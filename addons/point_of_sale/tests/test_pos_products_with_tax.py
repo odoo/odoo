@@ -716,6 +716,34 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self.assertEqual(get_taxes_name_popup(product_no_branch_tax), ["Tax A", "Tax B"])
         self.assertEqual(get_taxes_name_popup(product_no_tax), [])
 
+    def test_get_product_info_pos_with_fiscal_position(self):
+        tax_15 = self.env['account.tax'].create({
+            'name': 'tax_15',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 15.0,
+        })
+        tax_30 = self.env['account.tax'].create({
+            'name': 'tax_30',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 30.0,
+            'original_tax_ids': [Command.set(tax_15.ids)],
+        })
+        fp = self.env['account.fiscal.position'].create({
+            'name': 'Maps 15 to 30',
+            'tax_ids': [Command.set(tax_30.ids)],
+        })
+        product = self.create_product('Product FP', self.categ_basic, 100.0, tax_ids=tax_15.ids)
+        template = product.product_tmpl_id
+
+        def get_display_info(fp_id=False):
+            info = template.with_context(fiscal_position_id=fp_id).get_product_info_pos(100.0, 1, self.config.id)['all_prices']
+            return (info['price_with_tax'], [t['name'] for t in info['tax_details']])
+
+        self.assertEqual(get_display_info(), (115.0, ['tax_15']))
+        self.assertEqual(get_display_info(fp.id), (130.0, ['tax_30']))
+
     def test_combo_product_variant_error(self):
         """This tests make sure that product containing variants cannot change type to combo"""
 
