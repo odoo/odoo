@@ -170,16 +170,17 @@ functionRegistry.add("ODOO.CREDIT", {
             .map((code) => code.trim())
             .sort();
         offset = toNumber(offset.value, this.locale);
+        companyId = companyId.value === null ? null : toNumber(companyId.value, this.locale);
         dateRange = parseAccountingDate(dateRange, this.locale);
         includeUnposted = toBoolean(includeUnposted.value);
         const value = this.getters.getAccountPrefixCredit(
             accountCodes,
             dateRange,
             offset,
-            companyId.value,
+            companyId,
             includeUnposted
         );
-        const format = this.getters.getCompanyCurrencyFormat(companyId.value) || "#,##0.00";
+        const format = this.getters.getCompanyCurrencyFormat(companyId) || "#,##0.00";
         return { value, format };
     },
 });
@@ -201,16 +202,17 @@ functionRegistry.add("ODOO.DEBIT", {
             .map((code) => code.trim())
             .sort();
         offset = toNumber(offset.value, this.locale);
+        companyId = companyId.value === null ? null : toNumber(companyId.value, this.locale);
         dateRange = parseAccountingDate(dateRange, this.locale);
         includeUnposted = toBoolean(includeUnposted.value);
         const value = this.getters.getAccountPrefixDebit(
             accountCodes,
             dateRange,
             offset,
-            companyId.value,
+            companyId,
             includeUnposted
         );
-        const format = this.getters.getCompanyCurrencyFormat(companyId.value) || "#,##0.00";
+        const format = this.getters.getCompanyCurrencyFormat(companyId) || "#,##0.00";
         return { value, format };
     },
 });
@@ -232,6 +234,7 @@ functionRegistry.add("ODOO.BALANCE", {
             .map((code) => code.trim())
             .sort();
         offset = toNumber(offset.value, this.locale);
+        companyId = companyId.value === null ? null : toNumber(companyId.value, this.locale);
         dateRange = parseAccountingDate(dateRange, this.locale);
         includeUnposted = toBoolean(includeUnposted.value);
         const value =
@@ -239,17 +242,17 @@ functionRegistry.add("ODOO.BALANCE", {
                 accountCodes,
                 dateRange,
                 offset,
-                companyId.value,
+                companyId,
                 includeUnposted
             ) -
             this.getters.getAccountPrefixCredit(
                 accountCodes,
                 dateRange,
                 offset,
-                companyId.value,
+                companyId,
                 includeUnposted
             );
-        const format = this.getters.getCompanyCurrencyFormat(companyId.value) || "#,##0.00";
+        const format = this.getters.getCompanyCurrencyFormat(companyId) || "#,##0.00";
         return { value, format };
     },
 });
