@@ -3134,7 +3134,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.models["pos.prep.line"].deleteMany(orderline.prep_line_ids);
         order.removeOrderline(orderline, false);
         if (needsSync) {
-            await this.syncAllOrders({ orders: [order] });
+            await this.sendOrderInPreparation(order, { byPassPrint: true });
         }
     }
 
