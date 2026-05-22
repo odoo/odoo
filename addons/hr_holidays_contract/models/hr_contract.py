@@ -60,6 +60,8 @@ class HrContract(models.Model):
                             if not leave.request_unit_hours:
                                 leave.with_context(leave_skip_date_check=True, leave_skip_state_check=True)._compute_date_from_to()
                                 if leave.state == 'validate':
+                                    # Remove old resource time off records to prevent duplication on revalidation.
+                                    leave._remove_resource_leave()
                                     leave._validate_leave_request()
                         continue
                     if leave.id not in leaves_state:
