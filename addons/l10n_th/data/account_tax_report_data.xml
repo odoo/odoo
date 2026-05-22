@@ -33,12 +33,12 @@
                             <record id="tax_report_out_tax_sale_tag_pos" model="account.report.expression">
                                 <field name="label">sub_balance_1</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">-1. Sales amount</field>
+                                <field name="formula">-PP30_sale</field>
                             </record>
                             <record id="tax_report_out_tax_sale_tag_neg" model="account.report.expression">
                                 <field name="label">sub_balance_2</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">1. Sales amount_rev</field>
+                                <field name="formula">PP30_sale_rev</field>
                             </record>
                         </field>
                     </record>
@@ -50,7 +50,7 @@
                             <record id="tax_report_out_tax_less_sales_0_rate_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">-2. Less sales subject to 0% tax rate</field>
+                                <field name="formula">-PP30_sale_zero</field>
                             </record>
                         </field>
                     </record>
@@ -62,7 +62,7 @@
                             <record id="tax_report_out_tax_less_exempted_sales_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">-3. Less exempted sales</field>
+                                <field name="formula">-PP30_sale_exempt</field>
                             </record>
                         </field>
                     </record>
@@ -80,7 +80,7 @@
                             <record id="tax_report_out_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">-5. Output tax</field>
+                                <field name="formula">-PP30_tax_output</field>
                             </record>
                         </field>
                     </record>
@@ -100,7 +100,7 @@
                             <record id="tax_report_input_tax_purchase_from_out_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">6. Purchase amount that is entitled to deduction of input tax from output tax in tax computation</field>
+                                <field name="formula">PP30_purchase_deductible</field>
                             </record>
                         </field>
                     </record>
@@ -112,7 +112,7 @@
                             <record id="tax_report_input_tax_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">7. Input tax (according to invoice of purchase amount in 6.)</field>
+                                <field name="formula">PP30_tax_input</field>
                             </record>
                         </field>
                     </record>
@@ -163,7 +163,7 @@
                             <record id="tax_report_vat_payment_last_period_tag" model="account.report.expression">
                                 <field name="label">tag</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">10. Excess tax payment carried forward from last period</field>
+                                <field name="formula">PP30_tax_excess</field>
                             </record>
                             <record id="tax_report_vat_payment_last_period_formula" model="account.report.expression">
                                 <field name="label">balance</field>
