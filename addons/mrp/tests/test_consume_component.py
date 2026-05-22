@@ -24,6 +24,8 @@ class TestConsumeComponentCommon(common.TransactionCase):
         cls.SERIAL_TRIGGERS_COUNT = 2
         cls.DEFAULT_TRIGGERS_COUNT = 1
 
+        cls.env.user.group_ids |= cls.env.ref('stock.group_production_lot')
+
         cls.manufacture_route = cls.env.ref('mrp.route_warehouse0_manufacture')
         cls.stock_id = cls.env.ref('stock.stock_location_stock').id
 
@@ -482,7 +484,6 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         Check that moves created after setting the qty producing are
         also taken into considaration once the MO is marked as done
         """
-        self.env.user.group_ids += self.env.ref('stock.group_production_lot')
         mo = self.env['mrp.production'].create({
             'product_id': self.produced_serial.id,
             'product_qty': 1,
