@@ -60,15 +60,17 @@ export class BlurManager {
             rejectStreamPromise,
             resolveStreamPromise,
         });
-        try {
-            this.worker = new Worker("/mail/static/src/discuss/call/common/tick_worker.js");
-            this.worker.onmessage = (e) => this._handleWorkerMessage(e);
-            this.worker.onerror = () => {
-                this._terminateWorker();
-                this._requestFrame();
-            };
-        } catch {
-            this.worker = null;
+        if (!("requestVideoFrameCallback" in HTMLVideoElement.prototype)) {
+            try {
+                this.worker = new Worker("/mail/static/src/discuss/call/common/tick_worker.js");
+                this.worker.onmessage = (e) => this._handleWorkerMessage(e);
+                this.worker.onerror = () => {
+                    this._terminateWorker();
+                    this._requestAnimationFrame();
+                };
+            } catch {
+                this.worker = null;
+            }
         }
         this.video.srcObject = stream;
         this.video.load();
@@ -130,8 +132,10 @@ export class BlurManager {
         this.isVideoDataLoaded = true;
         if (this.worker) {
             this.worker.postMessage({ command: "start", fps: FPS });
+        } else if ("requestVideoFrameCallback" in HTMLVideoElement.prototype) {
+            this._requestVideoFrameCallback();
         } else {
-            this._requestFrame();
+            this._requestAnimationFrame();
         }
     }
 
@@ -175,15 +179,24 @@ export class BlurManager {
     /**
      * @private
      */
-    _requestFrame() {
+    _requestAnimationFrame() {
         if (!this.isVideoDataLoaded) {
             return;
         }
         browser.requestAnimationFrame(async () => {
             await this._onFrame();
             if (!this.worker) {
-                browser.setTimeout(() => this._requestFrame(), Math.floor(1000 / FPS));
+                browser.setTimeout(() => this._requestAnimationFrame(), Math.floor(1000 / FPS));
             }
+        });
+    }
+    _requestVideoFrameCallback() {
+        if (!this.isVideoDataLoaded) {
+            return;
+        }
+        this.video.requestVideoFrameCallback(async () => {
+            await this._onFrame();
+            this._requestVideoFrameCallback();
         });
     }
 }
