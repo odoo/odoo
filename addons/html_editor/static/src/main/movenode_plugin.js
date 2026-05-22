@@ -1,6 +1,6 @@
 import { useNativeDraggable } from "@html_editor/utils/drag_and_drop";
 import { childNodeIndex, endPos, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
-import { xml } from "@odoo/owl";
+import { htmlEscape, xml } from "@odoo/owl";
 import { Plugin } from "../plugin";
 import { closestElement } from "../utils/dom_traversal";
 import { _t } from "@web/core/l10n/translation";
@@ -281,11 +281,13 @@ export class MoveNodePlugin extends Plugin {
         this.moveWidget.style.top = `${anchorY - containerRect.y - moveWidgetOffsetTop}px`;
         this.moveWidget.style.left = `${anchorX - containerRect.x - WIDGET_CONTAINER_WIDTH}px`;
 
+        const dragToMoveTooltip = htmlEscape(_t("Drag to move"));
+        const clickToSelectTooltip = htmlEscape(_t("Click to select"));
         this.services.tooltip.add(this.moveWidget, {
             template: xml`
                 <div class="o-tooltip tooltip-inner text-start px-3">
-                    ${_t("Drag to move")}<br/>
-                    ${_t("Click to select")}
+                    ${dragToMoveTooltip}<br/>
+                    ${clickToSelectTooltip}
                 </div>`,
             arrow: true,
         });
