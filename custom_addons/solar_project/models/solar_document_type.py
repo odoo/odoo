@@ -22,5 +22,5 @@ class SolarDocumentType(models.Model):
         for rec in self:
             if self.search_count([("code", "=", rec.code), ("id", "!=", rec.id)]) > 0:
                 raise ValidationError(
-                    f'Document type code "{rec.code}" already exists.'
+                    f'Document type code "{rec.code}" already exists.',
                 )
