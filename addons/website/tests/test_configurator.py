@@ -93,9 +93,6 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestConfigurator(TestConfiguratorCommon):
 
-    def test_configurator_params_step(self):
-        self.start_tour('/website/configurator/3', 'configurator_params_step', login='admin')
-
     def test_configurator_page_creation(self):
         website = self.env['website'].create({
             'name': "New website",
@@ -116,8 +113,6 @@ class TestConfiguratorTranslation(TestConfiguratorCommon):
             'overwrite': True,
             'lang_ids': [(6, 0, [parseltongue.id])],
         }).lang_install()
-        feature = self.env['website.configurator.feature'].search([('name', '=', 'Pricing Plan')])
-        feature.with_context(lang=parseltongue.code).write({'name': 'Parseltongue_pricing'})
         self.env.ref('base.user_admin').write({'lang': parseltongue.code})
         website_fr = self.env['website'].create({
             'name': "New website",

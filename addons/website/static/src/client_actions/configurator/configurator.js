@@ -1,36 +1,37 @@
-import { reactive, useEnv, useExternalListener, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import {
+    reactive,
+    useEnv,
+    useExternalListener,
+    useLayoutEffect,
+    useRef,
+    useState,
+    useSubEnv,
+} from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 const sessionStorage = browser.sessionStorage;
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile, redirect } from "@web/core/utils/urls";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
+import { loadImage } from "@html_editor/utils/image_processing";
+import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
 import { svgToPNG, webpToPNG } from "@website/js/utils";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { htmlSprintf } from "@web/core/utils/html";
-import { clamp } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
-import { mixCssColors } from "@web/core/utils/colors";
+import { mixCssColors, normalizeCSSColor } from "@web/core/utils/colors";
 import { router } from "@web/core/browser/router";
-import {
-    Component,
-    markup,
-    onMounted,
-    onWillStart,
-} from "@odoo/owl";
+import { Component, markup, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 
 export const ROUTES = {
-    descriptionScreen: 2,
-    paletteSelectionScreen: 3,
-    featuresSelectionScreen: 4,
-    themeSelectionScreen: 5,
+    descriptionScreen: 1,
+    themeSelectionScreen: 2,
+    setupStyleScreen: 3,
 };
 
 export const WEBSITE_TYPES = {
@@ -49,50 +50,103 @@ export const WEBSITE_PURPOSES = {
     5: { id: 5, label: _t("schedule appointments"), name: "schedule_appointments" },
 };
 
-export const PALETTE_NAMES = [
-    "default-light-1",
-    "default-light-2",
-    "default-light-4",
-    "default-light-3",
-    "default-light-5",
-    "default-24",
-    "default-light-7",
-    "default-light-6",
-    "default-light-11",
-    "default-light-14",
-    "default-light-8",
-    "default-6",
-    "default-7",
-    "default-8",
-    "default-9",
-    "default-23",
-    "default-25",
-    "default-12",
-    "default-14",
-    "default-22",
-    "default-15",
-    "default-16",
-    "default-17",
-    "default-light-10",
-    "default-19",
-    "default-20",
-    "default-5",
-    "default-4",
-    "default-light-9",
-    "default-2",
-    "default-light-13",
-    "default-27",
-    "default-light-12",
-    "default-1",
-    "default-28",
-    "default-21",
+export const TONE_OPTIONS = [
+    { value: "professional", label: _t("Professional") },
+    { value: "friendly", label: _t("Friendly") },
+    { value: "inspirational", label: _t("Inspirational") },
+    { value: "educational", label: _t("Educational") },
+    { value: "playful", label: _t("Playful") },
+    { value: "luxury", label: _t("Luxury") },
 ];
+
+export const PALETTE_SECTIONS = [
+    {
+        id: "neutral",
+        label: _t("Neutral"),
+        names: [
+            "default-light-13",
+            "default-light-12",
+            "default-23",
+            "default-14",
+            "default-27",
+            "default-1",
+            "default-28",
+            "default-21",
+        ],
+    },
+    {
+        id: "airy",
+        label: _t("Airy"),
+        names: [
+            "default-light-2",
+            "default-light-4",
+            "default-light-3",
+            "default-light-10",
+            "default-light-5",
+            "default-light-7",
+            "default-light-6",
+            "default-light-8",
+            "default-light-1",
+            "default-24",
+        ],
+    },
+    {
+        id: "sophisticated",
+        label: _t("Sophisticated"),
+        names: [
+            "default-light-11",
+            "default-7",
+            "default-25",
+            "default-12",
+            "default-22",
+            "default-15",
+            "default-17",
+            "default-20",
+        ],
+    },
+    {
+        id: "vibrant",
+        label: _t("Vibrant"),
+        names: [
+            "default-6",
+            "default-8",
+            "default-9",
+            "default-10",
+            "default-11",
+            "default-13",
+            "default-3",
+            "default-16",
+            "default-18",
+            "default-19",
+            "default-26",
+            "default-5",
+            "default-4",
+            "default-light-9",
+            "default-2",
+            "default-light-14",
+        ],
+    },
+];
+
+export const PALETTE_NAMES = PALETTE_SECTIONS.flatMap((section) => section.names);
+
+const FEATURED_PALETTE_PLACEHOLDER = {
+    color1: "#868e96",
+    color2: "#adb5bd",
+    color3: "#ced4da",
+    color4: "#dee2e6",
+    color5: "#495057",
+};
 
 // Attributes for which background color should be retrieved
 // from CSS and added in each palette.
 export const CUSTOM_BG_COLOR_ATTRS = ["menu", "footer"];
 
 const MAX_NBR_DISPLAY_MAIN_THEMES = 3;
+const PREVIEW_IMAGE_SHAPE_URL_REGEX = /^\/?(html_editor|web_editor)\/image_shape(_url)?\//;
+const PREVIEW_DYNAMIC_IMAGE_URL_REGEX = /^\/?(html_editor|web_editor)\/(image_)?shape(_url)?\//;
+
+const DESKTOP_PREVIEW_WIDTH = 1400;
 
 /**
  * Returns a list of maximum "resultNbrMax" themes that depends on the wanted
@@ -108,10 +162,46 @@ const MAX_NBR_DISPLAY_MAIN_THEMES = 3;
  */
 async function getRecommendedThemes(orm, state, resultNbrMax = MAX_NBR_DISPLAY_MAIN_THEMES) {
     return orm.call("website", "configurator_recommended_themes", [], {
-        industry_id: state.selectedIndustry.id,
-        palette: state.selectedPalette,
+        industry_id: state.selectedIndustry?.id || 0,
         result_nbr_max: resultNbrMax,
     });
+}
+
+function getPreviewPaletteCacheKey(paletteName, themeName, logoPalette) {
+    if (paletteName !== "logoPalette" || !logoPalette) {
+        return `${themeName}:${paletteName}`;
+    }
+    return [themeName, "logoPalette", ...[1, 2, 3, 4, 5].map((i) => logoPalette[`color${i}`])].join(
+        ":"
+    );
+}
+
+async function getPreviewPaletteCSS(orm, state, paletteName, logoPalette = state.logoPalette) {
+    const cacheKey = getPreviewPaletteCacheKey(
+        paletteName,
+        state.selectedTheme || "theme_default",
+        logoPalette
+    );
+    if (state.previewPaletteCSS[cacheKey]) {
+        return state.previewPaletteCSS[cacheKey];
+    }
+    if (!state.previewPaletteCSSPromises[cacheKey]) {
+        state.previewPaletteCSSPromises[cacheKey] = orm.silent
+            .call("website.assets", "configurator_get_palette_preview_css", [
+                paletteName,
+                paletteName === "logoPalette" ? logoPalette : false,
+            ])
+            .then((css) => {
+                state.previewPaletteCSS[cacheKey] = css;
+                delete state.previewPaletteCSSPromises[cacheKey];
+                return css;
+            })
+            .catch((error) => {
+                delete state.previewPaletteCSSPromises[cacheKey];
+                throw error;
+            });
+    }
+    return state.previewPaletteCSSPromises[cacheKey];
 }
 
 //------------------------------------------------------------------------------
@@ -123,22 +213,6 @@ export class SkipButton extends Component {
     static props = {
         skip: Function,
     };
-}
-
-export class WelcomeScreen extends Component {
-    static template = "website.Configurator.WelcomeScreen";
-    static components = { SkipButton };
-    static props = {
-        skip: Function,
-        navigate: Function,
-    };
-    setup() {
-        this.state = useStore();
-    }
-
-    goToDescription() {
-        this.props.navigate(ROUTES.descriptionScreen);
-    }
 }
 
 export class DescriptionScreen extends Component {
@@ -238,7 +312,7 @@ export class DescriptionScreen extends Component {
             const res = fuzzyLevenshteinLookup(term, this.dictionarySet);
             correctedSet.add(res[0] || term);
         }
-        let terms = Array.from(correctedSet);
+        const terms = Array.from(correctedSet);
         const limit = 30;
         // `this.state.industries` is already sorted by hit count (from IAP).
         // That order should be kept after manipulating the recordset.
@@ -276,13 +350,11 @@ export class DescriptionScreen extends Component {
                 matches = matches.slice(0, limit);
             }
         }
-        if (matches.length === 0) {
-            matches = [{ label: term, id: -1 }];
-            terms = [term];
-        }
+
+        matches.push({ label: term, id: -1 });
         return matches.map((match) => ({
-            label: match.label,
-            labelTermOrder: this._getMatchTermOrder(match.label, terms),
+            label: match.id === -1 ? _t('Create "%s"', match.label) : match.label,
+            labelTermOrder: match.id === -1 ? null : this._getMatchTermOrder(match.label, terms),
             onSelect: () => this._setSelectedIndustry(match.label, match.id),
         }));
     }
@@ -353,7 +425,7 @@ export class DescriptionScreen extends Component {
                     unknown_industry: selectedIndustry.label,
                 });
             }
-            this.props.navigate(ROUTES.paletteSelectionScreen);
+            this.props.navigate(ROUTES.themeSelectionScreen);
         }
     }
     onConfiguratorScreenFocusin(ev) {
@@ -390,24 +462,326 @@ export class DescriptionScreen extends Component {
     }
 }
 
-export class PaletteSelectionScreen extends Component {
-    static components = { SkipButton };
-    static template = "website.Configurator.PaletteSelectionScreen";
-    static props = {
-        navigate: Function,
-        skip: Function,
-    };
+export class ApplyConfiguratorScreen extends Component {
+    static template = "";
+    static props = ["*"];
     setup() {
-        this.state = useStore();
-        this.logoInputRef = useRef("logoSelectionInput");
-        this.notification = useService("notification");
-        this.orm = useService("orm");
+        this.websiteService = useService("website");
+        this.configuratorProgress = 0;
+    }
 
-        onMounted(() => {
-            if (this.state.logo) {
-                this.updatePalettes();
+    async startBuilding() {
+        if (!this.state.selectedPalette) {
+            const fallbackPaletteName = this.state.palettes["default-25"]
+                ? "default-25"
+                : Object.keys(this.state.palettes || {})[0];
+            if (fallbackPaletteName) {
+                this.state.selectPalette(fallbackPaletteName);
+            }
+        }
+        if (!this.state.selectedTheme) {
+            this.state.selectedTheme = "theme_default";
+        }
+        await this.applyConfigurator(this.state.selectedTheme);
+    }
+
+    async applyConfigurator(themeName) {
+        if (!this.state.selectedIndustry) {
+            return this.props.navigate(ROUTES.descriptionScreen);
+        }
+        if (!this.state.selectedPalette) {
+            return this.props.navigate(ROUTES.setupStyleScreen);
+        }
+
+        const attemptConfiguratorApply = async (data, retryCount = 0) => {
+            try {
+                return await this.orm.silent.call("website", "configurator_apply", [], data);
+            } catch (error) {
+                // Wait a bit before retrying or allowing manual retry.
+                await delay(5000);
+                if (retryCount < 3) {
+                    return attemptConfiguratorApply(data, retryCount + 1);
+                }
+                document.querySelector(".o_website_loader_container").remove();
+                throw error;
+            }
+        };
+
+        if (themeName !== undefined) {
+            const loadingSteps = [
+                {
+                    description: _t("Applying your colors and design..."),
+                    flag: "colors",
+                },
+                {
+                    description: _t("Searching your images..."),
+                    flag: "images",
+                },
+                {
+                    description: _t("Generating inspiring text..."),
+                    flag: "text",
+                },
+                {
+                    title: _t("Finalizing."),
+                    description: _t("Applying the last changes."),
+                    flag: "generic",
+                },
+            ];
+
+            // Server requests are locked during module installation,
+            // uninstallation, or upgrade (when running without `workers`), so
+            // real-time progress can't be fetched. We simulate it instead.
+            const stopProgressSimulation = this.startConfiguratorProgressSimulation();
+            this.websiteService.showLoader({
+                title: _t("Building your website."),
+                loadingSteps,
+                getProgress: () => this.configuratorProgress,
+                bottomMessageTemplate: "website.website_loader.tour_tip",
+            });
+            const resp = await attemptConfiguratorApply(
+                this.getConfigurationData(this.state.selectedPalette, themeName)
+            );
+
+            this.props.clearStorage();
+            stopProgressSimulation();
+
+            this.websiteService.redirectOutFromLoader({
+                redirectAction: () => {
+                    // Here, the website service `goToWebsite` method is not
+                    // used because the web client needs to be reloaded after
+                    // the new modules have been installed.
+                    redirect(
+                        `/odoo/action-website.website_preview?website_id=${encodeURIComponent(
+                            resp.website_id
+                        )}`
+                    );
+                },
+            });
+        }
+    }
+
+    getConfigurationData(selectedPalette, themeName) {
+        const selectedFontConfig = this.state.fonts?.[this.state.selectedFont];
+        const toScssString = (value) => (value ? `'${value}'` : undefined);
+        return {
+            industry_id: this.state.selectedIndustry.id,
+            industry_name: this.state.selectedIndustry.label.toLowerCase(),
+            selected_palette:
+                selectedPalette === "logoPalette"
+                    ? [1, 2, 3, 4, 5].map((i) => this.state.logoPalette[`color${i}`])
+                    : selectedPalette,
+            theme_name: themeName,
+            website_purpose:
+                WEBSITE_PURPOSES[this.state.selectedPurpose || this.state.formerSelectedPurpose]
+                    .name,
+            website_type: WEBSITE_TYPES[this.state.selectedType].name,
+            logo_attachment_id: this.state.logoAttachmentId,
+            selected_font: toScssString(selectedFontConfig?.name),
+            selected_headings_font: toScssString(selectedFontConfig?.headingsFamily),
+        };
+    }
+
+    /**
+     * Simulates the progress for website creation, divided into three phases:
+     * 1. Initial Phase (0-30%): Fast progress to give the impression of quick
+     *    processing.
+     * 2. Build Phase (30-90%): Steady progress while the website is generated.
+     * 3. Final Phase (90-100%): Slow progress to allow any pending operations
+     *    to complete before reaching 100%.
+     *
+     * @returns {Function} A cleanup function that stops the simulation.
+     */
+    startConfiguratorProgressSimulation() {
+        const INITIAL_PHASE_END = 30;
+        const BUILD_PHASE_END = 90;
+
+        let progress = 0;
+        let phase = "initial";
+
+        const intervalId = setInterval(() => {
+            switch (phase) {
+                case "initial":
+                    progress += 2;
+                    if (progress >= INITIAL_PHASE_END) {
+                        phase = "build";
+                    }
+                    break;
+
+                case "build":
+                    progress = Math.min(progress + 0.8, BUILD_PHASE_END);
+                    if (progress >= BUILD_PHASE_END) {
+                        phase = "final";
+                    }
+                    break;
+
+                case "final":
+                    progress = Math.min(progress + 0.05, 100);
+                    break;
+            }
+
+            this.configuratorProgress = progress;
+        }, 500);
+
+        return () => clearInterval(intervalId);
+    }
+}
+
+export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
+    static template = "website.Configurator.ThemeSelectionScreen";
+    setup() {
+        super.setup();
+
+        this.uiService = useService("ui");
+        this.orm = useService("orm");
+        this.maxNbrDisplayThemes = 100;
+        this.themesByStep = 6;
+        this.bottomPageTrigger = useRef("loadMoreThemes");
+        this.bottomPageObserver = null;
+        const env = useEnv();
+        this.state = useState(env.store);
+        onWillStart(async () => {
+            await this.getThemes();
+            if (!this.state.themes.length) {
+                this.state.selectedTheme = "theme_default";
+                this.props.navigate(ROUTES.setupStyleScreen);
             }
         });
+        onMounted(() => {
+            this.bottomPageObserver = new IntersectionObserver((entries) => {
+                if (entries.some((entry) => entry.isIntersecting)) {
+                    this.loadNextThemes();
+                }
+            });
+            if (this.bottomPageTrigger.el) {
+                this.bottomPageObserver.observe(this.bottomPageTrigger.el);
+            }
+        });
+        onWillUnmount(() => {
+            this.bottomPageObserver?.disconnect();
+        });
+    }
+
+    /**
+     * The button should be shown if we never tried to load the extra themes and
+     * if they are enough main themes already displayed. If this last condition
+     * is not fulfilled, there is no need to display the button as no more will
+     * be displayed.
+     */
+    get showViewMoreThemesButton() {
+        return (
+            !this.state.extraThemesLoaded &&
+            this.state.themes.length === MAX_NBR_DISPLAY_MAIN_THEMES
+        );
+    }
+
+    async chooseTheme(themeName) {
+        if (this.state.selectedTheme !== themeName) {
+            this.state.recommendedPalettes = undefined;
+            this.state.featuredPaletteNames = [];
+            this.state.selectedPalette = undefined;
+            this.state.fonts = {};
+            this.state.fontIds = [];
+            this.state.selectedFont = undefined;
+        }
+        this.state.selectedTheme = themeName;
+        this.props.navigate(ROUTES.setupStyleScreen);
+    }
+
+    async getThemes() {
+        this.uiService.block();
+        const themes = await getRecommendedThemes(this.orm, this.state, this.maxNbrDisplayThemes);
+        this.state.allThemes = themes;
+        this.loadNextThemes();
+        this.uiService.unblock();
+    }
+
+    loadNextThemes() {
+        const allThemes = this.state.allThemes || [];
+        if (!allThemes.length) {
+            return;
+        }
+        const nbrThemesToDisplay = Math.min(
+            this.state.themes.length + this.themesByStep,
+            allThemes.length
+        );
+        this.state.themes = allThemes.slice(0, nbrThemesToDisplay);
+        if (nbrThemesToDisplay >= allThemes.length) {
+            this.bottomPageObserver?.disconnect();
+        }
+    }
+}
+
+export class SetupStyleScreen extends ApplyConfiguratorScreen {
+    static template = "website.Configurator.SetupStyleScreen";
+    setup() {
+        super.setup();
+        this.orm = useService("orm");
+        this.notification = useService("notification");
+        this.state = useStore();
+        this.featuredPalettePlaceholders = [0, 1, 2, 3].map((index) => ({
+            name: `featured_palette_placeholder_${index}`,
+            ...FEATURED_PALETTE_PLACEHOLDER,
+        }));
+        this.fontPlaceholders = [0, 1, 2, 3].map((index) => ({
+            name: `font_placeholder_${index}`,
+        }));
+        this.previewState = useState({ initialLoaded: false });
+        this.scrollState = useState({
+            isStylePanelBottomReached: false,
+            isColorPanelBottomReached: false,
+        });
+        this.previewDevice = useState({ value: "desktop" });
+        this.scrollContentRef = useRef("scrollContent");
+        this.colorPanelBodyRef = useRef("colorPanelBody");
+        this.previewIframeRef = useRef("previewIframe");
+        this.logoInputRef = useRef("logoSelectionInput");
+        this.isEnterprise = odoo.info && odoo.info.isEnterprise;
+        this.toneOptions = TONE_OPTIONS;
+        this.state.selectedTone = "inspirational";
+        this.images_loaded = false;
+        this.closeGeneratorNotification = null;
+        this.previewPalettePrefetchId = 0;
+        this.previewPalettePrefetchTimeout = null;
+        this.previewInlineVhConversionTimeout = null;
+
+        useExternalListener(window, "resize", () => this.scalePreviewIframe());
+
+        onWillStart(() => {
+            this.previewState.initialLoaded = false;
+            this.state.previewIsLoading = true;
+        });
+        onMounted(() => {
+            document.body.classList.add("o_configurator_notifications_top");
+            this.onScrollContent(this.scrollContentRef, "isStylePanelBottomReached");
+            this.onScrollContent(this.colorPanelBodyRef, "isColorPanelBottomReached");
+            document.getElementById("describeYourWebsiteTextarea").value = _t(
+                "Generate the text content for my %(industryName)s business.",
+                {
+                    industryName: this.state.selectedIndustry.label,
+                }
+            );
+        });
+        onWillUnmount(() => {
+            document.body.classList.remove("o_configurator_notifications_top");
+            this.cancelPreviewPalettePrefetch();
+            if (this.previewInlineVhConversionTimeout) {
+                browser.clearTimeout(this.previewInlineVhConversionTimeout);
+                this.previewInlineVhConversionTimeout = null;
+            }
+            this.closeGeneratorNotification?.();
+            this.closeGeneratorNotification = null;
+        });
+    }
+
+    onScrollContent(ref, stateKey) {
+        const el = ref.el;
+        if (!el) {
+            return;
+        }
+        const isBottomReached = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+        if (this.scrollState[stateKey] !== isBottomReached) {
+            this.scrollState[stateKey] = isBottomReached;
+        }
     }
 
     uploadLogo() {
@@ -427,11 +801,17 @@ export class PaletteSelectionScreen extends Component {
             await this._removeAttachments([this.state.logoAttachmentId]);
         }
         this.state.changeLogo();
-        // Remove recommended palette.
-        this.state.setRecommendedPalette();
+        this.state.setLogoPalette();
+        this.state.featuredPaletteNames = this.completeFeaturedPaletteNames(
+            this.state.featuredPaletteNames
+        );
+        if (this.state.selectedPalette === "logoPalette" && this.state.featuredPaletteNames[0]) {
+            await this.setPalette(this.state.featuredPaletteNames[0]);
+        }
+        this.setPreviewLogo();
     }
 
-    async changeLogo() {
+    async onLogoChange() {
         const logoSelectInput = this.logoInputRef.el;
         if (logoSelectInput.files.length === 1) {
             const previousLogoAttachmentId = this.state.logoAttachmentId;
@@ -457,7 +837,11 @@ export class PaletteSelectionScreen extends Component {
                     await this._removeAttachments([previousLogoAttachmentId]);
                 }
                 this.state.changeLogo(data, attachment.id);
-                this.updatePalettes();
+                await this.updateLogoPalette();
+                if (this.state.selectedPalette === "logoPalette") {
+                    await this.setPalette("logoPalette");
+                }
+                this.setPreviewLogo();
             } else {
                 this.notification.add(attachment.error, {
                     title: file.name,
@@ -466,7 +850,21 @@ export class PaletteSelectionScreen extends Component {
         }
     }
 
-    async updatePalettes() {
+    setPreviewLogo(iframeDoc = this.previewIframeRef.el?.contentDocument) {
+        if (!iframeDoc?.body) {
+            return;
+        }
+        for (const imgEl of iframeDoc.querySelectorAll(
+            'a[data-name="Navbar Logo"] img, a.navbar-brand.logo img'
+        )) {
+            if (!imgEl.dataset.previewOriginalSrc) {
+                imgEl.dataset.previewOriginalSrc = imgEl.getAttribute("src") || "";
+            }
+            imgEl.src = this.state.logo || imgEl.dataset.previewOriginalSrc;
+        }
+    }
+
+    async updateLogoPalette() {
         let img = this.state.logo;
         if (img.startsWith("data:image/svg+xml")) {
             img = await svgToPNG(img);
@@ -481,12 +879,7 @@ export class PaletteSelectionScreen extends Component {
             [img],
             { mitigate: 255 }
         );
-        this.state.setRecommendedPalette(color1, color2);
-    }
-
-    selectPalette(paletteName) {
-        this.state.selectPalette(paletteName);
-        this.props.navigate(ROUTES.featuresSelectionScreen);
+        this.state.setLogoPalette(color1, color2);
     }
 
     /**
@@ -498,413 +891,634 @@ export class PaletteSelectionScreen extends Component {
     async _removeAttachments(ids) {
         rpc("/html_editor/attachment/remove", { ids: ids });
     }
-}
 
-export class ApplyConfiguratorScreen extends Component {
-    static template = "";
-    static props = ["*"];
-    setup() {
-        this.websiteService = useService("website");
-        this.configuratorProgress = 0;
+    changeTheme() {
+        this.props.navigate(ROUTES.themeSelectionScreen);
     }
 
-    async applyConfigurator(themeName) {
-        if (!this.state.selectedIndustry) {
-            return this.props.navigate(ROUTES.descriptionScreen);
-        }
-        if (!this.state.selectedPalette) {
-            return this.props.navigate(ROUTES.paletteSelectionScreen);
-        }
-
-        const attemptConfiguratorApply = async (data, retryCount = 0) => {
-            try {
-                return await this.orm.silent.call("website", "configurator_apply", [], data);
-            } catch (error) {
-                // Wait a bit before retrying or allowing manual retry.
-                await delay(5000);
-                if (retryCount < 3) {
-                    return attemptConfiguratorApply(data, retryCount + 1);
-                }
-                document.querySelector(".o_website_loader_container").remove();
-                throw error;
+    // Fill missing featured slots with recommended palettes, in order.
+    completeFeaturedPaletteNames(featuredPaletteNames) {
+        for (const palette of this.state.recommendedPalettes || []) {
+            if (featuredPaletteNames.length >= 4) {
+                break;
             }
-        };
-
-        if (themeName !== undefined) {
-            const selectedFeatures = Object.values(this.state.features)
-                .filter((feature) => feature.selected)
-                .map((feature) => feature.id);
-            const loadingSteps = [
-                {
-                    description: _t("Applying your colors and design..."),
-                    flag: "colors",
-                },
-                {
-                    description: _t("Searching your images..."),
-                    flag: "images",
-                },
-                {
-                    description: _t("Generating inspiring text..."),
-                    flag: "text",
-                },
-                ...this.getSelectedFeaturesLoadingSteps(selectedFeatures),
-                {
-                    title: _t("Finalizing."),
-                    description: _t("Activating the last features."),
-                    flag: "generic",
-                },
-            ];
-
-            // Server requests are locked during module installation,
-            // uninstallation, or upgrade (when running without `workers`), so
-            // real-time progress can't be fetched. We simulate it instead.
-            const stopProgressSimulation = this.startConfiguratorProgressSimulation(
-                selectedFeatures.length
-            );
-            this.websiteService.showLoader({
-                title: _t("Building your website."),
-                loadingSteps,
-                getProgress: () => this.configuratorProgress,
-                bottomMessageTemplate: "website.website_loader.tour_tip",
-            });
-            let selectedPalette = this.state.selectedPalette.name;
-            if (!selectedPalette) {
-                selectedPalette = [
-                    this.state.selectedPalette.color1,
-                    this.state.selectedPalette.color2,
-                    this.state.selectedPalette.color3,
-                    this.state.selectedPalette.color4,
-                    this.state.selectedPalette.color5,
-                ];
+            if (!featuredPaletteNames.includes(palette.name)) {
+                featuredPaletteNames.push(palette.name);
             }
-            const resp = await attemptConfiguratorApply(
-                this.getConfigurationData(selectedFeatures, selectedPalette, themeName)
-            );
-
-            this.props.clearStorage();
-            stopProgressSimulation();
-
-            this.websiteService.redirectOutFromLoader({
-                redirectAction: () => {
-                    // Here, the website service `goToWebsite` method is not
-                    // used because the web client needs to be reloaded after
-                    // the new modules have been installed.
-                    redirect(
-                        `/odoo/action-website.website_preview?website_id=${encodeURIComponent(
-                            resp.website_id
-                        )}`
-                    );
-                },
-            });
         }
+        return featuredPaletteNames;
     }
 
-    getConfigurationData(selectedFeatures, selectedPalette, themeName) {
-        return {
-            selected_features: selectedFeatures,
-            industry_id: this.state.selectedIndustry.id,
-            industry_name: this.state.selectedIndustry.label.toLowerCase(),
-            selected_palette: selectedPalette,
-            theme_name: themeName,
-            website_purpose:
-                WEBSITE_PURPOSES[this.state.selectedPurpose || this.state.formerSelectedPurpose]
-                    .name,
-            website_type: WEBSITE_TYPES[this.state.selectedType].name,
-            logo_attachment_id: this.state.logoAttachmentId,
-        };
-    }
-
-    /**
-     * Simulates the progress for website creation, divided into three phases:
-     * 1. Initial Phase (0-30%): Fast progress to give the impression of quick
-     *    processing.
-     * 2. Modules Phase (30-90%): Distributes progress evenly across the
-     *    selected features (modules).
-     * 3. Final Phase (90-100%): Slow progress to allow any pending operations
-     *    to complete before reaching 100%.
-     *
-     * @param {number} selectedFeaturesCount - Number of features to simulate
-     *                                         progress for.
-     * @returns {Function} A cleanup function that stops the simulation.
-     */
-    startConfiguratorProgressSimulation(selectedFeaturesCount) {
-        const INITIAL_PHASE_END = 30;
-        const MODULES_PHASE_END = 90;
-
-        const moduleCount = Math.max(1, selectedFeaturesCount);
-        const progressPerModule = (MODULES_PHASE_END - INITIAL_PHASE_END) / moduleCount;
-
-        let progress = 0;
-        let phase = "initial";
-
-        const intervalId = setInterval(() => {
-            switch (phase) {
-                case "initial":
-                    progress += 2;
-                    if (progress >= INITIAL_PHASE_END) {
-                        phase = "modules";
-                    }
-                    break;
-
-                case "modules": {
-                    const moduleProgress = (progress - INITIAL_PHASE_END) % progressPerModule;
-                    // Gradually reduce speed within each module so the modules
-                    // phase gets adequate time while keeping progression evenly
-                    // distributed.
-                    const ratio = clamp(moduleProgress / progressPerModule, 0, 1);
-                    const speed = 1.5 + (0.2 - 1.5) * ratio;
-
-                    progress = Math.min(progress + speed, MODULES_PHASE_END);
-                    if (progress >= MODULES_PHASE_END) {
-                        phase = "final";
-                    }
+    // Keep featured palettes ordered by recent user actions.
+    updateFeaturedPaletteNames(paletteName) {
+        const featuredPaletteNames = this.state.featuredPaletteNames.filter(
+            (featuredPaletteName) => featuredPaletteName !== paletteName
+        );
+        featuredPaletteNames.unshift(paletteName);
+        if (featuredPaletteNames.length > 4) {
+            for (let index = featuredPaletteNames.length - 1; index >= 0; index--) {
+                if (featuredPaletteNames[index] !== this.state.selectedPalette) {
+                    featuredPaletteNames.splice(index, 1);
                     break;
                 }
-
-                case "final":
-                    progress = Math.min(progress + 0.05, 100);
-                    break;
             }
-
-            this.configuratorProgress = progress;
-        }, 500);
-
-        return () => clearInterval(intervalId);
-    }
-
-    /**
-     * Returns the list of feature steps with their loading messages.
-     * Each step maps to a `website.configurator.feature` record ID.
-     *
-     * @returns {Object[]} Array of feature step definitions.
-     */
-    get featureSteps() {
-        return [
-            {
-                id: 5,
-                title: _t("Adding features."),
-                name: _t("blog"),
-                description: _t("Enabling your %s."),
-                flag: "generic",
-            },
-            {
-                id: 7,
-                title: _t("Adding features."),
-                name: _t("recruitment platform"),
-                description: _t("Integrating your %s."),
-                flag: "generic",
-            },
-            {
-                id: 8,
-                title: _t("Adding features."),
-                name: _t("online store"),
-                description: _t("Activating your %s."),
-                flag: "generic",
-            },
-            {
-                id: 9,
-                title: _t("Adding features."),
-                name: _t("online appointment system"),
-                description: _t("Configuring your %s."),
-                flag: "generic",
-            },
-            {
-                id: 10,
-                title: _t("Adding features."),
-                name: _t("forum"),
-                description: _t("Setting up your %s."),
-                flag: "generic",
-            },
-            {
-                id: 12,
-                title: _t("Adding features."),
-                name: _t("e-learning platform"),
-                description: _t("Installing your %s."),
-                flag: "generic",
-            },
-        ];
-    }
-
-    /**
-     * Depending on the features selected, returns the right loading steps.
-     *
-     * @param {number[]} [selectedFeatures=[]]
-     * @returns {Object[]} The loading steps filtered by the selected features.
-     */
-    getSelectedFeaturesLoadingSteps(selectedFeatures = []) {
-        return this.featureSteps
-            .filter((step) => selectedFeatures.includes(step.id))
-            .map((step) => {
-                const highlight = markup`<span class="o_website_loader_text_highlight">${step.name}</span>`;
-                return { ...step, description: htmlSprintf(step.description, highlight) };
-            });
-    }
-}
-
-export class FeaturesSelectionScreen extends Component {
-    static components = { SkipButton };
-    static template = "website.Configurator.FeatureSelection";
-    static props = {
-        navigate: Function,
-        skip: Function,
-    };
-    setup() {
-        super.setup();
-        this.state = useStore();
-    }
-
-    /**
-     * Return the theme selection screen as the next step, unless overridden.
-     *
-     * @return {int} Next step route.
-     */
-    static nextStep() {
-        return ROUTES.themeSelectionScreen;
-    }
-
-    async buildWebsite() {
-        const industryId = this.state.selectedIndustry && this.state.selectedIndustry.id;
-        if (!industryId) {
-            return this.props.navigate(ROUTES.descriptionScreen);
         }
-
-        this.props.navigate(FeaturesSelectionScreen.nextStep());
+        this.state.featuredPaletteNames = featuredPaletteNames;
     }
 
-    onKeydown(ev) {
-        const hotkey = getActiveHotkey(ev);
-        if (["enter", "space"].includes(hotkey)) {
-            ev.target.click();
-        }
-    }
-}
-
-export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
-    static template = "website.Configurator.ThemeSelectionScreen";
-    setup() {
-        super.setup();
-
-        this.uiService = useService("ui");
-        this.orm = useService("orm");
-        this.maxNbrDisplayExtraThemes = 100;
-        const env = useEnv();
-        env.store["extraThemesLoaded"] = false;
-        env.store["extraThemes"] = [];
-        this.state = useState(env.store);
-        this.themeSVGPreviews = [
-            useRef("ThemePreview1"),
-            useRef("ThemePreview2"),
-            useRef("ThemePreview3"),
-        ];
-        this.extraThemesButtonRef = useRef("extraThemesButton");
-        this.extraThemeSVGPreviews = [];
-        for (let i = 0; i < this.maxNbrDisplayExtraThemes; i++) {
-            this.extraThemeSVGPreviews.push(useRef(`ExtraThemePreview${i}`));
-        }
-        onWillStart(async () => {
-            const themes = await getRecommendedThemes(this.orm, this.state);
-            if (!themes.length) {
-                await this.applyConfigurator("theme_default");
-            } else {
-                this.state.updateRecommendedThemes(themes);
-            }
-        });
-
-        onMounted(() => {
-            this.blockUiDuringImageLoading(this.state.themes, this.themeSVGPreviews);
-        });
-
-        useLayoutEffect(
-            () =>
-                this.blockUiDuringImageLoading(this.state.extraThemes, this.extraThemeSVGPreviews),
-            () => [this.state.extraThemes]
-        );
-    }
-
-    /**
-     * The button should be shown if we never tried to load the extra themes and
-     * if they are enough main themes already displayed. If this last condition
-     * is not fulfilled, there is no need to display the button as no more will
-     * be displayed.
-     */
-    get showViewMoreThemesButton() {
-        return (
-            !this.state.extraThemesLoaded &&
-            this.state.themes.length === MAX_NBR_DISPLAY_MAIN_THEMES
-        );
-    }
-
-    /**
-     * Transforms text svgs into svg elements and adds a loading effect that
-     * blocks the UI during the loading of the images inside those svg elements.
-     *
-     * @param {Array<Object>} themes - The text svgs.
-     * @param {Array} themeSVGPreviews - A reference to the svg elements.
-     */
-    blockUiDuringImageLoading(themes, themeSVGPreviews) {
-        if (!themes.length) {
-            // There is no svg to transform
+    initializePalettesFromPreview() {
+        const iframeDoc = this.previewIframeRef.el?.contentDocument;
+        const iframeRoot = iframeDoc?.documentElement;
+        if (!iframeRoot) {
             return;
         }
-        const proms = [];
-        this.uiService.block({ delay: 700 });
-        themes.forEach((theme, idx) => {
-            const svgEl = new DOMParser().parseFromString(
-                theme.svg,
-                "image/svg+xml"
-            ).documentElement;
-            for (const imgEl of svgEl.querySelectorAll("image")) {
-                proms.push(
-                    new Promise((resolve, reject) => {
-                        imgEl.addEventListener(
-                            "load",
-                            () => {
-                                resolve(imgEl);
-                            },
-                            { once: true }
-                        );
-                        imgEl.addEventListener(
-                            "error",
-                            () => {
-                                reject(imgEl);
-                            },
-                            { once: true }
-                        );
-                    })
-                );
+        const style = getComputedStyle(iframeRoot);
+        const mainPalette = this.cleanValue(style.getPropertyValue("--color-palettes-name"));
+        const recommendedPalettes = style
+            .getPropertyValue("--recommended-palette-name")
+            .replace(/[()]/g, "")
+            .split(",")
+            .map((value) => this.cleanValue(value))
+            .filter(Boolean);
+        // Read the theme recommendations from the preview CSS.
+        this.state.recommendedPalettes = (
+            recommendedPalettes.length ? recommendedPalettes : [mainPalette].filter(Boolean)
+        ).map((paletteName) => this.state.palettes[paletteName]);
+        // Preserve the current featured order across reloads and page refreshes.
+        this.state.featuredPaletteNames = this.completeFeaturedPaletteNames(
+            this.state.featuredPaletteNames.length
+                ? [...this.state.featuredPaletteNames]
+                : this.state.recommendedPalettes.slice(0, 4).map((palette) => palette.name)
+        );
+        // Keep the selected swatch aligned with the palette currently shown
+        // in the preview.
+        if (this.state.selectedPalette !== "logoPalette") {
+            this.state.selectedPalette = mainPalette || this.state.recommendedPalettes[0]?.name;
+        }
+    }
+
+    getFeaturedPalettes() {
+        return this.state.featuredPaletteNames.map(
+            (paletteName) => this.state.palettes[paletteName]
+        );
+    }
+
+    getOtherPaletteSections() {
+        const recommendedPaletteNames = new Set(
+            (this.state.recommendedPalettes || []).map((palette) => palette.name)
+        );
+        return PALETTE_SECTIONS.map((section) => ({
+            id: section.id,
+            label: section.label,
+            palettes: section.names
+                .filter((paletteName) => !recommendedPaletteNames.has(paletteName))
+                .map((paletteName) => this.state.palettes[paletteName]),
+        })).filter((section) => section.palettes.length);
+    }
+
+    cancelPreviewPalettePrefetch() {
+        this.previewPalettePrefetchId++;
+        if (this.previewPalettePrefetchTimeout) {
+            browser.clearTimeout(this.previewPalettePrefetchTimeout);
+            this.previewPalettePrefetchTimeout = null;
+        }
+    }
+
+    schedulePreviewPalettePrefetch() {
+        this.cancelPreviewPalettePrefetch();
+        const requestId = this.previewPalettePrefetchId;
+        // Start with the theme recommendations, then continue with common
+        // palettes in the background.
+        const paletteNames = [
+            ...(this.state.recommendedPalettes || []).map((palette) => palette.name),
+            ...PALETTE_NAMES,
+        ];
+        this.previewPalettePrefetchTimeout = browser.setTimeout(async () => {
+            this.previewPalettePrefetchTimeout = null;
+            for (const paletteName of new Set(paletteNames)) {
+                if (requestId !== this.previewPalettePrefetchId) {
+                    return;
+                }
+                await getPreviewPaletteCSS(this.orm, this.state, paletteName).catch(() => {});
+                await delay(100);
             }
-            themeSVGPreviews[idx].el.appendChild(svgEl);
-        });
-        // When all the images inside the svgs are loaded then remove the
-        // loading effect.
-        Promise.allSettled(proms).then(() => {
-            this.uiService.unblock();
-        });
+        }, 500);
     }
 
-    async chooseTheme(themeName) {
-        await this.applyConfigurator(themeName);
+    async setPalette(paletteName) {
+        this.state.selectedPalette = paletteName;
+        if (
+            paletteName !== "logoPalette" &&
+            !this.state.featuredPaletteNames.includes(paletteName)
+        ) {
+            this.updateFeaturedPaletteNames(paletteName);
+        }
+        this.cancelPreviewPalettePrefetch();
+        const loadingTimer = browser.setTimeout(() => {
+            this.state.previewIsLoading = true;
+        }, 500);
+        try {
+            await this.applyPreviewPalette(paletteName);
+        } finally {
+            browser.clearTimeout(loadingTimer);
+            this.state.previewIsLoading = false;
+            this.schedulePreviewPalettePrefetch();
+        }
     }
 
-    async getMoreThemes() {
-        this.uiService.block();
-        const themes = await getRecommendedThemes(
-            this.orm,
-            this.state,
-            this.maxNbrDisplayExtraThemes
+    async applyPreviewPalette(paletteName, iframeDoc = this.previewIframeRef.el?.contentDocument) {
+        if (!iframeDoc?.head || !iframeDoc.documentElement) {
+            return;
+        }
+        const css = await getPreviewPaletteCSS(this.orm, this.state, paletteName);
+        let styleEl = iframeDoc.getElementById("o_configurator_preview_palette_test");
+        if (!styleEl) {
+            styleEl = iframeDoc.createElement("style");
+            styleEl.id = "o_configurator_preview_palette_test";
+            iframeDoc.head.appendChild(styleEl);
+        }
+        // Read the new palette colors before the CSS is applied.
+        const colorValues = {};
+        for (const match of css.matchAll(/--o-color-([1-5])\s*:\s*([^;]+);/g)) {
+            colorValues[`o-color-${match[1]}`] = match[2].trim();
+        }
+        this.ensurePreviewShapeSources(iframeDoc);
+        // Preload recolored shapes first so the whole preview switches together.
+        const { imageSrcUpdates, backgroundImageUpdates } =
+            await this.getPreviewDynamicShapeUpdates(iframeDoc, colorValues);
+        styleEl.textContent = css;
+        this.applyPreviewShapeUpdates(imageSrcUpdates, backgroundImageUpdates);
+        this.convertVhToVw(this.previewIframeRef.el, 10 / 16);
+    }
+
+    // Rebuild dynamic shape URLs with the current iframe palette colors.
+    async updatePreviewDynamicShapes(iframeDoc = this.previewIframeRef.el?.contentDocument) {
+        // This is used after iframe reloads, when the preview CSS is already on
+        // the page and we only need to sync dynamic shape URLs again.
+        this.ensurePreviewShapeSources(iframeDoc);
+        const { imageSrcUpdates, backgroundImageUpdates } =
+            await this.getPreviewDynamicShapeUpdates(iframeDoc);
+        this.applyPreviewShapeUpdates(imageSrcUpdates, backgroundImageUpdates);
+    }
+
+    ensurePreviewShapeSources(iframeDoc = this.previewIframeRef.el?.contentDocument) {
+        if (!iframeDoc?.documentElement) {
+            return;
+        }
+        const style = getComputedStyle(iframeDoc.documentElement);
+        const paletteColors = Object.fromEntries(
+            [1, 2, 3, 4, 5]
+                .map((i) => [
+                    normalizeCSSColor(getCSSVariableValue(`o-color-${i}`, style)),
+                    `o-color-${i}`,
+                ])
+                .filter(([color]) => color)
         );
-        // Filter the extra themes to not propose a theme that is already
-        // present in the main themes.
-        const mainThemeNames = this.state.themes.map((theme) => theme.name);
-        this.state.extraThemes = themes.filter(
-            (extraTheme) => !mainThemeNames.includes(extraTheme.name)
-        );
-        this.state.extraThemesLoaded = true;
-        this.uiService.unblock();
+        const getPaletteShapeURL = (originalSrc) => {
+            const url = new URL(originalSrc, window.location.origin);
+            url.searchParams.forEach((value, key) => {
+                if (!/^c[1-5]$/.test(key)) {
+                    return;
+                }
+                const paletteColorName = paletteColors[normalizeCSSColor(value)];
+                if (paletteColorName) {
+                    url.searchParams.set(key, paletteColorName);
+                }
+            });
+            return url.pathname + url.search;
+        };
+        for (const imgEl of iframeDoc.querySelectorAll("img")) {
+            if (imgEl.dataset.configuratorOriginalSrc) {
+                continue;
+            }
+            const originalSrc = imgEl.getAttribute("src") || "";
+            if (!PREVIEW_IMAGE_SHAPE_URL_REGEX.test(originalSrc)) {
+                continue;
+            }
+            // Keep a palette-based source so shapes follow palette changes.
+            imgEl.dataset.configuratorOriginalSrc = getPaletteShapeURL(originalSrc);
+        }
+        for (const shapeEl of iframeDoc.querySelectorAll(".o_we_shape")) {
+            if (shapeEl.dataset.configuratorOriginalBgSrc) {
+                continue;
+            }
+            const originalSrc = getBgImageURLFromEl(shapeEl);
+            if (!originalSrc || !PREVIEW_DYNAMIC_IMAGE_URL_REGEX.test(originalSrc)) {
+                continue;
+            }
+            // Keep a palette-based source so shapes follow palette changes.
+            shapeEl.dataset.configuratorOriginalBgSrc = getPaletteShapeURL(originalSrc);
+        }
     }
 
-    getExtraThemeName(idx) {
-        return this.state.extraThemes.length > idx && this.state.extraThemes[idx].name;
+    applyPreviewShapeUpdates(imageSrcUpdates, backgroundImageUpdates) {
+        imageSrcUpdates.forEach(({ el, originalSrc, src }) => {
+            el.dataset.configuratorOriginalSrc = originalSrc;
+            el.setAttribute("src", src);
+        });
+        backgroundImageUpdates.forEach(({ el, originalSrc, src }) => {
+            el.dataset.configuratorOriginalBgSrc = originalSrc;
+            el.style.setProperty("background-image", `url("${src}")`);
+        });
+    }
+
+    async getPreviewDynamicShapeUpdates(
+        iframeDoc = this.previewIframeRef.el?.contentDocument,
+        colorValues = null
+    ) {
+        if (!iframeDoc?.documentElement) {
+            return { imageSrcUpdates: [], backgroundImageUpdates: [] };
+        }
+        const style = getComputedStyle(iframeDoc.documentElement);
+        const colorizeShapeURL = (originalSrc) => {
+            const url = new URL(originalSrc, window.location.origin);
+            url.searchParams.forEach((value, key) => {
+                const match = value.match(/^o-color-([1-5])$/);
+                if (/^c[1-5]$/.test(key) && match) {
+                    url.searchParams.set(
+                        key,
+                        colorValues?.[`o-color-${match[1]}`] ||
+                            getCSSVariableValue(`o-color-${match[1]}`, style)
+                    );
+                }
+            });
+            return url.pathname + url.search;
+        };
+        const imageSrcUpdates = [];
+        for (const imgEl of iframeDoc.querySelectorAll("img")) {
+            const src = imgEl.getAttribute("src") || "";
+            if (!PREVIEW_DYNAMIC_IMAGE_URL_REGEX.test(src)) {
+                continue;
+            }
+            // Keep the original palette-based URL so each palette change starts
+            // from c1=o-color-1, c2=o-color-2, ...
+            const originalSrc = imgEl.dataset.configuratorOriginalSrc || src;
+            imageSrcUpdates.push({ el: imgEl, originalSrc, src: colorizeShapeURL(originalSrc) });
+        }
+        const backgroundImageUpdates = [];
+        for (const shapeEl of iframeDoc.querySelectorAll(".o_we_shape")) {
+            const originalSrc =
+                shapeEl.dataset.configuratorOriginalBgSrc || getBgImageURLFromEl(shapeEl);
+            if (!originalSrc || !PREVIEW_DYNAMIC_IMAGE_URL_REGEX.test(originalSrc)) {
+                continue;
+            }
+            backgroundImageUpdates.push({
+                el: shapeEl,
+                originalSrc,
+                src: colorizeShapeURL(originalSrc),
+            });
+        }
+        // Wait for the new URLs before applying them to avoid a short flash.
+        await Promise.all(
+            [...new Set([...imageSrcUpdates, ...backgroundImageUpdates].map(({ src }) => src))].map(
+                (src) => loadImage(src).catch(() => null)
+            )
+        );
+        return { imageSrcUpdates, backgroundImageUpdates };
+    }
+
+    cleanValue(value) {
+        return value.trim().replace(/^['"]|['"]$/g, "");
+    }
+    async getFonts() {
+        const iframeDoc = this.previewIframeRef.el?.contentDocument;
+        const iframeRoot = iframeDoc?.documentElement;
+        if (!iframeRoot) {
+            return;
+        }
+        const style = getComputedStyle(iframeRoot);
+        const numberOfFonts = Number.parseInt(style.getPropertyValue("--number-of-fonts"), 10) || 0;
+        const getFontList = (cssVarName) =>
+            style
+                .getPropertyValue(cssVarName)
+                .replace(/[()]/g, "")
+                .split(",")
+                .map((value) => this.cleanValue(value))
+                .filter(Boolean);
+
+        const fonts = {};
+        const fontNameToId = {};
+        const fontUrls = new Set();
+        let nextFontId = 0;
+
+        for (let i = 1; i <= numberOfFonts; i++) {
+            const fontName = this.cleanValue(style.getPropertyValue(`--font-number-${i}`));
+            const fontFamily = style.getPropertyValue(`--font-family-number-${i}`).trim();
+            if (!fontName || !fontFamily) {
+                continue;
+            }
+            const fontId = nextFontId++;
+            fonts[fontId] = {
+                name: fontName,
+                bodyFamily: fontFamily,
+                headingsFamily: "",
+            };
+            if (fontNameToId[fontName] === undefined) {
+                fontNameToId[fontName] = fontId;
+            }
+            const fontUrl = this.cleanValue(style.getPropertyValue(`--font-url-number-${i}`));
+            if (fontUrl) {
+                fontUrls.add(fontUrl);
+            }
+        }
+
+        const recommendedBodyFonts = [
+            this.cleanValue(style.getPropertyValue("--font")),
+            ...getFontList("--alternative-fonts"),
+        ].filter(Boolean);
+        const recommendedHeadingsFonts = [
+            this.cleanValue(style.getPropertyValue("--headings-font")),
+            ...getFontList("--alternative-headings-fonts"),
+        ].filter(Boolean);
+        const recommendedFontIds = [];
+        const seenBaseFontIds = {};
+        for (const [index, bodyFontName] of recommendedBodyFonts.entries()) {
+            const baseFontId = fontNameToId[bodyFontName];
+            if (baseFontId === undefined) {
+                continue;
+            }
+            let fontId = baseFontId;
+            if (seenBaseFontIds[baseFontId]) {
+                fontId = nextFontId++;
+                fonts[fontId] = { ...fonts[baseFontId] };
+            }
+            seenBaseFontIds[baseFontId] = true;
+            fonts[fontId].headingsFamily = recommendedHeadingsFonts[index] || "";
+            recommendedFontIds.push(fontId);
+        }
+
+        const addFontLink = (targetDoc, href) => {
+            if (!targetDoc?.head) {
+                return;
+            }
+            if (targetDoc.head.querySelector(`link[href="${href}"]`)) {
+                return;
+            }
+            const link = targetDoc.createElement("link");
+            link.rel = "stylesheet";
+            link.href = href;
+            targetDoc.head.appendChild(link);
+        };
+
+        for (const fontUrl of fontUrls) {
+            const href = `https://fonts.googleapis.com/css?family=${fontUrl}&display=swap`;
+            addFontLink(iframeDoc, href);
+            addFontLink(document, href);
+        }
+
+        this.state.fonts = fonts;
+        this.state.fontIds = recommendedFontIds;
+        if (this.state.selectedFont === undefined || !fonts[this.state.selectedFont]) {
+            this.state.selectedFont = recommendedFontIds[0];
+        }
+        const previewFontNames = [...recommendedBodyFonts, ...recommendedHeadingsFonts].filter(
+            Boolean
+        );
+        await Promise.all(
+            previewFontNames.map((fontName) =>
+                document.fonts.load(`1em "${fontName}"`).catch(() => null)
+            )
+        );
+    }
+
+    setFont(font) {
+        this.state.selectedFont = font;
+        this.applyPreviewFont();
+    }
+
+    setPreviewDevice(device) {
+        this.previewDevice.value = device;
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                this.scalePreviewIframe();
+            });
+        });
+    }
+
+    get isPreviewMobile() {
+        return this.previewDevice.value === "mobile";
+    }
+
+    nextStep() {
+        return this.startBuilding();
+    }
+
+    async onPreviewIframeLoad() {
+        const hadGeneratorNotification = !!this.closeGeneratorNotification;
+        const iframeDoc = this.previewIframeRef.el?.contentDocument;
+        if (iframeDoc) {
+            this.deactivatePreviewInteractions(iframeDoc);
+            this.setPreviewLogo(iframeDoc);
+            await this.getFonts();
+            this.applyPreviewFont();
+            if (!this.state.recommendedPalettes?.length) {
+                this.initializePalettesFromPreview();
+            }
+            this.schedulePreviewPalettePrefetch();
+            const mainPalette = this.cleanValue(
+                getComputedStyle(iframeDoc.documentElement).getPropertyValue(
+                    "--color-palettes-name"
+                )
+            );
+            if (
+                this.state.selectedPalette &&
+                (this.state.selectedPalette === "logoPalette" ||
+                    this.state.selectedPalette !== mainPalette)
+            ) {
+                await this.applyPreviewPalette(this.state.selectedPalette, iframeDoc);
+            }
+            await this.updatePreviewDynamicShapes(iframeDoc);
+        }
+        this.closeGeneratorNotification?.();
+        this.closeGeneratorNotification = null;
+        if (hadGeneratorNotification) {
+            this.notification.add(_t("Your website content has been generated."), {
+                type: "success",
+            });
+        }
+        this.previewState.initialLoaded = true;
+        this.state.previewIsLoading = false;
+        this.scalePreviewIframe();
+        const iframe = this.previewIframeRef.el;
+        this.convertVhToVw(iframe, 10 / 16);
+    }
+
+    convertVhToVw(iframe, ratio) {
+        const doc = iframe.contentDocument;
+        if (!doc) {
+            return;
+        }
+
+        for (const sheet of doc.styleSheets) {
+            let rules;
+            try {
+                rules = sheet.cssRules;
+            } catch {
+                continue;
+            }
+
+            if (!rules) {
+                continue;
+            }
+
+            for (const rule of rules) {
+                if (!rule.style) {
+                    continue;
+                }
+
+                for (let i = 0; i < rule.style.length; i++) {
+                    const prop = rule.style[i];
+                    const value = rule.style.getPropertyValue(prop);
+
+                    if (!value.includes("vh")) {
+                        continue;
+                    }
+
+                    const newValue = value.replace(/([\d.]+)vh/g, (_, v) => {
+                        const vw = parseFloat(v) * ratio;
+                        return `${vw}vw`;
+                    });
+
+                    const priority = rule.style.getPropertyPriority(prop);
+                    rule.style.setProperty(prop, newValue, priority);
+                }
+            }
+        }
+    }
+
+    convertInlineVhToVw(iframe, ratio) {
+        const doc = iframe.contentDocument;
+        if (!doc) {
+            return;
+        }
+
+        doc.querySelectorAll("*").forEach((el) => {
+            for (let i = 0; i < el.style.length; i++) {
+                const prop = el.style[i];
+                const value = el.style.getPropertyValue(prop);
+                if (!value.includes("vh")) {
+                    continue;
+                }
+                const newValue = value.replace(/([\d.]+)vh/g, (_, v) => {
+                    const vw = parseFloat(v) * ratio;
+                    return `${vw}vw`;
+                });
+                const priority = el.style.getPropertyPriority(prop);
+                el.style.setProperty(prop, newValue, priority);
+            }
+        });
+    }
+
+    scalePreviewIframe() {
+        const iframe = this.previewIframeRef.el;
+        if (!iframe) {
+            return;
+        }
+        if (this.isPreviewMobile) {
+            iframe.style.removeProperty("width");
+            iframe.style.removeProperty("height");
+            iframe.style.removeProperty("transform");
+            iframe.style.removeProperty("transform-origin");
+            iframe.style.removeProperty("flex");
+            return;
+        }
+
+        const previewContainer = iframe.parentElement;
+
+        const topBarHeight =
+            previewContainer.querySelector(".o_configurator_preview_iframe_topbar").offsetHeight ||
+            0;
+
+        const availableWidth = previewContainer.clientWidth;
+        const availableHeight = previewContainer.clientHeight - topBarHeight;
+
+        if (!availableWidth || !availableHeight) {
+            return;
+        }
+
+        const scale = Math.min(1, availableWidth / DESKTOP_PREVIEW_WIDTH);
+
+        iframe.style.setProperty("width", `${DESKTOP_PREVIEW_WIDTH}px`, "important");
+        iframe.style.setProperty("height", `${Math.floor(availableHeight / scale)}px`, "important");
+        iframe.style.setProperty("transform-origin", "top left");
+        iframe.style.setProperty("transform", `scale(${scale})`);
+        iframe.style.setProperty("flex", "0 0 auto", "important");
+        if (this.previewInlineVhConversionTimeout) {
+            browser.clearTimeout(this.previewInlineVhConversionTimeout);
+        }
+        this.previewInlineVhConversionTimeout = browser.setTimeout(() => {
+            this.previewInlineVhConversionTimeout = null;
+            this.convertInlineVhToVw(iframe, 10 / 16);
+        }, 250);
+    }
+
+    deactivatePreviewInteractions(iframeDoc) {
+        const stopInteraction = (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+        };
+        iframeDoc.addEventListener("click", stopInteraction, true);
+        iframeDoc.addEventListener("submit", stopInteraction, true);
+    }
+
+    applyPreviewFont(iframeDoc = this.previewIframeRef.el?.contentDocument) {
+        if (iframeDoc?.body) {
+            const fontConfig = this.state.fonts?.[this.state.selectedFont];
+            if (!fontConfig) {
+                return;
+            }
+            iframeDoc.body.style.fontFamily = fontConfig.bodyFamily || "";
+            for (const el of iframeDoc.querySelectorAll(
+                "h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4"
+            )) {
+                el.style.fontFamily = fontConfig.headingsFamily;
+            }
+        }
+    }
+
+    changeTone(tone) {
+        this.state.selectedTone = tone;
+    }
+
+    generateContent() {
+        const userPrompt = document.getElementById("describeYourWebsiteTextarea").value || "";
+        const params = new URLSearchParams({
+            industry: this.state.selectedIndustry.label,
+            industry_id: this.state.selectedIndustry.id,
+            install_theme: "0",
+            theme_name: this.state.selectedTheme || "theme_default",
+            generate_content: "1",
+            user_prompt: userPrompt !== "" ? userPrompt : null,
+            tone: this.state.selectedTone || null,
+            with_images: "1",
+        });
+        const iframe = this.previewIframeRef.el;
+        if (iframe) {
+            this.closeGeneratorNotification?.();
+            this.closeGeneratorNotification = this.notification.add(
+                markup`<i class="fa fa-circle-o-notch fa-spin me-2" role="img" aria-label="${_t(
+                    "Loading"
+                )}"></i>${_t("Generating your website content with AI...")}`,
+                {
+                    type: "info",
+                    sticky: true,
+                }
+            );
+            iframe.src = `/website/configurator/preview?${params.toString()}&preview_ts=${Date.now()}`;
+        }
+    }
+
+    get previewUrl() {
+        const params = new URLSearchParams({
+            industry: this.state.selectedIndustry.label,
+            industry_id: this.state.selectedIndustry.id,
+            install_theme: "1",
+            theme_name: this.state.selectedTheme || "theme_default",
+            generate_content: "0",
+            with_images: "1",
+        });
+        this.images_loaded = true;
+        return `/website/configurator/preview?${params.toString()}`;
     }
 }
 
@@ -937,24 +1551,8 @@ export class Store {
         return id && WEBSITE_PURPOSES[id];
     }
 
-    getFeatures() {
-        return Object.values(this.features);
-    }
-
-    getPalettes() {
-        return Object.values(this.palettes);
-    }
-
     getThemeName(idx) {
         return this.themes.length > idx && this.themes[idx].name;
-    }
-
-    /**
-     * @returns {string | false}
-     */
-    getSelectedPaletteName() {
-        const palette = this.selectedPalette;
-        return palette ? palette.name || "recommendedPalette" : false;
     }
 
     //-------------------------------------------------------------------------
@@ -962,13 +1560,6 @@ export class Store {
     //-------------------------------------------------------------------------
 
     selectWebsiteType(id) {
-        Object.values(this.features)
-            .filter((feature) => feature.module_state !== "installed")
-            .forEach((feature) => {
-                feature.selected = feature.website_config_preselection.includes(
-                    WEBSITE_TYPES[id].name
-                );
-            });
         this.selectedType = id;
     }
 
@@ -979,13 +1570,6 @@ export class Store {
         if (!id && this.selectedPurpose) {
             this.formerSelectedPurpose = this.selectedPurpose;
         }
-        Object.values(this.features)
-            .filter((feature) => feature.module_state !== "installed")
-            .forEach((feature) => {
-                // need to check id, since we set to undefined in mount() to avoid the auto next screen on back button
-                feature.selected |=
-                    id && feature.website_config_preselection.includes(WEBSITE_PURPOSES[id].name);
-            });
         this.selectedPurpose = id;
     }
 
@@ -1003,25 +1587,15 @@ export class Store {
     }
 
     selectPalette(paletteName) {
-        if (paletteName === "recommendedPalette") {
-            this.selectedPalette = this.recommendedPalette;
-        } else {
-            this.selectedPalette = this.palettes[paletteName];
-        }
+        this.selectedPalette = paletteName;
     }
 
-    toggleFeature(featureId) {
-        const feature = this.features[featureId];
-        const isModuleInstalled = feature.module_state === "installed";
-        feature.selected = !feature.selected || isModuleInstalled;
-    }
-
-    setRecommendedPalette(color1, color2) {
+    setLogoPalette(color1, color2) {
         if (color1 && color2) {
             if (color1 === color2) {
                 color2 = mixCssColors("#FFFFFF", color1, 0.2);
             }
-            const recommendedPalette = {
+            const logoPalette = {
                 color1: color1,
                 color2: color2,
                 color3: mixCssColors("#FFFFFF", color2, 0.9),
@@ -1029,13 +1603,13 @@ export class Store {
                 color5: mixCssColors(color1, "#000000", 0.125),
             };
             CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
-                recommendedPalette[attr] = recommendedPalette[this.defaultColors[attr]];
+                logoPalette[attr] = logoPalette[this.defaultColors[attr]];
             });
-            this.recommendedPalette = recommendedPalette;
+            this.logoPalette = logoPalette;
         } else {
-            this.recommendedPalette = undefined;
+            this.logoPalette = undefined;
         }
-        this.selectedPalette = this.recommendedPalette;
+        // Keep the extracted logo palette available without changing selection.
     }
 
     updateRecommendedThemes(themes) {
@@ -1050,11 +1624,9 @@ export function useStore() {
 
 export class Configurator extends Component {
     static components = {
-        WelcomeScreen,
         DescriptionScreen,
-        PaletteSelectionScreen,
-        FeaturesSelectionScreen,
         ThemeSelectionScreen,
+        SetupStyleScreen,
     };
     static template = "website.Configurator.Configurator";
     static props = { ...standardActionServiceProps };
@@ -1123,16 +1695,12 @@ export class Configurator extends Component {
     }
 
     get currentComponent() {
-        if (this.state.currentStep === ROUTES.descriptionScreen) {
-            return DescriptionScreen;
-        } else if (this.state.currentStep === ROUTES.paletteSelectionScreen) {
-            return PaletteSelectionScreen;
-        } else if (this.state.currentStep === ROUTES.featuresSelectionScreen) {
-            return FeaturesSelectionScreen;
-        } else if (this.state.currentStep === ROUTES.themeSelectionScreen) {
+        if (this.state.currentStep === ROUTES.themeSelectionScreen) {
             return ThemeSelectionScreen;
+        } else if (this.state.currentStep === ROUTES.setupStyleScreen) {
+            return SetupStyleScreen;
         }
-        return WelcomeScreen;
+        return DescriptionScreen;
     }
 
     get componentProps() {
@@ -1140,7 +1708,10 @@ export class Configurator extends Component {
             skip: this.skipConfigurator.bind(this),
             navigate: this.navigate.bind(this),
         };
-        if (this.state.currentStep === ROUTES.themeSelectionScreen) {
+        if (
+            this.state.currentStep === ROUTES.themeSelectionScreen ||
+            this.state.currentStep === ROUTES.setupStyleScreen
+        ) {
             props.clearStorage = this.clearStorage.bind(this);
         }
         return props;
@@ -1177,7 +1748,15 @@ export class Configurator extends Component {
         const palettes = {};
         const style = window.getComputedStyle(document.documentElement);
 
-        PALETTE_NAMES.forEach((paletteName) => {
+        const paletteNames = getCSSVariableValue("palette-names", style)
+            .replace(/[()]/g, "")
+            .split(/[,\s]+/)
+            .map((name) => name.trim().replace(/^['"]|['"]$/g, ""))
+            .filter(Boolean);
+
+        const allPaletteNames = paletteNames.length ? paletteNames : PALETTE_NAMES;
+
+        allPaletteNames.forEach((paletteName) => {
             const palette = {
                 name: paletteName,
             };
@@ -1195,21 +1774,15 @@ export class Configurator extends Component {
 
         const localState = JSON.parse(sessionStorage.getItem(this.storageItemName));
         if (localState) {
-            let themes = [];
-            if (localState.selectedIndustry && localState.selectedPalette) {
-                themes = await getRecommendedThemes(this.orm, localState);
-            }
-            return Object.assign(r, { ...localState, palettes, themes });
-        }
-
-        const features = {};
-        results.features.forEach((feature) => {
-            features[feature.id] = Object.assign({}, feature, {
-                selected: feature.module_state === "installed",
+            return Object.assign(r, {
+                featuredPaletteNames: [],
+                ...localState,
+                palettes,
+                previewPaletteCSS: {},
+                previewPaletteCSSPromises: {},
+                themes: [],
             });
-            const wtp = features[feature.id]["website_config_preselection"];
-            features[feature.id]["website_config_preselection"] = wtp ? wtp.split(",") : [];
-        });
+        }
 
         // Palette color used by default as background color for menu and footer.
         // Needed to build the recommended palette.
@@ -1227,10 +1800,14 @@ export class Configurator extends Component {
             formerSelectedPurpose: undefined,
             selectedIndustry: undefined,
             selectedPalette: undefined,
-            recommendedPalette: undefined,
+            selectedTheme: undefined,
+            previewIsLoading: false,
+            featuredPaletteNames: [],
+            logoPalette: undefined,
             defaultColors: defaultColors,
             palettes: palettes,
-            features: features,
+            previewPaletteCSS: {},
+            previewPaletteCSSPromises: {},
             themes: [],
             logoAttachmentId: undefined,
         });
@@ -1239,15 +1816,17 @@ export class Configurator extends Component {
     updateStorage(state) {
         const newState = JSON.stringify({
             defaultColors: state.defaultColors,
-            features: state.features,
             logo: state.logo,
             logoAttachmentId: state.logoAttachmentId,
             selectedIndustry: state.selectedIndustry,
             selectedPalette: state.selectedPalette,
+            selectedTheme: state.selectedTheme,
             selectedPurpose: state.selectedPurpose,
             formerSelectedPurpose: state.formerSelectedPurpose,
             selectedType: state.selectedType,
-            recommendedPalette: state.recommendedPalette,
+            selectedFont: state.selectedFont,
+            featuredPaletteNames: state.featuredPaletteNames,
+            logoPalette: state.logoPalette,
         });
         sessionStorage.setItem(this.storageItemName, newState);
     }

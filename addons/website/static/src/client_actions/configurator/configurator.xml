@@ -1,288 +1,349 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="website.Configurator.SkipButton">
-        <div class="container-fluid py-2 pb-md-3 text-end pe-lg-5">
-            <button class="btn btn-link btn-lg" t-on-click="this.props.skip">Skip and start from scratch</button>
-        </div>
-    </t>
-
-    <t t-name="website.Configurator.WelcomeScreen">
-        <div class="o_configurator_screen h-100 d-flex flex-column o_welcome_screen">
-            <div class="o_configurator_screen_content d-flex h-100">
-                <div class="container align-self-center o_configurator_show">
-                    <div class="display-2 mb-2">Ready to build the <br class="d-none d-lg-inline"/>
-                    <b>perfect website?</b>
-                </div>
-                <div class="h1 fw-light mb-4 text-600">We'll set you up and running in <b>4 steps</b>
-                </div>
-                <button class="o_configurator_show btn btn-primary btn-lg px-4 py-2" t-on-click="this.goToDescription">Let's do it</button>
-            </div>
-        </div>
-        <SkipButton skip="this.props.skip"/>
+<t t-name="website.Configurator.SkipButton">
+    <div class="container-fluid py-2 pb-md-3 text-end pe-lg-5">
+        <button class="btn btn-lg text-muted" t-on-click="this.props.skip">Skip and start from scratch</button>
     </div>
 </t>
 
 <t t-name="website.Configurator.DescriptionScreen">
     <div class="o_configurator_screen h-100 d-flex flex-column o_description_screen"
          t-on-focusin="this.onConfiguratorScreenFocusin">
-        <div class="o_configurator_screen_content d-flex h-100 flex-grow-1">
-            <div class="container align-self-center">
-                <div class="o_configurator_typing_text d-inline d-md-block mb-md-2 mb-lg-4 o_configurator_show">
-                    <span>I want </span>
-                    <div t-attf-class="dropdown o_configurator_type_dd d-inline-block {{this.state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}"
-                         t-on-focusout="this.onDropdownFocusout">
-                        <button id="selectTypeToggle"
-                                class="o_btn_reset w-100 px-2"
-                                data-bs-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="true"
-                                aria-label="What type of website?"
-                                aria-controls="selectTypeMenu">
-                            <span class="d-flex align-items-center">
-                                <i class="text-primary" t-if="this.state.selectedType">
-                                    <t t-out="this.state.getSelectedType(this.state.selectedType).label"/>
-                                </i>
-                                <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
-                            </span>
-                        </button>
-                        <div id="selectTypeMenu"
-                             t-attf-class="dropdown-menu border-0 shadow-lg {{this.state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}"
-                             role="menu"
-                             aria-labelledby="selectTypeToggle">
-                            <t t-foreach="this.state.getWebsiteTypes()" t-as="type" t-key="type.name">
-                                <button t-att-title="type.name"
-                                        t-on-click="() => this.selectWebsiteType(type.id)"
-                                        class="dropdown-item o_change_website_type"
-                                        role="menuitem"
-                                        t-custom-ref="{{type.id === 1 ? 'autofocus' : type.name}}">
-                                    <t t-out="type.label"/>
-                                </button>
-                            </t>
-                        </div>
-                    </div>
-                    <span t-if="this.state.selectedType" class="me-2 o_configurator_show"> for my</span>
+        <div class="o_configurator_screen_content h-100">
+            <div class="container-fluid px-3 px-xl-5 d-flex flex-column h-100">
+                <div class="o_configurator_typing_text pt-3 mb-4">
+                    Build your perfect <b>website</b>
                 </div>
-                <div t-if="this.state.selectedType" class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 o_configurator_show">
-                    <!-- Use t-set in order to be able to translate, if put in the attribute directly then export POT file will not exist this text-->
-                    <label class="o_configurator_industry_wrapper me-2" t-custom-ref="industrySelection">
-                        <AutoComplete
-                            placeholder.translate="Restaurant, Hair Salon, Clothing Store,..."
-                            value="this.state.selectedIndustry?.label ?? ''"
-                            sources="this.sources"
-                            onInput.bind="this.onAutocompleteInput"
-                            inputDebounceDelay="100"
-                            menuPositionOptions="{ position: 'bottom-fit' }"
-                            menuCssClass="'custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast o_configurator_industry_dropdown'"
-                            selectOnBlur="true"
-                            autoSelect="true"
-                        />
-                    </label>
-                    <span> business</span>
-                    <span t-if="this.state.selectedIndustry" class="o_configurator_show">,</span>
-                </div>
-                <div t-if="this.state.selectedType and this.state.selectedIndustry" class="o_configurator_typing_text d-inline d-md-block mb-md-2 mb-lg-4 o_configurator_show">
-                    <span>with the main objective to </span>
-                    <div t-attf-class="dropdown d-inline-block o_configurator_purpose_dd {{this.state.selectedPurpose ? 'o_step_completed' : 'o_step_todo'}}"
-                         t-on-focusout="this.onDropdownFocusout">
-                        <button id="selectPurposeToggle"
-                                class="o_btn_reset w-100 px-2"
-                                data-bs-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="true"
-                                aria-label="To what purpose?"
-                                aria-controls="selectPurposeMenu">
-                            <span class="d-flex align-items-center">
-                                <t t-if="this.state.selectedPurpose">
-                                    <t t-out="this.state.getSelectedPurpose(this.state.selectedPurpose).label"/>
+                <div class="container flex-grow-1 d-flex flex-column justify-content-center mb-5">
+                    <div class="o_configurator_typing_text d-inline d-m  d-block mb-md-2 mb-lg-4 o_configurator_show">
+                        <span>I want </span>
+                        <div t-attf-class="dropdown o_configurator_type_dd d-inline-block {{this.state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}"
+                            t-on-focusout="this.onDropdownFocusout">
+                            <button id="selectTypeToggle"
+                                    class="o_btn_reset w-100 px-2"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="true"
+                                    aria-label="What type of website?"
+                                    aria-controls="selectTypeMenu">
+                                <span class="d-flex align-items-center">
+                                    <i class="text-primary" t-if="this.state.selectedType">
+                                        <t t-out="this.state.getSelectedType(this.state.selectedType).label"/>
+                                    </i>
+                                    <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
+                                </span>
+                            </button>
+                            <div id="selectTypeMenu"
+                                t-attf-class="dropdown-menu border-0 shadow-lg {{this.state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}"
+                                role="menu"
+                                aria-labelledby="selectTypeToggle">
+                                <t t-foreach="this.state.getWebsiteTypes()" t-as="type" t-key="type.name">
+                                    <button t-att-title="type.name"
+                                            t-on-click="() => this.selectWebsiteType(type.id)"
+                                            class="dropdown-item o_change_website_type"
+                                            role="menuitem"
+                                            t-custom-ref="{{type.id === 1 ? 'autofocus' : type.name}}">
+                                        <t t-out="type.label"/>
+                                    </button>
                                 </t>
-                                <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
-                            </span>
-                        </button>
-                        <div id="selectPurposeMenu" class="dropdown-menu border-0 shadow-lg show" role="menu" aria-labelledby="selectPurposeToggle">
-                            <t t-foreach="this.state.getWebsitePurpose()" t-as="type" t-key="type.id">
-                                <button t-on-click="() => this.selectWebsitePurpose(type.id)"
-                                        class="dropdown-item o_change_website_purpose"
-                                        role="menuitem"
-                                        t-custom-ref="{{type.id === 1 ? 'purposeSelection' : type.name}}">
-                                    <t t-out="type.label"/>
-                                </button>
-                            </t>
+                            </div>
+                        </div>
+                        <span t-if="this.state.selectedType" class="me-2 o_configurator_show"> for my</span>
+                    </div>
+                    <div t-att-class="{ 'invisible': !this.state.selectedType }" class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 o_configurator_show">
+                        <!-- Use t-set in order to be able to translate, if put in the attribute directly then export POT file will not exist this text-->
+                        <label class="o_configurator_industry_wrapper me-2" t-custom-ref="industrySelection">
+                            <AutoComplete
+                                placeholder.translate="Restaurant, Hair Salon, Clothing Store,..."
+                                value="this.state.selectedIndustry?.label ?? ''"
+                                sources="this.sources"
+                                onInput.bind="this.onAutocompleteInput"
+                                inputDebounceDelay="100"
+                                menuPositionOptions="{ position: 'bottom-fit' }"
+                                menuCssClass="'custom-ui-autocomplete shadow-lg border-0 o_configurator_show_fast o_configurator_industry_dropdown'"
+                                selectOnBlur="true"
+                                autoSelect="true"
+                            />
+                        </label>
+                        <span> business</span>
+                        <span t-if="this.state.selectedIndustry" class="o_configurator_show">,</span>
+                    </div>
+                    <div t-att-class="{ 'invisible': !this.state.selectedType or !this.state.selectedIndustry }" class="o_configurator_typing_text d-inline d-md-block mb-md-2 mb-lg-4 o_configurator_show">
+                        <span>with the main objective to </span>
+                        <div t-attf-class="dropdown d-inline-block o_configurator_purpose_dd {{this.state.selectedPurpose ? 'o_step_completed' : 'o_step_todo'}}"
+                            t-on-focusout="this.onDropdownFocusout">
+                            <button id="selectPurposeToggle"
+                                    class="o_btn_reset w-100 px-2"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="true"
+                                    aria-label="To what purpose?"
+                                    aria-controls="selectPurposeMenu">
+                                <span class="d-flex align-items-center">
+                                    <t t-if="this.state.selectedPurpose">
+                                        <t t-out="this.state.getSelectedPurpose(this.state.selectedPurpose).label"/>
+                                    </t>
+                                    <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
+                                </span>
+                            </button>
+                            <div id="selectPurposeMenu" class="dropdown-menu border-0 shadow-lg show" role="menu" aria-labelledby="selectPurposeToggle">
+                                <t t-foreach="this.state.getWebsitePurpose()" t-as="type" t-key="type.id">
+                                    <button t-on-click="() => this.selectWebsitePurpose(type.id)"
+                                            class="dropdown-item o_change_website_purpose"
+                                            role="menuitem"
+                                            t-custom-ref="{{type.id === 1 ? 'purposeSelection' : type.name}}">
+                                        <t t-out="type.label"/>
+                                    </button>
+                                </t>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <SkipButton skip="this.props.skip"/>
-    </div>
-</t>
-
-<t t-name="website.Configurator.PaletteSelectionScreen">
-    <div class="o_configurator_screen h-100 d-flex flex-column o_palette_selection_screen">
-        <div class="o_configurator_screen_content container palette_selection d-flex flex-grow-1 h-100">
-            <div class="o_content_container d-flex flex-row w-100 h-auto align-self-md-center o_configurator_show">
-                <div class="o_detect_logo w-25 order-lg-3 my-4 my-md-0 d-flex flex-column">
-                    <div class="h2 text-center">
-                        <b>Detect</b> from Logo</div>
-                    <div class="d-flex flex-column flex-grow-1 py-4">
-                        <button t-on-click="this.uploadLogo" t-attf-class="o_configurator_logo_upload position-relative btn btn-link rounded bg-100 overflow-hidden d-flex flex-grow-1 justify-content-center align-items-center text-decoration-none {{this.state.logo? 'h-50' : ''}}">
-                            <input type="file" class="logo_selection_input" t-on-change="this.changeLogo" style="display:none" name="logo_selection" t-custom-ref="logoSelectionInput" accept="image/*"/>
-                            <div class="h3 o_configurator_logo_button text-center">
-                                <i t-attf-class="fa fa-cloud-upload {{this.state.logo? 'fa-4x' : 'fa-6x'}}"></i>
-                                <div class="text-center">Upload <span t-if="this.state.logo">a new image</span>
-                                </div>
-                            </div>
-                            <div t-if="this.state.logo" class="o_configurator_logo_wrapper position-absolute d-flex justify-content-center align-items-center bg-white w-100 h-100">
-                                <img style="height: 120px" t-attf-src="{{this.state.logo}}" alt="Logo"/>
-                            </div>
-                            <i t-if="this.state.logo" class="fa fa-2x fa-times-circle text-danger position-absolute top-0 end-0 pe-2 pt-2" t-on-click="this.removeLogo"/>
-                        </button>
-                        <div t-if="this.state.recommendedPalette" class="w-75 mx-auto px-2 pt-3" style="max-width: 184px;">
-                            <button t-attf-class="palette_card o_btn_reset w-100 rounded-pill overflow-hidden d-flex {{this.state.getSelectedPaletteName() == 'recommendedPalette' ? 'selected' : ''}}"
-                                 t-on-click="() => this.selectPalette('recommendedPalette')" t-attf-style="background-color: {{this.state.recommendedPalette.color3}}">
-                                <div class="color_sample w-100" t-attf-style="background-color: {{this.state.recommendedPalette.color1}}"/>
-                                <div class="color_sample w-100" t-attf-style="background-color: {{this.state.recommendedPalette.color3}}"/>
-                                <div class="color_sample w-100" t-attf-style="background-color: {{this.state.recommendedPalette.color2}}"/>
-                            </button>
-                            <button class="btn btn-primary btn-lg text-nowrap mt-3 d-block mx-auto" t-on-click="() => this.selectPalette('recommendedPalette')">
-                                Let's go!<i class="fa fa-angle-right text-white-50 ps-2" role="img"/>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="o_palettes_separator position-relative d-flex justify-content-center order-lg-2 w-0 py-3 py-lg-0 px-lg-5 mb-4 mb-lg-0">
-                    <div class="border-top w-100"></div>
-                    <b class="palette_selection_or bg-view text-muted w-lg-100 text-center px-3 py-lg-3">OR</b>
-                    <div class="border-start d-none d-lg-inline h-100 mx-auto w-0"></div>
-                </div>
-                <div class="o_palettes_container w-auto flex-grow-1 o_configurator_show_fast">
-                    <div class="h2 text-center">
-                        <b>Choose</b> a Color Palette</div>
-                    <div class="d-flex flex-wrap align-items-end">
-                        <t t-foreach="this.state.getPalettes()" t-as="palette" t-key="palette_index">
-                            <div class="o_palette_card_container w-25 px-2 pt-3">
-                                <button t-attf-class="palette_card o_btn_reset w-100 rounded-pill overflow-hidden d-flex {{this.state.getSelectedPaletteName() == palette.name ? 'selected' : ''}}"
-                                     t-on-click="() => this.selectPalette(palette.name)" t-attf-style="background-color: {{palette.color3}}">
-                                    <div class="color_sample w-100" t-attf-style="background-color: {{palette.color1}}"/>
-                                    <div class="color_sample w-100" t-attf-style="background-color: {{palette.color3}}"/>
-                                    <div class="color_sample w-100" t-attf-style="background-color: {{palette.color2}}"/>
-                                </button>
-                            </div>
-                        </t>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <SkipButton skip="this.props.skip"/>
-    </div>
-</t>
-
-<t t-name="website.Configurator.FeatureSelection">
-    <div class="o_configurator_screen h-100 d-flex flex-column o_feature_selection_screen">
-        <div class="o_configurator_screen_content container d-flex flex-grow-1 align-items-center">
-            <div class="m-auto d-flex mh-100 flex-column">
-                <div class="o_configurator_typing_text o_configurator_show_fast">Add <b class="text-info">Pages</b> and <b class="text-warning">Features</b></div>
-                <h2 class="o_configurator_show_fast text-muted pb-lg-3">You'll be able to create your pages later on.</h2>
-                <div class="page_feature_selection o_configurator_show mt-lg-3 mx-n2">
-                    <div class="w-100 page_feature_selection d-flex flex-wrap">
-                        <t t-foreach="this.state.getFeatures()" t-as="feature" t-key="feature_index">
-                            <t t-set='isInstalled' t-value="feature.module_state == 'installed'"/>
-                            <div class="o_feature_card_container p-2 w-25" t-if="feature.type != 'empty'">
-                                <div t-attf-class="card h-100 {{isInstalled ? 'card_installed' : (feature.selected ? 'border-success' : '')}}"
-                                     t-on-click="() => this.state.toggleFeature(feature.id)"
-                                     t-on-keydown="this.onKeydown"
-                                     tabindex="0"
-                                     role="button">
-                                    <div class="h3 card-body py-3 px-4 mb-0">
-                                        <t t-if="isInstalled">
-                                            <i t-attf-class="o_configurator_feature_status fa fa-check-circle text-success" title="Already installed"/>
-                                        </t>
-                                        <t t-else="">
-                                            <i t-attf-class="o_configurator_feature_status fa {{feature.selected ? 'fa-check-circle text-success' : 'fa-circle-o text-300'}}" />
-                                        </t>
-                                        <div t-attf-class="h2 mb-0 card-title d-flex align-items-center {{isInstalled ? 'text-muted' : ''}}">
-                                            <i t-attf-class="me-2 fa {{feature.icon}} {{isInstalled ? 'text-muted' : (feature.type == 'page' ? 'text-info' : 'text-warning')}}"/>
-                                            <h3 class="m-1">
-                                                <t t-out="feature.name"/>
-                                            </h3>
-                                        </div>
-                                        <p class="small card-text text-muted" t-out="feature.description"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-                    </div>
-                </div>
-                <div class="pt-2">
-                    <button class="btn btn-primary btn-lg" t-on-click="this.buildWebsite">Build my website</button>
-                </div>
-            </div>
-        </div>
     </div>
 </t>
 
 <t t-name="website.Configurator.ThemeSelectionScreen">
     <div class="o_configurator_screen h-100 d-flex flex-column o_theme_selection_screen">
         <div class="o_configurator_screen_content d-flex flex-column flex-grow-1 align-items-center">
-            <div class="m-auto w-100 w-md-75 w-xl-100">
-                <div class="o_configurator_typing_text text-center mt-4 mb-lg-4">Choose your favorite <b>Theme</b>
+            <div class="container-fluid px-3 px-xl-5">
+                <div class="o_configurator_typing_text pt-3 mb-4">
+                    Choose your favorite <b>style</b>
                 </div>
-                <div class="container">
-                    <div class="row pb-4 pt-5">
-                        <div class="col-12 col-lg-4 d-flex align-items-end mb-4 mb-lg-0">
-                            <t t-if="this.state.getThemeName(1)">
-                                <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
-                                    <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
-                                    <!-- Force LTR to prevent SVG issues in RTL languages -->
-                                    <div class="theme_svg_container rounded overflow-hidden" t-custom-ref="ThemePreview2" dir="ltr"/>
-                                    <button class="o_btn_reset button_area" t-on-click="() => this.chooseTheme(this.state.getThemeName(1))"/>
+                <div class="row row-cols-1 row-cols-lg-3 row-cols-sm-2 g-2 g-sm-3 g-lg-4">
+                    <t t-foreach="this.state.themes" t-as="theme" t-key="theme.name">
+                        <div class="col">
+                            <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast mt-3 mb-2">
+                                <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
+                                <div class="theme_img_container rounded overflow-hidden">
+                                    <img t-att-src="theme.url" t-att-alt="theme.name" class="w-100"/>
                                 </div>
-                            </t>
+                                <button class="o_btn_reset button_area" t-on-click="() => this.chooseTheme(theme.name)"/>
+                            </div>
                         </div>
-                        <div class="col-12 col-lg-4 d-flex align-items-end mb-4 mb-lg-0">
-                            <t t-if="this.state.getThemeName(0)">
-                                <div class="theme_preview border rounded position-relative w-100 o_configurator_show">
-                                    <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
-                                    <!-- Force LTR to prevent SVG issues in RTL languages -->
-                                    <div class="theme_svg_container rounded overflow-hidden" t-custom-ref="ThemePreview1" dir="ltr"/>
-                                    <button class="o_btn_reset button_area" t-on-click="() => this.chooseTheme(this.state.getThemeName(0))"/>
-                                </div>
-                            </t>
-                        </div>
-                        <div class="col-12 col-lg-4 d-flex align-items-end">
-                            <t t-if="this.state.getThemeName(2)">
-                                <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
-                                    <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
-                                    <!-- Force LTR to prevent SVG issues in RTL languages -->
-                                    <div class="theme_svg_container rounded overflow-hidden" t-custom-ref="ThemePreview3" dir="ltr"/>
-                                    <button class="o_btn_reset button_area" t-on-click="() => this.chooseTheme(this.state.getThemeName(2))"/>
-                                </div>
-                            </t>
-                        </div>
-                    </div>
-                    <t t-if="this.showViewMoreThemesButton">
-                        <p style="text-align: center;">
-                            <button class="btn btn-primary btn-lg px-4 py-2 center-block" t-on-click="this.getMoreThemes" t-custom-ref="extraThemesButton">View more themes</button>
-                        </p>
                     </t>
-                    <t t-elif="this.state.extraThemes.length" t-foreach="Array(Math.ceil(this.state.extraThemes.length/3))" t-as="nbrExtraRow" t-key="nbrExtraRow_index">
-                        <div class="row pb-4 pt-5">
-                            <t t-foreach="Array(3)" t-as="nbrExtraCol" t-key="nbrExtraCol_index">
-                                <div class="col-12 col-lg-4 d-flex align-items-end mb-4 mb-lg-0">
-                                    <t t-set="extraThemeId" t-value="nbrExtraRow_index * 3 + nbrExtraCol_index"/>
-                                    <t t-set="extraThemeName" t-value="this.getExtraThemeName(extraThemeId)"/>
-                                    <t t-if="extraThemeName">
-                                        <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
-                                            <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
-                                            <!-- Force LTR to prevent SVG issues in RTL languages -->
-                                            <div class="theme_svg_container rounded overflow-hidden" t-custom-ref="ExtraThemePreview{{extraThemeId}}" dir="ltr"/>
-                                            <button class="o_btn_reset button_area" t-on-click="() => this.chooseTheme(extraThemeName)"/>
+                </div>
+                <div style="min-height: 1px;" t-custom-ref="loadMoreThemes"/>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.Configurator.SetupStyleScreenPaletteButton">
+    <button type="button"
+        class="btn btn-outline-secondary d-flex w-100 o_setup_style_screen_color_palette p-2 position-relative"
+        t-att-class="{'active': this.state.selectedPalette === palette.name}"
+        t-on-click="() => this.setPalette(palette.name)">
+        <t t-foreach="[1, 2, 3, 4, 5]" t-as="i" t-key="i">
+            <span class="flex-grow-1 border rounded"
+                t-attf-style="background-color: {{(palette and palette['color' + i]) || 'transparent'}};"/>
+        </t>
+    </button>
+</t>
+
+<t t-name="website.Configurator.SetupStyleScreen">
+    <div class="o_configurator_screen o_setup_style_screen h-100 d-flex flex-column overflow-hidden">
+        <div class="o_configurator_screen_content h-100 overflow-hidden">
+            <div class="container-fluid p-0 h-100">
+                <div class="row g-0 h-100">
+                    <div class="col-5 col-xl-4 col-xxl-3 d-flex flex-column h-100 bg-white overflow-hidden"
+                        t-att-class="{'pe-none': this.state.previewIsLoading}">
+                        <div class="flex-grow-1 overflow-auto pb-4 px-3"
+                            t-custom-ref="scrollContent"
+                            t-on-scroll="() => this.onScrollContent(this.scrollContentRef, 'isStylePanelBottomReached')">
+                            <div class="o_configurator_typing_text pt-3 mb-4">
+                                <b>Style</b>
+                            </div>
+                            <div class="mb-5">
+                                <h3><b>Logo</b></h3>
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-secondary w-100 p-2 position-relative"
+                                            t-att-class="this.state.logo ? 'bg-transparent' : 'bg-100'"
+                                            t-on-click="this.uploadLogo">
+                                            <input type="file" class="d-none"
+                                                t-on-change="this.onLogoChange" name="logo_selection"
+                                                t-custom-ref="logoSelectionInput" accept="image/*"/>
+                                            <div t-att-class="{'invisible': this.state.logo}">
+                                                <i class="fa fa-cloud-upload fa-2x"></i>
+                                                <p class="text-muted m-0">Upload your logo</p>
+                                            </div>
+                                            <t t-if="this.state.logo">
+                                                <div class="position-absolute top-0 bottom-0 end-0 start-0 py-1 px-4">
+                                                    <img class="h-100 mw-100 object-fit-contain" t-attf-src="{{this.state.logo}}" alt="Logo"/>
+                                                </div>
+                                                <i class="fa fa-trash text-danger position-absolute top-0 end-0 pe-1 pt-1"
+                                                    t-on-click="this.removeLogo"/>
+                                            </t>
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <t t-if="this.state.logoPalette">
+                                            <t t-set="palette" t-value="Object.assign({ name: 'logoPalette' }, this.state.logoPalette)"/>
+                                            <t t-call="website.Configurator.SetupStyleScreenPaletteButton"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-5">
+                                <h3><b>Colors</b></h3>
+                                <div class="row g-3">
+                                    <t t-foreach="!this.previewState.initialLoaded ? this.featuredPalettePlaceholders : this.getFeaturedPalettes()" t-as="palette" t-key="palette.name">
+                                        <div class="col-6" t-att-class="{'o_configurator_screen_option_loading': !this.previewState.initialLoaded}">
+                                            <t t-call="website.Configurator.SetupStyleScreenPaletteButton"/>
+                                        </div>
+                                    </t>
+                                    <a href="#" class="text-center" type="button" data-bs-toggle="offcanvas"
+                                        data-bs-target="#colorPanel" aria-controls="colorPanel">
+                                        <b>Show More</b>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="offcanvas offcanvas-start shadow bg-white" tabindex="-1"
+                                id="colorPanel" aria-labelledby="colorPanelLabel" data-bs-backdrop="false">
+                                <div class="offcanvas-body"
+                                    t-custom-ref="colorPanelBody"
+                                    t-on-scroll="() => this.onScrollContent(this.colorPanelBodyRef, 'isColorPanelBottomReached')">
+                                    <div class="o_configurator_typing_text mb-4">Change <b>Colors</b></div>
+                                    <p class="text-muted mb-2">Recommended</p>
+                                    <div class="row g-3 mb-4">
+                                        <t t-foreach="this.state.recommendedPalettes || []" t-as="palette" t-key="palette.name">
+                                            <div class="col-6">
+                                                <t t-call="website.Configurator.SetupStyleScreenPaletteButton"/>
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <t t-foreach="this.getOtherPaletteSections()" t-as="section" t-key="section.id">
+                                        <p class="text-muted mb-2" t-esc="section.label"/>
+                                        <div class="row g-3 mb-4">
+                                            <t t-foreach="section.palettes" t-as="palette" t-key="palette.name">
+                                                <div class="col-6">
+                                                    <t t-call="website.Configurator.SetupStyleScreenPaletteButton"/>
+                                                </div>
+                                            </t>
                                         </div>
                                     </t>
                                 </div>
-                            </t>
+                                <div class="d-flex w-100 p-3 bg-white"
+                                    t-att-class="{'o_setup_style_screen_buttons': !this.scrollState.isColorPanelBottomReached}">
+                                    <button type="button" class="btn btn-secondary btn-lg ms-auto" data-bs-dismiss="offcanvas">
+                                        <i class="oi oi-chevron-left" role="img"/>
+                                        Back
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mb-5">
+                                <h3><b>Font</b></h3>
+                                <div class="row g-3">
+                                    <t t-foreach="this.previewState.initialLoaded ? (this.state.fontIds || []) : this.fontPlaceholders" t-as="fontId" t-key="this.previewState.initialLoaded ? fontId : fontId.name">
+                                        <div class="col-6" t-att-class="{'o_configurator_screen_option_loading': !this.previewState.initialLoaded}">
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-secondary w-100 h-100 text-start p-3"
+                                                t-att-class="{'active': this.previewState.initialLoaded and this.state.selectedFont === fontId}"
+                                                t-on-click="() => this.previewState.initialLoaded and this.setFont(fontId)"
+                                            >
+                                                <h4 class="mb-1" t-att-style="this.previewState.initialLoaded ? 'font-family: ' + (this.state.fonts[fontId] and this.state.fonts[fontId]['headingsFamily']) : ''">
+                                                    Heading
+                                                </h4>
+                                                <p class="m-0 text-muted small" t-att-style="this.previewState.initialLoaded ? 'font-family: ' + (this.state.fonts[fontId] and this.state.fonts[fontId]['bodyFamily']) : ''">
+                                                    This is a paragraph
+                                                </p>
+                                            </button>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <h3 class="mb-1 d-flex align-items-center g-1">
+                                    <b>Customize your content</b>
+                                    <img t-if="this.isEnterprise" src="/ai/static/description/icon.png" alt="AI" class="o_setup_style_screen_ai_logo ms-1"/>
+                                </h3>
+                                <p class="text-muted small">Describe your website, our AI handles the rest</p>
+                                <div class="position-relative">
+                                    <textarea class="form-control" id="describeYourWebsiteTextarea" rows="5"></textarea>
+                                    <button class="btn btn-info d-flex align-items-center justify-content-center ms-auto mt-1 fa fa-send o_setup_style_screen_ai_btn" t-on-click="this.generateContent">
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <h4 class="mb-2">Tone of voice</h4>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <t t-foreach="this.toneOptions" t-as="tone" t-key="tone.value">
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            t-att-class="{'active': this.state.selectedTone === tone.value}"
+                                            t-on-click="() => this.changeTone(tone.value)">
+                                            <t t-esc="tone.label"/>
+                                        </button>
+                                    </t>
+                                </div>
+                            </div>
                         </div>
-                    </t>
+                        <div class="o_setup_style_screen_footer d-flex p-3 bg-white"
+                            t-att-class="{'o_setup_style_screen_buttons': !this.scrollState.isStylePanelBottomReached}">
+                            <button t-if="this.state.themes.length" type="button" class="btn btn-secondary btn-lg" t-on-click="this.changeTheme">
+                                <i class="oi oi-chevron-left" role="img"/>
+                                Change Theme
+                            </button>
+                            <button type="button" class="btn btn-primary btn-lg ms-auto" t-on-click="this.nextStep">
+                                Start Building
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-7 col-xl-8 col-xxl-9 d-flex bg-100">
+                        <div class="d-flex w-100 flex-column p-4 pt-3">
+                            <div class="d-flex justify-content-center flex-shrink-0">
+                                <div class="d-inline-flex align-items-center gap-1 p-1 pb-2">
+                                    <button
+                                        type="button"
+                                        aria-label="Desktop preview"
+                                        class="btn btn-sm border-0"
+                                        t-on-click="() => this.setPreviewDevice('desktop')"
+                                    >
+                                        <i class="fa fa-desktop"
+                                            t-att-class="{'active text-info bg-100': !this.isPreviewMobile, 'text-muted': this.isPreviewMobile}"
+                                            role="img" aria-hidden="true"
+                                        />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        aria-label="Mobile preview"
+                                        class="btn btn-sm border-0"
+                                        t-on-click="() => this.setPreviewDevice('mobile')"
+                                    >
+                                        <i class="fa fa-mobile"
+                                            t-att-class="{'active text-info bg-100': this.isPreviewMobile, 'text-muted': !this.isPreviewMobile}"
+                                            role="img" aria-hidden="true"
+                                        />
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="o_configurator_preview_iframe_wrapper border rounded bg-white overflow-hidden position-relative shadow-sm d-flex flex-column flex-grow-1"
+                                t-att-class="{'o_configurator_preview_mobile': this.isPreviewMobile}">
+                                <div class="o_configurator_preview_iframe_topbar d-flex align-items-center flex-shrink-0 gap-3 bg-200 border-bottom py-1 px-3">
+                                    <div class="d-flex align-items-center gap-1 flex-shrink-0">
+                                        <span class="d-block p-1 rounded-circle bg-300"/>
+                                        <span class="d-block p-1 rounded-circle bg-300"/>
+                                        <span class="d-block p-1 rounded-circle bg-300"/>
+                                    </div>
+                                    <div class="o_setup_style_screen_fake_searchbar py-1 bg-white rounded-pill opacity-75 mx-auto"/>
+                                </div>
+                                <iframe
+                                    class="o_configurator_preview_iframe w-100 flex-grow-1 border-0 bg-white"
+                                    t-att-class="{'loading': this.state.previewIsLoading}"
+                                    t-custom-ref="previewIframe"
+                                    t-on-load="this.onPreviewIframeLoad"
+                                    t-att-src="this.previewUrl"
+                                />
+                                <div t-if="this.state.previewIsLoading" class="o_configurator_preview_loader position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                    <img src="/web/static/img/spin.svg" alt="Loading..." width="50" height="50"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

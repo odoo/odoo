@@ -378,7 +378,7 @@
         <t t-set="breadcrumb_text_color_class" t-value="breadcrumb_text_color_is_class and breadcrumb_text_color or ''"/>
         <t t-set="breadcrumb_text_color_style" t-value="(not breadcrumb_text_color_is_class) and breadcrumb_text_color or ''"/>
 
-        <div groups="base.group_user" class="o_frontend_to_backend_nav position-fixed d-none">
+        <div groups="base.group_user" t-if="'o_website_theme_configurator_preview' not in (body_classname or '')" class="o_frontend_to_backend_nav position-fixed d-none">
             <svg xmlns="http://www.w3.org/2000/svg" class="o_frontend_to_backend_icon position-absolute" width="24px" height="24px"
                  viewBox="-7 -7 24 24" preserveAspectRatio="xMinYMin">
                 <path fill="#FFF" d="M8 8V1a1 1 0 1 1 2 0v8a1 1 0 0 1-1 1H1a1 1 0 1 1 0-2h7z"/>
@@ -2861,6 +2861,14 @@
 </asset>
 
 <!-- Error and special pages -->
+<template id="theme_configurator_preview" name="Configurator Theme Preview">
+    <t t-call="website.layout" pageName.f="homepage" no_copyright="True">
+        <div id="wrap">
+            <t t-out="preview_body"/>
+        </div>
+    </t>
+</template>
+
 <template id="website_info" name="Odoo Information">
     <t t-set="head">
         <meta name="robots" content="noindex, nofollow"/>

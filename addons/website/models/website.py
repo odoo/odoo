@@ -670,16 +670,6 @@ class Website(models.CachedModel):
         r = dict()
         current_website = self.get_current_website()
         company = current_website.company_id
-        configurator_features = self.env['website.configurator.feature'].search([])
-        r['features'] = [{
-            'id': feature.id,
-            'name': feature.name,
-            'description': feature.description,
-            'type': 'page' if feature.page_view_id else 'app',
-            'icon': feature.icon,
-            'website_config_preselection': feature.website_config_preselection,
-            'module_state': feature.module_id.state,
-        } for feature in configurator_features]
         r['logo'] = False
         if not company.uses_default_logo:
             r['logo'] = company.logo.to_base64()
@@ -693,7 +683,7 @@ class Website(models.CachedModel):
         return r
 
     @api.model
-    def configurator_recommended_themes(self, industry_id, palette, result_nbr_max=3):
+    def configurator_recommended_themes(self, industry_id, result_nbr_max=3):
         Module = request.env['ir.module.module']
         domain = Module.get_themes_domain()
         domain = Domain.AND([[('name', '!=', 'theme_default')], domain])
@@ -706,10 +696,253 @@ class Website(models.CachedModel):
                 'result_nbr_max': result_nbr_max,
             }
         )
-        process_svg = self.env['website.configurator.feature']._process_svg
         for theme in themes_suggested:
-            theme['svg'] = process_svg(theme['name'], palette, theme.pop('image_urls'))
+            theme_module = Module.search([('name', '=', theme['name'])], limit=1)
+            theme['url'] = "/web/image/" + str(theme_module.image_ids[0].id) if theme_module.image_ids else theme_module.icon
         return themes_suggested
+
+    @api.model
+    def theme_configurator_preview_body(self, theme_name, industry, install_theme=False, generate_content=False, user_prompt=None, tone=None, with_images=False, industry_id=0):
+        """Build homepage preview content using a theme configurator snippets."""
+        website = self.get_current_website()
+        if not theme_name:
+            if request:
+                request.session['configurator_generated_homepage_content'] = {}
+            return ''
+
+        Module = request.env['ir.module.module']
+        theme = Module.search(Domain.AND([Module.get_themes_domain(), [('name', '=', theme_name)]]), limit=1)
+        if not theme:
+            if request:
+                request.session['configurator_generated_homepage_content'] = {}
+            return ''
+
+        if install_theme and website.theme_id != theme:
+            theme.button_choose_theme()
+
+        snippet_list = website.get_theme_configurator_snippets(theme_name).get('homepage', [])
+        if not snippet_list:
+            if request:
+                request.session['configurator_generated_homepage_content'] = {}
+            return Markup('<div class="oe_structure"></div>')
+
+        cta_data = website.get_cta_data(None, None)
+        IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
+        html_text_processor = self.env['website.html.text.processor']._with_processing_context(
+            IrQweb=IrQweb,
+            cta_data=cta_data,
+            text_generation_target_lang=website.default_lang_id.code,
+            text_must_be_translated_for_openai=False,
+        )
+        generated_content = {}
+        translated_content = {}
+        for snippet in snippet_list:
+            snippet_key = website._get_snippet_view_key(snippet, 'homepage')
+            html_text_processor, snippet_generated_content, snippet_translated_content = html_text_processor._get_snippet_content(snippet_key)
+            generated_content.update(snippet_generated_content)
+            translated_content.update(snippet_translated_content)
+        homepage_placeholder_keys = set(generated_content)
+
+        footer_ids = [
+            'website.template_footer_contact', 'website.template_footer_headline',
+            'website.footer_custom', 'website.template_footer_links',
+            'website.template_footer_minimalist', 'website.template_footer_mega', 'website.template_footer_mega_columns', 'website.template_footer_mega_links',
+            'website.template_footer_mega_cards', 'website.template_footer_descriptive', 'website.template_footer_centered', 'website.template_footer_call_to_action',
+        ]
+
+        # Extract placeholders from footers
+        for footer_id in footer_ids:
+            view_id = self.env['website'].viewref(footer_id, raise_if_not_found=False)
+            if view_id and view_id.arch_db:
+                html_text_processor, placeholders = html_text_processor._process_snippet(view_id.arch_db, view_id.arch_db)
+                for placeholder in placeholders:
+                    generated_content[placeholder] = ''
+
+        if generate_content:
+            generated_content = self.configurator_generate_AI_content(
+                website,
+                generated_content,
+                translated_content,
+                html_text_processor,
+                industry,
+                user_prompt=user_prompt,
+                tone=tone,
+            )
+
+        theme_customizations = get_manifest(theme_name).get('theme_customizations', {})
+        rendered_snippets = []
+        nb_snippets = len(snippet_list)
+        for i, snippet in enumerate(snippet_list, start=1):
+            try:
+                snippet_key = website._get_snippet_view_key(snippet, 'homepage')
+                el = html_text_processor._update_snippet_content(generated_content, snippet_key)
+
+                # Add the data-snippet attribute to identify the snippet
+                # for compatibility code
+                el.attrib['data-snippet'] = snippet
+
+                # Theme specific customizations for non-website snippets
+                customizations = theme_customizations.get(snippet, {})
+
+                # Configure non-website snippet with defaults and theme-level customizations.
+                website._preconfigure_snippet(snippet, el, customizations)
+
+                # Remove the previews needed for the snippets dialog
+                dialog_preview_els = el.find_class('s_dialog_preview')
+                for preview_el in dialog_preview_els:
+                    preview_el.getparent().remove(preview_el)
+
+                # Tweak the shape of the first snippet to connect it
+                # properly with the header color in some themes
+                if i == 1:
+                    shape_el = el.xpath("//*[hasclass('o_we_shape')]")
+                    if shape_el:
+                        shape_el[0].attrib['class'] += ' o_header_extra_shape_mapping'
+
+                # Tweak the shape of the last snippet to connect it
+                # properly with the footer color in some themes
+                if i == nb_snippets:
+                    shape_el = el.xpath("//*[hasclass('o_we_shape')]")
+                    if shape_el:
+                        shape_el[0].attrib['class'] += ' o_footer_extra_shape_mapping'
+
+                rendered_snippets.append(html.tostring(el, encoding='unicode'))
+            except ValueError as e:
+                logger.warning(e)
+
+        final_html = ''.join(rendered_snippets)
+        custom_resources = {}
+        if with_images:
+            custom_resources = self._website_api_rpc(
+                '/api/website/2/configurator/custom_resources/%s' % (industry_id if industry_id > 0 else ''),
+                {'theme': theme_name}
+            )
+            images_map = custom_resources.get('images', {})
+            fallback_images_map = {
+                f'website.{image_name}': f'website.{fallback_image_name}'
+                for image_name, fallback_image_name in [
+                    ('s_intro_pill_default_image', 'library_image_10'),
+                    ('s_intro_pill_default_image_2', 'library_image_14'),
+                    ('s_banner_default_image_2', 's_image_text_default_image'),
+                    ('s_banner_default_image_3', 's_product_list_default_image_1'),
+                    ('s_striped_top_default_image', 's_picture_default_image'),
+                    ('s_text_cover_default_image', 's_cover_default_image'),
+                    ('s_showcase_default_image', 's_image_text_default_image'),
+                    ('s_image_hexagonal_default_image', 's_cover_default_image'),
+                    ('s_image_hexagonal_default_image_1', 's_company_team_image_1'),
+                    ('s_accordion_image_default_image', 's_image_text_default_image'),
+                    ('s_pricelist_boxed_default_background', 's_product_catalog_default_image'),
+                    ('s_image_title_default_image', 's_cover_default_image'),
+                    ('s_key_images_default_image_1', 's_media_list_default_image_1'),
+                    ('s_key_images_default_image_2', 's_image_text_default_image'),
+                    ('s_key_images_default_image_3', 's_media_list_default_image_2'),
+                    ('s_key_images_default_image_4', 's_text_image_default_image'),
+                    ('s_kickoff_default_image', 's_cover_default_image'),
+                    ('s_quadrant_default_image_1', 'library_image_03'),
+                    ('s_quadrant_default_image_2', 'library_image_10'),
+                    ('s_quadrant_default_image_3', 'library_image_13'),
+                    ('s_quadrant_default_image_4', 'library_image_05'),
+                    ('s_sidegrid_default_image_1', 'library_image_03'),
+                    ('s_sidegrid_default_image_2', 'library_image_10'),
+                    ('s_sidegrid_default_image_3', 'library_image_13'),
+                    ('s_sidegrid_default_image_4', 'library_image_05'),
+                    ('s_cta_box_default_image', 'library_image_02'),
+                    ('s_image_punchy_default_image', 's_cover_default_image'),
+                    ('s_image_frame_default_image', 's_carousel_default_image_2'),
+                    ('s_carousel_intro_default_image_1', 's_cover_default_image'),
+                    ('s_carousel_intro_default_image_2', 's_image_text_default_image'),
+                    ('s_carousel_intro_default_image_3', 's_text_image_default_image'),
+                    ('s_website_form_overlay_default_image', 's_cover_default_image'),
+                    ('s_website_form_cover_default_image', 's_cover_default_image'),
+                    ('s_split_intro_default_image', 's_cover_default_image'),
+                    ('s_framed_intro_default_image', 's_cover_default_image'),
+                    ('s_splash_intro_default_image', 's_cover_default_image'),
+                    ('s_wavy_grid_default_image_1', 's_cover_default_image'),
+                    ('s_wavy_grid_default_image_2', 's_image_text_default_image'),
+                    ('s_wavy_grid_default_image_3', 's_text_image_default_image'),
+                    ('s_wavy_grid_default_image_4', 's_carousel_default_image_1'),
+                    ('s_timeline_images_default_image_1', 's_media_list_default_image_1'),
+                    ('s_timeline_images_default_image_2', 's_media_list_default_image_2'),
+                    ('s_carousel_cards_default_image_1', 's_carousel_default_image_1'),
+                    ('s_carousel_cards_default_image_2', 's_carousel_default_image_2'),
+                    ('s_carousel_cards_default_image_3', 's_carousel_default_image_3'),
+                    ('s_banner_connected_default_image', 's_cover_default_image'),
+                ]
+            }
+
+            def get_mapped_image_url(image_name):
+                if image_name not in images_map:
+                    image_name = fallback_images_map.get(image_name)
+                image_url = images_map.get(image_name)
+                return image_url.replace('/small/', '/') if image_url else image_url
+
+            for image_url in set(re.findall(r'(?<=["\'])\/web\/image\/[^"\']+(?=["\'])', final_html)):
+                image_name = image_url.replace('/web/image/', '', 1)
+                mapped_image_url = get_mapped_image_url(image_name)
+                if mapped_image_url:
+                    final_html = final_html.replace(image_url, mapped_image_url)
+
+            shape_urls = set(re.findall(r'(?<=["\'])/(html_editor|web_editor)/image_shape/([^/"\']+)/([^"\']+)(?=["\'])', final_html))
+            for editor, image_name, shape_path in shape_urls:
+                mapped_image_url = get_mapped_image_url(image_name)
+                if not mapped_image_url:
+                    continue
+                shape_src = f'/{editor}/image_shape/{image_name}/{shape_path}'
+                shape_file_path, _, shape_query = shape_path.partition('?')
+                module, _, shape_filename = shape_file_path.partition('/')
+                if not shape_filename:
+                    continue
+                shaped_url = f'/{editor}/image_shape_url/{module}/{shape_filename}'
+                image_query = urls.url_encode({'image_url': mapped_image_url})
+                shaped_url = f'{shaped_url}?{shape_query}&{image_query}' if shape_query else f'{shaped_url}?{image_query}'
+                final_html = final_html.replace(shape_src, shaped_url)
+
+        generated_homepage_content = {}
+        if generate_content:
+            generated_homepage_content = {
+                placeholder: value
+                for placeholder, value in generated_content.items()
+                if placeholder in homepage_placeholder_keys and value
+            }
+        if request:
+            request.session['configurator_generated_homepage_content'] = generated_homepage_content
+        return Markup(final_html)
+
+    def configurator_generate_AI_content(
+        self,
+        website,
+        generated_content,
+        translated_content,
+        html_text_processor,
+        industry,
+        user_prompt=None,
+        tone=None,
+    ):
+        translated_ratio = html_text_processor._calculate_translation_ratio(generated_content, translated_content)
+        if translated_ratio <= 0.5:
+            logger.info("Skip AI text generation because translation coverage is too low (%s%%)", translated_ratio * 100)
+            return generated_content
+
+        try:
+            database_id = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
+            response = self._OLG_api_rpc('/api/olg/1/generate_placeholder', {
+                'placeholders': list(generated_content.keys()),
+                'lang': website.default_lang_id.name,
+                'industry': industry,
+                'database_id': database_id,
+                'user_prompt': user_prompt,
+                'tone': tone,
+            })
+            name_replace_parser = re.compile(r"XXXX", re.MULTILINE)
+            website_name = re.escape(website.name)
+            for key in generated_content:
+                if response.get(key):
+                    generated_content[key] = name_replace_parser.sub(website_name, response[key], 0)
+        except AccessError:
+            # If IAP is broken continue normally (without generating text)
+            pass
+
+        return generated_content
 
     @api.model
     def configurator_skip(self):
@@ -755,19 +988,35 @@ class Website(models.CachedModel):
             website.logo = BinaryBytes(company.logo.content)
 
         # Configure the color palette
+        Assets = self.env['website.assets']
         selected_palette = kwargs.get('selected_palette')
+        custom_palette = {}
+        user_values_to_customize = {}
         if selected_palette:
-            Assets = self.env['website.assets']
             selected_palette_name = selected_palette if isinstance(selected_palette, str) else 'base-1'
+            user_values_to_customize['color-palettes-name'] = "'%s'" % selected_palette_name
+            if isinstance(selected_palette, list):
+                custom_palette = {
+                    f'o-color-{i}': color for i, color in enumerate(selected_palette, 1)
+                }
+
+        # Configure selected fonts
+        selected_font = kwargs.get('selected_font')
+        selected_headings_font = kwargs.get('selected_headings_font')
+        if selected_font:
+            user_values_to_customize['font'] = selected_font
+        if selected_headings_font:
+            user_values_to_customize['headings-font'] = selected_headings_font
+        if user_values_to_customize:
             Assets.make_scss_customization(
                 '/website/static/src/scss/options/user_values.scss',
-                {'color-palettes-name': "'%s'" % selected_palette_name}
+                user_values_to_customize,
             )
-            if isinstance(selected_palette, list):
-                Assets.make_scss_customization(
-                    '/website/static/src/scss/options/colors/user_color_palette.scss',
-                    {f'o-color-{i}': color for i, color in enumerate(selected_palette, 1)}
-                )
+        if custom_palette:
+            Assets.make_scss_customization(
+                '/website/static/src/scss/options/colors/user_color_palette.scss',
+                custom_palette,
+            )
 
         # Update CTA
         cta_data = website.get_cta_data(kwargs.get('website_purpose'), kwargs.get('website_type'))
@@ -805,49 +1054,34 @@ class Website(models.CachedModel):
                 logger.warning(e)
 
         # Configure the features
-        features = self.env['website.configurator.feature'].browse(kwargs.get('selected_features'))
+        selection_keys = {
+            kwargs.get('website_purpose'),
+            kwargs.get('website_type'),
+        }
+        selection_keys.discard(False)
+        features = self.env['website.configurator.feature'].search([]).filtered(
+            lambda feature: bool(
+                set((feature.website_config_preselection or '').split(',')) & selection_keys
+            )
+        )
 
-        menu_company = self.env['website.menu']
-        if len(features.filtered('menu_sequence')) > 5 and len(features.filtered('menu_company')) > 1:
-            menu_company = self.env['website.menu'].create({
-                'name': _('Company'),
-                'parent_id': website.menu_id.id,
-                'website_id': website.id,
-                'sequence': 40,
-            })
-
-        pages_views = {}
         modules = self.env['ir.module.module']
         module_data = {}
         for feature in features:
             add_menu = bool(feature.menu_sequence)
-            if feature.module_id:
-                if feature.module_id.state != 'installed':
-                    modules += feature.module_id
-                if add_menu:
-                    if feature.module_id.name != 'website_blog':
-                        module_data[feature.feature_url] = {'sequence': feature.menu_sequence}
-                    else:
-                        blogs = module_data.setdefault('#blog', [])
-                        blogs.append({'name': feature.name, 'sequence': feature.menu_sequence})
-            elif feature.page_view_id:
-                result = self.env['website'].new_page(
-                    name=feature.name,
-                    add_menu=add_menu,
-                    page_values=dict(url=feature.feature_url, is_published=True),
-                    menu_values=add_menu and {
-                        'url': feature.feature_url,
-                        'sequence': feature.menu_sequence,
-                        'parent_id': feature.menu_company and menu_company.id or website.menu_id.id,
-                    },
-                    template=feature.page_view_id.key
-                )
-                pages_views[feature.iap_page_code] = result['view_id']
+            if feature.module_id.state != 'installed':
+                modules += feature.module_id
+            if add_menu:
+                if feature.module_id.name != 'website_blog':
+                    module_data[feature.feature_url] = {'sequence': feature.menu_sequence}
+                else:
+                    blogs = module_data.setdefault('#blog', [])
+                    blogs.append({'name': feature.name, 'sequence': feature.menu_sequence})
 
         if modules:
             modules.button_immediate_install()
 
-        self.env['website'].browse(website.id).configurator_set_menu_links(menu_company, module_data)
+        self.env['website'].browse(website.id).configurator_set_menu_links(self.env['website.menu'], module_data)
 
         # Extension hook: allows installed modules (e.g. website_sale, website_blog, ...) to perform
         # additional setup steps on the generated website. This acts as an entry point for modules to
@@ -887,17 +1121,14 @@ class Website(models.CachedModel):
                     el[0].attrib['t-value'] = json.dumps(footer_links)
                     view_id.with_context(website_id=website.id).write({'arch_db': etree.tostring(arch_string)})
 
-        # Load suggestion from iap for selected pages
+        # Load suggestion from iap for the generated content
         industry_id = kwargs['industry_id']
         custom_resources = self._website_api_rpc(
             '/api/website/2/configurator/custom_resources/%s' % (industry_id if industry_id > 0 else ''),
             {'theme': theme_name}
         )
-
-        # Generate text for the pages
-        requested_pages = set(pages_views.keys()).union({'homepage'})
         configurator_snippets = website.get_theme_configurator_snippets(theme_name)
-        industry = kwargs['industry_name']
+        homepage_snippets = configurator_snippets.get('homepage', [])
 
         IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
         text_generation_target_lang = self.get_current_website().default_lang_id.code
@@ -912,100 +1143,59 @@ class Website(models.CachedModel):
             text_generation_target_lang=text_generation_target_lang,
             text_must_be_translated_for_openai=text_must_be_translated_for_openai,
         )
-        generated_content = {}
-        translated_content = {}
-        for page_code in requested_pages - {'privacy_policy'}:
-            snippet_list = configurator_snippets.get(page_code, [])
-            for snippet in snippet_list:
-                snippet_key = website._get_snippet_view_key(snippet, page_code)
-                html_text_processor, snippet_generated_content, snippet_translated_content = html_text_processor._get_snippet_content(snippet_key)
-                generated_content.update(snippet_generated_content)
-                translated_content.update(snippet_translated_content)
-
-        # Extract placeholders from footers
-        for footer_id in footer_ids:
-            view_id = self.env['website'].viewref(footer_id, raise_if_not_found=False)
-            if view_id and view_id.arch_db:
-                html_text_processor, placeholders = html_text_processor._process_snippet(view_id.arch_db, view_id.arch_db)
-                for placeholder in placeholders:
-                    generated_content[placeholder] = ''
-
-        translated_ratio = html_text_processor._calculate_translation_ratio(generated_content, translated_content)
-        if translated_ratio > 0.8:
+        page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
+        rendered_snippets = []
+        nb_snippets = len(homepage_snippets)
+        generated_homepage_content = request and request.session.pop(
+            'configurator_generated_homepage_content',
+            {}
+        ) or {}
+        for i, snippet in enumerate(homepage_snippets, start=1):
             try:
-                database_id = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
-                response = self._OLG_api_rpc('/api/olg/1/generate_placeholder', {
-                    'placeholders': list(generated_content.keys()),
-                    'lang': website.default_lang_id.name,
-                    'industry': industry,
-                    'database_id': database_id,
-                })
-                name_replace_parser = re.compile(r"XXXX", re.MULTILINE)
-                website_name = re.escape(website.name)
-                for key in generated_content:
-                    if response.get(key):
-                        generated_content[key] = (name_replace_parser.sub(website_name, response[key], 0))
-            except AccessError:
-                # If IAP is broken continue normally (without generating text)
-                pass
-        else:
-            logger.info("Skip AI text generation because translation coverage is too low (%s%%)", translated_ratio * 100)
+                snippet_key = website._get_snippet_view_key(snippet, 'homepage')
+                el = html_text_processor._update_snippet_content(generated_homepage_content, snippet_key)
 
-        # Configure the pages
-        for index, page_code in enumerate(requested_pages):
-            snippet_list = configurator_snippets.get(page_code, [])
-            if page_code == 'homepage':
-                page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
-            else:
-                page_view_id = self.env['ir.ui.view'].browse(pages_views[page_code])
-            rendered_snippets = []
-            nb_snippets = len(snippet_list)
-            for i, snippet in enumerate(snippet_list, start=1):
-                try:
-                    snippet_key = website._get_snippet_view_key(snippet, page_code)
-                    el = html_text_processor._update_snippet_content(generated_content, snippet_key)
+                # Add the data-snippet attribute to identify the snippet
+                # for compatibility code
+                el.attrib['data-snippet'] = snippet
 
-                    # Add the data-snippet attribute to identify the snippet
-                    # for compatibility code
-                    el.attrib['data-snippet'] = snippet
+                # Theme specific customizations for non-website snippets
+                theme_customizations = get_manifest(theme_name).get('theme_customizations', {})
+                customizations = theme_customizations.get(snippet, {})
 
-                    # Theme specific customizations for non-website snippets
-                    theme_customizations = get_manifest(theme_name).get('theme_customizations', {})
-                    customizations = theme_customizations.get(snippet, {})
+                # Configure non-website snippet with defaults and theme-level customizations.
+                website._preconfigure_snippet(snippet, el, customizations)
 
-                    # Configure non-website snippet with defaults and theme-level customizations.
-                    website._preconfigure_snippet(snippet, el, customizations)
+                # Remove the previews needed for the snippets dialog
+                dialog_preview_els = el.find_class('s_dialog_preview')
+                for preview_el in dialog_preview_els:
+                    preview_el.getparent().remove(preview_el)
 
-                    # Remove the previews needed for the snippets dialog
-                    dialog_preview_els = el.find_class('s_dialog_preview')
-                    for preview_el in dialog_preview_els:
-                        preview_el.getparent().remove(preview_el)
+                # Tweak the shape of the first snippet to connect it
+                # properly with the header color in some themes
+                if i == 1:
+                    shape_el = el.xpath("//*[hasclass('o_we_shape')]")
+                    if shape_el:
+                        shape_el[0].attrib['class'] += ' o_header_extra_shape_mapping'
 
-                    # Tweak the shape of the first snippet to connect it
-                    # properly with the header color in some themes
-                    if i == 1:
-                        shape_el = el.xpath("//*[hasclass('o_we_shape')]")
-                        if shape_el:
-                            shape_el[0].attrib['class'] += ' o_header_extra_shape_mapping'
-
-                    # Tweak the shape of the last snippet to connect it
-                    # properly with the footer color in some themes
-                    if i == nb_snippets:
-                        shape_el = el.xpath("//*[hasclass('o_we_shape')]")
-                        if shape_el:
-                            shape_el[0].attrib['class'] += ' o_footer_extra_shape_mapping'
-                    rendered_snippet = etree.tostring(el, encoding='unicode')
-                    rendered_snippets.append(rendered_snippet)
-                except ValueError as e:
-                    logger.warning(e)
-            page_view_id.save(value=f'<div class="oe_structure">{"".join(rendered_snippets)}</div>',
-                              xpath="(//div[hasclass('oe_structure')])[last()]")
-            # Copy the configurator pages to preserve the original untouched
-            # pages in the landing page category when creating a new page.
-            page_view_id.copy({
-                'key': f"{index}_{page_view_id.key}_configurator_pages_landing",
-                'website_id': website.id,
-            })
+                # Tweak the shape of the last snippet to connect it
+                # properly with the footer color in some themes
+                if i == nb_snippets:
+                    shape_el = el.xpath("//*[hasclass('o_we_shape')]")
+                    if shape_el:
+                        shape_el[0].attrib['class'] += ' o_footer_extra_shape_mapping'
+                rendered_snippet = etree.tostring(el, encoding='unicode')
+                rendered_snippets.append(rendered_snippet)
+            except ValueError as e:
+                logger.warning(e)
+        page_view_id.save(value=f'<div class="oe_structure">{"".join(rendered_snippets)}</div>',
+                          xpath="(//div[hasclass('oe_structure')])[last()]")
+        # Copy the configurator pages to preserve the original untouched
+        # pages in the landing page category when creating a new page.
+        page_view_id.copy({
+            'key': f"0_{page_view_id.key}_configurator_pages_landing",
+            'website_id': website.id,
+        })
 
         # Configure the footers
         for key in footer_ids:
@@ -1017,7 +1207,7 @@ class Website(models.CachedModel):
             # view
             view_to_update = current_website_footer_view or generic_view
             if generic_view and view_to_update:
-                el = html_text_processor._update_snippet_content(generated_content, key, view_to_update.arch_db)
+                el = html_text_processor._update_snippet_content(generated_homepage_content, key, view_to_update.arch_db)
                 updated_view = etree.tostring(el, encoding='unicode')
                 generic_view.with_context(website_id=website.id).write({'arch_db': updated_view})
 
@@ -1029,6 +1219,7 @@ class Website(models.CachedModel):
             ('model', '=', 'ir.attachment')
         ]).mapped('name')
         for name, image_src in images.items():
+            image_src = image_src.replace('/small/', '/')
             extn_identifier = 'configurator_%s_%s' % (website.id, name.split('.')[1])
             if extn_identifier in names:
                 continue

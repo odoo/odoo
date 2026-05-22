@@ -17,6 +17,34 @@ class WebsiteAssets(models.AbstractModel):
     _description = 'Assets Utils'
 
     @api.model
+    def _update_scss_map_content(self, content, values):
+        """Patch a SCSS map file in memory without saving it."""
+        for name, value in values.items():
+            # Keep CSS vars like var(--700) valid after SCSS compilation.
+            if isinstance(value, str):
+                value = re.sub(
+                    r"var\(--([0-9]+)\)",
+                    lambda matchobj: "var(--#{" + matchobj.group(1) + "})",
+                    value,
+                )
+            pattern = "'%s': %%s,\n" % name
+            regex = re.compile(pattern % ".+")
+            replacement = pattern % value
+            if regex.search(content):
+                # Replace an existing key.
+                content = re.sub(regex, replacement, content)
+            else:
+                # Insert a new key at the hook.
+                content = re.sub(
+                    r'^( *)(.*hook.*)',
+                    r'\1%s\1\2' % replacement,
+                    content,
+                    count=1,
+                    flags=re.MULTILINE,
+                )
+        return content
+
+    @api.model
     def reset_asset(self, url, bundle):
         """
         Delete the potential customizations made to a given (original) asset.
@@ -296,23 +324,56 @@ class WebsiteAssets(models.AbstractModel):
         custom_url = self._make_custom_asset_url(url, 'web.assets_frontend')
         updatedFileContent = self._get_content_from_url(custom_url) or self._get_content_from_url(url)
         updatedFileContent = updatedFileContent.decode('utf-8')
-        for name, value in values.items():
-            # Protect variable names so they cannot be computed as numbers
-            # on SCSS compilation (e.g. var(--700) => var(700)).
-            if isinstance(value, str):
-                value = re.sub(
-                    r"var\(--([0-9]+)\)",
-                    lambda matchobj: "var(--#{" + matchobj.group(1) + "})",
-                    value)
-            pattern = "'%s': %%s,\n" % name
-            regex = re.compile(pattern % ".+")
-            replacement = pattern % value
-            if regex.search(updatedFileContent):
-                updatedFileContent = re.sub(regex, replacement, updatedFileContent)
-            else:
-                updatedFileContent = re.sub(r'^( *)(.*hook.*)', r'\1%s\1\2' % replacement, updatedFileContent, count=1, flags=re.MULTILINE)
+        updatedFileContent = self._update_scss_map_content(updatedFileContent, values)
 
         self.save_asset(url, 'web.assets_frontend', updatedFileContent, 'scss')
+
+    @api.model
+    def configurator_get_palette_preview_css(self, palette_name, logo_palette=None):
+        """Build preview CSS for a configurator palette change."""
+        # Use the real frontend bundle so the preview looks like the website.
+        bundle = self.env['ir.qweb']._get_asset_bundle(
+            'web.assets_frontend',
+            css=True,
+            js=False,
+        )
+
+        is_logo_palette = palette_name == 'logoPalette'
+        user_values_url = '/website/static/src/scss/options/user_values.scss'
+        user_color_palette_url = '/website/static/src/scss/options/colors/user_color_palette.scss'
+        user_values = {
+            'color-palettes-name': "'base-1'" if is_logo_palette else f"'{palette_name}'",
+        }
+        color_values = (
+            {
+                f'o-color-{i}': logo_palette[f'color{i}']
+                for i in range(1, 6)
+            }
+            if is_logo_palette and logo_palette
+            else {}
+        )
+
+        for asset in bundle.stylesheets:
+            if not asset.url:
+                continue
+
+            if asset.url.endswith(user_values_url):
+                custom_url = self._make_custom_asset_url(user_values_url, 'web.assets_frontend')
+                source = (
+                    self._get_content_from_url(custom_url)
+                    or self._get_content_from_url(user_values_url)
+                ).decode('utf-8')
+                values = user_values
+            elif asset.url.endswith(user_color_palette_url):
+                source = self._get_content_from_url(user_color_palette_url).decode('utf-8')
+                values = color_values
+            else:
+                continue
+
+            asset.inline = self._update_scss_map_content(source, values)
+            asset._content = None
+
+        return bundle.preprocess_css()
 
     @api.model
     def _get_custom_attachment(self, custom_url, op='='):

@@ -15,11 +15,8 @@
         }
 
         @keyframes theme_screenshot_scroll {
-            to { transform: translate3d(0, calc((100% - var(--ConfiguratorPreview-height)) * -1), 0)}
-        }
-
-        @keyframes theme_screenshot_scroll_small {
-            to { transform: translate3d(0, calc((100% - var(--ConfiguratorSmallPreview-height)) * -1), 0)}
+            from { object-position: center top; }
+            to { object-position: center bottom; }
         }
 
         // ==== General Components
@@ -66,12 +63,6 @@
         // in stable templates. All the templates can be improved.
         .o_configurator_screen_content {
             overflow-y: auto;
-        }
-
-        .o_configurator_logo_wrapper {
-            img {
-                object-fit: contain;
-            }
         }
 
         // ==== Screens
@@ -210,102 +201,8 @@
             }
         }
 
-        &.o_palette_selection_screen {
-            @include media-breakpoint-down(lg) {
-                .o_detect_logo {
-                    width: 100% !important;
-                }
-
-                .o_content_container {
-                    height: 100% !important;
-                    flex-direction: column !important;
-                }
-
-                .o_palettes_separator {
-                    width: 100% !important;
-                }
-
-                .o_palettes_container {
-                    width: 100% !important;
-                }
-            }
-
-            @include media-breakpoint-down(md) {
-                .o_palette_card_container {
-                    width: 50% !important;
-                }
-            }
-
-            .palette_card {
-                cursor: pointer;
-                box-shadow: 0 0 0 1px map-get($grays, '200');
-
-                .color_sample {
-                    padding-top: 20%;
-                }
-
-                &:hover, &:focus-visible, &.selected {
-                    box-shadow: 0 0 0 1px #FFF, 0 0 0 3px map-get($theme-colors, "primary")
-                }
-            }
-
-            .o_configurator_logo_wrapper {
-                transition: opacity .1s ease;
-
-                &:hover {
-                    transition: opacity .3s ease;
-                    opacity: .1;
-                }
-
-                img {
-                    height: 120px;
-                    max-width: 90%;
-                }
-            }
-
-            .o_configurator_logo_upload {
-                cursor: pointer;
-                @include o-hover-text-color(map-get($grays, '400'), map-get($grays, '800'));
-            }
-
-            .palette_selection_or {
-                @include o-position-absolute(50%);
-                transform: translateY(-50%);
-
-                @include media-breakpoint-up(lg) {
-                    right: 0;
-                }
-            }
-        }
-
-        &.o_feature_selection_screen {
-            @include media-breakpoint-down(lg) {
-                .o_feature_card_container {
-                    width: 50% !important;
-                }
-            }
-
-            @include media-breakpoint-down(md) {
-                .o_feature_card_container {
-                    width: 100% !important;
-                }
-            }
-
-            .card {
-                cursor: pointer;
-
-                &.card_installed {
-                    cursor: default;
-                    opacity: 0.75;
-                }
-            }
-            .o_configurator_feature_status {
-                @include o-position-absolute($card-spacer-y * 0.5 , $card-spacer-x * 0.5);
-            }
-        }
-
         &.o_theme_selection_screen{
-            .button_area, .theme_svg_container {
+            .button_area, .theme_img_container {
                 @include o-position-absolute(0, 0, 0, 0);
             }
 
@@ -313,18 +210,20 @@
                 @include o-position-absolute(0, 0, auto, 0);
             }
 
-            .theme_preview, .theme_svg_container svg, .theme_preview_tip {
+            .theme_preview, .theme_img_container img, .theme_preview_tip {
                 transform: translate3d(0,0,0);
                 will-change: transform;
             }
 
             .theme_preview, .theme_preview_tip {
-                transition: all .3s ease 0s;
+                transition: all .15s ease-out 0s;
             }
 
-            .theme_svg_container svg {
+            .theme_img_container img {
                 width: 100%;
-                height: auto;
+                height: 100%;
+                object-fit: cover;
+                object-position: center top;
             }
 
             .button_area {
@@ -339,24 +238,23 @@
 
                 height: var(--ConfiguratorPreview-height);
 
-                img {
+                img, .theme_img_container {
                     box-shadow: $box-shadow-sm;
                 }
 
                 @include media-breakpoint-up(lg) {
                     &:hover {
-                        transform: translate3d(0,-10px,0);
+                        transform: translate3d(0,-3px,0);
                     }
 
                     &.small {
-                        height: var(--ConfiguratorSmallPreview-height);
+                        aspect-ratio: 100 / 66;
+                        height: auto;
                     }
                 }
 
                 &:hover {
-                    border-color: map-get($theme-colors, primary)!important;
-
-                    img {
+                    img, .theme_img_container {
                         box-shadow: $box-shadow;
                     }
 
@@ -364,16 +262,130 @@
                         transform: translate3d(0,-120%,0);
                     }
 
-                    .theme_svg_container svg {
-                        animation: theme_screenshot_scroll 4s cubic-bezier(0.455, 0.030, 0.515, 0.955) .1s infinite alternate;
-                    }
-
-                    &.small .theme_svg_container svg {
-                        animation-name: theme_screenshot_scroll_small;
-                        animation-duration: 5s;
+                    .theme_img_container img {
+                        animation: theme_screenshot_scroll 5s cubic-bezier(0.455, 0.030, 0.515, 0.955) .15s infinite alternate;
                     }
                 }
             }
         }
+
+        &.o_setup_style_screen {
+            .o_configurator_preview_iframe {
+                display: block;
+                border: 0;
+            }
+
+            .o_configurator_preview_iframe_wrapper {
+                height: 90vh;
+                position: relative;
+            }
+
+            .o_configurator_preview_iframe.loading {
+                filter: brightness(75%);
+                transition: 0.1s;
+            }
+
+            .o_setup_style_screen_buttons {
+                box-shadow: 0px 1px 15px #dedede;
+            }
+
+            .o_setup_style_screen_color_palette {
+                height: 50px;
+
+                &:not(.active) {
+                    background-color: $o-gray-100;
+                    border: 1px solid $o-gray-200;;
+                }
+
+                &:hover {
+                    background-color: var(--btn-hover-bg);
+                }
+
+                > span {
+                    &:not(:first-child) {
+                        border-inline-start: 0 !important;
+                        border-start-start-radius: 0 !important;
+                        border-end-start-radius: 0 !important;
+                    }
+
+                    &:not(:last-child) {
+                        border-inline-end: 0 !important;
+                        border-start-end-radius: 0 !important;
+                        border-end-end-radius: 0 !important;
+                    }
+                }
+            }
+
+            .offcanvas-start {
+                box-shadow: 0 0 1rem 0 rgba(black, 0.1) !important;
+                // Keep this in sync with the left panel col-5/4/3 classes. If
+                // those Bootstrap classes change, update these widths too. This
+                // keeps the offcanvas width aligned at each breakpoint.
+                flex: 0 0 auto;
+                width: 41.66666667%;
+
+                @include media-breakpoint-up(xl) {
+                    width: 33.33333333%;
+                }
+
+                @include media-breakpoint-up(xxl) {
+                    width: 25%;
+                }
+            }
+
+            #describeYourWebsiteTextarea {
+                resize: none;
+                padding-right: 3rem;
+            }
+
+            .o_setup_style_screen_ai_logo {
+                width: 20px;
+                height: 20px;
+            }
+
+            .o_setup_style_screen_ai_btn {
+                @include o-position-absolute($right: 1rem, $bottom: 1rem);
+                width: 30px;
+                height: 30px;
+            }
+
+            .o_setup_style_screen_fake_searchbar {
+                height: 12px;
+                width: 40%;
+                margin: 1px;
+            }
+
+            .btn .fa.fa-desktop {
+                padding-top: 3px;
+                font-size: 16px;
+            }
+
+            .btn .fa.fa-mobile {
+                font-size: 23px;
+            }
+
+            .o_configurator_preview_mobile {
+                width: 450px;
+                max-width: 100%;
+                margin: auto;
+            }
+
+            @keyframes pulse {
+                0%, 100% {
+                    opacity: 20%;
+                }
+                50% {
+                    opacity: 50%;
+                }
+            }
+
+            .o_configurator_screen_option_loading {
+                animation: pulse 2s ease-in-out infinite;
+            }
+        }
     }
+}
+
+.o_configurator_notifications_top .o_notification_manager {
+    top: $o-notification-margin;
 }

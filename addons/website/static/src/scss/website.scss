@@ -66,7 +66,10 @@ $-seen-urls: ();
     @include print-variable('number-of-fonts', length($-font-names));
     $i: 1;
     @each $font-name in $-font-names {
+        $-font-config: map-get($o-theme-font-configs, $font-name);
         @include print-variable('font-number-#{$i}', $font-name);
+        @include print-variable('font-family-number-#{$i}', map-get($-font-config, 'family'));
+        @include print-variable('font-url-number-#{$i}', map-get($-font-config, 'url'));
         $i: $i + 1;
     }
 

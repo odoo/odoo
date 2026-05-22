@@ -28,6 +28,11 @@
                 <span t-out="this.state.currentLoadingStep.description"/>
             </div>
 
+            <div t-if="this.state.tipMessage" class="o_website_loader_tip d-flex gap-2 h3-fs mb-2">
+                <div><i class="fa fa-circle-o-notch fa-spin fa-fw" role="presentation"/></div>
+                <div t-out="this.state.tipMessage"/>
+            </div>
+
             <p class="o_website_loader_tip mt-auto mb-3">
                 <t t-if="this.state.bottomMessageTemplate" t-call="{{this.state.bottomMessageTemplate}}"/>
             </p>

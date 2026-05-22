@@ -1,13 +1,14 @@
-import { Component, onWillStart } from '@odoo/owl';
+import { onWillStart } from '@odoo/owl';
 import { useService } from '@web/core/utils/hooks';
 
-import { ROUTES, useStore } from '@website/client_actions/configurator/configurator';
+import { ApplyConfiguratorScreen, useStore } from '@website/client_actions/configurator/configurator';
 
-export class ProductPageSelectionScreen extends Component {
+export class ProductPageSelectionScreen extends ApplyConfiguratorScreen {
     static template = 'website_sale.Configurator.ProductPageSelectionScreen';
     static props = {
         navigate: Function,
         skip: Function,
+        clearStorage: { type: Function, optional: true },
     };
 
     setup() {
@@ -21,8 +22,8 @@ export class ProductPageSelectionScreen extends Component {
         });
     }
 
-    selectStyle(option) {
+    nextStep(option) {
         this.state.selectedProductPageStyleOption = option;
-        this.props.navigate(ROUTES.themeSelectionScreen);
+        return this.startBuilding();
     }
 }
