@@ -222,17 +222,6 @@ export class Analysis {
     }
 }
 
-/**
- * TODO EGGMAIL: need explanation
- */
-export function renderEmailNode(emailNode, context = {}) {
-    return emailNode.layout.renderToFragment({
-        ...context,
-        renderPositionedNodes: (positionContext = {}) =>
-            emailNode.children.map((child) => renderEmailNode(child, positionContext)),
-    });
-}
-
 export class EmailNode {
     referenceNodes = new UniqueArray();
     children = new UniqueArray();
@@ -246,6 +235,34 @@ export class EmailNode {
             this.pushReferenceNode(referenceNode);
         }
         this.analysis = new Analysis(analysis);
+        this.marginNode = undefined;
+        this.paddingNode = undefined;
+    }
+
+    /**
+     * The referenceNode that was used first to define what this EmailNode
+     * represents. It is often the most relevant when considering positioning in
+     * the parent.
+     */
+    get firstReferenceNode() {
+        return this.referenceNodes.at(0);
+    }
+
+    /**
+     * The referenceNode that was used last to define what this EmailNode
+     * represents. It is often the most relevant when considering children
+     * positioning.
+     */
+    get lastReferenceNode() {
+        return this.referenceNodes.at(-1);
+    }
+
+    get firstChild() {
+        return this.children.at(0);
+    }
+
+    get lastChild() {
+        return this.children.at(-1);
     }
 
     spliceChildren(start, deleteCount, ...items) {
@@ -268,24 +285,6 @@ export class EmailNode {
         return this.referenceNodes.push(referenceNode);
     }
 
-    /**
-     * The referenceNode that was used first to define what this EmailNode
-     * represents. It is often the most relevant when considering positioning in
-     * the parent.
-     */
-    get firstReferenceNode() {
-        return this.referenceNodes.at(0);
-    }
-
-    /**
-     * The referenceNode that was used last to define what this EmailNode
-     * represents. It is often the most relevant when considering children
-     * positioning.
-     */
-    get lastReferenceNode() {
-        return this.referenceNodes.at(-1);
-    }
-
     appendChild(emailNode) {
         if (emailNode.parent && emailNode.parent !== this) {
             emailNode.parent.removeChild(emailNode);
@@ -303,11 +302,39 @@ export class EmailNode {
         }
     }
 
-    get firstChild() {
-        return this.children.at(0);
-    }
-
-    get lastChild() {
-        return this.children.at(-1);
+    render(context = {}) {
+        const render = (layoutContainer, renderContext = {}, extraPositionContext = {}) => {
+            let renderChildren;
+            if (layoutContainer === this.marginNode) {
+                renderChildren = [this];
+            } else if (layoutContainer === this && this.paddingNode) {
+                renderChildren = [this.paddingNode];
+            } else {
+                renderChildren = this.children;
+            }
+            return layoutContainer.layout.renderToFragment({
+                ...renderContext,
+                renderPositionedNodes: (positionContext = {}) =>
+                    renderChildren.map((child) =>
+                        render(child, renderChildren, {
+                            ...extraPositionContext,
+                            ...positionContext,
+                        })
+                    ),
+            });
+        };
+        if (this.marginNode) {
+            return render(this.marginNode, {}, context);
+        } else if (this.paddingNode) {
+            return render(this, context);
+        } else {
+            return render(this, context);
+        }
     }
 }
+
+// export class SpacingNode {
+//     constructor({ emailNodeChildren = new UniqueArray() } = {}) {
+
+//     }
+// }

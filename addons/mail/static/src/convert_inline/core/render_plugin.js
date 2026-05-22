@@ -1,12 +1,6 @@
 import { Plugin } from "../plugin";
 import { registry } from "@web/core/registry";
-import {
-    Analysis,
-    ElementLayout,
-    EmailNode,
-    renderEmailNode,
-    TextNodeLayout,
-} from "./render_models";
+import { Analysis, ElementLayout, EmailNode, TextNodeLayout } from "./render_models";
 
 /**
  * This plugin handles 4 conversion phases, leading to the ability to render the email html:
@@ -322,7 +316,7 @@ export class RenderPlugin extends Plugin {
     renderEmailHtml(template) {
         let fragment;
         if (this.renderTree) {
-            fragment = renderEmailNode(this.renderTree);
+            fragment = this.renderTree.render();
         }
         if (fragment) {
             template.content.appendChild(fragment);
