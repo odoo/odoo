@@ -333,8 +333,6 @@ export class EmailNode {
     }
 }
 
-// export class SpacingNode {
-//     constructor({ emailNodeChildren = new UniqueArray() } = {}) {
-
-//     }
-// }
+export class SpacingNode {
+    constructor({ emailNodeChildren = new UniqueArray() } = {}) {}
+}
