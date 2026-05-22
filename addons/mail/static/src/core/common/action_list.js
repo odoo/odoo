@@ -58,7 +58,8 @@ class Action extends Component {
         return (
             this.props.odooControlPanelSwitchStyle ||
             this.props.hasBtnBg ||
-            this.props.action.hasBtnBg
+            this.props.action.hasBtnBg ||
+            (this.props.inline && !this.action.inlineIcon && this.action.inlineName)
         );
     }
 
