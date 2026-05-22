@@ -99,6 +99,10 @@ class AccountMove(models.Model):
             ('17_igic', _("Special retailer regime")),
         ]
 
+    def _l10n_es_get_return_type(self):
+        self.ensure_one()
+        return self.l10n_es_edi_verifactu_refund_reason or super()._l10n_es_get_return_type()
+
     def _l10n_es_edi_verifactu_get_tax_applicability(self):
         """
         Currently we only support a single Veri*Factu Tax Applicability per Veri*Factu document.

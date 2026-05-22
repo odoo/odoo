@@ -29,3 +29,9 @@ class AccountMove(models.Model):
     def _l10n_es_is_dua(self):
         self.ensure_one()
         return any(t.l10n_es_type == 'dua' for t in self.invoice_line_ids.tax_ids.flatten_taxes_hierarchy())
+
+    def _l10n_es_get_return_type(self):
+        self.ensure_one()
+        if self.move_type == 'in_refund':
+            return 'R4'
+        return 'R5' if self.l10n_es_is_simplified else 'R1'
