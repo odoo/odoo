@@ -57,7 +57,7 @@
     <template id="portal_my_orders" name="My Sales Orders">
         <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-            <t t-call="portal.portal_searchbar" title.translate="Your Orders"/>
+            <t t-call="portal.portal_searchbar" breadcrumbs_searchbar="True" title.translate="Your Orders"/>
             <div t-if="not orders" class="alert alert-warning" role="alert">
                 There are currently no sales orders for your account.
             </div>
