@@ -3478,3 +3478,34 @@ class TestStockValuation(TestStockValuationCommon):
         closing = self.branch.with_context(allowed_company_ids=[self.branch.id, self.company.id]).action_close_stock_valuation()
         closing_lines = self.env['account.move'].browse(closing['res_id']).line_ids
         self.assertEqual(closing_lines.move_id.company_id.id, self.branch.id)
+
+    def test_at_date_fifo_2(self):
+        """
+        Test that past stock reports calculate the avg_cost and total_value from the original move value.
+        This ensures moves without other valuation data ignore subsequent changes to the product's standard_price.
+        """
+        product = self.product_fifo
+        product.standard_price = 10
+        date = Datetime.now() - timedelta(days=8)
+
+        move = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': product.id,
+            'product_uom': self.uom.id,
+            'product_uom_qty': 10.0,
+        })
+        move._action_confirm()
+        move._action_assign()
+        move.picked = True
+        move._action_done()
+        move.date = date
+
+        self.assertEqual(product.qty_available, 10)
+        self.assertEqual(product.total_value, 100)
+
+        product.standard_price = 12
+
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date)).qty_available, 10)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date)).total_value, 100)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date)).avg_cost, 10)

@@ -550,10 +550,10 @@ class ProductProduct(models.Model):
             move = fifo_stack.pop(0)
             last_move = move
             move_value = move.value
+            valued_qty = move._get_valued_qty()
             if at_date:
-                move_value = move._get_value(at_date=at_date)
+                move_value = move._get_value(forced_std_price=move.value / valued_qty, at_date=at_date)
             if qty_on_first_move:
-                valued_qty = move._get_valued_qty()
                 in_qty = qty_on_first_move
                 in_value = move_value * in_qty / valued_qty
                 qty_on_first_move = 0
