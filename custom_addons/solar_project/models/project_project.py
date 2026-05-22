@@ -69,6 +69,16 @@ class ProjectProjectSolar(models.Model):
         store=True,
     )
 
+    solar_document_ids = fields.One2many(
+        comodel_name="solar.document",
+        inverse_name="project_id",
+        string="Project Documents",
+    )
+    solar_document_count = fields.Integer(
+        compute="_compute_document_count",
+        string="Documents",
+    )
+
     def _compute_roi(self):
         for rec in self:
             if rec.solar_kw_capacity and rec.solar_budget_usd:
@@ -78,3 +88,7 @@ class ProjectProjectSolar(models.Model):
                 )
             else:
                 rec.solar_estimated_roi_years = 0
+
+    def _compute_document_count(self):
+        for rec in self:
+            rec.solar_document_count = len(rec.solar_document_ids)
