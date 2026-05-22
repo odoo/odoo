@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="action_send_to_sii_batch" model="ir.actions.server">
+        <field name="name">Send to SII</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">list</field>
+        <field name="group_ids" eval="[(4, ref('account.group_account_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_l10n_es_sii_send_in_batch()
+        </field>
+    </record>
+</odoo>

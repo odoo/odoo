@@ -14,7 +14,6 @@ class AccountMoveSend(models.AbstractModel):
         return move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state == 'sent'
 
     def _get_all_extra_edis(self) -> dict:
-        # EXTENDS 'account'
         res = super()._get_all_extra_edis()
         res.update({
             'es_edi_sii': {
