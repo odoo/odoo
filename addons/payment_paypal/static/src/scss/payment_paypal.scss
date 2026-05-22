@@ -1,0 +1,14 @@
+/*
+    The PayPal SDK renders each card field in an iframe whose height it computes asynchronously,
+    after the inline form has already been made visible. Reserving that height (the one the SDK
+    settles on for the 38px input configured in `payment_form.js`) keeps the form from growing and
+    pushing the submit button down.
+*/
+[name="o_paypal_form"] {
+    .paypal-card-name-field,
+    .paypal-card-number-field,
+    .paypal-card-expiry-field,
+    .paypal-card-cvv-field {
+        min-height: 60px;
+    }
+}

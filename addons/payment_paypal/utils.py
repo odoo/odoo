@@ -1,5 +1,40 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.payment.logging import get_payment_logger
+
+_logger = get_payment_logger(__name__)
+
+
+def normalize_paypal_payment_data(data, from_webhook=False):
+    """Normalize the payment data received from PayPal.
+
+    The payment data received from PayPal has a different format depending on whether the data
+    come from the payment request response (order creation or capture), or from the webhook.
+
+    :param dict data: The data to normalize.
+    :param bool from_webhook: Whether the data come from the webhook.
+    :return: The normalized data.
+    :rtype: dict
+    """
+    purchase_unit = data["purchase_units"][0]
+    result = {
+        "payment_source": data["payment_source"],
+        "reference_id": purchase_unit.get("reference_id"),
+        "purchase_units": data["purchase_units"],
+    }
+    if from_webhook:
+        result.update({
+            **purchase_unit,
+            "txn_type": data.get("intent"),
+            "id": data.get("id"),
+            "status": data.get("status"),
+        })
+    elif captured := purchase_unit.get("payments", {}).get("captures"):
+        result.update({**captured[0], "txn_type": "CAPTURE"})
+    else:
+        _logger.warning("Invalid PayPal response format, can't normalize.")
+    return result
+
 
 def format_partner_address(partner):
     """Format the partner address values to PayPal address values. When provided, PayPal requires

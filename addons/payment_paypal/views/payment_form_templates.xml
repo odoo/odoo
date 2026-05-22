@@ -4,7 +4,7 @@
     <template id="payment_paypal.method_form" inherit_id="payment.method_form">
         <input name="o_payment_radio" position="attributes">
             <attribute name="t-att-data-paypal-inline-form-values">
-                provider_sudo._paypal_get_inline_form_values(currency)
+                provider_sudo._paypal_get_inline_form_values(currency, partner_id)
             </attribute>
             <attribute name="t-att-data-paypal-color">
                 "blue"

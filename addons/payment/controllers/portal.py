@@ -246,6 +246,7 @@ class PaymentPortal(portal.CustomerPortal):
             force_tokenization=force_tokenization,
             is_express_checkout=is_express_checkout,
             report=availability_report,
+            amount=amount,
             **kwargs,
         )._deduplicate_by_code(report=availability_report)
 
