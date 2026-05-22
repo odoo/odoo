@@ -132,7 +132,7 @@
     <template id="portal_my_tasks" name="My Tasks">
         <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-            <t t-call="portal.portal_searchbar" title.translate="Tasks"/>
+            <t t-call="portal.portal_searchbar" breadcrumbs_searchbar="True" title.translate="Tasks"/>
             <t t-if="not grouped_tasks">
                 <div class="alert alert-warning" role="alert">
                     There are no tasks.
