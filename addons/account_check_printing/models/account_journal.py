@@ -56,9 +56,9 @@ class AccountJournal(models.Model):
 
     def _inverse_check_next_number(self):
         for journal in self:
-            next_num = int(journal.check_next_number)
             if journal.check_next_number and not re.match(r'^[0-9]+$', journal.check_next_number):
                 raise ValidationError(_('Next Check Number should only contains numbers.'))
+            next_num = int(journal.check_next_number)
             if next_num < journal.check_sequence_id.number_next_actual:
                 raise ValidationError(_(
                     "The last check number was %s. In order to avoid a check being rejected "
