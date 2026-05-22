@@ -24,6 +24,8 @@ class TestConsumeComponentCommon(common.TransactionCase):
         cls.SERIAL_TRIGGERS_COUNT = 2
         cls.DEFAULT_TRIGGERS_COUNT = 1
 
+        cls.env.user.group_ids |= cls.env.ref('stock.group_production_lot')
+
         cls.manufacture_route = cls.env.ref('mrp.route_warehouse0_manufacture')
         cls.stock_id = cls.env.ref('stock.stock_location_stock').id
 
@@ -462,8 +464,6 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         Check that indicated lot on raw move lines are conserved even if the first
         lot has enough quantity on hand
         """
-        grp_lot = self.env.ref('stock.group_production_lot')
-        self.env.user.group_ids |= grp_lot
         self.bom_serial_lines[0].unlink()
         self.bom_serial_lines[2].unlink()
 
