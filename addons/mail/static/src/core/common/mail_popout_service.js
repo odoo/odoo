@@ -171,6 +171,10 @@ export const mailPopoutService = {
             popout.hooks = hooks;
         }
 
+        function resetAll() {
+            popouts.forEach((p, id) => reset(id));
+        }
+
         /**
          * Creates an ID-aware popout manager for a specific ID.
          * This allows using multiple popout instances with different IDs,
@@ -237,7 +241,7 @@ export const mailPopoutService = {
             };
         }
 
-        return Object.assign(createManager(), { createManager });
+        return Object.assign(createManager(), { createManager, resetAll });
     },
 };
 

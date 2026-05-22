@@ -406,7 +406,11 @@ export async function start(options) {
     // it depends on translations being loaded.
     await Promise.all([mountWithCleanup(WebClient, { env, target }), emojiLoader.load()]);
     const storeService = env.services["mail.store"];
-    after(() => storeService._runDisposeFns());
+    const popoutService = env.services["mail.popout"];
+    after(() => {
+        storeService._runDisposeFns();
+        popoutService.resetAll();
+    });
     return Object.assign(env, { ...options?.env, target });
 }
 
