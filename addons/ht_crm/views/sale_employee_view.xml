@@ -105,15 +105,190 @@
         <field name="name">sale.employee.list</field>
         <field name="model">sale.employee</field>
         <field name="arch" type="xml">
-            <list string="Danh Sách Nhân Viên" default_order="name">
-                <!-- <field name="code"/> -->
+
+            <list string="Danh Sách Nhân Viên"
+                default_order="department,name">
+
                 <field name="name"/>
+
+                <field name="department"/>
+
+                <field name="role_ids"
+                    widget="many2many_tags"/>
+
+                <field name="start_work_date"/>
+
+                <field name="seniority"/>
+
                 <field name="phone"/>
-                <!-- <field name="department"/> -->
-                <field name="manager_id"/>
-                <!-- <field name="role_ids" widget="many2many_tags"/> -->
-                <field name="active"/>
+
+                <field name="active"
+                    widget="boolean_toggle"/>
+
             </list>
+
+        </field>
+    </record>
+
+    <record id="view_sale_employee_form" model="ir.ui.view">
+        <field name="name">sale.employee.form</field>
+        <field name="model">sale.employee</field>
+        <field name="arch" type="xml">
+            <form string="Nhân viên">
+
+                <sheet>
+
+                    <!-- Header -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Họ và tên"/>
+                        </h1>
+
+                        <div class="text-muted">
+                            <field name="code" placeholder="Mã nhân viên"/>
+                        </div>
+                    </div>
+
+                    <!-- Avatar + quick info -->
+                    <group>
+                        <group>
+                            <field name="active"/>
+                            <field name="role_ids" widget="many2many_tags"/>
+                            <field name="manager_id"/>
+                            <field name="user_id"/>
+                        </group>
+
+                        <group>
+                            <field name="department"/>
+                            <field name="start_work_date"/>
+                            <field name="seniority" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+
+                        <!-- ====================== -->
+                        <!-- Personal -->
+                        <!-- ====================== -->
+                        <page string="Thông tin cá nhân">
+
+                            <group>
+
+                                <group string="Thông tin cơ bản">
+                                    <field name="gender"/>
+                                    <field name="birthday"/>
+                                    <field name="birth_year" readonly="1"/>
+                                    <field name="hometown"/>
+                                </group>
+
+                                <group string="Liên hệ">
+                                    <field name="phone"/>
+                                    <field name="email"/>
+                                    <field name="address"/>
+                                </group>
+
+                            </group>
+
+                            <group>
+
+                                <group string="Địa chỉ">
+                                    <field name="permanent_address"/>
+                                    <field name="temporary_address"/>
+                                </group>
+
+                            </group>
+
+                        </page>
+
+                        <!-- ====================== -->
+                        <!-- CCCD -->
+                        <!-- ====================== -->
+                        <page string="CCCD &amp; Pháp lý">
+
+                            <group>
+
+                                <group string="Căn cước công dân">
+                                    <field name="identity_number"/>
+                                    <field name="identity_issue_date"/>
+                                    <field name="identity_issue_place"/>
+                                </group>
+
+                                <group string="Thuế &amp; BHXH">
+                                    <field name="tax_code"/>
+                                    <field name="social_insurance_number"/>
+                                </group>
+
+                            </group>
+
+                        </page>
+
+                        <!-- ====================== -->
+                        <!-- Bank -->
+                        <!-- ====================== -->
+                        <page string="Ngân hàng">
+
+                            <group>
+
+                                <group string="Thông tin tài khoản">
+                                    <field name="bank_name"/>
+                                    <field name="bank_account"/>
+                                    <field name="bank_branch"/>
+                                </group>
+
+                            </group>
+
+                        </page>
+
+                        <!-- ====================== -->
+                        <!-- Projects -->
+                        <!-- ====================== -->
+                        <page string="Dự án phụ trách">
+
+                            <field name="project_ids"/>
+
+                        </page>
+
+                        <!-- ====================== -->
+                        <!-- Team -->
+                        <!-- ====================== -->
+                        <page string="Cơ cấu quản lý">
+
+                            <group>
+
+                                <group string="Quản lý trực tiếp">
+                                    <field name="manager_id"/>
+                                </group>
+
+                                <group string="Nhân viên cấp dưới">
+                                    <field name="child_ids">
+                                        <list>
+                                            <field name="name"/>
+                                            <field name="phone"/>
+                                            <field name="role_ids"/>
+                                        </list>
+                                    </field>
+                                </group>
+
+                            </group>
+
+                        </page>
+
+                        <!-- ====================== -->
+                        <!-- Notes -->
+                        <!-- ====================== -->
+                        <page string="Ghi chú">
+
+                            <field name="note"
+                                placeholder="Ghi chú thêm..."
+                                nolabel="1"/>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+
+            </form>
         </field>
     </record>
 

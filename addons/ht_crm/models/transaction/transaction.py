@@ -344,13 +344,9 @@ class TransactionPayment(models.Model):
     due_value = fields.Integer(related="plan_line_id.due_value", string="Sau bao lâu")
 
     # === #
-    prev_date = fields.Date(
-        compute="_compute_prev_date",
-        store=True,
-    )
     base_date = fields.Date(
         string="Ngày gốc",
-        compute="_compute_base_date",
+        compute="_compute_due_date",
         inverse="_inverse_base_date",
         store=True,
     )
@@ -371,60 +367,73 @@ class TransactionPayment(models.Model):
     ], compute="_compute_status", store=True, string="Trạng thái")
 
 
-    @api.depends(
-        "transaction_id.payment_ids.due_date",
-        "transaction_id.payment_ids.sequence",
-    )
-    def _compute_prev_date(self):
-
-        for rec in self:
-
-            rec.prev_date = False
-
-            if not rec.transaction_id:
-                continue
-
-            previous_line = rec.transaction_id.payment_ids.filtered(
-                lambda x: x.sequence < rec.sequence
-            ).sorted("sequence")
-
-            if previous_line:
-                rec.prev_date = previous_line[-1].due_date
-                rec.base_date = rec.prev_date
-
     def _inverse_base_date(self):
         pass
 
     @api.depends(
-        "prev_date",
         "transaction_id.date",
+        "transaction_id.payment_ids.due_date",
+        "sequence",
     )
     def _compute_base_date(self):
         for rec in self:
 
-            if rec.prev_date:
-                rec.base_date = rec.prev_date
-            else:
-                rec.base_date = rec.transaction_id.date
+            rec.base_date = rec.transaction_id.date
 
-    @api.depends(
-        "base_date",
-        "due_type",
-        "due_value",
-    )
-    def _compute_due_date(self):
-        for rec in self:
-
-            rec.due_date = False
-
-            if not rec.base_date:
+            if not rec.transaction_id:
                 continue
 
-            if rec.due_type == "day":
-                rec.due_date = rec.base_date + datetime.timedelta(days=rec.due_value)
+            previous_lines = rec.transaction_id.payment_ids.filtered(
+                lambda x:
+                    x.sequence < rec.sequence
+                    and x.id != rec.id
+            ).sorted("sequence")
 
-            elif rec.due_type == "month":
-                rec.due_date = rec.base_date + relativedelta(months=rec.due_value)
+            if previous_lines:
+                rec.base_date = previous_lines[-1].due_date
+
+    @api.depends(
+        "transaction_id.date",
+        "transaction_id.payment_ids.due_type",
+        "transaction_id.payment_ids.due_value",
+        "transaction_id.payment_ids.sequence",
+    )
+    def _compute_due_date(self):
+
+        transactions = self.mapped("transaction_id")
+
+        for transaction in transactions:
+
+            lines = transaction.payment_ids.sorted(
+                lambda x: (x.sequence, x.id)
+            )
+
+            base_date = transaction.date
+
+            for line in lines:
+
+                line.base_date = base_date
+
+                line.due_date = False
+
+                if not base_date:
+                    continue
+
+                if line.due_type == "day":
+                    line.due_date = (
+                        base_date +
+                        datetime.timedelta(days=line.due_value)
+                    )
+
+                elif line.due_type == "month":
+                    line.due_date = (
+                        base_date +
+                        relativedelta(months=line.due_value)
+                    )
+
+                # next line base_date
+                if line.due_date:
+                    base_date = line.due_date
 
     @api.depends("plan_line_id")
     def _compute_amount(self):
