@@ -2,6 +2,7 @@ import uuid
 import json
 from markupsafe import Markup
 from odoo import _, fields, models, api
+from odoo.exceptions import UserError
 from odoo.tools import float_repr
 from datetime import datetime
 from base64 import b64decode, b64encode
@@ -151,6 +152,13 @@ class AccountMove(models.Model):
             # or if the submission timed out. In both cases, a user should not be able to reset it to draft.
             if move.l10n_sa_chain_index:
                 move.show_reset_to_draft_button = False
+
+    def button_draft(self):
+        # OVERRIDE
+        for move in self:
+            if move.country_code == "SA" and move.l10n_sa_chain_index and move.company_id.l10n_sa_edi_is_production:
+                raise UserError(_("The Invoice(s) are linked to a validated EDI document and cannot be modified according to ZATCA rules"))
+        return super().button_draft()
 
     def _l10n_sa_reset_confirmation_datetime(self):
         """ OVERRIDE: we want rejected phase 2 invoices to keep the original confirmation datetime"""
