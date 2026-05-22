@@ -113,8 +113,7 @@
 
                 <field name="department"/>
 
-                <field name="role_ids"
-                    widget="many2many_tags"/>
+                <field name="role_id"/>
 
                 <field name="start_work_date"/>
 
@@ -153,7 +152,7 @@
                     <group>
                         <group>
                             <field name="active"/>
-                            <field name="role_ids" widget="many2many_tags"/>
+                            <field name="role_id"/>
                             <field name="manager_id"/>
                             <field name="user_id"/>
                         </group>
@@ -264,7 +263,7 @@
                                         <list>
                                             <field name="name"/>
                                             <field name="phone"/>
-                                            <field name="role_ids"/>
+                                            <field name="role_id"/>
                                         </list>
                                     </field>
                                 </group>

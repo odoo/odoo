@@ -34,6 +34,8 @@
         'views/rules/sale_phonebook.xml',
         'views/rules/sale_transaction.xml',
         'views/estate_project_view.xml',
+        'views/estate_property_unit_type_view.xml',
+        'views/estate_property_unit_view.xml',
         'views/estate_project_promotion_view.xml',
         'views/sale_customer_view.xml',
         'views/sale_phonebook_view.xml',

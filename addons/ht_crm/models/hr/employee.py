@@ -1,5 +1,5 @@
 from odoo import models, fields, api, exceptions
-import datetime as dt
+import datetime
 
 class Employee(models.Model):
     _name = 'sale.employee'
@@ -12,10 +12,8 @@ class Employee(models.Model):
     code = fields.Char(string="Mã NV")
     active = fields.Boolean(default=True)
 
-    role_ids = fields.Many2many(
+    role_id = fields.Many2one(
         'sale.employee.role',
-        'employee_id',
-        'role_id',
         string="Chức danh"
     )
 
@@ -83,8 +81,7 @@ class Employee(models.Model):
     # =========================
     # Work info
     # =========================
-    department = fields.Char(string="Department")
-    from datetime import date
+    department = fields.Char(string="Phòng ban")
 
     start_work_date = fields.Date(string="Ngày bắt đầu làm việc")
 

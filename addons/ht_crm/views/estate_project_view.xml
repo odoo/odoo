@@ -129,42 +129,6 @@
         </field>
     </record>    
 
-    <record id="view_estate_property_unit_list" model="ir.ui.view">
-        <field name="name">estate.property.unit.list</field>
-        <field name="model">estate.property.unit</field>
-        <field name="arch" type="xml">
-            <list>              
-                <field name="name"/>
-                <field name="project_id"/>
-                <field name="block"/>
-                <field name="floor"/>
-                <field name="unit_number"/>
-
-                <field name="unit_type_id"/>
-                <field name="net_area"/>
-                <field name="gross_area"/>
-
-                <field name="price" widget="monetary"/>
-                <field name="state"/>
-
-                <field name="currency_id" optional="1"/>
-            </list>
-        </field>
-    </record>
-
-    <record id="view_estate_property_unit_type_list" model="ir.ui.view">
-        <field name="name">estate.property.unit.type.list</field>
-        <field name="model">estate.property.unit.type</field>
-        <field name="arch" type="xml">
-            <list>
-
-                <field name="name"/>
-                <field name="code"/>
-                <field name="description"/>
-
-            </list>
-        </field>
-    </record>
 
     <record id="view_employee_project_rel_list" model="ir.ui.view">
         <field name="name">employee.project.rel.list</field>

@@ -23,7 +23,7 @@ class PhonebookBatch(models.Model):
         'employee.project.rel',
         'batch_id',
         string="Nhân viên phụ trách",
-        domain=[('sales_id.role_ids.code', '=', 'sales')]
+        domain=[('sales_id.role_id.code', '=', 'sales')]
     )
 
     # Trường phụ
@@ -175,7 +175,7 @@ class PhoneBook(models.Model):
     salesperson_id = fields.Many2one(
         'sale.employee',
         string="Sales phụ trách",
-        domain=[('role_ids.code', '=', 'sales')],
+        domain=[('role_id.code', '=', 'sales')],
         groups="ht_crm.group_ht_executive, ht_crm.group_ht_general_admin"
     )
 

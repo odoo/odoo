@@ -242,7 +242,7 @@ class EmployeeProjectRel(models.Model):
     _description = 'Sales Assignment By Project Batch'
     _order = "project_id, sales_id"
 
-    sales_id = fields.Many2one('sale.employee', required=True, domain=[('role_ids.code', '=', 'sales')], string="Sales phụ trách", ondelete='cascade')
+    sales_id = fields.Many2one('sale.employee', required=True, domain=[('role_id.code', '=', 'sales')], string="Sales phụ trách", ondelete='cascade')
     project_id = fields.Many2one(
         related='batch_id.project_id'
     )
