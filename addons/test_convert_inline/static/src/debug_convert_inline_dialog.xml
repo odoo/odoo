@@ -2,8 +2,8 @@
     <t t-name="test_convert_inline.DebugConvertInlineDialog">
         <Dialog title.translate="Debug Convert Inline" size="'fs'">
             <div>
-                <button t-on-click="() => this.updateLayoutDimensions(!state.isMobile)">
-                    Switch to <t t-out="state.isMobile ? 'Desktop' : 'Mobile'"/>
+                <button t-on-click="() => this.updateLayoutDimensions(!this.state.isMobile)">
+                    Switch to <t t-out="this.state.isMobile ? 'Desktop' : 'Mobile'"/>
                 </button>
                 <input
                     type="range"
@@ -18,11 +18,11 @@
             </div>
             <div class="d-flex">
                 <div>
-                    <iframe t-ref="outputIframe" t-att-sandbox="isBrowserSafari() ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
+                    <iframe t-ref="outputIframe" t-att-sandbox="this.isBrowserSafari() ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
                         t-attf-style="
                             display: block !important;
-                            width: {{ state.width }}px !important;
-                            height: {{ state.height }}px !important;
+                            width: {{ this.state.width }}px !important;
+                            height: {{ this.state.height }}px !important;
                         "/>
                 </div>
                 <div t-ref="referenceIframe"/>

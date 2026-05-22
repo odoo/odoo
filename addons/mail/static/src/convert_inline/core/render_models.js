@@ -170,8 +170,28 @@ export class ElementLayout extends LayoutModel {
         return this.tag;
     }
 
+    // TODO EGGMAIL: is this used? Else remove
     getStyleInfo() {
         return this.refToStyleInfo.get("root");
+    }
+}
+
+export class SpacingLayout extends LayoutModel {
+    static template = "mail.SpacingLayout";
+
+    constructor(options = {}) {
+        super(options);
+        this.setAttributes({
+            classNames: "o-ci-spacing-wrapper",
+        });
+    }
+
+    get ancestorTag() {
+        return "TABLE";
+    }
+
+    get descendantTag() {
+        return "TD";
     }
 }
 
@@ -333,6 +353,17 @@ export class EmailNode {
     }
 }
 
+/**
+ * Wrapper for a spacing layout, compatible with EmailNode render function.
+ */
 export class SpacingNode {
-    constructor({ emailNodeChildren = new UniqueArray() } = {}) {}
+    constructor({ Layout = SpacingLayout, refs = {} } = {}) {
+        this.layout = new Layout({ refs });
+    }
+
+    isRelevant() {
+        return Object.keys(this.layout.refs).some(
+            (ref) => Object.entries(this.layout.renderAttributes(ref)).length > 0
+        );
+    }
 }

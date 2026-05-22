@@ -1,13 +1,24 @@
 <templates>
     <t t-name="mail.NodePositionManager">
-        <t t-foreach="nodeIds" t-as="nodeId" t-key="nodeId_index">
+        <t t-foreach="this.nodeIds" t-as="nodeId" t-key="nodeId_index">
             <node-position t-att-data-id="nodeId"/>
         </t>
     </t>
     <t t-name="mail.ElementLayout">
-        <t t-tag="model.tag" t-att="model.renderAttributes()">
+        <t t-tag="this.model.tag" t-att="this.model.renderAttributes()">
             <t t-call="mail.NodePositionManager"
-                t-call-context="nodePositionManager.renderContext({ renderPositionedNodes })"/>
+                t-call-context="this.nodePositionManager.renderContext({ renderPositionedNodes: this.renderPositionedNodes })"/>
         </t>
+    </t>
+    <t t-name="mail.SpacingLayout">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+            t-att="this.model.renderAttributes()">
+            <tr>
+                <td t-att="this.model.renderAttributes('cell')">
+                    <t t-call="mail.NodePositionManager"
+                        t-call-context="this.nodePositionManager.renderContext({ renderPositionedNodes: this.renderPositionedNodes })"/>
+                </td>
+            </tr>
+        </table>
     </t>
 </templates>

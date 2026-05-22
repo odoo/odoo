@@ -1,13 +1,15 @@
 import { paragraphRelatedElements } from "@html_editor/utils/dom_info";
 import { DIMENSIONS } from "../hooks";
 import { Plugin } from "../plugin";
-import { ElementLayout } from "./render_models";
+import { ElementLayout, SpacingNode } from "./render_models";
 import { StyleInfo } from "./style_models";
 import { Rules } from "./rules_models";
 import { registry } from "@web/core/registry";
 import { parseCssValue } from "../css_parsers";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
+const MARGINS = ["margin-top", "margin-right", "margin-bottom", "margin-left"];
+const PADDINGS = ["padding-top", "padding-right", "padding-bottom", "padding-left"];
 
 export class SpacingPlugin extends Plugin {
     static id = "spacing";
@@ -33,6 +35,47 @@ export class SpacingPlugin extends Plugin {
         });
     }
 
+    buildMarginNode(facts) {
+        // TODO EGGMAIL: discard negative paddings
+        // for % values, use computed value in px (desktop mode) instead
+        const marginNode = new SpacingNode();
+        const styleInfo = facts.desktopSpacingStyleInfo;
+        if (
+            styleInfo.getPropertyValue("margin-left") === "auto" &&
+            styleInfo.getPropertyValue("margin-right") === "auto"
+        ) {
+            marginNode.setAttributes({ attributes: { align: "center" } });
+            marginNode.setAttributes({ attributes: { align: "center" } }, "cell");
+        } else if (styleInfo.getPropertyValue("margin-left") === "auto") {
+            // TODO EGGMAIL: consider RTL
+            marginNode.setAttributes({ attributes: { align: "right" } });
+            marginNode.setAttributes({ attributes: { align: "right" } }, "cell");
+        } else if (styleInfo.getPropertyValue("margin-right") === "auto") {
+            // TODO EGGMAIL: consider RTL
+            marginNode.setAttributes({ attributes: { align: "left" } });
+            marginNode.setAttributes({ attributes: { align: "left" } }, "cell");
+        }
+        for (const margin of MARGINS) {
+            const value = styleInfo.getPropertyValue(margin);
+            if (this.isPxSpacing(value)) {
+                marginNode.setAttributes({ style: { [margin]: value } });
+            }
+        }
+        return marginNode;
+    }
+
+    buildPaddingNode(facts) {
+        const paddingNode = new SpacingNode();
+        const styleInfo = facts.desktopSpacingStyleInfo;
+        for (const padding of PADDINGS) {
+            const value = styleInfo.getPropertyValue(padding);
+            if (this.isPxSpacing(value)) {
+                paddingNode.setAttributes({ style: { [padding]: value } });
+            }
+        }
+        return paddingNode;
+    }
+
     applyDefaultSpacing(layout, { emailNode }) {
         if (
             layout.constructor !== ElementLayout ||
@@ -41,13 +84,14 @@ export class SpacingPlugin extends Plugin {
         ) {
             return;
         }
-        // how to apply the related table the best way on the layout?
-        // include a container slot and a childContainer slot in LayoutModel, so that we can
-        // still access the main info easily, but we also have easy access to padding/margin structures?
-
-        // padding handling
-
-        // margin handling
+        const marginNode = this.buildMarginNode(emailNode.analysis.facts);
+        if (marginNode.isRelevant()) {
+            emailNode.marginNode = marginNode;
+        }
+        const paddingNode = this.buildPaddingNode(emailNode.analysis.facts);
+        if (paddingNode.isRelevant()) {
+            emailNode.paddingNode = paddingNode;
+        }
     }
 
     cacheSpacingStyleInfo() {
@@ -122,6 +166,11 @@ export class SpacingPlugin extends Plugin {
         spacingRules.allow(/^margin(-(top|right|bottom|left))?$/);
     }
 
+    isPxSpacing(propertyValue) {
+        const { number, unit } = parseCssValue(propertyValue);
+        return number === 0 || unit === "px";
+    }
+
     provideStyleRules(rules) {
         // Allow paragraph-related elements to keep their top/bottom margins
         rules.allow(/^margin(-(top|bottom))?$/, {
@@ -135,8 +184,7 @@ export class SpacingPlugin extends Plugin {
                             return number !== undefined && (number === 0 || unit === "px");
                         });
                     } else {
-                        const { number, unit } = parseCssValue(propertyValue);
-                        return number === 0 || unit === "px";
+                        return this.isPxSpacing(propertyValue);
                     }
                 },
             ],

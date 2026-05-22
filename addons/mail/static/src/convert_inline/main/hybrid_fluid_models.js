@@ -20,15 +20,13 @@ export class HybridFluidRow extends ElementLayout {
 
 export class HybridFluidCellWithOffset extends ElementLayout {
     constructor(options = {}) {
-        const refs = options.refs ?? {};
-        options.refs = refs;
-        refs.root = assignDefaultElementOptions(refs.root, {
+        const root = assignDefaultElementOptions(options, {
             style: {
                 "max-width": "100%",
                 "vertical-align": "top",
             },
         });
-        super(options);
+        super(root);
         this.setAttributes({
             classNames: "o-ci-hybrid-fluid-cell-with-offset",
             style: {

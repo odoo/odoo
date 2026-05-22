@@ -3,7 +3,7 @@
         <iframe t-att-sandbox="this.isBrowserSafari() ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
             aria-hidden="true"
             t-attf-style="
-                {{ isVisible ? `` : 
+                {{ this.isVisible ? `` : 
                     `visibility: hidden !important;
                     pointer-events: none !important;
                     position: absolute !important;

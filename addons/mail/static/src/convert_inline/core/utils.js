@@ -35,8 +35,14 @@ export function renderAttributes({
     classNames = new Set(),
     styleInfo = new StyleInfo(),
 } = {}) {
-    return Object.assign({}, attributes, {
+    const renderedAttributes = Object.assign({}, attributes, {
         class: [...classNames.values()].join(" ") || undefined,
         style: styleInfo.toString() || undefined,
     });
+    for (const [name, value] of Object.entries(renderedAttributes)) {
+        if (value === undefined) {
+            delete renderedAttributes[name];
+        }
+    }
+    return renderedAttributes;
 }

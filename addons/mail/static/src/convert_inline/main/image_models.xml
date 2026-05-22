@@ -1,7 +1,7 @@
 <templates>
     <t t-name="mail.ImageLink">
-        <a t-att="model.renderAttributes()">
-            <img t-att="model.renderAttributes('img')"/>
+        <a t-att="this.model.renderAttributes()">
+            <img t-att="this.model.renderAttributes('img')"/>
         </a>
     </t>
 </templates>

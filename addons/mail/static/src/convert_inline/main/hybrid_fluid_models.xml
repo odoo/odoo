@@ -1,9 +1,9 @@
 <templates>
     <t t-name="mail.HybridFluidCell">
-        <div t-att="model.renderAttributes()">
-            <div t-if="!model.isEmpty" t-att="model.renderAttributes('styleContext')">
+        <div t-att="this.model.renderAttributes()">
+            <div t-if="!this.model.isEmpty" t-att="this.model.renderAttributes('styleContext')">
                 <t t-call="mail.NodePositionManager"
-                    t-call-context="nodePositionManager.renderContext({ renderPositionedNodes })"/>
+                    t-call-context="this.nodePositionManager.renderContext({ renderPositionedNodes: this.renderPositionedNodes })"/>
             </div>
         </div>
     </t>
