@@ -653,15 +653,14 @@ class Store:
                 if self.field_name == "thread" and "thread" not in record._fields:
                     if (res_model := record[res_model_field]) and (res_id := record["res_id"]):
                         records = record.env[res_model].browse(res_id)
-            if self.value is not NO_VALUE and not isinstance(records, models.Model):
-                return records  # for a fake field, return the value as it is
             return self._copy_with_records(records, calling_record=record)
 
         def _copy_with_records(self, records, calling_record):
             """Returns a new relation with the given records instead of the field name."""
             assert self.field_name and self.records is None
             assert not self.dynamic_fields or calling_record
-            if records:
+            is_fake_field = self.value is not NO_VALUE and not isinstance(records, models.Model)
+            if not is_fake_field and records:
                 field_list = self.store._format_fields(self.fields, records, self.fields_params)
                 if self.dynamic_fields:
                     if (
@@ -678,11 +677,12 @@ class Store:
                 field_list = []  # avoid calling field methods (which potentially does queries) on empty records
             return self.__class__(
                 self.store,
-                records,
+                None if is_fake_field else records,
                 field_list,
                 as_thread=self.as_thread,
                 fields_params=self.fields_params,
                 only_data=self.only_data,
+                value=records if is_fake_field else NO_VALUE,
             )
 
         def _add_to_store(self, store, target, key):
@@ -779,13 +779,6 @@ class Store:
             self.mode = mode
             self.sort = sort
 
-        def _get_value(self, record):
-            res = super()._get_value(record)
-            if self.value is not NO_VALUE and not isinstance(res, (models.Model, Store.Attr)):
-                # for a fake field, immediately wrap the value with the mode
-                return self._prepend_mode(res)
-            return res
-
         def _copy_with_records(self, records, calling_record):
             if records is None:
                 records = []
@@ -797,7 +790,10 @@ class Store:
         def _add_to_store(self, store: "Store", target, key):
             self._sort_records()
             super()._add_to_store(store, target, key)
-            if not self.only_data and (self.records or self.mode == "REPLACE"):
+            has_something_to_write = (
+                self.value is not NO_VALUE or self.records or self.mode == "REPLACE"
+            )
+            if not self.only_data and has_something_to_write:
                 rel_val = self._get_id()
                 if self.mode == "REPLACE" or key not in target:
                     target[key] = rel_val
@@ -808,6 +804,8 @@ class Store:
 
         def _get_id(self):
             """Return the ids that can be used to insert the current relation in the store."""
+            if self.value is not NO_VALUE:
+                return self._prepend_mode(self.value)
             self._sort_records()
             res = [Store._get_one_id(record, self.as_thread) for record in self.records]
             return self._prepend_mode(res)

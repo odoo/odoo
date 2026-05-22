@@ -458,3 +458,27 @@ class TestDiscussTools(MailCase):
             data["discuss.channel"][0]["messages"],
             [("REPLACE", general.message_ids.ids), ("DELETE", general.message_ids[2].ids)],
         )
+
+    def test_470_many_commands_accumulated_for_fake_fields(self):
+        general = self.env["discuss.channel"].create({"name": "General"})
+        store = Store()
+        store.add(general, lambda res: res.many("messages", [], value=[1], mode="DELETE"))
+        store.add(general, lambda res: res.many("messages", [], value=[2], mode="ADD"))
+        data = store._build_result()
+        self.assertEqual(
+            data["discuss.channel"][0]["messages"],
+            [("DELETE", [1]), ("ADD", [2])],
+        )
+
+    def test_480_many_fake_field_per_record(self):
+        general = self.env["discuss.channel"].create({"name": "General"})
+        holiday = self.env["discuss.channel"].create({"name": "Holiday"})
+        store = Store()
+        store.add(
+            general | holiday,
+            lambda res: res.many("messages", [], value=lambda m: [m.id], mode="DELETE"),
+        )
+        data = store._build_result()
+        channels = data["discuss.channel"]
+        self.assertEqual(channels[0]["messages"], [("DELETE", [general.id])])
+        self.assertEqual(channels[1]["messages"], [("DELETE", [holiday.id])])
