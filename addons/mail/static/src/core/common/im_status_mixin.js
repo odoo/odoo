@@ -11,9 +11,6 @@ import { effectWithCleanup } from "@mail/utils/common/misc";
 
 const { DateTime } = luxon;
 
-const DISPOSE_EFFECT_SYM_1 = Symbol("DISPOSE_EFFECT_1");
-const DISPOSE_EFFECT_SYM_2 = Symbol("DISPOSE_EFFECT_2");
-
 /**
  * Both ResUsers and MailGuest models need to react to `presence_status` updates and
  * debounce updates to their `im_status` field to avoid flickering. This common class
@@ -31,35 +28,34 @@ export class ImStatusMixin extends Record {
         );
         record.setImStatusDebounced = setImStatusDebounced;
         record.cancelSetImStatusDebounced = setImStatusDebounced.cancel;
-        record[DISPOSE_EFFECT_SYM_1] = effect(() => {
-            const store = record.store;
-            const presenceService = record.store.env.services.presence;
-            const statusService = record.store.env.services.im_status;
-            if (record.notEq(store.self)) {
-                return;
-            }
-            const isOnline = presenceService.getInactivityPeriod() < AWAY_DELAY;
-            if (
-                (record.presence_status === "away" && isOnline) ||
-                record.presence_status === "offline"
-            ) {
-                statusService.updateBusPresence();
-            }
-        });
-        record[DISPOSE_EFFECT_SYM_2] = effectWithCleanup(() => {
-            const busService = record.store.env.services.bus_service;
-            const presenceChannel = record.monitorPresence && record.presenceChannel;
-            if (presenceChannel) {
-                busService.addChannel(presenceChannel);
-                return () => busService.deleteChannel(presenceChannel);
-            }
-        });
+        record._registerDisposeFn(
+            effect(() => {
+                const store = record.store;
+                const presenceService = record.store.env.services.presence;
+                const statusService = record.store.env.services.im_status;
+                if (record.notEq(store.self)) {
+                    return;
+                }
+                const isOnline = presenceService.getInactivityPeriod() < AWAY_DELAY;
+                if (
+                    (record.presence_status === "away" && isOnline) ||
+                    record.presence_status === "offline"
+                ) {
+                    statusService.updateBusPresence();
+                }
+            })
+        );
+        record._registerDisposeFn(
+            effectWithCleanup(() => {
+                const busService = record.store.env.services.bus_service;
+                const presenceChannel = record.monitorPresence && record.presenceChannel;
+                if (presenceChannel) {
+                    busService.addChannel(presenceChannel);
+                    return () => busService.deleteChannel(presenceChannel);
+                }
+            })
+        );
         return record;
-    }
-    delete(...args) {
-        this[DISPOSE_EFFECT_SYM_1]();
-        this[DISPOSE_EFFECT_SYM_2]();
-        super.delete(...args);
     }
     /** @type {(status) => void} */
     setImStatusDebounced;

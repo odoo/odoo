@@ -1,28 +1,23 @@
 import { fields, Record } from "@mail/model/export";
 import { effectWithCleanup } from "@mail/utils/common/misc";
 
-const DISPOSE_EFFECT_SYM = Symbol("DISPOSE_EFFECT");
-
 export class DiscussCategory extends Record {
     static _name = "discuss.category";
 
     static new() {
         /** @type {import("models").DiscussCategory} */
         const category = super.new(...arguments);
-        category[DISPOSE_EFFECT_SYM] = effectWithCleanup(() => {
-            const busChannel = category.busChannel;
-            const busService = category.store.env.services.bus_service;
-            if (busService && busChannel) {
-                busService.addChannel(busChannel);
-                return () => busService.deleteChannel(busChannel);
-            }
-        });
+        category._registerDisposeFn(
+            effectWithCleanup(() => {
+                const busChannel = category.busChannel;
+                const busService = category.store.env.services.bus_service;
+                if (busService && busChannel) {
+                    busService.addChannel(busChannel);
+                    return () => busService.deleteChannel(busChannel);
+                }
+            })
+        );
         return category;
-    }
-
-    delete(...args) {
-        this[DISPOSE_EFFECT_SYM]();
-        super.delete(...args);
     }
 
     busChannelSubscribed = false;

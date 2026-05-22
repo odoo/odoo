@@ -16,8 +16,6 @@ const { DateTime } = luxon;
 
 /** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
 
-const DISPOSE_EFFECT_SYM = Symbol("DISPOSE_EFFECT");
-
 export class DiscussChannel extends Record {
     static _name = "discuss.channel";
     static _inherits = { "mail.thread": "thread" };
@@ -28,18 +26,20 @@ export class DiscussChannel extends Record {
         // Handles subscriptions for non-members. Subscriptions for channels
         // that the user is a member of are handled by
         // `ir_websocket@_build_bus_channel_list`.
-        channel[DISPOSE_EFFECT_SYM] = effectWithCleanup(() => {
-            const busChannel =
-                !channel.isTransient &&
-                !channel.self_member_id &&
-                channel.shouldSubscribeToBusChannel &&
-                channel.busChannel;
-            const busService = channel.store.env.services.bus_service;
-            if (busService && busChannel) {
-                busService.addChannel(busChannel);
-                return () => busService.deleteChannel(busChannel);
-            }
-        });
+        channel._registerDisposeFn(
+            effectWithCleanup(() => {
+                const busChannel =
+                    !channel.isTransient &&
+                    !channel.self_member_id &&
+                    channel.shouldSubscribeToBusChannel &&
+                    channel.busChannel;
+                const busService = channel.store.env.services.bus_service;
+                if (busService && busChannel) {
+                    busService.addChannel(busChannel);
+                    return () => busService.deleteChannel(busChannel);
+                }
+            })
+        );
         return channel;
     }
 
@@ -555,7 +555,6 @@ export class DiscussChannel extends Record {
     }
 
     delete() {
-        this[DISPOSE_EFFECT_SYM]();
         this.chatWindow?.close();
         super.delete(...arguments);
     }
