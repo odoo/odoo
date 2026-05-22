@@ -428,8 +428,8 @@ class HrVersion(models.Model):
         domain_to_nullify = Domain(False)
         work_entry_null_vals = {field: False for field in self.env["hr.work.entry.regeneration.wizard"]._work_entry_fields_to_nullify()}
 
-        for tz, versions in self.grouped("tz").items():
-            tz = ZoneInfo(tz) if tz else UTC
+        for version_tz, versions in self.grouped(lambda v: v._get_tz()).items():
+            tz = ZoneInfo(version_tz) if version_tz else UTC
             for version in versions:
                 if not version.contract_date_start:
                     continue
