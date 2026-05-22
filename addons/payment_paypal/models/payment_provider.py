@@ -9,7 +9,6 @@ from odoo.tools import urls
 
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paypal import const
-from odoo.addons.payment_paypal.controllers.main import PaypalController
 
 _logger = get_payment_logger(__name__)
 
@@ -162,9 +161,13 @@ class PaymentProvider(models.Model):
         :raise UserError: If the base URL is not in HTTPS.
         """
         base_url = self.get_base_url()
-        webhook_events = const.CHECKOUT_WEBHOOK_EVENTS + const.MERCHANT_WEBHOOK_EVENTS
+        webhook_events = (
+            const.CHECKOUT_WEBHOOK_EVENTS
+            + const.CAPTURE_WEBHOOK_EVENTS
+            + const.MERCHANT_WEBHOOK_EVENTS
+        )
         data = {
-            "url": urls.urljoin(base_url, PaypalController._webhook_url),
+            "url": urls.urljoin(base_url, const.WEBHOOK_ROUTE),
             "event_types": [{"name": event_type} for event_type in webhook_events],
         }
         webhook_data = self._send_api_request("POST", "/v1/notifications/webhooks", json=data)
@@ -202,19 +205,22 @@ class PaymentProvider(models.Model):
 
         return response_content
 
-    def _paypal_get_inline_form_values(self, currency=None):
+    def _paypal_get_inline_form_values(self, currency=None, partner_id=None):
         """Return a serialized JSON of the required values to render the inline form.
 
         Note: `self.ensure_one()`
 
         :param res.currency currency: The transaction currency.
+        :param int partner_id: The partner of the transaction, as a `res.partner` id.
         :return: The JSON serial of the required values to render the inline form.
         :rtype: str
         """
+        partner = self.env["res.partner"].browse(partner_id).exists()
         inline_form_values = {
             "provider_id": self.id,
             "client_id": self.paypal_client_id,
             "currency_code": currency and currency.name,
+            "country_code": partner and partner.country_code,
         }
         return json.dumps(inline_form_values)
 
@@ -259,13 +265,11 @@ class PaymentProvider(models.Model):
                 paypal_onboarding_access_token=paypal_onboarding_access_token,
                 **kwargs,
             )
-
         headers = {
-            # PayPal requires a reference specific to Odoo to be able to track Odoo customers.
+            # PayPal requires a reference specific to Odoo to be able to track Odoo customers
             "PayPal-Partner-Attribution-Id": "ODOO_SP_DIRECT"
         }
-
-        if paypal_onboarding_shared_id or paypal_onboarding_access_token:
+        if paypal_onboarding_shared_id or paypal_onboarding_access_token:  # Onboarding request
             headers["Content-Type"] = "application/x-www-form-urlencoded"
         else:
             headers["Content-Type"] = "application/json"
@@ -311,7 +315,13 @@ class PaymentProvider(models.Model):
         """Override of `payment` to parse the error message."""
         if self.code != "paypal":
             return super()._parse_response_error(response)
-        return response.json().get("message", "")
+        response_content = response.json()
+        descriptions = [
+            detail["description"]
+            for detail in response_content.get("details", [])
+            if detail.get("description")
+        ]
+        return "\n".join(descriptions) or response_content.get("message", "")
 
     def _build_request_auth(
         self, *, is_refresh_token_request=False, paypal_onboarding_shared_id=None, **kwargs
