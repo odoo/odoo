@@ -169,7 +169,7 @@ class Cart(PaymentPortal):
                 product_values = order_sudo.with_context(skip_cart_verification=True)._cart_add(
                     product_id=product_data["product_id"],
                     quantity=product_data["quantity"],
-                    combo_item_ratio=product_data["combo_item_ratio"],
+                    combo_item_ratio=product_data.get("combo_item_ratio", 1),
                     uom_id=product_data.get("uom_id"),
                     product_custom_attribute_values=product_data["product_custom_attribute_values"],
                     no_variant_attribute_value_ids=[

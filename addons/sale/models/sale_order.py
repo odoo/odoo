@@ -1333,7 +1333,7 @@ class SaleOrder(models.Model):
                     for item in selected_combo_items:
                         combo_id = item_to_combo_map.get(item["combo_item_id"])
                         if combo_id:
-                            combo_counts[combo_id] += item.get("quantity", 1)
+                            combo_counts[combo_id] += item.get("combo_item_ratio", 1)
 
                     for combo in line.product_template_id.sudo().combo_ids:
                         if combo_counts.get(combo.id, 0) != combo.qty_free:
@@ -1354,7 +1354,7 @@ class SaleOrder(models.Model):
                     item_key = json.dumps(item, sort_keys=True)
                     if item_key not in grouped_items:
                         grouped_items[item_key] = item.copy()
-                        grouped_items[item_key]["quantity"] = item["quantity"]
+                        grouped_items[item_key]["quantity"] = item.get("combo_item_ratio", 1)
                     else:
                         grouped_items[item_key]["quantity"] += 1
 
