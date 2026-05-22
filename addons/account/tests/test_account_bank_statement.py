@@ -1510,7 +1510,7 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         )
         self.assertIn(transfer_aml, candidates)
 
-    def test_default_amls_matching_domain_excludes_reconciled_receivable(self):
+    def test_default_amls_matching_domain_includes_reconciled_receivable(self):
         receivable_account = self.company_data['default_account_receivable']
 
         st_line_a = self.env['account.bank.statement.line'].create({
@@ -1534,4 +1534,4 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         candidates = self.env['account.move.line'].search(
             st_line_b._get_default_amls_matching_domain(),
         )
-        self.assertNotIn(receivable_aml, candidates)
+        self.assertIn(receivable_aml, candidates)
