@@ -372,6 +372,8 @@ export class ProductAddExtraImageAction extends BaseProductPageAction {
                 noDocuments: true,
                 noIcons: true,
                 node: el,
+                resModel: "ir.ui.view",
+                resId: false,
                 // Kinda hack-ish but the regular save does not get the information we need
                 save: async (imgEls, selectedMedia, activeTab) => {
                     if (selectedMedia.length) {
