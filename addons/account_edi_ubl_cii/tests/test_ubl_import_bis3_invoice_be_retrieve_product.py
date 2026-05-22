@@ -18,12 +18,18 @@ class TestUblImportBis3InvoiceBERetrieveProduct(TestUblImportBis3InvoiceBE):
         }])
 
     def test_partial_import_product_name(self):
-        product = self._create_product(name='XYZ')
+        product = self._create_product(name='important product1')
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_product_name')
-        self.assertRecordValues(invoice.invoice_line_ids, [{
-            'name': 'XYZ',
-            'product_id': product.id,
-        }])
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {
+                'name': 'important product',
+                'product_id': product.id,
+            },
+            {
+                'name': 'XYZ',
+                'product_id': None,
+            },
+        ])
 
     def test_partial_import_product_barcode(self):
         product = self._create_product(name='XYZ', barcode='12345678912345')
