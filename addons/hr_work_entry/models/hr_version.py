@@ -348,8 +348,8 @@ class HrVersion(models.Model):
 
         intervals_to_generate = defaultdict(lambda: self.env['hr.version'])
 
-        for tz, versions in self.grouped("tz").items():
-            tz = ZoneInfo(tz) if tz else UTC
+        for version_tz, versions in self.grouped(lambda v: v._get_tz()).items():
+            tz = ZoneInfo(version_tz) if version_tz else UTC
             for version in versions:
                 version_start = fields.Datetime.to_datetime(version.date_start).replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                 version_stop = datetime.combine(fields.Datetime.to_datetime(version.date_end or date_stop),
