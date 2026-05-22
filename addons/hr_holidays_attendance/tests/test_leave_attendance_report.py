@@ -184,3 +184,40 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
             'leave_hours': 0.0, 'difference_hours': -8.0}])
         self.assertFalse(row(day(5, 3)),
                          "working day after contract end -> no row")
+
+    @freeze_time('2026-02-28')
+    def test_overlap_leave_and_public_holiday_excluded(self):
+        """ When the leave type excludes public holidays from its duration,
+            the holiday is dropped from the leave's pro-rated working-day
+            count (exercises the holiday anti-join in `leave_day`). """
+        self.employee_emp.contract_date_start = "2026-02-01"
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Some Public Holiday',
+            'calendar_id': self.employee_emp.resource_calendar_id.id,
+            'date_from': '2026-02-10 00:00:00',
+            'date_to': '2026-02-10 18:00:00',
+            'resource_id': False,
+        })
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Count Public Holiday Leave',
+            'requires_allocation': False,
+            'company_id': self.company.id,
+            'include_public_holidays_in_duration': False,
+        })
+        leave = self.env['hr.leave'].create({
+            'name': 'Some leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': "2026-02-09",
+            'request_date_to': "2026-02-11",
+        })
+        leave.action_approve()
+        non_overlap_days = (self.env["hr.leave.attendance.report"].search(
+            ['&', '|', ('date', '=', '2026-02-09'), ('date', '=', '2026-02-11'), ('employee_id', '=', self.employee_emp.id)]))
+        # 2026-02-10 is a public holiday -> no report row; the leave's 16h are
+        # spread over the 2 remaining working days -> 8h each.
+        self.assertRecordValues(non_overlap_days, [{
+            'expected_hours': 8.0,
+            'leave_hours': 8.0,
+            'difference_hours': 0.0,
+        } for _ in range(2)])
