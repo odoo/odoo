@@ -1,3 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+  <record id="view_project_form_solar" model="ir.ui.view">
+    <field name="name">project.project.view.form.solar</field>
+    <field name="model">project.project</field>
+    <field name="inherit_id" ref="project.edit_project"/>
+    <field name="arch" type="xml">
+      <notebook position="inside">
+        <page string="Solar System" name="solar">
+          <group string="Technical Parameters">
+            <group>
+              <field name="solar_stage"/>
+              <field name="solar_kw_capacity"/>
+              <field name="solar_battery_kwh"/>
+              <field name="solar_grid_type"/>
+              <field name="solar_roof_type"/>
+            </group>
+            <group>
+              <field name="solar_address"/>
+              <field name="solar_latitude"/>
+              <field name="solar_longitude"/>
+              <field name="solar_budget_usd" widget="monetary"/>
+              <field name="solar_estimated_roi_years"/>
+            </group>
+          </group>
+          <group string="Documents">
+            <field name="solar_document_ids" nolabel="1">
+              <list>
+                <field name="name"/>
+                <field name="document_type_id"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'approved'"
+                       decoration-warning="state == 'review'"
+                       decoration-danger="state in ('expired','superseded')"/>
+                <field name="valid_to"/>
+                <field name="ai_classified" optional="hide"/>
+              </list>
+            </field>
+          </group>
+        </page>
+      </notebook>
+    </field>
+  </record>
+
+  <record id="view_project_form_solar_stat" model="ir.ui.view">
+    <field name="name">project.project.view.form.solar.stat</field>
+    <field name="model">project.project</field>
+    <field name="inherit_id" ref="project.edit_project"/>
+    <field name="arch" type="xml">
+      <div name="button_box" position="inside">
+        <button name="%(solar_project.action_solar_document_project)d"
+                type="action"
+                class="oe_stat_button"
+                icon="fa-file-text-o"
+                context="{'default_project_id': id}">
+          <field name="solar_document_count" widget="statinfo" string="Docs"/>
+        </button>
+      </div>
+    </field>
+  </record>
 </odoo>

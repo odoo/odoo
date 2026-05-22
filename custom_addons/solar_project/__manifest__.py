@@ -14,8 +14,8 @@
     "data": [
         "security/ir.model.access.csv",
         "data/solar_document_type_data.xml",
-        "views/project_project_views.xml",
         "views/solar_document_views.xml",
+        "views/project_project_views.xml",
         "views/menus.xml",
     ],
     "installable": True,

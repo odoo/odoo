@@ -1,3 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+  <menuitem id="menu_solar_project_root"
+            name="Solar Projects"
+            sequence="10"
+            groups="project.group_project_user"/>
+
+  <menuitem id="menu_solar_project_projects"
+            name="Projects"
+            parent="menu_solar_project_root"
+            action="project.open_view_project_all_group_stage"
+            sequence="10"/>
+
+  <menuitem id="menu_solar_project_documents"
+            name="Documents"
+            parent="menu_solar_project_root"
+            action="solar_project.action_solar_document"
+            sequence="20"/>
 </odoo>

@@ -1,3 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+  <record id="view_solar_document_form" model="ir.ui.view">
+    <field name="name">solar.document.view.form</field>
+    <field name="model">solar.document</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_submit_review" string="Submit for Review"
+                  type="object" class="btn-primary"
+                  invisible="state != 'draft'"/>
+          <button name="action_approve" string="Approve"
+                  type="object" class="btn-primary"
+                  invisible="state != 'review'"/>
+          <button name="action_reset_draft" string="Reset to Draft"
+                  type="object"
+                  invisible="state not in ('review','approved')"/>
+          <button name="action_expire" string="Mark Expired"
+                  type="object"
+                  invisible="state not in ('approved',)"/>
+          <field name="state" widget="statusbar"
+                 statusbar_visible="draft,review,approved"/>
+        </header>
+        <sheet>
+          <group>
+            <group>
+              <field name="name"/>
+              <field name="project_id"/>
+              <field name="task_id"/>
+              <field name="document_type_id"/>
+            </group>
+            <group>
+              <field name="attachment_id" widget="many2one_binary"/>
+              <field name="valid_from"/>
+              <field name="valid_to"/>
+              <field name="replaces_id"/>
+            </group>
+          </group>
+          <group string="AI Metadata" groups="base.group_no_one">
+            <field name="ai_classified"/>
+            <field name="ai_extracted_data" widget="json"/>
+          </group>
+          <field name="notes" placeholder="Notes..."/>
+        </sheet>
+        <chatter/>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_solar_document_list" model="ir.ui.view">
+    <field name="name">solar.document.view.list</field>
+    <field name="model">solar.document</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="project_id"/>
+        <field name="document_type_id"/>
+        <field name="state" widget="badge"
+               decoration-success="state == 'approved'"
+               decoration-warning="state == 'review'"
+               decoration-danger="state in ('expired','superseded')"/>
+        <field name="valid_to"/>
+        <field name="ai_classified"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="action_solar_document" model="ir.actions.act_window">
+    <field name="name">Solar Documents</field>
+    <field name="res_model">solar.document</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="action_solar_document_project" model="ir.actions.act_window">
+    <field name="name">Project Documents</field>
+    <field name="res_model">solar.document</field>
+    <field name="view_mode">list,form</field>
+    <field name="context">{'default_project_id': active_id}</field>
+    <field name="domain">[('project_id', '=', active_id)]</field>
+  </record>
 </odoo>
