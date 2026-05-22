@@ -1,6 +1,6 @@
 from types import MappingProxyType
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 from odoo.tools.translate import LazyTranslate
 
@@ -49,6 +49,29 @@ class AccountPeppolResponse(models.Model):
             ('10', 'Report'),
         ],
     )
-    pdp_fully_paid = fields.Boolean(string="Fully Paid")
     pdp_issue_date = fields.Datetime(string="Issue Date")
     pdp_status_info = fields.Text(string="Status Info")
+    pdp_payment_info = fields.Json(string="Payment Info")
+    pdp_ref_uuid = fields.Char('Referenced UUID')
+    pdp_ppf_state = fields.Selection(
+        selection=[
+            ('sent', 'Sent'),
+            ('error', 'Error'),
+        ],
+        compute='_compute_pdp_ppf_state',
+        string='PPF Status',
+    )
+
+    @api.depends('move_id.peppol_response_ids')
+    def _compute_pdp_ppf_state(self):
+        for response in self:
+            lifecycles = response.move_id.peppol_response_ids.filtered(
+                lambda r: r.pdp_flow_number == '6' and r.pdp_ref_uuid == response.peppol_message_uuid
+            )
+            states = set(lifecycles.mapped('response_code'))
+            result = False
+            if {'refused', 'RE'} & states:
+                result = 'error'
+            elif lifecycles:
+                result = 'sent'
+            response.pdp_ppf_state = result

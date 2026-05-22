@@ -1,6 +1,15 @@
+from odoo.tools.sql import column_exists, create_column
+
 from . import models
 from . import wizard
 from . import tools
+
+
+def _pre_init_pdp(env):
+    if not column_exists(env.cr, "account_move", "pdp_ppf_move_state"):
+        create_column(env.cr, "account_move", "pdp_ppf_move_state", "varchar")
+        create_column(env.cr, "account_move", "pdp_ppf_lifecycle_state", "varchar")
+        create_column(env.cr, "account_move", "pdp_lifecycle_residual", "numeric")
 
 
 def _post_init_pdp(env):

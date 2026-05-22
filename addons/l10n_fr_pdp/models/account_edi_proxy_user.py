@@ -67,8 +67,6 @@ PAYMENT_TYPE_CODES = MappingProxyType({
     'MEN': _lt("Amount collected (including tax)"),  # Montant encaissé (TTC)
 })
 
-FULLY_PAID_CODES = frozenset({'MPA', 'MEN'})
-
 
 class AccountEdiProxyClientUser(models.Model):
     _inherit = 'account_edi_proxy_client.user'
@@ -309,6 +307,7 @@ class AccountEdiProxyClientUser(models.Model):
                     'reference_uuids': reference_moves.mapped('peppol_message_uuid'),
                     'status': PEPPOL_TO_PDP_STATUS.get(status) or status,
                     'additional_info': additional_info,
+                    'lifecycle': True,
                 },
             )
         except UserError as e:
@@ -342,6 +341,7 @@ class AccountEdiProxyClientUser(models.Model):
                 'peppol_state': 'processing',
                 'move_id': move.id,
                 'pdp_status_info': "\n\n".join([self._format_status_info(status_info) for status_info in status_infos]),
+                'pdp_payment_info': additional_info.get('payments'),
                 'pdp_issue_date': issue_time,
                 'pdp_flow_number': '2',
             }
@@ -420,6 +420,7 @@ class AccountEdiProxyClientUser(models.Model):
         issue_date = info['issue_date']
         status_infos = info['status_infos']
         origin_ref_status_code = content.get("origin_ref_status_code")
+        origin_peppol_lifecycle_uuid = content.get("origin_peppol_lifecycle_uuid")
         origin_ref_status = PROCESS_CONDITION_CODE_TO_RESPONSE_CODE.get(origin_ref_status_code)
         markup_status_info = Markup('<br/><br/>').join([self._format_status_info(status, separator=Markup('<br/>')) for status in status_infos])
         response_code_description = PDP_STATUSES.get(response_code)
@@ -458,6 +459,7 @@ class AccountEdiProxyClientUser(models.Model):
 
         response = self.env['account.peppol.response'].create({
             'peppol_message_uuid': uuid,
+            'pdp_ref_uuid': origin_peppol_lifecycle_uuid,
             'response_code': response_code,
             'peppol_state': content['state'],
             'move_id': origin_move.id,
@@ -465,7 +467,7 @@ class AccountEdiProxyClientUser(models.Model):
             'pdp_status_info': '\n\n'.join([self._format_status_info(status, separator=Markup('\n')) for status in status_infos]),
             'pdp_issue_date': issue_date,
             'pdp_flow_number': flow_number,
-            'pdp_fully_paid': any(payment_info.get('type_code') in FULLY_PAID_CODES for status in status_infos for payment_info in status.get('payment_infos', []))
+            'pdp_payment_info': [payment_info for status in status_infos for payment_info in status.get('payment_infos', [])],
         })
         if content['state'] == 'done':
             if origin_ref_status_code:
@@ -506,9 +508,9 @@ class AccountEdiProxyClientUser(models.Model):
               'payment_infos': [
                   {
                       'type_code': pay_node.findtext("./ram:TypeCode", namespaces=CDAR_NSMAP),
-                      'value_amount': pay_node.findtext("./ram:ValueAmount", namespaces=CDAR_NSMAP),
-                      'value_amount_currency': n.get("currencyID") if (n := pay_node.find("./ram:ValueAmount", namespaces=CDAR_NSMAP)) is not None else None,
-                      'value_percent': pay_node.findtext("./ram:ValuePercent", namespaces=CDAR_NSMAP),
+                      'amount': pay_node.findtext("./ram:ValueAmount", namespaces=CDAR_NSMAP),
+                      'currency': n.get("currencyID") if (n := pay_node.find("./ram:ValueAmount", namespaces=CDAR_NSMAP)) is not None else None,
+                      'tax_percent': pay_node.findtext("./ram:ValuePercent", namespaces=CDAR_NSMAP),
                   }
                   for pay_node in node.findall("./ram:SpecifiedDocumentCharacteristic", namespaces=CDAR_NSMAP)
               ],
@@ -531,20 +533,20 @@ class AccountEdiProxyClientUser(models.Model):
     def _format_payment_info(self, info, separator='\n'):
         type_code = info.get('type_code')
         type_string = PAYMENT_TYPE_CODES.get(type_code)
-        value_amount = info.get('value_amount')
-        value_amount_currency = info.get('value_amount_currency')
-        value_percent = info.get('value_percent')
+        amount = info.get('amount')
+        currency = info.get('currency')
+        tax_percent = info.get('tax_percent')
 
         infos = []
         if type_code and type_string:
             infos.append(f"[{type_code}] {type_string}")
         elif type_code:
             infos.append(f"[{type_code}]")
-        if value_amount and value_percent:
+        if amount and tax_percent:
             infos.append(self.env._("%(amount)s %(currency_code)s (including %(tax_percent)s%% VAT)",
-                                    amount=value_amount, currency_code=value_amount_currency, tax_percent=value_percent))
-        elif value_amount:
-            infos.append(self.env._("%(amount)s %(currency_code)s", amount=value_amount, currency_code=value_amount_currency))
+                                    amount=amount, currency_code=currency, tax_percent=tax_percent))
+        elif amount:
+            infos.append(self.env._("%(amount)s %(currency_code)s", amount=amount, currency_code=currency))
 
         return separator.join(infos)
 
@@ -591,6 +593,37 @@ class AccountEdiProxyClientUser(models.Model):
             return "pdf", "application/pdf"
         return super()._peppol_get_filetype(content)
 
+    def _pdp_send_lifecycles(self, batch_size=None):
+        job_count = batch_size or BATCH_SIZE
+        need_retrigger = False
+        for edi_user in self:
+            edi_user = edi_user.with_company(edi_user.company_id)
+            company = edi_user.company_id
+            collected_moves = self.env['account.move'].search(
+                [
+                    ('company_id', '=', company.id),
+                    ('pdp_ppf_move_state', 'in', ['sent', 'done']),
+                    ('pdp_lifecycle_residual', '!=', 0.0),
+                ],
+                limit=job_count + 1,
+            )
+            move_count = len(collected_moves)
+            _logger.info("At least %s moves need payment lifecycles in company '%s'.", move_count, company.name)
+            if not collected_moves:
+                continue
+            need_retrigger = need_retrigger or move_count > job_count
+            try:
+                wizard = self.env['pdp.response.wizard'].create({
+                    'status': 'PD',
+                    'move_ids': collected_moves[:job_count].ids,
+                })
+                wizard.button_send()
+            except Exception:  # noqa: BLE001
+                _logger.exception('Error while sending payment lifecycles: %s')
+                continue
+        if need_retrigger:
+            self.env.ref('l10n_fr_pdp.ir_cron_pdp_send_lifecycles')._trigger()
+
     # -------------------------------------------------------------------------
     # CRONS
     # -------------------------------------------------------------------------
@@ -598,3 +631,7 @@ class AccountEdiProxyClientUser(models.Model):
     def _cron_pdp_get_new_regulatory_documents(self):
         edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'receiver'), ('proxy_type', '=', 'pdp')])
         edi_users._pdp_get_new_regulatory_documents()
+
+    def _cron_pdp_send_lifecycles(self):
+        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'receiver'), ('proxy_type', '=', 'pdp')])
+        edi_users._pdp_send_lifecycles()

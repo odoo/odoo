@@ -30,7 +30,7 @@ class AccountEdiProxyClientUser(models.Model):
 
         try:
             response = self._call_peppol_proxy(
-                "/api/peppol/1/send_response",
+                endpoint=self._get_peppol_proxy_endpoint('1/send_response'),
                 params={
                     'reference_uuids': reference_moves.mapped('peppol_message_uuid'),
                     'status': status,
