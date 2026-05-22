@@ -98,8 +98,6 @@ export function onChange(target, key, callback) {
     if (Array.isArray(key)) {
         /** @type {Function[]} */
         const arrayDisposeFns = [];
-        arrayDisposeFns.forEach((f) => f());
-        arrayDisposeFns.length = 0;
         for (const k of key) {
             arrayDisposeFns.push(onChange(target, k, callback));
         }
