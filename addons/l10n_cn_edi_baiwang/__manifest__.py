@@ -27,5 +27,8 @@ Features:
         'views/res_config_settings_view.xml',
     ],
     'author': 'Odoo S.A.',
+    'demo': [
+        'data/demo_credentials.xml',
+    ],
     'license': 'LGPL-3',
 }

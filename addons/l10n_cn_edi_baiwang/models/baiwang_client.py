@@ -34,7 +34,8 @@ class BaiwangClient:
         self.salt = company.l10n_cn_baiwang_salt
         self.username = company.l10n_cn_baiwang_username
         self.password = company.l10n_cn_baiwang_password
-        self.tax_no = company.l10n_cn_baiwang_tax_no or company.vat
+        self.tax_no = company.vat
+        self.org_auth_code = company.l10n_cn_baiwang_org_auth_code
         mode = company.l10n_cn_edi_mode or 'test'
         self.endpoint = ENDPOINTS.get(mode, ENDPOINTS['test'])
 
@@ -95,9 +96,13 @@ class BaiwangClient:
             'client_id': self.app_key,
             'version': '7.0',
             'timestamp': str(int(time.time() * 1000)),
+            'signType': 'SHA256',
             'encryptType': 'NONE',
             'encryptScope': '00',
         }
+
+        if self.org_auth_code:
+            url_params['orgAuthCode'] = self.org_auth_code
 
         body = {
             'password': hashed_pw,
@@ -105,19 +110,31 @@ class BaiwangClient:
             'client_secret': self.app_secret,
         }
 
-        # Auth endpoint doesn't need a signature
+        # Compute sign and add to URL params
+        body_str = json.dumps(body, ensure_ascii=False, separators=(',', ':'))
+        url_params['sign'] = self._compute_sign(url_params, body_str)
+
         response = requests.post(
             self.endpoint,
             params=url_params,
-            json=body,
+            data=body_str.encode('utf-8'),
+            headers={'Content-Type': 'application/json; charset=utf-8'},
             timeout=15,
         )
         response.raise_for_status()
         result = response.json()
 
+        _logger.debug("Baiwang auth response: %s", result)
+
         if not result.get('success'):
-            error_msg = result.get('errorResponse', {}).get('message', 'Authentication failed')
-            raise UserError(f"Baiwang auth error: {error_msg}")
+            error_response = result.get('errorResponse', {})
+            error_code = error_response.get('code', '')
+            error_msg = error_response.get('message', 'Authentication failed')
+            raise UserError(
+                f"Baiwang authentication failed [{error_code}]: {error_msg}\n\n"
+                "Please verify your App Key, App Secret, Username, Password, Salt, "
+                "and Org Auth Code in Settings → Accounting → China Electronic Invoicing."
+            )
 
         token_data = result.get('response', {})
         access_token = token_data.get('access_token')

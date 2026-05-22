@@ -19,7 +19,7 @@ class L10nCnEdiDocument(models.Model):
         ('red_form_pending', 'Pending Confirmation'),
         ('red_form_confirmed', 'Confirmed'),
         ('failed', 'Failed/Rejected'),
-    ], default='draft', tracking=True)
+    ], default='draft')
 
     baiwang_uuid = fields.Char(string="Red Form UUID", copy=False)
     baiwang_red_form_number = fields.Char(string="Red Form Number", copy=False)

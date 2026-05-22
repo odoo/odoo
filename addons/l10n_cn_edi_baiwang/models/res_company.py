@@ -10,12 +10,16 @@ class ResCompany(models.Model):
     # ------------------
 
     # Baiwang API credentials
-    l10n_cn_baiwang_app_key = fields.Char(string="Baiwang App Key")
-    l10n_cn_baiwang_app_secret = fields.Char(string="Baiwang App Secret")
-    l10n_cn_baiwang_username = fields.Char(string="Baiwang Username")
-    l10n_cn_baiwang_password = fields.Char(string="Baiwang Password")
-    l10n_cn_baiwang_salt = fields.Char(string="Baiwang Salt", help="User salt for password hashing (provided during Baiwang account setup)")
-    l10n_cn_baiwang_tax_no = fields.Char(string="Baiwang Tax No", help="Seller tax registration number (销方税号) registered with Baiwang")
+    l10n_cn_baiwang_app_key = fields.Char(string="App Key")
+    l10n_cn_baiwang_app_secret = fields.Char(string="App Secret")
+    l10n_cn_baiwang_username = fields.Char(string="Username")
+    l10n_cn_baiwang_password = fields.Char(string="Password")
+    l10n_cn_baiwang_salt = fields.Char(string="Salt", help="User salt for password hashing (provided during Baiwang account setup)")
+    l10n_cn_baiwang_org_auth_code = fields.Char(
+        string="Org Auth Code",
+        help="Unique enterprise identifier issued by Baiwang. Required for third-party apps; "
+             "optional for internal enterprise apps. Found in Developer Portal → App Management → Permissions → Authorized Enterprises.",
+    )
     l10n_cn_baiwang_invoice_terminal_code = fields.Char(string="Invoice Terminal Code", help="Only needed for tax-controlled invoices (004/007/028)")
 
     # Token management (auto-managed)

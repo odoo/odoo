@@ -17,31 +17,38 @@
                         <div class="content-group mt16" invisible="not l10n_cn_edi_mode">
                             <div class="row mt8">
                                 <label for="l10n_cn_baiwang_app_key" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_cn_baiwang_app_key"/>
+                                <field name="l10n_cn_baiwang_app_key" placeholder="10000000"/>
                             </div>
                             <div class="row mt8">
                                 <label for="l10n_cn_baiwang_app_secret" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_cn_baiwang_app_secret" password="True"/>
+                                <field name="l10n_cn_baiwang_app_secret" password="True" placeholder="0e32b1ce-b0e7-4b45-a4de-07a2fbc3147a"/>
                             </div>
                             <div class="row mt8">
                                 <label for="l10n_cn_baiwang_username" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_cn_baiwang_username"/>
+                                <field name="l10n_cn_baiwang_username" placeholder="user"/>
                             </div>
                             <div class="row mt8">
                                 <label for="l10n_cn_baiwang_password" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_cn_baiwang_password" password="True"/>
+                                <field name="l10n_cn_baiwang_password" password="True" placeholder="password (hashed automatically)"/>
                             </div>
                             <div class="row mt8">
                                 <label for="l10n_cn_baiwang_salt" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_cn_baiwang_salt" password="True"/>
+                                <field name="l10n_cn_baiwang_salt" password="True" placeholder="0895205868F79DAF65C08C97A44302BB "/>
                             </div>
                             <div class="row mt8">
-                                <label for="l10n_cn_baiwang_tax_no" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_cn_baiwang_tax_no"/>
+                                <label for="l10n_cn_baiwang_org_auth_code" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_cn_baiwang_org_auth_code" placeholder="c7ed317328e8888afeeb2ac59c1b5436"/>
                             </div>
                             <div class="row mt8">
                                 <label for="l10n_cn_baiwang_invoice_terminal_code" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_cn_baiwang_invoice_terminal_code" placeholder="Only needed for tax-controlled invoices"/>
+                                <field name="l10n_cn_baiwang_invoice_terminal_code" placeholder="532dzp"/>
+                            </div>
+                            <div class="mt16">
+                                <button name="action_l10n_cn_baiwang_test_connection"
+                                        type="object"
+                                        string="Test Connection"
+                                        class="btn-primary"
+                                        icon="fa-plug"/>
                             </div>
                         </div>
                     </setting>

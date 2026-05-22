@@ -45,7 +45,6 @@ class AccountMove(models.Model):
         selection=BAIWANG_STATES,
         string="Baiwang Status",
         copy=False,
-        tracking=True,
     )
     l10n_cn_baiwang_invoice_type_code = fields.Selection(
         selection=INVOICE_TYPE_CODES,
@@ -53,7 +52,7 @@ class AccountMove(models.Model):
         default='02',
         help="Type of e-Fapiao to issue. Use '01'/'02' (fully digital) unless you have hardware terminals.",
     )
-    l10n_cn_baiwang_invoice_no = fields.Char(string="Fapiao Number", copy=False, readonly=True)
+    l10n_cn_baiwang_invoice_no = fields.Char(string="Baiwang Fapiao Number", copy=False, readonly=True)
     l10n_cn_baiwang_invoice_date = fields.Char(string="Fapiao Date", copy=False, readonly=True)
     l10n_cn_baiwang_serial_no = fields.Char(string="Serial No", copy=False, readonly=True, help="Unique request serial number for idempotency")
     l10n_cn_baiwang_qr_code = fields.Char(string="Invoice QR Code", copy=False, readonly=True)
@@ -106,6 +105,8 @@ class AccountMove(models.Model):
             raise UserError(self.env._("Baiwang API credentials are not configured. Please go to Settings > Invoicing > China Electronic Invoicing (Baiwang)."))
 
         client = BaiwangClient(company)
+
+        serial_no = self.l10n_cn_baiwang_serial_no or f"BLUE_{self.id}_{int(time.time())}"
 
 
         # Generate unique serial number (idempotent per invoice)
@@ -352,7 +353,7 @@ class AccountMove(models.Model):
         red_form_data = {
             'redConfirmSerialNo': serial_no,
             'entryIdentity': '01',  # 01=seller side
-            'sellerTaxNo': self.company_id.l10n_cn_baiwang_tax_no or self.company_id.vat,
+            'sellerTaxNo': self.company_id.vat,
             'sellerTaxName': self.company_id.name,
             'buyerTaxName': self.partner_id.name or '',
             'buyerTaxNo': self.partner_id.vat or '',
