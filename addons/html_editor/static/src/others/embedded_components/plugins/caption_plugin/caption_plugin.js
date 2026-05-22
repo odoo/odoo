@@ -39,7 +39,7 @@ export class CaptionPlugin extends Plugin {
                 description: _t("Add/remove a caption"),
                 groupId: "image_description",
                 commandId: "toggleImageCaption",
-                text: "Caption",
+                text: _t("Caption"),
                 isActive: () => this.hasImageCaption(this.dependencies.image.getTargetedImage()),
             },
         ],
