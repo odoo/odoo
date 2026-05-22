@@ -40,7 +40,6 @@ class StockMove(models.Model):
     is_out = fields.Boolean(string='Is Outgoing (valued)', compute='_compute_is_out', store=True)
     is_dropship = fields.Boolean(string='Is Dropship', compute='_compute_is_dropship', store=True)
     is_valued = fields.Boolean(string='Is Valued', compute='_compute_is_valued')
-
     remaining_qty = fields.Float(
         string='Remaining Quantity', compute='_compute_remaining_qty', search='search_remaining_qty')
     remaining_value = fields.Monetary(
@@ -133,11 +132,34 @@ class StockMove(models.Model):
             if not move.is_in:
                 move.remaining_value = 0
                 continue
-            ratio = move.remaining_qty / move.quantity if move.quantity else 0
             if move.product_id.cost_method == 'fifo':
+                ratio = move.remaining_qty / move.quantity if move.quantity else 0
                 move.remaining_value = ratio * move.value if ratio else 0
             else:
                 move.remaining_value = move.remaining_qty * move.standard_price
+
+    def _read_group_select(self, table, aggregate_spec):
+        if aggregate_spec in (
+            "remaining_qty:sum",
+            "remaining_value:sum",
+            "remaining_value:sum_currency",
+        ):
+            return super()._read_group_select(table, 'id:recordset')
+        return super()._read_group_select(table, aggregate_spec)
+
+    def _read_group_postprocess_aggregate(self, aggregate_spec, raw_values):
+        if aggregate_spec in ('remaining_qty:sum', 'remaining_value:sum', 'remaining_value:sum_currency'):
+            column = super()._read_group_postprocess_aggregate('id:recordset', raw_values)
+            field = 'remaining_qty' if aggregate_spec == 'remaining_qty:sum' else 'remaining_value'
+            field_name, op = aggregate_spec.split(':')
+            if op == 'sum':
+                return (sum(records.mapped(field)) for records in column)
+            if op == 'sum_currency':
+                return (sum(record.company_currency_id._convert(
+                    from_amount=record[field_name],
+                    to_currency=self.env.company.currency_id,
+                ) for record in records) for records in column)
+        return super()._read_group_postprocess_aggregate(aggregate_spec, raw_values)
 
     def _inverse_picked(self):
         super()._inverse_picked()
