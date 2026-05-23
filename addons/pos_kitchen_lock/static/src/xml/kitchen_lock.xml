@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <!--
+        Add a lock badge next to the product name for kitchen-sent lines.
+        The 'kitchen-sent-locked' CSS class is applied via PosOrderline.getDisplayClasses()
+        in kitchen_lock.js — no xpath attribute override needed here.
+    -->
+    <t t-name="pos_kitchen_lock.Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('text-wrap')]" position="after">
+            <span t-if="line.isKitchenSent()" class="kitchen-lock-badge">&#x1F512;</span>
+        </xpath>
+    </t>
+</templates>
