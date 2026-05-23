@@ -92,9 +92,11 @@ class AttachmentController(ThreadController):
         if not attachment or not attachment._has_attachments_ownership([access_token]):
             request.env.user._bus_send("ir.attachment/delete", {"id": attachment_id})
             raise NotFound()
+        if not attachment.has_access("unlink"):
+            raise request.not_found()
         message = request.env["mail.message"].sudo().search(
             [("attachment_ids", "in", attachment.ids)], limit=1)
-        # sudo: ir.attachment: access is validated with _has_attachments_ownership
+        # sudo: ir.attachment: ownership and ACL unlink access validated above
         attachment.sudo()._delete_and_notify(message)
 
     @http.route(['/mail/attachment/zip'], methods=["POST"], type="http", auth="public")
