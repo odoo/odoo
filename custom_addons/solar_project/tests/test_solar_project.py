@@ -9,8 +9,11 @@ class TestSolarProjectBase(TransactionCase):
         super().setUpClass()
         cls.project = cls.env["project.project"].create({"name": "Test Solar Project"})
 
-    def test_project_created(self):
-        self.assertEqual(self.project.name, "Test Solar Project")
+    def test_solar_fields_attached_to_project(self):
+        """Module-specific assertion: project.project has solar_stage default 'survey' from solar_project."""
+        self.assertEqual(self.project.solar_stage, "survey")
+        self.assertIn("solar_kw_capacity", self.project._fields)
+        self.assertIn("solar_document_ids", self.project._fields)
 
 
 @tagged("solar_project", "post_install", "-at_install")
@@ -147,7 +150,8 @@ class TestSolarChecklist(TransactionCase):
         item = self.env["solar.checklist.item"].create(
             {"name": "Take photo of meter", "task_id": self.task.id},
         )
-        item.is_done = True
+        item.write({"is_done": True})
+        item.invalidate_recordset()
         self.assertTrue(item.is_done)
 
 
@@ -158,12 +162,29 @@ class TestSolarDocumentTypeData(TransactionCase):
             "solar_project.solar_dtype_bill_electricity",
             raise_if_not_found=False,
         )
-        self.assertIsNotNone(
+        self.assertTrue(
             bill_type,
-            "Demo document type solar_dtype_bill_electricity not loaded",
+            "Demo document type solar_dtype_bill_electricity not loaded "
+            "(env.ref returned False)",
         )
         self.assertEqual(bill_type.code, "bill_electricity")
 
-    def test_at_least_10_types(self):
-        types = self.env["solar.document.type"].search([])
-        self.assertGreaterEqual(len(types), 10)
+    def test_module_loaded_12_types(self):
+        """Assert this module's data file loaded all 12 records by xml-id existence."""
+        expected_xmlids = [
+            "solar_project.solar_dtype_bill_electricity",
+            "solar_project.solar_dtype_roof_measurement",
+            "solar_project.solar_dtype_site_plan",
+            "solar_project.solar_dtype_topographic",
+            "solar_project.solar_dtype_client_brief",
+            "solar_project.solar_dtype_equipment_spec",
+            "solar_project.solar_dtype_single_line_diagram",
+            "solar_project.solar_dtype_permit",
+            "solar_project.solar_dtype_handover_act",
+            "solar_project.solar_dtype_commissioning_report",
+            "solar_project.solar_dtype_structural_calculation",
+            "solar_project.solar_dtype_grid_connection_agreement",
+        ]
+        for xmlid in expected_xmlids:
+            rec = self.env.ref(xmlid, raise_if_not_found=False)
+            self.assertTrue(rec, f"Demo record {xmlid} not loaded")

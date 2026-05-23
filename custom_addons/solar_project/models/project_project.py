@@ -1,6 +1,9 @@
+import html
 import json
 
-from odoo import fields, models
+from odoo import api, fields, models
+
+ALLOWED_SEVERITIES = {"error", "warning", "info"}
 
 SOLAR_STAGE_SELECTION = [
     ("survey", "Survey"),
@@ -81,16 +84,16 @@ class ProjectProjectSolar(models.Model):
         string="Documents",
     )
 
+    @api.depends("solar_kw_capacity", "solar_budget_usd")
     def _compute_roi(self):
         for rec in self:
             if rec.solar_kw_capacity and rec.solar_budget_usd:
                 annual_yield_usd = rec.solar_kw_capacity * 1200 * 0.05
-                rec.solar_estimated_roi_years = (
-                    rec.solar_budget_usd / annual_yield_usd if annual_yield_usd else 0
-                )
+                rec.solar_estimated_roi_years = rec.solar_budget_usd / annual_yield_usd
             else:
                 rec.solar_estimated_roi_years = 0
 
+    @api.depends("solar_document_ids")
     def _compute_document_count(self):
         for rec in self:
             rec.solar_document_count = len(rec.solar_document_ids)
@@ -138,8 +141,13 @@ Respond with ONLY the JSON, no markdown."""
 
             activity_type = self.env.ref("mail.mail_activity_data_todo")
             for issue in data.get("inconsistencies", []):
-                severity = issue.get("severity", "info")
-                note = f"[{severity.upper()}] {issue.get('description', '')}"
+                # Sanitize LLM output before HTML rendering in chatter (XSS guard).
+                severity_raw = (issue.get("severity") or "info").lower()
+                severity = (
+                    severity_raw if severity_raw in ALLOWED_SEVERITIES else "info"
+                )
+                description_text = str(issue.get("description", ""))[:1000]
+                note = f"[{severity.upper()}] {html.escape(description_text)}"
                 project.activity_schedule(
                     activity_type_id=activity_type.id,
                     note=note,
