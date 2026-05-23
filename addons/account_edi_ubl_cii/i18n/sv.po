@@ -13,13 +13,14 @@
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # Wil Odoo, 2025
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:36+0000\n"
-"PO-Revision-Date: 2026-05-16 08:09+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-05-22 09:36+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-17/"
 "account_edi_ubl_cii/sv/>\n"
 "Language: sv\n"
@@ -37,13 +38,13 @@ msgid ""
 "%s should have a KVK or OIN number set in Company ID field or as Peppol e-"
 "address (EAS code 0106 or 0190)."
 msgstr ""
-"%s ska ha ett KVK- eller OIN-nummer angivet i fältet för företags-ID eller "
-"som Peppols e-adress (EAS-kod 0106 eller 0190)."
+"%s bör ha ett KVK- eller OIN-nummer angivet i fältet för företags-ID eller "
+"som digital Peppol-adress (EAS-kod 0106 eller 0190)."
 
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
 msgid "(Un)Group lines by tax"
-msgstr ""
+msgstr "Avgruppera rader efter skatt"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0002
@@ -506,14 +507,14 @@ msgstr "A"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "A payment of %s was detected."
-msgstr "En betalning på %s upptäcktes."
+msgstr "En betalning på %s har upptäckts."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "A rounding amount of %s was detected."
-msgstr "En avrundning av %s upptäcktes."
+msgstr "En avrundning på %s har upptäckts."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
@@ -543,7 +544,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
 msgid "Account Move Send"
-msgstr "Skicka Bokföringsföring"
+msgstr "Skicka verifikation"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -584,14 +585,14 @@ msgstr "BIS3 DE (XRechnung)"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Cannot decode origin file, try by importing it again"
-msgstr ""
+msgstr "Kunde inte läsa av ursprungsfilen, vänligen försök importera den igen"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Cannot find the origin file, try by importing it again"
-msgstr ""
+msgstr "Kunde inte hitta urpsrungsfilen, vänligen försök importera den igen"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__checkbox_ubl_cii_label
@@ -613,15 +614,16 @@ msgid ""
 msgstr ""
 "Kod som används för att identifiera slutpunkten för BIS Billing 3.0 och dess "
 "derivat.\n"
-"             Lista tillgänglig på https://docs.peppol.eu/poacc/billing/3.0/"
-"codelist/eas/"
+"             Lista finns tillgänglig på https://docs.peppol.eu/poacc/billing/"
+"3.0/codelist/eas/"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_common
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
 msgstr ""
-"Gemensamma funktioner för EDI-dokument: generera data, begränsningar, etc."
+"Gemensamma funktioner för EDI-dokument: generera data, införa begränsningar, "
+"etc."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_company
@@ -638,7 +640,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "Conditional cash/payment discount"
-msgstr "Villkorlig kassa-/betalningsrabatt"
+msgstr "Villkorlig kontant-/betalningsrabatt"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_config_settings
@@ -659,8 +661,8 @@ msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and "
 "activate the currency?"
 msgstr ""
-"Kunde inte hämta valuta: %s. Har du aktiverat alternativet för flera valutor "
-"och aktiverat valutan?"
+"Kunde inte hämta valuta: %s. Har du aktiverat funktionen för flera valutor "
+"och även aktiverat den specifika valutan?"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -702,21 +704,21 @@ msgstr "EN 16931"
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line shall have one and only one tax."
-msgstr "Varje fakturarad ska ha en och endast en skatt."
+msgstr "Varje fakturarad bör endast ha en angiven skatt."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line should have a product or a label."
-msgstr "Varje fakturarad ska ha en produkt eller en etikett."
+msgstr "Varje fakturarad bör ha en produkt eller en etikett."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
-msgstr "Varje fakturarad ska ha minst en skatt."
+msgstr "Varje fakturarad bör ha minst en angiven skatt."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
@@ -733,7 +735,7 @@ msgstr "Aktivera Ubl Cii Xml"
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 #, python-format
 msgid "Errors occurred while creating the EDI document (format: %s):"
-msgstr "Fel uppstod vid skapandet av EDI-dokumentet (format: %s):"
+msgstr "Fel uppstod när EDI-dokumentet skapades (format: %s):"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -741,14 +743,14 @@ msgstr "Fel uppstod vid skapandet av EDI-dokumentet (format: %s):"
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "Exempt from tax"
-msgstr "Befriad från skatt"
+msgstr "Skattebefriad"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Export outside the EU"
-msgstr "Export utanför EU"
+msgstr "Exporter utanför EU"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__facturx
@@ -768,15 +770,15 @@ msgid ""
 "For intracommunity supply, the actual delivery date or the invoicing period "
 "should be included."
 msgstr ""
-"För gemenskapsinterna leveranser bör det faktiska leveransdatumet eller "
-"faktureringsperioden anges."
+"För leveranser inom området bör det faktiska leveransdatumet eller "
+"faktureringsperioden vara inkluderade."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "For intracommunity supply, the delivery address should be included."
-msgstr "Vid leverans inom gemenskapen bör leveransadressen anges."
+msgstr "För leveranser inom området bör leveransadressen vara inkluderad."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__ubl_cii_format
@@ -801,7 +803,7 @@ msgstr "Generera Peppol-format som standard"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Grouped lines by tax"
-msgstr ""
+msgstr "Grupperade rader efter skatt"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__hide_peppol_fields
@@ -814,17 +816,17 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Intra-Community supply"
-msgstr "Leverans inom gemenskapen"
+msgstr "Leverans inom området"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "Invoice generated by Odoo"
-msgstr "Faktura genererad av Odoo"
+msgstr "Faktura skapad av Odoo"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move
 msgid "Journal Entry"
-msgstr "Journalanteckning"
+msgstr "Verifikat"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__nlcius
@@ -880,13 +882,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_endpoint
 msgid "Peppol Endpoint"
-msgstr "Peppol Slutpunkt"
+msgstr "Peppol-destination"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_eas
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_eas
 msgid "Peppol e-address (EAS)"
-msgstr "Peppol e-adress (EAS)"
+msgstr "Digital Peppol-adress (EAS)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_config_settings__invoice_is_ubl_cii
@@ -905,7 +907,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
 msgid "Report Action"
-msgstr "Rapportaktivitet"
+msgstr "Rapporteringsåtgärd"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -951,8 +953,8 @@ msgid ""
 "The Peppol endpoint is not valid. It should contain exactly 10 digits "
 "(Company Registry number).The expected format is: 1234567890"
 msgstr ""
-"Peppols slutpunkt är inte giltig. Den ska innehålla exakt 10 siffror "
-"(företagets registreringsnummer). Det förväntade formatet är: 1234567890"
+"Peppol-destinationen är inte giltig. Den bör innehålla exakt 10 siffror "
+"(företagets organisationsnummer). Det förväntade formatet är: 1234567890"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -960,7 +962,7 @@ msgstr ""
 #, python-format
 msgid "The Peppol endpoint is not valid. The expected format is: 0239843188"
 msgstr ""
-"Slutpunkten Peppol är inte giltig. Det förväntade formatet är: 0239843188"
+"Peppol-destinationen är inte giltig. Det förväntade formatet är: 0239843188"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -969,7 +971,8 @@ msgstr ""
 msgid ""
 "The Peppol endpoint is not valid. The expected format is: 73282932000074"
 msgstr ""
-"Slutpunkten Peppol är inte giltig. Det förväntade formatet är: 73282932000074"
+"Peppol-destinationen är inte giltig. Det förväntade formatet är: "
+"73282932000074"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -979,8 +982,8 @@ msgid ""
 "The VAT number of the supplier does not seem to be valid. It should be of "
 "the form: NO179728982MVA."
 msgstr ""
-"Leverantörens momsregistreringsnummer verkar inte vara giltigt. Det ska vara "
-"av formen: NO179728982MVA."
+"Leverantörens momsregistreringsnummer verkar inte vara giltigt. Det bör vara "
+"angivet enligt följande format: NO179728982MVA."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1001,7 +1004,7 @@ msgstr "Bankkontot kunde inte hämtas: %s"
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The country is required for the %s."
-msgstr "Landet krävs för %s."
+msgstr "Landet måste anges för %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1030,7 +1033,7 @@ msgstr "Fältet %s krävs på %s."
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #, python-format
 msgid "The field 'Sanitized Account Number' is required on the Recipient Bank."
-msgstr "Fältet \"Sanitized Account Number\" krävs för mottagarbanken."
+msgstr "Fältet \"Sanerat kontonummer\" bör anges för mottagarens bank."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1054,7 +1057,7 @@ msgid ""
 "The invoice has been converted into a credit note and the quantities have "
 "been reverted."
 msgstr ""
-"Fakturan har omvandlats till en kreditnota och kvantiteterna har återförts."
+"Fakturan har omvandlats till en kreditfaktura och mängderna har omvänts."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1081,21 +1084,21 @@ msgstr "UBL 2.1"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_bis3
 msgid "UBL BIS Billing 3.0.12"
-msgstr "UBL BIS Fakturering 3.0.12"
+msgstr "UBL BIS Billing 3.0.12"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_file
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__ubl_cii_xml_file
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_payment__ubl_cii_xml_file
 msgid "UBL/CII File"
-msgstr "UBL/CII File"
+msgstr "UBL-/CII-fil"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Ungrouped lines from %s"
-msgstr ""
+msgstr "Avgrupperade rader från %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -1104,8 +1107,8 @@ msgid ""
 "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
 "known as 'Endpoint ID'."
 msgstr ""
-"Unik identifierare som används av BIS Billing 3.0 och dess derivat, även "
-"känd som \"Endpoint ID\"."
+"Unikt identifieringsnummer som används av BIS Billing 3.0 och dess derivat, "
+"även kallat 'Endpoint ID'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1126,7 +1129,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "Untaxed"
-msgstr "Ex moms"
+msgstr "Exkl. moms"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1149,7 +1152,7 @@ msgstr "XInvoice CIUS"
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "You can only (un)group lines of a draft invoice"
-msgstr ""
+msgstr "Det är endast möjligt att avgruppera rader i ett fakturautkast"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1164,7 +1167,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 #, python-format
 msgid "You can only group lines of an invoice"
-msgstr ""
+msgstr "Det är endast möjligt att gruppera rader i en faktura"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1175,9 +1178,9 @@ msgid ""
 "Invoice line (BG-25) shall be categorized with an Invoiced item VAT category "
 "code (BT-151)."
 msgstr ""
-"Du bör inkludera minst en skatt per fakturarad. [BR-CO-04]-Varje fakturarad "
-"(BG-25) ska kategoriseras med en momskategorikod för fakturerad artikel "
-"(BT-151)."
+"Det bör vara minst en skatt angiven per fakturarad. [BR-CO-04]-Varje "
+"fakturarad (BG-25) ska kategoriseras med en kod som anger en momskategori "
+"för varje fakturerad artikel (BT-151)."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__zugferd

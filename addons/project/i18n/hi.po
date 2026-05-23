@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-05-09 08:05+0000\n"
+"PO-Revision-Date: 2026-05-18 07:45+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/project/"
 "hi/>\n"
@@ -88,14 +88,14 @@ msgstr ""
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(closed_task_count)s / %(task_count)s"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
 
 #. module: project
 #. odoo-python
@@ -157,7 +157,7 @@ msgstr "(बाकी"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "(last project update),"
-msgstr ""
+msgstr "(पिछला प्रोजेक्ट अपडेट),"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
@@ -3215,7 +3215,7 @@ msgstr "ऑफ़िस डिज़ाइन"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Old Completed Sprint"
-msgstr ""
+msgstr "पूरा हुआ पुराना स्प्रिंट"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_hold
@@ -3229,7 +3229,7 @@ msgstr "होल्ड पर"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Track"
-msgstr ""
+msgstr "ट्रैक पर"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -3241,7 +3241,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
-msgstr ""
+msgstr "अटैचमेंट के रूप में सिर्फ़ jpeg, png, bmp और tiff इमेज की अनुमति है।"
 
 #. module: project
 #. odoo-javascript
@@ -3260,7 +3260,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Open Tasks"
-msgstr ""
+msgstr "टास्क खोलें"
 
 #. module: project
 #. odoo-python
@@ -3284,7 +3284,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Organize priorities amongst orders using the"
-msgstr ""
+msgstr "का उपयोग करके ऑर्डर के बीच प्राथमिकताओं को व्यवस्थित करें"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3294,6 +3294,8 @@ msgid ""
 "                    Collaborate efficiently by chatting in real-time or via "
 "email."
 msgstr ""
+"पाइपलाइन में बांटकर अपने टास्क को व्यवस्थित करें.<br>\n"
+"                    रीयल-टाइम चैट या ईमेल के ज़रिए अपनी टीम के साथ मिलकर काम करें।"
 
 #. module: project
 #. odoo-python
@@ -3305,14 +3307,14 @@ msgstr "अन्य"
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
-msgstr ""
+msgstr "वे टास्क जिनकी टाइमलाइन निकल गई है"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Page Ideas"
-msgstr ""
+msgstr "पेज के लिए आइडिया"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_model_id
@@ -3349,20 +3351,22 @@ msgstr ""
 #: code:addons/project/models/res_partner.py:0
 #, python-format
 msgid "Partner company cannot be different from its assigned projects' company"
-msgstr ""
+msgstr "पार्टनर कंपनी उसके असाइन किए गए प्रोजेक्ट की कंपनी से अलग नहीं हो सकती"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 #, python-format
 msgid "Partner company cannot be different from its assigned tasks' company"
-msgstr ""
+msgstr "पार्टनर कंपनी उसके असाइन किए गए टास्क की कंपनी से अलग नहीं हो सकती"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 msgid ""
 "People invited to collaborate on the project will have portal access rights."
 msgstr ""
+"प्रोजेक्ट पर साथ मिलकर काम करने के लिए आमंत्रित लोगों के पास पोर्टल ऐक्सेस करने का अधिकार "
+"होगा।"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3414,7 +3418,7 @@ msgstr "पर्सनल स्टेज"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_id
 msgid "Personal Stage State"
-msgstr ""
+msgstr "पर्सनल स्टेज की स्थिति"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
@@ -3424,7 +3428,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
 msgid "Personal Task Stage"
-msgstr ""
+msgstr "पर्सनल टास्क स्टेज"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3440,13 +3444,14 @@ msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
 "to delete."
 msgstr ""
+"कृपया उस प्रोजेक्ट से मौजूदा टास्क हटा दें जो उन खातों से जुड़े हैं जिन्हें आप हटाना चाहते हैं।"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Podcast and Video Production"
-msgstr ""
+msgstr "पॉडकास्ट और वीडियो प्रॉडक्शन"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_contact
@@ -3479,7 +3484,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Portal users will be removed from the followers of the project and its tasks."
-msgstr ""
+msgstr "पोर्टल यूज़र्स को प्रोजेक्ट और इसके टास्क के फ़ॉलोअर से हटा दिया जाएगा।"
 
 #. module: project
 #. odoo-javascript
@@ -3493,7 +3498,7 @@ msgstr "पिछला"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Prioritize your tasks by marking important ones using the"
-msgstr ""
+msgstr "का उपयोग करके महत्वपूर्ण टास्क को मार्क करके अपनी प्राथमिकताएं तय करें"
 
 #. module: project
 #. odoo-python
@@ -3528,7 +3533,7 @@ msgstr "प्राइवेट"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Private Tasks"
-msgstr ""
+msgstr "प्राइवेट टास्क"
 
 #. module: project
 #. odoo-python
@@ -3613,18 +3618,18 @@ msgstr "प्रोजेक्ट मैनेजर"
 #. module: project
 #: model:ir.model,name:project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "प्रोजेक्ट माइलस्टोन"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_activity
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban
 msgid "Project Name"
-msgstr ""
+msgstr "प्रोजेक्ट का नाम"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
 msgid "Project Rating Status"
-msgstr ""
+msgstr "प्रोजेक्ट रेटिंग स्टेटस"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__project_id
@@ -3640,49 +3645,49 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "Project Sharing: Task"
-msgstr ""
+msgstr "प्रोजेक्ट शेयरिंग: टास्क"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage
 msgid "Project Stage"
-msgstr ""
+msgstr "प्रोजेक्ट स्टेज"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_stage_change
 msgid "Project Stage Changed"
-msgstr ""
+msgstr "प्रोजेक्ट स्टेज बदल गया"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage_delete_wizard
 msgid "Project Stage Delete Wizard"
-msgstr ""
+msgstr "प्रोजेक्ट स्टेज हटाने का विज़ॉर्ड"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_stages
 #: model:ir.ui.menu,name:project.menu_project_config_project_stage
 msgid "Project Stages"
-msgstr ""
+msgstr "प्रोजेक्ट स्टेज"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tags"
-msgstr ""
+msgstr "प्रोजेक्ट टैग"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Task Stage Delete Wizard"
-msgstr ""
+msgstr "प्रोजेक्ट टास्क स्टेज को मिटाने का विज़ॉर्ड"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "Project Tasks"
-msgstr ""
+msgstr "प्रोजेक्ट टास्क"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.quick_create_project_form
 msgid "Project Title"
-msgstr ""
+msgstr "प्रोजेक्ट का टाइटल"
 
 #. module: project
 #: model:ir.model,name:project.model_project_update
@@ -3699,42 +3704,42 @@ msgstr "प्रोजेक्ट से जुड़े अपडेट"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
 msgid "Project Visibility"
-msgstr ""
+msgstr "प्रोजेक्ट विज़िबिलिटी"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Project description..."
-msgstr ""
+msgstr "प्रोजेक्ट का विवरण..।"
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
 msgid "Project status - {{ object.name }}"
-msgstr ""
+msgstr "प्रोजेक्ट स्टेटस - {{ object.name }}"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr ""
+msgstr "प्रोजेक्ट के टास्क"
 
 #. module: project
 #: model:mail.template,name:project.project_done_email_template
 msgid "Project: Project Completed"
-msgstr ""
+msgstr "प्रोजेक्ट: प्रोजेक्ट पूरा हुआ"
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
 msgid "Project: Request Acknowledgment"
-msgstr ""
+msgstr "प्रोजेक्ट: अनुरोध की स्वीकृति"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 msgid "Project: Send rating"
-msgstr ""
+msgstr "प्रोजेक्ट: रेटिंग भेजें"
 
 #. module: project
 #: model:mail.template,name:project.rating_project_request_email_template
 msgid "Project: Task Rating Request"
-msgstr ""
+msgstr "प्रोजेक्ट: टास्क रेटिंग के लिए अनुरोध"
 
 #. module: project
 #. odoo-python
@@ -3769,6 +3774,7 @@ msgstr "प्रोजेक्ट"
 msgid ""
 "Projects contain tasks on the same topic, and each has its own dashboard."
 msgstr ""
+"प्रोजेक्ट में एक ही विषय वाले टास्क होते हैं और हर टास्क का अपना डैशबोर्ड होता है।"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__project_ids
@@ -3777,6 +3783,8 @@ msgid ""
 "several projects, you can share this stage among them and get consolidated "
 "information this way."
 msgstr ""
+"वे प्रोजेक्ट जिनमें यह स्टेज मौजूद है. अगर आप कई प्रोजेक्ट्स में एक जैसे वर्कफ़्लो का पालन करते हैं, "
+"तो आप इस स्टेज को उनके बीच शेयर कर सकते हैं और इस तरह पूरी जानकारी पा सकते हैं।"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__task_properties
@@ -3804,7 +3812,7 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Publishing"
-msgstr ""
+msgstr "पब्लिशिंग"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
@@ -3818,6 +3826,8 @@ msgid ""
 "identify those on hold until dependencies are resolved with the hourglass "
 "icon."
 msgstr ""
+"अप्रूवल या चेंज रिक्वेस्ट के लिए टास्क की स्थिति की तुरंत जांच करें और ऑवरग्लास आइकन के माध्यम "
+"से उन टास्क की पहचान करें जो कौन से काम दूसरे कामों के पूरा होने के इंतज़ार में रुके हैं।"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
@@ -3829,7 +3839,7 @@ msgstr "रेटिंग"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 msgid "Rating (/5)"
-msgstr ""
+msgstr "रेटिंग (/5)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
@@ -3844,7 +3854,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status_period
 msgid "Rating Frequency"
-msgstr ""
+msgstr "रेटिंग फ़्रीक्वेंसी"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
@@ -3918,7 +3928,7 @@ msgstr "Readonly"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of {{ object.name }}"
-msgstr ""
+msgstr "{{ object.name }} की रसीद"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__partner_ids
@@ -4016,21 +4026,21 @@ msgstr "रिसर्च और डेवलपमेंट"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research Project"
-msgstr ""
+msgstr "रिसर्च प्रोजेक्ट"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Researching"
-msgstr ""
+msgstr "रिसर्चिंग"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Resources Allocation"
-msgstr ""
+msgstr "रिसोर्स अलोकेशन"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_user_id
@@ -4065,14 +4075,14 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 #, python-format
 msgid "Save the task to be able to drag images in description"
-msgstr ""
+msgstr "डिस्क्रिप्शन में इमेज ड्रैग करने के लिए टास्क सेव करें"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 #, python-format
 msgid "Save the task to be able to paste images in description"
-msgstr ""
+msgstr "विवरण में इमेज पेस्ट करने के लिए टास्क सेव करें"
 
 #. module: project
 #. odoo-javascript
@@ -4098,12 +4108,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Search Project"
-msgstr ""
+msgstr "प्रोजेक्ट खोजें"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Search Update"
-msgstr ""
+msgstr "अपडेट खोजें"
 
 #. module: project
 #. odoo-python
@@ -4145,7 +4155,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Priority"
-msgstr ""
+msgstr "प्रॉयरिटी में खोजें"
 
 #. module: project
 #. odoo-python
@@ -4166,14 +4176,14 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "स्टेज में खोजें"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Status"
-msgstr ""
+msgstr "स्टेटस में खोजें"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -4214,33 +4224,35 @@ msgstr "कवर इमेज सेट करें"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__to_define
 #, python-format
 msgid "Set Status"
-msgstr ""
+msgstr "स्टेटस सेट करें"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
-msgstr ""
+msgstr "स्टेज पर एक रेटिंग ईमेल टेम्पलेट सेट करें"
 
 #. module: project
 #: model:mail.template,description:project.project_done_email_template
 msgid ""
 "Set on project's stages to inform customers when a project reaches that stage"
 msgstr ""
+"प्रोजेक्ट के स्टेज पर सेट करें, ताकि प्रोजेक्ट के उस स्टेज पर पहुंचने पर ग्राहकों को सूचित किया "
+"जा सके"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_priority_switch_field/project_task_priority_switch_field.js:0
 #, python-format
 msgid "Set priority as %s"
-msgstr ""
+msgstr "%s के तौर पर प्राथमिकता सेट करें"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Set state as..."
-msgstr ""
+msgstr "के तौर पर स्थिति सेट करें..।"
 
 #. module: project
 #: model:mail.template,description:project.rating_project_request_email_template
@@ -4248,6 +4260,8 @@ msgid ""
 "Set this template on a project stage to request feedback from your "
 "customers. Enable the \"customer ratings\" feature on the project"
 msgstr ""
+"ग्राहकों से फीडबैक मांगने के लिए इस टेम्पलेट को प्रोजेक्ट स्टेज पर सेट करें. प्रोजेक्ट पर \"कस्टमर "
+"रेटिंग\" सुविधा चालू करें"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -4282,7 +4296,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Share Project"
-msgstr ""
+msgstr "प्रोजेक्ट शेयर करें"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4310,7 +4324,7 @@ msgstr "तब से"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Software Development"
-msgstr ""
+msgstr "सॉफ़्टवेयर डेवलपमेंट"
 
 #. module: project
 #. odoo-python
@@ -4318,13 +4332,14 @@ msgstr ""
 #, python-format
 msgid "Sorry. You can't set a task as its parent task."
 msgstr ""
+"माफ़ करें. आप किसी टास्क को उसके पैरेंट टास्क के रूप में सेट नहीं कर सकते।"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Specifications"
-msgstr ""
+msgstr "खासियत"
 
 #. module: project
 #. odoo-javascript
@@ -4338,14 +4353,14 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Complete"
-msgstr ""
+msgstr "स्प्रिंट पूरा हुआ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint in Progress"
-msgstr ""
+msgstr "स्प्रिंट जारी है"
 
 #. module: project
 #. odoo-javascript
@@ -4373,7 +4388,7 @@ msgstr "स्टेज बदल गया"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
 msgid "Stage Owner"
-msgstr ""
+msgstr "स्टेज के मालिक"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4488,6 +4503,9 @@ msgid ""
 "linked to this task. Usually less than or equal to the allocated hours of "
 "this task."
 msgstr ""
+"एक \"पैरेंट टास्क\" के नीचे जितने भी \"सब-टास्क\" हैं, उन सभी का कुल समय जोड़कर यहां "
+"दिखाया गया है. यह आमतौर पर इस मुख्य टास्क के लिए निर्धारित घंटों से कम या उनके बराबर "
+"होता है।"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4536,19 +4554,19 @@ msgstr "टास्क"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
 msgid "Task Activities"
-msgstr ""
+msgstr "टास्क एक्टिविटिज़"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_approved
 #: model:mail.message.subtype,name:project.mt_task_approved
 msgid "Task Approved"
-msgstr ""
+msgstr "टास्क स्वीकार हो गया"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_canceled
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Canceled"
-msgstr ""
+msgstr "टास्क रद्द हो गया"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
@@ -4561,7 +4579,7 @@ msgstr ""
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr ""
+msgstr "टास्क बनाया गया"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_task_dependencies
@@ -4581,12 +4599,12 @@ msgstr "टास्क पूरा हुआ"
 #: model:mail.message.subtype,name:project.mt_project_task_in_progress
 #: model:mail.message.subtype,name:project.mt_task_in_progress
 msgid "Task In Progress"
-msgstr ""
+msgstr "टास्क जारी है"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
 msgid "Task Logs"
-msgstr ""
+msgstr "टास्क लॉग"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_task_plan
@@ -4596,13 +4614,13 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_properties_definition
 msgid "Task Properties"
-msgstr ""
+msgstr "टास्क प्रॉपर्टीज़"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_rating
 #: model:mail.message.subtype,name:project.mt_task_rating
 msgid "Task Rating"
-msgstr ""
+msgstr "टास्क रेटिंग"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_recurrence
@@ -4620,33 +4638,33 @@ msgstr "टास्क स्टेज"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr ""
+msgstr "टास्क स्टेज बदला गया"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.actions.act_window,name:project.open_task_type_form_domain
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Task Stages"
-msgstr ""
+msgstr "टास्क स्टेज"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "Task Title"
-msgstr ""
+msgstr "टास्क का टाइटल"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
-msgstr ""
+msgstr "टास्क का टाइटल..।"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
 #: model:mail.message.subtype,name:project.mt_project_task_waiting
 #: model:mail.message.subtype,name:project.mt_task_waiting
 msgid "Task Waiting"
-msgstr ""
+msgstr "टास्क का इतज़ार किया जा रहा"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_approved
@@ -4666,12 +4684,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
 msgid "Task:"
-msgstr ""
+msgstr "टास्क:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task: Rating Request"
-msgstr ""
+msgstr "टास्क: रेटिंग के लिए अनुरोध"
 
 #. module: project
 #. odoo-python
@@ -4723,13 +4741,13 @@ msgstr "टास्क का विश्लेषण"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Tasks Management"
-msgstr ""
+msgstr "टास्क मैनेजमेंट"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
 #: model_terms:ir.ui.view,arch_db:project.task_type_search
 msgid "Tasks Stages"
-msgstr ""
+msgstr "टास्क स्टेज"
 
 #. module: project
 #. odoo-python
@@ -4737,7 +4755,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
 #, python-format
 msgid "Tasks in Recurrence"
-msgstr ""
+msgstr "टास्क में बार-बार दोहराव"
 
 #. module: project
 #. odoo-javascript
@@ -4756,43 +4774,43 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
 msgid "The current user's personal stage."
-msgstr ""
+msgstr "मौजूदा उपयोगकर्ता का पर्सनल स्टेज।"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
-msgstr ""
+msgstr "मौजूदा उपयोगकर्ता का पर्सनल टास्क स्टेज।"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "The document does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "दस्तावेज़ मौजूद नहीं है या आपके पास इसे ऐक्सेस करने के अधिकार नहीं हैं।"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
 msgid "The end date should be in the future"
-msgstr ""
+msgstr "आखिरी तारीख आज के बाद की होनी चाहिए"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestone has been added:"
-msgstr ""
+msgstr "नीचे दिया गया माइलस्टोन जोड़ा गया है:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestones have been added:"
-msgstr ""
+msgstr "नीचे दिए गए माइलस्टोन जोड़े गए हैं:"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
 msgid "The interval should be greater than 0"
-msgstr ""
+msgstr "अंतराल 0 से ज़्यादा होना चाहिए"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -4820,7 +4838,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The project and the associated partner must be linked to the same company."
-msgstr ""
+msgstr "प्रोजेक्ट और संबंधित पार्टनर को एक ही कंपनी से जुड़ा होना चाहिए।"
 
 #. module: project
 #. odoo-python
@@ -4840,11 +4858,14 @@ msgid ""
 "The project's company cannot be changed if its analytic account has analytic "
 "lines or if more than one project is linked to it."
 msgstr ""
+"अगर इसके एनालिटिक खाते में एनालिटिक लाइनें हैं या अगर एक से ज़्यादा प्रोजेक्ट इससे जुड़े हैं, तो "
+"प्रोजेक्ट की कंपनी नहीं बदली जा सकती।"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "The project's start date must be before its end date."
 msgstr ""
+"प्रोजेक्ट शुरू होने की तारीख उसके खत्म होने की तारीख से पहले की होनी चाहिए।"
 
 #. module: project
 #. odoo-python
@@ -4858,7 +4879,7 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "The task and the associated partner must be linked to the same company."
-msgstr ""
+msgstr "टास्क और संबंधित पार्टनर को एक ही कंपनी से जुड़ा होना चाहिए।"
 
 #. module: project
 #. odoo-python
@@ -4887,25 +4908,25 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
 msgid "There are no projects."
-msgstr ""
+msgstr "कोई प्रोजेक्ट नहीं हैं।"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There are no ratings for this project at the moment"
-msgstr ""
+msgstr "इस प्रोजेक्ट के लिए इस समय कोई रेटिंग नहीं है"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
-msgstr ""
+msgstr "कोई टास्क नहीं हैं।"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "There is nothing to report."
-msgstr ""
+msgstr "रिपोर्ट करने के लिए कुछ भी नहीं है।"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -4939,6 +4960,8 @@ msgid ""
 "This is a preview of how the project will look when it's shared with "
 "customers and they have editing access."
 msgstr ""
+"यह एक प्रीव्यू है कि ग्राहकों के साथ शेयर किए जाने और उन्हें एडिटिंग ऐक्सेस मिलने पर प्रोजेक्ट "
+"कैसा दिखेगा।"
 
 #. module: project
 #. odoo-python
@@ -4968,7 +4991,7 @@ msgstr ""
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 #, python-format
 msgid "This task is blocked by another unfinished task"
-msgstr ""
+msgstr "यह टास्क किसी अन्य अधूरे टास्क की वजह से रुका हुआ है"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -4976,6 +4999,7 @@ msgid ""
 "This will archive the stages and all the tasks they contain from the "
 "following projects:"
 msgstr ""
+"इससे नीचे दिए गए प्रोजेक्ट के स्टेज और उनमें मौजूद सभी टास्क को आर्काइव कर दिया जाएगा:"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_type_action_config_project_types
@@ -4996,13 +5020,14 @@ msgstr "टाइम मैनेजमेंट"
 #: model:digest.tip,name:project.digest_tip_project_1
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Tip: Create tasks from incoming emails"
-msgstr ""
+msgstr "सुझाव: आने वाली ईमेल से टास्क बनाएं"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Use task states to keep track of your tasks' progression"
 msgstr ""
+"सुझाव: अपने टास्क की प्रगति पर नज़र रखने के लिए टास्क स्टेटस का इस्तेमाल करें"
 
 #. module: project
 #. odoo-python
@@ -5054,6 +5079,8 @@ msgid ""
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
 msgstr ""
+"किसी टास्क को सब-टास्क में बदलने के लिए, एक पैरेंट टास्क चुनें. वैकल्पिक रूप से, सब-टास्क को "
+"इंडिपेंडेंट टास्क में बदलने के लिए पैरेंट टास्क फ़ील्ड को खाली छोड़ दें।"
 
 #. module: project
 #. odoo-python
@@ -5080,13 +5107,14 @@ msgstr "कुल"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
-msgstr ""
+msgstr "टास्क पर ग्राहकों की संतुष्टि ट्रैक करें"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track major progress points that must be reached to achieve success"
 msgstr ""
+"सफलता हासिल करने के लिए प्रोग्रेस से जुड़े जिन मुख्य बिंदुओं तक पहुंचना ज़रूरी है, उन पर नज़र रखें"
 
 #. module: project
 #. odoo-javascript
@@ -5104,6 +5132,8 @@ msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
 msgstr ""
+"संबंधित दस्तावेज़ों पर प्रोजेक्ट से जुड़े एनालिटिक अकाउंट को सेट करके प्रोजेक्ट की लागत, रेवेन्यू "
+"और मार्जिन को ट्रैक करें।"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5123,12 +5153,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track the progress of your projects"
-msgstr ""
+msgstr "अपने प्रोजेक्ट की प्रगति पर नज़र रखें"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr ""
+msgstr "प्रोजेक्ट और टास्क पर बिताए गए समय को ट्रैक करें"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_tags__color
@@ -5136,6 +5166,7 @@ msgid ""
 "Transparent tags are not visible in the kanban view of your projects and "
 "tasks."
 msgstr ""
+"ट्रांसपैरेंट टैग आपके प्रोजेक्ट और टास्क के कानबन व्यू में दिखाई नहीं देते हैं।"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__bimonthly
@@ -5147,7 +5178,7 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Two tasks cannot depend on each other."
-msgstr ""
+msgstr "दो टास्क एक-दूसरे पर निर्भर नहीं हो सकते।"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_exception_decoration
@@ -5161,14 +5192,14 @@ msgstr "रिकॉर्ड में जो अलग तरह की गत
 #: code:addons/project/models/project_project_stage.py:0
 #, python-format
 msgid "Unarchive Projects"
-msgstr ""
+msgstr "प्रोजेक्ट को अनआर्काइव करें"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task_type.py:0
 #, python-format
 msgid "Unarchive Tasks"
-msgstr ""
+msgstr "टास्क को अनआर्काइव करें"
 
 #. module: project
 #. odoo-javascript
@@ -5220,44 +5251,44 @@ msgstr "कारगर"
 #. module: project
 #: model:res.groups,name:project.group_project_milestone
 msgid "Use Milestones"
-msgstr ""
+msgstr "माइलस्टोन का इस्तेमाल करें"
 
 #. module: project
 #: model:res.groups,name:project.group_project_rating
 msgid "Use Rating on Project"
-msgstr ""
+msgstr "प्रोजेक्ट पर रेटिंग का इस्तेमाल करें"
 
 #. module: project
 #: model:res.groups,name:project.group_project_recurring_tasks
 msgid "Use Recurring Tasks"
-msgstr ""
+msgstr "बार-बार होने वाले टास्क का इस्तेमाल करें"
 
 #. module: project
 #: model:res.groups,name:project.group_project_stages
 msgid "Use Stages on Project"
-msgstr ""
+msgstr "प्रोजेक्ट पर स्टेज का इस्तेमाल करें"
 
 #. module: project
 #: model:res.groups,name:project.group_project_task_dependencies
 msgid "Use Task Dependencies"
-msgstr ""
+msgstr "टास्क डिपेंडेंसीज़ का इस्तेमाल करें"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
 msgid "Use Tasks as"
-msgstr ""
+msgstr "के तौर पर टास्क का इस्तेमाल करें"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Use This For My Project"
-msgstr ""
+msgstr "मेरे प्रोजेक्ट के लिए इसका इस्तेमाल करें"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Use tags to categorize your tasks."
-msgstr ""
+msgstr "अपने टास्क को ग्रुप में बांटने के लिए टैग का उपयोग करें।"
 
 #. module: project
 #. odoo-javascript
@@ -5275,6 +5306,9 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"ग्राहकों के साथ बेहतर तरीके से कम्यूनिकेशन करने और <b>ईमेल भेजने</b> के लिए चैटर का इस्तेमाल "
+"करें. इस टास्क के मुख्य बदलावों के बारे में सूचित करने के लिए नए लोगों को फ़ॉलोअर्स की सूची में "
+"जोड़ें।"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5311,7 +5345,7 @@ msgstr "टास्क देखें"
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "View Tasks"
-msgstr ""
+msgstr "टास्क देखें"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
@@ -5342,6 +5376,8 @@ msgstr "इंतज़ार किया जा रहा है"
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
 msgstr ""
+"आप <b>अपने प्रोजेक्ट को मैनेज</b> करने का बेहतर तरीका चाहते हैं? <i>इसकी शुरुआत यहां से "
+"होती है.</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__website_message_ids
@@ -5356,7 +5392,7 @@ msgstr "वेबसाइट मैसेज"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Website Redesign"
-msgstr ""
+msgstr "वेबसाइट रीडिज़ाइन"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__website_message_ids
@@ -5427,26 +5463,26 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "काम असाइन करने में लगा समय"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
+msgstr "बंद करने में लगने वाला समय"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_unarchive_wizard
 msgid ""
 "Would you like to unarchive all of the projects contained in these stages as "
 "well?"
-msgstr ""
+msgstr "क्या आप इन स्टेज में शामिल सभी प्रोजेक्ट को भी अनआर्काइव करना चाहेंगे?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 msgid ""
 "Would you like to unarchive all of the tasks contained in these stages as "
 "well?"
-msgstr ""
+msgstr "क्या आप इन स्टेज में शामिल सभी टास्क को भी अनआर्काइव करना चाहेंगे?"
 
 #. module: project
 #. odoo-javascript
@@ -5460,7 +5496,7 @@ msgstr "मैसेज लिखें..।"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Writing"
-msgstr ""
+msgstr "राइटिंग"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__yearly
@@ -5483,13 +5519,16 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists "
 "of projects linked to %(company_name)s."
 msgstr ""
+"आप इस स्टेज की कंपनी को %(company_name)s में नहीं बदल सकते, क्योंकि इसमें वर्तमान में %"
+"(project_company_name)s से संबंधित प्रोजेक्ट शामिल हैं. कृपया पक्का करें कि इस स्टेज में "
+"सिर्फ़ %(company_name)s से जुड़े प्रोजेक्ट शामिल हों।"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "You can only set a personal stage on a private task."
-msgstr ""
+msgstr "आप सिर्फ़ निजी टास्क पर ही पर्सनल स्टेज सेट कर सकते हैं।"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5497,6 +5536,8 @@ msgid ""
 "You cannot delete stages containing projects. You can either archive them or "
 "first delete all of their projects."
 msgstr ""
+"आप उन स्टेज को नहीं हटा सकते जिनमें प्रोजेक्ट शामिल हैं. आप या तो उन्हें आर्काइव कर सकते हैं "
+"या पहले उनके सभी प्रोजेक्ट को हटा सकते हैं।"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5504,6 +5545,8 @@ msgid ""
 "You cannot delete stages containing projects. You should first delete all of "
 "their projects."
 msgstr ""
+"आप उन स्टेज को नहीं हटा सकते जिनमें प्रोजेक्ट शामिल हैं. आपको पहले उनके सभी प्रोजेक्ट को "
+"हटाना चाहिए।"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5511,6 +5554,8 @@ msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
 msgstr ""
+"आप उन स्टेज को नहीं हटा सकते जिनमें टास्क शामिल हैं. आप या तो उन्हें आर्काइव कर सकते हैं या "
+"पहले उनके सभी टास्क को हटा सकते हैं।"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5518,6 +5563,8 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr ""
+"आप उन स्टेज को नहीं हटा सकते जिनमें टास्क शामिल हैं. आपको पहले उनके सभी टास्क को हटाना "
+"होगा।"
 
 #. module: project
 #. odoo-python
@@ -5551,6 +5598,8 @@ msgid ""
 "You have full control and can revoke portal access anytime. Are you ready to "
 "proceed?"
 msgstr ""
+"आपके पास पूरा नियंत्रण है और आप किसी भी समय पोर्टल ऐक्सेस रद्द कर सकते हैं. क्या आप आगे "
+"बढ़ने के लिए तैयार हैं?"
 
 #. module: project
 #. odoo-python
@@ -5571,7 +5620,7 @@ msgstr "आप"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Your managers decide which feedback is accepted"
-msgstr ""
+msgstr "आपके मैनेजेर तय करते हैं कि कौन सा फ़ीडबैक स्वीकार किया जाता है"
 
 #. module: project
 #. odoo-javascript
@@ -5588,6 +5637,8 @@ msgid ""
 "and which feedback is\n"
 "      moved to the \"Refused\" column."
 msgstr ""
+"और कौन सा फ़ीडबैक\n"
+"      \"अस्वीकार कर दिया गया\" कॉलम में ले जाया जाता है।"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
@@ -5606,7 +5657,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "button."
-msgstr ""
+msgstr "बटन।"
 
 #. module: project
 #. odoo-javascript
@@ -5618,20 +5669,20 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "e.g. Monthly review"
-msgstr ""
+msgstr "जैसे- मासिक समीक्षा"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #: model_terms:ir.ui.view,arch_db:project.quick_create_project_form
 msgid "e.g. Office Party"
-msgstr ""
+msgstr "जैसे, ऑफ़िस पार्टी"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "e.g. Product Launch"
-msgstr ""
+msgstr "जैसे, प्रॉडक्ट लॉन्च"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -5642,7 +5693,7 @@ msgstr "जैसे, न्योते भेजना"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "e.g. Tasks"
-msgstr ""
+msgstr "जैसे, टास्क"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
@@ -5652,7 +5703,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "e.g. To Do"
-msgstr ""
+msgstr "जैसे, टू-डू"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5663,19 +5714,19 @@ msgstr "जैसे, domain.com"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. office-party"
-msgstr ""
+msgstr "जैसे, ऑफ़िस-पार्टी"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "e.g: Product Launch"
-msgstr ""
+msgstr "जैसे, प्रॉडक्ट लॉन्च"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon to organize your daily activities."
-msgstr ""
+msgstr "अपनी रोज़ाना की गतिविधियों को व्यवस्थित करने के लिए आइकन।"
 
 #. module: project
 #. odoo-javascript
@@ -5691,7 +5742,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon."
-msgstr ""
+msgstr "आइकॉन।"
 
 #. module: project
 #. odoo-javascript
@@ -5703,7 +5754,7 @@ msgstr "लॉग इन किया गया"
 #. module: project
 #: model:ir.actions.server,name:project.action_server_view_my_task
 msgid "menu view My Tasks"
-msgstr ""
+msgstr "मेन्यू व्यू मेरे टास्क"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
@@ -5713,12 +5764,12 @@ msgstr ""
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "project."
-msgstr ""
+msgstr "प्रोजेक्ट।"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "ready to be marked as reached"
-msgstr ""
+msgstr "पहुंचने पर मार्क करने के लिए तैयार"
 
 #. module: project
 #. odoo-javascript
@@ -5726,7 +5777,7 @@ msgstr ""
 #, python-format
 msgid ""
 "state to indicate a request for changes or a need for discussion on a task."
-msgstr ""
+msgstr "टास्क में बदलाव के अनुरोध या चर्चा की आवश्यकता को दर्शाने वाली स्थिति।"
 
 #. module: project
 #. odoo-javascript
@@ -5735,6 +5786,7 @@ msgstr ""
 msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
 msgstr ""
+"सहकर्मियों को यह सूचित करने की स्थिति कि टास्क अगले स्टेज के लिए मंज़ूर किया गया है।"
 
 #. module: project
 #. odoo-javascript
@@ -5748,31 +5800,31 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "state to mark the task as complete."
-msgstr ""
+msgstr "टास्क को 'पूरा हुआ' के रूप में मार्क करने वाली स्थिति।"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 #, python-format
 msgid "sub-tasks)"
-msgstr ""
+msgstr "सब-टास्क)"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "task"
-msgstr ""
+msgstr "टास्क"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline for the following milestone has been updated:"
-msgstr ""
+msgstr "नीचे दिए गए माइलस्टोन के लिए समय-सीमा अपडेट की गई है:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline for the following milestones has been updated:"
-msgstr ""
+msgstr "नीचे दिए गए माइलस्टोन के लिए समय-सीमा अपडेट की गई है:"
 
 #. module: project
 #. odoo-javascript
@@ -5782,6 +5834,8 @@ msgid ""
 "to define if the project is\n"
 "      ready for the next step."
 msgstr ""
+"यह तय करने के लिए कि प्रोजेक्ट \n"
+"      अगले स्टेप के लिए तैयार है।"
 
 #. module: project
 #. odoo-javascript
@@ -5795,17 +5849,17 @@ msgstr "टिप्पणी पोस्ट करने के लिए।"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "to signalize what is the current status of your Idea."
-msgstr ""
+msgstr "यह बताने के लिए कि आपका विचार अभी किस स्टेज में है।"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "when reaching a given stage"
-msgstr ""
+msgstr "एक दिए गए स्टेज तक पहुंचने पर"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "will generate tasks in your"
-msgstr ""
+msgstr "में टास्क जनरेट करेगा"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
@@ -5813,6 +5867,8 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: संतुष्टि से "
+"जुड़ा सर्वे"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -5836,4 +5892,4 @@ msgstr "👤 असाइन नहीं किया गया"
 #: code:addons/project/static/src/views/project_task_list/project_task_list_renderer.js:0
 #, python-format
 msgid "🔒 Private"
-msgstr ""
+msgstr "🔒 प्राइवेट"

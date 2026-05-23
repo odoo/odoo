@@ -63,8 +63,6 @@ class ETransportAPI:
                 return {'error': response.json()['message']}
             case 403:
                 return {'error': _("Access token is forbidden.")}
-            case 401:
-                return {'error': _("Access token is unauthorized.")}
             case 204:
                 return {'error': _("You reached the limit of requests. Please try again later.")}
 

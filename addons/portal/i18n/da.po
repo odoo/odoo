@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-03-07 08:22+0000\n"
+"PO-Revision-Date: 2026-05-18 07:11+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-17/portal/"
 "da/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -433,7 +433,7 @@ msgstr "Adgangsadvarsel"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Account deleted!"
-msgstr ""
+msgstr "Konto slettet!"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -465,12 +465,12 @@ msgstr "Tilføjet Den"
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
-msgstr ""
+msgstr "Allerede registreret"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Are you sure you want to do this?"
-msgstr ""
+msgstr "Er du sikker på, at du vil gøre dette?"
 
 #. module: portal
 #. odoo-javascript
@@ -562,7 +562,7 @@ msgstr "Konfigurer opsætning"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Configure your connection parameters"
-msgstr ""
+msgstr "Konfigurér dine forbindelsesparametre"
 
 #. module: portal
 #. odoo-javascript
@@ -653,7 +653,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
 msgid "Customer API Keys"
-msgstr ""
+msgstr "Kunde-API-nøgler"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -663,7 +663,7 @@ msgstr "Kundeportal URL"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
 msgid "Customers can generate API Keys"
-msgstr ""
+msgstr "Kunder kan generere API-nøgler"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -680,7 +680,7 @@ msgstr "Slet"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Delete Account"
-msgstr ""
+msgstr "Slet konto"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -707,6 +707,13 @@ msgid ""
 "                                            This action cannot be undone.\n"
 "                                        </b>"
 msgstr ""
+"Deaktivér din konto for at forhindre yderligere login.<br/>\n"
+"                                        <b>\n"
+"                                           <i class=\"fa fa-exclamation-"
+"triangle text-danger\"/> \n"
+"                                            Denne handling kan ikke "
+"fortrydes.\n"
+"                                       </b>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -743,7 +750,7 @@ msgstr "E-mail"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Email Address already taken by another user"
-msgstr ""
+msgstr "Der findes allerede en bruger med denne e-mailadresse"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
@@ -798,6 +805,9 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"Her er din nye API-nøgle. Brug den i stedet for en adgangskode til RPC-"
+"adgang.\n"
+"Du skal stadig være logget ind for at kunne bruge den interaktive funktion."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -816,7 +826,7 @@ msgstr "ID"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Important:"
-msgstr ""
+msgstr "Vigtigt:"
 
 #. module: portal
 #. odoo-javascript
@@ -845,7 +855,7 @@ msgstr "Ugyldig"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Invalid Email Address"
-msgstr ""
+msgstr "Ugyldig e-mailadresse"
 
 #. module: portal
 #. odoo-python
@@ -876,17 +886,17 @@ msgstr "Invitationsmail til kontakter så de kan oprette en brugerkonto"
 #: code:addons/portal/wizard/portal_share.py:0
 #, python-format
 msgid "Invitation to access %s"
-msgstr ""
+msgstr "Invitation til adgang %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
 msgid "Is Internal"
-msgstr ""
+msgstr "Er internt"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
 msgid "Is Portal"
-msgstr ""
+msgstr "Er portal"
 
 #. module: portal
 #. odoo-javascript
@@ -896,6 +906,8 @@ msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
 msgstr ""
+"Det er meget vigtigt, at denne beskrivelse er klar\n"
+"                og fyldestgørende,"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
@@ -914,7 +926,7 @@ msgstr "Sidst opdateret den"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__login_date
 msgid "Latest Authentication"
-msgstr ""
+msgstr "Seneste godkendelse"
 
 #. module: portal
 #. odoo-javascript
@@ -964,7 +976,7 @@ msgstr ""
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Multi company reports are not supported."
-msgstr ""
+msgstr "Rapporter for flere virksomheder understøttes ikke."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -1018,7 +1030,7 @@ msgstr "Odoo logo"
 #: code:addons/portal/models/res_users_apikeys_description.py:0
 #, python-format
 msgid "Only internal and portal users can create API keys"
-msgstr ""
+msgstr "Kun interne brugere og portalbrugere kan oprette API-nøgler"
 
 #. module: portal
 #. odoo-javascript
@@ -1057,7 +1069,7 @@ msgstr "Telefon"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Please enter your password to confirm you own this account"
-msgstr ""
+msgstr "Indtast din adgangskode for at bekræfte, at dette er din konto"
 
 #. module: portal
 #. odoo-python
@@ -1123,6 +1135,8 @@ msgstr "Udgivet den"
 msgid ""
 "Put my email and phone in a block list to make sure I'm never contacted again"
 msgstr ""
+"Tilføj min e-mailadresse og mit telefonnummer til blokeringslisten, så jeg "
+"ikke kontaktes igen"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_qweb
@@ -1132,7 +1146,7 @@ msgstr "Qweb"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Re-Invite"
-msgstr ""
+msgstr "Geninvitér"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -1142,7 +1156,7 @@ msgstr "Modtagere"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__resource_ref
 msgid "Related Document"
-msgstr ""
+msgstr "Tilknyttet dokument"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_id
@@ -1243,6 +1257,7 @@ msgid ""
 "Some fields are required. Please make sure to write a message or attach a "
 "document"
 msgstr ""
+"Nogle felter er obligatoriske. Skriv en besked, eller vedhæft et dokument"
 
 #. module: portal
 #. odoo-python
@@ -1303,14 +1318,14 @@ msgstr ""
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
-msgstr ""
+msgstr "Kontakten \"%s\" har ikke en gyldig e-mailadresse."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" has the same email as an existing user"
-msgstr ""
+msgstr "Kontakten \"%s\" har samme e-mailadresse som en eksisterende bruger"
 
 #. module: portal
 #. odoo-python
@@ -1326,7 +1341,7 @@ msgstr ""
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "Nøglen kan ikke hentes senere og giver"
 
 #. module: portal
 #. odoo-python
@@ -1348,14 +1363,14 @@ msgstr "Gammelt kodeord er forkert, kodeord er ikke blevet ændret."
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "Partneren \"%s\" har allerede adgang til portalen."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" has no portal access or is internal."
-msgstr ""
+msgstr "Partneren \"%s\" har ingen adgang til portalen eller er intern."
 
 #. module: portal
 #. odoo-python
@@ -1365,6 +1380,8 @@ msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
 msgstr ""
+"Skabelonen \"Portal: ny bruger\" til udsendelse af e-mails til "
+"portalbrugeren blev ikke fundet."
 
 #. module: portal
 #. odoo-javascript
@@ -1391,11 +1408,14 @@ msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
 msgstr ""
+"Denne partner er knyttet til en intern bruger og har allerede adgang til "
+"portalen."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included at the end of the email sent to new portal users."
 msgstr ""
+"Denne tekst vises i slutningen af e-mailen, der sendes til nye portalbrugere."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
@@ -1439,7 +1459,7 @@ msgstr "Gyldig"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Valid Email Address"
-msgstr ""
+msgstr "Gyldig e-mailadresse"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1550,7 +1570,7 @@ msgstr "Skriv din nøgle ned"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Wrong password."
-msgstr ""
+msgstr "Forkert adgangskode."
 
 #. module: portal
 #. odoo-javascript
@@ -1578,14 +1598,14 @@ msgstr "Du skal være"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "You should enter \""
-msgstr ""
+msgstr "Du skal indtaste \""
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "Du skal først give portalen adgang til partneren \"%s\"."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -1643,6 +1663,8 @@ msgid ""
 "it will be the only way to\n"
 "                identify the key once created"
 msgstr ""
+"det vil være den eneste måde at\n"
+"                identificere nøglen på, når den først er oprettet"
 
 #. module: portal
 #. odoo-javascript
@@ -1673,4 +1695,4 @@ msgstr "at skrive en kommentar."
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "to your user account, it is very important to store it securely."
-msgstr ""
+msgstr "til din brugerkonto, er det meget vigtigt at opbevare den sikkert."

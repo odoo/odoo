@@ -500,7 +500,6 @@ class Picking(models.Model):
             return errors  # return prematurely because all the end location fields depend on this field
 
         # Location fields
-        country_ro = self.env.ref('base.ro')
         for location in ('start', 'end'):
             loc_value = data[f'l10n_ro_edi_stock_{location}_loc_type']
             loc_group = _("'Start Location'") if location == 'start' else _("'End Location'")
@@ -518,9 +517,6 @@ class Picking(models.Model):
                     case _other:
                         errors.append(_("Invalid picking type %(type_code)s", type_code=_other))
                         continue
-
-                if partner.country_id != country_ro:
-                    errors.append(_("Warehouse of %(location_group)s should be in Romania", location_group=loc_group))
 
                 missing_field_names = []
                 if not partner.state_id:

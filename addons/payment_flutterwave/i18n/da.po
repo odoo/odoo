@@ -7,13 +7,13 @@
 # Martin Trigaux, 2023
 # Ejner Sønniksen <ejner@vkdata.dk>, 2025
 # Kira Petersen, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2025-11-20 14:41+0000\n"
+"PO-Revision-Date: 2026-05-18 07:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-17/"
 "payment_flutterwave/da/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: payment_flutterwave
 #. odoo-python
@@ -32,6 +32,8 @@ msgid ""
 "An error occurred during the processing of your payment (status %s). Please "
 "try again."
 msgstr ""
+"Der opstod en fejl under behandlingen af din betaling (status %s). Prøv "
+"venligst igen."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__code
@@ -53,29 +55,29 @@ msgstr "Flutterwave"
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_token__flutterwave_customer_email
 msgid "Flutterwave Customer Email"
-msgstr ""
+msgstr "Flutterwave-kundemail"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "Flutterwave Public Key"
-msgstr ""
+msgstr "Flutterwaves offentlige nøgle"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_secret_key
 msgid "Flutterwave Secret Key"
-msgstr ""
+msgstr "Flutterwaves hemmelige nøgle"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_webhook_secret
 msgid "Flutterwave Webhook Secret"
-msgstr ""
+msgstr "Flutterwaves webhook-hemmelighed"
 
 #. module: payment_flutterwave
 #. odoo-python
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Der blev ikke fundet nogen transaktion, der matcher referencen %s."
 
 #. module: payment_flutterwave
 #: model:ir.model,name:payment_flutterwave.model_payment_provider
@@ -102,7 +104,7 @@ msgstr "Offentlig nøgle"
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference."
-msgstr ""
+msgstr "Modtagne data med manglende reference."
 
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
@@ -117,28 +119,31 @@ msgid ""
 "The communication with the API failed. Flutterwave gave us the following "
 "information: '%s'"
 msgstr ""
+"Kommunikationen med API’et mislykkedes. Flutterwave har sendt følgende "
+"oplysninger: '%s'"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_token__flutterwave_customer_email
 msgid "The email of the customer at the time the token was created."
-msgstr ""
+msgstr "Kundens e-mailadresse på tidspunktet for oprettelsen af tokenet."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "The key solely used to identify the account with Flutterwave."
 msgstr ""
+"Nøglen, der udelukkende bruges til at identificere kontoen hos Flutterwave."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Betalingsudbyderens tekniske kode."
 
 #. module: payment_flutterwave
 #. odoo-python
 #: code:addons/payment_flutterwave/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr ""
+msgstr "Transaktionen er ikke knyttet til et token."
 
 #. module: payment_flutterwave
 #. odoo-python

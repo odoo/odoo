@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-05-16 08:13+0000\n"
+"PO-Revision-Date: 2026-05-18 07:21+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/payment/"
 "hi/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr ""
+msgstr " डेटा मिल गया"
 
 #. module: payment
 #. odoo-python
@@ -45,6 +45,12 @@ msgid ""
 "                                and should be tested on a test database "
 "first."
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/> ये सेटिंग प्रोवाइडर के व्यवहार और Odoo के "
+"साथ\n"
+"                                 उनके इंटिग्रेशन से मेल खाने के लिए सेट की गई हैं. किसी "
+"भी बदलाव से\n"
+"                                गड़बड़ी हो सकती हैं और पहले टेस्ट डेटाबेस पर\n"
+"                                इनका परीक्षण किया जाना चाहिए।"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_breadcrumb
@@ -72,6 +78,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "<i class=\"oi oi-arrow-right me-1\"></i> Configure a payment provider"
 msgstr ""
+"<i class=\"oi oi-arrow-right me-1\"></i> पेमेंट प्रोवाइडर कॉन्फ़िगर करें"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -79,11 +86,13 @@ msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
 "                                            Enable Payment Methods"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/>\n"
+"                                            पेमेंट के तरीकों को चालू करें"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 msgid "<small class=\"text-600\">Save my payment details</small>"
-msgstr ""
+msgstr "<small class=\"text-600\">पेमेंट से जुड़ी मेरी जानकारी सेव करें</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -98,7 +107,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">सेव किए गए पेमेंट के तरीके</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -107,6 +116,9 @@ msgid ""
 "                                All countries are supported.\n"
 "                            </span>"
 msgstr ""
+"<span class=\"oe_inline text-muted\" invisible=\"supported_country_ids\">\n"
+"                                सभी देशों में काम करता है.\n"
+"                           </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
@@ -115,12 +127,15 @@ msgid ""
 "                                All currencies are supported.\n"
 "                            </span>"
 msgstr ""
+"<span class=\"oe_inline text-muted\" invisible=\"supported_currency_ids\">\n"
+"                                सभी करेंसी के साथ काम करता है.\n"
+"                           </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
-msgstr ""
+msgstr "<span><i class=\"fa fa-lock\"/> इसके ज़रिए सुरक्षित</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -147,6 +162,10 @@ msgid ""
 "provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
+"<strong>चेतावनी!</strong> पेमेंट का एक हिस्सा अभी भी पेंडिंग है. कृपया इसे \n"
+"                    प्रोसेस होने के लिए कुछ देर तक इंतज़ार करें. अगर कुछ मिनटों के बाद भी "
+"कैप्चर पेंडिंग है, \n"
+"                    तो अपने पेमेंट प्रोवाइडर कॉन्फ़िगरेशन की जांच करें।"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -154,6 +173,8 @@ msgid ""
 "<strong>Warning!</strong> You can not capture a negative amount nor more\n"
 "                    than"
 msgstr ""
+"<strong>चेतावनी!</strong> आप एक नकारात्मक राशि या इससे ज़्यादा कैप्चर नहीं कर सकते\n"
+"                    "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -162,6 +183,9 @@ msgid ""
 "em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
+"<strong>चेतावनी</strong> <em> बनाएं</em> बटन से पेमेंट प्रोवाइडर नहीं बनाया जा सकता "
+"है.\n"
+"कृपया इसके बजाय <em>डुप्लीकेट</em> ऐक्शन का इस्तेमाल करें।"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -170,16 +194,18 @@ msgid ""
 "                                    correct partner before making this "
 "payment."
 msgstr ""
+"<strong>चेतावनी</strong> यह सुनिश्चित करें कि इस पेमेंट को करने से पहले\n"
+"                                     आप सही पार्टनर के रूप में लॉग इन हैं।"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> The currency is missing or incorrect."
-msgstr ""
+msgstr "<strong>चेतावनी</strong> करेंसी की जानकारी नहीं मिली या वह गलत है।"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> You must be logged in to pay."
-msgstr ""
+msgstr "<strong>चेतावनी</strong> पेमेंट करने के लिए आपको लॉगिन करना ज़रूरी है।"
 
 #. module: payment
 #. odoo-python
@@ -189,6 +215,8 @@ msgid ""
 "A refund request of %(amount)s has been sent. The payment will be created "
 "soon. Refund transaction reference: %(ref)s (%(provider_name)s)."
 msgstr ""
+"%(amount)s का एक रिफ़ंड अनुरोध भेजा गया है. पेमेंट जल्द ही बनाया जाएगा. रिफ़ंड ट्रांज़ैक्शन "
+"के लिए रेफ़रेंस: %(ref)s (%(provider_name)s)।"
 
 #. module: payment
 #. odoo-python
@@ -204,6 +232,7 @@ msgstr ""
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(provider_name)s)."
 msgstr ""
+"रेफ़रेंस %(ref)s के साथ एक ट्रांज़ैक्शन शुरू किया गया है (%(provider_name)s)।"
 
 #. module: payment
 #. odoo-python
@@ -213,6 +242,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated to save a new "
 "payment method (%(provider_name)s)"
 msgstr ""
+"रेफ़रेंस %(ref)s के साथ पेमेंट का एक नए तरीके (%(provider_name)s) को सेव करने के लिए एक "
+"ट्रांज़ैक्शन शुरू किया गया है"
 
 #. module: payment
 #. odoo-python
@@ -222,6 +253,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token)s (%(provider_name)s)."
 msgstr ""
+"रेफ़रेंस %(ref)s के साथ पेमेंट का तरीका %(token)s (%(provider_name)s) का उपयोग करके "
+"एक ट्रांज़ैक्शन शुरू किया गया है।"
 
 #. module: payment
 #. odoo-python
@@ -265,7 +298,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_tokenization
 msgid "Allow Saving Payment Methods"
-msgstr ""
+msgstr "पेमेंट के तरीके को सेव करने की अनुमति दें"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
@@ -301,12 +334,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
 msgid "Amount To Capture"
-msgstr ""
+msgstr "कैप्चर करने के लिए राशि"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "An error occurred during the processing of your payment."
-msgstr ""
+msgstr "आपके पेमेंट की प्रक्रिया के दौरान कोई गड़बड़ी हुई।"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -324,7 +357,7 @@ msgstr "संग्रहीत किया गया"
 #: code:addons/payment/static/src/xml/payment_form_templates.xml:0
 #, python-format
 msgid "Are you sure you want to delete this payment method?"
-msgstr ""
+msgstr "क्या आप वाकई पेमेंट के इस तरीके को हटाना चाहते हैं?"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -343,7 +376,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__auth_msg
 msgid "Authorize Message"
-msgstr ""
+msgstr "मैसेज को मंज़ूरी दें"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_authorize
@@ -368,7 +401,7 @@ msgstr "उपलब्धता"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_search
 msgid "Available methods"
-msgstr ""
+msgstr "उपलब्ध तरीके"
 
 #. module: payment
 #. odoo-python
@@ -386,7 +419,7 @@ msgstr "बैंक का नाम"
 #: model:ir.model.fields,field_description:payment.field_payment_method__brand_ids
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Brands"
-msgstr ""
+msgstr "ब्रैंड"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_buckaroo
@@ -438,14 +471,14 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Cannot delete payment method"
-msgstr ""
+msgstr "पेमेंट के तरीके को हटाया नहीं जा सकता"
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Cannot save payment method"
-msgstr ""
+msgstr "पेमेंट के तरीके को सेव नहीं किया जा सकता"
 
 #. module: payment
 #. odoo-python
@@ -453,7 +486,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 #, python-format
 msgid "Capture"
-msgstr ""
+msgstr "कैप्चर करें"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
@@ -472,11 +505,14 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
+"डिलीवरी पूरी होने पर Odoo से राशि कैप्चर करें.\n"
+"इसका उपयोग तब करें जब आप अपने ग्राहकों के कार्ड से भुगतान सिर्फ़ तभी लेना चाहते हैं\n"
+"जब आपको यकीन हो कि आप उन्हें सामान भेज सकते हैं।"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
 msgid "Child Transactions"
-msgstr ""
+msgstr "चाइल्ड ट्रांज़ैक्शन"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -487,7 +523,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.form
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr ""
+msgstr "पेमेंट का तरीका चुनें"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -575,12 +611,12 @@ msgstr "देश"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__tokenize
 msgid "Create Token"
-msgstr ""
+msgstr "टोकन बनाएं"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "Create a new payment provider"
-msgstr ""
+msgstr "एक नया पेमेंट प्रोवाइडर बनाएं"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_uid
@@ -609,7 +645,7 @@ msgstr "इस तारीख को बनाया गया"
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Creating a transaction from an archived token is forbidden."
-msgstr ""
+msgstr "पुराने या हटाए गए टोकन का उपयोग करके नया भुगतान नहीं किया जा सकता है।"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -639,7 +675,7 @@ msgstr "करेंसी"
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__manual
 #: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "कस्टम पेमेंट से जुड़ा निर्देश"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
@@ -649,7 +685,7 @@ msgstr "साथी"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__sequence
 msgid "Define the display order"
-msgstr ""
+msgstr "डिस्प्ले ऑर्डर तय करें"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_demo
@@ -676,7 +712,7 @@ msgstr "डिस्प्ले का नाम"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__done_msg
 msgid "Done Message"
-msgstr ""
+msgstr "'पूरा' हो गया मैसेज"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__draft
@@ -711,12 +747,12 @@ msgstr "त्रुटि!"
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Error: %s"
-msgstr ""
+msgstr "गड़बड़ी: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__express_checkout_form_view_id
 msgid "Express Checkout Form Template"
-msgstr ""
+msgstr "एक्सप्रेस चेकआउट फ़ॉर्म टेम्पलेट"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
@@ -731,6 +767,9 @@ msgid ""
 "that provides all required billing and shipping information, thus allowing "
 "to skip the checkout process."
 msgstr ""
+"एक्सप्रेस चेकआउट ग्राहकों को पेमेंट के ऐसे तरीके का उपयोग करके तेज़ी से भुगतान करने की अनुमति "
+"देता है जो सभी ज़रूरी बिलिंग और शिपिंग जानकारी प्रदान करती है, जिससे चेकआउट प्रक्रिया को "
+"छोड़ना संभव हो जाता है।"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
@@ -747,7 +786,7 @@ msgstr "सिर्फ़ पूरा"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
-msgstr ""
+msgstr "पेमेंट लिंक जनरेट करें"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
@@ -757,12 +796,12 @@ msgstr "सेल्स पेमेंट लिंक जनरेट कर�
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate and Copy Payment Link"
-msgstr ""
+msgstr "पेमेंट लिंक जनरेट और कॉपी करें"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
-msgstr ""
+msgstr "मेरे खाते पर जाएं <i class=\"oi oi-arrow-right ms-2\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -779,22 +818,22 @@ msgstr "एचटीपीपी राउटिंग"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
 msgid "Has Draft Children"
-msgstr ""
+msgstr "ड्राफ़्ट के सब-सेक्शन हैं"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_remaining_amount
 msgid "Has Remaining Amount"
-msgstr ""
+msgstr "बची हुई राशि है"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
 msgid "Has the payment been post-processed"
-msgstr ""
+msgstr "पेमेंट का पोस्ट-प्रोसेसिंग हो गया है"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__pre_msg
 msgid "Help Message"
-msgstr ""
+msgstr "हेल्प मैसेज"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__id
@@ -843,7 +882,7 @@ msgstr "इंस्टॉल करें"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_state
 msgid "Installation State"
-msgstr ""
+msgstr "इंस्टॉलेशन स्टेट"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -860,29 +899,29 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
 msgid "Is Amount To Capture Valid"
-msgstr ""
+msgstr "कैप्चर की जाने वाली राशि मान्य है"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
 msgid "Is Post-processed"
-msgstr ""
+msgstr "यह पोस्ट-प्रोसेस्ड है"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__is_primary
 msgid "Is Primary Payment Method"
-msgstr ""
+msgstr "पेमेंट का प्राइमरी तरीका है"
 
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_form_templates.xml:0
 #, python-format
 msgid "It is currently linked to the following documents:"
-msgstr ""
+msgstr "यह वर्तमान में नीचे दिए दस्तावेज़ों से जुड़ा है:"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__landing_route
 msgid "Landing Route"
-msgstr ""
+msgstr "लैंडिंग रूट"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -892,7 +931,7 @@ msgstr "भाषा"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__last_state_change
 msgid "Last State Change Date"
-msgstr ""
+msgstr "आखिरी बार स्थिति बदलने की तारीख"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__write_uid
@@ -928,12 +967,12 @@ msgstr "चलिए, इसे करते हैं"
 msgid ""
 "Making a request to the provider is not possible because the provider is "
 "disabled."
-msgstr ""
+msgstr "प्रोवाइडर को अनुरोध करना संभव नहीं है, क्योंकि प्रोवाइडर बंद है।"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
 msgid "Manage your payment methods"
-msgstr ""
+msgstr "पेमेंट के अपने तरीकों को मैनेज करें"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
@@ -943,7 +982,7 @@ msgstr "मैन्युअल"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
 msgid "Manual Capture Supported"
-msgstr ""
+msgstr "मैन्युअल कैप्चर संभव है"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
@@ -993,7 +1032,7 @@ msgstr "नाम"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__code__none
 msgid "No Provider Set"
-msgstr ""
+msgstr "प्रोवाइडर सेट नहीं"
 
 #. module: payment
 #. odoo-python
@@ -1003,11 +1042,13 @@ msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Provider menu."
 msgstr ""
+"इस कंपनी के लिए पेमेंट का कोई मैन्युअल तरीका नहीं मिला. कृपया पेमेंट प्रोवाइडर मेन्यू से एक "
+"बनाएं।"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "No payment methods found for your payment providers."
-msgstr ""
+msgstr "आपके पेमेंट प्रोवाइडर के लिए पेमेंट का कोई तरीका नहीं मिला।"
 
 #. module: payment
 #. odoo-python
@@ -1019,12 +1060,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_to_buy
 msgid "Odoo Enterprise Module"
-msgstr ""
+msgstr "Odoo एंटरप्राइज मॉड्यूल"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__offline
 msgid "Offline payment by token"
-msgstr ""
+msgstr "टोकन द्वारा ऑफ़लाइन पेमेंट"
 
 #. module: payment
 #: model:ir.model,name:payment.model_onboarding_onboarding_step
@@ -1034,7 +1075,7 @@ msgstr "ऑनबोर्डिंग स्टेप"
 #. module: payment
 #: model:onboarding.onboarding.step,step_image_alt:payment.onboarding_onboarding_step_payment_provider
 msgid "Onboarding Step Image"
-msgstr ""
+msgstr "ऑनबोर्डिंग स्टेप इमेज"
 
 #. module: payment
 #: model:onboarding.onboarding.step,title:payment.onboarding_onboarding_step_payment_provider
@@ -1044,38 +1085,38 @@ msgstr "ऑनलाइन पेमेंट"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
 msgid "Online direct payment"
-msgstr ""
+msgstr "ऑनलाइन डायरेक्ट पेमेंट"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_token
 msgid "Online payment by token"
-msgstr ""
+msgstr "टोकन द्वारा ऑनलाइन पेमेंट"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_redirect
 msgid "Online payment with redirection"
-msgstr ""
+msgstr "रीडायरेक्शन के साथ ऑनलाइन पेमेंट"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/wizards/payment_onboarding_wizard.py:0
 #, python-format
 msgid "Only administrators can access this data."
-msgstr ""
+msgstr "सिर्फ़ एडमिन ही इस डेटा को ऐक्सेस कर सकते हैं।"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only authorized transactions can be voided."
-msgstr ""
+msgstr "सिर्फ़ अधिकृत ट्रांज़ैक्शन को ही रद्द किया जा सकता है।"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only confirmed transactions can be refunded."
-msgstr ""
+msgstr "सिर्फ़ पुष्टि किए गए ट्रांज़ैक्शन का ही रिफ़ंड किया जा सकता है।"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__operation
@@ -1097,7 +1138,7 @@ msgstr "अन्य"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Other payment methods"
-msgstr ""
+msgstr "पेमेंट के अन्य तरीके"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_pdt_token
@@ -1140,32 +1181,32 @@ msgstr "PayPal"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr ""
+msgstr "पेमेंट कैप्चर विज़ॉर्ड"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
 msgid "Payment Details"
-msgstr ""
+msgstr "पेमेंट की जानकारी"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Followup"
-msgstr ""
+msgstr "पेमेंट फ़ॉलो-अप"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Form"
-msgstr ""
+msgstr "पेमेंट फ़ॉर्म"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "पेमेंट से जुड़ा निर्देश"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
 msgid "Payment Link"
-msgstr ""
+msgstr "पेमेंट लिंक"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_method
@@ -1181,7 +1222,7 @@ msgstr "पेमेंट के तरीके"
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_method_code
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_method_code
 msgid "Payment Method Code"
-msgstr ""
+msgstr "पेमेंट के तरीके के लिए कोड"
 
 #. module: payment
 #. odoo-python
@@ -1207,13 +1248,13 @@ msgstr "पेमेंट प्रोवाइडर"
 #: model:ir.model,name:payment.model_payment_token
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__token_id
 msgid "Payment Token"
-msgstr ""
+msgstr "पेमेंट टोकन"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Payment Token Count"
-msgstr ""
+msgstr "पेमेंट टोकन की संख्या"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_token
@@ -1241,14 +1282,14 @@ msgstr "पेमेंट ट्रांज़ैक्शन"
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction_linked_to_token
 msgid "Payment Transactions Linked To Token"
-msgstr ""
+msgstr "टोकन से जुड़े पेमेंट ट्रांज़ैक्शन"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "Payment details saved on %(date)s"
-msgstr ""
+msgstr "%(date)s पर सेव की गई पेमेंट की जानकारी"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
@@ -1260,7 +1301,7 @@ msgstr "पेमेंट करने के तरीके"
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Payment processing failed"
-msgstr ""
+msgstr "पेमेंट प्रोसेस नहीं हो सका"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1270,7 +1311,7 @@ msgstr "पेमेंट प्रोवाइडर"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider_onboarding_wizard
 msgid "Payment provider onboarding wizard"
-msgstr ""
+msgstr "पेमेंट प्रोवाइडर ऑनबोर्डिंग विज़ॉर्ड"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -1285,7 +1326,7 @@ msgstr "पेडिंग"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__pending_msg
 msgid "Pending Message"
-msgstr ""
+msgstr "पेंडिंग मैसेज"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
@@ -1298,6 +1339,7 @@ msgstr "फ़ोन"
 #, python-format
 msgid "Please make sure that %(payment_method)s is supported by %(provider)s."
 msgstr ""
+"कृपया यह पक्का करें कि %(payment_method)s इस %(provider)s के साथ काम करता है।"
 
 #. module: payment
 #. odoo-python
@@ -1321,7 +1363,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__primary_payment_method_id
 msgid "Primary Payment Method"
-msgstr ""
+msgstr "पेमेंट का प्राइमरी तरीका"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1341,13 +1383,13 @@ msgstr "प्रोवाइडर"
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_code
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_code
 msgid "Provider Code"
-msgstr ""
+msgstr "प्रोवाइडर कोड"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__provider_ref
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__provider_reference
 msgid "Provider Reference"
-msgstr ""
+msgstr "प्रोवाइडर रेफ़रेंस"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__provider_ids
@@ -1371,12 +1413,12 @@ msgstr "Razorpay"
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Reason: %s"
-msgstr ""
+msgstr "वजह: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__redirect_form_view_id
 msgid "Redirect Form Template"
-msgstr ""
+msgstr "फ़ॉर्म टेम्पलेट रीडायरेक्ट करें"
 
 #. module: payment
 #. odoo-javascript
@@ -1391,7 +1433,7 @@ msgstr "संदर्भ"
 #. module: payment
 #: model:ir.model.constraint,message:payment.constraint_payment_transaction_reference_uniq
 msgid "Reference must be unique!"
-msgstr ""
+msgstr "रेफ़रेंस यूनीक होना चाहिए!"
 
 #. module: payment
 #. odoo-python
@@ -1407,6 +1449,7 @@ msgid ""
 "Refund is a feature allowing to refund customers directly from the payment "
 "in Odoo."
 msgstr ""
+"रिफ़ंड एक ऐसी सुविधा है जो Odoo में ग्राहकों को सीधे पेमेंट से रिफ़ंड करने की अनुमति देती है।"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
