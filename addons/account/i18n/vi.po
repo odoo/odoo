@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:37+0000\n"
+"POT-Creation-Date: 2026-05-22 17:41+0000\n"
 "PO-Revision-Date: 2026-04-11 14:22+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -20041,10 +20041,8 @@ msgstr "Tài khoản này sẽ được sử dụng khi xác thực hóa đơn b
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
-"this screen."
+"this screen.  -  This action will affect your current company only."
 msgstr ""
-"Hành động này không thể hoàn tác: số tiền nợ/có sẽ không thể chỉnh sửa lại "
-"từ màn hình này."
 
 #. module: account
 #. odoo-python
@@ -20138,10 +20136,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
-"Bút toán này đã được rà soát. Bạn cần có vai trò kế toán để thay đổi nó."
 
 #. module: account
 #. odoo-python
@@ -20160,6 +20157,13 @@ msgstr "Bút toán này đã được sao chép từ %s"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "Bút toán này đã được đảo từ %s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21742,16 +21746,6 @@ msgid "You are about to unsubscribe"
 msgstr "Bạn sắp hủy đăng ký"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You are attempting to validate opening entries belonging to another company. "
-"Please switch to the correct company."
-msgstr ""
-"Bạn đang cố gắng xác minh các bút toán đầu kỳ thuộc về một công ty khác. Vui "
-"lòng chuyển sang đúng công ty."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid ""
 "You are changing decimals in your entire database, including invoices,\n"
@@ -23224,3 +23218,23 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Hóa đơn tự lập (Tham chiếu {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid ""
+#~ "This action is irreversible: the credit/debit cannot be modified again "
+#~ "from this screen."
+#~ msgstr ""
+#~ "Hành động này không thể hoàn tác: số tiền nợ/có sẽ không thể chỉnh sửa "
+#~ "lại từ màn hình này."
+
+#~ msgid ""
+#~ "This entry has already been reviewed. You need the bookkeeper role to "
+#~ "change it."
+#~ msgstr ""
+#~ "Bút toán này đã được rà soát. Bạn cần có vai trò kế toán để thay đổi nó."
+
+#~ msgid ""
+#~ "You are attempting to validate opening entries belonging to another "
+#~ "company. Please switch to the correct company."
+#~ msgstr ""
+#~ "Bạn đang cố gắng xác minh các bút toán đầu kỳ thuộc về một công ty khác. "
+#~ "Vui lòng chuyển sang đúng công ty."

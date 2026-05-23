@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-05-16 14:46+0000\n"
+"POT-Creation-Date: 2026-05-22 17:43+0000\n"
+"PO-Revision-Date: 2026-05-23 13:13+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "pos_self_order/ja/>\n"
@@ -379,12 +379,6 @@ msgid "Choose when the customer will pay"
 msgstr "顧客がいつ支払うかを選択"
 
 #. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "Choose your"
-msgstr "選択する"
-
-#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_from_city
 msgid "City"
 msgstr "都市町村"
@@ -553,7 +547,8 @@ msgstr "注文総額がこの金額に達すると、配送料は無料となり
 msgid ""
 "Delivery isn't available for this address. You can still place your order "
 "using another method."
-msgstr "このご住所への配送はご利用いただけません。別の方法でご注文いただけます。"
+msgstr ""
+"このご住所への配送はご利用いただけません。別の方法でご注文いただけます。"
 
 #. module: pos_self_order
 #: model:mail.template,name:pos_self_order.delivery_email_template
@@ -619,7 +614,7 @@ msgstr "QRコードをダウンロード"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Download your receipt here"
-msgstr ""
+msgstr "領収書はこちらからダウンロードしてください"
 
 #. module: pos_self_order
 #. odoo-python
@@ -674,7 +669,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Enter a valid phone number"
-msgstr ""
+msgstr "有効な電話番号を入力してください"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -695,6 +690,12 @@ msgid "Evening"
 msgstr "夜"
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "Extra:"
+msgstr ""
+
+#. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
 "Feel free to use and print this QR code as many times as needed according to "
@@ -705,13 +706,13 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_product_price
 msgid "Fixed Price"
-msgstr ""
+msgstr "固定価格"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Follow instructions on the cash machine"
-msgstr ""
+msgstr "自動釣銭機の指示に従ってください"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -727,7 +728,7 @@ msgstr "無料メタル/ウッドスタンド"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__free_delivery_min_amount
 msgid "Free if order amount is above"
-msgstr ""
+msgstr "オーダ金額が次以上で無料"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -746,7 +747,7 @@ msgstr "汎用"
 #: code:addons/pos_self_order/static/src/overrides/components/navbar/navbar.xml:0
 #: code:addons/pos_self_order/static/src/overrides/screens/floor_screen/floor_screen.xml:0
 msgid "Get QR Codes"
-msgstr ""
+msgstr "QRコードを入手"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -771,6 +772,8 @@ msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
 msgstr ""
+"プロダクトの作成またはpos_configへの追加を忘れているようです。セルフオーダを"
+"使う前にプロダクトを追加して下さい"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -781,7 +784,7 @@ msgstr "ホームボタン"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Hope you enjoyed your meal!"
-msgstr ""
+msgstr "お食事をお楽しみ頂けましたか"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -890,13 +893,13 @@ msgstr "請求済"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "It seems that"
-msgstr ""
+msgstr "以下のようです："
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "It seems that the network connection was lost."
-msgstr ""
+msgstr "ネットワーク接続が切断されたようです。"
 
 #. module: pos_self_order
 #. odoo-python
@@ -936,7 +939,7 @@ msgstr "最終更新日"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_from_latitude
 msgid "Latitude"
-msgstr ""
+msgstr "緯度"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -957,7 +960,7 @@ msgstr "読込中..."
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_from_longitude
 msgid "Longitude"
-msgstr ""
+msgstr "経度"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -987,12 +990,12 @@ msgstr "この項目用にすべてのオプションを選択してください
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_max_distance_km
 msgid "Max radius"
-msgstr ""
+msgstr "最大半径"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_preset__delivery_max_distance_km
 msgid "Maximum delivery distance, in the unit shown next to the field."
-msgstr ""
+msgstr "最大配送距離(フィールドの横に表示されている単位)。"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1004,7 +1007,7 @@ msgstr "食事"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_home_ids
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
 msgid "Media items to display on the self order screen"
-msgstr ""
+msgstr "セルフオーダ画面に表示するメディア項目"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
@@ -1026,7 +1029,7 @@ msgstr "午前"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/landing_page/landing_page.xml:0
 msgid "My Order"
-msgstr ""
+msgstr "自分のオーダ"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1103,7 +1106,7 @@ msgstr "処理中"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Online"
-msgstr ""
+msgstr "オンライン"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1139,7 +1142,7 @@ msgstr "今すぐオーダ"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Order for"
-msgstr ""
+msgstr "オーダ："
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1187,7 +1190,7 @@ msgstr "後で払う"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Payment failed"
-msgstr ""
+msgstr "支払いに失敗しました"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1200,6 +1203,8 @@ msgid ""
 "Personalize your splash screen by adding one or multiple media items to "
 "create a slideshow"
 msgstr ""
+"1つまたは複数のメディア項目を追加してスライドショーを作成し、スプラッシュ画面"
+"をカスタマイズしてください"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1235,7 +1240,7 @@ msgstr "オーダの時間帯をお選びください。"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Please try again or select another payment method"
-msgstr ""
+msgstr "もう一度お試しいただくか、別の支払い方法を選択してください"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_load_mixin
@@ -1296,7 +1301,7 @@ msgstr "POS"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Powered by Google"
-msgstr ""
+msgstr "Powered by Google"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__link_html
@@ -1399,7 +1404,7 @@ msgstr "量の選択"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
 msgid "Remaining:"
-msgstr ""
+msgstr "残り:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1998,7 +2003,7 @@ msgstr "https://odoo.com"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "included"
+msgid "included &"
 msgstr ""
 
 #. module: pos_self_order
@@ -2042,10 +2047,19 @@ msgstr "odoo"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "per extra unit"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr ""
+
+#~ msgid "Choose your"
+#~ msgstr "選択する"
 
 #~ msgid ""
 #~ "\n"

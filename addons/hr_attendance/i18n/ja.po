@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-05-16 14:44+0000\n"
+"PO-Revision-Date: 2026-05-23 13:39+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "hr_attendance/ja/>\n"
@@ -29,8 +29,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
-msgstr ""
-"\"チェックアウト\"時間は\"チェックイン\"時間より早くすることはできません。"
+msgstr "「退勤」時間は「出勤」時間より前の時刻に設定できません。"
 
 #. module: hr_attendance
 #. odoo-python
@@ -73,9 +72,8 @@ msgid ""
 msgstr ""
 "<br/>\n"
 "                                        <span class=\"text-muted\">有効化され"
-"ている場合、スケジュール済みの勤務時間内(許容範囲を含む)の最初のチェックイン"
-"のみが記録されます。それ以降のチェックインは、自動チェックアウトが行われた後"
-"にのみ許可されます。</span>"
+"ている場合、スケジュール済みの勤務時間内(許容範囲を含む)の最初の出勤のみが記"
+"録されます。それ以降の出勤は、自動退勤が行われた後にのみ許可されます。</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
@@ -253,8 +251,8 @@ msgid ""
 "check in / check out.\n"
 "                To create employees go to the Employees menu."
 msgstr ""
-"ここで従業員を選択し、チェックイン/チェックアウトを実行できるように、何名かの"
-"従業員を追加します。\n"
+"ここで従業員を選択し、出勤/退勤打刻を実行できるように、何名かの従業員を追加し"
+"ます。\n"
 "従業員を作成するには、従業員メニューに移動します。"
 
 #. module: hr_attendance
@@ -277,7 +275,7 @@ msgstr "全部門"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Allow Users to Check in/out from Odoo."
-msgstr "ユーザがOdooからチェックイン/アウトできるようにします。"
+msgstr "ユーザがOdooから出勤/退勤打刻できるようにします。"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -499,13 +497,13 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Automatically Checked-Out"
-msgstr "自動チェックアウト済"
+msgstr "自動退勤済"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
 msgid "Back"
-msgstr ""
+msgstr "戻る"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__back
@@ -632,7 +630,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/check_in_out/check_in_out.xml:0
 msgid "Check IN"
-msgstr "チェックイン"
+msgstr "出勤"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
@@ -640,13 +638,13 @@ msgstr "チェックイン"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_check_in
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Check In"
-msgstr "チェックイン"
+msgstr "出勤"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/check_in_out/check_in_out.xml:0
 msgid "Check OUT"
-msgstr "チェックアウト"
+msgstr "退勤"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
@@ -654,41 +652,41 @@ msgstr "チェックアウト"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_check_out
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Check Out"
-msgstr "チェックアウト"
+msgstr "退勤"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Check in"
-msgstr "チェックイン"
+msgstr "出勤"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Check out"
-msgstr "チェックアウト"
+msgstr "退勤"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
 msgid "Checked in"
-msgstr "チェックイン"
+msgstr "出勤済"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Checked in at"
-msgstr ""
+msgstr "出勤時刻:"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_out
 msgid "Checked out"
-msgstr "チェックアウト"
+msgstr "退勤済"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Checked out at"
-msgstr ""
+msgstr "退勤時刻:"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -699,7 +697,7 @@ msgstr "挨拶メッセージの表示時間を選択"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Choose how to record attendances"
-msgstr ""
+msgstr "勤怠の記録方法を選択"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -751,14 +749,13 @@ msgstr "確定"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Connect an RFID reader, and scan a token."
-msgstr ""
+msgstr "RFIDリーダに接続して、トークンをスキャンします。"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Connection lost. Check in/out could not be recorded."
-msgstr ""
-"接続が切断されました。チェックイン/チェックアウトを記録できませんでした。"
+msgstr "接続が切断されました。出勤/退勤を記録できませんでした。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime_ruleset__rate_combination_mode
@@ -1051,13 +1048,13 @@ msgstr "時間外労働検証"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_calendar/attendance_calendar_overview.xml:0
 msgid "Extra Time"
-msgstr ""
+msgstr "追加時間"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Extra hours"
-msgstr ""
+msgstr "追加勤務時間"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1085,7 +1082,7 @@ msgstr "フォロワー (取引先)"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.xml:0
 msgid "For"
-msgstr ""
+msgstr "対象："
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__timing_start
@@ -1160,7 +1157,7 @@ msgstr "メッセージあり"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_calendar/attendance_calendar_overview.xml:0
 msgid "Hours"
-msgstr ""
+msgstr "時間"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month
@@ -1188,7 +1185,7 @@ msgstr "今日以前の時間"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Hours Previously Today:"
-msgstr ""
+msgstr "今日以前の時間:"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
@@ -1200,7 +1197,7 @@ msgstr "今日の勤務時間"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Hours Today:"
-msgstr ""
+msgstr "今日の勤務時間:"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__expected_hours_from_contract
@@ -2337,7 +2334,7 @@ msgstr "不明"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes (defined on the Employee's profile) to check-in."
-msgstr "チェックインには、PINコード（従業員のプロファイルに定義）を使用"
+msgstr "出勤打刻にPINコード(従業員のプロフィールに定義済)を使用"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -2501,13 +2498,13 @@ msgstr "及び"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
 msgid "check in"
-msgstr "チェックイン"
+msgstr "出勤"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
 msgid "check out"
-msgstr "チェックアウト"
+msgstr "退勤"
 
 #. module: hr_attendance
 #. odoo-python

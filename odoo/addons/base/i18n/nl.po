@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-24 11:01+0000\n"
-"PO-Revision-Date: 2026-05-06 14:31+0000\n"
+"PO-Revision-Date: 2026-05-23 12:20+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/base/"
 "nl/>\n"
@@ -16361,7 +16361,7 @@ msgstr ""
 "<i class=\"d-none d-md-block fa fa-envelope\" title=\"Gebruikersnaam / E-"
 "mail\" invisible=\"login != email\"/>\n"
 "                                    <i class=\"d-none d-md-block fa fa-key\" "
-"title=\"Gebruikersnaam\" invisible=\"login == e-mail\"/>"
+"title=\"Gebruikersnaam\" invisible=\"login == email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -17201,7 +17201,7 @@ msgstr "Een reeks mag alleen bij tekstvelden worden gebruikt."
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
 msgid "A user associated to the contact"
-msgstr "Een gebruiker behorende bij dit contactpersoon"
+msgstr "Een gebruiker gekoppeld aan dit contact"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_groups__disjoint_ids
@@ -18375,7 +18375,7 @@ msgstr "Adres"
 #: model:ir.model.fields,field_description:base.field_res_partner__address
 #: model:ir.model.fields,field_description:base.field_res_users__address
 msgid "Address (without name)"
-msgstr ""
+msgstr "Adres (zonder naam)"
 
 #. module: base
 #: model:ir.model,name:base.model_format_address_mixin
@@ -18403,7 +18403,7 @@ msgstr "Adresformaat..."
 #: model:ir.model.fields,field_description:base.field_res_partner__address_inline
 #: model:ir.model.fields,field_description:base.field_res_users__address_inline
 msgid "Address inline (without name)"
-msgstr ""
+msgstr "Adres (inline) (zonder naam)"
 
 #. module: base
 #. odoo-python
@@ -24418,7 +24418,7 @@ msgstr "Volledige adres"
 #: model:ir.model.fields,field_description:base.field_res_partner__contact_address_inline
 #: model:ir.model.fields,field_description:base.field_res_users__contact_address_inline
 msgid "Complete Address inline"
-msgstr ""
+msgstr "Volledig adres inline"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__complete_name
@@ -26032,12 +26032,12 @@ msgstr "Gedecimaliseerd getal"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
 msgid "Deduplicate Contacts"
-msgstr "Ontdubbelen contacten"
+msgstr "Contacten ontdubbelen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Deduplicate the other Contacts"
-msgstr "Ontdubbel de andere contacten"
+msgstr "Andere contacten ontdubbelen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -26359,7 +26359,7 @@ msgstr "Bureau productiebedrijf"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__dst_partner_id
 msgid "Destination Contact"
-msgstr "Bestemming contactpersoon"
+msgstr "Bestemmingscontact"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__res_model
@@ -26510,7 +26510,7 @@ msgstr "Chat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_tracking
 msgid "Discuss Tracking"
-msgstr ""
+msgstr "Chat-tracking"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__disjoint_ids
@@ -29553,7 +29553,7 @@ msgstr "Fitness"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ph_reports_asset
 msgid "Fixed Asset Listing report for the Philippines"
-msgstr ""
+msgstr "Rapport overzicht vaste activa Filipijnen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__icon_flag
@@ -30735,7 +30735,7 @@ msgstr "RH - Livechat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_address_extended
 msgid "HR Address Extended"
-msgstr ""
+msgstr "HR uitgebreid adres"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_attendance
@@ -32281,6 +32281,8 @@ msgid ""
 "Inherited view cannot have '%(attr)s' defined on the record. Use '%(attr)s' "
 "attributes inside the view definition"
 msgstr ""
+"Een geërfde weergave mag '%(attr)s' niet gedefinieerd hebben op het record. "
+"Gebruik '%(attr)s'-attributen binnen de weergavedefinitie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_setup
@@ -33317,7 +33319,7 @@ msgstr "Jordanië E-facturatie"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_journal_item
 msgid "Journal Items associated to the contact"
-msgstr "Boekingen behorende bij dit contactpersoon"
+msgstr "Boekingsregels gekoppeld aan dit contact"
 
 #. module: base
 #. odoo-python
@@ -36472,8 +36474,9 @@ msgstr "NTN"
 
 #. module: base
 #: model:res.country,vat_label:base.mz
+#, fuzzy
 msgid "NUIT"
-msgstr ""
+msgstr "NUIT"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.NGN
@@ -41274,7 +41277,7 @@ msgstr "De Filipijnen - Boekhouding"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ph_reports_asset
 msgid "Philippines - Accounting Asset Report"
-msgstr ""
+msgstr "Filipijnen - Activarapport Boekhouding"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ph_reports_stock
@@ -43489,13 +43492,14 @@ msgstr "Verplicht"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__res_access_read
+#, fuzzy
 msgid "Res Access Read"
-msgstr ""
+msgstr "Leestoegang op een resource"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__res_access_write
 msgid "Res Access Write"
-msgstr ""
+msgstr "Schrijftoegang op een resource"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__res_users_settings_ids
@@ -47166,7 +47170,7 @@ msgstr "Technische module: Raster implementatie"
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_tracking
 msgid "Technical tracking of discussion and message-related data"
-msgstr ""
+msgstr "Technische tracking van chat- en berichtgerelateerde gegevens"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_technology
@@ -49248,7 +49252,7 @@ msgstr "Deze modules kunnen niet worden verwijderd: %s"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
 msgid "Thousands Separator"
-msgstr "Duizend scheidingsteken"
+msgstr "Scheidingsteken voor duizendtallen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_thrift_store

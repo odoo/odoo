@@ -19,10 +19,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:37+0000\n"
-"PO-Revision-Date: 2026-04-23 11:53+0000\n"
+"POT-Creation-Date: 2026-05-22 17:41+0000\n"
+"PO-Revision-Date: 2026-05-23 13:25+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-3/"
 "account/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -379,7 +379,7 @@ msgstr "(object._get_report_base_filename())"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/search/search_panel.xml:0
 msgid "+ Add Section"
-msgstr ""
+msgstr "+ Aggiungi sezione"
 
 #. module: account
 #. odoo-python
@@ -6460,7 +6460,7 @@ msgstr "Costo di mobili per ufficio, arredi e attrezzature aziendali"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Cost of revenue"
-msgstr ""
+msgstr "Costo del venduto"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_postage
@@ -6613,7 +6613,7 @@ msgstr "Crea un modello e-mail"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "Create a bill manually"
-msgstr ""
+msgstr "Crea una fattura manualmente"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
@@ -6752,7 +6752,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "Create manually"
-msgstr ""
+msgstr "Crea manualmente"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -13264,7 +13264,7 @@ msgstr "Mensile"
 #. odoo-javascript
 #: code:addons/account/static/src/components/currency_form/open_decimal_precision_btn_template.xml:0
 msgid "More precision on Product Prices"
-msgstr ""
+msgstr "Maggiore precisione sui prezzi dei prodotti"
 
 #. module: account
 #. odoo-python
@@ -13432,7 +13432,7 @@ msgstr "Necessità di annullare la richiesta"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Need to update"
-msgstr ""
+msgstr "Necessità di aggiornamento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -17572,7 +17572,7 @@ msgstr "Mostra le caratteristiche di inalterabilità"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_invoice_vendor_bill
 #: model:ir.model.fields,field_description:account.field_account_move__show_invoice_vendor_bill
 msgid "Show Invoice Vendor Bill"
-msgstr ""
+msgstr "Mostra fattura fornitore"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_journal
@@ -20195,10 +20195,8 @@ msgstr "Questo conto viene usato alla validazione di una fattura cliente."
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
-"this screen."
+"this screen.  -  This action will affect your current company only."
 msgstr ""
-"Questa azione è irreversibile: l'accredito/debito non può essere modificato "
-"nuovamente da questa schermata."
 
 #. module: account
 #. odoo-python
@@ -20293,11 +20291,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
-"Questo movimento è già stato revisionato. Per modificarlo è necessario il "
-"ruolo di contabile."
 
 #. module: account
 #. odoo-python
@@ -20316,6 +20312,13 @@ msgstr "La voce è stata duplicata da %s"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "La registrazione è stata stornata da %s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21223,7 +21226,7 @@ msgstr "Aggiorna Termini & Condizioni"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Update app"
-msgstr ""
+msgstr "Aggiorna app"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -21909,16 +21912,6 @@ msgstr "Stai per inviare"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "You are about to unsubscribe"
 msgstr "Stai per annullare l'iscrizione"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You are attempting to validate opening entries belonging to another company. "
-"Please switch to the correct company."
-msgstr ""
-"Stai tentando di convalidare registrazioni di apertura appartenenti a "
-"un'altra azienda. Passa all'azienda corretta."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
@@ -22895,7 +22888,7 @@ msgstr "e non verrà registrato automaticamente."
 #. odoo-javascript
 #: code:addons/account/static/src/components/grouped_view_widget/grouped_view_widget.xml:0
 msgid "are not shown in the preview"
-msgstr ""
+msgstr "non sono mostrati nell'anteprima"
 
 #. module: account
 #. odoo-javascript
@@ -23118,7 +23111,7 @@ msgstr "in_invoice"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
 msgid "invoice(s)"
-msgstr ""
+msgstr "fattura(e)"
 
 #. module: account
 #. odoo-python
@@ -23292,7 +23285,7 @@ msgstr "per creare le imposte per questo paese."
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "try our sample"
-msgstr ""
+msgstr "prova il nostro modello"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -23416,3 +23409,24 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Fattura in autofatturazione (Rif {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid ""
+#~ "This action is irreversible: the credit/debit cannot be modified again "
+#~ "from this screen."
+#~ msgstr ""
+#~ "Questa azione è irreversibile: l'accredito/debito non può essere "
+#~ "modificato nuovamente da questa schermata."
+
+#~ msgid ""
+#~ "This entry has already been reviewed. You need the bookkeeper role to "
+#~ "change it."
+#~ msgstr ""
+#~ "Questo movimento è già stato revisionato. Per modificarlo è necessario il "
+#~ "ruolo di contabile."
+
+#~ msgid ""
+#~ "You are attempting to validate opening entries belonging to another "
+#~ "company. Please switch to the correct company."
+#~ msgstr ""
+#~ "Stai tentando di convalidare registrazioni di apertura appartenenti a "
+#~ "un'altra azienda. Passa all'azienda corretta."

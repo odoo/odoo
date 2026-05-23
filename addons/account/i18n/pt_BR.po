@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:37+0000\n"
+"POT-Creation-Date: 2026-05-22 17:41+0000\n"
 "PO-Revision-Date: 2026-05-16 14:34+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -504,7 +504,8 @@ msgstr "USD 100,00"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
-msgstr "10XXXXXXXXY ou 20XXXXXXXXY ou 15XXXXXXXXY ou 16XXXXXXXXY ou 17XXXXXXXXY"
+msgstr ""
+"10XXXXXXXXY ou 20XXXXXXXXY ou 15XXXXXXXXY ou 16XXXXXXXXY ou 17XXXXXXXXY"
 
 #. module: account
 #. odoo-python
@@ -20050,10 +20051,8 @@ msgstr "Essa conta será usada ao validar uma fatura de cliente."
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
-"this screen."
+"this screen.  -  This action will affect your current company only."
 msgstr ""
-"Esta ação é irreversível: o crédito/débito não pode ser modificado novamente "
-"nesta tela."
 
 #. module: account
 #. odoo-python
@@ -20146,11 +20145,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
-"Este lançamento já foi revisado. Você precisa da função de contador para "
-"alterá-lo."
 
 #. module: account
 #. odoo-python
@@ -20169,6 +20166,13 @@ msgstr "Este lançamento foi duplicado a partir de %s"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "Este lançamento foi revertido de %s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21768,16 +21772,6 @@ msgid "You are about to unsubscribe"
 msgstr "Você está prestes a cancelar a sua inscrição"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You are attempting to validate opening entries belonging to another company. "
-"Please switch to the correct company."
-msgstr ""
-"Você está tentando validar lançamentos de abertura pertencentes a outra "
-"empresa. Troque para a empresa correta."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid ""
 "You are changing decimals in your entire database, including invoices,\n"
@@ -23280,3 +23274,24 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Fatura de autofaturamento (Ref. {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid ""
+#~ "This action is irreversible: the credit/debit cannot be modified again "
+#~ "from this screen."
+#~ msgstr ""
+#~ "Esta ação é irreversível: o crédito/débito não pode ser modificado "
+#~ "novamente nesta tela."
+
+#~ msgid ""
+#~ "This entry has already been reviewed. You need the bookkeeper role to "
+#~ "change it."
+#~ msgstr ""
+#~ "Este lançamento já foi revisado. Você precisa da função de contador para "
+#~ "alterá-lo."
+
+#~ msgid ""
+#~ "You are attempting to validate opening entries belonging to another "
+#~ "company. Please switch to the correct company."
+#~ msgstr ""
+#~ "Você está tentando validar lançamentos de abertura pertencentes a outra "
+#~ "empresa. Troque para a empresa correta."

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:37+0000\n"
+"POT-Creation-Date: 2026-05-22 17:41+0000\n"
 "PO-Revision-Date: 2025-10-18 14:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -22101,7 +22101,7 @@ msgstr "Bu hisob mijoz hisob-fakturasini tasdiqlashda ishlatiladi."
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
-"this screen."
+"this screen.  -  This action will affect your current company only."
 msgstr ""
 
 #. module: account
@@ -22205,8 +22205,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
 
 #. module: account
@@ -22229,6 +22229,13 @@ msgstr "Bu yozuv %s dan nusxalangan"
 #, fuzzy
 msgid "This entry has been reversed from %s"
 msgstr "Bu yozuv %s dan qaytarilgan"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -24028,14 +24035,6 @@ msgstr "Siz yubormoqchisiz"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "You are about to unsubscribe"
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You are attempting to validate opening entries belonging to another company. "
-"Please switch to the correct company."
 msgstr ""
 
 #. module: account

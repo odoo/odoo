@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-05-16 14:33+0000\n"
+"POT-Creation-Date: 2026-05-22 17:41+0000\n"
+"PO-Revision-Date: 2026-05-23 13:48+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-3/website_sale/zh_Hans/>\n"
@@ -148,6 +148,58 @@ msgid ""
 "                }\n"
 "                }"
 msgstr ""
+".heartBeat {\n"
+"                        animation: heartBeat 1.3s ease-in-out forwards;\n"
+"                        animation-delay: 0.75s;\n"
+"                        transform-origin: 74.5px 25.5px;\n"
+"                    }\n"
+"                @keyframes heartBeat {\n"
+"                        0% {\n"
+"                        transform: scale(1);\n"
+"                        }\n"
+"\n"
+"                        14% {\n"
+"                            transform: scale(1.2);\n"
+"                        }\n"
+"\n"
+"                        28% {\n"
+"                            transform: scale(1);\n"
+"                        }\n"
+"\n"
+"                        42% {\n"
+"                            transform: scale(1.2);\n"
+"                        }\n"
+"\n"
+"                        70% {\n"
+"                            transform: scale(1);\n"
+"                        }\n"
+"                    }\n"
+"                .swing {\n"
+"                    animation: swing 1.3s ease forwards;\n"
+"                    animation-delay: 0.75s;\n"
+"                    transform-origin: top center\n"
+"                }\n"
+"                @keyframes swing {\n"
+"                    20% {\n"
+"                    transform: rotate(15deg)\n"
+"                }\n"
+"\n"
+"                40% {\n"
+"                    transform: rotate(-10deg)\n"
+"                }\n"
+"\n"
+"                60% {\n"
+"                    transform: rotate(5deg)\n"
+"                }\n"
+"\n"
+"                80% {\n"
+"                    transform: rotate(-5deg)\n"
+"                }\n"
+"\n"
+"                to {\n"
+"                    transform: rotate(0deg)\n"
+"                }\n"
+"                }"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.empty_cart_svg
@@ -599,6 +651,8 @@ msgid ""
 "<span class=\"fa fa-exchange fa-fw o_not-animable\"/>\n"
 "            <span class=\"o_label small ms-2\">Compare</span>"
 msgstr ""
+"<span class=\"fa fa-exchange fa-fw o_not-animable\"/>\n"
+"                    <span class=\"o_label small ms-2\">比较</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -1321,7 +1375,7 @@ msgstr "添加到购物车动作"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Add a product"
-msgstr ""
+msgstr "添加产品"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -5734,6 +5788,7 @@ msgid "Salesperson"
 msgstr "销售员"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_and_ribbon
 msgid "Sample"
 msgstr "示例"
@@ -6694,6 +6749,12 @@ msgid "This product is no longer available."
 msgstr "此产品已停产。"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "This product is not available (anymore) in this unit of measure."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "This promo code is not available."
 msgstr "促销代码无效."
@@ -6846,7 +6907,7 @@ msgstr "床下抽屉"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__is_unfulfilled
 msgid "Unfulfilled Orders"
-msgstr ""
+msgstr "未完成订单"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -6872,7 +6933,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_container__unset
 msgid "Unset"
-msgstr ""
+msgstr "未设置"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.action_update_suggested_products
@@ -7567,7 +7628,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "hours."
-msgstr ""
+msgstr "小时。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -7619,6 +7680,9 @@ msgid ""
 "                        <i class=\"oi oi-arrow-down ms-1\" aria-"
 "hidden=\"true\"/>"
 msgstr ""
+"项目 - 向下滚动查看更多\n"
+"                       <i class=\"oi oi-arrow-down ms-1\" aria-"
+"hidden=\"true\"/>"
 
 #. module: website_sale
 #. odoo-python

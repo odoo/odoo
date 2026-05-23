@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-05-16 14:50+0000\n"
+"POT-Creation-Date: 2026-05-22 17:43+0000\n"
+"PO-Revision-Date: 2026-05-23 13:36+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-3/pos_self_order/zh_Hans/>\n"
@@ -92,8 +92,8 @@ msgstr ""
 "lang_code=lg)\">\n"
 "                   <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
 "                    <t t-set=\"street\" t-value=\"client.street or ''\"/> \n"
-"                   <t t-set=\"state\" t-value=\"client.state_id.name or "
-"''\"/>\n"
+"                   <t t-set=\"state\" t-value=\"client.state_id.name or ''\"/"
+">\n"
 "                    <t t-set=\"city\" t-value=\"client.city or ''\"/> \n"
 "                   <t t-set=\"country\" t-value=\"client.country_id.name or "
 "''\"/>\n"
@@ -110,9 +110,9 @@ msgstr ""
 "                    </div>\n"
 "                   <br/>\n"
 "                    <div> 您的订单<t t-out=\"object.tracking_number\">...</"
-"t> 金额为<t t-out=\"format_amount(object.amount_total,object.currency_id)\">"
-"$xx.xx</t> 已确认。<span t-if=\"object.preset_time or client.street\">订单将"
-"于</span> <span t-if=\"object.preset_time\">12:00 pm</t></span> <span t-"
+"t> 金额为<t t-out=\"format_amount(object.amount_total,object.currency_id)"
+"\">$xx.xx</t> 已确认。<span t-if=\"object.preset_time or client.street\">订单"
+"将于</span> <span t-if=\"object.preset_time\">12:00 pm</t></span> <span t-"
 "if=\"client.street\"> 送达至<t t-out=\"street\">街道</t> ，<t t-"
 "out=\"state\">省/州</t> ，<t t-out=\"client.zip or ''\">邮编</t> ，<t t-"
 "out=\"city\">城市</t> ，<t t-out=\"country\">国家/地区</t></span></div>\n"
@@ -174,8 +174,8 @@ msgstr ""
 "                    </div>\n"
 "                   <br/>\n"
 "                    <div> 您的订单<t t-out=\"object.tracking_number\">...</"
-"t> 金额为<t t-out=\"format_amount(object.amount_total,object.currency_id)\">"
-"$xx.xx</t> 已确认。<span t-if=\"object.preset_time\">订单将于<t t-"
+"t> 金额为<t t-out=\"format_amount(object.amount_total,object.currency_id)"
+"\">$xx.xx</t> 已确认。<span t-if=\"object.preset_time\">订单将于<t t-"
 "out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
 "lang_code=lg)\">12:00 pm</t></span></div>\n"
 "                    <br/> \n"
@@ -223,7 +223,7 @@ msgstr "添加媒体"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Add an order note"
-msgstr ""
+msgstr "添加订单备注"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -369,12 +369,6 @@ msgstr "选择自订模式"
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
 msgid "Choose when the customer will pay"
 msgstr "选择客户付款时间"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "Choose your"
-msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_from_city
@@ -684,6 +678,12 @@ msgid "Evening"
 msgstr ""
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "Extra:"
+msgstr ""
+
+#. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid ""
 "Feel free to use and print this QR code as many times as needed according to "
@@ -721,7 +721,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Full Day"
-msgstr ""
+msgstr "全天"
 
 #. module: pos_self_order
 #. odoo-python
@@ -881,7 +881,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "It seems that the network connection was lost."
-msgstr ""
+msgstr "网络连接似乎已中断。"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1981,7 +1981,7 @@ msgstr "https://odoo.com"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "included"
+msgid "included &"
 msgstr ""
 
 #. module: pos_self_order
@@ -1998,7 +1998,7 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__delivery_distance_unit__mi
 msgid "mi"
-msgstr ""
+msgstr "mi"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -2022,6 +2022,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "odoo"
 msgstr "odoo"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "per extra unit"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript

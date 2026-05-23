@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:37+0000\n"
+"POT-Creation-Date: 2026-05-22 17:41+0000\n"
 "PO-Revision-Date: 2026-05-16 14:44+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -20279,10 +20279,8 @@ msgstr "Dieses Konto wird für die Validierung einer Kundenrechnung verwendet."
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
-"this screen."
+"this screen.  -  This action will affect your current company only."
 msgstr ""
-"Dieser Vorgang kann nicht rückgängig gemacht werden: Das Haben/Soll kann von "
-"diesem Bildschirm aus nicht mehr geändert werden."
 
 #. module: account
 #. odoo-python
@@ -20376,11 +20374,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
-"Dieser Posten wurde bereits geprüft. Sie benötigen die Rolle „Buchhalter“, "
-"um ihn zu ändern."
 
 #. module: account
 #. odoo-python
@@ -20399,6 +20395,13 @@ msgstr "Der Eintrag wurde dupliziert aus %s"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "Der Eintrag wurde von %s gutgeschrieben"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22018,16 +22021,6 @@ msgid "You are about to unsubscribe"
 msgstr "Sie sind im Begriff, sich abzumelden"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You are attempting to validate opening entries belonging to another company. "
-"Please switch to the correct company."
-msgstr ""
-"Sie versuchen, Eröffnungsbuchungen zu validieren, die zu einem anderen "
-"Unternehmen gehören. Wechseln Sie zum richtigen Unternehmen."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid ""
 "You are changing decimals in your entire database, including invoices,\n"
@@ -23550,6 +23543,27 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Selbstfakturierte Rechnung (Ref. {{ object.name "
 "or 'k. A.' }})"
+
+#~ msgid ""
+#~ "This action is irreversible: the credit/debit cannot be modified again "
+#~ "from this screen."
+#~ msgstr ""
+#~ "Dieser Vorgang kann nicht rückgängig gemacht werden: Das Haben/Soll kann "
+#~ "von diesem Bildschirm aus nicht mehr geändert werden."
+
+#~ msgid ""
+#~ "This entry has already been reviewed. You need the bookkeeper role to "
+#~ "change it."
+#~ msgstr ""
+#~ "Dieser Posten wurde bereits geprüft. Sie benötigen die Rolle "
+#~ "„Buchhalter“, um ihn zu ändern."
+
+#~ msgid ""
+#~ "You are attempting to validate opening entries belonging to another "
+#~ "company. Please switch to the correct company."
+#~ msgstr ""
+#~ "Sie versuchen, Eröffnungsbuchungen zu validieren, die zu einem anderen "
+#~ "Unternehmen gehören. Wechseln Sie zum richtigen Unternehmen."
 
 #~ msgid ""
 #~ "\n"

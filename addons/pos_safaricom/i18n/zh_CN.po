@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-05-16 14:49+0000\n"
+"POT-Creation-Date: 2026-05-22 17:43+0000\n"
+"PO-Revision-Date: 2026-05-23 12:38+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-3/pos_safaricom/zh_Hans/>\n"
@@ -18,6 +18,18 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.17\n"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+msgid "'Search by name or phone or transaction id...'"
+msgstr ""
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+msgid "'Select M-Pesa Transaction'"
+msgstr ""
 
 #. module: pos_safaricom
 #. odoo-javascript
@@ -76,7 +88,7 @@ msgstr "不能处理包含负数金额的交易。"
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__consumer_key
 msgid "Consumer Key"
-msgstr ""
+msgstr "消费者密钥"
 
 #. module: pos_safaricom
 #. odoo-python
@@ -87,6 +99,13 @@ msgstr "Safaricom M-Pesa 需要消费者密钥和消费者密钥"
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__consumer_secret
 msgid "Consumer Secret"
+msgstr "消费者秘密"
+
+#. module: pos_safaricom
+#. odoo-python
+#: code:addons/pos_safaricom/models/pos_payment_method.py:0
+msgid ""
+"Could not find base url. Please set up web.base.url to a valid https address"
 msgstr ""
 
 #. module: pos_safaricom
@@ -114,13 +133,13 @@ msgstr "无法生成二维码"
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
-msgid "Failed to register URLs"
+msgid "Failed to register URLs. Check your credentials and try again."
 msgstr ""
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
-msgid "Failed to register URLs. Check your credentials and try again."
+msgid "Failed to register URLs: %s"
 msgstr ""
 
 #. module: pos_safaricom
@@ -130,6 +149,8 @@ msgid "Failed to retrieve access token from Safaricom"
 msgstr ""
 
 #. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__id
 msgid "ID"
@@ -276,6 +297,13 @@ msgstr ""
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_test_mode
 msgid "Test Mode"
+msgstr ""
+
+#. module: pos_safaricom
+#: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__business_short_code
+msgid ""
+"The business short code and till number combination as 'shortcode-"
+"tillnumber' (ex: 123456-789012)"
 msgstr ""
 
 #. module: pos_safaricom

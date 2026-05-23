@@ -24,11 +24,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:37+0000\n"
-"PO-Revision-Date: 2026-04-23 11:53+0000\n"
+"POT-Creation-Date: 2026-05-22 17:41+0000\n"
+"PO-Revision-Date: 2026-05-23 13:45+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-2/mail/zh_Hans/>\n"
+"projects/odoo-s19-3/mail/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,6 +128,8 @@ msgid ""
 "%(author)s's poll %(strong_tag_start)s\"%(question)s\"%(strong_tag_end)s has "
 "closed."
 msgstr ""
+"%(author)s的投票%(strong_tag_start)s\"%(question)s\"%(strong_tag_end)s 已结"
+"束。"
 
 #. module: mail
 #. odoo-javascript
@@ -1322,7 +1324,7 @@ msgstr "活动: %s"
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 msgid "Activity: Todo"
-msgstr ""
+msgstr "活动：待办事项"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_followers_edit__operation__add
@@ -2796,7 +2798,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__discuss_category_id
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
 msgid "Category"
-msgstr ""
+msgstr "类别"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -3880,6 +3882,11 @@ msgstr "默认备注"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default Recipients"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+msgid "Default Subject"
 msgstr ""
 
 #. module: mail
@@ -5568,8 +5575,8 @@ msgid "Groups"
 msgstr "群组"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/controllers/discuss/public_page.py:0
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_model.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__guest_id
@@ -7096,7 +7103,7 @@ msgstr "连接到"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__linked_message_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__linked_message_ids
 msgid "Linked Message"
-msgstr ""
+msgstr "关联消息"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree

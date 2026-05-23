@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-05-16 14:32+0000\n"
+"POT-Creation-Date: 2026-05-22 17:41+0000\n"
+"PO-Revision-Date: 2026-05-23 13:27+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-3/website/zh_Hant/>\n"
@@ -2439,6 +2439,10 @@ msgid ""
 "&gt;= 2\">Install multiple languages to enable translation across your "
 "website.</span>"
 msgstr ""
+"<span invisible=\"website_language_count &lt; 2\">網站訪客看到的語言版本，會"
+"與其瀏覽器語言相符。若無可用版本，會顯示預設語言。</span>\n"
+"                                <span invisible=\"website_language_count "
+"&gt;= 2\">你可安裝多種語言，以啟用網站全站翻譯。</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_big_number
@@ -3326,6 +3330,12 @@ msgstr "在表單最尾加入新欄位"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Add an icon to the labels of required or optional fields"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/media_list_item_option.xml:0
+msgid "Add an image"
 msgstr ""
 
 #. module: website
@@ -7189,6 +7199,8 @@ msgid ""
 "Display a customizable cookies bar on your website. Please ensure your site "
 "is GDPR-compliant (e.g. Google Fonts usage)."
 msgstr ""
+"在你的網站顯示可自訂的 Cookie 通知列。請確保你的網站符合歐盟 GDPR 規定（例"
+"如：使用 Google Fonts 字體的方式）。"
 
 #. module: website
 #. odoo-python
@@ -7217,12 +7229,12 @@ msgstr "在網站上顯示此標誌。"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website for this web address"
-msgstr "為此網址顯示此網站"
+msgstr "使用以下網址時，顯示此網站"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website when users visit this domain"
-msgstr "當使用者連至此網域時顯示這個網站"
+msgstr "訪客存取以下網域時，顯示此網站"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_key_images
@@ -7274,7 +7286,7 @@ msgstr "推軌變焦"
 #: model:ir.model.fields,field_description:website.field_website_controller_page__record_domain
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Domain"
-msgstr "篩選範圍"
+msgstr "網域"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__record_domain
@@ -10002,6 +10014,7 @@ msgstr "說明服務重點，或介紹產品的主要功能。"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/media_list_item_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navbar_logo_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__partner_image
@@ -16116,7 +16129,7 @@ msgstr "簡單"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Simple and privacy-friendly Google Analytics alternative"
-msgstr ""
+msgstr "簡單、重視私隱的 Google Analytics 分析替代方案"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_block

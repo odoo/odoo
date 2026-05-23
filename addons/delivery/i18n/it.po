@@ -13,9 +13,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-03-14 12:51+0000\n"
+"PO-Revision-Date: 2026-05-23 13:24+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-3/"
 "delivery/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: delivery
 #. odoo-python
@@ -107,11 +107,14 @@ msgid ""
 "customers on the Sales Order and sales confirmation email. E.g. instructions "
 "for customers to follow."
 msgstr ""
+"Descrizione del metodo di consegna che vuoi fornire ai clienti nell'ordine "
+"di vendita e nell'e-mail di conferma delle vendite. Ad es. Istruzioni da "
+"seguire per il cliente."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
 msgid "Action while validating Delivery Orders."
-msgstr ""
+msgstr "Azione durante la convalida degli ordini di consegna."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
@@ -158,6 +161,8 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency."
 msgstr ""
+"Importo dell'ordine per beneficiare della spedizione gratuita, espresso "
+"nella valuta dell'azienda."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -225,12 +230,12 @@ msgstr "Condizione"
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Impostazioni configurazione"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Configure Methods"
-msgstr ""
+msgstr "Configura metodi"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -507,7 +512,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Find a Delivery Provider"
-msgstr ""
+msgstr "Trova un fornitore di servizi di consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -568,6 +573,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping."
 msgstr ""
+"Se l'importo totale dell'ordine (spedizione esclusa) è maggiore o uguale a "
+"questo valore, il cliente beneficia della spedizione gratuita."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_volume
@@ -874,7 +881,7 @@ msgstr "Stati/Province"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_cash_on_delivery
 msgid "Supports Cash On Delivery"
-msgstr ""
+msgstr "Supporta il pagamento in contrassegno"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
@@ -1056,6 +1063,12 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Impossibile aggiornare i costi di spedizione di un ordine già fatturato.\n"
+"\n"
+"Le seguenti righe di spedizione (prodotto, quantità fatturata e prezzo) sono "
+"già state elaborate:\n"
+"\n"
+"%s"
 
 #. module: delivery
 #. odoo-python
