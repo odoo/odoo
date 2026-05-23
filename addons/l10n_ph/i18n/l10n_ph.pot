@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 18:12+0000\n"
-"PO-Revision-Date: 2026-05-10 18:12+0000\n"
+"POT-Creation-Date: 2026-05-22 18:24+0000\n"
+"PO-Revision-Date: 2026-05-22 18:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -276,16 +276,6 @@ msgid "Approved By:"
 msgstr ""
 
 #. module: l10n_ph
-#: model:ir.actions.act_window,name:l10n_ph.view_l10n_ph_2307_wizard_act_window
-msgid "BIR 2307 Report"
-msgstr ""
-
-#. module: l10n_ph
-#: model_terms:ir.ui.view,arch_db:l10n_ph.l10n_ph_2307_wizard_view_form
-msgid "Bill Date"
-msgstr ""
-
-#. module: l10n_ph
 #: model:ir.model.fields,field_description:l10n_ph.field_res_partner__branch_code
 #: model:ir.model.fields,field_description:l10n_ph.field_res_users__branch_code
 msgid "Branch Code"
@@ -312,18 +302,13 @@ msgid "Contact"
 msgstr ""
 
 #. module: l10n_ph
+#: model:ir.model.fields.selection,name:l10n_ph.selection__res_partner__l10n_ph_entity_type__corporation
+msgid "Corporation"
+msgstr ""
+
+#. module: l10n_ph
 #: model:ir.model,website_form_label:l10n_ph.model_res_partner
 msgid "Create a Customer"
-msgstr ""
-
-#. module: l10n_ph
-#: model:ir.model.fields,field_description:l10n_ph.field_l10n_ph_2307_wizard__create_uid
-msgid "Created by"
-msgstr ""
-
-#. module: l10n_ph
-#: model:ir.model.fields,field_description:l10n_ph.field_l10n_ph_2307_wizard__create_date
-msgid "Created on"
 msgstr ""
 
 #. module: l10n_ph
@@ -333,19 +318,10 @@ msgstr ""
 
 #. module: l10n_ph
 #: model:ir.model.fields,field_description:l10n_ph.field_account_chart_template__display_name
-#: model:ir.model.fields,field_description:l10n_ph.field_account_move__display_name
-#: model:ir.model.fields,field_description:l10n_ph.field_account_payment__display_name
 #: model:ir.model.fields,field_description:l10n_ph.field_account_tax__display_name
-#: model:ir.model.fields,field_description:l10n_ph.field_l10n_ph_2307_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_ph.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_ph.field_res_partner__display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: l10n_ph
-#: model:ir.actions.server,name:l10n_ph.action_account_move_bir_2307
-#: model:ir.actions.server,name:l10n_ph.action_account_payment_bir_2307
-msgid "Download BIR 2307 XLS"
 msgstr ""
 
 #. module: l10n_ph
@@ -354,8 +330,8 @@ msgid "ETA tax codes mixin"
 msgstr ""
 
 #. module: l10n_ph
-#: model:ir.model,name:l10n_ph.model_l10n_ph_2307_wizard
-msgid "Exports 2307 data to a XLS file."
+#: model_terms:ir.ui.view,arch_db:l10n_ph.view_partner_form
+msgid "Entity type"
 msgstr ""
 
 #. module: l10n_ph
@@ -365,55 +341,29 @@ msgid "First Name"
 msgstr ""
 
 #. module: l10n_ph
-#: model_terms:ir.ui.view,arch_db:l10n_ph.l10n_ph_2307_wizard_view_form
-msgid "Generate"
-msgstr ""
-
-#. module: l10n_ph
-#: model_terms:ir.ui.view,arch_db:l10n_ph.l10n_ph_2307_wizard_view_form
-msgid "Generate BIR 2307 Report"
-msgstr ""
-
-#. module: l10n_ph
-#: model:ir.model.fields,field_description:l10n_ph.field_l10n_ph_2307_wizard__xls_file
-msgid "Generated file"
+#: model_terms:ir.ui.view,arch_db:l10n_ph.view_partner_form
+msgid ""
+"First name, middle name, or last name is missing for individual entity. "
+"Accounting Reports may be affected."
 msgstr ""
 
 #. module: l10n_ph
 #: model:ir.model.fields,field_description:l10n_ph.field_account_chart_template__id
-#: model:ir.model.fields,field_description:l10n_ph.field_account_move__id
-#: model:ir.model.fields,field_description:l10n_ph.field_account_payment__id
 #: model:ir.model.fields,field_description:l10n_ph.field_account_tax__id
-#: model:ir.model.fields,field_description:l10n_ph.field_l10n_ph_2307_wizard__id
 #: model:ir.model.fields,field_description:l10n_ph.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_ph.field_res_partner__id
 msgid "ID"
 msgstr ""
 
 #. module: l10n_ph
-#: model:ir.model.fields,field_description:l10n_ph.field_l10n_ph_2307_wizard__moves_to_export
-msgid "Joural To Include"
-msgstr ""
-
-#. module: l10n_ph
-#: model:ir.model,name:l10n_ph.model_account_move
-msgid "Journal Entry"
+#: model:ir.model.fields.selection,name:l10n_ph.selection__res_partner__l10n_ph_entity_type__individual
+msgid "Individual"
 msgstr ""
 
 #. module: l10n_ph
 #: model:ir.model.fields,field_description:l10n_ph.field_res_partner__last_name
 #: model:ir.model.fields,field_description:l10n_ph.field_res_users__last_name
 msgid "Last Name"
-msgstr ""
-
-#. module: l10n_ph
-#: model:ir.model.fields,field_description:l10n_ph.field_l10n_ph_2307_wizard__write_uid
-msgid "Last Updated by"
-msgstr ""
-
-#. module: l10n_ph
-#: model:ir.model.fields,field_description:l10n_ph.field_l10n_ph_2307_wizard__write_date
-msgid "Last Updated on"
 msgstr ""
 
 #. module: l10n_ph
@@ -438,18 +388,6 @@ msgid "Middle Name"
 msgstr ""
 
 #. module: l10n_ph
-#. odoo-python
-#: code:addons/l10n_ph/models/account_payment.py:0
-msgid "Only Outbound Payment is available."
-msgstr ""
-
-#. module: l10n_ph
-#. odoo-python
-#: code:addons/l10n_ph/models/account_move.py:0
-msgid "Only Vendor Bills are available."
-msgstr ""
-
-#. module: l10n_ph
 #: model:account.report.line,name:l10n_ph.l10n_ph_2550Q_2550q_ttp
 msgid "Part II - Total Tax Payable"
 msgstr ""
@@ -457,11 +395,6 @@ msgstr ""
 #. module: l10n_ph
 #: model:account.report.line,name:l10n_ph.l10n_ph_2550Q_2550q_dovc
 msgid "Part IV - Details of VAT Computation"
-msgstr ""
-
-#. module: l10n_ph
-#: model:ir.model,name:l10n_ph.model_account_payment
-msgid "Payment"
 msgstr ""
 
 #. module: l10n_ph
@@ -483,6 +416,12 @@ msgstr ""
 #. module: l10n_ph
 #: model:ir.model.fields,field_description:l10n_ph.field_account_tax__l10n_ph_atc
 msgid "Philippines ATC"
+msgstr ""
+
+#. module: l10n_ph
+#: model:ir.model.fields,help:l10n_ph.field_res_partner__l10n_ph_entity_type
+#: model:ir.model.fields,help:l10n_ph.field_res_users__l10n_ph_entity_type
+msgid "Philippines: Defines the type of entity."
 msgstr ""
 
 #. module: l10n_ph
@@ -511,33 +450,12 @@ msgid "Revenue District Office"
 msgstr ""
 
 #. module: l10n_ph
-#: model_terms:ir.ui.view,arch_db:l10n_ph.l10n_ph_2307_wizard_view_form
-msgid "Tax"
-msgstr ""
-
-#. module: l10n_ph
 #: model:account.report.column,name:l10n_ph.l10n_ph_2550Q_tax_base
 msgid "Tax Base"
 msgstr ""
 
 #. module: l10n_ph
-#: model:ir.model.fields,help:l10n_ph.field_l10n_ph_2307_wizard__xls_file
-msgid ""
-"Technical field used to temporarily hold the generated XLS file before its "
-"downloaded."
-msgstr ""
-
-#. module: l10n_ph
-#: model_terms:ir.ui.view,arch_db:l10n_ph.l10n_ph_2307_wizard_view_form
-msgid "This will export a XLS file for BIR 2307."
-msgstr ""
-
-#. module: l10n_ph
-#: model_terms:ir.ui.view,arch_db:l10n_ph.l10n_ph_2307_wizard_view_form
-msgid "Total"
-msgstr ""
-
-#. module: l10n_ph
-#: model_terms:ir.ui.view,arch_db:l10n_ph.l10n_ph_2307_wizard_view_form
-msgid "Vendor"
+#: model:ir.model.fields,field_description:l10n_ph.field_res_partner__l10n_ph_entity_type
+#: model:ir.model.fields,field_description:l10n_ph.field_res_users__l10n_ph_entity_type
+msgid "Type of Entity"
 msgstr ""

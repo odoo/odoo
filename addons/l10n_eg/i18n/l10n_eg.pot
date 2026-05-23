@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.1a1+e\n"
+"Project-Id-Version: Odoo Server 19.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 19:03+0000\n"
-"PO-Revision-Date: 2025-12-16 19:03+0000\n"
+"POT-Creation-Date: 2026-05-22 18:21+0000\n"
+"PO-Revision-Date: 2026-05-22 18:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,63 +16,83 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_sale_base_fourteen
-msgid "1. Standard Rated 14% (Base)"
+#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_contract_supply
+msgid "1. 1% Contracting and Supplying"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_sale_tax_fourteen
-msgid "1. Standard Rated 14% (Tax)"
+#: model:account.report.line,name:l10n_eg.tax_report_vat_return_sale_fourteen
+msgid "1. Standard Rated Sales 14%"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_sale_base_zero
-msgid "2. Zero Rated (Base)"
+#: model:account.report.line,name:l10n_eg.tax_report_vat_return_purchase_totals
+msgid "10. Totals"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_sale_tax_zero
-msgid "2. Zero Rated (Tax)"
+#: model:account.report.line,name:l10n_eg.tax_report_vat_return_net_1
+msgid "11. Total VAT Output"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_sale_base_exempt
-msgid "3. Exempt Sales (Base)"
+#: model:account.report.line,name:l10n_eg.tax_report_vat_return_net_2
+msgid "12. Total VAT Input"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_sale_tax_exempt
-msgid "3. Exempt Sales (Tax)"
+#: model:account.report.line,name:l10n_eg.tax_report_vat_return_net_3
+msgid "13. Net VAT Due"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_expense_base_fourteen
-msgid "5. Standard Rated 14% Expenses (Base)"
+#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_all_services
+msgid "2. 3% All Types of Services"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_expense_tax_fourteen
-msgid "5. Standard Rated 14% Expenses (Tax)"
+#: model:account.report.line,name:l10n_eg.tax_report_vat_return_sale_zero
+msgid "2. Zero Rated Sales"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_expense_base_zero
-msgid "6. Zero Rated (Base)"
+#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_commissions
+msgid "3. 5% Commissions"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_expense_tax_zero
-msgid "6. Zero Rated (Tax)"
+#: model:account.report.line,name:l10n_eg.tax_report_vat_return_sale_exempt
+msgid "3. Exempt Sales"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_expense_base_exempt
-msgid "7. Exempt Expenses (Base)"
+#: model:account.report.line,name:l10n_eg.tax_report_vat_return_sale_export
+msgid "4. Exports"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_expense_tax_exempt
-msgid "7. Exempt Expenses (Tax)"
+#: model:account.report.line,name:l10n_eg.tax_report_vat_return_sale_totals
+msgid "5. Totals"
+msgstr ""
+
+#. module: l10n_eg
+#: model:account.report.line,name:l10n_eg.tax_report_vat_return_purchas_fourteen
+msgid "6. Standard Rated Purchases 14%"
+msgstr ""
+
+#. module: l10n_eg
+#: model:account.report.line,name:l10n_eg.tax_report_vat_return_purchase_zero
+msgid "7. Zero Rated Purchases"
+msgstr ""
+
+#. module: l10n_eg
+#: model:account.report.line,name:l10n_eg.tax_report_vat_return_purchase_exempt
+msgid "8. Exempt Purchases"
+msgstr ""
+
+#. module: l10n_eg
+#: model:account.report.line,name:l10n_eg.tax_report_vat_return_purchase_import
+msgid "9. Imports"
 msgstr ""
 
 #. module: l10n_eg
@@ -81,11 +101,16 @@ msgid "Account Chart Template"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.column,name:l10n_eg.tax_report_other_taxes_balance
-#: model:account.report.column,name:l10n_eg.tax_report_schedule_tax_balance
-#: model:account.report.column,name:l10n_eg.tax_report_vat_return_balance
-#: model:account.report.column,name:l10n_eg.tax_report_withholding_tax_balance
-msgid "Balance"
+#: model:account.report.column,name:l10n_eg.tax_report_vat_return_base
+#: model:account.report.column,name:l10n_eg.tax_report_withholding_tax_base
+msgid "Base"
+msgstr ""
+
+#. module: l10n_eg
+#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_all_services_deducted
+#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_commissions_deducted
+#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_contract_supply_deducted
+msgid "Deducted"
 msgstr ""
 
 #. module: l10n_eg
@@ -105,6 +130,13 @@ msgid "ETA tax codes mixin"
 msgstr ""
 
 #. module: l10n_eg
+#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_all_services_gross
+#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_commissions_gross
+#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_contract_supply_gross
+msgid "Gross"
+msgstr ""
+
+#. module: l10n_eg
 #: model:ir.model.fields,field_description:l10n_eg.field_account_chart_template__id
 #: model:ir.model.fields,field_description:l10n_eg.field_account_tax__id
 msgid "ID"
@@ -113,221 +145,6 @@ msgstr ""
 #. module: l10n_eg
 #: model:account.report.line,name:l10n_eg.tax_report_vat_return_net
 msgid "Net VAT Due"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_net_3
-msgid "Net VAT due (or reclaimed) for the period"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report,name:l10n_eg.tax_report_other_taxes
-msgid "Other Taxes"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report,name:l10n_eg.tax_report_schedule_tax
-msgid "Schedule Tax"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_base
-msgid "Schedule Tax on Purchases (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_tax
-msgid "Schedule Tax on Purchases (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_base_half
-msgid "Schedule Tax on Purchases 0.5% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_tax_half
-msgid "Schedule Tax on Purchases 0.5% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_base_one
-msgid "Schedule Tax on Purchases 1% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_tax_one
-msgid "Schedule Tax on Purchases 1% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_base_ten
-msgid "Schedule Tax on Purchases 10% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_tax_ten
-msgid "Schedule Tax on Purchases 10% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_base_fifteen
-msgid "Schedule Tax on Purchases 15% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_tax_fifteen
-msgid "Schedule Tax on Purchases 15% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_base_thirty
-msgid "Schedule Tax on Purchases 30% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_tax_thirty
-msgid "Schedule Tax on Purchases 30% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_base_five
-msgid "Schedule Tax on Purchases 5% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_tax_five
-msgid "Schedule Tax on Purchases 5% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_base_eight
-msgid "Schedule Tax on Purchases 8% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_purchase_tax_eight
-msgid "Schedule Tax on Purchases 8% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_base
-msgid "Schedule Tax on Sales (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_tax
-msgid "Schedule Tax on Sales (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_base_half
-msgid "Schedule Tax on Sales 0.5% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_tax_half
-msgid "Schedule Tax on Sales 0.5% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_base_one
-msgid "Schedule Tax on Sales 1% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_tax_one
-msgid "Schedule Tax on Sales 1% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_base_ten
-msgid "Schedule Tax on Sales 10% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_tax_ten
-msgid "Schedule Tax on Sales 10% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_base_fifteen
-msgid "Schedule Tax on Sales 15% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_tax_fifteen
-msgid "Schedule Tax on Sales 15% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_base_thirty
-msgid "Schedule Tax on Sales 30% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_tax_thirty
-msgid "Schedule Tax on Sales 30% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_base_five
-msgid "Schedule Tax on Sales 5% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_tax_five
-msgid "Schedule Tax on Sales 5% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_base_eight
-msgid "Schedule Tax on Sales 8% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_schedule_tax_schedule_tax_sale_tax_eight
-msgid "Schedule Tax on Sales 8% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_other_taxes_stamp_purchase_tax_base
-msgid "Stamp Tax Purchases (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_other_taxes_stamp_purchase_tax_tax
-msgid "Stamp Tax Purchases (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_other_taxes_stamp_purchase_tax_base_purchase
-msgid "Stamp Tax Purchases 20% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_other_taxes_stamp_purchase_tax_tax_purchase
-msgid "Stamp Tax Purchases 20% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_other_taxes_stamp_tax_base
-msgid "Stamp Tax Sales (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_other_taxes_stamp_tax_tax
-msgid "Stamp Tax Sales (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_other_taxes_stamp_tax_base_sales
-msgid "Stamp Tax Sales 20% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_other_taxes_stamp_tax_tax_sales
-msgid "Stamp Tax Sales 20% (Tax)"
 msgstr ""
 
 #. module: l10n_eg
@@ -617,141 +434,32 @@ msgid "T9 - SC02 - Service charges (amount)"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_net_1
-msgid "Total value of due tax for the period"
+#: model:account.report.column,name:l10n_eg.tax_report_vat_return_tax
+#: model:account.report.column,name:l10n_eg.tax_report_withholding_tax_tax
+msgid "Tax"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_net_2
-msgid "Total value of recoverable tax for the period"
+#: model:account.report.line,name:l10n_eg.tax_report_withholding_total
+msgid "Total"
 msgstr ""
 
 #. module: l10n_eg
 #: model:account.report,name:l10n_eg.tax_report_vat_return
-msgid "VAT Return"
+msgid "VAT Return Report"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_expense_base
-msgid "VAT on Expenses and all other Inputs (Base)"
+#: model:account.report.line,name:l10n_eg.tax_report_vat_return_purchase
+msgid "VAT on Purchase and all other Inputs"
 msgstr ""
 
 #. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_expense_tax
-msgid "VAT on Expenses and all other Inputs (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_sale_base
-msgid "VAT on Sales and all other Outputs (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_vat_return_sale_tax
-msgid "VAT on Sales and all other Outputs (Tax)"
+#: model:account.report.line,name:l10n_eg.tax_report_vat_return_sale
+msgid "VAT on Sales and all other Outputs"
 msgstr ""
 
 #. module: l10n_eg
 #: model:account.report,name:l10n_eg.tax_report_withholding_tax
-msgid "WH Tax"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_purchase_base
-msgid "Withholding Tax on Purchases (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_purchase_tax
-msgid "Withholding Tax on Purchases (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_purchase_base_half
-msgid "Withholding Tax on Purchases -0.5% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_purchase_tax_half
-msgid "Withholding Tax on Purchases -0.5% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_purchase_base_one
-msgid "Withholding Tax on Purchases -1% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_purchase_tax_one
-msgid "Withholding Tax on Purchases -1% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_purchase_base_three
-msgid "Withholding Tax on Purchases -3% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_purchase_tax_three
-msgid "Withholding Tax on Purchases -3% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_purchase_base_five
-msgid "Withholding Tax on Purchases -5% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_purchase_tax_five
-msgid "Withholding Tax on Purchases -5% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_sale_base
-msgid "Withholding Tax on Sales (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_sale_tax
-msgid "Withholding Tax on Sales (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_sale_base_half
-msgid "Withholding Tax on Sales -0.5% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_sale_tax_half
-msgid "Withholding Tax on Sales -0.5% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_sale_base_one
-msgid "Withholding Tax on Sales -1% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_sale_tax_one
-msgid "Withholding Tax on Sales -1% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_sale_base_three
-msgid "Withholding Tax on Sales -3% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_sale_tax_three
-msgid "Withholding Tax on Sales -3% (Tax)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_sale_base_five
-msgid "Withholding Tax on Sales -5% (Base)"
-msgstr ""
-
-#. module: l10n_eg
-#: model:account.report.line,name:l10n_eg.tax_report_withholding_tax_sale_tax_five
-msgid "Withholding Tax on Sales -5% (Tax)"
+msgid "Withholding Report"
 msgstr ""
