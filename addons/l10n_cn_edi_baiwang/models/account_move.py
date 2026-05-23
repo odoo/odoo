@@ -10,19 +10,19 @@ from .baiwang_client import BaiwangClient
 _logger = logging.getLogger(__name__)
 
 INVOICE_TYPE_CODES = [
-    ('01', 'Digital Special Invoice (全电专票)'),
-    ('02', 'Digital General Invoice (全电普票)'),
-    ('004', 'VAT Special Invoice (纸质专票)'),
-    ('007', 'VAT General Invoice (纸质普票)'),
-    ('026', 'VAT Electronic Invoice (电子普票)'),
-    ('028', 'VAT Electronic Special Invoice (电子专票)'),
+    ('01', '01 Digital Special Invoice (全电专票)'),
+    ('02', '02 Digital General Invoice (全电普票)'),
+    ('004', '004 VAT Special Invoice (纸质专票)'),
+    ('007', '007 VAT General Invoice (纸质普票)'),
+    ('026', '026 VAT Electronic Invoice (电子普票)'),
+    ('028', '028 VAT Electronic Special Invoice (电子专票)'),
 ]
 
 RED_FORM_TYPES = [
-    ('01', 'Billing Error (开票有误)'),
-    ('02', 'Sales Return (销货退回)'),
-    ('03', 'Service Termination (服务中止)'),
-    ('04', 'Sales Discount (销售折让)'),
+    ('01', '01 Billing Error (开票有误)'),
+    ('02', '02 Sales Return (销货退回)'),
+    ('03', '03 Service Termination (服务中止)'),
+    ('04', '04 Sales Discount (销售折让)'),
 ]
 
 BAIWANG_STATES = [
