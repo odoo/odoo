@@ -6,6 +6,7 @@ import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const { DateTime } = luxon;
 const mutex = new Mutex(); // Used for sequential cache updates
@@ -1673,7 +1674,19 @@ patch(Order.prototype, {
                 claimableRewards[0].reward.reward_type !== "product" ||
                 !claimableRewards[0].reward.multi_product
             ) {
-                this._applyReward(claimableRewards[0].reward, claimableRewards[0].coupon_id);
+                const result = this._applyReward(claimableRewards[0].reward, claimableRewards[0].coupon_id);
+                if (result !== true) {
+                    // Returned an error, so undo the use of the coupon
+                    const couponIndex = this.codeActivatedCoupons.findIndex((coupon) => coupon.code === code)
+                    this.codeActivatedCoupons.splice(couponIndex, 1)
+                    this.pos.env.services.notification.add(
+                        result, 
+                        {
+                            title: _t("Oh snap !"),
+                            type: "danger"
+                        }
+                    );
+                }
                 this._updateRewards();
             }
         }
