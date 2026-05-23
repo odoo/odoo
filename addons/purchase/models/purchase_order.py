@@ -1256,15 +1256,14 @@ class PurchaseOrder(models.Model):
         grouped_lines = defaultdict(lambda: self.env['purchase.order.line'])
         if section_id is None:
             section_id = (
-                self.order_line[:1].id
-                if self.order_line[:1].display_type == 'line_section'
-                else False
+                self.order_line.filtered(lambda line: line.display_type == "line_section")[:1].id
+                or False
             )
         for line in self.order_line:
             if (
                 line.display_type
                 or line.product_id.id not in product_ids
-                or line.get_parent_section_line().id != section_id
+                or not line.is_in_section(section_id)
             ):
                 continue
             grouped_lines[line.product_id] |= line
@@ -1396,7 +1395,7 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         pol = self.order_line.filtered(
             lambda l: l.product_id.id == product.id
-            and l.get_parent_section_line().id == section_id
+            and l.is_in_section(section_id)
         )
         if pol:
             if uom and pol.uom_id != uom:

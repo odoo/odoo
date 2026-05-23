@@ -1584,21 +1584,21 @@ class SaleOrderLine(models.Model):
 
     def write(self, vals):
         values = vals
-        # if "display_type" in values:
-        # new_type = values.get("display_type")
-        # invalid_lines = self.filtered(
-        #     lambda line: (
-        #         line.display_type != new_type
-        #         and not (line.display_type == "line_subsection" and new_type == "line_section")
-        #     )
-        # )
-        # if invalid_lines:
-        #     raise UserError(
-        #         self.env._(
-        #             "You cannot change the type of a sale order line. Instead you should "
-        #             "delete the current line and create a new line of the proper type."
-        #         )
-        #     )
+        if "display_type" in values:
+            new_type = values.get("display_type")
+            invalid_lines = self.filtered(
+                lambda line: (
+                    line.display_type != new_type
+                    and not (line.display_type == "line_subsection" and new_type == "line_section")
+                )
+            )
+            if invalid_lines:
+                raise UserError(
+                    self.env._(
+                        "You cannot change the type of a sale order line. Instead you should "
+                        "delete the current line and create a new line of the proper type."
+                    )
+                )
 
         if "product_id" in values and any(
             sol.product_id.id != values["product_id"] and not sol.product_updatable for sol in self
@@ -1890,11 +1890,26 @@ class SaleOrderLine(models.Model):
             ]
         return res or [{"tax_labels": [], "price_subtotal": 0.0, "price_total": 0.0}]
 
-    def get_parent_section_line(self):
-        if not self.display_type and self.parent_id.display_type == "line_subsection":
-            return self.parent_id.parent_id
+    def is_in_section(self, section_id):
+        """Check if line belongs to given section or subsection in catalog."""
+        self.ensure_one()
 
-        return self.parent_id
+        has_parent_section = bool(
+            self.parent_id.parent_id
+            if not self.display_type and self.parent_id.display_type == "line_subsection"
+            else self.parent_id
+        )
+
+        if not section_id:
+            # If the caller did not pass a section_id, return True only for lines that are not
+            # inside any section.
+            return not has_parent_section
+
+        section = self.browse(section_id)
+        return section._is_line_in_section(self)
+
+    def get_section_subtotal(self):
+        return self._get_section_totals("price_subtotal")
 
     def _get_section_totals(self, totals_field):
         """Return the total/subtotal amount sale order lines linked to section."""

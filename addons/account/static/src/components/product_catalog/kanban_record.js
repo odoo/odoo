@@ -7,7 +7,7 @@ patch(ProductCatalogKanbanRecord.prototype, {
     setup() {
         super.setup();
 
-        this._pendingSectionUpdate = null;
+        this.productSubtotal = this.productCatalogData.quantity * this.productCatalogData.price;
 
         useSubEnv({
             ...this.env,
@@ -25,7 +25,8 @@ patch(ProductCatalogKanbanRecord.prototype, {
     _getUpdateQuantityAndGetPriceParams() {
         return {
             ...super._getUpdateQuantityAndGetPriceParams(),
-            section_id: this.env.selectedSectionId ?? this.env.searchModel.selectedSection.sectionId,
+            section_id:
+                this.env.selectedSectionId ?? this.env.searchModel.selectedSection.sectionId,
         };
     },
 
@@ -37,41 +38,26 @@ patch(ProductCatalogKanbanRecord.prototype, {
     },
 
     updateQuantity(quantity) {
-        const lineCountChange = (quantity > 0) - (this.productCatalogData.quantity > 0);
-
-        const oldSubtotal = this.productCatalogData.quantity * this.productCatalogData.price;
-
+        this.oldSubtotal = this.productCatalogData.quantity * this.productCatalogData.price;
         super.updateQuantity(quantity);
-
-        this._pendingSectionUpdate = {
-            oldSubtotal,
-            lineCountChange,
-        };
     },
 
     async _onQuantityChange() {
         await super._onQuantityChange();
 
-        if (this._pendingSectionUpdate) {
-            const newSubtotal = this.productCatalogData.quantity * this.productCatalogData.price;
+        const newSubtotal = this.productCatalogData.quantity * this.productCatalogData.price;
+        const subtotalDelta = newSubtotal - (this.productSubtotal || 0);
+        this.productSubtotal = newSubtotal;
 
-            const subtotalDelta =
-                newSubtotal - this._pendingSectionUpdate.oldSubtotal;
-
-            this.notifySectionUpdate({
-                lineCountChange: this._pendingSectionUpdate.lineCountChange,
-                subtotalDelta,
-            });
-
-            this._pendingSectionUpdate = null;
+        if (subtotalDelta) {
+            this.notifySectionSubtotalChange(subtotalDelta);
         }
     },
 
-    notifySectionUpdate({lineCountChange, subtotalDelta}) {
-        this.env.searchModel.trigger('section-line-count-change', {
+    notifySectionSubtotalChange(subtotalDelta) {
+        this.env.searchModel.trigger("section-subtotal-change", {
             sectionId: this.env.selectedSectionId,
-            lineCountChange: lineCountChange,
             subtotalDelta: subtotalDelta,
         });
     },
-})
+});

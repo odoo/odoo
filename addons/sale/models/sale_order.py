@@ -2656,15 +2656,14 @@ class SaleOrder(models.Model):
         grouped_lines = defaultdict(lambda: self.env["sale.order.line"])
         if section_id is None:
             section_id = (
-                self.order_line[:1].id
-                if self.order_line[:1].display_type == "line_section"
-                else False
+                self.order_line.filtered(lambda line: line.display_type == "line_section")[:1].id
+                or False
             )
         for line in self.order_line:
             if (
                 line.display_type
                 or line.product_id.id not in product_ids
-                or line.parent_id.id != section_id
+                or not line.is_in_section(section_id)
             ):
                 continue
             grouped_lines[line.product_id] |= line
@@ -2689,7 +2688,7 @@ class SaleOrder(models.Model):
         """
         request.update_context(catalog_skip_tracking=True)
         sol = self.order_line.filtered(
-            lambda line: line.product_id.id == product.id and line.parent_id.id == section_id
+            lambda line: line.product_id.id == product.id and line.is_in_section(section_id)
         )
         if sol:
             if uom and sol.product_uom_id != uom:

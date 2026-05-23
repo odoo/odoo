@@ -2,35 +2,35 @@
 
 <templates>
     <t t-name="account.SectionDropdown">
-        <Dropdown class="ms-auto">
-            <button style="min-width: 30px" class="btn p-0 border-0 bg-transparent">
+        <Dropdown noClasses="true">
+            <button
+                t-attf-class="o_section_dropdown_button btn border-0 bg-transparent rounded-start-0 px-2 {{this.props.section.id ? '' : 'opacity-0 pe-none'}}"
+                t-att-tabindex="this.props.section.id ? '0' : '-1'"
+            >
                 <i class="fa fa-ellipsis-v text-muted"/>
             </button>
             <t t-set-slot="content">
                 <DropdownItem
-                    t-if="'collapse_prices' in this.props.section"
-                    onSelected="() => this.toggleFieldOfSection('collapse_prices')"
-                    attrs="{ 'class': this.disablePricesButton() ? 'disabled' : '' }"
+                    t-if="this.props.section.display_type === 'line_section'"
+                    closingMode="'closest'"
+                    onSelected="() => this.env.enableSectionInput(this.props.section.id)"
                 >
-                    <i class="me-1 fa fa-fw" t-att-class="this.props.section.collapse_prices ? 'fa-eye' : 'fa-eye-slash'"/>
-                    <span t-if="this.props.section.collapse_prices">Show Prices</span>
-                    <span t-else="">Hide Prices</span>
+                    <i class="me-1 fa fa-fw fa-level-down"/><span>Add a subsection</span>
                 </DropdownItem>
-                <t t-name="composition_button">
-                    <DropdownItem
-                        t-if="'collapse_composition' in this.props.section"
-                        onSelected="() => this.toggleFieldOfSection('collapse_composition')"
-                        attrs="{ 'class': this.disableCompositionButton() ? 'disabled' : '' }"
-                    >
-                        <i class="me-1 fa fa-fw" t-att-class="this.props.section.collapse_composition ? 'fa-expand' : 'fa-compress'"/>
-                        <span t-if="this.props.section.collapse_composition">Show Composition</span>
-                        <span t-else="">Hide Composition</span>
-                    </DropdownItem>
-                </t>
-                <DropdownItem onSelected="() => this.duplicateSection()">
+                <DropdownItem
+                    closingMode="'closest'"
+                    onSelected="() => this.env.enableRenameSectionInput(this.props.section.id)"
+                >
+                    <i class="me-1 fa fa-fw fa-pencil"/><span>Rename</span>
+                </DropdownItem>
+                <DropdownItem closingMode="'closest'" onSelected="() => this.env.duplicateSection(this.props.section)">
                     <i class="me-1 fa fa-fw fa-clone"/><span>Duplicate</span>
                 </DropdownItem>
-                <DropdownItem onSelected="() => this.deleteSection()" class="'text-danger'">
+                <DropdownItem
+                    class="'text-danger'"
+                    closingMode="'closest'"
+                    onSelected="() => this.env.deleteSection(this.props.section)"
+                >
                     <i class="me-1 fa fa-fw fa-trash"/><span>Delete</span>
                 </DropdownItem>
             </t>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t
+        t-name="account.ProductCatalogSearchPanelContent"
+        t-inherit="web.SearchPanelContent"
+        t-inherit-mode="primary"
+    >
+        <div t-custom-ref="root" position="attributes">
+            <attribute
+                name="class" add="o_product_catalog_search_panel px-3" remove="px-2" separator=" "
+            />
+        </div>
+
+        <header position="attributes">
+            <attribute name="class" remove="text-uppercase" separator=" "/>
+        </header>
+
+        <xpath expr="//header/i" position="replace"/>
+
+        <section position="before">
+            <section
+                t-if="this.showSections"
+                class="o_search_panel_sections o_search_panel_section mt-4 mb-3 pb-4 border-bottom"
+            >
+                <t t-call="account.ProductCatalog.Sections"/>
+            </section>
+        </section>
+
+        <div class="o_search_panel_empty_state me-3" position="replace"/>
+    </t>
+
+    <t
+        t-name="account.ProductCatalogSearchPanel.Small"
+        t-inherit="web.SearchPanel.Small"
+        t-inherit-mode="primary"
+    >
+        <i position="replace"/>
+
+        <Dropdown position="before">
+            <Dropdown t-if="this.showSections">
+                <span class="btn btn-secondary my-2 mx-1 o-dropdown-caret">
+                    <i t-attf-class="fa fa-th-list o_search_panel_section_icon text-primary me-2"/>
+                    <b class="pe-2">Sections</b>
+                </span>
+                <t t-set-slot="content">
+                    <div class="o_search_panel_section o_search_panel_sections">
+                        <t t-call="account.ProductCatalog.Sections"/>
+                    </div>
+                </t>
+            </Dropdown>
+        </Dropdown>
+
+    </t>
+
+    <t t-name="account.ProductCatalog.Sections">
+        <header class="d-flex align-items-center cursor-default mb-3">
+            <b class="me-2" t-out="this.order.name"/>
+            <button
+                t-attf-class="btn btn-sm ms-auto #{this.env.isSmall ? 'btn-link p-0' : 'btn-secondary'}"
+                t-on-click="() => this.enableSectionInput()"
+                title="Add a section"
+            >
+                Add Section
+            </button>
+        </header>
+        <ul class="list-group d-block" t-custom-ref="sectionTreeRef">
+            <t t-foreach="this.state.sections" t-as="section" t-key="section.id">
+                <SectionRow
+                    section="section"
+                    selectedSection="this.selectedSection"
+                    state="this.state"
+                />
+            </t>
+        </ul>
+        <input
+            t-if="this.state.isAddingSection === 'section'"
+            class="o_section_input py-1"
+            type="text"
+            placeholder="Enter a description"
+            t-custom-model="this.state.newSectionName"
+            t-on-keydown="(ev) => this.onSectionInputKeydown(ev)"
+            t-on-blur="() => this.createSection()"
+            t-custom-ref="sectionInputRef"
+        />
+        <div class="mt-3 border-top">
+            <div class="d-flex justify-content-between mt-4">
+                <span>Total</span>
+                <span t-out="this.getFormattedSubTotal(this.state.totalUntaxedAmount)"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="account.ProductCatalogSearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
+        <t t-call="web.SearchPanel.Small" position="attributes">
+            <attribute name="t-call">account.ProductCatalogSearchPanel.Small</attribute>
+        </t>
+
+        <t t-call="web.SearchPanel.Regular" position="attributes">
+            <attribute name="t-call">account.ProductCatalogSearchPanelContent</attribute>
+        </t>
+    </t>
+</templates>

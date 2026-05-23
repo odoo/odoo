@@ -9,19 +9,19 @@
             </div>
             <span t-if="this.displayPriceByProductUoM" class="d-flex text-muted small" t-out="`${this.productUnitPrice}/${this.props.productUomDisplayName}`"/>
         </Portal>
-        <div 
+        <div
             t-if="this.props.readOnly and this.props.warning"
             class="text-danger text-truncate my-2 pt-3 border-top">
             <i class="fa fa-warning" t-att-title="this.props.warning"/>
-            <span 
-                class="px-1" 
+            <span
+                class="px-1"
                 t-att-title="this.props.warning"
                 t-out="this.props.warning"/>
         </div>
         <span t-elif="this.props.readOnly" class="m-2 pt-3 border-top" t-out="this.props.warning">
             You can't edit this product in the catalog.
         </span>
-        <div t-else="" class="d-flex align-items-center m-2">
+        <div t-else="" class="d-flex justify-content-end align-items-center m-2">
             <div t-if="this.isInOrder()"
                 class="o_product_catalog_quantity o_product_catalog_cancel_global_click input-group flex-nowrap mw-75">
                 <button
@@ -67,13 +67,13 @@
             </div>
             <t t-elif="this.props.warning">
                 <i class="fa fa-warning text-warning" t-att-title="this.props.warning"/>
-                <span 
-                    class="text-truncate text-warning px-1" 
+                <span
+                    class="text-truncate text-warning px-1"
                     t-att-title="this.props.warning"
                     t-out="this.props.warning"/>
             </t>
-            <div 
-                class="o_product_catalog_buttons o_product_catalog_cancel_global_click"
+            <div
+                class="ms-auto o_product_catalog_buttons o_product_catalog_cancel_global_click"
                 style="min-width: max-content;">
                 <button t-if="!this.isInOrder()"
                         t-on-click.stop="() => this.env.addProduct()"

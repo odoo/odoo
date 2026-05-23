@@ -171,6 +171,7 @@ class PurchaseOrder(models.Model):
         })
 
         po_lines_commands = []
+        subtotal_delta = 0.0
         for product in products:
             suggest_line = self.env['purchase.order.line']._prepare_purchase_order_line(
                 product,
@@ -182,10 +183,14 @@ class PurchaseOrder(models.Model):
             )
             existing_lines = self.order_line.filtered(lambda pol: pol.product_id == product)
             if section_id := ctx.get("section_id"):
-                existing_lines = existing_lines.filtered(lambda pol: pol.get_parent_section_line().id == section_id)
+                existing_lines = existing_lines.filtered(lambda pol: pol.is_in_section(section_id))
                 suggest_line["sequence"] = self._get_new_line_sequence("order_line", section_id)
             else:
                 existing_lines = existing_lines.filtered(lambda pol: not pol.parent_id)  # lines with no sections
+
+            old_subtotal = sum(existing_lines.mapped('price_subtotal'))
+            new_subtotal = suggest_line['price_unit'] * suggest_line['product_qty'] if product.suggested_qty > 0 else 0.0
+
             if existing_lines:
                 # Collapse into 1 or 0 po line, discarding previous data in favor of suggested qtys
                 to_unlink = existing_lines if product.suggested_qty == 0 else existing_lines[:-1]
@@ -195,9 +200,10 @@ class PurchaseOrder(models.Model):
             elif product.suggested_qty > 0:
                 po_lines_commands.append(Command.create(suggest_line))
 
+            subtotal_delta += new_subtotal - old_subtotal
+
         self.order_line = po_lines_commands
-        # Return the change in number of po_lines for the given section
-        return sum({"CREATE": 1, "UNLINK": -1}.get(line[0].name, 0) for line in po_lines_commands)
+        return subtotal_delta
 
     def button_approve(self, force=False):
         self.order_line._set_date_promised()
