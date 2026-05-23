@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~19.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-01 17:37+0000\n"
-"PO-Revision-Date: 2026-04-18 12:06+0000\n"
+"PO-Revision-Date: 2026-05-23 14:38+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-1/"
 "pos_safaricom/it/>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "'Search by name or phone or transaction id...'"
-msgstr ""
+msgstr "\"Cerca per nome, numero di telefono o ID transazione...\""
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "'Select M-Pesa Transaction'"
-msgstr ""
+msgstr "'Seleziona transazione M-Pesa'"
 
 #. module: pos_safaricom
 #. odoo-javascript
@@ -63,6 +63,11 @@ msgid ""
 "                        This happens automatically on creation, but you can "
 "re-register if you deleted them from the business portal."
 msgstr ""
+"Gli URL di callback C2B devono essere registrati presso Safaricom affinché "
+"Lipa na M-PESA funzioni.\n"
+"                        Ciò avviene automaticamente al momento della "
+"creazione, ma è possibile effettuare una nuova registrazione se li hai "
+"eliminati dal portale aziendale."
 
 #. module: pos_safaricom
 #. odoo-javascript
@@ -108,6 +113,8 @@ msgstr "Secret consumatore"
 msgid ""
 "Could not find base url. Please set up web.base.url to a valid https address"
 msgstr ""
+"Impossibile trovare l'URL di base. Imposta web.base.url su un indirizzo "
+"https valido"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_uid
@@ -142,7 +149,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Failed to register URLs: %s"
-msgstr ""
+msgstr "Impossibile registrare gli URL: %s"
 
 #. module: pos_safaricom
 #. odoo-python
@@ -303,6 +310,8 @@ msgid ""
 "The business short code and till number combination as 'shortcode-"
 "tillnumber' (ex: 123456-789012)"
 msgstr ""
+"La combinazione di codice breve aziendale e numero di cassa come \"shortcode-"
+"tillnumber\" (es.: 123456-789012)"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__passkey

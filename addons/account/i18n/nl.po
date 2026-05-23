@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:36+0000\n"
-"PO-Revision-Date: 2026-05-09 13:17+0000\n"
+"POT-Creation-Date: 2026-05-22 17:40+0000\n"
+"PO-Revision-Date: 2026-05-23 14:24+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/account/"
 "nl/>\n"
@@ -13841,7 +13841,7 @@ msgstr "Openstaande debet bedragen"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Overdue"
-msgstr "Te laat"
+msgstr "Vervallen"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__installments_mode__overdue
@@ -14083,7 +14083,7 @@ msgstr "Placeholder btw partner"
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Partner(s) should have an email address."
-msgstr "Partners(s) moet(en) een e-mailadres hebben."
+msgstr "Partner(s) moet(en) een e-mailadres hebben."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
@@ -19282,11 +19282,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
-"Deze boeking al gecontroleerd. Je hebt de rol van boekhouder nodig om dit te "
-"wijzigen."
 
 #. module: account
 #. odoo-python
@@ -19305,6 +19303,13 @@ msgstr "Deze boeking is gedupliceerd van %s"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "Deze boeking is teruggeboekt van %s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22386,6 +22391,13 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Self-billing verkoopfactuur (Ref {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid ""
+#~ "This entry has already been reviewed. You need the bookkeeper role to "
+#~ "change it."
+#~ msgstr ""
+#~ "Deze boeking al gecontroleerd. Je hebt de rol van boekhouder nodig om dit "
+#~ "te wijzigen."
 
 #~ msgid "Quick search: %s"
 #~ msgstr "Snelzoeken: %s"

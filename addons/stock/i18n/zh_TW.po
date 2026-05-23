@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:35+0000\n"
-"PO-Revision-Date: 2026-03-19 08:39+0000\n"
+"POT-Creation-Date: 2026-05-22 17:40+0000\n"
+"PO-Revision-Date: 2026-05-23 14:31+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-1/stock/zh_Hant/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: stock
 #. odoo-python
@@ -1250,6 +1250,8 @@ msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
+"啟用「按訂單補貨」，在產品售出時，自動產生採購訂單，同時在文件之間建立直接連"
+"結。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
@@ -1431,7 +1433,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__move_type__direct
 msgid "As soon as possible, with back orders"
-msgstr ""
+msgstr "盡快，並處理缺貨訂單"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__ask
@@ -1606,6 +1608,10 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"可用數量（計算方法：在庫數量 − 預留數量 − 待移除數量）\n"
+"若是單一庫存位置，此數量包括存放在此位置及其子位置的貨物。\n"
+"若是單一倉庫，此數量包括存放在此倉庫的庫存位置及其任何子位置的貨物。\n"
+"其他情況下，此數量包括存放在任何「內部」類型的庫存位置的貨物。"
 
 #. module: stock
 #. odoo-javascript
@@ -1616,12 +1622,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
 msgid "Back Order of"
-msgstr "欠單"
+msgstr "缺貨訂單："
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_ids
 msgid "Back Orders"
-msgstr "欠單"
+msgstr "缺貨訂單"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
@@ -2047,7 +2053,7 @@ msgstr "計算運費"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr "計算運輸成本並用DHL裝運"
+msgstr "以 DHL 計算運費及發貨"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2056,21 +2062,24 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"以 DHL 計算運費及發貨<br/>\n"
+"                                    <strong>（請前往主頁 &gt; 應用程式以安"
+"裝）</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr "計算運輸成本並用Easypost裝運"
+msgstr "以 Easypost 計算運費及發貨"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Envia.com"
-msgstr "計算運費並使用 Envia.com 發貨"
+msgstr "以 Envia.com 計算運費及發貨"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr "計算運輸成本並用FedEx裝運"
+msgstr "以 FedEx 計算運費及發貨"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2079,26 +2088,29 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"以 FedEx 計算運費及發貨<br/>\n"
+"                                    <strong>（請前往主頁 &gt; 應用程式以安"
+"裝）</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
-msgstr "計算運輸成本並用Sendcloud裝運"
+msgstr "以 Sendcloud 計算運費及發貨"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Shiprocket"
-msgstr "使用Shiprocket計算運輸成本及發貨"
+msgstr "以 Shiprocket 計算運費及發貨"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Starshipit"
-msgstr "計算運送成本，並以 Starshipit 送貨"
+msgstr "以 Starshipit 計算運費及發貨"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr "計算運輸成本並用USPS裝運"
+msgstr "以 UPS 計算運費及發貨"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2107,11 +2119,14 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"以 UPS 計算運費及發貨<br/>\n"
+"                                    <strong>（請前往主頁 &gt; 應用程式以安"
+"裝）</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr "計算運輸成本並用USPS裝運"
+msgstr "以美國郵政署（USPS）計算運費及發貨"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2120,11 +2135,14 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"以美國郵政署（USPS）計算運費及發貨<br/>\n"
+"                                    <strong>（請前往主頁 &gt; 應用程式以安"
+"裝）</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr "計算運輸成本並用bpost裝運"
+msgstr "以 bpost 計算運費及發貨"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
@@ -2160,6 +2178,8 @@ msgid ""
 "start on replenishment and avoid delays, or trigger it just-in-time ('0 "
 "days') to avoid overstocking."
 msgstr ""
+"配置提早補貨的時間，以更早觸發重新訂購規則，預早補貨以避免延誤。可設定為實時"
+"觸發（「0 天」），避免庫存過多。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.lot_label_layout_form_picking
@@ -2176,7 +2196,7 @@ msgstr "確認"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Confirmation Email"
-msgstr ""
+msgstr "確認電郵"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
@@ -2634,7 +2654,7 @@ msgstr "DEMO_UOM"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "DHL Connector"
-msgstr ""
+msgstr "DHL 連接器"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
@@ -3635,7 +3655,7 @@ msgstr "二月"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex_rest
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "FedEx Connector"
-msgstr "FedEx連接器"
+msgstr "FedEx 連接器"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
@@ -3727,6 +3747,10 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"預測數量（計算方法：在庫數量 − 出庫數量 + 入庫數量 − 待移除數量）\n"
+"若是單一庫存位置，此數量包括存放在此位置及其子位置的貨物。\n"
+"若是單一倉庫，此數量包括存放在此倉庫的庫存位置及其任何子位置的貨物。\n"
+"其他情況下，此數量包括存放在任何「內部」類型的庫存位置的貨物。"
 
 #. module: stock
 #. odoo-javascript
@@ -6121,7 +6145,7 @@ msgstr "在庫數量"
 msgid ""
 "On hand quantity which hasn't been reserved on a transfer and is still "
 "fresh, in the default unit of measure of the product"
-msgstr ""
+msgstr "未在調撥時保留、仍屬新鮮狀態的在庫數量，以產品的預設計量單位表示"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -7906,7 +7930,7 @@ msgstr "補貨數量"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__replenish_on_order
 #: model:stock.route,name:stock.route_warehouse0_mto
 msgid "Replenish on Order (MTO)"
-msgstr "訂單補給（特別訂製）"
+msgstr "按訂單補貨（特別訂製）"
 
 #. module: stock
 #. odoo-javascript
@@ -7935,7 +7959,7 @@ msgstr "重訂貨規則"
 #: model:ir.model.fields,field_description:stock.field_res_company__horizon_days
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__horizon_days
 msgid "Replenishment Horizon"
-msgstr ""
+msgstr "補貨提早時間"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__replenishment_info_id
@@ -8533,7 +8557,7 @@ msgstr "使用不同計量單位或包裝單位，去銷售及採購產品"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "Send an automatic confirmation Text Message when Delivery Orders are done"
-msgstr ""
+msgstr "送貨單完成交貨後，自動傳送確認文字訊息"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9215,7 +9239,7 @@ msgstr "庫存規則報告"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_text_confirmation
 msgid "Stock Text Confirmation"
-msgstr ""
+msgstr "庫存文字訊息確認"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_confirmation_type
@@ -9438,7 +9462,7 @@ msgstr "用於計算是否應顯示“檢查可用性”按鈕的技術欄位."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Text Confirmation"
-msgstr ""
+msgstr "文字訊息確認"
 
 #. module: stock
 #. odoo-python
@@ -10384,7 +10408,7 @@ msgstr "UPS 連接器"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps_rest
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "USPS Connector"
-msgstr "USPS 連接器"
+msgstr "美國郵政署（USPS）連接器"
 
 #. module: stock
 #. odoo-javascript
@@ -10969,7 +10993,7 @@ msgstr "勾選時，如果取消此規則建立的移動，則下一步移動也
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "When to start shipping"
-msgstr ""
+msgstr "何時開始裝運"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder

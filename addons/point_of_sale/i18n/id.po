@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:36+0000\n"
-"PO-Revision-Date: 2026-05-09 13:23+0000\n"
+"POT-Creation-Date: 2026-05-22 17:40+0000\n"
+"PO-Revision-Date: 2026-05-23 14:40+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "point_of_sale/id/>\n"
@@ -148,7 +148,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "%s left"
-msgstr "%s kiri"
+msgstr "%s tersisa"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4938,7 +4938,7 @@ msgstr "Baris No"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Link Cashdrawer"
-msgstr "Link Cashdrawer"
+msgstr "Hubungkan Laci Kas"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_uom
@@ -5869,7 +5869,7 @@ msgstr "Di tangan:"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "One-click Payment"
-msgstr "Pembayaran satu-klik"
+msgstr "Pembayaran Satu Klik"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8335,12 +8335,6 @@ msgid "Select"
 msgstr "Pilih"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.xml:0
-msgid "Select Date:"
-msgstr "Pilih Tanggal:"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Select PoS to start sharing orders"
 msgstr "Pilih POS untuk memulai sharing pesanan"
@@ -8391,6 +8385,12 @@ msgstr "Pilih tanggal pengiriman"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__attribute_value_ids
 msgid "Selected Attributes"
 msgstr "Atribut Terpilih"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
+msgid "Selected date cannot be in the past."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -8689,7 +8689,7 @@ msgstr "Shortcrust pastry with a Morello cherry filling."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Shortcut to skip payment screen"
-msgstr "Shortcut ke skip layar pembayaran"
+msgstr "Shortcut untuk melewati layar pembayaran"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__show_category_images
@@ -10658,6 +10658,20 @@ msgid "Validate"
 msgstr "Validasi"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
+msgid "Validation Error"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"Validation Error: You cannot assign the same Cash payment method to multiple "
+"POS Shops. Please create a separate Cash payment method for each shop."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
 msgid "Value"
 msgstr "Value"
@@ -10746,7 +10760,7 @@ msgstr "Pesan situs"
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__website_message_ids
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__website_message_ids
 msgid "Website communication history"
-msgstr "Sejarah komunikasi situs"
+msgstr "Riwayat komunikasi situs"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11106,6 +11120,12 @@ msgid ""
 "data."
 msgstr ""
 "Anda tidak memiliki hak akses untuk mendapatkan data kontrol closing sale."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "You don't have the access rights to perform a cash in/out."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -11533,6 +11553,9 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "x"
 msgstr ""
+
+#~ msgid "Select Date:"
+#~ msgstr "Pilih Tanggal:"
 
 #~ msgid "Connect device to your PoS"
 #~ msgstr "Hubungkan perangkat ke POS Anda"

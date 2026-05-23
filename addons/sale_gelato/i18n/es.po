@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-24 17:37+0000\n"
-"PO-Revision-Date: 2026-01-14 16:34+0000\n"
+"PO-Revision-Date: 2026-05-23 14:34+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-1/"
 "sale_gelato/es/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: sale_gelato
 #: model:mail.template,body_html:sale_gelato.order_status_update
@@ -66,6 +66,44 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                Hola, <t t-out=\"object.partner_id.name or ''\">Brandon "
+"Freeman</t>:<br/><br/>\n"
+"                <!-- Order in transit body -->\n"
+"                <t t-if=\"ctx.get('tracking_data')\">\n"
+"                    Te informamos de que tu pedido está en camino.\n"
+"                    <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+"                        <t t-set=\"tracking_url\" t-value=\"list"
+"(ctx['tracking_data'].keys())[0]\"/>\n"
+"                        Tu número de seguimiento es <a t-att-"
+"href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                        <br/><br/>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        Tus números de seguimiento son:\n"
+"                        <ul>\n"
+"                            <li t-foreach=\"ctx['tracking_data']\" t-"
+"as=\"tracking_url\">\n"
+"                                <a t-att-href=\"tracking_url\" t-"
+"out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                            </li>\n"
+"                        </ul>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <!-- Order delivered body -->\n"
+"                <t t-if=\"ctx.get('order_delivered')\">\n"
+"                    Te informamos de que tu pedido se ha enviado.\n"
+"                    <br/><br/>\n"
+"                </t>\n"
+"                Gracias,\n"
+"                <t t-if=\"object.user_id.name\">\n"
+"                    <br/>\n"
+"                    <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"object.user_id.name or ''\">Mitchell Admin</t></div>"
+"\n"
+"                </t>\n"
+"            </div>\n"
+"        "
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
@@ -214,7 +252,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_gelato/controlers/main.py:0
 msgid "Gelato has canceled order %(reference)s."
-msgstr ""
+msgstr "Gelato ha cancelado el pedido %(reference)s."
 
 #. module: sale_gelato
 #. odoo-python
@@ -419,13 +457,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid "Unable to confirm the order %s on Gelato."
-msgstr ""
+msgstr "No se puede confirmar el pedido %s en Gelato."
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid "Unable to delete the order %s on Gelato."
-msgstr ""
+msgstr "No se puede eliminar el pedido %s en Gelato."
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form

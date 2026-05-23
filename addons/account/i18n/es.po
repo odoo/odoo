@@ -32,8 +32,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:36+0000\n"
-"PO-Revision-Date: 2026-05-09 13:25+0000\n"
+"POT-Creation-Date: 2026-05-22 17:40+0000\n"
+"PO-Revision-Date: 2026-05-23 14:34+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-1/"
 "account/es/>\n"
@@ -5137,7 +5137,7 @@ msgstr "Facturas de abogados y tasas pagadas al sistema judicial"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_accounting
 msgid "Bills from your bookkeeper or accounting firm"
-msgstr "Facturas del contable o de la firma contable"
+msgstr "Facturas del contable o de la asesoría contable"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -19339,10 +19339,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
-"Este asiento ya se ha revisado. Necesitas el rol de contable para cambiarlo."
 
 #. module: account
 #. odoo-python
@@ -19361,6 +19360,13 @@ msgstr "Este asiento se ha duplicado a partir de %s"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "Este asiento se ha revertido a partir de %s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22439,6 +22445,13 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Factura de autofacturación (ref. {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid ""
+#~ "This entry has already been reviewed. You need the bookkeeper role to "
+#~ "change it."
+#~ msgstr ""
+#~ "Este asiento ya se ha revisado. Necesitas el rol de contable para "
+#~ "cambiarlo."
 
 #~ msgid "Quick search: %s"
 #~ msgstr "Búsqueda rápida: %s"

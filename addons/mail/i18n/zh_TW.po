@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:36+0000\n"
-"PO-Revision-Date: 2026-04-14 08:06+0000\n"
+"POT-Creation-Date: 2026-05-22 17:41+0000\n"
+"PO-Revision-Date: 2026-05-23 14:24+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-1/mail/zh_Hant/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -2358,7 +2358,7 @@ msgstr "忙碌"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
 msgid "By Emails"
-msgstr ""
+msgstr "發送電郵"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2626,7 +2626,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Capture replies in the chatter"
-msgstr ""
+msgstr "讀取聊天欄中的回覆"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -5290,7 +5290,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Forever"
-msgstr ""
+msgstr "永遠"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
@@ -5447,8 +5447,8 @@ msgid "Groups"
 msgstr "群組"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/controllers/discuss/public_page.py:0
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_model.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__guest_id
@@ -8266,7 +8266,7 @@ msgstr "無"
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "None planned"
-msgstr ""
+msgstr "未有規劃"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__email_normalized
@@ -8928,7 +8928,7 @@ msgstr "否則，你可以忽略此電郵。"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_from
 msgid "Out Of Office From"
-msgstr ""
+msgstr "休假開始日期"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_to
@@ -8944,7 +8944,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Out-of-office"
-msgstr ""
+msgstr "休假"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__out_of_office
@@ -8985,19 +8985,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Outgoing Mail Server"
-msgstr "外發郵件伺服器"
+msgstr "外寄郵件伺服器"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__outgoing_mail_server_type
 msgid "Outgoing Mail Server Type"
-msgstr ""
+msgstr "外寄郵件伺服器類型"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__mail_server_id
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_server_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__mail_server_id
 msgid "Outgoing mail server"
-msgstr "發信郵件伺服器"
+msgstr "外寄郵件伺服器"
 
 #. module: mail
 #. odoo-javascript
@@ -9472,6 +9472,9 @@ msgid ""
 "- By Emails: notifications are sent to your email address\n"
 "- In Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
+"聊天欄通知的處理方式：\n"
+"- 透過電子郵件：通知將發送至你的電郵地址\n"
+"- 在 Odoo 中：通知會在 Odoo 收件箱中顯示"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
@@ -11660,7 +11663,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_reset__template_ids
 msgid "Template"
-msgstr "範本文字"
+msgstr "範本"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__template_category
@@ -12247,7 +12250,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of your direct chat with %(userName)s"
-msgstr ""
+msgstr "你與 %(userName)s 的直接聊天從這裏開始"
 
 #. module: mail
 #. odoo-python
@@ -13164,6 +13167,8 @@ msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable"
 msgstr ""
+"使用你自己的伺服器進行通話，以處理大量流量，及在 Twilio 無法使用時，確保功能"
+"可用"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_ice_servers
@@ -13171,6 +13176,8 @@ msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable."
 msgstr ""
+"使用你自己的伺服器進行通話，以處理大量流量，及在 Twilio 無法使用時，確保功能"
+"可用。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -13378,7 +13385,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__out_of_office_message
 msgid "Vacation Responder"
-msgstr ""
+msgstr "放假回應文字"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__valid
@@ -13489,7 +13496,7 @@ msgstr "查看所有活動"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "View chat with %(channel_name)s"
-msgstr ""
+msgstr "查看 %(channel_name)s 的聊天記錄"
 
 #. module: mail
 #. odoo-javascript
@@ -14125,7 +14132,7 @@ msgstr "您的姓名"
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_simple_modif_mail
 msgid "Your out-of-office message..."
-msgstr ""
+msgstr "你的休假訊息..."
 
 #. module: mail
 #. odoo-python

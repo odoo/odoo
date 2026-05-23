@@ -16,13 +16,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:36+0000\n"
-"PO-Revision-Date: 2026-01-15 15:58+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"POT-Creation-Date: 2026-05-22 17:40+0000\n"
+"PO-Revision-Date: 2026-05-23 14:44+0000\n"
+"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-1/account/"
 "th/>\n"
 "Language: th\n"
@@ -30,7 +31,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -4114,7 +4115,7 @@ msgstr "รายการเดินบัญชีจากธนาคาร
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
 msgid "Bank Suspense"
-msgstr "การระงับของธนาคาร"
+msgstr "บัญชีพักรอตรวจสอบ (ธนาคาร)"
 
 #. module: account
 #. odoo-python
@@ -9521,7 +9522,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_move__status_in_payment__in_payment
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "In Payment"
-msgstr "ชำระเงิน"
+msgstr "อยู่ระหว่างกระทบยอด"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__in_process
@@ -9914,12 +9915,12 @@ msgstr ""
 #: model:account.journal,name:account.1_inventory_valuation
 #: model:account.journal,name:account.2_inventory_valuation
 msgid "Inventory Valuation"
-msgstr "การประเมินมูลค่าสินค้าคงคลัง"
+msgstr "การประเมินมูลค่าคลังสินค้า"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__inventory_value
 msgid "Inventory Value"
-msgstr "มูลค่าสินค้าคงคลัง"
+msgstr "มูลค่าคลังสินค้า"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_investing
@@ -15975,7 +15976,7 @@ msgstr "สถานะ"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__status_in_payment
 #: model:ir.model.fields,field_description:account.field_account_move__status_in_payment
 msgid "Status In Payment"
-msgstr "สถานะการชำระเงิน"
+msgstr "สถานะอยู่ระหว่างกระทบยอด"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__activity_state
@@ -17304,7 +17305,7 @@ msgid ""
 "validation."
 msgstr ""
 "ค่าใช้จ่ายจะถูกบันทึกเมื่อมีการตรวจสอบความถูกต้องของใบเรียกเก็บเงินของผู้จำหน่าย "
-"ยกเว้นในการบัญชีแบบ anglo-saxon ที่มีการประเมินมูลค่าสินค้าคงคลังแบบไม่สิ้นสุด ซึ่งในกรณีนี้ "
+"ยกเว้นในการบัญชีแบบ anglo-saxon ที่มีการประเมินมูลค่าคลังสินค้าแบบไม่สิ้นสุด ซึ่งในกรณีนี้ "
 "ค่าใช้จ่าย (บัญชีต้นทุนของสินค้าที่ขาย) "
 "จะมีการยอมรับในการตรวจสอบความถูกต้องของใบแจ้งหนี้ของลูกค้า"
 
@@ -18108,8 +18109,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
 
 #. module: account
@@ -18129,6 +18130,13 @@ msgstr "รายการนี้ได้รับการคัดลอก
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "รายการนี้ได้ถูกย้อนหลังจาก %s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python

@@ -38,7 +38,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:36+0000\n"
+"POT-Creation-Date: 2026-05-22 17:40+0000\n"
 "PO-Revision-Date: 2026-04-14 08:01+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -8317,12 +8317,6 @@ msgid "Select"
 msgstr "Seleccionar"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.xml:0
-msgid "Select Date:"
-msgstr ""
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Select PoS to start sharing orders"
 msgstr "Selecciona el TPV per començar a compartir comandes"
@@ -8373,6 +8367,12 @@ msgstr "Selecciona la data d'enviament"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__attribute_value_ids
 msgid "Selected Attributes"
 msgstr "Atributs seleccionats"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
+msgid "Selected date cannot be in the past."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -10629,6 +10629,20 @@ msgid "Validate"
 msgstr "Validar"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
+msgid "Validation Error"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"Validation Error: You cannot assign the same Cash payment method to multiple "
+"POS Shops. Please create a separate Cash payment method for each shop."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
 msgid "Value"
 msgstr "Valor"
@@ -11066,6 +11080,12 @@ msgid ""
 msgstr ""
 "No teniu els drets d'accés per obtenir les dades de control de tancament del "
 "punt de venda."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "You don't have the access rights to perform a cash in/out."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
