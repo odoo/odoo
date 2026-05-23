@@ -104,7 +104,7 @@ class TestAutoClassify(TransactionCase):
             "test-key",
         )
         cls.project = cls.env["project.project"].create(
-            {"name": "Classify Test Project"}
+            {"name": "Classify Test Project"},
         )
 
     @patch("httpx.post")
@@ -142,3 +142,48 @@ class TestAutoClassify(TransactionCase):
         doc._run_ai_classify()
         self.assertTrue(doc.ai_classified)
         self.assertEqual(doc.document_type_id.code, "bill_electricity")
+
+
+@tagged("solar_ai", "post_install", "-at_install")
+class TestConsistencyCheck(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env["ir.config_parameter"].sudo().set_param(
+            "solar_ai.openrouter_api_key",
+            "test-key",
+        )
+        cls.project = cls.env["project.project"].create({"name": "Consistency Test"})
+        doc_type = cls.env.ref("solar_project.solar_dtype_roof_measurement")
+        for i in range(2):
+            cls.env["solar.document"].create(
+                {
+                    "name": f"Doc {i}",
+                    "project_id": cls.project.id,
+                    "document_type_id": doc_type.id,
+                },
+            )
+
+    @patch("httpx.post")
+    def test_consistency_check_creates_activity(self, mock_post):
+        inconsistency_response = json.dumps(
+            {
+                "inconsistencies": [
+                    {
+                        "severity": "warning",
+                        "description": "Roof area in measurement doc (120m²) differs from site plan (95m²)",
+                    },
+                ],
+            },
+        )
+        mock_post.return_value.status_code = 200
+        mock_post.return_value.json.return_value = {
+            "choices": [
+                {"message": {"content": inconsistency_response, "role": "assistant"}},
+            ],
+            "usage": {},
+        }
+
+        initial_activity_count = len(self.project.activity_ids)
+        self.project.action_run_consistency_check()
+        self.assertGreater(len(self.project.activity_ids), initial_activity_count)

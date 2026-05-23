@@ -58,4 +58,19 @@
       </div>
     </field>
   </record>
+
+  <record id="view_project_form_solar_check" model="ir.ui.view">
+    <field name="name">project.project.view.form.solar.check</field>
+    <field name="model">project.project</field>
+    <field name="inherit_id" ref="project.edit_project"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form//header" position="inside">
+        <button name="action_run_consistency_check"
+                string="AI: Check Document Consistency"
+                type="object"
+                class="btn-secondary"
+                title="Run AI consistency check across all project documents"/>
+      </xpath>
+    </field>
+  </record>
 </odoo>

@@ -1,3 +1,5 @@
+import json
+
 from odoo import fields, models
 
 SOLAR_STAGE_SELECTION = [
@@ -92,3 +94,54 @@ class ProjectProjectSolar(models.Model):
     def _compute_document_count(self):
         for rec in self:
             rec.solar_document_count = len(rec.solar_document_ids)
+
+    CONSISTENCY_CHECK_PROMPT = """You are reviewing solar installation project documents for consistency.
+Given a list of document summaries (name, type, any extracted data), identify any contradictions or missing critical documents.
+
+Return JSON: {"inconsistencies": [{"severity": "error|warning|info", "description": "..."}]}
+Respond with ONLY the JSON, no markdown."""
+
+    def action_run_consistency_check(self):
+        """Run AI consistency check on all project documents.
+
+        Creates mail.activity for each issue found.
+        """
+        if "solar.ai.service" not in self.env:
+            return
+
+        for project in self:
+            docs = project.solar_document_ids
+            if not docs:
+                continue
+
+            doc_summaries = "\n".join(
+                f"- [{doc.document_type_id.name or 'Unknown type'}] {doc.name} "
+                f"(state: {doc.state}, extracted: {doc.ai_extracted_data or 'N/A'})"
+                for doc in docs
+            )
+
+            messages = [
+                {"role": "system", "content": self.CONSISTENCY_CHECK_PROMPT},
+                {
+                    "role": "user",
+                    "content": f"Project: {project.name}\n\nDocuments:\n{doc_summaries}",
+                },
+            ]
+
+            service = self.env["solar.ai.service"]
+            result = service.chat(messages)
+
+            try:
+                data = json.loads(result["content"])
+            except (json.JSONDecodeError, TypeError):
+                continue
+
+            activity_type = self.env.ref("mail.mail_activity_data_todo")
+            for issue in data.get("inconsistencies", []):
+                severity = issue.get("severity", "info")
+                note = f"[{severity.upper()}] {issue.get('description', '')}"
+                project.activity_schedule(
+                    activity_type_id=activity_type.id,
+                    note=note,
+                    summary="Document Consistency Issue",
+                )
