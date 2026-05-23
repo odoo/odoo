@@ -34,6 +34,11 @@ def _check_rate_limit(user_id):
     with _rate_limit_lock:
         calls = _rate_limit_state[user_id]
         calls[:] = [t for t in calls if t > cutoff]
+        if not calls:
+            # Reclaim memory for inactive users
+            _rate_limit_state.pop(user_id, None)
+            _rate_limit_state[user_id].append(now)
+            return True
         if len(calls) >= RATE_LIMIT_MAX_CALLS:
             return False
         calls.append(now)
@@ -104,9 +109,9 @@ class SolarAiOlgProxy(http.Controller):
             return {"status": "error", "error": "rate_limited"}
 
         body = request.get_json_data()
-        prompt = body.get(
-            "prompt",
-            "Generate a professional website text for a solar energy company.",
+        prompt = (
+            body.get("prompt")
+            or "Generate a professional website text for a solar energy company."
         )[:MAX_PROMPT_CHARS]
 
         service = request.env["solar.ai.service"]
