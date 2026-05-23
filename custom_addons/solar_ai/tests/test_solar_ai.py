@@ -67,7 +67,7 @@ class TestOlgProxy(HttpCase):
         mock_post.return_value.status_code = 200
         mock_post.return_value.json.return_value = {
             "choices": [
-                {"message": {"content": "AI response text", "role": "assistant"}}
+                {"message": {"content": "AI response text", "role": "assistant"}},
             ],
             "usage": {},
         }
@@ -92,3 +92,53 @@ class TestOlgProxy(HttpCase):
         self.assertEqual(resp.status_code, 200)
         result = resp.json()
         self.assertEqual(result.get("result", {}).get("status"), "success")
+
+
+@tagged("solar_ai", "post_install", "-at_install")
+class TestAutoClassify(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env["ir.config_parameter"].sudo().set_param(
+            "solar_ai.openrouter_api_key",
+            "test-key",
+        )
+        cls.project = cls.env["project.project"].create(
+            {"name": "Classify Test Project"}
+        )
+
+    @patch("httpx.post")
+    def test_auto_classify_on_attachment(self, mock_post):
+        mock_post.return_value.status_code = 200
+        mock_post.return_value.json.return_value = {
+            "choices": [
+                {
+                    "message": {
+                        "content": '{"document_type_code": "bill_electricity", "confidence": 0.92}',
+                        "role": "assistant",
+                    },
+                },
+            ],
+            "usage": {},
+        }
+        seed_type = self.env["solar.document.type"].search([], limit=1)
+        doc = self.env["solar.document"].create(
+            {
+                "name": "Test bill",
+                "project_id": self.project.id,
+                "document_type_id": seed_type.id,
+            },
+        )
+        attachment = self.env["ir.attachment"].create(
+            {
+                "name": "electricity_bill_jan.pdf",
+                "res_model": "solar.document",
+                "res_id": doc.id,
+                "mimetype": "application/pdf",
+                "datas": b"TW9udGhseSBlbGVjdHJpY2l0eTogODUwIGtXaA==",  # base64
+            },
+        )
+        doc.attachment_id = attachment
+        doc._run_ai_classify()
+        self.assertTrue(doc.ai_classified)
+        self.assertEqual(doc.document_type_id.code, "bill_electricity")

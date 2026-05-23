@@ -1,4 +1,8 @@
+import logging
+
 from odoo import fields, models
+
+_logger = logging.getLogger(__name__)
 
 
 class SolarDocument(models.Model):
@@ -82,3 +86,29 @@ class SolarDocument(models.Model):
 
     def action_expire(self):
         self.write({"state": "expired"})
+
+    def _run_ai_classify(self):
+        """Classify this document using solar.ai.service if available."""
+        if "solar.ai.service" not in self.env:
+            return
+
+        for rec in self:
+            attachment = rec.attachment_id
+            if not attachment:
+                continue
+            text = attachment.name or ""
+            if attachment.mimetype == "text/plain" and attachment.raw:
+                text += "\n" + attachment.raw.decode("utf-8", errors="ignore")[:4000]
+
+            service = self.env["solar.ai.service"]
+            classification = service.classify_document_text(text)
+            code = classification.get("document_type_code", "unknown")
+            if code and code != "unknown":
+                doc_type = self.env["solar.document.type"].search(
+                    [("code", "=", code)],
+                    limit=1,
+                )
+                if doc_type:
+                    rec.document_type_id = doc_type
+            rec.ai_classified = True
+            rec.ai_extracted_data = classification
