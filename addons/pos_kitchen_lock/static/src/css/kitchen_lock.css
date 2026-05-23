@@ -2,26 +2,26 @@
    It lands on the <li class="orderline ..."> element through lineContainerClasses. */
 
 .orderline.kitchen-sent-locked {
-    opacity: 0.55;
-    position: relative;
+  opacity: 0.55;
+  position: relative;
 }
 
 /* Purple left-edge accent */
 .orderline.kitchen-sent-locked::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 2px;
-    bottom: 2px;
-    width: 3px;
-    background: #7c7bad;
-    border-radius: 2px;
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 3px;
+  background: #e78888;
+  border-radius: 2px;
 }
 
 /* Lock badge injected by the Orderline template extension */
 .kitchen-lock-badge {
-    font-size: 11px;
-    margin-left: 4px;
-    vertical-align: middle;
-    pointer-events: none;
+  font-size: 11px;
+  margin-left: 4px;
+  vertical-align: middle;
+  pointer-events: none;
 }
