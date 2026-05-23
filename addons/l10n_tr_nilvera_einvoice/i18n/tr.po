@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 18:13+0000\n"
+"POT-Creation-Date: 2026-05-22 18:25+0000\n"
 "PO-Revision-Date: 2026-01-17 12:51+0000\n"
 "Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-1-l10n/"
@@ -55,6 +55,20 @@ msgid "351 - Other Not Exempt from VAT"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid ""
+"<i class=\"fa fa-check text-success\" aria-hidden=\"true\"/>\n"
+"                                <span class=\"text-success\">Accept</span>"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid ""
+"<i class=\"fa fa-times text-warning\" aria-hidden=\"true\"/>\n"
+"                                <span class=\"text-warning\">Reject</span>"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.res_config_settings_view_form_l10n_tr_nilvera
 msgid ""
 "<span class=\"fw-bold\">Warning:</span> Changing the Export Alias will cause "
@@ -66,6 +80,58 @@ msgstr ""
 msgid ""
 "<span class=\"o_form_label mx-3\" "
 "invisible=\"l10n_tr_nilvera_customer_status != 'einvoice'\">is</span>"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid ""
+"<span invisible=\"move_type != 'out_invoice' or partner_id\">Customer </span>"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid ""
+"<span invisible=\"move_type != 'out_invoice' or partner_id\">Customer</span>"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.ticarifatura_response_wizard_form
+msgid ""
+"<span>\n"
+"                                <span>You are about to </span>\n"
+"                                <span invisible=\"response_code != "
+"'approved'\">approve</span>\n"
+"                                <span invisible=\"response_code != "
+"'rejected'\">reject</span>\n"
+"                                a <strong>Commercial Bill</strong>.\n"
+"                            </span>\n"
+"                            <span> This action will send a response to "
+"Nilvera and cannot be undone.</span>"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid "<span> The commercial invoice has been rejected.</span>"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid "<span>.</span>"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid "<span>Accepted the commercial invoice</span>"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid "<span>Pending: Awaiting response from </span>"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid "<span>The commercial invoice has been automatically accepted</span>"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -93,6 +159,12 @@ msgid "ARACIKURUMVKN"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid "Accept Bill"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model,name:l10n_tr_nilvera_einvoice.model_account_chart_template
 msgid "Account Chart Template"
 msgstr ""
@@ -105,6 +177,27 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model:l10n_tr_nilvera_einvoice.account.tax.code,name:l10n_tr_nilvera_einvoice.account_tax_code_615
 msgid "All Kinds of Printing and Printing Services"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid "An error occurred. Try again later."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_ticarifatura_response_wizard__response_code__approved
+msgid "Approve"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__commercial_approved
+msgid "Approved (Commercial)"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__commercial_answered_automatically
+msgid "Approved Automatically (Commercial)"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -139,6 +232,11 @@ msgstr ""
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_line.py:0
 #: code:addons/l10n_tr_nilvera_einvoice/models/product_product.py:0
 msgid "CTSP Number must be 12 digits or fewer."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.ticarifatura_response_wizard_form
+msgid "Cancel"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -269,8 +367,19 @@ msgid "Combined Transportation"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_gib_invoice_scenario__ticarifatura
+msgid "Commercial"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:l10n_tr_nilvera_einvoice.account.tax.code,name:l10n_tr_nilvera_einvoice.account_tax_code_625
 msgid "Commercial Advertising Services"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_bank_statement_line__l10n_tr_ticarifatura_last_checked_at
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move__l10n_tr_ticarifatura_last_checked_at
+msgid "Commercial Status Check Date"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -317,11 +426,13 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_account_tax_code__create_uid
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_ticarifatura_response_wizard__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_account_tax_code__create_date
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_ticarifatura_response_wizard__create_date
 msgid "Created on"
 msgstr ""
 
@@ -432,6 +543,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_account_tax_code__display_name
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_ticarifatura_response_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_product_product__display_name
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_product_template__display_name
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_res_company__display_name
@@ -457,6 +569,11 @@ msgid "ETA tax codes mixin"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.ticarifatura_response_wizard_form
+msgid "Enter reason for rejection..."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_account_tax_code__percentage
 msgid ""
 "Enter the applicable withholding tax rate for this code as a whole number "
@@ -474,6 +591,14 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__error
 msgid "Error"
 msgstr "Hata"
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid ""
+"Error sending request:\n"
+"%s"
+msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_nilvera_einvoice_account_tax_code__code_type__exception
@@ -511,6 +636,12 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model:l10n_tr_nilvera_einvoice.account.tax.code,name:l10n_tr_nilvera_einvoice.account_tax_code_338
 msgid "Exports of Goods by Manufacturers"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_edi_xml_ubl_tr.py:0
+msgid "Failed to fetch TICARIFATURA response: %s"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -620,6 +751,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move_send__id
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_account_tax_code__id
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_ticarifatura_response_wizard__id
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_product_product__id
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_product_template__id
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_res_company__id
@@ -715,11 +847,13 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_account_tax_code__write_uid
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_ticarifatura_response_wizard__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_nilvera_einvoice_account_tax_code__write_date
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_ticarifatura_response_wizard__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -737,6 +871,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid "Make sure the price and taxes match the original invoice."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_ticarifatura_response_wizard__move_id
+msgid "Move"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -779,6 +918,14 @@ msgstr "Nilvera belgesi başarıyla alındı"
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid ""
+"Nilvera has already received a response for this invoice.\n"
+"The latest response has been fetched and updated on the invoice."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_edi_xml_ubl_tr.py:0
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid ""
@@ -791,6 +938,11 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.l10n_tr_nilvera_einvoice_account_tax_code_view_form
 msgid "Nilvera's documentation"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.actions.server,name:l10n_tr_nilvera_einvoice.ir_cron_nilvera_sync_ticarifatura_response_ir_actions_server
+msgid "Nilvera: Sync Commercial Invoice customer response"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -822,6 +974,14 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__not_sent
 msgid "Not sent"
 msgstr "Gönderilmedi"
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid ""
+"Odoo could not perform this action at the moment, try again later.\n"
+"%(reason)s - %(status)s"
+msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
@@ -923,6 +1083,11 @@ msgid "Private Security Service"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.ticarifatura_response_wizard_form
+msgid "Proceed"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model,name:l10n_tr_nilvera_einvoice.model_product_template
 msgid "Product"
 msgstr ""
@@ -964,10 +1129,41 @@ msgid "Registered for Export"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__l10n_tr_ticarifatura_response_wizard__response_code__rejected
+msgid "Reject"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid "Reject Bill"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__commercial_rejected
+msgid "Rejected (Commercial)"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:l10n_tr_nilvera_einvoice.account.tax.code,name:l10n_tr_nilvera_einvoice.account_tax_code_603
 msgid ""
 "Renovation, Maintenance and Repair Services for Machinery, Equipment, Fixed "
 "Assets and Vehicles"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_ticarifatura_response_wizard__response_code
+msgid "Response Code"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_l10n_tr_ticarifatura_response_wizard__response_note
+msgid "Response Note"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model,name:l10n_tr_nilvera_einvoice.model_l10n_tr_ticarifatura_response_wizard
+msgid "Response Wizard for Bills of type Ticarifatura E-Invoice"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -1139,6 +1335,11 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid "Synchronize response"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
 msgid "Synchronize with Nilvera"
 msgstr ""
 
@@ -1255,6 +1456,12 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid "The bill must be in 'Successful' status before sending a response."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_edi_xml_ubl_tr.py:0
 msgid ""
 "The credit note must be linked to the original invoice, or include the "
@@ -1321,6 +1528,12 @@ msgstr "Fatura Nilvera'ya başarıyla gönderildi."
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid "The invoice is not approved by Nilvera yet."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid ""
 "The invoice name must follow the format when sending to Nilvera: 3 "
@@ -1362,6 +1575,24 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_account_move_line__l10n_tr_original_quantity
 msgid "The quantity originally sold for this product."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid "The response has already been received for this invoice."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid "This action is only available for Commercial Invoices/Bills."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid "This action is only available for commercial bills."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -1537,10 +1768,9 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
-msgid "You cannot reset to draft an entry that has been sent to Nilvera."
+msgid ""
+"You cannot reset to draft an entry that has been sent/received from Nilvera."
 msgstr ""
-"Nilvera'ya gönderilmiş bir girişi taslak haline getirmek için "
-"sıfırlayamazsınız."
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
@@ -1559,3 +1789,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_res_users__l10n_tr_nilvera_customer_alias_id
 msgid "eInvoice Alias"
 msgstr ""
+
+#~ msgid "You cannot reset to draft an entry that has been sent to Nilvera."
+#~ msgstr ""
+#~ "Nilvera'ya gönderilmiş bir girişi taslak haline getirmek için "
+#~ "sıfırlayamazsınız."
