@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-04-18 18:00+0000\n"
+"PO-Revision-Date: 2026-05-18 16:14+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/"
 "pos_online_payment/hi/>\n"
@@ -23,40 +23,42 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "<strong>Error:</strong> The currency is missing or invalid."
-msgstr ""
+msgstr "<strong>गड़बड़ी:</strong> करेंसी अनुपस्थित या अमान्य है।"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "<strong>Error:</strong> There was a problem during the payment process."
-msgstr ""
+msgstr "<strong>गड़बड़ी</strong> पेमेंट प्रक्रिया के दौरान कोई समस्या हुई।"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_config.py:0
 msgid "A POS config cannot have more than one online payment method."
 msgstr ""
+"एक पीओएस कॉन्फ़िगरेशन में एक से ज़्यादा ऑनलाइन भुगतान विधि नहीं हो सकती।"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "A payment option must be specified."
-msgstr ""
+msgstr "एक भुगतान विकल्प तय किया जाना चाहिए।"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "A validation payment cannot be used for a Point of Sale online payment."
 msgstr ""
+"एक प्रमाणीकरण भुगतान का उपयोग पॉइंट ऑफ़ सेल ऑनलाइन भुगतान के लिए नहीं किया जा सकता है।"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "All available providers"
-msgstr ""
+msgstr "सभी उपलब्ध प्रोवाइडर"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -66,11 +68,13 @@ msgid ""
 "same currency as the Sales Journal, or the company currency if that is not "
 "set, of the POS config."
 msgstr ""
+"ऑनलाइन भुगतान तरीकों के लिए सेट किए गए सभी पेमेंट प्रोवाइडर की करेंसी वही होनी चाहिए "
+"जो पीओएस कॉन्फ़िगरेशन के सेल्स जर्नल की है या सेट न होने पर कंपनी की करेंसी होनी चाहिए।"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__online_payment_provider_ids
 msgid "Allowed Providers"
-msgstr ""
+msgstr "अनुमति दिए गए प्रोवाइडर"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -86,13 +90,13 @@ msgstr "रकम:"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "Cancel payment"
-msgstr ""
+msgstr "पेमेंट रद्द करें"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 msgid "Cannot create a POS online payment without an accounting payment."
-msgstr ""
+msgstr "अकाउंटिंग भुगतान के बिना पीओएस ऑनलाइन भुगतान नहीं बनाया जा सकता।"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -101,12 +105,15 @@ msgid ""
 "Cannot create a POS payment with a not online payment method and an online "
 "accounting payment."
 msgstr ""
+"एक गैर-ऑनलाइन भुगतान तरीका और ऑनलाइन अकाउंटिंग भुगतान के साथ पीओएस भुगतान नहीं बनाया "
+"जा सकता।"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment.py:0
 msgid "Cannot edit a POS online payment essential data."
 msgstr ""
+"पीओएस ऑनलाइन पेमेंट से जुड़ी मुख्य और ज़रूरी जानकारी को बदला नहीं जा सकता।"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -115,29 +122,31 @@ msgid ""
 "Could not create an online payment method (company_id=%(company_id)d, "
 "pos_config_id=%(pos_config_id)d)"
 msgstr ""
+"ऑनलाइन भुगतान विधि नहीं बनाया जा सका (company_id=%(company_id)d, "
+"pos_config_id=%(pos_config_id)d)"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment_method__has_an_online_payment_provider
 msgid "Has An Online Payment Provider"
-msgstr ""
+msgstr "एक ऑनलाइन पेमेंट प्रोवाइडर है"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Invalid online payment"
-msgstr ""
+msgstr "अमान्य ऑनलाइन पेमेंट"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Invalid online payments"
-msgstr ""
+msgstr "अमान्य ऑनलाइन पेमेंट"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Invoice could not be generated"
-msgstr ""
+msgstr "इनवॉइस जनरेट नहीं किया जा सका"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__next_online_payment_amount
@@ -159,29 +168,29 @@ msgstr "ऑनलाइन पेमेंट"
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_order__online_payment_method_id
 msgid "Online Payment Method"
-msgstr ""
+msgstr "ऑनलाइन पेमेंट का तरीका"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
 msgid "Online accounting payment"
-msgstr ""
+msgstr "ऑनलाइन अकाउंटिंग पेमेंट"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Online payment unavailable"
-msgstr ""
+msgstr "ऑनलाइन पेमेंट उपलब्ध नहीं है"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Online payments cannot have a negative amount (%s: %s)."
-msgstr ""
+msgstr "ऑनलाइन पेमेंट में नकारात्मक राशि नहीं हो सकती (%s: %s)।"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Order ID"
-msgstr ""
+msgstr "ऑर्डर आईडी"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -197,13 +206,13 @@ msgstr "ऑर्डर रेफ़रेंस"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
 msgid "Order reference:"
-msgstr ""
+msgstr "ऑर्डर रेफ़रेंस:"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Order saving issue"
-msgstr ""
+msgstr "ऑर्डर को सेव करने से जुड़ी समस्या"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -259,25 +268,25 @@ msgstr "पॉइंट ऑफ़ सेल सेशन"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Processed by"
-msgstr ""
+msgstr "इसके ज़रिए प्रोसेस किया गया"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
 msgid "QR Code to pay"
-msgstr ""
+msgstr "पेमेंट करने के लिए क्यूआर कोड"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
 msgid "Scan the QR code to pay"
-msgstr ""
+msgstr "पेमेंट करने के लिए क्यूआर कोड स्कैन करें"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/app/online_payment_popup/online_payment_popup.xml:0
 msgid "Scan to pay"
-msgstr ""
+msgstr "पेमेंट करने के लिए स्कैन करें"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -289,7 +298,7 @@ msgstr "सर्वर गड़बड़ी"
 #. odoo-python
 #: code:addons/pos_online_payment/models/payment_transaction.py:0
 msgid "The POS online payment (tx.id=%d) could not be saved correctly"
-msgstr ""
+msgstr "पीओएस ऑनलाइन पेमेंट (tx.id=%d) को सही ढंग से सेव नहीं किया जा सका"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -298,46 +307,48 @@ msgid ""
 "The POS online payment (tx.id=%d) could not be saved correctly because the "
 "online payment method could not be found"
 msgstr ""
+"पीओएस ऑनलाइन पेमेंट (tx.id=%d) को सही ढंग से सेव नहीं किया जा सका, क्योंकि ऑनलाइन पेमेंट "
+"विधि नहीं मिल सकी"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The POS session is not opened."
-msgstr ""
+msgstr "पीओएस सेशन नहीं खुला है।"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_payment_transaction__pos_order_id
 msgid "The Point of Sale order linked to the payment transaction"
-msgstr ""
+msgstr "पेमेंट ट्रांज़ैक्शन से जुड़ा पॉइंट ऑफ़ सेल ऑर्डर"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_account_payment__pos_order_id
 msgid "The Point of Sale order linked to this payment"
-msgstr ""
+msgstr "इस पेमेंट से जुड़ा पॉइंट ऑफ़ सेल ऑर्डर"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "The QR Code for paying could not be generated."
-msgstr ""
+msgstr "पेमेंट के लिए क्यूआर कोड जनरेट नहीं किया जा सका।"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The amount to pay has changed. Please refresh the page."
-msgstr ""
+msgstr "भुगतान की राशि बदल गई है. कृपया पेज को रीफ्रेश करें।"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The currency is invalid."
-msgstr ""
+msgstr "करेंसी अमान्य है।"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "The invoice could not be generated."
-msgstr ""
+msgstr "इनवॉइस जनरेट नहीं किया जा सका।"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -349,19 +360,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "The order has not been saved correctly on the server."
-msgstr ""
+msgstr "सर्वर पर ऑर्डर सही ढंग से सेव नहीं किया गया है।"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_session.py:0
 msgid "The partner of the POS online payment (id=%d) could not be found"
-msgstr ""
+msgstr "पीओएस ऑनलाइन पेमेंट के पार्टनर (id=%d) को नहीं पाया जा सका"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The payment provider is invalid."
-msgstr ""
+msgstr "पेमेंट प्रोवाइडर अमान्य है।"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -369,36 +380,38 @@ msgstr ""
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
 msgstr ""
+"पेमेंट या तो सीधे, रीडायरेक्शन के साथ, या एक टोकन के ज़रिए किया जाना चाहिए।"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The payment token is invalid."
-msgstr ""
+msgstr "पेमेंट टोकन अमान्य है।"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/models/payment_transaction.py:0
 msgid "The payment transaction (%d) has a negative amount."
-msgstr ""
+msgstr "पेमेंट ट्रांज़ैक्शन (%d) की राशि नकारात्मक है।"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The provided order or access token is invalid."
-msgstr ""
+msgstr "दिया गया ऑर्डर या ऐक्सेस टोकन अमान्य है।"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "The provided partner_id is different than expected."
 msgstr ""
+"दी गई partner_id) उस आईडी से मेल नहीं खा रही है जिसकी सिस्टम को ज़रूरत थी।"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "The saved order could not be retrieved."
-msgstr ""
+msgstr "सेव किया गया ऑर्डर प्राप्त नहीं किया जा सका।"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -407,12 +420,14 @@ msgid ""
 "The total amount of remaining online payments to execute (%s) doesn't "
 "correspond to the remaining unpaid amount of the order (%s)."
 msgstr ""
+"बाकी बचे ऑनलाइन भुगतान की कुल राशि (%s) ऑर्डर की बकाया राशि (%s) के साथ मेल नहीं "
+"खाती है।"
 
 #. module: pos_online_payment
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "There are online payments that were missing in your view."
-msgstr ""
+msgstr "आपकी व्यू में कुछ ऑनलाइन भुगतान दिखाई नहीं दे रहे थे।"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -421,6 +436,7 @@ msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved."
 msgstr ""
+"सर्वर में एक समस्या है. ऑर्डर के ऑनलाइन भुगतान की स्थिति प्राप्त नहीं की जा सकती।"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -429,6 +445,8 @@ msgid ""
 "There is a problem with the server. The order online payment status cannot "
 "be retrieved. Are you sure there is no online payment for this order ?"
 msgstr ""
+"सर्वर में एक समस्या है. ऑर्डर के ऑनलाइन भुगतान की स्थिति प्राप्त नहीं की जा सकती. क्या आप "
+"सुनिश्चित हैं कि इस ऑर्डर के लिए कोई ऑनलाइन भुगतान नहीं है?"
 
 #. module: pos_online_payment
 #. odoo-python
@@ -436,17 +454,18 @@ msgstr ""
 msgid ""
 "There is no online payment method configured for this Point of Sale order."
 msgstr ""
+"इस पॉइंट ऑफ सेल ऑर्डर के लिए ऑनलाइन भुगतान का कोई कॉन्फ़िगर नहीं की गई है।"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "There is nothing to pay for this order."
-msgstr ""
+msgstr "इस ऑर्डर के लिए कोई भुगतान नहीं करना है।"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
 msgid "There is nothing to pay."
-msgstr ""
+msgstr "पेमेंट करने के लिए कुछ भी नहीं है।"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -460,17 +479,20 @@ msgid ""
 "To use an online payment method in a POS config, it must have at least one "
 "published payment provider supporting the currency of that POS config."
 msgstr ""
+"अगर आप अपने पीओएस सिस्टम में ऑनलाइन पेमेंट की सुविधा चाहते हैं, तो यह ज़रूरी है कि आपके पास "
+"कम से कम एक ऐसा पेमेंट प्रोवाइडर सेट हो जो 'पब्लिश किया गया' मोड में हो और उसी करेंसी में "
+"लेन-देन करता हो जो आपके पीओएस में सेट है।"
 
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
 msgid "Tokenization is not available for logged out customers."
-msgstr ""
+msgstr "लॉग आउट किए हुए ग्राहकों के लिए टोकनाइज़ेशन उपलब्ध नहीं है।"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
 msgid "Transaction Reference"
-msgstr ""
+msgstr "ट्रांज़ैक्शन रेफ़रेंस"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -486,7 +508,7 @@ msgstr "प्रकार"
 #. odoo-javascript
 #: code:addons/pos_online_payment/static/src/overrides/pos_overrides/components/payment_screen/payment_screen.js:0
 msgid "Updated online payments"
-msgstr ""
+msgstr "अपडेट किया गया ऑनलाइन पेमेंट"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,help:pos_online_payment.field_pos_payment_method__is_online_payment
@@ -494,6 +516,8 @@ msgid ""
 "Use this payment method for online payments (payments made on a web page "
 "with online payment providers)"
 msgstr ""
+"ऑनलाइन भुगतानों (ऑनलाइन भुगतान प्रोवाइडर के साथ वेब पेज पर किए गए भुगतान) के लिए इस "
+"भुगतान विधि का उपयोग करें"
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -504,7 +528,7 @@ msgstr "हाँ"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "You have not activated any"
-msgstr ""
+msgstr "आपने सक्रिय नहीं किया है"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
@@ -514,4 +538,4 @@ msgstr ""
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment
 msgid "to allow online payments."
-msgstr ""
+msgstr "ऑनलाइन पेमेंट की अनुमति देने के लिए।"

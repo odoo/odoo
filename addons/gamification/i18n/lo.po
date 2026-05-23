@@ -4,37 +4,41 @@
 #
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
-"Language-Team: Lao (https://www.transifex.com/odoo/teams/41243/lo/)\n"
+"PO-Revision-Date: 2026-05-19 13:34+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/gamification/"
+"lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_count
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__rank_users_count
 msgid "# Users"
-msgstr ""
+msgstr "# ຜູ້ໃຊ້"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "%s has joined the challenge"
-msgstr ""
+msgstr "%s ໄດ້ເຂົ້າຮ່ວມການທ້າທາຍແລ້ວ"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "%s has refused the challenge"
-msgstr ""
+msgstr "%s ໄດ້ປະຕິເສດການທ້າທາຍ"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.mail_template_data_new_rank_reached
@@ -78,6 +82,53 @@ msgid ""
 " </table>\n"
 "</div>"
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-"
+"family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"<table style=\"width:600px;margin:0px auto;background:white;border:1px solid "
+"#e1e1e1;\">\n"
+"    <tbody>\n"
+"        <tr>\n"
+"            <td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>\n"
+"                    ຂໍສະແດງຄວາມຍິນດີ\n"
+"                    <span t-out=\"object.name or ''\">Joel Willis</span>!\n"
+"                </p>\n"
+"                <p>\n"
+"                    ທ່ານຫາກໍບັນລຸລະດັບໃໝ່: <strong t-out=\"object.rank_id.name or "
+"''\">ຜູ້ເລີ່ມຕົ້ນ</strong>\n"
+"                </p>\n"
+"                <t t-if=\"object.next_rank_id.name\">\n"
+"                    <p>ສືບຕໍ່ພະຍາຍາມເພື່ອເປັນ <strong t-"
+"out=\"object.next_rank_id.name or ''\">ນັກຮຽນ</strong>!</p>\n"
+"                </t>\n"
+"                <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                    <t t-set=\"gamification_redirection_data\" t-"
+"value=\"object.get_gamification_redirection_data()\"></t>\n"
+"                    <t t-foreach=\"gamification_redirection_data\" t-"
+"as=\"data\">\n"
+"                        <t t-set=\"url\" t-value=\"data['url']\"></t>\n"
+"                        <t t-set=\"label\" t-value=\"data['label']\"></t>\n"
+"                        <a t-att-href=\"url\" style=\"background-color: "
+"#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; "
+"border-radius: 5px; font-size:13px;\" t-out=\"label or ''\">ປ້າຍຊື່</a>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </td>\n"
+"            <td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p style=\"text-align: center;\">\n"
+"                    <img t-attf-src=\"/web/image/gamification.karma.rank/{{ "
+"object.rank_id.id }}/image_128\">\n"
+"                </p>\n"
+"            </td>\n"
+"        </tr>\n"
+"        <tr t-if=\"user.signature\">\n"
+"            <td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </tbody>\n"
+" </table>\n"
+"</div>"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
@@ -93,31 +144,50 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    <strong>ການແຈ້ງເຕືອນ</strong><br>\n"
+"    ທ່ານຍັງບໍ່ໄດ້ອັບເດດຄວາມຄືບໜ້າສຳລັບເປົ້າໝາຍ <t t-out=\"object.definition_id.name or "
+"''\"></t> (ປັດຈຸບັນບັນລຸໄດ້ <t t-out=\"object.completeness or ''\"></t>%) ເປັນເວລາຢ່າ"
+"ງໜ້ອຍ <t t-out=\"object.remind_update_delay or ''\"></t> ມື້ແລ້ວ. ຢ່າລືມເຂົ້າໄປອັບເດ"
+"ດ.\n"
+"    <br><br>\n"
+"    ຂໍຂອບໃຈ,\n"
+"    <t t-if=\"object.challenge_id.manager_id.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"object.challenge_id.manager_id.signature or ''\"></t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" aria-label=\"Goal in Progress\"/>"
 msgstr ""
+"<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"ເປົ້າໝາຍກຳລັງດຳເນີນການ\" "
+"aria-label=\"ເປົ້າໝາຍກຳລັງດຳເນີນການ\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "<i role=\"img\" class=\"text-danger fa fa-times fa-3x\" title=\"Goal Failed\" aria-label=\"Goal Failed\"/>"
 msgstr ""
+"<i role=\"img\" class=\"text-danger fa fa-times fa-3x\" title=\"ເປົ້າໝາຍບໍ່ສຳເລັ"
+"ດ\" aria-label=\"ເປົ້າໝາຍບໍ່ສຳເລັດ\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "<i role=\"img\" class=\"text-success fa fa-check fa-3x\" title=\"Goal Reached\" aria-label=\"Goal Reached\"/>"
 msgstr ""
+"<i role=\"img\" class=\"text-success fa fa-check fa-3x\" title=\"ບັນລຸເປົ້າໝາຍແລ້"
+"ວ\" aria-label=\"ບັນລຸເປົ້າໝາຍແລ້ວ\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "<span class=\"o_stat_text\">Related Goals</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ເປົ້າໝາຍທີ່ກ່ຽວຂ້ອງ</span>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "<span class=\"o_stat_text\">Users</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ຜູ້ໃຊ້</span>"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_badge_received
@@ -211,6 +281,136 @@ msgid ""
 "</td></tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" style=\"padding-top: 16px; background-"
+"color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;\"><tr>"
+"<td align=\"center\">\n"
+"<table border=\"0\" width=\"590\" cellpadding=\"0\" style=\"padding: 16px; "
+"background-color: white; color: #454748; border-collapse:separate;\" "
+"summary=\"o_mail_notification\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-"
+"width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-"
+"collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">ຫຼຽນກາຂອງທ່ານ</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-"
+"out=\"object.badge_id.name or ''\"></span>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not "
+"object.user_id.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ "
+"object.user_id.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: "
+"auto; width: 80px;\" t-att-alt=\"object.user_id.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-"
+"width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-"
+"collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <div>\n"
+"                        ຂໍສະແດງຄວາມຍິນດີ <t t-out=\"object.user_id.name or ''\">"
+"</t>!<br>\n"
+"                        ທ່ານຫາກໍ່ໄດ້ຮັບຫຼຽນກາ <strong t-out=\"object.badge_id.name "
+"or ''\"></strong>!<br>\n"
+"                        <table t-if=\"not is_html_empty"
+"(object.badge_id.description)\" cellspacing=\"0\" cellpadding=\"0\" "
+"border=\"0\" style=\"width: 560px; margin-top: 5px;\">\n"
+"                            <tbody><tr>\n"
+"                                <td valign=\"center\">\n"
+"                                    <img t-attf-src=\"/web/image/"
+"gamification.badge/{{ object.badge_id.id }}/image_128/80x80\" "
+"style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-"
+"alt=\"user.company_id.name\">\n"
+"                                </td>\n"
+"                                <td valign=\"center\">\n"
+"                                    <cite t-"
+"out=\"object.badge_id.description or ''\"></cite>\n"
+"                                </td>\n"
+"                            </tr></tbody>\n"
+"                        </table>\n"
+"                        <br>\n"
+"                        <t t-if=\"object.sender_id\">\n"
+"                            ຫຼຽນການີ້ຖືກມອບໃຫ້ໂດຍ <strong t-"
+"out=\"object.sender_id.name or ''\"></strong>.\n"
+"                        </t>\n"
+"                        <br>\n"
+"                        <t t-if=\"object.comment\" t-out=\"object.comment or "
+"''\"></t>\n"
+"                        <br><br>\n"
+"                        ຂໍຂອບໃຈ,\n"
+"                        <t t-if=\"object.sender_id.signature\">\n"
+"                            <br>\n"
+"                            <t t-out=\"object.sender_id.signature or ''\"></"
+"t>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-"
+"width: 590px; background-color: white; font-size: 12px; padding: 0px 8px 0px "
+"8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.user_id.company_id.name or ''\">ບໍລິສັດຂອງ"
+"ທ່ານ</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: "
+"0.7;\">\n"
+"                    <t t-out=\"object.user_id.company_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
+"                    <t t-if=\"object.user_id.company_id.email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ "
+"object.user_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.user_id.company_id.email or ''\">"
+"info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.user_id.company_id.website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ "
+"object.user_id.company_id.website }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.user_id.company_id.website or ''\">http://"
+"www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: "
+"590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-"
+"collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"        ຂັບເຄື່ອນໂດຍ <a target=\"_blank\" href=\"https://"
+"www.odoo.com?utm_source=db&amp;utm_medium=gamification\" style=\"color: "
+"#875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
@@ -408,6 +608,305 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"background-"
+"color: #EEE; border-collapse: collapse;\">\n"
+"<tr>\n"
+"    <td valign=\"top\" align=\"center\">\n"
+"        <t t-set=\"object_ctx\" t-value=\"ctx.get('object')\"></t>\n"
+"        <t t-set=\"company\" t-value=\"object_ctx and object_ctx.company_id "
+"or user.company_id\"></t>\n"
+"        <t t-set=\"challenge_lines\" t-value=\"ctx.get('challenge_lines', [])"
+"\"></t>\n"
+"        <table cellspacing=\"0\" cellpadding=\"0\" width=\"600\" "
+"style=\"margin: 0 auto; width: 570px;\">\n"
+"            <tr><td>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
+"                    <tr>\n"
+"                        <div>\n"
+"                            <t t-if=\"object.visibility_mode == 'ranking'\">"
+"\n"
+"                                <td style=\"padding:15px;\">\n"
+"                                    <p style=\"font-"
+"size:20px;color:#666666;\" align=\"center\">ກະດານຜູ້ນຳ</p>\n"
+"                                </td>\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </tr>\n"
+"                </table>\n"
+"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" "
+"bgcolor=\"#fff\" style=\"background-color:#fff;\">\n"
+"                    <tr><td style=\"padding: 15px;\">\n"
+"                        <t t-if=\"object.visibility_mode == 'personal'\">\n"
+"                            <span style=\"color:#666666;font-size:13px;\">ນີ້ແມ່"
+"ນຄວາມຄືບໜ້າປັດຈຸບັນຂອງທ່ານໃນການທ້າທາຍ <strong t-out=\"object.name or ''\"></strong>"
+".</span>\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" "
+"width=\"100%\" style=\"margin-top:20px;\">\n"
+"                                <tr>\n"
+"                                    <td align=\"center\">\n"
+"                                        <div>ຜົນງານສ່ວນບຸກຄົນ</div>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                            <table cellspacing=\"0\" cellpadding=\"0\" "
+"width=\"100%\" style=\"margin-top:30px;color:#666666;\">\n"
+"                                <thead>\n"
+"                                    <tr style=\"color:#9A6C8E; font-"
+"size:12px;\">\n"
+"                                        <th align=\"left\" style=\"padding-"
+"bottom: 0px;width:40%;text-align:left;\">ເປົ້າໝາຍ</th>\n"
+"                                        <th style=\"width:20%;text-"
+"align:right;\" align=\"left\">ຄາດໝາຍ</th>\n"
+"                                        <th style=\"width:20%;text-"
+"align:right;\" align=\"right\">ປັດຈຸບັນ</th>\n"
+"                                        <th style=\"width:20%;text-"
+"align:right;\" align=\"right\">ຄວາມສຳເລັດ</th>\n"
+"                                    </tr>\n"
+"                                    <tr>\n"
+"                                        <td colspan=\"5\" "
+"style=\"height:1px;background-color:#9A6C8E;\"></td>\n"
+"                                    </tr>\n"
+"                                </thead>\n"
+"                                <tbody t-foreach=\"challenge_lines\" t-"
+"as=\"line\">\n"
+"                                    <tr style=\"font-weight:bold;\">\n"
+"                                        <td style=\"padding: 20px 0;\" "
+"align=\"left\">\n"
+"                                            <t t-out=\"line['name'] or ''\">"
+"</t>\n"
+"                                            <t t-if=\"line['suffix'] or "
+"line['monetary']\">\n"
+"                                                (<t t-"
+"out=\"line['full_suffix'] or ''\"></t>)\n"
+"                                            </t>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;\" "
+"align=\"right\"><t t-out=\"&quot;%.2f&quot; % line['target'] or ''\"></t>\n"
+"                                            <t t-if=\"line['suffix']\" t-"
+"out=\"line['suffix'] or ''\"></t>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;\" "
+"align=\"right\"><t t-out=\"&quot;%.2f&quot; % line['current'] or ''\"></t>\n"
+"                                            <t t-if=\"line['suffix']\" t-"
+"out=\"line['suffix'] or ''\"></t>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 20px 0;font-"
+"size:25px;color:#9A6C8E;\" align=\"right\"><strong><t t-out=\"int"
+"(line['completeness']) or ''\"></t>%</strong></td>\n"
+"                                    </tr>\n"
+"                                    <tr>\n"
+"                                        <td colspan=\"5\" "
+"style=\"height:1px;background-color:#e3e3e3;\"></td>\n"
+"                                    </tr>\n"
+"                                </tbody>\n"
+"                            </table>                   \n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <span style=\"color:#A8A8A8;font-size:13px;\">\n"
+"                                ການທ້າທາຍ: <strong t-out=\"object.name or "
+"''\"></strong>.\n"
+"                            </span> \n"
+"                            <t t-foreach=\"challenge_lines\" t-as=\"line\">\n"
+"                                <!-- Header + Button table -->\n"
+"                                <table cellspacing=\"0\" cellpadding=\"0\" "
+"width=\"100%\" style=\"margin-top:35px;\">\n"
+"                                    <tr>\n"
+"                                        <td width=\"50%\">\n"
+"                                            <div>ຜູ້ທີ່ບັນລຸຜົນງານສູງສຸດສຳລັບເປົ້າໝາຍ "
+"<strong t-out=\"line['name'] or ''\"></strong></div>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                                <!-- Podium -->\n"
+"                                <t t-if=\"len(line['goals']) == 2\">\n"
+"                                    <table cellspacing=\"0\" "
+"cellpadding=\"0\" width=\"100%\" style=\"margin-top:10px;\">\n"
+"                                        <tr><td style=\"padding:0 30px;\">\n"
+"                                            <table cellspacing=\"0\" "
+"cellpadding=\"0\" width=\"100%\" style=\"table-layout: fixed;\">\n"
+"                                                <tr>\n"
+"                                                    <t t-set=\"top_goals\" t-"
+"value=\"line['goals'][:3]\"></t>\n"
+"                                                    <t t-"
+"foreach=\"top_goals\" t-as=\"goal\">\n"
+"                                                        <td align=\"center\" "
+"style=\"width:32%;\">\n"
+"                                                            <t t-"
+"if=\"loop.index == 1\">\n"
+"                                                                <t t-"
+"set=\"extra_div\" t-value=\"'&lt;div style=&quot;height:40px;&quot;&gt;&lt;/"
+"div&gt;'\"></t>\n"
+"                                                                <t t-"
+"set=\"heightA\" t-value=\"95\"></t>\n"
+"                                                                <t t-"
+"set=\"heightB\" t-value=\"75\"></t>\n"
+"                                                                <t t-"
+"set=\"bgColor\" t-value=\"'#b898b0'\"></t>\n"
+"                                                                <t t-"
+"set=\"fontSize\" t-value=\"50\"></t>\n"
+"                                                                <t t-"
+"set=\"podiumPosition\" t-value=\"'2'\"></t>\n"
+"                                                            </t>\n"
+"                                                            <t t-"
+"elif=\"loop.index == 2\">\n"
+"                                                                <t t-"
+"set=\"extra_div\" t-value=\"''\"></t>\n"
+"                                                                <t t-"
+"set=\"heightA\" t-value=\"55\"></t>\n"
+"                                                                <t t-"
+"set=\"heightB\" t-value=\"115\"></t>\n"
+"                                                                <t t-"
+"set=\"bgColor\" t-value=\"'#9A6C8E'\"></t>\n"
+"                                                                <t t-"
+"set=\"fontSize\" t-value=\"85\"></t>\n"
+"                                                                <t t-"
+"set=\"podiumPosition\" t-value=\"'1'\"></t>\n"
+"                                                            </t>\n"
+"                                                            <t t-"
+"elif=\"loop.index == 3\">\n"
+"                                                                <t t-"
+"set=\"extra_div\" t-value=\"'&lt;div style=&quot;height:60px;&quot;&gt;&lt;/"
+"div&gt;'\"></t>\n"
+"                                                                <t t-"
+"set=\"heightA\" t-value=\"115\"></t>\n"
+"                                                                <t t-"
+"set=\"heightB\" t-value=\"55\"></t>\n"
+"                                                                <t t-"
+"set=\"bgColor\" t-value=\"'#c8afc1'\"></t>\n"
+"                                                                <t t-"
+"set=\"fontSize\" t-value=\"35\"></t>\n"
+"                                                                <t t-"
+"set=\"podiumPosition\" t-value=\"'3'\"></t>\n"
+"                                                            </t>\n"
+"                                                            <div "
+"style=\"margin:0 3px 0 3px;height:220px;\">\n"
+"                                                                <div t-attf-"
+"style=\"height:{{ heightA }}px;\">\n"
+"                                                                    <t t-"
+"out=\"extra_div or ''\"></t>\n"
+"                                                                    <div "
+"style=\"height:55px;\">\n"
+"                                                                        <img "
+"style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;object-"
+"fit:cover;\" t-att-src=\"image_data_uri(object.env['res.users'].browse"
+"(goal['user_id']).partner_id.image_128)\" t-att-alt=\"goal['name']\">\n"
+"                                                                    </div>\n"
+"                                                                    <div "
+"align=\"center\" t-attf-style=\"color:{{ bgColor }};height:20px\">\n"
+"                                                                        <t t-"
+"out=\"goal['name'] or ''\"></t>\n"
+"                                                                    </div>\n"
+"                                                                </div>\n"
+"                                                                <div t-attf-"
+"style=\"background-color:{{ bgColor }};height:{{ heightB }}px;\">\n"
+"                                                                    <strong>"
+"<span t-attf-style=\"color:#fff;font-size:{{ fontSize }}px;\" t-"
+"out=\"podiumPosition or ''\"></span></strong>\n"
+"                                                                </div>\n"
+"                                                                <div "
+"style=\"height:30px;\">\n"
+"                                                                    <t t-"
+"out=\"&quot;%.2f&quot; % goal['current'] or ''\"></t>\n"
+"                                                                    <t t-"
+"if=\"line['suffix'] or line['monetary']\">\n"
+"                                                                        <t t-"
+"out=\"line['full_suffix'] or ''\"></t>\n"
+"                                                                    </t>\n"
+"                                                                </div>\n"
+"                                                            </div>\n"
+"                                                        </td>\n"
+"                                                    </t>\n"
+"                                                </tr>\n"
+"                                            </table>\n"
+"                                            </td>\n"
+"                                        </tr>\n"
+"                                    </table>\n"
+"                                </t>\n"
+"                                <!-- data table -->\n"
+"                                <table cellspacing=\"0\" cellpadding=\"0\" "
+"width=\"100%\" style=\"margin-bottom:5px\">\n"
+"                                    <tr>\n"
+"                                        <td>\n"
+"                                            <table cellspacing=\"0\" "
+"cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;margin-"
+"bottom:5px;color:#666666;\">\n"
+"                                                <thead>\n"
+"                                                    <tr "
+"style=\"color:#9A6C8E; font-size:12px;\">\n"
+"                                                        <th "
+"style=\"width:15%;text-align:center;\">ອັນດັບ</th>\n"
+"                                                        <th "
+"style=\"width:25%;text-align:left;\">ຊື່</th>\n"
+"                                                        <th "
+"style=\"width:30%;text-align:right;\">ຜົນງານ \n"
+"                                                            <t t-"
+"if=\"line['suffix']\">\n"
+"                                                                (<t t-"
+"out=\"line['suffix'] or ''\"></t>)\n"
+"                                                            </t>\n"
+"                                                            <t t-"
+"elif=\"line['monetary']\">\n"
+"                                                                (<t t-"
+"out=\"company.currency_id.symbol or ''\"></t>)\n"
+"                                                            </t>\n"
+"                                                        </th>\n"
+"                                                        <th "
+"style=\"width:30%;text-align:right;\">ຄວາມສຳເລັດ</th>\n"
+"                                                    </tr>\n"
+"                                                    <tr>\n"
+"                                                        <td colspan=\"5\" "
+"style=\"height:1px;background-color:#9A6C8E;\"></td>\n"
+"                                                    </tr>\n"
+"                                                </thead>\n"
+"                                                <tbody t-"
+"foreach=\"line['goals']\" t-as=\"goal\">\n"
+"                                                    <tr>\n"
+"                                                        <t t-"
+"set=\"tdBgColor\" t-value=\"'#fff'\"></t>\n"
+"                                                        <t t-set=\"tdColor\" "
+"t-value=\"'gray'\"></t>\n"
+"                                                        <t t-"
+"set=\"mutedColor\" t-value=\"'#AAAAAA'\"></t>\n"
+"                                                        <t t-"
+"set=\"tdPercentageColor\" t-value=\"'#9A6C8E'\"></t>\n"
+"                                                        <td width=\"15%\" "
+"align=\"center\" valign=\"middle\" t-attf-style=\"background-color:{{ "
+"tdBgColor }};padding :5px 0;font-size:20px;\"><t t-out=\"goal['rank']+1 or "
+"''\"></t>\n"
+"                                                        </td>\n"
+"                                                        <td width=\"25%\" "
+"align=\"left\" valign=\"middle\" t-attf-style=\"background-color:{{ "
+"tdBgColor }};padding :5px 0;font-size:13px;\"><t t-out=\"goal['name'] or "
+"''\"></t></td>\n"
+"                                                        <td width=\"30%\" "
+"align=\"right\" t-attf-style=\"background-color:{{ tdBgColor }};padding:5px "
+"0;line-height:1;\"><t t-out=\"&quot;%.2f&quot; % goal['current'] or ''\"></t>"
+"<br><span t-attf-style=\"font-size:13px;color:{{ mutedColor }};\">ຈາກ <t t-"
+"out=\"&quot;%.2f&quot; % line['target'] or ''\"></t></span>\n"
+"                                                        </td>\n"
+"                                                        <td width=\"30%\" t-"
+"attf-style=\"color:{{ tdPercentageColor }};background-color:{{ tdBgColor }}"
+";padding-right:15px;font-size:22px;\" align=\"right\"><strong><t t-out=\"int"
+"(goal['completeness']) or ''\"></t>%</strong></td>\n"
+"                                                    </tr>\n"
+"                                                    <tr>\n"
+"                                                        <td colspan=\"5\" "
+"style=\"height:1px;background-color:#DADADA;\"></td>\n"
+"                                                    </tr>\n"
+"                                                </tbody>\n"
+"                                            </table>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table> \n"
+"                            </t>\n"
+"                        </t>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"        </table>\n"
+"    </td>\n"
+"</tr>\n"
+"</table>"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.badge_list_action
@@ -416,6 +915,9 @@ msgid ""
 "                It can be deserved automatically when some conditions are met or manually by users.\n"
 "                Some badges are harder than others to get with specific conditions."
 msgstr ""
+"ຫຼຽນລາງວັນແມ່ນເຄື່ອງໝາຍແທນການຍ້ອງຍໍທີ່ມອບໃຫ້ຜູ້ໃຊ້ເພື່ອເປັນການໃຫ້ລາງວັນ.\n"
+"                ມັນສາມາດໄດ້ຮັບໂດຍອັດຕະໂນມັດເມື່ອບັນລຸເງື່ອນໄຂບາງຢ່າງ ຫຼື ມອບໃຫ້ໂດຍຜູ້ໃຊ້ເອງ.\n"
+"                ຫຼຽນລາງວັນບາງຢ່າງແມ່ນໄດ້ຮັບຍາກກວ່າອັນອື່ນດ້ວຍເງື່ອນໄຂສະເພາະ."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_definition_list_action
@@ -423,13 +925,15 @@ msgid ""
 "A goal definition is a technical specification of a condition to reach.\n"
 "                The dates, values to reach or users are defined in goal instance."
 msgstr ""
+"ການກຳນົດເປົ້າໝາຍແມ່ນຂໍ້ກຳນົດທາງເຕັກນິກຂອງເງື່ອນໄຂທີ່ຈະຕ້ອງບັນລຸ.\n"
+"                ວັນທີ, ຄ່າທີ່ຈະຕ້ອງບັນລຸ ຫຼື ຜູ້ໃຊ້ແມ່ນຖືກກຳນົດຢູ່ໃນຕົວຢ່າງຂອງເປົ້າໝາຍ."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__condition
 #: model:ir.model.fields,help:gamification.field_gamification_goal__definition_condition
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__condition
 msgid "A goal is considered as completed when the current value is compared to the value to reach"
-msgstr ""
+msgstr "ເປົ້າໝາຍຖືວ່າສຳເລັດເມື່ອຄ່າປັດຈຸບັນຖືກປຽບທຽບກັບຄ່າທີ່ຈະຕ້ອງບັນລຸ"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_list_action
@@ -437,6 +941,8 @@ msgid ""
 "A goal is defined by a user and a goal definition.\n"
 "                Goals can be created automatically by using challenges."
 msgstr ""
+"ເປົ້າໝາຍຖືກກຳນົດໂດຍຜູ້ໃຊ້ ແລະ ການກຳນົດເປົ້າໝາຍ.\n"
+"                ເປົ້າໝາຍສາມາດຖືກສ້າງຂຶ້ນໂດຍອັດຕະໂນມັດໂດຍການໃຊ້ການທ້າທາຍ."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_ranks_action
@@ -444,27 +950,31 @@ msgid ""
 "A rank correspond to a fixed karma level. The more you have karma, the more your rank is high.\n"
 "                    This is used to quickly know which user is new or old or highly or not active."
 msgstr ""
+"ລະດັບແມ່ນກົງກັບລະດັບຄະແນນ Karma ທີ່ກຳນົດໄວ້. ຍິ່ງເຈົ້າມີ Karma ຫຼາຍເທົ່າໃດ, ລະດັບຂອງເຈົ້າກໍຍິ່ງສູງຂຶ້"
+"ນ.\n"
+"                    ສິ່ງນີ້ຖືກໃຊ້ເພື່ອໃຫ້ຮູ້ໄດ້ໄວວ່າຜູ້ໃຊ້ຄົນໃດເປັນຄົນໃໝ່ ຫຼື ຄົນເກົ່າ ຫຼື ມີການເຄື່ອນໄຫວຫຼາ"
+"ຍໜ້ອຍພຽງໃດ."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__users
 msgid "A selected list of users"
-msgstr ""
+msgstr "ລາຍຊື່ຜູ້ໃຊ້ທີ່ຖືກເລືອກ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__action_id
 msgid "Action"
-msgstr ""
+msgstr "ການປະຕິບັດ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_needaction
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "ຕ້ອງການການປະຕິບັດ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__active
 msgid "Active"
-msgstr ""
+msgstr "ເປີດນຳໃຊ້"
 
 #. module: gamification
 #. odoo-python
@@ -472,33 +982,33 @@ msgstr ""
 #: code:addons/gamification/models/res_users.py:0
 #: code:addons/gamification/tests/test_karma_tracking.py:0
 msgid "Add Manually"
-msgstr ""
+msgstr "ເພີ່ມດ້ວຍຕົນເອງ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Advanced Options"
-msgstr ""
+msgstr "ຕົວເລືອກຂັ້ນສູງ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth
 msgid "Allowance to Grant"
-msgstr ""
+msgstr "ການອະນຸຍາດໃຫ້ມອບ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__challenge_category
 msgid "Appears in"
-msgstr ""
+msgstr "ປະກົດຢູ່ໃນ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
 msgid "Archived"
-msgstr ""
+msgstr "ເກັບໄວ້ແລ້ວ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Assign Challenge to"
-msgstr ""
+msgstr "ມອບໝາຍການທ້າທາຍໃຫ້ກັບ"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.challenge_list_action
@@ -507,37 +1017,41 @@ msgid ""
 "                The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                The goals are created for the specified users or member of the group."
 msgstr ""
+"ມອບໝາຍລາຍການເປົ້າໝາຍໃຫ້ກັບຜູ້ໃຊ້ທີ່ເລືອກເພື່ອປະເມີນພວກເຂົາ.\n"
+"                ການທ້າທາຍສາມາດໃຊ້ໄລຍະເວລາ (ລາຍອາທິດ, ລາຍເດືອນ...) ເພື່ອສ້າງເປົ້າໝາຍໂດຍ"
+"ອັດຕະໂນມັດ.\n"
+"                ເປົ້າໝາຍຖືກສ້າງຂຶ້ນສຳລັບຜູ້ໃຊ້ທີ່ລະບຸໄວ້ ຫຼື ສະມາຊິກຂອງກຸ່ມ."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_attachment_count
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "ຈຳນວນໄຟລ໌ຄັດຕິດ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth_user_ids
 msgid "Authorized Users"
-msgstr ""
+msgstr "ຜູ້ໃຊ້ທີ່ໄດ້ຮັບອະນຸຍາດ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__python
 msgid "Automatic: execute a specific Python code"
-msgstr ""
+msgstr "ອັດຕະໂນມັດ: ປະຕິບັດລະຫັດ Python ສະເພາະ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__count
 msgid "Automatic: number of records"
-msgstr ""
+msgstr "ອັດຕະໂນມັດ: ຈຳນວນບັນທຶກ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__sum
 msgid "Automatic: sum on a field"
-msgstr ""
+msgstr "ອັດຕະໂນມັດ: ຜົນລວມໃນຟິວ (field)"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_bachelor
 msgid "Bachelor"
-msgstr ""
+msgstr "ປະລິນຍາຕີ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__name
@@ -545,86 +1059,89 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__badge_id
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge"
-msgstr ""
+msgstr "ຫຼຽນລາງວັນ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Badge Description"
-msgstr ""
+msgstr "ຄຳອະທິບາຍຫຼຽນລາງວັນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__level
 msgid "Badge Level"
-msgstr ""
+msgstr "ລະດັບຫຼຽນລາງວັນ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_list_view
 msgid "Badge List"
-msgstr ""
+msgstr "ລາຍການຫຼຽນລາງວັນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__badge_name
 msgid "Badge Name"
-msgstr ""
+msgstr "ຊື່ຫຼຽນລາງວັນ"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.badge_list_action
 #: model:ir.model.fields,field_description:gamification.field_res_users__badge_ids
 #: model:ir.ui.menu,name:gamification.gamification_badge_menu
 msgid "Badges"
-msgstr ""
+msgstr "ຫຼຽນລາງວັນ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Badges are granted when a challenge is finished. This is either at the end of a running period (eg: end of the month for a monthly challenge), at the end date of a challenge (if no periodicity is set) or when the challenge is manually closed."
 msgstr ""
+"ຫຼຽນລາງວັນຈະຖືກມອບໃຫ້ເມື່ອການທ້າທາຍສິ້ນສຸດລົງ. ສິ່ງນີ້ອາດຈະເປັນຕອນທ້າຍຂອງໄລຍະເວລາ (ເຊັ່ນ: ທ້າຍເດືອ"
+"ນສຳລັບການທ້າທາຍລາຍເດືອນ), ໃນວັນທີສິ້ນສຸດຂອງການທ້າທາຍ (ຖ້າບໍ່ມີການກຳນົດໄລຍະເວລາ) ຫຼື ເມື່ອການທ້າທ"
+"າຍຖືກປິດດ້ວຍຕົນເອງ."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
 msgid "Batch Mode"
-msgstr ""
+msgstr "ໂໝດກຸ່ມ (Batch Mode)"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_idea
 msgid "Brilliant"
-msgstr ""
+msgstr "ດີເລີດ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__level__bronze
 msgid "Bronze"
-msgstr ""
+msgstr "ທອງແດງ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__bronze_badge
 msgid "Bronze badges count"
-msgstr ""
+msgstr "ຈຳນວນຫຼຽນທອງແດງ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Can not grant"
-msgstr ""
+msgstr "ບໍ່ສາມາດມອບໃຫ້ໄດ້"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_goal.py:0
 msgid "Can not modify the configuration of a started goal"
-msgstr ""
+msgstr "ບໍ່ສາມາດແກ້ໄຂການຕັ້ງຄ່າຂອງເປົ້າໝາຍທີ່ເລີ່ມຕົ້ນໄປແລ້ວ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Cancel"
-msgstr "ຍົກເລີອກ"
+msgstr "ຍົກເລີກ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__canceled
 msgid "Canceled"
-msgstr ""
+msgstr "ຍົກເລີກແລ້ວ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Category"
-msgstr ""
+msgstr "ໝວດໝູ່"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__challenge_id
@@ -632,27 +1149,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__challenge_id
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Challenge"
-msgstr ""
+msgstr "ການທ້າທາຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__line_id
 msgid "Challenge Line"
-msgstr ""
+msgstr "ລາຍການການທ້າທາຍ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_line_list_view
 msgid "Challenge Lines"
-msgstr ""
+msgstr "ລາຍການການທ້າທາຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__name
 msgid "Challenge Name"
-msgstr ""
+msgstr "ຊື່ການທ້າທາຍ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__challenge_id
 msgid "Challenge that generated the goal, assign challenge to users to generate goals with a value in this field."
 msgstr ""
+"ການທ້າທາຍທີ່ສ້າງເປົ້າໝາຍນີ້, ມອບໝາຍການທ້າທາຍໃຫ້ກັບຜູ້ໃຊ້ເພື່ອສ້າງເປົ້າໝາຍທີ່ມີຄ່າໃນຟິວນີ້."
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
@@ -660,97 +1178,100 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_list_view
 #: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Challenges"
-msgstr ""
+msgstr "ການທ້າທາຍ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max
 msgid "Check to set a monthly limit per person of sending this badge"
-msgstr ""
+msgstr "ໝາຍເລືອກເພື່ອຕັ້ງຂີດຈຳກັດລາຍເດືອນຕໍ່ຄົນໃນການສົ່ງຫຼຽນລາງວັນນີ້"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Clickable Goals"
-msgstr ""
+msgstr "ເປົ້າໝາຍທີ່ຄລິກໄດ້"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__closed
 msgid "Closed goal"
-msgstr ""
+msgstr "ເປົ້າໝາຍທີ່ປິດແລ້ວ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__comment
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard__comment
 msgid "Comment"
-msgstr ""
+msgstr "ຄຳຄິດເຫັນ"
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_discover
 msgid "Complete your Profile"
-msgstr ""
+msgstr "ເຮັດໂປຣໄຟລ໌ຂອງທ່ານໃຫ້ສົມບູນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__completeness
 msgid "Completeness"
-msgstr ""
+msgstr "ຄວາມສຳເລັດ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__computation_mode
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__computation_mode
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Computation Mode"
-msgstr ""
+msgstr "ໂໝດການຄຳນວນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__condition
 msgid "Condition"
-msgstr ""
+msgstr "ເງື່ອນໄຂ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__consolidated
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Consolidated"
-msgstr ""
+msgstr "ລວມເຂົ້າກັນແລ້ວ"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_karma_tracking.py:0
 msgid "Consolidation from %s to %s"
-msgstr ""
+msgstr "ການລວມເຂົ້າກັນຈາກ %s ເຖິງ %s"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
 msgid "Create User"
-msgstr ""
+msgstr "ສ້າງຜູ້ໃຊ້"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.badge_list_action
 msgid "Create a new badge"
-msgstr ""
+msgstr "ສ້າງຫຼຽນລາງວັນໃໝ່"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.challenge_list_action
 msgid "Create a new challenge"
-msgstr ""
+msgstr "ສ້າງການທ້າທາຍໃໝ່"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_list_action
 msgid "Create a new goal"
-msgstr ""
+msgstr "ສ້າງເປົ້າໝາຍໃໝ່"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_definition_list_action
 msgid "Create a new goal definition"
-msgstr ""
+msgstr "ສ້າງການກຳນົດເປົ້າໝາຍໃໝ່"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_ranks_action
 msgid "Create a new rank"
-msgstr ""
+msgstr "ສ້າງລະດັບໃໝ່"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.action_new_simplified_res_users
 msgid "Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system."
 msgstr ""
+"ສ້າງ ແລະ ຈັດການຜູ້ໃຊ້ທີ່ຈະເຊື່ອມຕໍ່ກັບລະບົບ. ຜູ້ໃຊ້ສາມາດຖືກປິດການໃຊ້ງານໄດ້ຫາກມີໄລຍະເວລາທີ່ພວກເຂົາບໍ່ຄວນ"
+"ເຊື່ອມຕໍ່ກັບລະບົບ. ທ່ານສາມາດມອບໝາຍກຸ່ມໃຫ້ພວກເຂົາເພື່ອໃຫ້ສິດການເຂົ້າເຖິງແອັບພລິເຄຊັນທີ່ພວກເຂົາຕ້ອງໃຊ້ໃນລ"
+"ະບົບ."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__create_uid
@@ -764,7 +1285,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__create_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__create_date
@@ -778,74 +1299,75 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__create_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__current
 msgid "Current"
-msgstr ""
+msgstr "ປັດຈຸບັນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__current
 msgid "Current Value"
-msgstr ""
+msgstr "ຄ່າປັດຈຸບັນ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__daily
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__daily
 msgid "Daily"
-msgstr ""
+msgstr "ລາຍວັນ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Data"
-msgstr ""
+msgstr "ຂໍ້ມູນ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Date"
-msgstr ""
+msgstr "ວັນທີ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_date_id
 msgid "Date Field"
-msgstr ""
+msgstr "ຟິວວັນທີ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__computation_mode
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__computation_mode
 msgid "Define how the goals will be computed. The result of the operation will be stored in the field 'Current'."
-msgstr ""
+msgstr "ກຳນົດວິທີການຄຳນວນເປົ້າໝາຍ. ຜົນໄດ້ຮັບຈະຖືກເກັບໄວ້ໃນຟິວ 'ປັດຈຸບັນ'."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__challenge_category
 msgid "Define the visibility of the challenge through menus"
-msgstr ""
+msgstr "ກຳນົດການເບິ່ງເຫັນຂອງການທ້າທາຍຜ່ານເມນູ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_condition
 msgid "Definition Condition"
-msgstr ""
+msgstr "ເງື່ອນໄຂການກຳນົດ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_description
 msgid "Definition Description"
-msgstr ""
+msgstr "ຄຳອະທິບາຍການກຳນົດ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Depending on the Display mode, reports will be individual or shared."
-msgstr ""
+msgstr "ຂຶ້ນຢູ່ກັບໂໝດການສະແດງຜົນ, ລາຍງານຈະເປັນແບບສ່ວນຕົວ ຫຼື ແບບແບ່ງປັນ."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Describe the challenge: what is does, who it targets, why it matters..."
-msgstr ""
+msgstr "ອະທິບາຍການທ້າທາຍ: ມັນເຮັດຫຍັງ, ເປົ້າໝາຍແມ່ນໃຜ, ເປັນຫຍັງມັນຈຶ່ງສຳຄັນ..."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Describe what they did and why it matters (will be public)"
 msgstr ""
+"ອະທິບາຍສິ່ງທີ່ພວກເຂົາເຮັດ ແລະ ເປັນຫຍັງມັນຈຶ່ງສຳຄັນ (ຈະຖືກເຜີຍແຜ່ເປັນສາທາລະນະ)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__description
@@ -860,7 +1382,7 @@ msgstr "ຄຳອະທິບາຍ"
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__visibility_mode
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_display
 msgid "Display Mode"
-msgstr ""
+msgstr "ໂໝດການສະແດງຜົນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__display_name
@@ -874,225 +1396,227 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__display_name
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ທີ່ສະແດງ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__display_mode
 msgid "Displayed as"
-msgstr ""
+msgstr "ສະແດງເປັນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_distinctive_field
 msgid "Distinctive field for batch user"
-msgstr ""
+msgstr "ຟິວທີ່ແຕກຕ່າງສຳລັບຜູ້ໃຊ້ແບບກຸ່ມ"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_doctor
 msgid "Doctor"
-msgstr ""
+msgstr "ດອກເຕີ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__domain
 msgid "Domain for filtering records. General rule, not user depending, e.g. [('state', '=', 'done')]. The expression can contain reference to 'user' which is a browse record of the current user if not in batch mode."
 msgstr ""
+"ໂດເມນສຳລັບການກັ່ນຕອງບັນທຶກ. ກົດເກົ່ວໄປ, ບໍ່ຂຶ້ນກັບຜູ້ໃຊ້, ເຊັ່ນ [('state', '=', 'done')]. ນິພົດສາ"
+"ມາດມີການອ້າງອີງເຖິງ 'user' ເຊິ່ງເປັນການເບິ່ງບັນທຶກຂອງຜູ້ໃຊ້ປັດຈຸບັນຫາກບໍ່ໄດ້ຢູ່ໃນໂໝດກຸ່ມ."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__done
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Done"
-msgstr ""
+msgstr "ສຳເລັດແລ້ວ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__draft
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__draft
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Draft"
-msgstr ""
+msgstr "ຮ່າງ"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_newbie
 msgid "Earn your first points and join the adventure!"
-msgstr ""
+msgstr "ສະສົມຄະແນນທຳອິດຂອງທ່ານ ແລະ ເຂົ້າຮ່ວມການຜະຈົນໄພ!"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__end_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__end_date
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "End Date"
-msgstr ""
+msgstr "ວັນທີສິ້ນສຸດ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_mode
 msgid "Evaluate the expression in batch instead of once for each user"
-msgstr ""
+msgstr "ປະເມີນນິພົດແບບເປັນກຸ່ມ ແທນທີ່ຈະປະເມີນເທື່ອລະຄົນສຳລັບຜູ້ໃຊ້ແຕ່ລະຄົນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_user_expression
 msgid "Evaluated expression for batch mode"
-msgstr ""
+msgstr "ນິພົດທີ່ຖືກປະເມີນສຳລັບໂໝດກຸ່ມ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__everyone
 msgid "Everyone"
-msgstr ""
+msgstr "ທຸກຄົນ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__display_mode__boolean
 msgid "Exclusive (done or not-done)"
-msgstr ""
+msgstr "ສະເພາະ (ສຳເລັດ ຫຼື ບໍ່ສຳເລັດ)"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__failed
 msgid "Failed"
-msgstr ""
+msgstr "ບໍ່ສຳເລັດ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_id
 msgid "Field to Sum"
-msgstr ""
+msgstr "ຟິວທີ່ຈະລວມ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__domain
 msgid "Filter Domain"
-msgstr ""
+msgstr "ໂດເມນການກັ່ນຕອງ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_follower_ids
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "ຜູ້ຕິດຕາມ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_partner_ids
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "ຜູ້ຕິດຕາມ (ຄູ່ຄ້າ)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_first_id
 msgid "For 1st user"
-msgstr ""
+msgstr "ສຳລັບຜູ້ໃຊ້ທີ 1"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_second_id
 msgid "For 2nd user"
-msgstr ""
+msgstr "ສຳລັບຜູ້ໃຊ້ທີ 2"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_third_id
 msgid "For 3rd user"
-msgstr ""
+msgstr "ສຳລັບຜູ້ໃຊ້ທີ 3"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_id
 msgid "For Every Succeeding User"
-msgstr ""
+msgstr "ສຳລັບຜູ້ໃຊ້ທຸກຄົນທີ່ເຮັດໄດ້ສຳເລັດ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Formatting Options"
-msgstr ""
+msgstr "ຕົວເລືອກການຈັດຮູບແບບ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__level
 msgid "Forum Badge Level"
-msgstr ""
+msgstr "ລະດັບຫຼຽນລາງວັນຟໍຣຳ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "From"
-msgstr ""
+msgstr "ຈາກ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__full_suffix
 msgid "Full Suffix"
-msgstr ""
+msgstr "ຄຳຕໍ່ທ້າຍແບບເຕັມ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__gain
 msgid "Gain"
-msgstr ""
+msgstr "ໄດ້ຮັບ"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
 msgid "Gamification Badge"
-msgstr ""
+msgstr "ຫຼຽນລາງວັນ Gamification"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge
 msgid "Gamification Challenge"
-msgstr ""
+msgstr "ການທ້າທາຍ Gamification"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal
 msgid "Gamification Goal"
-msgstr ""
+msgstr "ເປົ້າໝາຍ Gamification"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_definition
 msgid "Gamification Goal Definition"
-msgstr ""
+msgstr "ການກຳນົດເປົ້າໝາຍ Gamification"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_wizard
 msgid "Gamification Goal Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍສ້າງເປົ້າໝາຍ Gamification"
 
 #. module: gamification
 #: model:ir.ui.menu,name:gamification.gamification_menu
 msgid "Gamification Tools"
-msgstr ""
+msgstr "ເຄື່ອງມື Gamification"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr ""
+msgstr "ຫຼຽນລາງວັນຜູ້ໃຊ້ Gamification"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user_wizard
 msgid "Gamification User Badge Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍສ້າງຫຼຽນລາງວັນຜູ້ໃຊ້ Gamification"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
 msgid "Gamification generic goal for challenge"
-msgstr ""
+msgstr "ເປົ້າໝາຍທົ່ວໄປຂອງ Gamification ສຳລັບການທ້າທາຍ"
 
 #. module: gamification
 #: model:mail.template,name:gamification.email_template_badge_received
 msgid "Gamification: Badge Received"
-msgstr ""
+msgstr "Gamification: ໄດ້ຮັບຫຼຽນລາງວັນແລ້ວ"
 
 #. module: gamification
 #: model:mail.template,name:gamification.simple_report_template
 msgid "Gamification: Challenge Report"
-msgstr ""
+msgstr "Gamification: ລາຍງານການທ້າທາຍ"
 
 #. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_check_challenge_ir_actions_server
 msgid "Gamification: Goal Challenge Check"
-msgstr ""
+msgstr "Gamification: ກວດສອບເປົ້າໝາຍການທ້າທາຍ"
 
 #. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_consolidate_ir_actions_server
 msgid "Gamification: Karma tracking consolidation"
-msgstr ""
+msgstr "Gamification: ການລວມການຕິດຕາມ Karma"
 
 #. module: gamification
 #: model:mail.template,name:gamification.mail_template_data_new_rank_reached
 msgid "Gamification: New Rank Reached"
-msgstr ""
+msgstr "Gamification: ບັນລຸລະດັບໃໝ່ແລ້ວ"
 
 #. module: gamification
 #: model:mail.template,name:gamification.email_template_goal_reminder
 msgid "Gamification: Reminder For Goal Update"
-msgstr ""
+msgstr "Gamification: ການແຈ້ງເຕືອນໃຫ້ອັບເດດເປົ້າໝາຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Goal"
-msgstr ""
+msgstr "ເປົ້າໝາຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_id
@@ -1100,44 +1624,44 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__name
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Goal Definition"
-msgstr ""
+msgstr "ການກຳນົດເປົ້າໝາຍ"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goal_definition_list_action
 #: model:ir.ui.menu,name:gamification.gamification_definition_menu
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_list_view
 msgid "Goal Definitions"
-msgstr ""
+msgstr "ການກຳນົດເປົ້າໝາຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__description
 msgid "Goal Description"
-msgstr ""
+msgstr "ຄຳອະທິບາຍເປົ້າໝາຍ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Goal Failed"
-msgstr ""
+msgstr "ເປົ້າໝາຍບໍ່ສຳເລັດ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_list_view
 msgid "Goal List"
-msgstr ""
+msgstr "ລາຍການເປົ້າໝາຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__condition
 msgid "Goal Performance"
-msgstr ""
+msgstr "ຜົນງານເປົ້າໝາຍ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Goal Reached"
-msgstr ""
+msgstr "ບັນລຸເປົ້າໝາຍແລ້ວ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Goal definitions"
-msgstr ""
+msgstr "ການກຳນົດເປົ້າໝາຍ"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goal_list_action
@@ -1145,59 +1669,59 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Goals"
-msgstr ""
+msgstr "ເປົ້າໝາຍ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__level__gold
 msgid "Gold"
-msgstr ""
+msgstr "ຄຳ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__gold_badge
 msgid "Gold badges count"
-msgstr ""
+msgstr "ຈຳນວນຫຼຽນຄຳ"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_good_job
 msgid "Good Job"
-msgstr ""
+msgstr "ເຮັດໄດ້ດີຫຼາຍ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Grant"
-msgstr ""
+msgstr "ມອບໃຫ້"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_grant_wizard
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Grant Badge"
-msgstr ""
+msgstr "ມອບຫຼຽນລາງວັນ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Grant Badge To"
-msgstr ""
+msgstr "ມອບຫຼຽນລາງວັນໃຫ້ກັບ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Grant this Badge"
-msgstr ""
+msgstr "ມອບຫຼຽນລາງວັນນີ້"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Granted By"
-msgstr ""
+msgstr "ມອບໂດຍ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_user_kanban_view
 msgid "Granted by"
-msgstr ""
+msgstr "ມອບໂດຍ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Granting"
-msgstr ""
+msgstr "ກຳລັງມອບໃຫ້"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -1205,38 +1729,38 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Group By"
-msgstr ""
+msgstr "ຈັດກຸ່ມໂດຍ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__report_message_group_id
 msgid "Group that will receive a copy of the report in addition to the user"
-msgstr ""
+msgstr "ກຸ່ມທີ່ຈະໄດ້ຮັບສຳເນົາຂອງລາຍງານນອກເໜືອຈາກຜູ້ໃຊ້"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "HR Challenges"
-msgstr ""
+msgstr "ການທ້າທາຍຂອງ HR"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__has_message
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "ມີຂໍ້ຄວາມ"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_hidden
 msgid "Hidden"
-msgstr ""
+msgstr "ເຊື່ອງໄວ້"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "How is the goal computed?"
-msgstr ""
+msgstr "ເປົ້າໝາຍຖືກຄຳນວນແນວໃດ?"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__challenge_category__hr
 msgid "Human Resources / Engagement"
-msgstr ""
+msgstr "ຊັບພະຍາກອນມະນຸດ / ການມີສ່ວນຮ່ວມ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__id
@@ -1250,145 +1774,151 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__id
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__id
 msgid "ID"
-msgstr ""
+msgstr "ລະຫັດ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__res_id_field
 msgid "ID Field of user"
-msgstr ""
+msgstr "ຟິວລະຫັດ (ID) ຂອງຜູ້ໃຊ້"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__remaining_sending
 msgid "If a maximum is set"
-msgstr ""
+msgstr "ຫາກມີການຕັ້ງຄ່າສູງສຸດໄວ້"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "ຫາກໝາຍເລືອກ, ຂໍ້ຄວາມໃໝ່ຈະຕ້ອງການຄວາມສົນໃຈຈາກທ່ານ."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "ຫາກໝາຍເລືອກ, ຂໍ້ຄວາມບາງສະບັບມີຂໍ້ຜິດພາດໃນການສົ່ງ."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1920
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_1920
 msgid "Image"
-msgstr ""
+msgstr "ຮູບພາບ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1024
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "ຮູບພາບ 1024"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_128
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "ຮູບພາບ 128"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_256
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "ຮູບພາບ 256"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_512
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "ຮູບພາບ 512"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__inprogress
 msgid "In Progress"
-msgstr ""
+msgstr "ກຳລັງດຳເນີນການ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "In batch mode, the domain is evaluated globally. If enabled, do not use keyword 'user' in above filter domain."
 msgstr ""
+"ໃນໂໝດກຸ່ມ, ໂດເມນຈະຖືກປະເມີນໃນລະດັບສາກົນ. ຫາກເປີດນຳໃຊ້, ຫ້າມໃຊ້ຄຳສັບ 'user' ໃນໂດເມນການກັ່ນຕ"
+"ອງຂ້າງເທິງ."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_distinctive_field
 msgid "In batch mode, this indicates which field distinguishes one user from the other, e.g. user_id, partner_id..."
 msgstr ""
+"ໃນໂໝດກຸ່ມ, ສິ່ງນີ້ລະບຸວ່າຟິວໃດທີ່ໃຊ້ແຍກຜູ້ໃຊ້ຄົນໜຶ່ງອອກຈາກອີກຄົນໜຶ່ງ, ເຊັ່ນ user_id, partner_id..."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__last_update
 msgid "In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in challenge). Ignored in case of non-manual goal or goal not linked to a challenge."
 msgstr ""
+"ໃນກໍລະນີຂອງເປົ້າໝາຍທີ່ຈັດການດ້ວຍຕົນເອງ, ການແຈ້ງເຕືອນຈະຖືກສົ່ງໄປຫາກເປົ້າໝາຍບໍ່ໄດ້ຖືກອັບເດດມາໄລຍະໜຶ່ງ "
+"(ຕາມທີ່ກຳນົດໃນການທ້າທາຍ). ຈະຖືກລະເວັ້ນໃນກໍລະນີທີ່ບໍ່ແມ່ນເປົ້າໝາຍແບບຈັດການດ້ວຍຕົນເອງ ຫຼື ເປົ້າໝາຍທີ່ບໍ່ໄດ້"
+"ເຊື່ອມໂຍງກັບການທ້າທາຍ."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__inprogress
 msgid "In progress"
-msgstr ""
+msgstr "ກຳລັງດຳເນີນການ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__visibility_mode__personal
 msgid "Individual Goals"
-msgstr ""
+msgstr "ເປົ້າໝາຍສ່ວນຕົວ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__model_inherited_ids
 msgid "Inherited models"
-msgstr ""
+msgstr "ໂມເດວທີ່ສືບທອດມາ"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_base_invite
 msgid "Invite new Users"
-msgstr ""
+msgstr "ເຊີນຜູ້ໃຊ້ໃໝ່"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_is_follower
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "ແມ່ນຜູ້ຕິດຕາມ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma
 #: model_terms:ir.ui.view,arch_db:gamification.res_users_view_form
 msgid "Karma"
-msgstr ""
+msgstr "ຄະແນນ Karma"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma_tracking_ids
 msgid "Karma Changes"
-msgstr ""
+msgstr "ການປ່ຽນແປງຄະແນນຄຳມາ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Karma Owner"
-msgstr ""
+msgstr "ເຈົ້າຂອງຄະແນນຄຳມາ"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.gamification_karma_tracking_action
 #: model:ir.ui.menu,name:gamification.gamification_karma_tracking_menu
 msgid "Karma Tracking"
-msgstr ""
+msgstr "ການຕິດຕາມຄະແນນຄຳມາ"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/res_users.py:0
 msgid "Karma Updates"
-msgstr ""
+msgstr "ການອັບເດດຄະແນນຄຳມາ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__last_report_date
 msgid "Last Report Date"
-msgstr ""
+msgstr "ວັນທີລາຍງານລ່າສຸດ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__last_update
 msgid "Last Update"
-msgstr ""
+msgstr "ອັບເດດລ່າສຸດ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__write_uid
@@ -1402,7 +1932,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__write_uid
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ອັບເດດລ່າສຸດໂດຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__write_date
@@ -1416,667 +1946,673 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__write_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ອັບເດດລ່າສຸດເມື່ອ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__visibility_mode__ranking
 msgid "Leader Board (Group Ranking)"
-msgstr ""
+msgstr "ກະດານຜູ້ນຳ (ຈັດອັນດັບກຸ່ມ)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_max_number
 msgid "Limitation Number"
-msgstr ""
+msgstr "ຈຳນວນຈຳກັດ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Line List"
-msgstr ""
+msgstr "ລາຍການແຖວ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__line_ids
 msgid "Lines"
-msgstr ""
+msgstr "ແຖວ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__line_ids
 msgid "List of goals that will be set"
-msgstr ""
+msgstr "ລາຍຊື່ເປົ້າໝາຍທີ່ຈະຖືກກຳນົດ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Manual"
-msgstr ""
+msgstr "ຈັດການເອງ"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_master
 msgid "Master"
-msgstr ""
+msgstr "ຜູ້ຊ່ຽວຊານ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດໃນການສົ່ງຂໍ້ຄວາມ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_ids
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "ຂໍ້ຄວາມ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__model_id
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Model"
-msgstr ""
+msgstr "ແບບຈຳລອງ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_monetary
 msgid "Monetary"
-msgstr ""
+msgstr "ກ່ຽວກັບເງິນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__monetary
 msgid "Monetary Value"
-msgstr ""
+msgstr "ມູນຄ່າເປັນເງິນ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__monthly
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__monthly
 msgid "Monthly"
-msgstr ""
+msgstr "ລາຍເດືອນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_max
 msgid "Monthly Limited Sending"
-msgstr ""
+msgstr "ການສົ່ງແບບຈຳກັດລາຍເດືອນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_this_month
 msgid "Monthly total"
-msgstr ""
+msgstr "ຍອດລວມລາຍເດືອນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__description_motivational
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "Motivational"
-msgstr ""
+msgstr "ການສ້າງແຮງຈູງໃຈ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_karma_rank__description_motivational
 msgid "Motivational phrase to reach this rank on your profile page"
-msgstr ""
+msgstr "ວະລີສ້າງແຮງຈູງໃຈເພື່ອບັນລຸອັນດັບນີ້ໃນໜ້າໂປຣໄຟລ໌ຂອງທ່ານ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "My Goals"
-msgstr ""
+msgstr "ເປົ້າໝາຍຂອງຂ້ອຍ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "My Karma"
-msgstr ""
+msgstr "ຄະແນນຄຳມາຂອງຂ້ອຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my_monthly_sending
 msgid "My Monthly Sending Total"
-msgstr ""
+msgstr "ຍອດລວມການສົ່ງລາຍເດືອນຂອງຂ້ອຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my_this_month
 msgid "My Monthly Total"
-msgstr ""
+msgstr "ຍອດລວມລາຍເດືອນຂອງຂ້ອຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my
 msgid "My Total"
-msgstr ""
+msgstr "ຍອດລວມຂອງຂ້ອຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__name
 msgid "Name"
-msgstr ""
+msgstr "ຊື່"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__never
 msgid "Never"
-msgstr ""
+msgstr "ບໍ່ເຄີຍ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__remind_update_delay
 msgid "Never reminded if no value or zero is specified."
-msgstr ""
+msgstr "ຈະບໍ່ມີການແຈ້ງເຕືອນຖ້າບໍ່ໄດ້ກຳນົດຄ່າ ຫຼື ກຳນົດເປັນສູນ."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__new_value
 msgid "New Karma Value"
-msgstr ""
+msgstr "ຄ່າຄະແນນຄຳມາໃໝ່"
 
 #. module: gamification
 #: model:mail.template,subject:gamification.email_template_badge_received
 msgid "New badge {{ object.badge_id.name }} granted"
-msgstr ""
+msgstr "ໄດ້ຮັບຫຼຽນໃໝ່ {{ object.badge_id.name }}"
 
 #. module: gamification
 #: model:mail.template,subject:gamification.mail_template_data_new_rank_reached
 msgid "New rank: {{ object.rank_id.name }}"
-msgstr ""
+msgstr "ອັນດັບໃໝ່: {{ object.rank_id.name }}"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_newbie
 msgid "Newbie"
-msgstr ""
+msgstr "ມືໃໝ່"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__next_rank_id
 msgid "Next Rank"
-msgstr ""
+msgstr "ອັນດັບຖັດໄປ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__next_report_date
 msgid "Next Report Date"
-msgstr ""
+msgstr "ວັນທີລາຍງານຖັດໄປ"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_tracking_action
 msgid "No Karma Tracking"
-msgstr ""
+msgstr "ບໍ່ມີການຕິດຕາມຄະແນນຄຳມາ"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
 msgid "No goal found"
-msgstr ""
+msgstr "ບໍ່ພົບເປົ້າໝາຍ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "No monthly sending limit"
-msgstr ""
+msgstr "ບໍ່ມີຂີດຈຳກັດການສົ່ງລາຍເດືອນ"
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_problem_solver
 msgid "No one can solve challenges like you do."
-msgstr ""
+msgstr "ບໍ່ມີໃຜສາມາດແກ້ໄຂສິ່ງທ້າທາຍໄດ້ຄືກັນກັບເຈົ້າ."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__nobody
 msgid "No one, assigned through challenges"
-msgstr ""
+msgstr "ບໍ່ມີໃຜ, ມອບໝາຍຜ່ານສິ່ງທ້າທາຍ"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "Nobody has succeeded to reach every goal, no badge is rewarded for this challenge."
-msgstr ""
+msgstr "ບໍ່ມີໃຜບັນລຸທຸກເປົ້າໝາຍ, ຈຶ່ງບໍ່ມີການໃຫ້ຫຼຽນສຳລັບສິ່ງທ້າທາຍນີ້."
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "Nobody reached the required conditions to receive special badges."
-msgstr ""
+msgstr "ບໍ່ມີໃຜບັນລຸເງື່ອນໄຂທີ່ກຳນົດໄວ້ເພື່ອຮັບຫຼຽນພິເສດ."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__once
 msgid "Non recurring"
-msgstr ""
+msgstr "ບໍ່ເກີດຂຶ້ນຊ້ຳ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__remind_update_delay
 msgid "Non-updated manual goals will be reminded after"
-msgstr ""
+msgstr "ເປົ້າໝາຍທີ່ຈັດການເອງແລະບໍ່ໄດ້ອັບເດດຈະຖືກແຈ້ງເຕືອນຫຼັງຈາກ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Notification Messages"
-msgstr ""
+msgstr "ຂໍ້ຄວາມແຈ້ງເຕືອນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_needaction_counter
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "ຈຳນວນການດຳເນີນການ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error_counter
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຜິດພາດ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction_counter
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ຕ້ອງການການດຳເນີນການ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error_counter
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ມີຂໍ້ຜິດພາດໃນການສົ່ງ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__granted_users_count
 msgid "Number of users"
-msgstr ""
+msgstr "ຈຳນວນຜູ້ໃຊ້"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__old_value
 msgid "Old Karma Value"
-msgstr ""
+msgstr "ຄ່າຄະແນນຄຳມາເກົ່າ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__onchange
 msgid "On change"
-msgstr ""
+msgstr "ເມື່ອມີການປ່ຽນແປງ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Only the people having these badges can give this badge"
-msgstr ""
+msgstr "ສະເພາະຜູ້ທີ່ມີຫຼຽນເຫຼົ່ານີ້ເທົ່ານັ້ນທີ່ສາມາດໃຫ້ຫຼຽນນີ້ໄດ້"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth_user_ids
 msgid "Only these people can give this badge"
-msgstr ""
+msgstr "ສະເພາະບຸກຄົນເຫຼົ່ານີ້ເທົ່ານັ້ນທີ່ສາມາດໃຫ້ຫຼຽນນີ້ໄດ້"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Optimisation"
-msgstr ""
+msgstr "ການປັບໃຫ້ເໝາະສົມ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Owner"
-msgstr ""
+msgstr "ເຈົ້າຂອງ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__owner_ids
 msgid "Owners"
-msgstr ""
+msgstr "ເຈົ້າຂອງ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_ids
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Participants"
-msgstr ""
+msgstr "ຜູ້ເຂົ້າຮ່ວມ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__having
 msgid "People having some badges"
-msgstr ""
+msgstr "ບຸກຄົນທີ່ມີຫຼຽນບາງອັນ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Period"
-msgstr ""
+msgstr "ໄລຍະເວລາ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__period
 msgid "Period of automatic goal assignment. If none is selected, should be launched manually."
 msgstr ""
+"ໄລຍະເວລາຂອງການມອບໝາຍເປົ້າໝາຍອັດຕະໂນມັດ. ຖ້າບໍ່ເລືອກ, ຈະຕ້ອງດຳເນີນການດ້ວຍຕົນເອງ."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__period
 msgid "Periodicity"
-msgstr ""
+msgstr "ຄວາມຖີ່"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Previous Total"
-msgstr ""
+msgstr "ຍອດລວມກ່ອນໜ້າ"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_problem_solver
 msgid "Problem Solver"
-msgstr ""
+msgstr "ນັກແກ້ໄຂບັນຫາ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__display_mode__progress
 msgid "Progressive (using numerical values)"
-msgstr ""
+msgstr "ແບບຕໍ່ເນື່ອງ (ໃຊ້ຄ່າຕົວເລກ)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__compute_code
 msgid "Python Code"
-msgstr ""
+msgstr "ລະຫັດ Python"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__compute_code
 msgid "Python code to be executed for each user. 'result' should contains the new current value. Evaluated user can be access through object.user_id."
 msgstr ""
+"ລະຫັດ Python ທີ່ຈະຖືກປະຕິບັດສໍາລັບຜູ້ໃຊ້ແຕ່ລະຄົນ. 'result' ຄວນປະກອບມີຄ່າປັດຈຸບັນໃໝ່. ຜູ້ໃຊ້ທີ່ຖືກປະເມີນ"
+"ສາມາດເຂົ້າເຖິງໄດ້ຜ່ານ object.user_id."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__rank_id
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "Rank"
-msgstr ""
+msgstr "ອັນດັບ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__name
 msgid "Rank Name"
-msgstr ""
+msgstr "ຊື່ອັນດັບ"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_karma_rank
 msgid "Rank based on karma"
-msgstr ""
+msgstr "ອັນດັບໂດຍອີງໃສ່ຄະແນນຄຳມາ"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.gamification_karma_ranks_action
 #: model:ir.ui.menu,name:gamification.gamification_karma_ranks_menu
 msgid "Ranks"
-msgstr ""
+msgstr "ອັນດັບທັງໝົດ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_ranks_view_tree
 msgid "Ranks List"
-msgstr ""
+msgstr "ລາຍການອັນດັບ"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
 msgid "Reach the next rank and gain a very magic wand!"
-msgstr ""
+msgstr "ບັນລຸອັນດັບຖັດໄປ ແລະ ຮັບໄມ້ກາຍະສິດສຸດວິເສດ!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
 msgid "Reach the next rank and gain a very nice hat!"
-msgstr ""
+msgstr "ບັນລຸອັນດັບຖັດໄປ ແລະ ຮັບໝວກສຸດງາມ!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
 msgid "Reach the next rank and gain a very nice mug!"
-msgstr ""
+msgstr "ບັນລຸອັນດັບຖັດໄປ ແລະ ຮັບຈອກສຸດເທ້!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
 msgid "Reach the next rank and gain a very nice unicorn!"
-msgstr ""
+msgstr "ບັນລຸອັນດັບຖັດໄປ ແລະ ຮັບຢູນີຄອນສຸດວິເສດ!"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__reached
 msgid "Reached"
-msgstr ""
+msgstr "ບັນລຸແລ້ວ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reached when current value is"
-msgstr ""
+msgstr "ບັນລຸເມື່ອຄ່າປັດຈຸບັນຄື"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__computation_mode__manually
 msgid "Recorded manually"
-msgstr ""
+msgstr "ບັນທຶກດ້ວຍຕົນເອງ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reference"
-msgstr ""
+msgstr "ອ້າງອີງ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Refresh Challenge"
-msgstr ""
+msgstr "ໂຫຼດສິ່ງທ້າທາຍໃໝ່"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goals_from_challenge_act
 msgid "Related Goals"
-msgstr ""
+msgstr "ເປົ້າໝາຍທີ່ກ່ຽວຂ້ອງ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_wizard__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr ""
+msgstr "ຊື່ຜູ້ໃຊ້ທີ່ກ່ຽວຂ້ອງສຳລັບຊັບພະຍາກອນເພື່ອຈັດການການເຂົ້າເຖິງ."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__remaining_sending
 msgid "Remaining Sending Allowed"
-msgstr ""
+msgstr "ຈຳນວນທີ່ອະນຸຍາດໃຫ້ສົ່ງທີ່ເຫຼືອ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__remind_update_delay
 msgid "Remind delay"
-msgstr ""
+msgstr "ໄລຍະເວລາການແຈ້ງເຕືອນ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Reminders for Manual Goals"
-msgstr ""
+msgstr "ການແຈ້ງເຕືອນສຳລັບເປົ້າໝາຍທີ່ຈັດການເອງ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_message_frequency
 msgid "Report Frequency"
-msgstr ""
+msgstr "ຄວາມຖີ່ຂອງລາຍງານ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_template_id
 msgid "Report Template"
-msgstr ""
+msgstr "ແບບຟອມລາຍງານ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth_badge_ids
 msgid "Required Badges"
-msgstr ""
+msgstr "ຫຼຽນທີ່ຈຳເປັນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__karma_min
 msgid "Required Karma"
-msgstr ""
+msgstr "ຄະແນນຄຳມາທີ່ຕ້ອງການ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reset Completion"
-msgstr ""
+msgstr "ລຶບລ້າງການເຮັດສຳເລັດ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__manager_id
 msgid "Responsible"
-msgstr ""
+msgstr "ຜູ້ຮັບຜິດຊອບ"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "Retrieving progress for personal challenge without user information"
-msgstr ""
+msgstr "ກຳລັງດຶງຂໍ້ມູນຄວາມຄືບໜ້າສຳລັບສິ່ງທ້າທາຍສ່ວນບຸກຄົນໂດຍບໍ່ມີຂໍ້ມູນຜູ້ໃຊ້"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Reward"
-msgstr ""
+msgstr "ລາງວັນ"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "Reward (badge %(badge_name)s) for every succeeding user was sent to %(users)s."
 msgstr ""
+"ລາງວັນ (ຫຼຽນກາ %(badge_name)s) ສໍາລັບຜູ້ໃຊ້ທຸກຄົນທີ່ປະສົບຜົນສໍາເລັດໄດ້ຖືກສົ່ງໄປໃຫ້ %(users)s ແລ້ວ."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_failure
 msgid "Reward Bests if not Succeeded?"
-msgstr ""
+msgstr "ໃຫ້ລາງວັນຜູ້ທີ່ເຮັດໄດ້ດີທີ່ສຸດ ຖ້າບໍ່ມີໃຜບັນລຸເປົ້າໝາຍ?"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_realtime
 msgid "Reward as soon as every goal is reached"
-msgstr ""
+msgstr "ໃຫ້ລາງວັນທັນທີທີ່ບັນລຸແຕ່ລະເປົ້າໝາຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__challenge_ids
 msgid "Reward of Challenges"
-msgstr ""
+msgstr "ລາງວັນຂອງສິ່ງທ້າທາຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__goal_definition_ids
 msgid "Rewarded by"
-msgstr ""
+msgstr "ໃຫ້ລາງວັນໂດຍ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Rewards for challenges"
-msgstr ""
+msgstr "ລາງວັນສຳລັບສິ່ງທ້າທາຍ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Running"
-msgstr ""
+msgstr "ກຳລັງດຳເນີນການ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Running Challenges"
-msgstr ""
+msgstr "ສິ່ງທ້າທາຍທີ່ກຳລັງດຳເນີນການ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Schedule"
-msgstr ""
+msgstr "ກຳນົດເວລາ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
 msgid "Search Badge"
-msgstr ""
+msgstr "ຄົ້ນຫາຫຼຽນ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Search Challenges"
-msgstr ""
+msgstr "ຄົ້ນຫາສິ່ງທ້າທາຍ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Search Goal Definitions"
-msgstr ""
+msgstr "ຄົ້ນຫາຄຳນິຍາມເປົ້າໝາຍ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Search Goals"
-msgstr ""
+msgstr "ຄົ້ນຫາເປົ້າໝາຍ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_ranks_view_search
 msgid "Search Ranks"
-msgstr ""
+msgstr "ຄົ້ນຫາອັນດັບ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Search Trackings"
-msgstr ""
+msgstr "ຄົ້ນຫາການຕິດຕາມ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Security rules to define who is allowed to manually grant badges. Not enforced for administrator."
 msgstr ""
+"ກົດລະບຽບຄວາມປອດໄພເພື່ອລະບຸວ່າໃຜມີສິດໃຫ້ຫຼຽນດ້ວຍຕົນເອງ. ບໍ່ໃຊ້ບັງຄັບກັບຜູ້ດູແລລະບົບ."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Send Report"
-msgstr ""
+msgstr "ສົ່ງລາຍງານ"
 
 #. module: gamification
 #: model:mail.template,description:gamification.simple_report_template
 msgid "Send a challenge report to all participants"
-msgstr ""
+msgstr "ສົ່ງລາຍງານສິ່ງທ້າທາຍໃຫ້ກັບຜູ້ເຂົ້າຮ່ວມທັງໝົດ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_message_group_id
 msgid "Send a copy to"
-msgstr ""
+msgstr "ສົ່ງສຳເນົາໃຫ້"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user__sender_id
 msgid "Sender"
-msgstr ""
+msgstr "ຜູ້ສົ່ງ"
 
 #. module: gamification
 #: model:mail.template,description:gamification.email_template_goal_reminder
 msgid "Sent automatically to participant who haven't updated their goal"
-msgstr ""
+msgstr "ສົ່ງໃຫ້ຜູ້ເຂົ້າຮ່ວມທີ່ບໍ່ໄດ້ອັບເດດເປົ້າໝາຍຂອງພວກເຂົາໂດຍອັດຕະໂນມັດ"
 
 #. module: gamification
 #: model:mail.template,description:gamification.email_template_badge_received
 msgid "Sent automatically to the user who received a badge"
-msgstr ""
+msgstr "ສົ່ງໃຫ້ຜູ້ໃຊ້ທີ່ໄດ້ຮັບຫຼຽນໂດຍອັດຕະໂນມັດ"
 
 #. module: gamification
 #: model:mail.template,description:gamification.mail_template_data_new_rank_reached
 msgid "Sent automatically when user reaches a new rank"
-msgstr ""
+msgstr "ສົ່ງໂດຍອັດຕະໂນມັດເມື່ອຜູ້ໃຊ້ບັນລຸອັນດັບໃໝ່"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "ລຳດັບ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Set the current value you have reached for this goal"
-msgstr ""
+msgstr "ກຳນົດຄ່າປັດຈຸບັນທີ່ເຈົ້າບັນລຸໄດ້ສຳລັບເປົ້າໝາຍນີ້"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_base_company_data
 msgid "Set your Company Data"
-msgstr ""
+msgstr "ຕັ້ງຄ່າຂໍ້ມູນບໍລິສັດຂອງທ່ານ"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_base_company_logo
 msgid "Set your Company Logo"
-msgstr ""
+msgstr "ຕັ້ງຄ່າໂລໂກ້ບໍລິສັດຂອງທ່ານ"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_base_timezone
 msgid "Set your Timezone"
-msgstr ""
+msgstr "ຕັ້ງຄ່າເຂດເວລາຂອງທ່ານ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__challenge_category__other
 msgid "Settings / Gamification Tools"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າ / ເຄື່ອງມື Gamification"
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_configure
 msgid "Setup your Company"
-msgstr ""
+msgstr "ຕັ້ງຄ່າບໍລິສັດຂອງທ່ານ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__level__silver
 msgid "Silver"
-msgstr ""
+msgstr "ເງິນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__silver_badge
 msgid "Silver badges count"
-msgstr ""
+msgstr "ຈຳນວນຫຼຽນເງິນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__origin_ref
 msgid "Source"
-msgstr ""
+msgstr "ແຫຼ່ງຂໍ້ມູນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__origin_ref_model_name
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "Source Type"
-msgstr ""
+msgstr "ປະເພດແຫຼ່ງຂໍ້ມູນ"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "Special rewards were sent to the top competing users. The ranking for this challenge is:"
 msgstr ""
+"ລາງວັນພິເສດໄດ້ຖືກສົ່ງໃຫ້ຜູ້ໃຊ້ທີ່ມີຄະແນນສູງສຸດ. ການຈັດອັນດັບສຳລັບສິ່ງທ້າທາຍນີ້ຄື:"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Start Challenge"
-msgstr ""
+msgstr "ເລີ່ມສິ່ງທ້າທາຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__start_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__start_date
 msgid "Start Date"
-msgstr ""
+msgstr "ວັນທີເລີ່ມ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Start goal"
-msgstr ""
+msgstr "ເລີ່ມເປົ້າໝາຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__state
@@ -2084,89 +2620,92 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "State"
-msgstr ""
+msgstr "ສະຖານະ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Statistics"
-msgstr ""
+msgstr "ສະຖິຕິ"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_student
 msgid "Student"
-msgstr ""
+msgstr "ນັກຮຽນ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Subscriptions"
-msgstr ""
+msgstr "ການຕິດຕາມ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_full_suffix
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_suffix
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__suffix
 msgid "Suffix"
-msgstr ""
+msgstr "ຄຳຕໍ່ທ້າຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__invited_user_ids
 msgid "Suggest to users"
-msgstr ""
+msgstr "ແນະນຳໃຫ້ຜູ້ໃຊ້"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_line_list_view
 msgid "Target"
-msgstr ""
+msgstr "ເປົ້າໝາຍ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__target_goal
 msgid "Target Value to Reach"
-msgstr ""
+msgstr "ມູນຄ່າເປົ້າໝາຍທີ່ຈະຕ້ອງບັນລຸ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "Target: less than"
-msgstr ""
+msgstr "ເປົ້າໝາຍ: ນ້ອຍກວ່າ"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/tests/test_karma_tracking.py:0
 msgid "Test Reason"
-msgstr ""
+msgstr "ເຫດຜົນການທົດສອບ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__action_id
 msgid "The action that will be called to update the goal value."
-msgstr ""
+msgstr "ການດຳເນີນການທີ່ຈະຖືກເອີ້ນເພື່ອອັບເດດຄ່າເປົ້າໝາຍ."
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "The challenge %s is finished."
-msgstr ""
+msgstr "ສິ່ງທ້າທາຍ %s ສຳເລັດແລ້ວ."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_full_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal__definition_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__full_suffix
 msgid "The currency and suffix field"
-msgstr ""
+msgstr "ຊ່ອງສະກຸນເງິນ ແລະ ຄຳຕໍ່ທ້າຍ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__field_date_id
 msgid "The date to use for the time period evaluated"
-msgstr ""
+msgstr "ວັນທີທີ່ຈະໃຊ້ສຳລັບໄລຍະເວລາທີ່ຖືກປະເມີນ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__end_date
 msgid "The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date."
 msgstr ""
+"ມື້ທີ່ການທ້າທາຍໃໝ່ຈະຖືກປິດໂດຍອັດຕະໂນມັດ. ຖ້າບໍ່ມີການຕັ້ງຄ່າຮອບວຽນ, ຈະໃຊ້ວັນທີນີ້ເປັນວັນທີສິ້ນສຸດເປົ້າໝາຍ."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__start_date
 msgid "The day a new challenge will be automatically started. If no periodicity is set, will use this date as the goal start date."
 msgstr ""
+"ມື້ທີ່ການທ້າທາຍໃໝ່ຈະຖືກເລີ່ມຕົ້ນໂດຍອັດຕະໂນມັດ. ຖ້າບໍ່ມີການຕັ້ງຄ່າຮອບວຽນ, ຈະໃຊ້ວັນທີນີ້ເປັນວັນທີເລີ່ມຕົ້ນເປົ້າໝາ"
+"ຍ."
 
 #. module: gamification
 #. odoo-python
@@ -2176,41 +2715,45 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"ເຂດຂໍ້ມູນ (Domain) ສໍາລັບຄໍາຈໍາກັດຄວາມ %s ເບິ່ງຄືວ່າບໍ່ຖືກຕ້ອງ, ກະລຸນາກວດສອບຄືນ.\n"
+"\n"
+"%s"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__res_id_field
 msgid "The field name on the user profile (res.users) containing the value for res_id for action."
 msgstr ""
+"ຊື່ຟິວ (Field) ໃນໂປຣໄຟລ໌ຜູ້ໃຊ້ (res.users) ທີ່ບັນຈຸຄ່າສໍາລັບ res_id ສໍາລັບການປະຕິບັດ."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__higher
 msgid "The higher the better"
-msgstr ""
+msgstr "ຍິ່ງສູງຍິ່ງດີ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__owner_ids
 msgid "The list of instances of this badge granted to users"
-msgstr ""
+msgstr "ລາຍຊື່ຫຼຽນນີ້ທີ່ໄດ້ມອບໃຫ້ຜູ້ໃຊ້ແລ້ວ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__model_inherited_ids
 msgid "The list of models that extends the current model."
-msgstr ""
+msgstr "ລາຍຊື່ຂອງໂມເດວ (Models) ທີ່ຂະຫຍາຍອອກຈາກໂມເດວປັດຈຸບັນ."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__unique_owner_ids
 msgid "The list of unique users having received this badge."
-msgstr ""
+msgstr "ລາຍຊື່ຜູ້ໃຊ້ທີ່ໄດ້ຮັບຫຼຽນນີ້ (ບໍ່ຊ້ຳກັນ)."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__condition__lower
 msgid "The lower the better"
-msgstr ""
+msgstr "ຍິ່ງນ້ອຍຍິ່ງດີ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max_number
 msgid "The maximum number of time this badge can be sent per month per person."
-msgstr ""
+msgstr "ຈຳນວນສູງສຸດທີ່ສາມາດສົ່ງຫຼຽນນີ້ໃຫ້ແຕ່ລະຄົນຕໍ່ເດືອນ."
 
 #. module: gamification
 #. odoo-python
@@ -2220,6 +2763,9 @@ msgid ""
 "\n"
 "%(error)s not found"
 msgstr ""
+"ການຕັ້ງຄ່າໂມເດວສໍາລັບຄໍາຈໍາກັດຄວາມ %(name)s ເບິ່ງຄືວ່າບໍ່ຖືກຕ້ອງ, ກະລຸນາກວດສອບຄືນ.\n"
+"\n"
+"ບໍ່ພົບ %(error)s"
 
 #. module: gamification
 #. odoo-python
@@ -2229,68 +2775,75 @@ msgid ""
 "\n"
 "%(field_name)s not stored"
 msgstr ""
+"ການຕັ້ງຄ່າໂມເດວສໍາລັບຄໍາຈໍາກັດຄວາມ %(name)s ເບິ່ງຄືວ່າບໍ່ຖືກຕ້ອງ, ກະລຸນາກວດສອບຄືນ.\n"
+"\n"
+"%(field_name)s ບໍ່ໄດ້ຖືກຈັດເກັບ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__remind_update_delay
 msgid "The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified."
 msgstr ""
+"ຈຳນວນມື້ຫຼັງຈາກທີ່ຜູ້ໃຊ້ທີ່ຖືກມອບໝາຍໃຫ້ເປົ້າໝາຍແບບປ້ອນເອງຈະຖືກແຈ້ງເຕືອນ. ຈະບໍ່ມີການແຈ້ງເຕືອນຫາກບໍ່ໄດ້ກຳນົ"
+"ດຄ່າ."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_this_month
 msgid "The number of time the current user has received this badge this month."
-msgstr ""
+msgstr "ຈຳນວນຄັ້ງທີ່ຜູ້ໃຊ້ປັດຈຸບັນໄດ້ຮັບຫຼຽນນີ້ໃນເດືອນນີ້."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my
 msgid "The number of time the current user has received this badge."
-msgstr ""
+msgstr "ຈຳນວນຄັ້ງທີ່ຜູ້ໃຊ້ປັດຈຸບັນໄດ້ຮັບຫຼຽນນີ້."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_monthly_sending
 msgid "The number of time the current user has sent this badge this month."
-msgstr ""
+msgstr "ຈຳນວນຄັ້ງທີ່ຜູ້ໃຊ້ປັດຈຸບັນໄດ້ສົ່ງຫຼຽນນີ້ໃນເດືອນນີ້."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__granted_users_count
 msgid "The number of time this badge has been received by unique users."
-msgstr ""
+msgstr "ຈຳນວນຄັ້ງທີ່ຫຼຽນນີ້ໄດ້ຮັບໂດຍຜູ້ໃຊ້ທີ່ບໍ່ຊ້ຳກັນ."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_this_month
 msgid "The number of time this badge has been received this month."
-msgstr ""
+msgstr "ຈຳນວນຄັ້ງທີ່ຫຼຽນນີ້ໄດ້ຮັບໃນເດືອນນີ້."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__granted_count
 msgid "The number of time this badge has been received."
-msgstr ""
+msgstr "ຈຳນວນຄັ້ງທີ່ຫຼຽນນີ້ໄດ້ຮັບ."
 
 #. module: gamification
 #: model:ir.model.constraint,message:gamification.constraint_gamification_karma_rank_karma_min_check
 msgid "The required karma has to be above 0."
-msgstr ""
+msgstr "ຄະແນນຄຳມາທີ່ຕ້ອງການຕ້ອງຫຼາຍກວ່າ 0."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_monetary
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__monetary
 msgid "The target and current value are defined in the company currency."
-msgstr ""
+msgstr "ຄ່າເປົ້າໝາຍ ແລະ ຄ່າປັດຈຸບັນຖືກກຳນົດເປັນສະກຸນເງິນຂອງບໍລິສັດ."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_suffix
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__suffix
 msgid "The unit of the target and current values"
-msgstr ""
+msgstr "ຫົວໜ່ວຍຂອງຄ່າເປົ້າໝາຍ ແລະ ຄ່າປັດຈຸບັນ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__goal_definition_ids
 msgid "The users that have succeeded these goals will receive automatically the badge."
-msgstr ""
+msgstr "ຜູ້ໃຊ້ທີ່ບັນລຸເປົ້າໝາຍເຫຼົ່ານີ້ຈະໄດ້ຮັບຫຼຽນໂດຍອັດຕະໂນມັດ."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_user_expression
 msgid "The value to compare with the distinctive field. The expression can contain reference to 'user' which is a browse record of the current user, e.g. user.id, user.partner_id.id..."
 msgstr ""
+"ຄ່າທີ່ຈະປຽບທຽບກັບຟິວ (Field) ທີ່ແຕກຕ່າງ. ສູດຄຳນວນສາມາດອ້າງອີງເຖິງ 'user' ເຊິ່ງແມ່ນຂໍ້ມູນຂອງຜູ້ໃຊ້ປັ"
+"ດຈຸບັນ, ຕົວຢ່າງ: user.id, user.partner_id.id..."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
@@ -2298,27 +2851,30 @@ msgid ""
 "There is no goal associated to this challenge matching your search.\n"
 "            Make sure that your challenge is active and assigned to at least one user."
 msgstr ""
+"ບໍ່ມີເປົ້າໝາຍທີ່ກ່ຽວຂ້ອງກັບການທ້າທາຍນີ້ທີ່ກົງກັບການຄົ້ນຫາຂອງທ່ານ.\n"
+"            ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າການທ້າທາຍຂອງທ່ານຍັງເປີດໃຊ້ງານຢູ່ ແລະ ຖືກມອບໝາຍໃຫ້ຜູ້ໃຊ້ຢ່າງ"
+"ໜ້ອຍໜຶ່ງຄົນ."
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_badge.py:0
 msgid "This badge can not be sent by users."
-msgstr ""
+msgstr "ຫຼຽນນີ້ບໍ່ສາມາດສົ່ງໂດຍຜູ້ໃຊ້ໄດ້."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "To"
-msgstr ""
+msgstr "ຫາ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__target_goal
 msgid "To Reach"
-msgstr ""
+msgstr "ທີ່ຈະຕ້ອງບັນລຸ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__to_update
 msgid "To update"
-msgstr ""
+msgstr "ທີ່ຈະຕ້ອງອັບເດດ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__granted_count
@@ -2329,48 +2885,48 @@ msgstr "ລວມທັງໝົດ"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_karma_tracking
 msgid "Track Karma Changes"
-msgstr ""
+msgstr "ຕິດຕາມການປ່ຽນແປງຄະແນນຄຳມາ"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_tracking_action
 msgid "Track the sources of the users karma and monitor"
-msgstr ""
+msgstr "ຕິດຕາມແຫຼ່ງທີ່ມາຂອງຄະແນນຄຳມາຂອງຜູ້ໃຊ້ ແລະ ກວດກາ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form
 msgid "Tracking"
-msgstr ""
+msgstr "ການຕິດຕາມ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__tracking_date
 msgid "Tracking Date"
-msgstr ""
+msgstr "ວັນທີຕິດຕາມ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Trackings"
-msgstr ""
+msgstr "ລາຍການຕິດຕາມ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__unique_owner_ids
 msgid "Unique Owners"
-msgstr ""
+msgstr "ເຈົ້າຂອງທີ່ບໍ່ຊ້ຳກັນ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_suffix
 msgid "Unit"
-msgstr ""
+msgstr "ຫົວໜ່ວຍ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Update"
-msgstr ""
+msgstr "ອັບເດດ"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_goal.py:0
 msgid "Update %s"
-msgstr ""
+msgstr "ອັບເດດ %s"
 
 #. module: gamification
 #. odoo-python
@@ -2382,131 +2938,133 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__user_id
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "User"
-msgstr ""
+msgstr "ຜູ້ໃຊ້"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/res_users.py:0
 msgid "User Creation"
-msgstr ""
+msgstr "ການສ້າງຜູ້ໃຊ້"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_domain
 msgid "User domain"
-msgstr ""
+msgstr "ຂອບເຂດຜູ້ໃຊ້"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_current_rank_users
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__user_ids
 msgid "Users"
-msgstr ""
+msgstr "ຜູ້ໃຊ້ທັງໝົດ"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__weekly
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__weekly
 msgid "Weekly"
-msgstr ""
+msgstr "ລາຍອາທິດ"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_auth
 msgid "Who can grant this badge"
-msgstr ""
+msgstr "ໃຜສາມາດໃຫ້ຫຼຽນນີ້ໄດ້"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Who would you like to reward?"
-msgstr ""
+msgstr "ທ່ານຕ້ອງການໃຫ້ລາງວັນກັບໃຜ?"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__reward_realtime
 msgid "With this option enabled, a user can receive a badge only once. The top 3 badges are still rewarded only at the end of the challenge."
 msgstr ""
+"ຖ້າເປີດໃຊ້ຕົວເລືອກນີ້, ຜູ້ໃຊ້ສາມາດຮັບຫຼຽນໄດ້ພຽງແຕ່ຄັ້ງດຽວ. ສ່ວນ 3 ຫຼຽນອັນດັບສູງສຸດຍັງຄົງໃຫ້ລາງວັນໃນຕອນທ້"
+"າຍຂອງສິ່ງທ້າທາຍເທົ່ານັ້ນ."
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_idea
 msgid "With your brilliant ideas, you are an inspiration to others."
-msgstr ""
+msgstr "ດ້ວຍແນວຄວາມຄິດທີ່ດີເລີດຂອງທ່ານ, ທ່ານເປັນແຮງບັນດານໃຈໃຫ້ກັບຄົນອື່ນ."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__yearly
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__yearly
 msgid "Yearly"
-msgstr ""
+msgstr "ລາຍປີ"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_badge.py:0
 msgid "You are not in the user allowed list."
-msgstr ""
+msgstr "ທ່ານບໍ່ໄດ້ຢູ່ໃນລາຍຊື່ຜູ້ໃຊ້ທີ່ໄດ້ຮັບອະນຸຍາດ."
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/wizard/grant_badge.py:0
 msgid "You can not grant a badge to yourself."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດໃຫ້ຫຼຽນກັບຕົນເອງໄດ້."
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 msgid "You can not reset a challenge with unfinished goals."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດລຶບລ້າງສິ່ງທ້າທາຍທີ່ຍັງມີເປົ້າໝາຍບໍ່ສຳເລັດໄດ້."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "You can still grant"
-msgstr ""
+msgstr "ທ່ານຍັງສາມາດໃຫ້"
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_good_job
 msgid "You did great at your job."
-msgstr ""
+msgstr "ທ່ານເຮັດວຽກໄດ້ດີຫຼາຍ."
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_badge.py:0
 msgid "You do not have the required badges."
-msgstr ""
+msgstr "ທ່ານບໍ່ມີຫຼຽນທີ່ຈຳເປັນ."
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_badge.py:0
 msgid "You have already sent this badge too many time this month."
-msgstr ""
+msgstr "ທ່ານໄດ້ສົ່ງຫຼຽນນີ້ຫຼາຍເກີນໄປແລ້ວໃນເດືອນນີ້."
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_hidden
 msgid "You have found the hidden badge"
-msgstr ""
+msgstr "ທ່ານໄດ້ຄົ້ນພົບຫຼຽນທີ່ເຊື່ອງໄວ້"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_doctor
 msgid "You have reached the last rank. Congratulations!"
-msgstr ""
+msgstr "ທ່ານໄດ້ບັນລຸອັນດັບສຸດທ້າຍແລ້ວ. ຂໍສະແດງຄວາມຍິນດີ!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_newbie
 msgid "You just began the adventure! Welcome!"
-msgstr ""
+msgstr "ທ່ານຫາກໍ່ເລີ່ມການຜະຈົນໄພ! ຍິນດີຕ້ອນຮັບ!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_master
 msgid "You know what you are talking about. People learn from you."
-msgstr ""
+msgstr "ທ່ານຮູ້ໃນສິ່ງທີ່ທ່ານກຳລັງເວົ້າ. ຄົນອື່ນສາມາດຮຽນຮູ້ຈາກທ່ານໄດ້."
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_bachelor
 msgid "You love learning things. Curiosity is a good way to progress."
-msgstr ""
+msgstr "ທ່ານມັກການຮຽນຮູ້. ຄວາມຢາກຮູ້ຢາກເຫັນເປັນວິທີທີ່ດີໃນການພັດທະນາ."
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_student
 msgid "You're a young padawan now. May the force be with you!"
-msgstr ""
+msgstr "ຕອນນີ້ເຈົ້າເປັນສິດໃໝ່ແລ້ວ. ຂໍໃຫ້ພະລັງຈົ່ງສະຖິດຢູ່ກັບທ່ານ!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "badges this month"
-msgstr ""
+msgstr "ຫຼຽນໃນເດືອນນີ້"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2517,69 +3075,69 @@ msgstr "ມື້"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "e.g. A Master Chief knows quite everything on the forum! You cannot beat him!"
-msgstr ""
+msgstr "ຕ.ຢ. ຜູ້ຊ່ຽວຊານຮູ້ທຸກຢ່າງໃນຟໍຣຳ! ເຈົ້າບໍ່ສາມາດເອົາຊະນະເຂົາໄດ້!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. Get started"
-msgstr ""
+msgstr "ຕ.ຢ. ເລີ່ມຕົ້ນ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "e.g. Master Chief"
-msgstr ""
+msgstr "ຕ.ຢ. ຜູ້ຊ່ຽວຊານ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "e.g. Monthly Sales Objectives"
-msgstr ""
+msgstr "ຕ.ຢ. ເປົ້າໝາຍການຂາຍລາຍເດືອນ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "e.g. Problem Solver"
-msgstr ""
+msgstr "ຕ.ຢ. ນັກແກ້ໄຂບັນຫາ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "e.g. Reach this rank to gain a free mug!"
-msgstr ""
+msgstr "ຕ.ຢ. ບັນລຸອັນດັບນີ້ເພື່ອຮັບຈອກຟຣີ!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. Register to the platform"
-msgstr ""
+msgstr "ຕ.ຢ. ລົງທະບຽນເຂົ້າໃຊ້ລະບົບ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. days"
-msgstr ""
+msgstr "ຕ.ຢ. ມື້"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. user.partner_id.id"
-msgstr ""
+msgstr "ຕົວຢ່າງ: user.partner_id.id"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "granted,"
-msgstr ""
+msgstr "ໄດ້ຮັບ,"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "refresh"
-msgstr ""
+msgstr "ໂຫຼດໃໝ່"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "than the target."
-msgstr ""
+msgstr "ກວ່າເປົ້າໝາຍ."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_user_kanban_view
 msgid "the"
-msgstr ""
+msgstr "ເດີ"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "this month"
-msgstr ""
+msgstr "ເດືອນນີ້"
