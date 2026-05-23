@@ -1,3 +1,6 @@
+import json
+from unittest.mock import MagicMock, patch
+
 from odoo.tests import TransactionCase, tagged
 
 
@@ -13,3 +16,44 @@ class TestSolarAiBase(TransactionCase):
         model_name = self.env["ir.config_parameter"].get_param("solar_ai.default_model")
         self.assertIsNotNone(model_name)
         self.assertIn("claude", model_name)
+
+
+@tagged("solar_ai", "post_install", "-at_install")
+class TestSolarAiService(TransactionCase):
+    def _mock_openrouter_response(self, content):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = {
+            "choices": [{"message": {"content": content, "role": "assistant"}}],
+            "usage": {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15},
+        }
+        return mock_resp
+
+    @patch("httpx.post")
+    def test_chat_returns_content(self, mock_post):
+        mock_post.return_value = self._mock_openrouter_response("Hello, solar world!")
+        self.env["ir.config_parameter"].set_param(
+            "solar_ai.openrouter_api_key",
+            "test-key-123",
+        )
+
+        service = self.env["solar.ai.service"]
+        result = service.chat([{"role": "user", "content": "Hello"}])
+        self.assertEqual(result["content"], "Hello, solar world!")
+
+    @patch("httpx.post")
+    def test_classify_document_returns_code(self, mock_post):
+        mock_post.return_value = self._mock_openrouter_response(
+            json.dumps(
+                {"document_type_code": "bill_electricity", "confidence": 0.95},
+            ),
+        )
+        self.env["ir.config_parameter"].set_param(
+            "solar_ai.openrouter_api_key", "test-key"
+        )
+
+        service = self.env["solar.ai.service"]
+        result = service.classify_document_text(
+            "Monthly electricity consumption: 850 kWh. Total: 3210 UAH",
+        )
+        self.assertEqual(result.get("document_type_code"), "bill_electricity")
