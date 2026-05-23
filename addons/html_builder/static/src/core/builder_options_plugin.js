@@ -135,6 +135,7 @@ export class BuilderOptionsPlugin extends Plugin {
         "getFolded",
         "setNextTarget",
         "getBuilderOptionContext",
+        "isNotActivable",
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -276,6 +277,18 @@ export class BuilderOptionsPlugin extends Plugin {
 
     getFolded() {
         return this.lastContainers.map((c) => c.folded);
+    }
+
+    /**
+     * Returns true if the given element (or one of its ancestors) matches one
+     * of the `not_activable_element_selectors`, meaning it should not receive
+     * any builder interaction (click overlay, hover overlay, etc.).
+     *
+     * @param {Element} el
+     * @returns {boolean}
+     */
+    isNotActivable(el) {
+        return !!el.closest(this.notActivableElementsSelector);
     }
 
     updateContainers(target, { forceUpdate = false } = {}) {

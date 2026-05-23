@@ -255,3 +255,93 @@ test("Mouse move on throttleForAnimation", async () => {
     await animationFrame();
     expect(".oe_overlay.oe_active:not(.o_overlay_hidden)").toHaveCount(1);
 });
+
+// Selectors from `not_activable_element_selectors` that can be applied as a
+// single class directly on the hovered element.
+const simpleClassSelectors = [
+    ".oe_drop_zone",
+    ".o_notification_manager",
+    ".o_we_no_overlay",
+    ".ui-autocomplete",
+    ".transfo-container",
+    ".o_datetime_picker",
+];
+
+for (const selector of simpleClassSelectors) {
+    const className = selector.slice(1); // strip leading "."
+    test(`Do not show hover overlay for "${selector}"`, async () => {
+        await setupWebsiteBuilder(`
+            <section>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <p>Activable</p>
+                        </div>
+                        <div class="col-lg-6 ${className}">
+                            <p>Not activable</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        `);
+        // Hovering a normal element shows the hover overlay.
+        expect(".oe_overlay.o_hover_overlay").toHaveCount(0);
+        await contains(":iframe .col-lg-6:first-child").hover();
+        expect(".oe_overlay.o_hover_overlay").toHaveCount(1);
+        // Hovering a non-activable element must NOT show a hover overlay.
+        await contains(`:iframe .${className}`).hover();
+        expect(".oe_overlay.o_hover_overlay").toHaveCount(0);
+    });
+}
+
+// ID-based selectors: inject the element using an `id` attribute.
+const idSelectors = ["#web_editor-top-edit", "#oe_manipulators"];
+
+for (const selector of idSelectors) {
+    const id = selector.slice(1); // strip leading "#"
+    test(`Do not show hover overlay for "${selector}"`, async () => {
+        await setupWebsiteBuilder(`
+            <section>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <p>Activable</p>
+                        </div>
+                        <div class="col-lg-6" id="${id}">
+                            <p>Not activable</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        `);
+        expect(".oe_overlay.o_hover_overlay").toHaveCount(0);
+        await contains(":iframe .col-lg-6:first-child").hover();
+        expect(".oe_overlay.o_hover_overlay").toHaveCount(1);
+        await contains(`:iframe #${id}`).hover();
+        expect(".oe_overlay.o_hover_overlay").toHaveCount(0);
+    });
+}
+
+// Compound selector ".modal .btn-close": the hovered element is .btn-close
+// nested inside a .modal ancestor.
+test(`Do not show hover overlay for ".modal .btn-close"`, async () => {
+    await setupWebsiteBuilder(`
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p>Activable</p>
+                    </div>
+                    <div class="col-lg-6 modal">
+                        <button class="btn-close">Not activable</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `);
+    expect(".oe_overlay.o_hover_overlay").toHaveCount(0);
+    await contains(":iframe .col-lg-6:first-child").hover();
+    expect(".oe_overlay.o_hover_overlay").toHaveCount(1);
+    await contains(":iframe .btn-close").hover();
+    expect(".oe_overlay.o_hover_overlay").toHaveCount(0);
+});

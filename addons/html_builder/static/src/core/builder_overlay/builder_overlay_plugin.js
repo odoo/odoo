@@ -90,6 +90,10 @@ export class BuilderOverlayPlugin extends Plugin {
             this.removeHoverOverlay();
         });
         this.addDomListener(this.editable, "mousemove", (ev) => {
+            if (this.dependencies.builderOptions.isNotActivable(ev.target)) {
+                this.removeHoverOverlay();
+                return;
+            }
             const el = this.dependencies.builderOptions.closestWithOption(ev.target);
             el ? this.showHoverOverlay(el) : this.removeHoverOverlay();
         });
