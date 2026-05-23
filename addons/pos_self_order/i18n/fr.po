@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-04-18 11:32+0000\n"
+"PO-Revision-Date: 2026-05-23 11:20+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s18-3/"
 "pos_self_order/fr/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -195,7 +195,7 @@ msgid ""
 "when no session is open."
 msgstr ""
 "Les droits d'accès de cet utilisateur seront utilisés lors de la visite du "
-"site web de commande autonome lorsqu'aucune session n'est ouverte."
+"site web de commande en libre-service lorsqu'aucune session n'est ouverte."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
@@ -260,18 +260,18 @@ msgstr "Langues disponibles"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
 msgid "Available in Self"
-msgstr "Disponible en commande autonome"
+msgstr "Disponible en libre-service"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_available
 msgid "Available in Self Order"
-msgstr "Disponible en commande autonome"
+msgstr "Disponible en libre-service"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__available_in_self
 msgid "Available in self"
-msgstr "Disponible en commande autonome"
+msgstr "Disponible en libre-service"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -342,7 +342,7 @@ msgstr "Choisir le mode kiosque"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_mode
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_mode
 msgid "Choose the self ordering mode"
-msgstr "Choisir le mode de commande autonome"
+msgstr "Choisir le mode de commande en libre-service"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_pay_after
@@ -469,7 +469,7 @@ msgid ""
 "order screen"
 msgstr ""
 "Les liens personnalisés que le restaurant peut configurer pour qu'ils soient "
-"affichés sur l'écran de commande autonome"
+"affichés sur l'écran de commande en libre-service"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__danger
@@ -681,8 +681,9 @@ msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
 msgstr ""
-"Il semble que vous avez oublié de créer des produits ou de les ajouter à "
-"post_config. Ajoutez-les avant d'utiliser la commande autonome."
+"Il semble que vous ayez oublié de créer des produits ou de les ajouter à la "
+"configuration du point de vente. Veuillez les ajouter avant d'utiliser la "
+"commande en libre-service"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -733,7 +734,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,help:pos_self_order.field_product_template__self_order_available
 msgid "If this product is available in the Self Order screens"
-msgstr "Si ce produit est disponible sur les écrans de commande autonome"
+msgstr ""
+"Si ce produit est disponible sur les écrans de commande en libre-service"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -760,7 +762,7 @@ msgstr "Image à afficher en arrière-plan"
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
 msgid "Image to display on the self order screen"
-msgstr "Image à afficher sur l'écran de commande autonome"
+msgstr "Image à afficher sur l'écran de commande en libre-service"
 
 #. module: pos_self_order
 #. odoo-python
@@ -768,8 +770,8 @@ msgstr "Image à afficher sur l'écran de commande autonome"
 msgid ""
 "In Self-Order mode, you must have at least one table to generate QR codes"
 msgstr ""
-"En mode commande autonome, vous devez avoir au moins une table pour générer "
-"des codes QR"
+"En mode commande en libre-service, vous devez avoir au moins une table pour "
+"générer des codes QR"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
@@ -897,7 +899,7 @@ msgstr "Menu mobile"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Mobile self-order & Kiosk"
-msgstr "Commande autonome mobile & Kiosque"
+msgstr "Commande mobile en libre-service & kiosque"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -934,7 +936,7 @@ msgstr "Nom"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Name of the image to display on the self order screen"
-msgstr "Nom de l'image à afficher sur l'écran de commande autonome"
+msgstr "Nom de l'image à afficher sur l'écran de commande en libre-service"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -975,7 +977,7 @@ msgstr "Pas disponible"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
 msgid "Not available in Self"
-msgstr "Pas disponible en commande autonome"
+msgstr "Pas disponible en commande en libre-service"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1304,36 +1306,36 @@ msgstr "Sélection"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Self Order"
-msgstr "Commande autonome"
+msgstr "Commande en libre-service"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
 msgid "Self Order Kiosk Image Brand"
-msgstr "Marque image kiosque commande autonome"
+msgstr "Image de marque du kiosque de commande en libre-service"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Self Order Kiosk Image Brand Name"
-msgstr "Nom marque image kiosque commande autonome"
+msgstr "Nom de l'image de marque du kiosque de commande en libre-service"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_visible
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_visible
 msgid "Self Order Visible"
-msgstr "Commande autonome visible"
+msgstr "Commande en libre-service visible"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Self Order:"
-msgstr "Commande autonome :"
+msgstr "Commande en libre-service :"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 #: model_terms:ir.ui.view,arch_db:pos_self_order.view_pos_preset_form
 msgid "Self Ordering"
-msgstr "En commande autonome"
+msgstr "En libre-service"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
@@ -1344,36 +1346,36 @@ msgstr "Commandes autonomes activées"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_mode
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_mode
 msgid "Self Ordering Mode"
-msgstr "Mode commande autonome"
+msgstr "Mode de commande en libre-service"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_service_mode
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
 msgid "Self Ordering Service Mode"
-msgstr "Mode service commande autonome"
+msgstr "Mode de service de commande en libre-service"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_url
 msgid "Self Ordering Url"
-msgstr "URL commande autonome"
+msgstr "URL de commande en libre-service"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
 msgid "Self-Order T"
-msgstr "Commande autonome T"
+msgstr "Commande en libre-service T"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Self-Order T %s"
-msgstr "Commande autonome T%s"
+msgstr "Commande en libre-service T%s"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 msgid "Self-ordering:"
-msgstr "Commande autonome :"
+msgstr "Commande en libre-service :"
 
 #. module: pos_self_order
 #: model:mail.template,description:pos_self_order.delivery_email_template
@@ -1504,7 +1506,8 @@ msgstr "Merci beaucoup !"
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "The Self-Order default user must be a POS user"
 msgstr ""
-"L'utilisateur par défaut de la commande autonome doit être un utilisateur PdV"
+"L'utilisateur par défaut de la commande en libre-service doit être un "
+"utilisateur PdV"
 
 #. module: pos_self_order
 #. odoo-python

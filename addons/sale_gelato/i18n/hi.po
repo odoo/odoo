@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:38+0000\n"
-"PO-Revision-Date: 2026-01-31 11:24+0000\n"
+"PO-Revision-Date: 2026-05-23 11:14+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/"
 "sale_gelato/hi/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: sale_gelato
 #: model:mail.template,body_html:sale_gelato.order_status_update
@@ -78,8 +78,8 @@ msgstr ""
 "                    <t t-if=\"ctx.get('tracking_data')\">\n"
 "                        हमें आपको यह बताते हुए खुशी है कि आपका ऑर्डर ट्रांज़िट में है.\n"
 "                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
-"                            <t t-set=\"tracking_url\" t-"
-"value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+"                            <t t-set=\"tracking_url\" t-value=\"list"
+"(ctx['tracking_data'].keys())[0]\"/>\n"
 "                             आपका ट्रैकिंग नंबर <a t-att-href=\"tracking_url\" t-"
 "out=\"ctx['tracking_data'][tracking_url]\"/> है.\n"
 "                            <br/><br/>\n"
@@ -97,7 +97,8 @@ msgstr ""
 "                    </t>\n"
 "                    <!-- Order delivered body -->\n"
 "                    <t t-if=\"ctx.get('order_delivered')\">\n"
-"                        आपको यह बताते हुए खुशी है कि आपका ऑर्डर डिलीवर हो गया है.\n"
+"                        हमें बताते हुए खुशी हो रही है कि आपका ऑर्डर डिलीवर हो गया "
+"है.\n"
 "                        <br/><br/>\n"
 "                    </t>\n"
 "                    धन्यवाद,\n"
@@ -105,8 +106,8 @@ msgstr ""
 "container=\"1\">\n"
 "                        <br/>\n"
 "                        <div data-o-mail-quote=\"1\">--<br data-o-mail-"
-"quote=\"1\"/><t t-out=\"object.user_id.name or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"quote=\"1\"/><t t-out=\"object.user_id.name or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
 "                    </t>\n"
 "                </p>\n"
 "            </div>\n"
@@ -121,11 +122,16 @@ msgid ""
 "invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-"
 "danger fs-3 me-3\"/>"
 msgstr ""
+"<i title=\"All print images are set\" invisible=\"gelato_missing_images\" "
+"class=\"fa fa-check-circle text-success fs-3 me-3\"/>\n"
+"                        <i title=\"Some print images are missing\" "
+"invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-"
+"danger fs-3 me-3\"/>"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
 msgid "API Key"
-msgstr ""
+msgstr "एपीआई कुंजी"
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_res_company
@@ -146,13 +152,13 @@ msgstr "संपर्क"
 #. odoo-python
 #: code:addons/sale_gelato/utils.py:0
 msgid "Could not establish the connection to the Gelato API."
-msgstr ""
+msgstr "Gelato एपीआई से कनेक्शन स्थापित नहीं हो सका।"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Could not synchronize with Gelato"
-msgstr ""
+msgstr "Gelato के साथ सिंक्रनाइज़ नहीं हो सका"
 
 #. module: sale_gelato
 #: model:ir.model,website_form_label:sale_gelato.model_res_partner
@@ -176,12 +182,12 @@ msgstr "डिस्प्ले नाम"
 #: model:delivery.carrier,name:sale_gelato.express_delivery
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__gelato_shipping_service_type__express
 msgid "Express Delivery"
-msgstr ""
+msgstr "एक्सप्रेस डिलीवरी"
 
 #. module: sale_gelato
 #: model:product.template,name:sale_gelato.express_delivery_product_product_template
 msgid "Express Delivery (Gelato)"
-msgstr ""
+msgstr "एक्सप्रेस डिलीवरी (Gelato)"
 
 #. module: sale_gelato
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__delivery_type__gelato
@@ -189,46 +195,46 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Gelato"
-msgstr ""
+msgstr "Gelato"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_api_key
 #: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_api_key
 msgid "Gelato API Key"
-msgstr ""
+msgstr "Gelato एपीआई कुंजी"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_image_ids
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_image_ids
 msgid "Gelato Print Images"
-msgstr ""
+msgstr "Gelato प्रिंट इमेज"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_product_uid
 msgid "Gelato Product UID"
-msgstr ""
+msgstr "Gelato प्रॉडक्ट UID"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_product_uid
 msgid "Gelato Product Uid"
-msgstr ""
+msgstr "Gelato प्रॉडक्ट Uid"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__gelato_shipping_service_type
 msgid "Gelato Shipping Service Type"
-msgstr ""
+msgstr "Gelato शिपिंग सर्विस टाइप"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_template_ref
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_template_ref
 msgid "Gelato Template Reference"
-msgstr ""
+msgstr "Gelato टेम्प्लेट रेफ़रेंस"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_webhook_secret
 #: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_webhook_secret
 msgid "Gelato Webhook Secret"
-msgstr ""
+msgstr "Gelato वेबहुक सीक्रेट"
 
 #. module: sale_gelato
 #. odoo-python
@@ -237,23 +243,25 @@ msgid ""
 "Gelato could not proceed with the fulfillment of order %(order_reference)s: %"
 "(gelato_message)s"
 msgstr ""
+"Gelato ऑर्डर %(order_reference)s को पूरा करने की प्रक्रिया आगे नहीं बढ़ा सका: %"
+"(gelato_message)s"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/controlers/main.py:0
 msgid "Gelato has canceled order %(reference)s."
-msgstr ""
+msgstr "Gelato ने ऑर्डर %(reference)s रद्द कर दिया है।"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/controlers/main.py:0
 msgid "Gelato has returned order %(reference)s."
-msgstr ""
+msgstr "Gelato ने ऑर्डर %(reference)s लौटाया है।"
 
 #. module: sale_gelato
 #: model:mail.template,name:sale_gelato.order_status_update
 msgid "Gelato: Order status update"
-msgstr ""
+msgstr "Gelato: ऑर्डर स्थिति अपडेट"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__id
@@ -271,35 +279,35 @@ msgstr "आईडी"
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_document__is_gelato
 msgid "Is Gelato"
-msgstr ""
+msgstr "Gelato है"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
 msgid "Manage Delivery Methods"
-msgstr ""
+msgstr "डिलीवरी के तरीकों को मैनेज करें"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_missing_images
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_missing_images
 msgid "Missing Print Images"
-msgstr ""
+msgstr "प्रिंट इमेज गायब हैं"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Missing product variants and images have been successfully created."
-msgstr ""
+msgstr "गायब प्रॉडक्ट वैरिएंट और इमेज सफलतापूर्वक बना दिए गए हैं।"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Print Images"
-msgstr ""
+msgstr "इमेज प्रिंट करें"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_document.py:0
 msgid "Print images must be set on products before they can be ordered."
-msgstr ""
+msgstr "प्रॉडक्ट का ऑर्डर देने से पहले उन पर प्रिंट इमेज सेट की जानी चाहिए।"
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_product_template
@@ -309,14 +317,14 @@ msgstr "प्रॉडक्ट"
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "प्रॉडक्ट से जुड़ा दस्तावेज़"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_easy_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Product UID"
-msgstr ""
+msgstr "प्रॉडक्ट UID"
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_product_product
@@ -326,7 +334,7 @@ msgstr "प्रॉडक्ट वैरिएंट"
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__delivery_type
 msgid "Provider"
-msgstr ""
+msgstr "प्रोवाइडर"
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_sale_order
@@ -336,68 +344,68 @@ msgstr "सेल्स ऑर्डर"
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "परचेज़ ऑर्डर लाइन"
+msgstr "सेल्स ऑर्डर लाइन"
 
 #. module: sale_gelato
 #: model:mail.template,description:sale_gelato.order_status_update
 msgid "Sent to the customer when Gelato updates the status of an order"
-msgstr ""
+msgstr "जब Gelato किसी ऑर्डर की स्थिति अपडेट करता है, तो ग्राहक को भेजा जाता है"
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_delivery_carrier
 msgid "Shipping Methods"
-msgstr ""
+msgstr "शिपिंग के तरीके"
 
 #. module: sale_gelato
 #: model:delivery.carrier,name:sale_gelato.standard_delivery
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__gelato_shipping_service_type__normal
 msgid "Standard Delivery"
-msgstr ""
+msgstr "स्टैंडर्ड डिलीवरी"
 
 #. module: sale_gelato
 #: model:product.template,name:sale_gelato.standard_delivery_product_product_template
 msgid "Standard Delivery (Gelato)"
-msgstr ""
+msgstr "स्टैंडर्ड डिलीवरी (Gelato)"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Successfully synchronized with Gelato"
-msgstr ""
+msgstr "Gelato के साथ सफलतापूर्वक सिंक्रनाइज़ हो गया"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Synchronize"
-msgstr ""
+msgstr "सिंक करने की सुविधा"
 
 #. module: sale_gelato
 #: model:ir.model.fields,help:sale_gelato.field_product_product__gelato_template_ref
 #: model:ir.model.fields,help:sale_gelato.field_product_template__gelato_template_ref
 msgid "Synchronize to fetch variants from Gelato"
-msgstr ""
+msgstr "Gelato से वैरिएंट प्राप्त करने के लिए सिंक्रोनाइज़ करें"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Template Reference"
-msgstr ""
+msgstr "टेम्प्लेट रेफ़रेंस"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/delivery_carrier.py:0
 msgid "The delivery method is not available for this order."
-msgstr ""
+msgstr "इस ऑर्डर के लिए डिलीवरी का तरीका उपलब्ध नहीं है।"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/delivery_carrier.py:0
 msgid "The following required address fields are missing: %s"
-msgstr ""
+msgstr "पते की ये ज़रूरी जानकारियां गायब हैं: %s"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid "The order has been successfully passed on Gelato."
-msgstr ""
+msgstr "ऑर्डर सफलतापूर्वक Gelato पर भेज दिया गया है।"
 
 #. module: sale_gelato
 #. odoo-python
@@ -406,23 +414,25 @@ msgid ""
 "The order with reference %(order_reference)s was not sent to Gelato.\n"
 "Reason: %(error_message)s"
 msgstr ""
+"रेफ़रेंस %(order_reference)s वाली ऑर्डर Gelato को नहीं भेजी गई थी.\n"
+"वजह: %(error_message)s"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid "Unable to confirm the order %s on Gelato."
-msgstr ""
+msgstr "Gelato पर ऑर्डर %s की पुष्टि नहीं हो सकी।"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid "Unable to delete the order %s on Gelato."
-msgstr ""
+msgstr "Gelato पर ऑर्डर %s को हटाया नहीं जा सका।"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
 msgid "Webhook Secret"
-msgstr ""
+msgstr "वेबहुक सीक्रेट"
 
 #. module: sale_gelato
 #. odoo-python
@@ -430,8 +440,9 @@ msgstr ""
 msgid ""
 "You cannot mix Gelato products with non-Gelato products in the same order."
 msgstr ""
+"आप एक ही ऑर्डर में Gelato प्रॉडक्ट को गैर-Gelato प्रॉडक्ट के साथ मिलाकर नहीं रख सकते।"
 
 #. module: sale_gelato
 #: model:mail.template,subject:sale_gelato.order_status_update
 msgid "{{ object.reference }}"
-msgstr ""
+msgstr "{{ object.reference }}"
