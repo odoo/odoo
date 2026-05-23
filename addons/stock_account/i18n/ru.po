@@ -5,13 +5,14 @@
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2025-11-08 19:02+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-05-16 09:45+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "stock_account/ru/>\n"
 "Language: ru\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: stock_account
 #. odoo-python
@@ -34,12 +35,14 @@ msgstr " [Учтено на %s]"
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s"
 msgstr ""
+"%(lot)s: цена изменена с %(old_price)s на %(new_price)s пользователем %(user)"
+"s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "%(quantity)s %(uom)s at product's cost"
-msgstr ""
+msgstr "%(quantity)s %(uom)s по себестоимости товара"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -63,11 +66,13 @@ msgid ""
 "A lot/serial number is required for product '%s' as it has lot valuation "
 "enabled."
 msgstr ""
+"Для товара «%s» требуется указать партию/серийный номер, так как для него "
+"включена оценка по партиям."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
 msgid "AVCO Value"
-msgstr ""
+msgstr "Стоимость по средней цене (AVCO)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_account
@@ -95,7 +100,7 @@ msgstr "Бухгалтерская информация"
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Accrual"
-msgstr ""
+msgstr "Начисление"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -108,7 +113,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__quantity
 msgid "Added Quantity"
-msgstr ""
+msgstr "Добавленное количество"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__added_value
@@ -126,13 +131,13 @@ msgstr "Скорректировать оценку"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Adjust Valuation: %(product)s"
-msgstr ""
+msgstr "Корректировка оценки: %(product)s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Adjusted on %(date)s by %(user)s"
-msgstr ""
+msgstr "Скорректировано %(date)s пользователем %(user)s"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -178,12 +183,14 @@ msgid ""
 "At closing, register the inventory variation of the period into a specific "
 "account"
 msgstr ""
+"При закрытии периода зарегистрируйте изменение стоимости запасов за период "
+"на отдельном счете"
 
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
 msgid "At the date of"
-msgstr ""
+msgstr "На дату"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -213,19 +220,21 @@ msgstr "Бекон"
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Closing: Location Reclassification - [%(account)s]"
-msgstr ""
+msgstr "Закрытие периода: Реклассификация локации – [%(account)s]"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Closing: Stock Variation Global for company [%(company)s]"
 msgstr ""
+"Закрытие периода: Глобальное изменение стоимости запасов для компании [%"
+"(company)s]"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Closing: Stock Variation Over Period"
-msgstr ""
+msgstr "Закрытие периода: Изменение стоимости запасов за период"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
@@ -252,7 +261,7 @@ msgstr "Валюта Компании"
 #: model:ir.model.fields,field_description:stock_account.field_product_value__computed_value_description
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_computed_justification
 msgid "Computed Value Description"
-msgstr ""
+msgstr "Описание рассчитанной стоимости"
 
 #. module: stock_account
 #. odoo-python
@@ -261,6 +270,8 @@ msgid ""
 "Computed value: %(value)s\n"
 "%(description)s"
 msgstr ""
+"Рассчитанная стоимость: %(value)s\n"
+"%(description)s"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings
@@ -278,7 +289,7 @@ msgstr "Стоимость"
 #: model:ir.model.fields,field_description:stock_account.field_res_company__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__cost_method
 msgid "Cost Method"
-msgstr ""
+msgstr "Метод оценки себестоимости"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -296,6 +307,8 @@ msgid ""
 "Counterpart used at closing for accounting adjustments to inventory "
 "valuation."
 msgstr ""
+"Корреспондирующий счет, используемый при закрытии периода для корректировок "
+"оценки запасов."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -334,12 +347,12 @@ msgstr "Текущее значение"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__current_value_description
 msgid "Current Value Description"
-msgstr ""
+msgstr "Описание текущей стоимости"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__current_value_details
 msgid "Current Value Details"
-msgstr ""
+msgstr "Детализация текущей стоимости"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__daily
@@ -419,13 +432,13 @@ msgstr "Отображение серийного номера и номера �
 #: code:addons/stock_account/report/stock_valuation_report.py:0
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Ending Stock"
-msgstr ""
+msgstr "Конечный остаток"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Everything is correctly closed"
-msgstr ""
+msgstr "Все периоды корректно закрыты"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_id
@@ -438,6 +451,8 @@ msgid ""
 "Expense account used to re-qualify products removed from stock and sent to "
 "this location"
 msgstr ""
+"Счет расходов, используемый для реклассификации товаров, списанных со склада "
+"и отправленных в эту локацию"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -451,18 +466,18 @@ msgstr "Первый пришел - первый ушел (FIFO)"
 #. odoo-python
 #: code:addons/stock_account/models/product_value.py:0
 msgid "For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)"
-msgstr ""
+msgstr "Для %(quantity)s %(uom)s (%(price_unit)s за %(uom)s)"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_account_form
 msgid "For Perpetual Continental Only"
-msgstr ""
+msgstr "Только для непрерывного континентального учета"
 
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml:0
 msgid "Generate Entry"
-msgstr ""
+msgstr "Создать запись"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__id
@@ -498,6 +513,8 @@ msgid ""
 "If checked, the product will be valued using the Anglo-Saxon accounting "
 "method."
 msgstr ""
+"Если флажок установлен, товар будет оцениваться с использованием "
+"англосаксонского метода учета."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__lot_valuated
@@ -520,7 +537,7 @@ msgstr "Первоначальный баланс"
 #. odoo-python
 #: code:addons/stock_account/models/stock_location.py:0
 msgid "Invalid search operator or value"
-msgstr ""
+msgstr "Недопустимый оператор или значение поиска"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory_adjustment_name
@@ -544,7 +561,7 @@ msgstr "Потери запасов"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__inventory_period
 msgid "Inventory Period"
-msgstr ""
+msgstr "Складской период"
 
 #. module: stock_account
 #. odoo-python
@@ -558,32 +575,32 @@ msgstr "Оценка товарных запасов"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_dropship
 msgid "Is Dropship"
-msgstr ""
+msgstr "Дропшиппинг"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_in
 msgid "Is Incoming (valued)"
-msgstr ""
+msgstr "Входящее перемещение (оцениваемое)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_out
 msgid "Is Outgoing (valued)"
-msgstr ""
+msgstr "Исходящее перемещение (оцениваемое)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_valued
 msgid "Is Valued"
-msgstr ""
+msgstr "Оценивается"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__is_valued_internal
 msgid "Is valued inside the company"
-msgstr ""
+msgstr "Оценивается внутри компании"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__is_valued_external
 msgid "Is valued outside the company"
-msgstr ""
+msgstr "Оценивается вне компании"
 
 #. module: stock_account
 #. odoo-python
@@ -592,6 +609,8 @@ msgid ""
 "It exists closing entries after the selected date. Cancel them before "
 "generate an entry prior to them"
 msgstr ""
+"После выбранной даты существуют закрывающие проводки. Отмените их перед "
+"генерацией проводки, предшествующей им"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
@@ -612,7 +631,7 @@ msgstr "Статьи из журнала"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__justification
 msgid "Justification"
-msgstr ""
+msgstr "Обоснование"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -657,7 +676,7 @@ msgstr "Руководство"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_manual
 msgid "Manual Value"
-msgstr ""
+msgstr "Ручная оценка стоимости"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__monthly
@@ -672,13 +691,14 @@ msgstr "Переместить"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
 msgid "New Value"
-msgstr ""
+msgstr "Новая стоимость"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Only is set (= True) is supported in search for remaining_qty."
 msgstr ""
+"Для поиска по remaining_qty поддерживается только условие is set (= True)."
 
 #. module: stock_account
 #. odoo-python
@@ -687,6 +707,8 @@ msgid ""
 "Only the value 'periodic' and 'real_time' are accepted to search on "
 "valuation field."
 msgstr ""
+"Для поиска по полю оценки допускаются только значения «periodic» и «real_time"
+"»."
 
 #. module: stock_account
 #. odoo-javascript
@@ -699,7 +721,7 @@ msgstr "Опции"
 #: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__periodic
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__periodic
 msgid "Periodic (at closing)"
-msgstr ""
+msgstr "Периодическая (при закрытии периода)"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -710,13 +732,19 @@ msgid ""
 "inventory when a product is billed or invoiced.\n"
 "        "
 msgstr ""
+"Периодическая: бухгалтерские проводки предлагаются вручную в отчете по "
+"оценке запасов.\n"
+"        Непрерывная: бухгалтерская проводка автоматически создается для "
+"оценки запасов при выставлении счета клиенту или получении счета от "
+"поставщика.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
 #: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__real_time
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__real_time
 msgid "Perpetual (at invoicing)"
-msgstr ""
+msgstr "Непрерывная (при выставлении счетов)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
@@ -727,14 +755,14 @@ msgstr "Тип комплектования"
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Please set the Journal for Inventory Valuation in the settings."
-msgstr ""
+msgstr "Пожалуйста, укажите журнал для оценки запасов в настройках."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid ""
 "Please set the Valuation Account for Inventory Valuation in the settings."
-msgstr ""
+msgstr "Пожалуйста, укажите счет оценки запасов в настройках."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_id
@@ -752,7 +780,7 @@ msgstr "Единица цены"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "Price update from %(old_price)s to %(new_price)s by %(user)s"
-msgstr ""
+msgstr "Цена изменена с %(old_price)s на %(new_price)s пользователем %(user)s"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -787,7 +815,7 @@ msgstr "Кол-во товара обновлено"
 #: model:ir.model,name:stock_account.model_product_value
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_avco_report__res_model_name__product_value
 msgid "Product Value"
-msgstr ""
+msgstr "Стоимость товара"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
@@ -817,12 +845,12 @@ msgstr "Справка"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_search
 msgid "Remaining"
-msgstr ""
+msgstr "Остаток"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
 msgid "Remaining Quantity"
-msgstr ""
+msgstr "Оставшееся количество"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_value
@@ -832,7 +860,7 @@ msgstr "Оставшаяся стоимость"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__res_model_name
 msgid "Resource Model Name"
-msgstr ""
+msgstr "Название модели ресурса"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
@@ -842,7 +870,7 @@ msgstr "Позиции комплектования к возврату"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__should_show_accounting_date
 msgid "Should Show Accounting Date"
-msgstr ""
+msgstr "Должен показывать дату проводки"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__standard_price
@@ -876,23 +904,23 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
 msgid "Stock AVCO Justifier"
-msgstr ""
+msgstr "Метод средней стоимости (AVCO)"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Stock Account"
-msgstr ""
+msgstr "Складской счет"
 
 #. module: stock_account
 #: model:ir.actions.server,name:stock_account.ir_cron_post_stock_valuation_ir_actions_server
 msgid "Stock Account: Inventory Valuation Closing"
-msgstr ""
+msgstr "Складской учет: Закрытие оценки запасов"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Stock Closing"
-msgstr ""
+msgstr "Закрытие склада"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
@@ -934,12 +962,12 @@ msgstr "Счет оценки запасов"
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Stock Variation"
-msgstr ""
+msgstr "Отклонение стоимости запасов"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_id
 msgid "Stock Variation Account"
-msgstr ""
+msgstr "Счет изменения стоимости запасов"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -965,6 +993,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock_account.field_stock_move__value
 msgid "The current value of the move. It's zero if the move is not valued."
 msgstr ""
+"Текущая стоимость перемещения. Равна нулю, если перемещение не оценивается."
 
 #. module: stock_account
 #. odoo-javascript
@@ -984,7 +1013,7 @@ msgstr "Общее количество"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
 msgid "Total Remaining Qty"
-msgstr ""
+msgstr "Общее оставшееся количество"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
@@ -1027,7 +1056,7 @@ msgstr "Стоимость единицы продукции"
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_avco_report_action
 msgid "Unit Cost History"
-msgstr ""
+msgstr "История себестоимости единицы"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
@@ -1038,7 +1067,7 @@ msgstr "Обновление количества на SO/PO"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__anglo_saxon_accounting
 msgid "Use Anglo-Saxon Accounting"
-msgstr ""
+msgstr "Использовать англосаксонский учет"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__user_id
@@ -1066,7 +1095,7 @@ msgstr "Валюта оценки"
 #: model:ir.model.fields,field_description:stock_account.field_product_template__lot_valuated
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__lot_valuated
 msgid "Valuation by Lot/Serial"
-msgstr ""
+msgstr "Оценка по партиям/серийным номерам"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__value
@@ -1079,7 +1108,7 @@ msgstr "Значение"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_justification
 msgid "Value Description"
-msgstr ""
+msgstr "Описание стоимости"
 
 #. module: stock_account
 #. odoo-javascript
@@ -1091,7 +1120,7 @@ msgstr "Стоимость на руках:"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Value based on original move %(reference)s"
-msgstr ""
+msgstr "Стоимость на основе исходного перемещения %(reference)s"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
@@ -1110,7 +1139,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
 msgid "Variation Account"
-msgstr ""
+msgstr "Счет отклонений"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
@@ -1138,12 +1167,16 @@ msgid ""
 "With perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
 msgstr ""
+"При непрерывной оценке этот счет будет использоваться для отражения разницы "
+"между стандартной ценой и ценой в счете поставщика."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "You can only adjust valuation for one move at a time."
 msgstr ""
+"Вы можете корректировать оценку стоимости только для одного перемещения за "
+"раз."
 
 #. module: stock_account
 #. odoo-python
@@ -1152,12 +1185,14 @@ msgid ""
 "You can only get the standard price at a given date for products with "
 "'Standard Price' as cost method."
 msgstr ""
+"Вы можете получить стандартную цену на определенную дату только для товаров "
+"с методом оценки себестоимости «Стандартная цена»."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "You can only use the '=' operator to search on valuation field."
-msgstr ""
+msgstr "Для поиска по полю оценки можно использовать только оператор «=»."
 
 #. module: stock_account
 #. odoo-python
@@ -1167,6 +1202,9 @@ msgid ""
 "quantities without a lot/serial number:\n"
 "%s"
 msgstr ""
+"Вы не можете включить оценку по партиям, так как для следующих товаров "
+"имеются остатки без указания партии/серийного номера:\n"
+"%s"
 
 #. module: stock_account
 #. odoo-python
@@ -1175,11 +1213,13 @@ msgid ""
 "You cannot modify the scheduled date of operation %s because it falls within "
 "a locked fiscal period."
 msgstr ""
+"Вы не можете изменить запланированную дату операции %s, так как она попадает "
+"в закрытый финансовый период."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_id
 msgid "stock_move_id"
-msgstr ""
+msgstr "stock_move_id"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document

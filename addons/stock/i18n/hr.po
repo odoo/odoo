@@ -33,7 +33,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-04-13 09:44+0000\n"
 "Last-Translator: Boris Peko <boris.peko@ecodica.eu>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/stock/"
@@ -632,8 +632,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Pozdrav <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
-",<br/><br/>\n"
+"        Pozdrav <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</"
+"t>,<br/><br/>\n"
 "        Drago nam je obavijestiti Vas da je Vaša narudžba otpremljena.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
 "object.carrier_tracking_ref\">\n"
@@ -643,8 +643,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
-"\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -665,8 +665,8 @@ msgstr ""
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
-"\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -3614,8 +3614,8 @@ msgid ""
 "Due to receipts scheduled in the future, you might end up with "
 "excessive stock . Check the Forecasted Report  before reordering"
 msgstr ""
-"Zbog primki zakazanih u budućnosti, mogli biste završiti s prekomjernom "
-"zalihom. Provjerite izvještaj o prognozi prije ponovne narudžbe"
+"Zbog primki zakazanih u budućnosti, mogli biste završiti s "
+"prekomjernom zalihom. Provjerite izvještaj o prognozi prije ponovne narudžbe"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__procurement_values
@@ -4162,7 +4162,8 @@ msgstr "Primka robe"
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 msgid "HTML reports cannot be auto-printed, skipping report: %s"
-msgstr "HTML izvještaji se ne mogu automatski ispisati, preskačem izvještaj: %s"
+msgstr ""
+"HTML izvještaji se ne mogu automatski ispisati, preskačem izvještaj: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -5115,7 +5116,8 @@ msgstr "Zadrži trenutne stavke"
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
 msgid ""
 "Keep the <strong>Counted Quantity</strong> (the Difference will be updated)"
-msgstr "Zadrži <strong>prebrojanu količinu</strong> (razlika će biti ažurirana)"
+msgstr ""
+"Zadrži <strong>prebrojanu količinu</strong> (razlika će biti ažurirana)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -6754,6 +6756,7 @@ msgstr "Tip pakiranja"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
+#: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_has_serial_move_line
 msgid "Pack of 6"
 msgstr "Pakiranje od 6"
 
@@ -9253,7 +9256,8 @@ msgstr "Odgođeno"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_set_view
 msgid "Some selected lines already have quantities set, they will be ignored."
-msgstr "Neke odabrane stavke već imaju postavljene količine, bit će zanemarene."
+msgstr ""
+"Neke odabrane stavke već imaju postavljene količine, bit će zanemarene."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__origin

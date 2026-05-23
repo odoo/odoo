@@ -119,7 +119,11 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
 
         if (login && employee) {
             pos.hasLoggedIn = true;
-            pos.setCashier(employee);
+            const result = pos.setCashier(employee);
+
+            if (!result) {
+                return false;
+            }
         }
 
         const currentScreen = pos.router.state.current;

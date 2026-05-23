@@ -30,7 +30,11 @@ export function showTemplateUndoNotification(
                         // Taking out the controller to be restored after unlinking the record
                         const restoreController =
                             env.services.action.currentController.config.breadcrumbs?.at(-2);
-                        restoreController?.onSelected();
+                        await restoreController?.onSelected();
+                        const postAction = undoCallback?.post_action;
+                        if (postAction) {
+                            env.services.action.doAction(postAction);
+                        }
                     }
                     undoNotification();
                 },

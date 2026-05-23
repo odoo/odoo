@@ -1762,13 +1762,13 @@ class TestUi(TestPointOfSaleHttpCommon):
             self.assertEqual(len(warning_outputs), 1, "Exactly one warning should be logged")
 
     def test_customer_display(self):
-        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}", 'CustomerDisplayTour', login="pos_user")
+        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}?access_token={self.main_pos_config.access_token}", 'CustomerDisplayTour', login="pos_user")
 
     def test_customer_display_scroll(self):
-        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}", 'CustomerDisplayTourScroll', login="pos_user")
+        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}?access_token={self.main_pos_config.access_token}", 'CustomerDisplayTourScroll', login="pos_user")
 
     def test_customer_display_with_qr(self):
-        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}", 'CustomerDisplayTourWithQr', login="pos_user")
+        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}?access_token={self.main_pos_config.access_token}", 'CustomerDisplayTourWithQr', login="pos_user")
 
     def test_combo_refund_different_qty(self):
         setup_product_combo_items(self)
@@ -2064,6 +2064,58 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'PosProductWithDynamicAttributes', login="pos_admin")
 
+    def test_product_with_single_value_dynamic_attribute(self):
+        """A dynamic attribute with a single value must not open the configurator but still
+        creates the product variant on the server when added to the order."""
+        dynamic_attribute = self.env['product.attribute'].create({
+            'name': 'Single Dynamic Attribute',
+            'create_variant': 'dynamic',
+        })
+        value = self.env['product.attribute.value'].create({
+            'name': 'Only Value',
+            'attribute_id': dynamic_attribute.id,
+        })
+        product_template = self.env['product.template'].create({
+            'name': 'Single Dynamic Product',
+            'list_price': 5.0,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_template.id,
+            'attribute_id': dynamic_attribute.id,
+            'value_ids': [Command.set([value.id])],
+        })
+
+        no_variant_attribute = self.env['product.attribute'].create({
+            'name': 'No Variant Attribute',
+            'create_variant': 'no_variant',
+        })
+        no_variant_value = self.env['product.attribute.value'].create({
+            'name': 'No Variant Value',
+            'attribute_id': no_variant_attribute.id,
+        })
+        mixed_template = self.env['product.template'].create({
+            'name': 'Mixed Attribute Product',
+            'list_price': 7.0,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        self.env['product.template.attribute.line'].create([
+            {
+                'product_tmpl_id': mixed_template.id,
+                'attribute_id': dynamic_attribute.id,
+                'value_ids': [Command.set([value.id])],
+            },
+            {
+                'product_tmpl_id': mixed_template.id,
+                'attribute_id': no_variant_attribute.id,
+                'value_ids': [Command.set([no_variant_value.id])],
+            },
+        ])
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_product_with_single_value_dynamic_attribute', login="pos_user")
+
     def test_autofill_cash_count(self):
         """Make sure that when the decimal separator is a comma, the shown orderline price is correct.
         """
@@ -2352,13 +2404,8 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     @freeze_time("2025-06-15 11:09")
     def test_cash_in_out(self):
-        self.pos_user.write({
-            'group_ids': [
-                (4, self.env.ref('account.group_account_basic').id),
-            ]
-        })
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_cash_in_out', login="pos_user")
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_cash_in_out', login="pos_admin")
 
         self.assertEqual(len(self.main_pos_config.current_session_id.statement_line_ids), 1, "There should be one cash in/out statement line")
         self.assertEqual(self.main_pos_config.current_session_id.statement_line_ids[0].amount, -5, "The cash in/out amount should be -5")

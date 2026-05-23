@@ -4,8 +4,8 @@
         <xpath expr="//div[hasclass('pos-receipt-contact')]" position="before">
             <t t-if="order.config._self_order_pos">
                 <div t-if="order.preset_id or order.config.self_ordering_mode !== 'nothing'" class="picking-service text-center pt-3">
-                    <span t-if="order.preset_id?.identification == 'none' or (!order.preset_id and order.config.self_ordering_service_mode == 'table')">Service at Table</span>
-                    <span t-elif="order.preset_id?.identification == 'name' or (!order.preset_id and order.config.self_ordering_service_mode != 'table')">Pickup At Counter</span>
+                    <span t-if="order.preset_id?.service_at == 'table' or (!order.preset_id and order.config.self_ordering_service_mode == 'table')">Service at Table</span>
+                    <span t-elif="order.preset_id?.service_at == 'counter' or (!order.preset_id and order.config.self_ordering_service_mode != 'table')">Pickup At Counter</span>
                     <span t-else="">Delivery</span>
                 </div>
                 <h1 t-if="order.tracking_number and order.config.displayBigTrackingNumber" class="tracking-number text-center" style="font-size: 100px" t-out="order.tracking_number" />

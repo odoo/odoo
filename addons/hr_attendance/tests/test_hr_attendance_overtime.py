@@ -817,6 +817,24 @@ class TestHrAttendanceOvertime(HttpCase):
         })
         self.assertEqual(attendance.overtime_hours, 0, 'There should be no overtime for the fully flexible resource.')
 
+    def test_overtime_flexible_non_consecutive_days(self):
+        """ A flexible hours employee working exactly their weekly budget
+        spread across non consecutive days must not generate overtime. """
+        self.flexible_employee.ruleset_id = self.ruleset
+        self.flexible_employee.tz = 'Europe/Brussels'
+        self.calendar_flex_40h.write({
+            'hours_per_day': 8,
+            'hours_per_week': 16,
+            'flexible_hours': True,
+        })
+        # Jan 6 2025 = Monday, Jan 11 = Saturday
+        attendances = self.env['hr.attendance'].create([
+            {'employee_id': self.flexible_employee.id, 'check_in': datetime(2025, 1, 6, 7, 0), 'check_out': datetime(2025, 1, 6, 15, 0)},
+            {'employee_id': self.flexible_employee.id, 'check_in': datetime(2025, 1, 11, 7, 0), 'check_out': datetime(2025, 1, 11, 15, 0)},
+        ])
+        for att in attendances:
+            self.assertEqual(att.overtime_hours, 0)
+
     def test_refuse_timeoff(self):
         self.company.write({
             "attendance_overtime_validation": "by_manager"
@@ -1527,3 +1545,38 @@ class TestHrAttendanceOvertime(HttpCase):
         self.ruleset.company_id.absence_management = True
         attendances._update_overtime()
         assert_overtime_durations(attendances)
+
+    def test_regenerate_weekly_overtime_flexible_employee(self):
+        self.ruleset.rule_ids.write({
+            'expected_hours_from_contract': True,
+            'quantity_period': 'week'
+        })
+        attendances = self.env['hr.attendance'].create([
+            {
+                "employee_id": self.flexible_employee.id,
+                "check_in": datetime(2026, 5, 5, 8, 15, 0),
+                "check_out": datetime(2026, 5, 5, 16, 15, 0),
+            },
+            {
+                "employee_id": self.flexible_employee.id,
+                "check_in": datetime(2026, 5, 6, 8, 15, 0),
+                "check_out": datetime(2026, 5, 6, 18, 15, 0),
+            },
+            {
+                "employee_id": self.flexible_employee.id,
+                "check_in": datetime(2026, 5, 7, 8, 15, 0),
+                "check_out": datetime(2026, 5, 7, 13, 15, 0),
+            },
+            {
+                "employee_id": self.flexible_employee.id,
+                "check_in": datetime(2026, 5, 8, 8, 15, 0),
+                "check_out": datetime(2026, 5, 8, 23, 15, 0),
+            },
+            {
+                "employee_id": self.flexible_employee.id,
+                "check_in": datetime(2026, 5, 9, 8, 15, 0),
+                "check_out": datetime(2026, 5, 9, 20, 15, 0),
+            },
+        ])
+        self.ruleset.action_regenerate_overtimes()
+        self.assertEqual(sum(attendances.mapped('overtime_hours')), 10)

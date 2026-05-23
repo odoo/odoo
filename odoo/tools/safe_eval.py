@@ -23,8 +23,8 @@ import typing
 from opcode import opmap, opname
 from types import CodeType
 
+import psycopg2
 import werkzeug
-from psycopg2 import OperationalError
 
 import odoo.exceptions
 
@@ -356,10 +356,12 @@ _BUILTINS = {
 
 
 _BUBBLEUP_EXCEPTIONS = (
+    odoo.exceptions.ConcurrencyError,  # let retrying handle this error
     odoo.exceptions.UserError,
     odoo.exceptions.RedirectWarning,
+    psycopg2.OperationalError,  # let auto-replay of serialized transactions work its magic
+    psycopg2.IntegrityError,  # let retrying handle this error
     werkzeug.exceptions.HTTPException,
-    OperationalError,  # let auto-replay of serialized transactions work its magic
     ZeroDivisionError,
 )
 

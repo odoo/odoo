@@ -55,7 +55,9 @@ registry.category("web_tour.tours").add("test_pos_order_shipping_date", {
                 content: "Assert shipping date in receipt",
                 trigger: ".pos-receipt-order-data",
                 run: () => {
-                    const dateDiv = document.querySelector(".pos-receipt-order-data div");
+                    const dateDiv = document.querySelector(
+                        ".pos-receipt-order-data .shipping-date"
+                    );
                     const nextYear = new Date().getFullYear() + 1;
                     const expectedDate = `5/30/${nextYear}`;
                     if (dateDiv.innerText !== expectedDate) {

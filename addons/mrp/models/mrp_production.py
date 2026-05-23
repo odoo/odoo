@@ -1032,7 +1032,9 @@ class MrpProduction(models.Model):
                 if production.state in ('cancel', 'done'):
                     continue
                 if picking_type != production.picking_type_id:
+                    prev_production_name = production.name
                     production.name = picking_type.sequence_id.next_by_id()
+                    production.move_raw_ids.reference_ids.filtered(lambda r: r.name == prev_production_name).name = production.name
                     moves_to_reassign |= production.move_raw_ids
 
         res = super(MrpProduction, self).write(vals)
@@ -1090,6 +1092,10 @@ class MrpProduction(models.Model):
         # Make sure that the date passed in vals_list are taken into account and not modified by a compute
         reference_vals_list = []
         for rec, vals in zip(res, vals_list):
+            # Make sure that the move_dest_ids of the move_finished_ids are set since the created_production_id
+            # is a One2Many field unable to link multiple MO's to a common move_dest_ids
+            if vals.get('move_dest_ids'):
+                rec.move_finished_ids.move_dest_ids = vals.get('move_dest_ids')
             (rec.move_raw_ids | rec.move_finished_ids).production_group_id = rec.production_group_id
             if not rec.reference_ids:
                 reference_vals_list.append({
@@ -1261,10 +1267,10 @@ class MrpProduction(models.Model):
         ], limit=1).id
 
     def _get_move_finished_values(self, product_id, product_uom_qty, product_uom, operation_id=False, byproduct_id=False, cost_share=0):
-        group_orders = self.production_group_id.production_ids
+        group_orders = self.reference_ids.production_ids.production_group_id.production_ids.filtered(lambda p: p.production_group_id.parent_ids == self.production_group_id.parent_ids)
         move_dest_ids = self.move_dest_ids
-        if len(group_orders) > 1:
-            move_dest_ids |= group_orders[0].move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_dest_ids
+        if not move_dest_ids:
+            move_dest_ids = group_orders.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_dest_ids
         return {
             'product_id': product_id,
             'product_uom_qty': product_uom_qty,
@@ -1282,7 +1288,7 @@ class MrpProduction(models.Model):
             'origin': self.product_id.partner_ref,
             'reference_ids': self.reference_ids.ids,
             'propagate_cancel': self.propagate_cancel,
-            'move_dest_ids': [(4, x.id) for x in move_dest_ids if not byproduct_id],
+            'move_dest_ids': [Command.set(move_dest_ids.ids)] if not byproduct_id else [],
             'cost_share': cost_share,
             'production_group_id': self.production_group_id.id,
         }
@@ -1632,7 +1638,7 @@ class MrpProduction(models.Model):
 
         ignored_mo_ids = self.env.context.get('ignore_mo_ids', [])
         move_raws_to_adjust._adjust_procure_method()
-        moves_to_confirm._action_confirm(merge=False, create_proc=not self.env.context.get('no_procurement'))
+        moves_to_confirm._action_confirm(merge=False)
         workorder_to_confirm._action_confirm()
         workorder_to_confirm._set_cost_mode()
         # run scheduler for moves forecasted to not have enough in stock
@@ -1918,7 +1924,7 @@ class MrpProduction(models.Model):
                 elif workorder.duration == 0.0:
                     workorder.duration = workorder.duration_expected
                     workorder.duration_unit = round(workorder.duration / max(workorder.qty_produced, 1), 2)
-            order._cal_price(moves_to_do_by_order[order.id])
+            order.with_company(order.company_id)._cal_price(moves_to_do_by_order[order.id])
         moves_to_finish = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_to_finish.picked = True
         moves_to_finish = moves_to_finish._action_done(cancel_backorder=cancel_backorder)
@@ -2552,7 +2558,12 @@ class MrpProduction(models.Model):
             production.action_confirm()
 
         self.with_context(skip_activity=True)._action_cancel()
-        self.sudo().production_group_id.unlink()
+        self_sudo = self.sudo()
+        groups = {production.production_group_id for production in self_sudo if production.production_group_id}
+        self_sudo.production_group_id = False
+        for group in groups:
+            if not group.production_ids:
+                group.unlink()
         # set the new deadline of origin moves (stock to pre prod)
         production.move_raw_ids.move_orig_ids.with_context(date_deadline_propagate_ids=set(production.move_raw_ids.ids)).write({'date_deadline': production.date_start})
         for p in self:

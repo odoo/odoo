@@ -1991,8 +1991,11 @@ class TestBoM(TestMrpCommon):
         mo_form.bom_id = self.bom_1
         mo_form.picking_type_id = self.picking_type_manu
         mo_1 = mo_form.save()
+        picking_type_manu_clone = self.picking_type_manu.copy({'sequence_code': 'NEW_CODE'})
+        mo_1.picking_type_id = picking_type_manu_clone
         mo_1.action_confirm()
         picking = mo_1.picking_ids
+        self.assertEqual(picking.origin, mo_1.name)
         self.assertRecordValues(picking.move_ids, [
             {'product_id': self.product_2.id, 'product_uom_qty': 2},
             {'product_id': self.product_1.id, 'product_uom_qty': 4},

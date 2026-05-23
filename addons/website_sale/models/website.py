@@ -650,7 +650,8 @@ class Website(models.Model):
         return request and request.geoip.country_code or False
 
     def sale_product_domain(self):
-        website_domain = self.get_current_website().website_domain()
+        website = self or self.get_current_website()
+        website_domain = website.website_domain()
         if self.env.user._is_internal():
             user_domain = Domain.TRUE
         else:
@@ -658,7 +659,7 @@ class Website(models.Model):
                 ('is_published', '=', True),
                 ('service_tracking', 'in', self.env['product.template']._get_saleable_tracking_types()),
             ]
-        company_domain = [('company_id', 'in', [False, self.company_id.id])]
+        company_domain = [('company_id', 'in', [False, website.company_id.id])]
         return Domain.AND([self._product_domain(), website_domain, user_domain, company_domain])
 
     def _product_domain(self):
@@ -935,8 +936,8 @@ class Website(models.Model):
             (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
             for sale_order in abandoned_carts:
                 template = self.env.ref('website_sale.mail_template_sale_cart_recovery')
-                # fallback email_vals in case partner_to and email_to were emptied
-                email_vals = {} if template.email_to or template.partner_to else {
+                # fallback email_vals in case partner_to,email_to were emptied or default recipients is false
+                email_vals = {} if template.email_to or template.partner_to or template.use_default_to else {
                     'email_to': sale_order.partner_id.email_formatted
                 }
                 template.send_mail(sale_order.id, email_values=email_vals)

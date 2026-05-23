@@ -3,7 +3,7 @@ import { onRpc } from "@web/../tests/web_test_helpers";
 
 // Pre-fetch image routes so they're cached and available faster during tests
 const imgCache = new Map();
-function onRpcImg(route) {
+export function onRpcImg(route) {
     if (!imgCache.has(route)) {
         imgCache.set(route, globals.fetch.call(window, route));
     }

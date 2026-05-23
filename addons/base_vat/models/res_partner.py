@@ -29,7 +29,7 @@ _ref_vat = {
     'au': '83 914 571 673',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
-    'br': _lt('either 11 digits for CPF or 14 digits for CNPJ'),
+    'br': _lt('either 11 digits for CPF or 14 characters for CNPJ'),
     'cr': '3101012009',
     'ch': _lt('CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA'),  # Swiss by Yannick Vaucher @ Camptocamp
     'cl': '76086428-5',
@@ -169,6 +169,17 @@ class ResPartner(models.Model):
     @api.onchange('vat', 'country_id')
     def _onchange_vat(self):
         self._check_vat(validation=False)
+
+    @api.model
+    def _get_country_specific_vat_variants(self, normalized_vat, country_prefix):
+        vat_variants = super()._get_country_specific_vat_variants(normalized_vat, country_prefix)
+        if country_prefix.upper() == 'CH':
+            normalized_vat = normalized_vat.replace('-', '')
+            if len(normalized_vat) >= 12:
+                vat_formatted = self._run_vat_checks(self.env.ref('base.ch'), normalized_vat, validation=False)[0]
+                vat_base = re.sub(r"\s*(TVA|IVA|MWST)?$", "", vat_formatted.upper())
+                vat_variants.extend([f'{vat_base} {suffix}' for suffix in ('TVA', 'IVA', 'MWST')])
+        return vat_variants
 
     @api.depends_context('company')
     @api.depends('vat')
@@ -724,9 +735,26 @@ class ResPartner(models.Model):
             return any(re.compile(rx).match(vat) for rx in all_gstin_re)
         return False
 
+    # Minimal regex matching similar to stdnum
+    # Derived from https://github.com/arthurdejong/python-stdnum/commit/d3ec3bd7fefe0d0a708b6594a66de28777eb9b8d
+    __check_vat_br_re = re.compile(r'^[\dA-Z]+$')
+
     def check_vat_br(self, vat):
+        def is_cnpj_valid(vat):
+            vat = clean(vat, ' -./').strip().upper()
+            if vat.startswith('000000000000') or len(vat) != 14:
+                return False
+            if self.__check_vat_br_re.match(vat):
+                values = [ord(n) - 48 for n in vat[:12]]
+                weights = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+                d1 = (11 - sum(w * v for w, v in zip(weights, values))) % 11 % 10
+                values.append(d1)
+                weights = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+                d2 = (11 - sum(w * v for w, v in zip(weights, values))) % 11 % 10
+                return vat[-2:] == f'{d1}{d2}'
+            return False
+
         is_cpf_valid = stdnum.get_cc_module('br', 'cpf').is_valid
-        is_cnpj_valid = stdnum.get_cc_module('br', 'cnpj').is_valid
         return is_cpf_valid(vat) or is_cnpj_valid(vat)
 
     _check_vat_cr_re = re.compile(r'^(?:[1-9]\d{8}|\d{10}|[1-9]\d{10,11})$')

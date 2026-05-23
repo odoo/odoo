@@ -43,8 +43,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:35+0000\n"
-"PO-Revision-Date: 2026-04-24 12:08+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"PO-Revision-Date: 2026-05-16 09:35+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/fi/>\n"
@@ -1815,7 +1815,7 @@ msgstr "Käteisen pyöristäminen (kassa)"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Cash Rounding:"
-msgstr ""
+msgstr "Käteisen pyöristäminen:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2906,7 +2906,7 @@ msgstr "Päivittäiset istunnot sisältävät kassasi myynnin."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid "Dangerous: Too Many Products"
-msgstr ""
+msgstr "Vaarallista: Liian monta tuotetta"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
@@ -2917,7 +2917,7 @@ msgstr "Koontinäyttö"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid "Database Connection Lost"
-msgstr ""
+msgstr "Yhteys tietokantaan katkesi"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3388,6 +3388,18 @@ msgstr "Haluatko avata asiakasluettelon valitaksesi asiakkaan?"
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 msgid "Download"
 msgstr "Lataa"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download IDB Errors"
+msgstr "Lataa IDB-virheet"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download IndexedDB error logs from localStorage"
+msgstr "Lataa IndexedDB-virhelokit localStorage:sta"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4792,7 +4804,7 @@ msgstr "Kannettavan tietokoneen malli X"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.js:0
 msgid "Large Product Count Detected"
-msgstr ""
+msgstr "Havaittu suuri tuotemäärä"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_big_scrollbars
@@ -7956,7 +7968,7 @@ msgstr "Aiheeseen liittyvä istunto: %(link)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid "Reload"
-msgstr ""
+msgstr "Lataa uudelleen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9325,6 +9337,8 @@ msgid ""
 "The connection to the local database was lost. Reloading the page will "
 "restore it and prevent any loss of unsaved orders."
 msgstr ""
+"Yhteys paikalliseen tietokantaan katkesi. Sivun uudelleenlataaminen "
+"palauttaa yhteyden ja estää tallentamattomien tilausten menettämisen."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9843,6 +9857,9 @@ msgid ""
 "(limit)s). Loading all products may slow down the Point of Sale. Do you want "
 "to continue with Full Synchronization?"
 msgstr ""
+"Tälle kassajärjestelmälle on saatavilla %(count)s tuotetta (määritetty raja: "
+"%(limit)s). Kaikkien tuotteiden lataaminen voi hidastaa kassajärjestelmää. "
+"Haluatko jatkaa täydellä synkronoinnilla?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9853,6 +9870,11 @@ msgid ""
 "may cause it to crash or become unresponsive. It is strongly recommended to "
 "use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
+"Tälle kassajärjestelmälle on saatavilla %(count)s tuotetta (määritetty raja: "
+"%(limit)s). Näin monen tuotteen lataaminen hidastaa järjestelmää "
+"huomattavasti ja voi aiheuttaa sen kaatumisen tai toimimattomuuden. "
+"Rajoitetun synkronoinnin käyttäminen on erittäin suositeltavaa. Haluatko "
+"silti jatkaa?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10641,6 +10663,14 @@ msgid "Validate"
 msgstr "Vahvista"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"Validation Error: You cannot assign the same Cash payment method to multiple "
+"POS Shops. Please create a separate Cash payment method for each shop."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
 msgid "Value"
 msgstr "Arvo"
@@ -10815,7 +10845,7 @@ msgstr "Haluatko jatkaa ilman tulostamista vai yrittää uudelleen?"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11086,6 +11116,12 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "You don't have the access rights to perform a cash in/out."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
@@ -11191,7 +11227,7 @@ msgstr "Sinun {{ object.config_id.name }} kuittisi"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Z"
-msgstr ""
+msgstr "Z"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11508,7 +11544,7 @@ msgstr "arvolla"
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sales_detail_report.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #~ msgid "0.00"
 #~ msgstr "0.00"

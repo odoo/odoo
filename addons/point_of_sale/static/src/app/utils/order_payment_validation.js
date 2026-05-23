@@ -2,7 +2,7 @@ import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/c
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
-import { handleRPCError } from "./error_handlers";
+import { handleRPCError } from "@point_of_sale/app/utils/error_handlers";
 import { ask } from "./make_awaitable_dialog";
 
 /**
@@ -158,7 +158,7 @@ export default class OrderPaymentValidation {
             }
 
             // 2. Invoice, should not stop the validation process but a dialog is shown if an
-            // error occured.
+            // error occurred.
             if (this.shouldDownloadInvoice() && this.order.isToInvoice()) {
                 if (this.order.raw.account_move) {
                     await this.pos.env.services.account_move.downloadPdf(
@@ -196,6 +196,14 @@ export default class OrderPaymentValidation {
         }
     }
 
+    get canPrintReceipt() {
+        return (
+            this.order.nb_print === 0 &&
+            this.pos.config.iface_print_auto &&
+            (this.order.isToInvoice() ? this.order.finalized : true)
+        );
+    }
+
     async afterOrderValidation() {
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
@@ -205,11 +213,8 @@ export default class OrderPaymentValidation {
             });
         }
 
-        if (this.order.nb_print === 0 && this.pos.config.iface_print_auto) {
-            const invoiced_finalized = this.order.isToInvoice() ? this.order.finalized : true;
-            if (invoiced_finalized) {
-                await this.pos.printReceipt({ order: this.order });
-            }
+        if (this.canPrintReceipt) {
+            await this.pos.printReceipt({ order: this.order });
         }
     }
 

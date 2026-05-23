@@ -44,6 +44,7 @@ import { FieldChangeReplicationPlugin } from "@html_builder/core/field_change_re
 import { BuilderContentEditablePlugin } from "@html_builder/core/builder_content_editable_plugin";
 import { ImageFieldPlugin } from "@html_builder/plugins/image_field_plugin";
 import { MonetaryFieldPlugin } from "@html_builder/plugins/monetary_field_plugin";
+import { DateTimeFieldPlugin } from "@html_builder/plugins/date_time_field_plugin";
 import { Many2OneOptionPlugin } from "@html_builder/plugins/many2one_option_plugin";
 import { CustomizeTranslationTab } from "@website/builder/plugins/translation_tab/customize_translation_tab";
 import { CustomizeTranslationTabPlugin } from "./plugins/translation_tab/customize_translation_tab_plugin";
@@ -88,6 +89,7 @@ const TRANSLATION_PLUGINS = [
     BuilderContentEditablePlugin,
     ImageFieldPlugin,
     MonetaryFieldPlugin,
+    DateTimeFieldPlugin,
     Many2OneOptionPlugin,
     CustomizeTranslationTabPlugin,
     // Those plugin are depended by other Plugin but not used in translation
