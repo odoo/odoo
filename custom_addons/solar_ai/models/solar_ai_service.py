@@ -58,15 +58,17 @@ class SolarAiService(models.AbstractModel):
         headers = self._build_headers()
         if not headers:
             _logger.warning(
-                "solar_ai: no OpenRouter API key configured — skipping LLM call"
+                "solar_ai: no OpenRouter API key configured — skipping LLM call",
             )
             return {"content": "", "usage": {}}
 
         base_url = self._get_config(
-            "openrouter_base_url", "https://openrouter.ai/api/v1"
+            "openrouter_base_url",
+            "https://openrouter.ai/api/v1",
         )
         model = model or self._get_config(
-            "default_model", "anthropic/claude-sonnet-4-5"
+            "default_model",
+            "anthropic/claude-sonnet-4-5",
         )
 
         payload = {"model": model, "messages": messages}
@@ -96,7 +98,9 @@ class SolarAiService(models.AbstractModel):
         data = resp.json()
         elapsed_ms = int((datetime.now() - started_at).total_seconds() * 1000)
         _logger.info(
-            "solar_ai: LLM call complete in %dms (model=%s)", elapsed_ms, model
+            "solar_ai: LLM call complete in %dms (model=%s)",
+            elapsed_ms,
+            model,
         )
 
         return {

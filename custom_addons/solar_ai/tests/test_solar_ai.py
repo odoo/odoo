@@ -1,7 +1,7 @@
 import json
 from unittest.mock import MagicMock, patch
 
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import HttpCase, TransactionCase, tagged
 
 
 @tagged("solar_ai", "post_install", "-at_install")
@@ -49,7 +49,8 @@ class TestSolarAiService(TransactionCase):
             ),
         )
         self.env["ir.config_parameter"].set_param(
-            "solar_ai.openrouter_api_key", "test-key"
+            "solar_ai.openrouter_api_key",
+            "test-key",
         )
 
         service = self.env["solar.ai.service"]
@@ -57,3 +58,37 @@ class TestSolarAiService(TransactionCase):
             "Monthly electricity consumption: 850 kWh. Total: 3210 UAH",
         )
         self.assertEqual(result.get("document_type_code"), "bill_electricity")
+
+
+@tagged("solar_ai", "post_install", "-at_install")
+class TestOlgProxy(HttpCase):
+    @patch("httpx.post")
+    def test_olg_chat_route(self, mock_post):
+        mock_post.return_value.status_code = 200
+        mock_post.return_value.json.return_value = {
+            "choices": [
+                {"message": {"content": "AI response text", "role": "assistant"}}
+            ],
+            "usage": {},
+        }
+        self.env["ir.config_parameter"].sudo().set_param(
+            "solar_ai.openrouter_api_key",
+            "test-key",
+        )
+        self.authenticate("admin", "admin")
+
+        resp = self.url_open(
+            "/solar_ai/olg/api/olg/1/chat",
+            data=json.dumps(
+                {
+                    "jsonrpc": "2.0",
+                    "method": "call",
+                    "id": 1,
+                    "params": {"prompt": "Translate this", "conversation_history": []},
+                },
+            ),
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(resp.status_code, 200)
+        result = resp.json()
+        self.assertEqual(result.get("result", {}).get("status"), "success")
