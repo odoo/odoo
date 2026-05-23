@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-05-02 09:28+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-05-20 16:40+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/pos_hr/"
 "uk/>\n"
 "Language: uk\n"
@@ -46,7 +46,7 @@ msgstr "У доступі відмовлено"
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_daily_sales_reports_wizard__add_report_per_employee
 msgid "Add a report per each employee"
-msgstr ""
+msgstr "Додати звіт для кожного співробітника"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -77,12 +77,14 @@ msgid ""
 "Can't generate a report per employee! as selected session has no orders "
 "associated with any employee."
 msgstr ""
+"Неможливо створити звіт для кожного співробітника! Оскільки вибрана сесія не "
+"має замовлень, пов'язаних з жодним співробітником."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.xml:0
 msgid "Cash in/out"
-msgstr ""
+msgstr "Покласти/забрати готвіку"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
@@ -96,12 +98,12 @@ msgstr "Касир"
 #. odoo-python
 #: code:addons/pos_hr/models/pos_order.py:0
 msgid "Cashier %s"
-msgstr ""
+msgstr "Касир %s"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
 msgid "Cashier name"
-msgstr ""
+msgstr "Імʼя касира"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -113,7 +115,7 @@ msgstr "Змінити касира"
 #. odoo-python
 #: code:addons/pos_hr/models/pos_session.py:0
 msgid "Closed Register"
-msgstr ""
+msgstr "Закритий касовий апарат"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_res_config_settings
@@ -150,12 +152,12 @@ msgstr "Співробітник"
 #. module: pos_hr
 #: model:ir.actions.report,name:pos_hr.multi_employee_sales_report_action
 msgid "Employee Sales Details"
-msgstr ""
+msgstr "Деталі продажів співробітника"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Employee Sales Report"
-msgstr ""
+msgstr "Звіт продажів співробітника"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
@@ -175,6 +177,8 @@ msgid ""
 "Employees linked to users with the PoS Manager role are automatically added "
 "to this list"
 msgstr ""
+"Співробітники, пов’язані з користувачами з роллю менеджера PoS, автоматично "
+"додаються до цього списку"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
@@ -192,7 +196,7 @@ msgstr "Співробітникик з паравами доступу мене
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
 msgid "Enter your PIN"
-msgstr ""
+msgstr "Введіть ваш PIN"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
@@ -219,18 +223,20 @@ msgid ""
 "Only the cashier linked to the logged-in user (%s) can proceed to the "
 "Backend."
 msgstr ""
+"Тільки касир, пов'язаний з користувачем, що зареєстрований (%s), може "
+"перейти до бекенду."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
 msgid "Open Register"
-msgstr ""
+msgstr "Відкрити касовий апарат"
 
 #. module: pos_hr
 #. odoo-python
 #: code:addons/pos_hr/models/pos_session.py:0
 msgid "Opened register"
-msgstr ""
+msgstr "Відкритий касовий апарат"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -248,7 +254,7 @@ msgstr "Інші"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 msgid "PIN not found"
-msgstr ""
+msgstr "PIN не знайдено"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -266,7 +272,7 @@ msgstr "Платежі"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/components/closing_popup/closing_popup.js:0
 msgid "Payments in %(paymentMethod)s"
-msgstr ""
+msgstr "Платежі в %(paymentMethod)s"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
@@ -313,40 +319,40 @@ msgstr "Варіант товару"
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Select Employee(s)"
-msgstr ""
+msgstr "Вибраний співробітник"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_hr_single_employee_sales_report
 msgid "Session sales details for a single employee"
-msgstr ""
+msgstr "Відомості про продажі сесії для одного співробітника"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_session__employee_id
 msgid "The employee who currently uses the cash register"
-msgstr ""
+msgstr "Працівник, який наразі користується касовим апаратом"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_account_bank_statement_line__employee_id
 msgid "The employee who made the cash move."
-msgstr ""
+msgstr "Працівник, який здійснив переказ готівки."
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
 #: model:ir.model.fields,help:pos_hr.field_pos_payment__employee_id
 msgid "The employee who uses the cash register."
-msgstr ""
+msgstr "Працівник, який користується касовим апаратом."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 msgid "There is no cashier available."
-msgstr ""
+msgstr "Каса відсутня."
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.xml:0
 msgid "Unlock Register"
-msgstr ""
+msgstr "Розблокувати касовий апарат"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -358,7 +364,7 @@ msgstr "Невірний PIN-код"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/overrides/screens/product_screen/order_summary/order_summary.js:0
 msgid "You are not allowed to change the price of a product."
-msgstr ""
+msgstr "Вам не дозволено змінювати ціну товару."
 
 #. module: pos_hr
 #. odoo-python

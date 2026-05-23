@@ -4,63 +4,69 @@
 #
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
-"Language-Team: Lao (https://www.transifex.com/odoo/teams/41243/lo/)\n"
+"PO-Revision-Date: 2026-05-19 13:31+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/hr_timesheet/"
+"lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "%s Spent"
-msgstr ""
+msgstr "%s ທີ່ໃຊ້ໄປ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 msgid "(%(sign)s%(hours)s:%(minutes)s remaining)"
-msgstr ""
+msgstr "(ຍັງເຫຼືອ %(sign)s%(hours)s:%(minutes)s)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 msgid "(%s days remaining)"
-msgstr ""
+msgstr "(ຍັງເຫຼືອ %s ມື້)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "(incl."
-msgstr ""
+msgstr "(ລວມມີ."
 
 #. module: hr_timesheet
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
-msgstr ""
+msgstr "<b class=\"tip_title\">ເຄັດລັບ: ບັນທຶກຕາຕະລາງເວລາຂອງທ່ານໃຫ້ໄວຂຶ້ນ</b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
 msgid "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 msgstr ""
+"<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"ວັນທີ\" title=\"ວັນ"
+"ທີ\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 msgid "<i class=\"fa fa-download\"/> Download"
-msgstr ""
+msgstr "<i class=\"fa fa-download\"/> ດາວໂຫຼດ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 msgid "<i class=\"fa fa-print\"/> Print"
-msgstr ""
+msgstr "<i class=\"fa fa-print\"/> ພິມ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
@@ -78,11 +84,27 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('has_timesheet', '=', False)]}\">\n"
+"                        ທ່ານບໍ່ສາມາດລຶບພະນັກງານທີ່ມີຕາຕະລາງເວລາໄດ້.\n"
+"                        <span attrs=\"{'invisible': [('has_active_employee', "
+"'=', False)]}\">\n"
+"                            ທ່ານສາມາດຈັດເກັບພະນັກງານເຫຼົ່ານີ້ ຫຼື ລຶບຕາຕະລາງເວລາທັງໝົດຂອງພວ"
+"ກເຂົາກ່ອນ.\n"
+"                        </span>\n"
+"                        <span attrs=\"{'invisible': [('has_active_employee', "
+"'=', True)]}\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            ກະລຸນາລຶບຕາຕະລາງເວລາທັງໝົດຂອງພວກເຂົາກ່ອນ.\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('has_timesheet', '=', True)"
+"]}\">\n"
+"                        ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການລຶບພະນັກງານເຫຼົ່ານີ້?\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 msgid "<span class=\"o_stat_text\">Timesheets</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ຕາຕະລາງເວລາ</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -91,124 +113,128 @@ msgid ""
 "<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Hours Spent on Sub-tasks:</span>\n"
 "                                <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Days Spent on Sub-tasks:</span>"
 msgstr ""
+"<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', "
+"'=', True)]}\">ຊົ່ວໂມງທີ່ໃຊ້ໃນວຽກຍ່ອຍ:</span>\n"
+"                                <span class=\"text-nowrap\" attrs=\""
+"{'invisible' : [('encode_uom_in_days', '=', False)]}\">ມື້ທີ່ໃຊ້ໃນວຽກຍ່ອຍ:</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span style=\"margin-right: 15px;\">Total (Days)</span>"
-msgstr ""
+msgstr "<span style=\"margin-right: 15px;\">ລວມ (ມື້)</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span style=\"margin-right: 15px;\">Total (Hours)</span>"
-msgstr ""
+msgstr "<span style=\"margin-right: 15px;\">ລວມ (ຊົ່ວໂມງ)</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span>Date</span>"
-msgstr ""
+msgstr "<span>ວັນທີ</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span>Description</span>"
-msgstr ""
+msgstr "<span>ຄຳອະທິບາຍ</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span>Employee</span>"
-msgstr ""
+msgstr "<span>ພະນັກງານ</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span>Project</span>"
-msgstr ""
+msgstr "<span>ໂຄງການ</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span>Task</span>"
-msgstr ""
+msgstr "<span>ວຽກ</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Days Spent:</strong>"
-msgstr ""
+msgstr "<strong>ມື້ທີ່ໃຊ້ໄປ:</strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
 msgid "<strong>Duration: </strong>"
-msgstr ""
+msgstr "<strong>ໄລຍະເວລາ: </strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Hours Spent:</strong>"
-msgstr ""
+msgstr "<strong>ຊົ່ວໂມງທີ່ໃຊ້ໄປ:</strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 msgid "<strong>Progress:</strong>"
-msgstr ""
+msgstr "<strong>ຄວາມຄືບໜ້າ:</strong>"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__analytic_account_active
 msgid "Active Analytic Account"
-msgstr ""
+msgstr "ບັນຊີວິເຄາະທີ່ໃຊ້ງານຢູ່"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_timesheet_manager
 msgid "Administrator"
-msgstr ""
+msgstr "ຜູ້ດູແລລະບົບ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "All"
-msgstr ""
+msgstr "ທັງໝົດ"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_all
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_all
 msgid "All Timesheets"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາທັງໝົດ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__allocated_hours
 msgid "Allocated Hours"
-msgstr ""
+msgstr "ຊົ່ວໂມງທີ່ຈັດສັນ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__planned_hours
 msgid "Allocated Time"
-msgstr ""
+msgstr "ເວລາທີ່ຈັດສັນ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__allow_timesheets
 msgid "Allow timesheets"
-msgstr ""
+msgstr "ອະນຸຍາດຕາຕະລາງເວລາ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__amount
 msgid "Amount"
-msgstr ""
+msgstr "ຈຳນວນ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/__init__.py:0
 msgid "Analysis"
-msgstr ""
+msgstr "ການວິເຄາະ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__analytic_account_id
 msgid "Analytic Account"
-msgstr ""
+msgstr "ບັນຊີວິເຄາະ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
 msgid "Analytic Entry"
-msgstr ""
+msgstr "ລາຍການວິເຄາະ"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "ແຖວວິເຄາະ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__analytic_account_id
@@ -218,6 +244,11 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
+"ບັນຊີວິເຄາະທີ່ໂຄງການນີ້, ວຽກ ແລະ ຕາຕະລາງເວລາຂອງມັນຖືກເຊື່ອມໂຍງ. \n"
+"ຕິດຕາມຕົ້ນທຶນ ແລະ ລາຍຮັບຂອງໂຄງການຂອງທ່ານໂດຍການຕັ້ງບັນຊີວິເຄາະນີ້ໃນເອກະສານທີ່ກ່ຽວຂ້ອງ (ເຊັ່ນ: ໃບສັ່"
+"ງຂາຍ, ໃບແຈ້ງໜີ້, ໃບສັ່ງຊື້, ໃບບິນຜູ້ສະໜອງ, ຄ່າໃຊ້ຈ່າຍ ແລະ ອື່ນໆ).\n"
+"ບັນຊີວິເຄາະນີ້ສາມາດປ່ຽນແປງໃນແຕ່ລະວຽກໄດ້ແຍກຕ່າງຫາກຖ້າຈຳເປັນ.\n"
+"ຈຳເປັນຕ້ອງມີບັນຊີວິເຄາະເພື່ອໃຊ້ຕາຕະລາງເວລາ."
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
@@ -227,82 +258,84 @@ msgid ""
 "Analyze the projects and tasks on which your employees spend their time.<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
+"ວິເຄາະໂຄງການ ແລະ ວຽກທີ່ພະນັກງານຂອງທ່ານໃຊ້ເວລາ.<br>\n"
+"                ປະເມີນວ່າສ່ວນໃດສາມາດອອກໃບແຈ້ງໜີ້ໄດ້ ແລະ ມັນເປັນຕົ້ນທຶນເທົ່າໃດ."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_allow
 msgid "Approver Reminder"
-msgstr ""
+msgstr "ການເຕືອນຜູ້ອະນຸມັດ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Archive Employees"
-msgstr ""
+msgstr "ຈັດເກັບພະນັກງານ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_ids
 msgid "Associated Timesheets"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາທີ່ກ່ຽວຂ້ອງ"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_activity_analysis
 msgid "By Employee"
-msgstr ""
+msgstr "ຕາມພະນັກງານ"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_project
 msgid "By Project"
-msgstr ""
+msgstr "ຕາມໂຄງການ"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_task
 msgid "By Task"
-msgstr ""
+msgstr "ຕາມວຽກ"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr ""
+msgstr "ຜູ້ຮ່ວມງານໃນໂຄງການທີ່ແບ່ງປັນ"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "ບັນດາບໍລິສັດ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__company_id
 msgid "Company"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າກໍານົດຄ່າ"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "ການກໍານົດຄ່າ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_employee.py:0
 msgid "Confirmation"
-msgstr ""
+msgstr "ການຢືນຢັນ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "ສະກຸນເງິນ"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -312,12 +345,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Date"
-msgstr ""
+msgstr "ວັນທີ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__days
 msgid "Days / Half-Days"
-msgstr ""
+msgstr "ມື້ / ເຄິ່ງມື້"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -327,44 +360,45 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Days Spent"
-msgstr ""
+msgstr "ມື້ທີ່ໃຊ້ໄປ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Days recorded on sub-tasks:"
-msgstr ""
+msgstr "ມື້ທີ່ບັນທຶກໃນວຽກຍ່ອຍ:"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
-msgstr ""
+msgstr "ຄ່າໂຄງການເລີ່ມຕົ້ນສຳລັບຕາຕະລາງເວລາທີ່ສ້າງຂຶ້ນຈາກປະເພດການພັກວຽກ."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_line__employee_id
 msgid "Define an 'hourly cost' on the employee to track the cost of their time."
 msgstr ""
+"ກຳນົດ 'ຕົ້ນທຶນຕໍ່ຊົ່ວໂມງ' ໃຫ້ກັບພະນັກງານເພື່ອຕິດຕາມຕົ້ນທຶນຂອງເວລາຂອງພວກເຂົາ."
 
 #. module: hr_timesheet
 #: model:ir.actions.server,name:hr_timesheet.unlink_employee_action
 msgid "Delete"
-msgstr ""
+msgstr "ລຶບ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Delete Employee"
-msgstr ""
+msgstr "ລຶບພະນັກງານ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__department_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
 msgid "Department"
-msgstr ""
+msgstr "ພະແນກ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
 msgid "Describe your activity"
-msgstr ""
+msgstr "ອະທິບາຍກິດຈະກຳຂອງທ່ານ"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -378,31 +412,31 @@ msgstr "ຄຳອະທິບາຍ"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Discard"
-msgstr ""
+msgstr "ຍົກເລີກ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__display_name
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__display_name
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ທີ່ສະແດງ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 msgid "Download"
-msgstr ""
+msgstr "ດາວໂຫຼດ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Duration"
-msgstr ""
+msgstr "ໄລຍະເວລາ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Effective Hours"
-msgstr ""
+msgstr "ຊົ່ວໂມງທີ່ມີຜົນ"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -414,87 +448,88 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Employee"
-msgstr ""
+msgstr "ພະນັກງານ"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee_delete_wizard
 msgid "Employee Delete Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍລຶບພະນັກງານ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__reminder_user_allow
 msgid "Employee Reminder"
-msgstr ""
+msgstr "ການເຕືອນພະນັກງານ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
 msgid "Employee Termination"
-msgstr ""
+msgstr "ການສິ້ນສຸດການຈ້າງງານ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__employee_ids
 msgid "Employees"
-msgstr ""
+msgstr "ພະນັກງານ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
 msgid "Employees' Timesheets"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາຂອງພະນັກງານ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__encode_uom_in_days
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__encode_uom_in_days
 msgid "Encode Uom In Days"
-msgstr ""
+msgstr "ບັນທຶກຫົວໜ່ວຍເປັນມື້"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_method
 msgid "Encoding Method"
-msgstr ""
+msgstr "ວິທີການບັນທຶກ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__encoding_uom_id
 msgid "Encoding Uom"
-msgstr ""
+msgstr "ຫົວໜ່ວຍການບັນທຶກ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Generate timesheets for validated time off requests and public holidays"
 msgstr ""
+"ສ້າງຕາຕະລາງເວລາສຳລັບຄຳຮ້ອງຂໍພັກວຽກທີ່ໄດ້ຮັບການອະນຸມັດ ແລະ ວັນພັກລັດຖະການ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
 msgid "Group By"
-msgstr ""
+msgstr "ຈັດກຸ່ມຕາມ"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "ການກຳນົດເສັ້ນທາງ HTTP"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__has_active_employee
 msgid "Has Active Employee"
-msgstr ""
+msgstr "ມີພະນັກງານທີ່ກຳລັງເຮັດວຽກຢູ່"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee__has_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__has_timesheet
 msgid "Has Timesheet"
-msgstr ""
+msgstr "ມີຕາຕະລາງເວລາ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Hours"
-msgstr ""
+msgstr "ຊົ່ວໂມງ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields.selection,name:hr_timesheet.selection__res_config_settings__timesheet_encode_method__hours
 msgid "Hours / Minutes"
-msgstr ""
+msgstr "ຊົ່ວໂມງ / ນາທີ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__effective_hours
@@ -507,139 +542,139 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Hours Spent"
-msgstr ""
+msgstr "ຊົ່ວໂມງທີ່ໃຊ້ໄປ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Hours Spent on Sub-Tasks"
-msgstr ""
+msgstr "ຊົ່ວໂມງທີ່ໃຊ້ໃນວຽກຍ່ອຍ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Hours recorded on sub-tasks:"
-msgstr ""
+msgstr "ຊົ່ວໂມງທີ່ບັນທຶກໃນວຽກຍ່ອຍ:"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__id
 msgid "ID"
-msgstr ""
+msgstr "ລະຫັດ (ID)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 msgid "Initially Planned Hours"
-msgstr ""
+msgstr "ຊົ່ວໂມງທີ່ວາງແຜນໄວ້ແຕ່ຕົ້ນ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/res_company.py:0
 #: model:project.task.type,name:hr_timesheet.internal_project_default_stage
 msgid "Internal"
-msgstr ""
+msgstr "ພາຍໃນ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__internal_project_id
 msgid "Internal Project"
-msgstr ""
+msgstr "ໂຄງການພາຍໃນ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid "Invalid operator: %s"
-msgstr ""
+msgstr "ຕົວດຳເນີນການບໍ່ຖືກຕ້ອງ: %s"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid "Invalid value: %s"
-msgstr ""
+msgstr "ຄ່າບໍ່ຖືກຕ້ອງ: %s"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__is_encode_uom_days
 msgid "Is Encode Uom Days"
-msgstr ""
+msgstr "ແມ່ນການບັນທຶກຫົວໜ່ວຍເປັນມື້"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_internal_project
 msgid "Is Internal Project"
-msgstr ""
+msgstr "ແມ່ນໂຄງການພາຍໃນ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__job_title
 msgid "Job Title"
-msgstr ""
+msgstr "ຕຳແໜ່ງງານ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ອັບເດດລ່າສຸດໂດຍ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ອັບເດດລ່າສຸດເມື່ອ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Last month"
-msgstr ""
+msgstr "ເດືອນແລ້ວ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Last week"
-msgstr ""
+msgstr "ອາທິດແລ້ວ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Last year"
-msgstr ""
+msgstr "ປີແລ້ວ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_project_view_form_simplified_inherit_timesheet
 msgid "Log time on tasks"
-msgstr ""
+msgstr "ບັນທຶກເວລາໃນວຽກ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__manager_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__manager_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
 msgid "Manager"
-msgstr ""
+msgstr "ຜູ້ຈັດການ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/res_company.py:0
 msgid "Meeting"
-msgstr ""
+msgstr "ການປະຊຸມ"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_ir_ui_menu
 msgid "Menu"
-msgstr ""
+msgstr "ເມນູ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.rating_rating_view_search_project_inherited
 msgid "My Department's Ratings"
-msgstr ""
+msgstr "ການໃຫ້ຄະແນນຂອງພະແນກຂ້ອຍ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
 msgid "My Department's Updates"
-msgstr ""
+msgstr "ການອັບເດດຂອງພະແນກຂ້ອຍ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.rating_rating_view_search_project_inherited
 msgid "My Team's Ratings"
-msgstr ""
+msgstr "ການໃຫ້ຄະແນນຂອງທີມຂ້ອຍ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
 msgid "My Team's Updates"
-msgstr ""
+msgstr "ການອັບເດດຂອງທີມຂ້ອຍ"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line
@@ -647,70 +682,70 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_user
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
 msgid "My Timesheets"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາຂອງຂ້ອຍ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Newest"
-msgstr ""
+msgstr "ໃໝ່ສຸດ"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid "No activities found. Let's start a new one!"
-msgstr ""
+msgstr "ບໍ່ພົບກິດຈະກຳ. ມາເລີ່ມຕົ້ນອັນໃໝ່ກັນເລີຍ!"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "No data yet!"
-msgstr ""
+msgstr "ຍັງບໍ່ມີຂໍ້ມູນ!"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "None"
-msgstr ""
+msgstr "ບໍ່ມີ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__remaining_hours
 msgid "Number of allocated hours minus the number of hours spent."
-msgstr ""
+msgstr "ຈຳນວນຊົ່ວໂມງທີ່ຈັດສັນ ລົບ ຈຳນວນຊົ່ວໂມງທີ່ໃຊ້ໄປ."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "Ok"
-msgstr ""
+msgstr "ຕົກລົງ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__overtime
 msgid "Overtime"
-msgstr ""
+msgstr "ລ່ວງເວລາ (OT)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__parent_task_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__parent_task_id
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
 msgid "Parent Task"
-msgstr ""
+msgstr "ວຽກແມ່"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "ຄູ່ຄ້າ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 msgid "Print"
-msgstr ""
+msgstr "ພິມ"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "ຫົວໜ່ວຍວັດແທກຜະລິດຕະພັນ"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -718,7 +753,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__progress
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__progress
 msgid "Progress"
-msgstr ""
+msgstr "ຄວາມຄືບໜ້າ"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -731,49 +766,51 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Project"
-msgstr ""
+msgstr "ໂຄງການ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__project_time_mode_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__project_time_mode_id
 msgid "Project Time Unit"
-msgstr ""
+msgstr "ຫົວໜ່ວຍເວລາໂຄງການ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_project_overtime
 msgid "Project in Overtime"
-msgstr ""
+msgstr "ໂຄງການທີ່ເກີນເວລາ"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_project
 msgid "Project's Timesheets"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາຂອງໂຄງການ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__readonly_timesheet
 msgid "Readonly Timesheet"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາທີ່ອ່ານໄດ້ຢ່າງດຽວ"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 msgid "Record a new activity"
-msgstr ""
+msgstr "ບັນທຶກກິດຈະກຳໃໝ່"
 
 #. module: hr_timesheet
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "Record your timesheets in an instant by pressing Shift + the corresponding hotkey to add 15min to your projects."
 msgstr ""
+"ບັນທຶກຕາຕະລາງເວລາຂອງທ່ານໃນທັນທີໂດຍການກົດ Shift + ປຸ່ມລັດທີ່ກ່ຽວຂ້ອງເພື່ອເພີ່ມ 15 ນາທີໃຫ້ກັບໂຄງການ"
+"ຂອງທ່ານ."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Remaining Days"
-msgstr ""
+msgstr "ມື້ທີ່ເຫຼືອ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Remaining Days:"
-msgstr ""
+msgstr "ມື້ທີ່ເຫຼືອ:"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__remaining_hours
@@ -782,91 +819,93 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Remaining Hours"
-msgstr ""
+msgstr "ຊົ່ວໂມງທີ່ເຫຼືອ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__remaining_hours_percentage
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__remaining_hours_percentage
 msgid "Remaining Hours Percentage"
-msgstr ""
+msgstr "ເປີເຊັນຊົ່ວໂມງທີ່ເຫຼືອ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Remaining Hours:"
-msgstr ""
+msgstr "ຊົ່ວໂມງທີ່ເຫຼືອ:"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__remaining_hours
 msgid "Remaining Invoiced Time"
-msgstr ""
+msgstr "ເວລາທີ່ເຫຼືອລໍຖ້າອອກໃບແຈ້ງໜີ້"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
 msgid "Reporting"
-msgstr "ບົດລາຍງານ"
+msgstr "ການລາຍງານ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Search in All"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນທັງໝົດ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Search in Description"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນຄຳອະທິບາຍ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Search in Employee"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນພະນັກງານ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Search in Project"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນໂຄງການ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Search in Task"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນວຽກ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_delete_wizard_form
 msgid "See Timesheets"
-msgstr ""
+msgstr "ເບິ່ງຕາຕະລາງເວລາ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 #: code:addons/hr_timesheet/models/project_task.py:0
 msgid "See timesheet entries"
-msgstr ""
+msgstr "ເບິ່ງລາຍການຕາຕະລາງເວລາ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Send a periodical email reminder to timesheets approvers that still have timesheets to validate"
 msgstr ""
+"ສົ່ງອີເມລເຕືອນເປັນໄລຍະໃຫ້ຜູ້ອະນຸມັດຕາຕະລາງເວລາທີ່ຍັງມີຕາຕະລາງເວລາລໍຖ້າການກວດສອບ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Send a periodical email reminder to timesheets users that still have timesheets to encode"
 msgstr ""
+"ສົ່ງອີເມລເຕືອນເປັນໄລຍະໃຫ້ຜູ້ໃຊ້ຕາຕະລາງເວລາທີ່ຍັງມີຕາຕະລາງເວລາລໍຖ້າການບັນທຶກ"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
 msgid "Settings"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Sub-tasks Hours Spent"
-msgstr ""
+msgstr "ຊົ່ວໂມງທີ່ໃຊ້ໃນວຽກຍ່ອຍ"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -877,82 +916,91 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "Task"
-msgstr ""
+msgstr "ວຽກ"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_task
 msgid "Task's Timesheets"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາຂອງວຽກ"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "ການວິເຄາະວຽກ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/res_company.py:0
 msgid "The Internal Project of a company should be in that company."
-msgstr ""
+msgstr "ໂຄງການພາຍໃນຂອງບໍລິສັດຄວນຈະຢູ່ໃນບໍລິສັດນັ້ນ."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "There are no timesheets."
-msgstr ""
+msgstr "ບໍ່ມີຕາຕະລາງເວລາ."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid "These projects have some timesheet entries referencing them. Before removing these projects, you have to remove these timesheet entries."
 msgstr ""
+"ໂຄງການເຫຼົ່ານີ້ມີລາຍການຕາຕະລາງເວລາທີ່ອ້າງອີງເຖິງພວກມັນ. ກ່ອນທີ່ຈະລຶບໂຄງການເຫຼົ່ານີ້, ທ່ານຕ້ອງລຶບລາຍກາ"
+"ນຕາຕະລາງເວລາເຫຼົ່ານີ້ກ່ອນ."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 msgid "These tasks have some timesheet entries referencing them. Before removing these tasks, you have to remove these timesheet entries."
 msgstr ""
+"ວຽກເຫຼົ່ານີ້ມີລາຍການຕາຕະລາງເວລາທີ່ອ້າງອີງເຖິງພວກມັນ. ກ່ອນທີ່ຈະລຶບວຽກເຫຼົ່ານີ້, ທ່ານຕ້ອງລຶບລາຍການຕາຕະລ"
+"າງເວລາເຫຼົ່ານີ້ກ່ອນ."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "This Quarter"
-msgstr ""
+msgstr "ໄຕມາດນີ້"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "This month"
-msgstr ""
+msgstr "ເດືອນນີ້"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 msgid "This operator %s is not supported in this search method."
-msgstr ""
+msgstr "ຕົວດຳເນີນການ %s ນີ້ບໍ່ຮອງຮັບໃນວິທີການຄົ້ນຫານີ້."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid "This project has some timesheet entries referencing it. Before removing this project, you have to remove these timesheet entries."
 msgstr ""
+"ໂຄງການນີ້ມີລາຍການຕາຕະລາງເວລາທີ່ອ້າງອີງເຖິງມັນ. ກ່ອນທີ່ຈະລຶບໂຄງການນີ້, ທ່ານຕ້ອງລຶບລາຍການຕາຕະລາງເ"
+"ວລາເຫຼົ່ານີ້ກ່ອນ."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 msgid "This task has some timesheet entries referencing it. Before removing this task, you have to remove these timesheet entries."
 msgstr ""
+"ວຽກນີ້ມີລາຍການຕາຕະລາງເວລາທີ່ອ້າງອີງເຖິງມັນ. ກ່ອນທີ່ຈະລຶບວຽກນີ້, ທ່ານຕ້ອງລຶບລາຍການຕາຕະລາງເວລາເຫຼົ່າ"
+"ນີ້ກ່ອນ."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_task.py:0
 msgid "This task must be part of a project because there are some timesheets linked to it."
 msgstr ""
+"ວຽກນີ້ຕ້ອງເປັນສ່ວນໜຶ່ງຂອງໂຄງການ ເພາະວ່າມີບາງຕາຕະລາງເວລາທີ່ເຊື່ອມໂຍງກັບມັນ."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "This week"
-msgstr ""
+msgstr "ອາທິດນີ້"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__project_time_mode_id
@@ -961,43 +1009,46 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"ນີ້ຈະກຳນົດຫົວໜ່ວຍວັດແທກທີ່ໃຊ້ໃນໂຄງການ ແລະ ວຽກ.\n"
+"ຖ້າທ່ານໃຊ້ຕາຕະລາງເວລາທີ່ເຊື່ອມໂຍງກັບໂຄງການ, ຢ່າລືມຕັ້ງຄ່າຫົວໜ່ວຍວັດແທກທີ່ຖືກຕ້ອງໃຫ້ກັບພະນັກງານຂອງທ່າ"
+"ນ."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "This year"
-msgstr ""
+msgstr "ປີນີ້"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time Encoding"
-msgstr ""
+msgstr "ການບັນທຶກເວລາ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time Off"
-msgstr ""
+msgstr "ການພັກວຽກ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Time spent on the sub-tasks (and their own sub-tasks) of this task."
-msgstr ""
+msgstr "ເວລາທີ່ໃຊ້ໃນວຽກຍ່ອຍ (ແລະ ວຽກຍ່ອຍຂອງພວກເຂົາເອງ) ຂອງວຽກນີ້."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Time spent on this task and its sub-tasks (and their own sub-tasks)."
-msgstr ""
+msgstr "ເວລາທີ່ໃຊ້ໃນວຽກນີ້ ແລະ ວຽກຍ່ອຍຂອງມັນ (ແລະ ວຽກຍ່ອຍຂອງພວກເຂົາເອງ)."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_report_project_task_user__total_hours_spent
 msgid "Time spent on this task, including its sub-tasks."
-msgstr ""
+msgstr "ເວລາທີ່ໃຊ້ໃນວຽກນີ້, ລວມທັງວຽກຍ່ອຍຂອງມັນ."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time unit used to record your timesheets"
-msgstr ""
+msgstr "ຫົວໜ່ວຍເວລາທີ່ໃຊ້ເພື່ອບັນທຶກຕາຕະລາງເວລາຂອງທ່ານ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
@@ -1005,14 +1056,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph_my
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 msgid "Timesheet"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Timesheet Activities"
-msgstr ""
+msgstr "ກິດຈະກຳຕາຕະລາງເວລາ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_graph_employee
@@ -1027,23 +1078,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 msgid "Timesheet Costs"
-msgstr ""
+msgstr "ຕົ້ນທຶນຕາຕະລາງເວລາ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_encode_uom_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr ""
+msgstr "ຫົວໜ່ວຍການບັນທຶກຕາຕະລາງເວລາ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_report_search
 msgid "Timesheet Report"
-msgstr ""
+msgstr "ບົດລາຍງານຕາຕະລາງເວລາ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
 msgid "Timesheet by Date"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາຕາມວັນທີ"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1080,113 +1131,114 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_project_kanban_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Timesheets"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets - %s"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາ - %s"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
 msgid "Timesheets 80%"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາ 80%"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_project_project_filter_inherit_timesheet
 msgid "Timesheets >100%"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາ >100%"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_employee
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_project
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_task
 msgid "Timesheets Analysis"
-msgstr ""
+msgstr "ການວິເຄາະຕາຕະລາງເວລາ"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_timesheets_analysis_report
 msgid "Timesheets Analysis Report"
-msgstr ""
+msgstr "ບົດລາຍງານການວິເຄາະຕາຕະລາງເວລາ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Timesheets Control"
-msgstr ""
+msgstr "ການຄວບຄຸມຕາຕະລາງເວລາ"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
 msgid "Timesheets by Employee"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາຕາມພະນັກງານ"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
 msgid "Timesheets by Project"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາຕາມໂຄງການ"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
 msgid "Timesheets by Task"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາຕາມວຽກ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
 msgid "Timesheets can be logged on this task."
-msgstr ""
+msgstr "ສາມາດບັນທຶກຕາຕະລາງເວລາໃນວຽກນີ້ໄດ້."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets cannot be created on a private task."
-msgstr ""
+msgstr "ບໍ່ສາມາດສ້າງຕາຕະລາງເວລາໃນວຽກສ່ວນຕົວໄດ້."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets must be created on a project or a task with an active analytic account."
-msgstr ""
+msgstr "ຕາຕະລາງເວລາຕ້ອງຖືກສ້າງຂຶ້ນໃນໂຄງການ ຫຼື ວຽກທີ່ມີບັນຊີວິເຄາະທີ່ໃຊ້ງານຢູ່."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets must be created with an active employee in the selected companies."
 msgstr ""
+"ຕາຕະລາງເວລາຕ້ອງຖືກສ້າງຂຶ້ນໂດຍພະນັກງານທີ່ກຳລັງເຮັດວຽກຢູ່ໃນບໍລິສັດທີ່ເລືອກ."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/wizard/hr_employee_delete_wizard.py:0
 msgid "Timesheets of %(name)s"
-msgstr ""
+msgstr "ຕາຕະລາງເວລາຂອງ %(name)s"
 
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "Tip: Record your Timesheets faster"
-msgstr ""
+msgstr "ເຄັດລັບ: ບັນທຶກຕາຕະລາງເວລາຂອງທ່ານໃຫ້ໄວຂຶ້ນ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "Today"
-msgstr ""
+msgstr "ມື້ນີ້"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
 msgid "Total"
-msgstr "ລວມທັງໝົດ"
+msgstr "ລວມ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Allocated Time"
-msgstr ""
+msgstr "ເວລາທີ່ຈັດສັນທັງໝົດ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Total Days"
-msgstr ""
+msgstr "ມື້ທັງໝົດ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -1194,22 +1246,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Total Hours"
-msgstr ""
+msgstr "ຊົ່ວໂມງທັງໝົດ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__total_timesheet_time
 msgid "Total Timesheet Time"
-msgstr ""
+msgstr "ເວລາຕາຕະລາງທັງໝົດ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__total_timesheet_time
 msgid "Total number of time (in the proper UoM) recorded in the project, rounded to the unit."
 msgstr ""
+"ຈຳນວນເວລາທັງໝົດ (ໃນຫົວໜ່ວຍວັດແທກທີ່ເໝາະສົມ) ທີ່ບັນທຶກໄວ້ໃນໂຄງການ, ປັດເປັນຫົວໜ່ວຍ."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "Total:"
-msgstr ""
+msgstr "ລວມ:"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -1217,12 +1270,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid "Track your working hours by projects every day and invoice this time to your customers."
 msgstr ""
+"ຕິດຕາມຊົ່ວໂມງເຮັດວຽກຂອງທ່ານຕາມໂຄງການໃນແຕ່ລະມື້ ແລະ ອອກໃບແຈ້ງໜີ້ເວລານີ້ໃຫ້ກັບລູກຄ້າຂອງທ່ານ."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/res_company.py:0
 msgid "Training"
-msgstr ""
+msgstr "ການຝຶກອົບຮົມ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__display_name
@@ -1236,79 +1290,90 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"ໃຊ້ຄຳສຳຄັນເຫຼົ່ານີ້ໃນຫົວຂໍ້ເພື່ອຕັ້ງວຽກໃໝ່:\n"
+"\n"
+"        30h ຈັດສັນ 30 ຊົ່ວໂມງໃຫ້ກັບວຽກ\n"
+"        #tags ຕັ້ງແທັກໃນວຽກ\n"
+"        @user ມອບໝາຍວຽກໃຫ້ກັບຜູ້ໃຊ້\n"
+"        ! ຕັ້ງວຽກໃຫ້ມີລຳດັບຄວາມສຳຄັນສູງ\n"
+"\n"
+"        ກວດສອບໃຫ້ແນ່ໃຈວ່າໃຊ້ຮູບແບບ ແລະ ລຳດັບທີ່ຖືກຕ້ອງ ເຊັ່ນ: ປັບປຸງໜ້າຈໍການຕັ້ງຄ່າ 5h #feature "
+"#v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__user_id
 msgid "User"
-msgstr ""
+msgstr "ຜູ້ໃຊ້"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_approver
 msgid "User: all timesheets"
-msgstr ""
+msgstr "ຜູ້ໃຊ້: ຕາຕະລາງເວລາທັງໝົດ"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
 msgid "User: own timesheets only"
-msgstr ""
+msgstr "ຜູ້ໃຊ້: ຕາຕະລາງເວລາຂອງຕົນເອງເທົ່ານັ້ນ"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget
 msgid "Widget"
-msgstr ""
+msgstr "ວິດເຈັດ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "You cannot access timesheets that are not yours."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດເຂົ້າເຖິງຕາຕະລາງເວລາທີ່ບໍ່ແມ່ນຂອງທ່ານໄດ້."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_employee.py:0
 msgid "You cannot delete employees who have timesheets."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດລຶບພະນັກງານທີ່ມີຕາຕະລາງເວລາໄດ້."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "You cannot log timesheets on this project since it is linked to an inactive analytic account. Please change this account, or reactivate the current one to timesheet on the project."
 msgstr ""
+"ທ່ານບໍ່ສາມາດບັນທຶກຕາຕະລາງເວລາໃນໂຄງການນີ້ໄດ້ ເພາະວ່າມັນເຊື່ອມໂຍງກັບບັນຊີວິເຄາະທີ່ບໍ່ໄດ້ໃຊ້ງານ. ກະລຸນາ"
+"ປ່ຽນບັນຊີນີ້, ຫຼື ເປີດໃຊ້ບັນຊີປັດຈຸບັນຄືນໃໝ່ເພື່ອບັນທຶກຕາຕະລາງເວລາໃນໂຄງການ."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "You cannot set an archived employee to the existing timesheets."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດຕັ້ງພະນັກງານທີ່ຖືກຈັດເກັບແລ້ວໃຫ້ກັບຕາຕະລາງເວລາທີ່ມີຢູ່ໄດ້."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project_project.py:0
 msgid "You cannot use timesheets without an analytic account."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດໃຊ້ຕາຕະລາງເວລາໄດ້ໂດຍບໍ່ມີບັນຊີວິເຄາະ."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/res_company.py:0
 msgid "days"
-msgstr ""
+msgstr "ມື້"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet_task
 msgid "for"
-msgstr ""
+msgstr "ສຳລັບ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_project_task_page
 msgid "for the"
-msgstr ""
+msgstr "ສຳລັບ"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/res_company.py:0
 msgid "hours"
-msgstr ""
+msgstr "ຊົ່ວໂມງ"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -1316,6 +1381,8 @@ msgid ""
 "on\n"
 "                            <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
 msgstr ""
+"ໃນ\n"
+"                            <span class=\"fw-bold text-dark\"> ວຽກຍ່ອຍ</span>)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1323,3 +1390,5 @@ msgid ""
 "on\n"
 "                        <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
 msgstr ""
+"ໃນ\n"
+"                        <span class=\"fw-bold text-dark\"> ວຽກຍ່ອຍ</span>)"
