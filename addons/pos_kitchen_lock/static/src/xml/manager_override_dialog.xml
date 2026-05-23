@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_kitchen_lock.ManagerOverrideDialog">
+        <Dialog title="'Manager Approval Required'" footer="false" size="'md'" bodyClass="'d-flex flex-column gap-2'">
+
+            <p class="text-muted mb-1">
+                This line was already sent to the kitchen.
+                Select a manager or cashier to authorise this change.
+            </p>
+
+            <!-- Manager / cashier list (requires pos_hr) -->
+            <t t-if="managers.length">
+                <button
+                    t-foreach="managers" t-as="emp" t-key="emp.id"
+                    class="selection-item d-flex align-items-center justify-content-between btn btn-outline-secondary p-2 p-sm-3 text-start"
+                    t-on-click="() => this.selectManager(emp)"
+                    t-att-disabled="state.selecting"
+                >
+                    <div class="d-flex align-items-center">
+                        <div class="ratio ratio-1x1 me-2 me-sm-3" style="width: 40px">
+                            <img class="rounded-3"
+                                 t-attf-src="/web/image/hr.employee.public/{{emp.id}}/avatar_128"
+                                 alt="" />
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="fs-5 fw-bold" t-out="emp.name" />
+                            <small class="text-muted"
+                                   t-esc="emp._role === 'manager' ? 'Manager' : 'Cashier'" />
+                        </div>
+                    </div>
+                    <i class="oi oi-chevron-right" />
+                </button>
+            </t>
+
+            <!-- Fallback when no managers are available or pos_hr is not installed -->
+            <t t-else="">
+                <div class="alert alert-warning mb-0">
+                    <t t-if="!pos.config.module_pos_hr">
+                        Employee management (pos_hr) is not active.
+                        Ask your manager to log in via the cashier selector in the top bar.
+                    </t>
+                    <t t-else="">
+                        No manager or cashier is configured.
+                        Please contact your system administrator.
+                    </t>
+                </div>
+            </t>
+
+            <div class="d-flex justify-content-end pt-1 border-top">
+                <button class="btn btn-secondary" t-on-click="cancel">Cancel</button>
+            </div>
+
+        </Dialog>
+    </t>
+</templates>
