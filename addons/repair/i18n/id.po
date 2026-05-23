@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-05-07 10:01+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -364,11 +364,21 @@ msgid "Confirmed"
 msgstr "Dikonfirmasi"
 
 #. module: repair
+#: model:ir.model,name:repair.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: repair
 #. odoo-python
 #: code:addons/repair/models/stock_picking.py:0
 #: model:ir.actions.server,name:repair.action_create_repair_order
 msgid "Create Repair"
 msgstr "Buat Perbaikan"
+
+#. module: repair
+#: model:ir.model,website_form_label:repair.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -431,6 +441,7 @@ msgstr "Perincian"
 #: model:ir.model.fields,field_description:repair.field_product_template__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_order__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_tags__display_name
+#: model:ir.model.fields,field_description:repair.field_res_partner__display_name
 #: model:ir.model.fields,field_description:repair.field_sale_order__display_name
 #: model:ir.model.fields,field_description:repair.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:repair.field_stock_forecasted_product_product__display_name
@@ -501,6 +512,7 @@ msgstr "Memiliki Pergerakan yang Belum Selesai"
 #: model:ir.model.fields,field_description:repair.field_product_template__id
 #: model:ir.model.fields,field_description:repair.field_repair_order__id
 #: model:ir.model.fields,field_description:repair.field_repair_tags__id
+#: model:ir.model.fields,field_description:repair.field_res_partner__id
 #: model:ir.model.fields,field_description:repair.field_sale_order__id
 #: model:ir.model.fields,field_description:repair.field_sale_order_line__id
 #: model:ir.model.fields,field_description:repair.field_stock_forecasted_product_product__id
@@ -1036,12 +1048,19 @@ msgid "Repair Order"
 msgstr "Order Perbaikan"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_res_partner__repair_order_count
+#: model:ir.model.fields,field_description:repair.field_res_users__repair_order_count
+msgid "Repair Order Count"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_sale_order__repair_count
 msgid "Repair Order(s)"
 msgstr "Order Perbaikan"
 
 #. module: repair
 #. odoo-python
+#: code:addons/repair/models/res_partner.py:0
 #: code:addons/repair/models/sale_order.py:0
 #: code:addons/repair/models/stock_picking.py:0
 #: model:ir.actions.act_window,name:repair.action_picking_repair
@@ -1125,6 +1144,7 @@ msgstr "Jumlah yang diperbaiki"
 #: model:ir.ui.menu,name:repair.menu_repair_order
 #: model:ir.ui.menu,name:repair.repair_menu
 #: model:stock.picking.type,name:repair.picking_type_warehouse0_repair
+#: model_terms:ir.ui.view,arch_db:repair.view_partner_form
 #: model_terms:ir.ui.view,arch_db:repair.view_sale_order_form_inherit_repair
 msgid "Repairs"
 msgstr "Perbaikan"

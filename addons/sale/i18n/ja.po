@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:36+0000\n"
+"POT-Creation-Date: 2026-05-22 17:47+0000\n"
 "PO-Revision-Date: 2026-05-06 06:25+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/sale/"
@@ -2221,11 +2221,6 @@ msgid "Communication"
 msgstr "通信費"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Communication history"
-msgstr "通信履歴"
-
-#. module: sale
 #: model:ir.model,name:sale.model_res_company
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__company_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__company_id
@@ -2284,7 +2279,6 @@ msgstr "確定"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_confirm
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Confirm Orders"
 msgstr "オーダ確定"
 
@@ -2945,6 +2939,11 @@ msgstr ""
 "らはコピーされません。"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Download"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__downpayment_account_id
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_id
 msgid "Downpayment Account"
@@ -3158,11 +3157,6 @@ msgstr "Gelato"
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
 msgstr "販売支払いリンクを生成する"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
-msgid "Generate a Payment Link"
-msgstr "支払用リンクを生成"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3829,8 +3823,8 @@ msgstr "マージン"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
-msgid "Mark Quotation as Sent"
-msgstr "見積を送信済とする"
+msgid "Mark as Sent"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -4354,6 +4348,11 @@ msgid "Payment"
 msgstr "支払"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
+msgid "Payment Link"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__preferred_payment_method_line_id
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Payment Method"
@@ -4504,11 +4503,6 @@ msgstr "価格表"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Pricing"
 msgstr "価格設定"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Print"
-msgstr "印刷"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
@@ -6744,6 +6738,18 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and '見積' "
 "or 'オーダ' }} {{ object.name or '該当なし' }}"
+
+#~ msgid "Communication history"
+#~ msgstr "通信履歴"
+
+#~ msgid "Generate a Payment Link"
+#~ msgstr "支払用リンクを生成"
+
+#~ msgid "Mark Quotation as Sent"
+#~ msgstr "見積を送信済とする"
+
+#~ msgid "Print"
+#~ msgstr "印刷"
 
 #~ msgid "Invoicing Journal"
 #~ msgstr "請求仕訳帳"

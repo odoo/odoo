@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-05-08 09:01+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/stock/"
@@ -3798,11 +3798,6 @@ msgid "Filtered Location"
 msgstr "Gefilterde locatie"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__location_final_id
-msgid "Final Location"
-msgstr "Definitieve locatie"
-
-#. module: stock
 #: model:product.removal,name:stock.removal_fifo
 msgid "First In First Out (FIFO)"
 msgstr "First In First Out (FIFO)"
@@ -3917,6 +3912,11 @@ msgstr "Verwachte leveringsdatum"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Forecasted Inventory"
 msgstr "Voorspelde voorraad"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__forecasted_location_id
+msgid "Forecasted Location"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -5437,6 +5437,11 @@ msgstr "Voorraadlocatie"
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Location Type"
 msgstr "Locatiesoort"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move__forecasted_location_id
+msgid "Location used in the computation of the forecast."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -9863,16 +9868,6 @@ msgid "The number of Serial Numbers to generate must be greater than zero."
 msgstr "Het aantal te genereren serienummers moet groter zijn dan nul."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move__location_final_id
-msgid ""
-"The operation brings the products to the intermediate location.But this "
-"operation is part of a chain of operations targeting the final location."
-msgstr ""
-"De bewerking brengt de producten naar de tussenliggende locatie. Maar deze "
-"bewerking maakt deel uit van een keten van bewerkingen die gericht zijn op "
-"de eindlocatie."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
 msgstr "De bewerking neemt en biedt producten aan vanuit deze locatie."
@@ -12094,6 +12089,17 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Leveringsorder (Ref {{ object.name or 'nvt' }})"
+
+#~ msgid "Final Location"
+#~ msgstr "Definitieve locatie"
+
+#~ msgid ""
+#~ "The operation brings the products to the intermediate location.But this "
+#~ "operation is part of a chain of operations targeting the final location."
+#~ msgstr ""
+#~ "De bewerking brengt de producten naar de tussenliggende locatie. Maar "
+#~ "deze bewerking maakt deel uit van een keten van bewerkingen die gericht "
+#~ "zijn op de eindlocatie."
 
 #~ msgid "On hand:"
 #~ msgstr "Aanwezige voorraad:"

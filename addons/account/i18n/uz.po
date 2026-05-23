@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2025-10-18 14:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3345,12 +3345,6 @@ msgid "Add a note"
 msgstr "Eslatma qo‘shish"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
-msgid "Add a payment QR-code to your invoices"
-msgstr "Hisob-fakturalaringizga to‘lov QR-kodini qo‘shing"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__add_invoice_line
 #, fuzzy
 msgid "Add a rounding line"
@@ -5283,6 +5277,12 @@ msgid "Boolean"
 msgstr "Mantiqiy"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid "Branch Code"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #, fuzzy
@@ -6207,12 +6207,6 @@ msgstr "Aloqa standarti"
 #, fuzzy
 msgid "Communication Type"
 msgstr "Aloqa turi"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
-#, fuzzy
-msgid "Communication history"
-msgstr "Aloqalar tarixi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_ids
@@ -11822,6 +11816,11 @@ msgstr "Ma'lumot"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Initial Setup"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #, fuzzy
 msgid "Insert your terms & conditions here..."
 msgstr "Shartlar va qoidalaringizni shu yerga kiriting..."
@@ -13449,9 +13448,8 @@ msgstr "Sun'iy intellekt hisobingizni tekshirib chiqsin. Oson to‘lang."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
-msgid "Let your customers pay their invoices online"
-msgstr "Mijozlaringiz hisob-fakturalarini onlayn to‘lashiga imkon bering"
+msgid "Let your customers pay their invoices on your portal"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -17241,12 +17239,6 @@ msgid "QR Code URL"
 msgstr "QR kod URL manzili"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
-msgid "QR Codes"
-msgstr "QR kodlar"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
 #, fuzzy
 msgid "Quantity"
@@ -17778,6 +17770,7 @@ msgstr "Hisobot satri nomi"
 #. module: account
 #: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
+#: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #, fuzzy
 msgid "Reporting"
@@ -18212,6 +18205,11 @@ msgstr "SEPA kredit o‘tkazmasi / ISO20022"
 #, fuzzy
 msgid "SEPA Direct Debit (SDD)"
 msgstr "SEPA to‘g‘ridan-to‘g‘ri debet (SDD)"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "SEPA QR Codes"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20691,6 +20689,14 @@ msgstr ""
 "Hisob-fakturani tasdiqlash uchun \"Mijoz\" maydoni to‘ldirilishi shart. "
 "Auditoringizga ko‘rinmas odamga hisob-faktura yozganingizni tushuntirishni "
 "xohlamasangiz kerak :)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid ""
+"The 5-digit branch code as registered with the Revenue Department. Leave "
+"empty for Head Office."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -25692,3 +25698,19 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} o‘z-o‘zini hisoblash hisob-fakturasi (Havola "
 "{{ object.name or 'mavjud emas' }})"
+
+#, fuzzy
+#~ msgid "Add a payment QR-code to your invoices"
+#~ msgstr "Hisob-fakturalaringizga to‘lov QR-kodini qo‘shing"
+
+#, fuzzy
+#~ msgid "Communication history"
+#~ msgstr "Aloqalar tarixi"
+
+#, fuzzy
+#~ msgid "Let your customers pay their invoices online"
+#~ msgstr "Mijozlaringiz hisob-fakturalarini onlayn to‘lashiga imkon bering"
+
+#, fuzzy
+#~ msgid "QR Codes"
+#~ msgstr "QR kodlar"

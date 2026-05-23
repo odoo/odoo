@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-05-16 10:48+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/mrp/th/"
@@ -2479,11 +2479,6 @@ msgid "Expected Duration"
 msgstr "ระยะเวลาที่คาดหวัง"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__location_final_id
-msgid "Final Location from procurement"
-msgstr "ตำแหน่งสุดท้ายจากการจัดซื้อ"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_finished_ids
 msgid "Finished Moves"
 msgstr "การย้ายเสร็จสิ้น"
@@ -2601,6 +2596,11 @@ msgstr "พยากรณ์"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__forecasted_issue
 msgid "Forecasted Issue"
 msgstr "ปัญหาที่คาดการณ์"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__forecasted_location_id
+msgid "Forecasted Location"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -3223,6 +3223,11 @@ msgstr "รายการปัญหาการบริโภค"
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "สถานที่"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production__forecasted_location_id
+msgid "Location used in the computation of the forecast."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
@@ -7215,6 +7220,9 @@ msgstr "ระยะเวลาจริง"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "แยก"
+
+#~ msgid "Final Location from procurement"
+#~ msgstr "ตำแหน่งสุดท้ายจากการจัดซื้อ"
 
 #~ msgid ""
 #~ "<p class=\"o_view_nocontent_smiling_face\">\n"

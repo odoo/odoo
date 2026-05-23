@@ -36,7 +36,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-01-16 05:43+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s19-1/mrp/he/"
@@ -2502,11 +2502,6 @@ msgid "Expected Duration"
 msgstr "משך זמן צפוי"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__location_final_id
-msgid "Final Location from procurement"
-msgstr "המיקום הסופי לפי הרכש"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_finished_ids
 msgid "Finished Moves"
 msgstr "תנועות שהסתיימו"
@@ -2619,6 +2614,11 @@ msgstr "חזוי"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__forecasted_issue
 msgid "Forecasted Issue"
 msgstr "תחזית בעיות"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__forecasted_location_id
+msgid "Forecasted Location"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -3245,6 +3245,11 @@ msgstr "שורת צריכת רכיבים"
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "מיקום"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production__forecasted_location_id
+msgid "Location used in the computation of the forecast."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
@@ -7243,6 +7248,9 @@ msgstr "משך זמן בפועל"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "פצל"
+
+#~ msgid "Final Location from procurement"
+#~ msgstr "המיקום הסופי לפי הרכש"
 
 #~ msgid ""
 #~ "<p class=\"o_view_nocontent_smiling_face\">\n"

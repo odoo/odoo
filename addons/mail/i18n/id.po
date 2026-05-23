@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-05-07 10:01+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -1813,8 +1813,8 @@ msgstr "Terjadi error saat mengirim email pada “%(record_name)s”"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/thread.xml:0
-msgid "An error occurred while fetching messages."
+#: code:addons/mail/static/src/core/common/thread.js:0
+msgid "An error occurred while loading messages."
 msgstr ""
 
 #. module: mail
@@ -1846,12 +1846,6 @@ msgstr "Terapkan untuk"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/follower_subtype_dialog.xml:0
 msgid "Apply"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Apply a privacy blur to your surroundings."
 msgstr ""
 
 #. module: mail
@@ -2146,12 +2140,6 @@ msgid "Auto subscription"
 msgstr "Subskripsi otomatis"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Auto-focus speaker"
-msgstr "Auto-fokus pembicara"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Auto: %(subject)s"
@@ -2173,12 +2161,6 @@ msgstr "Kegiatan Otomatis"
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Automated message"
 msgstr "Pesan otomatis"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Automatically enlarge the person currently speaking."
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -2339,12 +2321,6 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/quick_video_settings.xml:0
 msgid "Blur Background"
 msgstr "Blur Latar Belakang"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Blur video background"
-msgstr "Blur lata belakang video"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__body_html
@@ -2611,6 +2587,11 @@ msgstr "Dapat Keluar"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__can_self_edit_readonly_channel
 msgid "Can Self Edit Readonly Channel"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_channel_member__can_unlink
+msgid "Can Unlink"
 msgstr ""
 
 #. module: mail
@@ -3093,20 +3074,14 @@ msgstr "Kota, Daerah, Negara"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/search_message_input.xml:0
-msgid "Clear Search"
+#: code:addons/mail/static/src/core/common/search_input.xml:0
+msgid "Clear"
 msgstr ""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 msgid "Clear Time"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/thread.xml:0
-msgid "Click here to retry"
 msgstr ""
 
 #. module: mail
@@ -3130,6 +3105,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/scheduled_message.js:0
+#: code:addons/mail/static/src/core/common/poll_votes_panel.xml:0
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -3974,6 +3950,11 @@ msgstr "Catatan Default"
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default Recipients"
 msgstr "Penerima Default"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+msgid "Default Subject"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
@@ -4916,12 +4897,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
 msgid "Enable Ordered Tracking"
 msgstr "Aktifkan Ordered Tracking"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Enable Push-to-talk"
-msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5910,12 +5885,6 @@ msgstr "Sembunyikan semua percakapan"
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Hide camera preview"
 msgstr "Sembunyikkan pratinjau kamera"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Hide participants who have turned off their camera."
-msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7307,8 +7276,8 @@ msgstr "Muat lebih"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/search_input.xml:0
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
-#: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
 msgid "Loading..."
 msgstr "Memuat..."
 
@@ -7360,12 +7329,6 @@ msgstr "Log"
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
 msgid "Log Now"
 msgstr "Log Sekarang"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Log RTC events"
-msgstr "Log acara-acara RTC"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -7738,12 +7701,6 @@ msgstr "Tindakan Member"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__member_count
 msgid "Member Count"
 msgstr "Jumlah Anggota"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
-msgid "Member search is loading..."
-msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8489,6 +8446,12 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/message_card_list.js:0
 msgid "No messages found"
 msgstr "Tidak ada pesan yang ditemuka"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/thread.xml:0
+msgid "No messages yet."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10817,12 +10780,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Save detailed RTC connection logs for troubleshooting."
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
 msgid "Save editing"
@@ -10999,12 +10956,6 @@ msgstr "Cari sesi RTC"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
-msgid "Search Sub Channels"
-msgstr "Cari Sub Channel"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "Search by name"
 msgstr "Cari berdasarkan nama"
 
@@ -11035,9 +10986,9 @@ msgstr "Cari user..."
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
-msgid "Search in progress"
-msgstr "Pencarian sedang berlangsung"
+#: code:addons/mail/static/src/core/common/search_input.xml:0
+msgid "Search is loading..."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -11054,7 +11005,6 @@ msgstr "Cari orang untuk diundang"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mention_list.js:0
-#: code:addons/mail/static/src/core/web/mention_list.xml:0
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 msgid "Search..."
 msgstr "Cari ..."
@@ -11618,12 +11568,6 @@ msgstr "Tunjukkan sidebar"
 #: code:addons/mail/static/src/views/web/fields/html_composer_message_field/content_expandable_plugin.xml:0
 msgid "Show trimmed content"
 msgstr "Tunjukkan konten yang di-trim"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Show video participants only"
-msgstr "Tunjukkan hanya peserta video"
 
 #. module: mail
 #. odoo-javascript
@@ -12272,12 +12216,6 @@ msgstr "Nama kategori harus unik"
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_uuid_unique
 msgid "The channel UUID must be unique"
 msgstr "UUID channel harus uni"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/thread.xml:0
-msgid "The conversation is empty."
-msgstr "Percakapan kosong."
 
 #. module: mail
 #. odoo-javascript
@@ -13099,6 +13037,12 @@ msgstr "Terjemahan Gagal"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__delay_from
 msgid "Trigger"
 msgstr "Pemicu"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/thread.xml:0
+msgid "Try again"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -15375,6 +15319,27 @@ msgstr ""
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr ""
+
+#~ msgid "Auto-focus speaker"
+#~ msgstr "Auto-fokus pembicara"
+
+#~ msgid "Blur video background"
+#~ msgstr "Blur lata belakang video"
+
+#~ msgid "Log RTC events"
+#~ msgstr "Log acara-acara RTC"
+
+#~ msgid "Search Sub Channels"
+#~ msgstr "Cari Sub Channel"
+
+#~ msgid "Search in progress"
+#~ msgstr "Pencarian sedang berlangsung"
+
+#~ msgid "Show video participants only"
+#~ msgstr "Tunjukkan hanya peserta video"
+
+#~ msgid "The conversation is empty."
+#~ msgstr "Percakapan kosong."
 
 #~ msgid "Search button"
 #~ msgstr "Tombol pencarian"

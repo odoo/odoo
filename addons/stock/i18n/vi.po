@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-03-20 07:01+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -3751,11 +3751,6 @@ msgid "Filtered Location"
 msgstr "Vị trí đã lọc"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__location_final_id
-msgid "Final Location"
-msgstr "Vị trí cuối cùng"
-
-#. module: stock
 #: model:product.removal,name:stock.removal_fifo
 msgid "First In First Out (FIFO)"
 msgstr "Nhập trước xuất trước (FIFO)"
@@ -3870,6 +3865,11 @@ msgstr "Ngày dự báo dự kiến"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Forecasted Inventory"
 msgstr "Tồn kho được dự báo"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__forecasted_location_id
+msgid "Forecasted Location"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -5367,6 +5367,11 @@ msgstr "Vị trí tồn kho"
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Location Type"
 msgstr "Loại vị trí"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move__forecasted_location_id
+msgid "Location used in the computation of the forecast."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -9761,15 +9766,6 @@ msgid "The number of Serial Numbers to generate must be greater than zero."
 msgstr "Số lượng số sê-ri cần tạo phải lớn hơn 0."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move__location_final_id
-msgid ""
-"The operation brings the products to the intermediate location.But this "
-"operation is part of a chain of operations targeting the final location."
-msgstr ""
-"Hoạt động này đưa sản phẩm đến vị trí trung gian. Nhưng hoạt động này là một "
-"phần của chuỗi hoạt động hướng tới vị trí cuối cùng."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
 msgstr "Hoạt động lấy và đề xuất sản phẩm từ vị trí này."
@@ -11954,6 +11950,16 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Lệnh giao hàng (Mã {{ object.name or 'không "
 "có' }})"
+
+#~ msgid "Final Location"
+#~ msgstr "Vị trí cuối cùng"
+
+#~ msgid ""
+#~ "The operation brings the products to the intermediate location.But this "
+#~ "operation is part of a chain of operations targeting the final location."
+#~ msgstr ""
+#~ "Hoạt động này đưa sản phẩm đến vị trí trung gian. Nhưng hoạt động này là "
+#~ "một phần của chuỗi hoạt động hướng tới vị trí cuối cùng."
 
 #~ msgid "On hand:"
 #~ msgstr "Hiện có:"

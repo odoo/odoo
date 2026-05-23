@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-04-11 14:22+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -3568,11 +3568,6 @@ msgid "Add a note"
 msgstr "Thêm ghi chú"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Add a payment QR-code to your invoices"
-msgstr "Thêm mã QR thanh toán cho hóa đơn của bạn"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__add_invoice_line
 msgid "Add a rounding line"
 msgstr "Thêm một dòng làm tròn"
@@ -5269,6 +5264,12 @@ msgid "Boolean"
 msgstr "Boolean"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid "Branch Code"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 msgid "Branch:"
@@ -6085,11 +6086,6 @@ msgstr "Tiêu chuẩn nội dung"
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_type
 msgid "Communication Type"
 msgstr "Loại nội dung"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
-msgid "Communication history"
-msgstr "Lịch sử trao đổi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_ids
@@ -11021,6 +11017,11 @@ msgstr "Thông tin"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Initial Setup"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
 msgstr "Nhập các điều khoản & điều kiện của bạn vào đây..."
 
@@ -12441,8 +12442,8 @@ msgstr "Hãy để AI quét hóa đơn của bạn. Thanh toán thật dễ dàn
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Let your customers pay their invoices online"
-msgstr "Cho phép khách hàng của bạn thanh toán hóa đơn online"
+msgid "Let your customers pay their invoices on your portal"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -15760,11 +15761,6 @@ msgid "QR Code URL"
 msgstr "URL mã QR"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "QR Codes"
-msgstr "Mã QR"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
 msgid "Quantity"
 msgstr "Số lượng"
@@ -16222,6 +16218,7 @@ msgstr "Tên dòng báo cáo"
 #. module: account
 #: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
+#: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Reporting"
 msgstr "Báo cáo"
@@ -16597,6 +16594,11 @@ msgstr "Chuyển khoản tín dụng SEPA/ISO20022"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "SEPA Direct Debit (SDD)"
 msgstr "Ghi nợ trực tiếp SEPA (SDD)"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "SEPA QR Codes"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18760,6 +18762,14 @@ msgstr ""
 "Trường 'Khách hàng' là bắt buộc để xác thực hóa đơn.\n"
 "Chắc hẳn bạn không muốn phải giải thích với kiểm toán rằng mình đã xuất hóa "
 "đơn cho một người vô hình đâu :)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid ""
+"The 5-digit branch code as registered with the Revenue Department. Leave "
+"empty for Head Office."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -23225,6 +23235,18 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Hóa đơn tự lập (Tham chiếu {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "Add a payment QR-code to your invoices"
+#~ msgstr "Thêm mã QR thanh toán cho hóa đơn của bạn"
+
+#~ msgid "Communication history"
+#~ msgstr "Lịch sử trao đổi"
+
+#~ msgid "Let your customers pay their invoices online"
+#~ msgstr "Cho phép khách hàng của bạn thanh toán hóa đơn online"
+
+#~ msgid "QR Codes"
+#~ msgstr "Mã QR"
 
 #~ msgid ""
 #~ "You cannot switch the type of a document with an existing sequence number."

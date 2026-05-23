@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-01-15 23:13+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s19-1/account/"
@@ -2921,11 +2921,6 @@ msgid "Add a note"
 msgstr "नोट जोड़ें"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Add a payment QR-code to your invoices"
-msgstr "अपने इनवॉइस पर पेमेंट क्यूआर-कोड जोड़ें"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__add_invoice_line
 msgid "Add a rounding line"
 msgstr "राउडिंग लाइन जोड़ें"
@@ -4586,6 +4581,12 @@ msgid "Boolean"
 msgstr "बूलियन"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid "Branch Code"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 msgid "Branch:"
@@ -5386,11 +5387,6 @@ msgstr "कम्यूनिकेशन स्टैंडर्ड"
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_type
 msgid "Communication Type"
 msgstr "कम्यूनिकेशन टाइप"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
-msgid "Communication history"
-msgstr "कम्यूनिकेशन का इतिहास"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_ids
@@ -10264,6 +10260,11 @@ msgstr "जानकारी"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Initial Setup"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
 msgstr "अपने नियम और शर्तें यहां डालें..।"
 
@@ -11683,8 +11684,8 @@ msgstr "आर्टिफ़िशियल इंटेलिजेंस क�
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Let your customers pay their invoices online"
-msgstr "ग्राहकों को अपने इनवॉइस का बिल ऑनलाइन भरने दें"
+msgid "Let your customers pay their invoices on your portal"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -14948,11 +14949,6 @@ msgid "QR Code URL"
 msgstr "क्यूआर कोड यूआरएल"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "QR Codes"
-msgstr "क्यूआर कोड"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
 msgid "Quantity"
 msgstr "मात्रा"
@@ -15407,6 +15403,7 @@ msgstr "रिपोर्ट लाइन का नाम"
 #. module: account
 #: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
+#: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Reporting"
 msgstr "रिपोर्टिंग"
@@ -15782,6 +15779,11 @@ msgstr "SEPA क्रेडिट ट्रांसफ़र / ISO20022"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "SEPA Direct Debit (SDD)"
 msgstr "SEPA डायरेक्ट डेबिट (SDD)"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "SEPA QR Codes"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -17919,6 +17921,14 @@ msgid ""
 "The 'Customer' field is required to validate the invoice.\n"
 "You probably don't want to explain to your auditor that you invoiced an "
 "invisible man :)"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid ""
+"The 5-digit branch code as registered with the Revenue Department. Leave "
+"empty for Head Office."
 msgstr ""
 
 #. module: account
@@ -22255,3 +22265,15 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "Add a payment QR-code to your invoices"
+#~ msgstr "अपने इनवॉइस पर पेमेंट क्यूआर-कोड जोड़ें"
+
+#~ msgid "Communication history"
+#~ msgstr "कम्यूनिकेशन का इतिहास"
+
+#~ msgid "Let your customers pay their invoices online"
+#~ msgstr "ग्राहकों को अपने इनवॉइस का बिल ऑनलाइन भरने दें"
+
+#~ msgid "QR Codes"
+#~ msgstr "क्यूआर कोड"

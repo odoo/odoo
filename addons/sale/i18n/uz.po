@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:36+0000\n"
+"POT-Creation-Date: 2026-05-22 17:47+0000\n"
 "PO-Revision-Date: 2025-10-08 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1772,12 +1772,6 @@ msgid "Communication"
 msgstr "Aloqa"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-#, fuzzy
-msgid "Communication history"
-msgstr "Aloqa tarixi"
-
-#. module: sale
 #: model:ir.model,name:sale.model_res_company
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__company_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__company_id
@@ -1843,7 +1837,6 @@ msgstr "Tasdiqlash"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_confirm
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Confirm Orders"
 msgstr ""
 
@@ -2603,6 +2596,11 @@ msgstr ""
 "oshiriladi. Sotuv buyurtmasini nusxalashda ular ko‘chirilmaydi."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Download"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__downpayment_account_id
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_id
 #, fuzzy
@@ -2841,12 +2839,6 @@ msgstr "Gelato"
 #, fuzzy
 msgid "Generate Sales Payment Link"
 msgstr "Savdo to‘lov havolasini yaratish"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
-#, fuzzy
-msgid "Generate a Payment Link"
-msgstr "To‘lov havolasini yaratish"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3618,9 +3610,8 @@ msgstr "Daromadlar"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
-#, fuzzy
-msgid "Mark Quotation as Sent"
-msgstr "Taklifni yuborilgan deb belgilash"
+msgid "Mark as Sent"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -4228,6 +4219,11 @@ msgid "Payment"
 msgstr "To‘lov"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
+msgid "Payment Link"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__preferred_payment_method_line_id
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #, fuzzy
@@ -4404,12 +4400,6 @@ msgstr "Narxlar ro‘yxati"
 #, fuzzy
 msgid "Pricing"
 msgstr "Narxlash"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-#, fuzzy
-msgid "Print"
-msgstr "Chop etish"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
@@ -6981,6 +6971,22 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Communication history"
+#~ msgstr "Aloqa tarixi"
+
+#, fuzzy
+#~ msgid "Generate a Payment Link"
+#~ msgstr "To‘lov havolasini yaratish"
+
+#, fuzzy
+#~ msgid "Mark Quotation as Sent"
+#~ msgstr "Taklifni yuborilgan deb belgilash"
+
+#, fuzzy
+#~ msgid "Print"
+#~ msgstr "Chop etish"
 
 #, fuzzy
 #~ msgid "Invoicing Journal"

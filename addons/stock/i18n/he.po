@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-01-13 16:07+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s19-1/stock/"
@@ -3624,11 +3624,6 @@ msgid "Filtered Location"
 msgstr "איתור מסונן"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__location_final_id
-msgid "Final Location"
-msgstr "מיקום סופי"
-
-#. module: stock
 #: model:product.removal,name:stock.removal_fifo
 msgid "First In First Out (FIFO)"
 msgstr "ראשון נכנס ראשון יוצא (FIFO)"
@@ -3735,6 +3730,11 @@ msgstr "צפי תאריך קבלה"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Forecasted Inventory"
 msgstr "מלאי חזוי"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__forecasted_location_id
+msgid "Forecasted Location"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -5197,6 +5197,11 @@ msgstr "איתור מלאי"
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Location Type"
 msgstr "סוג האיתור"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move__forecasted_location_id
+msgid "Location used in the computation of the forecast."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -9492,15 +9497,6 @@ msgid "The number of Serial Numbers to generate must be greater than zero."
 msgstr "מספר המספרים הסידוריים חייב להיות גדול מאפס."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move__location_final_id
-msgid ""
-"The operation brings the products to the intermediate location.But this "
-"operation is part of a chain of operations targeting the final location."
-msgstr ""
-"הפעולה מביאה את המוצרים למקום הביניים. אבל הפעולה הזו היא חלק משרשרת פעולות "
-"המכוונת למיקום הסופי."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
 msgstr "הפעולה מושכת ומציעה מוצרים מהמיקום הזה."
@@ -11570,6 +11566,16 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid "Final Location"
+#~ msgstr "מיקום סופי"
+
+#~ msgid ""
+#~ "The operation brings the products to the intermediate location.But this "
+#~ "operation is part of a chain of operations targeting the final location."
+#~ msgstr ""
+#~ "הפעולה מביאה את המוצרים למקום הביניים. אבל הפעולה הזו היא חלק משרשרת "
+#~ "פעולות המכוונת למיקום הסופי."
 
 #~ msgid "On hand:"
 #~ msgstr "במלאי"

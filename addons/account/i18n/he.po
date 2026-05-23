@@ -41,7 +41,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-03-17 12:31+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -2948,11 +2948,6 @@ msgid "Add a note"
 msgstr "הוסף הערה"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Add a payment QR-code to your invoices"
-msgstr "הוסף קוד QR לתשלום לחשבוניות שלך"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__add_invoice_line
 msgid "Add a rounding line"
 msgstr "הוסף שורת עיגול"
@@ -4599,6 +4594,12 @@ msgid "Boolean"
 msgstr "בוליאני"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid "Branch Code"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 msgid "Branch:"
@@ -5390,11 +5391,6 @@ msgstr "תקן תקשורת"
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_type
 msgid "Communication Type"
 msgstr "סוג תקשורת"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
-msgid "Communication history"
-msgstr "היסטוריית התקשרות"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_ids
@@ -10218,6 +10214,11 @@ msgstr "מידע"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Initial Setup"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
 msgstr "הכנס את התנאים וההגבלות שלך כאן..."
 
@@ -11617,8 +11618,8 @@ msgstr "תן לבינה מלאכותית לסרוק את החשבונית שלך
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Let your customers pay their invoices online"
-msgstr "אפשר ללקוחות שלך לשלם את החשבוניות באופן מקוון"
+msgid "Let your customers pay their invoices on your portal"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -14842,11 +14843,6 @@ msgid "QR Code URL"
 msgstr "קישור קוד QR"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "QR Codes"
-msgstr "קודי QR"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
 msgid "Quantity"
 msgstr "כמות"
@@ -15299,6 +15295,7 @@ msgstr "שם שורת דו\"ח"
 #. module: account
 #: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
+#: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Reporting"
 msgstr "דו\"חות"
@@ -15674,6 +15671,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "SEPA Direct Debit (SDD)"
 msgstr "SEPA הוראת קבע (SDD)"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "SEPA QR Codes"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -17772,6 +17774,14 @@ msgid ""
 "The 'Customer' field is required to validate the invoice.\n"
 "You probably don't want to explain to your auditor that you invoiced an "
 "invisible man :)"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid ""
+"The 5-digit branch code as registered with the Revenue Department. Leave "
+"empty for Head Office."
 msgstr ""
 
 #. module: account
@@ -21929,3 +21939,15 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "Add a payment QR-code to your invoices"
+#~ msgstr "הוסף קוד QR לתשלום לחשבוניות שלך"
+
+#~ msgid "Communication history"
+#~ msgstr "היסטוריית התקשרות"
+
+#~ msgid "Let your customers pay their invoices online"
+#~ msgstr "אפשר ללקוחות שלך לשלם את החשבוניות באופן מקוון"
+
+#~ msgid "QR Codes"
+#~ msgstr "קודי QR"

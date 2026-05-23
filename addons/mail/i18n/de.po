@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-05-06 14:29+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/mail/"
@@ -1859,9 +1859,9 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/thread.xml:0
-msgid "An error occurred while fetching messages."
-msgstr "Beim Abrufen der Nachrichten ist ein Fehler aufgetreten."
+#: code:addons/mail/static/src/core/common/thread.js:0
+msgid "An error occurred while loading messages."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -1894,13 +1894,6 @@ msgstr "Gilt für"
 #: code:addons/mail/static/src/core/web/follower_subtype_dialog.xml:0
 msgid "Apply"
 msgstr "Anwenden"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Apply a privacy blur to your surroundings."
-msgstr ""
-"Wenden Sie eine Unschärfe zur Wahrung der Privatsphäre auf Ihre Umgebung an."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
@@ -2205,12 +2198,6 @@ msgid "Auto subscription"
 msgstr "Automatisches Abonnement"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Auto-focus speaker"
-msgstr "Lautsprecher mit automatischem Fokus"
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Auto: %(subject)s"
@@ -2232,12 +2219,6 @@ msgstr "Automatische Aktivität"
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "Automated message"
 msgstr "Automatische Nachricht"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Automatically enlarge the person currently speaking."
-msgstr "Vergrößern Sie automatisch die Person, die gerade spricht."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -2398,12 +2379,6 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/call/common/quick_video_settings.xml:0
 msgid "Blur Background"
 msgstr "Hintergrund unscharf machen"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Blur video background"
-msgstr "Video-Hintergrund trüben"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__body_html
@@ -2674,6 +2649,11 @@ msgstr "Kann verlassen"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__can_self_edit_readonly_channel
 msgid "Can Self Edit Readonly Channel"
 msgstr "Kann selbst schreibgeschützten Kanal bearbeiten"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_channel_member__can_unlink
+msgid "Can Unlink"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -3168,21 +3148,15 @@ msgstr "Stadt, Region, Land"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/search_message_input.xml:0
-msgid "Clear Search"
-msgstr "Suche löschen"
+#: code:addons/mail/static/src/core/common/search_input.xml:0
+msgid "Clear"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 msgid "Clear Time"
 msgstr "Zeit löschen"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/thread.xml:0
-msgid "Click here to retry"
-msgstr "Hier klicken, um es erneut zu versuchen"
 
 #. module: mail
 #. odoo-javascript
@@ -3207,6 +3181,7 @@ msgstr "Klicken, um die Anhänge zu sehen"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/scheduled_message.js:0
+#: code:addons/mail/static/src/core/common/poll_votes_panel.xml:0
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -4062,6 +4037,11 @@ msgstr "Standard-Notiz"
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default Recipients"
 msgstr "Standardempfänger"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+msgid "Default Subject"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
@@ -5014,12 +4994,6 @@ msgstr "GIFs aktivieren"
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
 msgid "Enable Ordered Tracking"
 msgstr "Auftragsverfolgung aktivieren"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Enable Push-to-talk"
-msgstr "Push-to-Talk aktivieren"
 
 #. module: mail
 #. odoo-javascript
@@ -6031,12 +6005,6 @@ msgstr "Alle Unterhaltungen ausblenden"
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "Hide camera preview"
 msgstr "Kameravorschau ausblenden"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Hide participants who have turned off their camera."
-msgstr "Blenden Sie Teilnehmer aus, die ihre Kamera ausgeschaltet haben."
 
 #. module: mail
 #. odoo-javascript
@@ -7449,8 +7417,8 @@ msgstr "Mehr laden"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/search_input.xml:0
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
-#: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
 msgid "Loading..."
 msgstr "Lädt…"
 
@@ -7502,12 +7470,6 @@ msgstr "Hinterlassen"
 #: model_terms:ir.ui.view,arch_db:mail.mail_scheduled_message_view_form
 msgid "Log Now"
 msgstr "Jetzt hinterlassen"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Log RTC events"
-msgstr "RTC-Ereignisse protokollieren"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -7880,12 +7842,6 @@ msgstr "Mitgliederaktionen"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__member_count
 msgid "Member Count"
 msgstr "Anzahl Mitglieder"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
-msgid "Member search is loading..."
-msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8634,6 +8590,12 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/message_card_list.js:0
 msgid "No messages found"
 msgstr "Keine Nachrichten gefunden"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/thread.xml:0
+msgid "No messages yet."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -11001,13 +10963,6 @@ msgstr "Als Vorlage speichern"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Save detailed RTC connection logs for troubleshooting."
-msgstr ""
-"Speichern Sie detaillierte RTC-Verbindungsprotokolle zur Fehlerbehebung."
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
 msgid "Save editing"
@@ -11189,12 +11144,6 @@ msgstr "RTC-Sitzung suchen"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
-msgid "Search Sub Channels"
-msgstr "Unterkanäle durchsuchen"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "Search by name"
 msgstr "Nach Name suchen"
 
@@ -11225,9 +11174,9 @@ msgstr "Nach einem Benutzer suchen ..."
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
-msgid "Search in progress"
-msgstr "Suche im Gange"
+#: code:addons/mail/static/src/core/common/search_input.xml:0
+msgid "Search is loading..."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -11244,7 +11193,6 @@ msgstr "Einzuladende Personen suchen"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mention_list.js:0
-#: code:addons/mail/static/src/core/web/mention_list.xml:0
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 msgid "Search..."
 msgstr "Suchen ..."
@@ -11818,12 +11766,6 @@ msgstr "Seitenleiste anzeigen"
 #: code:addons/mail/static/src/views/web/fields/html_composer_message_field/content_expandable_plugin.xml:0
 msgid "Show trimmed content"
 msgstr "Abgeschnittenen Inhalt anzeigen"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
-msgid "Show video participants only"
-msgstr "Nur Video-Teilnehmer anzeigen"
 
 #. module: mail
 #. odoo-javascript
@@ -12479,12 +12421,6 @@ msgstr "Der Name der Kategorie muss eindeutig sein"
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_uuid_unique
 msgid "The channel UUID must be unique"
 msgstr "Die Channel-UUID muss eindeutig sein"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/thread.xml:0
-msgid "The conversation is empty."
-msgstr "Die Unterhaltung ist leer."
 
 #. module: mail
 #. odoo-javascript
@@ -13331,6 +13267,12 @@ msgstr "Übersetzungsfehler"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__delay_from
 msgid "Trigger"
 msgstr "Auslöser"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/thread.xml:0
+msgid "Try again"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -15646,6 +15588,54 @@ msgstr "„%s“"
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privat"
+
+#~ msgid "An error occurred while fetching messages."
+#~ msgstr "Beim Abrufen der Nachrichten ist ein Fehler aufgetreten."
+
+#~ msgid "Apply a privacy blur to your surroundings."
+#~ msgstr ""
+#~ "Wenden Sie eine Unschärfe zur Wahrung der Privatsphäre auf Ihre Umgebung "
+#~ "an."
+
+#~ msgid "Auto-focus speaker"
+#~ msgstr "Lautsprecher mit automatischem Fokus"
+
+#~ msgid "Automatically enlarge the person currently speaking."
+#~ msgstr "Vergrößern Sie automatisch die Person, die gerade spricht."
+
+#~ msgid "Blur video background"
+#~ msgstr "Video-Hintergrund trüben"
+
+#~ msgid "Clear Search"
+#~ msgstr "Suche löschen"
+
+#~ msgid "Click here to retry"
+#~ msgstr "Hier klicken, um es erneut zu versuchen"
+
+#~ msgid "Enable Push-to-talk"
+#~ msgstr "Push-to-Talk aktivieren"
+
+#~ msgid "Hide participants who have turned off their camera."
+#~ msgstr "Blenden Sie Teilnehmer aus, die ihre Kamera ausgeschaltet haben."
+
+#~ msgid "Log RTC events"
+#~ msgstr "RTC-Ereignisse protokollieren"
+
+#~ msgid "Save detailed RTC connection logs for troubleshooting."
+#~ msgstr ""
+#~ "Speichern Sie detaillierte RTC-Verbindungsprotokolle zur Fehlerbehebung."
+
+#~ msgid "Search Sub Channels"
+#~ msgstr "Unterkanäle durchsuchen"
+
+#~ msgid "Search in progress"
+#~ msgstr "Suche im Gange"
+
+#~ msgid "Show video participants only"
+#~ msgstr "Nur Video-Teilnehmer anzeigen"
+
+#~ msgid "The conversation is empty."
+#~ msgstr "Die Unterhaltung ist leer."
 
 #~ msgid "Search button"
 #~ msgstr "Suchschaltfläche"

@@ -34,7 +34,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:36+0000\n"
+"POT-Creation-Date: 2026-05-22 17:47+0000\n"
 "PO-Revision-Date: 2026-01-16 05:49+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s19-1/sale/"
@@ -1661,11 +1661,6 @@ msgid "Communication"
 msgstr "Veza"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Communication history"
-msgstr "Povijest komunikacije"
-
-#. module: sale
 #: model:ir.model,name:sale.model_res_company
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__company_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__company_id
@@ -1724,7 +1719,6 @@ msgstr "Potvrdi"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_confirm
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Confirm Orders"
 msgstr ""
 
@@ -2386,6 +2380,11 @@ msgstr ""
 "prilikom kopiranja prodajnog naloga."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Download"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__downpayment_account_id
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_id
 msgid "Downpayment Account"
@@ -2595,11 +2594,6 @@ msgstr "Sladoled"
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
 msgstr "Generirajte link za plaćanje prodaje"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
-msgid "Generate a Payment Link"
-msgstr "Generiraj link za plaćanje"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3268,8 +3262,8 @@ msgstr "Marže"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
-msgid "Mark Quotation as Sent"
-msgstr "Označi ponudu kao poslanu"
+msgid "Mark as Sent"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -3793,6 +3787,11 @@ msgid "Payment"
 msgstr "Plaćanje"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
+msgid "Payment Link"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__preferred_payment_method_line_id
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Payment Method"
@@ -3943,11 +3942,6 @@ msgstr "Cjenici"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Pricing"
 msgstr "Cijene"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Print"
-msgstr "Ispis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
@@ -6187,6 +6181,18 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Communication history"
+#~ msgstr "Povijest komunikacije"
+
+#~ msgid "Generate a Payment Link"
+#~ msgstr "Generiraj link za plaćanje"
+
+#~ msgid "Mark Quotation as Sent"
+#~ msgstr "Označi ponudu kao poslanu"
+
+#~ msgid "Print"
+#~ msgstr "Ispis"
 
 #~ msgid "Invoicing Journal"
 #~ msgstr "Dnevnik fakturiranja"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -235,13 +235,15 @@ msgstr "Faol"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #, fuzzy
 msgid "Active Employees"
 msgstr "Faol xodimlar"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_version_list_view_enhanced_hr_attendance_add
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/hr_version_list_view.xml:0
 msgid "Add"
 msgstr ""
 
@@ -325,6 +327,11 @@ msgid "Applied Rules"
 msgstr "Qo‘llaniladigan qoidalar"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__ruleset_id
+msgid "Applied Rulesets"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 #, fuzzy
@@ -365,6 +372,7 @@ msgstr "Arxivlangan"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #, fuzzy
 msgid "Archived Employees"
@@ -933,6 +941,7 @@ msgstr "Boshqaruv paneli"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__date
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #, fuzzy
 msgid "Date"
@@ -1055,6 +1064,7 @@ msgstr "Oshib ketish muddati:"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__employee_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__employee_id
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
 #, fuzzy
@@ -1318,6 +1328,12 @@ msgid "Has Message"
 msgstr "Xabar mavjud"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__has_ruleset_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_version__has_ruleset_id
+msgid "Has Ruleset"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_calendar/attendance_calendar_overview.xml:0
 msgid "Hours"
@@ -1544,6 +1560,11 @@ msgid "Kiosk Settings"
 msgstr "Kiosk sozlamalari"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
+msgid "Last 2 Months"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #, fuzzy
 msgid "Last 3 Months"
@@ -1597,6 +1618,12 @@ msgstr "Kirish kengligi"
 #, fuzzy
 msgid "Latitude (Out)"
 msgstr "Chiqish kengligi"
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance_overtime.py:0
+msgid "Linked Attendance"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__linked_overtime_ids
@@ -1755,7 +1782,13 @@ msgid "My Attendances"
 msgstr "Mening davomatlarim"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
+msgid "My Overtimes"
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #, fuzzy
 msgid "My Team"
@@ -1803,6 +1836,11 @@ msgstr "Shtrix-kod qabul qilinmadi"
 #, fuzzy
 msgid "No employee corresponding to Badge ID '%(barcode)s.'"
 msgstr "'%(barcode)s' nishon ID raqamiga mos keladigan xodim topilmadi"
+
+#. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_overtime_analysis
+msgid "No overtime records found"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1897,6 +1935,14 @@ msgstr "Ish boshiga kiritish"
 
 #. module: hr_attendance
 #. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/hr_version_list_view.js:0
+msgid ""
+"One or more selected records already have a ruleset assigned (highlighted in "
+"yellow). Do you want to overwrite them?"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
 #, fuzzy
 msgid "Online"
@@ -1965,15 +2011,32 @@ msgstr "Ortiqcha vaqt"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_list_view
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_graph
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_pivot
 #, fuzzy
 msgid "Overtime"
 msgstr "Ish vaqtidan tashqari"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_analysis
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_overtime_analysis
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_list_view
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_graph
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_pivot
+msgid "Overtime Analysis"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 #, fuzzy
 msgid "Overtime Details"
 msgstr "Ish vaqtidan tashqari tafsilotlari"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_graph
+msgid "Overtime Encoded"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -1995,6 +2058,7 @@ msgstr "Ish vaqtidan tashqari qoidalari"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime_ruleset
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 #, fuzzy
 msgid "Overtime Ruleset"
@@ -2030,10 +2094,26 @@ msgid "Overview"
 msgstr "Umumiy ko‘rinish"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/views/hr_version_list_view.js:0
+msgid "Overwrite"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__paid
 #, fuzzy
 msgid "Pay Extra Hours"
 msgstr "Qo‘shimcha soatlar uchun haq to‘lash"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_list_view
+msgid "Pay Rate"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_filter
+msgid "Pay Rate > 0"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
@@ -2226,6 +2306,8 @@ msgstr "Hisobot"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__rule_ids
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_list_view
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_pivot
 #, fuzzy
 msgid "Rule"
 msgstr "Qoida"
@@ -2272,6 +2354,8 @@ msgstr "Qoidalar soni"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__ruleset_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__ruleset_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_version__ruleset_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_list_view
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_analysis_view_pivot
 #, fuzzy
 msgid "Ruleset"
 msgstr "Qoidalar to‘plami"
@@ -2496,6 +2580,11 @@ msgid "The attendance reporting of your employees will be displayed here."
 msgstr "Xodimlaringizning davomat hisoboti shu yerda ko‘rsatiladi"
 
 #. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_overtime_analysis
+msgid "The overtime reporting of your employees will be displayed here."
+msgstr ""
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 #, fuzzy
 msgid "The rule is based on"
@@ -2556,7 +2645,7 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_version_list_view_add
-msgid "There are no employees without an overtime ruleset."
+msgid "There are no employees without this overtime ruleset."
 msgstr ""
 
 #. module: hr_attendance

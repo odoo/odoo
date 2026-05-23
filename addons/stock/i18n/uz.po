@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -4252,12 +4252,6 @@ msgid "Filtered Location"
 msgstr "Filtrlangan joy"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__location_final_id
-#, fuzzy
-msgid "Final Location"
-msgstr "Yakuniy joy"
-
-#. module: stock
 #: model:product.removal,name:stock.removal_fifo
 #, fuzzy
 msgid "First In First Out (FIFO)"
@@ -4389,6 +4383,11 @@ msgstr "Prognozlangan kutilayotgan sana"
 #, fuzzy
 msgid "Forecasted Inventory"
 msgstr "Prognozlangan inventar"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__forecasted_location_id
+msgid "Forecasted Location"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -6114,6 +6113,11 @@ msgstr "Joylashuv zaxirasi"
 #, fuzzy
 msgid "Location Type"
 msgstr "Joylashuv turi"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move__forecasted_location_id
+msgid "Location used in the computation of the forecast."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -11176,16 +11180,6 @@ msgstr ""
 "Yaratilishi kerak bo‘lgan seriya raqamlari soni noldan katta bo‘lishi kerak."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move__location_final_id
-#, fuzzy
-msgid ""
-"The operation brings the products to the intermediate location.But this "
-"operation is part of a chain of operations targeting the final location."
-msgstr ""
-"Bu operatsiya mahsulotlarni oraliq joyga olib keladi. Ammo bu operatsiya "
-"yakuniy joyga yo‘naltirilgan operatsiyalar zanjirining bir qismidir."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 #, fuzzy
 msgid "The operation takes and suggests products from this location."
@@ -13673,6 +13667,18 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Yetkazib berish buyurtmasi (Havola "
 "{{ object.name or 'mavjud emas' }})"
+
+#, fuzzy
+#~ msgid "Final Location"
+#~ msgstr "Yakuniy joy"
+
+#, fuzzy
+#~ msgid ""
+#~ "The operation brings the products to the intermediate location.But this "
+#~ "operation is part of a chain of operations targeting the final location."
+#~ msgstr ""
+#~ "Bu operatsiya mahsulotlarni oraliq joyga olib keladi. Ammo bu operatsiya "
+#~ "yakuniy joyga yo‘naltirilgan operatsiyalar zanjirining bir qismidir."
 
 #, fuzzy
 #~ msgid "On hand:"

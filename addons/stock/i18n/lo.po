@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-05-10 17:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3497,11 +3497,6 @@ msgid "Filtered Location"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__location_final_id
-msgid "Final Location"
-msgstr ""
-
-#. module: stock
 #: model:product.removal,name:stock.removal_fifo
 msgid "First In First Out (FIFO)"
 msgstr ""
@@ -3607,6 +3602,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Forecasted Inventory"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__forecasted_location_id
+msgid "Forecasted Location"
 msgstr ""
 
 #. module: stock
@@ -5036,6 +5036,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_location__usage
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Location Type"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move__forecasted_location_id
+msgid "Location used in the computation of the forecast."
 msgstr ""
 
 #. module: stock
@@ -9262,13 +9267,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "The number of Serial Numbers to generate must be greater than zero."
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move__location_final_id
-msgid ""
-"The operation brings the products to the intermediate location.But this "
-"operation is part of a chain of operations targeting the final location."
 msgstr ""
 
 #. module: stock

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-05-22 17:47+0000\n"
 "PO-Revision-Date: 2026-05-05 23:51+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -18,6 +18,18 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.17\n"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+msgid "'Search by name or phone or transaction id...'"
+msgstr ""
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+msgid "'Select M-Pesa Transaction'"
+msgstr ""
 
 #. module: pos_safaricom
 #. odoo-javascript
@@ -95,6 +107,13 @@ msgid "Consumer Secret"
 msgstr "Secreto del consumidor"
 
 #. module: pos_safaricom
+#. odoo-python
+#: code:addons/pos_safaricom/models/pos_payment_method.py:0
+msgid ""
+"Could not find base url. Please set up web.base.url to a valid https address"
+msgstr ""
+
+#. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_uid
 msgid "Created by"
 msgstr "Creada por"
@@ -119,12 +138,6 @@ msgstr "Ocurrió un error al generar el código QR"
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
-msgid "Failed to register URLs"
-msgstr "Error al registrar las URL"
-
-#. module: pos_safaricom
-#. odoo-python
-#: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Failed to register URLs. Check your credentials and try again."
 msgstr ""
 "Ocurrió un error al registrar las URL. Verifica tus credenciales e inténtalo "
@@ -133,10 +146,18 @@ msgstr ""
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
+msgid "Failed to register URLs: %s"
+msgstr ""
+
+#. module: pos_safaricom
+#. odoo-python
+#: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Failed to retrieve access token from Safaricom"
 msgstr "No fue posible obtener el token de acceso de Safaricom"
 
 #. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__id
 msgid "ID"
@@ -289,6 +310,13 @@ msgid "Test Mode"
 msgstr "Modo de prueba"
 
 #. module: pos_safaricom
+#: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__business_short_code
+msgid ""
+"The business short code and till number combination as 'shortcode-"
+"tillnumber' (ex: 123456-789012)"
+msgstr ""
+
+#. module: pos_safaricom
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__passkey
 msgid "The passkey is used to generate the password for the STK Push"
 msgstr "La llave de acceso se usa para generar la contraseña del STK Push"
@@ -307,3 +335,6 @@ msgstr "Transacción de Lipa na M-PESA"
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__safaricom_test_mode
 msgid "Use sandbox environment"
 msgstr "Usar el entorno de prueba"
+
+#~ msgid "Failed to register URLs"
+#~ msgstr "Error al registrar las URL"

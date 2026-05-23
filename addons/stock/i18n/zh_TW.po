@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-03-19 07:14+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -3628,11 +3628,6 @@ msgid "Filtered Location"
 msgstr "篩選的庫位"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__location_final_id
-msgid "Final Location"
-msgstr "最終位置"
-
-#. module: stock
 #: model:product.removal,name:stock.removal_fifo
 msgid "First In First Out (FIFO)"
 msgstr "先進先出(FIFO)"
@@ -3739,6 +3734,11 @@ msgstr "預測 預計日期"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Forecasted Inventory"
 msgstr "庫存預測"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__forecasted_location_id
+msgid "Forecasted Location"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -5188,6 +5188,11 @@ msgstr "庫存位置"
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Location Type"
 msgstr "位置類型"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move__forecasted_location_id
+msgid "Location used in the computation of the forecast."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -9501,13 +9506,6 @@ msgid "The number of Serial Numbers to generate must be greater than zero."
 msgstr "要產生的序列號必須大於零."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move__location_final_id
-msgid ""
-"The operation brings the products to the intermediate location.But this "
-"operation is part of a chain of operations targeting the final location."
-msgstr "該操作將產品帶到中期位置。但此操作是針對最終位置的操作鏈的一部份。"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
 msgstr "該操作會從此位置獲取及建議產品。"
@@ -11559,6 +11557,14 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} 送貨單 (參照 {{ object.name or 'n/a' }})"
+
+#~ msgid "Final Location"
+#~ msgstr "最終位置"
+
+#~ msgid ""
+#~ "The operation brings the products to the intermediate location.But this "
+#~ "operation is part of a chain of operations targeting the final location."
+#~ msgstr "該操作將產品帶到中期位置。但此操作是針對最終位置的操作鏈的一部份。"
 
 #~ msgid "On hand:"
 #~ msgstr "在庫："

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-05-07 10:00+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -3557,11 +3557,6 @@ msgid "Add a note"
 msgstr "メモを追加"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Add a payment QR-code to your invoices"
-msgstr "請求書に支払用のQRコードを追加"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__add_invoice_line
 msgid "Add a rounding line"
 msgstr "丸め行を追加"
@@ -5227,6 +5222,12 @@ msgid "Boolean"
 msgstr "ブーリアン"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid "Branch Code"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 msgid "Branch:"
@@ -6032,11 +6033,6 @@ msgstr "コミュニケーション基準"
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_type
 msgid "Communication Type"
 msgstr "コミュニケーションタイプ"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
-msgid "Communication history"
-msgstr "通信履歴"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_ids
@@ -10920,6 +10916,11 @@ msgstr "情報"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Initial Setup"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
 msgstr "ここに取引条件を定義..."
 
@@ -12330,8 +12331,8 @@ msgstr "AI が請求書を読み取り。支払いも簡単。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Let your customers pay their invoices online"
-msgstr "顧客は請求書をオンラインで支払えるようにします"
+msgid "Let your customers pay their invoices on your portal"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -15605,11 +15606,6 @@ msgid "QR Code URL"
 msgstr "QRコードURL"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "QR Codes"
-msgstr "QRコード"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
 msgid "Quantity"
 msgstr "数量"
@@ -16062,6 +16058,7 @@ msgstr "レポート明細名"
 #. module: account
 #: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
+#: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Reporting"
 msgstr "レポーティング"
@@ -16437,6 +16434,11 @@ msgstr "SEPAクレジット振替 / ISO20022"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "SEPA Direct Debit (SDD)"
 msgstr "SEPA Direct Debit (SDD)"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "SEPA QR Codes"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18575,6 +18577,14 @@ msgid ""
 msgstr ""
 "「顧客」フィールドを入力しないと、請求書を検証できません。\n"
 "顧客の情報がない請求書は、監査上の問題となる可能性があります。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid ""
+"The 5-digit branch code as registered with the Revenue Department. Leave "
+"empty for Head Office."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22949,6 +22959,18 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Self-billing請求書 (参照番号 {{ object.name or "
 "'n/a' }})"
+
+#~ msgid "Add a payment QR-code to your invoices"
+#~ msgstr "請求書に支払用のQRコードを追加"
+
+#~ msgid "Communication history"
+#~ msgstr "通信履歴"
+
+#~ msgid "Let your customers pay their invoices online"
+#~ msgstr "顧客は請求書をオンラインで支払えるようにします"
+
+#~ msgid "QR Codes"
+#~ msgstr "QRコード"
 
 #~ msgid ""
 #~ "You cannot switch the type of a document with an existing sequence number."

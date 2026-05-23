@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-01-15 21:57+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -2872,11 +2872,6 @@ msgid "Add a note"
 msgstr "Dodaj bilješku"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Add a payment QR-code to your invoices"
-msgstr "Dodajte QR kod za plaćanje vašim računima"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__add_invoice_line
 msgid "Add a rounding line"
 msgstr "Dodaj redak zaokruživanja"
@@ -4502,6 +4497,12 @@ msgid "Boolean"
 msgstr "Logička"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid "Branch Code"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 msgid "Branch:"
@@ -5293,11 +5294,6 @@ msgstr "Standard komunikacije"
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_type
 msgid "Communication Type"
 msgstr "Vrsta komunikacije"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
-msgid "Communication history"
-msgstr "Povijest komunikacije"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_ids
@@ -10100,6 +10096,11 @@ msgstr "Informacija"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Initial Setup"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
 msgstr "Umetnite ovdje svoje uvijete i pravila..."
 
@@ -11495,8 +11496,8 @@ msgstr "Neka umjetna inteligencija skenira vaš račun. Platite jednostavno."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Let your customers pay their invoices online"
-msgstr "Omogućite svojim kupcima da svoje račune plaćaju online"
+msgid "Let your customers pay their invoices on your portal"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -14700,11 +14701,6 @@ msgid "QR Code URL"
 msgstr "URL QR koda"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "QR Codes"
-msgstr "QR kodovi"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
 msgid "Quantity"
 msgstr "Količina"
@@ -15157,6 +15153,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
+#: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Reporting"
 msgstr "Izvještavanje"
@@ -15532,6 +15529,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "SEPA Direct Debit (SDD)"
 msgstr "SEPA Direct Debit (SDD)"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "SEPA QR Codes"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -17621,6 +17623,14 @@ msgid ""
 "The 'Customer' field is required to validate the invoice.\n"
 "You probably don't want to explain to your auditor that you invoiced an "
 "invisible man :)"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid ""
+"The 5-digit branch code as registered with the Revenue Department. Leave "
+"empty for Head Office."
 msgstr ""
 
 #. module: account
@@ -21659,3 +21669,15 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "Add a payment QR-code to your invoices"
+#~ msgstr "Dodajte QR kod za plaćanje vašim računima"
+
+#~ msgid "Communication history"
+#~ msgstr "Povijest komunikacije"
+
+#~ msgid "Let your customers pay their invoices online"
+#~ msgstr "Omogućite svojim kupcima da svoje račune plaćaju online"
+
+#~ msgid "QR Codes"
+#~ msgstr "QR kodovi"

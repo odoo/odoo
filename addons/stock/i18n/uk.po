@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-01-13 16:10+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -3641,11 +3641,6 @@ msgid "Filtered Location"
 msgstr "Відфільтровані місцезнаходження"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__location_final_id
-msgid "Final Location"
-msgstr ""
-
-#. module: stock
 #: model:product.removal,name:stock.removal_fifo
 msgid "First In First Out (FIFO)"
 msgstr "First In First Out (FIFO)"
@@ -3752,6 +3747,11 @@ msgstr "Прогнозована очікувана дата"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Forecasted Inventory"
 msgstr "Прогнозований запас"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__forecasted_location_id
+msgid "Forecasted Location"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -5241,6 +5241,11 @@ msgstr "Запаси місцезнаходження"
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Location Type"
 msgstr "Тип розташування"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move__forecasted_location_id
+msgid "Location used in the computation of the forecast."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -9594,13 +9599,6 @@ msgstr "Назва складу повинна бути унікальною д�
 #: code:addons/stock/models/stock_move.py:0
 msgid "The number of Serial Numbers to generate must be greater than zero."
 msgstr "Кількість серійних номерів для створення має бути більшою за нуль."
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move__location_final_id
-msgid ""
-"The operation brings the products to the intermediate location.But this "
-"operation is part of a chain of operations targeting the final location."
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id

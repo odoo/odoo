@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-01-15 20:32+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-1/hr/ru/"
@@ -2433,7 +2433,6 @@ msgstr "Месячная брутто-зарплата сотрудника."
 #: model:ir.model.fields,field_description:hr.field_hr_employee_type__employees_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
 #: model:ir.model.fields,field_description:hr.field_res_partner__employee_ids
-#: model:ir.ui.menu,name:hr.menu_hr_employee_payroll
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:res.groups.privilege,name:hr.res_groups_privilege_employees
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
@@ -3197,6 +3196,13 @@ msgid "Indefinite"
 msgstr "Бессрочный"
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__split_legal_name
+msgid ""
+"Indicates whether the legal name is split into first and last name fields "
+"based on the employee's country."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__child_all_count
 msgid "Indirect Subordinates Count"
 msgstr ""
@@ -3595,6 +3601,7 @@ msgstr "Управление технологическим бюджетом и 
 
 #. module: hr
 #: model:hr.department,name:hr.dep_management
+#: model:ir.ui.menu,name:hr.menu_hr_employee_payroll
 msgid "Management"
 msgstr "Управление"
 
@@ -4612,6 +4619,11 @@ msgid "Related employees based on their private address"
 msgstr "Связанные сотрудники на основе их личного адреса"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__all_employee_ids
+msgid "Related employees from all companies"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
 #: model:ir.model.fields,help:hr.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
@@ -4885,6 +4897,11 @@ msgstr "У некоторых сотрудников уже есть рабоч�
 msgid ""
 "Some employees are present in a loop.\n"
 "                Click"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__split_legal_name
+msgid "Split Legal Name"
 msgstr ""
 
 #. module: hr

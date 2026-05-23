@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-05-06 14:31+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -2098,6 +2098,15 @@ msgstr ""
 "Handwerkskunst mit zeitlosem Design und schafft so Stücke, die jeden "
 "Innenraum aufwerten.“\n"
 "                            </span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown
+msgid ""
+"<span class=\"h3-fs\">\n"
+"                        <font class=\"text-o-color-1\">Sales begins in:</"
+"font>\n"
+"                    </span>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_inline
@@ -4803,13 +4812,13 @@ msgstr "Bluesky"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/bg_blur_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_shadow_option.xml:0
 msgid "Blur"
 msgstr "Unschärfe"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
 #: code:addons/website/static/src/builder/plugins/options/header/header_navigation_option.xml:0
 msgid "Bold"
 msgstr "Schwarzer Bereich"
@@ -6423,8 +6432,6 @@ msgid "Countdown is over - Firework"
 msgstr "Countdown ist vorbei - Feuerwerk"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__country_id
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Country"
@@ -8201,6 +8208,12 @@ msgid "Enhance Your <strong>Experience</strong>"
 msgstr "Verbessern Sie Ihr <strong>Erlebnis</strong>"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/bg_blur_option.xml:0
+msgid "Enhance contrast and brightness"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_shape_image
 msgid ""
 "Enhance your experience with our user-focused designs, ensuring you get the "
@@ -9652,11 +9665,6 @@ msgid "Google"
 msgstr "Google"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics
-msgid "Google Analytics"
-msgstr "Google Analytics"
-
-#. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_analytics_key
 #: model:ir.model.fields,field_description:website.field_website__google_analytics_key
 msgid "Google Analytics Key"
@@ -9691,6 +9699,11 @@ msgstr "Google-Suchkonsole"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
 msgid "Google Search Console Key"
 msgstr "Schlüssel für Google Search Console"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics
+msgid "Google Tag Manager/Google Analytics"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
@@ -10253,6 +10266,11 @@ msgid "How can we help?"
 msgstr "Wie können wir helfen?"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "How does GTM work?"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_mosaic_template
 msgid "How ideas come to life"
 msgstr "Wie Ideen zum Leben erweckt werden"
@@ -10267,11 +10285,6 @@ msgstr "Wie kann ich Plausible verknüpfen?"
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "How to create my Plausible Shared Link"
 msgstr "Meinen geteilten Plausible-Link erstellen"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "How to get my Measurement ID"
-msgstr "Wie erhalte ich meine Mess-ID"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -10431,6 +10444,11 @@ msgid ""
 msgstr ""
 "Ideal für Neueinsteiger. Grundlegende Funktionen für den schnellen Einstieg "
 "in Vertrieb und Marketing. Perfekt für kleine Teams."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Identifier"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__specific_user_account
@@ -11736,8 +11754,6 @@ msgid "Language from the website when visitor has been created"
 msgstr "Sprache von der Website, wenn ein Besucher erzeugt wurde"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
 #: model:ir.model.fields,field_description:website.field_res_config_settings__language_ids
 #: model:ir.model.fields,field_description:website.field_website__language_ids
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -12089,7 +12105,6 @@ msgstr "Bibliothek"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
 msgid "Light"
@@ -12501,11 +12516,6 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Max File Size"
 msgstr "Max. Dateigröße"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Measurement ID or Tag"
-msgstr "Mess-ID oder Stichwort"
 
 #. module: website
 #. odoo-javascript
@@ -15537,7 +15547,6 @@ msgstr "Liste der Route aktualisieren"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/content_width_option.xml:0
-#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
 #: code:addons/website/static/src/builder/plugins/options/base_visibility_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/footer_option.xml:0
@@ -16061,6 +16070,12 @@ msgstr "SEO-optimiert"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 msgid "SVG images are not supported. Please select a PNG, JPG, WEBP, or GIF"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
+msgid "Sales begins in:"
 msgstr ""
 
 #. module: website
@@ -18752,6 +18767,7 @@ msgstr "Titel - Bild"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
 msgid "Title Position"
 msgstr "Titelposition"
@@ -18957,9 +18973,8 @@ msgstr "Beitrag"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Track visits using Google Analytics or Google Tag Manager"
+msgid "Track your users, using Google Analytics or Google Tag Manager"
 msgstr ""
-"Analysieren Sie Besucherzahlen mit Google Analytics oder Google Tag Manager."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
@@ -19198,24 +19213,6 @@ msgstr "URL muss mit „#“ beginnen."
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
 msgid "URL to"
 msgstr "URL zu"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
-msgid "UTM Campaign"
-msgstr "UTM-Kampagne"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
-msgid "UTM Medium"
-msgstr "UTM-Medium"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
-msgid "UTM Source"
-msgstr "UTM-Quelle"
 
 #. module: website
 #. odoo-javascript
@@ -22612,6 +22609,12 @@ msgid "schedule appointments"
 msgstr "Termine zu planen"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/resource_editor/resource_editor.xml:0
+msgid "scope.data.label"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "scrolling, depth, effect, background, layer, visual, movement, parallax"
 msgstr ""
@@ -22780,6 +22783,12 @@ msgstr "diese Seite"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/resource_editor/resource_editor.xml:0
+msgid "this.state.type === 'xml' ? resource.name : resource.label"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 msgid "to"
 msgstr "bis"
@@ -22849,6 +22858,29 @@ msgstr "✽  Pizza"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  Was wir bieten"
+
+#~ msgid "Google Analytics"
+#~ msgstr "Google Analytics"
+
+#~ msgid "How to get my Measurement ID"
+#~ msgstr "Wie erhalte ich meine Mess-ID"
+
+#~ msgid "Measurement ID or Tag"
+#~ msgstr "Mess-ID oder Stichwort"
+
+#~ msgid "Track visits using Google Analytics or Google Tag Manager"
+#~ msgstr ""
+#~ "Analysieren Sie Besucherzahlen mit Google Analytics oder Google Tag "
+#~ "Manager."
+
+#~ msgid "UTM Campaign"
+#~ msgstr "UTM-Kampagne"
+
+#~ msgid "UTM Medium"
+#~ msgstr "UTM-Medium"
+
+#~ msgid "UTM Source"
+#~ msgstr "UTM-Quelle"
 
 #~ msgid "Add predefined error message"
 #~ msgstr "Vordefinierte Fehlermeldung hinzufügen"

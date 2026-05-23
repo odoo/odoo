@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:36+0000\n"
+"POT-Creation-Date: 2026-05-22 17:47+0000\n"
 "PO-Revision-Date: 2026-01-16 05:52+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -1586,11 +1586,6 @@ msgid "Communication"
 msgstr "Харилцаа"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Communication history"
-msgstr "Харилцааны түүх"
-
-#. module: sale
 #: model:ir.model,name:sale.model_res_company
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__company_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__company_id
@@ -1649,7 +1644,6 @@ msgstr "Батлах"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_confirm
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Confirm Orders"
 msgstr ""
 
@@ -2306,6 +2300,11 @@ msgstr ""
 "хуулбарлагдахгүй."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Download"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__downpayment_account_id
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_id
 msgid "Downpayment Account"
@@ -2513,11 +2512,6 @@ msgstr ""
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
 msgstr "Борлуулалтын төлбөр төлөх холбоос үүсгэх"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
-msgid "Generate a Payment Link"
-msgstr "Төлбөрийн холбоос үүсгэх"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3181,7 +3175,7 @@ msgstr "Бохир ашиг"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
-msgid "Mark Quotation as Sent"
+msgid "Mark as Sent"
 msgstr ""
 
 #. module: sale
@@ -3706,6 +3700,11 @@ msgid "Payment"
 msgstr "Төлбөр"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
+msgid "Payment Link"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__preferred_payment_method_line_id
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Payment Method"
@@ -3856,11 +3855,6 @@ msgstr "Үнийн хүснэгт"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Pricing"
 msgstr "Үнэ тооцоолол"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Print"
-msgstr "Хэвлэх"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
@@ -6033,3 +6027,12 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Communication history"
+#~ msgstr "Харилцааны түүх"
+
+#~ msgid "Generate a Payment Link"
+#~ msgstr "Төлбөрийн холбоос үүсгэх"
+
+#~ msgid "Print"
+#~ msgstr "Хэвлэх"

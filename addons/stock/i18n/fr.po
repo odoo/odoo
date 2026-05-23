@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-05-05 11:55+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/stock/"
@@ -3807,11 +3807,6 @@ msgid "Filtered Location"
 msgstr "Emplacement filtré"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__location_final_id
-msgid "Final Location"
-msgstr "Emplacement final"
-
-#. module: stock
 #: model:product.removal,name:stock.removal_fifo
 msgid "First In First Out (FIFO)"
 msgstr "Premier rentré premier sorti (FIFO)"
@@ -3927,6 +3922,11 @@ msgstr "Date prévue espérée"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Forecasted Inventory"
 msgstr "Inventaire planifié"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__forecasted_location_id
+msgid "Forecasted Location"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -5439,6 +5439,11 @@ msgstr "Emplacement de stock"
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Location Type"
 msgstr "Type d'emplacement"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move__forecasted_location_id
+msgid "Location used in the computation of the forecast."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -9878,16 +9883,6 @@ msgid "The number of Serial Numbers to generate must be greater than zero."
 msgstr "Le nombre de numéros de série à générer doit être supérieur à zéro."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move__location_final_id
-msgid ""
-"The operation brings the products to the intermediate location.But this "
-"operation is part of a chain of operations targeting the final location."
-msgstr ""
-"L'opération amène les produits à l'emplacement intermédiaire. Cependant, "
-"cette opération fait partie d'une chaîne d'opérations visant l'emplacement "
-"final."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
 msgid "The operation takes and suggests products from this location."
 msgstr ""
@@ -12116,6 +12111,17 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Bon de livraison (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "Final Location"
+#~ msgstr "Emplacement final"
+
+#~ msgid ""
+#~ "The operation brings the products to the intermediate location.But this "
+#~ "operation is part of a chain of operations targeting the final location."
+#~ msgstr ""
+#~ "L'opération amène les produits à l'emplacement intermédiaire. Cependant, "
+#~ "cette opération fait partie d'une chaîne d'opérations visant "
+#~ "l'emplacement final."
 
 #~ msgid "On hand:"
 #~ msgstr "Disponible :"

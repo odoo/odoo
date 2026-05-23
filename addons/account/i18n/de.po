@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-04-30 09:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -3616,11 +3616,6 @@ msgid "Add a note"
 msgstr "Notiz hinzufügen"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Add a payment QR-code to your invoices"
-msgstr "Fügen Sie Ihrer Rechnung einen QR-Zahlungscode hinzu"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__strategy__add_invoice_line
 msgid "Add a rounding line"
 msgstr "Eine Rundungszeile hinzufügen"
@@ -5320,6 +5315,12 @@ msgid "Boolean"
 msgstr "Boolesch"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid "Branch Code"
+msgstr ""
+
+#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 msgid "Branch:"
@@ -6146,11 +6147,6 @@ msgstr "Mitteilungsstandard"
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_type
 msgid "Communication Type"
 msgstr "Mitteilungsart"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
-msgid "Communication history"
-msgstr "Kommunikationsverlauf"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_ids
@@ -11115,6 +11111,11 @@ msgstr "Information"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Initial Setup"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
 msgstr "Geben Sie hier Ihre Geschäftsbedingungen ein …"
 
@@ -12557,8 +12558,8 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Let your customers pay their invoices online"
-msgstr "Lassen Sie Ihre Kunden Rechnungen online bezahlen"
+msgid "Let your customers pay their invoices on your portal"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -15911,11 +15912,6 @@ msgid "QR Code URL"
 msgstr "URL des QR-Codes"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "QR Codes"
-msgstr "QR-Codes"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
 msgid "Quantity"
 msgstr "Menge"
@@ -16373,6 +16369,7 @@ msgstr "Name der Berichtszeile"
 #. module: account
 #: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
+#: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Reporting"
 msgstr "Berichtswesen"
@@ -16752,6 +16749,11 @@ msgstr "SEPA-Überweisung / ISO20022"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "SEPA Direct Debit (SDD)"
 msgstr "SEPA-Lastschriftverfahren (SDD)"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "SEPA QR Codes"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -18947,6 +18949,14 @@ msgstr ""
 "Das Feld „Kunde“ ist für die Validierung der Rechnung erforderlich.\n"
 "Sie möchten Ihrem Wirtschaftsprüfer wahrscheinlich nicht erklären, dass Sie "
 "einem unsichtbaren Mann eine Rechnung ausgestellt haben."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/tools/partner_identifiers.py:0
+msgid ""
+"The 5-digit branch code as registered with the Revenue Department. Leave "
+"empty for Head Office."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -23549,6 +23559,18 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Selbstfakturierte Rechnung (Ref. {{ object.name "
 "or 'k. A.' }})"
+
+#~ msgid "Add a payment QR-code to your invoices"
+#~ msgstr "Fügen Sie Ihrer Rechnung einen QR-Zahlungscode hinzu"
+
+#~ msgid "Communication history"
+#~ msgstr "Kommunikationsverlauf"
+
+#~ msgid "Let your customers pay their invoices online"
+#~ msgstr "Lassen Sie Ihre Kunden Rechnungen online bezahlen"
+
+#~ msgid "QR Codes"
+#~ msgstr "QR-Codes"
 
 #~ msgid ""
 #~ "You cannot switch the type of a document with an existing sequence number."

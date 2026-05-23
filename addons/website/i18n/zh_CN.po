@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-05-04 13:44+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -1954,6 +1954,15 @@ msgstr ""
 "                                “此系列以大师级技艺，揉合高超工艺与永恒经典设"
 "计，创造的作品能够为任何室内空间提升品味。”\n"
 "                            </span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown
+msgid ""
+"<span class=\"h3-fs\">\n"
+"                        <font class=\"text-o-color-1\">Sales begins in:</"
+"font>\n"
+"                    </span>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_inline
@@ -4465,13 +4474,13 @@ msgstr "Bluesky"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/bg_blur_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_shadow_option.xml:0
 msgid "Blur"
 msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
 #: code:addons/website/static/src/builder/plugins/options/header/header_navigation_option.xml:0
 msgid "Bold"
 msgstr "加粗"
@@ -6043,8 +6052,6 @@ msgid "Countdown is over - Firework"
 msgstr "倒计时结束 - 烟花"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__country_id
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Country"
@@ -7769,6 +7776,12 @@ msgid "Enhance Your <strong>Experience</strong>"
 msgstr "增强<strong>体验</strong>"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/bg_blur_option.xml:0
+msgid "Enhance contrast and brightness"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_shape_image
 msgid ""
 "Enhance your experience with our user-focused designs, ensuring you get the "
@@ -9150,11 +9163,6 @@ msgid "Google"
 msgstr "谷歌"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics
-msgid "Google Analytics"
-msgstr "谷歌 分析"
-
-#. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_analytics_key
 #: model:ir.model.fields,field_description:website.field_website__google_analytics_key
 msgid "Google Analytics Key"
@@ -9188,6 +9196,11 @@ msgstr "谷歌 搜索控制台"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
 msgid "Google Search Console Key"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics
+msgid "Google Tag Manager/Google Analytics"
 msgstr ""
 
 #. module: website
@@ -9731,6 +9744,11 @@ msgid "How can we help?"
 msgstr "我们能帮助你什么吗？"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "How does GTM work?"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_mosaic_template
 msgid "How ideas come to life"
 msgstr "如何让想法变为现实"
@@ -9745,11 +9763,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "How to create my Plausible Shared Link"
 msgstr "如何创建我的 Plausible 共享链接"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "How to get my Measurement ID"
-msgstr "如何获取我的计量单位 ID"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -9906,6 +9919,11 @@ msgid ""
 "Ideal for newcomers. Essential features to kickstart sales and marketing. "
 "Perfect for small teams."
 msgstr "适合新手。必备功能可快速启动销售和营销。适合小型团队。"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Identifier"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__specific_user_account
@@ -11172,8 +11190,6 @@ msgid "Language from the website when visitor has been created"
 msgstr "创建访问者时网站上的语言"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
 #: model:ir.model.fields,field_description:website.field_res_config_settings__language_ids
 #: model:ir.model.fields,field_description:website.field_website__language_ids
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -11517,7 +11533,6 @@ msgstr "库"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
 msgid "Light"
@@ -11917,11 +11932,6 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Max File Size"
 msgstr "文件大小上限"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Measurement ID or Tag"
-msgstr "量度识别码或标签"
 
 #. module: website
 #. odoo-javascript
@@ -14878,7 +14888,6 @@ msgstr "刷新路由的列表"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/content_width_option.xml:0
-#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
 #: code:addons/website/static/src/builder/plugins/options/base_visibility_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/footer_option.xml:0
@@ -15396,6 +15405,12 @@ msgstr "SEO优化"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 msgid "SVG images are not supported. Please select a PNG, JPG, WEBP, or GIF"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
+msgid "Sales begins in:"
 msgstr ""
 
 #. module: website
@@ -17988,6 +18003,7 @@ msgstr "标题 - 图片"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
 msgid "Title Position"
 msgstr "标题位置"
@@ -18184,8 +18200,8 @@ msgstr "追踪"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Track visits using Google Analytics or Google Tag Manager"
-msgstr "使用 Google Analytics 或 Google Tag Manager 追踪浏览情况"
+msgid "Track your users, using Google Analytics or Google Tag Manager"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
@@ -18414,24 +18430,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
 msgid "URL to"
 msgstr "URL 到"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
-msgid "UTM Campaign"
-msgstr "UTM营销"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
-msgid "UTM Medium"
-msgstr "UTM媒介"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
-msgid "UTM Source"
-msgstr "UTM来源"
 
 #. module: website
 #. odoo-javascript
@@ -21601,6 +21599,12 @@ msgid "schedule appointments"
 msgstr "安排约会"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/resource_editor/resource_editor.xml:0
+msgid "scope.data.label"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "scrolling, depth, effect, background, layer, visual, movement, parallax"
 msgstr ""
@@ -21752,6 +21756,12 @@ msgstr "此页"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/resource_editor/resource_editor.xml:0
+msgid "this.state.type === 'xml' ? resource.name : resource.label"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 msgid "to"
 msgstr "到"
@@ -21821,3 +21831,24 @@ msgstr "✽  披萨"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  我们提供的岗位"
+
+#~ msgid "Google Analytics"
+#~ msgstr "谷歌 分析"
+
+#~ msgid "How to get my Measurement ID"
+#~ msgstr "如何获取我的计量单位 ID"
+
+#~ msgid "Measurement ID or Tag"
+#~ msgstr "量度识别码或标签"
+
+#~ msgid "Track visits using Google Analytics or Google Tag Manager"
+#~ msgstr "使用 Google Analytics 或 Google Tag Manager 追踪浏览情况"
+
+#~ msgid "UTM Campaign"
+#~ msgstr "UTM营销"
+
+#~ msgid "UTM Medium"
+#~ msgstr "UTM媒介"
+
+#~ msgid "UTM Source"
+#~ msgstr "UTM来源"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:45+0000\n"
 "PO-Revision-Date: 2026-04-13 19:32+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -2013,6 +2013,15 @@ msgstr ""
 "자인이 완벽하게 조화를 이룬 컬렉션으로, 어떤 실내 공간에서나 품격을 높여주는 "
 "작품을 창조해 냅니다.\"\n"
 "                            </span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown
+msgid ""
+"<span class=\"h3-fs\">\n"
+"                        <font class=\"text-o-color-1\">Sales begins in:</"
+"font>\n"
+"                    </span>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_inline
@@ -4575,13 +4584,13 @@ msgstr "블루스카이"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/bg_blur_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_shadow_option.xml:0
 msgid "Blur"
 msgstr "흐리게"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
 #: code:addons/website/static/src/builder/plugins/options/header/header_navigation_option.xml:0
 msgid "Bold"
 msgstr "굵게"
@@ -6172,8 +6181,6 @@ msgid "Countdown is over - Firework"
 msgstr "카운트 다운 종료 - 불꽃 놀이"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__country_id
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Country"
@@ -7914,6 +7921,12 @@ msgid "Enhance Your <strong>Experience</strong>"
 msgstr "<strong>경험</strong> 개선"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/bg_blur_option.xml:0
+msgid "Enhance contrast and brightness"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_shape_image
 msgid ""
 "Enhance your experience with our user-focused designs, ensuring you get the "
@@ -9313,11 +9326,6 @@ msgid "Google"
 msgstr "Google"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics
-msgid "Google Analytics"
-msgstr "구글 웹로그 분석"
-
-#. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_analytics_key
 #: model:ir.model.fields,field_description:website.field_website__google_analytics_key
 msgid "Google Analytics Key"
@@ -9352,6 +9360,11 @@ msgstr "구글 서치 콘솔"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
 msgid "Google Search Console Key"
 msgstr "Google 검색 콘솔 키"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics
+msgid "Google Tag Manager/Google Analytics"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
@@ -9900,6 +9913,11 @@ msgid "How can we help?"
 msgstr "어떻게 도와 드릴까요?"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "How does GTM work?"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_mosaic_template
 msgid "How ideas come to life"
 msgstr "아이디어가 실현되는 방식"
@@ -9914,11 +9932,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "How to create my Plausible Shared Link"
 msgstr "그럴듯한 공유 링크를 생성하는 방법"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "How to get my Measurement ID"
-msgstr "내 측정 ID를 얻는 방법"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -10079,6 +10092,11 @@ msgid ""
 msgstr ""
 "영업 및 마케팅 활동을 시작하기 위한 필수 도구가 포함되어 있어 초보자에게 적합"
 "합니다. 소규모 팀에 이상적입니다."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Identifier"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__specific_user_account
@@ -11354,8 +11372,6 @@ msgid "Language from the website when visitor has been created"
 msgstr "방문자가 생성될 때의 웹 사이트 언어"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
 #: model:ir.model.fields,field_description:website.field_res_config_settings__language_ids
 #: model:ir.model.fields,field_description:website.field_website__language_ids
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -11704,7 +11720,6 @@ msgstr "라이브러리"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
 msgid "Light"
@@ -12106,11 +12121,6 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Max File Size"
 msgstr "최대 파일 용량"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Measurement ID or Tag"
-msgstr "측정 ID 또는 태그"
 
 #. module: website
 #. odoo-javascript
@@ -15092,7 +15102,6 @@ msgstr "경로 목록 새로 고침"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/content_width_option.xml:0
-#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
 #: code:addons/website/static/src/builder/plugins/options/base_visibility_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/footer_option.xml:0
@@ -15614,6 +15623,12 @@ msgstr "SEO 최적화"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 msgid "SVG images are not supported. Please select a PNG, JPG, WEBP, or GIF"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
+msgid "Sales begins in:"
 msgstr ""
 
 #. module: website
@@ -18248,6 +18263,7 @@ msgstr "제목 - 이미지"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/social_media_option.xml:0
 msgid "Title Position"
 msgstr "제목 위치"
@@ -18445,8 +18461,8 @@ msgstr "추적"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "Track visits using Google Analytics or Google Tag Manager"
-msgstr "Google 애널리틱스 또는 Google 태그 관리자로 방문자 추적하기"
+msgid "Track your users, using Google Analytics or Google Tag Manager"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
@@ -18682,24 +18698,6 @@ msgstr "URL은 '#' 으로 시작할 수 없습니다."
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
 msgid "URL to"
 msgstr "다음에 대한 URL"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
-msgid "UTM Campaign"
-msgstr "UTM 캠페인"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
-msgid "UTM Medium"
-msgstr "UTM 매체"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/visibility_option.xml:0
-msgid "UTM Source"
-msgstr "UTM 소스"
 
 #. module: website
 #. odoo-javascript
@@ -21963,6 +21961,12 @@ msgid "schedule appointments"
 msgstr "일정 예약하기"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/resource_editor/resource_editor.xml:0
+msgid "scope.data.label"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "scrolling, depth, effect, background, layer, visual, movement, parallax"
 msgstr ""
@@ -22126,6 +22130,12 @@ msgstr "해당 페이지"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/resource_editor/resource_editor.xml:0
+msgid "this.state.type === 'xml' ? resource.name : resource.label"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 msgid "to"
 msgstr "-"
@@ -22195,6 +22205,27 @@ msgstr "✽  피자"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  제공하는 서비스"
+
+#~ msgid "Google Analytics"
+#~ msgstr "구글 웹로그 분석"
+
+#~ msgid "How to get my Measurement ID"
+#~ msgstr "내 측정 ID를 얻는 방법"
+
+#~ msgid "Measurement ID or Tag"
+#~ msgstr "측정 ID 또는 태그"
+
+#~ msgid "Track visits using Google Analytics or Google Tag Manager"
+#~ msgstr "Google 애널리틱스 또는 Google 태그 관리자로 방문자 추적하기"
+
+#~ msgid "UTM Campaign"
+#~ msgstr "UTM 캠페인"
+
+#~ msgid "UTM Medium"
+#~ msgstr "UTM 매체"
+
+#~ msgid "UTM Source"
+#~ msgstr "UTM 소스"
 
 #~ msgid "Add predefined error message"
 #~ msgstr "오류 메시지 사전 지정 후 추가"
