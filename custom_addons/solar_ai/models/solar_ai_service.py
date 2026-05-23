@@ -103,8 +103,21 @@ class SolarAiService(models.AbstractModel):
             model,
         )
 
+        choices = data.get("choices") or []
+        if not choices:
+            _logger.warning(
+                "solar_ai: empty choices in response (model=%s) — likely safety filter",
+                model,
+            )
+            return {
+                "content": "",
+                "usage": data.get("usage", {}),
+                "elapsed_ms": elapsed_ms,
+                "error": "empty_choices",
+            }
+        content = (choices[0].get("message") or {}).get("content") or ""
         return {
-            "content": data["choices"][0]["message"]["content"],
+            "content": content,
             "usage": data.get("usage", {}),
             "elapsed_ms": elapsed_ms,
         }
