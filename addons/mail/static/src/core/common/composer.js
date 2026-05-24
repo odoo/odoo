@@ -5,8 +5,9 @@ import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzo
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
-import { useSuggestion } from "@mail/core/common/suggestion_hook";
+import { mapSuggestionsToOptions, useSuggestion } from "@mail/core/common/suggestion_hook";
 import { useSelection } from "@mail/utils/common/hooks";
+import { trimEmptyBlocksAround } from "@mail/utils/common/format";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 
 import { Wysiwyg } from "@html_editor/wysiwyg";
@@ -89,6 +90,7 @@ export class Composer extends Component {
         Wysiwyg,
     };
     static defaultProps = {
+        autofocus: 0,
         mode: "normal",
         className: "",
         sidebar: true,
@@ -459,82 +461,14 @@ export class Composer extends Component {
         if (!this.hasSuggestions) {
             return props;
         }
-        const suggestions = this.suggestion.state.items.suggestions;
-        switch (this.suggestion.state.items.type) {
-            case "Partner":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionPartner",
-                    options: suggestions.map((suggestion) => {
-                        if (suggestion.isSpecial) {
-                            return {
-                                ...suggestion,
-                                group: 1,
-                                optionTemplate: "mail.Composer.suggestionSpecial",
-                                classList: "o-mail-Composer-suggestion",
-                            };
-                        } else if (suggestion.Model.getName() === "res.role") {
-                            return {
-                                label: suggestion.name,
-                                role: suggestion,
-                                thread: this.thread,
-                                optionTemplate: "mail.Composer.suggestionRole",
-                                classList: "o-mail-Composer-suggestion",
-                            };
-                        } else {
-                            return {
-                                label: this.thread?.getPersonaName(suggestion) ?? suggestion.name,
-                                thread: this.thread,
-                                partner: suggestion,
-                                classList: "o-mail-Composer-suggestion",
-                            };
-                        }
-                    }),
-                };
-            case "Thread":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionThread",
-                    options: suggestions.map((suggestion) => ({
-                        label: suggestion.fullNameWithParent,
-                        thread: suggestion,
-                        classList: "o-mail-Composer-suggestion",
-                    })),
-                };
-            case "ChannelCommand":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionChannelCommand",
-                    options: suggestions.map((suggestion) => ({
-                        label: suggestion.name,
-                        help: suggestion.help,
-                        classList: "o-mail-Composer-suggestion",
-                    })),
-                };
-            case "mail.canned.response":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionCannedResponse",
-                    options: suggestions.map((suggestion) => ({
-                        cannedResponse: suggestion,
-                        label: suggestion.substitution,
-                        source: suggestion.source,
-                        title: suggestion.substitution,
-                        classList: "o-mail-Composer-suggestion",
-                    })),
-                };
-            case "emoji":
-                return {
-                    ...props,
-                    optionTemplate: "mail.Composer.suggestionEmoji",
-                    options: suggestions.map((suggestion) => ({
-                        emoji: suggestion,
-                        label: suggestion.codepoints,
-                    })),
-                };
-            default:
-                return props;
-        }
+        return {
+            ...props,
+            ...mapSuggestionsToOptions(
+                this.suggestion.state.items.type,
+                this.suggestion.state.items.suggestions,
+                { thread: this.thread }
+            ),
+        };
     }
 
     onDropFile(ev) {
@@ -676,6 +610,7 @@ export class Composer extends Component {
             default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             clicked_on_full_composer: true,
+            body_contains_signature_only: !this.props.composer.composerText || this.props.composer.composerText.trim().length === 0,
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually
             ...this.fullComposerAdditionalContext,
         };
@@ -694,10 +629,6 @@ export class Composer extends Component {
                 // args === { special: true } : click on 'discard'
                 const accidentalDiscard = args?.dismiss;
                 const isDiscard = accidentalDiscard || args?.special;
-                // otherwise message is posted (args === [undefined])
-                if (!isDiscard && this.props.composer.thread.model === "mail.box") {
-                    this.notifySendFromMailbox();
-                }
                 if (accidentalDiscard) {
                     this.fullComposerBus.trigger("ACCIDENTAL_DISCARD", {
                         onAccidentalDiscard: (isEmpty) => {
@@ -745,9 +676,7 @@ export class Composer extends Component {
     }
 
     notifySendFromMailbox() {
-        this.env.services.notification.add(_t('Message posted on "%s"', this.thread.displayName), {
-            type: "info",
-        });
+        this.store.notifySendFromMailbox(this.thread.displayName);
     }
 
     isEventTrusted(ev) {
@@ -765,7 +694,7 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
-            await cb(this.props.composer.composerHtml);
+            await cb(trimEmptyBlocksAround(this.props.composer.composerHtml));
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
@@ -941,7 +870,8 @@ export class Composer extends Component {
         }
     }
 
-    onFocusin() {
+    onFocusin(ev) {
+        ev.stopPropagation();
         const composer = toRaw(this.props.composer);
         composer.isFocused = true;
         if (

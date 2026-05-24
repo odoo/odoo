@@ -37,7 +37,9 @@ export class PaymentStripe extends PaymentInterface {
     }
 
     async discoverReaders() {
-        const discoverResult = await this.terminal.discoverReaders({});
+        const discoverResult = await this.terminal.discoverReaders({
+            simulated: this.payment_method_id.stripe_serial_number === "SIMULATOR",
+        });
         if (discoverResult.error) {
             this._showError(_t("Failed to discover: %s", discoverResult.error));
         } else if (discoverResult.discoveredReaders.length === 0) {
@@ -161,7 +163,11 @@ export class PaymentStripe extends PaymentInterface {
             return false;
         }
         line.setPaymentStatus("waitingCard");
-        const collectPaymentMethod = await this.terminal.collectPaymentMethod(clientSecret);
+        const collectPaymentMethod = await this.terminal.collectPaymentMethod(clientSecret, {
+            config_override: {
+                enable_customer_cancellation: true,
+            },
+        });
         if (collectPaymentMethod.error) {
             this._showError(collectPaymentMethod.error.message, collectPaymentMethod.error.code);
             line.setPaymentStatus("retry");
@@ -185,13 +191,36 @@ export class PaymentStripe extends PaymentInterface {
                     line.card_type = captured_card_type;
                     line.transaction_id = captured_transaction_id;
                 } else {
-                    await this.captureAfterPayment(processPayment, line);
+                    if (!(await this.captureAfterPayment(processPayment, line))) {
+                        line.setPaymentStatus("retry");
+                        return false;
+                    }
                 }
 
                 line.setPaymentStatus("done");
                 return true;
             }
         }
+    }
+
+    async collectRefund(amount) {
+        const line = this.pos.getOrder().getSelectedPaymentline();
+        line.setPaymentStatus("waitingCard");
+
+        const paymentId = line.uiState.stripePaymentIdToRefund;
+        const refundResult = await this.pos.data.silentCall("pos.payment.method", "stripe_refund", [
+            [line.payment_method_id.id],
+            paymentId,
+            amount,
+        ]);
+
+        if (refundResult.error) {
+            throw new Error(refundResult.error);
+        }
+        line.transaction_id = refundResult.id;
+        line.setPaymentStatus("done");
+
+        return true;
     }
 
     createStripeTerminal() {
@@ -223,12 +252,16 @@ export class PaymentStripe extends PaymentInterface {
 
     async captureAfterPayment(processPayment, line) {
         const capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
+        if (!capturePayment) {
+            return false;
+        }
         if (capturePayment.charges) {
             line.card_type = this.getCardBrandFromPaymentMethodDetails(
                 capturePayment.charges.data[0].payment_method_details
             );
         }
         line.transaction_id = capturePayment.id;
+        return true;
     }
 
     async capturePayment(paymentIntentId) {
@@ -280,10 +313,21 @@ export class PaymentStripe extends PaymentInterface {
          */
         await super.sendPaymentRequest(...arguments);
         const line = this.pos.getOrder().getSelectedPaymentline();
+        const isRefund = line.amount < 0;
+
+        if (isRefund && !line.uiState.stripePaymentIdToRefund) {
+            this._showError(_t("You cannot refund a non-Stripe payment via Stripe"));
+            return false;
+        }
+
         line.setPaymentStatus("waiting");
         try {
             if (await this.checkReader()) {
-                return await this.collectPayment(line.amount);
+                if (isRefund) {
+                    return await this.collectRefund(line.amount);
+                } else {
+                    return await this.collectPayment(line.amount);
+                }
             }
         } catch (error) {
             logPosMessage(

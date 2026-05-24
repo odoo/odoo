@@ -353,9 +353,17 @@
                                                 <a
                                                     t-if="combination_info['prevent_zero_price_sale']"
                                                     t-att-href="website.contact_us_button_url + '?subject=' + combination_info['display_name']"
-                                                    class="btn btn-primary btn_cta"
+                                                    class="o_wsale_product_btn_primary btn btn-primary btn_cta"
                                                 >
-                                                    Contact Us
+                                                   <span class="d-inline-flex align-items-baseline">
+                                                        <i
+                                                            class="fa fa-fw fa-envelope o_not-animable"
+                                                            role="presentation"
+                                                        />
+                                                        <span class="o_label small ms-1">
+                                                            Contact Us
+                                                        </span>
+                                                    </span>
                                                 </a>
                                                 <button
                                                     t-else=""
@@ -368,11 +376,15 @@
                                                     t-att-data-product-type="product.type"
                                                     t-att-data-ptav-ids="json.dumps(product_variant.product_template_attribute_value_ids.ids)"
                                                 >
-                                                    <i
-                                                        class="fa fa-fw fa-shopping-cart o_not-animable"
-                                                        role="presentation"
-                                                    />
-                                                    <span class="o_label small ms-1">Add to Cart</span>
+                                                    <span class="d-inline-flex align-items-baseline">
+                                                        <i
+                                                            class="fa fa-fw fa-shopping-cart o_not-animable"
+                                                            role="presentation"
+                                                        />
+                                                        <span class="o_label small ms-1">
+                                                            Add to Cart
+                                                        </span>
+                                                    </span>
                                                 </button>
                                             </div>
                                         </t>

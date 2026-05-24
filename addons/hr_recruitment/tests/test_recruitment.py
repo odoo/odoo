@@ -492,3 +492,32 @@ class TestRecruitment(TransactionCase):
         applicant_get_refuse_reason._prepare_send_refusal_mails()
         mail = self.env['mail.mail'].search([('subject', '=', 'Application refused: Mario')], limit=1)
         self.assertEqual(mail.partner_ids, app_1.partner_id)
+
+    def test_default_template_applicant_refuse_reason_when_archived(self):
+        """
+        Ensure that an archived email template linked to a refuse reason
+        is not automatically set on the refuse wizard
+        """
+        email_template = self.env['mail.template'].create({
+            'model_id': self.env['ir.model']._get('hr.applicant').id,
+            'name': 'template1',
+        })
+        application = self.env['hr.applicant'].create({'partner_name': 'Test'})
+        refuse_reason = self.env['hr.applicant.refuse.reason'].create({
+            'name': 'Fired',
+            'template_id': email_template.id,
+        })
+        wizard = self.env['applicant.get.refuse.reason'].create({
+            'refuse_reason_id': refuse_reason.id,
+            'applicant_ids': [application.id],
+        })
+
+        self.assertEqual(wizard.template_id, email_template)
+
+        email_template.active = False
+        wizard = self.env['applicant.get.refuse.reason'].create({
+            'refuse_reason_id': refuse_reason.id,
+            'applicant_ids': [application.id],
+        })
+
+        self.assertFalse(wizard.template_id)

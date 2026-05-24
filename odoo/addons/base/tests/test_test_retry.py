@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import BaseCase, TransactionCase, tagged, BaseCase
-from odoo.tests.common import _logger as test_logger
+from odoo.tests.suite import _logger as test_logger
 
 import logging
-import os
+import inspect
 
 from unittest.mock import patch
 
@@ -26,11 +26,13 @@ class TestRetryCommon(BaseCase):
         patcher = patch.object(test_logger, 'runbot', runbot)
         cls.startClassPatcher(patcher)
 
-    def get_tests_run_count(self):
-        return BaseCase._tests_run_count
-
-    def update_count(self):
-        self.count = getattr(self, 'count', 0) + 1
+    def is_soft_fail(self):
+        for frame in inspect.stack():
+            if frame.function == 'run':
+                result = frame.frame.f_locals.get('result')
+                if result and hasattr(result, '_soft_fail') and result._soft_fail:
+                    return True
+        return False
 
 
 @tagged('test_retry', 'test_retry_success')
@@ -42,11 +44,8 @@ class TestRetry(TestRetryCommon):
         _logger.info('test info')
 
     def test_retry_success(self):
-        tests_run_count = self.get_tests_run_count()
-        self.update_count()
-        if tests_run_count != self.count:
+        if self.is_soft_fail():
             _logger.error('Failure')
-        self.assertEqual(tests_run_count, self.count)
 
 
 @tagged('test_retry', 'test_retry_success')
@@ -54,21 +53,15 @@ class TestRetryTraceback(TestRetryCommon):
     """ Check some tests behaviour when ODOO_TEST_FAILURE_RETRIES is set"""
 
     def test_retry_traceback_success(self):
-        tests_run_count = self.get_tests_run_count()
-        self.update_count()
-        if tests_run_count != self.count:
+        if self.is_soft_fail():
             _logger.error('Traceback (most recent call last):\n')
-        self.assertEqual(tests_run_count, self.count)
 
 
 @tagged('test_retry', 'test_retry_success')
 class TestRetryTracebackArg(TestRetryCommon):
     def test_retry_traceback_args_success(self):
-        tests_run_count = self.get_tests_run_count()
-        self.update_count()
-        if tests_run_count != self.count:
+        if self.is_soft_fail():
             _logger.error('%s', 'Traceback (most recent call last):\n')
-        self.assertEqual(tests_run_count, self.count)
 
 
 @tagged('-standard', 'test_retry', 'test_retry_failures')
@@ -83,27 +76,21 @@ class TestRetryFailures(TestRetryCommon):
 @tagged('test_retry', 'test_retry_success')
 class TestRetryRollbackedCursor(TestRetryCommon, TransactionCase):
     def test_broken_cursor(self):
-        tests_run_count = self.get_tests_run_count()
-        self.update_count()
-        if tests_run_count != self.count:
+        if self.is_soft_fail():
             self.env.cr.rollback()
 
 
 @tagged('test_retry', 'test_retry_success')
 class TestRetryCommitedCursor(TestRetryCommon, TransactionCase):
     def test_broken_cursor(self):
-        tests_run_count = self.get_tests_run_count()
-        self.update_count()
-        if tests_run_count != self.count:
+        if self.is_soft_fail():
             self.env.cr.commit()
 
 
 @tagged('test_retry', 'test_retry_success')
 class TestRetryRollbackedCursorError(TestRetryCommon, TransactionCase):
     def test_broken_cursor(self):
-        tests_run_count = self.get_tests_run_count()
-        self.update_count()
-        if tests_run_count != self.count:
+        if self.is_soft_fail():
             self.env.cr.rollback()
             raise Exception('a')
 
@@ -111,9 +98,7 @@ class TestRetryRollbackedCursorError(TestRetryCommon, TransactionCase):
 @tagged('test_retry', 'test_retry_success')
 class TestRetryCommitedCursorError(TestRetryCommon, TransactionCase):
     def test_broken_cursor(self):
-        tests_run_count = self.get_tests_run_count()
-        self.update_count()
-        if tests_run_count != self.count:
+        if self.is_soft_fail():
             self.env.cr.commit()
             raise Exception('a')
 
@@ -122,23 +107,22 @@ class TestRetryCommitedCursorError(TestRetryCommon, TransactionCase):
 class TestRetrySubtest(TestRetryCommon):
 
     def test_retry_subtest_success_one(self):
-        tests_run_count = self.get_tests_run_count()
-        self.update_count()
+        is_soft_fail = self.is_soft_fail()
         for i in range(3):
             if i == 1:
                 with self.subTest():
-                    if tests_run_count != self.count:
+                    if is_soft_fail:
                         _logger.error('Failure')
-                    self.assertEqual(tests_run_count, self.count)
 
+
+@tagged('test_retry', 'test_retry_success')
+class TestRetrySubtestAll(TestRetryCommon):
     def test_retry_subtest_success_all(self):
-        tests_run_count = self.get_tests_run_count()
-        self.update_count()
+        is_soft_fail = self.is_soft_fail()
         for _ in range(3):
             with self.subTest():
-                if tests_run_count != self.count:
+                if is_soft_fail:
                     _logger.error('Failure')
-                self.assertEqual(tests_run_count, self.count)
 
 
 @tagged('-standard', 'test_retry', 'test_retry_failures')
@@ -162,9 +146,7 @@ class TestRetrySubtestFailures(TestRetryCommon):
 class TestRetry1Disable(TestRetryCommon):
 
     def test_retry_0_retry_success(self):
-        tests_run_count = self.get_tests_run_count()
-        self.update_count()
-        if tests_run_count != self.count:
+        if self.is_soft_fail():
             raise Exception('Should success on retry')
 
     def test_retry_1_fails(self):

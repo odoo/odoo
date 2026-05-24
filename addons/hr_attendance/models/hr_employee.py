@@ -46,7 +46,7 @@ class HrEmployee(models.Model):
         compute='_compute_hours_last_month', groups="hr.group_hr_user")
     overtime_ids = fields.One2many(
         'hr.attendance.overtime.line', 'employee_id', groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
-    total_overtime = fields.Float(compute='_compute_total_overtime', compute_sudo=True)
+    total_overtime = fields.Float(compute='_compute_total_overtime')
     display_extra_hours = fields.Boolean(related='company_id.hr_attendance_display_overtime')
 
     ruleset_id = fields.Many2one(readonly=False, related="version_id.ruleset_id", inherited=True, groups="hr.group_hr_manager")
@@ -76,6 +76,18 @@ class HrEmployee(models.Model):
         res = super().write(vals)
         old_officers.sudo()._clean_attendance_officers()
 
+        return res
+
+    def action_archive(self):
+        res = super().action_archive()
+        open_attendances = self.env['hr.attendance'].sudo().search([
+            ('employee_id', 'in', self.ids),
+            ('check_out', '=', False),
+        ])
+        if open_attendances:
+            open_attendances.write({
+                'check_out': fields.Datetime.now(),
+            })
         return res
 
     @api.depends('overtime_ids.manual_duration', 'overtime_ids', 'overtime_ids.status')

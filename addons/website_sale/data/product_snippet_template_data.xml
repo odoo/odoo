@@ -85,7 +85,8 @@
                                     class="o_wsale_product_rating_wrapper"
                                 >
                                     <t t-call="portal_rating.rating_widget_stars_static">
-                                        <t t-set="rating_avg" t-value="record.rating_avg"/>
+                                        <!-- sudo: product.product - visitor can access product average rating -->
+                                        <t t-set="rating_avg" t-value="record.sudo().rating_avg"/>
                                         <t t-set="rating_count" t-value="record.rating_count"/>
                                     </t>
                                 </div>

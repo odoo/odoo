@@ -81,7 +81,7 @@ export class MediaDialog extends Component {
             },
             () => [this.selectedMedia[this.state.activeTab].length, this.state.isSaving]
         );
-         this.abortUploads = null;
+        this.abortUploads = null;
     }
 
     get initialActiveTab() {
@@ -89,9 +89,15 @@ export class MediaDialog extends Component {
             return this.props.activeTab;
         }
         if (this.props.media) {
-            const correspondingTab = Object.keys(this.tabs).find((id) =>
-                this.tabs[id].Component.tagNames.includes(this.props.media.tagName)
-            );
+            const correspondingTab =
+                Object.keys(this.tabs).find((id) =>
+                    this.tabs[id].Component.mediaSpecificClasses.some((cls) =>
+                        [...this.props.media.classList].includes(cls)
+                    )
+                ) ||
+                Object.keys(this.tabs).find((id) =>
+                    this.tabs[id].Component.tagNames.includes(this.props.media.tagName)
+                );
             if (correspondingTab) {
                 return correspondingTab;
             }
@@ -118,7 +124,7 @@ export class MediaDialog extends Component {
                 selectMedia: (...args) =>
                     this.selectMedia(...args, tab.id, additionalProps.multiSelect),
                 save: this.save.bind(this),
-                setAbortUploadsCallback: (abortFunc) => this.abortUploads = abortFunc,
+                setAbortUploadsCallback: (abortFunc) => (this.abortUploads = abortFunc),
                 onAttachmentChange: this.props.onAttachmentChange,
                 errorMessages: (errorMessage) => (this.errorMessages[tab.id] = errorMessage),
                 modalRef: this.modalRef,
@@ -192,35 +198,6 @@ export class MediaDialog extends Component {
                 const style = this.props.media.getAttribute("style");
                 if (style) {
                     element.setAttribute("style", style);
-                }
-                if (this.state.activeTab === TABS.IMAGES.id) {
-                    if (this.props.media.dataset.shape) {
-                        element.dataset.shape = this.props.media.dataset.shape;
-                    }
-                    if (this.props.media.dataset.shapeColors) {
-                        element.dataset.shapeColors = this.props.media.dataset.shapeColors;
-                    }
-                    if (this.props.media.dataset.shapeFlip) {
-                        element.dataset.shapeFlip = this.props.media.dataset.shapeFlip;
-                    }
-                    if (this.props.media.dataset.shapeRotate) {
-                        element.dataset.shapeRotate = this.props.media.dataset.shapeRotate;
-                    }
-                    if (this.props.media.dataset.hoverEffect) {
-                        element.dataset.hoverEffect = this.props.media.dataset.hoverEffect;
-                    }
-                    if (this.props.media.dataset.hoverEffectColor) {
-                        element.dataset.hoverEffectColor =
-                            this.props.media.dataset.hoverEffectColor;
-                    }
-                    if (this.props.media.dataset.hoverEffectStrokeWidth) {
-                        element.dataset.hoverEffectStrokeWidth =
-                            this.props.media.dataset.hoverEffectStrokeWidth;
-                    }
-                    if (this.props.media.dataset.hoverEffectIntensity) {
-                        element.dataset.hoverEffectIntensity =
-                            this.props.media.dataset.hoverEffectIntensity;
-                    }
                 }
             }
             for (const otherTab of Object.keys(this.tabs).filter(

@@ -131,11 +131,13 @@ class TestStockPickingTour(HttpCase):
             {'lot_id': lot_1.id, 'quantity': 10.0},
             {'lot_id': lot_2.id, 'quantity': 10.0},
         ])
+        # pick the move to ensure that new move lines will then be created in picked state from the detailed operation
+        delivery.move_ids.picked = True
         url = self._get_picking_url(delivery.id)
         self.env.ref('base.user_admin').write({'group_ids': [Command.link(self.env.ref('stock.group_production_lot').id)]})
         self.start_tour(url, 'test_add_new_line_in_detailled_op', login='admin', timeout=100)
         self.assertRecordValues(delivery.move_line_ids.sorted("quantity"), [
-            {'quantity': 2.0, 'lot_id': lot_1.id},
-            {'quantity': 3.0, 'lot_id': lot_1.id},
-            {'quantity': 15.0, 'lot_id': lot_2.id},
+            {'quantity': 2.0, 'lot_id': lot_1.id, 'picked': True},
+            {'quantity': 3.0, 'lot_id': lot_1.id, 'picked': True},
+            {'quantity': 15.0, 'lot_id': lot_2.id, 'picked': True},
         ])

@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-02-25 14:43+0000\n"
+"PO-Revision-Date: 2026-04-24 12:08+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/hr/de/>\n"
 "Language: de\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: hr
 #. odoo-python
@@ -36,7 +36,7 @@ msgstr " Datensätze"
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_email_amount
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email_amount
 msgid "# emails to send"
-msgstr "# zu versendende E-Mails"
+msgstr "Anzahl zu versendender E-Mails"
 
 #. module: hr
 #. odoo-python
@@ -63,7 +63,7 @@ msgstr ""
 "\n"
 "- Ändern Sie das Startdatum, damit es sich nicht mit dem bestehenden Vertrag "
 "überschneidet, oder\n"
-"- Legen Sie einen neuen Mitarbeiter an, wenn dieser Mitarbeiter mehrere "
+"- legen Sie einen neuen Mitarbeiter an, wenn dieser Mitarbeiter mehrere "
 "aktive Verträge haben soll."
 
 #. module: hr
@@ -74,7 +74,7 @@ msgstr "'Abzeichen - %s' % (object.name).replace('/', '')"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 msgid "/ month"
-msgstr "/ Monat"
+msgstr "/Monat"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_consultant
@@ -146,8 +146,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>Glückwunsch!</b> Darf ich Ihnen vorschlagen, einen <a "
-"href=\"%s\">Einführungsplan</a> aufzusetzen?"
+"<b>Glückwunsch!</b> Darf ich Ihnen vorschlagen, einen <a href=\"%s\">"
+"Einführungsplan</a> aufzusetzen?"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -156,7 +156,7 @@ msgid ""
 "title=\"Company\"/>"
 msgstr ""
 "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" "
-"title=\"Company\"/>"
+"title=\"Unternehmen\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
@@ -210,13 +210,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Email\"/>"
-msgstr "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Email\"/>"
+msgstr "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"E-Mail\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Phone\"/>"
-msgstr "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Phone\"/>"
+msgstr "<i class=\"fa fa-fw me-2 fa-phone text-primary\" title=\"Telefon\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -655,7 +655,7 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Ability to build client relationships."
-msgstr "Möglichkeit zum Aufbau von Kundenbeziehungen"
+msgstr "Möglichkeit zum Aufbau von Kundenbeziehungen."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -1272,7 +1272,7 @@ msgstr "Anwesenheit/Kassensystem"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
 msgid "Authenticated Employees"
-msgstr "Authentifizierten Mitarbeitern"
+msgstr "Authentifizierte Mitarbeiter"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.discuss_channel_view_form
@@ -1399,8 +1399,8 @@ msgstr "Bankname"
 msgid ""
 "Bank account %s not found within the salary distribution of the employee"
 msgstr ""
-"Das Bankkonto %s wurde in der Gehaltsverteilung des Mitarbeiters nicht "
-"gefunden."
+"Das Bankkonto %s wurde nicht in der Gehaltsverteilung des Mitarbeiters "
+"gefunden"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -1831,7 +1831,7 @@ msgstr "Erstellt am"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form_inherit_hr
 msgid "Create Employee"
-msgstr "Mitarbeiter anlegen"
+msgstr "Mitarbeiter erstellen"
 
 #. module: hr
 #. odoo-python
@@ -1850,28 +1850,28 @@ msgstr "Kunden erstellen"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_create_job_position
 msgid "Create a Job Position"
-msgstr "Eine Stelle erstellen"
+msgstr "Stelle erstellen"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
 #: model_terms:ir.actions.act_window,help:hr.hr_department_tree_action
 msgid "Create a new department"
-msgstr "Eine neue Abteilung erstellen"
+msgstr "Neue Abteilung erstellen"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
 msgid "Create a new employment type"
-msgstr "Einen neuen Mitarbeitertyp erstellen"
+msgstr "Neuen Mitarbeitertyp erstellen"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
 msgid "Create a new work location"
-msgstr "Einen neuen Arbeitsort erstellen"
+msgstr "Neuen Arbeitsort erstellen"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.mail_activity_plan_action
 msgid "Create an Activity Plan"
-msgstr "Einen Aktivitätsplan erstellen"
+msgstr "Aktivitätsplan erstellen"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1885,7 +1885,7 @@ msgstr "Inhalte erstellen, die unseren Nutzern im Alltag helfen"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 msgid "Create employee"
-msgstr "Mitarbeiter anlegen"
+msgstr "Mitarbeiter erstellen"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard__create_uid
@@ -2468,7 +2468,7 @@ msgstr "Arbeitsstunden des Mitarbeiters"
 #: model:ir.model.fields,help:hr.field_hr_employee__wage
 #: model:ir.model.fields,help:hr.field_hr_version__wage
 msgid "Employee's monthly gross wage."
-msgstr "Monatsbruttolohn des Mitarbeiters"
+msgstr "Monatsbruttolohn des Mitarbeiters."
 
 #. module: hr
 #. odoo-python
@@ -4904,7 +4904,7 @@ msgid ""
 "You can use this field for quick search."
 msgstr ""
 "ISO-Ländercode in zwei Zeichen. \n"
-"Sie können dieses Feld auch für eine Schnellsuche einsetzen."
+"Sie können dieses Feld auch für eine Schnellsuche verwenden."
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_marketing
@@ -4996,6 +4996,7 @@ msgstr ""
 #: code:addons/hr/models/hr_employee.py:0
 msgid "The following employees have the same work email address: %s"
 msgstr ""
+"Die folgenden Mitarbeiter haben dieselbe geschäftliche E-Mail-Adresse: %s"
 
 #. module: hr
 #. odoo-python

@@ -139,7 +139,7 @@ export class Chatbot extends Record {
     }
 
     get canRestart() {
-        return this.completed && !this.currentStep?.operatorFound;
+        return this.currentStep?.isLast && !this.currentStep.operatorFound;
     }
 
     /**

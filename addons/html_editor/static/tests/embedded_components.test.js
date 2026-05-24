@@ -17,7 +17,7 @@ import {
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { parseHTML } from "@html_editor/utils/html";
 import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
-import { click, queryFirst } from "@odoo/hoot-dom";
+import { click, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import {
     App,
@@ -582,13 +582,17 @@ describe("Selection after embedded component insertion", () => {
         });
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.addStep();
-        await animationFrame();
+        // Insertion triggers selectionchange & addStep creates selection
+        // placeholder.fixSelectionInsideEditableRoot moves selection into it,
+        // trigger another selectionchange that removes selection placeholder.
+        // So we must wait for the o-we-hint.
+        await waitFor(".o-we-hint");
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <div data-embedded="counter" data-oe-protected="true" contenteditable="false">[]<span class="counter">Counter:0</span></div>
-                <p data-selection-placeholder=""><br></p>`)
+                <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
+                <p>[]<br></p>`)
         );
     });
     test("block at the end of paragraph", async () => {
@@ -597,13 +601,17 @@ describe("Selection after embedded component insertion", () => {
         });
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.addStep();
-        await animationFrame();
+        // Insertion triggers selectionchange & addStep creates selection
+        // placeholder.fixSelectionInsideEditableRoot moves selection into it,
+        // trigger another selectionchange that removes selection placeholder.
+        // So we must wait for the o-we-hint.
+        await waitFor(".o-we-hint");
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <p>a</p>
-                <div data-embedded="counter" data-oe-protected="true" contenteditable="false">[]<span class="counter">Counter:0</span></div>
-                <p data-selection-placeholder=""><br></p>`)
+                <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
+                <p>[]<br></p>`)
         );
     });
     test("block at the start of paragraph", async () => {

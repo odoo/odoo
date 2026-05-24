@@ -1270,6 +1270,44 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.assertAlmostEqual(order.amount_total, invoice.amount_total, places=2, msg="Order and Invoice amounts do not match.")
 
+    def test_settle_cancelled_sale_order(self):
+        """When settling a cancelled (reset to draft) SO in PoS,
+        the PoS picking should include moves for its products."""
+
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 10.0,
+            'taxes_id': [Command.clear()],
+        })
+        product_b = self.env['product.product'].create({
+            'name': 'Product B',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 20.0,
+            'taxes_id': [Command.clear()],
+        })
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'order_line': [
+                Command.create({'product_id': product_a.id, 'product_uom_qty': 1}),
+                Command.create({'product_id': product_b.id, 'product_uom_qty': 1}),
+            ],
+        })
+        sale_order.action_confirm()
+        sale_order._action_cancel()
+        sale_order.action_draft()
+
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_settle_cancelled_sale_order', login="accountman")
+
+        pos_order = sale_order.pos_order_line_ids.order_id
+        pos_shipped_products = pos_order.picking_ids.filtered(lambda p: p.state == 'done').move_ids.product_id
+        self.assertEqual(pos_shipped_products, product_a | product_b)
+
     def test_settle_order_with_lot(self):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         stock_location = warehouse.lot_stock_id
@@ -2159,6 +2197,27 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             ]
         })
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_changed_price_with_lots', login="accountman")
+
+    def test_advance_payment_with_extra_lines(self):
+        so = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1.0,
+                    'price_unit': 100,
+                    'tax_ids': False,
+                })],
+        })
+        so.action_confirm()
+        self.product_a.write({'available_in_pos': True})
+
+        # Apply 10% down payment and add a product to the PoS order
+        self.main_pos_config.open_ui()
+        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSApplyDownpaymentWithExtraLine', login="accountman")
+        self.assertEqual(so.amount_unpaid, 90)
 
 
 @tagged('post_install', '-at_install')

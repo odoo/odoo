@@ -282,7 +282,9 @@ class ProjectTask(models.Model):
     def _get_portal_total_hours_dict(self):
         if not (timesheetable_tasks := self.filtered('allow_timesheets')):
             return {}
+        sub_tasks = timesheetable_tasks._get_all_subtasks()
+        tasks_for_total = timesheetable_tasks - sub_tasks
         return {
-            'allocated_hours': sum(timesheetable_tasks.mapped('allocated_hours')),
-            'effective_hours': sum(timesheetable_tasks.mapped('effective_hours')),
+            'allocated_hours': sum(tasks_for_total.mapped('allocated_hours')),
+            'effective_hours': sum(tasks_for_total.mapped('total_hours_spent')),
         }

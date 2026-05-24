@@ -9,7 +9,7 @@
         <record id="onboarding_plan" model="mail.activity.plan">
             <field name="name">Onboarding</field>
             <field name="res_model">hr.employee</field>
-            <field name="company_id" eval="False"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record id="onboarding_setup_it_materials" model="mail.activity.plan.template">
@@ -36,7 +36,7 @@
         <record id="offboarding_plan" model="mail.activity.plan">
             <field name="name">Offboarding</field>
             <field name="res_model">hr.employee</field>
-            <field name="company_id" eval="False"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <record id="offboarding_setup_compute_out_delais" model="mail.activity.plan.template">

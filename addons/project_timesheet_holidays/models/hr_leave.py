@@ -21,9 +21,10 @@ class HrLeave(models.Model):
         """
         vals_list = []
         leave_ids = []
-        calendar_leaves_data = self.env['resource.calendar.leaves']._read_group([('holiday_id', 'in', self.ids)], ['holiday_id'], ['id:array_agg'])
+        leaves_with_active_employee = self.filtered(lambda l: l.employee_id.active)
+        calendar_leaves_data = self.env['resource.calendar.leaves']._read_group([('holiday_id', 'in', leaves_with_active_employee.ids)], ['holiday_id'], ['id:array_agg'])
         mapped_calendar_leaves = {leave: calendar_leave_ids[0] for leave, calendar_leave_ids in calendar_leaves_data}
-        for leave in self:
+        for leave in leaves_with_active_employee:
             project, task = leave.employee_id.company_id.internal_project_id, leave.employee_id.company_id.leave_timesheet_task_id
 
             if not project or not task or leave.holiday_status_id.time_type == 'other':
@@ -36,11 +37,11 @@ class HrLeave(models.Model):
             calendar = leave.resource_calendar_id
             calendar_timezone = pytz.timezone((calendar or leave.employee_id).tz)
 
-            if calendar.flexible_hours and (leave.request_unit_hours or leave.request_unit_half or leave.date_from.date() == leave.date_to.date()):
+            if calendar.flexible_hours and leave.date_from.date() == leave.date_to.date():
                 leave_date = leave.date_from.astimezone(calendar_timezone).date()
                 if leave.request_unit_hours:
                     hours = leave.request_hour_to - leave.request_hour_from
-                elif leave.request_unit_half:
+                elif leave.request_unit_half and leave.request_date_from_period == leave.request_date_to_period:
                     hours = calendar.hours_per_day / 2
                 else:  # Single-day leave
                     hours = calendar.hours_per_day

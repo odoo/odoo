@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:38+0000\n"
-"PO-Revision-Date: 2026-03-14 09:44+0000\n"
+"POT-Creation-Date: 2026-04-24 17:36+0000\n"
+"PO-Revision-Date: 2026-04-23 14:20+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "pos_self_order/ar/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -57,7 +57,8 @@ msgid ""
 "''\"/>\n"
 "                    <t t-set=\"store_name\" t-"
 "value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
 "user.lang\"/>\n"
 "                    <div>\n"
@@ -98,33 +99,34 @@ msgstr ""
 "''\"/>\n"
 "                    <t t-set=\"store_name\" t-"
 "value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
 "user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">مرحباً <t t-"
-"out=\"client_name\">اسم العميل</t>،</t>\n"
+"                        <t t-if=\"client_name\">مرحباً<t t-"
+"out=\"client_name\">\"اسم العميل\"</t>،</t>\n"
 "                        <t t-else=\"\">مرحباً،</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>لقد تم تأكيد طلبك <t t-"
-"out=\"object.tracking_number\">...</t> والذي تبلغ قيمته <<t t-"
+"out=\"object.tracking_number\">...</t>والذي تبلغ قيمته <t t-"
 "out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> "
-"بنجاح. <span t-if=\"object.preset_time or client.street\">سيكون جاهزاً</span> "
-"<span t-if=\"object.preset_time\">الساعة <t t-out=\"format_time"
-"(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 "
-"مساءً</t></span> <span t-if=\"client.street\">في <t t-out=\"street\">الشارع</"
-"t>، <t t-out=\"state\">الولاية</t>، <t t-out=\"client.zip or ''\">الرمز "
-"البريدي</t>، <t t-out=\"city\">المدينة</t>، <t t-out=\"country\">الدولة</t></"
-"span></div>\n"
+"بنجاح. <span t-if=\"object.preset_time or client.street\">سيكون طلبك جاهزاً</"
+"span> <span t-if=\"object.preset_time\">في تمام الساعة <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 مساءً</t></span> <span t-if=\"client.street\">في <t t-"
+"out=\"street\">الشارع</t>, <t t-out=\"state\">المحافظة</t>، <t t-"
+"out=\"client.zip or ''\">الرمز البريدي</t>, <t t-out=\"city\">المدينة</t>، "
+"<t t-out=\"country\">الدولة</t></span></div>\n"
 "                    <br/>\n"
-"                    <div>شكراً لك،</div>\n"
+"                    <div>مع وافر الشكر والتقدير،</div>\n"
 "                    <br/>\n"
 "                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>ستجد إيصالك في المرفقات</div>\n"
+"                        <div>ستجد الإيصال ضمن المرفقات</div>\n"
 "                        <br/>\n"
 "                    </div>\n"
-"                    <t t-out=\"store_name\">اسم المتجر</t>\n"
+"                    <t t-out=\"store_name\">\"اسم المتجر\"</t>\n"
 "                </div>\n"
 "            "
 
@@ -134,7 +136,8 @@ msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
 "                    <t t-set=\"store_name\" t-"
 "value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
 "user.lang\"/>\n"
 "                    <div>\n"
@@ -163,33 +166,30 @@ msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
 "                    <t t-set=\"store_name\" t-"
 "value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
 "user.lang\"/>\n"
 "                    <div>\n"
 "                        <t t-if=\"client_name\">مرحباً <t t-"
-"out=\"client_name\">اسم العميل</t>،</t>\n"
+"out=\"client_name\">\"اسم العميل\"</t>،</t>\n"
 "                        <t t-else=\"\">مرحباً،</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>لقد تم تأكيد طلبك <t t-"
-"out=\"object.tracking_number\">...</t>والذي تبلغ قيمته <t t-"
+"out=\"object.tracking_number\">...</t> والذي تبلغ قيمته <t t-"
 "out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> "
-"بنجاح. <span t-if=\"object.preset_time or client.street\">سيكون جاهزاً </"
-"span> <span t-if=\"object.preset_time\">في تمام الساعة<t t-out=\"format_time"
-"(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 "
-"مساءً</t></span> <span t-if=\"client.street\">في شارع<t t-out=\"street\"></t>"
-"، الولاية <t t-out=\"state\"></t>، والرمز البريدي <t t-out=\"client.zip or "
-"''\"></t>، والمدينة <t t-out=\"city\"></t>، والدولة <t t-out=\"country\"></t>"
-"</span></div>\n"
+"بنجاح. <span t-if=\"object.preset_time\">سيكون طلبك جاهزاً في تمام الساعة <t "
+"t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 مساءً</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>شكراً لك،</div>\n"
 "                    <br/>\n"
 "                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>ستجد إيصال الشراء الخاص بك في المرفقات</div>\n"
+"                        <div>ستجد إيصالك ضمن المرفقات</div>\n"
 "                        <br/>\n"
 "                    </div>\n"
-"                    <t t-out=\"store_name\">اسم المتجر</t>\n"
+"                    <t t-out=\"store_name\">\"اسم المتجر\"</t>\n"
 "                </div>\n"
 "            "
 
@@ -356,12 +356,6 @@ msgstr "اختر وضع الطلب الذاتي"
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
 msgid "Choose when the customer will pay"
 msgstr "اختر متى يقوم العميل بالدفع"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "Choose your"
-msgstr "اختر"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -601,6 +595,12 @@ msgid "Easily load a set of configuration options"
 msgstr "تمكن من تحميل مجموعة من خيارات التهيئة بسهولة"
 
 #. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__mail_template_id
 msgid "Email Confirmation"
 msgstr "تأكيد البريد الإلكتروني"
@@ -635,6 +635,12 @@ msgstr "قم بإدخال قيمتك المخصصة"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Enter your tracker number"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "Extra:"
 msgstr ""
 
 #. module: pos_self_order
@@ -1108,6 +1114,12 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Phone"
+msgstr "رقم الهاتف"
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
 msgid "Pickup At Counter"
 msgstr "الاستلام عند الكاونتر"
@@ -1352,12 +1364,6 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Select your address"
-msgstr "حدد عنوانك الخاص"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "Selection"
 msgstr "قائمة خيارات"
@@ -1491,6 +1497,12 @@ msgstr "تفعيل الكشك"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__status
 msgid "Status"
 msgstr "الحالة"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Street and Number"
+msgstr "الشارع والرقم"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__style
@@ -1748,6 +1760,17 @@ msgstr "إيصال {{ object.config_id.name }} الخاص بك"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Zip"
+msgstr "الرمز البريدي"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "a"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "are"
 msgstr " "
@@ -1783,8 +1806,8 @@ msgstr "https://odoo.com"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "included"
-msgstr "شاملة"
+msgid "included &"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1803,17 +1826,27 @@ msgstr "لم يعد متاحًا. يرجى العودة وتعديل طلبك."
 msgid "odoo"
 msgstr "أودو"
 
-#~ msgid "Email"
-#~ msgstr "البريد الإلكتروني"
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "per extra unit"
+msgstr ""
 
-#~ msgid "Phone"
-#~ msgstr "رقم الهاتف"
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "x"
+msgstr ""
 
-#~ msgid "Street and Number"
-#~ msgstr "الشارع والرقم"
+#~ msgid "Choose your"
+#~ msgstr "اختر"
 
-#~ msgid "Zip"
-#~ msgstr "الرمز البريدي"
+#~ msgid "included"
+#~ msgstr "شاملة"
+
+#~ msgid "Select your address"
+#~ msgstr "حدد عنوانك الخاص"
 
 #~ msgid ""
 #~ "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"

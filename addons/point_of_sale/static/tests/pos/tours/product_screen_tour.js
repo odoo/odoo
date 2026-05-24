@@ -29,6 +29,9 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
+            // ensure that even after refreshing the page while being offline all data is correctly reloaded
+            refresh(),
+            Dialog.confirm("Continue with limited functionality"),
             ProductScreen.firstProductIsFavorite("Whiteboard Pen"),
             // Make sure we don't have any scroll bar on the product list
             {
@@ -585,6 +588,10 @@ registry.category("web_tour.tours").add("PosCategoriesOrder", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            {
+                content: "category selector keeps category-list styling",
+                trigger: ".category-list",
+            },
             ProductScreen.verifyCategorySequence(["AAA", "AAB", "AAC"]),
             {
                 trigger: '.category-button:eq(1) > div span:contains("AAB")',
@@ -1222,9 +1229,11 @@ registry.category("web_tour.tours").add("test_preset_customer_selection", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            PartnerList.searchCustomerValue("Test Partner", true),
-            PartnerList.clickPartner("Test Partner"),
-            ProductScreen.customerIsSelected("Test Partner"),
+            PartnerList.searchCustomerValue("Partner Full", true),
+            PartnerList.clickPartner("Partner Full"),
+            ProductScreen.customerIsSelected("Partner Full"),
+            Chrome.clickOrders(),
+            TicketScreen.checkCustomerAddress("77 Santa Barbara Rd Pleasant Hill"),
             Chrome.endTour(),
         ].flat(),
 });

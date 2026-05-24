@@ -152,7 +152,10 @@ export class IoTLongpolling {
             }
             return await post(iot_ip, route, params, timeout, headers, abortController.signal, this.useLna);
         } catch (error) {
-            if (!fallback && error?.name !== "AbortError") {
+            if (error?.name === "AbortError") {
+                throw error;
+            }
+            if (!fallback) {
                 this._doWarnFail(iot_ip);
             }
             throw new Error("Longpolling action failed");
@@ -185,7 +188,9 @@ export class IoTLongpolling {
             },
             (e) => {
                 if (e.name === "TimeoutError") {
-                    this._onError();
+                    this._onPollTimeout();
+                } else if (e.name !== "AbortError") {
+                    this._onPollNetworkError(iot_ip);
                 }
             }
         );
@@ -197,9 +202,15 @@ export class IoTLongpolling {
         this._retries = 0;
     }
 
-    _onError() {
+    _onPollTimeout() {
         this._retries++;
         this._delayedStartPolling(Math.min(this.rpcDelay * this._retries, this.maxRpcDelay));
+    }
+
+    _onPollNetworkError(iot_ip) {
+        for (const device of Object.values(this._listeners[iot_ip].devices)) {
+            device.callback({ status: "unreachable" });
+        }
     }
 
     /**

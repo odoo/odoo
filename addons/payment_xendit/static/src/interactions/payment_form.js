@@ -174,6 +174,7 @@ patch(PaymentForm.prototype, {
             const payload = {
                 'reference': processingValues.reference,
                 'partner_id': processingValues.partner_id,
+                'access_token': processingValues.access_token,
             };
             // Verified state could come from either authorization or tokenization. If it comes from
             // authentication, we must pass auth_id.

@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">ECPay Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group invisible="code != 'ecpay'">
+                    <field
+                        string="Merchant ID"
+                        name="ecpay_merchant_id"
+                        required="code == 'ecpay' and state != 'disabled'"
+                    />
+                    <field
+                        string="Secure Hash Secret"
+                        name="ecpay_hash_key"
+                        required="code == 'ecpay' and state != 'disabled'"
+                        password="True"
+                    />
+                    <field
+                        string="Secure Hash IV"
+                        name="ecpay_hash_iv"
+                        required="code == 'ecpay' and state != 'disabled'"
+                        password="True"
+                    />
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

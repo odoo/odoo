@@ -770,6 +770,26 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.assertEqual(inv.invoice_line_ids[2].name, f"{pol_prod_product_in_name.name}", "When description contains the product name, the invoice line name should only be the description")
         self.assertEqual(inv.invoice_line_ids[3].name, f"{pol_prod_name_in_product.product_id.display_name}\n{pol_prod_name_in_product.name}", "When the product name contains the description, the invoice line name should be the product name and the description")
 
+    def test_compute_po_count_with_different_plan(self):
+        analytic_plan_1, analytic_plan_2 = self.env['account.analytic.plan'].create([
+            {'name': 'Plan 1'}, {'name': 'Plan 2'}
+        ])
+        analytic_account = self.env['account.analytic.account'].create({'name': 'Account', 'plan_id': analytic_plan_1.id})
+        purchase_order = self.init_purchase(partner=self.partner_a, products=[self.product_a])
+        purchase_order.order_line[0].analytic_distribution = {analytic_account.id: 100}
+        purchase_order.button_confirm()
+        purchase_order.order_line.qty_received = 1
+
+        bill = self.env['account.move'].browse(purchase_order.action_create_invoice()['res_id'])
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+
+        self.assertEqual(analytic_account.purchase_order_count, 1)
+        analytic_account.plan_id = analytic_plan_2.id
+        analytic_account.invalidate_recordset(['purchase_order_count'])
+        self.assertEqual(analytic_account.purchase_order_count, 1)
+        self.assertEqual(analytic_account.action_view_purchase_orders()['domain'], [['id', 'in', purchase_order.ids]])
+
 
 @tagged('post_install', '-at_install')
 class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
@@ -1248,6 +1268,15 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertTrue(bill.id in po.invoice_ids.ids)
         self.assertTrue(bill.id in po_2.invoice_ids.ids)
         self.assertEqual(bill.amount_total, po.amount_total + po_2.amount_total)
+
+    def test_link_bill_origin_to_purchase_orders_trailing_comma(self):
+        """Trailing comma in bill reference does not match a PO with an empty reference"""
+        po = self.init_purchase(confirm=True, products=[self.product_order])
+        po.partner_ref = False
+        bill = self.init_invoice('in_invoice', partner=self.partner_b, products=[self.product_order])
+        bill.invoice_origin = "OTHER PO, "
+        bill._link_bill_origin_to_purchase_orders()
+        self.assertNotIn(bill, po.invoice_ids)
 
     def test_po_matching_credit_note(self):
         po = self.init_purchase(partner=self.partner_a, products=[self.product_deliver])

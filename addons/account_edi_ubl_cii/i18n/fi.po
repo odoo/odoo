@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:36+0000\n"
-"PO-Revision-Date: 2026-03-14 09:43+0000\n"
+"POT-Creation-Date: 2026-05-22 17:41+0000\n"
+"PO-Revision-Date: 2026-05-06 11:15+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "account_edi_ubl_cii/fi/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -49,13 +49,24 @@ msgid "(Un)Group lines by tax"
 msgstr "Lisää/poista rivien ryhmittely verokohtaisesti"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "<span class=\"text-muted\">FROM</span>"
+msgstr "<span class=\"text-muted\">LÄHETTÄJÄ</span>"
+
+#. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "<span class=\"text-muted\">TO</span>"
+msgstr "<span class=\"text-muted\">VASTAANOTTAJA</span>"
+
+#. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-msgid "1.0"
-msgstr "1.0"
+msgid "A"
+msgstr "A"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "A payment of %s was detected."
 msgstr "Havaittiin maksu: %s."
 
@@ -99,12 +110,6 @@ msgstr "Albanian ALV"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9922
 msgid "Andorra VAT"
 msgstr "Andorran ALV"
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-msgid "Articles 226 items 11 to 15 Directive 2006/112/EN"
-msgstr "226 artiklan kohdat 11-15, direktiivi 2006/112/EN"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -191,6 +196,12 @@ msgstr "Yritysrekisteriverkosto"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
+msgid "Cannot decode origin file, try by importing it again"
+msgstr "Alkuperätiedoston purkaminen ei onnistu, yritä tuoda se uudelleen"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Cannot find the origin file, try by importing it again"
 msgstr "Alkuperätiedostoa ei löydy, yritä tuoda se uudelleen"
 
@@ -250,6 +261,7 @@ msgstr "Yhteystiedot"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid ""
 "Could not retrieve a partner corresponding to '%s'. A new partner was "
 "created."
@@ -258,6 +270,7 @@ msgstr "'%s' vastaavan kumppanin haku ei onnistunut. Luotiin uusi kumppani."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and "
 "activate the currency?"
@@ -284,6 +297,7 @@ msgstr "Veron hakeminen ei onnistunut: %(amount)s %% riville '%(line)s'."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'."
 msgstr ""
 "Veron hakeminen ei onnistunut: %(tax_percentage)s %% riville '%(line)s'."
@@ -291,6 +305,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Could not retrieve the tax: %s for the document level allowance/charge."
 msgstr ""
 "Veron hakeminen ei onnistunut: %s asiakirjatason määrärahaa/maksua varten."
@@ -440,6 +455,7 @@ msgstr "Viron ALV"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "Exempt from tax"
 msgstr "Verovapaa"
 
@@ -503,6 +519,12 @@ msgstr "Asiakirjan tuonnissa käytettävä muoto: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
+msgid "Format used to import the invoice: %s"
+msgstr "Laskun tuonnissa käytetty muoto: %s"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Format: %s"
 msgstr "Muoto: %s"
@@ -556,7 +578,7 @@ msgstr "Odoon luoma"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0246
 msgid "German Electronic Business Address"
-msgstr ""
+msgstr "Saksan sähköinen yritysosoite"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__xrechnung
@@ -800,7 +822,7 @@ msgstr "Alankomaiden ALV"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0244
 msgid "Nigeria Tax Identification"
-msgstr ""
+msgstr "Nigerian verotunniste"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0192
@@ -891,6 +913,7 @@ msgstr "Romanian ALV"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Rounding"
 msgstr "Pyöristys"
 
@@ -927,7 +950,7 @@ msgstr "SIA -kohdetunnisteet"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0245
 msgid "SK Tax identification number (DIČ)"
-msgstr ""
+msgstr "Slovakian verotunniste (DIČ)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9951
@@ -1006,6 +1029,11 @@ msgid "Tax Exemption Reason Code"
 msgstr "Verovapautuksen syykoodi"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "Tax ID"
+msgstr "Verotunnus"
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid ""
@@ -1014,6 +1042,14 @@ msgid ""
 msgstr ""
 "Vastaavaa verovelvollisuutta ei saatu haettua: '%(exigibility)s' riville '%"
 "(line)s'."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+msgid ""
+"Taxes of category 'Service outside scope of tax' shall not be mixed with tax "
+"from other categories. You should split your invoice in two"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1071,6 +1107,7 @@ msgstr "%s:n ALV-etuliitteen pitäisi olla sen maakoodi."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "The bank account couldn't be fetched: %s"
 msgstr "Pankkitilin hakeminen ei onnistunut: %s"
 
@@ -1083,6 +1120,7 @@ msgstr "%s vaatii maan."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "The currency '%s' is not active."
 msgstr "Valuutta '%s' ei ole aktiivinen."
 
@@ -1106,6 +1144,7 @@ msgstr "Kenttä 'Siistitty tilinumero' vaaditaan vastaanottavassa pankissa."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 msgid ""
@@ -1184,7 +1223,7 @@ msgstr "Ubl Cii vaatii vapautusperusteen"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Ungrouped lines from %s"
-msgstr ""
+msgstr "Ryhmittelemättömät rivit kohdasta %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -1379,6 +1418,15 @@ msgid ""
 msgstr ""
 "VATEX-EU-132-1Q - Vapautus neuvoston direktiivin 2006/112/EY artiklan 132 "
 "kohdan 1 (q) perusteella"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-135-1
+msgid ""
+"VATEX-EU-135-1 - Exempt based on article 135, section 1 of Council Directive "
+"2006/112/EC"
+msgstr ""
+"VATEX-EU-135-1 - Vapautus neuvoston direktiivin 2006/112/EY artiklan 135 "
+"kohdan 1 perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143
@@ -1887,10 +1935,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-3
 msgid ""
 "VATEX-FR-CGI261D-3 - Exempt based on 3° of article 261 D of the Code Général "
-"des Impôts (CGI ; General tax code)"
+"des Impôts (CGI ; General tax code) Exonération de TVA - Article 261 D-3° du "
+"Code Général des Impôts"
 msgstr ""
-"VATEX-FR-CGI261D-3 - Vapautus artiklan 261 D Code Général des Impôts (CGI; "
-"yleinen verokoodi) kohdan 3 perusteella"
+"VATEX-FR-CGI261D-3 - Vapautus artiklan 261 D-3 Code Général des Impôts (CGI; "
+"yleinen verokoodi) Exonération de TVA perusteella"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-cgi261d-4
@@ -1966,6 +2015,11 @@ msgid "Vatican VAT"
 msgstr "Vatikaanin ALV"
 
 #. module: account_edi_ubl_cii
+#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
+msgid "Vendor Bill"
+msgstr "Toimittajan lasku"
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "View Partner(s)"
@@ -1992,6 +2046,12 @@ msgstr "X.400 -osoite postin tekstille"
 msgid "You can only (un)group lines of a draft invoice"
 msgstr ""
 "Voit lisätä/poistaa rivien ryhmittelyn vain luonnostilassa olevista laskuista"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+msgid "You can only group lines of an invoice"
+msgstr "Voit ryhmitellä vain laskun rivejä"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2031,6 +2091,19 @@ msgstr "fx"
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 
+#~ msgid "1.0"
+#~ msgstr "1.0"
+
+#~ msgid ""
+#~ "VATEX-FR-CGI261D-3 - Exempt based on 3° of article 261 D of the Code "
+#~ "Général des Impôts (CGI ; General tax code)"
+#~ msgstr ""
+#~ "VATEX-FR-CGI261D-3 - Vapautus artiklan 261 D Code Général des Impôts "
+#~ "(CGI; yleinen verokoodi) kohdan 3 perusteella"
+
+#~ msgid "Articles 226 items 11 to 15 Directive 2006/112/EN"
+#~ msgstr "226 artiklan kohdat 11-15, direktiivi 2006/112/EN"
+
 #~ msgid ""
 #~ "No gross price, net price nor line subtotal amount found for line in xml"
 #~ msgstr ""
@@ -2062,6 +2135,3 @@ msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 
 #~ msgid "Your endpoint"
 #~ msgstr "Päätepisteesi"
-
-#~ msgid "Format used to import the invoice: %s"
-#~ msgstr "Laskun tuonnissa käytetty muoto: %s"

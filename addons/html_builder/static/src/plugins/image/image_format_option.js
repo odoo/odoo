@@ -1,5 +1,7 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
-import { getImageSrc, getMimetype } from "@html_editor/utils/image";
+import { getMimetypeBeforeShape } from "@html_builder/utils/image";
+import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
+import { getImageSrc } from "@html_editor/utils/image";
 import { clamp } from "@web/core/utils/numbers";
 
 export class ImageFormatOption extends BaseOptionComponent {
@@ -22,15 +24,14 @@ export class ImageFormatOption extends BaseOptionComponent {
                 this.computeMaxDisplayWidth.bind(this)
             );
             const hasSrc = !!getImageSrc(editingElement);
-            const mimetype =
-                editingElement.dataset.formatMimetype ||
-                editingElement.dataset.mimetypeBeforeConversion ||
-                getMimetype(editingElement);
+            const mimetype = await getMimetypeBeforeShape(editingElement);
             const compressionUnsupported =
                 mimetype === "image/webp" && this.webpCompressionUnuspported();
+            const showFormat = await isImageSupportedForProcessing(editingElement, mimetype);
             return {
                 showQuality: ["image/jpeg", "image/webp"].includes(mimetype),
                 compressionUnsupported: compressionUnsupported,
+                showFormat,
                 formats: hasSrc ? formats : [],
             };
         });

@@ -7,8 +7,7 @@ patch(PosStore.prototype, {
             await this.data.loadServerOrders([
                 ["company_id", "=", this.config.company_id.id],
                 ["state", "=", "draft"],
-                ["source", "in", ["kiosk", "mobile"]],
-                ["self_ordering_table_id", "=", false],
+                ["source", "=", "kiosk"],
             ]);
         }
 

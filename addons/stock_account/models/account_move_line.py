@@ -53,12 +53,12 @@ class AccountMoveLine(models.Model):
         """
         self.ensure_one()
 
-        original_line = self.move_id.reversed_entry_id.line_ids.filtered(
-            lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and
-            l.product_uom_id == self.product_uom_id and l.price_unit >= 0)
-        original_line = original_line and original_line[0]
-        if original_line:
-            return original_line.price_unit
+        # Use original invoice price_unit if there is one and product is not fifo
+        if self.product_id.cost_method in ['standard', 'average']:
+            original_lines = self._get_lines_from_original_invoice()
+            original_line = original_lines and original_lines[0]
+            if original_line:
+                return original_line.price_unit
 
         if not self.product_id or self.product_uom_id.is_zero(self.quantity):
             return self.price_unit
@@ -84,3 +84,9 @@ class AccountMoveLine(models.Model):
     def _get_posted_cogs_value(self):
         self.ensure_one()
         return 0
+
+    def _get_lines_from_original_invoice(self):
+        return self.move_id.reversed_entry_id.line_ids.filtered(
+            lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and
+            l.product_uom_id == self.product_uom_id and l.price_unit >= 0
+        )

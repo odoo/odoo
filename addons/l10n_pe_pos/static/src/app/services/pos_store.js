@@ -14,13 +14,10 @@ patch(PosStore.prototype, {
     isPeruvianCompany() {
         return this.company.country_id?.code == "PE";
     },
-    createNewOrder() {
-        const order = super.createNewOrder(...arguments);
-
-        if (this.isPeruvianCompany() && !order.partner_id) {
-            order.partner_id = this.config._consumidor_final_anonimo_id;
+    getDefaultPartnerId() {
+        if (this.isPeruvianCompany()) {
+            return this.config._consumidor_final_anonimo_id;
         }
-
-        return order;
+        return super.getDefaultPartnerId();
     },
 });

@@ -1,8 +1,12 @@
-import { cropperDataFieldsWithAspectRatio, loadImage } from "@html_editor/utils/image_processing";
+import {
+    cropperDataFieldsWithAspectRatio,
+    loadImage,
+    loadImageInfo,
+} from "@html_editor/utils/image_processing";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { ImageToolOption } from "./image_tool_option";
-import { isImageCorsProtected } from "@html_editor/utils/image";
+import { getFetchedMimetype, isImageCorsProtected } from "@html_editor/utils/image";
 import { withSequence } from "@html_editor/utils/resource";
 import {
     REPLACE_MEDIA,
@@ -17,6 +21,7 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 import { isCSSColor } from "@web/core/utils/colors";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { BaseOptionComponent } from "@html_builder/core/utils";
+import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
 
 const IMAGE_LINK_ALIGN_CLASSES = ["mx-auto", "ms-auto", "me-auto"];
 
@@ -57,44 +62,32 @@ class ImageToolOptionPlugin extends Plugin {
         on_media_dialog_saved_handlers: async (elements, { node }) => {
             for (const image of elements) {
                 if (image && image.tagName === "IMG") {
+                    const imgInfo = await loadImageInfo(image);
+                    if (!imgInfo.originalSrc || !imgInfo.originalId) {
+                        continue;
+                    }
+                    const isImgSupportedForProcessing = await isImageSupportedForProcessing(
+                        image,
+                        await getFetchedMimetype(image, imgInfo)
+                    );
+                    const newDataset = {};
+                    if (isImgSupportedForProcessing) {
+                        newDataset.formatMimetype =
+                            this.config.defaultImageMimetype ?? "image/webp";
+                        const original = await loadImage(imgInfo.originalSrc);
+                        const maxWidth = image.dataset.width
+                            ? image.naturalWidth
+                            : original.naturalWidth;
+                        const optimizedWidth = Math.min(
+                            maxWidth,
+                            computeMaxDisplayWidth(node || this.editable)
+                        );
+                        newDataset.resizeWidth = optimizedWidth;
+                    }
                     const updateImageAttributes =
                         await this.dependencies.imagePostProcess.processImage({
                             img: image,
-                            newDataset: {
-                                formatMimetype: this.config.defaultImageMimetype ?? "image/webp",
-                            },
-                            // TODO Using a callback is currently needed to avoid
-                            // the extra RPC that would occur if loadImageInfo was
-                            // called before processImage as well. This flow can be
-                            // simplified if image infos are somehow cached.
-                            onImageInfoLoaded: async (dataset) => {
-                                if (!dataset.originalSrc || !dataset.originalId) {
-                                    return true;
-                                }
-                                const original = await loadImage(dataset.originalSrc);
-                                const maxWidth = dataset.width
-                                    ? image.naturalWidth
-                                    : original.naturalWidth;
-                                const optimizedWidth = Math.min(
-                                    maxWidth,
-                                    computeMaxDisplayWidth(node || this.editable)
-                                );
-                                if (
-                                    !["image/gif", "image/svg+xml"].includes(
-                                        dataset.mimetypeBeforeConversion
-                                    )
-                                ) {
-                                    // Convert to recommended format and width.
-                                    dataset.resizeWidth = optimizedWidth;
-                                } else if (
-                                    dataset.shape &&
-                                    dataset.mimetypeBeforeConversion !== "image/gif"
-                                ) {
-                                    dataset.resizeWidth = optimizedWidth;
-                                } else {
-                                    return true;
-                                }
-                            },
+                            newDataset,
                         });
                     updateImageAttributes();
                 }

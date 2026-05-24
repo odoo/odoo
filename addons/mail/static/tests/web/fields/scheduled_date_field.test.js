@@ -10,15 +10,16 @@ import {
 
 import { beforeEach, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
+import { MailComposeMessage } from "../../mock_server/mock_models/mail_composer_message";
 
 defineMailModels();
 beforeEach(() => mockDate("2024-10-20 10:00:00", +1));
 
 test("Text scheduled date field", async () => {
     const pyEnv = await startServer();
-    registerArchs({
-        "mail.compose.message,false,form": `<form><field name="scheduled_date" widget="text_scheduled_date"/></form>`,
-    });
+    MailComposeMessage._views = {
+        "form,false": `<form><field name="scheduled_date" widget="text_scheduled_date"/></form>`,
+    };
     const composerId = pyEnv["mail.compose.message"].create({
         subject: "Greetings",
         body: "<p>Hello There</p>",

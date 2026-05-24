@@ -18,6 +18,7 @@ class Test_Access_RightSome_Obj(models.Model):
     )
     forbidden2 = fields.Integer(groups='test_access_rights.test_group')
     forbidden3 = fields.Integer(groups=fields.NO_ACCESS)
+    active = fields.Boolean(default=True)
 
 
 class Test_Access_RightContainer(models.Model):

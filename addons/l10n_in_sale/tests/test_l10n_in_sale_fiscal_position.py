@@ -96,7 +96,7 @@ class TestSaleFiscal(L10nInTestInvoicingCommon):
 
     def test_l10n_in_sale_invoice_fiscal_position(self):
         """Ensure the fiscal position is correctly compute from the sale order to the invoice."""
-        self.env.company = self.default_company
+        self.env = self.env['base'].with_company(self.default_company).env
 
         # Create a sale order with an intra-state fiscal position
         sale_order = self._assert_order_fiscal_position(

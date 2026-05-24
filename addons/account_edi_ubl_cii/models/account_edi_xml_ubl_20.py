@@ -160,7 +160,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         vals.update({
             'document_type': 'debit_note' if 'debit_origin_id' in self.env['account.move']._fields and invoice.debit_origin_id
-                else 'credit_note' if invoice.move_type == 'out_refund'
+                else 'credit_note' if invoice.move_type in ('out_refund', 'in_refund')
                 else 'invoice',
 
             'process_type': 'billing',
@@ -1274,6 +1274,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             if percentage is None:
                 percentage = elem.find('.//{*}Percent')
             amount = elem.find('.//{*}TaxAmount')
+            # When multi-currency invoices have TaxSubtotal in multiple TaxTotal nodes (e.g. JP PINT),
+            # only correct using the document currency's TaxTotal to avoid overwriting with the wrong amount.
+            if amount is not None and amount.get('currencyID') != currency.name:
+                continue
             if (percentage is not None and percentage.text is not None) and (amount is not None and amount.text is not None):
                 tax_percent = float(percentage.text)
                 # Compare the result with our tax total on the invoice, and apply correction if needed.

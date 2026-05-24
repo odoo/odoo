@@ -2671,23 +2671,24 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.env['mrp.bom'].create({
             'product_tmpl_id': product.product_tmpl_id.id,
             'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+            'enable_batch_size': True,
+            'batch_size': 2.0,
         })
 
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'order_line': [Command.create({
-                'name': f"2 of {self.product.name}",
+                'name': f"4 of {self.product.name}",
                 'product_id': product.id,
-                'product_uom_qty': 2,
+                'product_uom_qty': 4,
             })],
         })
         sale_order.action_confirm()
         sale_picking = sale_order.picking_ids
         self.assertTrue(sale_picking)
 
-        mo = self.env['mrp.production'].search([('product_id', '=', product.id)], limit=1)
-        action = mo.action_split()
-        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        mo, mo2 = sale_order.mrp_production_ids
+        wizard = Form.from_action(self.env, mo.action_split())
         wizard.max_batch_size = 1
         wizard.save().action_split()
         self.assertEqual(len(mo.production_group_id.production_ids), 2)
@@ -2696,8 +2697,10 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(sale_picking.move_ids.quantity, 1)
         mo.production_group_id.production_ids[1].button_mark_done()
         self.assertEqual(sale_picking.move_ids.quantity, 2)
+        mo2.button_mark_done()
+        self.assertEqual(sale_picking.move_ids.quantity, 4)
         sale_picking.button_validate()
-        self.assertEqual(sale_order.order_line.qty_delivered, 2.0)
+        self.assertEqual(sale_order.order_line.qty_delivered, 4.0)
 
     def test_separate_child_mo_for_shared_component(self):
         """Ensure that when confirming a Sale Order with multiple MTO products
@@ -2795,3 +2798,58 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             {'user_id': self.env.user.id, 'display_name': 'Exception'}
         ])
         self.assertRegex(production_2.activity_ids.note, fr"Exception\(s\) occurred on the sale order\(s\).*\n.*{sale_order_to_cancel.name}.*\n.*Manual actions may be needed")
+
+    def test_kit_cogs_entry_with_delivery_line_removal(self):
+        """
+        Check that there is a cogs entry for order despite deleting a kit's component from delivery
+        """
+        # create category with correct config so cogs expense entry can be created
+        new_category = self.env.ref('product.product_category_goods').copy({
+            'name': 'Test category',
+            'property_valuation': 'real_time',
+            'property_cost_method': 'standard',
+        })
+
+        self.kit_1.categ_id = new_category.id
+        self.component_a.write({"standard_price": 2.50, "categ_id": new_category.id})
+        self.component_b.write({"standard_price": 1, "categ_id": new_category.id})
+        self.component_c.write({"standard_price": 1, "categ_id": new_category.id})
+
+        # We receive enough of each component in Warehouse 1 to make 2x kit_1
+        warehouse_1 = self.env['stock.warehouse'].create({
+            'name': 'Warehouse 1',
+            'code': 'WH1'
+        })
+        components = [self.component_a, self.component_c]
+        qty_to_process = {
+            self.component_a: (4, self.uom_unit),
+            self.component_c: (6, self.uom_unit),
+        }
+        self._create_move_quantities(qty_to_process, components, warehouse_1)
+
+        so = self.env['sale.order'].create({
+        'partner_id': self.partner.id,
+        'order_line': [
+            Command.create({
+                'product_id': self.kit_1.id,
+                'product_uom_qty': 2,
+            }),
+            ],
+        })
+        so.action_confirm()
+
+        # remove component b from delivery and validate
+        delivery = so.picking_ids
+        delivery.move_ids[1].unlink()
+        for move in delivery.move_ids:
+            move.quantity = move.product_qty
+        delivery.button_validate()
+
+        so._create_invoices()
+        invoice = so.invoice_ids
+        invoice.action_post()
+
+        expense_line = invoice.journal_line_ids.filtered(lambda line: line.account_name == "Expenses")
+        correct_amount = 16  # 2.5 * 4 + 6 * 1
+        self.assertTrue(expense_line, "COGS entry was not generated")
+        self.assertAlmostEqual(expense_line.debit, correct_amount, "COGS entry has the incorrect ammount")

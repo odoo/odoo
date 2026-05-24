@@ -691,11 +691,7 @@
         "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
       },
       "context": { "grid_anchor": "2022-09-12", "group_expand": true },
-      "domain": [
-        "&",
-        ["project_id", "!=", false],
-        ["user_id", "=", 2]
-      ],
+      "domain": [["project_id", "!=", false]],
       "id": "5",
       "measures": [
         { "id": "unit_amount", "fieldName": "unit_amount" }
@@ -719,11 +715,7 @@
         "4788ea63-ee8f-4082-a118-a26b4b6f1a71": { "chain": "employee_id", "type": "many2one" }
       },
       "context": { "grid_anchor": "2022-09-12", "group_expand": true },
-      "domain": [
-        "&",
-        ["project_id", "!=", false],
-        ["user_id", "=", 2]
-      ],
+      "domain": [["project_id", "!=", false]],
       "id": "6",
       "measures": [
         { "id": "unit_amount", "fieldName": "unit_amount" }

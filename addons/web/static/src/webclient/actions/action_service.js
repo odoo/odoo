@@ -1497,7 +1497,7 @@ export function makeActionManager(env, router = _router) {
      * @returns {Promise<void>}
      */
     async function doActionButton(params, { isEmbeddedAction, newWindow } = {}) {
-        if (!params.name) {
+        if (!params.name && !params.special) {
             return;
         }
         // determine the action to execute according to the params
@@ -1692,7 +1692,8 @@ export function makeActionManager(env, router = _router) {
             // This case would mostly happen when loadState detects a change in the URL.
             // Also, I guess we may need it when we have other monoRecord views
             index = controllerStack.findIndex(
-                (ct) => ct.action.jsId === controller.action.jsId && !ct.view.multiRecord
+                (ct) =>
+                    ct.action.jsId === controller.action.jsId && !ct.virtual && !ct.view.multiRecord
             );
             index = index > -1 ? index : controllerStack.length;
         }

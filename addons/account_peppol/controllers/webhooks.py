@@ -12,7 +12,7 @@ class PeppolWebhookController(http.Controller):
         csrf=False,
     )
     def webhook_new_message(self, token):
-        edi_client = request.env['account_edi_proxy_client.user']._get_user_from_token(token, url=request.httprequest.url)
+        edi_client = request.env['account_edi_proxy_client.user'].sudo()._get_user_from_token(token, url=request.httprequest.url)
 
         cron = request.env.ref(
             'account_peppol.ir_cron_peppol_get_new_documents',
@@ -31,7 +31,7 @@ class PeppolWebhookController(http.Controller):
         csrf=False,
     )
     def webhook_message_update(self, token):
-        edi_client = request.env['account_edi_proxy_client.user']._get_user_from_token(token, url=request.httprequest.url)
+        edi_client = request.env['account_edi_proxy_client.user'].sudo()._get_user_from_token(token, url=request.httprequest.url)
 
         cron = request.env.ref(
             'account_peppol.ir_cron_peppol_get_message_status',
@@ -50,7 +50,7 @@ class PeppolWebhookController(http.Controller):
         csrf=False,
     )
     def webhook_user_update(self, token):
-        edi_client = request.env['account_edi_proxy_client.user']._get_user_from_token(token, url=request.httprequest.url)
+        edi_client = request.env['account_edi_proxy_client.user'].sudo()._get_user_from_token(token, url=request.httprequest.url)
 
         cron = request.env.ref(
             'account_peppol.ir_cron_peppol_get_participant_status',

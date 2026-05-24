@@ -5,13 +5,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Dorin Hongu <dhongu@gmail.com>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:38+0000\n"
-"PO-Revision-Date: 2025-12-20 19:04+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"POT-Creation-Date: 2026-04-24 17:37+0000\n"
+"PO-Revision-Date: 2026-04-13 20:51+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "spreadsheet/ro/>\n"
 "Language: ro\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -260,6 +261,12 @@ msgstr "%s potriviri în toate foile"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "'${str}'"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "(Blanks)"
 msgstr "(Goale)"
@@ -351,6 +358,12 @@ msgstr "2 rânduri"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "=PIVOT(${"
 msgstr "=PIVOT(${"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "A"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1163,27 +1176,6 @@ msgstr "A apărut o eroare neașteptată în timpul transferului de imagini"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          Additional information can be found in the browser console."
-msgstr ""
-"A apărut o eroare neașteptată în timpul lipirii conținutului.\n"
-"Informații suplimentare pot fi găsite în consola browserului."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"A apărut o eroare neașteptată la lipirea conținutului.\n"
-"          Probabil este cauzată de o nepotrivire de versiune a foii de "
-"calcul."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An unexpected error occurred. Submit a support ticket at odoo.com/help."
 msgstr ""
 "A apărut o eroare neașteptată. Trimiteți un tichet de suport la odoo.com/"
@@ -1399,9 +1391,8 @@ msgstr "Șir sau interval care conține setul de date de luat în considerare."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Array result was not expanded because it would overwrite data in %s."
+msgid "Array result was not expanded because it would overwrite data."
 msgstr ""
-"Rezultatul șirului nu a fost extins, deoarece ar suprascrie datele în %s."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4284,25 +4275,6 @@ msgstr "Funcția [[FUNCTION_NAME]] nu a găsit niciun rezultat."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"Funcția [[FUNCTION_NAME]] se așteaptă ca intervalul de criterii și criteriul "
-"să fie în perechi."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr ""
-"Funcția [[FUNCTION_NAME]] se așteaptă ca intervalul de criterii să aibă "
-"aceeași dimensiune"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
 "Funcția [[FUNCTION_NAME]] așteaptă valori numerice pentru %s, dar a primit o "
@@ -4925,12 +4897,8 @@ msgstr "În [[FUNCTION_NAME]] evaluare, nu se poate găsi '%s' în '%s'."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"          number of rows of the second matrix (%s)."
+"equal to the           number of rows of the second matrix (%s)."
 msgstr ""
-"În [[FUNCTION_NAME]], numărul de coloane al primei matrice (%s) trebuie să "
-"fie egal cu \n"
-"        numărul de rânduri al celei de-a doua matrice (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6228,6 +6196,12 @@ msgstr "Următoarea dată a cuponului după data decontării."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "No Color"
 msgstr "Fără culoare"
@@ -6495,6 +6469,12 @@ msgstr "Valoare medie numerică într-un set de date."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "OFFSET evaluates to an out of bounds range."
 msgstr "OFFSET evaluează la un interval în afara limitelor."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/helpers/geo_json_service.js:0
+msgid "Oceania"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13384,15 +13364,9 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
-"Dacă să eliminați sau nu mesajele text goale din rezultatele divizate. "
-"Comportamentul implicit este de a trata \n"
-"        delimitatori consecutivi ca unul (dacă ESTE ADEVĂRAT). Dacă sunt "
-"FALSE, valorile celulelor goale sunt adăugate între delimitatorii "
-"consecutivi."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13617,6 +13591,12 @@ msgstr "Ani"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/helpers.js:0
 msgid "Yesterday"
 msgstr "Ieri"
@@ -13632,6 +13612,14 @@ msgstr "Nu puteți îmbina celule în interiorul unui filtru existent."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
 msgstr "Nu puteți crea tabele suprapuse."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"and image content will be pasted."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -14028,6 +14016,12 @@ msgstr "mâine"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.xml:0
+msgid "x"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "yesterday"
 msgstr "Ieri"
@@ -14037,3 +14031,53 @@ msgstr "Ieri"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "zero"
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          Additional information can be found in the browser console."
+#~ msgstr ""
+#~ "A apărut o eroare neașteptată în timpul lipirii conținutului.\n"
+#~ "Informații suplimentare pot fi găsite în consola browserului."
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          This is probably due to a spreadsheet version mismatch."
+#~ msgstr ""
+#~ "A apărut o eroare neașteptată la lipirea conținutului.\n"
+#~ "          Probabil este cauzată de o nepotrivire de versiune a foii de "
+#~ "calcul."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "Funcția [[FUNCTION_NAME]] se așteaptă ca intervalul de criterii și "
+#~ "criteriul să fie în perechi."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "Funcția [[FUNCTION_NAME]] se așteaptă ca intervalul de criterii să aibă "
+#~ "aceeași dimensiune"
+
+#~ msgid ""
+#~ "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must "
+#~ "be equal to the \n"
+#~ "          number of rows of the second matrix (%s)."
+#~ msgstr ""
+#~ "În [[FUNCTION_NAME]], numărul de coloane al primei matrice (%s) trebuie "
+#~ "să fie egal cu \n"
+#~ "        numărul de rânduri al celei de-a doua matrice (%s)."
+
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "Dacă să eliminați sau nu mesajele text goale din rezultatele divizate. "
+#~ "Comportamentul implicit este de a trata \n"
+#~ "        delimitatori consecutivi ca unul (dacă ESTE ADEVĂRAT). Dacă sunt "
+#~ "FALSE, valorile celulelor goale sunt adăugate între delimitatorii "
+#~ "consecutivi."

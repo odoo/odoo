@@ -18,7 +18,8 @@
             <field name="arch" type="xml">
                 <list string="Contacts" sample="1" multi_edit="1">
                     <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded'}" width="30" nolabel="1"/>
-                    <field name="complete_name" string="Name"/>
+                    <field name="complete_name" string="Name" column_invisible="true"/>
+                    <field name="display_name" string="Name"/>
                     <field name="vat" optional="hide" readonly="1"/>
                     <field name="email" optional="show"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
@@ -316,7 +317,7 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                     <field name="name"
-                       filter_domain="['|', '|', '|', '|', ('complete_name', 'ilike', self), ('ref', 'ilike', self), ('email', 'ilike', self), ('vat', 'ilike', self), ('company_registry', 'ilike', self)]"/>
+                       filter_domain="[('display_name', 'ilike', self)]"/>
                     <field name="parent_id" domain="[('is_company', '=', True)]" operator="child_of"/>
                     <field name="email" filter_domain="[('email', 'ilike', self)]"/>
                     <field name="phone"/>
@@ -365,8 +366,11 @@
                                 </t>
                             </aside>
                             <main class="ps-2">
-                                <div class="mb-1">
+                                <div class="mb-1" invisible="true">
                                     <field name="complete_name" class="mb-0 fw-bold fs-5"/>
+                                </div>
+                                <div class="mb-1">
+                                    <field name="display_name" class="mb-0 fw-bold fs-5"/>
                                 </div>
                                 <div t-if="record.email.raw_value" class="text-truncate">
                                     <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_safaricom.MpesaTransactionPopup" owl="1">
-        <Dialog title="Select M-Pesa Transaction" bodyClass="'d-flex flex-column justify-content-center'" size="'lg'">
+        <Dialog title.translate="'Select M-Pesa Transaction'" bodyClass="'d-flex flex-column justify-content-center'" size="'lg'">
             <div class="popup">
                 <!-- QR Code Display -->
                 <t t-if="props.qrCode and state.showQrCode">
@@ -18,7 +18,7 @@
                 <div class="mb-3">
                     <Input
                         tModel="[state, 'searchQuery']"
-                        placeholder="Search by name or phone..."
+                        placeholder.translate="'Search by name or phone or transaction id...'"
                         icon="{ type: 'fa', value: 'fa-search' }"
                         class="'w-100'"
                     />
@@ -31,6 +31,7 @@
                             <th>Phone</th>
                             <th>Amount</th>
                             <th>Arrived at</th>
+                            <th>ID</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -41,6 +42,7 @@
                                 <td><t t-esc="tx.phone"/></td>
                                 <td><t t-esc="tx.amount"/></td>
                                 <td><t t-esc="tx.received_at"/></td>
+                                <td><t t-esc="tx.trans_id"/></td>
                                 <td>
                                     <button class="btn btn-primary"
                                             t-on-click="() => this.confirm(tx)">

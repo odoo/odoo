@@ -21,13 +21,14 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Tommy Gombar <tommy.gombar@kilafornia.net>, 2026.
 # Sarbó Gergely <sarbo.gergely@gmail.com>, 2026.
+# Nagy Géza <geza.nagy@oregional.hu>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-03-14 09:35+0000\n"
-"Last-Translator: Sarbó Gergely <sarbo.gergely@gmail.com>\n"
+"PO-Revision-Date: 2026-05-02 09:45+0000\n"
+"Last-Translator: Nagy Géza <geza.nagy@oregional.hu>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/portal/"
 "hu/>\n"
 "Language: hu\n"
@@ -35,7 +36,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -68,6 +69,7 @@ msgid ""
 "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary-emphasis\"/> My "
 "Account"
 msgstr ""
+"<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary-emphasis\"/> Fiókom"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
@@ -81,6 +83,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "<i class=\"fa fa-fw fa-th me-1 small text-primary-emphasis\"/> Apps"
 msgstr ""
+"<i class=\"fa fa-fw fa-th me-1 small text-primary-emphasis\"/> Alkalmazások"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
@@ -90,7 +93,7 @@ msgstr "<i class=\"fa fa-pencil\"/> Információ szerkesztése"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
-msgstr ""
+msgstr "<i class=\"fw-light fa fa-angle-left me-2\"/>Elvetés"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -103,8 +106,8 @@ msgid ""
 "<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
-"title=\"Previous\"/>"
+"<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Előző\" "
+"title=\"Előző\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -112,8 +115,8 @@ msgid ""
 "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
 "title=\"Next\"/>"
 msgstr ""
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
-"title=\"Next\"/>"
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Következő\" "
+"title=\"Következő\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
@@ -125,7 +128,7 @@ msgstr "<i class=\"oi oi-plus me-2\"/>Cím hozzáadása"
 msgid ""
 "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 msgstr ""
-"<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
+"<i title=\"Dokumentáció\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -135,7 +138,7 @@ msgstr "<option value=\"\">Ország...</option>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "<option value=\"\">State / Province...</option>"
-msgstr ""
+msgstr "<option value=\"\">Állam / megye...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -148,6 +151,13 @@ msgid ""
 "                            operation.\n"
 "                        </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                            Adószám megváltoztatása nem engedélyezett, ha "
+"már dokumentumok\n"
+"                            kerültek kiállításra. Kérjük, vegye fel velünk "
+"közvetlenül a kapcsolatot\n"
+"                            a művelet végrehajtásához.\n"
+"                        </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -157,6 +167,10 @@ msgid ""
 "company account.\n"
 "                        </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                            Az adószámot csak a vállalati fiókon lehet "
+"módosítani.\n"
+"                        </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -168,6 +182,13 @@ msgid ""
 "                    operation.\n"
 "                </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                    Az ország megváltoztatása nem lehetséges, ha már "
+"dokumentumok kerültek\n"
+"                    kibocsátásra a felhasználói fiók kapcsán. Kérjük, vegye "
+"fel velünk a kapcsolatot\n"
+"                    a művelet végrehajtásához.\n"
+"                </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -175,6 +196,8 @@ msgid ""
 "<span class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<span class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Előző\" "
+"title=\"Előző\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -182,11 +205,13 @@ msgid ""
 "<span class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
 "title=\"Next\"/>"
 msgstr ""
+"<span class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Következő\" "
+"title=\"Következő\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid "<span class=\"px-3\">or</span>"
-msgstr ""
+msgstr "<span class=\"px-3\">vagy</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -245,7 +270,7 @@ msgstr "Megjegyzés hozzáadása"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Add an address"
-msgstr ""
+msgstr "Adjon hozzá címet"
 
 #. module: portal
 #. odoo-javascript
@@ -256,7 +281,7 @@ msgstr "Melléklet hozzáadása"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add contacts to share the document..."
-msgstr "Adjon meg kapcsolatokat a dokumentum megosztásához"
+msgstr "Adjon meg kapcsolatokat a dokumentum megosztásához..."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_share__note
@@ -276,7 +301,7 @@ msgstr "Hozzáadva"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
 msgid "Address Management"
-msgstr ""
+msgstr "Címek kezelése"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -308,13 +333,13 @@ msgstr "Avatár"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
 msgid "Billing Address"
-msgstr ""
+msgstr "Számlázási cím"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Billing address"
-msgstr ""
+msgstr "Számlázási cím"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -345,6 +370,9 @@ msgid ""
 "Changing your country is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Az ország megváltoztatása nem engedélyezett, ha már dokumentumok kerültek "
+"kiállításra a fiókhoz. Kérjük, vegye fel a kapcsolatot velünk a művelet "
+"végrehajtásához."
 
 #. module: portal
 #. odoo-javascript
@@ -385,7 +413,7 @@ msgstr "Beállítások"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Configure your connection parameters"
-msgstr "Bejelentkezési paraméterek beállítása"
+msgstr "Kapcsolódási paraméterek beállítása"
 
 #. module: portal
 #. odoo-javascript
@@ -417,7 +445,7 @@ msgstr "Kapcsolat"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Contact Details"
-msgstr "Partner részletei"
+msgstr "Kapcsolat részletei"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -428,7 +456,7 @@ msgstr "Kapcsolatok"
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_composer.js:0
 msgid "Could not save file %s"
-msgstr ""
+msgstr "Nem sikerült menteni a fájlt %s"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -438,7 +466,7 @@ msgstr "Ország"
 #. module: portal
 #: model:ir.model,website_form_label:portal.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Ügyfél létrehozása"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__create_uid
@@ -472,7 +500,7 @@ msgstr "Az ügyfelek generálhatnak API kulcsot"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "Dear"
-msgstr "Tisztelt"
+msgstr "Kedves"
 
 #. module: portal
 #. odoo-javascript
@@ -549,7 +577,7 @@ msgstr "Megjelenített név"
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/sidebar.js:0
 msgid "Due in %s days"
-msgstr "Esedékes %s napon belül."
+msgstr "Esedékes %s napon belül"
 
 #. module: portal
 #. odoo-javascript
@@ -571,7 +599,7 @@ msgstr "Email"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Email Address already taken by another user"
-msgstr "Ezt az email címet már használja egy másik felhasználó."
+msgstr "Ezt az email címet már használja egy másik felhasználó"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
@@ -666,6 +694,10 @@ msgid ""
 "backend. If you wish to change your name or email address, please do so in "
 "the account settings or contact your administrator."
 msgstr ""
+"Ha külsős személy számára rendel, akkor kérjük, adja le a rendelést az "
+"irodai nézetben. Ha szeretné megváltoztatáni a nevét vagy email címért, "
+"akkor kérjük, használja a fiók beállításokat vagy vegye fel a kapcsolatot az "
+"adminisztrátorral."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -774,7 +806,7 @@ msgstr "Kijelentkezés az összes eszközről"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
 msgid "Main Address"
-msgstr ""
+msgstr "Központi cím"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
@@ -805,7 +837,7 @@ msgstr "Fiókom"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "My addresses"
-msgstr ""
+msgstr "Címeim"
 
 #. module: portal
 #. odoo-javascript
@@ -853,7 +885,7 @@ msgstr "Csak belső és portál felhasználók hozhatnak létre API kulcsokat"
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
 "Upsz! Valami félrement. Az oldal frissítése után próbáljon meg újra "
-"bejelentkezni!"
+"bejelentkezni."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__partner_ids
@@ -884,7 +916,7 @@ msgstr "Telefon"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Please enter your password to confirm you own this account"
-msgstr "Add meg a jelszavad a folytatáshoz"
+msgstr "Adja meg a jelszavát a folytatáshoz"
 
 #. module: portal
 #. odoo-python
@@ -955,17 +987,17 @@ msgstr "Kapcsolódó dokumentum"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_id
 msgid "Related Document ID"
-msgstr "Kapcsolódó dokumentum azonosító"
+msgstr "Kapcsolódó dokumentum ID"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_model
 msgid "Related Document Model"
-msgstr "Vonatkozó dokumentum modell"
+msgstr "Kapcsolódó dokumentum modell"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
 msgid "Remove this address"
-msgstr ""
+msgstr "Cím eltávolítása"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -985,7 +1017,7 @@ msgstr "Megegyezik a szállítási címmel"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
 msgid "Save Address"
-msgstr ""
+msgstr "Cím mentése"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1060,7 +1092,7 @@ msgstr "Bejelentkezés"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Skip to Content"
-msgstr "Kihagyás és továbblépés a tartalomhoz"
+msgstr "Továbbugrás a tartalomhoz"
 
 #. module: portal
 #. odoo-javascript
@@ -1103,13 +1135,13 @@ msgstr "Köszönöm!"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your company account."
-msgstr ""
+msgstr "%(field_name)s mezőt a vállalati fiókon lehet kezelni."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The %(field_name)s is managed on your main account address."
-msgstr ""
+msgstr "%(field_name)s mezőt a fő fiók címében lehet kezelni."
 
 #. module: portal
 #. odoo-python
@@ -1123,14 +1155,14 @@ msgstr ""
 #: code:addons/portal/controllers/portal.py:0
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
-msgstr "A(z) %s melléklet nem távolítható el, mert nem függőben lévő."
+msgstr "A(z) %s melléklet nem távolítható el, mert nem függő állapotban van."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr "A melléklet nem található, vagy Önnek nincs hozzáférése."
+msgstr "A melléklet nem található, vagy nincs hozzáférése."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -1168,7 +1200,7 @@ msgstr "A kulcs törlésre kerül az időszak letelte után."
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "The new password and its confirmation must be identical."
-msgstr "Az új jelszónak és a jelszó megerősítésnek azonosnak kell lennie"
+msgstr "Az új jelszónak és a jelszó megerősítésnek azonosnak kell lennie."
 
 #. module: portal
 #. odoo-python
@@ -1247,7 +1279,7 @@ msgstr "Felhasználó"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "User Dashboard"
-msgstr ""
+msgstr "Felhasználói kezelőpult"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__user_ids
@@ -1354,7 +1386,7 @@ msgstr "Weboldal üzenetek"
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
-msgstr "Weboldal kommunikációs előzmények"
+msgstr "Weboldal kommunikáció előzmények"
 
 #. module: portal
 #. odoo-javascript
@@ -1394,13 +1426,13 @@ msgstr "Hibás jelszó."
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot archive your main address"
-msgstr ""
+msgstr "Nem lehet archiválni a fő címet"
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "You cannot leave any password empty."
-msgstr "Nem hagyhat egyetlen jelszót sem üresen"
+msgstr "Nem hagyhat egyetlen jelszót sem üresen."
 
 #. module: portal
 #. odoo-javascript
@@ -1443,7 +1475,7 @@ msgstr "teljes hozzáférést"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "has invited you to access the following"
-msgstr "meghívta Önt, hogy hozzáférjen ehhez:"
+msgstr "meghívta Önt, hogy hozzáférjen ehhez"
 
 #. module: portal
 #. odoo-javascript
@@ -1475,7 +1507,7 @@ msgstr "jelszó"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "to post a comment."
-msgstr "hozzászólás közzétételéhez"
+msgstr "hozzászólás közzétételéhez."
 
 #. module: portal
 #. odoo-javascript

@@ -1221,7 +1221,7 @@ class StockPicking(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'stock.move.line',
             'views': [(view_id, 'list')],
-            'domain': [('id', 'in', self.move_line_ids.ids)],
+            'domain': [('picking_id', '=', self.id)],
             'context': {
                 'sml_specific_default': True,
                 'default_picking_id': self.id,
@@ -1306,10 +1306,12 @@ class StockPicking(models.Model):
 
     def _check_entire_pack(self):
         """ This function check if entire packs are moved in the picking"""
-        for package in self.move_line_ids.package_id:
-            pickings = self.move_line_ids.filtered(lambda ml: ml.package_id == package).picking_id
+        for package, package_move_lines in self.move_line_ids.grouped('package_id').items():
+            if not package:
+                continue
+            pickings = package_move_lines.picking_id
             if pickings._is_single_transfer() and pickings._check_move_lines_map_quant_package(package):
-                move_lines_to_pack = pickings.move_line_ids.filtered(lambda ml: ml.package_id == package and not ml.result_package_id and ml.state not in ('done', 'cancel'))
+                move_lines_to_pack = package_move_lines.filtered(lambda ml: not ml.result_package_id and ml.state not in ('done', 'cancel'))
                 if package.package_type_id.package_use != 'reusable':
                     move_lines_to_pack.write({
                         'result_package_id': package.id,
@@ -1569,6 +1571,7 @@ class StockPicking(models.Model):
             'move_ids': [],
             'move_line_ids': [],
             'backorder_id': self.id,
+            'return_id': self.return_id.id,
         })
 
     def _create_backorder(self, backorder_moves=None):

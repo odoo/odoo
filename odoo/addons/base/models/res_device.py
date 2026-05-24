@@ -117,18 +117,22 @@ class ResDeviceLog(models.Model):
     def _gc_device_log(self):
         # Keep the last device log
         # (even if the session file no longer exists on the filesystem)
-        self.env.cr.execute("""
+        query = SQL("""
             DELETE FROM res_device_log log1
-            WHERE EXISTS (
-                SELECT 1 FROM res_device_log log2
-                WHERE
-                    log1.session_identifier = log2.session_identifier
-                    AND log1.platform = log2.platform
-                    AND log1.browser = log2.browser
-                    AND log1.ip_address = log2.ip_address
-                    AND log1.last_activity < log2.last_activity
-            )
+            USING res_device_log log2
+            WHERE
+                log1.session_identifier = log2.session_identifier
+                AND log1.platform = log2.platform
+                AND log1.browser = log2.browser
+                AND log1.ip_address = log2.ip_address
+                AND log1.last_activity < log2.last_activity
         """)
+        if cron_lastcall := self.env.context.get('lastcall'):
+            query = SQL(
+                '%s AND log2.last_activity >= %s',
+                query, cron_lastcall,
+            )
+        self.env.cr.execute(query)
         _logger.info("GC device logs delete %d entries", self.env.cr.rowcount)
 
     @api.autovacuum

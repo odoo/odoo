@@ -1180,6 +1180,19 @@ class HrExpense(models.Model):
         if len(employee_expenses.company_id) > 1:
             raise UserError(_("You can't post simultaneously employee-paid expenses belonging to different companies"))
 
+        # For company-paid expenses using SEPA Credit Transfer, the vendor must be set
+        # because SEPA XML generation requires a creditor name (partner).
+        expenses_missing_vendor = company_expenses.filtered(
+            lambda exp: exp.payment_method_line_id.code == 'sepa_ct' and not exp.vendor_id
+        )
+        if expenses_missing_vendor:
+            expense_names = ', '.join(expenses_missing_vendor.mapped('name'))
+            raise UserError(_(
+                "The vendor is required for expenses using SEPA Credit Transfer as the payment method."
+                "\nPlease set a vendor on the following expenses: %s",
+                expense_names
+            ))
+
         if company_expenses:
             company_expenses._create_company_paid_moves()
             # Post the company-paid expense through the payment, to post both at the same time
@@ -1581,14 +1594,12 @@ class HrExpense(models.Model):
         return moves_sudo.sudo(self.env.su)
 
     def _prepare_receipts_vals(self):
-        attachments_data = []
-        for attachment in self.attachment_ids:
-            attachments_data.append(
-                Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
-            )
-
         return_vals = []
         for employee_sudo, expenses_sudo in self.sudo().grouped('employee_id').items():
+            attachments_data = [
+                Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
+                for attachment in expenses_sudo.attachment_ids
+            ]
             multiple_expenses_name = _("Expenses of %(employee)s", employee=employee_sudo.name)
             move_ref = expenses_sudo.name if len(expenses_sudo) == 1 else multiple_expenses_name
             return_vals.append({

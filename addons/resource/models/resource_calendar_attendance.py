@@ -74,7 +74,7 @@ class ResourceCalendarAttendance(models.Model):
         # some years have 53 weeks. Therefore, two consecutive odd week number follow each other (53 --> 1).
         return int(math.floor((date.toordinal() - 1) / 7) % 2)
 
-    @api.depends('hour_from', 'hour_to')
+    @api.depends('hour_from', 'hour_to', 'day_period')
     def _compute_duration_hours(self):
         for attendance in self.filtered('hour_to'):
             attendance.duration_hours = (attendance.hour_to - attendance.hour_from) if attendance.day_period != 'lunch' else 0

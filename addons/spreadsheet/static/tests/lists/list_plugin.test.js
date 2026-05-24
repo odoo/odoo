@@ -24,6 +24,7 @@ import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_fi
 import { createSpreadsheetWithList } from "@spreadsheet/../tests/helpers/list";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
+import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 
 import { animationFrame } from "@odoo/hoot-mock";
 import * as spreadsheet from "@odoo/o-spreadsheet";
@@ -112,7 +113,7 @@ test("Numeric/monetary fields are correctly loaded and displayed", async () => {
     expect(getFormattedValueGrid(model, "A2:C6")).toEqual({
         A2: "74.40€",    B2: "10.00",  C2: "1",
         A3: "$74.80",    B3: "11.00",  C3: "2",
-        A4: "4.00€",     B4: "95.00",  C4: "3",      
+        A4: "4.00€",     B4: "95.00",  C4: "3",
         A5: "$1,000.00", B5: "15.00",  C5: "4",
         A6: "$0.00",     B6: "0.00",   C6: "0",
     });
@@ -319,7 +320,11 @@ test("Referencing non-existing fields does not crash", async function () {
 
     await animationFrame();
     expect(model.getters.getListDataSource(listId).getFields()[forbiddenFieldName]).toBe(undefined);
-    expect(getCellValue(model, "A1")).toBe(forbiddenFieldName);
+    const A1 = getEvaluatedCell(model, "A2");
+    expect(A1.type).toBe("error");
+    expect(A1.message).toBe(
+        `The field ${forbiddenFieldName} does not exist or you do not have access to that field`
+    );
     const A2 = getEvaluatedCell(model, "A2");
     expect(A2.type).toBe("error");
     expect(A2.message).toBe(
@@ -835,6 +840,7 @@ test("fetch all and only required fields", async function () {
                     A1: '=ODOO.LIST(1, 1, "foo")', // in the definition
                     A2: '=ODOO.LIST(1, 1, "product_id")', // not in the definition
                     A3: '=ODOO.LIST(1, 1, "invalid_field")',
+                    A4: '=ODOO.LIST.HEADER(1, "bar")',
                 },
             },
         ],
@@ -857,6 +863,7 @@ test("fetch all and only required fields", async function () {
                 expect(args.kwargs.specification).toEqual({
                     id: {},
                     foo: {},
+                    bar: {},
                     product_id: {
                         fields: {
                             display_name: {},
@@ -866,6 +873,7 @@ test("fetch all and only required fields", async function () {
             }
         },
     });
+    await animationFrame();
     expect.verifySteps(["data-fetched"]);
 });
 
@@ -1326,4 +1334,63 @@ test("Chaining monetary fields includes the currency field", async function () {
     expect(getCellValue(model, "A1")).toBe(699.99);
     expect(getEvaluatedCell(model, "A1").formattedValue).toBe("$699.99");
     expect.verifySteps(["web_search_read"]);
+});
+
+test("List header labels are loaded even if there are no corresponding list values", async function () {
+    const { model } = await createSpreadsheetWithList({ columns: [] });
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST.HEADER(${listId}, "currency_id")`);
+    setCellContent(model, "B1", `=ODOO.LIST.HEADER(${listId}, "product_id.template_id.name")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("Currency");
+    expect(getCellValue(model, "B1")).toBe("Product Name");
+});
+
+test("List Headers with invalid field names do not trigger infinite loops", async function () {
+    const { model } = await createSpreadsheetWithList();
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST.HEADER(${listId}, "")`);
+    setCellContent(model, "A2", `=ODOO.LIST.HEADER(${listId}, #REF)`);
+    setCellContent(model, "A3", `=ODOO.LIST.HEADER(${listId}, Z4)`); // Z4 is empty
+    setCellContent(model, "A4", `=ODOO.LIST.HEADER(${listId}, "notAField")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("#ERROR");
+    expect(getCellValue(model, "A2")).toBe("#REF");
+    expect(getCellValue(model, "A3")).toBe("#ERROR");
+    expect(getCellValue(model, "A4")).toBe("#ERROR");
+});
+
+test("List with invalid field names do not trigger infinite loops", async function () {
+    const { model } = await createSpreadsheetWithList();
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST(${listId}, 1, "")`);
+    setCellContent(model, "A2", `=ODOO.LIST(${listId}, 1, #REF)`);
+    setCellContent(model, "A3", `=ODOO.LIST(${listId}, 1, Z4)`); // Z4 is empty
+    setCellContent(model, "A4", `=ODOO.LIST(${listId}, 1, "notAField")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("#ERROR");
+    expect(getCellValue(model, "A2")).toBe("#REF");
+    expect(getCellValue(model, "A3")).toBe("#ERROR");
+    expect(getCellValue(model, "A4")).toBe("#ERROR");
+});
+
+test("Empty fieldPaths are treated as invalid fields in the datasource", async function () {
+    const { model } = await createSpreadsheetWithList();
+    const listId = model.getters.getListIds()[0];
+    const ds = model.getters.getListDataSource(listId);
+
+    for (const fieldPath of ["", "badField"]) {
+        expect(ds.getFieldFromFieldPath(fieldPath)).toBe(undefined);
+        expect(() => ds.getListCellValue(1, fieldPath)).toThrow(LoadingDataError);
+        expect(() => ds.getListHeaderValue(1, fieldPath)).toThrow(LoadingDataError);
+    }
+
+    await animationFrame();
+
+    // after the server call, the path were fetchd from the server but do not exist
+    for (const fieldPath of ["", "badField"]) {
+        expect(ds.getFieldFromFieldPath(fieldPath)).toBe(undefined);
+        expect(() => ds.getListCellValue(1, fieldPath)).toThrow(spreadsheet.EvaluationError);
+        expect(() => ds.getListHeaderValue(1, fieldPath)).toThrow(spreadsheet.EvaluationError);
+    }
 });

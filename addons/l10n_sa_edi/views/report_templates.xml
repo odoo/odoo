@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_sa_edi_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="additional_address_sa" t-out="additional_address_sa"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_edi_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="additional_address_sa" t-out="additional_address_sa"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_edi_external_layout_bold" inherit_id="web.external_layout_bold">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="additional_address_sa" t-out="additional_address_sa"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_edi_external_layout_striped" inherit_id="web.external_layout_striped">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="additional_address_sa" t-out="additional_address_sa"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_edi_external_layout_folder" inherit_id="web.external_layout_folder">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="additional_address_sa" t-out="additional_address_sa"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_edi_external_layout_wave" inherit_id="web.external_layout_wave">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="additional_address_sa" t-out="additional_address_sa"/>
+        </xpath>
+    </template>
+    <template id="l10n_sa_edi_external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="additional_address_sa" t-out="additional_address_sa"/>
+        </xpath>
+    </template>
+</odoo>

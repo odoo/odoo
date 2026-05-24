@@ -521,6 +521,7 @@
                                                 invisible="state not in ['draft', 'sent'] or not is_product_archived"
                                             />
                                             <field name="product_id"
+                                                domain="[('type', '!=', 'combo')]"
                                                 context="{
                                                     'default_uom_id': product_uom_id,
                                                     'partner_id': parent.partner_id,
@@ -909,7 +910,7 @@
                             </group>
                         </group>
                     </page>
-                    <page groups="base.group_no_one" string="Customer Signature" name="customer_signature" invisible="not require_signature and not signed_by and not signature and not signed_on">
+                    <page groups="base.group_no_one" string="Customer Signature" name="customer_signature" invisible="1">
                         <group>
                             <field name="signed_by" readonly="signature"/>
                             <field name="signed_on" readonly="signature"/>
@@ -1077,7 +1078,7 @@
             <a
                 role="button"
                 class="btn btn-secondary"
-                href="https://www.odoo.com/documentation/latest/_downloads/312a470653db882b08ad72eb30cb4088/sample_quotation.pdf"
+                href="https://www.odoo.com/documentation/latest/_downloads/4c54b867f6472b9cbcc233b4821d5c7b/sample_quotation.pdf"
                 target="_blank"
             >
                 Check a sample. It's clean!
@@ -1114,7 +1115,7 @@
             <a
                 role="button"
                 class="btn btn-secondary"
-                href="https://www.odoo.com/documentation/latest/_downloads/312a470653db882b08ad72eb30cb4088/sample_quotation.pdf"
+                href="https://www.odoo.com/documentation/latest/_downloads/4c54b867f6472b9cbcc233b4821d5c7b/sample_quotation.pdf"
                 target="_blank"
             >
                 Check a sample. It's clean!

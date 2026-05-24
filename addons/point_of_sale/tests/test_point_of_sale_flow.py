@@ -575,6 +575,92 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(len(picking_mls_stock), 1)
         self.assertEqual(len(order.picking_ids.picking_type_id), 1)
 
+    def test_description_is_computed_for_product_with_attribute(self):
+        """
+        Test that description is computed on the move for a product with
+        atttribute when sold through POS
+        """
+        chair_fabrics_attribute = self.env['product.attribute'].create({
+            'name': 'Fabrics',
+            'display_type': 'radio',
+            'create_variant': 'no_variant',
+            'value_ids': [
+                Command.create({
+                    'name': 'Leather',
+                }),
+                Command.create({
+                    'name': 'Custom',
+                    'is_custom': True,
+                }),
+            ]
+        })
+        product_a = self.env['product.template'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'is_storable': True,
+            'list_price': 10.0,
+            'seller_ids': [(0, 0, {
+                'partner_id': self.partner_adgu.id,
+                'min_qty': 1.0,
+                'price': 1.0,
+            })],
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': chair_fabrics_attribute.id,
+                    'value_ids': [Command.set(chair_fabrics_attribute.value_ids.ids)]
+                })
+            ],
+        })
+        ptavs = self.env["product.template.attribute.value"].search(
+            [("product_attribute_value_id", "in", chair_fabrics_attribute.value_ids.ids)]
+        ).sorted("id")
+        self.pos_config_usd.open_ui()
+        self.pos_config_usd.current_session_id.update_stock_at_closing = False
+        order_data = {
+            "company_id": self.env.company.id,
+            "session_id": self.pos_config_usd.current_session_id.id,
+            "partner_id": self.partner.id,
+            "lines": [[0, 0, {
+                        "name": "OL/0001",
+                        "product_id": product_a.product_variant_id.id,
+                        "price_unit": 10,
+                        "qty": 2,
+                        "tax_ids": [[6, False, []]],
+                        "attribute_value_ids": [ptavs[0].id],
+                        "full_product_name": "Product A (Leather)",
+                        "price_subtotal": 20,
+                        "price_subtotal_incl": 20,
+                        "total_cost": 20,
+                    }], [0, 0, {
+                        "name": "OL/0001",
+                        "product_id": product_a.product_variant_id.id,
+                        "price_unit": 10,
+                        "attribute_value_ids": [ptavs[1].id],
+                        "full_product_name": "Product A (Fabrics: Custom: Test Instructions)",
+                        "qty": 2,
+                        "tax_ids": [[6, False, []]],
+                        "price_subtotal": 20,
+                        "price_subtotal_incl": 20,
+                        "total_cost": 20,
+                    }]],
+            'payment_ids': [(0, 0, {
+                'amount': 20,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.cash_payment_method.id
+            })],
+            "amount_paid": 20.0,
+            "amount_total": 20.0,
+            "amount_tax": 0.0,
+            "amount_return": 0.0,
+            "shipping_date": fields.Date.today(),
+            "to_invoice": True,
+            "last_order_preparation_change": "{}",
+        }
+        self.env["pos.order"].sync_from_ui([order_data])
+
+        moves = self.pos_config_usd.current_session_id.order_ids[0].picking_ids.move_ids
+        self.assertEqual(["\n(Leather)", "\n(Fabrics: Custom: Test Instructions)"], moves.mapped("description_picking"))
+
     def test_pos_order_invoice_payment_term(self):
         """ Test that when invoicing a POS order paid with customer account, the partner's payment term is then applied to the invoice. """
         self.customer_account_payment_method = self.env['pos.payment.method'].create({
@@ -2431,7 +2517,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         )
 
     def test_pos_payment_direction_and_accounts(self):
-        """Ensure POS payments create correct inbound/outbound payments and accounts."""
+        """Ensure POS payments create correct inbound/outbound payments and accounts and related journal items"""
 
         def _do_pos_transaction(amount, split, index):
             self.bank_payment_method.write({'split_transactions': split})
@@ -2470,8 +2556,9 @@ class TestPointOfSaleFlow(CommonPosTest):
             _do_pos_transaction(amount, split, idx).id
             for idx, (amount, split) in enumerate([(100, False), (-100, False), (100, True), (-100, True)])
         ]
+        payments = self.env['account.payment'].search([('pos_session_id', 'in', session_ids)], order='id')
         self.assertRecordValues(
-            self.env['account.payment'].search([('pos_session_id', 'in', session_ids)], order='id'),
+            payments,
             [
                 {
                     "payment_type": "inbound",
@@ -2480,8 +2567,8 @@ class TestPointOfSaleFlow(CommonPosTest):
                 },
                 {
                     "payment_type": "outbound",
-                    "outstanding_account_id": self.bank_payment_method.receivable_account_id.id,
-                    "destination_account_id": self.bank_payment_method.outstanding_account_id.id,
+                    "outstanding_account_id": self.bank_payment_method.outstanding_account_id.id,
+                    "destination_account_id": self.bank_payment_method.receivable_account_id.id,
                 },
                 {
                     "payment_type": "inbound",
@@ -2490,8 +2577,21 @@ class TestPointOfSaleFlow(CommonPosTest):
                 },
                 {
                     "payment_type": "outbound",
-                    "outstanding_account_id": self.bank_payment_method.receivable_account_id.id,
-                    "destination_account_id": self.bank_payment_method.outstanding_account_id.id,
+                    "outstanding_account_id": self.bank_payment_method.outstanding_account_id.id,
+                    "destination_account_id": self.bank_payment_method.receivable_account_id.id,
                 },
             ],
         )
+
+        for payment in payments:
+            move_lines = payment.move_id.line_ids.sorted('balance')
+            if payment.payment_type == "inbound":
+                self.assertRecordValues(move_lines, [
+                    {'account_id': self.bank_payment_method.receivable_account_id.id},
+                    {'account_id': self.bank_payment_method.outstanding_account_id.id},
+                ])
+            else:
+                self.assertRecordValues(move_lines, [
+                    {'account_id': self.bank_payment_method.outstanding_account_id.id},
+                    {'account_id': self.bank_payment_method.receivable_account_id.id},
+                ])

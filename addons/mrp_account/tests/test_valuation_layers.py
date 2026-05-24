@@ -13,6 +13,18 @@ class TestMrpValuationStandard(TestBomPriceCommon):
             ('account_id', '=', self.account_production.id),
         ], order='date, id')
 
+    def test_mo_journal_entry_ref_matches_mo_name(self):
+        self.glass.categ_id = self.category_fifo_auto
+
+        self._make_in_move(self.glass, 1, 10)
+        mo = self._create_mo(self.bom_1, 1)
+        self._produce(mo)
+        mo.button_mark_done()
+
+        account_moves = (mo.move_raw_ids + mo.move_finished_ids).account_move_id
+        self.assertTrue(account_moves, "Expected accounting entries to be created for the manufacturing order.")
+        self.assertEqual(set(account_moves.mapped('ref')), {mo.name})
+
     def test_fifo_fifo_1(self):
         self.glass.categ_id = self.category_fifo
         self.dining_table.categ_id = self.category_fifo
@@ -323,3 +335,26 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         comp_move = mo.unbuild_ids.produce_line_ids.filtered(lambda move: move.product_id.id == self.glass.id)
         with Form(comp_move.move_line_ids[0]) as form:
             form.quantity = 0
+
+    def test_kit_product_valuation(self):
+        """
+        Verify that kit products are excluded from inventory valuation
+        and have no effect on valuation upon price change.
+        """
+        self.assertRecordValues(self.table_head, [{'standard_price': 300, 'total_value': 300}])
+        self.assertTrue(self.table_head not in self.env.company._get_accounts_by_product())
+        old_stock_value = sum(self.env.company.stock_value().values())
+        self.table_head.action_bom_cost()
+        self.assertRecordValues(self.table_head, [{'standard_price': 468.75, 'total_value': 468.75}])
+        self.assertEqual(old_stock_value, sum(self.env.company.stock_value().values()))
+
+    def test_mo_valuation_uses_production_company(self):
+        """
+        Verify that when validating an MO while env.company differs from mo.company_id, we read company-dependent
+        fields (product.cost_method / standard_price) in the MO's company, not the caller's env.company
+        """
+        self._make_in_move(self.glass, 1, 10)
+        mo = self._create_mo(self.bom_1, 1)
+        self._produce(mo)
+        mo.with_company(self.other_company).button_mark_done()
+        self.assertEqual(self.dining_table.total_value, PRICE + 10)

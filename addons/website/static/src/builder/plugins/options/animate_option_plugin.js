@@ -11,6 +11,8 @@ import { ANIMATE } from "@html_builder/utils/option_sequence";
 import { childNodeIndex, DIRECTIONS, nodeSize } from "@html_editor/utils/position";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { EmphasizeAnimatedText } from "./emphasize_animated_text";
+import { handleImagesIfDataset } from "@html_builder/utils/image";
+import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 
 /**
  * @typedef { Object } AnimateOptionShared
@@ -24,10 +26,20 @@ import { EmphasizeAnimatedText } from "./emphasize_animated_text";
  * @typedef {((editingElement: HTMLElement) => Promise<void>)[]} set_hover_effect_handlers
  */
 
+/**
+ * @typedef {((el: HTMLElement) => Promise<boolean>)[]} hover_effect_allowed_predicates
+ */
+
 export class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
     static dependencies = ["history", "selection", "split"];
-    static shared = ["forceAnimation", "getDirectionsItems", "getEffectsItems"];
+    static shared = [
+        "forceAnimation",
+        "getDirectionsItems",
+        "getEffectsItems",
+        "hasAnimationEffect",
+        "canHaveHoverEffect",
+    ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(ANIMATE, AnimateOption)],
@@ -65,10 +77,46 @@ export class AnimateOptionPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         unsplittable_node_predicates: (node) => node.classList?.contains("o_animated_text"),
         lower_panel_entries: withSequence(10, { Component: EmphasizeAnimatedText }),
+        on_media_dialog_saved_handlers: withSequence(5, this.onMediaDialogSavedHandlers.bind(this)),
+        before_save_handlers: () =>
+            applyFunDependOnSelectorAndExclude(
+                this.cleanImageHoverDataset.bind(this),
+                this.editable,
+                {
+                    selector: "img",
+                    exclude: "[data-oe-type='image'] > img",
+                }
+            ),
     };
 
     setup() {
         this.scrollingElement = getScrollingElement(this.document);
+    }
+
+    async canHaveHoverEffect(el) {
+        const proms = this.getResource("hover_effect_allowed_predicates").map((p) => p(el));
+        const settledProms = await Promise.all(proms);
+        return settledProms.length && settledProms.every(Boolean);
+    }
+
+    async onMediaDialogSavedHandlers(elements, { node }) {
+        const callback = async (toProcessEl, nodeEl) => {
+            const canImgHaveHoverEffect = await this.canHaveHoverEffect(toProcessEl);
+            if (!canImgHaveHoverEffect) {
+                return;
+            }
+            toProcessEl.dataset.hoverEffect = nodeEl.dataset.hoverEffect;
+            for (const hoverEffectInfo of [
+                "hoverEffectColor",
+                "hoverEffectStrokeWidth",
+                "hoverEffectIntensity",
+            ]) {
+                if (nodeEl.dataset[hoverEffectInfo]) {
+                    toProcessEl.dataset[hoverEffectInfo] = nodeEl.dataset[hoverEffectInfo];
+                }
+            }
+        };
+        await handleImagesIfDataset(elements, node, "hoverEffect", callback);
     }
 
     getEffectsItems(isActiveItem) {
@@ -108,6 +156,20 @@ export class AnimateOptionPlugin extends Plugin {
             { className: "o_anim_from_bottom_left", label: "From bottom left", check: isRotate },
         ];
     }
+
+    /**
+     * Checks whether the given element contains any animation class from the
+     * list returned by getEffectsItems().
+     *
+     * @param {HTMLElement} editingElement- The element to check
+     * @returns {boolean} True if at least one animation class is present
+     */
+    hasAnimationEffect(editingElement) {
+        return this.getEffectsItems().some(({ className }) =>
+            editingElement.classList.contains(className)
+        );
+    }
+
     async forceAnimation(editingElement) {
         editingElement.style.animationName = "dummy";
         if (editingElement.classList.contains("o_animate_on_scroll")) {
@@ -346,6 +408,19 @@ export class AnimateOptionPlugin extends Plugin {
             el.classList.remove("o_animate_preview");
         }
     }
+    async cleanImageHoverDataset(imgEl) {
+        if (!imgEl.dataset.hoverEffect) {
+            return;
+        }
+        const canImgHaveHoverEffect = await this.canHaveHoverEffect(imgEl);
+        if (!canImgHaveHoverEffect) {
+            delete imgEl.dataset.hoverEffect;
+            delete imgEl.dataset.hoverEffectColor;
+            delete imgEl.dataset.hoverEffectStrokeWidth;
+            delete imgEl.dataset.hoverEffectIntensity;
+            imgEl.classList.remove("o_animate_on_hover");
+        }
+    }
 }
 
 export class SetAnimationModeAction extends BuilderAction {
@@ -394,7 +469,9 @@ export class SetAnimationModeAction extends BuilderAction {
     }
 
     async apply({ editingElement, value: effectName, params: { forceAnimation } }) {
-        if (this.animationWithFadein.includes(effectName)) {
+        const { hasAnimationEffect } = this.dependencies.animateOption;
+        // Prevent adding fade-in when another animation class is already present.
+        if (this.animationWithFadein.includes(effectName) && !hasAnimationEffect(editingElement)) {
             editingElement.classList.add("o_anim_fade_in");
         }
         if (effectName === "onScroll") {

@@ -42,11 +42,11 @@ class ApplicantGetRefuseReason(models.TransientModel):
         help="send emails after that date. This date is considered as being in UTC timezone."
     )
 
-    @api.depends('refuse_reason_id', 'applicant_without_email')
+    @api.depends('refuse_reason_id', 'applicant_without_email', 'template_id')
     def _compute_send_mail(self):
         for wizard in self:
-            template = wizard.refuse_reason_id.template_id
-            wizard.send_mail = template and not wizard.applicant_without_email
+            template = wizard.template_id
+            wizard.send_mail = template.active and not wizard.applicant_without_email
 
     @api.depends('applicant_ids')
     def _compute_applicant_without_email(self):
@@ -86,8 +86,8 @@ class ApplicantGetRefuseReason(models.TransientModel):
     @api.depends('refuse_reason_id')
     def _compute_template_id(self):
         for wizard in self:
-            if wizard.refuse_reason_id:
-                wizard.template_id = wizard.refuse_reason_id.template_id
+            if wizard.refuse_reason_id and (template := wizard.refuse_reason_id.template_id):
+                wizard.template_id = template.active and template
             else:
                 wizard.template_id = False
 
@@ -101,11 +101,16 @@ class ApplicantGetRefuseReason(models.TransientModel):
             'subject': 'subject',
         }
         for wizard in self:
+            template = wizard.template_id
             for wizard_field_name, template_field_name in fields_to_copy_name_mapping.items():
-                if wizard.template_id:
-                    wizard[wizard_field_name] = wizard.template_id[template_field_name]
-                else:
-                    wizard[wizard_field_name] = False
+                wizard[wizard_field_name] = template[template_field_name] if template else False
+
+            if template and len(wizard.applicant_ids) == 1:
+                rendered_values = self._prepare_mail_values(wizard.applicant_ids._origin)
+                wizard.update({
+                    'subject': rendered_values.get('subject'),
+                    'body': rendered_values.get('body'),
+                })
 
     def action_refuse_reason_apply(self):
         if self.send_mail:

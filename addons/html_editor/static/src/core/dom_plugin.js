@@ -12,7 +12,6 @@ import {
 } from "../utils/dom";
 import {
     allowsParagraphRelatedElements,
-    getDeepestPosition,
     isContentEditable,
     isContentEditableAncestor,
     isEmptyBlock,
@@ -25,9 +24,9 @@ import {
     isShrunkBlock,
     isTangible,
     isUnprotecting,
-    listElementSelector,
     isEditorTab,
     isPhrasingContent,
+    getDeepestEditablePosition,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -76,7 +75,7 @@ function getConnectedParents(nodes) {
  * @typedef {((container: Element, block: Element) => container)[]} before_insert_processors
  * @typedef {((arg: { nodeToInsert: Node, container: HTMLElement }) => nodeToInsert)[]} node_to_insert_processors
  *
- * @typedef {((el: HTMLElement) => Promise<boolean>)[]} are_inlines_allowed_at_root_predicates
+ * @typedef {((el: HTMLElement) => boolean)[]} are_inlines_allowed_at_root_predicates
  *
  * @typedef {string[]} system_attributes
  * @typedef {string[]} system_classes
@@ -184,15 +183,19 @@ export class DomPlugin extends Plugin {
         // In case the html inserted starts with a list and will be inserted within
         // a list, unwrap the list elements from the list.
         const hasSingleChild = nodeSize(container) === 1;
-        if (
-            closestElement(selection.anchorNode, listElementSelector) &&
-            isListElement(container.firstChild)
-        ) {
+        const closestList = (node) => {
+            if (isBlock(node)) {
+                return node && isListItemElement(node);
+            }
+            return closestList(node.parentElement);
+        };
+
+        if (closestList(selection.anchorNode) && isListElement(container.firstChild)) {
             unwrapContents(container.firstChild);
         }
         // Similarly if the html inserted ends with a list.
         if (
-            closestElement(selection.focusNode, listElementSelector) &&
+            closestList(selection.focusNode) &&
             isListElement(container.lastChild) &&
             !hasSingleChild
         ) {
@@ -471,7 +474,7 @@ export class DomPlugin extends Plugin {
 
         if (!this.config.allowInlineAtRoot && this.isEditionBoundary(lastPosition[0])) {
             // Correct the position if it happens to be in the editable root.
-            lastPosition = getDeepestPosition(...lastPosition);
+            lastPosition = getDeepestEditablePosition(...lastPosition);
         }
         this.dependencies.selection.setSelection(
             { anchorNode: lastPosition[0], anchorOffset: lastPosition[1] },

@@ -249,13 +249,21 @@ export class GradientPicker extends Component {
         };
 
         updateAngle(ev);
-        this.onColorGradientChange();
+
+        // Only update the visual CSS gradient preview during drag and
+        // defer the onGradientChange callback to mouseup to avoid
+        // triggering heavy operations (e.g. SCSS generation) on every
+        // mousemove.
+        this.updateCssGradients();
 
         const onKnobMouseMove = (ev) => {
             updateAngle(ev);
+            this.updateCssGradients();
+        };
+        const onKnobMouseUp = () => {
+            document.removeEventListener("mousemove", onKnobMouseMove);
             this.onColorGradientChange();
         };
-        const onKnobMouseUp = () => document.removeEventListener("mousemove", onKnobMouseMove);
 
         document.addEventListener("mousemove", onKnobMouseMove);
         document.addEventListener("mouseup", onKnobMouseUp, { once: true });

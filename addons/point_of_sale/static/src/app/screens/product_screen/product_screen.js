@@ -28,6 +28,7 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { OptionalProductPopup } from "@point_of_sale/app/components/popups/optional_products_popup/optional_products_popup";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 import { debounce } from "@web/core/utils/timing";
+import { capitalize } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 
@@ -157,7 +158,8 @@ export class ProductScreen extends Component {
                 text: _t("Price"),
                 disabled:
                     !this.pos.cashierHasPriceControlRights() ||
-                    this.pos.cashier._role === "minimal",
+                    this.pos.cashier._role === "minimal" ||
+                    this.pos.getOrder()?.getSelectedOrderline()?.isPartOfCombo(),
             },
             BACKSPACE,
         ]).map((button) => ({
@@ -184,7 +186,7 @@ export class ProductScreen extends Component {
         }
         if (this.pos.selectedOrder.isRefund && buttonValue !== "Backspace") {
             return this.dialog.add(AlertDialog, {
-                title: _t("%s update not allowed", this.pos.numpadMode),
+                title: _t("%s update not allowed", capitalize(this.pos.numpadMode)),
                 body: _t("You can not change the %s of the refund order.", this.pos.numpadMode),
             });
         }
@@ -227,14 +229,37 @@ export class ProductScreen extends Component {
             product = productPackaging && productPackaging.product_id;
         }
 
+        // GS1 GTINs are zero-padded to a fixed length, but product barcodes may be stored
+        // without the leading zeros. Compute the stripped version as a fallback candidate.
+        const strippedBarcode = /^0\d+$/.test(code.base_code)
+            ? String(parseInt(code.base_code, 10))
+            : null;
+
+        if (!product && strippedBarcode) {
+            product = this.pos.models["product.product"].getBy("barcode", strippedBarcode);
+            if (!product) {
+                const productPackaging = this.pos.models["product.uom"].getBy(
+                    "barcode",
+                    strippedBarcode
+                );
+                product = productPackaging && productPackaging.product_id;
+            }
+        }
+
         if (!product) {
-            const records = await this.pos.loadNewProducts([
-                ["product_variant_ids.barcode", "in", [code.base_code]],
+            const barcodesToSearch = strippedBarcode
+                ? [code.base_code, strippedBarcode]
+                : [code.base_code];
+            await this.pos.loadNewProducts([
+                ["product_variant_ids.barcode", "in", barcodesToSearch],
             ]);
 
-            if (records && records["product.product"].length > 0) {
-                return records["product.product"][0];
-            }
+            // After loading, the local model contains all variants of the matched template.
+            // Look up the specific variant by barcode instead of taking the first one.
+            product =
+                this.pos.models["product.product"].getBy("barcode", code.base_code) ||
+                (strippedBarcode &&
+                    this.pos.models["product.product"].getBy("barcode", strippedBarcode));
         }
 
         return product;
@@ -312,7 +337,7 @@ export class ProductScreen extends Component {
             vals.qty = qty.value;
         }
 
-        await this.pos.addLineToCurrentOrder(vals, { code: lotBarcode });
+        await this.pos.addLineToCurrentOrder(vals, { code: lotBarcode }, product.needToConfigure());
         this.numberBuffer.reset();
         this.showOptionalProductPopupIfNeeded(product);
     }

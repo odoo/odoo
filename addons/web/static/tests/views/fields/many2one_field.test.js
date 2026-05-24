@@ -3150,6 +3150,7 @@ test("leaving an empty many2one by pressing tab (after backspace or delete)", as
     await press("backspace");
     await press("tab");
     await animationFrame();
+    await runAllTimers();
     expect(".o_field_many2one input").toHaveValue("");
 
     // reset a value
@@ -4037,7 +4038,8 @@ test("many2one search with formatted name", async () => {
         {
             id: 1,
             display_name: "Paul Eric",
-            __formatted_display_name: "Research & Development Test: **Paul** --Eric-- `good guy`\n\tMore text",
+            __formatted_display_name:
+                "Research & Development Test: **Paul** --Eric-- `good guy`\n\tMore text",
         },
     ]);
     await mountView({

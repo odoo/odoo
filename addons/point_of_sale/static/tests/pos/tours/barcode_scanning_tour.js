@@ -5,6 +5,7 @@ import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
 import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
+import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 
 registry.category("web_tour.tours").add("BarcodeScanningTour", {
     steps: () =>
@@ -93,6 +94,10 @@ registry.category("web_tour.tours").add("GS1BarcodeScanningTour", {
             ProductScreen.selectedOrderlineHas("Product 3"),
             scan_barcode("3760171283370"),
             ProductScreen.selectedOrderlineHas("Product 3", 2),
+
+            // Scanning lot number of product temoplate and variant have GS1 barcode should add the product to the order.
+            scan_barcode("010512364869541610784512"),
+            ProductScreen.selectedOrderlineHas("GS1 Variant Product", 1),
             Chrome.endTour(),
         ].flat(),
 });
@@ -140,6 +145,32 @@ registry.category("web_tour.tours").add("test_variants_merge_line_barcode", {
                 quantity: 2,
                 attributeLine: "S, Blue",
             }),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_gs1_barcode_scan_missing_product_variant", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            scan_barcode("0105400000002649"),
+            inLeftSide(
+                Order.hasLine({
+                    productName: "GS1 Missing Variant Product",
+                    quantity: 1,
+                    attributeLine: "S",
+                })
+            ),
+            scan_barcode("0105400000002649"),
+            inLeftSide(
+                Order.hasLine({
+                    productName: "GS1 Missing Variant Product",
+                    quantity: 2,
+                    attributeLine: "S",
+                })
+            ),
             Chrome.endTour(),
         ].flat(),
 });

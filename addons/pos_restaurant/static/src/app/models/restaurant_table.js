@@ -81,11 +81,11 @@ export class RestaurantTable extends Base {
         );
     }
     setPositionAsIfLinked(parent, side) {
-        this.parent_id = parent;
+        this.setParent(parent);
         this.parent_side = side;
         this.position_h = this.getX();
         this.position_v = this.getY();
-        this.parent_id = null;
+        this.setParent(null);
     }
     getName() {
         return this.table_number.toString();
@@ -99,6 +99,12 @@ export class RestaurantTable extends Base {
             table = table.parent_id;
         }
         return table;
+    }
+    setParent(parent) {
+        if (parent && (parent.id === this.id || parent.isParent(this))) {
+            return;
+        }
+        this.parent_id = parent;
     }
 }
 registry.category("pos_available_models").add(RestaurantTable.pythonModel, RestaurantTable);

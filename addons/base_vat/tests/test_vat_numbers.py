@@ -230,7 +230,7 @@ class TestStructure(TransactionCase):
         for ubn in ['88117254', '12345601', '90183275']:
             test_partner.vat = ubn
 
-        for ubn in ['88117250', '12345600', '90183272']:
+        for ubn in ['88117250', '12345600', '90183272', '1234567A']:
             with self.assertRaises(ValidationError):
                 test_partner.vat = ubn
 
@@ -276,6 +276,19 @@ class TestStructure(TransactionCase):
         """Test valid NRI GSTIN number is accepted"""
         in_partner = self.env["res.partner"].create({"name": "IN Company", "country_id": self.env.ref("base.in").id})
         in_partner.vat = "9922JPN29001OSU"
+
+    def test_cnpj_br(self):
+        """Test valid alphanumeric CNPJ for Brazil"""
+        test_partner = self.env["res.partner"].create({"name": "BR Company", "country_id": self.env.ref("base.br").id})
+        # Invalid CNPJ with checksum failure
+        with self.assertRaises(ValidationError):
+            test_partner.write({'vat': "49.233.848/0001-59"})
+
+        # Valid alphanumeric CNPJ
+        test_partner.write({'vat': '12.ABC.345/01DE-35'})
+        self.assertEqual(test_partner.vat, '12ABC34501DE35')
+        test_partner.write({'vat': '51.494.569/0131-70'})
+        self.assertEqual(test_partner.vat, '51494569013170')
 
 
 @tagged('-standard', 'external')

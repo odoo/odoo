@@ -138,7 +138,7 @@ class PosSession(models.Model):
     @api.model
     def _load_pos_data_models(self, config):
         return ['pos.config', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.pack.operation.lot', 'pos.payment', 'pos.payment.method', 'pos.printer',
-            'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'product.attribute', 'product.attribute.custom.value',
+            'pos.category', 'pos.bill', 'res.company', 'product.template', 'product.product', 'product.attribute', 'account.tax', 'account.tax.group', 'product.attribute.custom.value',
             'product.template.attribute.line', 'product.template.attribute.value', 'product.template.attribute.exclusion', 'product.combo', 'product.combo.item', 'res.users', 'res.partner', 'product.uom',
             'decimal.precision', 'uom.uom', 'res.country', 'res.country.state', 'res.lang', 'product.category', 'product.pricelist', 'product.pricelist.item',
             'account.cash.rounding', 'account.fiscal.position', 'stock.picking.type', 'res.currency', 'pos.note', 'product.tag', 'ir.module.module', 'account.move', 'account.account']
@@ -206,10 +206,13 @@ class PosSession(models.Model):
             }
         if self.state != 'opening_control' or len(self.order_ids) > 0:
             raise UserError(_("You can only cancel a session that is in opening control state and has no orders."))
-        self.sudo().unlink()
+        self._delete_session()
         return {
             'status': 'success',
         }
+
+    def _delete_session(self):
+        self.sudo().unlink()
 
     def get_pos_ui_product_pricelist_item_by_product(self, product_tmpl_ids, product_ids, config_id):
         pos_config = self.env['pos.config'].browse(config_id)
@@ -1086,18 +1089,14 @@ class PosSession(models.Model):
     def _ensure_payment_outstanding_account(self, payment, payment_amount):
         # In community the outstanding account is computed on the creation of account.payment records
         if not payment.outstanding_account_id and self.env['account.move']._get_invoice_in_payment_state() == 'in_payment':
-            payment.outstanding_account_id = payment._get_outstanding_account(payment.payment_type)
-
-        if float_compare(payment_amount, 0, precision_rounding=self.currency_id.rounding) < 0:
-            payment.write({
-                'force_outstanding_account_id': payment.destination_account_id,
-                'destination_account_id': payment.outstanding_account_id,
-                'payment_type': 'outbound',
-            })
+            payment.force_outstanding_account_id = payment._get_outstanding_account(payment.payment_type)
 
     def _create_combine_account_payment(self, payment_method, amounts, diff_amount):
         outstanding_account = payment_method.outstanding_account_id
         destination_account = self._get_receivable_account(payment_method)
+        payment_type = "inbound"
+        if self.currency_id.compare_amounts(amounts['amount'], 0) < 0:
+            payment_type = 'outbound'
 
         account_payment = self.env['account.payment'].with_context(pos_payment=True).create({
             'amount': abs(amounts['amount']),
@@ -1108,6 +1107,7 @@ class PosSession(models.Model):
             'pos_payment_method_id': payment_method.id,
             'pos_session_id': self.id,
             'company_id': self.company_id.id,
+            'payment_type': payment_type,
         })
 
         self._ensure_payment_outstanding_account(account_payment, amounts['amount'])
@@ -1149,6 +1149,9 @@ class PosSession(models.Model):
         outstanding_account = payment_method.outstanding_account_id
         accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
         destination_account = accounting_partner.property_account_receivable_id
+        payment_type = "inbound"
+        if self.currency_id.compare_amounts(amounts['amount'], 0) < 0:
+            payment_type = 'outbound'
 
         account_payment = self.env['account.payment'].create({
             'amount': abs(amounts['amount']),
@@ -1159,6 +1162,7 @@ class PosSession(models.Model):
             'memo': _('%(payment_method)s POS payment of %(partner)s in %(session)s', payment_method=payment_method.name, partner=payment.partner_id.display_name, session=self.name),
             'pos_payment_method_id': payment_method.id,
             'pos_session_id': self.id,
+            'payment_type': payment_type,
         })
 
         self._ensure_payment_outstanding_account(account_payment, amounts['amount'])
@@ -1789,6 +1793,8 @@ class PosSession(models.Model):
         }
 
     def try_cash_in_out(self, _type, amount, reason, partner_id, extras):
+        if not self.env.user._has_cash_move_permission():
+            raise AccessError(_("You don't have the access rights to perform a cash in/out."))
         sign = 1 if _type == 'in' else -1
         sessions = self.filtered('cash_journal_id')
         if not sessions:
@@ -1799,13 +1805,13 @@ class PosSession(models.Model):
             for session in sessions
         ]
 
-        self.env['account.bank.statement.line'].with_context(no_retrieve_partner=True).create(vals_list)
+        self.env['account.bank.statement.line'].sudo().with_context(no_retrieve_partner=True).create(vals_list)
 
     def delete_cash_in_out(self, absl_id, partner_id):
-        if not self.env.user.has_group('account.group_account_basic'):
+        if not self.env.user._has_cash_delete_permission():
             raise AccessError(_("You don't have the access rights to delete a cash in/out."))
-        absl = self.env['account.bank.statement.line'].browse(absl_id)
-        if absl not in self.statement_line_ids:
+        absl = self.env['account.bank.statement.line'].browse(absl_id).sudo()
+        if absl not in self.sudo().statement_line_ids:
             raise AccessError(_("You cannot delete a cash move that is not linked to this session."))
         cashier_name = absl.partner_id.name
         amount = absl.amount
@@ -1869,6 +1875,7 @@ class PosSession(models.Model):
         invoice_list = []
         for order in self.order_ids.filtered(lambda o: o.is_invoiced):
             invoice = {
+                'id': order.account_move.id,
                 'total': order.account_move.amount_total_signed,
                 'name': order.account_move.name,
                 'order_ref': order.pos_reference,

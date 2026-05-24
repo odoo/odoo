@@ -95,6 +95,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
                     'price_unit': 1000.0,
                 })
             ],
+            'ref': '12345',
         })
 
     def _get_xml_value(self, xml_content, xpath):
@@ -118,6 +119,16 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         invoice_etree = etree.fromstring(xml)
         try:
             self.assertXmlTreeEqual(invoice_etree, expected_tree)
+        except AssertionError as ae:
+            ae.args = (ae.args[0] + f"\nFile used for comparison: {filename}", )
+            raise
+
+    def _assert_import_invoice(self, filename, expected_values):
+        path = f'l10n_pl_edi/tests/import_xmls/{filename}'
+        with tools.file_open(path, mode='rb') as fd:
+            invoice = self.env['account.move'].create(self.env['account.move'].l10n_pl_edi_get_ksef_bill_vals_from_xml(fd.read()))
+        try:
+            self.assertRecordValues(invoice.invoice_line_ids, expected_values)
         except AssertionError as ae:
             ae.args = (ae.args[0] + f"\nFile used for comparison: {filename}", )
             raise
@@ -396,6 +407,25 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         )
 
     @freeze_time('2026-01-23')
+    def test_invoice_in_foreign_currency(self):
+        self.env.ref('base.EUR').active = True
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_pl.id,
+            'invoice_date': fields.Date.today(),
+            'currency_id': self.env.ref('base.EUR').id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'price_unit': 10.0,
+            })],
+            'invoice_currency_rate': '2',
+        })
+        invoice.action_post()
+        self._assert_export_invoice(invoice, 'fa3_invoice_foreign_currency.xml')
+
+    @freeze_time('2026-01-23')
     def test_scenario_correction_values_are_negative(self):
         """
         Verification of Negative Values for Corrections (Difference Method).
@@ -529,7 +559,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
 
         created_move = self.env['account.move'].search([('l10n_pl_edi_number', '=', '7492091229-20260210-0700A043714A-5E')])
         self.assertTrue(created_move)
-        self.assertEqual(created_move.partner_id.vat, '7492091229')
+        self.assertEqual(created_move.partner_id.vat, 'PL7492091229')
         self.assertEqual(len(created_move), 1)
         self.assertRecordValues(
             created_move, [
@@ -574,6 +604,14 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             ).ids,
         )
 
+        created_move_attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', '=', created_move.id),
+        ], limit=1)
+        self.assertTrue(created_move_attachment)
+        with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
+            self.assertEqual(created_move_attachment.raw, file.read())
+
     def test_l10n_pl_edi_download_bill_retry_after(self):
         """Test that when a rate limit error occurs the progress is preserved and the cron is rescheduled."""
 
@@ -612,6 +650,13 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
 
         bill_1 = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-BILL-001')])
         self.assertTrue(bill_1)
+        bill_1_attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', '=', bill_1.id),
+        ], limit=1)
+        self.assertTrue(bill_1_attachment)
+        with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
+            self.assertEqual(bill_1_attachment.raw, file.read())
 
         bill_2 = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-BILL-002')])
         self.assertFalse(bill_2)
@@ -619,3 +664,58 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertEqual(len(capt.records), cron_runs_before + 1)
         self.assertGreaterEqual(capt.records[-1].call_at, start + timedelta(seconds=120))
         self.assertLessEqual(capt.records[-1].call_at, start + timedelta(seconds=240))
+
+    def test_import_invoice_with_net_and_gross_unit_price(self):
+        self._assert_import_invoice('invoice_with_net_and_gross_unit_price.xml', [
+            {
+                'name': '[FURN_0006] Podstawka pod monitor',
+                'price_unit': 3.19,
+                'price_total': 3.92,
+                'tax_ids': self.env['account.chart.template'].ref('vz_kraj_23').ids,
+            },
+            {
+                'name': '[FOOD_0001] Chleb pszenny',
+                'price_unit': 5.0,
+                'price_total': 13.5,
+                'tax_ids': self.env['account.chart.template'].ref('vz_kraj_8').ids,
+            },
+            {
+                'name': '[BOOK_0001] Podręcznik szkolny',
+                'price_unit': 5.0,
+                'price_total': 21.0,
+                'tax_ids': self.env['account.chart.template'].ref('vz_kraj_5').ids,
+            },
+        ])
+
+    def test_import_invoice_from_foreign_country_retrieve_correct_partner(self):
+        partner = self.env["res.partner"].create({
+            'name': "LU Company",
+            'vat': "PL7492091229",
+            'country_id': self.env.ref('base.lu').id,
+        })
+        self._assert_import_invoice('invoice_from_foreign_country.xml', [{
+            'partner_id': partner.id,
+        }])
+
+    def test_import_invoice_from_foreign_country_partner_correctly_created(self):
+        path = 'l10n_pl_edi/tests/import_xmls/invoice_from_foreign_country.xml'
+        with tools.file_open(path, mode='rb') as fd:
+            content = fd.read()
+            invoice_data = self.env['account.move'].l10n_pl_edi_get_ksef_bill_vals_from_xml(content)
+            invoice = self.env['account.move'].create(invoice_data)
+        self.assertEqual(invoice.partner_id.name, "LU Company")
+        self.assertIn("7492091229", invoice.partner_id.vat)
+
+    @freeze_time('2026-01-23')
+    def test_ksef_export_vat_without_country_code(self):
+        """ Ensure VAT numbers do not include the country code in NrVatUE/NrID fields """
+        # non-Polish VAT
+        foreign_partner = self.partner_a.copy({'vat': 'GB298357641'})
+        invoice = self._create_invoice(partner_id=foreign_partner.id, post=True)
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(self._get_xml_value(xml, "//ns:Podmiot2/ns:DaneIdentyfikacyjne/ns:NrID"), '298357641')
+
+        # Polish VAT
+        invoice = self._create_invoice(partner_id=self.partner_pl.id, post=True)
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(self._get_xml_value(xml, "//ns:Podmiot2/ns:DaneIdentyfikacyjne/ns:NIP"), '1111111111')

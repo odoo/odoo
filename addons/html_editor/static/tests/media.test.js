@@ -139,6 +139,26 @@ test("should not preserve image styles when replacing an image with an icon", as
     );
 });
 
+test("should not preserve image shape classes when replacing an image with an icon", async () => {
+    onRpc("ir.attachment", "search_read", () => []);
+    const { el } = await setupEditor(
+        `<p><img class="img-fluid rounded rounded-circle shadow img-thumbnail" src="/web/static/img/logo.png"></p>`
+    );
+    expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
+    await click("img");
+    await tick(); // selectionchange
+    await expectElementCount(".o-we-toolbar button[name='replace_image']", 1);
+    await click("button[name='replace_image']");
+    await animationFrame();
+    await click(".nav-link:contains('Icons')");
+    await animationFrame();
+    await click(".fa-glass");
+    await animationFrame();
+    expect(getContent(el).replace(/<img.*?>/, "<img>")).toBe(
+        `<p>\ufeff[<span class="fa fa-glass" contenteditable="false">\u200b</span>]\ufeff</p>`
+    );
+});
+
 test.tags("focus required");
 test("Can insert an image, and selection should be collapsed after it", async () => {
     onRpc("ir.attachment", "search_read", () => [
@@ -368,4 +388,25 @@ test("Image cropper disappear on backspace", async () => {
     press("backspace");
     await waitForNone(".o_we_crop_widget", { timeout: 1500 });
     expect("img.o_we_cropper_img").toHaveCount(0);
+});
+
+test("shape remain present in cropper preview", async () => {
+    const base64Image =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+    // Mock backend image RPCs
+    onRpc("/html_editor/get_image_info", async () => ({
+        original: { image_src: base64Image },
+    }));
+
+    await setupEditor(`
+        <p>[<img src="${base64Image}">]</p>
+    `);
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar button[name='shape_rounded']");
+    await expectElementCount(".o-we-toolbar button[name='shape_rounded'].active", 1);
+    expect("img").toHaveClass("rounded");
+
+    await click('.btn[name="image_crop"]');
+    await waitFor(".cropper-face.cropper-move.rounded");
+    expect(".cropper-face.cropper-move.rounded").toHaveCount(1);
 });

@@ -713,6 +713,7 @@ test("process favorite filters", async () => {
             description: "Sorted filter",
             domain: "[('user_id', '=', uid)]",
             groupBys: ["foo", "bar"],
+            isInvalid: false,
             orderBy: [
                 {
                     asc: true,

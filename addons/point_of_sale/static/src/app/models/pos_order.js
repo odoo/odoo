@@ -390,7 +390,7 @@ export class PosOrder extends PosOrderAccounting {
         for (const cLine of pLine.combo_line_ids) {
             if (!(cLine.combo_item_id.combo_id.id in comboRemainingFree)) {
                 comboRemainingFree[cLine.combo_item_id.combo_id.id] =
-                    cLine.combo_item_id.combo_id.qty_free;
+                    cLine.combo_item_id.combo_id.qty_free * pLine.qty;
             }
             const newQty = comboRemainingFree[cLine.combo_item_id.combo_id.id] - cLine.qty;
             const baseData = { combo_item_id: cLine.combo_item_id };
@@ -400,7 +400,7 @@ export class PosOrder extends PosOrderAccounting {
             if (cLine.qty) {
                 if (newQty >= 0) {
                     comboRemainingFree[cLine.combo_item_id.combo_id.id] = newQty;
-                    childLineFree.push({ ...baseData, qty: cLine.qty });
+                    childLineFree.push({ ...baseData, qty: cLine.qty, parentQty: pLine.qty });
                 } else {
                     childLineExtra.push({ ...baseData, qty: cLine.qty });
                 }
@@ -646,6 +646,15 @@ export class PosOrder extends PosOrderAccounting {
         return false;
     }
 
+    findFiscalPosition(fiscalPosition) {
+        if (fiscalPosition) {
+            return this.models["account.fiscal.position"].find(
+                (position) => position.id === fiscalPosition.id
+            );
+        }
+        return false;
+    }
+
     updatePricelistAndFiscalPosition(newPartner) {
         let newPartnerPricelist, newPartnerFiscalPosition;
         const defaultFiscalPosition = this.models["account.fiscal.position"].find(
@@ -653,11 +662,8 @@ export class PosOrder extends PosOrderAccounting {
         );
 
         if (newPartner) {
-            newPartnerFiscalPosition = newPartner.fiscal_position_id
-                ? this.models["account.fiscal.position"].find(
-                      (position) => position.id === newPartner.fiscal_position_id?.id
-                  )
-                : defaultFiscalPosition;
+            newPartnerFiscalPosition =
+                this.findFiscalPosition(newPartner.fiscal_position_id) || defaultFiscalPosition;
             newPartnerPricelist =
                 this.config.available_pricelist_ids.find(
                     (pricelist) => pricelist.id === newPartner.property_product_pricelist?.id
@@ -728,7 +734,7 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     get floatingOrderName() {
-        return this.floating_order_name || this.tracking_number.toString() || "";
+        return this.floating_order_name || this.tracking_number?.toString() || "";
     }
 
     sortBySequenceAndCategory(a, b) {

@@ -257,27 +257,39 @@ class HrLeave(models.Model):
         env_company_calendar = self.env.company.resource_calendar_id
         for leave in self:
             calendar = leave.resource_calendar_id or env_company_calendar
-            if (not leave.request_unit_hours
-                    and leave.employee_id
-                    and leave.request_date_from
-                    and leave.request_date_to
-                    and calendar):
+            if (
+                leave.employee_id
+                and leave.request_date_from
+                and leave.request_date_to
+                and calendar
+                and not (
+                    leave.request_unit_hours
+                    and leave.request_hour_from
+                    and leave.request_hour_to
+                )
+            ):
                 hour_from, hour_to = leave._get_hour_from_to(leave.request_date_from, leave.request_date_to)
                 leave.request_hour_from = hour_from
                 leave.request_hour_to = hour_to
 
     @api.depends('employee_id', 'leave_type_request_unit', 'request_date_from', 'request_date_to',
-            'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period')
+            'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period', 'state')
     def _compute_dashboard_warning_message(self):
+        check_warning_leaves = self.filtered_domain([
+            ('state', 'not in', ('refuse', 'cancel')),
+            ('holiday_status_id.allow_request_on_top', '=', False),
+        ])
+        (self - check_warning_leaves).dashboard_warning_message = False
+        if not check_warning_leaves:
+            return
         all_leaves = self.search([
-            ('date_from', '<', max(self.mapped('date_to'))),
-            ('date_to', '>', min(self.mapped('date_from'))),
-            ('employee_id', 'in', self.employee_id.ids),
+            ('date_from', '<', max(check_warning_leaves.mapped('date_to'))),
+            ('date_to', '>', min(check_warning_leaves.mapped('date_from'))),
+            ('employee_id', 'in', check_warning_leaves.employee_id.ids),
             ('holiday_status_id.allow_request_on_top', '=', False),
             ('state', 'not in', ['cancel', 'refuse']),
         ])
-        self.filtered(lambda self: self.state in ['cancel', 'refuse']).dashboard_warning_message = False
-        for holiday in self.filtered(lambda self: self.state not in ['cancel', 'refuse']):
+        for holiday in check_warning_leaves:
             conflicting_holidays = all_leaves.filtered_domain([
                 ('employee_id', 'in', holiday.employee_id.ids),
                 ('date_from', '<', holiday.date_to),
@@ -732,11 +744,13 @@ Versions:
             holiday.attachment_ids = holiday.supported_attachment_ids
         self.invalidate_recordset(['attachment_ids'])
 
-    @api.constrains('date_from', 'date_to', 'employee_id')
+    @api.constrains('date_from', 'date_to', 'employee_id', 'state')
     def _check_date(self):
         if self.env.context.get('leave_skip_date_check', False):
             return
         for holiday in self:
+            if holiday.state in ('refuse', 'cancel'):
+                continue
             if holiday.dashboard_warning_message:
                 raise ValidationError(holiday.dashboard_warning_message)
 
@@ -1461,6 +1475,8 @@ is approved, validated or refused.')
                 responsible = self.employee_id.leave_manager_id
             elif self.employee_id.parent_id.user_id:
                 responsible = self.employee_id.parent_id.user_id
+            elif self.holiday_status_id.responsible_ids:
+                responsible = self.holiday_status_id.responsible_ids
         elif self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
             if self.holiday_status_id.responsible_ids:
                 responsible = self.holiday_status_id.responsible_ids

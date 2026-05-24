@@ -383,6 +383,7 @@ export class CalendarCommonRenderer extends Component {
         this.unhighlightEvent(info.event, "o_cw_custom_highlight");
     }
     onEventDragStart(info) {
+        this.popover.close();
         this.props.cleanSquareSelection();
         info.el.classList.add(info.view.type);
         this.fc.api.unselect();

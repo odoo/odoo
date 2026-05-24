@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2026-03-16 11:29+0000\n"
+"PO-Revision-Date: 2026-04-24 12:05+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "hr_recruitment/de/>\n"
@@ -23,12 +23,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__no_of_talents
 msgid "# Talents"
-msgstr "# Talente"
+msgstr "Anzahl Talente"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -642,7 +642,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
-msgstr "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
+msgstr "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Dokumente\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -863,7 +863,7 @@ msgstr "Bewerber zum Talentpool hinzufügen"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Add private notes about this applicant..."
-msgstr "Fügen Sie private Notizen zu diesem Bewerber hinzu ..."
+msgstr "Fügen Sie private Notizen zu diesem Bewerber hinzu …"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1080,12 +1080,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
 msgid "Applications with the same email or phone or mobile"
-msgstr "Bewerbungen mit derselben E-Mail, Telefon- oder Handynummer."
+msgstr "Bewerbungen mit derselben E-Mail, Telefon- oder Handynummer"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_date
 msgid "Applied on"
-msgstr "Angewendet auf"
+msgstr "Beworben um"
 
 #. module: hr_recruitment
 #: model:ir.model,website_form_label:hr_recruitment.model_hr_applicant
@@ -1133,7 +1133,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
 msgid "Attach a file"
-msgstr "Eine Datei anhängen"
+msgstr "Datei anhängen"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_ir_attachment
@@ -1201,18 +1201,18 @@ msgstr "Der Textinhalt entspricht der Vorlage"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_bounce
 msgid "Bounce"
-msgstr "Hüpfend"
+msgstr "Unzustellbar"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position_interviewer
 msgid "By Job Positions"
-msgstr "Nach Stellenbezeichnung"
+msgstr "Nach Stellenbezeichnungen"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_talent_pools
 msgid "By Talent Pools"
-msgstr "Nach Talentpool"
+msgstr "Nach Talentpools"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -1230,7 +1230,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
 msgid "Calendar Event"
-msgstr "Kalender-Ereignis"
+msgstr "Kalenderereignis"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__campaign_id
@@ -1377,7 +1377,7 @@ msgstr "Bewerbungen erstellen"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Create Employee"
-msgstr "Mitarbeiter anlegen"
+msgstr "Mitarbeiter erstellen"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1394,12 +1394,12 @@ msgstr "Kunden erstellen"
 #: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Create a Job Position"
-msgstr "Eine Stelle erstellen"
+msgstr "Stelle erstellen"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_plan_action_config_hr_applicant
 msgid "Create a Recruitment Activity Plan"
-msgstr "Einen Aktivitätsplan für Personalbeschaffung erstellen"
+msgstr "Aktivitätsplan für Personalbeschaffung erstellen"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
@@ -1517,7 +1517,7 @@ msgid ""
 "body."
 msgstr ""
 "Definieren Sie einen Regex: Entnehmen Sie den Namen des Bewerbers aus dem "
-"Betreff oder Körper der E-Mail."
+"Betreff oder dem Nachrichtentext der E-Mail."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1623,7 +1623,7 @@ msgstr "Übersicht"
 msgid "Digitize your résumé to extract name and email automatically."
 msgstr ""
 "Digitalisieren Sie Ihren Lebenslauf, um Name und E-Mail automatisch zu "
-"entnehmen"
+"entnehmen."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1757,7 +1757,7 @@ msgstr "E-Mail-Alias"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "Email Body..."
-msgstr "E-Mail-Text ..."
+msgstr "E-Mail-Text …"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__template_id
@@ -1783,7 +1783,7 @@ msgstr "E-Mail-CC"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "E-Mail-Domain z. B. 'beispiel.com' in 'odoo@beispiel.com'"
+msgstr "E-Mail-Domain z. B. „beispiel.com“ in „odoo@beispiel.com“"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_platforms
@@ -1822,7 +1822,7 @@ msgstr "Mitarbeiter angelegt:"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__employee_id
 msgid "Employee linked to the applicant."
-msgstr "Mitarbeiter, der mit dem Bewerber verbunden ist"
+msgstr "Mitarbeiter, der mit dem Bewerber verknüpft ist."
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_config_employees
@@ -1854,7 +1854,7 @@ msgstr "Erwartet"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__expected_degree
 msgid "Expected Degree"
-msgstr "Erwarteter Grad"
+msgstr "Erwarteter Abschluss"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__expected_employee
@@ -1952,7 +1952,7 @@ msgstr "Schulabschluss"
 #. module: hr_recruitment
 #: model_terms:web_tour.tour,rainbow_man_message:hr_recruitment.hr_recruitment_tour
 msgid "Great job! You hired a new colleague!"
-msgstr "Gute Arbeit! Sie haben einen Kollegen eingestellt!"
+msgstr "Gute Arbeit! Sie haben einen neuen Kollegen eingestellt!"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_done
@@ -2036,8 +2036,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
 msgstr ""
-"ID des übergeordneten Alias-Datensatz (Beispiel: Projekt welches den Alias "
-"für die Erstellung von Aufgaben beinhaltet)."
+"ID des übergeordneten Alias-Datensatz (Beispiel: Projekt mit dem Alias für "
+"die Aufgabenerstellung)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_icon
@@ -2070,8 +2070,8 @@ msgstr "Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
 msgid ""
 "If checked, this stage is used to determine the hire date of an applicant"
 msgstr ""
-"Wenn dieses Kästchen angekreuzt ist, wird diese Phase verwendet, um das "
-"Einstellungsdatum eines Bewerbers zu bestimmen."
+"Falls markiert, wird diese Phase verwendet, um das Einstellungsdatum eines "
+"Bewerbers zu bestimmen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__template_id
@@ -2097,7 +2097,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Wenn das aktive Feld auf Falsch gesetzt ist, können Sie den "
+"Wenn das aktive Feld auf False gesetzt ist, können Sie den "
 "Ressourcendatensatz ausblenden, ohne ihn zu entfernen."
 
 #. module: hr_recruitment
@@ -2329,7 +2329,7 @@ msgstr "Stelle bereits besetzt"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Jobs"
-msgstr "Jobs"
+msgstr "Stellen"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -2453,8 +2453,8 @@ msgstr ""
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 msgid "Let's have a look at how to <b>improve</b> your <b>hiring process</b>."
 msgstr ""
-"Lassen Sie uns herausfinden, wie Sie Ihr <b>Einstellungsverfahren</b> "
-"<b>verbessern</b> können."
+"Lassen Sie uns herausfinden, wie Sie Ihr <b>Einstellungsverfahren</b> <b>"
+"verbessern</b> können."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2487,7 +2487,7 @@ msgstr "Beispieldaten laden"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
 msgid "Load template"
-msgstr "Vorlagen laden"
+msgstr "Vorlage laden"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_incoming_local
@@ -4130,7 +4130,7 @@ msgstr "z. B. john.doe@beispiel.com"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. mycompany.com"
-msgstr "z. B. meinunternehmen.com"
+msgstr "z. B. meinunternehmen.de"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form

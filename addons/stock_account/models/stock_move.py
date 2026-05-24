@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _, Command
 from odoo.fields import Domain
-from odoo.tools import OrderedSet
+from odoo.tools import float_is_zero, OrderedSet
 from odoo.exceptions import UserError
 
 VALUATION_DICT = {
@@ -22,7 +22,7 @@ class StockMove(models.Model):
         help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
     company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string='Company Currency', readonly=True)
     value = fields.Monetary(
-        "Value", currency_field='company_currency_id',
+        "Value", currency_field='company_currency_id', copy=False,
         help="The current value of the move. It's zero if the move is not valued.")
     value_justification = fields.Text(
         "Value Description", compute="_compute_value_justification")
@@ -172,6 +172,7 @@ class StockMove(models.Model):
         moves_out = self.filtered(lambda m: m._is_out())
         moves_out._set_value()
         moves = super()._action_done(cancel_backorder=cancel_backorder)
+        moves_out = moves_out.exists()
         moves_in = moves.filtered(lambda m: m.is_in or m.is_dropship)
         moves_in._set_value()
         moves._create_account_move()
@@ -190,7 +191,15 @@ class StockMove(models.Model):
                 move_to_link.add(move.id)
         if not aml_vals_list:
             return self.env['account.move']
+
+        move_refs = list(set(self.mapped('reference')))
+        joined_refs = ", ".join(move_refs)
+        if len(joined_refs) > 43:
+            joined_refs = joined_refs[:40] + "..."
+
         account_move = self.env['account.move'].sudo().create({
+            'ref': joined_refs,
+            'partner_id': self._get_partner_id_for_valuation_lines(),
             'journal_id': self.company_id.account_stock_journal_id.id,
             'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
             'date': self.env.context.get('force_period_date') or fields.Date.context_today(self),
@@ -198,6 +207,9 @@ class StockMove(models.Model):
         self.env['stock.move'].browse(move_to_link).account_move_id = account_move.id
         account_move._post()
         return account_move
+
+    def _get_partner_id_for_valuation_lines(self):
+        return (self.picking_id.partner_id and self.env['res.partner']._find_accounting_partner(self.picking_id.partner_id).id) or False
 
     def _create_analytic_move(self):
         for move in self:
@@ -249,13 +261,11 @@ class StockMove(models.Model):
         if len(self.product_id) > 1:
             return 0
         total_qty = sum(m._get_valued_qty() for m in self)
-        if not total_qty:
-            return 0
         valued_consigned_qty = self._get_valued_consigned_qty()
-        total_qty += valued_consigned_qty
-        if self.product_id.cost_method == 'fifo' or valued_consigned_qty or\
-            (self.product_id.lot_valuated and self.product_id.cost_method == 'average'):
-            return sum(self.mapped('value')) / total_qty
+        total_valued_qty = total_qty + valued_consigned_qty
+        if total_valued_qty and (self.product_id.cost_method == 'fifo' or valued_consigned_qty or
+            (self.product_id.lot_valuated and self.product_id.cost_method == 'average')):
+            return sum(self.mapped('value')) / total_valued_qty
         else:
             return self.product_id.standard_price
 
@@ -285,6 +295,7 @@ class StockMove(models.Model):
         fifo_qty_processed = defaultdict(float)
 
         for move in self:
+            move = move.with_company(move.company_id)
             # Incoming moves
             if move.is_dropship or move.is_in:
                 products_to_recompute.add(move.product_id.id)
@@ -570,6 +581,12 @@ class StockMove(models.Model):
         return (self.location_id.usage == 'customer' or (self.location_id.usage == 'transit' and not self.location_id.company_id)) \
            and (self.location_dest_id.usage == 'supplier' or (self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id))
 
+    def _is_incoming(self):
+        return super()._is_incoming() and not self._is_dropshipped()
+
+    def _is_outgoing(self):
+        return super()._is_outgoing() and not self._is_dropshipped_returned()
+
     def _prepare_analytic_lines(self):
         self.ensure_one()
         if not self._get_analytic_distribution() and not self.analytic_account_line_ids:
@@ -623,6 +640,7 @@ class StockMove(models.Model):
         self.ensure_one()
         return self.product_id.is_storable and self.is_valued\
         and (self.location_dest_id.valuation_account_id or self.location_id.valuation_account_id)\
+        and not float_is_zero(self.quantity, precision_rounding=self.product_uom.rounding)\
         and self.product_id.valuation == 'real_time'
 
     def _should_exclude_for_valuation(self):
@@ -649,3 +667,24 @@ class StockMove(models.Model):
 
     def _get_valued_consigned_qty(self):
         return sum(self.move_line_ids.filtered(lambda l: l._is_consigned_valued_line()).mapped('quantity_product_uom'))
+
+    def _get_price_unit_delivery(self):
+        """ Computes the unit price for a set of moves, using a weighted average between
+        dropshipped and non dropshipped moves.
+        """
+        dropship_moves = self.filtered(lambda m: m._is_dropshipped() or m._is_dropshipped_returned())
+        dropship_quantity = sum(m._get_valued_qty() for m in dropship_moves)
+        dropship_price_unit = dropship_moves._get_price_unit_dropshipped()
+        regular_moves = self - dropship_moves
+        regular_quantity = sum(m._get_valued_qty() for m in regular_moves)
+        regular_price_unit = regular_moves._get_price_unit()
+        total_quantity = dropship_quantity + regular_quantity
+        if not total_quantity:
+            return self._get_price_unit()
+        return (dropship_quantity * dropship_price_unit + regular_quantity * regular_price_unit) / total_quantity
+
+    def _get_price_unit_dropshipped(self):
+        """ Returns the unit price to value the dropshipped moves."""
+        total_value = sum(m._get_value() for m in self)
+        total_qty = sum(m._get_valued_qty() for m in self)
+        return total_value / total_qty if total_qty else 0

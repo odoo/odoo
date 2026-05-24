@@ -574,6 +574,27 @@ class TestEdiZatca(TestSaEdiCommon):
             f'<p>Please set the following on {self.company.name}: Street</p>'
         )
 
+    def test_child_company_api_mode_change_does_not_reset_parent_journal(self):
+        """Changing a child company's ZATCA API mode must not reset the parent company's journal."""
+        self.customer_invoice_journal._l10n_sa_load_edi_demo_data()
+        self.assertTrue(self.customer_invoice_journal.l10n_sa_production_csid_json)
+
+        child_journal = self.env['account.journal'].create({
+            'name': 'Child Sales Journal',
+            'code': 'CSAL',
+            'type': 'sale',
+            'company_id': self.sa_branch.id,
+        })
+        child_journal._l10n_sa_load_edi_demo_data()
+        self.assertTrue(child_journal.l10n_sa_production_csid_json)
+
+        self.sa_branch.l10n_sa_api_mode = 'preprod'
+
+        self.assertFalse(child_journal.l10n_sa_production_csid_json,
+            "Child journal should be reset after API mode change")
+        self.assertTrue(self.customer_invoice_journal.l10n_sa_production_csid_json,
+            "Parent journal must not be reset when child company API mode changes")
+
     def test_invoice_cash_rounding_payable_amount(self):
         """Test that payable_amount is correctly computed when using cash rounding"""
         cash_rounding = self.env['account.cash.rounding'].create({
@@ -607,3 +628,80 @@ class TestEdiZatca(TestSaEdiCommon):
             namespaces=self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_get_namespaces()
         )[0].text.strip()
         self.assertEqual(payable_amount, '115.00')
+
+    @freeze_time('2022-09-05 08:20:02')
+    def test_invoice_global_rounding_payable_amount(self):
+        """Test that prepaid tax amounts are calculated correctly when using global rounding.
+
+        Scenario: 8 invoice lines * 5.001 raw tax = 40.008 → 40.01 (correct, after global rounding)
+                  vs 5.00 + 5.00... = 40.00 (incorrect, from summing pre-rounded values)
+        """
+        self.ensure_installed('sale')
+
+        self.env.user.group_ids += self.env.ref('sales_team.group_sale_salesman')
+
+        self.company.tax_calculation_rounding_method = 'round_globally'
+
+        # Create sale order with 8 lines at 33.34 each (triggers rounding precision issues)
+        sale_order = self.env['sale.order'].create({  # noqa: OLS03001
+            'partner_id': self.partner_sa.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 33.34,
+                    'product_uom_qty': 1,
+                    'tax_ids': [Command.set(self.tax_15.ids)],
+                }) for _dummy in range(8)
+            ],
+        })
+        sale_order.action_confirm()
+
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': sale_order.ids,
+            'active_id': sale_order.id,
+            'default_journal_id': self.customer_invoice_journal.id,
+        }
+
+        downpayment_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({  # noqa: OLS03001
+            'advance_payment_method': 'percentage',
+            'amount': 100,
+        })
+        downpayment = downpayment_wizard._create_invoices(sale_order)
+        downpayment.action_post()
+
+        # Create final invoice that includes downpayment lines
+        final_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({})  # noqa: OLS03001
+        final = final_wizard._create_invoices(sale_order)
+        final.action_post()
+
+        EdiHandler = self.env['account.edi.xml.ubl_21.zatca']
+
+        # Generate EDI document and verify tax amount and payable amount
+        xml_content = self.env['account.edi.format']._l10n_sa_generate_zatca_template(final)
+        xml_root = etree.fromstring(xml_content)
+        namespaces = EdiHandler._l10n_sa_get_namespaces()
+
+        # Verify tax amount is correctly calculated with global rounding
+        tax_total_nodes = xml_root.xpath(
+            "//cac:TaxTotal/cbc:TaxAmount",
+            namespaces=namespaces,
+        )
+        tax_amount = tax_total_nodes[0].text.strip()
+        self.assertEqual(
+            tax_amount,
+            '40.01',
+            f"Tax amount should be 40.01 (correct global rounding), got {tax_amount}",
+        )
+
+        payable_amount_nodes = xml_root.xpath(
+            "//cbc:PayableAmount",
+            namespaces=namespaces,
+        )
+        self.assertTrue(payable_amount_nodes, "PayableAmount node not found in XML")
+        payable_amount = payable_amount_nodes[0].text.strip()
+        self.assertEqual(
+            payable_amount,
+            '0.00',
+            f"Payable amount should be 0.00 (fully prepaid), got {payable_amount}",
+        )

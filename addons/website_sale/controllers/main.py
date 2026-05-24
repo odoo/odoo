@@ -424,8 +424,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         Category = request.env['product.public.category']
         categs_domain = Domain('parent_id', '=', False) & website_domain
-        if not self.env.user._is_internal():
-            categs_domain &= Domain('has_published_products', '=', True)
         if search:
             search_categories = Category.search(
                 Domain('product_tmpl_ids', 'in', search_product.ids) & website_domain
@@ -441,10 +439,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if not category_entries:
                 parent = category.parent_id
                 category_entries = not search and parent.child_id or parent.child_id.filtered(lambda c: c.id in search_categories.ids)
+            if not search and not request.env.user._is_internal():
+                # We know the user has access to `categs` and `search_categories` because they come
+                # from a regular `search`, but we have not checked access to `category`'s children,
+                # nor its siblings or itself.
+                category_entries = category_entries.filtered("has_published_products")
         else:
             category_entries = categs
-        if not request.env.user._is_internal():
-            category_entries = category_entries.filtered('has_published_products')
 
         # products for current pager
 
@@ -461,9 +462,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductAttribute = request.env['product.attribute']
         if products:
             # get all products without limit
+            search_term = fuzzy_search_term if fuzzy_search_term else search
+            product_query = request.env['product.template']._search(
+                self._get_shop_domain(search_term, category, attribute_value_dict)
+            )
             attributes_grouped = request.env['product.template.attribute.line']._read_group(
                 domain=[
-                    ('product_tmpl_id', 'in', search_product.ids),
+                    ('product_tmpl_id', 'in', product_query),
                     ('attribute_id.visibility', '=', 'visible'),
                 ],
                 groupby=['attribute_id'],
@@ -793,10 +798,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _prepare_product_values(self, product, category, **kwargs):
         ProductCategory = request.env['product.public.category']
         product_markup_data = [product._to_markup_data(request.website)]
-        category = (
-            (category and ProductCategory.browse(int(category)).exists())
-            or product.public_categ_ids[:1]
-        )
+        original_category = category
+        category = category or product.public_categ_ids.filtered(
+            lambda c: c.can_access_from_current_website()
+        )[:1]
         if category:
             # Add breadcrumb's SEO data.
             product_markup_data.append(self._prepare_breadcrumb_markup_data(
@@ -805,11 +810,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if (last_attributes_search := request.session.get('attribute_values', [])):
             keep = QueryURL(
-                self._get_shop_path(category),
+                self._get_shop_path(original_category),
                 attribute_values=last_attributes_search
             )
         else:
-            keep = QueryURL(self._get_shop_path(category))
+            keep = QueryURL(self._get_shop_path(original_category))
 
         if attribute_values := kwargs.get('attribute_values', ''):
             attribute_value_ids = {int(i) for i in attribute_values.split(',')}
@@ -835,6 +840,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return {
             'categories': ProductCategory.search([('parent_id', '=', False)]),
             'category': category,
+            'original_category': original_category,
             'combination_info': combination_info,
             'keep': keep,
             'main_object': product,
@@ -1562,7 +1568,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
     )
     def express_checkout_shipping_address_compute_taxes(self):
         order_sudo = request.cart
-        order_sudo._recompute_taxes()
+        try:
+            order_sudo.with_context(is_express_checkout_flow=True)._recompute_taxes()
+        except ValidationError:
+            return {'external_tax_error': True}
+
         amount_without_delivery = order_sudo._compute_amount_total_without_delivery()
 
         return payment_utils.to_minor_currency_units(

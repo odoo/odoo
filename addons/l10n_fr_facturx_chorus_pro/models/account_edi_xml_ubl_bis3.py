@@ -58,7 +58,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         if commercial_partner.country_code == 'FR' and commercial_partner.company_registry:
             nodes.append({
                 'cbc:ID': {
-                    '_text': commercial_partner.company_registry,
+                    '_text': commercial_partner.company_registry.replace(" ", ""),
                     'schemeID': '0009',
                 },
             })
@@ -87,7 +87,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             vals['party_node']['cac:PartyLegalEntity'] = [{
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
                 'cbc:CompanyID': {
-                    '_text': commercial_partner.company_registry,
+                    '_text': commercial_partner.company_registry.replace(" ", ""),
                     'schemeID': '0009',
                 },
             }]

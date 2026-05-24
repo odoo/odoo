@@ -6455,6 +6455,37 @@ test(`pager, grouped, with count limit reached`, async () => {
 });
 
 test.tags("desktop");
+test(`pager, grouped, with count limit reached and total above countLimit`, async () => {
+    Foo._records.push({ id: 398, foo: "blip" });
+    Foo._records.push({ id: 399, foo: "blip" });
+    Foo._records.push({ id: 400, foo: "blip" });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list limit="2" count_limit="3"><field name="foo"/><field name="bar"/></list>`,
+        groupBy: ["foo"],
+    });
+    expect(`.o_group_header`).toHaveCount(3, { message: "should have 3 groups" });
+
+    await contains(`.o_group_header:first-of-type`).click();
+    expect(`.o_group_header:first-of-type .o_pager:eq(0)`).toHaveCount(1, {
+        message: "first group should have a pager",
+    });
+    expect(`.o_group_header:first-of-type .o_pager_value`).toHaveText("1-2");
+    expect(`.o_group_header:first-of-type .o_pager_limit`).toHaveText("5", {
+        message:
+            "The true count being already computed, we can display it instead of the countLimit",
+    });
+
+    await contains(`.o_pager_next:eq(1)`).click();
+    expect(`.o_group_header:first-of-type .o_pager_value`).toHaveText("3-4");
+    expect(`.o_group_header:first-of-type .o_pager_limit`).toHaveText("5", {
+        message:
+            "The true count being already computed, we can display it instead of the countLimit",
+    });
+});
+
+test.tags("desktop");
 test(`multi-level grouped list, pager inside a group`, async () => {
     for (const record of Foo._records) {
         record.bar = true;
@@ -19556,4 +19587,47 @@ test("scroll position is restored when coming back to list view", async () => {
     await animationFrame();
     expect(".o_list_renderer").toHaveCount(1);
     expect(".o_list_view").toHaveProperty("scrollTop", 200);
+});
+
+test.tags("desktop");
+test(`select menu navigation with hot keys`, async () => {
+    Bar._fields.stage = fields.Selection({
+        selection: [
+            ["aab", "aab"],
+            ["aac", "aac"],
+        ],
+    });
+
+    await mountView({
+        resModel: "foo",
+        type: "form",
+        arch: `
+            <form>
+                <field name="o2m">
+                    <list editable="top">
+                        <field name="stage"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 1,
+    });
+    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(`.o_field_widget[name=o2m] .o_data_row [name=stage] input`).click();
+    await press("Tab");
+    await animationFrame();
+    await press("Enter");
+    await animationFrame();
+
+    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(`.o_field_widget[name=o2m] .o_data_row [name=stage] input`).click();
+    await press("ArrowLeft");
+    await animationFrame();
+    await press("ArrowLeft");
+    await animationFrame();
+    await press("Enter");
+    await animationFrame();
+
+    await contains(`.o_form_button_save`).click();
+    expect(queryAllTexts(`.o_field_x2many_list .o_data_row`)).toEqual(["aab", "aac"]);
 });

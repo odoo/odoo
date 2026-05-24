@@ -6157,11 +6157,31 @@ class TestStockMove(TestStockCommon):
         destination location and then the done quantity. In such cases, since
         the user has defined himself the destination location, we should not try
         to apply any putaway rule that would override his choice.
+
+        Additionally, ensure that when a delivery is waiting for availability
+        from a parent location, validating a receipt whose destination is a
+        child location of that parent triggers the reservation of the delivery.
         """
         self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
 
         child_location = self.stock_location.child_ids[0]
         self.picking_type_in.show_operations = True
+
+        # Create a delivery from the parent location to the customer location.
+        delivery = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [Command.create({
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'product_id': self.productA.id,
+                'product_uom': self.productA.uom_id.id,
+                'product_uom_qty': 2.0,
+            })],
+        })
+        delivery.action_confirm()
+        self.assertEqual(delivery.state, 'confirmed', 'The delivery should be waiting for availability since there is no stock on hand.')
 
         receipt = self.env['stock.picking'].create({
             'location_id': self.customer_location.id,
@@ -6185,6 +6205,10 @@ class TestStockMove(TestStockCommon):
         self.assertRecordValues(receipt.move_ids.move_line_ids[-1], [
             {'location_dest_id': child_location.id, 'product_id': self.productA.id, 'quantity': 2},
         ])
+        receipt.button_validate()
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(delivery.state, 'assigned',
+                        'The delivery should be assigned since the receipt destination is a child location of the delivery source location.')
 
     def test_scheduled_date_after_backorder(self):
         today = fields.Datetime.today()
@@ -6581,7 +6605,10 @@ class TestStockMove(TestStockCommon):
             })]
         })
         self.product.is_storable = True
+        self.assertEqual(picking.move_ids.forecast_availability, -10)
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10)
+        self.env.invalidate_all()
+        self.assertEqual(picking.move_ids.forecast_availability, 10)
         picking.action_confirm()
         self.assertEqual(picking.move_ids.state, 'assigned')
         picking.move_ids.quantity = 4
@@ -6726,3 +6753,96 @@ class TestStockMove(TestStockCommon):
         # All the move lines are also picked
         for move_line in delivery.move_ids.move_line_ids:
             self.assertTrue(move_line.picked)
+
+    def test_delivery_slip_quantity_aggregation_with_pack_uom(self):
+        """
+        Test aggregated delivery slip quantities with respect to mixed uoms and packages.
+        """
+        pack_of_6 = self.env.ref('uom.product_uom_pack_6')
+        package1, package2 = self.env['stock.package'].create([{'name': 'Pack 1'}, {'name': 'Pack 2'}])
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 10,
+                'product_uom': pack_of_6.id,
+            })],
+        })
+        self.assertEqual(receipt.move_ids.packaging_uom_id, pack_of_6)
+        receipt.action_confirm()
+        receipt.write({
+            'move_line_ids': [
+                Command.update(receipt.move_ids.move_line_ids[0].id, {
+                    'product_id': self.product.id,
+                    'quantity': 30,
+                    'product_uom_id': self.uom_unit.id,
+                    'result_package_id': package1.id,
+                }),
+                Command.create({
+                    'product_id': self.product.id,
+                    'quantity': 30,
+                    'product_uom_id': self.uom_unit.id,
+                    'result_package_id': package2.id,
+                })],
+        })
+        for aggregate_val in receipt.move_line_ids._get_aggregated_product_quantities().values():
+            self.assertDictEqual({
+                'qty_ordered': aggregate_val['qty_ordered'],
+                'quantity': aggregate_val['quantity'],
+                'packaging_quantity': aggregate_val['packaging_quantity'],
+                'packaging_qty_ordered': aggregate_val['packaging_qty_ordered'],
+            }, {
+                'qty_ordered': 5.0,
+                'quantity': 5.0,
+                'packaging_quantity': 5.0,
+                'packaging_qty_ordered': 5.0,
+            })
+
+    def test_aggregated_quantities_partial_and_over_delivery(self):
+        """
+        Test that aggregated product quantities preserve the original demand
+        and quantity done during a partial or over delivery.
+        """
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [(0, 0, {
+                'product_id': self.product.id,
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 10.0,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.action_assign()
+        # -------------------------
+        # Partial delivery (6 / 10)
+        # -------------------------
+        delivery.move_line_ids.quantity = 6
+        delivery.move_ids.picked = True
+        wizard_vals = delivery.button_validate()
+        wizard = Form(
+            self.env[wizard_vals['res_model']]
+            .with_context(wizard_vals['context'])
+        )
+        wizard.save().process_cancel_backorder()
+        aggregated = list(delivery.move_line_ids._get_aggregated_product_quantities().values())
+        self.assertEqual(aggregated[0]['qty_ordered'], 10)
+        self.assertEqual(aggregated[0]['quantity'], 6)
+        # -------------------------
+        # Over-delivery (12 / 10)
+        # -------------------------
+        delivery.move_line_ids.quantity = 12
+        aggregated = list(delivery.move_line_ids._get_aggregated_product_quantities().values())
+        self.assertEqual(aggregated[0]['qty_ordered'], 10)
+        self.assertEqual(aggregated[0]['quantity'], 12)
+        # -------------------------
+        # Over-delivery (10 / 0)
+        # -------------------------
+        delivery.move_ids.product_uom_qty = 0
+        delivery.move_line_ids.quantity = 10
+        aggregated = list(delivery.move_line_ids._get_aggregated_product_quantities().values())
+        self.assertEqual(aggregated[0]['qty_ordered'], 0)
+        self.assertEqual(aggregated[0]['quantity'], 10)

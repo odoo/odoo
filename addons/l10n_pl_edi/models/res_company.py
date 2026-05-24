@@ -1,4 +1,7 @@
+import logging
 from odoo import api, fields, models
+
+_logger = logging.getLogger(__name__)
 
 
 class ResCompany(models.Model):
@@ -16,3 +19,25 @@ class ResCompany(models.Model):
     def _compute_l10n_pl_edi_register(self):
         for company in self:
             company.l10n_pl_edi_register = bool(company.l10n_pl_edi_certificate)
+
+    @api.model
+    def _cron_l10n_pl_edi_refresh_tokens(self):
+        """
+        Automatically performs a full KSeF authentication to renew both
+        the access token and the refresh token for active companies.
+        """
+        companies = self.search([
+            ('l10n_pl_edi_certificate', '!=', False)
+        ])
+
+        for company in companies:
+            try:
+                config = self.env['res.config.settings'].new({
+                    'company_id': company.id,
+                    'l10n_pl_edi_certificate': company.l10n_pl_edi_certificate.id,
+                })
+
+                config._l10n_pl_edi_ksef_authenticate()
+                _logger.info("Successfully renewed KSeF tokens for company %s via cron.", company.name)
+            except Exception:
+                _logger.exception("Failed to renew KSeF token for company %s", company.name)

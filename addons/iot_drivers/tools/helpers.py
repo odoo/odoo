@@ -270,8 +270,7 @@ def get_version(detailed_version=False):
     if IS_RPI:
         image_version = read_file_first_line('/var/odoo/iotbox_version')
     elif IS_WINDOWS:
-        # updated manually when big changes are made to the windows virtual IoT
-        image_version = '23.11'
+        image_version = read_file_first_line('VERSION') or '23.11'
     elif IS_TEST:
         image_version = 'test'
 

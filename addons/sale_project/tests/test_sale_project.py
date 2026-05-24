@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import Command, SUPERUSER_ID
 from odoo.fields import Datetime
 from odoo.tests import Form, new_test_user, tagged
 from odoo.exceptions import UserError
@@ -913,6 +913,36 @@ class TestSaleProject(TestSaleProjectCommon):
             sale_order_action = multi_company_project.with_company(company).action_view_sos()
             self.assertEqual(sale_order_action["type"], "ir.actions.act_window")
             self.assertEqual(sale_order_action["res_model"], "sale.order")
+
+    def test_multi_company_so_creation(self):
+        # SO with project template with non-superuser company_id able creates project with proper company
+        company = self.env['res.company'].create({
+            'name': 'Multi-Company Test Company',
+            'currency_id': self.env.ref('base.EUR').id,
+        })
+
+        company_project_template = self.env['project.project'].with_company(company).create({
+            'name': 'Multi-Company Test Company Project Template',
+            'company_id': company.id,
+        })
+
+        product_with_project_template = self.env['product.product'].with_company(company).create({
+            'name': 'product with template',
+            'list_price': 1,
+            'type': 'service',
+            'service_tracking': 'project_only',
+            'project_template_id': company_project_template.id,
+        })
+
+        # SOs with one created project
+        sale_order = self.env['sale.order'].with_company(company).create({'partner_id': self.partner.id})
+        self.env['sale.order.line'].with_company(company).create({
+            'product_id': product_with_project_template.id,
+            'order_id': sale_order.id,
+        })
+        sale_order_sudo = sale_order.with_user(SUPERUSER_ID)
+        sale_order_sudo.action_confirm()
+        self.assertEqual(company_project_template.company_id, sale_order.project_ids[0].company_id, "The created project should have the same company as the template")
 
     def test_creating_AA_when_adding_service_to_confirmed_so(self):
         sale_order = self.env['sale.order'].create({
@@ -1928,3 +1958,91 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertFalse(optional_product_line.project_id)
         optional_product_line.write({'product_uom_qty': 1})
         self.assertEqual(optional_product_line.project_id.sale_order_id, sale_order_with_option)
+
+    def test_subtask_inherits_sale_line_from_template(self):
+        """Test that subtasks created from project template inherit sale_line_id from parent task."""
+
+        project_template = self.env['project.project'].create({
+            'name': 'Project Template with Subtasks',
+        })
+        parent_task_template = self.env['project.task'].create({
+            'name': 'Parent Task Template',
+            'project_id': project_template.id,
+        })
+        self.env['project.task'].create([
+            {
+                'name': 'Subtask Template 1',
+                'parent_id': parent_task_template.id,
+                'project_id': project_template.id,
+            },
+            {
+                'name': 'Subtask Template 2',
+                'parent_id': parent_task_template.id,
+                'project_id': project_template.id,
+            }
+        ])
+
+        service_product = self.env['product.product'].create({
+            'name': 'Service with Project Template',
+            'standard_price': 20,
+            'list_price': 40,
+            'type': 'service',
+            'invoice_policy': 'delivery',
+            'uom_id': self.uom_hour.id,
+            'service_tracking': 'task_in_project',
+            'project_id': False,
+            'project_template_id': project_template.id,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': service_product.id,
+            'product_uom_qty': 1,
+        })
+        sale_order.action_confirm()
+
+        created_project = sale_order_line.project_id
+        self.assertTrue(created_project, "A new project should have been created")
+
+        created_tasks = created_project.task_ids
+        parent_task = created_tasks.filtered(lambda t: not t.parent_id)
+        subtasks = created_tasks.filtered(lambda t: t.parent_id)
+
+        self.assertEqual(len(subtasks), 2, "Should have exactly two subtasks from template")
+        self.assertEqual(parent_task.sale_line_id, sale_order_line, "Parent task should have sale_line_id set")
+
+        for subtask in subtasks:
+            self.assertEqual(subtask.sale_line_id, sale_order_line, "Subtask '%s' should inherit sale_line_id from parent task" % subtask.name)
+
+    def test_section_sale_line_from_template_has_no_task(self):
+        default_task = self.env['project.task'].with_context(tracking_disable=True).create({
+            'name': 'Task',
+            'project_id': self.project_global.id
+        })
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True, default_task_id=default_task.id).create({
+            'partner_id': self.partner.id,
+        })
+
+        quotation_template = self.env['sale.order.template'].create({
+            'name': 'Test quotation with section',
+        })
+        quotation_template.write({
+            'sale_order_template_line_ids': [
+                Command.set(
+                    self.env['sale.order.template.line'].create([{
+                        'name': 'section 1',
+                        'sale_order_template_id': quotation_template.id,
+                        'display_type': 'line_section',
+                    }]).ids
+                )
+            ]
+        })
+
+        sale_order.with_context(default_task_id=default_task.id).write({
+            'sale_order_template_id': quotation_template.id,
+        })
+        sale_order.with_context(default_task_id=default_task.id)._onchange_sale_order_template_id()
+        self.assertFalse(sale_order.order_line.mapped('task_id'), "SOL should have no related tasks, because it is a section")

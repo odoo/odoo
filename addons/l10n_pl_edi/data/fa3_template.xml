@@ -48,12 +48,10 @@
           <!-- AdresL2: Second line of the address (optional). -->
           <AdresL2 t-if="seller.street2" t-out="seller.street2"/>
         </Adres>
-        <t t-if="seller.email or seller.phone">
-        <DaneKontaktowe>
-            <Email t-out="seller.email"/>
-            <Telefon t-out="seller.phone"/>
+        <DaneKontaktowe t-if="seller.email or seller.phone">
+          <Email t-if="seller.email" t-out="seller.email"/>
+          <Telefon t-if="seller.phone" t-out="seller.phone"/>
         </DaneKontaktowe>
-        </t>
       </Podmiot1>
 
       <!--
@@ -99,13 +97,10 @@
             <AdresL2 t-if="buyer.street2" t-out="buyer.street2"/>
           </Adres>
         </t>
-        <t t-if="buyer.email or buyer.phone">
-        <DaneKontaktowe>
-            <Email t-out="buyer.email"/>
-            <Telefon t-out="buyer.phone"/>
+        <DaneKontaktowe t-if="buyer.email or buyer.phone">
+          <Email t-if="buyer.email" t-out="buyer.email"/>
+          <Telefon t-if="buyer.phone" t-out="buyer.phone"/>
         </DaneKontaktowe>
-        </t>
-
             <!-- JST flag: 1=subordinate local gov unit; 2=otherwise. If 1, complete Podmiot3 with NIP/IDWew and role=8 -->
           <JST>2</JST>
 
@@ -184,10 +179,10 @@
           <!-- P_13_11: Total value of sales under the margin scheme referred to in Article 119 and Article 120 TO-CHECK -->
 
           <!-- P_15: Total gross amount of the invoice (including all taxes). -->
-        <P_15 t-out="float_repr(invoice.amount_total_signed, 2)"/>
+        <P_15 t-out="float_repr(invoice.amount_total_in_currency_signed, 2)"/>
 
           <!-- KursWalutyZ: Exchange rate of the currency to PLN on the invoice date. TO-CHECK -->
-          <KursWalutyZ t-out="invoice.invoice_currency_rate"/>
+          <KursWalutyZ t-out="float_repr(1 / (invoice.invoice_currency_rate or 1), 5)"/>
         <!--
           ======================================================================
           Adnotacje (Annotations)
@@ -326,14 +321,19 @@
                 <RachunekBankowy>
                     <NrRB t-out="invoice.partner_bank_id.acc_number.replace(' ', '')"/>
                     <NazwaBanku t-out="invoice.partner_bank_id.bank_id.name"/>
-                    <OpisRachunku t-out="invoice.currency_id.name"/>
+                    <OpisRachunku t-out="invoice.partner_bank_id.currency_id.name"/>
                 </RachunekBankowy>
             </t>
         </Platnosc>
 
-        <t t-if="invoice.invoice_incoterm_id">
+        <t t-if="invoice.invoice_incoterm_id or invoice.ref">
         <WarunkiTransakcji>
-            <WarunkiDostawy t-out="invoice.invoice_incoterm_id.code"/>
+            <WarunkiDostawy t-if="invoice.invoice_incoterm_id" t-out="invoice.invoice_incoterm_id.code"/>
+            <t t-if="invoice.ref">
+            <Zamowienia>
+              <NrZamowienia t-out="invoice.ref"/>
+            </Zamowienia>
+            </t>
         </WarunkiTransakcji>
         </t>
       </Fa>

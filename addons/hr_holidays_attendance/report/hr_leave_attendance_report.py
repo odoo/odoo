@@ -138,8 +138,8 @@ class HrLeaveAttendanceReport(models.Model):
                            AND rcl.resource_id IS NULL
                            AND rcl.company_id = emp.company_id
                            AND gs.day
-                       BETWEEN (rcl.date_from AT TIME ZONE 'UTC')::date
-                           AND (rcl.date_to AT TIME ZONE 'UTC')::date
+                       BETWEEN (rcl.date_from AT TIME ZONE 'UTC' AT TIME ZONE COALESCE(rc.tz, 'UTC'))::date
+                           AND (rcl.date_to AT TIME ZONE 'UTC' AT TIME ZONE COALESCE(rc.tz, 'UTC'))::date
                       )
         """
 
@@ -170,11 +170,12 @@ class HrLeaveAttendanceReport(models.Model):
             LEFT JOIN LATERAL (
                         SELECT SUM(lv.number_of_hours / NULLIF(wd.working_days,0)) AS leave_hours
                           FROM hr_leave AS lv
+                          JOIN hr_leave_type as lvt ON lvt.id = lv.holiday_status_id
                           JOIN LATERAL (
                                            SELECT COUNT(*) AS working_days
                                              FROM generate_series(
-                                                     (lv.date_from AT TIME ZONE 'UTC')::date,
-                                                     (lv.date_to AT TIME ZONE 'UTC')::date,
+                                                     (lv.date_from AT TIME ZONE 'UTC' AT TIME ZONE COALESCE(rc.tz, 'UTC'))::date,
+                                                     (lv.date_to AT TIME ZONE 'UTC' AT TIME ZONE COALESCE(rc.tz, 'UTC'))::date,
                                                      INTERVAL '1 day'
                                                   )
                                                AS d(day)
@@ -194,17 +195,18 @@ class HrLeaveAttendanceReport(models.Model):
                                                ON (
                                                           (rc.id = rcl2.calendar_id OR rcl2.calendar_id IS NULL)
                                                       AND rcl2.resource_id IS NULL
+                                                      AND NOT lvt.include_public_holidays_in_duration
                                                       AND rcl2.company_id = emp.company_id
                                                       AND d.day
-                                                  BETWEEN (rcl2.date_from AT TIME ZONE 'UTC')::date
-                                                      AND (rcl2.date_to AT TIME ZONE 'UTC')::date
+                                                  BETWEEN (rcl2.date_from AT TIME ZONE 'UTC' AT TIME ZONE COALESCE(rc.tz, 'UTC'))::date
+                                                      AND (rcl2.date_to AT TIME ZONE 'UTC' AT TIME ZONE COALESCE(rc.tz, 'UTC'))::date
                                                   )
                                             WHERE rcl2.id IS NULL
                                        ) AS wd ON TRUE
                          WHERE lv.employee_id = emp.id
                            AND gs.day
-                       BETWEEN (lv.date_from AT TIME ZONE 'UTC')::date
-                           AND (lv.date_to AT TIME ZONE 'UTC')::date
+                       BETWEEN (lv.date_from AT TIME ZONE 'UTC' AT TIME ZONE COALESCE(rc.tz, 'UTC'))::date
+                           AND (lv.date_to AT TIME ZONE 'UTC' AT TIME ZONE COALESCE(rc.tz, 'UTC'))::date
                            AND lv.state = 'validate'
                       ) AS dlh
                    ON TRUE

@@ -180,11 +180,8 @@ class PosOrder(models.Model):
 
             if device_type == 'kiosk':
                 floating_order_name = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else tracking_number
-
-            if not order.get('floating_order_name') and table:
-                floating_order_name = f"Self-Order T {table.table_number}"
-            elif not order.get('floating_order_name'):
-                floating_order_name = f"Self-Order {tracking_number}"
+            elif not floating_order_name:
+                floating_order_name = f"Self-Order T {table.table_number}" if table else f"Self-Order {tracking_number}"
 
             tracking_number = f"{prefix}{tracking_number}"
         else:
@@ -300,9 +297,10 @@ class PosOrder(models.Model):
             max_free = combo.qty_free
 
             for line in child_lines:
+                qty_per_line = line.qty / line.combo_parent_id.qty if line.combo_parent_id.qty else line.qty
                 qty_free = max(0, max_free - free_count)
-                free_qty = min(line.qty, qty_free)
-                extra_qty = line.qty - free_qty
+                free_qty = min(qty_per_line, qty_free)
+                extra_qty = qty_per_line - free_qty
 
                 if free_qty > 0:
                     child_line_free.append(line)
@@ -311,7 +309,13 @@ class PosOrder(models.Model):
                 if extra_qty > 0:
                     child_line_extra.append(line)
 
-        original_total = sum(line.combo_item_id.combo_id.base_price * line.qty for line in child_line_free if line.combo_item_id.combo_id.qty_free > 0)
+        original_total = sum(
+            line.combo_item_id.combo_id.base_price * (
+                line.qty / line.combo_parent_id.qty
+                if line.combo_parent_id.qty
+                else line.qty
+            ) for line in child_line_free if line.combo_item_id.combo_id.qty_free > 0
+        )
         remaining_total = parent_lst_price
 
         for index, child in enumerate(child_line_free):
@@ -319,10 +323,11 @@ class PosOrder(models.Model):
             combo = combo_item.combo_id
             unit_devision_factor = original_total or 1
             price_unit = currency.round(combo.base_price * parent_lst_price / unit_devision_factor)
-            remaining_total -= price_unit * child.qty
+            remaining_total -= price_unit * (child.qty / child.combo_parent_id.qty if child.combo_parent_id.qty else child.qty)
 
             if index == len(child_line_free) - 1:
                 price_unit += remaining_total
+                remaining_total = 0
 
             selected_attributes = child.attribute_value_ids
             price_extra = sum(attr.price_extra for attr in selected_attributes)

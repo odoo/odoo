@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 from odoo import _, http, tools, SUPERUSER_ID
 from odoo.addons.html_editor.tools import get_video_url_data
 from odoo.exceptions import UserError, MissingError, AccessError
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.image import image_process, image_data_uri, binary_to_image, get_webp_size
 from odoo.tools.mimetypes import guess_mimetype
@@ -333,10 +334,22 @@ class HTML_Editor(http.Controller):
         if not attachment:
             # Find attachment by url. There can be multiple matches because of default
             # snippet images referencing the same image in /static/, so we limit to 1
-            attachment = request.env['ir.attachment'].search([
-                '|', ('url', '=like', src), ('url', '=like', '%s?%%' % src),
-                ('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
-            ], limit=1)
+            attachment = request.env['ir.attachment'].search(
+                Domain.AND([
+                    Domain.OR([
+                        Domain('url', '=like', src),
+                        Domain('url', '=like', '%s?%%' % src),
+                    ]),
+                    Domain.OR([
+                        Domain('mimetype', 'in', list(SUPPORTED_IMAGE_MIMETYPES.keys())),
+                        # Add mimetype with optional parameters:
+                        # e.g: `image/svg+xml; charset=utf-8`
+                        *[
+                            Domain('mimetype', '=like', image_mimetype + ';%')
+                            for image_mimetype in SUPPORTED_IMAGE_MIMETYPES
+                        ],
+                    ]),
+                ]), limit=1)
         if not attachment:
             return {
                 'attachment': False,
@@ -553,6 +566,13 @@ class HTML_Editor(http.Controller):
                 ], limit=1)
                 if not attachment:
                     raise werkzeug.exceptions.NotFound()
+
+            if not re.match(r'^image\/svg\+xml(;.*)?$', attachment.mimetype):
+                return request.make_response(attachment.raw, [
+                    ('Content-type', attachment.mimetype),
+                    ('Cache-control', 'max-age=%s' % http.STATIC_CACHE_LONG),
+                ])
+
             svg = attachment.raw.decode('utf-8')
         else:
             # Used for compatibility

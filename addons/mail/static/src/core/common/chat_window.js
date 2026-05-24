@@ -64,6 +64,20 @@ export class ChatWindow extends Component {
         });
     }
 
+    get autofocusComposer() {
+        if (this.isMobileOS || this.thread.composerDisabled) {
+            return undefined;
+        }
+        return this.props.chatWindow.autofocus;
+    }
+
+    get autofocusThread() {
+        if (this.isMobileOS || this.thread.composerDisabled) {
+            return this.props.chatWindow.autofocus;
+        }
+        return undefined;
+    }
+
     get composerType() {
         if (this.thread.model !== "discuss.channel") {
             return "note";

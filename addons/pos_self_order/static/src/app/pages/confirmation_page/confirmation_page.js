@@ -75,7 +75,7 @@ export class ConfirmationPage extends Component {
         }
 
         this.selfOrder.selectedOrderUuid = order.uuid;
-        this.confirmedOrder.uiState.receiptReady = this.beforePrintOrder();
+        this.confirmedOrder.uiState.receiptReady = await this.beforePrintOrder();
         this.state.onReload = false;
     }
 
@@ -87,7 +87,7 @@ export class ConfirmationPage extends Component {
         );
     }
 
-    beforePrintOrder() {
+    async beforePrintOrder() {
         // meant to be overriden.
         return true;
     }

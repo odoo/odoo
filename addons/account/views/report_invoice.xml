@@ -223,7 +223,7 @@
                                             <t t-set="line_colspan" t-value="3 + (1 if display_discount else 0) + (1 if display_taxes and not line.tax_ids else 0)"/>
                                             <t t-if="is_product" name="account_invoice_line_accountable">
                                                 <td name="account_invoice_line_name" t-att-class="padding_class">
-                                                    <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">Bacon Burger</span>
+                                                    <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}" dir="auto">Bacon Burger</span>
                                                 </td>
                                                 <td name="td_quantity" class="o_td_quantity text-end">
                                                     <span t-field="line.quantity" class="text-nowrap">3.00</span>
@@ -251,15 +251,19 @@
                                             </t>
                                             <t t-elif="line.display_type in ('line_section', 'line_subsection')">
                                                 <t t-set="section_subtotal" t-value="line.get_section_subtotal()"/>
+                                                <!-- To not break views xpath on this expression on stable -->
+                                                <t t-if="section_subtotal == line.get_section_subtotal() and o.company_price_include == 'tax_included'">
+                                                    <t t-set="section_subtotal" t-value="line.get_section_total()"/>
+                                                </t>
                                                 <!-- For desktop -->
                                                 <td name="line_name_td"
                                                     t-att-colspan="(1 if is_product else line_colspan)"
                                                     t-attf-class="{{'d-none d-md-table-cell' if report_type == 'html' else ''}} {{padding_class}}">
-                                                    <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
+                                                    <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}" dir="auto">A section title</span>
                                                 </td>
                                                 <!-- For mobile -->
                                                 <td colspan="2" t-attf-class="{{'d-md-none d-table-cell' if report_type == 'html' else 'd-none'}} {{padding_class}}">
-                                                    <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
+                                                    <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}" dir="auto">A section title</span>
                                                 </td>
                                                 <td colspan="1" class="text-end o_price_total">
                                                     <span t-out="section_subtotal" class="text-nowrap" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
@@ -267,7 +271,7 @@
                                             </t>
                                             <t t-elif="is_note">
                                                 <td colspan="99">
-                                                    <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A note, whose content usually applies to the section or product above.</span>
+                                                    <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}" dir="auto">A note, whose content usually applies to the section or product above.</span>
                                                 </td>
                                             </t>
                                         </tr>
@@ -337,7 +341,7 @@
                                                     t-if="hide_details or grouped_line['display_type'] not in ('line_section', 'line_subsection')"
                                                     colspan="1"
                                                     t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
-                                                    <span t-if="not hide_prices and not hide_details" t-out="grouped_line['price_subtotal']" t-options="{'widget': 'float', 'decimal_precision': 'Product Price'}" class="text-nowrap">9.00</span>
+                                                    <span t-if="not hide_prices" t-out="grouped_line['price_subtotal']" t-options="{'widget': 'float', 'decimal_precision': 'Product Price'}" class="text-nowrap">9.00</span>
                                                 </td>
                                                 <td name="td_discount_grouped"
                                                     t-if="display_discount and (hide_details or grouped_line['display_type'] == 'product')"
@@ -350,8 +354,8 @@
                                                     <span t-if="grouped_line.get('taxes')" t-out="','.join(grouped_line['taxes'])" id="grouped_line_tax_ids">Tax 15%</span>
                                                 </td>
                                                 <td name="td_subtotal_grouped" colspan="1" class="text-end o_price_total">
-                                                    <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details) and o.company_price_include == 'tax_excluded'" class="text-nowrap" t-out="grouped_line['price_subtotal']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>27.00</span>
-                                                    <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details) and o.company_price_include == 'tax_included'" class="text-nowrap" t-out="grouped_line['price_total']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>31.05</span>
+                                                    <span t-if="(grouped_line.get('display_type') == 'line_section' or (not hide_prices and grouped_line.get('display_type') == 'line_subsection') or hide_details) and o.company_price_include == 'tax_excluded'" class="text-nowrap" t-out="grouped_line['price_subtotal']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>27.00</span>
+                                                    <span t-if="(grouped_line.get('display_type') == 'line_section' or (not hide_prices and grouped_line.get('display_type') == 'line_subsection') or hide_details) and o.company_price_include == 'tax_included'" class="text-nowrap" t-out="grouped_line['price_total']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'>31.05</span>
                                                 </td>
                                             </tr>
                                         </t>

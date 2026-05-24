@@ -297,7 +297,7 @@ class CardCampaign(models.Model):
 
 <div class="s_text_block o_mail_snippet_general pt24 pb24" style="padding-left: 15px; padding-right: 15px;" data-snippet="s_text_block" data-name="Text">
     <div class="container s_allow_columns">
-        <p">{_("Hello everyone")}</p>
+        <p>{_("Hello everyone")}</p>
         <p>{_("Here's the link to advertise your participation.")}
         <br>{_("Your help with this promotion would be greatly appreciated!")}</p>
         <p>{_("Many thanks")}</p>

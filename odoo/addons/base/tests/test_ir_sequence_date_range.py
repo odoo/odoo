@@ -93,6 +93,9 @@ class TestIrSequenceDateRangeChangeImplementation(SingleTransactionCase):
     """ Create sequence objects and change their ``implementation`` field. """
 
     def test_ir_sequence_date_range_1_create(self):
+        year = date.today().year - 1
+        january = lambda d: date(year, 1, d)   # noqa: E731
+        february = lambda d: date(year, 2, d)  # noqa: E731
         """ Try to create a sequence object. """
         seq = self.env['ir.sequence'].create({
             'code': 'test_sequence_date_range_3',
@@ -116,13 +119,13 @@ class TestIrSequenceDateRangeChangeImplementation(SingleTransactionCase):
             'prefix': '%(month)s/',
             'date_range_ids': [
                 Command.create({
-                    'date_from': '2025-01-01',
-                    'date_to': '2025-01-31',
+                    'date_from': january(1),
+                    'date_to': january(31),
                     'number_next_actual': 15,
                 }),
                 Command.create({
-                    'date_from': '2025-02-01',
-                    'date_to': '2025-02-28',
+                    'date_from': february(1),
+                    'date_to': february(28),
                     'number_next_actual': 1
                 })
             ]

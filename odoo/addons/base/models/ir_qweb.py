@@ -391,6 +391,7 @@ from psycopg2.extensions import TransactionRollbackError
 from psycopg2.errors import ReadOnlySqlTransaction
 from typing import NamedTuple, Literal
 from types import FunctionType
+from urllib.parse import unquote_plus
 
 from odoo import api, models, tools
 from odoo.modules import Manifest
@@ -457,6 +458,9 @@ _SAFE_QWEB_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'STORE_FAST_STORE_FAST', 'STORE_FAST_LOAD_FAST',
     'CONVERT_VALUE', 'FORMAT_SIMPLE', 'FORMAT_WITH_SPEC',
     'SET_FUNCTION_ATTRIBUTE',
+    # 3.14 c.f. safe_eval
+    'LOAD_FAST_BORROW', 'LOAD_FAST_BORROW_LOAD_FAST_BORROW',
+    'POP_ITER', 'LOAD_COMMON_CONSTANT', 'NOT_TAKEN',
 ])) - _BLACKLIST
 
 
@@ -483,7 +487,8 @@ T_CALL_SLOT = '0'
 ETREE_TEMPLATE_REF = count()
 
 # Only allow a javascript scheme if it is followed by [ ][window.]history.back()
-MALICIOUS_SCHEMES = re.compile(r'javascript:(?!( ?)((window\.)?)history\.back\(\)$)', re.I).findall
+MALICIOUS_SCHEMES = re.compile(r'javascript:(?!((window\.)?)history\.back\(\)$)', re.I).findall
+WHITESPACE_REGEX = re.compile(r'[\s\x00-\x08\x0B\x0C\x0E-\x19]+')
 
 
 def _id_or_xmlid(ref):
@@ -987,6 +992,7 @@ class IrQweb(models.AbstractModel):
         return self._generate_code_uncached(ref)
 
     def _generate_code_uncached(self, template: int | str | etree._Element):
+        assert isinstance(self, IrQweb)
         ref = self._get_template_info(template)['id'] if isinstance(template, (int, str)) else None
 
         code, options, def_name = self._generate_code(template)
@@ -1391,9 +1397,10 @@ class IrQweb(models.AbstractModel):
             f'self._compile_to_str({self._compile_expr(m.group(1) or m.group(2))})'
             for m in FORMAT_REGEX.finditer(expr)
         ]
+        if not values:
+            return repr(expr)
         code = repr(FORMAT_REGEX.sub('%s', expr.replace('%', '%%')))
-        if values:
-            code += f' % ({", ".join(values)},)'
+        code += f' % ({", ".join(values)},)'
         return code
 
     def _compile_expr_tokens(self, tokens, allowed_keys, argument_names=None, raise_on_missing=False):
@@ -2708,7 +2715,10 @@ class IrQweb(models.AbstractModel):
 
             @returns dict
         """
-        if not atts.pop('__is_static_node', False) and (href := atts.get('href')) and MALICIOUS_SCHEMES(str(href)):
+        if atts.pop('__is_static_node', False):
+            return atts
+        href = str(atts.get('href') or '')
+        if MALICIOUS_SCHEMES(WHITESPACE_REGEX.sub('', unquote_plus(href))):
             atts['href'] = ""
         return atts
 

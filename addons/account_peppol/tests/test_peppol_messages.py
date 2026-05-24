@@ -141,7 +141,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 }
                 return response
 
-            if peppol_identifier == '0198:dk16356706':
+            if peppol_identifier in '0198:dk16356706':
                 response.status_code = 200
                 response.json = lambda: {"result": {
                         'identifier': peppol_identifier,
@@ -196,6 +196,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
         if url == '/api/peppol/1/get_document':
             uuid = body['params']['message_uuids'][0]
+            response_content = {}
             if uuid == FAKE_UUID[0]:
                 response_content = {
                     'accounting_supplier_party': False,
@@ -215,9 +216,20 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                     'state': 'done' if not cls.env.context.get('error') else 'error',
                     'direction': 'incoming',
                     'document_type': 'Invoice',
+                    'origin_message_uuid': FAKE_UUID[1],
                 }
 
             response.json = lambda: {'result': {uuid: response_content}}
+            return response
+
+        if url == '/api/peppol/1/send_response':
+            # This will be called if account_peppol_response is installed, to be overridden in that module
+            num_responses = len(body['params']['reference_uuids'])
+            response.json = lambda: {
+                'result': {
+                    'messages': [{'message_uuid': 'rrrrrrrr-rrrr-rrrr-rrrr-rrrrrrrrrrrr'}] * num_responses,
+                },
+            }
             return response
 
         return super()._request_handler(s, r, **kw)
@@ -665,12 +677,26 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         wizard.action_send_and_print()
         self.assertEqual(spoiled_move.peppol_move_state, 'processing')
 
+        # Check that the supplier is the parent company in the xml (and not the branch company)
+        tree = etree.fromstring(spoiled_move.ubl_cii_xml_id.raw)
+        namespaces = {
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+        }
+        supplier_name = tree.xpath('//cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name/text()', namespaces=namespaces)
+        self.assertEqual(supplier_name[0], self.env.company.name)
+
         # Branch uses peppol configuration independent of their parent
         independent_move = self.create_move(self.valid_partner, company=branch_independent)
         independent_move.action_post()
         wizard = self.create_send_and_print(independent_move, sending_methods=['peppol'])
         wizard.action_send_and_print()
         self.assertEqual(independent_move.peppol_move_state, 'processing')
+
+        # Check that the supplier is the branch company in the xml (and not the parent)
+        tree_independent = etree.fromstring(independent_move.ubl_cii_xml_id.raw)
+        supplier_name_independent = tree_independent.xpath('//cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name/text()', namespaces=namespaces)
+        self.assertEqual(supplier_name_independent[0], branch_independent.name)
 
     def test_compute_available_peppol_eas_multi_partner(self):
         """Check _compute_available_peppol_eas works with multiple partners"""
@@ -918,3 +944,48 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             embedded_pdfs and embedded_pdfs[0].text,
             "Peppol XML must embed the already-generated PDF"
         )
+
+    def test_receive_self_billed_invoice_from_peppol_multi_company(self):
+        """Test that when two companies exist in the database and both are registered on Peppol, receiving a
+        self-billed invoice from Peppol assigns the invoice to the correct company."""
+
+        other_company = self.setup_other_company()['company']
+        other_company.write(
+            {
+                "country_id": self.env.ref("base.be").id,
+                "peppol_eas": "0208",
+                "peppol_endpoint": "0477472701",
+                "account_peppol_proxy_state": "receiver",
+            }
+        )
+        edi_identification = self.env["account_edi_proxy_client.user"]._get_proxy_identification(
+            other_company, "peppol"
+        )
+        self.env["account_edi_proxy_client.user"].create(
+            {
+                "company_id": other_company.id,
+                "id_client": "random-id",
+                "proxy_type": "peppol",
+                "edi_mode": "test",
+                "edi_identification": edi_identification,
+                "private_key_id": self.private_key.id,
+                "refresh_token": FAKE_UUID[0],
+            },
+        )
+
+        cls = self.__class__
+        cls.mocked_incoming_invoice_fname = 'incoming_self_billed_invoice'
+
+        def restore_mocked_incoming_invoice_fname():
+            cls.mocked_incoming_invoice_fname = 'incoming_invoice'
+        self.addCleanup(restore_mocked_incoming_invoice_fname)
+
+        # Receive the self-billed invoices (using existing mock data)
+        self.env["account_edi_proxy_client.user"]._cron_peppol_get_new_documents()
+
+        # Verify that 1 invoice was received in each company
+        moves = self.env["account.move"].search([("peppol_message_uuid", "=", FAKE_UUID[1])])
+        self.assertEqual(len(moves), 2)
+        self.assertEqual(len(moves.company_id), 2)
+        self.assertEqual(len(moves.line_ids), 4)
+        self.assertEqual(set(moves.mapped("move_type")), {"out_invoice"})

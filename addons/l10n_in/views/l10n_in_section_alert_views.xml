@@ -37,7 +37,7 @@
                         <div>
                             <field class="w-25" name="is_aggregate_limit" widget="boolean_toggle"/>
                             <field class="w-25 text-center oe_inline" name="aggregate_limit" invisible="not is_aggregate_limit"/>
-                            <field class="w-25" name="aggregate_period" invisible="not is_aggregate_limit"/>
+                            <field class="w-25" name="aggregate_period" invisible="not is_aggregate_limit" required="is_aggregate_limit"/>
                         </div>
                     </group>
                 </sheet>

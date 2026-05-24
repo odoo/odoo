@@ -3,7 +3,7 @@ import re
 from types import SimpleNamespace
 
 from odoo import models
-from odoo.tools import float_round, float_is_zero
+from odoo.tools import float_compare, float_round, float_is_zero
 from odoo.addons.l10n_jo_edi.models.account_edi_xml_ubl_21_jo import JO_MAX_DP
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 
@@ -64,6 +64,37 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         super()._add_pos_order_currency_vals(vals)
         vals['currency_name'] = 'JO'
 
+    def _add_base_lines_edi_ids(self, vals):
+        vals['base_lines_edi_ids'] = {}
+        if vals['is_refund']:
+            DecimalPrecision = self.env['decimal.precision']
+            order_vals = {
+                **vals,
+                'is_refund': False,
+                'pos_order': vals['pos_order'].refunded_order_id,
+            }
+            self._add_pos_order_base_lines_vals(order_vals)
+            order_edi_id_x_base_line = dict(enumerate(order_vals['base_lines'], 1))
+            overflow_edi_id = len(order_edi_id_x_base_line) + 1
+
+            refund_base_lines = filter(lambda l: not self._is_document_allowance_charge(l), vals['base_lines'])
+            for line_idx, refund_base_line in enumerate(refund_base_lines, 1):
+                matching_edi_ids = [
+                    line_id for line_id, base_line in order_edi_id_x_base_line.items()
+                    if base_line['product_id'] == refund_base_line['product_id']
+                    and float_compare(base_line['price_unit'], refund_base_line['price_unit'], precision_digits=DecimalPrecision.precision_get('Product Price')) == 0
+                    and float_compare(base_line['discount'], refund_base_line['discount'], precision_digits=DecimalPrecision.precision_get('Discount')) == 0
+                    and float_compare(base_line['quantity'], abs(refund_base_line['quantity']), precision_digits=DecimalPrecision.precision_get('Product Unit of Measure')) >= 0
+                ]
+
+                if matching_edi_ids:
+                    edi_id = min(matching_edi_ids, key=lambda line_id: order_edi_id_x_base_line[line_id]['quantity'])
+                    vals['base_lines_edi_ids'][line_idx] = edi_id
+                    order_edi_id_x_base_line.pop(edi_id)
+                else:
+                    vals['base_lines_edi_ids'][line_idx] = overflow_edi_id
+                    overflow_edi_id += 1
+
     def _add_pos_order_base_lines_vals(self, vals):
         # OVERRIDE account_edi_xml_ubl_20.py
         currency_9_dp = vals['currency_id']
@@ -97,6 +128,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
 
         vals['base_lines'] = base_lines
         self._add_pos_order_discount_vals(vals)
+        self._add_base_lines_edi_ids(vals)
 
     def _add_document_line_gross_subtotal_and_discount_vals(self, vals):
         """ In JO, because of the precision requirements, we first compute an exact
@@ -134,6 +166,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
 
     def _add_pos_order_header_nodes(self, document_node, vals):
         pos_order = vals['pos_order']
+        pos_order._compute_l10n_jo_edi_pos_uuid()
         document_node.update({
             'cbc:ProfileID': {'_text': 'reporting:1.0'},
             'cbc:ID': {'_text': (pos_order.name or '').replace('/', '_')},
@@ -160,12 +193,11 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
 
     def _add_pos_order_accounting_customer_party_nodes(self, document_node, vals):
         super()._add_pos_order_accounting_customer_party_nodes(document_node, vals)
-        if not vals['is_refund']:
-            document_node['cac:AccountingCustomerParty'].update({
-                'cac:AccountingContact': {
-                    'cbc:Telephone': {'_text': self._sanitize_phone(vals['customer'].phone)}
-                },
-            })
+        document_node['cac:AccountingCustomerParty'].update({
+            'cac:AccountingContact': {
+                'cbc:Telephone': {'_text': self._sanitize_phone(vals['customer'].phone)}
+            },
+        })
 
     def _add_pos_order_seller_supplier_party_nodes(self, document_node, vals):
         document_node['cac:SellerSupplierParty'] = {
@@ -190,17 +222,17 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         return {
             'cac:PartyIdentification': {
                 'cbc:ID': {'_text': commercial_partner.vat, 'schemeID': 'TN' if partner.country_code == 'JO' else 'PN'},
-            } if not vals['is_refund'] and is_customer else None,
+            } if is_customer else None,
             'cac:PostalAddress': self._get_address_node(vals),
             'cac:PartyTaxScheme': {
-                'cbc:CompanyID': {'_text': commercial_partner.vat} if not vals['is_refund'] or not is_customer else None,
+                'cbc:CompanyID': {'_text': commercial_partner.vat},
                 'cac:TaxScheme': {
-                    'cbc:ID': {'_text': 'VAT'}
+                    'cbc:ID': {'_text': 'VAT'},
                 },
             },
             'cac:PartyLegalEntity': {
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
-            } if not vals['is_refund'] or not is_customer else None,
+            },
         }
 
     def _get_address_node(self, vals):
@@ -209,8 +241,8 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         state = partner['state_id']
 
         return {
-            'cbc:PostalZone': {'_text': partner.zip} if not vals['is_refund'] else None,
-            'cbc:CountrySubentityCode': {'_text': state.code} if not vals['is_refund'] else None,
+            'cbc:PostalZone': {'_text': partner.zip},
+            'cbc:CountrySubentityCode': {'_text': state.code},
             'cac:Country': {
                 'cbc:IdentificationCode': {'_text': country.code},
             },
@@ -273,22 +305,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         return line_node
 
     def _get_pos_order_line_id(self, vals):
-        if not vals['is_refund']:
-            return vals['line_idx']
-
-        line_id = -1
-        refund_line = vals['base_line']['record']
-        order_lines = vals['pos_order'].refunded_order_id.lines
-        for order_line_id, order_line in enumerate(order_lines, 1):
-            if refund_line.product_id == order_line.product_id \
-                    and refund_line.price_unit == order_line.price_unit \
-                    and refund_line.discount == order_line.discount:
-                line_id = order_line_id
-                break
-        if line_id == -1:
-            line_id = len(order_lines) + vals['line_idx']
-
-        return line_id
+        return vals['base_lines_edi_ids'].get(vals['line_idx'], vals['line_idx'])
 
     def _add_pos_order_line_id_nodes(self, line_node, vals):
         line_id = self._get_pos_order_line_id(vals)
@@ -392,7 +409,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
             'cbc:ChargeIndicator': {'_text': 'false'},
             'cbc:AllowanceChargeReason': {'_text': 'DISCOUNT'},
             'cbc:Amount': {
-                '_text': self.format_float(vals[f'discount_amount{currency_suffix}'], vals['currency_dp']),
+                '_text': self.format_float(abs(vals[f'discount_amount{currency_suffix}']), vals['currency_dp']),
                 'currencyID': vals['currency_name'],
             },
         }

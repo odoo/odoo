@@ -377,15 +377,26 @@ describe("zero width no-break space", () => {
 
     test("should not add two contiguous ZWNBSP between two file cards (2)", async () => {
         const { el } = await setupEditor(
-            '<p>abc<span data-embedded="file" class="o_file_box"></span>x[]<span data-embedded="file" class="o_file_box"></span></p>',
+            '<p>abc<span data-embedded="file" class="o_file_box" contenteditable="false"></span>x[]<span data-embedded="file" class="o_file_box" contenteditable="false"></span></p>',
             { config: { ...configWithEmbeddedFile, resources: {} } } // disable embedded component rendering
         );
         expect(getContent(el)).toBe(
-            '<p>abc\ufeff<span data-embedded="file" class="o_file_box"></span>\ufeffx[]\ufeff<span data-embedded="file" class="o_file_box"></span>\ufeff</p>'
+            '<p>abc\ufeff<span data-embedded="file" class="o_file_box" contenteditable="false"></span>\ufeffx[]\ufeff<span data-embedded="file" class="o_file_box" contenteditable="false"></span>\ufeff</p>'
         );
         press("Backspace");
         expect(getContent(el)).toBe(
-            '<p>abc\ufeff<span data-embedded="file" class="o_file_box"></span>\ufeff[]<span data-embedded="file" class="o_file_box"></span>\ufeff</p>'
+            '<p>abc\ufeff<span data-embedded="file" class="o_file_box" contenteditable="false"></span>\ufeff[]<span data-embedded="file" class="o_file_box" contenteditable="false"></span>\ufeff</p>'
         );
     });
+});
+
+test("Should delete the file box", async () => {
+    const { el } = await setupEditor(
+        '<p>[ab<span data-embedded="file" class="o_file_box" contenteditable="false"></span>x<span data-embedded="file" class="o_file_box" contenteditable="false"></span>]</p>',
+        { config: { ...configWithEmbeddedFile, resources: {} } } // disable embedded component rendering
+    );
+    press("Backspace");
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
 });

@@ -18,6 +18,10 @@ export class OverlayPlugin extends Plugin {
 
     overlays = [];
 
+    setup() {
+        this.targetRectProviders = this.getResource("overlay_selection_target_rect_providers");
+    }
+
     destroy() {
         super.destroy();
         for (const overlay of this.overlays) {
@@ -37,6 +41,15 @@ export class OverlayPlugin extends Plugin {
         const overlay = new Overlay(this, Component, props, options);
         this.overlays.push(overlay);
         return overlay;
+    }
+
+    getCustomRect() {
+        for (const cb of this.targetRectProviders) {
+            const rect = cb();
+            if (rect) {
+                return rect;
+            }
+        }
     }
 }
 
@@ -66,8 +79,10 @@ export class Overlay {
             const selection = this.plugin.editable.ownerDocument.getSelection();
             let initialSelection;
             if (selection && selection.type !== "None") {
+                const rect = this.plugin.getCustomRect();
                 initialSelection = {
                     range: selection.getRangeAt(0),
+                    rect,
                 };
             }
             this._remove = this.plugin.services.overlay.add(
@@ -79,6 +94,7 @@ export class Overlay {
                     props,
                     target,
                     initialSelection,
+                    getCustomRect: this.plugin.getCustomRect.bind(this.plugin),
                     bus: this.bus,
                     close: this.close.bind(this),
                     isOverlayOpen: this.isOverlayOpen.bind(this),

@@ -261,3 +261,12 @@ export function isShown() {
         },
     ];
 }
+
+export function checkCustomerAddress(addressText) {
+    return [
+        {
+            isActive: ["desktop"],
+            trigger: `.ticket-screen tbody tr > td:contains("${addressText}")`,
+        },
+    ];
+}

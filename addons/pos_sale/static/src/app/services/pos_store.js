@@ -87,7 +87,7 @@ patch(PosStore.prototype, {
         ]);
 
         for (const line of sale_order.order_line) {
-            if (line.display_type === "line_note") {
+            if (this.isSaleOrderLineNote(line)) {
                 if (previousProductLine) {
                     const previousNote = previousProductLine.customer_note;
                     previousProductLine.customer_note = previousNote
@@ -430,5 +430,8 @@ patch(PosStore.prototype, {
             });
         }
         return super.addLineToCurrentOrder(vals, opt, configure);
+    },
+    isSaleOrderLineNote(orderline) {
+        return orderline.display_type === "line_note";
     },
 });

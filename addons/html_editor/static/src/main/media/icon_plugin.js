@@ -63,13 +63,14 @@ export class IconPlugin extends Plugin {
                     return;
                 }
                 const isIconInTargetedNodes = targetedNodes.some(isIconElement);
-                // All nodes should be icons or their ZWS children.
+                // All nodes should be icons, their ZWS children, or their ancestors.
                 // FEFF nodes are only considered valid if an icon is selected and the
                 // FEFF is directly adjacent to it.
                 const isIconRelatedNode = (node) => {
                     if (
                         node.classList?.contains("fa") ||
-                        node.parentElement?.classList.contains("fa")
+                        node.parentElement?.classList.contains("fa") ||
+                        (node.querySelector?.(":scope > .fa") && node.isContentEditable !== false)
                     ) {
                         return true;
                     }
@@ -78,6 +79,14 @@ export class IconPlugin extends Plugin {
                             node.nextElementSibling?.classList?.contains("fa") ||
                             node.previousElementSibling?.classList?.contains("fa")
                         );
+                    }
+                    // Node is applying style on the icon.
+                    if (
+                        isElement(node) &&
+                        node.children.length === 1 &&
+                        isIconElement(node.children[0])
+                    ) {
+                        return true;
                     }
                     return false;
                 };

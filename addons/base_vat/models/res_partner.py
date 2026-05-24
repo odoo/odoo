@@ -29,7 +29,7 @@ _ref_vat = {
     'au': '83 914 571 673',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
-    'br': _lt('either 11 digits for CPF or 14 digits for CNPJ'),
+    'br': _lt('either 11 digits for CPF or 14 characters for CNPJ'),
     'cr': '3101012009',
     'ch': _lt('CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA'),  # Swiss by Yannick Vaucher @ Camptocamp
     'cl': '76086428-5',
@@ -81,6 +81,7 @@ _ref_vat = {
     'tr': _lt('11111111111 (NIN) or 2222222222 (VKN)'),
     'ua': _lt('12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)'),
     'uy': _lt("Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"),
+    'uz': _lt('XXXXXXXXX [9 digits]'),
     've': 'V-12345678-1, V123456781, V-12.345.678-1',
     'xi': 'XI123456782',
     'sa': _lt('310175397400003 [Fifteen digits, first and last digits should be "3"]'),
@@ -169,6 +170,17 @@ class ResPartner(models.Model):
     def _onchange_vat(self):
         self._check_vat(validation=False)
 
+    @api.model
+    def _get_country_specific_vat_variants(self, normalized_vat, country_prefix):
+        vat_variants = super()._get_country_specific_vat_variants(normalized_vat, country_prefix)
+        if country_prefix.upper() == 'CH':
+            normalized_vat = normalized_vat.replace('-', '')
+            if len(normalized_vat) >= 12:
+                vat_formatted = self._run_vat_checks(self.env.ref('base.ch'), normalized_vat, validation=False)[0]
+                vat_base = re.sub(r"\s*(TVA|IVA|MWST)?$", "", vat_formatted.upper())
+                vat_variants.extend([f'{vat_base} {suffix}' for suffix in ('TVA', 'IVA', 'MWST')])
+        return vat_variants
+
     @api.depends_context('company')
     @api.depends('vat')
     def _compute_perform_vies_validation(self):
@@ -213,6 +225,10 @@ class ResPartner(models.Model):
         If they exist, we simply return them. If they don't, we create them in another cursor to
         avoid the current transaction to be rolled back after the record has been created on IAP.
         """
+        # No existing cron = no way for db to pull updates, thus no need to bother IAP
+        if not self.env.ref('base_vat.vies_iap_check_update', raise_if_not_found=False):
+            return "dummy_identifier", "dummy_token"  # ignored by IAP, same as neutralized
+
         IrConfigParam = self.env['ir.config_parameter'].sudo()
         identifier = IrConfigParam.get_param('iap_vies.client_identifier')
         token = IrConfigParam.get_param('iap_vies.client_token')
@@ -319,7 +335,7 @@ class ResPartner(models.Model):
             company = self.env.company
 
         vat_label = _("VAT")
-        if country_code and company.country_id and country_code == company.country_id.code.lower() and company.country_id.vat_label:
+        if country_code and company.country_id and country_code == company.country_id.code and company.country_id.vat_label:
             vat_label = company.country_id.vat_label
 
         expected_format = _ref_vat.get(country_code.lower())
@@ -651,6 +667,9 @@ class ResPartner(models.Model):
             and vat[-1] == calc_check_digit(vat)  # Invalid Check Digit
         )
 
+    def check_vat_uz(self, vat):
+        return len(vat) == 9 and vat.isdigit()
+
     def check_vat_ve(self, vat):
         # https://tin-check.com/en/venezuela/
         # https://techdocs.broadcom.com/us/en/symantec-security-software/information-security/data-loss-prevention/15-7/About-content-packs/What-s-included-in-Content-Pack-2021-02/Updated-data-identifiers-in-Content-Pack-2021-02/venezuela-national-identification-number-v115451096-d327e108002-CP2021-02.html
@@ -716,9 +735,26 @@ class ResPartner(models.Model):
             return any(re.compile(rx).match(vat) for rx in all_gstin_re)
         return False
 
+    # Minimal regex matching similar to stdnum
+    # Derived from https://github.com/arthurdejong/python-stdnum/commit/d3ec3bd7fefe0d0a708b6594a66de28777eb9b8d
+    __check_vat_br_re = re.compile(r'^[\dA-Z]+$')
+
     def check_vat_br(self, vat):
+        def is_cnpj_valid(vat):
+            vat = clean(vat, ' -./').strip().upper()
+            if vat.startswith('000000000000') or len(vat) != 14:
+                return False
+            if self.__check_vat_br_re.match(vat):
+                values = [ord(n) - 48 for n in vat[:12]]
+                weights = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+                d1 = (11 - sum(w * v for w, v in zip(weights, values))) % 11 % 10
+                values.append(d1)
+                weights = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+                d2 = (11 - sum(w * v for w, v in zip(weights, values))) % 11 % 10
+                return vat[-2:] == f'{d1}{d2}'
+            return False
+
         is_cpf_valid = stdnum.get_cc_module('br', 'cpf').is_valid
-        is_cnpj_valid = stdnum.get_cc_module('br', 'cnpj').is_valid
         return is_cpf_valid(vat) or is_cnpj_valid(vat)
 
     _check_vat_cr_re = re.compile(r'^(?:[1-9]\d{8}|\d{10}|[1-9]\d{10,11})$')
@@ -751,6 +787,12 @@ class ResPartner(models.Model):
         """
         vat = vat.strip()
         return bool(self.__check_vat_vn_re.match(vat))
+
+    def format_vat_al(self, vat):
+        vat_prefix, vat_number = self._split_vat(vat)
+        stdnum_vat_format = stdnum.util.get_cc_module('al', 'nipt').compact
+        vat_number = stdnum_vat_format(vat_number)
+        return f'{vat_prefix}{vat_number}'
 
     def format_vat_eu(self, vat):
         # Foreign companies that trade with non-enterprises in the EU
@@ -791,6 +833,12 @@ class ResPartner(models.Model):
         if self._check_tin_hu_companies_re.match(vat):
             vat = vat[:8] + '-' + vat[8] + '-' + vat[9] + vat[10]
         return vat
+
+    def format_vat_is(self, vat):
+        vat_prefix, vat_number = self._split_vat(vat)
+        stdnum_vat_format = stdnum.util.get_cc_module('is_', 'vsk').compact
+        vat_number = stdnum_vat_format(vat_number)
+        return f'{vat_prefix}{vat_number}'
 
     def check_vat_id(self, vat):
         """ Temporary Indonesian VAT validation to support the new format
@@ -844,7 +892,7 @@ class ResPartner(models.Model):
         own validation to support these new valid UBNs.
         """
         vat = stdnum.util.get_cc_module("tw", "vat").compact(vat)
-        if len(vat) != 8:
+        if len(vat) != 8 or not vat.isdigit():
             return False  # The length is fixed, and we will expect it to be 8 in the following checks.
 
         logic_multiplier = [1, 2, 1, 2, 1, 2, 4, 1]  # This multiplier is set by the official validation logic.
