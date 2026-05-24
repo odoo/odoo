@@ -237,6 +237,7 @@ class EstateProject(models.Model):
         for rec in self:
             rec.unique_sales_ids = rec.sales_ids.mapped('sales_id')
 
+
 class EmployeeProjectRel(models.Model):
     _name='employee.project.rel'
     _description = 'Sales Assignment By Project Batch'
@@ -248,6 +249,14 @@ class EmployeeProjectRel(models.Model):
     )
 
     batch_id = fields.Many2one('sale.phonebook.batch', required=True, string="Tập dữ liệu", ondelete='cascade')
+
+    @api.depends('batch_id.phone_ids')
+    def _compute_phone_received(self):
+        for rec in self:
+            rec.phone_received = len(
+                rec.batch_id.phone_ids.filtered(lambda p: p.salesperson_id)
+            )
+        
 
     @api.constrains('sales_id', 'project_id', 'batch_id')
     def _check_unique_combination(self):
