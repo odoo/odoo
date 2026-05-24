@@ -24,8 +24,7 @@ class PhonebookBatch(models.Model):
     e_p_rel_ids = fields.One2many(
         'employee.project.rel',
         'batch_id',
-        string="Nhân viên phụ trách",
-        domain=[('sales_id.role_id.code', '=', 'sales')]
+        string="Nhân viên phụ trách"
     )
 
     # Trường phụ
@@ -89,7 +88,7 @@ class PhonebookBatch(models.Model):
 
     def action_redistribute(self):
         self.write({'state': 'processing'})
-        available_phones = self.phone_ids.filtered()
+        available_phones = self.phone_ids
         
         for phone in available_phones:
             phone.write({'salesperson_id': False})
@@ -102,65 +101,16 @@ class PhonebookBatch(models.Model):
             phone.unlink()
 
     def action_remove_sales(self):
-        available_phones = self.phone_ids.filtered(lambda p: p.is_hot)
+        available_phones = self.phone_ids
         
         for phone in available_phones:
             phone.write({'salesperson_id': False})
-        
-    def action_distribute(self):
-        self.ensure_one()
-        
-        employees = self.e_p_rel_ids.mapped('sales_id')
-        phones = self.phone_ids.filtered()
-
-        if not employees or not phones:
-            return
-
-        quota = {emp.id: 0 for emp in employees}
-
-        self.action_clean_invalid()
-        self.action_remove_sales()
-
-        phone_ids = phones.ids
-        random.shuffle(phone_ids)
-
-        all_blocked = True
-        for phone in self.env['sale.phonebook'].browse(phone_ids):
-            filtered = employees.filtered(
-                lambda u: u not in phone.previous_salesperson_ids
-            )
-
-            if not filtered:
-                continue
-
-            available_emps = [
-                e for e in filtered
-                if quota[e.id] < self.chunk_size
-            ]
-            
-            if not available_emps:
-                break  # tất cả full quota
-
-            employee = random.choice(available_emps)
-
-            # Đạt 50 số thì skip
-            if self.validate_salesperson_target(employee):
-                continue
-
-            phone.write({'salesperson_id': employee.id})
-            phone.write({'previous_salesperson_ids': [(4, employee.id)]})
-            quota[employee.id] += 1
-            
-            all_blocked = False
-
-        if all_blocked:
-            self.write({'state': 'done'})
 
     def action_distribute(self):
         self.ensure_one()
         
         employees = self.e_p_rel_ids.mapped('sales_id')
-        phones = self.phone_ids.filtered()
+        phones = self.phone_ids
 
         if not employees or not phones:
             return

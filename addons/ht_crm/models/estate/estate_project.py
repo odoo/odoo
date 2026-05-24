@@ -243,19 +243,33 @@ class EmployeeProjectRel(models.Model):
     _description = 'Sales Assignment By Project Batch'
     _order = "project_id, sales_id"
 
-    sales_id = fields.Many2one('sale.employee', required=True, domain=[('role_id.code', '=', 'sales')], string="Sales phụ trách", ondelete='cascade')
+    sales_id = fields.Many2one('sale.employee', required=True, domain=['|', ('role_id.code', '=', 'sales'), ('role_id.code', '=', 'sales_manager')], string="Sales phụ trách", ondelete='cascade')
     project_id = fields.Many2one(
         related='batch_id.project_id'
     )
 
     batch_id = fields.Many2one('sale.phonebook.batch', required=True, string="Tập dữ liệu", ondelete='cascade')
 
+    phone_received = fields.Integer(stirng="Số đã nhận", compute='_compute_phone_received')
+
     @api.depends('batch_id.phone_ids')
     def _compute_phone_received(self):
         for rec in self:
             rec.phone_received = len(
-                rec.batch_id.phone_ids.filtered(lambda p: p.salesperson_id)
+                rec.batch_id.phone_ids.filtered(
+                    lambda p: p.salesperson_id == rec.sales_id
+                )
             )
+    
+
+    def get_total_phone_received(self, salesperson):
+        rels = self.env['employee.project.rel'].search([
+            ('sales_id', '=', salesperson.id)
+        ])
+
+        return sum(rels.mapped('phone_received'))
+        
+
         
 
     @api.constrains('sales_id', 'project_id', 'batch_id')
