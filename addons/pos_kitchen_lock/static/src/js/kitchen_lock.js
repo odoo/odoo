@@ -2,7 +2,7 @@
 
 import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
-import { NoteButton } from "@point_of_sale/app/screens/product_screen/control_buttons/orderline_note_button/orderline_note_button";
+import { NoteButton, InternalNoteButton } from "@point_of_sale/app/screens/product_screen/control_buttons/orderline_note_button/orderline_note_button";
 import { ManagerOverrideDialog } from "@pos_kitchen_lock/js/manager_override_dialog";
 import { patch } from "@web/core/utils/patch";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
@@ -85,9 +85,25 @@ patch(OrderSummary.prototype, {
     },
 });
 
-// ── 3. NoteButton ──────────────────────────────────────────────────────────────
-// Block customer-note and internal-note edits on kitchen-sent lines.
+// ── 3. NoteButton + InternalNoteButton ────────────────────────────────────────
+// Block customer-note edits on kitchen-sent lines.
 patch(NoteButton.prototype, {
+    async onClick() {
+        const selectedLine = this.pos.getOrder()?.getSelectedOrderline();
+        if (selectedLine?.isKitchenSent() && _isMinimalCashier(this.pos)) {
+            const ok = await _applyManagerOverride(this);
+            if (!ok) {
+                return { confirmed: false };
+            }
+            return super.onClick();
+        }
+        return super.onClick();
+    },
+});
+
+// InternalNoteButton overrides onClick() directly on its own prototype so the
+// NoteButton patch above never fires for it — patch it separately.
+patch(InternalNoteButton.prototype, {
     async onClick() {
         const selectedLine = this.pos.getOrder()?.getSelectedOrderline();
         if (selectedLine?.isKitchenSent() && _isMinimalCashier(this.pos)) {

@@ -13,9 +13,19 @@
   left: 0;
   top: 2px;
   bottom: 2px;
-  width: 3px;
+  width: 5px;
   background: #e78888;
   border-radius: 2px;
+}
+
+/* Selected kitchen-sent line: full red highlight, no fade */
+.orderline.kitchen-sent-locked.selected {
+  background-color: #fde8e8;
+  opacity: 1;
+}
+
+.orderline.kitchen-sent-locked.selected::before {
+  background: #dc3545;
 }
 
 /* Lock badge injected by the Orderline template extension */
