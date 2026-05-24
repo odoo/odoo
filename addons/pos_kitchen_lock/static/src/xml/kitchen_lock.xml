@@ -10,4 +10,11 @@
             <span t-if="line.isKitchenSent()" class="kitchen-lock-badge">&#x1F512;</span>
         </xpath>
     </t>
+
+    <!-- Replace the Odoo logo on the screensaver with the RKPOS brand name -->
+    <t t-name="pos_kitchen_lock.SaverScreen" t-inherit="point_of_sale.SaverScreen" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-logo')]" position="replace">
+            <div class="rkpos-saver-brand">RKPOS</div>
+        </xpath>
+    </t>
 </templates>
