@@ -34,11 +34,23 @@ class VideoOption extends Component {
     static props = {
         description: { type: String, optional: true },
         label: { type: String, optional: true },
+<<<<<<< 0f0fb695459ccee82f2c629526870cbdd221157f
         isActive: { type: Boolean, optional: true },
         value: { type: String, optional: true },
         onOptionToggled: Function,
         onTextInputed: Function,
         onTextChanged: Function,
+||||||| fd9c4dc83c6f6a6674400b580babd874b141fcdc
+        onChangeOption: Function,
+        onChangeStartAt: Function,
+        value: { type: String, optional: true },
+        name: { type: String, optional: true },
+=======
+        onChangeOption: Function,
+        onChangeStartAt: Function,
+        value: { type: [String, Boolean], optional: true },
+        name: { type: String, optional: true },
+>>>>>>> 4d07c022fe8f1b4957223f9b4de1a6fd872da4fe
     };
 
     get isInputVisible() {
