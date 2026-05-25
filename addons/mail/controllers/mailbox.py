@@ -35,8 +35,10 @@ class MailboxController(WebclientController):
             request.update_context(add_inbox_fields=True)
         if name == "/mail/history/messages":
             message_fetch_domain = Domain("needaction", "=", False)
+            request.update_context(add_inbox_fields=True)
         if name == "/mail/bookmark/messages":
             message_fetch_domain = Domain("bookmarked_partner_ids", "in", [request.env.user.partner_id.id])
+            request.update_context(add_inbox_fields=True)
         if message_fetch_domain:
             self._resolve_messages(
                 store,
