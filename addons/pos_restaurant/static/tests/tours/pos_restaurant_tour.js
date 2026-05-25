@@ -800,6 +800,12 @@ registry.category("web_tour.tours").add("RestaurantPresetEatInTour", {
             PaymentScreen.clickValidate(),
             FeedbackScreen.checkTicketData({
                 cashier_name: "test_user",
+                cssRules: [
+                    {
+                        css: ".preset-info",
+                        negation: true,
+                    },
+                ],
             }),
             Chrome.closePrintingWarning(),
             FeedbackScreen.clickNextOrder(),
