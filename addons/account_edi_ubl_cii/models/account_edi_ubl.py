@@ -2428,7 +2428,7 @@ class AccountEdiUBL(models.AbstractModel):
 
             percentage = subtotal_elem.findtext('.//{*}TaxCategory/{*}Percent')
             if percentage is None:
-                percentage = subtotal_elem.find('.//{*}Percent')
+                percentage = subtotal_elem.findtext('.//{*}Percent')
             if percentage is None:
                 continue
 
