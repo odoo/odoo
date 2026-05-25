@@ -2,7 +2,12 @@ import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
 import { click, dblclick, press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    makeMockEnv,
+    mountWithCleanup,
+    onRpc,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { cleanHints } from "./_helpers/dispatch";
 import { base64Img, setupEditor, testEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
@@ -11,6 +16,7 @@ import { deleteBackward, deleteForward, insertText } from "./_helpers/user_actio
 import { delay } from "@web/core/utils/concurrency";
 import { ImageCrop } from "@html_editor/main/media/image_crop";
 import { ImageSelector } from "@html_editor/main/media/media_dialog/image_selector";
+import { VideoSelector } from "@html_editor/main/media/media_dialog/video_selector";
 
 test("Can replace an image", async () => {
     onRpc("ir.attachment", "search_read", () => [
@@ -451,4 +457,35 @@ test("double-click on image in Media Dialog executes onClickAttachment only once
     await animationFrame();
     await dblclick(".o_existing_attachment_cell .o_button_area");
     expect(executionCount).toBe(1);
+});
+
+describe("video options", () => {
+    const VIDEO_URL = "//www.youtube.com/embed/xyz?autoplay=1&mute=1";
+
+    const mountVideoSelector = async () => {
+        onRpc("/html_editor/video_url/data", () => ({
+            platform: "youtube",
+            embed_url: VIDEO_URL,
+            video_id: "xyz",
+            params: {},
+        }));
+        const media = document.createElement("div");
+        media.dataset.oeExpression = VIDEO_URL;
+        await mountWithCleanup(VideoSelector, {
+            props: {
+                media,
+                selectMedia: () => {},
+                errorMessages: () => {},
+            },
+        });
+    };
+
+    test("VideoOption supports boolean value prop (autoplay sync and toggle)", async () => {
+        await mountVideoSelector();
+        // `VideoOption` must accept it as `value` prop without a validation error.
+        expect(".o_video_dialog_options input[name='switch']:checked").toHaveCount(1);
+        // Toggling an enabled option off stores Boolean `false` in the state.
+        await click(".o_video_dialog_options input[name='switch']:checked");
+        expect(".o_video_dialog_options input[name='switch']:checked").toHaveCount(0);
+    });
 });
