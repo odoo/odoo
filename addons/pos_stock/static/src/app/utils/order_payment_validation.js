@@ -8,6 +8,7 @@ patch(OrderPaymentValidation.prototype, {
         const isOrderValid = await super.isOrderValid(isForceValidate);
         const partner = this.order.getPartner();
         if (
+            isOrderValid &&
             this.order.shipping_date &&
             !(partner.name && partner.street && partner.city && partner.country_id)
         ) {

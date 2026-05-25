@@ -7,6 +7,9 @@ import * as StockPaymentScreen from "@pos_stock/../tests/pos/tours/utils/payment
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import { registry } from "@web/core/registry";
 
+const { DateTime } = luxon;
+const nextYear = DateTime.now().year + 1;
+
 registry.category("web_tour.tours").add("test_edit_paid_order_stock", {
     steps: () =>
         [
@@ -40,32 +43,7 @@ registry.category("web_tour.tours").add("test_edit_paid_order_stock", {
             }),
             FeedbackScreen.clickEditPayment(),
             // clicking once will make it empty and on clicking again it will open date picking
-            {
-                content: "click ship later button",
-                trigger: ".button:contains('Ship Later')",
-                run: "click",
-            },
-            {
-                content: "click ship later button",
-                trigger: ".button:contains('Ship Later')",
-                run: "click",
-            },
-            {
-                content: "pick a date",
-                trigger: ".modal-body .o_datetime_input",
-                run: () => {
-                    const input = document.querySelector(".modal-body .o_datetime_input");
-                    const nextYear = new Date().getFullYear() + 1;
-                    input.value = `${nextYear}-05-30`;
-                    input.dispatchEvent(new Event("input", { bubbles: true }));
-                    input.dispatchEvent(new Event("change", { bubbles: true }));
-                },
-            },
-            {
-                content: "click confirm button",
-                trigger: ".btn:contains('Confirm')",
-                run: "click",
-            },
+            StockPaymentScreen.setShipLaterDate(`${nextYear}-05-30`),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
         ].flat(),
