@@ -14,9 +14,10 @@
             <div t-if="!this.props.isSmall || this.state.isOpen"
                 class="input-group">
                 <div class="form-control form-control-lg input-container d-flex align-items-center bg-view"
-                    t-att-class="{'is-invalid': !this.props.isValid(this.getValue())}">
+                    t-att-class="{'is-invalid': !this.props.isValid(this.getValue()), 'text-muted': this.props.readonly}">
                     <t t-if="this.props.iconOnLeftSide" t-call="point_of_sale.inputIcon" />
-                    <input class="o_input border-0 mx-2 text-body" type="text" style="min-width: 60px;"
+                    <input class="o_input border-0 mx-2" type="text" style="min-width: 60px;"
+                        t-att-class="this.props.readonly ? 'text-muted' : 'text-body'"
                         t-on-focus="ev=>ev.target.select()"
                         t-att-placeholder="this.props.placeholder"
                         t-custom-ref="input"
@@ -26,7 +27,7 @@
                         t-on-blur="(ev) => this.props.onBlur?.(ev)"
                         t-on-click="(ev) => this.props.onClick?.(ev)" />
                     <t t-if="!this.props.iconOnLeftSide" t-call="point_of_sale.inputIcon" />
-                    <i t-att-class="{ 'invisible': !this.getValue() }" class="fa fa-times mx-2" t-on-click="() => this.setValue('')"/>
+                    <i t-att-class="{ 'invisible': !this.getValue() or this.props.readonly }" class="fa fa-times mx-2" t-on-click="() => this.setValue('')"/>
                 </div>
             </div>
         </div>

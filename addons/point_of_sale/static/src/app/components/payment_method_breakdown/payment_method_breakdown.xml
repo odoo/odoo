@@ -5,20 +5,14 @@
             <t t-set-slot="header">
                 <div class="name-amount d-flex justify-content-between w-100">
                     <span t-out="this.props.title"/>
-                    <span>
-                        <span class="cash-sign me-1" t-out="this.props.total_amount &lt; 0 ? '-' : '+'" />
-                        <t t-out="this.env.utils.formatCurrency(Math.abs(this.props.total_amount))"/>
-                    </span>
+                    <span t-out="this.env.utils.formatCurrency(this.props.total_amount)"/>
                 </div>
             </t>
             <t t-set-slot="content">
                 <div class="border-start small text-muted d-flex flex-column ps-2 ms-1">
                     <div t-foreach="this.props.transactions" t-as="payment" t-key="payment.id" class="d-flex justify-content-between">
                         <span t-out="payment.name"/>
-                        <span>
-                            <span class="cash-sign me-1" t-out="payment.amount &lt; 0 ? '-' : '+'" />
-                            <t t-out="this.env.utils.formatCurrency(Math.abs(payment.amount))"/>
-                        </span>
+                        <span t-out="this.env.utils.formatCurrency(payment.amount)"/>
                     </div>
                 </div>
             </t>
