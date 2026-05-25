@@ -248,6 +248,45 @@ class TestL10nHrEdiXml(TestL10nHrEdiCommon, AccountTestInvoicingCommon):
             self.get_xml_tree_from_string(expected_content),
         )
 
+    def test_export_credit_note_p10(self):
+        """
+        Test that a credit note with P10 (corrective invoice) process type can be created,
+        exported, and produces UBL CreditNoteTypeCode 384 (Corrected Invoice).
+
+        P10 supports two correction scenarios:
+        - Full cancellation: quantities and amounts are reported as negative values.
+        - Partial correction: values can be positive or negative depending on the adjustment.
+        """
+        self.setup_partner_as_hr(self.env.company.partner_id)
+        self.setup_partner_as_hr_alt(self.partner_a)
+        tax = self.env['account.chart.template'].ref('VAT_S_IN_ROC_25')
+
+        credit_note = self._create_invoice_one_line(
+            move_type='out_refund',
+            invoice_date='2025-01-01',
+            price_unit=100.0,
+            product_id=self.product_a,
+            tax_ids=tax,
+            l10n_hr_process_type='P10',
+            post=True,
+        )
+        credit_note.l10n_hr_edi_addendum_id = self.env['l10n_hr_edi.addendum'].create({
+            'move_id': credit_note.id,
+            'invoice_sending_time': '2025-01-02',
+            'fiscalization_number': self.env['account.move']._get_l10n_hr_fiscalization_number(credit_note.name),
+        })
+        actual_content, errors = self.env['account.edi.xml.ubl_hr'].with_context(lang='en_US')._export_invoice(credit_note)
+        self.assertFalse(errors)
+
+        tree = self.get_xml_tree_from_string(actual_content)
+        # P10 corrective invoices must use UNTDID 1001 code 384 (Corrected Invoice)
+        type_code = tree.findtext('.//{*}CreditNoteTypeCode')
+        self.assertEqual(type_code, '384', "P10 credit notes must emit CreditNoteTypeCode 384 (Corrected Invoice)")
+
+        # ProfileID must be P10
+        profile_id = tree.findtext('.//{*}ProfileID')
+        self.assertEqual(profile_id, 'P10')
+
     def test_export_invoice_with_no_oib(self):
         """
         Test that OIB is substituted correctly from VAT when it is not explicitly set on partner.
