@@ -80,16 +80,18 @@ class AccountMove(models.Model):
             # (receipts are always simplified -- see the branch below -- so this never applies to them).
             explicit_simplified = bool(simplified_partner and move.partner_id == simplified_partner)
 
-            # VAT + amount-limit criterion, sale side only (see the comment on the method above).
+            # VAT/ID + amount-limit criterion, sale side only (see the comment on the method above).
+            # Non-EU/no-country partners aren't subject to this no-identification heuristic
+            is_eu_partner = move.commercial_partner_id.country_id in europe.country_ids
             explicit_regular = False
-            if (move.move_type in ('out_invoice', 'out_refund') and move.commercial_partner_id.country_id in europe.country_ids):
-                has_vat = move.commercial_partner_id.has_vat
+            if move.move_type in ('out_invoice', 'out_refund') and is_eu_partner:
+                has_identification = move.commercial_partner_id._l10n_es_has_identification()
                 total_amount = sum(move.invoice_line_ids.filtered(
                     lambda line: line.display_type == 'product').mapped('price_total'))
                 under_limit = currency.compare_amounts(
                     total_amount, move.company_id.l10n_es_simplified_invoice_limit) <= 0
-                explicit_simplified = explicit_simplified or (not has_vat and under_limit)
-                explicit_regular = has_vat and not under_limit
+                explicit_simplified = explicit_simplified or (not has_identification and under_limit)
+                explicit_regular = has_identification and not under_limit
 
             if move.move_type in ('out_invoice', 'in_invoice'):
                 if explicit_simplified:
@@ -97,7 +99,7 @@ class AccountMove(models.Model):
                 elif explicit_regular and move.l10n_es_invoice_type in (False, 'F2'):
                     move.l10n_es_invoice_type = 'F1'
                 elif move.move_type == 'out_invoice' and not move.l10n_es_invoice_type:
-                    move.l10n_es_invoice_type = 'F1' if move.commercial_partner_id.has_vat else 'F2'
+                    move.l10n_es_invoice_type = 'F2' if is_eu_partner and not move.commercial_partner_id._l10n_es_has_identification() else 'F1'
                 elif move.move_type == 'in_invoice' and not move.l10n_es_invoice_type:
                     move.l10n_es_invoice_type = 'F1'
                 # Vendor bills under the REAGYP or DUA regimes must be classified F6/F5
@@ -115,7 +117,7 @@ class AccountMove(models.Model):
                 elif explicit_regular and move.l10n_es_invoice_type in (False, 'R5'):
                     move.l10n_es_invoice_type = 'R4'
                 elif move.move_type == 'out_refund' and not move.l10n_es_invoice_type:
-                    move.l10n_es_invoice_type = 'R4' if move.commercial_partner_id.has_vat else 'R5'
+                    move.l10n_es_invoice_type = 'R5' if is_eu_partner and not move.commercial_partner_id._l10n_es_has_identification() else 'R4'
                 elif move.move_type == 'in_refund' and not move.l10n_es_invoice_type:
                     move.l10n_es_invoice_type = 'R4'
             elif move.move_type in ('out_receipt', 'in_receipt'):

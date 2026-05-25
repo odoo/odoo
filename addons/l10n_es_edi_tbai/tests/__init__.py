@@ -8,3 +8,4 @@ from . import test_edi_tbai_user_errors
 from . import test_edi_web_services
 from . import test_edi_xml
 from . import test_move_reversal
+from . import test_tbai_recipient_id_types
