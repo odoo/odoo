@@ -17,4 +17,11 @@
             <div class="rkpos-saver-brand">RKPOS</div>
         </xpath>
     </t>
+
+    <!-- Replace the Odoo logo in the top navbar with the RKPOS brand name -->
+    <t t-name="pos_kitchen_lock.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-centerheader')]//div[hasclass('pos-logo')]" position="replace">
+            <span class="rkpos-navbar-brand">RKPOS</span>
+        </xpath>
+    </t>
 </templates>
