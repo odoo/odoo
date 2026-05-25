@@ -301,7 +301,7 @@ class MrpProduction(models.Model):
         search='_search_date_category', readonly=True
     )
     serial_numbers_count = fields.Integer("Count of serial numbers", compute='_compute_serial_numbers_count')
-    note = fields.Html(string="Additional Notes", compute='_compute_note', store=True, help="Additional notes for the manufacturing order. Notes added here will also be displayed in the Shop Floor.")
+    note = fields.Html(string="Additional Notes", compute='_compute_note', store=True, readonly=False, help="Additional notes for the manufacturing order. Notes added here will also be displayed in the Shop Floor.")
     remaining_time = fields.Float('Remaining Working Time', compute='_compute_remaining_time',
                                   help="The remaining time to finish this production in hours.")
     active_workcenter_ids = fields.Many2many('mrp.workcenter', compute='_compute_active_workcenter_ids')
