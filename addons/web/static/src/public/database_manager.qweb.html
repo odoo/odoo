@@ -23,6 +23,27 @@
         a {
             text-decoration: none;
         }
+        .o_db_version_tabs .o_db_tab_pane {
+            display: none;
+        }
+        .o_db_version_tabs .o_db_tab_pane.active {
+            display: block;
+        }
+        .o_db_version_tabs .nav-tabs {
+            row-gap: .25rem;
+        }
+        .o_db_version_tabs .nav-link {
+            cursor: pointer;
+            white-space: nowrap;
+            border: none;
+            border-bottom: 2px solid transparent;
+            border-radius: 0;
+            padding: .5rem .9rem;
+        }
+        .o_db_version_tabs .nav-link.active {
+            background-color: transparent;
+            border-bottom-color: currentColor;
+        }
     </style>
 </head>
 <body>
@@ -44,31 +65,58 @@
                     <div class="alert alert-danger" t-out="error"></div>
                 </t>
                 <t t-if="list_db and databases">
-                    <div class="list-group">
-
-                        <t t-foreach="databases" t-as="db">
-                            <div class="list-group-item d-flex align-items-center">
-                                <a t-attf-href="/odoo?db={{ db }}" class="d-block flex-grow-1">
-                                    <t t-if="db in incompatible_databases">
-                                        <i class="icon fa fa-warning float-end text-warning" title="This database may not be compatible"></i>
+                    <div class="o_db_version_tabs">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <t t-foreach="databases_by_version" t-as="ver">
+                                <t t-set="ver_id" t-value="ver.replace('.', '_').replace(' ', '_')"/>
+                                <li class="nav-item" role="presentation">
+                                    <button type="button"
+                                            t-att-class="'nav-link' + (' active' if ver == current_version else '')"
+                                            t-att-data-ver-id="ver_id">
+                                        <t t-out="ver"/>
+                                        <t t-if="ver == current_version"> <span class="badge text-bg-secondary">current</span></t>
+                                    </button>
+                                </li>
+                            </t>
+                        </ul>
+                        <div class="tab-content pt-2">
+                            <t t-foreach="databases_by_version" t-as="ver">
+                                <t t-set="ver_id" t-value="ver.replace('.', '_').replace(' ', '_')"/>
+                                <div t-att-class="'o_db_tab_pane' + (' active' if ver == current_version else '')"
+                                     t-att-data-ver-id="ver_id">
+                                    <t t-if="not databases_by_version[ver]">
+                                        <p class="text-muted text-center my-3">No database for this version.</p>
                                     </t>
-                                    <t t-out="db" />
-                                </a>
-                                <t t-if="manage">
-                                    <div class="btn-group btn-group-sm float-end">
-                                        <button type="button" t-att-data-db="db" data-bs-target=".o_database_backup" class="o_database_action btn btn-primary">
-                                            <i class="fa fa-floppy-o fa-fw"></i> Backup
-                                        </button>
-                                        <button type="button" t-att-data-db="db" data-bs-target=".o_database_duplicate" class="o_database_action btn btn-secondary">
-                                            <i class="fa fa-files-o fa-fw"></i> Duplicate
-                                        </button>
-                                        <button type="button" t-att-data-db="db" data-bs-target=".o_database_delete" class="o_database_action btn btn-danger">
-                                            <i class="fa fa-trash-o fa-fw"></i> Delete
-                                        </button>
-                                    </div>
-                                </t>
-                            </div>
-                        </t>
+                                    <t t-else="">
+                                        <div class="list-group">
+                                            <t t-foreach="databases_by_version[ver]" t-as="db">
+                                                <div class="list-group-item d-flex align-items-center">
+                                                    <a t-attf-href="/odoo?db={{ db }}" class="d-block flex-grow-1">
+                                                        <t t-if="db in incompatible_databases">
+                                                            <i class="icon fa fa-warning float-end text-warning" title="This database may not be compatible"></i>
+                                                        </t>
+                                                        <t t-out="db" />
+                                                    </a>
+                                                    <t t-if="manage and ver == current_version">
+                                                        <div class="btn-group btn-group-sm float-end">
+                                                            <button type="button" t-att-data-db="db" data-bs-target=".o_database_backup" class="o_database_action btn btn-primary">
+                                                                <i class="fa fa-floppy-o fa-fw"></i> Backup
+                                                            </button>
+                                                            <button type="button" t-att-data-db="db" data-bs-target=".o_database_duplicate" class="o_database_action btn btn-secondary">
+                                                                <i class="fa fa-files-o fa-fw"></i> Duplicate
+                                                            </button>
+                                                            <button type="button" t-att-data-db="db" data-bs-target=".o_database_delete" class="o_database_action btn btn-danger">
+                                                                <i class="fa fa-trash-o fa-fw"></i> Delete
+                                                            </button>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
                     </div>
                     <t t-if="manage">
                         <div class="d-flex mt-2">

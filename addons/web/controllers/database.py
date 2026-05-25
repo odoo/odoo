@@ -5,6 +5,7 @@ import datetime
 import logging
 import os
 import tempfile
+from collections import OrderedDict
 from collections.abc import Iterable
 from operator import itemgetter
 from xml.etree import ElementTree as ET
@@ -29,6 +30,38 @@ from odoo.addons.base.models.ir_qweb import render as qweb_render
 _logger = logging.getLogger(__name__)
 
 
+def collect_db_versions(databases: Iterable[str]) -> dict[str, str | None]:
+    """
+    Return a mapping of database name to detected Odoo serie.
+
+    For each database, read ``ir_module_module.latest_version`` for the
+    ``base`` module and keep its ``major.minor`` part (e.g.
+    ``19.1.1.3`` becomes ``19.1``). When the table or row is missing
+    the serie is ``None``.
+
+    Close each connection after the read so a cluster with many
+    databases stays within the Postgres connection limit.
+
+    :param databases: A list of existing Postgresql databases.
+    :returns: Mapping ``{db_name: serie_or_none}``.
+    """
+    versions: dict[str, str | None] = {}
+    for database_name in databases:
+        serie = None
+        try:
+            with db_connect(database_name, readonly=True).cursor() as cr:
+                if odoo.tools.sql.table_exists(cr, 'ir_module_module'):
+                    cr.execute("SELECT latest_version FROM ir_module_module WHERE name=%s", ('base',))
+                    base_version = cr.fetchone()
+                    if base_version and base_version[0]:
+                        # e.g. 19.1.1.3 -> 19.1
+                        serie = '.'.join(base_version[0].split('.')[:2])
+        finally:
+            odoo.sql_db.close_db(database_name)
+        versions[database_name] = serie
+    return versions
+
+
 def list_db_incompatible(databases: Iterable[str]) -> list[str]:
     """
     Check a list of databases if they are compatible with this version
@@ -37,25 +70,43 @@ def list_db_incompatible(databases: Iterable[str]) -> list[str]:
     :param databases: A list of existing Postgresql databases.
     :returns: A sub-list of incompatible databases.
     """
-    incompatible_databases = []
-    for database_name in databases:
-        with db_connect(database_name, readonly=True).cursor() as cr:
-            if odoo.tools.sql.table_exists(cr, 'ir_module_module'):
-                cr.execute("SELECT latest_version FROM ir_module_module WHERE name=%s", ('base',))
-                base_version = cr.fetchone()
-                if not base_version or not base_version[0]:
-                    incompatible_databases.append(database_name)
-                else:
-                    # e.g. 19.1.1.3 -> 19.1
-                    local_version = '.'.join(base_version[0].split('.')[:2])
-                    if local_version != release.serie:
-                        incompatible_databases.append(database_name)
-            else:
-                incompatible_databases.append(database_name)
-    for database_name in incompatible_databases:
-        # don't fill the pool with connections to incompatible databases
-        odoo.sql_db.close_db(database_name)
-    return incompatible_databases
+    versions = collect_db_versions(databases)
+    return [db for db, serie in versions.items() if serie != release.serie]
+
+
+def group_databases_by_version(databases: Iterable[str]) -> OrderedDict[str, list[str]]:
+    """
+    Group databases by their detected Odoo serie.
+
+    The current server serie is the first key, even with no matching
+    database. Remaining series follow in descending version order.
+    Databases with no detectable serie go under the ``"unknown"`` key.
+
+    :param databases: A list of existing Postgresql databases.
+    :returns: Ordered mapping ``{serie: [db_name, ...]}``.
+    """
+    versions = collect_db_versions(databases)
+    buckets: dict[str, list[str]] = {}
+    for db, serie in versions.items():
+        key = serie or 'unknown'
+        buckets.setdefault(key, []).append(db)
+    for db_list_ in buckets.values():
+        db_list_.sort()
+
+    grouped: OrderedDict[str, list[str]] = OrderedDict()
+    grouped[release.serie] = buckets.pop(release.serie, [])
+
+    def sort_key(serie: str) -> tuple:
+        try:
+            return (0, tuple(-int(p) for p in serie.split('.')))
+        except ValueError:
+            return (1, serie)
+
+    for serie in sorted((k for k in buckets if k != 'unknown'), key=sort_key):
+        grouped[serie] = buckets[serie]
+    if 'unknown' in buckets:
+        grouped['unknown'] = buckets['unknown']
+    return grouped
 
 
 def list_countries():
@@ -99,11 +150,20 @@ def _render_template(**d):
     d['countries'] = list_countries()
     d['pattern'] = odoo.modules.db.DB_NAME_RE.pattern
     # databases list
+    d['current_version'] = release.serie
     try:
         d['databases'] = db_list()
-        d['incompatible_databases'] = list_db_incompatible(d['databases'])
+        d['databases_by_version'] = group_databases_by_version(d['databases'])
+        d['incompatible_databases'] = [
+            db
+            for serie, dbs in d['databases_by_version'].items()
+            if serie != release.serie
+            for db in dbs
+        ]
     except odoo.exceptions.AccessDenied:
         d['databases'] = [request.db] if request.db else []
+        d['databases_by_version'] = OrderedDict([(release.serie, list(d['databases']))])
+        d['incompatible_databases'] = []
 
     templates = {}
 

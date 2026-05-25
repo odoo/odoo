@@ -12,6 +12,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // version tabs
+    const versionTabs = document.querySelector(".o_db_version_tabs");
+    if (versionTabs) {
+        versionTabs.addEventListener("click", function (ev) {
+            const button = ev.target.closest(".nav-link[data-ver-id]");
+            if (!button) {
+                return;
+            }
+            const verId = button.getAttribute("data-ver-id");
+            for (const link of versionTabs.querySelectorAll(".nav-link[data-ver-id]")) {
+                link.classList.toggle("active", link === button);
+            }
+            for (const pane of versionTabs.querySelectorAll(".o_db_tab_pane[data-ver-id]")) {
+                pane.classList.toggle("active", pane.getAttribute("data-ver-id") === verId);
+            }
+        });
+    }
+
     // db modal
     document.body.addEventListener("click", function (ev) {
         if (ev.target.classList.contains("o_database_action")) {
