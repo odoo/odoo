@@ -1085,3 +1085,21 @@ class TestAccountAccount(TestAccountMergeCommon):
         not_found = self.env["account.account"].search([("code", "=ilike", example_account.code)])
         self.assertEqual(found, example_account)
         self.assertFalse(not_found)
+
+    def test_no_multi_company_on_bank_cash_accounts(self):
+        """Ensure multiple companies cannot be selected on bank and cash accounts."""
+        parent_company = self.env['res.company'].create([{
+            'name': "Parent Company",
+        }])
+        branch = self.env['res.company'].create([{
+            'name': "Branch Company",
+            'parent_id': parent_company.id,
+        }])
+        account = self.env['account.account'].create({
+            'code': 'TE1000',
+            'name': 'Bank Account Test',
+            'account_type': 'asset_cash',
+            'company_ids': [Command.link(parent_company.id)],
+        })
+        with self.assertRaisesRegex(ValidationError, "Bank & Cash accounts cannot be shared between companies."):
+            account.write({'company_ids': [Command.link(branch.id)]})

@@ -177,3 +177,18 @@ class TestUblImportBis3InvoiceBERetrieveTax(TestUblImportBis3InvoiceBE):
                 },
             ],
         )
+
+    def test_import_foreign_tax(self):
+        domestic = self.env['account.chart.template'].ref('template_generic_domestic_fiscal_position')
+        foreign_trade = self.env['account.chart.template'].ref('template_generic_export_fiscal_position')
+        tax_21 = self.percent_tax(21.0, type_tax_use='sale')
+        tax_21_foreign = self.percent_tax(21.0, type_tax_use='sale', fiscal_position_ids=foreign_trade)
+
+        bill = self._import_invoice_as_attachment_on(test_name='test_partial_import_tax_manual_tax_amounts', journal=self.company_data["default_journal_sale"])
+        partner = bill.partner_id
+        self.assertEqual(bill.line_ids.tax_ids, tax_21_foreign)
+
+        partner.property_account_position_id = domestic
+        bill = self._import_invoice_as_attachment_on(test_name='test_partial_import_tax_manual_tax_amounts', journal=self.company_data["default_journal_sale"])
+        partner = bill.partner_id
+        self.assertEqual(bill.line_ids.tax_ids, tax_21)

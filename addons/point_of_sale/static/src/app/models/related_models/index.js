@@ -793,7 +793,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         }
                         resultsArray.push(record);
                     }
-                    modelEvents.triggerEvents("create", { ids: createdIds });
+                    if (createdIds.length) {
+                        modelEvents.triggerEvents("create", { ids: createdIds });
+                    }
                 }
                 return finalResults;
             } finally {

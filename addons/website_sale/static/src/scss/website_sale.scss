@@ -55,11 +55,12 @@
     // === Content (Right) =====================================================
     // == Main content wrapper
     #products_grid {
-        overflow: auto;
+        overflow: visible;
         container-type: inline-size;
         container-name: o-wsale-grid;
         grid-template-rows: minmax(auto, auto);
 
+        /*rtl:ignore*/
         border-left: var(--o-wsale-sidebar-border);
     }
 
@@ -260,7 +261,7 @@
             --o-wsale-filmstrip-item-direction: column;
             --o-wsale-filmstrip-item-justify: center;
             --o-wsale-filmstrip-item-width: 18rem;
-            --o-wsale-filmstrip-item-border-width: 0 #{$border-width} 0 0;
+            --o-wsale-filmstrip-item-border-width: 0 #{$border-width} 0 0 #{"/*rtl: 0 0 0 " + $border-width + "*/"};
             --o-wsale-filmstrip-item-border-radius: 0;
             --o-wsale-filmstrip-item-padding-y: #{map-get($spacers, 3)};
             --o-wsale-filmstrip-item-padding-x: #{map-get($spacers, 3)};
@@ -627,12 +628,14 @@
                     --o-wsale-topbar-border-width: 0 #{$border-width} #{$border-width} 0;
 
                     #o_wsale_pager {
+                        /*rtl:ignore*/
                         border-left: 0;
                     }
                 }
             }
 
             #o_wsale_products_grid {
+                /*rtl:ignore*/
                 box-shadow: inset -1px -1px 0 0px var(--border-color);
             }
 
@@ -653,6 +656,7 @@
             }
             @include media-breakpoint-up(lg) {
                 #products_grid {
+                    /*rtl:ignore*/
                     padding-left: 0;
                 }
             }
@@ -1064,7 +1068,6 @@ $-product-radius-map: (
     padding-top: map-get($spacers, 3);
     padding-left: var(--o-wsale-product-col-details-padding-left, calc(var(--gutter-x) * .5));
     padding-right: var(--o-wsale-product-col-details-padding-right, calc(var(--gutter-x) * .5));
-    background-color: $body-bg;
     container: product-details / inline-size;
     z-index: 0;
 
@@ -2051,4 +2054,13 @@ body.modal-open:has(.js_sale.o_wsale_product_page) {
 
 .o_wsale_alternative_products:not(:has(.s_dynamic_snippet_row)) {
     display: none;
+}
+
+div[name="order_confirmation"] {
+    .alert {
+        padding: #{$alert-padding-y} #{$alert-padding-x} !important; // TODO remove in master
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
 }

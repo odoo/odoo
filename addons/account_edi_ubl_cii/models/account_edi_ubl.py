@@ -5,7 +5,7 @@ from markupsafe import Markup
 
 from odoo import _, fields, models, Command
 from odoo.exceptions import UserError
-from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, pdf, str2bool
+from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, pdf, str2bool, unique
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     FloatFmt,
     GST_COUNTRY_CODES,
@@ -103,6 +103,7 @@ class AccountEdiUBL(models.AbstractModel):
                 # Reverse-charge taxes with +100/-100% repartition lines are used in vendor bills.
                 # In self-billed invoices, we report them from the seller's perspective, as 0% taxes.
                 tax = tax_data['tax']
+
                 return {
                     'tax_category_code': self._get_tax_category_code(customer.commercial_partner_id, supplier, tax),
                     **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
@@ -113,10 +114,21 @@ class AccountEdiUBL(models.AbstractModel):
                 }
             elif tax_data:
                 tax = tax_data['tax']
+                tax_category_code = self._get_tax_category_code(customer.commercial_partner_id, supplier, tax)
+                if tax_category_code == 'O':
+                    # [BR-O-05] An Invoice line (BG-25) where the VAT category code (BT-151) is
+                    # "Not subject to VAT" shall not contain an Invoiced item VAT rate (BT-152).
+                    # [BR-O-06] A Document level allowance (BG-20) where VAT category code (BT-95) is
+                    # "Not subject to VAT" shall not contain a Document level allowance VAT rate (BT-96).
+                    # [BR-O-07] A Document level charge (BG-21) where the VAT category code (BT-102) is
+                    # "Not subject to VAT" shall not contain a Document level charge VAT rate (BT-103).
+                    percent = None
+                else:
+                    percent = tax.amount if not tax.has_negative_factor else 0.0
                 return {
-                    'tax_category_code': self._get_tax_category_code(customer.commercial_partner_id, supplier, tax),
+                    'tax_category_code': tax_category_code,
                     **self._get_tax_exemption_reason(customer.commercial_partner_id, supplier, tax),
-                    'percent': tax.amount,
+                    'percent': percent,
                     'scheme_id': scheme_id,
                     'is_withholding': tax.amount < 0.0,
                     'currency': currency,
@@ -179,6 +191,12 @@ class AccountEdiUBL(models.AbstractModel):
         tax_grouping_key = self._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
         if not tax_grouping_key or tax_grouping_key['is_withholding']:
             return
+
+        # We do not want to group the positive and negative lines together;
+        # the following changes the grouping key to be like in 18.0 to 18.3.
+        if tax_grouping_key['tax_category_code'] == 'E' and tax_data and tax_data['tax']:
+            tax_grouping_key['tax_exemption_reason'] = None
+
         return tax_grouping_key
 
     def _ubl_default_payable_amount_tax_withholding_grouping_key(self, base_line, tax_data, vals, currency):
@@ -2187,7 +2205,7 @@ class AccountEdiUBL(models.AbstractModel):
 
         # Peppol EAS/Endpoint.
         if (node := party_node.find(".//{*}EndpointID")) is not None:
-            customer_values['peppol_endpoint'] = node.text
+            customer_values['peppol_endpoint'] = node.text.strip()
             if peppol_eas := node.attrib.get('schemeID'):
                 customer_values['peppol_eas'] = peppol_eas
 
@@ -2380,7 +2398,7 @@ class AccountEdiUBL(models.AbstractModel):
             if note := node.text:
                 payment_references.append(note)
 
-        if payment_reference := ','.join(payment_references):
+        if payment_reference := ','.join(unique(payment_references)):
             collected_values['to_write']['payment_reference'] = payment_reference
 
     def _import_ubl_invoice_add_delivery(self, collected_values):
@@ -2873,6 +2891,15 @@ class AccountEdiUBL(models.AbstractModel):
                 if tax_values := charge.get('attempt_tax_values'):
                     tax_values_list.append(tax_values)
 
+        if customer := collected_values.get('customer_values', {}).get('customer'):
+            fiscal_position = self.env['account.move'].new({
+                'company_id': collected_values['company'].id,
+                'move_type': collected_values['invoice'].move_type,
+                'partner_id': customer.id,
+            }).fiscal_position_id
+            for tax_values in tax_values_list:
+                tax_values['fiscal_position'] = fiscal_position
+
         self.env['account.tax']._import_retrieve_tax(
             search_plan=self._import_ubl_retrieve_taxes_search_plan(collected_values),
             company=company,
@@ -3122,11 +3149,11 @@ class AccountEdiUBL(models.AbstractModel):
                 if tax_data['tax'].price_include:
                     base_line['price_unit'] += tax_data['raw_tax_amount_currency']
 
-        # Remove lines having a zero amount.
+        # Remove lines having a zero amount except 100% discounts
         collected_values['base_lines'] = [
             base_line
             for base_line in collected_values['base_lines']
-            if not base_line['currency_id'].is_zero(base_line['tax_details']['total_included_currency'])
+            if (not base_line['currency_id'].is_zero(base_line['tax_details']['total_included_currency']) or base_line.get('discount'))
         ]
 
     def _import_ubl_invoice_write_collected_values(self, collected_values):
@@ -3341,14 +3368,15 @@ class AccountEdiUBL(models.AbstractModel):
 
         # Collect the embedded documents.
         invoice = collected_values['invoice']
-        attachments = self._import_attachments(invoice, collected_values['tree']) or self.env['ir.attachment']
+        source_attachment = collected_values['file_data']['attachment'] or self.env['ir.attachment']
+        attachments = source_attachment + self._import_attachments(invoice, collected_values['tree'])
 
         # Chatter.
         body = Markup("<strong>%s</strong>") % _(
             "Format used to import the invoice: %s",
             self.env['ir.model']._get(self._name).name,
         )
-        if logs := collected_values['logs']:
+        if logs := dict.fromkeys(collected_values['logs']):
             body += Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % l for l in logs)
         invoice.with_context(no_new_invoice=True).message_post(body=body, attachment_ids=attachments.ids)
 

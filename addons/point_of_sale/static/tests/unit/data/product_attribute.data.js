@@ -79,5 +79,17 @@ export class ProductAttribute extends models.ServerModel {
             attribute_line_ids: [],
             create_variant: "always",
         },
+        {
+            id: 10,
+            name: "Flavor",
+            display_type: "radio",
+            create_variant: "always",
+        },
+        {
+            id: 11,
+            name: "Customization",
+            display_type: "radio",
+            create_variant: "no_variant",
+        },
     ];
 }

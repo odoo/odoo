@@ -19,7 +19,7 @@ import {
     PROTECTED_QWEB_SELECTOR,
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
-import { isColorGradient, rgbaToHex } from "@web/core/utils/colors";
+import { isColorGradient, normalizeCSSColor, rgbaToHex } from "@web/core/utils/colors";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isBlock } from "@html_editor/utils/blocks";
@@ -102,9 +102,12 @@ export class ColorPlugin extends Plugin {
         }
 
         return {
-            color: hasGradient && hasTextGradientClass ? gradient : rgbaToHex(elStyle.color),
+            color:
+                hasGradient && hasTextGradientClass ? gradient : normalizeCSSColor(elStyle.color),
             backgroundColor:
-                hasGradient && !hasTextGradientClass ? gradient : rgbaToHex(backgroundColor),
+                hasGradient && !hasTextGradientClass
+                    ? gradient
+                    : normalizeCSSColor(backgroundColor),
         };
     }
 
@@ -221,7 +224,10 @@ export class ColorPlugin extends Plugin {
                 }
                 const li = closestElement(node, "li");
                 if (li && color && this.dependencies.selection.areNodeContentsFullySelected(li)) {
-                    return rgbaToHex(li.style.color).toLowerCase() !== hexColor;
+                    const existingColor = li.style.color
+                    ? li.style.color
+                    : [...li.classList].find((cls) => TEXT_CLASSES_REGEX.test(cls));
+                    return rgbaToHex(existingColor).toLowerCase() !== hexColor;
                 }
                 return true;
             })

@@ -113,6 +113,7 @@
             "point_of_sale/static/src/app/utils/devices_identifier_sequence.js",
             "point_of_sale/static/src/app/hooks/hooks.js",
             "point_of_sale/static/src/app/utils/debug-formatter.js",
+            "pos_restaurant/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml",
         ],
         # Assets tests
         "pos_self_order.assets_tests": [

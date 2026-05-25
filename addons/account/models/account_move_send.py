@@ -272,7 +272,10 @@ class AccountMoveSend(models.AbstractModel):
         extra_mail_templates = mail_template.report_template_ids - invoice_template
         attachments = []
         for extra_mail_template in extra_mail_templates:
-            filename = move._get_invoice_report_filename(report=extra_mail_template)
+            if extra_mail_template.print_report_name:
+                filename = move._get_invoice_report_filename(report=extra_mail_template)
+            else:
+                filename = f'{extra_mail_template.name.lower()}_{move.name}.pdf'
             attachments.append({
                 'id': f'placeholder_{extra_mail_template.name.lower()}_{filename}',
                 'name': filename,
@@ -854,6 +857,7 @@ class AccountMoveSend(models.AbstractModel):
         # Return generated attachments.
         attachments = self.env['ir.attachment']
         for move, move_data in success.items():
-            attachments += self._get_invoice_extra_attachments(move) or move_data['proforma_pdf_attachment']
+            extra_attachments = self._get_invoice_extra_attachments(move)
+            attachments += extra_attachments or move_data.get('proforma_pdf_attachment', self.env['ir.attachment'])
 
         return attachments
