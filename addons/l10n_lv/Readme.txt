@@ -15,17 +15,18 @@ PVN konts ir 5721, bet jūs variet to mainīt sadaļā Grāmatvedība -> Nodokļ
 Konta piesaiste bilances un peļņas vai zaudējumu posteņiem tiek veikta, izmantojot “tag_ids/id” sadaļā Kontu plāns – Birkas.
 
 EN:
-by installing these modules, will be created:
-* Chart of accounts (standardized),
-* the list of account groups,
+By installing these modules, the following items will be created:
+* Standardized chart of accounts,
+* List of account groups,
 * VAT analytics,
-* The list of banks of Latvia and Lithuania.
+* List of banks in Latvia and Lithuania.
 
-To get around and make full use of these features, you will need the following modules:
+To fully use these features, the following modules are required:
 * account,
 * base_vat,
 * l10n_multilang,
-* as well as account_accountant (for Enterprise version) or similar modules for Community version.
+* account_accountant (for the Enterprise version) or a similar module for the Community version.
 
-The VAT account is created as 5721, but you can modify and change it via Accounting -> Taxes.
-Account linking to Balance Sheet items and Profit/Loss items - via "tag_ids/id" in Chart of Accounts - Tags
+The default VAT account is set to 5721, but it can be modified via Accounting -> Taxes.
+
+Accounts are linked to Balance Sheet and Profit/Loss items using "tag_ids/id" in Chart of Accounts -> Tags.
