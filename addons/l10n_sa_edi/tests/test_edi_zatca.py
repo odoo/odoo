@@ -251,8 +251,8 @@ class TestEdiZatca(TestSaEdiCommon):
 
             # Create downpayment invoice
             downpayment_wizard = self.env['sale.advance.payment.inv'].with_context(context).sudo().create({
-                'advance_payment_method': 'fixed',
-                'fixed_amount': 115,
+                'advance_payment_method': 'downpayment',
+                'amount': 115,
             })
             downpayment = downpayment_wizard._create_invoices(sale_order)
             downpayment.invoice_date_due = '2022-09-22'
@@ -344,8 +344,8 @@ class TestEdiZatca(TestSaEdiCommon):
 
         # 1. First downpayment, then reverse it through the Credit Note
         dp1_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({  # noqa: OLS03001
-            'advance_payment_method': 'fixed',
-            'fixed_amount': 115,
+            'advance_payment_method': 'downpayment',
+            'amount': 115,
         })
         dp1 = dp1_wizard._create_invoices(sale_order)
         dp1.invoice_date_due = '2022-09-22'
@@ -714,8 +714,8 @@ class TestEdiZatca(TestSaEdiCommon):
         }
 
         downpayment_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({  # noqa: OLS03001
-            'advance_payment_method': 'percentage',
-            'amount': 100,
+            'advance_payment_method': 'downpayment',
+            'percentage': 1.0,
         })
         downpayment = downpayment_wizard._create_invoices(sale_order)
         downpayment.action_post()
