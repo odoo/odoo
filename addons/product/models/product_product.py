@@ -1134,6 +1134,17 @@ class ProductProduct(models.Model):
                             ('res_id', '=', self.product_tmpl_id.id)]
         return res
 
+    def action_open_packaging_barcodes(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('product.product_uom_action_view_list')
+        action['domain'] = [('product_id', '=', self.id)]
+        action['context'] = {
+            'create': True,
+            'default_product_id': self.id,
+            'product_ids': self.ids,
+        }
+        return action
+
     #=== BUSINESS METHODS ===#
 
     def _prepare_sellers(self, params=False):

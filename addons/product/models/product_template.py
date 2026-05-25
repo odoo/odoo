@@ -941,6 +941,17 @@ class ProductTemplate(models.Model):
             )
         }
 
+    def action_open_packaging_barcodes(self):
+        self.ensure_one()
+        variants = self.product_variant_ids
+        action = self.env['ir.actions.act_window']._for_xml_id('product.product_uom_action_view_list')
+        action['domain'] = [('product_id', 'in', variants.ids)]
+        action['context'] = {
+            'default_product_id': variants[0].id,
+            'product_ids': variants.ids,
+        }
+        return action
+
     #=== BUSINESS METHODS ===#
 
     def _get_product_price_context(self, combination):
