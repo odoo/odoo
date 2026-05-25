@@ -228,7 +228,7 @@ class AccountChartTemplate(models.AbstractModel):
             except Exception:
                 # Do not rollback installation of CoA if demo data failed
                 _logger.exception('Error while loading accounting demo data')
-        for subsidiary in company.child_ids:
+        for subsidiary in company.child_ids.filtered('active'):
             self._load(template_code, subsidiary, install_demo)
 
     @api.model

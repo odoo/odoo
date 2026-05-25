@@ -20,19 +20,28 @@ class AccountChartTemplate(models.AbstractModel):
 
         if company.account_fiscal_country_id.code == "AR":
             demo_data.setdefault('res.partner', {})
-            demo_data['account.move'] = demo_data.pop('account.move')
             demo_data['res.partner'].setdefault('base.res_partner_2', {})
             demo_data['res.partner']['base.res_partner_2']['l10n_ar_afip_responsibility_type_id'] = 'l10n_ar.res_IVARI'
             demo_data['res.partner'].setdefault('base.res_partner_12', {})
             demo_data['res.partner']['base.res_partner_12']['l10n_ar_afip_responsibility_type_id'] = 'l10n_ar.res_IVARI'
+            demo_data['account.move'] = demo_data.pop('account.move')
+            demo_data['account.bank.statement'] = demo_data.pop('account.bank.statement')
+            demo_data['account.bank.statement.line'] = demo_data.pop('account.bank.statement.line')
+            demo_data['account.reconcile.model'] = demo_data.pop('account.reconcile.model')
+            demo_data['ir.attachment'] = demo_data.pop('ir.attachment')
+            demo_data['mail.message'] = demo_data.pop('mail.message')
+            demo_data['mail.activity'] = demo_data.pop('mail.activity')
         return demo_data
 
     @api.model
     def _get_demo_data_move(self, company=False):
         data = super()._get_demo_data_move(company)
         if company.account_fiscal_country_id.code == "AR":
-            data['demo_invoice_5']['l10n_latam_document_number'] = '1-1'
-            data['demo_invoice_equipment_purchase']['l10n_latam_document_number'] = '1-2'
+            next_document_number = 1
+            for move_vals in data.values():
+                if move_vals.get('move_type') in ('in_invoice', 'in_refund') and not move_vals.get('l10n_latam_document_number'):
+                    move_vals['l10n_latam_document_number'] = f'1-{next_document_number}'
+                    next_document_number += 1
         return data
 
     def _post_load_demo_data(self, company=False):

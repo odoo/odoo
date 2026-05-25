@@ -616,6 +616,31 @@ class TestChartTemplate(TransactionCase):
         self.assertEqual(company.chart_template, 'test')
         self.assertEqual(branch.chart_template, 'test')
 
+    def test_branch_demo_only_on_root_and_skip_archived_branch(self):
+        company = self.env['res.company'].create([{'name': 'Test Company'}])
+        branches = self.env['res.company'].create([{
+            'name': 'Active Branch',
+            'parent_id': company.id,
+        }, {
+            'name': 'Archived Branch',
+            'parent_id': company.id,
+            'active': False,
+        }])
+
+        with (
+            patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True),
+            patch.object(AccountChartTemplate, '_install_demo', autospec=True) as install_demo,
+        ):
+            self.env['account.chart.template'].with_context(active_test=False).try_loading('test', company=company, install_demo=True)
+
+        demo_companies = [call.args[1] for call in install_demo.call_args_list]
+        self.assertEqual(company.chart_template, 'test')
+        self.assertEqual(branches[0].chart_template, 'test')
+        self.assertFalse(branches[1].chart_template)
+        self.assertIn(company, demo_companies)
+        self.assertIn(branches[0], demo_companies)
+        self.assertNotIn(branches[1], demo_companies)
+
     def test_change_coa(self):
         def _get_chart_template_mapping(self, get_all=False):
             return {'other_test': {
