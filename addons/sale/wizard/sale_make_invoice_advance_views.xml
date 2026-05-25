@@ -27,26 +27,25 @@
                     <field name="invoice_overages"/>
                 </group>
                 <group name="down_payment_specification"
-                    invisible="advance_payment_method not in ('fixed', 'percentage')">
+                    invisible="advance_payment_method != 'downpayment'">
                     <field name="company_id" invisible="1"/> <!-- needed on record so create_invoices can run with_company(company_id) -->
-                    <label for="fixed_amount" invisible="advance_payment_method != 'fixed'"/>
-                    <label for="amount" invisible="advance_payment_method != 'percentage'"/>
+                    <label for="amount"/>
                     <div id="payment_method_details">
-                        <field name="currency_id" invisible="1"/> <!-- supplies currency for the amount/fixed_amount Monetary widgets below -->
-                        <field name="fixed_amount"
-                            invisible="advance_payment_method != 'fixed'"
-                            required="advance_payment_method == 'fixed'"
-                            class="oe_inline"/>
-                        <field name="amount"
-                            invisible="advance_payment_method != 'percentage'"
-                            required="advance_payment_method == 'percentage'"
-                            class="oe_inline"/>
-                        <span invisible="advance_payment_method != 'percentage'"
-                            class="oe_inline">% </span>
+                        <field name="currency_id" invisible="1"/> <!-- supplies currency for the amount Monetary widget below -->
+                        <field name="amount" class="oe_inline"/>
+                        <span>(</span>
+                        <field name="percentage" widget="percentage" style="width: 60px;"/>
+                        <span>)</span>
                     </div>
                 </group>
                 <group invisible="not has_down_payments">
                     <field name="amount_invoiced"/>
+                </group>
+                <group invisible="amount_paid == 0">
+                    <field name="amount_paid"/>
+                </group>
+                <group invisible="advance_payment_method == 'downpayment'">
+                    <field name="amount_to_invoice"/>
                 </group>
                 <footer>
                     <button name="create_invoices" type="object"
@@ -60,7 +59,7 @@
     </record>
 
     <record id="action_view_sale_advance_payment_inv" model="ir.actions.act_window">
-        <field name="name">Create invoice(s)</field>
+        <field name="name">Create Invoice</field>
         <field name="res_model">sale.advance.payment.inv</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>

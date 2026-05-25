@@ -323,7 +323,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                     gross_amount = net_amount * (1 + self.tax_sale_a.amount / 100)
                     wizard = self.env['sale.advance.payment.inv'].with_context(  # noqa: OLS03001
                         active_model='sale.order', active_ids=sale_order.ids,
-                    ).create({'advance_payment_method': 'fixed', 'fixed_amount': gross_amount})
+                    ).create({'advance_payment_method': 'downpayment', 'amount': gross_amount})
                     down_payment_invoice = self.env['account.move'].browse(wizard.create_invoices()['res_id'])
                     down_payment_invoice.action_post()
                 invoice = sale_order._create_invoices(final=True)
