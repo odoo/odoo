@@ -137,6 +137,8 @@ class SaleOrder(models.Model):
                 order.order_line.sudo().with_company(order.company_id)._timesheet_service_generation()
 
         for order in self.sudo(): # Salesman may not have access to projects
+            if (order.project_id and order.commitment_date and not order.project_id.date_start):
+                order.project_id.write({'date_start': order.date_order, 'date': order.commitment_date})
             sale_line_to_assign = next((sol for sol in order.order_line if sol.is_service), False)
             if not sale_line_to_assign:
                 continue
