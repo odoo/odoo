@@ -1303,7 +1303,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         # accesses move_data.get('proforma_pdf_attachment').
         wizard = self.create_send_and_print(invoice, sending_methods=['email'])
         # Must not raise KeyError.
-        results = wizard.action_send_and_print(allow_fallback_pdf=True)
+        wizard.action_send_and_print(allow_fallback_pdf=True)
 
         # The wizard should complete; a proper PDF is generated because there
         # was no error — the alien attachment is simply ignored.
@@ -1325,7 +1325,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         invoice2.message_main_attachment_id = alien_attachment2
 
         # Must not raise KeyError.
-        attachments = self.env['account.move.send']._generate_and_send_invoices(
+        self.env['account.move.send']._generate_and_send_invoices(
             invoice2,
             allow_fallback_pdf=False,
             sending_methods=[],
@@ -1346,7 +1346,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard = self.create_send_and_print(invoice, sending_methods=[])
 
         # Standard send — no error injected, so no proforma is created.
-        results = wizard.action_send_and_print(allow_fallback_pdf=True)
+        wizard.action_send_and_print(allow_fallback_pdf=True)
 
         # Should complete without KeyError.
         self.assertTrue(invoice.invoice_pdf_report_id)
