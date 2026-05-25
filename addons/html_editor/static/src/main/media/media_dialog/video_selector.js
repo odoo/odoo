@@ -16,7 +16,7 @@ class VideoOption extends Component {
         label: { type: String, optional: true },
         onChangeOption: Function,
         onChangeStartAt: Function,
-        value: { type: String, optional: true },
+        value: { type: [String, Boolean], optional: true },
         name: { type: String, optional: true },
     };
 
