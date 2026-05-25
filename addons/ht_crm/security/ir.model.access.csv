@@ -14,6 +14,10 @@ access_employee_user,sale.employee.user,model_sale_employee,group_ht_user,1,0,0,
 access_employee_role_user,sale.employee.role.user,model_sale_employee_role,group_ht_user,1,0,0,0
 access_transaction_user,sale.transaction.user,model_sale_transaction,group_ht_user,1,0,0,0
 
+access_customer,sale.customer,model_sale_customer,group_manage_customer,1,1,1,1
+access_transaction_read,sale.transaction.read,model_sale_transaction,group_manage_customer,1,0,0,0
+access_estate_read,estate.project.read,model_estate_project,group_manage_customer,1,0,0,0
+
 access_phonebook_manager,sale.phonebook.manager,model_sale_phonebook,group_ht_leader,1,1,1,1
 access_customer_manager,sale.customer.manager,model_sale_customer,group_ht_leader,1,1,1,1
 access_estate_manager,estate.project.manager,model_estate_project,group_ht_leader,1,1,1,1
