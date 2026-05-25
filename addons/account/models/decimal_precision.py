@@ -5,6 +5,9 @@ class DecimalPrecision(models.Model):
 
     def precision_get(self, application):
         stackmap = self.env.cr.cache.get('account_disable_recursion_stack', {})
-        if stackmap.get('ignore_discount_precision') and application in ('Discount', 'Product Unit of Measure'):
-            return 13
+        if stackmap.get('ignore_discount_precision'):
+            if application == 'Discount':
+                return 13
+            if application == 'Product Unit of Measure':
+                return 10
         return super().precision_get(application)
