@@ -360,7 +360,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
                    'active_id': order.id,
                    'default_journal_id': self.company_data_2['default_journal_sale'].id,
                }).create({
-                   'advance_payment_method': 'percentage',
+                   'advance_payment_method': 'fixed',
                    'amount': 50,
                }).create_invoices()
 

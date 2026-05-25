@@ -223,7 +223,7 @@ class TestAccruedSaleOrders(TestSaleCommon):
             "active_id": self.sale_order.id,
             "default_journal_id": self.company_data["default_journal_sale"].id,
         }
-        payment_params = {"advance_payment_method": "percentage", "amount": 50.0}
+        payment_params = {"advance_payment_method": "fixed", "amount": 50.0}
         downpayment = (
             self.env["sale.advance.payment.inv"].with_context(so_context).create(payment_params)
         )

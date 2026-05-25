@@ -8,6 +8,8 @@
             <form string="Invoice Sales Order">
                 <field name="display_draft_invoice_warning" invisible="1"/>
                 <field name="has_down_payments" invisible="1"/>
+                <field name="amount_paid" invisible="1"/>
+                <field name="to_invoice_amount" invisible="1"/>
                 <div class="alert alert-warning pb-1" role="alert" invisible="not display_draft_invoice_warning">
                     <p>There are existing <a name="view_draft_invoices" type="object">Draft Invoices</a> for this Sale Order.</p>
                     <p invisible="advance_payment_method != 'delivered'">
@@ -31,24 +33,37 @@
                 <group name="down_payment_specification"
                     invisible="advance_payment_method not in ('fixed', 'percentage')">
                     <field name="company_id" invisible="1"/>
-                    <label for="fixed_amount" invisible="advance_payment_method != 'fixed'"/>
-                    <label for="amount" invisible="advance_payment_method != 'percentage'"/>
+                    <label for="fixed_amount" invisible="advance_payment_method == 'fixed'"/>
+                    <label for="amount" invisible="advance_payment_method != 'fixed'"/>
                     <div id="payment_method_details">
                         <field name="currency_id" invisible="1"/>
                         <field name="fixed_amount"
                             invisible="advance_payment_method != 'fixed'"
-                            required="advance_payment_method == 'fixed'"
                             class="oe_inline"/>
+
+                        <span invisible="advance_payment_method != 'fixed'">
+                            (
+                        </span>
+
                         <field name="amount"
-                            invisible="advance_payment_method != 'percentage'"
-                            required="advance_payment_method == 'percentage'"
-                            class="oe_inline"/>
-                        <span invisible="advance_payment_method != 'percentage'"
-                            class="oe_inline">% </span>
+                            invisible="advance_payment_method != 'fixed'"
+                         style="width: 40px;"/>
+
+                        <span invisible="advance_payment_method != 'fixed'">
+                            %)
+                        </span>
                     </div>
                 </group>
                 <group invisible="not has_down_payments">
                     <field name="amount_invoiced"/>
+                </group>
+
+                <group invisible="amount_paid &lt;= 0">
+                    <field name="amount_paid"/>
+                </group>
+
+                <group invisible="advance_payment_method != 'delivered'">
+                    <field name="to_invoice_amount"/>
                 </group>
                 <footer>
                     <button name="create_invoices" type="object"
@@ -62,7 +77,7 @@
     </record>
 
     <record id="action_view_sale_advance_payment_inv" model="ir.actions.act_window">
-        <field name="name">Create invoice(s)</field>
+        <field name="name">Create Invoice</field>
         <field name="res_model">sale.advance.payment.inv</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>

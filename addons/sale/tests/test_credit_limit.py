@@ -102,7 +102,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
             "active_ids": [sale_order.id],
             "active_id": sale_order.id,
             "default_journal_id": self.company_data["default_journal_sale"].id,
-        }).create({"advance_payment_method": "percentage", "amount": 50}).create_invoices()
+        }).create({"advance_payment_method": "fixed", "amount": 50}).create_invoices()
 
         invoice = sale_order.invoice_ids
 

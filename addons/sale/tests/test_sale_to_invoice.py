@@ -171,10 +171,7 @@ class TestSaleToInvoice(TestSaleCommon):
         self.sale_order.action_confirm()
         self._check_order_search(self.sale_order, [("invoice_ids", "=", False)], self.sale_order)
         # Let's do an invoice for a deposit of 10%
-        downpayment = self.InvoiceWizard.create({
-            "advance_payment_method": "percentage",
-            "amount": 10,
-        })
+        downpayment = self.InvoiceWizard.create({"advance_payment_method": "fixed", "amount": 10})
         downpayment.create_invoices()
         self._check_order_search(
             self.sale_order, [("invoice_ids", "=", False)], self.env["sale.order"]
@@ -325,7 +322,7 @@ class TestSaleToInvoice(TestSaleCommon):
         # Confirm the SO
         self.sale_order.action_confirm()
         # Let's do an invoice for a deposit of 100
-        payment = self.InvoiceWizard.create({"advance_payment_method": "percentage", "amount": 50})
+        payment = self.InvoiceWizard.create({"advance_payment_method": "fixed", "amount": 50})
         payment.create_invoices()
 
         self.assertEqual(
@@ -962,7 +959,7 @@ class TestSaleToInvoice(TestSaleCommon):
             self
             .env["sale.advance.payment.inv"]
             .with_context(no_journal_ctxt)
-            .create({"advance_payment_method": "percentage", "amount": 50})
+            .create({"advance_payment_method": "fixed", "amount": 50})
         )
         payment.create_invoices()
         self.assertEqual(
@@ -1710,7 +1707,7 @@ class TestSaleToInvoice(TestSaleCommon):
                 "active_id": sale_order.id,
                 "default_journal_id": self.company_data["default_journal_sale"].id,
             })
-            .create({"advance_payment_method": "percentage", "amount": 10})
+            .create({"advance_payment_method": "fixed", "amount": 10})
         )
         action_values = wizard.create_invoices()
 

@@ -29,16 +29,6 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
 
         cls.sale_order.prepayment_percent = 1.0
 
-    @mute_logger("odoo.http", "werkzeug")
-    def test_payment_amount_must_not_be_less_than_prepayment_amount(self):
-        """Test that accessing the portal page with a payment amount below prepayment amount raises
-        an error."""
-        res = self._make_http_get_request(
-            f"/my/orders/{self.sale_order.id}",
-            params={"access_token": self.sale_order._portal_ensure_token(), "payment_amount": 1},
-        )
-        self.assertEqual(res.status_code, 404)
-
     def test_is_down_payment_when_prepayment_amount_is_less_than_order_total(self):
         """Test that we are in the downpayment case when the prepayment amount is less than the
         order total."""

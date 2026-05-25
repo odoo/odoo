@@ -33,7 +33,7 @@ class TestUblExportBis3InvoiceBEDownPayment(TestUblExportBis3BE):
 
         invoice = self._create_down_payment_invoice(
             sale_order=sale_order,
-            amount_type='percentage',
+            amount_type='fixed',
             amount=40.0,
             post=True,
         )
