@@ -4,7 +4,6 @@
 from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tools import formatLang
 
 
 class SaleAdvancePaymentInv(models.TransientModel):
@@ -12,11 +11,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
     _description = "Sales Advance Payment Invoice"
 
     advance_payment_method = fields.Selection(
-        selection=[
-            ("delivered", "Regular invoice"),
-            ("percentage", "Down payment (percentage)"),
-            ("fixed", "Down payment (fixed amount)"),
-        ],
+        selection=[("delivered", "Regular Invoice"), ("downpayment", "Down Payment")],
         string="Create Invoice",
         default="delivered",
         required=True,
@@ -40,23 +35,26 @@ class SaleAdvancePaymentInv(models.TransientModel):
     deduct_down_payments = fields.Boolean(string="Deduct down payments", default=True)
 
     # New Down Payment
-    amount = fields.Float(
-        string="Down Payment", help="The percentage of amount to be invoiced in advance."
+    amount = fields.Monetary(
+        string="Down Payment", compute="_compute_amount", store=True, readonly=False
     )
-    fixed_amount = fields.Monetary(
-        string="Down Payment Amount (Fixed)", help="The fixed amount to be invoiced in advance."
-    )
+    percentage = fields.Float(compute="_compute_percentage", readonly=False, store=True)
     currency_id = fields.Many2one(
         comodel_name="res.currency", compute="_compute_currency_id", store=True
     )
     company_id = fields.Many2one(
         comodel_name="res.company", compute="_compute_company_id", store=True
     )
+
+    # Invoicing Amounts
     amount_invoiced = fields.Monetary(
-        string="Already invoiced",
-        compute="_compute_invoice_amounts",
+        string="Already Invoiced",
+        compute="_compute_total_amounts",
         help="Only confirmed down payments are considered.",
     )
+    amount_paid = fields.Monetary(string="Already Paid", compute="_compute_total_amounts")
+    amount_to_invoice = fields.Monetary(string="To Invoice", compute="_compute_total_amounts")
+    amount_total = fields.Monetary(compute="_compute_total_amounts")
 
     # UI
     display_draft_invoice_warning = fields.Boolean(compute="_compute_display_draft_invoice_warning")
@@ -117,26 +115,37 @@ class SaleAdvancePaymentInv(models.TransientModel):
             invoice_states = wizard.sale_order_ids._origin.sudo().invoice_ids.mapped("state")
             wizard.display_draft_invoice_warning = "draft" in invoice_states
 
-    @api.depends("sale_order_ids")
-    def _compute_invoice_amounts(self):
+    @api.depends("percentage", "amount_total")
+    def _compute_amount(self):
         for wizard in self:
-            wizard.amount_invoiced = sum(wizard.sale_order_ids._origin.mapped("amount_invoiced"))
+            wizard.amount = wizard.amount_total * wizard.percentage
+
+    @api.depends("amount", "amount_total")
+    def _compute_percentage(self):
+        for wizard in self:
+            wizard.percentage = wizard.amount / wizard.amount_total if wizard.amount_total else 0.0
+
+    @api.depends("sale_order_ids", "sale_order_ids.amount_to_invoice")
+    def _compute_total_amounts(self):
+        for wizard in self:
+            sale_orders = wizard.sale_order_ids
+            wizard.amount_invoiced = sum(sale_orders.mapped("amount_invoiced"))
+            wizard.amount_paid = sum(sale_orders.mapped("amount_paid"))
+            wizard.amount_to_invoice = sum(sale_orders.mapped("amount_to_invoice"))
+            wizard.amount_total = sum(sale_orders.mapped("amount_total"))
 
     # === ONCHANGE METHODS ===#
 
     @api.onchange("advance_payment_method")
     def _onchange_advance_payment_method(self):
-        if self.advance_payment_method == "percentage":
-            amount = self.default_get(["amount"]).get("amount")
-            return {"value": {"amount": amount}}
+        if self.advance_payment_method == "downpayment":
+            self.amount = max(self.amount_paid - self.amount_invoiced, 0.0)
 
     # === CONSTRAINT METHODS ===#
 
     def _check_amount_is_positive(self):
         for wizard in self:
-            if (wizard.advance_payment_method == "percentage" and wizard.amount <= 0.00) or (
-                wizard.advance_payment_method == "fixed" and wizard.fixed_amount <= 0.00
-            ):
+            if wizard.advance_payment_method == "downpayment" and wizard.amount <= 0.00:
                 raise UserError(
                     wizard.env._("The value of the down payment amount must be positive.")
                 )
@@ -184,12 +193,13 @@ class SaleAdvancePaymentInv(models.TransientModel):
         AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
 
-        if self.advance_payment_method == "percentage":
+        recomputed_amount = self.amount_total * self.percentage
+        if self.currency_id.compare_amounts(recomputed_amount, self.amount) == 0:
             amount_type = "percent"
-            amount = self.amount
-        else:  # self.advance_payment_method == 'fixed':
+            amount = self.percentage * 100
+        else:
             amount_type = "fixed"
-            amount = self.fixed_amount
+            amount = self.amount
 
         down_payment_base_lines = AccountTax._prepare_down_payment_lines(
             base_lines=base_lines,
@@ -267,10 +277,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         self.ensure_one()
         self = self.with_context(lang=order._get_lang())
 
-        if self.advance_payment_method == "percentage":
-            name = self.env._("Down payment of %s%%", formatLang(self.env, self.amount))
-        else:
-            name = self.env._("Down Payment")
+        name = self.env._("Down payment")
 
         return so_line._prepare_invoice_line(
             name=name, quantity=1.0, **({"account_id": account.id} if account else {})
