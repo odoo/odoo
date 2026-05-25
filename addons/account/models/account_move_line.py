@@ -3875,7 +3875,11 @@ class AccountMoveLine(models.Model):
         if self:
             self.product_id.ensure_one()
             return {
-                'quantity': self.quantity,
+                'quantity': sum(self.mapped(
+                    lambda line: line.product_uom_id._compute_quantity(
+                        qty=line.quantity, to_unit=self[0].product_uom_id,
+                    ),
+                )),
                 'readOnly': self.move_id._is_readonly() or len(self) > 1,
                 'price': self[0].price_unit,
                 **self.move_id._get_product_catalog_uom_data(
