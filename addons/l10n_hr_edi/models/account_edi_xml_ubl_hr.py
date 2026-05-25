@@ -187,6 +187,8 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
             vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = '386'
         elif invoice.l10n_hr_process_type == 'P9':
             vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = '381'
+        elif invoice.l10n_hr_process_type == 'P10':
+            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = '384'
 
     def _ubl_add_billing_reference_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
