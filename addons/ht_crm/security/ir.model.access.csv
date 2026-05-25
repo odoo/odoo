@@ -1,7 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_employee,sale.employee,model_sale_employee,group_manage_employee,1,1,1,1
+access_employee,employee.profile,model_employee_profile,group_manage_employee,1,1,1,1
 access_employee_project,employee.project.rel,model_employee_project_rel,group_manage_employee,1,1,1,1
-access_employee_role,sale.employee.role,model_sale_employee_role,group_manage_employee,1,1,1,1
+access_employee_role,employee.profile.role,model_employee_profile_role,group_manage_employee,1,1,1,1
 
 access_estate_project_promotion_user,estate.project.promotion.user,model_estate_project_promotion,group_ht_user,1,0,0,0
 access_phonebook_user,sale.phonebook.user,model_sale_phonebook,group_ht_user,1,1,0,0
@@ -10,8 +10,8 @@ access_customer_user,sale.customer.user,model_sale_customer,group_ht_user,1,1,0,
 access_estate_project_user,estate.project.user,model_estate_project,group_ht_user,1,0,0,0
 access_estate_property_unit_user,estate.property.unit.user,model_estate_property_unit,group_ht_user,1,0,0,0
 access_estate_property_unit_type_user,estate.property.unit.type.user,model_estate_property_unit_type,group_ht_user,1,0,0,0
-access_employee_user,sale.employee.user,model_sale_employee,group_ht_user,1,0,0,0
-access_employee_role_user,sale.employee.role.user,model_sale_employee_role,group_ht_user,1,0,0,0
+access_employee_user,employee.profile.user,model_employee_profile,group_ht_user,1,0,0,0
+access_employee_role_user,employee.profile.role.user,model_employee_profile_role,group_ht_user,1,0,0,0
 access_transaction_user,sale.transaction.user,model_sale_transaction,group_ht_user,1,0,0,0
 
 access_customer,sale.customer,model_sale_customer,group_manage_customer,1,1,1,1
@@ -22,9 +22,9 @@ access_phonebook_manager,sale.phonebook.manager,model_sale_phonebook,group_ht_le
 access_customer_manager,sale.customer.manager,model_sale_customer,group_ht_leader,1,1,1,1
 access_estate_manager,estate.project.manager,model_estate_project,group_ht_leader,1,1,1,1
 access_estate_property_unit_type_user,estate.property.unit.type.user,model_estate_property_unit_type,group_ht_user,1,0,0,0
-access_employee_manager,sale.employee.manager,model_sale_employee,group_ht_leader,1,1,1,1
-access_employee_role_manager,sale.employee.role.manager,model_sale_employee_role,group_ht_leader,1,0,0,0
-access_employee_kpi_manager,sale.employee.kpi.manager,model_sale_employee_kpi,group_ht_leader,1,0,0,0
+access_employee_manager,employee.profile.manager,model_employee_profile,group_ht_leader,1,1,1,1
+access_employee_role_manager,employee.profile.role.manager,model_employee_profile_role,group_ht_leader,1,0,0,0
+access_employee_kpi_manager,employee.profile.sales.kpi.manager,model_employee_profile_sales_kpi,group_ht_leader,1,0,0,0
 access_sale_customer_report_manager,sale.customer.report.manager,model_sale_customer_report,group_ht_leader,1,0,0,0
 access_revenue_report_manager,revenue.report.manager,model_revenue_report,group_ht_leader,1,0,0,0
 access_estate_project_report_manager,estate.project.report.manager,model_estate_project_report,group_ht_leader,1,0,0,0
@@ -42,20 +42,20 @@ access_estate_project_promotion_view,estate.project.promotion.view,model_estate_
 access_employee_project_view,employee.project.rel.view,model_employee_project_rel,group_view_only,1,0,0,0
 access_estate_property_unit_view,estate.property.unit.view,model_estate_property_unit,group_view_only,1,0,0,0
 access_estate_property_unit_type_view,estate.property.unit.type.view,model_estate_property_unit_type,group_view_only,1,0,0,0
-access_employee_view,sale.employee.view,model_sale_employee,group_view_only,1,0,0,0
-access_employee_role_view,sale.employee.role.view,model_sale_employee_role,group_view_only,1,0,0,0
-access_employee_kpi_view,sale.employee.kpi.view,model_sale_employee_kpi,group_view_only,1,0,0,0
+access_employee_view,employee.profile.view,model_employee_profile,group_view_only,1,0,0,0
+access_employee_role_view,employee.profile.role.view,model_employee_profile_role,group_view_only,1,0,0,0
+access_employee_kpi_view,employee.profile.sales.kpi.view,model_employee_profile_sales_kpi,group_view_only,1,0,0,0
 access_sale_transaction_view,sale.transaction.view,model_sale_transaction,group_view_only,1,0,0,0
 
-access_sale_employee_ga,sale.employee.general.admin,model_sale_employee,group_ht_general_admin,1,0,0,0
-access_sale_employee_role_ga,sale.employee.role.general.admin,model_sale_employee_role,group_ht_general_admin,1,0,0,0
-access_sale_employee_kpi_ga,sale.employee.kpi.general.admin,model_sale_employee_kpi,group_ht_general_admin,1,1,1,1
+access_sale_employee_ga,employee.profile.general.admin,model_employee_profile,group_ht_general_admin,1,0,0,0
+access_sale_employee_role_ga,employee.profile.role.general.admin,model_employee_profile_role,group_ht_general_admin,1,0,0,0
+access_sale_employee_kpi_ga,employee.profile.sales.kpi.general.admin,model_employee_profile_sales_kpi,group_ht_general_admin,1,1,1,1
 
 access_sale_transaction,sale.transaction.general,model_sale_transaction,group_manage_transaction,1,1,1,1
 access_sale_transaction_payment,sale.transaction.payment,model_sale_transaction_payment,group_manage_transaction,1,1,1,1
 access_estate_payment_plan,estate.payment.plan,model_estate_payment_plan,group_manage_transaction,1,1,1,1
 access_estate_payment_plan_line,estate.payment.plan.line,model_estate_payment_plan_line,group_manage_transaction,1,1,1,1
-access_employee_kpi,sale.employee.kpi,model_sale_employee_kpi,group_manage_transaction,1,1,1,1
+access_employee_kpi,employee.profile.sales.kpi,model_employee_profile_sales_kpi,group_manage_transaction,1,1,1,1
 
 access_employee_project_phonebatch,employee.project.rel,model_employee_project_rel,group_manage_project,1,1,1,1
 access_estate_project,estate.project,model_estate_project,group_manage_project,1,1,1,1
@@ -68,3 +68,8 @@ access_revenue_report,revenue.report,model_revenue_report,group_view_report,1,0,
 access_estate_project_report,estate.project.report,model_estate_project_report,group_view_report,1,0,0,0
 access_estate_project_unit_report,estate.project.report.unit,model_estate_project_unit_report,group_view_report,1,0,0,0
 access_ir_actions_report_user,ir.actions.report.user,base.model_ir_actions_report,group_view_report,1,0,0,0
+
+
+access_employee_profile_manager,employee.profile.manager,model_employee_profile,group_manage_employee,1,1,1,1
+access_employee_profile_sales_manager,employee.profile.sales.manager,model_employee_profile_sales,group_manage_employee,1,1,1,1
+access_employee_profile_role_manager,employee.profile.role.manager,model_employee_profile_sales,group_manage_employee,1,1,1,1

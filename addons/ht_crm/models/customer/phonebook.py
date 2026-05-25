@@ -2,8 +2,6 @@ from odoo import models, fields, api, exceptions
 import datetime
 import random
 
-TARGET_PHONE = 50
-
 class PhonebookBatch(models.Model):
     _name = "sale.phonebook.batch"
     _description = "Phone Dataset"
@@ -83,7 +81,7 @@ class PhonebookBatch(models.Model):
             ('salesperson_id', '=', salesperson.id)
         ])
 
-        if count >= TARGET_PHONE:
+        if count >= salesperson.max_received:
             return True
 
     def action_redistribute(self):
@@ -183,14 +181,14 @@ class PhoneBook(models.Model):
     project_id = fields.Many2one(related='batch_id.project_id', string="Dự án")
 
     salesperson_id = fields.Many2one(
-        'sale.employee',
+        'employee.profile.sales',
         string="Sales phụ trách",
         domain=[('role_id.code', '=', 'sales')],
         groups="ht_crm.group_ht_executive, ht_crm.group_ht_general_admin"
     )
 
     previous_salesperson_ids = fields.Many2many(
-        'sale.employee',
+        'employee.profile.sales',
         string="Lịch sử phụ trách",
         groups="ht_crm.group_ht_executive, ht_crm.group_ht_general_admin"
     )
@@ -228,7 +226,7 @@ class PhoneBook(models.Model):
             person = vals.get('salesperson_id')
 
             if person:
-                salesperson = self.env['sale.employee'].browse(person)
+                salesperson = self.env['employee.profile.sales'].browse(person)
 
                 if self.env.user != salesperson.user_id:
                     raise exceptions.UserError(

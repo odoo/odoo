@@ -2,7 +2,7 @@ from odoo import models, fields, api, exceptions
 import datetime
 
 class Employee(models.Model):
-    _name = 'sale.employee'
+    _name = 'employee.profile'
     _description = 'Employee Information'
 
     # =========================
@@ -13,14 +13,8 @@ class Employee(models.Model):
     active = fields.Boolean(default=True)
 
     role_id = fields.Many2one(
-        'sale.employee.role',
+        'employee.profile.role',
         string="Chức danh"
-    )
-
-    project_ids = fields.One2many(
-        'employee.project.rel',
-        'sales_id',
-        string="Dự án phụ trách"
     )
 
     # =========================
@@ -91,16 +85,6 @@ class Employee(models.Model):
         store=True
     )
 
-    manager_id = fields.Many2one(
-        'sale.employee',
-        string="Quản lý"
-    )
-
-    child_ids = fields.One2many(
-        'sale.employee',
-        'manager_id',
-        string="Nhân viên cấp dưới"
-    )
 
     # =========================
     # System / tracking
@@ -208,8 +192,97 @@ class Employee(models.Model):
         for rec in self:
             rec.birth_year = rec.birthday.year if rec.birthday else False
 
+    # =========================
+    # USER SYNC
+    # =========================
+    def action_sync_user(self):
+        self.ensure_one()
+
+        if not self.env.user.has_group(
+            'ht_crm.group_manage_employee'
+        ):
+            raise exceptions.ValidationError("Bạn không có quyền đồng bộ")
+
+        Users = self.env['res.users'].sudo()
+
+        if self.user_id:
+
+            self.user_id.write({
+                'name': self.name,
+                'login': self.email,
+                'email': self.email,
+            })
+
+        else:
+            existed = Users.search([
+                    ('login', '=', self.email)
+                ], limit=1)
+
+            if existed:
+                self.user_id = existed.id
+                return
+            
+            user = Users.create({
+                'name': self.name,
+                'login': self.email,
+                'email': self.email,
+            })
+
+            self.user_id = user.id
+
+
+class EmployeeSales(models.Model):
+    _name = 'employee.profile.sales'
+    _description = 'Sales Information'
+
+    name = fields.Char(related="employee_id.name" , string="Tên Sales")
+
+    employee_id = fields.Many2one(
+        "employee.profile",
+        required=True,
+        ondelete="cascade",
+        domain=['|', ('role_id.code', '=', 'sales'), ('role_id.code', '=', 'sales_manager')]
+    )
+
+    project_ids = fields.One2many(
+        'employee.project.rel',
+        'sales_id',
+        string="Dự án phụ trách"
+    )
+
+    manager_id = fields.Many2one(
+        'employee.profile.sales',
+        string="Quản lý"
+    )
+
+    child_ids = fields.One2many(
+        'employee.profile.sales',
+        'manager_id',
+        string="Nhân viên cấp dưới"
+    )
+
+    user_id = fields.Many2one(related="employee_id.user_id")
+
+    max_received = fields.Integer(string="Nhận tối đa", default=50)
+
+    current_received = fields.Integer(string="Đã nhận")
+
+    group_ids = fields.One2many(
+        "employee.project.rel",
+        "sales_id",
+    )
+
+    _sql_constraints = [
+        (
+            "unique_employee",
+            "unique(employee_id)",
+            "Nhân viên đã có hồ sơ sales."
+        )
+    ]
+
+
 class EmployeeRole(models.Model):
-    _name = 'sale.employee.role'
+    _name = 'employee.profile.role'
     _description = "Employee Role"
     _order = 'sequence, id'
 
@@ -224,10 +297,10 @@ class EmployeeRole(models.Model):
     ]
 
 class EmployeeKPI(models.Model):
-    _name = 'sale.employee.kpi'
+    _name = 'employee.profile.sales.kpi'
     _description = 'Employee KPI'
 
-    employee_id = fields.Many2one('sale.employee', required=True)
+    employee_id = fields.Many2one('employee.profile.sales', required=True)
     month = fields.Integer(string="Tháng", required=True)
     year = fields.Integer(string="Năm", required=True)
     quarter = fields.Integer(string="Quý", compute='_compute_quarter', store=True)

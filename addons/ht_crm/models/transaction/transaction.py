@@ -20,7 +20,7 @@ class Transaction(models.Model):
         default=lambda self: self.env.company.currency_id,
     )
 
-    employee_id = fields.Many2one('sale.employee', string="Sales", domain=[('role_ids.code', '=', 'sales')], required=True)
+    employee_id = fields.Many2one('employee.profile.sales', string="Sales", domain=[('role_ids.code', '=', 'sales')], required=True)
     customer_id = fields.Many2one("sale.customer", string="Khách hàng", required=True)
     
     date = fields.Date(default=fields.Date.today, string="Ngày giao dịch")
@@ -185,14 +185,14 @@ class Transaction(models.Model):
             rec.tax_amount = rec.listed_price * (rec.discount / 100)
 
     def _get_kpi(self, employee_id, month, year):
-        return self.env['sale.employee.kpi'].search([
+        return self.env['employee.profile.sales.kpi'].search([
             ('employee_id', '=', employee_id),
             ('month', '=', month),
             ('year', '=', year),
         ], limit=1)
 
     def _increase_kpi(self, employee_id, month, year, value):
-        kpi_model = self.env['sale.employee.kpi']
+        kpi_model = self.env['employee.profile.sales.kpi']
         kpi = self._get_kpi(employee_id, month, year)
 
         if kpi:

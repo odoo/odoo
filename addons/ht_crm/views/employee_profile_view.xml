@@ -1,14 +1,14 @@
 <odoo>
     <record id="rule_employee_ga" model="ir.rule">
         <field name="name">GA (Employee)</field>
-        <field name="model_id" ref="model_sale_employee"/>
+        <field name="model_id" ref="model_employee_profile_sales"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('group_ht_general_admin'))]"/>
     </record>
 
     <record id="rule_employee_kpi_ga" model="ir.rule">
         <field name="name">GA (Employee KPI)</field>
-        <field name="model_id" ref="model_sale_employee_kpi"/>
+        <field name="model_id" ref="model_employee_profile_sales_kpi"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('group_ht_general_admin'))]"/>
     </record>
@@ -16,14 +16,14 @@
     <!-- Hệ Thống -->
     <record id="rule_employee_admin" model="ir.rule">
         <field name="name">Hệ Thống (Employee)</field>
-        <field name="model_id" ref="model_sale_employee"/>
+        <field name="model_id" ref="model_employee_profile_sales"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
 
     <record id="rule_kpi_admin" model="ir.rule">
         <field name="name">Hệ Thống (KPI)</field>
-        <field name="model_id" ref="model_sale_employee_kpi"/>
+        <field name="model_id" ref="model_employee_profile_sales_kpi"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
@@ -33,14 +33,14 @@
     <!-- Ban Điều Hành -->
     <record id="rule_employee_exec" model="ir.rule">
         <field name="name">Ban Điều Hành (Employee)</field>
-        <field name="model_id" ref="model_sale_employee"/>
+        <field name="model_id" ref="model_employee_profile_sales"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('group_ht_executive'))]"/>
     </record>
 
     <record id="rule_kpi_exec" model="ir.rule">
         <field name="name">Ban Điều Hành (KPI)</field>
-        <field name="model_id" ref="model_sale_employee_kpi"/>
+        <field name="model_id" ref="model_employee_profile_sales_kpi"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('group_ht_executive'))]"/>
     </record>
@@ -50,7 +50,7 @@
     <!-- Trưởng Phòng -->
     <record id="rule_employee_manager" model="ir.rule">
         <field name="name">Trưởng Phòng (Employee)</field>
-        <field name="model_id" ref="model_sale_employee"/>
+        <field name="model_id" ref="model_employee_profile_sales"/>
         <field name="domain_force">
             [
                 '|',
@@ -63,7 +63,7 @@
 
     <record id="rule_kpi_manager" model="ir.rule">
         <field name="name">Trưởng Phòng (Employee)</field>
-        <field name="model_id" ref="model_sale_employee_kpi"/>
+        <field name="model_id" ref="model_employee_profile_sales_kpi"/>
         <field name="domain_force">
             [
                 '|',
@@ -77,7 +77,7 @@
     <!-- User -->
     <!-- <record id="rule_employee_user" model="ir.rule">
         <field name="name">User (Employee)</field>
-        <field name="model_id" ref="model_sale_employee"/>
+        <field name="model_id" ref="model_employee_profile_sales"/>
         <field name="domain_force">
         [
             '|',
@@ -89,8 +89,8 @@
     </record> -->
 
     <record id="view_employee_role_tree" model="ir.ui.view">
-        <field name="name">sale.employee.role.tree</field>
-        <field name="model">sale.employee.role</field>
+        <field name="name">employee.profile.role.tree</field>
+        <field name="model">employee.profile.role</field>
         <field name="arch" type="xml">
             <list>
                 <field name="sequence" widget="handle"/>
@@ -102,8 +102,8 @@
     </record>
 
     <record id="view_sale_employee_list" model="ir.ui.view">
-        <field name="name">sale.employee.list</field>
-        <field name="model">sale.employee</field>
+        <field name="name">employee.profile.list</field>
+        <field name="model">employee.profile</field>
         <field name="arch" type="xml">
 
             <list string="Danh Sách Nhân Viên"
@@ -130,10 +130,18 @@
     </record>
 
     <record id="view_sale_employee_form" model="ir.ui.view">
-        <field name="name">sale.employee.form</field>
-        <field name="model">sale.employee</field>
+        <field name="name">employee.profile.form</field>
+        <field name="model">employee.profile</field>
         <field name="arch" type="xml">
             <form string="Nhân viên">
+                <header>
+                    <button name="action_sync_user"
+                            string="Tạo / Đồng bộ tài khoản"
+                            type="object"
+                            class="oe_highlight"
+                            icon="fa-refresh"
+                            groups="base.group_system,ht_crm.group_manage_employee"/>
+                </header>
 
                 <sheet>
 
@@ -153,7 +161,6 @@
                         <group>
                             <field name="active"/>
                             <field name="role_id"/>
-                            <field name="manager_id"/>
                             <field name="user_id"/>
                         </group>
 
@@ -239,40 +246,6 @@
                         </page>
 
                         <!-- ====================== -->
-                        <!-- Projects -->
-                        <!-- ====================== -->
-                        <page string="Dự án phụ trách">
-
-                            <field name="project_ids"/>
-
-                        </page>
-
-                        <!-- ====================== -->
-                        <!-- Team -->
-                        <!-- ====================== -->
-                        <page string="Cơ cấu quản lý">
-
-                            <group>
-
-                                <group string="Quản lý trực tiếp">
-                                    <field name="manager_id"/>
-                                </group>
-
-                                <group string="Nhân viên cấp dưới">
-                                    <field name="child_ids">
-                                        <list>
-                                            <field name="name"/>
-                                            <field name="phone"/>
-                                            <field name="role_id"/>
-                                        </list>
-                                    </field>
-                                </group>
-
-                            </group>
-
-                        </page>
-
-                        <!-- ====================== -->
                         <!-- Notes -->
                         <!-- ====================== -->
                         <page string="Ghi chú">
@@ -292,8 +265,8 @@
     </record>
 
     <record id="view_employee_kpi_list" model="ir.ui.view">
-        <field name="name">sale.employee.kpi.list</field>
-        <field name="model">sale.employee.kpi</field>
+        <field name="name">employee.profile.sales.kpi.list</field>
+        <field name="model">employee.profile.sales.kpi</field>
         <field name="arch" type="xml">
             <list string="KPI Nhân Viên" create="false" default_order="year desc, month desc, total_value desc">
 

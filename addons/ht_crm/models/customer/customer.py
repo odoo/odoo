@@ -22,7 +22,7 @@ class Customer(models.Model):
 
     # Nhân viên đang phụ trách (có thể thay)
     salesperson_id = fields.Many2one(
-        'sale.employee',
+        'employee.profile.sales',
         string="Nhân viên phụ trách",
         domain=[('role_ids.code', '=', 'sales')]
     )

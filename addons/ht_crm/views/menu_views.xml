@@ -68,15 +68,21 @@
     </record>
 
     <!-- Nhân sự -->
-    <record id="action_employee" model="ir.actions.act_window">
+    <record id="action_employee_profile" model="ir.actions.act_window">
         <field name="name">Nhân Sự</field>
-        <field name="res_model">sale.employee</field>
+        <field name="res_model">employee.profile</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_employee_profile_sales" model="ir.actions.act_window">
+        <field name="name">Nhân viên Sales</field>
+        <field name="res_model">employee.profile.sales</field>
         <field name="view_mode">list,form</field>
     </record>
 
     <record id="action_employee_kpi" model="ir.actions.act_window">
         <field name="name">Sales KPI</field>
-        <field name="res_model">sale.employee.kpi</field>
+        <field name="res_model">employee.profile.sales.kpi</field>
         <field name="view_mode">list,form</field>
     </record>
 
@@ -91,7 +97,7 @@
 
     <record id="action_employee_role" model="ir.actions.act_window">
         <field name="name">Chức Vụ</field>
-        <field name="res_model">sale.employee.role</field>
+        <field name="res_model">employee.profile.role</field>
         <field name="view_mode">list,form</field>
     </record>
 
@@ -124,11 +130,15 @@
     <menuitem id="menu_ht_root" name="HTLand CRM">
 
         <!-- CUSTOMER MANAGEMENT -->
-        <menuitem id="menu_customer_root" name="CRM" sequence="10">
+        <menuitem id="menu_customer_root" name="CRM">
             <menuitem id="menu_customer" action="action_customer"/>
-            <menuitem id="menu_phonebook" action="action_phonebook"/>
-            <menuitem id="menu_phonebook_batch" action="action_phonebook_batch"/>
-            <menuitem id="menu_employee_project_rel" action="action_employee_project_rel"/>
+
+            <menuitem id="menu_phonebook_root" name="Lead / Data">
+                <menuitem id="menu_phonebook" action="action_phonebook"/>
+                <menuitem id="menu_phonebook_batch" action="action_phonebook_batch"/>
+            </menuitem>
+
+            <menuitem id="menu_assignment" name="Phân bổ Data" action="action_employee_project_rel"/>
         </menuitem>
 
         <menuitem id="menu_project_root" name="Dự Án" sequence="20">
@@ -148,7 +158,8 @@
 
         <!-- ORGANIZATION -->
         <menuitem id="menu_org_root" name="Tổ Chức" sequence="40" groups="group_ht_leader,group_ht_executive">
-            <menuitem id="menu_employee" action="action_employee"/>
+            <menuitem id="menu_employee" action="action_employee_profile"/>
+            <menuitem id="menu_employee_sales" action="action_employee_profile_sales"/>
             <menuitem id="menu_role" action="action_employee_role"/>
         </menuitem>
 
