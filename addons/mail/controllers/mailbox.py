@@ -56,6 +56,7 @@ class MailboxController(WebclientController):
 
     @store_handler("/mail/history/messages")
     def store_history_messages(self, store: Store, fetch_params=None):
+        request.update_context(add_inbox_fields=True)
         self._resolve_messages(
             store,
             domain=Domain("needaction", "=", False),
@@ -64,6 +65,7 @@ class MailboxController(WebclientController):
 
     @store_handler("/mail/bookmark/messages")
     def store_bookmark_messages(self, store: Store, fetch_params=None):
+        request.update_context(add_inbox_fields=True)
         self._resolve_messages(
             store,
             domain=Domain("bookmarked_partner_ids", "in", [request.env.user.partner_id.id]),

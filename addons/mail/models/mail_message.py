@@ -947,7 +947,11 @@ class MailMessage(models.Model):
             self.env.user,
             notification_type="mail.message/mark_as_unread",
             notification_payload={"message_ids": notifications.mail_message_id.ids},
-        ).add(notifications.mail_message_id, "_store_message_fields")
+        ).add(
+            notifications.mail_message_id,
+            "_store_message_fields",
+            fields_params={"inbox_fields": True},
+        )
 
     @api.model
     def _message_fetch(self, domain, *, thread=None, search_term=None, is_notification=None, before=None, after=None, around=None, limit=30):
