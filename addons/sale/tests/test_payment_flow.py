@@ -689,8 +689,8 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         pay, unless they are cancelled."""
         downpayment_wizard = self.env["sale.advance.payment.inv"].create({
             "sale_order_ids": [Command.set(self.sale_order.ids)],
-            "advance_payment_method": "percentage",
-            "amount": 20,
+            "advance_payment_method": "downpayment",
+            "percentage": 0.20,
         })
         downpayment_wizard._create_invoices(self.sale_order)  # Draft
         downpayment_wizard._create_invoices(self.sale_order).action_post()

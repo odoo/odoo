@@ -746,8 +746,8 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         }
 
         payment = self.env['sale.advance.payment.inv'].with_context(context).create({
-            'advance_payment_method': 'fixed',
-            'fixed_amount': 300,
+            'advance_payment_method': 'downpayment',
+            'amount': 300,
         })
         res = payment.create_invoices()
         invoice = self.env['account.move'].browse(res['res_id'])

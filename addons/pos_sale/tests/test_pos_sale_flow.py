@@ -392,8 +392,8 @@ class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
         so.action_confirm()
 
         self.env['sale.advance.payment.inv'].sudo().create({
-            'advance_payment_method': 'fixed',
-            'fixed_amount': 20,
+            'advance_payment_method': 'downpayment',
+            'amount': 20,
             'sale_order_ids': so.ids,
         }).create_invoices()
         # Invoice the delivered part from the down payment
@@ -651,8 +651,8 @@ class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
             'active_id': sale_order.id,
             'default_journal_id': self.company_data['default_journal_sale'].id,
         }).create({
-            'advance_payment_method': 'fixed',
-            'fixed_amount': 100,
+            'advance_payment_method': 'downpayment',
+            'amount': 100,
         }).create_invoices()
 
         selected_groups = self.user.group_ids
@@ -1210,8 +1210,8 @@ class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
         }
 
         payment = self.env['sale.advance.payment.inv'].with_context(context).create({
-            'advance_payment_method': 'fixed',
-            'fixed_amount': 300,
+            'advance_payment_method': 'downpayment',
+            'amount': 300,
         })
         res = payment.create_invoices()
         invoice = self.env['account.move'].browse(res['res_id'])
@@ -1392,8 +1392,8 @@ class TestPoSSalePayment(PoSSaleSyncCommon, TestPointOfSaleHttpCommon, PaymentCo
         })
         # Manual downpayment invoice
         down_payment = self.env['sale.advance.payment.inv'].sudo().create({
-            'advance_payment_method': 'fixed',
-            'fixed_amount': 50,
+            'advance_payment_method': 'downpayment',
+            'amount': 50,
             'sale_order_ids': sale_order.ids,
         })
         down_payment.create_invoices()
