@@ -10,6 +10,7 @@ from . import stock_traceability
 from . import mrp_unbuild
 from . import mrp_workorder
 from . import product
+from . import product_uom
 from . import res_company
 from . import stock_move
 from . import stock_move_line
