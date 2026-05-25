@@ -311,7 +311,7 @@ export class MailMessage extends models.ServerModel {
                     message_ids: [message.id],
                     store_data: new mailDataHelpers.Store(
                         this.browse(message.id),
-                        makeKwArgs({ for_current_user: true })
+                        makeKwArgs({ for_current_user: true, inbox_fields: true })
                     ).get_result(),
                 }
             );
