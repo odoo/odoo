@@ -884,6 +884,14 @@ patch(PosStore.prototype, {
                 return;
             }
             destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
+        // Guard against self-transfer (source and destination the same order)
+        if (destinationOrder && sourceOrder && destinationOrder.uuid === sourceOrder.uuid) {
+            await this.dialog.open({
+                title: _t("Cannot transfer order to itself"),
+                body: _t("This order is already linked to the destination. Choose a different table or order."),
+            });
+            return;
+        }
         }
         await this.mergeOrders(sourceOrder, destinationOrder, destinationTable);
         if (destinationTable) {
@@ -899,6 +907,14 @@ patch(PosStore.prototype, {
         }
 
         const destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
+        // Guard against self-transfer (source and destination the same order)
+        if (destinationOrder && sourceOrder && destinationOrder.uuid === sourceOrder.uuid) {
+            await this.dialog.open({
+                title: _t("Cannot transfer order to itself"),
+                body: _t("This order is already linked to the destination. Choose a different table or order."),
+            });
+            return;
+        }
         await this.mergeOrders(sourceOrder, destinationOrder);
         await this.setTable(destinationTable);
         return destinationOrder;
