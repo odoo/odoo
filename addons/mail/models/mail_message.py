@@ -907,7 +907,11 @@ class MailMessage(models.Model):
         if not notifications:
             return
         notifications.write({"is_read": False, "read_date": False})
-        store = Store().add(notifications.mail_message_id, "_store_message_fields")
+        store = Store().add(
+            notifications.mail_message_id,
+            "_store_message_fields",
+            fields_params={"inbox_fields": True},
+        )
         self.env.user._bus_send(
             "mail.message/mark_as_unread",
             {"message_ids": notifications.mail_message_id.ids, "store_data": store.get_result()},

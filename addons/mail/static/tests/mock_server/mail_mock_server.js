@@ -1152,6 +1152,7 @@ function _process_request_for_logged_in_user(store, name, params) {
                 domain: [["needaction", "=", false]],
             },
             {
+                extraKwargs: { inbox_fields: true },
                 filter(message) {
                     const notifs = MailNotification.search_read([
                         ["mail_message_id", "=", message.id],
@@ -1164,10 +1165,15 @@ function _process_request_for_logged_in_user(store, name, params) {
         );
     }
     if (name === "/mail/bookmark/messages") {
-        _resolve_messages.call(this, store, {
-            ...params.fetch_params,
-            domain: [["bookmarked_partner_ids", "in", [this.env.user.partner_id]]],
-        });
+        _resolve_messages.call(
+            this,
+            store,
+            {
+                ...params.fetch_params,
+                domain: [["bookmarked_partner_ids", "in", [this.env.user.partner_id]]],
+            },
+            { extraKwargs: { inbox_fields: true } }
+        );
     }
     if (name === "/mail/thread/messages") {
         const thread = this.env[params.thread_model].browse(params.thread_id);
