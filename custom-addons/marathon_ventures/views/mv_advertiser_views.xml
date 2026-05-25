@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_advertiser_list" model="ir.ui.view">
+    <field name="name">mv.advertiser.list</field>
+    <field name="model">mv.advertiser</field>
+    <field name="arch" type="xml">
+      <list string="Advertiser">
+        <field name="name"/>
+        <field name="adv_log_with_expiration_date"/>
+        <field name="account"/>
+        <field name="accuweather_adv_sep"/>
+        <field name="advertiser_approved_to_book"/>
+        <field name="advertiser_cia"/>
+        <field name="advertiser_count"/>
+        <field name="advertiser_credit_limit"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_advertiser_form" model="ir.ui.view">
+    <field name="name">mv.advertiser.form</field>
+    <field name="model">mv.advertiser</field>
+    <field name="arch" type="xml">
+      <form string="Advertiser">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="account"/>
+                <field name="umbrella_account"/>
+                <field name="umbrella_account_2"/>
+                <field name="accuweather_adv_sep"/>
+                <field name="bouncetv_adv_sep"/>
+                <field name="commercial"/>
+                <field name="courttv_adv_sep"/>
+                <field name="defy_adv_sep"/>
+                <field name="duplicate_approval"/>
+                <field name="grittv_adv_sep"/>
+                <field name="ion_mys_adv_sep"/>
+                <field name="ion_tv_adv_sep"/>
+                <field name="laff_adv_sep"/>
+                <field name="merit_street_adv_sep"/>
+                <field name="mlb_adv_sep"/>
+                <field name="nhl_adv_sep"/>
+                <field name="noseytv_adv_sep"/>
+              </group>
+              <group>
+                <field name="quest_adv_sep"/>
+                <field name="scripps_news_adv_sep"/>
+                <field name="true_crime_adv_sep"/>
+                <field name="twist_adv_sep"/>
+                <field name="adv_log_with_expiration_date"/>
+                <field name="log_exp_test"/>
+                <field name="advertiser_number"/>
+                <field name="comments"/>
+                <field name="duplicate_name_check"/>
+                <field name="advertiser_approved_to_book"/>
+                <field name="advertiser_cia"/>
+                <field name="hold_placed_on_advertiser_account"/>
+                <field name="monitoring"/>
+                <field name="new_advertiser"/>
+                <field name="advertiser_count"/>
+                <field name="advertiser_credit_limit"/>
+                <field name="intacct_adv_balance"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_advertiser_search" model="ir.ui.view">
+    <field name="name">mv.advertiser.search</field>
+    <field name="model">mv.advertiser</field>
+    <field name="arch" type="xml">
+      <search string="Advertiser">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_advertiser" model="ir.actions.act_window">
+    <field name="name">Advertiser</field>
+    <field name="res_model">mv.advertiser</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_advertiser" name="Advertiser" parent="menu_mv_master_data" action="action_mv_advertiser"/>
+</odoo>

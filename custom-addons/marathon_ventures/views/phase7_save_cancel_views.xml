@@ -1,0 +1,915 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_advertiser_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.advertiser.form.savebtn</field>
+    <field name="model">mv.advertiser</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_advertiser_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_agency_double_check_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.agency_double_check.form.savebtn</field>
+    <field name="model">mv.agency_double_check</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_agency_double_check_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_agency_match_error_accounts_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.agency_match_error_accounts.form.savebtn</field>
+    <field name="model">mv.agency_match_error_accounts</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_agency_match_error_accounts_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_brands_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.brands.form.savebtn</field>
+    <field name="model">mv.brands</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_brands_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_broadcast_month_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.broadcast_month.form.savebtn</field>
+    <field name="model">mv.broadcast_month</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_broadcast_month_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_bundle_pricing_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.bundle_pricing.form.savebtn</field>
+    <field name="model">mv.bundle_pricing</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_bundle_pricing_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_case_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.case.form.savebtn</field>
+    <field name="model">mv.case</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_case_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_check_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.check.form.savebtn</field>
+    <field name="model">mv.check</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_check_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_check_detail_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.check_detail.form.savebtn</field>
+    <field name="model">mv.check_detail</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_check_detail_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_clearance_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.clearance.form.savebtn</field>
+    <field name="model">mv.clearance</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_clearance_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_clearance_list_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.clearance_list.form.savebtn</field>
+    <field name="model">mv.clearance_list</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_clearance_list_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_contract_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.contract.form.savebtn</field>
+    <field name="model">mv.contract</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_contract_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_contracts_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.contracts.form.savebtn</field>
+    <field name="model">mv.contracts</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_contracts_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_credit_application_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.credit_application.form.savebtn</field>
+    <field name="model">mv.credit_application</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_credit_application_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_credit_monitoring_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.credit_monitoring.form.savebtn</field>
+    <field name="model">mv.credit_monitoring</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_credit_monitoring_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_credit_monitoring_info_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.credit_monitoring_info.form.savebtn</field>
+    <field name="model">mv.credit_monitoring_info</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_credit_monitoring_info_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_current_quarter_overview_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.current_quarter_overview.form.savebtn</field>
+    <field name="model">mv.current_quarter_overview</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_current_quarter_overview_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_custom_debug_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.custom_debug.form.savebtn</field>
+    <field name="model">mv.custom_debug</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_custom_debug_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_deal_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.deal.form.savebtn</field>
+    <field name="model">mv.deal</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_deal_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_disable_related_schedule_email_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.disable_related_schedule_email.form.savebtn</field>
+    <field name="model">mv.disable_related_schedule_email</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_disable_related_schedule_email_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_double_checked_deals_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.double_checked_deals.form.savebtn</field>
+    <field name="model">mv.double_checked_deals</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_double_checked_deals_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_hiatus_excluded_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.hiatus_excluded.form.savebtn</field>
+    <field name="model">mv.hiatus_excluded</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_hiatus_excluded_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_intacct_entity_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.intacct_entity.form.savebtn</field>
+    <field name="model">mv.intacct_entity</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_intacct_entity_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_logger_settings_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.logger_settings.form.savebtn</field>
+    <field name="model">mv.logger_settings</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_logger_settings_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_market_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.market.form.savebtn</field>
+    <field name="model">mv.market</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_market_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_mass_deal_change_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.mass_deal_change.form.savebtn</field>
+    <field name="model">mv.mass_deal_change</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_mass_deal_change_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_opportunity_line_item_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.opportunity_line_item.form.savebtn</field>
+    <field name="model">mv.opportunity_line_item</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_opportunity_line_item_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_other_sales_document_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.other_sales_document.form.savebtn</field>
+    <field name="model">mv.other_sales_document</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_other_sales_document_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_other_sales_document_item_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.other_sales_document_item.form.savebtn</field>
+    <field name="model">mv.other_sales_document_item</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_other_sales_document_item_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_other_sales_document_total_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.other_sales_document_total.form.savebtn</field>
+    <field name="model">mv.other_sales_document_total</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_other_sales_document_total_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_pi_payout_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.pi_payout.form.savebtn</field>
+    <field name="model">mv.pi_payout</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_pi_payout_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_po_detail_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.po_detail.form.savebtn</field>
+    <field name="model">mv.po_detail</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_po_detail_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_prelog_batch_networks_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.prelog_batch_networks.form.savebtn</field>
+    <field name="model">mv.prelog_batch_networks</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_prelog_batch_networks_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_prelog_data_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.prelog_data.form.savebtn</field>
+    <field name="model">mv.prelog_data</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_prelog_data_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_prelog_data_mirror_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.prelog_data_mirror.form.savebtn</field>
+    <field name="model">mv.prelog_data_mirror</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_prelog_data_mirror_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_prelog_data_mirrors_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.prelog_data_mirrors.form.savebtn</field>
+    <field name="model">mv.prelog_data_mirrors</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_prelog_data_mirrors_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_prelog_fuzzy_match_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.prelog_fuzzy_match.form.savebtn</field>
+    <field name="model">mv.prelog_fuzzy_match</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_prelog_fuzzy_match_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_programs_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.programs.form.savebtn</field>
+    <field name="model">mv.programs</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_programs_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_pto_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.pto.form.savebtn</field>
+    <field name="model">mv.pto</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_pto_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_purchase_order_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.purchase_order.form.savebtn</field>
+    <field name="model">mv.purchase_order</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_purchase_order_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_rating_detail_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.rating_detail.form.savebtn</field>
+    <field name="model">mv.rating_detail</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_rating_detail_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_rating_estimates_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.rating_estimates.form.savebtn</field>
+    <field name="model">mv.rating_estimates</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_rating_estimates_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_rating_header_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.rating_header.form.savebtn</field>
+    <field name="model">mv.rating_header</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_rating_header_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_ratings_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.ratings.form.savebtn</field>
+    <field name="model">mv.ratings</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_ratings_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_ratings_compiled_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.ratings_compiled.form.savebtn</field>
+    <field name="model">mv.ratings_compiled</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_ratings_compiled_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_ratings_compiles_dayparts_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.ratings_compiles_dayparts.form.savebtn</field>
+    <field name="model">mv.ratings_compiles_dayparts</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_ratings_compiles_dayparts_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_raycom_monthly_line_item_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.raycom_monthly_line_item.form.savebtn</field>
+    <field name="model">mv.raycom_monthly_line_item</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_raycom_monthly_line_item_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_request_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.request.form.savebtn</field>
+    <field name="model">mv.request</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_request_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_sales_invoice_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.sales_invoice.form.savebtn</field>
+    <field name="model">mv.sales_invoice</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_sales_invoice_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_sales_invoice_item_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.sales_invoice_item.form.savebtn</field>
+    <field name="model">mv.sales_invoice_item</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_sales_invoice_item_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_sales_invoice_payment_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.sales_invoice_payment.form.savebtn</field>
+    <field name="model">mv.sales_invoice_payment</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_sales_invoice_payment_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_sales_invoice_total_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.sales_invoice_total.form.savebtn</field>
+    <field name="model">mv.sales_invoice_total</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_sales_invoice_total_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_sales_order_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.sales_order.form.savebtn</field>
+    <field name="model">mv.sales_order</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_sales_order_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_sales_order_item_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.sales_order_item.form.savebtn</field>
+    <field name="model">mv.sales_order_item</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_sales_order_item_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_sales_order_total_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.sales_order_total.form.savebtn</field>
+    <field name="model">mv.sales_order_total</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_sales_order_total_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_sales_plan_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.sales_plan.form.savebtn</field>
+    <field name="model">mv.sales_plan</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_sales_plan_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_sales_quote_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.sales_quote.form.savebtn</field>
+    <field name="model">mv.sales_quote</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_sales_quote_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_sales_quote_item_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.sales_quote_item.form.savebtn</field>
+    <field name="model">mv.sales_quote_item</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_sales_quote_item_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_sales_quote_total_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.sales_quote_total.form.savebtn</field>
+    <field name="model">mv.sales_quote_total</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_sales_quote_total_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_schedules_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.schedules.form.savebtn</field>
+    <field name="model">mv.schedules</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_schedules_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_sf_credit_memo_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.sf_credit_memo.form.savebtn</field>
+    <field name="model">mv.sf_credit_memo</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_sf_credit_memo_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_sf_credit_memo_detail_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.sf_credit_memo_detail.form.savebtn</field>
+    <field name="model">mv.sf_credit_memo_detail</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_sf_credit_memo_detail_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_sf_credit_memo_old_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.sf_credit_memo_old.form.savebtn</field>
+    <field name="model">mv.sf_credit_memo_old</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_sf_credit_memo_old_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_sf_credit_reference_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.sf_credit_reference.form.savebtn</field>
+    <field name="model">mv.sf_credit_reference</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_sf_credit_reference_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_split_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.split.form.savebtn</field>
+    <field name="model">mv.split</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_split_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_spot_data_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.spot_data.form.savebtn</field>
+    <field name="model">mv.spot_data</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_spot_data_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_spot_data_mirror_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.spot_data_mirror.form.savebtn</field>
+    <field name="model">mv.spot_data_mirror</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_spot_data_mirror_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_spot_data_mirrors_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.spot_data_mirrors.form.savebtn</field>
+    <field name="model">mv.spot_data_mirrors</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_spot_data_mirrors_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_station_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.station.form.savebtn</field>
+    <field name="model">mv.station</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_station_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_tape_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.tape.form.savebtn</field>
+    <field name="model">mv.tape</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_tape_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_time_and_expense_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.time_and_expense.form.savebtn</field>
+    <field name="model">mv.time_and_expense</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_time_and_expense_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_time_and_expense_detail_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.time_and_expense_detail.form.savebtn</field>
+    <field name="model">mv.time_and_expense_detail</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_time_and_expense_detail_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_traffic_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.traffic.form.savebtn</field>
+    <field name="model">mv.traffic</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_traffic_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_traffic_video_asset_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.traffic_video_asset.form.savebtn</field>
+    <field name="model">mv.traffic_video_asset</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_traffic_video_asset_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_video_file_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.video_file.form.savebtn</field>
+    <field name="model">mv.video_file</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_video_file_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+  <record id="view_mv_working_log_form_savebtn" model="ir.ui.view">
+    <field name="name">mv.working_log.form.savebtn</field>
+    <field name="model">mv.working_log</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_working_log_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_save_record" type="object" string="Save" class="btn-primary o_mv_save_btn"/>
+        </header>
+      </xpath>
+    </field>
+  </record>
+</odoo>

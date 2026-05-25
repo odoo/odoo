@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_purchase_order_list" model="ir.ui.view">
+    <field name="name">mv.purchase_order.list</field>
+    <field name="model">mv.purchase_order</field>
+    <field name="arch" type="xml">
+      <list string="Purchase Order">
+        <field name="name"/>
+        <field name="comments"/>
+        <field name="company"/>
+        <field name="date"/>
+        <field name="order_complete"/>
+        <field name="priority"/>
+        <field name="quantity"/>
+        <field name="status"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_purchase_order_form" model="ir.ui.view">
+    <field name="name">mv.purchase_order.form</field>
+    <field name="model">mv.purchase_order</field>
+    <field name="arch" type="xml">
+      <form string="Purchase Order">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="company"/>
+                <field name="date"/>
+                <field name="priority"/>
+                <field name="status"/>
+              </group>
+              <group>
+                <field name="comments"/>
+                <field name="total_po"/>
+                <field name="order_complete"/>
+                <field name="quantity"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_purchase_order_search" model="ir.ui.view">
+    <field name="name">mv.purchase_order.search</field>
+    <field name="model">mv.purchase_order</field>
+    <field name="arch" type="xml">
+      <search string="Purchase Order">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_purchase_order" model="ir.actions.act_window">
+    <field name="name">Purchase Order</field>
+    <field name="res_model">mv.purchase_order</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_purchase_order" name="Purchase Order" parent="menu_mv_finance" action="action_mv_purchase_order"/>
+</odoo>

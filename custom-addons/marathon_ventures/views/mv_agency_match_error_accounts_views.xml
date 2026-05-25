@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_agency_match_error_accounts_list" model="ir.ui.view">
+    <field name="name">mv.agency_match_error_accounts.list</field>
+    <field name="model">mv.agency_match_error_accounts</field>
+    <field name="arch" type="xml">
+      <list string="Agency Match Error Accounts">
+        <field name="name"/>
+        <field name="contact_account"/>
+        <field name="prelog_agency"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_agency_match_error_accounts_form" model="ir.ui.view">
+    <field name="name">mv.agency_match_error_accounts.form</field>
+    <field name="model">mv.agency_match_error_accounts</field>
+    <field name="arch" type="xml">
+      <form string="Agency Match Error Accounts">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="contact_account"/>
+              </group>
+              <group>
+                <field name="prelog_agency"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_agency_match_error_accounts_search" model="ir.ui.view">
+    <field name="name">mv.agency_match_error_accounts.search</field>
+    <field name="model">mv.agency_match_error_accounts</field>
+    <field name="arch" type="xml">
+      <search string="Agency Match Error Accounts">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_agency_match_error_accounts" model="ir.actions.act_window">
+    <field name="name">Agency Match Error Accounts</field>
+    <field name="res_model">mv.agency_match_error_accounts</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_agency_match_error_accounts" name="Agency Match Error Accounts" parent="menu_mv_finance" action="action_mv_agency_match_error_accounts"/>
+</odoo>

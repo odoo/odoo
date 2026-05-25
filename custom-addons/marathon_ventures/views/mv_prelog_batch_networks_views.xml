@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_prelog_batch_networks_list" model="ir.ui.view">
+    <field name="name">mv.prelog_batch_networks.list</field>
+    <field name="model">mv.prelog_batch_networks</field>
+    <field name="arch" type="xml">
+      <list string="Prelog Batch Networks">
+        <field name="name"/>
+        <field name="isprocessingspot"/>
+        <field name="isprocessing"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_prelog_batch_networks_form" model="ir.ui.view">
+    <field name="name">mv.prelog_batch_networks.form</field>
+    <field name="model">mv.prelog_batch_networks</field>
+    <field name="arch" type="xml">
+      <form string="Prelog Batch Networks">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="isprocessing"/>
+              </group>
+              <group>
+                <field name="isprocessingspot"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_prelog_batch_networks_search" model="ir.ui.view">
+    <field name="name">mv.prelog_batch_networks.search</field>
+    <field name="model">mv.prelog_batch_networks</field>
+    <field name="arch" type="xml">
+      <search string="Prelog Batch Networks">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_prelog_batch_networks" model="ir.actions.act_window">
+    <field name="name">Prelog Batch Networks</field>
+    <field name="res_model">mv.prelog_batch_networks</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_prelog_batch_networks" name="Prelog Batch Networks" parent="menu_mv_finance" action="action_mv_prelog_batch_networks"/>
+</odoo>

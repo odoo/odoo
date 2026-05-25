@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Phase 3 — Credit Application approval state machine -->
+  <record id="view_mv_credit_application_form_phase3" model="ir.ui.view">
+    <field name="name">mv.credit_application.form.phase3</field>
+    <field name="model">mv.credit_application</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_credit_application_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_submit_for_approval" type="object" string="Submit for Approval"
+                  class="btn-primary"
+                  invisible="state not in ('draft','rejected')"/>
+          <button name="action_approve" type="object" string="Approve"
+                  class="btn-primary"
+                  invisible="state != 'submitted'"/>
+          <button name="action_reject" type="object" string="Reject"
+                  class="btn-secondary"
+                  invisible="state != 'submitted'"/>
+          <button name="action_reset_to_draft" type="object" string="Reset to Draft"
+                  class="btn-secondary"
+                  invisible="state in ('draft','approved')"/>
+          <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"/>
+        </header>
+      </xpath>
+      <xpath expr="//sheet" position="inside">
+        <group string="Approval Audit">
+          <field name="submitted_by_id" readonly="1"/>
+          <field name="submitted_date" readonly="1"/>
+          <field name="approved_by_id" readonly="1"/>
+          <field name="approved_date" readonly="1"/>
+          <field name="rejection_reason" invisible="state != 'rejected'"/>
+        </group>
+      </xpath>
+    </field>
+  </record>
+</odoo>

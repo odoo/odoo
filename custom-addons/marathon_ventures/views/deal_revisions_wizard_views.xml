@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Deal Revisions Wizard form  (SF Workflows 3–11)
+       Single-footer pattern: each notebook page lives inside the form, and the
+       active_tab field is bound to the user's tab choice via clickable buttons.
+       The single Update button at the bottom dispatches to the right action. -->
+  <record id="view_deal_revisions_wizard_form" model="ir.ui.view">
+    <field name="name">mv.deal.revision.wizard.form</field>
+    <field name="model">mv.deal.revision.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Deal Revisions" class="o_form_view o_deal_revisions_wizard">
+        <!-- Deal Description header (SF yellow bar) -->
+        <group string="Deal" col="6">
+          <field name="deal_id" readonly="1" colspan="2"/>
+          <field name="deal_program" readonly="1"/>
+          <field name="deal_brand" readonly="1"/>
+          <field name="deal_advertiser" readonly="1"/>
+          <field name="deal_campaign" readonly="1"/>
+          <field name="deal_network_number" readonly="1"/>
+          <field name="deal_length" readonly="1"/>
+          <field name="deal_total_units" readonly="1"/>
+          <field name="deal_total_dollars" readonly="1"/>
+          <field name="currency_id" invisible="1"/>
+        </group>
+
+        <!-- Schedule selector (the "lines" — common to all tabs) -->
+        <group string="Affected Schedules">
+          <field name="selected_schedule_ids" widget="many2many"
+                 options="{'no_create': True}"
+                 placeholder="Leave empty to apply to all schedules of the deal">
+            <list create="0" delete="0">
+              <field name="week"/>
+              <field name="rate" widget="monetary"/>
+              <field name="units_available"/>
+              <field name="cap"/>
+              <field name="days_allowed" widget="many2many_tags"/>
+              <field name="start_time"/>
+              <field name="end_time"/>
+              <field name="test"/>
+              <field name="status"/>
+              <field name="currency_id" column_invisible="1"/>
+            </list>
+          </field>
+        </group>
+
+        <!-- Tab selector — single source of truth driving which inputs show -->
+        <group string="Revision Action">
+          <field name="active_tab" widget="radio"/>
+        </group>
+
+        <!-- ============================================================
+             Per-tab input groups (only the active one is visible)
+             ============================================================ -->
+
+        <!-- LTC -->
+        <group string="LTC — Last Telecast Date" invisible="active_tab != 'ltc'">
+          <p colspan="2" class="oe_grey">
+            Used for cancellations. The LTC date is the LAST day the campaign airs;
+            all weeks strictly <em>after</em> this date are cancelled. Units booked Mon-LTC remain
+            (they may have already aired).
+          </p>
+          <field name="ltc_date"/>
+        </group>
+
+        <!-- Rate -->
+        <group string="Rate — Adjust rate from Monday forward" invisible="active_tab != 'rate'">
+          <p colspan="2" class="oe_grey">Select a Monday Start Week + the new Rate.</p>
+          <field name="start_week"/>
+          <field name="new_rate" widget="monetary"/>
+        </group>
+
+        <!-- Extend -->
+        <group string="Extend — Add weeks at end of flight" invisible="active_tab != 'extend'">
+          <p colspan="2" class="oe_grey">Enter the LAST Monday of the extension. Existing rate/units/days carry forward.</p>
+          <field name="extend_to_week"/>
+        </group>
+
+        <!-- Frequency -->
+        <group string="Frequency — Change weekly units" invisible="active_tab != 'frequency'">
+          <p colspan="2" class="oe_grey">Sets Units Available on all schedules at or after the chosen Monday.</p>
+          <field name="start_week"/>
+          <field name="new_units_available"/>
+        </group>
+
+        <!-- Test -->
+        <group string="Test — Single-week test flag" invisible="active_tab != 'test'">
+          <p colspan="2" class="oe_grey">Test only affects ONE week. Untick the box to remove the Test flag.</p>
+          <field name="test_week"/>
+          <field name="test_value"/>
+        </group>
+
+        <!-- Cap -->
+        <group string="Cap — Inventory capping (internal)" invisible="active_tab != 'cap'">
+          <p colspan="2" class="oe_grey">Internal-only. Applies to selected schedules from Monday forward.</p>
+          <field name="start_week"/>
+          <field name="new_cap"/>
+        </group>
+
+        <!-- Daypart -->
+        <group string="Daypart — Days Allowed / Start / End" invisible="active_tab != 'daypart'">
+          <p colspan="2" class="oe_grey">Modify Days Allowed and/or Start/End Time on selected schedules from Monday forward.</p>
+          <field name="start_week"/>
+          <field name="new_days_allowed_ids" widget="many2many_tags"/>
+          <field name="new_start_time"/>
+          <field name="new_end_time"/>
+        </group>
+
+        <!-- Hiatus -->
+        <group string="Hiatus — Remove specific weekdays" invisible="active_tab != 'hiatus'">
+          <p colspan="2" class="oe_grey">For overlapping schedules, removes the matching weekdays from Days Allowed.</p>
+          <field name="hiatus_start_date"/>
+          <field name="hiatus_end_date"/>
+          <field name="hiatus_time_before"/>
+          <field name="hiatus_time_after"/>
+        </group>
+
+        <!-- Max Per Day -->
+        <group string="Max Per Day — Daily unit cap" invisible="active_tab != 'max_per_day'">
+          <p colspan="2" class="oe_grey">Restrict max units per day on selected schedules from Monday forward.</p>
+          <field name="start_week"/>
+          <field name="new_max_per_day"/>
+        </group>
+
+        <!-- SINGLE footer for the whole wizard -->
+        <footer>
+          <button name="action_apply_active_tab" type="object" string="Update"
+                  class="btn-primary"/>
+          <button special="cancel" string="Cancel" class="btn-secondary"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <!-- Window action — opened from the Deal smart button -->
+  <record id="action_open_deal_revisions_wizard" model="ir.actions.act_window">
+    <field name="name">Deal Revisions</field>
+    <field name="res_model">mv.deal.revision.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="binding_model_id" ref="model_mv_deal"/>
+    <field name="binding_view_types">form</field>
+  </record>
+
+</odoo>

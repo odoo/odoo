@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_sales_quote_total_list" model="ir.ui.view">
+    <field name="name">mv.sales_quote_total.list</field>
+    <field name="model">mv.sales_quote_total</field>
+    <field name="arch" type="xml">
+      <list string="Sales Quote Total">
+        <field name="name"/>
+        <field name="absolute_value"/>
+        <field name="description"/>
+        <field name="percent_value"/>
+        <field name="sales_quote"/>
+        <field name="subtotal"/>
+        <field name="total"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_sales_quote_total_form" model="ir.ui.view">
+    <field name="name">mv.sales_quote_total.form</field>
+    <field name="model">mv.sales_quote_total</field>
+    <field name="arch" type="xml">
+      <form string="Sales Quote Total">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="sales_quote"/>
+                <field name="description"/>
+                <field name="absolute_value"/>
+              </group>
+              <group>
+                <field name="percent_value"/>
+                <field name="subtotal"/>
+                <field name="total"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_sales_quote_total_search" model="ir.ui.view">
+    <field name="name">mv.sales_quote_total.search</field>
+    <field name="model">mv.sales_quote_total</field>
+    <field name="arch" type="xml">
+      <search string="Sales Quote Total">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_sales_quote_total" model="ir.actions.act_window">
+    <field name="name">Sales Quote Total</field>
+    <field name="res_model">mv.sales_quote_total</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_sales_quote_total" name="Sales Quote Total" parent="menu_mv_finance" action="action_mv_sales_quote_total"/>
+</odoo>

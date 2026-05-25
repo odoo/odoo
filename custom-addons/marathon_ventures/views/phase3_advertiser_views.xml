@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Phase 3 — Advertiser: show Finance Hold reason + LOG-alert audit flags -->
+  <record id="view_mv_advertiser_form_phase3" model="ir.ui.view">
+    <field name="name">mv.advertiser.form.phase3</field>
+    <field name="model">mv.advertiser</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_advertiser_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="inside">
+        <group string="Finance Status">
+          <field name="finance_hold" readonly="1"/>
+          <field name="finance_hold_reason" readonly="1"/>
+        </group>
+        <group string="LOG Alert Audit" name="log_alert_audit">
+          <field name="log_alert_5d_sent" readonly="1"/>
+          <field name="log_alert_2d_sent" readonly="1"/>
+          <field name="log_alert_0d_sent" readonly="1"/>
+          <field name="log_alert_48h_sent" readonly="1"/>
+        </group>
+      </xpath>
+    </field>
+  </record>
+</odoo>

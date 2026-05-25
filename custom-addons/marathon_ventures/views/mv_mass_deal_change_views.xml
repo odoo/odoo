@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_mass_deal_change_list" model="ir.ui.view">
+    <field name="name">mv.mass_deal_change.list</field>
+    <field name="model">mv.mass_deal_change</field>
+    <field name="arch" type="xml">
+      <list string="Mass Deal Change">
+        <field name="name"/>
+        <field name="cap_change"/>
+        <field name="changed_800_number"/>
+        <field name="changed_cap"/>
+        <field name="changed_daypart"/>
+        <field name="changed_days_allowed"/>
+        <field name="changed_isci"/>
+        <field name="changed_max_per_day"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_mass_deal_change_form" model="ir.ui.view">
+    <field name="name">mv.mass_deal_change.form</field>
+    <field name="model">mv.mass_deal_change</field>
+    <field name="arch" type="xml">
+      <form string="Mass Deal Change">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="deal"/>
+                <field name="schedule"/>
+                <field name="schedule_operation"/>
+                <field name="tab"/>
+                <field name="ltc_date"/>
+                <field name="week_end"/>
+                <field name="week_start"/>
+                <field name="cap_change"/>
+                <field name="changed_800_number"/>
+                <field name="changed_cap"/>
+                <field name="changed_daypart"/>
+                <field name="changed_days_allowed"/>
+                <field name="changed_isci"/>
+                <field name="changed_start_end_time"/>
+                <field name="changed_status"/>
+                <field name="frequency_change"/>
+                <field name="original_800_number"/>
+                <field name="original_cap"/>
+                <field name="original_daypart"/>
+              </group>
+              <group>
+                <field name="original_days_allowed"/>
+                <field name="original_isci"/>
+                <field name="original_start_end_time"/>
+                <field name="original_status"/>
+                <field name="rate_change"/>
+                <field name="schedules"/>
+                <field name="changed_max_per_day"/>
+                <field name="changed_rate"/>
+                <field name="changed_units_available"/>
+                <field name="hour_revised_time"/>
+                <field name="log_type"/>
+                <field name="net_rate_effect"/>
+                <field name="original_max_per_day"/>
+                <field name="original_rate"/>
+                <field name="original_units_available"/>
+                <field name="pp_revision"/>
+                <field name="total_canceled_dollars"/>
+                <field name="total_units"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_mass_deal_change_search" model="ir.ui.view">
+    <field name="name">mv.mass_deal_change.search</field>
+    <field name="model">mv.mass_deal_change</field>
+    <field name="arch" type="xml">
+      <search string="Mass Deal Change">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_mass_deal_change" model="ir.actions.act_window">
+    <field name="name">Mass Deal Change</field>
+    <field name="res_model">mv.mass_deal_change</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_mass_deal_change" name="Mass Deal Change" parent="menu_mv_finance" action="action_mv_mass_deal_change"/>
+</odoo>

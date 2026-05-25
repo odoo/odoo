@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_station_list" model="ir.ui.view">
+    <field name="name">mv.station.list</field>
+    <field name="model">mv.station</field>
+    <field name="arch" type="xml">
+      <list string="Station">
+        <field name="name"/>
+        <field name="active_station"/>
+        <field name="affiliate_owner"/>
+        <field name="affiliate"/>
+        <field name="call_letters"/>
+        <field name="group_owner"/>
+        <field name="market"/>
+        <field name="nielsen"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_station_form" model="ir.ui.view">
+    <field name="name">mv.station.form</field>
+    <field name="model">mv.station</field>
+    <field name="arch" type="xml">
+      <form string="Station">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="call_letters"/>
+                <field name="group_owner"/>
+                <field name="market"/>
+                <field name="station_affiliate"/>
+                <field name="affiliate_owner"/>
+                <field name="affiliate"/>
+              </group>
+              <group>
+                <field name="nielsen"/>
+                <field name="owner_call_letters"/>
+                <field name="active_station"/>
+                <field name="rank"/>
+                <field name="station_count"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_station_search" model="ir.ui.view">
+    <field name="name">mv.station.search</field>
+    <field name="model">mv.station</field>
+    <field name="arch" type="xml">
+      <search string="Station">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_station" model="ir.actions.act_window">
+    <field name="name">Station</field>
+    <field name="res_model">mv.station</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_station" name="Station" parent="menu_mv_master_data" action="action_mv_station"/>
+</odoo>

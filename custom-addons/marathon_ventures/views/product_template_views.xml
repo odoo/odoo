@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_product_template_mv_form" model="ir.ui.view">
+    <field name="name">product.template.mv.form</field>
+    <field name="model">product.template</field>
+    <field name="inherit_id" ref="product.product_template_form_view"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet" position="inside">
+        <group string="Marathon Ventures" name="marathon_ventures">
+          <group string="SF Metadata">
+            <field name="sf_external_id"/>
+            <field name="sf_legacy_data"/>
+          </group>
+          <group string="SF Custom Fields">
+            <field name="canusequantityschedule"/>
+            <field name="canuserevenueschedule"/>
+            <field name="cost_method"/>
+            <field name="displayurl"/>
+            <field name="externaldatasourceid"/>
+            <field name="externalid"/>
+            <field name="family"/>
+            <field name="item_type"/>
+            <field name="numberofquantityinstallments"/>
+            <field name="numberofrevenueinstallments"/>
+            <field name="purchasing_unit"/>
+            <field name="quantityinstallmentperiod"/>
+            <field name="quantityscheduletype"/>
+            <field name="ratio_to_oe_standard"/>
+            <field name="ratio_to_po_standard"/>
+            <field name="revenueinstallmentperiod"/>
+            <field name="revenuescheduletype"/>
+            <field name="sales_unit"/>
+            <field name="standard_unit"/>
+          </group>
+        </group>
+      </xpath>
+    </field>
+  </record>
+</odoo>

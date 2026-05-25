@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_other_sales_document_list" model="ir.ui.view">
+    <field name="name">mv.other_sales_document.list</field>
+    <field name="model">mv.other_sales_document</field>
+    <field name="arch" type="xml">
+      <list string="Other Sales Document">
+        <field name="name"/>
+        <field name="account"/>
+        <field name="bill_to_address_1"/>
+        <field name="bill_to_address_2"/>
+        <field name="bill_to_city"/>
+        <field name="bill_to_company_name"/>
+        <field name="bill_to_country"/>
+        <field name="bill_to_name"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_other_sales_document_form" model="ir.ui.view">
+    <field name="name">mv.other_sales_document.form</field>
+    <field name="model">mv.other_sales_document</field>
+    <field name="arch" type="xml">
+      <form string="Other Sales Document">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="account"/>
+                <field name="opportunity"/>
+                <field name="date"/>
+                <field name="ship_date"/>
+                <field name="bill_to_address_1"/>
+                <field name="bill_to_address_2"/>
+                <field name="bill_to_city"/>
+                <field name="bill_to_company_name"/>
+                <field name="bill_to_country"/>
+                <field name="bill_to_name"/>
+                <field name="bill_to_state"/>
+                <field name="bill_to_zip_code"/>
+                <field name="document_number"/>
+                <field name="document_type"/>
+              </group>
+              <group>
+                <field name="message"/>
+                <field name="reference_number"/>
+                <field name="ship_to_address_1"/>
+                <field name="ship_to_address_2"/>
+                <field name="ship_to_city"/>
+                <field name="ship_to_company_name"/>
+                <field name="ship_to_country"/>
+                <field name="ship_to_name"/>
+                <field name="ship_to_state"/>
+                <field name="ship_to_zip_code"/>
+                <field name="state"/>
+                <field name="terms"/>
+                <field name="subtotal"/>
+                <field name="total"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_other_sales_document_search" model="ir.ui.view">
+    <field name="name">mv.other_sales_document.search</field>
+    <field name="model">mv.other_sales_document</field>
+    <field name="arch" type="xml">
+      <search string="Other Sales Document">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_other_sales_document" model="ir.actions.act_window">
+    <field name="name">Other Sales Document</field>
+    <field name="res_model">mv.other_sales_document</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_other_sales_document" name="Other Sales Document" parent="menu_mv_finance" action="action_mv_other_sales_document"/>
+</odoo>

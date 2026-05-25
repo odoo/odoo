@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_clearance_list_list" model="ir.ui.view">
+    <field name="name">mv.clearance_list.list</field>
+    <field name="model">mv.clearance_list</field>
+    <field name="arch" type="xml">
+      <list string="Clearance List">
+        <field name="name"/>
+        <field name="aa_hh"/>
+        <field name="end_date"/>
+        <field name="program"/>
+        <field name="season"/>
+        <field name="start_date"/>
+        <field name="us_hh"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_clearance_list_form" model="ir.ui.view">
+    <field name="name">mv.clearance_list.form</field>
+    <field name="model">mv.clearance_list</field>
+    <field name="arch" type="xml">
+      <form string="Clearance List">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="end_date"/>
+                <field name="program"/>
+                <field name="start_date"/>
+              </group>
+              <group>
+                <field name="season"/>
+                <field name="aa_hh"/>
+                <field name="us_hh"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_clearance_list_search" model="ir.ui.view">
+    <field name="name">mv.clearance_list.search</field>
+    <field name="model">mv.clearance_list</field>
+    <field name="arch" type="xml">
+      <search string="Clearance List">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_clearance_list" model="ir.actions.act_window">
+    <field name="name">Clearance List</field>
+    <field name="res_model">mv.clearance_list</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_clearance_list" name="Clearance List" parent="menu_mv_finance" action="action_mv_clearance_list"/>
+</odoo>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_ratings_list" model="ir.ui.view">
+    <field name="name">mv.ratings.list</field>
+    <field name="model">mv.ratings</field>
+    <field name="arch" type="xml">
+      <list string="Ratings">
+        <field name="name"/>
+        <field name="actual_ratings"/>
+        <field name="daypart_formula"/>
+        <field name="daypart"/>
+        <field name="estimated_ratings"/>
+        <field name="hour"/>
+        <field name="measurement_type"/>
+        <field name="month"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_ratings_form" model="ir.ui.view">
+    <field name="name">mv.ratings.form</field>
+    <field name="model">mv.ratings</field>
+    <field name="arch" type="xml">
+      <form string="Ratings">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="program"/>
+                <field name="actual_ratings"/>
+                <field name="estimated_ratings"/>
+                <field name="projected_ratings"/>
+                <field name="daypart"/>
+                <field name="measurement_type"/>
+              </group>
+              <group>
+                <field name="week"/>
+                <field name="daypart_formula"/>
+                <field name="hour"/>
+                <field name="month"/>
+                <field name="quarter"/>
+                <field name="year"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_ratings_search" model="ir.ui.view">
+    <field name="name">mv.ratings.search</field>
+    <field name="model">mv.ratings</field>
+    <field name="arch" type="xml">
+      <search string="Ratings">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_ratings" model="ir.actions.act_window">
+    <field name="name">Ratings</field>
+    <field name="res_model">mv.ratings</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_ratings" name="Ratings" parent="menu_mv_finance" action="action_mv_ratings"/>
+</odoo>

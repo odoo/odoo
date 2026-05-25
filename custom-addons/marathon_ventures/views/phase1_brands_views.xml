@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Phase 1 — Brand: approval state machine buttons, statusbar, Deals smart button. -->
+  <record id="view_mv_brands_form_phase1" model="ir.ui.view">
+    <field name="name">mv.brands.form.phase1</field>
+    <field name="model">mv.brands</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_brands_form"/>
+    <field name="arch" type="xml">
+
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_submit_for_approval" type="object" string="Submit for Approval"
+                  class="btn-primary"
+                  invisible="approval_status not in ('pending', False)"/>
+          <button name="action_approve" type="object" string="Approve"
+                  class="btn-primary"
+                  invisible="approval_status != 'pending'"/>
+          <button name="action_reject" type="object" string="Reject"
+                  class="btn-secondary"
+                  invisible="approval_status != 'pending'"/>
+          <field name="approval_status" widget="statusbar"
+                 statusbar_visible="pending,approved,rejected"/>
+        </header>
+      </xpath>
+
+      <xpath expr="//sheet" position="inside">
+        <div class="oe_button_box" name="button_box">
+          <button name="action_open_deals" type="object"
+                  class="oe_stat_button" icon="fa-handshake-o">
+            <field name="deal_count" widget="statinfo" string="Deals"/>
+          </button>
+        </div>
+      </xpath>
+
+    </field>
+  </record>
+</odoo>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_pi_payout_list" model="ir.ui.view">
+    <field name="name">mv.pi_payout.list</field>
+    <field name="model">mv.pi_payout</field>
+    <field name="arch" type="xml">
+      <list string="Pi Payout">
+        <field name="name"/>
+        <field name="brand"/>
+        <field name="calls"/>
+        <field name="market"/>
+        <field name="payout_amount"/>
+        <field name="payout_gross"/>
+        <field name="response_time"/>
+        <field name="schedule"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_pi_payout_form" model="ir.ui.view">
+    <field name="name">mv.pi_payout.form</field>
+    <field name="model">mv.pi_payout</field>
+    <field name="arch" type="xml">
+      <form string="Pi Payout">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="schedule"/>
+                <field name="market"/>
+                <field name="station"/>
+                <field name="response_time"/>
+                <field name="week"/>
+                <field name="brand"/>
+              </group>
+              <group>
+                <field name="x800_number"/>
+                <field name="zip_code"/>
+                <field name="calls"/>
+                <field name="payout_amount"/>
+                <field name="payout_gross"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_pi_payout_search" model="ir.ui.view">
+    <field name="name">mv.pi_payout.search</field>
+    <field name="model">mv.pi_payout</field>
+    <field name="arch" type="xml">
+      <search string="Pi Payout">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_pi_payout" model="ir.actions.act_window">
+    <field name="name">Pi Payout</field>
+    <field name="res_model">mv.pi_payout</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_pi_payout" name="Pi Payout" parent="menu_mv_finance" action="action_mv_pi_payout"/>
+</odoo>

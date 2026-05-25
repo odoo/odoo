@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Phase 8 — Record Type field visibility on Deal + Schedules -->
+
+  <record id="view_mv_deal_form_phase8_rt" model="ir.ui.view">
+    <field name="name">mv.deal.form.phase8.recordtype</field>
+    <field name="model">mv.deal</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_deal_form"/>
+    <field name="arch" type="xml">
+      <!-- Place the Record Type prominently right after the Name H1 -->
+      <xpath expr="//notebook" position="before">
+        <group>
+          <field name="sf_record_type" widget="radio" options="{'horizontal': true}"/>
+        </group>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="view_mv_deal_list_phase8_rt" model="ir.ui.view">
+    <field name="name">mv.deal.list.phase8.recordtype</field>
+    <field name="model">mv.deal</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_deal_list"/>
+    <field name="arch" type="xml">
+      <xpath expr="//list" position="inside">
+        <field name="sf_record_type" optional="show"/>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="view_mv_schedules_form_phase8_rt" model="ir.ui.view">
+    <field name="name">mv.schedules.form.phase8.recordtype</field>
+    <field name="model">mv.schedules</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_schedules_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//notebook" position="before">
+        <group>
+          <field name="sf_record_type" widget="radio" options="{'horizontal': true}"/>
+        </group>
+      </xpath>
+    </field>
+  </record>
+
+  <record id="view_mv_schedules_list_phase8_rt" model="ir.ui.view">
+    <field name="name">mv.schedules.list.phase8.recordtype</field>
+    <field name="model">mv.schedules</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_schedules_list"/>
+    <field name="arch" type="xml">
+      <xpath expr="//list" position="inside">
+        <field name="sf_record_type" optional="show"/>
+      </xpath>
+    </field>
+  </record>
+</odoo>

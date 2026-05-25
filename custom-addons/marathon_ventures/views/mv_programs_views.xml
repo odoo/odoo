@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_programs_list" model="ir.ui.view">
+    <field name="name">mv.programs.list</field>
+    <field name="model">mv.programs</field>
+    <field name="arch" type="xml">
+      <list string="Programs">
+        <field name="name"/>
+        <field name="account_exec_1"/>
+        <field name="account_exec_2"/>
+        <field name="assistant_backup"/>
+        <field name="assistant"/>
+        <field name="barter"/>
+        <field name="bundle_name"/>
+        <field name="bundle_rate"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_programs_form" model="ir.ui.view">
+    <field name="name">mv.programs.form</field>
+    <field name="model">mv.programs</field>
+    <field name="arch" type="xml">
+      <form string="Programs">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="clientcode"/>
+                <field name="account_exec_1"/>
+                <field name="account_exec_2"/>
+                <field name="assistant"/>
+                <field name="assistant_backup"/>
+                <field name="lead"/>
+                <field name="lead_backup"/>
+                <field name="logs_contact"/>
+                <field name="post_log"/>
+                <field name="vendor_account"/>
+                <field name="cable_synd"/>
+                <field name="clock_start_time"/>
+                <field name="deal_entity"/>
+                <field name="finance_invoice_template"/>
+                <field name="invoice_month"/>
+                <field name="network_owner"/>
+                <field name="network_system"/>
+                <field name="ratings_quarter"/>
+                <field name="launch_week_del"/>
+                <field name="prelog_date"/>
+                <field name="prelog_date_time"/>
+                <field name="rcreconciled_lf_week"/>
+                <field name="rcreconciled_week"/>
+                <field name="reconciled_week"/>
+                <field name="version_time_stamp"/>
+                <field name="week_pending"/>
+                <field name="bundle_name"/>
+                <field name="bundle_rate"/>
+                <field name="conga_log_template"/>
+                <field name="digital_id"/>
+                <field name="logs_cc"/>
+                <field name="merit_street_media_url_2025"/>
+              </group>
+              <group>
+                <field name="pp_log_check_nw_history"/>
+                <field name="pp_log_check_tw_history"/>
+                <field name="program_number"/>
+                <field name="station_call_letter"/>
+                <field name="team"/>
+                <field name="barter"/>
+                <field name="detailed_invoices"/>
+                <field name="inactive"/>
+                <field name="invoice_run"/>
+                <field name="rated"/>
+                <field name="spot_data_sync"/>
+                <field name="da_filler"/>
+                <field name="ef_filler"/>
+                <field name="filler_em"/>
+                <field name="fr_filler"/>
+                <field name="lf_filler"/>
+                <field name="ln_filler"/>
+                <field name="log_week"/>
+                <field name="on_filler"/>
+                <field name="pp_revision"/>
+                <field name="pp_revision_cycle"/>
+                <field name="pr_filler"/>
+                <field name="prelog_version"/>
+                <field name="program_count"/>
+                <field name="ros_filler"/>
+                <field name="syndication_filler"/>
+                <field name="template"/>
+                <field name="wc_filler"/>
+                <field name="wknd_da_filler"/>
+                <field name="wknd_on_filler"/>
+                <field name="wknd_pr_filler"/>
+                <field name="working_log_version"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_programs_search" model="ir.ui.view">
+    <field name="name">mv.programs.search</field>
+    <field name="model">mv.programs</field>
+    <field name="arch" type="xml">
+      <search string="Programs">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_programs" model="ir.actions.act_window">
+    <field name="name">Programs</field>
+    <field name="res_model">mv.programs</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_programs" name="Programs" parent="menu_mv_master_data" action="action_mv_programs"/>
+</odoo>

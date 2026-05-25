@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_contract_list" model="ir.ui.view">
+    <field name="name">mv.contract.list</field>
+    <field name="model">mv.contract</field>
+    <field name="arch" type="xml">
+      <list string="Contract">
+        <field name="name"/>
+        <field name="accountid"/>
+        <field name="activatedbyid"/>
+        <field name="activateddate"/>
+        <field name="billingaddress"/>
+        <field name="companysigneddate"/>
+        <field name="companysignedid"/>
+        <field name="contractterm"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_contract_form" model="ir.ui.view">
+    <field name="name">mv.contract.form</field>
+    <field name="model">mv.contract</field>
+    <field name="arch" type="xml">
+      <form string="Contract">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="accountid"/>
+                <field name="activatedbyid"/>
+                <field name="companysignedid"/>
+                <field name="customersignedid"/>
+                <field name="ownerid"/>
+                <field name="renewal_option"/>
+                <field name="status"/>
+                <field name="which_party_can_exercise_option"/>
+                <field name="activateddate"/>
+                <field name="billingaddress"/>
+              </group>
+              <group>
+                <field name="companysigneddate"/>
+                <field name="contractterm"/>
+                <field name="customersigneddate"/>
+                <field name="customersignedtitle"/>
+                <field name="description"/>
+                <field name="enddate"/>
+                <field name="ownerexpirationnotice"/>
+                <field name="shippingaddress"/>
+                <field name="specialterms"/>
+                <field name="startdate"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_contract_search" model="ir.ui.view">
+    <field name="name">mv.contract.search</field>
+    <field name="model">mv.contract</field>
+    <field name="arch" type="xml">
+      <search string="Contract">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_contract" model="ir.actions.act_window">
+    <field name="name">Contract</field>
+    <field name="res_model">mv.contract</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_contract" name="Contract" parent="menu_mv_finance" action="action_mv_contract"/>
+</odoo>

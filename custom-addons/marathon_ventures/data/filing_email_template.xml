@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <!-- SF Workflow 43 — Filing email.
+         The user clicks "Send Filing Email" on a Deal; this template is loaded
+         into the mail composer.  Subject is overridden by the controller with
+         _build_filing_subject() so it follows the exact SF subject pattern.
+
+         Recipients (filing@mvmediasales.com + the user's assigned SF email-id)
+         are left empty by default — the user can fill them at compose time, or
+         we can wire defaults via res.users in Phase 3. -->
+    <record id="mail_template_filing" model="mail.template">
+      <field name="name">MV Filing — Deal</field>
+      <field name="model_id" ref="marathon_ventures.model_mv_deal"/>
+      <field name="subject">{{ object._build_filing_subject() }}</field>
+      <field name="body_html" type="html">
+        <div style="font-family: Arial, sans-serif;">
+          <p>Filing record for <strong>{{ object.name or '' }}</strong>.</p>
+          <p>Deal Reference: <strong>{{ object.sf_external_id or object.id }}</strong></p>
+          <p>Program: {{ (object.program and object.program.display_name) or '' }}<br/>
+             Brand: {{ (object.brands and object.brands.display_name) or '' }}<br/>
+             Advertiser: {{ (object.brands and object.brands.advertiser and object.brands.advertiser.display_name) or '' }}<br/>
+             Length: {{ object.length and (':%s' % int(object.length)) or '' }}</p>
+          <p>Please file this under the corresponding program folder.</p>
+        </div>
+      </field>
+      <field name="auto_delete" eval="False"/>
+    </record>
+  </data>
+</odoo>

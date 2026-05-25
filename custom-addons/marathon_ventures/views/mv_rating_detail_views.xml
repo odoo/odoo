@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_rating_detail_list" model="ir.ui.view">
+    <field name="name">mv.rating_detail.list</field>
+    <field name="model">mv.rating_detail</field>
+    <field name="arch" type="xml">
+      <list string="Rating Detail">
+        <field name="name"/>
+        <field name="a18_24"/>
+        <field name="a18_34"/>
+        <field name="a18_49"/>
+        <field name="a18_54"/>
+        <field name="a18_64"/>
+        <field name="a18"/>
+        <field name="a21_34"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_rating_detail_form" model="ir.ui.view">
+    <field name="name">mv.rating_detail.form</field>
+    <field name="model">mv.rating_detail</field>
+    <field name="arch" type="xml">
+      <form string="Rating Detail">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="week"/>
+                <field name="program"/>
+                <field name="quarterly_budget"/>
+                <field name="quarterly_forecast"/>
+                <field name="station"/>
+                <field name="day"/>
+                <field name="daypart"/>
+                <field name="measurement_type"/>
+                <field name="time_gradient"/>
+                <field name="type"/>
+                <field name="version"/>
+                <field name="date"/>
+                <field name="hour"/>
+                <field name="a18"/>
+                <field name="a18_24"/>
+                <field name="a18_34"/>
+                <field name="a18_49"/>
+                <field name="a18_54"/>
+                <field name="a18_64"/>
+                <field name="a21_34"/>
+                <field name="a21_39"/>
+                <field name="a21_49"/>
+                <field name="a25"/>
+                <field name="a25_34"/>
+                <field name="a25_44"/>
+                <field name="a25_49"/>
+                <field name="a25_54"/>
+                <field name="a25_64"/>
+                <field name="a2_99"/>
+                <field name="a35"/>
+                <field name="a35_49"/>
+                <field name="a35_54"/>
+                <field name="a35_64"/>
+                <field name="a40"/>
+                <field name="a45"/>
+                <field name="a45_64"/>
+                <field name="a50"/>
+                <field name="a50_64"/>
+                <field name="a55"/>
+                <field name="a65"/>
+                <field name="hh"/>
+                <field name="k02_11"/>
+                <field name="k06_11"/>
+                <field name="m12_34"/>
+                <field name="m18"/>
+                <field name="m18_24"/>
+                <field name="m18_34"/>
+                <field name="m18_49"/>
+                <field name="m18_64"/>
+              </group>
+              <group>
+                <field name="m21_34"/>
+                <field name="m21_39"/>
+                <field name="m25"/>
+                <field name="m25_34"/>
+                <field name="m25_49"/>
+                <field name="m25_54"/>
+                <field name="m25_64"/>
+                <field name="m2_99"/>
+                <field name="m35"/>
+                <field name="m35_54"/>
+                <field name="m35_64"/>
+                <field name="m45"/>
+                <field name="m45_64"/>
+                <field name="m50"/>
+                <field name="m55"/>
+                <field name="m65"/>
+                <field name="month"/>
+                <field name="quarter"/>
+                <field name="ratings_total_dollars"/>
+                <field name="tteen"/>
+                <field name="v12_24"/>
+                <field name="v12_34"/>
+                <field name="w12_34"/>
+                <field name="w18"/>
+                <field name="w18_24"/>
+                <field name="w18_34"/>
+                <field name="w18_49"/>
+                <field name="w18_54"/>
+                <field name="w18_64"/>
+                <field name="w21_34"/>
+                <field name="w21_39"/>
+                <field name="w25"/>
+                <field name="w25_34"/>
+                <field name="w25_44"/>
+                <field name="w25_49"/>
+                <field name="w25_54"/>
+                <field name="w25_64"/>
+                <field name="w2_99"/>
+                <field name="w35"/>
+                <field name="w35_49"/>
+                <field name="w35_54"/>
+                <field name="w35_64"/>
+                <field name="w45"/>
+                <field name="w45_64"/>
+                <field name="w50"/>
+                <field name="w50_64"/>
+                <field name="w55"/>
+                <field name="w65"/>
+                <field name="year"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_rating_detail_search" model="ir.ui.view">
+    <field name="name">mv.rating_detail.search</field>
+    <field name="model">mv.rating_detail</field>
+    <field name="arch" type="xml">
+      <search string="Rating Detail">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_rating_detail" model="ir.actions.act_window">
+    <field name="name">Rating Detail</field>
+    <field name="res_model">mv.rating_detail</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_rating_detail" name="Rating Detail" parent="menu_mv_finance" action="action_mv_rating_detail"/>
+</odoo>

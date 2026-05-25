@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_sf_credit_reference_list" model="ir.ui.view">
+    <field name="name">mv.sf_credit_reference.list</field>
+    <field name="model">mv.sf_credit_reference</field>
+    <field name="arch" type="xml">
+      <list string="Sf Credit Reference">
+        <field name="name"/>
+        <field name="average_days_to_pay"/>
+        <field name="balance_past_due"/>
+        <field name="comments"/>
+        <field name="contact_person"/>
+        <field name="credit_amount_granted"/>
+        <field name="credit_application"/>
+        <field name="credit_terms"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_sf_credit_reference_form" model="ir.ui.view">
+    <field name="name">mv.sf_credit_reference.form</field>
+    <field name="model">mv.sf_credit_reference</field>
+    <field name="arch" type="xml">
+      <form string="Sf Credit Reference">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="contact_person"/>
+                <field name="credit_application"/>
+                <field name="reference_company_website"/>
+                <field name="credit_terms"/>
+                <field name="date"/>
+                <field name="average_days_to_pay"/>
+                <field name="comments"/>
+                <field name="email"/>
+                <field name="high_credit_date"/>
+                <field name="length_of_business"/>
+              </group>
+              <group>
+                <field name="phone_number"/>
+                <field name="reference_company"/>
+                <field name="title"/>
+                <field name="unlimited_credit"/>
+                <field name="balance_past_due"/>
+                <field name="credit_amount_granted"/>
+                <field name="current_balance"/>
+                <field name="days_past_due"/>
+                <field name="high_credit"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_sf_credit_reference_search" model="ir.ui.view">
+    <field name="name">mv.sf_credit_reference.search</field>
+    <field name="model">mv.sf_credit_reference</field>
+    <field name="arch" type="xml">
+      <search string="Sf Credit Reference">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_sf_credit_reference" model="ir.actions.act_window">
+    <field name="name">Sf Credit Reference</field>
+    <field name="res_model">mv.sf_credit_reference</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_sf_credit_reference" name="Sf Credit Reference" parent="menu_mv_finance" action="action_mv_sf_credit_reference"/>
+</odoo>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Phase 1 — Schedule form: action buttons, Days Allowed widget, totals,
+       Additional Schedules button, statusbar. -->
+  <record id="view_mv_schedules_form_phase1" model="ir.ui.view">
+    <field name="name">mv.schedules.form.phase1</field>
+    <field name="model">mv.schedules</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_schedules_form"/>
+    <field name="arch" type="xml">
+
+      <xpath expr="//sheet" position="before">
+        <header>
+          <button name="action_cancel_schedule" type="object" string="Cancel Schedule"
+                  class="btn-secondary" invisible="status == 'canceled'"/>
+          <button name="action_uncancel_schedule" type="object" string="Uncancel Schedule"
+                  class="btn-secondary" invisible="status != 'canceled'"/>
+          <button name="%(marathon_ventures.action_open_additional_schedules_wizard)d"
+                  type="action" string="Additional Schedules…"
+                  class="btn-secondary"
+                  context="{'default_schedule_id': id}"/>
+          <field name="status" widget="statusbar"
+                 statusbar_visible="sold,canceled,sold_unflighted"/>
+        </header>
+      </xpath>
+
+      <!-- Place a compact summary at the top of the sheet -->
+      <xpath expr="//sheet" position="inside">
+        <group string="Phase 1 Computed">
+          <field name="total_dollars" widget="monetary" readonly="1"/>
+          <field name="equiv_30" readonly="1"/>
+          <field name="currency_id" invisible="1"/>
+        </group>
+      </xpath>
+
+    </field>
+  </record>
+
+  <!-- List view: better defaults -->
+  <record id="view_mv_schedules_list_phase1" model="ir.ui.view">
+    <field name="name">mv.schedules.list.phase1</field>
+    <field name="model">mv.schedules</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_schedules_list"/>
+    <field name="arch" type="xml">
+      <xpath expr="//list" position="attributes">
+        <attribute name="decoration-muted">status == 'canceled'</attribute>
+        <attribute name="decoration-info">test == True</attribute>
+      </xpath>
+      <xpath expr="//list" position="inside">
+        <field name="deal_parent" optional="show"/>
+        <field name="week" optional="show"/>
+        <field name="rate" widget="monetary" optional="show"/>
+        <field name="units_available" optional="show"/>
+        <field name="total_dollars" widget="monetary" optional="show"/>
+        <field name="equiv_30" optional="hide"/>
+        <field name="cap" optional="hide"/>
+        <field name="status" optional="show"/>
+        <field name="test" optional="hide"/>
+        <field name="currency_id" column_invisible="1"/>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- Search view -->
+  <record id="view_mv_schedules_search_phase1" model="ir.ui.view">
+    <field name="name">mv.schedules.search.phase1</field>
+    <field name="model">mv.schedules</field>
+    <field name="inherit_id" ref="marathon_ventures.view_mv_schedules_search"/>
+    <field name="arch" type="xml">
+      <xpath expr="//search" position="inside">
+        <field name="deal_parent"/>
+        <field name="week"/>
+        <filter name="filter_canceled" string="Canceled" domain="[('status','=','canceled')]"/>
+        <filter name="filter_test" string="Test" domain="[('test','=',True)]"/>
+        <filter name="filter_priority" string="Priority" domain="[('priority','=',True)]"/>
+        <separator/>
+          <filter name="group_deal" string="Deal" context="{'group_by':'deal_parent'}"/>
+          <filter name="group_week" string="Week" context="{'group_by':'week'}"/>
+          <filter name="group_status" string="Status" context="{'group_by':'status'}"/>
+        
+      </xpath>
+    </field>
+  </record>
+</odoo>

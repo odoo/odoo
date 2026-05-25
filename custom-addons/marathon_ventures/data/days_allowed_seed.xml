@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <!-- Seed the mv.days_allowed.tag model with Mon-Sun + common SF combos.
+         The auto-generated mv.days_allowed.tag is a Many2many destination for
+         SF's multi-select Days Allowed picklist.  We seed the 7 base days
+         here; additional combinations (M-F, M-Sun, SaSu, etc.) can be added
+         via the Settings UI. -->
+    <record id="days_allowed_mon" model="mv.days_allowed.tag">
+      <field name="name">Mon</field>
+      <field name="code">Mon</field>
+    </record>
+    <record id="days_allowed_tue" model="mv.days_allowed.tag">
+      <field name="name">Tue</field>
+      <field name="code">Tue</field>
+    </record>
+    <record id="days_allowed_wed" model="mv.days_allowed.tag">
+      <field name="name">Wed</field>
+      <field name="code">Wed</field>
+    </record>
+    <record id="days_allowed_thu" model="mv.days_allowed.tag">
+      <field name="name">Thu</field>
+      <field name="code">Thu</field>
+    </record>
+    <record id="days_allowed_fri" model="mv.days_allowed.tag">
+      <field name="name">Fri</field>
+      <field name="code">Fri</field>
+    </record>
+    <record id="days_allowed_sat" model="mv.days_allowed.tag">
+      <field name="name">Sat</field>
+      <field name="code">Sat</field>
+    </record>
+    <record id="days_allowed_sun" model="mv.days_allowed.tag">
+      <field name="name">Sun</field>
+      <field name="code">Sun</field>
+    </record>
+  </data>
+</odoo>

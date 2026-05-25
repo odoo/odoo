@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- ==========================================================================
+       PHASE 6 — DASHBOARDS
+       Approximates the SF OPS / Quarterly / Prelog dashboards using Odoo's
+       built-in graph + pivot views over mv.schedules / mv.prelog_data_mirror /
+       mv.spot_data_mirror.
+       ========================================================================== -->
+
+  <!-- ============================================================
+       Pivot + Graph views on mv.schedules — feed the OPS Dashboard
+       ============================================================ -->
+  <record id="view_mv_schedules_graph" model="ir.ui.view">
+    <field name="name">mv.schedules.graph.dashboard</field>
+    <field name="model">mv.schedules</field>
+    <field name="arch" type="xml">
+      <graph string="Schedules — Booked $ by Week / Daypart" type="bar" stacked="0">
+        <field name="week" type="row" interval="week"/>
+        <field name="daypart" type="col"/>
+        <field name="total_dollars" type="measure"/>
+        <field name="units_available" type="measure"/>
+        <field name="equiv_30" type="measure"/>
+      </graph>
+    </field>
+  </record>
+
+  <record id="view_mv_schedules_pivot" model="ir.ui.view">
+    <field name="name">mv.schedules.pivot.dashboard</field>
+    <field name="model">mv.schedules</field>
+    <field name="arch" type="xml">
+      <pivot string="Schedules — Booked $ Pivot">
+        <field name="networks" type="row"/>
+        <field name="daypart" type="row"/>
+        <field name="week" type="col" interval="week"/>
+        <field name="total_dollars" type="measure"/>
+        <field name="units_available" type="measure"/>
+        <field name="equiv_30" type="measure"/>
+      </pivot>
+    </field>
+  </record>
+
+  <!-- Add graph/pivot view modes to the existing Schedule action so users get the new views in the dropdown -->
+  <record id="action_mv_schedules_dashboard" model="ir.actions.act_window">
+    <field name="name">OPS Dashboard — Schedules</field>
+    <field name="res_model">mv.schedules</field>
+    <field name="view_mode">graph,pivot,list,form</field>
+    <field name="domain">[('status','!=','canceled')]</field>
+    <field name="context">{'search_default_group_week': 1}</field>
+  </record>
+
+  <menuitem id="menu_mv_dashboard_ops"
+            name="OPS Dashboard"
+            parent="menu_mv_sales_ops"
+            action="action_mv_schedules_dashboard"
+            sequence="1"/>
+
+  <!-- ============================================================
+       Quarterly Dashboard — same data, grouped by Program + Quarter
+       ============================================================ -->
+  <record id="action_mv_quarterly_dashboard" model="ir.actions.act_window">
+    <field name="name">Quarterly Dashboard</field>
+    <field name="res_model">mv.schedules</field>
+    <field name="view_mode">pivot,graph,list,form</field>
+    <field name="domain">[('status','!=','canceled')]</field>
+    <field name="context">{'search_default_group_week': 1, 'search_default_group_networks': 1}</field>
+  </record>
+
+  <record id="view_mv_schedules_pivot_quarterly" model="ir.ui.view">
+    <field name="name">mv.schedules.pivot.quarterly</field>
+    <field name="model">mv.schedules</field>
+    <field name="priority">99</field>
+    <field name="arch" type="xml">
+      <pivot string="Quarterly Booked $ by Program">
+        <field name="networks" type="row"/>
+        <field name="week" type="col" interval="quarter"/>
+        <field name="total_dollars" type="measure"/>
+        <field name="units_available" type="measure"/>
+        <field name="equiv_30" type="measure"/>
+      </pivot>
+    </field>
+  </record>
+
+  <menuitem id="menu_mv_dashboard_quarterly"
+            name="Quarterly Dashboard"
+            parent="menu_mv_sales_ops"
+            action="action_mv_quarterly_dashboard"
+            sequence="20"/>
+
+  <!-- ============================================================
+       Prelog Dashboard — kpi widgets via graph/pivot on prelog mirror
+       ============================================================ -->
+  <record id="view_mv_prelog_data_mirror_graph" model="ir.ui.view">
+    <field name="name">mv.prelog_data_mirror.graph.dashboard</field>
+    <field name="model">mv.prelog_data_mirror</field>
+    <field name="arch" type="xml">
+      <graph string="Prelog — Rows by Removal Reason" type="pie">
+        <field name="removal_reason" type="row"/>
+      </graph>
+    </field>
+  </record>
+
+  <record id="view_mv_prelog_data_mirror_pivot" model="ir.ui.view">
+    <field name="name">mv.prelog_data_mirror.pivot.dashboard</field>
+    <field name="model">mv.prelog_data_mirror</field>
+    <field name="arch" type="xml">
+      <pivot string="Prelog Counts by Removal Reason">
+        <field name="removal_reason" type="row"/>
+      </pivot>
+    </field>
+  </record>
+
+  <record id="action_mv_prelog_dashboard" model="ir.actions.act_window">
+    <field name="name">Prelog Dashboard</field>
+    <field name="res_model">mv.prelog_data_mirror</field>
+    <field name="view_mode">graph,pivot,list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_dashboard_prelog"
+            name="Prelog Dashboard"
+            parent="menu_mv_sales_ops"
+            action="action_mv_prelog_dashboard"
+            sequence="2"/>
+
+  <!-- ============================================================
+       Spot Data Dashboard — status breakdown
+       ============================================================ -->
+  <record id="view_mv_spot_data_mirror_graph" model="ir.ui.view">
+    <field name="name">mv.spot_data_mirror.graph.dashboard</field>
+    <field name="model">mv.spot_data_mirror</field>
+    <field name="arch" type="xml">
+      <graph string="Spot Data — Status Breakdown" type="pie">
+        <field name="status" type="row"/>
+      </graph>
+    </field>
+  </record>
+
+  <record id="view_mv_spot_data_mirror_pivot" model="ir.ui.view">
+    <field name="name">mv.spot_data_mirror.pivot.dashboard</field>
+    <field name="model">mv.spot_data_mirror</field>
+    <field name="arch" type="xml">
+      <pivot string="Spot Data — Status Counts">
+        <field name="status" type="row"/>
+      </pivot>
+    </field>
+  </record>
+
+  <record id="action_mv_spot_data_dashboard" model="ir.actions.act_window">
+    <field name="name">Spot Data Dashboard</field>
+    <field name="res_model">mv.spot_data_mirror</field>
+    <field name="view_mode">graph,pivot,list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_dashboard_spot"
+            name="Spot Data Dashboard"
+            parent="menu_mv_sales_ops"
+            action="action_mv_spot_data_dashboard"
+            sequence="3"/>
+
+  <!-- ============================================================
+       Deal / Brand top-level reporting
+       ============================================================ -->
+  <record id="view_mv_deal_graph" model="ir.ui.view">
+    <field name="name">mv.deal.graph.dashboard</field>
+    <field name="model">mv.deal</field>
+    <field name="arch" type="xml">
+      <graph string="Deals — $ Booked by Program" type="bar">
+        <field name="program" type="row"/>
+        <field name="total_booked_dollars" type="measure"/>
+      </graph>
+    </field>
+  </record>
+
+  <record id="view_mv_deal_pivot" model="ir.ui.view">
+    <field name="name">mv.deal.pivot.dashboard</field>
+    <field name="model">mv.deal</field>
+    <field name="arch" type="xml">
+      <pivot string="Deals — $ by Program × Brand">
+        <field name="program" type="row"/>
+        <field name="brands" type="col"/>
+        <field name="total_booked_dollars" type="measure"/>
+        <field name="schedule_count" type="measure"/>
+      </pivot>
+    </field>
+  </record>
+
+  <record id="action_mv_deal_dashboard" model="ir.actions.act_window">
+    <field name="name">Deals Dashboard</field>
+    <field name="res_model">mv.deal</field>
+    <field name="view_mode">graph,pivot,list,form</field>
+    <field name="domain">[('status','=','sold')]</field>
+  </record>
+
+  <menuitem id="menu_mv_dashboard_deals"
+            name="Deals Dashboard"
+            parent="menu_mv_sales_ops"
+            action="action_mv_deal_dashboard"
+            sequence="10"/>
+
+</odoo>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_time_and_expense_list" model="ir.ui.view">
+    <field name="name">mv.time_and_expense.list</field>
+    <field name="model">mv.time_and_expense</field>
+    <field name="arch" type="xml">
+      <list string="Time And Expense">
+        <field name="name"/>
+        <field name="intacct_recon"/>
+        <field name="mv_employee"/>
+        <field name="te_period"/>
+        <field name="te_total"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_time_and_expense_form" model="ir.ui.view">
+    <field name="name">mv.time_and_expense.form</field>
+    <field name="model">mv.time_and_expense</field>
+    <field name="arch" type="xml">
+      <form string="Time And Expense">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="mv_employee"/>
+                <field name="te_period"/>
+              </group>
+              <group>
+                <field name="te_total"/>
+                <field name="intacct_recon"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_time_and_expense_search" model="ir.ui.view">
+    <field name="name">mv.time_and_expense.search</field>
+    <field name="model">mv.time_and_expense</field>
+    <field name="arch" type="xml">
+      <search string="Time And Expense">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_time_and_expense" model="ir.actions.act_window">
+    <field name="name">Time And Expense</field>
+    <field name="res_model">mv.time_and_expense</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_time_and_expense" name="Time And Expense" parent="menu_mv_finance" action="action_mv_time_and_expense"/>
+</odoo>

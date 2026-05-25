@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_rating_header_list" model="ir.ui.view">
+    <field name="name">mv.rating_header.list</field>
+    <field name="model">mv.rating_header</field>
+    <field name="arch" type="xml">
+      <list string="Rating Header">
+        <field name="name"/>
+        <field name="a18_000"/>
+        <field name="a18_34_000"/>
+        <field name="a18_34"/>
+        <field name="a18_49_000"/>
+        <field name="a18_49"/>
+        <field name="a18"/>
+        <field name="a25_000"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_rating_header_form" model="ir.ui.view">
+    <field name="name">mv.rating_header.form</field>
+    <field name="model">mv.rating_header</field>
+    <field name="arch" type="xml">
+      <form string="Rating Header">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="start_date"/>
+                <field name="program"/>
+                <field name="actuals_estimates"/>
+                <field name="bounce_daypart"/>
+                <field name="methodology"/>
+                <field name="season"/>
+                <field name="end_date"/>
+                <field name="a18"/>
+                <field name="a18_000"/>
+                <field name="a18_34"/>
+                <field name="a18_34_000"/>
+                <field name="a18_49"/>
+                <field name="a18_49_000"/>
+                <field name="a25"/>
+                <field name="a25_000"/>
+                <field name="a25_34"/>
+                <field name="a25_34_000"/>
+                <field name="a25_49"/>
+                <field name="a25_49_000"/>
+                <field name="a25_54"/>
+                <field name="a25_54_000"/>
+                <field name="a35"/>
+                <field name="a35_000"/>
+                <field name="a35_64"/>
+                <field name="a35_64_000"/>
+                <field name="a50"/>
+                <field name="a50_000"/>
+                <field name="a55"/>
+                <field name="a55_000"/>
+                <field name="a65"/>
+                <field name="a65_000"/>
+                <field name="bc_74_factor_50_hh"/>
+                <field name="bc_74_factor_50_hh_000"/>
+                <field name="bc_74_factor_66"/>
+                <field name="bill_cunningham_74_66"/>
+                <field name="est_median_age"/>
+                <field name="f18"/>
+                <field name="f18_000"/>
+                <field name="f18_34"/>
+                <field name="f18_34_000"/>
+                <field name="f18_49"/>
+                <field name="f18_49_000"/>
+                <field name="f25"/>
+                <field name="f25_000"/>
+                <field name="f25_49"/>
+              </group>
+              <group>
+                <field name="f25_49_000"/>
+                <field name="f25_54"/>
+                <field name="f25_54_000"/>
+                <field name="f35"/>
+                <field name="f35_000"/>
+                <field name="f35_64"/>
+                <field name="f35_64_000"/>
+                <field name="f50"/>
+                <field name="f50_000"/>
+                <field name="f55"/>
+                <field name="f55_000"/>
+                <field name="f65"/>
+                <field name="f65_000"/>
+                <field name="hh"/>
+                <field name="hh_rtg"/>
+                <field name="m18"/>
+                <field name="m18_000"/>
+                <field name="m18_34"/>
+                <field name="m18_34_000"/>
+                <field name="m18_49"/>
+                <field name="m18_49_000"/>
+                <field name="m25"/>
+                <field name="m25_000"/>
+                <field name="m25_49"/>
+                <field name="m25_49_000"/>
+                <field name="m25_54"/>
+                <field name="m25_54_000"/>
+                <field name="m35"/>
+                <field name="m35_000"/>
+                <field name="m35_64"/>
+                <field name="m35_64_000"/>
+                <field name="m50"/>
+                <field name="m50_000"/>
+                <field name="m55"/>
+                <field name="m55_000"/>
+                <field name="m65"/>
+                <field name="m65_000"/>
+                <field name="p12_17"/>
+                <field name="p12_17_000"/>
+                <field name="p2"/>
+                <field name="p2_000"/>
+                <field name="p2_11"/>
+                <field name="p2_11_000"/>
+                <field name="p6_11"/>
+                <field name="p6_11_000"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_rating_header_search" model="ir.ui.view">
+    <field name="name">mv.rating_header.search</field>
+    <field name="model">mv.rating_header</field>
+    <field name="arch" type="xml">
+      <search string="Rating Header">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_rating_header" model="ir.actions.act_window">
+    <field name="name">Rating Header</field>
+    <field name="res_model">mv.rating_header</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_rating_header" name="Rating Header" parent="menu_mv_finance" action="action_mv_rating_header"/>
+</odoo>

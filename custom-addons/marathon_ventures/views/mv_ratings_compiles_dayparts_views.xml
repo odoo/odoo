@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_ratings_compiles_dayparts_list" model="ir.ui.view">
+    <field name="name">mv.ratings_compiles_dayparts.list</field>
+    <field name="model">mv.ratings_compiles_dayparts</field>
+    <field name="arch" type="xml">
+      <list string="Ratings Compiles Dayparts">
+        <field name="name"/>
+        <field name="daypart"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_ratings_compiles_dayparts_form" model="ir.ui.view">
+    <field name="name">mv.ratings_compiles_dayparts.form</field>
+    <field name="model">mv.ratings_compiles_dayparts</field>
+    <field name="arch" type="xml">
+      <form string="Ratings Compiles Dayparts">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="daypart"/>
+              </group>
+              <group>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_ratings_compiles_dayparts_search" model="ir.ui.view">
+    <field name="name">mv.ratings_compiles_dayparts.search</field>
+    <field name="model">mv.ratings_compiles_dayparts</field>
+    <field name="arch" type="xml">
+      <search string="Ratings Compiles Dayparts">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_ratings_compiles_dayparts" model="ir.actions.act_window">
+    <field name="name">Ratings Compiles Dayparts</field>
+    <field name="res_model">mv.ratings_compiles_dayparts</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_ratings_compiles_dayparts" name="Ratings Compiles Dayparts" parent="menu_mv_finance" action="action_mv_ratings_compiles_dayparts"/>
+</odoo>

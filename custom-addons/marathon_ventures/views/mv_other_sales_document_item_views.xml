@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_mv_other_sales_document_item_list" model="ir.ui.view">
+    <field name="name">mv.other_sales_document_item.list</field>
+    <field name="model">mv.other_sales_document_item</field>
+    <field name="arch" type="xml">
+      <list string="Other Sales Document Item">
+        <field name="name"/>
+        <field name="department"/>
+        <field name="description"/>
+        <field name="extended_price"/>
+        <field name="item"/>
+        <field name="location"/>
+        <field name="memo"/>
+        <field name="opportunity"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_mv_other_sales_document_item_form" model="ir.ui.view">
+    <field name="name">mv.other_sales_document_item.form</field>
+    <field name="model">mv.other_sales_document_item</field>
+    <field name="arch" type="xml">
+      <form string="Other Sales Document Item">
+        <sheet>
+          <div class="oe_title">
+            <label for="name"/>
+            <h1><field name="name"/></h1>
+          </div>
+          <notebook>
+            <page string="Details">
+              <group>
+                <field name="other_sales_document"/>
+                <field name="opportunity"/>
+                <field name="department"/>
+                <field name="description"/>
+                <field name="item"/>
+                <field name="location"/>
+              </group>
+              <group>
+                <field name="memo"/>
+                <field name="site"/>
+                <field name="unit"/>
+                <field name="extended_price"/>
+                <field name="price"/>
+                <field name="quantity"/>
+              </group>
+            </page>
+            <page string="SF Metadata">
+              <group>
+                <field name="sf_external_id"/>
+                <field name="sf_legacy_data"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_mv_other_sales_document_item_search" model="ir.ui.view">
+    <field name="name">mv.other_sales_document_item.search</field>
+    <field name="model">mv.other_sales_document_item</field>
+    <field name="arch" type="xml">
+      <search string="Other Sales Document Item">
+        <field name="name"/>
+        <field name="sf_external_id"/>
+      </search>
+    </field>
+  </record>
+
+  <record id="action_mv_other_sales_document_item" model="ir.actions.act_window">
+    <field name="name">Other Sales Document Item</field>
+    <field name="res_model">mv.other_sales_document_item</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <menuitem id="menu_mv_other_sales_document_item" name="Other Sales Document Item" parent="menu_mv_finance" action="action_mv_other_sales_document_item"/>
+</odoo>
