@@ -1274,6 +1274,89 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
                 'raw': attachments_data[0][2]['raw'],
             }])
 
+    def test_send_and_print_with_alien_main_attachment(self):
+        """Regression test: Send & Print must not crash (KeyError) when
+        message_main_attachment_id points to an attachment that does NOT belong
+        to the invoice (e.g. a screenshot injected by the 'documents' module).
+
+        Before the fix, the success-path in _generate_and_send_invoices tried
+        ``move_data['proforma_pdf_attachment']`` with a hard dict subscription
+        instead of ``.get()``, causing a KeyError when the key was absent.
+        The same issue occurred in the UBL/CII hooks that accessed
+        ``proforma_pdf_attachment_values`` without a guard.
+        """
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+
+        # Simulate an 'alien' attachment being set as the main attachment,
+        # e.g. a document uploaded via the documents module or a screenshot.
+        alien_attachment = self.env['ir.attachment'].create({
+            'name': 'alien_screenshot.png',
+            'raw': b'\x89PNG fake image data',
+            'mimetype': 'image/png',
+            'res_model': 'res.partner',  # intentionally NOT 'account.move'
+            'res_id': invoice.partner_id.id,
+        })
+        invoice.message_main_attachment_id = alien_attachment
+
+        # ── Path 1: Single-invoice wizard (allow_fallback_pdf=True) ──
+        # This exercises the full wizard flow, including _send_mails which
+        # accesses move_data.get('proforma_pdf_attachment').
+        wizard = self.create_send_and_print(invoice, sending_methods=['email'])
+        # Must not raise KeyError.
+        results = wizard.action_send_and_print(allow_fallback_pdf=True)
+
+        # The wizard should complete; a proper PDF is generated because there
+        # was no error — the alien attachment is simply ignored.
+        self.assertTrue(invoice.invoice_pdf_report_id)
+        self.assertTrue(invoice.is_move_sent)
+        # The main attachment should now point to the generated PDF, not the alien.
+        self.assertNotEqual(invoice.message_main_attachment_id, alien_attachment)
+
+        # ── Path 2: Direct _generate_and_send_invoices (no wizard) ──
+        # Reset the invoice state to test the lower-level API.
+        invoice2 = self.init_invoice("out_invoice", amounts=[500], post=True)
+        alien_attachment2 = self.env['ir.attachment'].create({
+            'name': 'alien_document.pdf',
+            'raw': b'%PDF-1.4 fake alien pdf',
+            'mimetype': 'application/pdf',
+            'res_model': 'res.partner',
+            'res_id': invoice2.partner_id.id,
+        })
+        invoice2.message_main_attachment_id = alien_attachment2
+
+        # Must not raise KeyError.
+        attachments = self.env['account.move.send']._generate_and_send_invoices(
+            invoice2,
+            allow_fallback_pdf=False,
+            sending_methods=[],
+        )
+        self.assertTrue(invoice2.invoice_pdf_report_id)
+        self.assertTrue(invoice2.is_move_sent)
+        self.assertNotEqual(invoice2.message_main_attachment_id, alien_attachment2)
+
+    def test_send_and_print_proforma_without_alien_attachment(self):
+        """Regression test: proforma fallback path must work when
+        proforma_pdf_attachment / proforma_pdf_attachment_values are absent
+        from move_data because the move succeeded (no error).
+
+        This is the complementary test to the alien-attachment scenario:
+        a *successful* move should never try to read proforma keys.
+        """
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice, sending_methods=[])
+
+        # Standard send — no error injected, so no proforma is created.
+        results = wizard.action_send_and_print(allow_fallback_pdf=True)
+
+        # Should complete without KeyError.
+        self.assertTrue(invoice.invoice_pdf_report_id)
+        self.assertTrue(invoice.is_move_sent)
+        # No proforma attachment should exist.
+        proforma_attachment = self.env['ir.attachment'].sudo().search([
+            ('name', '=', invoice._get_invoice_proforma_pdf_report_filename()),
+        ])
+        self.assertFalse(proforma_attachment)
+
     def test_invoice_send_reply_to_persistence(self):
         """ Test that the reply_to set on the mail template is correctly
         propagated through the wizard to the final mail message. """
