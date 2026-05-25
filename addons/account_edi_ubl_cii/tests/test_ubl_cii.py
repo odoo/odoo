@@ -704,7 +704,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
             "partner_id": self.partner_a.id,
             "move_type": "out_invoice",
             "invoice_line_ids": [Command.create({
-                "name": "Down payment of 40.00%",
+                "name": "Down Payment",
                 "price_unit": 100.0,
             })],
         })
@@ -715,7 +715,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         name_node = xml_tree.find(".//ram:SpecifiedTradeProduct/ram:Name", self.namespaces)
         description_node = xml_tree.find(".//ram:SpecifiedTradeProduct/ram:Description", self.namespaces)
         self.assertIsNotNone(name_node, "ram:Name must be present even when the line has no product")
-        self.assertEqual(name_node.text, "Down payment of 40.00%")
+        self.assertEqual(name_node.text, "Down Payment")
         self.assertIsNone(description_node)
 
     def test_bank_details_import(self):

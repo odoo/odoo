@@ -1494,8 +1494,8 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
         # Do a 100% down payment
         self.env['sale.advance.payment.inv'].sudo().create({
-            'advance_payment_method': 'percentage',
-            'amount': 100,
+            'advance_payment_method': 'downpayment',
+            'percentage': 1.0,
             'sale_order_ids': so.ids,
         }).create_invoices()
 

@@ -100,8 +100,8 @@ class TestSaleToInvoice(TestSaleCommon):
         self._check_order_search(self.sale_order, [("invoice_ids", "=", False)], self.sale_order)
         # Let's do an invoice for a deposit of 100
         downpayment = self.InvoiceWizard.create({
-            "advance_payment_method": "fixed",
-            "fixed_amount": 50,
+            "advance_payment_method": "downpayment",
+            "amount": 50,
         })
         # Create two $50 invoices
         downpayment.create_invoices()
@@ -174,8 +174,8 @@ class TestSaleToInvoice(TestSaleCommon):
         self._check_order_search(self.sale_order, [("invoice_ids", "=", False)], self.sale_order)
         # Let's do an invoice for a deposit of 10%
         downpayment = self.InvoiceWizard.create({
-            "advance_payment_method": "percentage",
-            "amount": 10,
+            "advance_payment_method": "downpayment",
+            "percentage": 0.10,
         })
         downpayment.create_invoices()
         self._check_order_search(
@@ -220,7 +220,7 @@ class TestSaleToInvoice(TestSaleCommon):
             self
             .env["sale.advance.payment.inv"]
             .with_context(context)
-            .create({"advance_payment_method": "fixed", "fixed_amount": 50})
+            .create({"advance_payment_method": "downpayment", "amount": 50})
         )
         downpayment.create_invoices()
         # Let's do the invoice for the remaining amount
@@ -266,8 +266,8 @@ class TestSaleToInvoice(TestSaleCommon):
         # Let's do an invoice for a down payment of 50
         self.env["sale.advance.payment.inv"].with_context(context).create({
             "sale_order_ids": [Command.set(sale_order.ids)],
-            "advance_payment_method": "fixed",
-            "fixed_amount": 50,
+            "advance_payment_method": "downpayment",
+            "amount": 50,
         }).create_invoices()
         dp_line = sale_order.order_line.filtered(
             lambda sol: sol.is_downpayment and not sol.display_type
@@ -313,11 +313,11 @@ class TestSaleToInvoice(TestSaleCommon):
             self
             .env["sale.advance.payment.inv"]
             .with_context(context)
-            .create({"advance_payment_method": "fixed", "fixed_amount": 50})
+            .create({"advance_payment_method": "downpayment", "amount": 50})
         )
         # Create invoice
         downpayment.create_invoices()
-        self.assertEqual(downpayment.amount, 0.0, "The down payment amount should be 0.0")
+        self.assertEqual(downpayment.percentage, 0.0, "The down payment percentage should be 0.0")
 
     def test_downpayment_percentage_tax_icl(self):
         """Test invoice with a percentage downpayment and an included tax.
@@ -327,7 +327,10 @@ class TestSaleToInvoice(TestSaleCommon):
         # Confirm the SO
         self.sale_order.action_confirm()
         # Let's do an invoice for a deposit of 100
-        payment = self.InvoiceWizard.create({"advance_payment_method": "percentage", "amount": 50})
+        payment = self.InvoiceWizard.create({
+            "advance_payment_method": "downpayment",
+            "percentage": 0.50,
+        })
         payment.create_invoices()
 
         self.assertEqual(
@@ -370,8 +373,8 @@ class TestSaleToInvoice(TestSaleCommon):
 
         # Create an invoice for a Down payment of 100
         self.InvoiceWizard.create({
-            "advance_payment_method": "fixed",
-            "fixed_amount": 100,
+            "advance_payment_method": "downpayment",
+            "amount": 100,
         }).create_invoices()
 
         # Ensure the downpayment line on the sale order is correctly set to 100
@@ -414,23 +417,28 @@ class TestSaleToInvoice(TestSaleCommon):
         after a "Reverse and Create Invoice" on the down payment invoice."""
         self.sale_order.action_confirm()
 
-        payment = self.env["sale.advance.payment.inv"].with_context(self.context).create({
-            "advance_payment_method": "fixed",
-            "fixed_amount": 100,
-        })
+        payment = (
+            self
+            .env["sale.advance.payment.inv"]
+            .with_context(self.context)
+            .create({"advance_payment_method": "downpayment", "amount": 100})
+        )
         payment.create_invoices()
         downpayment_line = self.sale_order.order_line.filtered(
-            lambda l: l.is_downpayment and not l.display_type)
+            lambda l: l.is_downpayment and not l.display_type
+        )
         downpayment_invoice = downpayment_line.invoice_lines.move_id
         downpayment_invoice.action_post()
 
-        move_reversal = self.env["account.move.reversal"].with_context(
-            active_model="account.move",
-            active_ids=downpayment_invoice.ids,
-        ).create({
-            "date": downpayment_invoice.date,
-            "journal_id": downpayment_invoice.journal_id.id,
-        })
+        move_reversal = (
+            self
+            .env["account.move.reversal"]
+            .with_context(active_model="account.move", active_ids=downpayment_invoice.ids)
+            .create({
+                "date": downpayment_invoice.date,
+                "journal_id": downpayment_invoice.journal_id.id,
+            })
+        )
         new_invoice = self.env["account.move"].browse(move_reversal.modify_moves()["res_id"])
         new_invoice.action_post()
 
@@ -991,7 +999,7 @@ class TestSaleToInvoice(TestSaleCommon):
             self
             .env["sale.advance.payment.inv"]
             .with_context(no_journal_ctxt)
-            .create({"advance_payment_method": "percentage", "amount": 50})
+            .create({"advance_payment_method": "downpayment", "percentage": 0.50})
         )
         payment.create_invoices()
         self.assertEqual(
@@ -1005,7 +1013,7 @@ class TestSaleToInvoice(TestSaleCommon):
             self
             .env["sale.advance.payment.inv"]
             .with_context(context_for_downpayment)
-            .create({"advance_payment_method": "fixed", "fixed_amount": 50})
+            .create({"advance_payment_method": "downpayment", "amount": 50})
         )
         downpayment.create_invoices()
         self.assertEqual(
@@ -1739,7 +1747,7 @@ class TestSaleToInvoice(TestSaleCommon):
                 "active_id": sale_order.id,
                 "default_journal_id": self.company_data["default_journal_sale"].id,
             })
-            .create({"advance_payment_method": "percentage", "amount": 10})
+            .create({"advance_payment_method": "downpayment", "amount": 10})
         )
         action_values = wizard.create_invoices()
 
@@ -1769,14 +1777,14 @@ class TestSaleToInvoice(TestSaleCommon):
 
             # Let's do 2 invoices for a deposit of 50 each
             downpayment = self.env["sale.advance.payment.inv"].create({
-                "advance_payment_method": "fixed",
-                "fixed_amount": 50,
+                "advance_payment_method": "downpayment",
+                "amount": 50,
                 "sale_order_ids": sale_order,
             })
             downpayment.create_invoices()
             downpayment2 = self.env["sale.advance.payment.inv"].create({
-                "advance_payment_method": "fixed",
-                "fixed_amount": 50,
+                "advance_payment_method": "downpayment",
+                "amount": 50,
                 "sale_order_ids": sale_order,
             })
             downpayment2.create_invoices()
