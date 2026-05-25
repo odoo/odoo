@@ -166,3 +166,7 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
             'price_unit': 2.0,
             'discount': 25.0,
         }])
+
+    def test_import_invoice_line_quantity_decimals(self):
+        imported_invoice = self._import_invoice_as_attachment_on(test_name='test_import_invoice_line_quantity_decimals')
+        self.assertEqual(imported_invoice.invoice_line_ids[0].quantity, 1800.0)
