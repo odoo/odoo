@@ -339,7 +339,9 @@ export class MailMessage extends models.ServerModel {
                 {
                     message_ids: [message.id],
                     store_data: new Store()
-                        .add(this.browse(message.id), "_store_message_fields")
+                        .add(this.browse(message.id), "_store_message_fields", {
+                            fields_params: { inbox_fields: true },
+                        })
                         .as_dict(),
                 }
             );
