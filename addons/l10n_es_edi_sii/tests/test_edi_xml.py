@@ -182,6 +182,84 @@ class TestEdiXmls(TestEsEdiCommon):
             },
         })
 
+    def test_012_out_invoice_foreign_partner_passport_uses_idtype_03(self):
+        """ Wiring check: a non-EU partner with a Pasaporte set must reach the SII JSON as IDOtro/03,
+        and (having an IDOtro) must use the per-operation-type desglose branch. """
+        partner_passport = self.env['res.partner'].create({
+            'name': 'Foreign Partner (Passport)',
+            'country_id': self.env.ref('base.us').id,
+            'l10n_es_passport': 'X1234567',
+        })
+        invoice = self._create_invoice_es(
+            partner_id=partner_passport.id,
+            invoice_line_ids=[
+                {'price_unit': 100.0, 'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva10b').ids)]},
+                {'price_unit': 200.0, 'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21s').ids)]},
+            ],
+        )
+        with patch(
+            'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
+            autospec=True,
+            side_effect=self._mock_sii_webservice,
+        ):
+            json_file = self._send_sii_and_get_json(invoice)
+        factura = json_file['FacturaExpedida']
+        self.assertEqual(factura['Contraparte']['IDOtro'], {
+            'IDType': '03',
+            'ID': 'X1234567',
+            'CodigoPais': 'US',
+        })
+        self.assertIn('DesgloseTipoOperacion', factura['TipoDesglose'])
+
+    def test_013_out_invoice_eu_partner_without_vat_is_not_idtype_02(self):
+        """ Regression guard at the full-invoice level: an EU partner without VAT must not be
+        reported as IDOtro/02. Forced non-simplified: below `l10n_es_simplified_invoice_limit`
+        a no-VAT EU partner otherwise auto-flags the invoice as simplified, which omits
+        'Contraparte' entirely (see test_014) - not what we want to check here. """
+        partner_eu_no_vat = self.env['res.partner'].create({
+            'name': 'EU Partner (no VAT)',
+            'country_id': self.env.ref('base.be').id,
+        })
+        invoice = self._create_invoice_es(
+            partner_id=partner_eu_no_vat.id,
+            l10n_es_is_simplified=False,
+            invoice_line_ids=[
+                {'price_unit': 100.0, 'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva10b').ids)]},
+            ],
+        )
+        with patch(
+            'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
+            autospec=True,
+            side_effect=self._mock_sii_webservice,
+        ):
+            json_file = self._send_sii_and_get_json(invoice)
+        id_otro = json_file['FacturaExpedida']['Contraparte']['IDOtro']
+        self.assertNotEqual(id_otro['IDType'], '02')
+        self.assertEqual(id_otro, {'IDType': '06', 'ID': 'NO_DISPONIBLE', 'CodigoPais': 'BE'})
+
+    def test_014_out_invoice_eu_partner_without_vat_below_limit_is_auto_simplified(self):
+        """ Documents existing (pre-task) behavior: a low-amount invoice to a no-VAT EU partner is
+        auto-flagged simplified, so 'Contraparte' (and thus the new IDOtro logic) never appears.
+        Caught this while writing test_013 - worth pinning down explicitly. """
+        partner_eu_no_vat = self.env['res.partner'].create({
+            'name': 'EU Partner (no VAT, small amount)',
+            'country_id': self.env.ref('base.be').id,
+        })
+        invoice = self._create_invoice_es(
+            partner_id=partner_eu_no_vat.id,
+            invoice_line_ids=[
+                {'price_unit': 100.0, 'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva10b').ids)]},
+            ],
+        )
+        self.assertTrue(invoice.l10n_es_is_simplified)
+        with patch(
+            'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
+            autospec=True,
+            side_effect=self._mock_sii_webservice,
+        ):
+            json_file = self._send_sii_and_get_json(invoice)
+        self.assertNotIn('Contraparte', json_file['FacturaExpedida'])
+
     def test_020_out_invoice_s_iva10b_s_iva0_ns(self):
         """ The ns tax is a special case with l10n_es_type ignore and should not appear in what we send"""
         invoice = self._create_invoice_es(
