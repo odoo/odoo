@@ -1,0 +1,26 @@
+/* Move the kiosk clock to the top-left corner and hide it on
+   employee-selection screens — show only on the PIN entry screen. */
+
+.o_attendance_background {
+  position: relative;
+}
+
+.o_hr_kiosk_mode_top {
+  position: absolute !important;
+  top: 1rem;
+  left: 1.25rem;
+  margin: 0 !important;
+  z-index: 1;
+  display: none !important;
+}
+
+/* Show the clock only when the PIN pad is in the DOM */
+.o_attendance_background:has(.o_hr_attendance_pin_pad) .o_hr_kiosk_mode_top {
+  display: flex !important;
+}
+
+/* Keep the time text readable against any background */
+.o_hr_kiosk_mode_top_time span {
+  color: rgba(0, 0, 0, 0.75);
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.6);
+}

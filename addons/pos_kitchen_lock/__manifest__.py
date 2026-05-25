@@ -24,6 +24,9 @@
             'pos_kitchen_lock/static/src/xml/manager_override_dialog.xml',
             'pos_kitchen_lock/static/src/xml/kitchen_lock.xml',
         ],
+        'hr_attendance.assets_public_attendance': [
+            'pos_kitchen_lock/static/src/css/kiosk_overrides.css',
+        ],
     },
     'license': 'LGPL-3',
     'installable': True,

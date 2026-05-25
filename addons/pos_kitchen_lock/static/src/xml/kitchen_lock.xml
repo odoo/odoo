@@ -7,7 +7,7 @@
     -->
     <t t-name="pos_kitchen_lock.Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension">
         <xpath expr="//span[hasclass('text-wrap')]" position="after">
-            <span t-if="line.isKitchenSent()" class="kitchen-lock-badge">&#x1F512;</span>
+            <span t-if="line.isKitchenSent() and !vals.isReceipt" class="kitchen-lock-badge">&#x1F512;</span>
         </xpath>
     </t>
 
