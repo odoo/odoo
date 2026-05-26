@@ -33,6 +33,8 @@ class StockRule(models.Model):
                 rule.picking_type_code_domain = rule.picking_type_code_domain or [] + ['mrp_operation']
 
     def _should_auto_confirm_procurement_mo(self, p):
+        if not p.picking_type_id.auto_confirm_production:
+            return False
         if not p.move_raw_ids:
             return (not p.workorder_ids and (p.orderpoint_id or p.move_dest_ids.procure_method == 'make_to_stock'))
         return not p.orderpoint_id
