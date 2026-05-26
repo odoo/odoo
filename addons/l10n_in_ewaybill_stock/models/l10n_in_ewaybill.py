@@ -5,7 +5,7 @@ import json
 import logging
 import pytz
 import re
-from datetime import datetime
+from datetime import date, datetime
 from collections import defaultdict
 from psycopg2 import OperationalError
 
@@ -582,17 +582,19 @@ class Ewaybill(models.Model):
                 for key, fun in key_paired_function
                 for place, partner in partner_detail
             }
+
+        transaction_type = get_transaction_type(
+            self.partner_bill_from_id,
+            self.partner_ship_from_id,
+            self.partner_bill_to_id,
+            self.partner_ship_to_id
+        )
         ewaybill_json = {
                 # document details
                 "supplyType": self.supply_type,
                 "subSupplyType": self.type_id.sub_type_code,
                 "docType": self.type_id.code,
-                "transactionType": get_transaction_type(
-                    self.partner_bill_from_id,
-                    self.partner_ship_from_id,
-                    self.partner_bill_to_id,
-                    self.partner_ship_to_id
-                ),
+                "transactionType": transaction_type,
                 "transDistance": str(self.distance),
                 "docNo": self.document_number,
                 "docDate": fields.Date.context_today(self.with_context(tz='Asia/Kolkata'), self.document_date).strftime("%d/%m/%Y"),
@@ -620,6 +622,11 @@ class Ewaybill(models.Model):
         }
         if self.type_id.sub_type_code == '8':
             ewaybill_json["subSupplyDesc"] = self.type_description
+        if transaction_type in (2, 4) and fields.Date.context_today(self) >= date(2026, 8, 1):
+            ewaybill_json.update({
+                "shipToGSTIN": self.partner_ship_to_id.commercial_partner_id.vat or "URP",
+                "shipToTradeName": self.partner_ship_to_id.commercial_partner_id.name,
+            })
         return ewaybill_json
 
     def _prepare_ewaybill_transportation_json_payload(self):

@@ -3,7 +3,7 @@
 
 import re
 import json
-from datetime import timedelta
+from datetime import date, timedelta
 from markupsafe import Markup
 
 from odoo import models, fields, api, _
@@ -423,6 +423,7 @@ class AccountEdiFormat(models.Model):
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
         invoice_line_tax_details = tax_details.get("tax_details_per_record")
         rounding_amount = sum(line.balance for line in invoices.line_ids if line.display_type == 'rounding') * sign
+        transaction_type = get_transaction_type(seller_details, dispatch_details, buyer_details, ship_to_details)
         json_payload = {
             # Note:
             # Customer Invoice, Sales Receipt and Vendor Credit Note are Outgoing
@@ -430,7 +431,7 @@ class AccountEdiFormat(models.Model):
             "supplyType": invoices.is_outbound() and "I" or "O",
             "subSupplyType": invoices.l10n_in_type_id.sub_type_code,
             "docType": invoices.l10n_in_type_id.code,
-            "transactionType": get_transaction_type(seller_details, dispatch_details, buyer_details, ship_to_details),
+            "transactionType": transaction_type,
             "transDistance": str(invoices.l10n_in_distance),
             "docNo": invoices.is_purchase_document(include_receipts=True) and invoices.ref or invoices.name,
             "docDate": invoices.date.strftime("%d/%m/%Y"),
@@ -516,6 +517,11 @@ class AccountEdiFormat(models.Model):
                         "transporterName": invoices.l10n_in_transporter_id.name,
                     }.items() if v
                 },
+            })
+        if transaction_type in (2, 4) and fields.Date.context_today(self) >= date(2026, 8, 1):
+            json_payload.update({
+                "shipToGSTIN": ship_to_details.commercial_partner_id.vat or "URP",
+                "shipToTradeName": ship_to_details.commercial_partner_id.name,
             })
         return json_payload
 
