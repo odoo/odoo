@@ -39,11 +39,6 @@ export class MailActivity extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    activity_format(ids) {
-        return new mailDataHelpers.Store(this.browse(ids)).get_result();
-    }
-
-    /** @param {number[]} ids */
     _to_store(store, fields) {
         /** @type {import("mock_models").MailActivityType} */
         const MailActivityType = this.env["mail.activity.type"];

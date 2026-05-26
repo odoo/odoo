@@ -141,10 +141,7 @@ test("list activity widget: open dropdown", async () => {
     pyEnv["res.users"].write([serverState.userId], {
         activity_type_id: activityTypeId_2,
     });
-    onRpc("mail.activity", "activity_format", (params) => {
-        expect(params.args).toEqual([[activityId_1, activityId_2]]);
-        expect.step("activity_format");
-    });
+    listenStoreFetch("mail.activity");
     onRpc("mail.activity", "action_feedback", (params) => {
         pyEnv["res.partner"].write([serverState.partnerId], {
             activity_ids: [activityId_2],
@@ -164,7 +161,7 @@ test("list activity widget: open dropdown", async () => {
     });
     await contains(".o-mail-ListActivity-summary:text('Call with Al')");
     await click(".o-mail-ActivityButton");
-    await expect.waitForSteps(["activity_format"]);
+    await waitStoreFetch("mail.activity");
     await click(
         ":nth-child(1 of .o-mail-ActivityListPopoverItem) .o-mail-ActivityListPopoverItem-markAsDone"
     );

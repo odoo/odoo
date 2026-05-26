@@ -566,7 +566,7 @@ test("activity widget: delete an activity from the widget", async () => {
 
     // Check if activity is scheduled
     await click(".planned .o-mail-ActivityCell-deadline");
-    await contains(".o-mail-ActivityListPopover");
+    await contains(".o-mail-ActivityListPopoverItem");
 
     const activityListPopoverButtons = document.querySelectorAll(
         ".overflow-auto.d-flex.align-items-baseline button"
