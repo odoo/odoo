@@ -889,6 +889,23 @@ describe("Convert classes to inline styles", () => {
         styleSheet.deleteRule(0);
     });
 
+    test("strip theme color classes after inlining their styles", async () => {
+        const bgColor = "rgb(17, 24, 39)";
+        const style = document.createElement("style");
+        style.textContent = `.bg-o-color-5 { background-color: ${bgColor} !important; }`;
+        const fixture = getFixture();
+        fixture.append(style);
+
+        editable.innerHTML = `<div class="bg-o-color-5 keep-me">Hello</div>`;
+        fixture.append(editable);
+
+        classToStyle(editable, getCSSRules(editable.ownerDocument));
+
+        const block = editable.querySelector(".keep-me");
+        expect(block).toHaveStyle({ backgroundColor: bgColor });
+        expect(block).not.toHaveClass("bg-o-color-5");
+    });
+
     test("simplify border/margin/padding styles", async () => {
         // border-radius
         styleSheet.insertRule(
