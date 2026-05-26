@@ -1450,3 +1450,38 @@ class TestProcurement(TestMrpCommon):
         self.assertRecordValues(target_moves, [
             {'quantity': 2.0}, {'quantity': 2.0}, {'quantity': 3.0}
         ])
+
+    def test_procurement_respects_auto_confirm_production(self):
+        """Ensure that manufacturing orders created from procurement remain in draft state
+        when auto_confirm_production boolean is disabled on the manufacturing operation type.
+        """
+        # Configure two BOMs with different auto_confirm_production settings on their manufacturing operation types.
+        warehouse = self.warehouse_1
+        self.bom_1.picking_type_id = warehouse.manu_type_id.copy({'auto_confirm_production': False})
+        self.bom_3.picking_type_id = warehouse.manu_type_id
+
+        # Trigger procurement for two products whose BOMs use operation types with different auto_confirm_production settings.
+        self.env['stock.rule'].run([
+            self.env['stock.rule'].Procurement(
+                product,
+                5.0,
+                product.uom_id,
+                warehouse.lot_stock_id,
+                product.name,
+                'MO State Test',
+                warehouse.company_id,
+                {
+                    'warehouse_id': warehouse,
+                },
+            )
+            for product in (self.product_4, self.product_6)
+        ])
+
+        # Verify that each MO has the correct state based on its operation type configuration
+        mo_draft = self.env['mrp.production'].search([('product_id', '=', self.product_4.id)], limit=1)
+        self.assertFalse(mo_draft.picking_type_id.auto_confirm_production)
+        self.assertEqual(mo_draft.state, 'draft', "MO should be in draft state because auto_confirm_production is disabled on the operation type.")
+
+        mo_confirm = self.env['mrp.production'].search([('product_id', '=', self.product_6.id)], limit=1)
+        self.assertTrue(mo_confirm.picking_type_id.auto_confirm_production)
+        self.assertEqual(mo_confirm.state, 'confirmed', "MO should be in confirmed state because auto_confirm_production is enabled on the operation type.")
