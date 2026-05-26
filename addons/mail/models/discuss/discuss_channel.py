@@ -464,7 +464,7 @@ class DiscussChannel(models.Model):
                         "partner_id": pid,
                         "channel_role": (
                             "owner"
-                            if vals.get("channel_type", "channel") in ["channel", "group"]
+                            if vals.get("channel_type", "channel") in self._types_allowing_channel_role()
                             and pid == self.env.user.partner_id.id
                             and not self.env.user._is_public()
                             else None
@@ -539,7 +539,7 @@ class DiscussChannel(models.Model):
         if "active" in vals:
             if channels_to_check := self.filtered(lambda channel: channel.active != vals["active"]):
                 if failing_channels := channels_to_check.filtered(
-                    lambda channel: channel.channel_type in ["channel", "group"]
+                    lambda channel: channel.channel_type in channel._types_allowing_channel_role()
                     # sudo: discuss.channel.member - allow reading channel_role for access checks
                     and channel.self_member_id.sudo().channel_role != "owner"
                     and not self.env.user.has_group("base.group_system")
@@ -1510,6 +1510,10 @@ class DiscussChannel(models.Model):
         return self.channel_type in ("group", "chat") or (
             self.channel_type == "channel" and not self.group_public_id
         )
+
+    def _types_allowing_channel_role(self):
+        """ Return the channel types which allow setting channel roles on members """
+        return ["channel", "group"]
 
     def _types_allowing_seen_infos(self):
         """ Return the channel types which allow sending seen infos notification
