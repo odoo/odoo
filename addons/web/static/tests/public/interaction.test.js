@@ -1110,7 +1110,7 @@ describe("waitFor...", () => {
             class Test extends Interaction {
                 static selector = ".test";
                 async willStart() {
-                    await this.waitForTimeout(() => expect.step("waitfortimeout"), 50);
+                    this.waitForTimeout(() => expect.step("waitfortimeout"), 50);
                     expect.step("willstart");
                     return new Promise((resolve) => {
                         setTimeout(() => {
@@ -1125,9 +1125,9 @@ describe("waitFor...", () => {
             }
             await startInteraction(Test, TemplateTest, { waitForStart: false });
             expect.verifySteps(["willstart"]);
-            await advanceTime(75);
+            await advanceTime(50, { animationFrame: false });
             expect.verifySteps(["waitfortimeout"]);
-            await advanceTime(75);
+            await advanceTime(50, { animationFrame: false });
             expect.verifySteps(["timeout", "start"]);
         });
 
