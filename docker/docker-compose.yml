@@ -5,8 +5,9 @@ name: rkpos
 # 2. docker compose pull
 # 3. docker compose up -d
 #
-# Cloudflare Tunnel handles SSL and external routing.
-# Nginx listens on 127.0.0.1:80 — configure your tunnel to point there.
+# Cloudflare Tunnel handles SSL and external routing (tunnel → localhost:80).
+# LAN devices access via server IP directly (192.168.x.x:80 / :8069 / :8072).
+# PostgreSQL stays loopback-only (SSH tunnel for DB tools).
 # ─────────────────────────────────────────────────────────────────────────────
 
 services:
@@ -54,8 +55,14 @@ services:
       - backend
       - frontend
     ports:
-      - "127.0.0.1:8069:8069"   # Odoo HTTP  — reachable via SSH tunnel
-      - "127.0.0.1:8072:8072"   # Odoo WS/longpolling
+      - "8069:8069"   # Odoo HTTP  — LAN + SSH tunnel
+      - "8072:8072"   # Odoo WS/longpolling — LAN + SSH tunnel
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8069/web/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
 
   # ── Portainer CE ──────────────────────────────────────────────────────────
   portainer:
@@ -66,22 +73,26 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     ports:
-      - "127.0.0.1:9443:9443"   # direct HTTPS access via SSH tunnel
+      - "9443:9443"   # direct HTTPS access — LAN + SSH tunnel
     networks:
       - frontend
+    healthcheck:
+      disable: true
 
   # ── Nginx (HTTP only — SSL handled by Cloudflare Tunnel) ──────────────────
   nginx:
     image: nginx:alpine
     restart: always
     ports:
-      - "127.0.0.1:80:80"   # loopback only — Cloudflare Tunnel connects here
+      - "80:80"             # LAN + Cloudflare Tunnel
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
     depends_on:
-      - odoo
-      - portainer
+      odoo:
+        condition: service_healthy
+      portainer:
+        condition: service_started
     networks:
       - frontend
 
