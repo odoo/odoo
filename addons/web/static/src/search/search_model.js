@@ -1127,15 +1127,6 @@ export class SearchModel extends EventBus {
         });
     }
 
-    switchGroupBySort() {
-        if (this.orderByCount === "Desc") {
-            this.orderByCount = "Asc";
-        } else {
-            this.orderByCount = "Desc";
-        }
-        this._notify();
-    }
-
     /**
      * Generate the searchItems corresponding to the properties.
      * @param {Object} searchItem
