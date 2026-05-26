@@ -4,6 +4,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { generateHTMLId } from "@web/core/utils/strings";
 import { isSmallInteger } from "@html_builder/utils/utils";
 import { markup } from "@odoo/owl";
+import { createElementWithContent } from "@web/core/utils/html";
 
 const DESCRIPTION_POSITION_PREFIX = "s_website_form_description_";
 export const VISIBILITY_DATASET = [
@@ -25,7 +26,7 @@ export const VISIBILITY_DATASET = [
  */
 export function getCustomField(type, label, name = "") {
     return {
-        name: name || label,
+        name: name || createElementWithContent("container", label).textContent,
         string: label,
         custom: true,
         type: type,
@@ -361,13 +362,13 @@ export function replaceFieldElement(oldFieldEl, fieldEl) {
  */
 export function getActiveField(fieldEl, { noRecords, fields } = {}) {
     let field;
-    const labelText = fieldEl.querySelector(".s_website_form_label_content")?.innerText || "";
+    const label = markup(fieldEl.querySelector(".s_website_form_label_content")?.innerHTML || "");
     if (isFieldCustom(fieldEl)) {
         const inputName = fieldEl.querySelector(".s_website_form_input").getAttribute("name");
-        field = getCustomField(fieldEl.dataset.type, labelText, inputName);
+        field = getCustomField(fieldEl.dataset.type, label, inputName);
     } else {
         field = Object.assign({}, fields[getFieldName(fieldEl)]);
-        field.string = labelText;
+        field.string = label;
         field.type = getFieldType(fieldEl);
     }
     if (!noRecords) {
