@@ -1348,7 +1348,7 @@ class CalendarEvent(models.Model):
                 if 'user_id' in fields:
                     activity_values['user_id'] = event.user_id.id
                 if activity_values.keys():
-                    event.meeting_activity_ids.write(activity_values)
+                    event.meeting_activity_ids.with_context(calendar_event_meeting_update=True).write(activity_values)
 
     @api.model
     def _get_activity_deadline_from_start(self, start, allday):
