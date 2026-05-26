@@ -12,31 +12,6 @@ const { DateTime } = luxon;
 definePosModels();
 
 describe("restaurant pos_store.js", () => {
-    test("restoreOrdersToOriginalTable", async () => {
-        const store = await setupPosEnv();
-        const table1 = store.models["restaurant.table"].get(1);
-        const table2 = store.models["restaurant.table"].get(2);
-        const sourceOrder = store.addNewOrder({ table_id: table1 });
-        const product = store.models["product.template"].get(5);
-        await store.addLineToOrder(
-            {
-                product_tmpl_id: product,
-                qty: 3,
-            },
-            sourceOrder
-        );
-        const line = sourceOrder.lines[0];
-        sourceOrder.uiState.unmerge = {
-            [line.uuid]: {
-                table_id: table2.id,
-                quantity: 1,
-            },
-        };
-        const newOrder = await store.restoreOrdersToOriginalTable(sourceOrder, table2);
-        expect(newOrder.table_id.id).toBe(table2.id);
-        expect(newOrder.lines.length).toBe(1);
-    });
-
     test("fireCourse", async () => {
         const store = await setupPosEnv();
         store.addNewOrder();
@@ -372,8 +347,9 @@ describe("restaurant pos_store.js", () => {
     test("transferOrder", async () => {
         const store = await setupPosEnv();
         const date = DateTime.now();
-        const tableSrc = store.models["restaurant.table"].get(1);
-        const tableDst = store.models["restaurant.table"].get(2);
+        const tableSrc = store.models["restaurant.table"].get(2);
+        const tableDst = store.models["restaurant.table"].get(3);
+        const tableDstRoot = store.models["restaurant.table"].get(4);
         const sourceOrder = store.addNewOrder({
             table_id: tableSrc,
             write_date: date,
@@ -389,15 +365,16 @@ describe("restaurant pos_store.js", () => {
             },
             sourceOrder
         );
+        tableDst.parent_id = tableDstRoot;
         const order = store.addNewOrder({
-            table_id: tableDst,
+            table_id: tableDstRoot,
             write_date: date,
             create_date: date,
         });
         await store.transferOrder(sourceOrder.uuid, tableDst);
         expect(sourceOrder.lines.length).toBe(0);
         expect(order.lines.length).toBe(1);
-        expect(order.table_id.id).toBe(tableDst.id);
+        expect(order.table_id.id).toBe(tableDstRoot.id);
     });
 
     test("mergeOrders merges lines and courses", async () => {
@@ -472,6 +449,110 @@ describe("restaurant pos_store.js", () => {
             expect(order.course_ids.length).toBe(2);
             expect(course1).not.toBe(course2);
             expect(order.lines[0].course_id).toBe(course1);
+        });
+    });
+
+    describe("handlePreparationHistory", () => {
+        test("srcLine not yet sent to kitchen", async () => {
+            const store = await setupPosEnv();
+            const srcLine = { preparationKey: "A", uuid: "A", qty: 3 };
+            const destLine = { preparationKey: "B", uuid: "B", qty: 3 };
+            const srcPrep = {};
+            const destPrep = {
+                B: { uuid: "B", quantity: 3, history: [] },
+            };
+
+            store.handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, 3);
+
+            expect(srcPrep).toEqual({});
+            expect(destPrep).toEqual({
+                B: { uuid: "B", quantity: 3, history: [] },
+            });
+        });
+
+        test("move all quantity", async () => {
+            const store = await setupPosEnv();
+            const srcLine = { preparationKey: "A", uuid: "A", qty: 3 };
+            const destLine = { preparationKey: "B", uuid: "B", qty: 3 };
+            const srcPrep = {
+                A: { uuid: "A", quantity: 3, history: ["Z"] },
+            };
+            const destPrep = {
+                B: { uuid: "B", quantity: 3, history: ["Y"] },
+            };
+
+            store.handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, 3);
+
+            expect(srcPrep).toEqual({});
+            expect(destPrep).toEqual({
+                A: { uuid: "A", quantity: 0, history: ["Z", "A"] },
+                B: { uuid: "B", quantity: 6, history: ["A", "Y", "Z"] },
+            });
+        });
+
+        test("move partial quantity and srcPrep has enough quantity", async () => {
+            const store = await setupPosEnv();
+            const srcLine = { preparationKey: "A", uuid: "A", qty: 7 };
+            const destLine = { preparationKey: "B", uuid: "B", qty: 2 };
+            const srcPrep = {
+                A: { uuid: "A", quantity: 7, history: ["Z"] },
+            };
+            const destPrep = {
+                B: { uuid: "B", quantity: 2, history: ["Y"] },
+            };
+
+            store.handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, 3);
+
+            expect(srcPrep).toEqual({
+                A: { uuid: "A", quantity: 4, history: ["Z"] },
+            });
+            expect(destPrep).toEqual({
+                B: { uuid: "B", quantity: 5, history: ["A", "Y", "Z"] },
+            });
+        });
+
+        test("move partial quantity and srcPrep does not have enough quantity and movingQty > 0", async () => {
+            const store = await setupPosEnv();
+            // srcLine.qty=5, qty=4, srcPrepQty=2 → movingQty=max(2-[5-4],0)=1
+            const srcLine = { preparationKey: "A", uuid: "A", qty: 5 };
+            const destLine = { preparationKey: "B", uuid: "B", qty: 2 };
+            const srcPrep = {
+                A: { uuid: "A", quantity: 2, history: ["Z"] },
+            };
+            const destPrep = {
+                B: { uuid: "B", quantity: 2, history: ["Y"] },
+            };
+
+            store.handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, 4);
+
+            expect(srcPrep).toEqual({
+                A: { uuid: "A", quantity: 1, history: ["Z"] },
+            });
+            expect(destPrep).toEqual({
+                B: { uuid: "B", quantity: 3, history: ["A", "Y", "Z"] },
+            });
+        });
+
+        test("move partial quantity and srcPrep does not have enough quantity and movingQty <= 0", async () => {
+            const store = await setupPosEnv();
+            // srcLine.qty=5, qty=3, srcPrepQty=1 → movingQty=max(1-[5-3],0)=0
+            const srcLine = { preparationKey: "A", uuid: "A", qty: 5 };
+            const destLine = { preparationKey: "B", uuid: "B", qty: 3 };
+            const srcPrep = {
+                A: { uuid: "A", quantity: 1, history: ["Z"] },
+            };
+            const destPrep = {
+                B: { uuid: "B", quantity: 3, history: ["Y"] },
+            };
+
+            store.handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, 3);
+
+            expect(srcPrep).toEqual({
+                A: { uuid: "A", quantity: 1, history: ["Z"] },
+            });
+            expect(destPrep).toEqual({
+                B: { uuid: "B", quantity: 3, history: ["A", "Y", "Z"] },
+            });
         });
     });
 });

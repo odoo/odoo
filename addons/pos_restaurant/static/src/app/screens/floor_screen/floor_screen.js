@@ -149,7 +149,6 @@ export class FloorScreen extends Component {
                 table.position_h = table.getX();
                 table.position_v = table.getY();
                 if (table.parent_id) {
-                    this.unMergeTable(table);
                     this.pos.data.write("restaurant.table", [table.id], { parent_id: null });
                 }
             },
@@ -621,10 +620,6 @@ export class FloorScreen extends Component {
         newTableData.active = true;
         const table = await this.pos.data.create("restaurant.table", [newTableData]);
         return table[0];
-    }
-    async unMergeTable(table) {
-        const mainOrder = this.pos.getActiveOrdersOnTable(table.rootTable)?.[0];
-        this.pos.restoreOrdersToOriginalTable(mainOrder, table);
     }
     _getNewTableNumber() {
         if (!this.activeTables?.length) {
