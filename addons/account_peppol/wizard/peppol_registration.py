@@ -6,6 +6,7 @@ except ImportError:
     phonenumbers = None
 
 from odoo import _, api, fields, models, modules
+from odoo.tools import single_email_re
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -232,6 +233,8 @@ class PeppolRegistration(models.TransientModel):
             return
         if not self.contact_email or not self.phone_number:
             raise ValidationError(_("Contact email and phone number are required."))
+        if not single_email_re.match(self.contact_email):
+            raise ValidationError(_("Please make sure the Contact email is a valid email address."))
         if not self.peppol_eas or not self.peppol_endpoint:
             raise ValidationError(_("Peppol Address should be provided."))
         if (
