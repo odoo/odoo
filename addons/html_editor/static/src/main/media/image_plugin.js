@@ -304,7 +304,10 @@ export class ImagePlugin extends Plugin {
         };
         this.document.getSelection().collapseToEnd();
         this.document.activeElement.blur();
-        this.fileViewer.open(fileModel);
+        const onClose = () => {
+            this.dependencies.selection.focusEditable();
+        };
+        this.fileViewer.open(fileModel, undefined, { onCloseCallback: onClose });
     }
 
     deleteImage() {
