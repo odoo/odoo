@@ -58,10 +58,11 @@ class PosPrinter(models.Model):
     product_categories_ids = fields.Many2many('pos.category', 'printer_category_rel', 'printer_id', 'category_id', string='Printed Product Categories')
     pos_config_ids = fields.Many2many('pos.config', 'pos_config_receipt_printer_rel', 'printer_id', 'config_id', string="Point of Sale")
     printer_ip = fields.Char(
-        string='Epson Printer IP Address',
+        string='Printer IP Address',
         help=(
             "Local IP address of an Epson receipt printer, or its serial number if the "
-            "'Automatic Certificate Update' option is enabled in the printer settings."
+            "'Automatic Certificate Update' option is enabled in the printer settings. "
+            "It can also be the IP address of a Zebra network printer."
         ),
     )
     use_lna = fields.Boolean(string="Use Local Network Access")
@@ -69,6 +70,7 @@ class PosPrinter(models.Model):
     paper_size = fields.Selection(string="Paper Size", selection=[
         ('80', 'Standard 80mm'),
         ('58', 'Standard 58mm'),
+        ('label', 'Zebra (>=2.75in)'),
         *EPSON_MODELS,
     ], required=True, default='80')
     paper_size_keys = fields.Char(compute='_compute_paper_size_keys')
@@ -85,7 +87,7 @@ class PosPrinter(models.Model):
     @api.depends('printer_type')
     def _compute_paper_size_keys(self):
         for record in self:
-            standard_size = ['58', '80']
+            standard_size = ['58', '80', 'label']
 
             if record.printer_type == 'epson_epos':
                 epson_models = [key for key, _ in EPSON_MODELS]

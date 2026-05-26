@@ -9,6 +9,7 @@ import { logPosImage, logPosMessage } from "../utils/pretty_console_log";
 import { waitImages } from "@point_of_sale/utils";
 import { SelectDefaultPrinterPopup } from "@point_of_sale/app/components/popups/select_default_printer_popup/select_default_printer_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { ZebraPrinter } from "@point_of_sale/app/utils/printer/zebra_printer";
 
 export const posTicketPrinterService = {
     dependencies: ["dialog", "pos_data", "notification"],
@@ -288,7 +289,6 @@ export class PosTicketPrinterService {
         let rawChangeForRetry = null;
 
         for (const printer of printers) {
-            const template = "point_of_sale.pos_order_change_receipt";
             const generator = this.getGenerator({ models: this.data.models, order });
             const categoryIds = new Set(printer.product_categories_ids.map((c) => c.id));
             const changes = generator.generatePreparationData(categoryIds, opts);
@@ -304,10 +304,22 @@ export class PosTicketPrinterService {
                     break;
                 }
 
-                const iframe = await this.generateIframe(template, ticket);
-                this.setIframeSizeFromPrinter(iframe, printer);
-                const image = await this.generateImage(iframe);
-                const result = await this.print({ printer, image });
+                let result;
+                if (printer.paper_size === "label") {
+                    const zpl = renderToString(
+                        "point_of_sale.pos_order_change_receipt_zpl",
+                        ticket
+                    );
+                    result = await printer._instance.print(zpl);
+                } else {
+                    const iframe = await this.generateIframe(
+                        "point_of_sale.pos_order_change_receipt",
+                        ticket
+                    );
+                    this.setIframeSizeFromPrinter(iframe, printer);
+                    const image = await this.generateImage(iframe);
+                    result = await this.print({ printer, image });
+                }
                 if (result.successful) {
                     isPrinted = true;
                 }
@@ -368,6 +380,9 @@ export class PosTicketPrinterService {
 
     async createPrinterInstance(printer) {
         if (printer.printer_type === "epson_epos") {
+            if (printer.paper_size === "label") {
+                return new ZebraPrinter({ printer });
+            }
             return new EpsonPrinter({ printer });
         }
 

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="point_of_sale.pos_order_change_receipt_zpl">
+            <t t-translation="off">
+                <t t-set="y" t-value="30"/>
+                <t t-set="lh" t-value="32"/>
+                <t t-set="slh" t-value="27"/>
+^XA^CI28
+                <t t-if="preset">
+^FT0,<t t-out="y"/>^A0N,25^FB576,1,0,C^FD<t t-out="preset['name']"/><t t-if="extra_data.get('preset_time')"> (<t t-out="extra_data['preset_time']"/>)</t>^FS
+                    <t t-set="y" t-value="y + lh"/>
+                </t>
+^FT0,<t t-out="y"/>^A0N,25^FB576,1,0,C^FD<t t-out="config['name']"/> : <t t-out="extra_data['time']"/>^FS
+                <t t-set="y" t-value="y + lh"/>
+                <t t-if="extra_data.get('employee_name')">
+^FT0,<t t-out="y"/>^A0N,22^FB576,1,0,C^FDBy: <t t-out="extra_data['employee_name']"/>^FS
+                    <t t-set="y" t-value="y + slh"/>
+                </t>
+^FT0,<t t-out="y"/>^A0N,30^FB576,1,0,C^FDOrder <t t-out="order['pos_reference']"/><t t-if="order.get('tracking_number')"> # <t t-out="order['tracking_number']"/></t>^FS
+                <t t-set="y" t-value="y + lh + 5"/>
+^FO0,<t t-out="y"/>^GB576,4,4^FS
+                <t t-set="y" t-value="y + 50"/>
+                <t t-if="changes.get('title')">
+^FT0,<t t-out="y"/>^A0N,40^FD<t t-out="changes['title']"/><t t-if="extra_data['reprint']"> (DUPLICATE !)</t>^FS
+                    <t t-set="y" t-value="y + 50"/>
+                </t>
+                <t t-if="changes.get('groupedData') and len(changes['groupedData'])">
+                    <t t-foreach="changes['groupedData']" t-as="group">
+^FT0,<t t-out="y"/>^A0N,32^FD<t t-out="group['name']"/>^FS
+                        <t t-set="y" t-value="y + 40"/>
+^FO0,<t t-out="y"/>^GB576,2,2^FS
+                        <t t-set="y" t-value="y + 42"/>
+                        <t t-foreach="group['data']" t-as="line">
+^FT<t t-out="line['combo_parent_uuid'] ? '80' : '0'"/>,<t t-out="y"/>^A0N,32^FD<t t-out="line['quantity']"/> <t t-out="line['basic_name']"/>^FS
+                            <t t-set="y" t-value="y + lh + 5"/>
+                            <t t-if="line.get('attribute_value_names')">
+                                <t t-foreach="line['attribute_value_names']" t-as="name">
+^FT80,<t t-out="y"/>^A0N,22^FD- <t t-out="name"/>^FS
+                                    <t t-set="y" t-value="y + slh"/>
+                                </t>
+                            </t>
+                            <t t-if="line.get('pack_lot_lines')">
+                                <t t-foreach="line['pack_lot_lines']" t-as="name">
+^FT80,<t t-out="y"/>^A0N,22^FD. <t t-out="name"/>^FS
+                                    <t t-set="y" t-value="y + slh"/>
+                                </t>
+                            </t>
+                            <t t-if="line.get('note')">
+^FT20,<t t-out="y"/>^A0N,22^FD<t t-out="line['note']"/>^FS
+                                <t t-set="y" t-value="y + slh"/>
+                            </t>
+                            <t t-if="line.get('customer_note')">
+^FT20,<t t-out="y"/>^A0N,22^FD<t t-out="line['customer_note']"/>^FS
+                                <t t-set="y" t-value="y + slh"/>
+                            </t>
+                        </t>
+                    </t>
+                </t>
+                <t t-else="">
+                    <t t-foreach="changes['data']" t-as="line">
+^FT<t t-out="line['combo_parent_uuid'] ? '80' : '0'"/>,<t t-out="y"/>^A0N,32^FD<t t-out="line['quantity']"/> <t t-out="line['basic_name']"/>^FS
+                        <t t-set="y" t-value="y + lh + 5"/>
+                        <t t-if="line.get('attribute_value_names')">
+                            <t t-foreach="line['attribute_value_names']" t-as="name">
+^FT80,<t t-out="y"/>^A0N,22^FD- <t t-out="name"/>^FS
+                                <t t-set="y" t-value="y + slh"/>
+                            </t>
+                        </t>
+                        <t t-if="line.get('pack_lot_lines')">
+                            <t t-foreach="line['pack_lot_lines']" t-as="name">
+^FT80,<t t-out="y"/>^A0N,22^FD. <t t-out="name"/>^FS
+                                <t t-set="y" t-value="y + slh"/>
+                            </t>
+                        </t>
+                        <t t-if="line.get('note')">
+^FT20,<t t-out="y"/>^A0N,22^FD<t t-out="line['note']"/>^FS
+                            <t t-set="y" t-value="y + slh"/>
+                        </t>
+                        <t t-if="line.get('customer_note')">
+^FT20,<t t-out="y"/>^A0N,22^FD<t t-out="line['customer_note']"/>^FS
+                            <t t-set="y" t-value="y + slh"/>
+                        </t>
+                    </t>
+                </t>
+                <t t-if="extra_data.get('internal_note')">
+^FO0,<t t-out="y"/>^GB576,2,2^FS
+                    <t t-set="y" t-value="y + 35"/>
+^FT0,<t t-out="y"/>^A0N,25^FDINTERNAL NOTE^FS
+                    <t t-set="y" t-value="y + lh"/>
+^FT0,<t t-out="y"/>^A0N,22^FD<t t-out="extra_data['internal_note']"/>^FS
+                    <t t-set="y" t-value="y + slh"/>
+                </t>
+                <t t-if="extra_data['general_customer_note']">
+^FO0,<t t-out="y"/>^GB576,2,2^FS
+                    <t t-set="y" t-value="y + 35"/>
+^FT0,<t t-out="y"/>^A0N,25^FDCUSTOMER NOTE^FS
+                    <t t-set="y" t-value="y + lh"/>
+^FT0,<t t-out="y"/>^A0N,22^FD<t t-out="extra_data['general_customer_note']"/>^FS
+                    <t t-set="y" t-value="y + slh"/>
+                </t>
+^XZ
+            </t>
+        </template>
+    </data>
+</odoo>
