@@ -1,10 +1,5 @@
-import base64
 import calendar
-import json
 import logging
-import re
-import uuid
-
 from markupsafe import Markup
 
 from odoo import api, fields, models
@@ -12,15 +7,6 @@ from odoo.exceptions import UserError, RedirectWarning
 
 _logger = logging.getLogger(__name__)
 
-# Blocking rejection codes from Flux 10 v1.2 specification (Tableau 14)
-# REJ_UNI is handled separately as duplicate acknowledgement (G8.05).
-REJECTION_CODES = {
-    'REJ_PER',  # Contrôle du format/période
-    'REJ_COH',  # Contrôle de cohérence
-}
-DUPLICATE_ACK_CODES = {
-    'REJ_UNI',  # Contrôle d'unicité (treated as duplicate transmission)
-}
 PDP_INTERFACE_CODE = 'FFE1025A'
 PDP_APP_CODE_QUAL = 'PPF262'  # ODOO raccordement EDI QUAL
 PDP_APP_CODE_PROD = 'PDP257'  # ODOO raccordement EDI PROD
@@ -34,7 +20,7 @@ FLOW_OPEN_STATES_SELECTION = [
 ]
 FLOW_SENT_STATES_SELECTION = [
     ('sent', 'Sent'),
-    ('completed', 'Completed')
+    ('completed', 'Completed'),
 ]  # once a flow is sent, sent move_id's and xml payload must stay immutable
 FLOW_OPEN_STATES = tuple(dict(FLOW_OPEN_STATES_SELECTION))
 FLOW_SENT_STATES = tuple(dict(FLOW_SENT_STATES_SELECTION))
@@ -103,7 +89,7 @@ class PdpFlow(models.Model):
         selection=[
             ('open', "Open"),
             ('grace', "Grace"),
-            ('closed', "Closed")
+            ('closed', "Closed"),
         ],
         string="Period Status",
         compute='_compute_period_status',
@@ -114,7 +100,7 @@ class PdpFlow(models.Model):
     # Compute Methods
     # -------------------------------------------------------------------------
 
-    @api.depends('operation_type', 'report_type', 'initial_flow_id', 'period_end')
+    @api.depends('operation_type', 'report_type', 'initial_flow_id', 'period_start')
     def _compute_tracking_id(self):
         for flow in self:
             flow.tracking_id = ''.join([
@@ -128,10 +114,11 @@ class PdpFlow(models.Model):
     @api.depends('company_id', 'period_start', 'period_end', 'report_type', 'operation_type')
     def _compute_move_ids(self):
         # get all the moves for which this is the orignial flow but also all the moves linked to any flow with same scope
-        sale_types = self._get_sale_move_types()
-        purchase_types = self.env['account.move'].get_purchase_types(False)
         for flow in self:
-            # search in loop, but there are few flows, keeping things simplier
+            if flow.state in FLOW_SENT_STATES_SELECTION:
+                flow.move_ids = flow.sent_move_ids
+                continue
+
             flow.move_ids = self.env['account.move'].search_fetch(
                 domain = [
                     ('company_id', '=', flow.company_id.id),
@@ -157,7 +144,7 @@ class PdpFlow(models.Model):
         for flow in self:
             flow.payload_id = attachments_map.get(flow.id)
 
-    @api.depends('period_end', 'due_period_start', 'due_period_end')
+    @api.depends('due_period_start', 'due_period_end')
     def _compute_period_status(self):
         """Compute the current status of the reporting period."""
         today = fields.Date.context_today(self)
@@ -194,14 +181,10 @@ class PdpFlow(models.Model):
     @api.model
     def _get_scope_params_for_move(self, move):
         """ This method returns a flow 10 scope dict for a move
-        but it DOES NOT verifiy if move is eligible for flow 10
+        but it DOES NOT verif_l10n_fr_pdp_is_saley if move is eligible for flow 10
         """
-        if matched_moves := move._l10n_fr_pdp_get_matched_transactions():
-            transaction = matched_moves[0]
-            report_type = 'payment'
-        else:
-            transaction = move
-            report_type = 'transaction'
+        report_type = move.l10n_fr_pdp_flow_10_report_type
+        transaction = move if report_type == 'transaction' else move._l10n_fr_pdp_get_matched_transactions()[0]
         period_data = self._get_period_flow_properties(move.company_id, move.date, report_type)
         operation_type = 'purchase' if transaction._l10n_fr_pdp_is_purchase() else 'sale'
         return {
@@ -213,42 +196,35 @@ class PdpFlow(models.Model):
         }
 
     @api.model
-    def _get_last_flow_for_scope(self, scope):
-        self.search(
-            domain=[(key, '=', value) for key, value in scope.items()],
-            order='id desc',
-            limit=1,
-        )
-
-    @api.model
     def _get_open_flow_and_create_if_needed(self, move):
         """ This returns a flow that meets the move scope and that is open.
         It creates a new initial flow or a rectificative flow if needed.
         """
-        scope = self._get_scope_params_for_move(move)
-        report_type = scope['report_type']
+        scope_params = self._get_scope_params_for_move(move)
+        report_type = scope_params['report_type']
         period_data = self._get_period_flow_properties(move.company_id, move.date, report_type)
         existing_flows = self.search(
-            domain=[(key, '=', value) for key, value in scope.items()],
+            domain=[(key, '=', value) for key, value in scope_params.items()],
             order='id',
         )
         # If last flow is sent, create a new rectificative one.
         is_rectificative = existing_flows and existing_flows[-1].state in FLOW_SENT_STATES
 
         if not existing_flows or is_rectificative:
-            name = self.env._(
-                '%(date)s - %(report_type)s - %(type)s',
-                date=f'{period_data['period_start']} > {period_data['period_end']}',
-                report_type='Transaction' if report_type == 'transaction' else 'Payment',
-                type='rect.' if is_rectificative else 'init.',
-            )
+            name =  ' - '.join([
+                f'{period_data['period_start']} > {period_data['period_end']}',
+                self.env._('Transaction') if report_type == 'transaction' else self.env._('Payment'),
+                self.env._('Sale') if scope_params['operation_type'] == 'sale' else self.env._('Purchase'),
+                self.env._('Rect.') if is_rectificative else self.env._('Init.'),
+            ])
             existing_flows += self.create({
-                **scope,
+                **scope_params,
                 'name': name,
                 'due_period_start': period_data['due_period_start'],
                 'due_period_end': period_data['due_period_end'],
                 'initial_flow_id': existing_flows[0].id if is_rectificative else None,
             })
+            existing_flows[-1].move_ids._compute_l10n_fr_pdp_last_flow_id()  # update last flow of moves
 
         return existing_flows[-1]
 
@@ -258,11 +234,12 @@ class PdpFlow(models.Model):
 
     def _build_payload(self):
         """Build single XML payload for the entire flow period."""
+        invalid_move_states = {None, 'out_of_scope', 'error'}
         for flow in self:
             if flow.state not in FLOW_OPEN_STATES:
-                raise UserError(_("Flow %(name)s has already been sent.", name=flow.name))
+                raise UserError(self.env._("Flow %(name)s has already been sent.", name=flow.name))
 
-            valid_moves = flow.move_ids.filtered(lambda move: move.l10n_fr_pdp_status not in {'out_of_scope', 'error'})
+            valid_moves = flow.move_ids.filtered(lambda move: move.l10n_fr_pdp_status not in invalid_move_states)
 
             if not valid_moves:
                 flow._message_post_once(self.env._("Payload build failed: no valid invoices."))
@@ -273,7 +250,7 @@ class PdpFlow(models.Model):
 
             if flow.payload_id:
                 flow.payload_id.unlink()
-            attachment = self.env['ir.attachment'].create({
+            flow.payload_id = self.env['ir.attachment'].create({
                 'name': filename,
                 'datas': payload,
                 'res_model': flow._name,
@@ -281,7 +258,6 @@ class PdpFlow(models.Model):
                 'type': 'binary',
                 'mimetype': 'application/xml',
             })
-            flow.payload_id = attachment
 
             # Log build completion
             error_moves_len = len(valid_moves) < len(flow.move_ids)
@@ -312,11 +288,21 @@ class PdpFlow(models.Model):
                 ),
                 button_text=self.env._("Go to the preference panel"),
             )
-        
+
         for flow in self:
             if flow.state != 'ready':
                 continue
-            valid_moves = flow.move_ids.filtered(lambda move: move.l10n_fr_pdp_status not in {'out_of_scope', 'error'})
+
+            valid_moves_ids = []
+            error_moves_ids = []
+            for move in self.move_ids:
+                if not move.l10n_fr_pdp_status or move.l10n_fr_pdp_status == 'out_of_scope':
+                    continue
+                if move.l10n_fr_pdp_status == 'error':
+                    error_moves_ids.append(move.id)
+                else:
+                    valid_moves_ids.append(move.id)
+
             if flow.initial_flow_id:
                 previous_flow = (flow.initial_flow_id + flow.initial_flow_id.rectificative_flow_ids - flow).sorted('id')[-1]
                 if previous_flow.state not in FLOW_SENT_STATES:
@@ -325,13 +311,13 @@ class PdpFlow(models.Model):
                         name=previous_flow.name
                     ))
                     continue
-                if previous_flow.sent_move_ids == valid_moves:
+                if previous_flow.sent_move_ids.ids == set(valid_moves_ids):
                     flow._message_post_once(self.env._(
                         "This flow is identical to the previous flow %(name)s.",
                         name=previous_flow.name
                     ))
                     continue
-            elif not valid_moves:
+            elif not valid_moves_ids:
                 flow._message_post_once(self.env._("No valid transactions/payments to send."))
                 continue
 
@@ -342,6 +328,7 @@ class PdpFlow(models.Model):
 
             # Post audit messages on sent moves
             if flow.state in FLOW_SENT_STATES:
+                valid_moves = self.env['account.move'].browse(valid_moves_ids)
                 flow._post_sent_message_on_moves(valid_moves)
                 valid_moves.l10n_fr_pdp_sent_in_flow_ids += flow
 
@@ -352,6 +339,11 @@ class PdpFlow(models.Model):
                 transport=response.get('id') or self.env._("n/a"),
                 details=response.get('message') or '',
             ))
+
+            # create rectificative flow for error moves that must still be send
+            if error_moves_ids:
+                error_move = self.env['account.move'].browse(error_moves_ids[0])
+                self._get_open_flow_and_create_if_needed(error_move)
 
         return True
 
@@ -381,18 +373,18 @@ class PdpFlow(models.Model):
         payload_doc = {
             'flow_number': 10,
             'filename': self.payload_id.name,
-            'ubl': self.payload_id.raw.decode(),
+            'ubl': self.payload_id.datas.decode(),
             'external_ref': self.tracking_id,
         }
 
         result = proxy_user._call_peppol_proxy(
-            proxy_user._get_peppol_proxy_endpoint('send_document'),
+            proxy_user._get_peppol_proxy_endpoint('1/send_document'),
             {'documents': [payload_doc]},
         )
         ppf_messages = result.get('ppf_messages') or []
         if not ppf_messages:
             raise UserError(self.env._("The PDP proxy did not return a flow tracking identifier."))
-        
+
         proxy_message = ppf_messages[0]
         return {
             'id': proxy_message.get('uuid') or proxy_message.get('flow_id'),
@@ -409,16 +401,40 @@ class PdpFlow(models.Model):
 
     @api.model
     def _get_period_flow_properties(self, company_id, date, report_type):
-        """Return period start/end and due date for a given move date and report type."""
+        """
+        This method returns a dict with start/end dates for the period and due period.
+        Where period is the time frime in which the revelvant move are, and de due period
+        is the time window in which the report must be send. Sometimes the due period is only one day.
+        This depends on the report type and the company perdiodicity.
+                               +----------------------------------------------------+-----------------------------------+
+                               | transactions flow                                  | payment flow                      |
+                               +---------------------+------------------------------+-----------+-----------------------+
+                               | period              | due                          | period    | due                   |
+        +----------------------+---------------------+------------------------------+-----------+-----------------------+
+        | normal_monthly       | Decade:             | 10 days after end of period: | monthly   | 10th of next month    |
+        |                      | from day 1 to 10,   | 20th,                        |           |                       |
+        |                      | 11 to 20,           | end of month                 |           |                       |
+        |                      | 20 to end of month  | 10th of next month           |           |                       |
+        +----------------------+---------------------+------------------------------+-----------+-----------------------+
+        | normal_quarterly     | monthly             | 10th of next month           | monthly   | 10th of next month    |
+        +----------------------+---------------------+------------------------------+-----------+-----------------------+
+        | simplified_monthly   | monthly             | between 25th and 30th        | monthly   | between 25th and 30th |
+        |                      |                     | of next month                |           | of next month         |
+        +----------------------+---------------------+------------------------------+-----------+-----------------------+
+        | simplified_bimonthly | bimonthly           | between 25th and 30th        | bimonthly | between 25th and 30th |
+        |                      |                     | of next month                |           | of next month         |
+        +----------------------+---------------------+------------------------------+-----------+-----------------------+
+
+        """
 
         def get_monthly_period(date):
             return date.replace(day=1), date.replace(day=last_month_day)
 
         def get_next_10th_due(date):
-            return date.replace(day=10, month=(date.month + 1) % 12, year=date.year + (date.month // 12))
+            return date.replace(day=10, month=date.month % 12 + 1, year=date.year + (date.month // 12))
 
         def get_end_of_month_window_after(date):
-            month = (date.month + 1) % 12,
+            month = date.month % 12  + 1
             year = date.year + (date.month // 12)
             return date.replace(
                 day=25,
@@ -517,37 +533,11 @@ class PdpFlow(models.Model):
         _logger.info('Manual transport submission triggered for flows: %s', self.ids)
         return self.with_context(ctx).action_send()
 
-
-    def _action_open_moves(self, domain, name, context=None):
-        """Helper to open list view of account moves.
-
-        Args:
-            moves: Recordset of account.move to display
-            name: Window title
-            context: Optional context dict
-
-        Returns:
-            dict: Action to open moves list view
-        """
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.move',
-            'view_mode': 'list,form',
-            'domain': domain,
-            'name': name,
-            'context': context or {},
-        }
-
     def action_view_error_moves(self):
         """Open list view of invalid invoices."""
-        return self._action_open_moves(
-            [
-                ('id', 'in', self.move_ids.ids),
-                ('l10n_fr_pdp_status', '=', 'error')
-            ],
-            self.env._("Invalid Invoices"),
-        )
+        action = self.move_ids._get_records_action(name=self.env._("Invalid Invoices"))
+        action['domain'].append(('l10n_fr_pdp_status', '=', 'error'))
+        return action
 
     def action_open_send_wizard(self):
         """Open send wizard if errors exist, otherwise send directly."""
@@ -566,19 +556,13 @@ class PdpFlow(models.Model):
 
     def action_view_moves(self):
         """Open list view of related invoices."""
-        return self._action_open_moves(
-            [('id', 'in', self.move_ids.ids)],
-            self.env._("Related Invoices"),
-            {'create': False, 'group_by': ['move_type']},
+        return self.move_ids._get_records_action(
+            name=self.env._("Related Invoices"),
+            context={'create': False, 'group_by': ['move_type']},
         )
 
     def action_view_initial(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': self._name,
-            'view_mode': 'form',
-            'res_id': self.initial_flow_id.id,
-        }
+        return self.initial_flow_id._get_records_action()
 
     # -------------------------------------------------------------------------
     # Cron

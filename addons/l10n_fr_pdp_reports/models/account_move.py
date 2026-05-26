@@ -1,8 +1,8 @@
 from collections import defaultdict
 
 from odoo import api, fields, models
+from odoo.addons.l10n_fr_pdp_reports.models.pdp_flow import FLOW_OPEN_STATES_SELECTION, FLOW_SENT_STATES, FLOW_SENT_STATES_SELECTION
 from odoo.addons.l10n_fr_pdp_reports.utils import drom_com_territories
-from odoo.addons.l10n_fr_pdp_reports.models.pdp_flow import FLOW_SENT_STATES, FLOW_OPEN_STATES_SELECTION, FLOW_SENT_STATES_SELECTION
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict
 
@@ -16,6 +16,7 @@ class AccountMove(models.Model):
         relation='sent_account_move__pdp_flow',
         column1='move_id',
         column2='flow_id',
+        copy=False,
     )
     l10n_fr_pdp_last_flow_id = fields.Many2one(
         comodel_name='l10n.fr.pdp.reports.flow',
@@ -38,7 +39,7 @@ class AccountMove(models.Model):
         selection=[('transaction', 'Transaction'), ('payment', 'Payment')],
         compute='_compute_l10n_fr_pdp_flow_10_report_type',
         store=True,
-    )  
+    )
     l10n_fr_pdp_flow_10_operation_type = fields.Selection(
         selection=[('sale', 'Sale'), ('purchase', 'Purchase')],
         compute='_compute_l10n_fr_pdp_flow_10_operation_type',
@@ -97,7 +98,7 @@ class AccountMove(models.Model):
         'date',
         'l10n_fr_pdp_flow_10_report_type',
         'l10n_fr_pdp_has_error',
-        'l10n_fr_pdp_last_flow_id',
+        'l10n_fr_pdp_last_flow_id.state',
         'line_ids.matched_credit_ids.credit_move_id',
         'line_ids.matched_debit_ids.debit_move_id',
         'move_type',
@@ -189,9 +190,11 @@ class AccountMove(models.Model):
             elif move.move_type == 'entry':
                 if move._l10n_fr_pdp_get_matched_transactions():
                     move.l10n_fr_pdp_flow_10_report_type = 'payment'
-                elif move.l10n_fr_pdp_sent_in_flow_ids:
-                    # payment was sent but is not linked to an invoice anymore, must create rectificative flow
-                    self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
+                else:
+                    if move.l10n_fr_pdp_sent_in_flow_ids:
+                        # payment was sent but is not linked to an invoice anymore, must create rectificative flow
+                        self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
+                    move.l10n_fr_pdp_flow_10_report_type = None
             else:
                 move.l10n_fr_pdp_flow_10_report_type = None
 
@@ -222,29 +225,30 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     def _l10n_fr_pdp_get_matched_transactions(self):
+        """If self is a payment move, this method returns the transactions it's paying."""
         self.ensure_one()
         if self.move_type != 'entry':
             return
-        
+
         return self._get_reconciled_amls().move_id.filtered(
             lambda move: move.l10n_fr_pdp_flow_10_report_type == 'transaction' and (
                 move._is_downpayment()
                 or any(tax.tax_exigibility == 'on_payment' for tax in move.invoice_line_ids.tax_ids)
             )
         )
-    
+
     def _l10n_fr_pdp_is_sale(self):
         self.ensure_one()
         return self.is_sale_document(include_receipts=True)
 
     def _l10n_fr_pdp_is_purchase(self):
         self.ensure_one()
-        return self.is_purchase_document(include_receipts=False)
+        return self.is_purchase_document(include_receipts=False)  # Purchase receipts are not in Flow10 scope as they do not have VAT to report.
 
     def _get_l10n_fr_pdp_errors(self, lazy=False):
         """Return the list of validation errors for this move in the context of PDP reporting."""
         self.ensure_one()
-        if self.state != 'posted' or self.l10n_fr_pdp_flow_10_report_type != 'transaction':
+        if self.state != 'posted' or self.l10n_fr_pdp_flow_10_report_type == 'payment':  # all the checks concerns transactions properties
             return []
         def check():
             if self.is_sale_document(include_receipts=True) and not self.is_move_sent:
@@ -255,7 +259,7 @@ class AccountMove(models.Model):
                 except ValidationError:
                     yield self.env._("Invalid partner VAT (%(vat)s).", vat=self.commercial_partner_id.vat)
 
-            for move in (self, self._l10n_fr_pdp_get_referenced_document()):
+            for move in (self, self._l10n_fr_pdp_get_referenced_documents()):
                 if not move:
                     continue
                 ref_move = self.env._(" in referenced move %s", move.name) if move != self else ""
@@ -273,10 +277,10 @@ class AccountMove(models.Model):
             error = next(check(), False)
             return [error] if error else []
         return list(check())
-    
-    def _l10n_fr_pdp_get_referenced_document(self):
+
+    def _l10n_fr_pdp_get_referenced_documents(self):
         self.ensure_one()
-        return self.reversed_entry_id or (self.debit_origin_id if 'debit_origin_id' in self._fields else None)
+        return self.reversed_entry_id + (self.debit_origin_id if 'debit_origin_id' in self._fields else None)
 
     def _l10n_fr_pdp_get_transaction_type(self):
         """Classify invoice for PDP reporting: b2c, b2bi, or False (domestic B2B)."""
@@ -288,15 +292,13 @@ class AccountMove(models.Model):
         else:
             move = self
 
-        if not move:
-            return
         company_country_code = move.company_id.account_fiscal_country_id.code
         partner_country_code = move.commercial_partner_id.country_id.code
         partner_vat = move.commercial_partner_id.vat
         operation_type = move.l10n_fr_pdp_flow_10_operation_type
 
         if not operation_type:
-            return
+            return None
 
         # partner has no vat -> b2c, if is sale, else no VAT has to be reported
         if operation_type == 'sale' and not partner_vat or len(partner_vat) == 1:
@@ -304,21 +306,22 @@ class AccountMove(models.Model):
 
         if not partner_country_code:
             partner_country_code = self.env['res.country'].search(
-                [('code', '=', move.commercial_partner_id._deduce_country_code())]
+                [('code', '=', move.commercial_partner_id._deduce_country_code())],
+                limit=1,
             ).code
             if not partner_country_code:
-                return
+                return None
 
         company_territory_type = drom_com_territories.get_territory_type(company_country_code)
         partner_territory_type = drom_com_territories.get_territory_type(partner_country_code)
         # One party outside French territories => International
         if not partner_territory_type or not company_territory_type:
             return 'b2bi'
-        
-        # all companies are in e-invoicing zones 
+
+        # all companies are in e-invoicing zones
         if {company_territory_type, partner_territory_type}.issubset(drom_com_territories.E_INVOICING_ZONES):
-            return  # b2b
-        
+            return None  # b2b
+
         # All other cases: International
         return 'b2bi'
 

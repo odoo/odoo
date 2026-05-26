@@ -1,7 +1,6 @@
 from odoo import api, fields, models
 
 
-
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
@@ -33,21 +32,23 @@ class ResCompany(models.Model):
     @api.depends('l10n_fr_pdp_annuaire_start_date', 'l10n_fr_pdp_periodicity')
     def _compute_l10n_fr_pdp_flow_10_start_date(self):
         for company in self:
-            
-            period_data = company.l10n_fr_pdp_annuaire_start_date and self.env['l10n.fr.pdp.reports.flow']._get_period_flow_properties(
-                company, company.l10n_fr_pdp_annuaire_start_date, 'payment'
-            )
-            company.l10n_fr_pdp_flow_10_start_date = period_data['period_start'] if period_data else None
-
+            if company.l10n_fr_pdp_annuaire_start_date:
+                period_data = self.env['l10n.fr.pdp.reports.flow']._get_period_flow_properties(
+                    company,
+                    company.l10n_fr_pdp_annuaire_start_date,
+                    'payment',
+                )
+                company.l10n_fr_pdp_flow_10_start_date = period_data['period_start']
+            else:
+                company.l10n_fr_pdp_flow_10_start_date = None
 
     @api.depends('l10n_fr_pdp_send_to_ppf', 'account_fiscal_country_id', 'account_peppol_edi_user')
     def _compute_l10n_fr_f10_enable_reporting(self):
         for company in self:
-            enable_reporting = (
+            company.l10n_fr_f10_enable_reporting = (
                 company.l10n_fr_pdp_send_to_ppf
                 and company.l10n_fr_pdp_pilot_phase
                 and company.account_peppol_edi_user
                 and company.account_fiscal_country_id.code == 'FR'
                 and company.currency_id == self.env.ref('base.EUR')
             )
-            company.l10n_fr_f10_enable_reporting = enable_reporting

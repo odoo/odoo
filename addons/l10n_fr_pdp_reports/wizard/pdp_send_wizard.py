@@ -1,4 +1,4 @@
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class PdpSendWizard(models.TransientModel):
