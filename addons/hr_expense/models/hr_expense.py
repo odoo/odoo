@@ -1535,7 +1535,7 @@ class HrExpense(models.Model):
             'res_model': 'hr.expense.post.wizard',
             'res_id': self.env['hr.expense.post.wizard'].create({}).id,
             'target': 'new',
-            'context': self.with_context(active_ids=self.ids).env.context,
+            'context': self.with_context(active_ids=self.ids, validate_analytic=True).env.context,
         }
 
     def _post_without_wizard(self):
