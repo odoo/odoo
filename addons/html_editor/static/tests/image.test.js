@@ -260,10 +260,11 @@ test("Can preview an image", async () => {
         <img class="img-fluid test-image" src="${base64Img}">
     `);
     await click("img.test-image");
-    await waitFor(".o-we-toolbar");
+    await expectElementCount(".o-we-toolbar", 1);
     await click(".o-we-toolbar button[name='image_preview']");
     await animationFrame();
-    expect(".o-FileViewer").toHaveCount(1);
+    await expectElementCount(".o-we-toolbar", 0);
+    await expectElementCount(".o-FileViewer", 1);
 });
 
 test("Can transform an image", async () => {
