@@ -652,3 +652,20 @@ describe("list", () => {
         });
     });
 });
+
+describe("availability", () => {
+    test("columnize 2 should be available from p at root of editable", async () => {
+        const { editor } = await setupEditor("<p>ab[]</p>");
+        await insertText(editor, "/col");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toInclude("2 columns");
+    });
+    test("columnize 2 should not be available from p which is the root of editable", async () => {
+        const { editor } = await setupEditor(
+            '<div contenteditable="false"><p contenteditable="true">ab[]</p></div>'
+        );
+        await insertText(editor, "/col");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).not.toInclude("2 columns");
+    });
+});
