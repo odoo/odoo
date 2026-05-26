@@ -891,7 +891,7 @@ ${issueStrings}`);
   }
   function stringType() {
     return function validateString(context) {
-      if (typeof context.value !== "string") {
+      if (typeof context.value !== "string" && !(context.value instanceof String)) {
         context.addIssue({ message: "value is not a string" });
       }
     };
@@ -3017,6 +3017,9 @@ ${issueStrings}`);
         node.forceNextRender = true;
       } else {
         result++;
+        if (node.bdom) {
+          node.forceNextRender = true;
+        }
       }
       result += cancelFibers(fiber.children);
     }

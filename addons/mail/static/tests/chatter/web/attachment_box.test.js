@@ -185,8 +185,7 @@ test("attachment box should order attachments from newest to oldest", async () =
     await contains(".o-mail-AttachmentContainer:eq(2):has(:text('A.txt'))");
 });
 
-test.tags("owl3");
-test.skip("attachment box auto-closed on switch to record wih no attachments", async () => {
+test("attachment box auto-closed on switch to record wih no attachments", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { display_name: "first partner" },
@@ -241,8 +240,7 @@ test("removing the last attachment should close the attachment box", async () =>
     await contains(".o-mail-AttachmentBox", { count: 0 });
 });
 
-test.tags("owl3");
-test.skip("attachment should be uploaded on the correct record when using the pager navigation", async () => {
+test("attachment should be uploaded on the correct record when using the pager navigation", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { display_name: "first partner" },
