@@ -211,6 +211,10 @@ export class PosOrder extends PosOrderAccounting {
         return this.lines.length === 0;
     }
 
+    isEmptyOrder() {
+        return this.getOrderlines().length === 0 && this.payment_ids.length === 0;
+    }
+
     updateSavedQuantity() {
         this.lines.forEach((line) => line.updateSavedQuantity());
     }

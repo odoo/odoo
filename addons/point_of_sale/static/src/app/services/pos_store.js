@@ -1512,9 +1512,8 @@ export class PosStore extends WithLazyGetterTrap {
         const defaultPartnerId = this.getDefaultPartnerId();
         const emptyOrders = this.models["pos.order"].filter(
             (order) =>
-                order.isEmpty() &&
+                order.isEmptyOrder() &&
                 !order.finalized &&
-                order.payment_ids.length === 0 &&
                 (!order.partner_id || order.partner_id.id === defaultPartnerId) &&
                 order.pricelist_id?.id === this.config.pricelist_id?.id &&
                 order.fiscal_position_id?.id === this.config.default_fiscal_position_id?.id
