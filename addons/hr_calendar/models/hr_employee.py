@@ -28,13 +28,11 @@ class HrEmployee(models.Model):
                     'work_location_id': employee[day].id,
                 }
 
-        exceptions_for_period = self.env['hr.employee.location']
-        if exceptions_for_period.has_access('read'):
-            exceptions_for_period = self.env['hr.employee.location'].search_fetch([
-                ('employee_id', 'in', self.ids),
-                ('date', '>=', start_date),
-                ('date', '<=', end_date)
-            ], ['employee_id', 'date', 'work_location_name', 'work_location_id', 'work_location_type'])
+        exceptions_for_period = self.env['hr.employee.location'].sudo().search_fetch([
+            ('employee_id', 'in', self.ids),
+            ('date', '>=', start_date),
+            ('date', '<=', end_date)
+        ], ['employee_id', 'date', 'work_location_name', 'work_location_id', 'work_location_type'])
 
         for exception in exceptions_for_period:
             date = exception.date.strftime(DEFAULT_SERVER_DATE_FORMAT)
