@@ -25,7 +25,9 @@ function isUnremovableColumn(node, root) {
 function columnIsAvailable(numberOfColumns) {
     return (selection) => {
         const row = closestElement(selection.anchorNode, ".o_text_columns .row");
-        return !(row && row.childElementCount === numberOfColumns);
+        return row
+            ? row.childElementCount !== numberOfColumns
+            : closestBlock(selection.anchorNode)?.parentNode?.isContentEditable;
     };
 }
 
