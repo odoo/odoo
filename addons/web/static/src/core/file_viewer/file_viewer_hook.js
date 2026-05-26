@@ -9,8 +9,9 @@ export function createFileViewer(owner) {
     /**
      * @param {import("@web/core/file_viewer/file_viewer").FileViewer.props.files[]} file
      * @param {import("@web/core/file_viewer/file_viewer").FileViewer.props.files} files
+     * @param {Function} [onCloseCallback]
      */
-    function open(file, files = [file]) {
+    function open(file, files = [file], onCloseCallback) {
         closeFn?.();
         if (!file.isViewable) {
             return;
@@ -25,7 +26,10 @@ export function createFileViewer(owner) {
                     startIndex: index,
                     close: () => closeFn?.(),
                 },
-                { rootId: owner?.root?.el?.getRootNode()?.host?.id }
+                {
+                    rootId: owner?.root?.el?.getRootNode()?.host?.id,
+                    onRemove: onCloseCallback,
+                }
             );
         }
     }
