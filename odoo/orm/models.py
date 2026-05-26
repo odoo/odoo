@@ -67,7 +67,7 @@ from .fields_textual import Char, StoredTranslations
 from .identifiers import NewId
 from .query import Query, TableSQL
 from .utils import (
-    OriginIds, Prefetch, check_object_name, parse_field_expr,
+    OriginIds, Prefetch, ReversibleComparator, check_object_name, parse_field_expr,
     COLLECTION_TYPES, SQL_OPERATORS,
     SUPERUSER_ID,
 )
@@ -107,8 +107,6 @@ regex_order_part_read_group = re.compile(r"""
 """, re.IGNORECASE | re.VERBOSE)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')  # For read_group
 regex_read_group_spec = re.compile(r'(\w+)(\.([\w\.]+))?(?::(\w+))?$')  # For _read_group
-
-AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 
 INSERT_BATCH_SIZE = 100
 UPDATE_BATCH_SIZE = 100
@@ -6521,38 +6519,6 @@ class Model(AbstractModel):
     _auto: bool = True          # automatically create database backend
     _register: bool = False     # not visible in ORM registry, meant to be python-inherited only
     _abstract: typing.Literal[False] = False  # not abstract
-
-
-@functools.total_ordering
-class ReversibleComparator:
-    __slots__ = ('__item', '__none_first', '__reverse')
-
-    def __init__(self, item, reverse: bool, none_first: bool):
-        self.__item = item
-        self.__reverse = reverse
-        self.__none_first = none_first
-
-    def __lt__(self, other: ReversibleComparator) -> bool:
-        item = self.__item
-        item_cmp = other.__item
-        if item == item_cmp:
-            return False
-        if item is None:
-            return self.__none_first
-        if item_cmp is None:
-            return not self.__none_first
-        if self.__reverse:
-            item, item_cmp = item_cmp, item
-        return item < item_cmp
-
-    def __eq__(self, other: ReversibleComparator) -> bool:
-        return self.__item == other.__item
-
-    def __hash__(self):
-        return hash(self.__item)
-
-    def __repr__(self):
-        return f"<ReversibleComparator {self.__item!r}{' reverse' if self.__reverse else ''}>"
 
 
 def itemgetter_tuple(items):

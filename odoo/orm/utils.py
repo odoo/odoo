@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import functools
 import re
 from collections.abc import Reversible
 from collections.abc import Set as AbstractSet
@@ -262,3 +265,35 @@ class Prefetch:
     relational = PrefetchRelational
     origin = OriginIds
     union = PrefetchUnion
+
+
+@functools.total_ordering
+class ReversibleComparator:
+    __slots__ = ('__item', '__none_first', '__reverse')
+
+    def __init__(self, item, reverse: bool = False, none_first: bool = False):
+        self.__item = item
+        self.__reverse = reverse
+        self.__none_first = none_first
+
+    def __lt__(self, other: ReversibleComparator) -> bool:
+        item = self.__item
+        item_cmp = other.__item
+        if item == item_cmp:
+            return False
+        if item is None:
+            return self.__none_first
+        if item_cmp is None:
+            return not self.__none_first
+        if self.__reverse:
+            item, item_cmp = item_cmp, item
+        return item < item_cmp
+
+    def __eq__(self, other: ReversibleComparator) -> bool:
+        return self.__item == other.__item
+
+    def __hash__(self):
+        return hash(self.__item)
+
+    def __repr__(self):
+        return f"<ReversibleComparator {self.__item!r}{' reverse' if self.__reverse else ''}>"
