@@ -218,6 +218,22 @@ class TestEventNotifications(CalendarMailCommon):
         }):
             self.event.start = fields.Datetime.now() + relativedelta(days=1)
 
+    @freeze_time('2018')  # class event has hardcoded dates
+    def test_message_datetime_changed_with_activity(self):
+        self.env['mail.activity'].create({
+            'activity_type_id': self.env.ref('mail.mail_activity_data_meeting').id,
+            'calendar_event_id': self.event.id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': self.customers[0].id,
+        })
+        self.event.partner_ids = self.partner
+
+        with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
+            'message_type': 'user_notification',
+            'subtype': 'mail.mt_note',
+        }):
+            self.event.start = fields.Datetime.now() + relativedelta(days=1)
+
     def test_message_date_changed(self):
         self.event.write({
             'allday': True,
