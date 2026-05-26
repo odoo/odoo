@@ -258,6 +258,16 @@ describe("date command", () => {
             `<p>abc</p><p>\uFEFF${embeddedDate}\uFEFF</p><p>def\uFEFF${embeddedDate}[]\uFEFF</p>`
         );
     });
+    test("editable should not be focused when opening datepicker", async () => {
+        const { el, editor } = await setupEditor("<p>[]<br></p>", {
+            config: configWithEmbeddings,
+        });
+        await insertText(editor, "/datetime");
+        await expectElementCount(".o-we-powerbox .o-we-command-name:contains('Date and Time')", 1);
+        await press("Enter");
+        await expectElementCount(".o_datetime_picker", 1);
+        expect(document.activeElement).not.toBe(el);
+    });
     describe("formattings", () => {
         const dateUTC = DateTime.now().toUTC().toISO();
         test("should be able to apply and remove formattings on date nodes", async () => {
