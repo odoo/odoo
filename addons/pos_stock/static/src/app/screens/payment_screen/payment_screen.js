@@ -5,16 +5,13 @@ import { DatePickerPopup } from "@pos_stock/app/components/popups/date_picker_po
 
 patch(PaymentScreen.prototype, {
     async toggleShippingDatePicker() {
-        if (!this.currentOrder.shipping_date) {
-            this.dialog.add(DatePickerPopup, {
-                title: _t("Select the shipping date"),
-                getPayload: (shippingDate) => {
-                    this.currentOrder.shipping_date = shippingDate;
-                },
-            });
-        } else {
-            this.currentOrder.shipping_date = false;
-        }
+        this.dialog.add(DatePickerPopup, {
+            title: _t("Select the shipping date"),
+            defaultValue: this.currentOrder.shipping_date,
+            getPayload: (shippingDate) => {
+                this.currentOrder.shipping_date = shippingDate;
+            },
+        });
     },
 
     shouldShowTipOrder() {
