@@ -258,3 +258,8 @@ export async function simulateTripleClickSelect(target) {
     await secondClick(target);
     await thirdClick(target);
 }
+export async function waitForSelectionChange() {
+    await new Promise((resolve) =>
+        document.addEventListener("selectionchange", resolve, { once: true })
+    );
+}
