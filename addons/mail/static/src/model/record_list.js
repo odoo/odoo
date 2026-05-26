@@ -15,51 +15,6 @@ function getTargetModel(reclist) {
 }
 
 /** @param {RecordList} reclist */
-function isComputeField(reclist) {
-    return reclist._.owner.Model._.fieldsCompute.get(reclist._.name);
-}
-
-/** @param {RecordList} reclist */
-function isSortField(reclist) {
-    return reclist._.owner.Model._.fieldsSort.get(reclist._.name);
-}
-
-/** @param {RecordList} reclist */
-function isEager(reclist) {
-    return reclist._.owner.Model._.fieldsEager.get(reclist._.name);
-}
-
-/** @param {RecordList} reclist */
-function setComputeInNeed(reclist) {
-    reclist._.owner._.fieldsComputeInNeed.set(reclist._.name, true);
-}
-
-/** @param {RecordList} reclist */
-function setSortInNeed(reclist) {
-    reclist._.owner._.fieldsSortInNeed.set(reclist._.name, true);
-}
-
-/** @param {RecordList} reclist */
-function isComputeOnNeed(reclist) {
-    return reclist._.owner._.fieldsComputeOnNeed.get(reclist._.name);
-}
-
-/** @param {RecordList} reclist */
-function isSortOnNeed(reclist) {
-    return reclist._.owner._.fieldsSortOnNeed.get(reclist._.name);
-}
-
-/** @param {RecordList} reclist */
-function computeField(reclist) {
-    reclist._.owner._.compute(reclist._.owner, reclist._.name, { fromInNeed: true });
-}
-
-/** @param {RecordList} reclist */
-function sortField(reclist) {
-    reclist._.owner._.sort(reclist._.owner, reclist._.name, { fromInNeed: true });
-}
-
-/** @param {RecordList} reclist */
 function isOne(reclist) {
     return reclist._.owner.Model._.fieldsOne.get(reclist._.name);
 }
@@ -287,20 +242,14 @@ export class RecordList extends Array {
                     }
                     return res;
                 }
-                if (isComputeField(recordList) && !isEager(recordList)) {
-                    setComputeInNeed(recordList);
-                    if (isComputeOnNeed(recordList)) {
-                        computeField(recordList);
-                    }
+                if (!recordList._.owner._.fieldsComputeComputing.get(recordList._.name)) {
+                    recordList._.owner._.fieldsComputeComputed.get(recordList._.name)?.();
                 }
                 if (name === "length") {
                     return recordListFullProxy.data.length;
                 }
-                if (isSortField(recordList) && !isEager(recordList)) {
-                    setSortInNeed(recordList);
-                    if (isSortOnNeed(recordList)) {
-                        sortField(recordList);
-                    }
+                if (!recordList._.owner._.fieldsSortComputing.get(recordList._.name)) {
+                    recordList._.owner._.fieldsSortComputed.get(recordList._.name)?.();
                 }
                 if (typeof name !== "symbol" && !window.isNaN(parseInt(name))) {
                     // support for "array[index]" syntax

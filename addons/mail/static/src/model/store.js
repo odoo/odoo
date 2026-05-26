@@ -23,6 +23,7 @@ export class Store extends Record {
     }
 
     handleError(err) {
+        debugger;
         this._.ERRORS.push(err);
     }
 
@@ -43,8 +44,6 @@ export class Store extends Record {
             // pretend an increased update cycle so that nothing in queue creates many small update cycles
             this._.UPDATE++;
             while (
-                this._.FC_QUEUE.size > 0 ||
-                this._.FS_QUEUE.size > 0 ||
                 this._.FA_QUEUE.size > 0 ||
                 this._.FD_QUEUE.size > 0 ||
                 this._.FU_QUEUE.size > 0 ||
@@ -52,38 +51,18 @@ export class Store extends Record {
                 this._.RD_QUEUE.size > 0 ||
                 this._.RHD_QUEUE.size > 0
             ) {
-                const FC_QUEUE = new Map(this._.FC_QUEUE);
-                const FS_QUEUE = new Map(this._.FS_QUEUE);
                 const FA_QUEUE = new Map(this._.FA_QUEUE);
                 const FD_QUEUE = new Map(this._.FD_QUEUE);
                 const FU_QUEUE = new Map(this._.FU_QUEUE);
                 const RO_QUEUE = new Map(this._.RO_QUEUE);
                 const RD_QUEUE = new Map(this._.RD_QUEUE);
                 const RHD_QUEUE = new Map(this._.RHD_QUEUE);
-                this._.FC_QUEUE.clear();
-                this._.FS_QUEUE.clear();
                 this._.FA_QUEUE.clear();
                 this._.FD_QUEUE.clear();
                 this._.FU_QUEUE.clear();
                 this._.RO_QUEUE.clear();
                 this._.RD_QUEUE.clear();
                 this._.RHD_QUEUE.clear();
-                while (FC_QUEUE.size > 0) {
-                    /** @type {[Record, Map<string, true>]} */
-                    const [record, recMap] = FC_QUEUE.entries().next().value;
-                    FC_QUEUE.delete(record);
-                    for (const fieldName of recMap.keys()) {
-                        record._.requestCompute(record, fieldName, { force: true });
-                    }
-                }
-                while (FS_QUEUE.size > 0) {
-                    /** @type {[Record, Map<string, true>]} */
-                    const [record, recMap] = FS_QUEUE.entries().next().value;
-                    FS_QUEUE.delete(record);
-                    for (const fieldName of recMap.keys()) {
-                        record._.requestSort(record, fieldName, { force: true });
-                    }
-                }
                 while (FA_QUEUE.size > 0) {
                     /** @type {[Record, Map<string, Map<Record, true>>]} */
                     const [record, recMap] = FA_QUEUE.entries().next().value;

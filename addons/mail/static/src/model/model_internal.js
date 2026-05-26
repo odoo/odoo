@@ -80,7 +80,7 @@ export class ModelInternal {
                         if (!this._rawStore._.isUpdatingFromStorageEvent) {
                             lse.remove();
                         }
-                        return this[fieldName];
+                        return record._.fieldsDefault.get(fieldName);
                     }
                     return value;
                 }

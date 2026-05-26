@@ -235,14 +235,12 @@ export class Record {
                     recordByLocalId: Model._rawStore.recordByLocalId,
                 });
             }
-            // compute inherits fields in priority, as other fields might depend on them
-            for (const fieldName of Model._.inheritsFields) {
-                record._.compute?.(record, fieldName);
-            }
             Model._rawStore.recordByLocalId.set(record.localId, recordProxy);
             for (const fieldName of record.Model._.fields.keys()) {
-                record._.requestCompute?.(record, fieldName);
-                record._.requestSort?.(record, fieldName);
+                if (record.Model._.fieldsEager.get(fieldName)) {
+                    record._.fieldsComputeComputed.get(fieldName)?.();
+                    record._.fieldsSortComputed.get(fieldName)?.();
+                }
             }
             return recordProxy;
         });
