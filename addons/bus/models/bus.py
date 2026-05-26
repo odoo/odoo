@@ -18,7 +18,7 @@ from odoo.service.server import CommonServer
 from odoo.tools import config, json_default, SQL
 from odoo.tools.misc import OrderedSet
 
-from ..tools import orjson
+from ..tools import decode_snapshot, encode_snapshot, orjson
 
 _logger = logging.getLogger(__name__)
 
@@ -45,31 +45,6 @@ NOTIFY_PAYLOAD_MAX_LENGTH = get_notify_payload_max_length()
 # Sentinel used by `_prepare_payload` to indicate the notification
 # creation should be aborted.
 SKIP_NOTIFICATION = object()
-
-
-def fetch_bus_notifications(cr, min_id_by_channel, ignore_ids=None):
-    """Fetch notifications from the bus table.
-
-    :param cr: Database cursor.
-    :param min_id_by_channel: Dictionary mapping channels to the ID of the last fully
-        processed id. See `Websocket._notif_history`.
-    :param ignore_ids: IDs to exclude.
-    :return: List of notifications.
-
-    """
-    threshold = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT)
-    channels_by_id = defaultdict(list)
-    for channel, min_id in min_id_by_channel.items():
-        channels_by_id[min_id].append(json_dump(channel))
-    channel_conditions = []
-    for min_id, channels in channels_by_id.items():
-        since = SQL("create_date > %s", threshold) if min_id == 0 else SQL("id > %s", min_id)
-        channel_conditions.append(SQL("(channel IN %s AND %s)", tuple(channels), since))
-    where = SQL(" OR ").join(channel_conditions)
-    if ignore_ids:
-        where = SQL("(%s) AND id NOT IN %s", where, tuple(ignore_ids))
-    cr.execute(SQL("SELECT id, message FROM bus_bus WHERE %s ORDER BY id", where))
-    return [{"id": r[0], "message": orjson.loads(r[1])} for r in cr.fetchall()]
 
 
 # ---------------------------------------------------------
@@ -122,6 +97,24 @@ class BusBus(models.Model):
 
     channel = fields.Char('Channel')
     message = fields.Char('Message')
+    create_xid = fields.Float(
+        help=(
+            "PostgreSQL transaction id (xid8) assigned when this notification row is "
+            "inserted. Used internally as part of the notification dispatching mechanism."
+        ),
+        digits=(0, False),
+    )
+
+    _create_xid_channel_idx = models.Index("(create_xid, channel)")
+
+    def init(self):
+        super().init()
+        # Set the default at the DB level so the xid is assigned with the INSERT, avoiding
+        # a separate `pg_current_xact_id()` round-trip.
+        self.env.cr.execute("""
+            ALTER TABLE bus_bus ALTER COLUMN create_xid
+            SET DEFAULT pg_current_xact_id()::text::numeric
+        """)
 
     @api.autovacuum
     def _gc_messages(self):
@@ -135,7 +128,7 @@ class BusBus(models.Model):
         self.env.cr.execute("DELETE FROM bus_bus WHERE create_date < %s", (timeout_ago,))
 
     @api.model
-    def _sendone(self, target, notification_type, message):
+    def _sendone(self, target, notification_type, message=None):
         """Low-level method to send ``notification_type`` and ``message`` to ``target``.
 
         Using ``_bus_send()`` from ``bus.listener.mixin`` is recommended for simplicity and
@@ -205,13 +198,67 @@ class BusBus(models.Model):
                             )
                         )
 
-    @api.model
-    def _poll(self, channels, last=0, ignore_ids=None):
-        return fetch_bus_notifications(self.env.cr, {c: last for c in channels}, ignore_ids)
-
     def _bus_last_id(self):
         last = self.env['bus.bus'].search([], order='id desc', limit=1)
         return last.id if last else 0
+
+    @staticmethod
+    def get_current_pg_snapshot(cr):
+        cr.execute("SELECT pg_current_snapshot()")
+        return encode_snapshot(cr.fetchone()[0])
+
+
+def fetch_bus_notifications(
+    cr,
+    channels,
+    from_snapshot,
+    catchup_snapshot_by_channel=None,
+):
+    """Fetch bus notifications committed since the given snapshots.
+
+    Snapshots act as bookmarks: only notifications committed after a given snapshot are
+    returned for the channels associated with it.
+
+    See :attr:`~bus.websocket.Websocket._last_fetch_snapshot` for details.
+
+    :param Cursor cr: Database cursor.
+    :param list[str] channels: Channels for which notifications should be fetched from the
+        provided ``from_snapshot``.
+    :param str from_snapshot: Only notifications committed after this snapshot are
+        returned for ``channels``. Typically the caller's ``last_fetch_snapshot``.
+    :param dict[str, str] catchup_snapshot_by_channel: Channels waiting for their
+        initial catch-up fetch, each mapped to their snapshot at subscribe time.
+    :return: Tuple ``(last_fetch_snapshot, notifications)`` where ``last_fetch_snapshot``
+        is the snapshot taken at fetch time (to be passed as ``from_snapshot`` on the next
+        call) and ``notifications`` is a list of dicts sorted by ascending id.
+    :rtype: tuple[str, list[dict]]
+
+    """
+    snapshot_to_channels = defaultdict(list)
+    if channels:
+        snapshot_to_channels[from_snapshot].extend(channels)
+    for channel, snap in (catchup_snapshot_by_channel or {}).items():
+        snapshot_to_channels[snap].append(channel)
+    if not snapshot_to_channels:
+        return BusBus.get_current_pg_snapshot(cr), []
+    where_parts = []
+    for snap, channels in snapshot_to_channels.items():
+        _, xmax, xips = decode_snapshot(snap)
+        where_parts.append(
+            SQL(
+                "(channel = ANY(%(channels)s) AND (create_xid >= %(xmax)s OR create_xid = ANY(%(xip)s)))",
+                channels=[json_dump(c) for c in channels],
+                xmax=xmax,
+                xip=xips,
+            ),
+        )
+    query = SQL(
+        "SELECT id, message FROM bus_bus WHERE %(where)s ORDER BY id ASC",
+        where=SQL(" OR ").join(where_parts),
+    )
+    cr.execute(query)
+    notifications = [{"id": r[0], "message": orjson.loads(r[1])} for r in cr.fetchall()]
+    return BusBus.get_current_pg_snapshot(cr), notifications
 
 
 # ---------------------------------------------------------
@@ -223,7 +270,7 @@ class ImDispatch(threading.Thread):
         super().__init__(daemon=True, name=f'{__name__}.Bus')
         self._channels_to_ws = {}
 
-    def subscribe(self, channels, last, websocket):
+    def subscribe(self, channels, from_snapshot, websocket):
         """
         Subcribe to bus notifications. Every notification related to the
         given channels will be sent through the websocket. If a subscription
@@ -231,15 +278,15 @@ class ImDispatch(threading.Thread):
         """
         for channel in channels:
             self._channels_to_ws.setdefault(channel, set()).add(websocket)
-        outdated_channels = websocket._min_id_by_channel.keys() - channels
+        outdated_channels = websocket.channels - channels
         self._clear_outdated_channels(websocket, outdated_channels)
-        websocket.subscribe(channels, last)
+        websocket.subscribe(channels, from_snapshot)
         with contextlib.suppress(RuntimeError):
             if not self.is_alive():
                 self.start()
 
     def unsubscribe(self, websocket):
-        self._clear_outdated_channels(websocket, websocket._min_id_by_channel.keys())
+        self._clear_outdated_channels(websocket, websocket.channels)
 
     def _clear_outdated_channels(self, websocket, outdated_channels):
         """ Remove channels from channel to websocket map. """

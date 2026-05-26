@@ -1,4 +1,4 @@
-import { after, expect, registerDebugInfo } from "@odoo/hoot";
+import { after, before, expect, registerDebugInfo } from "@odoo/hoot";
 import {
     MockServer,
     defineModels,
@@ -18,6 +18,13 @@ import { on, runAllTimers, waitUntil } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { deepEqual } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
+import { session } from "@web/session";
+
+before(() =>
+    patchWithCleanup(session, {
+        bus_info: { initial_snapshot: "1:1:", worker_version: "saas-19.4-1" },
+    })
+);
 
 /**
  * @typedef {[

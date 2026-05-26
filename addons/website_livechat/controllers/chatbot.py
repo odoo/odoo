@@ -52,9 +52,19 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         store.add(discuss_channel, "_store_open_chat_window_fields")
         store.add_global_values(request.env.user.sudo(False)._store_init_global_fields)
         store.add(chatbot_script, "_store_script_fields")
-        return request.render("im_livechat.chatbot_test_script_page", {
-            'server_url': chatbot_script.get_base_url(),
-            'chatbot_script': chatbot_script,
-            'chatbot_test_store': store.as_dict(),
-            'title': self.env._("Test %s", chatbot_script.title),
-        })
+        return request.render(
+            "im_livechat.chatbot_test_script_page",
+            {
+                "chatbot_script": chatbot_script,
+                "loader_info": {
+                    "available": True,
+                    "chatbot_test_store": store.as_dict(),
+                    "server_url": chatbot_script.get_base_url(),
+                    "session_info": {
+                        "bus_info": self.env["ir.http"]._get_bus_session_info(),
+                    },
+                    "options": {"chatbot_test_store": store.as_dict()},
+                },
+                "title": self.env._("Test %s", chatbot_script.title),
+            },
+        )

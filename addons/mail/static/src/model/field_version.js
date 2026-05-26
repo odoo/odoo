@@ -5,23 +5,21 @@
  */
 
 /**
- * Represents a PostgreSQL transaction snapshot. See:
- * https://www.postgresql.org/docs/13/functions-info.html#FUNCTIONS-PG-SNAPSHOT-PARTS
+ * Represents a PostgreSQL transaction snapshot as a compact string "xmin:xmax:xip_bitmap".
+ * See: https://www.postgresql.org/docs/13/functions-info.html#FUNCTIONS-PG-SNAPSHOT-PARTS.
  *
- * @typedef {Object} IPgSnapshot
- * @property {string} xmin The lowest active transaction ID at the time this snapshot was
- * taken. Lower transaction IDs are completed.
+ * - xmin: The lowest active transaction ID at the time this snapshot was taken. Lower
+ *   transaction IDs are completed.
+ * - xmax: The upper bound of transaction IDs for this snapshot. Greater or equal
+ *   transaction IDs are invisible to this snapshot.
+ * - xip_bitmap: A base64-encoded bitmap representing in-progress transactions in the range
+ *   [xmin, xmax). Each bit corresponds to a transaction ID within this range. If the bit
+ *   is set, the transaction was in progress at the time this snapshot was taken.
  *
- * @property {string} xmax The upper bound of transaction IDs for this snapshot. Greater
- * or equals transaction IDs are invisible by this snapshot.
- *
- * @property {string} xip_bitmap A bitmap representing in progress transactions in the
- * range [xmin, xmax). Each bit corresponds to a transaction ID within this range. If the
- * bit is set, the transaction was in progress at the time this snapshot was taken.
- *
- * @property {string|null} current_xact_id The current transaction ID, assigned when a
- * transaction modify the database.
- *
+ * @typedef {string} IPgSnapshot
+ */
+
+/**
  * A versioned field value tied to a database snapshot. It tracks what this revision "saw"
  * when this value was set, allowing the client to correctly order updates and ignore late
  * arriving, stale data.
@@ -35,7 +33,7 @@
 /**
  * Version metadata sent by the server alongside insert data. Used to determine if
  * incoming insert values should override stored ones.
- * @typedef {{snapshot: IPgSnapshot, written_fields_by_record: WrittenFieldsByRecord}} StoreVersion
+ * @typedef {{snapshot: IPgSnapshot, current_xact_id: string|null, written_fields_by_record: WrittenFieldsByRecord}} StoreVersion
  */
 
 /**
@@ -61,14 +59,21 @@
  *                          +-------------------------------------------------+
  */
 export class PgSnapshot {
-    /** @param {IPgSnapshot} */
-    constructor(params) {
-        this.current_xact_id = params.current_xact_id
-            ? BigInt(params.current_xact_id)
-            : params.current_xact_id;
-        this.xmin = BigInt(params.xmin);
-        this.xmax = BigInt(params.xmax);
-        const bitmapBinaryStr = atob(params.xip_bitmap);
+    /**
+     * @param {string|IPgSnapshot} encoded Compact snapshot string "xmin:xmax:base64_bitmap",
+     *   or legacy dict {xmin, xmax, xip_bitmap, current_xact_id} for backward compatibility.
+     * @param {string|null} [current_xact_id]
+     */
+    constructor(encoded, current_xact_id = null) {
+        if (typeof encoded === "object" && encoded !== null) {
+            current_xact_id ??= encoded.current_xact_id ?? null;
+            encoded = `${encoded.xmin}:${encoded.xmax}:${encoded.xip_bitmap}`;
+        }
+        this.current_xact_id = current_xact_id ? BigInt(current_xact_id) : current_xact_id;
+        const [xminStr, xmaxStr, b64] = encoded.split(":");
+        this.xmin = BigInt(xminStr);
+        this.xmax = BigInt(xmaxStr);
+        const bitmapBinaryStr = atob(b64 || "");
         // Bitmap [xmin, xmax) showing which xact_ids are in progress of the time of the snapshot.
         this.xip_bitmap = new Uint8Array(bitmapBinaryStr.length).map((_, idx) =>
             bitmapBinaryStr.charCodeAt(idx)
@@ -154,7 +159,7 @@ export const SKIP_REVISION = Symbol("SKIP");
  */
 export class SingleFieldVersion {
     lastRevision = {
-        snapshot: new PgSnapshot({ xmin: 0, xmax: 0, xip_bitmap: "" }),
+        snapshot: new PgSnapshot("0:0:"),
         isWrite: false,
     };
 
@@ -193,7 +198,7 @@ export class ManyFieldVersion {
         {
             cmd: ["REPLACE", []],
             revision: {
-                snapshot: new PgSnapshot({ xmin: 0, xmax: 0, xip_bitmap: "" }),
+                snapshot: new PgSnapshot("0:0:"),
                 isWrite: false,
             },
         },

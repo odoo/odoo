@@ -216,7 +216,7 @@ export class Store extends Record {
             delete dataByModelName.__store_version__;
             this._.currentInsertVersion = {
                 ...versionMeta,
-                snapshot: new PgSnapshot(versionMeta.snapshot),
+                snapshot: new PgSnapshot(versionMeta.snapshot, versionMeta.current_xact_id),
             };
         }
         try {

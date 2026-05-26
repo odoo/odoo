@@ -182,26 +182,19 @@ test("re-subscribe on reconnect", async () => {
     await expect.waitForSteps(["BUS:RECONNECT", "subscribe - []"]);
 });
 
-test("pass last notification id on initialization", async () => {
+test("pass initial_snapshot on initialization", async () => {
+    patchWithCleanup(session, { bus_info: { initial_snapshot: "1:1:" } });
     patchWithCleanup(WebsocketWorker.prototype, {
         _onClientMessage(_client, { action, data }) {
             if (action === "BUS:INITIALIZE_CONNECTION") {
-                expect.step(`${action} - ${data["lastNotificationId"]}`);
+                expect.step(`${action} - ${data["initial_snapshot"]}`);
             }
             return super._onClientMessage(...arguments);
         },
     });
     const firstEnv = await makeMockEnv();
     startBusService(firstEnv);
-    await expect.waitForSteps(["BUS:INITIALIZE_CONNECTION - 0"]);
-    firstEnv.services.bus_service.addChannel("lambda");
-    await waitForChannels(["lambda"]);
-    MockServer.env["bus.bus"]._sendone("lambda", "notifType", "beta");
-    await waitNotifications([firstEnv, "notifType", "beta"]);
-    restoreRegistry(registry);
-    const secondEnv = await makeMockEnv(null, { makeNew: true });
-    startBusService(secondEnv);
-    await expect.waitForSteps([`BUS:INITIALIZE_CONNECTION - 1`]);
+    await expect.waitForSteps(["BUS:INITIALIZE_CONNECTION - 1:1:"]);
 });
 
 test("websocket disconnects when user logs out", async () => {
@@ -253,7 +246,7 @@ test("websocket connects with URL corresponding to given serverURL", async () =>
     mockWebSocket((ws) => expect.step(ws.url));
     startBusService();
     await expect.waitForSteps([
-        `${serverURL.replace("http", "ws")}/websocket?version=${session.websocket_worker_version}`,
+        `${serverURL.replace("http", "ws")}/websocket?version=${session.bus_info.worker_version}`,
     ]);
 });
 
@@ -565,8 +558,8 @@ test("channel is kept until deleted as many times as added", async () => {
     await expect.waitForSteps(["delete channel", "subscribe - []"]);
 });
 
-test("subscription last id is captured from the initial call to update channel", async () => {
-    // Large delay so lastNotificationId can advance before the subscription is sent.
+test("subscription from_snapshot is captured from the initial call to update channel", async () => {
+    // Large delay so from_snapshot can advance before the subscription is sent.
     patchWithCleanup(WebsocketWorker, { OUTGOING_BATCH_DELAY: 120_000 });
     await makeMockEnv();
     const worker = getWebSocketWorker();
@@ -578,47 +571,48 @@ test("subscription last id is captured from the initial call to update channel",
     });
     addBusServiceListeners(["BUS:CONNECT", () => expect.step("BUS:CONNECT")]);
     onWebsocketEvent("subscribe", (data) =>
-        expect.step(`subscribe - [${data.channels.toString()}] - ${data.last}`)
+        expect.step(`subscribe - [${data.channels.toString()}] - ${data.from_snapshot}`)
     );
     await startBusService();
     const busService = getService("bus_service");
     await expect.waitForSteps(["BUS:CONNECT"]);
     await advanceTime(120_000);
-    await expect.waitForSteps(["subscribe - [] - 0"]);
-    let lastReceivedId = MockServer.env["bus.bus"]._sendone(
+    await expect.waitForSteps([`subscribe - [] - ${session.bus_info.initial_snapshot}`]);
+    let lastReceivedSnapshot = MockServer.env["bus.bus"]._sendone(
         serverState.partnerId,
         "message_type",
         "message_1"
     );
     await waitNotifications(["message_type", "message_1"]);
-    expect(worker.lastNotificationId).toBe(lastReceivedId);
-    const fooBusId = lastReceivedId;
+    expect(worker.last_fetch_snapshot).toBe(lastReceivedSnapshot);
+    const fooSnapshot = lastReceivedSnapshot;
     busService.addChannel("foo");
     await expect.waitForSteps(["add_channel - foo"]);
-    lastReceivedId = MockServer.env["bus.bus"]._sendone(
+    lastReceivedSnapshot = MockServer.env["bus.bus"]._sendone(
         serverState.partnerId,
         "message_type",
         "message_2"
     );
     await waitNotifications(["message_type", "message_2"]);
-    expect(worker.lastNotificationId).toBe(lastReceivedId);
+    expect(worker.last_fetch_snapshot).toBe(lastReceivedSnapshot);
     busService.addChannel("bar");
     await expect.waitForSteps(["add_channel - bar"]);
     await advanceTime(120_000);
-    await expect.waitForSteps([`subscribe - [bar,foo] - ${fooBusId}`]);
+    await expect.waitForSteps([`subscribe - [bar,foo] - ${fooSnapshot}`]);
 });
 
 test("disconnect during vacuum should ask for reload", async () => {
     browser.location.addEventListener("reload", () => expect.step("reload"));
     addBusServiceListeners(["BUS:CONNECT", () => expect.step("BUS:CONNECT")]);
     await mountWithCleanup(WebClient);
-    browser.localStorage.setItem("bus.last_notification_id", 1);
     startBusService();
     await runAllTimers();
     await expect.waitForSteps(["BUS:CONNECT"]);
     getWebSocketWorker().websocket.dispatchEvent(
         new MessageEvent("message", {
-            data: JSON.stringify([{ type: "bus/subscription_outdated", internal: true }]),
+            data: JSON.stringify({
+                notifications: [{ type: "bus/subscription_outdated", internal: true }],
+            }),
         })
     );
     await waitFor(".o_notification");

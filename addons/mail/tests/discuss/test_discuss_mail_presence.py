@@ -10,14 +10,16 @@ except ImportError:
 from itertools import product
 
 from odoo.tests import new_test_user
-from odoo.addons.bus.tests.common import WebsocketCase, BusResult
-from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
+
 from odoo.addons.bus.models.bus import channel_with_db, json_dump
+from odoo.addons.bus.tests.common import BusResult, WebsocketCase
+from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
 
 
 class TestMailPresence(WebsocketCase, MailCommon):
     def _receive_presence(self, requested_by, target, has_token=False):
         self.env["mail.presence"].search([]).unlink()
+        self._reset_bus()
         if isinstance(requested_by, self.env.registry["res.users"]):
             session = self.authenticate(requested_by.login, requested_by.login)
             auth_cookie = f"session_id={session.sid};"
@@ -28,10 +30,10 @@ class TestMailPresence(WebsocketCase, MailCommon):
         channel_parts = ["odoo-presence", f"{target._name}_{target.id}"]
         if has_token:
             channel_parts.append(target._get_im_status_access_token())
-        self.subscribe(websocket, ["-".join(channel_parts)], self.env["bus.bus"]._bus_last_id())
-        self.env["mail.presence"]._update_presence(target)
-        self.trigger_notification_dispatching()
-        notifications = json.loads(websocket.recv())
+        self.subscribe(websocket, ["-".join(channel_parts)])
+        with self.bus_db_mock.tx():
+            self.env["mail.presence"]._update_presence(target)
+        notifications = json.loads(websocket.recv())["notifications"]
         self._close_websockets()
         bus_record = self.env["bus.bus"].search([("id", "=", int(notifications[0]["id"]))])
         self.assertEqual(

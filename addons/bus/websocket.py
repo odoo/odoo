@@ -1,5 +1,4 @@
 import base64
-import bisect
 import functools
 import hashlib
 import logging
@@ -37,7 +36,7 @@ from odoo.http.session import (
 )
 from odoo.modules.registry import Registry
 from odoo.service.server import CommonServer
-from odoo.tools import config
+from odoo.tools import OrderedSet, config
 
 from .models.bus import dispatch, fetch_bus_notifications
 from .session_helpers import check_session, new_env
@@ -71,6 +70,7 @@ def acquire_cursor(db):
         # Yield after releasing the cursor to let waiting greenlets
         # immediately pick up the freed connection.
         time.sleep(0)
+
 
 # ------------------------------------------------------
 # EXCEPTIONS
@@ -282,32 +282,6 @@ class Websocket:
     # Maximum size for a message in bytes, whether it is sent as one
     # frame or many fragmented ones.
     MESSAGE_MAX_SIZE = 2 ** 20
-    # How much time (in second) the history of last dispatched notifications is
-    # kept in memory for each websocket.
-    # To avoid duplicate notifications, we fetch them based on their ids.
-    # However during parallel transactions, ids are assigned immediately (when
-    # they are requested), but the notifications are dispatched at the time of
-    # the commit. This means lower id notifications might be dispatched after
-    # higher id notifications.
-    # Simply incrementing the min id is sufficient to guarantee no duplicates,
-    # but it is not sufficient to guarantee all notifications are dispatched,
-    # and in particular not sufficient for those with a lower id coming after a
-    # higher id was dispatched.
-    # To solve the issue of missed notifications, the lowest id, stored in
-    # ``_min_id_by_channel``, is held back by a few seconds to give time for
-    # concurrent transactions to finish. To avoid dispatching duplicate
-    # notifications, the history of already dispatched notifications during this
-    # period is kept in memory in ``_notif_history`` and the corresponding
-    # notifications are discarded from subsequent dispatching even if their id
-    # is higher than the corresponding ``_min_id_by_channel``.
-    # In practice, what is important functionally is the time between the create
-    # of the notification and the commit of the transaction in business code.
-    # If this time exceeds this threshold, the notification will never be
-    # dispatched if the target user receive any other notification in the
-    # meantime.
-    # Transactions known to be long should therefore create their notifications
-    # at the end, as close as possible to their commit.
-    MAX_NOTIFICATION_HISTORY_SEC = 10
     # How many requests can be made in excess of the given rate.
     RL_BURST = int(config['websocket_rate_limit_burst'])
     # How many seconds between each request.
@@ -329,13 +303,49 @@ class Websocket:
         # as triggering notification dispatching or terminating the connection.
         self.__cmd_queue = PollablePriorityQueue()
         self._waiting_for_dispatch = False
-        # For ``_min_id_by_channel and ``_notif_history``, see
-        # ``MAX_NOTIFICATION_HISTORY_SEC`` for more details.
-        # Id of the last sent notification that is no longer in ``_notif_history``, by channel.
-        self._min_id_by_channel = {}
-        # History of last sent notifications in the format (notif_id, send_time)
-        # always sorted by notif_id ASC
-        self._notif_history = []
+        # Notification dispatching internals. Under concurrency, notifications inserted
+        # earlier may become visible later than newer ones because transactions can commit
+        # in any order:
+        #   - TX100 INSERT
+        #   - TX101 INSERT + COMMIT
+        #   - FETCH (TX101)
+        #   - TX100 COMMIT
+        #
+        # A fetch strategy based on either `id > last_seen_id` or `create_xid >
+        # last_seen_tx_id` would therefore permanently miss TX100.
+        #
+        # To address this, each fetch captures a PostgreSQL snapshot
+        # (`pg_current_snapshot()`) rather than recording a single monotonic value.
+        #
+        # The snapshot defines which transactions were already resolved at fetch time,
+        # which were still in progress (XIP), and the first transaction ID not yet
+        # assigned (XMAX).
+        #
+        # The next fetch will only consider transactions that were unknown during the
+        # previous fetch:
+        #   - transactions still in progress (in XIP)
+        #   - transactions that did not yet exist (>= XMAX)
+        #
+        # Transactions already committed and visible during the previous snapshot are
+        # excluded permanently.
+        #
+        # This guarantees that:
+        #   - no committed notification can ever be skipped,
+        #   - commit order does not matter,
+        #   - long-running transactions do not stall delivery,
+        #   - already delivered rows are not re-fetched.
+        #
+        # Newly subscribed channels cannot immediately adopt the current
+        # `_last_fetch_snapshot`, otherwise notifications committed between the
+        # subscription request and the actual subscription on the server-side could be
+        # missed.
+        #
+        # Each new channel therefore starts from the `from_snapshot` of the subscribe
+        # request and performs an initial catch-up fetch. Past the catch-up, channels can
+        # join `_active_channels` that share a single `_last_fetch_snapshot`.
+        self._last_fetch_snapshot = None
+        self._active_channels = OrderedSet()
+        self._catchup_snapshot_by_channel = {}
         # Websocket start up
         self.__selector = (
             selectors.PollSelector()
@@ -389,6 +399,10 @@ class Websocket:
         """
         self._enqueue_control_command(ControlCommand.CLOSE, {'code': code, 'reason': reason})
 
+    @property
+    def channels(self):
+        return self._active_channels | self._catchup_snapshot_by_channel.keys()
+
     @classmethod
     def onopen(cls, func):
         cls.__event_callbacks[LifecycleEvent.OPEN].add(func)
@@ -406,15 +420,24 @@ class Websocket:
         """
         self._enqueue_control_command(
             ControlCommand.SEND,
-            [{'type': type_, 'internal': True, 'payload': payload}],
+            {'notifications': [{'type': type_, 'internal': True, 'payload': payload}]},
         )
 
-    def subscribe(self, channels, last):
-        self._min_id_by_channel = {
-            c: self._min_id_by_channel.get(c, last) for c in channels
-        }
-        # Dispatch past notifications if there are any.
-        self.trigger_notification_dispatching()
+    def subscribe(self, channels, from_snapshot):
+        """Subscribe to the given channels. This method should only be called from within
+        the websocket event loop, as part of the `subscribe` event processing.
+
+        :param set channels: Set of channels to subscribe to.
+        :param str from_snapshot: Only notifications committed after this snapshot are
+            delivered for newly subscribed channels.
+        """
+        self._last_fetch_snapshot = self._last_fetch_snapshot or from_snapshot
+        self._active_channels &= channels
+        for removed_channel in self._catchup_snapshot_by_channel.keys() - channels:
+            del self._catchup_snapshot_by_channel[removed_channel]
+        if added_channels := channels - self.channels:
+            self._catchup_snapshot_by_channel.update(dict.fromkeys(added_channels, from_snapshot))
+            self.trigger_notification_dispatching()
 
     def trigger_notification_dispatching(self):
         """
@@ -794,50 +817,18 @@ class Websocket:
     def _dispatch_bus_notifications(self):
         self._waiting_for_dispatch = False
         with acquire_cursor(self._session.db) as cr:
-            notifications = fetch_bus_notifications(
+            snapshot, notifications = fetch_bus_notifications(
                 cr,
-                self._min_id_by_channel,
-                [n[0] for n in self._notif_history],
+                self._active_channels,
+                self._last_fetch_snapshot,
+                self._catchup_snapshot_by_channel,
             )
-        if not notifications:
+        self._active_channels.update(self._catchup_snapshot_by_channel.keys())
+        self._catchup_snapshot_by_channel.clear()
+        if self._last_fetch_snapshot == snapshot and not notifications:
             return
-        for notif in notifications:
-            bisect.insort(self._notif_history, (notif['id'], time.time()), key=lambda x: x[0])
-        # Discard all the smallest notification ids that have expired and
-        # increment the min id accordingly. History can only be trimmed of ids
-        # that are below the new min id otherwise some notifications might be
-        # dispatched again.
-        # For example, if the theshold is 10s, and the state is:
-        # min id 2, history [(3, 8s), (6, 10s), (7, 7s)]
-        # If 6 is removed because it is above the threshold, the next query will
-        # be (id > 2 AND id NOT IN (3, 7)) which will fetch 6 again.
-        # 6 can only be removed after 3 reaches the threshold and is removed as
-        # well, and if 4 appears in the meantime, 3 can be removed but 6 will
-        # have to wait for 4 to reach the threshold as well.
-        last_index = -1
-        for i, notif in enumerate(self._notif_history):
-            if time.time() - notif[1] > self.MAX_NOTIFICATION_HISTORY_SEC:
-                last_index = i
-            else:
-                break
-        if last_index != -1:
-            new_min_id = self._notif_history[last_index][0]
-            for channel, current_min in self._min_id_by_channel.items():
-                # Ensure the min_id doesn't rollback, as lower notification ids can be
-                # fetched by other channels.
-                #
-                # For example, starting with the A channel, with 99 as its min id and the
-                # following history : [A(100, 0s)]. The client subscribes to B, with 80 as
-                # its min id. The resulting history looks like this:
-                # [B(90, 0s), B(91, 0s), A(100, 1s)].
-                #
-                # Then, the C channel is added: [B(90, 1s), B(91, 1s), C(95, 0s), A(100, 2s)].
-                # 9 seconds later, the new id considered as safe would be 91, since 10 seconds
-                # have passed. But A min_id shouldn't rollback.
-                if current_min < new_min_id:
-                    self._min_id_by_channel[channel] = new_min_id
-            self._notif_history = self._notif_history[last_index + 1 :]
-        self._send(notifications)
+        self._last_fetch_snapshot = snapshot
+        self._send({'last_fetch_snapshot': snapshot, 'notifications': notifications})
 
 
 class TimeoutManager:
@@ -1009,7 +1000,7 @@ class WebsocketConnectionHandler:
     # Latest version of the websocket worker. This version should be incremented
     # every time `websocket_worker.js` is modified to force the browser to fetch
     # the new worker bundle.
-    _VERSION = "saas-19.3-1"
+    _VERSION = "saas-19.4-1"
 
     @classmethod
     def websocket_allowed(cls, request):

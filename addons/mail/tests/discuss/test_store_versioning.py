@@ -1,12 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
-import math
-
 from odoo.http import Controller
 from odoo.tests import new_test_user
 
 from odoo.addons.base.tests.common import HttpCase
 from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.bus.tools import encode_snapshot
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.mail.tools.discuss import Store, mail_route
 
@@ -99,11 +97,10 @@ class TestStoreVersioning(HttpCase, MailCase):
                 },
             },
         )
-        snapshot = result.pop("__store_version__")["snapshot"]
-        self.assertIn("xmin", snapshot)
-        self.assertIn("xmax", snapshot)
-        self.assertIn("xip_bitmap", snapshot)
-        self.assertIn("current_xact_id", snapshot)
+        version = result.pop("__store_version__")
+        self.assertIsInstance(version["snapshot"], str)
+        self.assertEqual(version["snapshot"].count(":"), 2)
+        self.assertIn("current_xact_id", version)
         result = self.make_jsonrpc_request(
             "/store/version/read_fields",
             {
@@ -112,10 +109,9 @@ class TestStoreVersioning(HttpCase, MailCase):
                 },
             },
         )
-        snapshot = result["__store_version__"]["snapshot"]
-        self.assertIn("xmin", snapshot)
-        self.assertIn("xmax", snapshot)
-        self.assertIn("xip_bitmap", snapshot)
+        version = result["__store_version__"]
+        self.assertIsInstance(version["snapshot"], str)
+        self.assertEqual(version["snapshot"].count(":"), 2)
 
     def test_store_version_sent_alongside_bus_notifications(self):
         self.authenticate("admin_user", "admin_user")
@@ -125,23 +121,8 @@ class TestStoreVersioning(HttpCase, MailCase):
         self.env.cr.execute("""
             SELECT pg_current_snapshot(), pg_current_xact_id_if_assigned()
         """)
-        snapshot, current_xact_id = self.env.cr.fetchone()
-        snapshot_parts = snapshot.split(":")
-        xmin = int(snapshot_parts[0])
-        xmax = int(snapshot_parts[1])
-        xip = {int(xid) for xid in snapshot_parts[2].split(",") if xid}
-        bitmap = bytearray(math.ceil((xmax - xmin) / 8))
-        for x in xip:
-            offset = x - xmin
-            byte_idx = offset // 8
-            bit_idx = offset % 8
-            bitmap[byte_idx] |= 1 << bit_idx
-        expected_snapshot = {
-            "xmin": str(xmin),
-            "xmax": str(xmax),
-            "xip_bitmap": base64.b64encode(bitmap),
-            "current_xact_id": current_xact_id,
-        }
+        snapshot_str, current_xact_id = self.env.cr.fetchone()
+        expected_snapshot = encode_snapshot(snapshot_str)
         with self.assertBus(
             [
                 BusResult(
@@ -151,6 +132,7 @@ class TestStoreVersioning(HttpCase, MailCase):
                         "res.users": [{"id": bob.id, "name": "bob (base.group_user)"}],
                         "__store_version__": {
                             "snapshot": expected_snapshot,
+                            "current_xact_id": current_xact_id,
                             "written_fields_by_record": {},
                         },
                     },
@@ -162,6 +144,7 @@ class TestStoreVersioning(HttpCase, MailCase):
                         "discuss.channel": [{"id": general.id, "name": "general"}],
                         "__store_version__": {
                             "snapshot": expected_snapshot,
+                            "current_xact_id": current_xact_id,
                             "written_fields_by_record": {},
                         },
                     },

@@ -4,8 +4,7 @@
         <template id="chatbot_test_script_page">
             <t t-set="head">
                 <script>
-                    <t t-call="im_livechat.loader"
-                        info="{ 'available': True, 'options': { 'chatbot_test_store': chatbot_test_store }, 'server_url': server_url }"/>
+                    <t t-call="im_livechat.loader" info="loader_info"/>
                 </script>
             </t>
             <t t-call="web.frontend_layout"

@@ -44,7 +44,8 @@ class WebsocketClient(Thread):
             'event_name': 'subscribe',
             'data': {
                 'channels': [self.channel] if self.channel else [],  # TODO: remove when v19 is deprecated
-                'last': self.last_message_id,
+                'last': self.last_message_id,  # TODO: remove when v19 is deprecated
+                'from_snapshot': self.last_fetch_snapshot,
                 'check_outdated': False,
                 'iot_token': helpers.get_token(),
                 'mac_address': system.get_mac_address(),  # TODO: remove when v18 is deprecated
@@ -52,17 +53,21 @@ class WebsocketClient(Thread):
             }
         }))
 
-    def on_message(self, ws, messages):
+    def on_message(self, ws, payload):
         """Synchronously handle messages received by the websocket."""
-        for message in json.loads(messages):
+        messages = json.loads(payload)
+        if isinstance(messages, dict):
+            self.last_fetch_snapshot = messages["last_fetch_snapshot"]
+            messages = messages["notifications"]
+        for message in messages:
             self.last_message_id = message["id"]
-            payload = message['message']['payload']
+            notif_payload = message['message']['payload']
             message_type = message['message']['type']
 
-            if payload.get('iot_identifier') != IOT_IDENTIFIER:
+            if notif_payload.get('iot_identifier') != IOT_IDENTIFIER:
                 continue
 
-            result = communication.handle_message(message_type, 'ws', **payload)
+            result = communication.handle_message(message_type, 'ws', **notif_payload)
             if result:
                 send_to_controller(result)
 
@@ -83,6 +88,7 @@ class WebsocketClient(Thread):
         self.db_name = system.get_conf('db_name') or ''
         self.session_id = ''
         self.last_message_id = 0
+        self.last_fetch_snapshot = None
         super().__init__(daemon=True)
 
     def run(self):

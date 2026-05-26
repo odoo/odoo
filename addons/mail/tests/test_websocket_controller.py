@@ -3,12 +3,11 @@
 from freezegun import freeze_time
 
 from odoo.http.session import SESSION_ROTATION_INTERVAL
-from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.bus.models.bus import BusBus
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebsocketController(HttpCaseWithUserDemo):
     def test_im_status_offline_on_websocket_closed(self):
         self.authenticate("demo", "demo")
@@ -21,8 +20,8 @@ class TestWebsocketController(HttpCaseWithUserDemo):
             "/websocket/peek_notifications",
             {
                 "channels": [f"odoo-presence-res.users_{self.user_demo.id}"],
-                "last": 0,
                 "is_first_poll": True,
+                "from_snapshot": BusBus.get_current_pg_snapshot(self.env.cr),
             },
         )["notifications"]
         self.assertEqual(presence_notif["message"]["type"], "mail.record/insert")
@@ -41,8 +40,8 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         clock.tick(SESSION_ROTATION_INTERVAL + 1)
         self.make_jsonrpc_request('/websocket/peek_notifications', {
             'channels': [],
-            'last': 0,
             'is_first_poll': True,
+            'from_snapshot': BusBus.get_current_pg_snapshot(self.env.cr),
         })
         self.make_jsonrpc_request('/websocket/update_bus_presence', {
             'inactivity_period': 0,

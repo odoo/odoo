@@ -2,7 +2,9 @@
 
 import json
 from datetime import datetime, timedelta
+
 from freezegun import freeze_time
+
 try:
     import websocket as ws
 except ImportError:
@@ -17,43 +19,40 @@ from odoo.addons.mail.models.mail_presence import AWAY_TIMER
 class TestIrWebsocket(WebsocketCase):
     def test_notify_on_status_change(self):
         bob = new_test_user(self.env, login="bob_user", groups="base.group_user")
+        self._reset_bus()
         session = self.authenticate("bob_user", "bob_user")
         websocket = self.websocket_connect(cookie=f"session_id={session.sid};")
-        self.subscribe(
-            websocket,
-            [f"odoo-presence-res.users_{bob.id}"],
-            self.env["bus.bus"]._bus_last_id(),
-        )
+        self.subscribe(websocket, [f"odoo-presence-res.users_{bob.id}"])
         # offline => online
-        self.env["mail.presence"]._update_presence(bob)
-        self.trigger_notification_dispatching()
-        message = json.loads(websocket.recv())[0]["message"]
+        with self.bus_db_mock.tx():
+            self.env["mail.presence"]._update_presence(bob)
+        message = json.loads(websocket.recv())["notifications"][0]["message"]
         self.assertEqual(message["type"], "mail.record/insert")
         self.assertEqual(message["payload"]["res.users"][0]["im_status"], "online")
         self.assertEqual(message["payload"]["res.users"][0]["id"], bob.id)
         # online => away
         away_timer_later = datetime.now() + timedelta(seconds=AWAY_TIMER + 1)
         with freeze_time(away_timer_later):
-            self.env["mail.presence"]._update_presence(bob, (AWAY_TIMER + 1) * 1000)
-            self.trigger_notification_dispatching()
-            message = json.loads(websocket.recv())[0]["message"]
+            with self.bus_db_mock.tx():
+                self.env["mail.presence"]._update_presence(bob, (AWAY_TIMER + 1) * 1000)
+            message = json.loads(websocket.recv())["notifications"][0]["message"]
             self.assertEqual(message["type"], "mail.record/insert")
             self.assertEqual(message["payload"]["res.users"][0]["im_status"], "away")
             self.assertEqual(message["payload"]["res.users"][0]["id"], bob.id)
         # away => online
         ten_minutes_later = datetime.now() + timedelta(minutes=10)
         with freeze_time(ten_minutes_later):
-            self.env["mail.presence"]._update_presence(bob)
-            self.trigger_notification_dispatching()
-            message = json.loads(websocket.recv())[0]["message"]
+            with self.bus_db_mock.tx():
+                self.env["mail.presence"]._update_presence(bob)
+            message = json.loads(websocket.recv())["notifications"][0]["message"]
             self.assertEqual(message["type"], "mail.record/insert")
             self.assertEqual(message["payload"]["res.users"][0]["im_status"], "online")
             self.assertEqual(message["payload"]["res.users"][0]["id"], bob.id)
         # online => online, nothing happens
         ten_minutes_later = datetime.now() + timedelta(minutes=10)
         with freeze_time(ten_minutes_later):
-            self.env["mail.presence"]._update_presence(bob)
-            self.trigger_notification_dispatching()
+            with self.bus_db_mock.tx():
+                self.env["mail.presence"]._update_presence(bob)
             timeout_occurred = False
             # Save point rollback of `assertRaises` can compete with `on_websocket_close`
             # leading to `InvalidSavepoint` errors. We need to avoid it.
