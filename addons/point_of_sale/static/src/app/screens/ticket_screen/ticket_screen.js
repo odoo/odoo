@@ -733,7 +733,7 @@ export class TicketScreen extends Component {
         let emptyOrderForPartner = null;
         let emptyOrder = null;
         for (const order of this.pos.models["pos.order"].filter((order) => !order.finalized)) {
-            if (order.getOrderlines().length === 0 && order.payment_ids.length === 0) {
+            if (order.isEmptyOrder()) {
                 if (order.getPartner() === partner) {
                     emptyOrderForPartner = order;
                     break;

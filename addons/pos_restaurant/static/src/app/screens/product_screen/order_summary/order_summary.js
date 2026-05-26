@@ -65,7 +65,7 @@ patch(OrderSummary.prototype, {
             this.pos.config.module_pos_restaurant &&
             !currentOrder.finalized &&
             currentOrder.isBooked &&
-            currentOrder.isEmpty() &&
+            currentOrder.isEmptyOrder() &&
             !currentOrder.hasCourses()
         );
     },

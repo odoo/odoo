@@ -123,7 +123,7 @@ test("SplitBillScreenTour: split items, verify both orders, split again", async 
     expect(finalTest2.qty).toBe(2);
 });
 
-test("RefundStayCurrentTableTour: refund from another table stays on current table", async () => {
+test("RefundStayCurrentTableTour: refund from another table creates floating order", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
     await Utils.clickTable("1");
@@ -157,7 +157,7 @@ test("RefundStayCurrentTableTour: refund from another table stays on current tab
     }
 
     const refundOrder = store.getOrder();
-    expect(refundOrder.table_id.table_number).toBe(4);
+    expect(refundOrder.table_id).toBe(undefined);
     expect(refundOrder.lines.some((l) => l.qty < 0)).toBe(true);
 });
 
