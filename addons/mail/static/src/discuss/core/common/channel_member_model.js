@@ -164,8 +164,8 @@ export class ChannelMember extends Record {
             this.partner_id?.main_user_id?.active &&
             this.channel_role !== "admin" &&
             (this.store.self_user?.is_admin ||
-                (this.channel_role === "owner" && this.channel_role !== "owner") ||
-                (this.channel_role === "owner" && this.threadAsSelf))
+                (this.selfChannelRole === "owner" && this.channel_role !== "owner") ||
+                (this.selfChannelRole === "owner" && this.threadAsSelf))
         );
     }
 
