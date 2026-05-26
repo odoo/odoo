@@ -22,7 +22,13 @@ patch(DiscussClientAction.prototype, {
         }
         await this.joinCallWithDefaultSettings();
     },
-    closeWelcomePage() {
+    async closeWelcomePage() {
+        if (this.rtc.channel) {
+            const shouldSwitchCall = await this.rtc.askCallSwitchConfirmation();
+            if (!shouldSwitchCall) {
+                return;
+            }
+        }
         super.closeWelcomePage(...arguments);
         if (this.store.discuss.thread.channel.default_display_mode === "video_full_screen") {
             this.joinCallWithDefaultSettings();

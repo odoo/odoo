@@ -332,6 +332,13 @@ export class Store extends BaseStore {
     }
 
     async startMeeting() {
+        const rtc = this.env.services["discuss.rtc"];
+        if (rtc.channel) {
+            const shouldSwitchCall = await rtc.askCallSwitchConfirmation();
+            if (!shouldSwitchCall) {
+                return;
+            }
+        }
         /** @type {import("models").DiscussChannel} */
         const channel = await this.createGroupChat({
             default_display_mode: "video_full_screen",
@@ -339,9 +346,9 @@ export class Store extends BaseStore {
         });
         await this.chatHub.initPromise;
         channel.chatWindow?.update({ autofocus: 0 });
-        await this.env.services["discuss.rtc"].toggleCall(channel, { camera: true });
-        if (this.rtc.selfSession) {
-            this.rtc.enterFullscreen();
+        await rtc.toggleCall(channel, { camera: true, confirmCallSwitch: false });
+        if (rtc.selfSession) {
+            rtc.enterFullscreen();
         }
     }
 
