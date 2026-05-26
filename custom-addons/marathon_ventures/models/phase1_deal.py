@@ -101,7 +101,15 @@ class MvDealPhase1(models.Model):
     # Smart Button actions
     # ------------------------------------------------------------------
     def action_new_schedule(self):
-        """Smart Button — opens an mv.schedules form with deal_parent pre-set."""
+        """Smart Button — opens an mv.schedules form with deal_parent pre-set.
+
+        Note: We intentionally do NOT pass a `default_networks` here. `networks`
+        on mv.schedules is a Selection field (string keys like 'accuweather',
+        'bounce', etc.), so passing a Many2one id from the Deal's program would
+        raise `ValueError: Wrong value for mv.schedules.networks: <int>`. The
+        `@api.onchange('deal_parent')` handler on mv.schedules safely auto-fills
+        networks when the parent program's name matches a Selection key.
+        """
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
@@ -111,7 +119,6 @@ class MvDealPhase1(models.Model):
             'target': 'current',
             'context': {
                 'default_deal_parent': self.id,
-                'default_networks': self.program.id if self.program else False,
             },
         }
 
