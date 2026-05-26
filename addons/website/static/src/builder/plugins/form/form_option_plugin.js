@@ -94,6 +94,7 @@ export class FormOptionPlugin extends Plugin {
         "setLabelsMark",
         "clearValidationDataset",
         "fetchModels",
+        "updateFieldName",
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -641,6 +642,30 @@ export class FormOptionPlugin extends Plugin {
         const fieldEl = renderField(field);
         replaceFieldElement(oldFieldEl, fieldEl);
     }
+    readConditionalInputs({ fieldEl, formEl }) {
+        const existingDependencyNames = [];
+        const conditionInputs = [];
+        for (const el of formEl.querySelectorAll(
+            ".s_website_form_field:not(.s_website_form_dnone), .s_website_form_field[data-type]"
+        )) {
+            const inputEl = el.querySelector(".s_website_form_input");
+            if (
+                el.querySelector(".s_website_form_label_content") &&
+                inputEl &&
+                inputEl.name &&
+                inputEl.name !== fieldEl.querySelector(".s_website_form_input").name &&
+                !existingDependencyNames.includes(inputEl.name) &&
+                !findCircular(el, fieldEl)
+            ) {
+                conditionInputs.push({
+                    name: inputEl.name,
+                    textContent: el.querySelector(".s_website_form_label_content").textContent,
+                });
+                existingDependencyNames.push(inputEl.name);
+            }
+        }
+        return conditionInputs;
+    }
     async loadFieldOptionData(fieldEl) {
         const formEl = fieldEl.closest("form");
         const fields = {};
@@ -670,27 +695,7 @@ export class FormOptionPlugin extends Plugin {
                 );
         });
         // Update available visibility dependencies
-        const existingDependencyNames = [];
-        const conditionInputs = [];
-        for (const el of formEl.querySelectorAll(
-            ".s_website_form_field:not(.s_website_form_dnone), .s_website_form_field[data-type]"
-        )) {
-            const inputEl = el.querySelector(".s_website_form_input");
-            if (
-                el.querySelector(".s_website_form_label_content") &&
-                inputEl &&
-                inputEl.name &&
-                inputEl.name !== fieldEl.querySelector(".s_website_form_input").name &&
-                !existingDependencyNames.includes(inputEl.name) &&
-                !findCircular(el, fieldEl)
-            ) {
-                conditionInputs.push({
-                    name: inputEl.name,
-                    textContent: el.querySelector(".s_website_form_label_content").textContent,
-                });
-                existingDependencyNames.push(inputEl.name);
-            }
-        }
+        const conditionInputs = this.readConditionalInputs({ fieldEl, formEl });
 
         const comparator = fieldEl.dataset.visibilityComparator;
         const isContainsComparator = ["contains", "!contains"].includes(comparator);
@@ -1001,6 +1006,52 @@ export class FormOptionPlugin extends Plugin {
         el.parentNode.replaceChild(wrapper, el);
         wrapper.appendChild(el);
         return wrapper;
+    }
+
+    async updateFieldName({ name, fieldEl }) {
+        if (isFieldCustom(fieldEl)) {
+            const value = getQuotesEncodedName(name);
+            const multiple = fieldEl.querySelector(".s_website_form_multiple");
+            if (multiple) {
+                multiple.dataset.name = value;
+            }
+            const inputEls = fieldEl.querySelectorAll(".s_website_form_input");
+            const previousInputName = inputEls[0].name;
+            inputEls.forEach((el) => (el.name = value));
+
+            // Synchronize the fields whose visibility depends on this field
+            const dependentEls = fieldEl.closest("form").querySelectorAll(
+                `.s_website_form_field[data-visibility-dependency="${CSS.escape(
+                    previousInputName
+                )}"],
+                    .s_website_form_field[data-visibility-dependency="${CSS.escape(value)}"]`
+            );
+            for (const dependentEl of dependentEls) {
+                if (findCircular(fieldEl, dependentEl)) {
+                    // For all the fields whose visibility depends on this
+                    // field, check if the new name creates a circular
+                    // dependency and remove the problematic conditional
+                    // visibility if it is the case. E.g. a field (A) depends on
+                    // another (B) and the user renames "B" by "A".
+                    deleteConditionalVisibility(dependentEl);
+                } else {
+                    dependentEl.dataset.visibilityDependency = value;
+                }
+            }
+            const fieldWithVisibilityDependencyEls = [
+                ...fieldEl.closest("form").querySelectorAll("[data-visibility-dependency]"),
+            ];
+            await Promise.all(
+                fieldWithVisibilityDependencyEls.map(async (fieldWithConditionEl) => {
+                    const conditionFieldName = fieldWithConditionEl.dataset.visibilityDependency;
+                    const fieldData = await this.loadFieldOptionData(fieldWithConditionEl);
+                    const names = fieldData.conditionInputs.map((entry) => entry.name);
+                    if (!names.includes(conditionFieldName)) {
+                        deleteConditionalVisibility(fieldWithConditionEl);
+                    }
+                })
+            );
+        }
     }
 }
 
@@ -1336,51 +1387,7 @@ export class SetLabelTextAction extends BuilderAction {
     async apply({ editingElement: fieldEl, value }) {
         const labelEl = fieldEl.querySelector(".s_website_form_label_content");
         labelEl.textContent = value;
-        if (isFieldCustom(fieldEl)) {
-            value = getQuotesEncodedName(value);
-            const multiple = fieldEl.querySelector(".s_website_form_multiple");
-            if (multiple) {
-                multiple.dataset.name = value;
-            }
-            const inputEls = fieldEl.querySelectorAll(".s_website_form_input");
-            const previousInputName = inputEls[0].name;
-            inputEls.forEach((el) => (el.name = value));
-
-            // Synchronize the fields whose visibility depends on this field
-            const dependentEls = fieldEl.closest("form").querySelectorAll(
-                `.s_website_form_field[data-visibility-dependency="${CSS.escape(
-                    previousInputName
-                )}"],
-                    .s_website_form_field[data-visibility-dependency="${CSS.escape(value)}"]`
-            );
-            for (const dependentEl of dependentEls) {
-                if (findCircular(fieldEl, dependentEl)) {
-                    // For all the fields whose visibility depends on this
-                    // field, check if the new name creates a circular
-                    // dependency and remove the problematic conditional
-                    // visibility if it is the case. E.g. a field (A) depends on
-                    // another (B) and the user renames "B" by "A".
-                    deleteConditionalVisibility(dependentEl);
-                } else {
-                    dependentEl.dataset.visibilityDependency = value;
-                }
-            }
-            const fieldWithVisibilityDependencyEls = [
-                ...fieldEl.closest("form").querySelectorAll("[data-visibility-dependency]"),
-            ];
-            await Promise.all(
-                fieldWithVisibilityDependencyEls.map(async (fieldWithConditionEl) => {
-                    const conditionFieldName = fieldWithConditionEl.dataset.visibilityDependency;
-                    const fieldData = await this.dependencies.websiteFormOption.loadFieldOptionData(
-                        fieldWithConditionEl
-                    );
-                    const names = fieldData.conditionInputs.map((entry) => entry.name);
-                    if (!names.includes(conditionFieldName)) {
-                        deleteConditionalVisibility(fieldWithConditionEl);
-                    }
-                })
-            );
-        }
+        await this.dependencies.websiteFormOption.updateFieldName({ name: value, fieldEl });
     }
     getValue({ editingElement: fieldEl }) {
         const labelEl = fieldEl.querySelector(".s_website_form_label_content");
