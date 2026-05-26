@@ -28,6 +28,7 @@ export const seoContext = proxy({
     defaultTitle: "",
     updatedAlts: [],
     brokenLinks: [],
+    generated: false,
 });
 
 const LINK_CHECK_BASE_OPTIONS = {
@@ -170,12 +171,15 @@ const getSeo = async (self, onlyKeywords = false) => {
 
     const keywords = extractKeywords();
     if (keywords.length) {
-        self.seoContext.keywords = keywords;
+        self.seoContext.keywords.push(
+            ...keywords.filter((kw) => !self.seoContext.keywords.includes(kw))
+        );
     }
     if (!onlyKeywords) {
         self.seoContext.title = htmlToTextContentInline(self.seoContext.defaultTitle);
         self.seoContext.description = extractDescription();
     }
+    self.seoContext.generated = true;
 };
 
 class MetaImage extends Component {
@@ -445,13 +449,13 @@ class MetaKeywords extends Component {
         );
     }
 
-    get isFull() {
+    get hasTooManyKeywords() {
         return this.seoContext.keywords.length >= this.maxKeywords;
     }
 
     addKeyword(keyword) {
         keyword = keyword.replaceAll(/,\s*/gi, " ").trim();
-        if (keyword && !this.isFull && !this.seoContext.keywords.includes(keyword)) {
+        if (keyword && !this.seoContext.keywords.includes(keyword)) {
             this.seoContext.keywords.push(keyword);
             this.state.keyword = "";
         }
@@ -459,6 +463,14 @@ class MetaKeywords extends Component {
 
     removeKeyword(keyword) {
         this.seoContext.keywords = this.seoContext.keywords.filter((kw) => kw !== keyword);
+        if (!this.seoContext.keywords.length) {
+            this.seoContext.generated = false;
+        }
+    }
+
+    removeAllKeywords() {
+        this.seoContext.keywords = [];
+        this.seoContext.generated = false;
     }
 }
 
@@ -1023,6 +1035,7 @@ export class OptimizeSEODialog extends Component {
             } else {
                 seoContext.keywords = [];
             }
+            seoContext.generated = seoContext.keywords.length > 0;
         });
     }
 
