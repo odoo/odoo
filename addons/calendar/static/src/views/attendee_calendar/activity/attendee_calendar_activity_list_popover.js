@@ -24,17 +24,13 @@ export class AttendeeCalendarActivityListPopover extends Component {
     setup() {
         super.setup();
         this.action = useService("action");
-        this.orm = useService("orm");
         this.store = useService("mail.store");
         this.limit = this.env.isSmall ? false : 5;
 
         this.activityIds = this.props.activityIds;
 
         onWillStart(async () => {
-            const data = await this.orm.silent.call("mail.activity", "activity_format", [
-                this.activityIds,
-            ]);
-            this.store.insert(data);
+            await this.store.fetchStoreData("mail.activity", { ids: this.activityIds });
         });
     }
 

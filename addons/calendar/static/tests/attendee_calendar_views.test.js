@@ -1,5 +1,6 @@
 import { defineCalendarModels } from "@calendar/../tests/calendar_test_helpers";
 import { beforeEach, expect, queryAllTexts, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import {
     contains,
@@ -243,6 +244,7 @@ test("Activity events rendering and popover", async () => {
     expect(".fc-event.o_activity_event").toHaveCount(3);
     // Check activity popover rendering
     await clickEvent("activity-event-2016-12-12");
+    await waitFor(".o_cw_activity_popover .o-mail-ActivityListPopoverItem");
     expect(queryAllTexts(".o-mail-ActivityListPopoverItem-name")).toEqual([
         "Activity 2",
         "Activity 3",

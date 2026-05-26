@@ -93,6 +93,13 @@ class WebclientController(ThreadController):
         user = request.env["res.users"].search_fetch([("id", "=", id)])
         store.add(user, "_store_user_fields")
 
+    @store_handler("mail.activity")
+    def store_get_mail_activity(self, store: Store, ids):
+        activities = request.env["mail.activity"].with_context(active_test=False).search_fetch(
+            [("id", "in", ids)]
+        )
+        store.add(activities, "_store_activity_fields")
+
     @store_handler("/mail/poll_option/votes", audience="everyone")
     def store_poll_option_votes(self, store: Store, poll_option_id):
         # sudo - mail.poll.option: validated by "_get_thread_with_access" afterwards.

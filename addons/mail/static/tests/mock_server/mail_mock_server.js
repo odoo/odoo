@@ -1193,8 +1193,14 @@ function _process_request_for_logged_in_user(store, name, params) {
 }
 
 function _process_request_for_internal_user(store, name, params) {
+    /** @type {import("mock_models").MailActivity} */
+    const MailActivity = this.env["mail.activity"];
     /** @type {import("mock_models").ResUsers} */
     const ResUsers = this.env["res.users"];
+    if (name === "mail.activity") {
+        const activities = MailActivity._filter([["id", "in", params.ids]], { active_test: false });
+        store.add(MailActivity.browse(activities.map((a) => a.id)));
+    }
     if (name === "systray_get_activities" && this.env.user?.partner_id) {
         const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
         const groups = ResUsers._get_activity_groups();
