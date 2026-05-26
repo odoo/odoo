@@ -765,3 +765,23 @@ class TestItEdiImport(TestItEdi):
                 },
             ],
         }], applied_xml)
+
+    def test_import_simplified_invoice_zero_base(self):
+        """Test the import of a xml bill where the total amount equals the tax amount (Importo == Imposta)."""
+
+        self._assert_import_invoice('IT01234567890_FPR05.xml', [{
+            'move_type': 'in_refund',
+            'amount_untaxed': 0.0,
+            'invoice_line_ids': [
+                {
+                    'name': 'IVA ANNO PRECEDENTE',
+                    'quantity': 1.0,
+                    'price_unit': 9.20,
+                },
+                {
+                    'name': 'TOTALE IMPORTO IN ADDEBITO',
+                    'quantity': 1.0,
+                    'price_unit': -9.20,
+                }
+            ],
+        }])
