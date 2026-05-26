@@ -182,7 +182,7 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
             '_name': name,
             '_register': False,
             '_original_module': model_def._module,
-            '_inherit_module': {},                  # map parent to introducing module
+            '_inherit_module': {},                  # direct _inherit parent name -> module name that last registered the parent
             '_inherit_children': OrderedSet(),      # names of children models
             '_inherits_children': set(),            # names of children models
             '_fields__': {},                        # populated in _setup()
@@ -202,7 +202,8 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
         else:
             _check_model_parent_extension(model_cls, model_def, parent_cls)
             bases.add(parent_cls)
-            model_cls._inherit_module[parent_name] = model_def._module
+            if parent_name != 'base' or 'base' not in model_cls._inherit_module:
+                model_cls._inherit_module[parent_name] = model_def._module
             parent_cls._inherit_children.add(name)
 
     # model_cls.__bases__ must be assigned those classes; however, this
