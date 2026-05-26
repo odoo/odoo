@@ -113,10 +113,13 @@
         <field name="model">sale.order</field>
         <field name="priority">1000</field>
         <field name="arch" type="xml">
-            <list class="o_sale_order"
-                  string="Sales Orders"
-                  sample="1"
-                  decoration-muted="state == 'cancel'">
+            <list
+                string="Sales Orders"
+                class="o_sale_order"
+                sample="1"
+                multi_edit="1"
+                decoration-muted="state == 'cancel'"
+            >
                 <header>
                     <button
                         string="Create Invoices"
