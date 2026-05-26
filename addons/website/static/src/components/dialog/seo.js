@@ -39,6 +39,7 @@ export const seoContext = proxy({
     defaultTitle: "",
     updatedAlts: [],
     brokenLinks: [],
+    altAttributes: [],
 });
 
 const LINK_CHECK_BASE_OPTIONS = {
@@ -188,7 +189,21 @@ const getSeo = async (self, onlyKeywords = false) => {
     if (!onlyKeywords) {
         self.seoContext.title = htmlToTextContentInline(self.seoContext.defaultTitle);
         self.seoContext.description = extractDescription();
+        setAltTags(self);
+        self.seoContext.updatedAlts = self.seoContext.altAttributes.filter((img) => img.updated);
     }
+};
+
+export const setAltTags = (self) => {
+    const activeAltAttributes = self.seoContext.altAttributes.filter(
+        (img) => !img.decorative && !img.alt
+    );
+    activeAltAttributes.forEach((img) => {
+        const urlParts = img.src.split("?")[0].split("#")[0].split("/");
+        const lastPart = urlParts.pop();
+        img.alt = decodeURIComponent(lastPart || "");
+        img.updated = true;
+    });
 };
 
 /**
@@ -816,7 +831,6 @@ export class SeoChecks extends Component {
         } = this.website.currentWebsite;
         this.object = seoObject || mainObject;
         this.state = proxy({
-            altAttributes: [],
             checkingLinks: false,
             checkedLinks: false,
             counterLinks: 0,
@@ -824,7 +838,7 @@ export class SeoChecks extends Component {
         });
         this.imgUpdated = this.imgUpdated.bind(this);
         onWillStart(async () => {
-            this.state.altAttributes = await this.getAltAttributes();
+            this.seoContext.altAttributes = await this.getAltAttributes();
             this.seoContext.updatedAlts = [];
             if (!this.props.isDefaultLang) {
                 this.hasDelayedTranslation = await fetchDelayedTranslations(path);
@@ -839,7 +853,7 @@ export class SeoChecks extends Component {
 
     imgUpdated(img) {
         img.updated = true;
-        this.seoContext.updatedAlts = this.state.altAttributes.filter((img) => img.updated);
+        this.seoContext.updatedAlts = this.seoContext.altAttributes.filter((img) => img.updated);
     }
 
     async getAltAttributes() {
