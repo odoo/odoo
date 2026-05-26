@@ -1,7 +1,7 @@
-import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
+import { insertText, redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { beforeEach, describe, expect, press, queryOne, test, waitFor } from "@odoo/hoot";
-import { animationFrame, edit } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
@@ -26,6 +26,7 @@ import {
     unfoldAllOptionsGroups,
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
 
 class HrJob extends models.Model {
     _name = "hr.job";
@@ -284,23 +285,31 @@ const formWithCondition = `
 </form></section>
 `;
 
+function setSelectionOnNodeContent(el) {
+    setSelection({ anchorNode: el, anchorOffset: 0, focusOffset: el.childNodes.length });
+}
+
 test("Remove visibility dependency on field unavailable (change first)", async () => {
     onRpc("get_authorized_fields", () => ({}));
     const { getEditor } = await setupWebsiteBuilder(formWithCondition);
-    getEditor();
-    await contains(":iframe input[name=a]").click();
-    await contains("[data-label=Label] input").click();
-    await contains("[data-label=Label] input").edit("b");
+    const editor = getEditor();
+    expect(":iframe .s_website_form_field:not([data-visibility-dependency])").toHaveCount(1);
+    const aLabelEl = queryOne(":iframe .s_website_form_label_content:contains(a)");
+    await contains(aLabelEl).click();
+    setSelectionOnNodeContent(aLabelEl);
+    await insertText(editor, "b");
     expect(":iframe .s_website_form_field:not([data-visibility-dependency])").toHaveCount(2);
 });
 
 test("Remove visibility dependency on field unavailable (change second)", async () => {
     onRpc("get_authorized_fields", () => ({}));
     const { getEditor } = await setupWebsiteBuilder(formWithCondition);
-    getEditor();
-    await contains(":iframe input[name=b]").click();
-    await contains("[data-label=Label] input").click();
-    await contains("[data-label=Label] input").edit("a");
+    const editor = getEditor();
+    expect(":iframe .s_website_form_field:not([data-visibility-dependency])").toHaveCount(1);
+    const aLabelEl = queryOne(":iframe .s_website_form_label_content:contains(b)");
+    await contains(aLabelEl).click();
+    setSelectionOnNodeContent(aLabelEl);
+    await insertText(editor, "a");
     expect(":iframe .s_website_form_field:not([data-visibility-dependency])").toHaveCount(2);
 });
 
@@ -685,10 +694,10 @@ test("Min and max character limits should not contradict one another.", async ()
             <div class="container-fluid">
             <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
                 <div class="s_website_form_rows">
-                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char" data-translated-name="Your Name">
+                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ok0ney2v8rwf">
-                                <span class="s_website_form_label_content">Your Name</span>
+                                <span class="s_website_form_label_content">name</span>
                                 <span class="s_website_form_mark"> *</span>
                             </label>
                             <div class="col-sm">
@@ -768,38 +777,6 @@ test("Only state fields have data-link-state-to-country attr", async () => {
     await contains(".o-hb-select-dropdown-item:contains('Selection')").click();
     expect(":iframe .s_website_form_field:last-child select").not.toHaveAttribute(
         "data-link-state-to-country"
-    );
-});
-
-test("Label falls back to default value (data-translated-name) when removed", async () => {
-    onRpc("get_authorized_fields", () => ({}));
-    await setupWebsiteBuilder(
-        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
-            <div class="container-fluid">
-            <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
-                <div class="s_website_form_rows">
-                    <div data-name="Field" data-translated-name="Default value" class="s_website_form_field s_website_form_required" data-type="text">
-                        <div class="row">
-                            <label class="s_website_form_label" for="oyeqnysxh10b">
-                                <span class="s_website_form_label_content">My Field</span>
-                            </label>
-                        <select class="form-select s_website_form_input" required="" id="oyeqnysxh10b" name="field" />
-                        </div>
-                    </div>
-                </div>
-            </form>
-            </div>
-        </section>`
-    );
-
-    await contains(":iframe section span:contains('My Field')").click();
-    await contains("[data-action-id='setLabelText'] input").click();
-    expect("[data-action-id='setLabelText'] input").toHaveValue("My Field");
-    await edit("");
-    await press("Tab");
-    expect("[data-action-id='setLabelText'] input").toHaveValue("Default value");
-    expect(":iframe section [data-translated-name='Default value'] label").toHaveText(
-        "Default value"
     );
 });
 

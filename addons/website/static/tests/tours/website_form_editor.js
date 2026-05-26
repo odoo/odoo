@@ -141,8 +141,9 @@ const addField = function (
         testText += `:has(label:contains(${label}))`;
         ret.push({
             content: "Change the label text",
-            trigger: ".o_customize_tab div[data-action-id='setLabelText'] input",
-            run: `edit ${label} && press Tab`,
+            trigger:
+                ":iframe .s_website_form_field:nth-last-child(2) .s_website_form_label_content",
+            run: `editor ${label}`,
         });
     }
     if (type !== "checkbox" && type !== "radio" && type !== "select") {
@@ -217,9 +218,10 @@ registerWebsitePreviewTour(
             trigger: ".o_customize_tab div[data-container-title='Form']",
         },
         {
-            content: "Rename and leave the field label",
-            trigger: ".o_customize_tab div[data-action-id='setLabelText'] input",
-            run: "edit Renamed && click body",
+            content: "Rename the field label",
+            trigger:
+                ":iframe .s_website_form_field:has(textarea.s_website_form_input) .s_website_form_label_content",
+            run: "editor Renamed",
         },
         goBackToBlocks(),
         {
@@ -238,7 +240,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Set the offset and width of the Phone Number field",
-            trigger: ':iframe input[name="phone"]',
+            trigger: ':iframe input[name="Phone Number"]',
             run: function () {
                 const fieldEl = this.anchor.closest(".s_website_form_field");
                 fieldEl.classList.add("offset-lg-3");
@@ -247,7 +249,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Edit the Phone Number field",
-            trigger: ':iframe input[name="phone"]',
+            trigger: ':iframe input[name="Phone Number"]',
             run: "click",
         },
         ...unfoldOptionsGroup("Form"),
@@ -282,9 +284,8 @@ registerWebsitePreviewTour(
         {
             content:
                 "Change the label of 'Conditional Visibility Check 4' and change it to 'Conditional Visibility Check 3'",
-            trigger: ".o_customize_tab div[data-action-id='setLabelText'] input",
-            // TODO: remove && click body
-            run: "edit Conditional Visibility Check 3 && click body",
+            trigger: ":iframe .s_website_form_label_content:text(Conditional Visibility Check 4)",
+            run: "editor Conditional Visibility Check 3",
         },
         {
             content: "Check that the conditional visibility of the renamed field is removed",
@@ -296,9 +297,8 @@ registerWebsitePreviewTour(
         {
             content:
                 "Change the label of 'Conditional Visibility Check 6' and change it to 'Conditional Visibility Check 5'",
-            trigger: ".o_customize_tab div[data-action-id='setLabelText'] input",
-            // TODO: remove && click body
-            run: "edit Conditional Visibility Check 5 && click body",
+            trigger: ":iframe .s_website_form_label_content:text(Conditional Visibility Check 6)",
+            run: "editor Conditional Visibility Check 5",
         },
         {
             content: "Open list of the visibility selector of Conditional Visibility Check 1",
@@ -1250,7 +1250,7 @@ registerWebsitePreviewTour(
         ...essentialFieldsForDefaultFormFillInSteps,
         {
             content: "Complete 'Your Question' field",
-            trigger: ":iframe textarea[name='description']",
+            trigger: ":iframe textarea[name='Your Question']",
             run: "edit test",
         },
         {
@@ -1294,8 +1294,8 @@ registerWebsitePreviewTour(
         }),
         compareIds({
             content: "Check that the first field of both the form snippets have different IDs",
-            firstElSelector: ".s_website_form input[name='name']",
-            secondElSelector: ".s_title_form .s_website_form input[name='name']",
+            firstElSelector: ".s_website_form input[name='Your Name']",
+            secondElSelector: ".s_title_form .s_website_form input[name='Your Name']",
             errorMessage: "The first fields of two different form snippet have the same ID",
         }),
         {
@@ -1328,8 +1328,9 @@ registerWebsitePreviewTour(
         compareIds({
             content:
                 "Check if the first field of forms in original and cloned snippets have different IDs",
-            firstElSelector: ".s_title_form .s_website_form input[name='name']",
-            secondElSelector: ".s_title_form:nth-of-type(2) .s_website_form input[name='name']",
+            firstElSelector: ".s_title_form .s_website_form input[name='Your Name']",
+            secondElSelector:
+                ".s_title_form:nth-of-type(2) .s_website_form input[name='Your Name']",
             errorMessage: "The first fields of original and cloned form snippet have the same ID",
         }),
         // Cloning a form itself should should generate new IDs for the cloned
@@ -1351,14 +1352,15 @@ registerWebsitePreviewTour(
         compareIds({
             content:
                 "Check if the first field of original and cloned form snippets have different IDs",
-            firstElSelector: ".s_title_form .s_website_form input[name='name']",
-            secondElSelector: ".s_title_form .s_website_form:nth-of-type(2) input[name='name']",
+            firstElSelector: ".s_title_form .s_website_form input[name='Your Name']",
+            secondElSelector:
+                ".s_title_form .s_website_form:nth-of-type(2) input[name='Your Name']",
             errorMessage: "The first fields of original and cloned form snippet have the same ID",
         }),
         // Cloning a field should generate new ID for the cloned field
         {
             content: "Click on the name field",
-            trigger: ":iframe .s_title_form .s_website_form input[name='name']",
+            trigger: ":iframe .s_title_form .s_website_form input[name='Your Name']",
             run: "click",
         },
         {
@@ -1368,8 +1370,9 @@ registerWebsitePreviewTour(
         },
         compareIds({
             content: "Check if both, original and cloned name fields have unique IDs",
-            firstElSelector: ".s_title_form .s_website_form input[name='name']",
-            secondElSelector: ".s_title_form [data-name='Field']:nth-of-type(3) input[name='name']",
+            firstElSelector: ".s_title_form .s_website_form input[name='Your Name']",
+            secondElSelector:
+                ".s_title_form [data-name='Field']:nth-of-type(3) input[name='Your Name']",
             errorMessage: "Original and cloned fields have the same ID",
         }),
     ]

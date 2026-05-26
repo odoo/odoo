@@ -47,6 +47,7 @@ import { isSmallInteger } from "@html_builder/utils/utils";
 import { getParsedDataFor } from "@website/js/utils";
 import { isTargetVisible } from "@html_builder/core/visibility_plugin";
 import { nodeSize } from "@html_editor/utils/position";
+import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 
 /**
  * @typedef { Object } FormOptionShared
@@ -94,7 +95,6 @@ export class FormOptionPlugin extends Plugin {
         "setLabelsMark",
         "clearValidationDataset",
         "fetchModels",
-        "updateFieldName",
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -166,7 +166,6 @@ export class FormOptionPlugin extends Plugin {
             SelectTypeAction,
             ExistingFieldSelectTypeAction,
             MultiCheckboxDisplayAction,
-            SetLabelTextAction,
             SelectLabelsPositionAction,
             SetDescriptionAction,
             SelectTextareaValueAction,
@@ -192,6 +191,7 @@ export class FormOptionPlugin extends Plugin {
             ".s_website_form_field_description",
             ".s_website_form_recaptcha",
             ".row > div:not(.s_website_form_field, .s_website_form_submit, .s_website_form_field *, .s_website_form_submit *)",
+            ".s_website_form_label_content",
         ].map((selector) => `.s_website_form form ${selector}`),
         clean_for_save_processors: (rootEl) => {
             this.removeSuccessMessagePreviews(rootEl);
@@ -225,6 +225,7 @@ export class FormOptionPlugin extends Plugin {
         on_cloned_handlers: this.onCloned.bind(this),
         is_unremovable_selectors: ".s_website_form_send, .s_website_form_submit",
         immutable_link_selectors: [".s_website_form_send"],
+        normalize_processors: this.normalizeFieldName.bind(this),
     };
     setup() {
         this.modelsCache = new SyncCache(this._fetchModels.bind(this));
@@ -1008,7 +1009,7 @@ export class FormOptionPlugin extends Plugin {
         return wrapper;
     }
 
-    async updateFieldName({ name, fieldEl }) {
+    updateFieldName({ name, fieldEl }) {
         if (isFieldCustom(fieldEl)) {
             const value = getQuotesEncodedName(name);
             const multiple = fieldEl.querySelector(".s_website_form_multiple");
@@ -1041,17 +1042,35 @@ export class FormOptionPlugin extends Plugin {
             const fieldWithVisibilityDependencyEls = [
                 ...fieldEl.closest("form").querySelectorAll("[data-visibility-dependency]"),
             ];
-            await Promise.all(
-                fieldWithVisibilityDependencyEls.map(async (fieldWithConditionEl) => {
-                    const conditionFieldName = fieldWithConditionEl.dataset.visibilityDependency;
-                    const fieldData = await this.loadFieldOptionData(fieldWithConditionEl);
-                    const names = fieldData.conditionInputs.map((entry) => entry.name);
-                    if (!names.includes(conditionFieldName)) {
-                        deleteConditionalVisibility(fieldWithConditionEl);
-                    }
-                })
-            );
+            fieldWithVisibilityDependencyEls.forEach(async (fieldWithConditionEl) => {
+                const conditionFieldName = fieldWithConditionEl.dataset.visibilityDependency;
+                const conditionInputs = this.readConditionalInputs({
+                    fieldEl: fieldWithConditionEl,
+                    formEl: fieldWithConditionEl.closest("form"),
+                });
+                const names = conditionInputs.map((entry) => entry.name);
+                if (!names.includes(conditionFieldName)) {
+                    deleteConditionalVisibility(fieldWithConditionEl);
+                }
+            });
         }
+    }
+
+    /**
+     * Normalize input names to match label's text content
+     *
+     * @param {HTMLElement} root
+     */
+    normalizeFieldName(root) {
+        applyFunDependOnSelectorAndExclude(
+            (labelEl) => {
+                const fieldEl = labelEl.closest(".s_website_form_field");
+                this.updateFieldName({ fieldEl, name: labelEl.textContent });
+            },
+            root,
+            { selector: ".s_website_form_label_content:not(.s_website_form_dnone *)" }
+        );
+        return root;
     }
 }
 
@@ -1379,19 +1398,6 @@ export class MultiCheckboxDisplayAction extends BuilderAction {
         const targetEl = getMultipleInputs(fieldEl);
         const currentValue = targetEl ? targetEl.dataset.display : "";
         return currentValue === value;
-    }
-}
-export class SetLabelTextAction extends BuilderAction {
-    static id = "setLabelText";
-    static dependencies = ["websiteFormOption"];
-    async apply({ editingElement: fieldEl, value }) {
-        const labelEl = fieldEl.querySelector(".s_website_form_label_content");
-        labelEl.textContent = value;
-        await this.dependencies.websiteFormOption.updateFieldName({ name: value, fieldEl });
-    }
-    getValue({ editingElement: fieldEl }) {
-        const labelEl = fieldEl.querySelector(".s_website_form_label_content");
-        return labelEl.textContent;
     }
 }
 export class SelectLabelsPositionAction extends BuilderAction {
