@@ -21,7 +21,7 @@ class EventManager:
         self.sessions = {
             session: self.sessions[session]
             for session in self.sessions
-            if self.sessions[session]['time_request'] + ttl < time.time()
+            if self.sessions[session]['time_request'] + ttl > time.time()
         }
 
     def add_request(self, listener):
