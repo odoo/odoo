@@ -4187,57 +4187,19 @@ test("group order by count", async () => {
     await selectGroup("currency_id");
     expect("tr.o_group_header").toHaveCount(3, { message: "list should be grouped" });
     await contains(".o_count_header").click();
-    expect.verifySteps(["web_read_group foo,currency_id order by __count DESC"]);
-    await contains("tr.o_group_header:eq(0)").click();
-    expect.verifySteps(["web_read_group currency_id order by __count DESC"]);
-    await contains(".o_count_header").click();
     expect.verifySteps(["web_read_group foo,currency_id order by __count ASC"]);
+    await contains("tr.o_group_header:eq(0)").click();
+    // First click: ASC
+    expect.verifySteps(["web_read_group currency_id order by __count ASC"]);
     await contains(".o_count_header").click();
+    // Second click: DESC
     expect.verifySteps(["web_read_group foo,currency_id order by __count DESC"]);
-});
-
-test.tags("desktop");
-test("order by count reset", async () => {
-    let readGroupCount = 0;
-    onRpc("foo", "web_read_group", ({ kwargs, method }) => {
-        if (readGroupCount < 2) {
-            readGroupCount++;
-        } else {
-            expect.step(`${method} ${kwargs.groupby} order by ${kwargs.order}`);
-        }
-    });
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `<list>
-                    <field name="foo"/>
-                    <field name="bar"/>
-                </list>`,
-        searchViewArch: `
-            <search>
-                <filter name="my_filter" string="My Filter" domain="[('id', '=', 0)]"/>
-            </search>
-        `,
-    });
-    await toggleSearchBarMenu();
-    await selectGroup("foo");
-    await selectGroup("currency_id");
-    await toggleMenuItem("My Filter");
     await contains(".o_count_header").click();
-    expect.verifySteps([
-        "web_read_group foo,currency_id order by ",
-        "web_read_group foo,currency_id order by __count DESC",
-    ]);
-    await toggleSearchBarMenu();
-    await toggleMenuItem("My Filter");
-    expect.verifySteps(["web_read_group foo,currency_id order by __count DESC"]);
-    await toggleMenuItem("My Filter");
-    expect.verifySteps(["web_read_group foo,currency_id order by __count DESC"]);
-    await toggleMenuItem("Currency");
-    expect.verifySteps(["web_read_group foo order by __count DESC"]);
-    await toggleMenuItem("Foo");
-    await toggleMenuItem("Foo");
-    expect.verifySteps(["web_read_group foo order by "]);
+    // Third click: Resets the order by
+    expect.verifySteps(["web_read_group foo,currency_id order by "]);
+    await contains(".o_count_header").click();
+    // Fourth click: Back to ASC
+    expect.verifySteps(["web_read_group foo,currency_id order by __count ASC"]);
 });
 
 test.tags("desktop");

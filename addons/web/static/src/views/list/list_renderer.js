@@ -1339,10 +1339,6 @@ export class ListRenderer extends Component {
             return;
         }
         const list = this.props.list;
-        if (column.type === "count") {
-            this.env.searchModel.switchGroupBySort();
-            return;
-        }
         const fieldName = column.name;
         if (this.isSortable(column)) {
             list.sortBy(fieldName);

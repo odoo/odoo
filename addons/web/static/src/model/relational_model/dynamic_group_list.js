@@ -191,6 +191,9 @@ export class DynamicGroupList extends DynamicList {
         if (!this.groups.length) {
             return;
         }
+        if (fieldName === "__count") {
+            return super.sortBy(fieldName);
+        }
         if (this.groups.every((group) => group.isFolded)) {
             // all groups are folded
             if (this.groupByField.name !== fieldName) {
