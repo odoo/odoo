@@ -150,3 +150,36 @@ test("Don't set contenteditable attribute to true on element that is inside '.o_
     `);
     expect(":iframe .target-extra").not.toHaveAttribute("contenteditable", "true");
 });
+
+test("elements inside o_force_not_editable regions cannot be edited", async () => {
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".o_editable_element, .o_protected_image";
+            static template = xml`<BuilderButton classAction="'test'">Edit Options</BuilderButton>`;
+        }
+    );
+    class TestPlugin extends Plugin {
+        static id = "testPlugin";
+        resources = {
+            force_content_not_editable_selectors: [".o_protected_section"],
+        };
+    }
+    addBuilderPlugin(TestPlugin);
+    const testImgSrc = "/web/image/test.png";
+    await setupHTMLBuilder(`
+        <main>
+            <div class="o_editable_element o_editable">Click me - should show options</div>
+            <section class="o_protected_section">
+                <div class="o_protected_image" style="background-image: url('${testImgSrc}'); height: 200px; width: 200px;">Protected Image - no options</div>
+            </section>
+        </main>
+    `);
+
+    expect(":iframe .o_protected_section.o_force_not_editable").toHaveCount(1);
+    await contains(":iframe .o_editable_element").click();
+    expect(".o-tab-content .o_customize_tab .options-container").toHaveCount(1);
+    await contains(":iframe .o_protected_section .o_protected_image").click();
+    // Options container should not appear because element is inside
+    // o_force_not_editable
+    expect(".o-tab-content .o_customize_tab .options-container").toHaveCount(0);
+});

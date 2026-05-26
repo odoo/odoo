@@ -5,6 +5,7 @@ import { isClonable } from "./clone_plugin";
 import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
+import { FORCE_CONTENT_NOT_EDITABLE_CLASS } from "./builder_content_editable_plugin";
 
 /** @typedef {import("@html_builder/core/utils").BaseOptionComponent} BaseOptionComponent */
 /** @typedef {import("@odoo/owl").Component} Component */
@@ -549,7 +550,15 @@ function getClosestElements(element, selector) {
  * @returns {Boolean}
  */
 export function checkElement(el, { editableOnly = true, exclude = "" }) {
-    // Unless specified otherwise, the element should be in an editable.
+    // An element inside a `force_content_not_editable_selectors` zone (marked
+    // at normalize time with `o_force_not_editable`) is always treated as
+    // non-editable, even when an option is page-level/field-level.
+    // (editableOnly: false).
+    if (el.closest(`.${FORCE_CONTENT_NOT_EDITABLE_CLASS}`)) {
+        return false;
+    }
+
+    // Unless specified otherwise, the element must be inside an editable zone.
     if (editableOnly && !el.closest(".o_editable")) {
         return false;
     }
