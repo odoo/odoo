@@ -1195,6 +1195,8 @@ class PosOrder(models.Model):
     def action_pos_order_cancel(self):
         orders = self.browse(self.env.context.get('active_ids'))
         orders.write({'state': 'cancel'})
+        for config in orders.config_id:
+            config.notify_synchronisation(config.current_session_id.id, 0)
 
     def _get_open_order(self, order):
         return self.env["pos.order"].search([('uuid', '=', order.get('uuid'))], limit=1, order='id desc')
