@@ -6,6 +6,9 @@
 
 target-version = "py310"
 
+# Custom overrides for local development to match Odoo guidelines
+line-length = 119
+
 [lint]
 preview = true
 external = ["OLS"]
@@ -82,3 +85,7 @@ ignore = [
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 known-first-party = ["odoo"]
 known-local-folder = ["odoo.addons"]
+
+[format]
+quote-style = "single"          # Actively converts double quotes to single quotes
+indent-style = "space"
