@@ -20,6 +20,7 @@
         display: flex;
         flex-wrap: wrap;
         bottom: 1rem;
+        pointer-events: none;
 
         input[type=radio] {
             /* Hide radios visually but keep them focusable for keyboard */
@@ -41,6 +42,7 @@
         button, label {
             cursor: pointer !important;
             padding: 0.2rem 0.3rem;
+            pointer-events: auto;
         }
 
         label {
