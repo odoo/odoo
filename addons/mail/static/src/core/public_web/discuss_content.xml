@@ -45,7 +45,7 @@
                     </div>
                     <div t-if="this.showsChatLocalDateTime" class="text-muted smaller ms-1" t-out="this.correspondentLocalDateTimeFormatted()"/>
                 </div>
-                <div class="pe-3 d-print-none">
+                <div class="pe-3 flex-shrink-0 d-print-none">
                     <ActionList actions="[partitionedActions.quick, partitionedActions.other, ...partitionedActions.group.slice().reverse()]" inline="true" odooControlPanelSwitchStyle="true"/>
                 </div>
                 <div t-if="this.store.inPublicPage and !this.ui.isSmall" class="d-flex align-items-center">
