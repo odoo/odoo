@@ -113,6 +113,7 @@ export class DatePlugin extends Plugin {
                 }
             },
         });
+        this.editable.blur();
         this.overlay.open({
             props: {
                 showResetButton: false,
