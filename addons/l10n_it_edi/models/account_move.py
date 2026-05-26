@@ -1864,7 +1864,10 @@ class AccountMove(models.Model):
         elif amount := get_float(element, './/Importo'):
             percentage = get_float(element, './/Aliquota')
             if not percentage and (tax_amount := get_float(element, './/Imposta')):
-                percentage = round(tax_amount / (amount - tax_amount) * 100)
+                if amount == tax_amount:
+                    percentage = 0.0
+                else:
+                    percentage = round(tax_amount / (amount - tax_amount) * 100)
             move_line.price_unit = amount / (1 + percentage / 100)
 
         move_line.tax_ids = [Command.clear()]

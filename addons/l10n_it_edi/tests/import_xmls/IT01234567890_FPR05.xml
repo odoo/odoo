@@ -1,0 +1,72 @@
+<p:FatturaElettronicaSemplificata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                  xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+                                  xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.0"
+                                  xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.0 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.0/Schema_del_file_xml_FatturaPA_versione_1.0.xsd"
+                                  versione="FSM10">
+    <FatturaElettronicaHeader>
+        <DatiTrasmissione>
+            <IdTrasmittente>
+                <IdPaese>IT</IdPaese>
+                <IdCodice>01234560157</IdCodice>
+            </IdTrasmittente>
+            <ProgressivoInvio>V202200001</ProgressivoInvio>
+            <FormatoTrasmissione>FSM10</FormatoTrasmissione>
+            <CodiceDestinatario>123456</CodiceDestinatario>
+        </DatiTrasmissione>
+        <CedentePrestatore>
+            <IdFiscaleIVA>
+                <IdPaese>IT</IdPaese>
+                <IdCodice>06655971007</IdCodice>
+            </IdFiscaleIVA>
+            <CodiceFiscale>06655971007</CodiceFiscale>
+            <Denominazione>Fornitore Fittizio Srl</Denominazione>
+            <Sede>
+                <Indirizzo>1234 Test Street</Indirizzo>
+                <CAP>12345</CAP>
+                <Comune>Prova</Comune>
+                <Nazione>IT</Nazione>
+            </Sede>
+            <RegimeFiscale>RF01</RegimeFiscale>
+        </CedentePrestatore>
+        <CessionarioCommittente>
+            <IdentificativiFiscali>
+                <IdFiscaleIVA>
+                    <IdPaese>IT</IdPaese>
+                    <IdCodice>01234560157</IdCodice>
+                </IdFiscaleIVA>
+                <CodiceFiscale>01234560157</CodiceFiscale>
+            </IdentificativiFiscali>
+        </CessionarioCommittente>
+    </FatturaElettronicaHeader>
+    <FatturaElettronicaBody>
+        <DatiGenerali>
+            <DatiGeneraliDocumento>
+            <TipoDocumento>TD08</TipoDocumento>
+            <Divisa>EUR</Divisa>
+            <Data>2026-04-11</Data>
+            <Numero>6920260414045572</Numero>
+            </DatiGeneraliDocumento>
+            <DatiFatturaRettificata>
+            <NumeroFR>8V005158302025</NumeroFR>
+            <DataFR>2025-11-11</DataFR>
+            <ElementiRettificati>Recupero IVA in esito a risoluzione contrattuale</ElementiRettificati>
+            </DatiFatturaRettificata>
+        </DatiGenerali>
+        <DatiBeniServizi>
+            <Descrizione>IVA ANNO PRECEDENTE</Descrizione>
+            <Importo>9.20</Importo>
+            <DatiIVA>
+            <Imposta>9.20</Imposta>
+            </DatiIVA>
+            <RiferimentoNormativo>Nota di credito per recupero IVA Art.26 c.2 DPR 633/72</RiferimentoNormativo>
+        </DatiBeniServizi>
+        <DatiBeniServizi>
+            <Descrizione>TOTALE IMPORTO IN ADDEBITO</Descrizione>
+            <Importo>-9.20</Importo>
+            <DatiIVA>
+            <Imposta>-9.20</Imposta>
+            </DatiIVA>
+            <Natura>N2.2</Natura>
+        </DatiBeniServizi>
+    </FatturaElettronicaBody>
+</p:FatturaElettronicaSemplificata>
