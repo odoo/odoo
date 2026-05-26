@@ -185,6 +185,8 @@ describe("selected cell color in toolbar", () => {
             focusOffset: 1,
         });
         await animationFrame();
+        // Additional tick is needed to update the toolbar attributes after the repositioning.
+        await tick();
         expect(".fa-paint-brush").toHaveCount(1);
         expect(".fa-paint-brush").toHaveStyle({
             "border-bottom": "2px solid rgba(0, 0, 0, 0)",
