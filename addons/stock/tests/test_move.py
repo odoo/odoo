@@ -7105,6 +7105,53 @@ class StockMove(TransactionCase):
             {'quantity': 0.03, 'quantity_product_uom': 0},
         ])
 
+    def test_tracked_move_quantity_lot_ids_combined_write(self):
+        """ Writing both `quantity` and `lot_ids` on a tracked move in the
+        same call must keep `move.quantity` in sync with the resulting
+        `move.move_line_ids`. Otherwise the picking can be validated to
+        'done' with a positive `quantity` but no move line and no serial
+        number recorded (phantom delivery, broken traceability).
+        """
+        picking_type_out = self.env.ref('stock.picking_type_out')
+        picking_type_out.use_existing_lots = True
+        picking_type_out.use_create_lots = False
+        lots = self.env['stock.lot'].create([
+            {'name': 'SN-PHANTOM-%d' % i, 'product_id': self.product_serial.id}
+            for i in range(1, 7)
+        ])
+        for lot in lots:
+            self.env['stock.quant']._update_available_quantity(
+                self.product_serial, self.stock_location, 1.0, lot_id=lot,
+            )
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'name': self.product_serial.name,
+                'product_id': self.product_serial.id,
+                'product_uom_qty': 6.0,
+                'product_uom': self.product_serial.uom_id.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        move = picking.move_ids
+        self.assertEqual(move.state, 'assigned')
+        self.assertEqual(len(move.move_line_ids), 6)
+        self.assertEqual(move.quantity, 6.0)
+        # The exact write the form sends when the user typed "1" in the
+        # Quantity column AND cleared every lot in the Serial Numbers
+        # widget on the same form save
+        move.write({
+            'quantity': 1.0,
+            'lot_ids': [Command.set([])],
+        })
+        self.assertFalse(move.move_line_ids)
+        self.assertEqual(move.quantity, 0.0)
+
     def test_move_is_picked_when_quantity_set_after_empty_pick(self):
         """
         Verify that a stock move remains marked as picked when the quantity
