@@ -32,6 +32,16 @@ ALL_DEV_MODE = ['access', 'qweb', 'reload', 'xml']
 DEFAULT_SERVER_WIDE_MODULES = ['base', 'rpc', 'web']
 REQUIRED_SERVER_WIDE_MODULES = ['base', 'web']
 
+DEFAULT_COLOR_SPEC = {
+    'pid': 'never',
+    'loglevel': 'auto',
+    'session_id': 'never',
+    'http_request_line': 'auto',
+    'http_response_body': 'auto',
+    'perf': 'auto',
+    'cursor_mode': 'auto',
+}
+
 
 class _Empty:
     def __repr__(self):
@@ -193,6 +203,9 @@ class configmanager:
 
         # list of nargs='?' options, indexed by short/long option (-x, --xx)
         self.optional_options = {}
+
+        # optional [colors] options, no color until we load_color_options()
+        self.colors: dict[str, bool] = dict.fromkeys(DEFAULT_COLOR_SPEC, False)
 
         # map old name -> new name
         self.aliases = {
@@ -599,6 +612,7 @@ class configmanager:
         opt = self._parse_config(args)
         if setup_logging is not False:
             netsvc.init_logger()
+            self.load_color_options()
             # warn after having done setup, so it has a chance to show up
             # (mostly once this warning is bumped to DeprecationWarning proper)
             if setup_logging is None:
@@ -675,6 +689,57 @@ class configmanager:
 
         if opt.log_handler:
             self._cli_options['log_handler'] = [handler for comma in opt.log_handler for handler in comma]
+
+    def load_color_options(self):
+        if os.getenv('NO_COLOR'):
+            self.colors = dict.fromkeys(DEFAULT_COLOR_SPEC, False)
+            return
+
+        if os.getenv('FORCE_COLOR'):
+            self.colors = dict.fromkeys(DEFAULT_COLOR_SPEC, True)
+            return
+
+        color2bool = {'always': True, 'never': False, 'auto': any(
+            isinstance(handler, logging.StreamHandler)
+            and hasattr(handler.stream, 'fileno')
+            and os.isatty(handler.stream.fileno())
+            for handler in logging.getLogger().handlers
+        )}
+
+        if color := os.getenv('ODOO_PY_COLORS'):
+            try:
+                value = color2bool[color]
+            except KeyError:
+                try:
+                    value = self._check_bool(..., ..., color)  # backward compat
+                except optparse.OptionValueError:
+                    e = f"environ['ODOO_PY_COLORS'] is not always/never/auto: {color!r}"
+                    raise optparse.OptionValueError(e) from None
+
+            self.colors = dict.fromkeys(DEFAULT_COLOR_SPEC, value)
+            return
+
+        self.colors = {
+            name: color2bool[value]
+            for name, value in DEFAULT_COLOR_SPEC.items()
+        }
+
+        p = ConfigParser.RawConfigParser()
+        try:
+            p.read([self['config']])
+            file_options = p.items('colors')
+        except (OSError, ConfigParser.NoSectionError):
+            pass
+        else:
+            for name, value in file_options:
+                if name not in DEFAULT_COLOR_SPEC:
+                    self._log(logging.WARNING, "unknown color option: %r, skipped", name)
+                    continue
+                try:
+                    self.colors[name] = color2bool[value]
+                except KeyError:
+                    e = f"color option {name}: invalid value: {value!r}"
+                    raise optparse.OptionValueError(e) from None
 
     def _postprocess_options(self):
         self._runtime_options.clear()
@@ -967,6 +1032,8 @@ class configmanager:
             p.read([self['config']])
         if not p.has_section('options'):
             p.add_section('options')
+        if not p.has_section('colors'):
+            p.add_section('colors')
         for opt in sorted(self.options):
             option = self.options_index.get(opt)
             if keys is not None and opt not in keys:
@@ -977,6 +1044,10 @@ class configmanager:
                 p.set('options', opt, self.format(opt, self.options[opt]))
             else:
                 p.set('options', opt, self.options[opt])
+
+        for color, value in DEFAULT_COLOR_SPEC.items():
+            if color not in p['colors']:  # ignored unless keys are given
+                p['colors'][color] = value
 
         # try to create the directories and write the file
         try:

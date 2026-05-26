@@ -22,9 +22,8 @@ from odoo.netsvc import (
     RESET_SEQ,
     TRUE_COLOR_PATTERN,
     YELLOW,
-    ColoredFormatter,
 )
-from odoo.tools import frozendict
+from odoo.tools import config, frozendict
 from odoo.tools.misc import real_time
 
 from .requestlib import DEFAULT_MAX_CONTENT_LENGTH, MAX_FORM_SIZE
@@ -155,20 +154,24 @@ def http_log(
     extra.update(kwargs.get('extra', {}))
     kwargs['extra'] = extra.copy()  # before we set colors
 
-    if _has_color():
+    # colors
+    if config.colors['perf']:
         extra['query_count'] = _colorize_query_count(extra['query_count'])
         extra['query_time'] = _colorize_query_time(extra['query_time'])
         extra['remaining_time'] = _colorize_remaining_time(extra['remaining_time'])
-        if extra['http_response_status'] != '-':
-            extra['http_request_line'] = _colorize_request_line(
-                extra['http_request_line'], extra['http_response_status'])
-        if extra['cursor_mode'] != '-':
-            extra['cursor_mode'] = _colorize_cursor_mode(extra['cursor_mode'])
-        extra['http_response_body'] = _colorize_body_length(extra['http_response_body'])
-        extra['ident'] = _colorize_ident(extra['ident'])
     else:
         extra['query_time'] = round(extra['query_time'], 3)
         extra['remaining_time'] = round(extra['remaining_time'], 3)
+
+    if config.colors['http_request_line'] and extra['http_response_status'] != '-':
+        extra['http_request_line'] = _colorize_request_line(
+            extra['http_request_line'], extra['http_response_status'])
+    if config.colors['cursor_mode'] and extra['cursor_mode'] != '-':
+        extra['cursor_mode'] = _colorize_cursor_mode(extra['cursor_mode'])
+    if config.colors['http_response_body']:
+        extra['http_response_body'] = _colorize_body_length(extra['http_response_body'])
+    if config.colors['session_id']:
+        extra['ident'] = _colorize_ident(extra['ident'])
 
     if extra['http_headers'] and _logger_headers.isEnabledFor(logging.DEBUG):
         extra['http_headers'] = pprint.pformat(list(extra['http_headers']))
@@ -261,16 +264,6 @@ def _colorize_cursor_mode(cursor_mode: typing.Literal['ro', 'rw', 'ro->rw']) -> 
         else GREEN
     )
     return COLOR_PATTERN % (30 + cursor_mode_color, 40 + DEFAULT, cursor_mode)
-
-
-@functools.cache
-def _has_color():
-    """ Determine if the root logger supports colors. """
-    return any(
-        isinstance(handler.formatter, ColoredFormatter)
-        for handler
-        in logging.root.handlers
-    )
 
 
 _logger = logging.getLogger('odoo.http.server')

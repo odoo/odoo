@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import collections.abc
 import itertools
-import logging
 import typing
 from collections import defaultdict
 from difflib import unified_diff
@@ -14,8 +13,8 @@ from markupsafe import escape as markup_escape
 from psycopg2.extras import Json as PsycopgJson
 
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.netsvc import COLOR_PATTERN, DEFAULT, GREEN, RED, ColoredFormatter
-from odoo.tools import SQL, html_normalize, html_sanitize, html2plaintext, is_html_empty, plaintext2html, sql
+from odoo.netsvc import COLOR_PATTERN, DEFAULT, GREEN, RED
+from odoo.tools import SQL, config, html_normalize, html_sanitize, html2plaintext, is_html_empty, plaintext2html, sql
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel
 from odoo.tools.sql import pattern_to_translated_trigram_pattern, pg_varchar, value_to_translated_trigram_pattern
@@ -687,7 +686,7 @@ class Html(BaseString):
                         original_value_normalized.splitlines(),
                     )
 
-                    with_colors = isinstance(logging.getLogger().handlers[0].formatter, ColoredFormatter)
+                    with_colors = any(config.colors.values())
                     diff_str = f'The field ({record._description}, {self.string}) will not be editable:\n'
                     for line in list(diff)[2:]:
                         if with_colors:
