@@ -1,29 +1,26 @@
-import base64
-import re
 from collections import defaultdict
 from lxml import etree
+import base64
 
-
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.l10n_fr_pdp_reports.utils import drom_com_territories
-from odoo.tools import float_round, frozendict, html2plaintext, ormcache
+from odoo.tools import float_is_zero, float_round, frozendict, html2plaintext, ormcache
 
 
-G1_05_RE = re.compile(r'^(?! )(?!.*  )[A-Za-z0-9+\-_/ ]{1,20}(?<! )$')  # can't start with space, can't have 2 consecutive spaces, max 20 chars, allowed chars are alphanumeric, space, -, _, /, can't end with space
 VALID_TAX_CODES = {
-    'S',   # Taux de TVA standard
-    'E',   # Exonéré de TVA
-    'AE',  # Autoliquidation de TVA
-    'K',   # Exonération pour cause de livraison intracommunautaire
-    'G',   # Exonération de TVA pour Export hors UE
-    'O',   # Hors du périmètre d'application de la TVA
-    'Z',   # Taux de TVA égal à 0 (cf. G1.47)
+    'S',   # Standard VAT rate (Taux de TVA standard)
+    'E',   # VAT exempt (Exonéré de TVA)
+    'AE',  # VAT reverse charge (Autoliquidation de TVA)
+    'K',   # VAT exemption for intra-Community supply (Exonération pour cause de livraison intracommunautaire)
+    'G',   # VAT exemption for exports outside the EU (Exonération de TVA pour Export hors UE)
+    'O',   # Outside the scope of VAT (Hors du périmètre d'application de la TVA)
+    'Z',   # Zero VAT rate (see G1.47) (Taux de TVA égal à 0 (cf. G1.47))
 }
 
 
 class PdpFlow10XMLBuilder(models.AbstractModel):
-    '''Build Flow 10 XML for a flow'''
+    """Build Flow 10 XML for a flow"""
     _name = 'pdp.flow.10.xml.builder'
     _inherit = 'account.edi.common'
     _description = 'Flow 10 XML Builder'
@@ -38,7 +35,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         self._add_report_header(document, flow)  # TB-1
 
         if flow.report_type == 'transaction':
-            self._add_transacitons(document, flow, valid_moves)  # TB-2
+            self._add_transactions(document, flow, valid_moves)  # TB-2
         else:
             self._add_payments(document, flow, valid_moves)  # TB-3
 
@@ -47,7 +44,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             nsmap={'xsi': 'http://www.w3.org/2001/XMLSchema-instance'},
         )
         payload = base64.b64encode(
-            etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
+            etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
         )
         return payload
 
@@ -56,7 +53,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         document['ReportDocument'] = {
             'Id': {'_text': flow.tracking_id},
             'IssueDateTime': {
-                'DateTimeString': {'_text': self._format_date(fields.Datetime.now())},
+                'DateTimeString': {'_text': fields.Datetime.now().strftime('%Y%m%d%H%M%S')},
             },
             'TypeCode': {'_text': 'RE' if flow.transmission_type == 'rectificative' else 'IN'},
             'Sender': {
@@ -93,6 +90,9 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
 
     @api.model
     def _add_payments(self, document, flow, moves):
+        """ This method adds payment nodes to document. Per invoice for b2bi payments and
+            agregated for b2c payments.
+        """
         def get_payment_node(date, subtotals, currency_code, transaction=None):
             node = {
                 **({
@@ -108,7 +108,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 node['Payment']['SubTotals'].append({
                     'TaxPercent': {'_text': tax_subtotal['tax'].amount},
                     'CurrencyCode': {'_text': currency_code},
-                    'Amount': {'_text': tax_subtotal['tax_amount']},
+                    'Amount': {'_text': float_round(tax_subtotal['tax_amount'], 6)},  # G1.16
                 })
             return node
 
@@ -117,25 +117,27 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             transaction_type = payment._l10n_fr_pdp_get_transaction_type()
             for matched in payment._l10n_fr_pdp_get_matched_transactions():
                 matched_transactions_map[transaction_type][matched].add(payment)
-        invoices = []
-        for transaction, payments in matched_transactions_map['b2bi'].items():
-            summary = self._get_payments_summary(transaction, payments)  # {payment: (subtotals, transaction)}
-            for payment, (subtotals, transaction) in summary.items():
-                invoices.append(
-                    get_payment_node(payment.date, subtotals, payment.currency_id.name, transaction)
-                )
 
+        invoices = []
         transactions = []
         payments_aggregates = defaultdict(lambda: defaultdict(float))
-        for transaction, payments in matched_transactions_map['b2c'].items():
-            summary = self._get_payments_summary(transaction, payments)  # {payment: (subtotals, transaction)}
-            for payment, (subtotals, _transaction) in summary.items():
-                for subtotal in subtotals:
-                    date_currency = frozendict({'date': payment.date, 'currency_name': payment.currency_id.name})
-                    payments_aggregates[date_currency][subtotal['tax']] += subtotal['tax_amount']
+
+        for transaction_type, matched_map in matched_transactions_map.items():
+            for transaction, payments in matched_map.items():
+                summary = self._get_payments_summary(transaction, payments)  # {payment: (subtotals, transaction)}
+                for payment, (subtotals, transaction) in summary.items():
+                    if transaction_type == 'b2bi':
+                        invoices.append(
+                            get_payment_node(payment.date, subtotals, payment.currency_id.name, transaction)
+                        )
+                    else:
+                        for subtotal in subtotals:
+                            date_currency = frozendict({'date': payment.date, 'currency_name': payment.currency_id.name})
+                            payments_aggregates[date_currency][subtotal['tax']] += subtotal['tax_amount']
+
         for payment_info, subtotals in payments_aggregates.items():
             date, currency_code = payment_info['date'], payment_info['currency_name']
-            subtotals = [{'tax':tax, 'tax_amount':amount} for tax, amount in subtotals.items()]
+            subtotals = [{'tax': tax, 'tax_amount': amount} for tax, amount in subtotals.items()]
             transactions.append(
                 get_payment_node(date, subtotals, currency_code)
             )
@@ -181,63 +183,11 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         return bool(aml and (aml.move_id.origin_payment_id or aml.move_id.statement_line_id))
 
     @api.model
-    def _add_transacitons(self, document, flow, moves):
+    def _add_transactions(self, document, flow, moves):
         b2c_moves, b2bi_moves = self._split_moves_by_transaction_type(flow, moves)
-        b2bi_invoices = []
-        # B2BI
-        for move in b2bi_moves:
-            is_purchase = move.is_purchase_document(include_receipts=False)
-            seller = move.commercial_partner_id if is_purchase else move.company_id.partner_id
-            buyer = move.company_id.partner_id if is_purchase else move.commercial_partner_id
-            invoice = {
-                'ID': {'_text': move.name},
-                'IssueDate': {'_text': self._format_date(move.date)},
-                'TypeCode': {'_text': self._get_move_typecode(move)},
-                'CurrencyCode': {'_text': move.currency_id.name},
-                'DueDate': {'_text': self._format_date(move.invoice_date_due or move.date)},
-            }
 
-            self._invoice_add_due_date_type_code(invoice, move),
-            self._invoice_add_notes(invoice, move),
-            self._invoice_add_business_process(invoice, move),
-            self._invoice_add_referenced_documents(invoice, move),
-            self._invoice_add_partner_vals(invoice, seller, 'Seller'),
-            self._invoice_add_partner_vals(invoice, buyer, 'Buyer'),
-            self._invoice_add_seller_tax_representative(invoice, move),
-            self._invoice_add_delivery_vals(invoice, move),
-            self._invoice_add_invoice_period(invoice, move, flow),
-            self._invoice_add_allowance_charges(invoice, move, seller, buyer),
-            self._invoice_add_monetary_total(invoice, move),
-            self._invoice_add_tax_sub_total(invoice, move, seller, buyer),
-            self._invoice_add_lines(invoice, move),
-
-            b2bi_invoices.append(invoice)
-
-        # B2C
-        b2c_agregates = []
-        summary = self._get_tax_summary(
-            move_lines=b2c_moves.line_ids,
-            agregation_function=lambda line: frozendict({
-                'date': line.date,
-                'currency_id': line.currency_id,
-                'tax_due_date_type_code': self._get_move_tax_data(line.move_id)['tax_due_date_type_code'],
-                'category_code': self._get_line_category_code(line),
-            }),
-        )
-        for agregate, taxes in summary.items():
-            b2c_agregates.append({
-                'Date': {'_text': self._format_date(agregate['date'])},
-                'TransactionsCurrency': {'_text': agregate['currency_id'].name},
-                'TaxDueDateTypeCode': {'_text': agregate['tax_due_date_type_code']},
-                'CategoryCode': {'_text': agregate['category_code']},
-                'TaxExclusiveAmount': {'_text': taxes['taxable_amount_total']},
-                'TaxTotal': {'_text': taxes['tax_total']},
-                'TaxSubtotal': [{
-                    'TaxPercent': {'_text': tax.amount if tax else 0},
-                    'TaxableAmount': {'_text': subtotal['taxable_amount']},
-                    'TaxTotal': {'_text': subtotal['tax_amount']},
-                } for tax, subtotal in taxes['subtotals'].items()],
-            })
+        b2bi_invoices = self._get_b2bi_transaction_nodes(flow, b2bi_moves)
+        b2c_agregates = self._get_b2c_transaction_nodes(b2c_moves)
 
         if b2bi_invoices or b2c_agregates:
             document['TransactionsReport'] = {
@@ -250,23 +200,79 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             }
 
     @api.model
+    def _get_b2bi_transaction_nodes(self, flow, moves):
+        nodes = []
+        for move in moves:
+            is_purchase = move.is_purchase_document(include_receipts=False)
+            seller = move.commercial_partner_id if is_purchase else move.company_id.partner_id
+            buyer = move.company_id.partner_id if is_purchase else move.commercial_partner_id
+            invoice_node = {
+                'ID': {'_text': move.name},
+                'IssueDate': {'_text': self._format_date(move.date)},
+                'TypeCode': {'_text': self._get_move_typecode(move)},
+                'CurrencyCode': {'_text': move.currency_id.name},
+                'DueDate': {'_text': self._format_date(move.invoice_date_due or move.date)},
+            }
+
+            self._invoice_add_due_date_type_code(invoice_node, move)
+            self._invoice_add_notes(invoice_node, move)
+            self._invoice_add_business_process(invoice_node, move)
+            self._invoice_add_referenced_documents(invoice_node, move)
+            self._invoice_add_partner_vals(invoice_node, seller, 'Seller')
+            self._invoice_add_partner_vals(invoice_node, buyer, 'Buyer')
+            self._invoice_add_seller_tax_representative(invoice_node, move)
+            self._invoice_add_delivery_vals(invoice_node, move)
+            self._invoice_add_invoice_period(invoice_node, move, flow)
+            self._invoice_add_allowance_charges(invoice_node, move, seller, buyer)
+            self._invoice_add_monetary_total(invoice_node, move)
+            self._invoice_add_tax_sub_total(invoice_node, move, seller, buyer)
+            self._invoice_add_lines(invoice_node, move)
+
+            nodes.append(invoice_node)
+        return nodes
+
+    @api.model
+    def _get_b2c_transaction_nodes(self, moves):
+        nodes = []
+        summary = self._get_tax_summary(
+            move_lines=moves.line_ids,
+            agregation_function=lambda line: frozendict({
+                'date': line.date,
+                'currency_id': line.currency_id,
+                'tax_due_date_type_code': self._get_move_tax_data(line.move_id)['tax_due_date_type_code'],
+                'category_code': self._get_line_category_code(line),
+            }),
+        )
+        for agregate, taxes in summary.items():
+            nodes.append({
+                'Date': {'_text': self._format_date(agregate['date'])},
+                'TransactionsCurrency': {'_text': agregate['currency_id'].name},
+                'TaxDueDateTypeCode': {'_text': agregate['tax_due_date_type_code']},
+                'CategoryCode': {'_text': agregate['category_code']},
+                'TaxExclusiveAmount': {'_text': float_round(taxes['taxable_amount_total'], 2)},  # G1.14
+                'TaxTotal': {'_text': float_round(taxes['tax_total'], 2)},  # G1.14
+                'TaxSubtotal': [{
+                    'TaxPercent': {'_text': tax.amount if tax else 0},
+                    'TaxableAmount': {'_text': float_round(subtotal['taxable_amount'], 2)},  # G1.14
+                    'TaxTotal': {'_text': float_round(subtotal['tax_amount'], 2)},  # G1.14
+                } for tax, subtotal in taxes['subtotals'].items()],
+            })
+        return nodes
+
+    @api.model
     def _invoice_add_due_date_type_code(self, invoice, move):
-        tax_due_date_type_code = self._get_move_tax_data(move)['scope']
+        tax_due_date_type_code = self._get_move_tax_data(move)['tax_due_date_type_code']
         if tax_due_date_type_code:
             invoice['TaxDueDateTypeCode'] = {'_text': tax_due_date_type_code}
 
     @api.model
     def _get_line_category_code(self, line):
         # TODO: ADD TMA1 Margin scheme when applicable, add field on tax ??
-        if all(tax.amount == 0 for tax in line.tax_ids):
+        if all(float_is_zero(tax.amount, tax.fields_get('amount')['amount']['digits'][1]) for tax in line.tax_ids):
             return 'TNT1'
         if any(tax.tax_scope == 'service' for tax in line.tax_ids):
             return 'TPS1'
-        if any(tax.tax_scope == 'consu' for tax in line.tax_ids):
-            return 'TLB1'
-        if line.product_id and line.product_id.type == 'service':
-            return 'TPS1'
-        return 'TLB1'
+        return 'TLB1'  # 'consu'
 
     @api.model
     def _invoice_add_notes(self, invoice, move):
@@ -275,11 +281,6 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 'Subject': {'_text': 'AAB'},
                 'Content': html2plaintext(move.narration).strip(),
             }
-            notes.append({
-                'subject': 'AAB',
-                'content': html2plaintext(move.narration).strip(),
-            })
-
 
     @api.model
     @ormcache('move.id')
@@ -298,7 +299,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 scopes.add('B')
             if move_is_downpayment and not line.is_downpayment:
                 down_payment_type = '4'
-            if not tax_exigibility_on_invoice and any(tax.tax_exigibility in (None, 'on_invoice') for tax in line.tax_ids):
+            if not tax_exigibility_on_invoice and any(tax.tax_exigibility in {None, 'on_invoice'} for tax in line.tax_ids):
                 tax_exigibility_on_invoice = True
 
         scope = 'M' if len(scopes) == 2 else next(iter(scopes), 'B')  # B = goods (default), S = services, M = mixed.
@@ -308,7 +309,6 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             'down_payment_type': down_payment_type,
             'tax_due_date_type_code': tax_due_date_type_code,
         }
-
 
     @api.model
     def _invoice_add_business_process(self, invoice, move):
@@ -323,12 +323,10 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
 
     @api.model
     def _invoice_add_referenced_documents(self, invoice, move):
-        origin = move.reversed_entry_id or (move.debit_origin_id if 'debit_origin_id' in move._fields else None)
-        if origin:
-            invoice['ReferencedDocument'] = {
-                'Id': {'_text': origin.name},
-                'IssueDate': {'_text': self._format_date(origin.date)}
-            }
+        invoice['ReferencedDocument'] = [{
+            'ID': {'_text': ref_doc.name},
+            'IssueDate': {'_text': self._format_date(ref_doc.date)}
+        } for ref_doc in move._l10n_fr_pdp_get_referenced_documents()]
 
     @api.model
     def _invoice_add_partner_vals(self, invoice, partner, tag):
@@ -346,7 +344,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             # Standard French SIREN
             company_scheme = '0002'
             company_id = partner.siret[:9]
-        elif partner.vat:
+        elif len(partner.vat) > 1:
             # VAT scheme
             company_scheme = '0223'
             company_id = partner.vat
@@ -360,7 +358,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 'schemeId': company_scheme,
             }
         }
-        if partner.vat:
+        if len(partner.vat) > 1:
             partner_vals['TaxRegistrationId'] = {
                 '_text': partner.vat,
                 'qualifyingId': 'VAT',
@@ -417,14 +415,13 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             if not all((line.discount, line.price_unit, line.quantity)):
                 continue
             base_amount = line.price_unit * line.quantity
-            amount = self._round_amount(abs(base_amount * (line.discount / 100.0)))
+            amount = float_round(abs(base_amount * (line.discount / 100.0)), 2)  # G1.14
             for tax in line.tax_ids or [False]:
                 tax_code, _exemption_reason_code, _exemption_reason = self._get_tax_codes_and_exemption(buyer, seller, tax)
                 invoice['AllowanceCharge'].append({
                     'Amount': {'_text': amount},
                     'TaxCategoryCode': {'_text': tax_code},
                     'TaxPercent': {'_text': tax.amount if tax else 0},
-                    'AllowanceCharge': 'false',
                 })
 
     @api.model
@@ -432,7 +429,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         invoice['MonetaryTotal'] = {
             'TaxExclusiveAmount': {'_text': move.amount_untaxed},  # invoice currency
             'TaxAmount': {
-                '_text': abs(move.amount_tax_signed),
+                '_text': float_round(abs(move.amount_tax_signed), 2),  # G1.14
                 'CurrencyCode': 'EUR',
             },
         }
@@ -475,7 +472,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             )
             tax_items = taxes_res['taxes']
             for tax_item in tax_items:
-                base_amount = tax_item['base']
+                base_amount = line.currency_id.round(tax_item['base'])
                 tax_amount = tax_item['amount']
                 subtotal = summary['subtotals'][self.env['account.tax'].browse(tax_item['id'])]
                 subtotal['taxable_amount'] += base_amount
@@ -504,8 +501,8 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         tax_summary = self._get_tax_summary(move.line_ids, buyer, seller)
         for tax, tax_sub_total in tax_summary['subtotals'].items():
             invoice['TaxSubTotal'].append({
-                'TaxableAmount': {'_text': tax_sub_total['taxable_amount']},
-                'TaxAmount': {'_text': tax_sub_total['tax_amount']},
+                'TaxableAmount': {'_text': float_round(tax_sub_total['taxable_amount'], 2)},  # G1.14
+                'TaxAmount': {'_text': float_round(tax_sub_total['tax_amount'], 2)},  # G1.14
                 'TaxCategory': {
                     'Code': {'_text': tax_sub_total['tax_category_code']},
                     'Percent': {'_text': tax.amount if tax else 0},
@@ -526,7 +523,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             res = {
                 'BilledQuantity': {
                     '_text': line.quantity,
-                    'unitCode': self._get_uom_unece_code(line.product_uom_id),
+                    'UnitCode': self._get_uom_unece_code(line.product_uom_id),
                 },
             }
             if sale_line_ids_in_fields:
@@ -542,12 +539,17 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                         'ID': {'_text': ref_id},
                         'IssueDate': {'_text': self._format_date(ref_date)},
                     }
-            allowance_charge = self._round_amount(line.price_unit * line.discount / 100.0)
-            allowance_charge_base = self._round_amount(line.price_unit)
-            price = self._round_amount(allowance_charge_base - allowance_charge)
+
+            allowance_charge = float_round(line.price_unit * line.discount / 100.0, 6)  # G1.16
+            allowance_charge_base = float_round(line.price_unit, 6)  # G1.16
+            price = float_round(allowance_charge_base - allowance_charge, 6)  # G1.16
             res['Price'] = {
                 'PriceAmount': {'_text': price},
-                'AllowanceChargeAmount': {'_text': allowance_charge},
+                **(
+                    {'AllowanceChargeAmount': {'_text': allowance_charge}}
+                    if not float_is_zero(allowance_charge, 6)
+                    else {}
+                ),
                 'AllowanceChargeBaseAmount': {'_text': allowance_charge_base},
             }
             res['Product'] = {
@@ -565,7 +567,6 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         exemption_reason_code = res.get('tax_exemption_reason_code')
         exemption_reason = res.get('tax_exemption_reason')
         return tax_code, exemption_reason_code, exemption_reason
-
 
     @api.model
     def _get_move_business_process_id(self, move):
@@ -588,7 +589,6 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         else:
             suffix = '1'
         return f'{prefix}{suffix}'
-
 
     @api.model
     def _get_move_typecode(self, move):
@@ -620,7 +620,3 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         if isinstance(date, str):
             date = fields.Date.from_string(date)
         return date.strftime('%Y%m%d')
-
-    @api.model
-    def _round_amount(self, amount):
-        return float_round(amount, 2)  # G1.14 round at 2 decimals
