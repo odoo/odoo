@@ -227,6 +227,13 @@ class TestHolidaysOvertime(TransactionCase):
         alloc.number_of_days = 2
         self.assertEqual(self.employee.total_overtime, 0)
 
+        alloc.action_refuse()
+        self.assertEqual(self.employee.total_overtime, 16)
+        alloc.action_set_to_confirm()
+        self.assertEqual(self.employee.total_overtime, 0)
+        alloc.unlink()
+        self.assertEqual(self.employee.total_overtime, 16)
+
     def test_allocation_change_leave_type_to_overtime(self):
         """Changing an allocation's leave type to an overtime-deductible type should validate overtime."""
         non_overtime_type = self.env['hr.leave.type'].create({
