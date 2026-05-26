@@ -44,8 +44,9 @@ class HrEmployee(models.Model):
                 role = 'cashier'
 
             employee['_role'] = role
-            employee['_barcode'] = bp_per_employee_id[employee['id']]['barcode']
-            employee['_pin'] = bp_per_employee_id[employee['id']]['pin']
+            if employee['id'] in bp_per_employee_id:
+                employee['_barcode'] = bp_per_employee_id[employee['id']]['barcode']
+                employee['_pin'] = bp_per_employee_id[employee['id']]['pin']
 
         return super()._post_read_pos_data(data)
 
