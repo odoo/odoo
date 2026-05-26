@@ -3017,6 +3017,9 @@ ${issueStrings}`);
         node.forceNextRender = true;
       } else {
         result++;
+        if (node.bdom) {
+          node.forceNextRender = true;
+        }
       }
       result += cancelFibers(fiber.children);
     }
