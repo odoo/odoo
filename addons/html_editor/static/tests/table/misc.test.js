@@ -2,7 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor } from "../_helpers/editor";
 import { click, manuallyDispatchProgrammaticEvent, queryAll, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { getContent, setSelection } from "../_helpers/selection";
+import { getContent, setSelection, waitForSelectionChange } from "../_helpers/selection";
 import { execCommand } from "../_helpers/userCommands";
 import { expandToolbar } from "../_helpers/toolbar";
 import { expectElementCount } from "../_helpers/ui_expectations";
@@ -213,6 +213,7 @@ describe("selected cell color in toolbar", () => {
             focusNode: nonStyledCellTwo,
             focusOffset: 1,
         });
+        await waitForSelectionChange();
         await animationFrame();
         expect(".fa-paint-brush").toHaveCount(1);
         expect(".fa-paint-brush").toHaveStyle({
