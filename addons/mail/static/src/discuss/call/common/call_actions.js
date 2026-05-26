@@ -286,7 +286,7 @@ export const acceptWithCamera = {
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Accept with camera"),
     icon: "videocam",
-    onSelected: ({ channel, store }) => store.rtc.toggleCall(channel, { camera: true }),
+    onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel, { camera: true }),
     sequence: 100,
     sequenceGroup: 300,
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
@@ -305,7 +305,7 @@ registerCallAction("join-back", {
     inlineName: ({ owner }) => (owner.env.inCallInvitation ? undefined : _t("Join")),
     name: ({ channel }) => (channel?.useCameraByDefault ? _t("Join Video Call") : _t("Join Call")),
     onSelected: ({ channel, store }) =>
-        store.rtc.toggleCall(channel, { camera: channel.useCameraByDefault }),
+        store.rtc.requestToggleCall(channel, { camera: channel.useCameraByDefault }),
     sequence: 110,
     sequenceGroup: 300,
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
@@ -320,8 +320,10 @@ registerCallAction("join-with-camera", {
     name: _t("Join Video Call"),
     icon: "videocam",
     onSelected: async ({ channel, store }) => {
-        await store.rtc.toggleCall(channel, { camera: true });
-        if (store.rtc.selfSession) {
+        if (
+            (await store.rtc.requestToggleCall(channel, { camera: true })) &&
+            store.rtc.selfSession
+        ) {
             store.rtc.enterFullscreen();
         }
     },
@@ -336,7 +338,7 @@ export const joinAction = {
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Join Call"),
     icon: "phone",
-    onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
+    onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel),
     sequence: 130,
     sequenceGroup: 300,
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],

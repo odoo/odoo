@@ -22,10 +22,15 @@ patch(DiscussClientAction.prototype, {
         }
         await this.joinCallWithDefaultSettings();
     },
-    closeWelcomePage() {
-        super.closeWelcomePage(...arguments);
-        if (this.store.discuss.thread.channel.default_display_mode === "video_full_screen") {
-            this.joinCallWithDefaultSettings();
+    async requestCloseWelcomePage() {
+        if (this.store.discuss.thread.channel.default_display_mode !== "video_full_screen") {
+            this.closeWelcomePage();
+            return;
         }
+        if (this.rtc.channel && !(await this.rtc.askCallSwitchConfirmation())) {
+            return;
+        }
+        this.closeWelcomePage();
+        this.joinCallWithDefaultSettings();
     },
 });

@@ -8,15 +8,17 @@ import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permi
 import { rpc } from "@web/core/network/rpc";
 import { assignDefined, closeStream } from "@mail/utils/common/misc";
 
-import { proxy, toRaw } from "@odoo/owl";
+import { markup, proxy, toRaw } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { debounce } from "@web/core/utils/timing";
 import { loadBundle, loadJS } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
+import { htmlJoin, htmlSprintf } from "@web/core/utils/html";
 import { url } from "@web/core/utils/urls";
 import { isBrowserSafari, isMobileOS } from "@web/core/browser/feature_detection";
 import { CallAction } from "@mail/discuss/call/common/call_actions";
@@ -933,6 +935,51 @@ export class Rtc extends Record {
     }
 
     /**
+     * Prompts the user to confirm switching calls.
+     *
+     * @param {Object} [options]
+     * @param {string} [options.confirmIcon] Icon displayed on the confirm button.
+     * @param {string} [options.confirmLabel] Label of the confirm button.
+     * @param {string} [options.description] Secondary text describing the consequences of switching.
+     * @param {string} [options.message] Message displayed in the dialog.
+     * @param {string} [options.title] Title of the dialog.
+     * @returns {Promise<boolean>} Whether the user confirmed the action.
+     */
+    async askCallSwitchConfirmation({
+        confirmIcon = "fa fa-phone fa-fw",
+        confirmLabel = _t("Switch"),
+        description = _t("This will disconnect you from your ongoing call."),
+        message = _t("Switch to the other call?"),
+        title = _t("Call Switch Confirmation"),
+    } = {}) {
+        return new Promise((resolve) => {
+            this.dialog.add(ConfirmationDialog, {
+                body: htmlJoin([
+                    message,
+                    htmlSprintf("%(br)s%(span_start)s%(content)s%(span_end)s", {
+                        br: markup`<br>`,
+                        span_start: markup`<span class='text-muted'>`,
+                        content: description,
+                        span_end: markup`</span>`,
+                    }),
+                ]),
+                cancel: () => resolve(false),
+                cancelLabel: htmlJoin([
+                    markup`<i class="fa fa-close fa-fw me-1 opacity-75"></i>`,
+                    _t("Cancel"),
+                ]),
+                confirm: () => resolve(true),
+                confirmLabel: htmlJoin([
+                    markup`<i class="${confirmIcon} me-1 opacity-75"></i>`,
+                    confirmLabel,
+                ]),
+                dismiss: () => resolve(false),
+                title,
+            });
+        });
+    }
+
+    /**
      * @returns {Promise<void>}
      */
     async exitBrowserFullscreen() {
@@ -954,6 +1001,24 @@ export class Rtc extends Record {
             return;
         }
         await this.exitFullscreen();
+    }
+
+    /**
+     * Like toggleCall but shows a confirmation dialog first when switching calls.
+     *
+     * @param {Parameters<typeof Rtc.prototype.toggleCall>[0]} channel
+     * @param {Parameters<typeof Rtc.prototype.toggleCall>[1]} options
+     */
+    async requestToggleCall(channel, options) {
+        if (
+            this.channel &&
+            channel.notEq(this.channel) &&
+            !(await this.askCallSwitchConfirmation())
+        ) {
+            return false;
+        }
+        await this.toggleCall(channel, options);
+        return true;
     }
 
     /**

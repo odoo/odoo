@@ -328,6 +328,25 @@ export class Store extends BaseStore {
         );
     }
 
+    async requestStartMeeting() {
+        const rtc = this.env.services["discuss.rtc"];
+        if (rtc.channel) {
+            const hasConfirmed = await rtc.askCallSwitchConfirmation({
+                confirmIcon: "fa fa-video-camera fa-fw",
+                confirmLabel: _t("Start Meeting"),
+                description: _t(
+                    "You will leave the ongoing call and automatically join the new meeting."
+                ),
+                message: _t("Start a new Meeting?"),
+                title: _t("New Meeting Confirmation"),
+            });
+            if (!hasConfirmed) {
+                return;
+            }
+        }
+        await this.startMeeting();
+    }
+
     async startMeeting() {
         const localizedDatetime = this.store.self?.tz
             ? DateTime.now().setZone(this.store.self?.tz)
