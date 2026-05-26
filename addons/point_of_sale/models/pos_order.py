@@ -582,7 +582,9 @@ class PosOrder(models.Model):
         for vals in vals_list:
             session = self.env['pos.session'].browse(vals['session_id'])
             vals = self._complete_values_from_session(session, vals)
-        return super().create(vals_list)
+        orders = super().create(vals_list)
+        orders._translate_order_to_restaurant_lang()
+        return orders
 
     def _update_sequence_number(self, session, values):
         # Some localization needs orders to have a sequence number
@@ -644,6 +646,9 @@ class PosOrder(models.Model):
             for order in self:
                 if vals.get('payment_ids'):
                     order.message_post(body=body)
+
+        if 'last_order_preparation_change' in vals or 'lines' in vals:
+            self._translate_order_to_restaurant_lang()
 
         return res
 
@@ -1585,6 +1590,153 @@ class PosOrder(models.Model):
 
     def _prepare_pos_log(self, body):
         return body
+
+    def _get_restaurant_lang(self):
+        """Return the best language for preparation tickets (kitchen display / printer)."""
+        self.ensure_one()
+        public_user = self.env.ref('base.public_user', raise_if_not_found=False)
+        public_user_id = public_user.id if public_user else None
+
+        # 1. Session user (cashier/waiter) or current active user (non-public)
+        for user in (self.session_id.user_id, self.env.user):
+            if user and user.id != public_user_id and user.lang:
+                return user.lang
+
+        # 2. Company partner language
+        if self.company_id.partner_id.lang:
+            return self.company_id.partner_id.lang
+
+        # 3. Environment language fallback
+        return self.env.lang or 'en_US'
+
+    def _translate_order_to_restaurant_lang(self):
+        """Pre-translate order line names and preparation change JSON to the restaurant language."""
+        for order in self:
+            lang = order._get_restaurant_lang()
+            current_lang = self.env.lang or order.company_id.partner_id.lang or 'en_US'
+            if not lang or lang == current_lang:
+                continue
+
+            # Translate stored full_product_name on each line
+            for line in order.lines:
+                translated_name = line._get_full_product_name(lang)
+                if line.full_product_name != translated_name:
+                    super(models.Model, line).write({'full_product_name': translated_name})
+
+            # Translate cached names in the preparation change JSON
+            if not order.last_order_preparation_change:
+                continue
+
+            lopc = json.loads(order.last_order_preparation_change)
+
+            lines_by_uuid = {line.uuid: line for line in order.lines}
+            changed = False
+            for _key, line_data in lopc.get('lines', {}).items():
+                line = lines_by_uuid.get(line_data.get('uuid'))
+                if not line:
+                    continue
+                tdata = line._get_translated_line_data(lang)
+                for json_key, tdata_key in [('basic_name', 'basic_name'), ('display_name', 'display_name'),
+                                             ('attribute_value_names', 'attribute_value_names'), ('name', 'full_name')]:
+                    if line_data.get(json_key) != tdata[tdata_key]:
+                        line_data[json_key] = tdata[tdata_key]
+                        changed = True
+
+            if changed:
+                super(models.Model, order).write({'last_order_preparation_change': json.dumps(lopc)})
+
+    # --- Preparation ticket HTML generation helpers ---
+
+    def _read_pos_record(self, record):
+        """Read a record using its standard POS data fields, or return False if empty."""
+        return record and record.read(record._load_pos_data_fields(self.config_id), load=False)[0]
+
+    def _get_preparation_changes(self, reprint=False):
+        """Parse last_order_preparation_change JSON, or build from current lines as fallback."""
+        if not reprint and self.last_order_preparation_change:
+            if (lopc := json.loads(self.last_order_preparation_change)).get('lines'):
+                return lopc
+        # Fallback: fresh order from kiosk or reprint → generate from current lines
+        return {'lines': {line.uuid: {'quantity': line.qty} for line in self.lines}}
+
+    def _build_change_lines(self, lopc_section, lines_by_uuid, lang, category_ids, cancelled=False):
+        """Build translated line data dicts for a preparation change section (new or cancelled)."""
+        def fmt_qty(q):
+            return int(q) if q == int(q) else q
+
+        result = []
+        for line_uuid, line_data in lopc_section.items():
+            line = lines_by_uuid.get(line_uuid)
+
+            # Filter by POS category if requested
+            if line and category_ids and not (set(line.product_id.pos_categ_ids.ids) & set(category_ids)):
+                continue
+
+            if line:
+                tdata = line._get_translated_line_data(lang)
+                basic_name, attr_names = tdata['basic_name'], tdata['attribute_value_names']
+            elif cancelled:
+                # Cancelled line no longer in order → use stored data from JSON
+                basic_name = line_data.get('basic_name', '')
+                attr_names = line_data.get('attribute_value_names', [])
+            else:
+                continue
+
+            entry = {
+                'uuid': line_uuid,
+                'basic_name': basic_name,
+                'attribute_value_names': attr_names,
+                'quantity': fmt_qty(line_data.get('quantity', line.qty if line else 0)),
+                'note': (line.note if line else line_data.get('note', '')) or '',
+                'customer_note': line_data.get('customer_note', ''),
+            }
+            if not cancelled:
+                entry['combo_parent_uuid'] = line_data.get('combo_parent_uuid', '')
+            result.append(entry)
+        return result
+
+    def generate_preparation_changes_html(self, category_ids=None, reprint=False):
+        """Render HTML receipts for preparation ticket changes (new/cancelled lines)."""
+        self.ensure_one()
+        lang = self._get_restaurant_lang()
+        self_lang = self.with_context(lang=lang)
+
+        # Read all context data for the QWeb template
+        context_data = {
+            'order': self_lang._read_pos_record(self_lang),
+            'config': self_lang._read_pos_record(self_lang.config_id),
+            'company': self_lang._read_pos_record(self_lang.company_id),
+            'partner': self_lang._read_pos_record(self_lang.partner_id),
+            'preset': self_lang._read_pos_record(self_lang.preset_id),
+        }
+
+        lopc = self_lang._get_preparation_changes(reprint)
+        lines_by_uuid = {line.uuid: line for line in self_lang.lines}
+
+        new_lines = self_lang._build_change_lines(lopc.get('lines', {}), lines_by_uuid, lang, category_ids, cancelled=False)
+        cancelled_lines = self_lang._build_change_lines(lopc.get('cancelled', {}), lines_by_uuid, lang, category_ids, cancelled=True)
+
+        extra_data = {
+            'reprint': reprint,
+            'time': fields.Datetime.context_timestamp(self_lang, fields.Datetime.now()).strftime('%H:%M'),
+            'internal_note': self_lang.internal_note or False,
+            'general_customer_note': self_lang.general_customer_note or False,
+            'employee_name': self_lang.user_id.name or False,
+            'preset_time': self_lang.preset_time or False,
+        }
+
+        receipts_html = []
+        for title_key, lines in [("NEW", new_lines), ("CANCELLED", cancelled_lines)]:
+            if not lines:
+                continue
+            title = self_lang.env._("NEW") if title_key == "NEW" else self_lang.env._("CANCELLED")
+            val = {
+                **context_data,
+                'changes': {'title': title, 'data': lines},
+                'extra_data': extra_data,
+            }
+            receipts_html.append(self_lang.env['ir.qweb']._render('point_of_sale.pos_order_change_receipt', val))
+        return receipts_html
 
 
 class PosPackOperationLot(models.Model):

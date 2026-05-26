@@ -56,7 +56,9 @@ export class ConfirmationPage extends Component {
     }
 
     get confirmedOrder() {
-        return this.selfOrder.models["pos.order"].getBy("uuid", this.selfOrder.selectedOrderUuid);
+        return this.selfOrder.models["pos.order"].find(
+            (o) => o.access_token === this.props.orderAccessToken
+        );
     }
 
     async initOrder(retry = true) {

@@ -368,3 +368,16 @@ class PosOrder(models.Model):
             price_extra = sum(attr.price_extra for attr in selected_attributes)
             total_price = price_unit + price_extra + child.combo_item_id.extra_price
             child.price_unit = total_price
+
+    def _get_restaurant_lang(self):
+        self.ensure_one()
+        pub = self.env.ref('base.public_user', raise_if_not_found=False)
+        user_lang = next(
+            (u.lang for u in (self.session_id.user_id, self.env.user) if u and u.id != (pub.id if pub else None) and u.lang),
+            None
+        )
+        if user_lang:
+            return user_lang
+        if self.config_id.self_ordering_default_language_id:
+            return self.config_id.self_ordering_default_language_id.code
+        return super()._get_restaurant_lang()

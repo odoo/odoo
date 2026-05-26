@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { rpc } from "@web/core/network/rpc";
 import { EpsonPrinter } from "../utils/printer/epson_printer";
 import { GeneratePrinterData } from "../utils/printer/generate_printer_data";
 import { RetryPrintPopup } from "../components/popups/retry_print_popup/retry_print_popup";
@@ -228,6 +229,73 @@ export class PosTicketPrinterService {
      * Changes use preparation printers via this.config.preparation_printer_ids
      */
     async printOrderChanges({ order, opts = {}, printers = this.config.preparation_printer_ids }) {
+        if (
+            window.location.pathname.includes("/pos-self") &&
+            this.config.self_ordering_mode &&
+            this.config.self_ordering_mode !== "nothing"
+        ) {
+            let isPrinted = false;
+            const unsuccessfulPrints = [];
+            const retryPrinters = new Set();
+
+            for (const printer of printers) {
+                const categoryIds = printer.product_categories_ids.map((c) => c.id);
+                const accessToken =
+                    (typeof odoo !== "undefined" && odoo?.access_token) ||
+                    this.config?.access_token ||
+                    "";
+                const htmlReceipts = await rpc("/pos-self-order/get-preparation-changes-receipt", {
+                    access_token: accessToken,
+                    order_id: order.id,
+                    order_access_token: order.access_token,
+                    category_ids: categoryIds,
+                    reprint: Boolean(opts.explicitReprint),
+                });
+
+                for (const html of htmlReceipts) {
+                    if (!printer?._instance) {
+                        unsuccessfulPrints.push(printer.name + " is not connected");
+                        break;
+                    }
+
+                    const iframe = document.createElement("iframe");
+                    iframe.style.width = "100%";
+                    iframe.style.height = "100%";
+                    iframe.style.border = "none";
+                    iframe.srcdoc = html;
+                    document.getElementById("receipt-iframe-container").innerHTML = "";
+                    document.getElementById("receipt-iframe-container").appendChild(iframe);
+                    await new Promise((resolve) => (iframe.onload = resolve));
+
+                    const image = await this.generateImage(iframe);
+                    const result = await this.print({ printer, image });
+                    if (result.successful) {
+                        isPrinted = true;
+                    } else {
+                        retryPrinters.add(printer);
+                        unsuccessfulPrints.push(printer.name + ": " + result.message.body);
+                    }
+                }
+            }
+
+            if (unsuccessfulPrints.length && this.config?.self_ordering_mode !== "mobile") {
+                const message = {
+                    title: _t("Printing failed"),
+                    body: unsuccessfulPrints.join("\n"),
+                };
+                this.showPrinterErrorDialog(
+                    message,
+                    this.printOrderChanges.bind(this, {
+                        order,
+                        opts,
+                        retryPrinters,
+                    })
+                );
+            }
+
+            return isPrinted;
+        }
+
         let isPrinted = false;
         const unsuccessfulPrints = [];
         const retryPrinters = new Set();
