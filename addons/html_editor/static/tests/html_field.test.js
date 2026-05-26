@@ -618,7 +618,36 @@ test("edit a html field with `o-contenteditable-true` or `o-contenteditable-fals
     pasteOdooEditorHtml(htmlEditor, "addon");
     expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(getTxtValue("addoninside", true));
     await clickSave();
-    expect.verifySteps(["update_value", "web_save"]);
+    expect.verifySteps(["update_value", "update_value", "web_save"]);
+});
+
+test("blurring an inner contenteditable field by clicking outside should trigger update_value", async () => {
+    patchWithCleanup(HtmlField.prototype, {
+        updateValue() {
+            expect.step("update_value");
+            super.updateValue(...arguments);
+        },
+    });
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<div contenteditable="false">outside<div contenteditable="true"><p class="inner">inside</p></div></div>`,
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    setSelection({ anchorNode: queryOne(".inner"), anchorOffset: 0 });
+    await tick();
+    await insertText(htmlEditor, "a");
+    await click(document.body);
+    expect.verifySteps(["update_value"]);
 });
 
 test.tags("focus required");
