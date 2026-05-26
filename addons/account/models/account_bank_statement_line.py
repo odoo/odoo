@@ -5,6 +5,7 @@ from odoo.fields import Command, Domain
 from xmlrpc.client import MAXINT
 
 from odoo.tools import SQL
+from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 
 
 class AccountBankStatementLine(models.Model):
@@ -63,8 +64,13 @@ class AccountBankStatementLine(models.Model):
         check_company=True)
 
     # Technical field used to store the bank account number before its creation, upon the line's processing
-    account_number = fields.Char(string='Bank Account Number')
+    account_number = fields.Char(string='Bank Account Number', search='_search_account_number')
 
+    sanitized_account_number = fields.Char(
+        string='Sanitized Bank Account Number',
+        compute='_compute_sanitized_account_number',
+        readonly=True, store=True,
+    )
     # This field is used to record the third party name when importing bank statement in electronic format,
     # when the partner doesn't exist yet in the database (or cannot be found).
     partner_name = fields.Char(index='btree_not_null')
@@ -308,6 +314,11 @@ class AccountBankStatementLine(models.Model):
                 # The journal entry seems reconciled.
                 st_line.is_reconciled = True
 
+    @api.depends('account_number')
+    def _compute_sanitized_account_number(self):
+        for account in self:
+            account.sanitized_account_number = sanitize_account_number(account.account_number)
+
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
@@ -447,6 +458,13 @@ class AccountBankStatementLine(models.Model):
             for group_line in result:
                 group_line['running_balance'] = self.search(group_line['__extra_domain'] + domain, limit=1).running_balance or 0.0
         return result
+
+    def _search_account_number(self, operator, value):
+        if operator in ('in', 'not in'):
+            value = [sanitize_account_number(i) for i in value]
+        else:
+            value = sanitize_account_number(value)
+        return [('sanitized_account_number', operator, value)]
 
     # -------------------------------------------------------------------------
     # ACTION METHODS
