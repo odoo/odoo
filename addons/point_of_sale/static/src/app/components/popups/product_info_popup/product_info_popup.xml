@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductInfoPopup">
+        <t t-set="productInfo" t-value="this.props.info.productInfo"/>
         <Dialog contentClass="'product-info-popup'">
             <t t-set-slot="header">
                 <button t-on-click="this.toggleFavorite" class="border-0 bg-transparent mb-2" t-att-disabled="this.pos.cashier._role == 'minimal'">
@@ -8,7 +9,7 @@
                         t-att-style="this.props.productTemplate.is_favorite ? 'color: #f3cc00;' : ''"
                         role="img"/>
                 </button>
-                <h3 class="section-title" t-out="this.props.productTemplate.displayName + ' | ' + this.env.utils.formatCurrency(this.props.info.productInfo.all_prices.price_with_tax)"/>
+                <h3 class="section-title" t-out="this.props.productTemplate.displayName + ' | ' + this.env.utils.formatCurrency(productInfo.all_prices.price_with_tax)"/>
                 <button type="button" class="btn-close mb-2" aria-label="Close" tabindex="-1" t-on-click="this.props.close"/>
             </t>
             <div class="section-public-description mt-3 mb-4 pb-4 border-bottom text-start" t-if="this.props.productTemplate.productDescriptionMarkup">
@@ -18,29 +19,30 @@
                 <t t-out="this.props.productTemplate.productDescriptionMarkup" />
             </div>
             <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start">
-                <div class="d-flex align-items-center gap-2">
-                    <div class="d-flex flex-column">
+                <div class="d-flex flex-column">
+                    <div class="d-flex align-items-center justify-content-between gap-2">
                         <h3 class="section-title">Inventory</h3>
-                        <div class="section-inventory-body">
-                            <div>
-                                On hand: <span class="me-1 fw-bolder"><t t-out="this.props.info.productInfo.free_qty"/></span>
-                                <t t-out="this.props.info.productInfo.uom"/>
-                            </div>
+                        <button class="btn btn-lg lh-lg text-nowrap" t-on-click="this.openSnoozeDialog" t-attf-class="{{this.state.activeSnooze ? 'btn-warning' : 'btn-secondary'}}">
+                            <i class="fa fa-clock-o me-1" t-if="!(this.state.activeSnooze and this.ui.isSmall)" aria-hidden="true"></i>
+                            <span t-if="!this.state.activeSnooze and !this.ui.isSmall">Snooze</span>
+                            <span class="m-0" t-if="this.state.activeSnooze" style="font-variant-numeric: tabular-nums;">
+                                <t t-out="this.state.countdown" />
+                            </span>
+                        </button>
+                    </div>
+                    <div class="section-inventory-body">
+                        <div>
+                            <i t-attf-class="fa fa-circle text-{{ productInfo.free_qty &gt; 0 ? 'success' : 'danger' }} me-2"></i>
+                            On hand: <span class="me-1 fw-bolder on-hand"><t t-out="productInfo.free_qty"/></span>
+                            <t t-out="productInfo.uom"/>
                         </div>
                     </div>
-                    <button class="btn btn-lg lh-lg ms-auto text-nowrap" t-on-click="this.openSnoozeDialog" t-attf-class="{{this.state.activeSnooze ? 'btn-warning' : 'btn-secondary'}}">
-                        <i class="fa fa-clock-o me-1" t-if="!(this.state.activeSnooze and this.ui.isSmall)" aria-hidden="true"></i>
-                        <span t-if="!this.state.activeSnooze and !this.ui.isSmall">Snooze</span>
-                        <span class="m-0" t-if="this.state.activeSnooze" style="font-variant-numeric: tabular-nums;">
-                            <t t-out="this.state.countdown" />
-                        </span>
-                    </button>
                 </div>
             </div>
             <div class="section-supplier mt-3 mb-4 pb-4 border-bottom text-start" t-if="this.props.info?.productInfo?.suppliers?.length">
                 <h3 class="section-title">Replenishment</h3>
                 <div class="section-supplier-body">
-                    <t t-foreach="this.props.info.productInfo.suppliers" t-as="supplier" t-key="supplier.id">
+                    <t t-foreach="productInfo.suppliers" t-as="supplier" t-key="supplier.id">
                         <div class="d-flex flex-column flex-md-row gap-2">
                             <div>
                                 <span t-out="supplier.name" class="table-name"/>:
@@ -58,7 +60,7 @@
             </div>
             <div class="section-optional-product mt-3 mb-4 pb-4 border-bottom text-start" t-if="this.props.info?.productInfo?.optional_products?.length > 0">
                 <h3 class="section-title">Optional Products:</h3>
-                <div class="section-optional-product-body" t-foreach="this.props.info.productInfo.optional_products" t-as="optional" t-key="optional.id">
+                <div class="section-optional-product-body" t-foreach="productInfo.optional_products" t-as="optional" t-key="optional.id">
                     <span>
                         <a class="text-primary text-decoration-underline" t-out="optional.name" t-on-click="() => this.searchProduct(optional.name)"/>
                             from
@@ -71,14 +73,14 @@
                     <h3 class="section-title">Financials</h3>
                     <div class="grid gap-2">
                         <label class="fw-bold">Price excl. Tax:</label>
-                        <span><t t-out="this.env.utils.formatCurrency(this.props.info.productInfo.all_prices.price_without_tax)"/></span>
+                        <span><t t-out="this.env.utils.formatCurrency(productInfo.all_prices.price_without_tax)"/></span>
                         <label class="fw-bold vat-label"><t t-out="this.vatLabel"/></label>
                         <span class="vat-value">
                             <t t-out="this.props.info.taxAmount"/>
                             (<t t-out="this.props.info.taxName"/>)
                         </span>
                         <label class="fw-bold">Price incl. Tax:</label>
-                        <span><t t-out="this.env.utils.formatCurrency(this.props.info.productInfo.all_prices.price_with_tax)"/></span>
+                        <span><t t-out="this.env.utils.formatCurrency(productInfo.all_prices.price_with_tax)"/></span>
                         <t t-if="this._hasMarginsCostsAccessRights()">
                             <label class="fw-bold">Cost:</label>
                             <span><t t-out="this.props.info.costCurrency"/></span>
@@ -87,7 +89,7 @@
                         </t>
                     </div>
                     <div class="grid gap-2 mt-3">
-                        <t t-foreach="this.props.info.productInfo.pricelists" t-as="pricelist" t-key="pricelist.name">
+                        <t t-foreach="productInfo.pricelists" t-as="pricelist" t-key="pricelist.name">
                             <label class="fw-bold" t-out="pricelist.name"/>
                             <span t-out="this.env.utils.formatCurrency(pricelist.price)"/>
                         </t>

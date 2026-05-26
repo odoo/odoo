@@ -7,23 +7,35 @@
         <div class="section-inventory-body" position="replace">
             <div class="section-inventory-body">
                 <t t-foreach="this.props.info.productInfo.warehouses" t-as="warehouse" t-key="warehouse.name">
-                    <div class="d-flex flex-column flex-md-row gap-2">
-                        <div>
-                            <t t-out="warehouse.name" class="table-name"/>
-                            :
+                    <div t-attf-class="row align-items-center my-3 {{ this.ui.isSmall ? 'text-center' : 'text-start' }}">
+                        <div t-attf-class="{{ this.ui.isSmall ? 'col-12 mb-2' : 'col-3 mb-0' }} text-start fw-bold text-break">
+                            <t t-out="warehouse.name"/> <t t-if="!this.ui.isSmall">:</t>
                         </div>
-                        <div>
-                            <span class="me-1 fw-bolder"><t t-out="warehouse.free_qty" class="table-name"/></span>
-                            <t t-out="warehouse.uom"/> available,
+                        <div t-attf-class="{{ this.ui.isSmall ? 'col-4 flex-column' : 'col flex-row' }} d-flex align-items-center">
+                            <span t-if="this.ui.isSmall" class="text-muted mb-1">On hand</span>
+                            <div>
+                                <i t-attf-class="fa fa-circle text-{{ warehouse.available_quantity &gt; 0 ? 'success' : 'danger' }} me-1"></i>
+                                <span class="fw-bolder on-hand"><t t-out="warehouse.available_quantity"/></span>
+                                <span class="ms-1"><t t-out="warehouse.uom"/></span>
+                                <span t-if="!this.ui.isSmall" class="ms-1">on hand</span>
+                            </div>
                         </div>
-                        <div>
-                            <span class="me-1 fw-bolder"><t t-out="warehouse.forecasted_quantity"/></span>
-                            forecasted
+                        <div t-attf-class="{{ this.ui.isSmall ? 'col-4 flex-column' : 'col flex-row' }} d-flex align-items-center border-start border-end">
+                            <span t-if="this.ui.isSmall" class="text-muted mb-1">Available</span>
+                            <div>
+                                <span class="fw-bolder"><t t-out="warehouse.free_qty"/></span>
+                                <span class="ms-1"><t t-out="warehouse.uom"/></span>
+                                <span t-if="!this.ui.isSmall" class="ms-1">available</span>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        On hand: <span class="me-1 fw-bolder"><t t-out="warehouse.available_quantity"/></span>
-                        <t t-out="warehouse.uom"/>
+                        <div t-attf-class="{{ this.ui.isSmall ? 'col-4 flex-column' : 'col flex-row' }} d-flex align-items-center">
+                            <span t-if="this.ui.isSmall" class="text-muted mb-1">Forecasted</span>
+                            <div>
+                                <span class="fw-bolder"><t t-out="warehouse.forecasted_quantity"/></span>
+                                <span class="ms-1"><t t-out="warehouse.uom"/></span>
+                                <span t-if="!this.ui.isSmall" class="ms-1">forecasted</span>
+                            </div>
+                        </div>
                     </div>
                 </t>
             </div>
