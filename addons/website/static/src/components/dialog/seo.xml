@@ -183,7 +183,15 @@
                         <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page description">D</abbr></th>
                         <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page content">C</abbr></th>
                         <th title="Most searched topics related to your keyword, ordered by importance">Content ideas based on Google searches</th>
-                        <th class="text-center"></th>
+                        <th></th>
+                        <th class="text-center">
+                            <button class="border-0 oe_remove text-danger bg-transparent"
+                                    t-on-click="this.removeAllKeywords"
+                                    title="Remove all keywords"
+                                    aria-label="Remove all keywords">
+                                <i class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
+                            </button>
+                        </th>
                     </tr>
                 </thead>
                 <t t-foreach="this.seoContext.keywords" t-as="keyword" t-key="keyword">
@@ -192,15 +200,20 @@
             </table>
         </div>
         <div role="form" class="input-group w-50">
-            <t t-set="placeholderRemove">Remove a keyword first</t>
-            <t t-set="placeholderAdd">Add your keyword</t>
-            <input t-model.proxy="this.state.keyword" type="text" class="form-control" t-att-placeholder="this.isFull ? placeholderRemove : placeholderAdd" t-att-readonly="this.isFull" t-on-keyup="this.onKeyup"/>
-            <button t-on-click="() => this.addKeyword(this.state.keyword)" t-att-disabled="this.isFull" class="btn btn-primary" type="button">Add</button>
-            <button t-if="!this.seoContext.keywords.length" t-on-click="this.provideKeywords" class="btn btn-secondary" type="button">
+            <t t-set="placeholder">Add your keyword</t>
+            <t t-if="this.hasTooManyKeywords">
+                <t t-set="placeholder">Avoid too many keywords</t>
+            </t>
+            <input t-model.proxy="this.state.keyword" type="text" class="form-control" t-att-class="{ 'is-invalid' : this.hasKeyword }" t-att-placeholder="placeholder" t-on-keyup="this.onKeyup"/>
+            <button t-on-click="() => this.addKeyword(this.state.keyword)" t-att-disabled="this.hasKeyword" class="btn btn-primary" type="button">Add</button>
+            <button t-if="!this.hasTooManyKeywords" t-on-click="this.provideKeywords" class="btn btn-secondary" type="button">
                 Generate keywords
             </button>
         </div>
-        <div t-if="this.state.errorMessage" class="alert alert-warning" t-out="this.state.errorMessage"></div>
+        <span t-if="this.hasKeyword" class="me-2 small text-danger">
+            <i class="oi me-1" data-icon="close" aria-hidden="true"/>
+            The keyword <t t-out="this.normalizeKeyword(this.state.keyword)"/> already exists.
+        </span>
     </section>
 </t>
 
