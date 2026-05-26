@@ -12,8 +12,9 @@ const fileViewerService = {
             /**
              * @param {import("@web/core/file_viewer/file_viewer").File} file
              * @param {import("@web/core/file_viewer/file_viewer").File[]} files
+             * @param {Function} [onCloseCallback]
              */
-            function open(file, files = [file]) {
+            function open(file, files = [file], onCloseCallback) {
                 closeFn?.();
                 if (!file.isViewable) {
                     return;
@@ -28,7 +29,10 @@ const fileViewerService = {
                             startIndex: index,
                             close: () => closeFn?.(),
                         },
-                        { rootId: owner?.root?.el?.getRootNode()?.host?.id }
+                        {
+                            rootId: owner?.root?.el?.getRootNode()?.host?.id,
+                            onRemove: onCloseCallback,
+                        }
                     );
                 }
             }
