@@ -100,7 +100,7 @@ export function renderField(field, resetId = false) {
     if (!field.id) {
         field.id = generateHTMLId();
     }
-    const params = { field: { ...field }, defaultName: field.string || _t("Field") };
+    const params = { field: { ...field } };
     if (["url", "email", "tel"].includes(field.type)) {
         params.field.inputType = field.type;
     }

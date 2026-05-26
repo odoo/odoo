@@ -36,9 +36,9 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         self.assertEqual(guru_applicant.partner_name, 'John Smith')
         self.assertEqual(guru_applicant.email_from, 'john@smith.com')
         self.assertEqual(guru_applicant.partner_phone, '118.218')
-        self.assertTrue(
-            "Other Information:\n___________\n\nShort introduction from applicant : ### [GURU] HR RECRUITMENT TEST DATA ###"
-            in guru_applicant.message_ids.mapped(lambda m: html2plaintext(m.body))
+        self.assertIn(
+            "Other Information:\n___________\n\nShort Introduction : ### [GURU] HR RECRUITMENT TEST DATA ###",
+            guru_applicant.message_ids.mapped(lambda m: html2plaintext(m.body))
         )
         self.assertEqual(guru_applicant.job_id, job_guru)
 
@@ -46,9 +46,9 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         self.assertEqual(internship_applicant.partner_name, 'Jack Doe')
         self.assertEqual(internship_applicant.email_from, 'jack@doe.com')
         self.assertEqual(internship_applicant.partner_phone, '118.712')
-        self.assertTrue(
-            "Other Information:\n___________\n\nShort introduction from applicant : ### HR [INTERN] RECRUITMENT TEST DATA ###"
-            in internship_applicant.message_ids.mapped(lambda m: html2plaintext(m.body))
+        self.assertIn(
+            "Other Information:\n___________\n\nShort Introduction : ### HR [INTERN] RECRUITMENT TEST DATA ###",
+            internship_applicant.message_ids.mapped(lambda m: html2plaintext(m.body))
         )
         self.assertEqual(internship_applicant.job_id, job_intern)
 

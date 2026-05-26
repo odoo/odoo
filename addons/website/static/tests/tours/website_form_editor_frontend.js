@@ -7,9 +7,9 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
             trigger:
                 "form[data-model_name='mail.mail']" +
                 "[data-success-page='/contactus-thank-you']" +
-                ":has(.s_website_form_field:has(label:contains('Your Name')):has(input[type='text'][name='name'][required]))" +
+                ":has(.s_website_form_field:has(label:contains('Your Name')):has(input[type='text'][name='Your Name'][required]))" +
                 ":has(.s_website_form_field:has(label:contains('Your Email')):has(input[type='email'][name='email_from'][required]))" +
-                ":has(.s_website_form_field:has(label:contains('Your Question')):has(textarea[name='description'][required]))" +
+                ":has(.s_website_form_field:has(label:contains('Your Question')):has(textarea[name='Your Question'][required]))" +
                 ":has(.s_website_form_field:has(label:contains('Subject')):has(input[type='text'][name='subject'][required]))" +
                 ":has(.s_website_form_field:has(label:contains('Test Date')):has(input[type='text'][name='date'][required]))" +
                 ":has(.s_website_form_field:has(label:contains('Your Message')):has(textarea[name='body_html'][required]))" +
@@ -128,7 +128,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
         },
         {
             content: "Complete Your Name field",
-            trigger: "input[name='name']",
+            trigger: "input[name='Your Name']",
             run: "edit chhagan",
         },
         {
@@ -143,7 +143,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
         },
         {
             content: "Complete Your Question field",
-            trigger: "textarea[name='description']",
+            trigger: "textarea[name='Your Question']",
             run: "edit magan",
         },
         {
@@ -160,7 +160,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
         },
         {
             content: "Change name input",
-            trigger: "input[name='name']",
+            trigger: "input[name='Your Name']",
             run: "edit odoo",
         },
         {
@@ -237,7 +237,7 @@ registry.category("web_tour.tours").add("website_form_contactus_submit", {
         },
         {
             content: "Fill in the message",
-            trigger: 'textarea[name="description"]',
+            trigger: 'textarea[name="Message"]',
             run: "edit Test",
         },
         {

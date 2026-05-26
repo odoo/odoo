@@ -114,7 +114,7 @@ registry.category("web_tour.tours").add("snippet_popup_display_on_click", {
         },
         {
             content: "Wait form is patched",
-            trigger: ":iframe form#contactus_form input[name=company]:value(yourcompany)",
+            trigger: ":iframe form#contactus_form input[name=Company]:value(yourcompany)",
         },
         clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
         {
