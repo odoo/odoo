@@ -250,9 +250,13 @@ class EmployeeProjectRel(models.Model):
 
     batch_id = fields.Many2one('sale.phonebook.batch', required=True, string="Tập dữ liệu", ondelete='cascade')
 
-    phone_received = fields.Integer(string="Số đã nhận", compute='_compute_phone_received')
+    phone_received = fields.Integer(string="Số đã nhận", compute='_compute_phone_received', store=True)
+    phone_handled = fields.Integer(string="Số đã xử lý", compute='_compute_phone_handled', store=True)
 
-    @api.depends('batch_id.phone_ids')
+    @api.depends(
+        'batch_id.phone_ids',
+        'batch_id.phone_ids.salesperson_id'
+    )
     def _compute_phone_received(self):
         for rec in self:
             rec.phone_received = len(
@@ -260,6 +264,34 @@ class EmployeeProjectRel(models.Model):
                     lambda p: p.salesperson_id == rec.sales_id
                 )
             )
+
+    @api.depends(
+        'batch_id.phone_ids',
+        'batch_id.phone_ids.salesperson_id'
+    )
+    def _compute_phone_received(self):
+        for rec in self:
+            rec.phone_received = len(
+                rec.batch_id.phone_ids.filtered(
+                    lambda p: p.salesperson_id == rec.sales_id
+                )
+            )
+        
+    @api.depends(
+        'batch_id.phone_ids',
+        'batch_id.phone_ids.salesperson_id',
+        'batch_id.phone_ids.status'
+    )
+    def _compute_phone_handled(self):
+        for rec in self:
+            rec.phone_handled = len(
+                rec.batch_id.phone_ids.filtered(
+                    lambda p:
+                    p.salesperson_id == rec.sales_id and
+                    p.status in ('contacted', 'callback')
+                )
+            )
+            rec.sales_id.total_handled += rec.phone_handled
     
 
     def get_total_phone_received(self, salesperson):

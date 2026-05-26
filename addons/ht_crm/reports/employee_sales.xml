@@ -1,0 +1,28 @@
+<odoo>
+    <record id="view_estate_project_report_pivot" model="ir.ui.view">
+        <field name="name">estate.project.report.pivot</field>
+        <field name="model">estate.project.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Sales Report">
+                <field name="sales_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+
+                <field name="total_received" type="measure"/>
+                <field name="total_handled" type="measure"/>
+                <field name="performance" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_estate_project_report_graph" model="ir.ui.view">
+        <field name="name">estate.project.report.graph</field>
+        <field name="model">estate.project.report</field>
+        <field name="arch" type="xml">
+            <graph string="Performance" type="bar">
+                <field name="sales_id"/>
+                <field name="performance" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    
+</odoo>

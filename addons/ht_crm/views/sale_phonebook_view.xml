@@ -36,7 +36,7 @@
                 <field name="name" readonly="True" class="col-name"/>
                 <field name="phone" widget="phone" class="col-phone"/>
                 <field name="status" class="col-status"/>
-                <field name="note" class="col-note"/>
+                <field name="note_preview" string="Ghi chú" class="col-note"/>
 
                 <!-- Trường bổ sung -->
                 <field name="salesperson_id" optional="1" groups="ht_crm.group_ht_executive,ht_crm.group_ht_general_admin,ht_crm.group_ht_leader"/>
@@ -86,7 +86,7 @@
                                     Ghi chú
                                 </div>
 
-                                <field name="note_preview"/>
+                                <field name="note"/>
 
                             </div>
 

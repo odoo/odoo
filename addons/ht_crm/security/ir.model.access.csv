@@ -15,7 +15,7 @@ access_employee_role_user,employee.profile.role.user,model_employee_profile_role
 access_transaction_user,sale.transaction.user,model_sale_transaction,group_ht_user,1,0,0,0
 
 access_customer,sale.customer,model_sale_customer,group_manage_customer,1,1,1,1
-access_transaction_read,sale.transaction.read,model_sale_transaction,group_manage_customer,1,0,0,0
+access_transaction_read,sale.transaction.read,model_sale_transaction,group_transaction_read,1,0,0,0
 access_estate_read,estate.project.read,model_estate_project,group_manage_customer,1,0,0,0
 
 access_phonebook_manager,sale.phonebook.manager,model_sale_phonebook,group_ht_leader,1,1,1,1
@@ -67,9 +67,13 @@ access_customer_report,sale.customer.report,model_sale_customer_report,group_vie
 access_revenue_report,revenue.report,model_revenue_report,group_view_report,1,0,0,0
 access_estate_project_report,estate.project.report,model_estate_project_report,group_view_report,1,0,0,0
 access_estate_project_unit_report,estate.project.report.unit,model_estate_project_unit_report,group_view_report,1,0,0,0
+access_employee_sales_report,employee.sales.report,model_employee_sales_report,group_view_report,1,0,0,0
 access_ir_actions_report_user,ir.actions.report.user,base.model_ir_actions_report,group_view_report,1,0,0,0
 
 
 access_employee_profile_manager,employee.profile.manager,model_employee_profile,group_manage_employee,1,1,1,1
 access_employee_profile_sales_manager,employee.profile.sales.manager,model_employee_profile_sales,group_manage_employee,1,1,1,1
-access_employee_profile_role_manager,employee.profile.role.manager,model_employee_profile_sales,group_manage_employee,1,1,1,1
+access_employee_profile_role_manager,employee.profile.role.manager,model_employee_profile_role,group_manage_employee,1,1,1,1
+access_employee_sales_log,employee.sales.log,model_employee_sales_log,group_manage_employee,1,1,1,1
+
+acccess_employee_profile_sales_read,employee.profile.sales.read,model_employee_profile_sales,group_employee_sales_read,1,0,0,0

@@ -33,6 +33,7 @@
         'views/rules/sale_customers.xml',
         'views/rules/sale_phonebook.xml',
         'views/rules/sale_transaction.xml',
+        'views/rules/employee_profile_sales.xml',
         'views/estate_project_view.xml',
         'views/estate_property_unit_type_view.xml',
         'views/estate_property_unit_view.xml',

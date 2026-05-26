@@ -2,6 +2,40 @@ from odoo import models, fields, api, exceptions
 import datetime
 import random
 
+class EmployeeSalesLog(models.Model):
+    _name = 'employee.sales.log'
+    _description = 'Sales Statistic Log'
+    _order = 'date desc'
+
+    sales_id = fields.Many2one(
+        'employee.profile.sales',
+        required=True,
+        ondelete='cascade'
+    )
+
+    date = fields.Date(
+        default=fields.Date.today,
+        required=True
+    )
+
+    received = fields.Integer(default=0)
+    handled = fields.Integer(default=0)
+
+    performance = fields.Float(
+        compute='_compute_performance',
+        store=True
+    )
+
+    @api.depends('received', 'handled')
+    def _compute_performance(self):
+        for rec in self:
+            if rec.received:
+                rec.performance = (
+                    rec.handled / rec.received
+                ) * 100
+            else:
+                rec.performance = 0
+
 class PhonebookBatch(models.Model):
     _name = "sale.phonebook.batch"
     _description = "Phone Dataset"
@@ -115,6 +149,9 @@ class PhonebookBatch(models.Model):
 
         quota = {emp.id: 0 for emp in employees}
 
+        # Track statistic
+        received_counter = {}
+
         self.action_clean_invalid()
         self.action_remove_sales()
 
@@ -145,8 +182,36 @@ class PhonebookBatch(models.Model):
             phone.write({'salesperson_id': employee.id})
             phone.write({'previous_salesperson_ids': [(4, employee.id)]})
             quota[employee.id] += 1
+
+
+            # Lifetime counter
+            employee.total_received += 1
+
+            # Statistic counter
+            received_counter[employee.id] = (
+                received_counter.get(employee.id, 0) + 1
+            )
             
             all_blocked = False
+
+        # Update statistic log
+        today = fields.Date.today()
+        Log = self.env['employee.sales.log']
+
+        for employee_id, quantity in received_counter.items():
+
+            log = Log.search([
+                ('sales_id', '=', employee_id),
+                ('date', '=', today)
+            ], limit=1)
+
+            if not log:
+                log = Log.create({
+                    'sales_id': employee_id,
+                    'date': today,
+                })
+
+            log.received += quantity
 
         if all_blocked:
             self.write({'state': 'done'})
@@ -160,7 +225,7 @@ class PhoneBook(models.Model):
     batch_id = fields.Many2one(
         'sale.phonebook.batch',
         string="Tập dữ liệu",
-        groups="ht_crm.group_ht_board_of_directors,ht_crm.group_ht_executive"
+        groups="ht_crm.group_manage_phone_data"
     )
 
     # Trường cơ bản
@@ -168,7 +233,6 @@ class PhoneBook(models.Model):
     phone = fields.Char(string="Số điện thoại", size=15, required=True)
     note = fields.Text(string="Ghi chú")
     note_preview = fields.Char(
-        string="Ghi chú",
         compute="_compute_note_preview",
         store=False
     )
@@ -209,7 +273,14 @@ class PhoneBook(models.Model):
         ])
 
     def write(self, vals):
-        if not self.env.user.has_group('base.group_system') and not self.env.user.has_group('ht_crm.group_ht_executive'):
+        # =========================
+        # Permission check
+        # =========================
+        if (
+            not self.env.user.has_group('base.group_system')
+            and not self.env.user.has_group('ht_crm.group_ht_executive')
+        ):
+
             allowed_fields = ['note', 'status']
 
             forbidden_fields = [
@@ -221,19 +292,70 @@ class PhoneBook(models.Model):
                 raise exceptions.UserError(
                     "Bạn chỉ được sửa ghi chú và trạng thái."
                 )
-            
+
+        # =========================
+        # Check reclaim
+        # =========================
         if self.env.user.has_group('ht_crm.group_ht_user'):
+
             person = vals.get('salesperson_id')
 
             if person:
-                salesperson = self.env['employee.profile.sales'].browse(person)
+
+                salesperson = self.env[
+                    'employee.profile.sales'
+                ].browse(person)
 
                 if self.env.user != salesperson.user_id:
                     raise exceptions.UserError(
                         "Số này đã bị thu hồi."
                     )
 
-        return super().write(vals)
+        # Track old status
+        old_status = {
+            rec.id: rec.status
+            for rec in self
+        }
+
+        res = super().write(vals)
+
+        # =========================
+        # Update handled statistic
+        # =========================
+        handled_status = ['contacted', 'callback']
+
+        if 'status' in vals:
+
+            Log = self.env['employee.sales.log']
+
+            for rec in self:
+
+                old = old_status.get(rec.id)
+                new = rec.status
+
+                # Chỉ tính khi chuyển từ status khác
+                if (
+                    old not in handled_status
+                    and new in handled_status
+                    and rec.salesperson_id
+                ):
+
+                    today = fields.Date.today()
+
+                    log = Log.search([
+                        ('sales_id', '=', rec.salesperson_id),
+                        ('date', '=', today)
+                    ], limit=1)
+
+                    if not log:
+                        log = Log.create({
+                            'sales_id': rec.salesperson_id,
+                            'date': today,
+                        })
+
+                    log.handled += 1
+
+        return res
 
     @api.depends('note')
     def _compute_note_preview(self):
@@ -285,6 +407,29 @@ class PhoneBook(models.Model):
         self.ensure_one()
         self.write({'salesperson_id': ""})
         self.write({'previous_salesperson_ids': [(5, 0, 0)]})
+
+    # log_ids = fields.One2many(
+    #     'sale.phonebook.log',
+    #     'phonebook_id',
+    #     string="Logs"
+    # )
+
+    # def write(self, vals):
+    #     for rec in self:
+    #         old_status = rec.status
+
+    #         res = super(PhoneBook, rec).write(vals)
+
+    #         # Log when status changed
+    #         if 'status' in vals and old_status != vals['status']:
+    #             self.env['sale.phonebook.log'].create({
+    #                 'phonebook_id': rec.id,
+    #                 'old_status': old_status,
+    #                 'new_status': vals['status'],
+    #                 'note': vals.get('note', ''),
+    #             })
+
+    #     return True
 
 
 class PhonebookStatusWizard(models.TransientModel):

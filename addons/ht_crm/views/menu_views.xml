@@ -127,6 +127,18 @@
         <field name="view_mode">graph,pivot</field>
     </record>
 
+    <record id="action_employee_sales_log" model="ir.actions.act_window">
+        <field name="name">Log Sales</field>
+        <field name="res_model">employee.sales.log</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+    </record>
+
+    <record id="action_employee_sales_report" model="ir.actions.act_window">
+        <field name="name">Báo cáo Sales</field>
+        <field name="res_model">employee.sales.report</field>
+        <field name="view_mode">graph,pivot</field>
+    </record>
+
     <menuitem id="menu_ht_root" name="HTLand CRM">
 
         <!-- CUSTOMER MANAGEMENT -->
@@ -139,6 +151,7 @@
             </menuitem>
 
             <menuitem id="menu_assignment" name="Phân bổ Data" action="action_employee_project_rel"/>
+            <menuitem id="menu_sales_log" name="Sales Log" action="action_employee_sales_log"/>
         </menuitem>
 
         <menuitem id="menu_project_root" name="Dự Án" sequence="20">
@@ -168,6 +181,7 @@
             <menuitem id="menu_stats_transaction" name="Giao dịch" action="action_transaction_graph"/>
             <menuitem id="menu_stats_project" name="Dự án" action="action_estate_project_report"/>
             <menuitem id="menu_stats_project_unit" name="Sản phẩm dự án" action="action_estate_project_unit_report"/>
+            <menuitem id="menu_stats_sales" name="Sales" action="action_employee_sales_report"/>
         </menuitem> 
 
         <!-- SYSTEM -->

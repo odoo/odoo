@@ -3,14 +3,14 @@ import datetime
 
 class Employee(models.Model):
     _name = 'employee.profile'
-    _description = 'Employee Information'
+    _description = 'Thông Tin Nhân Viên'
 
     # =========================
     # Basic info
     # =========================
     name = fields.Char(string="Họ và Tên", required=True)
-    code = fields.Char(string="Mã NV")
-    active = fields.Boolean(default=True)
+    code = fields.Char(string="Mã NV", size=5) # HT###
+    active = fields.Boolean(default=True) 
 
     role_id = fields.Many2one(
         'employee.profile.role',
@@ -43,14 +43,14 @@ class Employee(models.Model):
     # =========================
     # Contact
     # =========================
-    phone = fields.Char(string="SĐT")
+    phone = fields.Char(string="SĐT", size=13)
     email = fields.Char(string="Email")
     address = fields.Text(string="Address")
 
     # =========================
     # Citizen ID
     # =========================
-    identity_number = fields.Char(string="CCCD")
+    identity_number = fields.Char(string="CCCD", size=15)
 
     identity_issue_date = fields.Date(string="Ngày cấp")
 
@@ -68,7 +68,7 @@ class Employee(models.Model):
     # =========================
     bank_name = fields.Char(string="Tên ngân hàng")
 
-    bank_account = fields.Char(string="Số tài khoản")
+    bank_account = fields.Char(string="Số tài khoản", size=20)
 
     bank_branch = fields.Char(string="Chi nhánh")
 
@@ -233,21 +233,16 @@ class Employee(models.Model):
 
 class EmployeeSales(models.Model):
     _name = 'employee.profile.sales'
-    _description = 'Sales Information'
+    _description = 'Thông Tin Sales'
+    _rec_name = 'name'
 
-    name = fields.Char(related="employee_id.name" , string="Tên Sales")
+    name = fields.Char(related="employee_id.name" , string="Tên Sales", store=True)
 
     employee_id = fields.Many2one(
         "employee.profile",
         required=True,
         ondelete="cascade",
         domain=['|', ('role_id.code', '=', 'sales'), ('role_id.code', '=', 'sales_manager')]
-    )
-
-    project_ids = fields.One2many(
-        'employee.project.rel',
-        'sales_id',
-        string="Dự án phụ trách"
     )
 
     manager_id = fields.Many2one(
@@ -261,29 +256,69 @@ class EmployeeSales(models.Model):
         string="Nhân viên cấp dưới"
     )
 
-    user_id = fields.Many2one(related="employee_id.user_id")
+    user_id = fields.Many2one(related="employee_id.user_id", store=True)
 
+    total_received = fields.Integer(string="Tổng Data đã nhận", default=0)
+    total_handled = fields.Integer(string="Tổng Data đã gọi", default=0)
     max_received = fields.Integer(string="Nhận tối đa", default=50)
-
-    current_received = fields.Integer(string="Đã nhận")
+    current_received = fields.Integer(
+        string="Đã nhận",
+        compute="_compute_received",
+        store=True
+    )
+    performance = fields.Float(string="Hiệu suất (%)", compute='_compute_performance', store=True)
 
     group_ids = fields.One2many(
         "employee.project.rel",
         "sales_id",
     )
 
-    _sql_constraints = [
-        (
-            "unique_employee",
-            "unique(employee_id)",
-            "Nhân viên đã có hồ sơ sales."
-        )
-    ]
+    # Actions
+    def action_reset_counter(self):
+        self.total_received = 0
+        self.total_handled = 0
+
+    # Constraints
+    @api.constrains('employee_id')
+    def _check_unique_employee(self):
+        for rec in self:
+            existed = self.search([
+                ('employee_id', '=', rec.employee_id.id),
+                ('id', '!=', rec.id)
+            ], limit=1)
+
+            if existed:
+                raise exceptions.ValidationError(
+                    "Nhân viên đã có hồ sơ sales."
+                )
+
+    @api.constrains('manager_id')
+    def _check_manager(self):
+        for rec in self:
+            if rec.manager_id == rec:
+                raise exceptions.ValidationError("Không thể tự quản lý chính mình.")
+
+    # Computes
+    @api.depends('group_ids.phone_received')
+    def _compute_received(self):
+        for rec in self:
+            rec.current_received = sum(
+                rec.group_ids.mapped('phone_received')
+            )
+
+    @api.depends('total_received', 'total_handled')
+    def _compute_performance(self):
+        for rec in self:
+            if rec.total_received == 0:
+                rec.performance = 0
+                continue
+            rec.performance = (rec.total_handled / rec.total_received) * 100
+
 
 
 class EmployeeRole(models.Model):
     _name = 'employee.profile.role'
-    _description = "Employee Role"
+    _description = "Thông Tin Chức Danh"
     _order = 'sequence, id'
 
     name = fields.Char(string="Tên vai trò", required=True)

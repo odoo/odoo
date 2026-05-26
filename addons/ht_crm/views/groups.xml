@@ -2,6 +2,14 @@
     <!-- =========================
         FEATURE / PERMISSION GROUP
     ========================= -->
+    <record id="group_employee_sales_read" model="res.groups">
+        <field name="name">Đọc / Thông tin Sales</field>
+    </record>
+
+    <record id="group_transaction_read" model="res.groups">
+        <field name="name">Đọc / Thông tin GD</field>
+    </record>
+
     <record id="group_view_only" model="res.groups">
         <field name="name">Chỉ xem</field>
     </record>
@@ -20,6 +28,7 @@
 
     <record id="group_manage_customer" model="res.groups">
         <field name="name">Quản lý khách hàng</field>
+        <field name="implied_ids" eval="[(4, ref('ht_crm.group_transaction_read'))]"/>
     </record>
 
     <record id="group_manage_employee" model="res.groups">
