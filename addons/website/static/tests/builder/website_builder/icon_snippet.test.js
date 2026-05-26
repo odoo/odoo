@@ -35,6 +35,19 @@ test("Drag & drop an 'Icon' snippet opens the dialog to select an icon", async (
     await dragIcon();
     await contains(".o_select_media_dialog .font-icons-icons span.fa-heart").click();
     expect(".o_select_media_dialog").toHaveCount(0);
+    expect(":iframe p").toHaveCount(2); // new `p` for the icon
     expect(":iframe p span.fa-heart").toHaveCount(1);
     expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
+});
+
+test("Drag & drop an 'Icon' snippet in inline does not add <p>", async () => {
+    await setupWebsiteBuilder(`<div><p>Text<a class="btn">button</a>Text</p></div>`);
+    const { drop } = await contains(
+        ".o-website-builder_sidebar [name='Icon'] .o_snippet_thumbnail"
+    ).drag();
+    await drop(":iframe p a + .oe_drop_zone");
+    await contains(".o_select_media_dialog .font-icons-icons span.fa-heart").click();
+    expect(".o_select_media_dialog").toHaveCount(0);
+    expect(":iframe p").toHaveCount(1); // no new `p` for the icon
+    expect(":iframe p span.fa-heart").toHaveCount(1);
 });

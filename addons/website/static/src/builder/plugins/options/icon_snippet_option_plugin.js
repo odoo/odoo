@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { wrapInlinesInBlocks } from "@html_editor/utils/dom";
+import { allowsParagraphRelatedElements } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
 
 export class IconSnippetOptionPlugin extends Plugin {
@@ -25,7 +25,11 @@ export class IconSnippetOptionPlugin extends Plugin {
                 dragState.replacedSnippetEl = selectedIconEl;
                 // ensure the icon is wrapped in a block("P") element to allow
                 // line breaks
-                wrapInlinesInBlocks(selectedIconEl.parentElement);
+                if (allowsParagraphRelatedElements(selectedIconEl.parentElement)) {
+                    const blockEl = this.document.createElement("p");
+                    selectedIconEl.before(blockEl);
+                    blockEl.append(selectedIconEl);
+                }
             },
         });
         return !iconInserted;
