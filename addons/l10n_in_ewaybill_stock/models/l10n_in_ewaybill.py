@@ -1,5 +1,15 @@
 import re
 from collections import defaultdict
+<<<<<<< 455b6ae293e68ae48a752ff0825cb8431dd2bc43
+||||||| 4b29bdf7c3f57ff573b89a32c4b8229c5c6d0cbb
+from datetime import datetime
+
+import psycopg2.errors
+=======
+from datetime import date, datetime
+
+import psycopg2.errors
+>>>>>>> 5478122285e5c29700791dd4deab8f24e0dea376
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -231,6 +241,7 @@ class L10nInEwaybill(models.Model):
                 ),
                 'taxableAmount': AccountMove._l10n_in_round_value(tax_details['total_excluded']),
             }
+<<<<<<< 455b6ae293e68ae48a752ff0825cb8431dd2bc43
             gst_types = ('sgst', 'cgst', 'igst')
             gst_tax_rates = {}
             for tax in tax_details.get('taxes'):
@@ -254,6 +265,122 @@ class L10nInEwaybill(models.Model):
             )
             return line_details
         return super()._get_l10n_in_ewaybill_line_details(line, tax_details)
+||||||| 4b29bdf7c3f57ff573b89a32c4b8229c5c6d0cbb
+        ewaybill_json = {
+                # document details
+                "supplyType": self.supply_type,
+                "subSupplyType": self.type_id.sub_type_code,
+                "docType": self.type_id.code,
+                "transactionType": get_transaction_type(
+                    self.partner_bill_from_id,
+                    self.partner_ship_from_id,
+                    self.partner_bill_to_id,
+                    self.partner_ship_to_id
+                ),
+                "transDistance": str(self.distance),
+                "docNo": self.document_number,
+                "docDate": fields.Date.context_today(self.with_context(tz='Asia/Kolkata'), self.document_date).strftime("%d/%m/%Y"),
+                # bill details
+                **prepare_details(
+                    key_paired_function={
+                        'Gstin': lambda p: p.commercial_partner_id.vat or "URP",
+                        'TrdName': lambda p: p.commercial_partner_id.name,
+                        'StateCode': lambda p, place: self._get_partner_state_code(p, is_to_state=place == 'to'),
+                    }.items(),
+                    partner_detail={'from': self.partner_bill_from_id, 'to': self.partner_bill_to_id}.items()
+                ),
+                # shipping details
+                **prepare_details(
+                    key_paired_function={
+                        "Addr1": lambda p: p.street and p.street[:120] or "",
+                        "Addr2": lambda p: p.street2 and p.street2[:120] or "",
+                        "Place": lambda p: p.city and p.city[:50] or "",
+                        "Pincode": lambda p: int(p.zip) if p.country_id.code == "IN" else 999999,
+                    }.items(),
+                    partner_detail={'from': self.partner_ship_from_id, 'to': self.partner_ship_to_id}.items()
+                ),
+                "actToStateCode": self._get_partner_state_code(self.partner_ship_to_id),
+                "actFromStateCode": self._get_partner_state_code(self.partner_ship_from_id),
+        }
+        if self.type_id.sub_type_code == '8':
+            ewaybill_json["subSupplyDesc"] = self.type_description
+        return ewaybill_json
+
+    def _prepare_ewaybill_transportation_json_payload(self):
+        # only pass transporter details when value is exist
+        return dict(
+            filter(lambda kv: kv[1], {
+                "transporterId": self.transporter_id.vat,
+                "transporterName": self.transporter_id.name,
+                "transMode": self.mode,
+                "transDocNo": self.transportation_doc_no,
+                "transDocDate": self.transportation_doc_date and self.transportation_doc_date.strftime("%d/%m/%Y"),
+                "vehicleNo": self.vehicle_no,
+                "vehicleType": self.vehicle_type,
+            }.items())
+        )
+=======
+
+        transaction_type = get_transaction_type(
+            self.partner_bill_from_id,
+            self.partner_ship_from_id,
+            self.partner_bill_to_id,
+            self.partner_ship_to_id
+        )
+        ewaybill_json = {
+                # document details
+                "supplyType": self.supply_type,
+                "subSupplyType": self.type_id.sub_type_code,
+                "docType": self.type_id.code,
+                "transactionType": transaction_type,
+                "transDistance": str(self.distance),
+                "docNo": self.document_number,
+                "docDate": fields.Date.context_today(self.with_context(tz='Asia/Kolkata'), self.document_date).strftime("%d/%m/%Y"),
+                # bill details
+                **prepare_details(
+                    key_paired_function={
+                        'Gstin': lambda p: p.commercial_partner_id.vat or "URP",
+                        'TrdName': lambda p: p.commercial_partner_id.name,
+                        'StateCode': lambda p, place: self._get_partner_state_code(p, is_to_state=place == 'to'),
+                    }.items(),
+                    partner_detail={'from': self.partner_bill_from_id, 'to': self.partner_bill_to_id}.items()
+                ),
+                # shipping details
+                **prepare_details(
+                    key_paired_function={
+                        "Addr1": lambda p: p.street and p.street[:120] or "",
+                        "Addr2": lambda p: p.street2 and p.street2[:120] or "",
+                        "Place": lambda p: p.city and p.city[:50] or "",
+                        "Pincode": lambda p: int(p.zip) if p.country_id.code == "IN" else 999999,
+                    }.items(),
+                    partner_detail={'from': self.partner_ship_from_id, 'to': self.partner_ship_to_id}.items()
+                ),
+                "actToStateCode": self._get_partner_state_code(self.partner_ship_to_id),
+                "actFromStateCode": self._get_partner_state_code(self.partner_ship_from_id),
+        }
+        if self.type_id.sub_type_code == '8':
+            ewaybill_json["subSupplyDesc"] = self.type_description
+        if transaction_type in (2, 4) and fields.Date.context_today(self) >= date(2026, 8, 1):
+            ewaybill_json.update({
+                "shipToGSTIN": self.partner_ship_to_id.commercial_partner_id.vat or "URP",
+                "shipToTradeName": self.partner_ship_to_id.commercial_partner_id.name,
+            })
+        return ewaybill_json
+
+    def _prepare_ewaybill_transportation_json_payload(self):
+        # only pass transporter details when value is exist
+        return dict(
+            filter(lambda kv: kv[1], {
+                "transporterId": self.transporter_id.vat,
+                "transporterName": self.transporter_id.name,
+                "transMode": self.mode,
+                "transDocNo": self.transportation_doc_no,
+                "transDocDate": self.transportation_doc_date and self.transportation_doc_date.strftime("%d/%m/%Y"),
+                "vehicleNo": self.vehicle_no,
+                "vehicleType": self.vehicle_type,
+            }.items())
+        )
+>>>>>>> 5478122285e5c29700791dd4deab8f24e0dea376
 
     def _prepare_ewaybill_tax_details_json_payload(self):
         if self.picking_id:
