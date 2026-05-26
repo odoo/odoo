@@ -51,6 +51,15 @@ class HrLeaveAllocation(models.Model):
         self._check_employee_overtime_balance()
         return res
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_overtime_id(self):
+        self.overtime_id.sudo().unlink()
+
+    def action_set_to_confirm(self):
+        res = super().action_set_to_confirm()
+        self._validate_overtime_and_create_adjustment()
+        return res
+
     def action_refuse(self):
         res = super().action_refuse()
         return res
