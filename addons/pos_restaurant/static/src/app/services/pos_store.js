@@ -872,7 +872,7 @@ patch(PosStore.prototype, {
             }
             destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
         }
-	if (destinationOrder && destinationOrder.uuid === sourceOrder.uuid) {
+        if (destinationOrder && destinationOrder.uuid === sourceOrder.uuid) {
             return;
         }
         await this.mergeOrders(sourceOrder, destinationOrder, destinationTable);
