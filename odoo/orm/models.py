@@ -466,9 +466,8 @@ class BaseModel(metaclass=MetaModel):
     _table_objects: dict[str, TableObject] = frozendict()  #: SQL/Table objects
     _inherit_children: OrderedSet[str]
 
-    # TODO default _rec_name to ''
-    _rec_name: str | None = None                  #: field to use for labeling records, default: ``name``
-    _rec_names_search: list[str] | None = None    #: fields to consider in ``name_search``
+    _rec_name: str = ''                           #: field to use for labeling records, default: ``name``
+    _rec_names_search: Collection[str] = ()       #: fields to consider in ``name_search``
     _order: str = 'id'                            #: default order field for searching results
     _parent_name: str = 'parent_id'               #: the many2one field used as parent field
     _parent_store: bool = False
