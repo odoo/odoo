@@ -231,7 +231,7 @@ export class SelectMenu extends Component {
     }
 
     get isBottomSheet() {
-        return this.env.isSmall && hasTouch();
+        return hasTouch();
     }
 
     get canDeselect() {
