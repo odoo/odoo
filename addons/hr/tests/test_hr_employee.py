@@ -832,6 +832,22 @@ class TestHrEmployee(TestHrCommon):
             if presence_state == 'out_of_working_hour':
                 self.assertEqual(employees.ids, [out_working_emp.id])
 
+    def test_exclude_archived_employees_from_direct_subordinate_filter(self):
+        """ Test that archived subordinates aren't included when searching on child_ids. """
+        employee_1, employee_2 = self.env['hr.employee'].create([
+            {'name': 'first employee'},
+            {'name': 'second employee'}
+        ])
+        employee_2.parent_id = employee_1
+
+        result = self.env['hr.employee'].search([('child_ids', '!=', False)])
+        self.assertIn(employee_1, result)
+
+        employee_2.active = False
+
+        result = self.env['hr.employee'].search([('child_ids', '!=', False)])
+        self.assertNotIn(employee_1, result)
+
 
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeLinks(HttpCase):
