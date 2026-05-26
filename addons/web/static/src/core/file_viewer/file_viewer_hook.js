@@ -26,8 +26,9 @@ const fileViewerService = {
              * @param {Object} [options]
              * @param {(File) => boolean} [options.canUnlink]
              * @param {(File) => boolean} [options.onUnlink] called when the user requests to unlink the file. * Returns `true` on success, allowing the file viewer to close.
+             * @param {Function} [options.onCloseCallback] called when the viewer is closed
              */
-            function open(file, files = [file], { canUnlink, onUnlink } = {}) {
+            function open(file, files = [file], { canUnlink, onUnlink, onCloseCallback } = {}) {
                 close();
                 if (!file.isViewable) {
                     return;
@@ -44,7 +45,10 @@ const fileViewerService = {
                             onUnlink,
                             close,
                         },
-                        { rootId: ref?.()?.getRootNode()?.host?.id }
+                        {
+                            rootId: ref?.()?.getRootNode()?.host?.id,
+                            onRemove: onCloseCallback,
+                        }
                     );
                 }
             }
