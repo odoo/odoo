@@ -79,6 +79,7 @@ class Driver(Thread):
         # printers and payment terminals handle their own events (low on paper, waiting for card, etc.)
         # TODO: remove when v19.0 is deprecated - backward compat for db that don't handle longpolling direct response
         if self.device_type not in ["printer", "payment"]:
+            response["owner"] = session_id
             event_manager.device_changed(self, response)
 
         return response
