@@ -660,6 +660,12 @@ Please change the quantity done or the rounding precision in your settings.""",
                     move_line = move.move_line_ids.filtered(lambda line: line.lot_id.id == lot.id)
                     move_line.quantity = 1
             move.write({'move_line_ids': move_lines_commands})
+            # When `quantity` is written in the same call as `lot_ids`, the
+            # user-set value is kept and the recompute triggered by this
+            # inverse rewriting `move_line_ids` does not override it. Force
+            # the recompute to keep `quantity` in sync with the move lines
+            if any(command[0] == Command.DELETE for command in move_lines_commands):
+                self.env.add_to_compute(move._fields['quantity'], move)
 
     @api.depends('picking_type_id', 'date', 'priority', 'state')
     def _compute_reservation_date(self):
