@@ -21,6 +21,7 @@ class PosOrderReceipt(models.AbstractModel):
             'point_of_sale.pos_order_receipt_footer',
             'point_of_sale.pos_order_receipt',
             'point_of_sale.pos_order_change_receipt',
+            'point_of_sale.pos_order_change_receipt_zpl',
             'point_of_sale.pos_order_change_receipt_line',
             'point_of_sale.pos_cash_move_receipt',
             'point_of_sale.pos_tip_receipt',

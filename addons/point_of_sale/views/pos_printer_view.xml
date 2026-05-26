@@ -19,10 +19,10 @@
                             <field name="printer_ip" invisible="printer_type != 'epson_epos'" placeholder="10.100.50.87" required="printer_type == 'epson_epos'"/>
                             <field name="use_lna"/>
                             <field name="paper_size_keys" invisible="True"/>
-                            <field name="paper_size" widget="dynamic_selection" options="{'available_field': 'paper_size_keys'}" groups="base.group_no_one"/>
+                            <field name="paper_size" widget="dynamic_selection" options="{'available_field': 'paper_size_keys'}"/>
                             <field name="timeout" widget="integer" options="{'type': 'number', 'step': 1000}" placeholder="3000" groups="base.group_no_one"/>
                             <field name="product_categories_ids" invisible="use_type != 'preparation'" widget="many2many_tags" required="use_type == 'preparation'" placeholder="None"/>
-                            <field name="use_cashdrawer" invisible="use_type != 'receipt'"/>
+                            <field name="use_cashdrawer" invisible="use_type != 'receipt' or paper_size == 'label'"/>
                         </group>
                     </group>
                 </sheet>
