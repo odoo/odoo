@@ -33,6 +33,8 @@ class WebsitePage(models.Model):
 
         html = response.response[0]
         cache_quantity = re.search(my_cart_quantity_re, html)
+        if cache_quantity is None:
+            return
         classname = cache_quantity.group('classname').replace('d-none', '') + ('' if quantity else 'd-none')
         attributes = cache_quantity.group('attributes') + (f' data-order-id="{order_id}"' if quantity else '')
         html_quantity = f'''<sup class="{classname}"{attributes}>{quantity}</sup>'''
