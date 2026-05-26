@@ -1,11 +1,9 @@
-import { reactive } from "@web/owl2/utils";
+import { EventBus, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
-import { _t } from "@web/core/l10n/translation";
-import { Deferred } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
-import { EventBus } from "@odoo/owl";
 import { user } from "@web/core/user";
+import { Deferred } from "@web/core/utils/concurrency";
+import { session } from "@web/session";
 
 // List of worker events that should not be broadcasted.
 const INTERNAL_EVENTS = new Set([
@@ -96,25 +94,6 @@ export const busService = {
                     if (data.unregisterMultiTab) {
                         multiTab.unregister();
                     }
-                    notification.add(
-                        _t(
-                            "Save your work and refresh to get the latest updates and avoid potential issues."
-                        ),
-                        {
-                            title: _t("The page is out of date"),
-                            type: "warning",
-                            sticky: true,
-                            buttons: [
-                                {
-                                    name: _t("Refresh"),
-                                    primary: true,
-                                    onClick: () => {
-                                        browser.location.reload();
-                                    },
-                                },
-                            ],
-                        }
-                    );
                     break;
                 }
             }
