@@ -3,6 +3,10 @@
     min-height: 50px;
     max-height: Min(calc(#{ $o-dropdown-max-height } - 5px), 630px); // -5px for borders
     background-color: var(--mail-MessagingMenu-bg, $o-view-background-color);
+
+    .o-dropdown.o-dropdown-caret::after {
+        display: none;
+    }
 }
 
 .o-mail-MessagingMenu-list {
