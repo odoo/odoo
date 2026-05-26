@@ -1,9 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
+import { allowsParagraphRelatedElements } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
 
 export class IconSnippetOptionPlugin extends Plugin {
     static id = "iconSnippetOption";
-    static dependencies = ["media", "dom"];
+    static dependencies = ["media"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
@@ -24,7 +25,11 @@ export class IconSnippetOptionPlugin extends Plugin {
                 dragState.replacedSnippetEl = selectedIconEl;
                 // ensure the icon is wrapped in a block("P") element to allow
                 // line breaks
-                this.dependencies.dom.wrapInlinesInBlocks(selectedIconEl.parentElement);
+                if (allowsParagraphRelatedElements(selectedIconEl.parentElement)) {
+                    const blockEl = this.document.createElement("p");
+                    selectedIconEl.before(blockEl);
+                    blockEl.append(selectedIconEl);
+                }
             },
         });
         return !iconInserted;
