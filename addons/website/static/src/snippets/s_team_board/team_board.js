@@ -4,6 +4,8 @@ import { _t } from "@web/core/l10n/translation";
 
 let nextModalId = 0;
 
+const CONTACT_METHODS = "website.team_board.contact_methods";
+
 export class TeamBoard extends Interaction {
     static selector = ".s_team_board";
     dynamicContent = {
@@ -11,8 +13,8 @@ export class TeamBoard extends Interaction {
             "t-on-click": this.onCardClick,
             "t-on-keydown": this.onCardKeydown,
         },
-        ".s_team_board_modal_send": {
-            "t-on-click": this.onSendClick,
+        ".s_team_board_modal_action": {
+            "t-on-click": this.onContactMethodClick,
         },
         ".s_team_board_modal_close": {
             "t-on-click": this.onCloseClick,
@@ -33,21 +35,41 @@ export class TeamBoard extends Interaction {
         this.roleEl = this.modalEl.querySelector(".s_team_board_modal_role");
         this.bioEl = this.modalEl.querySelector(".s_team_board_modal_bio");
         this.imgEl = this.modalEl.querySelector(".s_team_board_modal_img");
-        this.sendBtnEl = this.modalEl.querySelector(".s_team_board_modal_send");
-        this.defaultSendLabel = this.sendBtnEl.dataset.defaultLabel || this.sendBtnEl.textContent;
+        this.actionsEl = this.modalEl.querySelector(".s_team_board_modal_actions");
+
+        this.contactButtons = new Map();
+        this.renderContactMethods();
 
         this.bsModal = window.Modal.getOrCreateInstance(this.modalEl);
         this.registerCleanup(() => this.bsModal.dispose());
 
         this.currentMember = null;
+        this.currentCardEl = null;
+    }
+
+    renderContactMethods() {
+        if (!this.actionsEl) {
+            return;
+        }
+        this.actionsEl.replaceChildren();
+        this.contactButtons.clear();
+        const entries = registry.category(CONTACT_METHODS).getEntries();
+        entries.sort(([, a], [, b]) => (a.sequence ?? 100) - (b.sequence ?? 100));
+        for (const [id, method] of entries) {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = `btn ${method.className || "btn-secondary"} s_team_board_modal_action`;
+            btn.dataset.methodId = id;
+            btn.textContent = method.label;
+            this.actionsEl.appendChild(btn);
+            this.contactButtons.set(id, { buttonEl: btn, defaultLabel: method.label, method });
+        }
     }
 
     extractMember(cardEl) {
         const titleEl = cardEl.querySelector(".card-title");
         const roleEl = cardEl.querySelector(".card-body .text-muted");
-        const bodyParas = cardEl.querySelectorAll(".card-body p");
-        const lastP = bodyParas[bodyParas.length - 1];
-        const bioEl = lastP && lastP !== roleEl ? lastP : null;
+        const bioEl = cardEl.querySelector(".s_team_board_bio");
         const imgEl = cardEl.querySelector(".o_card_img");
         return {
             name: (titleEl?.textContent || "").trim(),
@@ -63,18 +85,15 @@ export class TeamBoard extends Interaction {
             return;
         }
         const member = this.extractMember(cardEl);
-        // Placeholder demo: every third card fails the simulated send so
-        // both the success and failure UIs can be exercised without a
-        // backend round-trip.
-        const cards = Array.from(this.el.querySelectorAll(".s_card"));
-        this.shouldFailSend = cards.indexOf(cardEl) % 3 === 2;
+
         this.currentMember = member;
+        this.currentCardEl = cardEl;
         this.titleEl.textContent = member.name;
         this.roleEl.textContent = member.role;
         this.bioEl.textContent = member.bio;
         this.imgEl.setAttribute("src", member.imgSrc);
         this.imgEl.setAttribute("alt", member.imgAlt || member.name);
-        this.resetSendButton();
+        this.resetAllButtons();
         this.bsModal.show();
     }
 
@@ -90,42 +109,48 @@ export class TeamBoard extends Interaction {
         this.openModalForCard(ev.currentTarget);
     }
 
-    setSendButtonLoading() {
-        this.sendBtnEl.disabled = true;
-        this.sendBtnEl.innerHTML =
+    setButtonLoading(btn, label) {
+        btn.disabled = true;
+        btn.innerHTML =
             `<span class="spinner-border spinner-border-sm me-2"` +
             ` role="status" aria-hidden="true"></span>` +
-            _t("Sending...");
+            (label || _t("Working..."));
     }
 
-    resetSendButton() {
-        this.sendBtnEl.disabled = false;
-        this.sendBtnEl.textContent = this.defaultSendLabel;
+    resetButton(btn, defaultLabel) {
+        btn.disabled = false;
+        btn.textContent = defaultLabel;
     }
 
-    async onSendClick() {
-        if (!this.currentMember || this.sendBtnEl.disabled) {
+    resetAllButtons() {
+        for (const { buttonEl, defaultLabel } of this.contactButtons.values()) {
+            this.resetButton(buttonEl, defaultLabel);
+        }
+    }
+
+    async onContactMethodClick(ev) {
+        const btn = ev.currentTarget;
+        const id = btn.dataset.methodId;
+        const entry = this.contactButtons.get(id);
+        if (!entry || !this.currentMember || btn.disabled) {
             return;
         }
-        this.setSendButtonLoading();
-        const shouldFail = this.shouldFailSend;
         try {
-            // Placeholder: simulate a network round-trip. No real endpoint
-            // is called yet — replace with a `rpc(...)` once the backend
-            // contact route is wired up.
-            await this.waitFor(
-                new Promise((resolve, reject) => {
-                    setTimeout(
-                        () => (shouldFail ? reject(new Error("simulated")) : resolve()),
-                        1000
-                    );
-                })
-            );
-            this.bsModal.hide();
-            this.services.notification.add(_t("Your message has been sent."), { type: "success" });
-        } catch {
-            this.resetSendButton();
-            this.services.notification.add(_t("Could not send your message."), { type: "danger" });
+            await entry.method.handler({
+                member: this.currentMember,
+                cardEl: this.currentCardEl,
+                modalEl: this.modalEl,
+                services: this.services,
+                waitFor: this.waitFor.bind(this),
+                closeModal: () => this.bsModal.hide(),
+                button: {
+                    setLoading: (label) => this.setButtonLoading(btn, label),
+                    reset: () => this.resetButton(btn, entry.defaultLabel),
+                },
+            });
+        } catch (err) {
+            console.error(`Team board contact method '${id}' threw:`, err);
+            this.resetButton(btn, entry.defaultLabel);
         }
     }
 
@@ -135,7 +160,8 @@ export class TeamBoard extends Interaction {
 
     onModalHidden() {
         this.currentMember = null;
-        this.resetSendButton();
+        this.currentCardEl = null;
+        this.resetAllButtons();
     }
 }
 

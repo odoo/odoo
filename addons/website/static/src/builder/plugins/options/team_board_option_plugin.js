@@ -69,7 +69,7 @@ export class SortTeamMembersAlphabeticallyAction extends BuilderAction {
         if (!rowEl) {
             return;
         }
-        const memberEls = [...rowEl.querySelectorAll(':scope > [data-name="Team Member"]')];
+        const memberEls = [...editingElement.querySelectorAll(MEMBER_SELECTOR)];
         if (memberEls.length < 2) {
             return;
         }
