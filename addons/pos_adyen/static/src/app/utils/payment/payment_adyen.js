@@ -249,7 +249,13 @@ export class PaymentAdyen extends PaymentInterface {
         return (
             notification &&
             notification.SaleToPOIResponse.MessageHeader.ServiceID ==
+<<<<<<< 2c0127b4d0a525233fbcaacea70cb6b7efb72be9:addons/pos_adyen/static/src/app/utils/payment/payment_adyen.js
                 this.pendingAdyenline()?.terminalServiceId &&
+||||||| 36a1c6300f52f408b6af3f769e26686e07810e5a:addons/pos_adyen/static/src/app/payment_adyen.js
+                this.pending_adyen_line().terminalServiceId &&
+=======
+                this.pending_adyen_line()?.terminalServiceId &&
+>>>>>>> 96924646fa383bd83acb1472920e2a8f6ca274ad:addons/pos_adyen/static/src/app/payment_adyen.js
             response.Result === "Success"
         );
     }
