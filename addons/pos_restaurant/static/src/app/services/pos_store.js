@@ -746,7 +746,6 @@ patch(PosStore.prototype, {
         const order = course.order_id;
         course.fired = true;
         order.deselectCourse();
-        await this.data.call("pos.prep.order", "fire_course", [order.id, course.id]);
         await this.printCourseTicket(course);
         return true;
     },
