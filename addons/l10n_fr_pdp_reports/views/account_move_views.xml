@@ -41,7 +41,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='other_info']/group[1]" position="inside">
-                <group string="E-Reporting" invisible="not company_id.l10n_fr_pdp_display_info">
+                <group string="E-Reporting" invisible="not l10n_fr_pdp_display_info">
                     <field name="l10n_fr_pdp_status"
                             widget="badge"
                             invisible="not l10n_fr_pdp_status"></field>
@@ -126,7 +126,7 @@
                         string="Group By Invoice Month"
                         context="{'group_by': 'invoice_date:month'}"/>
                 <filter name="l10n_fr_pdp_group_by_flow"
-                        string="Group By Original PDP Flow"
+                        string="Group By Last PDP Flow"
                         context="{'group_by': 'l10n_fr_pdp_last_flow_id'}"/>
             </xpath>
         </field>

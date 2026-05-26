@@ -1,4 +1,5 @@
-from odoo import _, api, fields, models
+from odoo import models
+
 
 class PdpFlow(models.Model):
     _inherit = 'l10n.fr.pdp.reports.flow'
