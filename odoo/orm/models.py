@@ -1551,7 +1551,7 @@ class BaseModel(metaclass=MetaModel):
         return aggregator(domains)
 
     @api.model
-    def name_create(self, name: str) -> tuple[int, str] | typing.Literal[False]:
+    def name_create(self, name: str) -> tuple[int, str]:
         """Create a new record by calling :meth:`~.create` with only one value
         provided: the display name of the new record.
 
@@ -1562,13 +1562,10 @@ class BaseModel(metaclass=MetaModel):
         :param name: display name of the record to create
         :return: the (id, display_name) pair value of the created record
         """
-        if self._rec_name:
-            record = self.create({self._rec_name: name})
-            return record.id, record.display_name
-        else:
-            # TODO raise an error, remove False return value
-            _logger.warning("Cannot execute name_create, no _rec_name defined on %s", self._name)
-            return False
+        if not self._rec_name:
+            raise NotImplementedError(f"Cannot name_create on {self._name}")
+        record = self.create({self._rec_name: name})
+        return record.id, record.display_name
 
     @api.model
     @api.readonly
