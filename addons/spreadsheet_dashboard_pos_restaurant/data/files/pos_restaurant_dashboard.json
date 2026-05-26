@@ -389,7 +389,7 @@
             "humanize": false,
             "chartId": "150978db-0307-4a65-a70a-e3a634dcfd48"
           },
-          "offset": { "x": 620, "y": 127 },
+          "offset": { "x": 827, "y": 10 },
           "col": 0,
           "row": 0
         },
@@ -414,6 +414,26 @@
           "row": 0
         },
         {
+          "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          "width": 200,
+          "height": 108,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#EA6175",
+            "baselineColorUp": "#43C5B1",
+            "baselineMode": "difference",
+            "title": { "text": "Total guests", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "keyValue": "Data!B10",
+            "humanize": false,
+            "chartId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+          },
+          "offset": { "x": 414, "y": 127 },
+          "col": 0,
+          "row": 0
+        },
+        {
           "id": "87cda1aa-ba42-4865-8f56-912dd9e323a7",
           "width": 200,
           "height": 108,
@@ -429,7 +449,7 @@
             "humanize": false,
             "chartId": "87cda1aa-ba42-4865-8f56-912dd9e323a7"
           },
-          "offset": { "x": 414, "y": 127 },
+          "offset": { "x": 620, "y": 127 },
           "col": 0,
           "row": 0
         },
@@ -594,6 +614,7 @@
         "A7": "Average net revenue / sitting ",
         "A8": "Average total revenue / sitting",
         "A9": "Average discount",
+        "A10": "Total guests",
         "A12": "=_t(\"Revenue per hour\")",
         "A13": "=_t(\"Time\")",
         "A14": "0",
@@ -629,6 +650,7 @@
         "B7": "=PIVOT.VALUE(5,\"Untaxed revenue per sitting:sum\")",
         "B8": "=PIVOT.VALUE(5,\"Total revenue per sitting:sum\")",
         "B9": "=iferror(PIVOT.VALUE(4,\"Discount / Order:sum\"))",
+        "B10": "=PIVOT.VALUE(5,\"customer_count:sum\")",
         "B13": "=_t(\"Revenue\")",
         "B14": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",0)",
         "B15": "=PIVOT.VALUE(1,\"amount_total:sum\",\"date_order:hour_number\",1)",
