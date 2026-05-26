@@ -1781,7 +1781,7 @@ class AccountMoveLine(models.Model):
     @api.constrains('deductible_percentage')
     def _constrains_deductible_percentage(self):
         for line in self:
-            if not line.move_id.is_purchase_document() and float_compare(line.deductible_percentage, 1, precision_digits=4):
+            if not line.move_id.is_purchase_document(include_receipts=True) and float_compare(line.deductible_percentage, 1, precision_digits=4):
                 raise ValidationError(_("Only vendor bills allow for deductibility of product/services."))
             if line.deductible_percentage < 0 or line.deductible_percentage > 1:
                 raise ValidationError(_("The deductibility percentage must be between 0% and 100%"))
