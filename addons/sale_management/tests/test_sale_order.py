@@ -573,3 +573,52 @@ class TestSaleOrder(SaleManagementCommon):
                 sale_order_with_option.id, optional_product_line.id, input_quantity=10
             )
             self.assertEqual(optional_product_line.discount, 20)
+
+    def test_optional_lines_price_recomputed_with_pricelist_on_portal(self):
+        """Test that optional line prices are recomputed based on pricelist quantity rules."""
+        pricelist = self.env["product.pricelist"].create({
+            "name": "Qty-based Pricelist",
+            "item_ids": [
+                Command.create({
+                    "applied_on": "1_product",
+                    "product_tmpl_id": self.optional_product.product_tmpl_id.id,
+                    "min_quantity": 1,
+                    "compute_price": "fixed",
+                    "fixed_price": 100.0,
+                }),
+                Command.create({
+                    "applied_on": "1_product",
+                    "product_tmpl_id": self.optional_product.product_tmpl_id.id,
+                    "min_quantity": 10,
+                    "compute_price": "fixed",
+                    "fixed_price": 80.0,
+                }),
+            ],
+        })
+        self.sale_order.write({
+            "pricelist_id": pricelist.id,
+            "order_line": [
+                Command.create({
+                    "display_type": "line_section",
+                    "name": "Optional products",
+                    "is_optional": True,
+                }),
+                Command.create({"product_id": self.optional_product.id, "product_uom_qty": 1}),
+            ],
+        })
+
+        line = self._get_optional_product_lines(self.sale_order)
+        self.assertEqual(line.price_unit, 100.0)
+
+        with MockRequest(self.env):
+            CustomerPortal().portal_quote_option_update(
+                self.sale_order.id, line.id, input_quantity=10
+            )
+        self.assertEqual(line.price_unit, 80.0)
+
+        self.env["ir.config_parameter"].sudo().set_param("sale.disable_sale_update", True)
+        with MockRequest(self.env):
+            CustomerPortal().portal_quote_option_update(
+                self.sale_order.id, line.id, input_quantity=1
+            )
+        self.assertEqual(line.price_unit, 80.0)
