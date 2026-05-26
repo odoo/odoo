@@ -1,11 +1,12 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, queryFirst, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 
-import { makeMockEnv } from "@web/../tests/web_test_helpers";
+import { makeMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Domain } from "@web/core/domain";
 import { condition, connector, expression } from "@web/core/tree_editor/condition_tree";
 import { constructDomainFromTree } from "@web/core/tree_editor/construct_domain_from_tree";
+import { InRange, Select } from "@web/core/tree_editor/tree_editor_components";
 import {
     eliminateVirtualOperators,
     introduceVirtualOperators,
@@ -753,4 +754,18 @@ test(`"in range" operator: introduction/elimination for date fields`, async () =
     for (const { tree_py, domain } of toTest) {
         expect(new Domain(constructDomainFromTree(tree_py)).toList()).toEqual(domain || []);
     }
+});
+
+test(`"in range" operator: date range tooltips on dropdown`, async () => {
+    mockDate("2025-07-03 16:20:00");
+    await makeMockEnv();
+
+    await mountWithCleanup(Select, {
+        props: { value: "last7Days", update: () => {}, options: InRange.options },
+    });
+    expect(queryFirst("select option", { text: "Last 7 days" })).toHaveAttribute(
+        "title",
+        "Jun 27 → Jul 3"
+    );
+    expect("select").toHaveAttribute("title", "Jun 27 → Jul 3"); // Also display tooltip folded
 });

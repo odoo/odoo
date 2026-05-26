@@ -6,10 +6,16 @@
     </t>
 
     <t t-name="web.TreeEditor.Select">
-        <select class="o_input pe-3 text-truncate" t-on-change="(ev) => this.props.update(this.deserialize(ev.target.value))">
+        <select class="o_input pe-3 text-truncate" t-on-change="(ev) => this.props.update(this.deserialize(ev.target.value))" t-att-title="this.selectedTooltip">
             <option class="o_select_placeholder" t-if="this.props.addBlankOption" hidden="true" t-out="this.props.placeholder ? this.props.placeholder : ''"/>
             <t t-foreach="this.props.options" t-as="option" t-key="this.serialize(option[0])">
-                <option class="text-black" t-att-value="this.serialize(option[0])" t-att-selected="!this.props.addBlankOption and option[0] === this.props.value" t-out="option[1]" />
+                <option
+                    class="text-black"
+                    t-att-value="this.serialize(option[0])"
+                    t-att-selected="!this.props.addBlankOption and option[0] === this.props.value"
+                    t-att-title="option[2]?.title || false"
+                    t-out="option[1]"
+                />
             </t>
         </select>
     </t>
