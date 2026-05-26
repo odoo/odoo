@@ -65,7 +65,7 @@ class ResUsers(models.Model):
     has_external_mail_server = fields.Boolean(compute='_compute_has_external_mail_server', compute_sudo=True)
 
     def _compute_has_external_mail_server(self):
-        self.has_external_mail_server = self.env['ir.config_parameter'].sudo().get_str(
+        self.has_external_mail_server = self.env['ir.config_parameter'].sudo().get_bool(
             'base_setup.default_external_email_server')
 
     _notification_type = models.Constraint(
