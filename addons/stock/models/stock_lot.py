@@ -158,10 +158,28 @@ class StockLot(models.Model):
             lot.delivery_count = len(lot.delivery_ids)
 
     def _compute_partner_ids(self):
-        delivery_ids_by_lot = self._find_delivery_ids_by_lot()
+        move_lines = self.env['stock.move.line'].search([
+            ('lot_id', 'in', self.ids),
+            ('state', '=', 'done'),
+            '|',
+            ('location_id.usage', '=', 'customer'),
+            ('location_dest_id.usage', '=', 'customer'),
+        ])
+        balances = {}
+        for line in move_lines:
+            lot = line.lot_id
+            partner = line.picking_id.partner_id or line.move_id.partner_id
+            if not partner:
+                continue
+            if lot not in balances:
+                balances[lot] = {}
+            balances[lot][partner] = balances[lot].get(partner, 0) + (line.quantity if line.location_dest_id.usage == 'customer' else -line.quantity)
         for lot in self:
-            if delivery_ids_by_lot.get(lot.id, []):
-                lot.partner_ids = self.env['stock.picking'].browse(delivery_ids_by_lot[lot.id]).sorted(key='date_done', reverse=True).partner_id
+            if lot in balances:
+                active_partner_ids = [
+                    partner.id for partner, qty in balances[lot].items() if qty > 0
+                ]
+                lot.partner_ids = active_partner_ids
             else:
                 lot.partner_ids = False
 
