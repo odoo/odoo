@@ -926,7 +926,7 @@ registry.category("web_tour.tours").add("test_product_long_press", {
             Dialog.is(),
             {
                 content: "Check On hand quantity is display on product info popup",
-                trigger: "div:contains('On hand: 0')",
+                trigger: ".section-inventory .on-hand:contains('0')",
             },
             {
                 content: "Check that VAT label is present in the product details popup",
