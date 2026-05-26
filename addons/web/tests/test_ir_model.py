@@ -216,7 +216,7 @@ class TestIrModel(TransactionCase):
         # unlinking x_name should fixup _rec_name and display_name
         self.env['ir.model.fields']._get('x_bananas', 'x_name').unlink()
         record = self.env['x_bananas'].browse(record.id)
-        self.assertEqual(record._rec_name, None)
+        self.assertEqual(record._rec_name, '')
         self.assertEqual(self.registry.field_depends[ClassRecord.display_name], ())
         self.assertEqual(record.display_name, f"x_bananas,{record.id}")
 
