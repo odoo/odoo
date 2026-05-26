@@ -22,6 +22,12 @@ patch(PosOrder.prototype, {
     getTable() {
         return this.table_id;
     },
+    isEmptyOrder() {
+        if (this.config.module_pos_restaurant && this.table_id) {
+            return false;
+        }
+        return super.isEmptyOrder(...arguments);
+    },
     get isBooked() {
         const res = super.isBooked;
         if (this.config.module_pos_restaurant) {
