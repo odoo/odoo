@@ -7,6 +7,7 @@ import { reactive } from "@web/owl2/utils";
 import { App, effect } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpcBus } from "@web/core/network/rpc";
+import { ClickbotOverlay } from "./clickbot_overlay";
 
 export const SUCCESS_SIGNAL = "clickbot test succeeded";
 
@@ -30,6 +31,7 @@ let errorRPC;
 let actionCount;
 let env;
 let disposeEffect = () => {};
+let removeOverlay = () => {};
 
 /**
  * Hook on specific activities of the webclient to detect when to move forward.
@@ -37,15 +39,6 @@ let disposeEffect = () => {};
  */
 function setup(light, currentState) {
     env = odoo.__WOWL_DEBUG__.root.env;
-    const stopButton = document.createElement("button");
-    stopButton.setAttribute("id", "stop-clickbot");
-    stopButton.classList.add("btn", "btn-danger");
-    stopButton.textContent = "Stop ClickAll!";
-    stopButton.onclick = function () {
-        browser.localStorage.removeItem("running.clickbot");
-        location.reload();
-    };
-    document.body.appendChild(stopButton);
 
     env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", uiUpdate);
     rpcBus.addEventListener("RPC:REQUEST", onRPCRequest);
@@ -61,8 +54,19 @@ function setup(light, currentState) {
             testedModals: 0,
             appIndex: 0,
             menuIndex: 0,
+            totalApps: 0,
+            totalMenus: 0,
+            currentApp: "",
+            currentMenu: "",
+            done: false,
+            timeTaken: 0,
+            error: "",
         }
     );
+    removeOverlay = env.services.overlay.add(ClickbotOverlay, {
+        state,
+        onClose: () => removeOverlay(),
+    });
     disposeEffect = effect(() => {
         browser.localStorage.setItem("running.clickbot", JSON.stringify(state));
     });
@@ -93,8 +97,6 @@ function cleanup() {
     env.bus.removeEventListener("ACTION_MANAGER:UI-UPDATED", uiUpdate);
     rpcBus.removeEventListener("RPC:REQUEST", onRPCRequest);
     rpcBus.removeEventListener("RPC:RESPONSE", onRPCResponse);
-    const stopButton = document.getElementById("stop-clickbot");
-    stopButton.remove();
 }
 
 /**
@@ -165,6 +167,11 @@ async function waitForCondition(stopCondition) {
     }
 
     while (errorDialog() || !stopCondition() || hasPendingRPC() || hasScheduledTask()) {
+        if (state.done) {
+            const err = new Error("Clickbot stopped by user");
+            err.isUserStop = true;
+            throw err;
+        }
         if (timeLimit <= 0) {
             let msg = `Timeout, the clicked element took more than ${
                 initialTime / 1000
@@ -304,6 +311,7 @@ async function testViews() {
  * @returns {Promise}
  */
 async function testMenuItem(menu) {
+    state.currentMenu = menu.name;
     if (BLACKLISTED_MENUS.has(menu.xmlid)) {
         browser.console.log(`Skipping blacklisted menu ${menu.name} (${menu.xmlid})`);
         return;
@@ -334,7 +342,9 @@ async function testMenuItem(menu) {
             await testViews();
         }
     } catch (err) {
-        browser.console.error(`Error while testing ${menu.name} (${menu.xmlid})`);
+        if (!err.isUserStop) {
+            browser.console.error(`Error while testing ${menu.name} (${menu.xmlid})`);
+        }
         throw err;
     }
 }
@@ -347,6 +357,7 @@ async function testMenuItem(menu) {
  */
 async function testApp(app) {
     browser.console.log(`Testing app: ${app.name} (${app.xmlid})`);
+    state.currentApp = app.name;
     if (!state.testedApps.includes(app.xmlid)) {
         state.testedApps.push(app.xmlid);
     }
@@ -363,12 +374,15 @@ async function testApp(app) {
         return node.childrenTree.flatMap(flatten);
     };
     const menus = env.services.menu.getMenuAsTree(app.id).childrenTree.flatMap(flatten);
+    state.totalMenus = menus.length;
 
     while (state.menuIndex < menus.length) {
         await testMenuItem(menus[state.menuIndex]);
         state.menuIndex++;
     }
     state.menuIndex = 0;
+    state.totalMenus = 0;
+    state.currentMenu = "";
 }
 
 /**
@@ -385,16 +399,20 @@ async function _clickEverywhere(xmlId, light, currentState) {
             if (!app) {
                 throw new Error(`No app found for xmlid ${xmlId}`);
             }
+            state.currentApp = app.name;
             await testApp(app);
         } else {
             const apps = env.services.menu.getApps();
+            state.totalApps = apps.length;
             while (state.appIndex < apps.length) {
                 await testApp(apps[state.appIndex]);
                 state.appIndex++;
             }
         }
 
-        browser.console.log(`Test took ${(performance.now() - startTime) / 1000} seconds`);
+        state.timeTaken = (performance.now() - startTime) / 1000;
+        state.done = true;
+        browser.console.log(`Test took ${state.timeTaken} seconds`);
         browser.console.log(`Successfully tested ${state.testedApps.length} apps`);
         browser.console.log(`Successfully tested ${state.testedMenus.length} menus`);
         browser.console.log(`Successfully tested ${state.testedModals} modals`);
@@ -404,8 +422,13 @@ async function _clickEverywhere(xmlId, light, currentState) {
         }
         browser.console.log(SUCCESS_SIGNAL);
     } catch (err) {
-        browser.console.log(`Test took ${(performance.now() - startTime) / 1000} seconds`);
-        browser.console.error(err || "test failed");
+        state.timeTaken = (performance.now() - startTime) / 1000;
+        if (!err.isUserStop) {
+            state.error = err?.message || "test failed";
+            state.done = true;
+            browser.console.log(`Test took ${state.timeTaken} seconds`);
+            browser.console.error(err || "test failed");
+        }
     } finally {
         cleanup();
     }
