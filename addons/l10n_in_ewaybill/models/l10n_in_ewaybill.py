@@ -9,8 +9,11 @@ from itertools import starmap
 
 from odoo import _, api, fields, models
 from odoo.exceptions import LockError, UserError
-from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBillError
 from odoo.tools import BinaryBytes
+from odoo.tools.float_utils import json_float_round
+
+from odoo.addons.l10n_in import utils
+from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBillError
 
 _logger = logging.getLogger(__name__)
 
@@ -384,12 +387,11 @@ class L10nInEwaybill(models.Model):
     def _check_lines(self):
         error_message = []
         invoice_lines = self.account_move_id.invoice_line_ids
-        AccountMove = self.env['account.move']
         if not any(l.product_id for l in invoice_lines):
             error_message.append(_("Ensure that at least one line item includes a product."))
             return error_message
         if all(
-            AccountMove._l10n_in_is_service_hsn(l.l10n_in_hsn_code)
+            utils.l10n_in_is_service_hsn(l.l10n_in_hsn_code)
             for l in invoice_lines if l.product_id
         ):
             error_message.append(_("You need at least one product having 'Product Type' as stockable or consumable."))
@@ -397,7 +399,7 @@ class L10nInEwaybill(models.Model):
         for line in invoice_lines:
             if (
                 line.display_type == 'product'
-                and not AccountMove._l10n_in_is_service_hsn(line.l10n_in_hsn_code)
+                and not utils.l10n_in_is_service_hsn(line.l10n_in_hsn_code)
                 and (hsn_error_message := line._l10n_in_check_invalid_hsn_code())
             ):
                 error_message.append(hsn_error_message)
@@ -580,20 +582,18 @@ class L10nInEwaybill(models.Model):
 
     def _get_l10n_in_ewaybill_line_details(self, line, tax_details):
         sign = self.account_move_id.is_inbound() and -1 or 1
-        extract_digits = self.env['account.move']._l10n_in_extract_digits
-        round_value = self.env['account.move']._l10n_in_round_value
-        tax_details_by_code = self.env['account.move']._get_l10n_in_tax_details_by_line_code(tax_details.get('tax_details', {}))
+        tax_details_by_code = utils.l10n_in_get_tax_details_by_line_code(tax_details.get('tax_details', {}))
         line_details = {
             'productName': line.product_id.name[:100] if line.product_id else "",
-            'hsnCode': extract_digits(line.l10n_in_hsn_code),
+            'hsnCode': utils.l10n_in_extract_digits(line.l10n_in_hsn_code),
             'productDesc': line.name[:100] if line.name else "",
             'quantity': line.quantity,
             'qtyUnit': line.product_uom_id.l10n_in_code and line.product_uom_id.l10n_in_code.split('-')[0] or 'OTH',
-            'taxableAmount': round_value(line.balance * sign),
+            'taxableAmount': json_float_round(line.balance * sign),
         }
         gst_types = {'cgst', 'sgst', 'igst'}
         gst_tax_rates = {
-            f"{gst_type}Rate": round_value(gst_tax_rate)
+            f"{gst_type}Rate": json_float_round(gst_tax_rate)
             for gst_type in gst_types
             if (gst_tax_rate := tax_details_by_code.get(f"{gst_type}_rate"))
         }
@@ -601,7 +601,7 @@ class L10nInEwaybill(models.Model):
             gst_tax_rates or dict.fromkeys({f"{gst_type}Rate" for gst_type in gst_types}, 0.00)
         )
         if tax_details_by_code.get('cess_rate'):
-            line_details.update({'cessRate': round_value(tax_details_by_code.get('cess_rate'))})
+            line_details.update({'cessRate': json_float_round(tax_details_by_code.get('cess_rate'))})
         return line_details
 
     def _prepare_ewaybill_base_json_payload(self):
@@ -681,9 +681,8 @@ class L10nInEwaybill(models.Model):
         )
 
     def _prepare_ewaybill_tax_details_json_payload(self):
-        round_value = self.env['account.move']._l10n_in_round_value
         tax_details = self.account_move_id._l10n_in_prepare_tax_details()
-        tax_details_by_code = self.env['account.move']._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
+        tax_details_by_code = utils.l10n_in_get_tax_details_by_line_code(tax_details.get("tax_details", {}))
         invoice_line_tax_details = tax_details.get("tax_details_per_record")
         sign = self.account_move_id.is_inbound() and -1 or 1
         rounding_amount = sum(line.balance for line in self.account_move_id.line_ids if line.display_type == 'rounding') * sign
@@ -698,14 +697,14 @@ class L10nInEwaybill(models.Model):
             total_invoice_value -= adjusting_rc_amount
         return {
             "itemList": list(starmap(self._get_l10n_in_ewaybill_line_details, invoice_line_tax_details.items())),
-            "totalValue": round_value(tax_details.get("base_amount", 0.00)),
+            "totalValue": json_float_round(tax_details.get("base_amount", 0.00)),
             **{
-                f'{tax_type}Value': round_value(tax_details_by_code.get(f'{tax_type}_amount', 0.00))
+                f'{tax_type}Value': json_float_round(tax_details_by_code.get(f'{tax_type}_amount', 0.00))
                 for tax_type in ['cgst', 'sgst', 'igst', 'cess']
             },
-            "cessNonAdvolValue": round_value(tax_details_by_code.get("cess_non_advol_amount", 0.00)),
-            "otherValue": round_value(tax_details_by_code.get("other_amount", 0.00) + rounding_amount),
-            "totInvValue": round_value(total_invoice_value),
+            "cessNonAdvolValue": json_float_round(tax_details_by_code.get("cess_non_advol_amount", 0.00)),
+            "otherValue": json_float_round(tax_details_by_code.get("other_amount", 0.00) + rounding_amount),
+            "totInvValue": json_float_round(total_invoice_value),
         }
 
     def _ewaybill_generate_direct_json(self):

@@ -317,7 +317,7 @@ def float_split(value: float, precision_digits: int) -> tuple[int, int]:
 
 def json_float_round(
     value: float,
-    precision_digits: int,
+    precision_digits: int = 2,
     rounding_method: RoundingMethod = 'HALF-UP',
 ) -> float:
     """Not suitable for float calculations! Similar to float_repr except that it
@@ -328,7 +328,7 @@ def json_float_round(
     Unfortunately `json.dumps` does not allow any form of custom float representation,
     nor any custom types, everything is serialized from the basic JSON types.
 
-    :param precision_digits: number of fractional digits to round to.
+    :param precision_digits: number of fractional digits to round to, default value is 2.
     :param rounding_method: the rounding method used: 'HALF-UP', 'UP' or 'DOWN',
            the first one rounding up to the closest number with the rule that
            number>=0.5 is rounded up to 1, the second always rounding up and the
