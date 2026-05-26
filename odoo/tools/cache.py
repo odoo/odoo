@@ -67,13 +67,18 @@ class ormcache:
 
     Methods implementing this decorator should never return a Recordset,
     because the underlying cursor will eventually be closed and raise a
-    `psycopg2.InterfaceError`.
+    `psycopg2.InterfaceError`. This also leads to memory errors.
+
+    :param cache: The name of the cache to use.
+    :param use_ttl: If set, the first value of the returned tuple is compared to
+                    ``time.time`` and if lower than now, we call the method.
     """
     key: Callable[..., tuple]
 
-    def __init__(self, *args: str, cache: str = 'default', **kwargs):
+    def __init__(self, *args: str, cache: str = 'default', use_ttl: bool = False, **kwargs):
         self.args = args
         self.cache_name = cache
+        self.use_ttl = use_ttl
 
     def __call__[C: Callable](self, method: C) -> C:
         assert not hasattr(self, 'method'), "ormcache is already bound to a method"
@@ -83,11 +88,27 @@ class ormcache:
 
         @functools.wraps(method)
         def lookup(*args, **kwargs):
+            if self.use_ttl:
+                now = time.time()
+                ttl, *value = self.lookup(*args, **kwargs)
+                if ttl < now:
+                    model: BaseModel = args[0]
+                    counter = _COUNTERS[model.pool.db_name, self.method]
+                    counter.hit -= 1
+                    counter.miss += 1
+                    start = time.monotonic()
+                    ttl, *value = self.method(*args, **kwargs)
+                    counter.gen_time += time.monotonic() - start
+                    if ttl < now:
+                        _logger.warning("Method %s returns an expired cache value", self.method)
+                    self.add_value(*args, **kwargs, cache_value=(ttl, *value))
+                return value if len(value) > 1 else value[0]
+
             return self.lookup(*args, **kwargs)
         lookup.__cache__ = self  # type: ignore
         return lookup
 
-    def add_value(self, *args, cache_value=None, **kwargs) -> None:
+    def add_value(self, *args, cache_value, **kwargs) -> None:
         model: BaseModel = args[0]
         d: LRU = model.pool._Registry__caches[self.cache_name]  # type: ignore
         key = self.key(*args, **kwargs)

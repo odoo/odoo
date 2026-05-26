@@ -34,6 +34,7 @@ from odoo.tools import (
     str2bool,
 )
 from odoo.tools.date_utils import all_timezones
+from odoo.tools.cache import ormcache_timeout
 
 _logger = logging.getLogger(__name__)
 
@@ -717,11 +718,13 @@ class ResUsers(models.Model):
 
         return frozendict(context)
 
+    @ormcache_timeout
     @tools.ormcache('self.id')
     def _get_company_ids(self):
         # use search() instead of `self.company_ids` to avoid extra query for `active_test`
         domain = [('active', '=', True), ('user_ids', 'in', self.id)]
-        return (self.company_id | self.env['res.company'].search(domain))._ids
+        print('comp')
+        return fields.Datetime.now() + datetime.timedelta(seconds=10), (self.company_id | self.env['res.company'].search(domain))._ids
 
     @api.model
     def action_get(self):
