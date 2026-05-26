@@ -62,6 +62,13 @@ export class SavePlugin extends Plugin {
     setup() {
         this.canObserve = false;
         this.savableSelector = this.getResource("savable_selectors").join(", ");
+        this.addDomListener(this.window, "beforeunload", (ev) => {
+            // hack
+            if (this.dependencies.history.canUndo()) {
+                ev.preventDefault();
+                ev.returnValue = "Unsaved changes";
+            }
+        });
     }
 
     async save({ shouldSkipAfterSaveHandlers = async () => true } = {}) {

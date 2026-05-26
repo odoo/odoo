@@ -412,6 +412,10 @@ export class WebsiteBuilderClientAction extends Component {
         this.websiteService.hideLoader();
         this.lastPageURL = iframe.contentWindow.location.href;
 
+        if (!this.isReloadingIframe) {
+            this.state.isEditing = false; // close editor.
+        }
+        // we have an issue with "isNavigatingToAnotherPage". When we navigate with browser arrow back, we don't add a deffered in "isNavigatingToAnotherPage".
         if (this.isNavigatingToAnotherPage) {
             this.isNavigatingToAnotherPage.resolve();
             this.isNavigatingToAnotherPage = null;
@@ -548,6 +552,7 @@ export class WebsiteBuilderClientAction extends Component {
 
     async reloadIframe(isEditing = true, url) {
         this.ui.block();
+        this.isReloadingIframe = true;
         this.preparePublicRootReady();
         this.setIframeLoaded();
         this.websiteService.websiteRootInstance = undefined;
@@ -563,6 +568,7 @@ export class WebsiteBuilderClientAction extends Component {
             this.websiteContent.el.contentWindow.location.reload();
         }
         await this.loadIframeAndBundles(isEditing);
+        this.isReloadingIframe = false;
         this.ui.unblock();
     }
 
