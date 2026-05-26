@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
+
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
@@ -375,16 +377,22 @@ class PurchaseOrder(models.Model):
     def _create_picking(self):
         StockPicking = self.env['stock.picking']
         for order in self.filtered(lambda po: po.state == 'purchase'):
-            if any(product.type == 'consu' for product in order.order_line.product_id):
-                order = order.with_company(order.company_id)
-                pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-                if not pickings:
-                    res = order._prepare_picking()
-                    picking = StockPicking.with_user(SUPERUSER_ID).create(res)
-                    pickings = picking
-                else:
-                    picking = pickings[0]
-                moves = order.order_line._create_stock_moves(picking)
+            consu_lines = order.order_line.filtered(lambda l: l.product_id.type == 'consu')
+            if not consu_lines:
+                continue
+            order = order.with_company(order.company_id)
+            existing_pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            # Group lines by destination so each picking's header matches its moves.
+            lines_by_dest = defaultdict(lambda: self.env['purchase.order.line'])
+            for line in consu_lines:
+                lines_by_dest[line._get_move_dest_location()] |= line
+            for dest, lines in lines_by_dest.items():
+                picking = existing_pickings.filtered(lambda p: p.location_dest_id == dest)[:1]
+                if not picking:
+                    vals = order._prepare_picking()
+                    vals['location_dest_id'] = dest.id
+                    picking = StockPicking.with_user(SUPERUSER_ID).create(vals)
+                moves = lines._create_stock_moves(picking)
                 moves = moves.filtered(lambda x: x.state not in ('done', 'cancel'))._action_confirm()
                 seq = 0
                 for move in sorted(moves, key=lambda move: move.date):
@@ -393,7 +401,7 @@ class PurchaseOrder(models.Model):
                 moves._action_assign()
                 # Get following pickings (created by push rules) to confirm them as well.
                 forward_pickings = self.env['stock.picking']._get_impacted_pickings(moves)
-                (pickings | forward_pickings).action_confirm()
+                (picking | forward_pickings).action_confirm()
                 picking.message_post_with_source(
                     'mail.message_origin_link',
                     render_values={'self': picking, 'origin': order},

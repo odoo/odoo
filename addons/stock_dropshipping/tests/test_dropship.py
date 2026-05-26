@@ -643,3 +643,74 @@ class TestDropshipPostInstall(common.TransactionCase):
         self.assertFalse(po.dest_address_id)
         po.picking_type_id = self.env['stock.picking.type'].search([('name', '=', 'Dropship'), ('company_id', '=', self.env.company.id)], limit=1)
         self.assertEqual(po.dest_address_id, self.customer)
+
+    def test_dropship_intermediate_location_splits_picking(self):
+        """ A dropship PO with lines targeting different destinations splits
+        into one picking per destination, and each move lands at its rule's
+        destination. """
+        virtual_loc = self.env['stock.location'].create({
+            'name': 'Virtual Transit',
+            'usage': 'internal',
+            'company_id': self.env.company.id,
+        })
+        customer_loc = self.env.ref('stock.stock_location_customers')
+        supplier_loc = self.env.ref('stock.stock_location_suppliers')
+        dropship_picking_type = self.env['stock.picking.type'].search([
+            ('code', '=', 'dropship'),
+            ('company_id', '=', self.env.company.id),
+        ], limit=1)
+        intermediate_route = self.env['stock.route'].create({
+            'name': 'Dropship via Virtual',
+            'product_selectable': True,
+            'sale_selectable': True,
+            'company_id': self.env.company.id,
+            'rule_ids': [
+                Command.create({
+                    'name': 'Vendors -> Virtual',
+                    'action': 'buy',
+                    'picking_type_id': dropship_picking_type.id,
+                    'location_src_id': supplier_loc.id,
+                    'location_dest_id': virtual_loc.id,
+                    'procure_method': 'make_to_stock',
+                    'company_id': self.env.company.id,
+                }),
+                Command.create({
+                    'name': 'Virtual -> Customers',
+                    'action': 'pull',
+                    'picking_type_id': dropship_picking_type.id,
+                    'location_src_id': virtual_loc.id,
+                    'location_dest_id': customer_loc.id,
+                    'procure_method': 'make_to_order',
+                    'company_id': self.env.company.id,
+                }),
+            ],
+        })
+        direct_product = self.dropship_product
+        intermediate_product = self.env['product.product'].create({
+            'name': 'Dropshipped Product (intermediate)',
+            'seller_ids': [Command.create({'partner_id': self.supplier.id})],
+            'route_ids': [Command.set(intermediate_route.ids)],
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                Command.create({'product_id': direct_product.id, 'product_uom_qty': 1.0, 'price_unit': 1}),
+                Command.create({'product_id': intermediate_product.id, 'product_uom_qty': 1.0, 'price_unit': 1}),
+            ],
+        })
+        so.action_confirm()
+        po = self.env['purchase.order'].search([('reference_ids', '=', so.stock_reference_ids.id)])
+        po.button_confirm()
+
+        direct_line = po.order_line.filtered(lambda l: l.product_id == direct_product)
+        intermediate_line = po.order_line.filtered(lambda l: l.product_id == intermediate_product)
+        self.assertEqual(direct_line.move_ids.location_dest_id, customer_loc)
+        self.assertEqual(intermediate_line.move_ids.location_dest_id, virtual_loc)
+
+        self.assertEqual(len(po.picking_ids), 2)
+        self.assertEqual(direct_line.move_ids.picking_id.location_dest_id, customer_loc)
+        self.assertEqual(intermediate_line.move_ids.picking_id.location_dest_id, virtual_loc)
+
+        intermediate_so_line = so.order_line.filtered(lambda l: l.product_id == intermediate_product)
+        self.assertEqual(intermediate_line.move_ids.move_dest_ids, intermediate_so_line.move_ids)

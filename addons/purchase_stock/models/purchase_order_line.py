@@ -280,14 +280,21 @@ class PurchaseOrderLine(models.Model):
             raise UserError(_('The warehouse of operation type (%(operation_type)s) is inconsistent with location (%(location)s) of reordering rule (%(reordering_rule)s) for product %(product)s. Change the operation type or cancel the request for quotation.',
                               product=self.product_id.display_name, operation_type=self.order_id.picking_type_id.display_name, location=self.orderpoint_id.location_id.display_name, reordering_rule=self.orderpoint_id.display_name))
 
-    def _prepare_stock_move_vals(self, picking, price_unit, product_uom_qty, product_uom):
+    def _get_move_dest_location(self):
         self.ensure_one()
-        self._check_orderpoint_picking_type()
-        product = self.product_id.with_context(lang=self.order_id.dest_address_id.lang or self.env.user.lang)
         location_dest = self.env['stock.location'].browse(self.order_id._get_destination_location())
         location_final = self.location_final_id or self.order_id._get_final_location_record()
         if location_final and location_final._child_of(location_dest):
             location_dest = location_final
+        elif self.location_final_id and self.order_id.picking_type_id.code == 'dropship':
+            location_dest = self.location_final_id
+        return location_dest
+
+    def _prepare_stock_move_vals(self, picking, price_unit, product_uom_qty, product_uom):
+        self.ensure_one()
+        self._check_orderpoint_picking_type()
+        location_dest = self._get_move_dest_location()
+        location_final = self.location_final_id or self.order_id._get_final_location_record()
         date_planned = self.date_planned or self.order_id.date_planned
         return {
             'product_id': self.product_id.id,
