@@ -1856,6 +1856,18 @@ class TestHTMLTranslation(TransactionCase):
         # same behavior is expected for translated fields
         company.flush_recordset()
 
+    def test_get_field_translations_no_term(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        company = self.env['res.company'].create({'name': 'company_1'})
+        self.assertFalse(company.report_footer)
+
+        translations, context = company.get_field_translations('report_footer')
+        self.assertEqual(sorted(t['lang'] for t in translations), ['en_US', 'fr_FR'])
+        self.assertFalse(context['translation_show_source'])
+
+        company.update_field_translations('report_footer', {'fr_FR': 'Pied de page'})
+        self.assertIn('Pied de page', company.with_context(lang='fr_FR').report_footer)
+
     def test_delay_translations_no_term(self):
         self.env['res.lang']._activate_lang('fr_FR')
         self.env['res.lang']._activate_lang('nl_NL')

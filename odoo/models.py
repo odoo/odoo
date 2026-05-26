@@ -3925,7 +3925,10 @@ class BaseModel(metaclass=MetaModel):
             related_path, field_name = field.related.rsplit(".", 1)
             return self.mapped(related_path)._update_field_translations(field_name, translations, digest)
 
-        if field.translate is True:
+        old_values = field._get_stored_translations(self) if field.translate is not True else None
+        if field.translate is True or not old_values:
+            # a term translated field with no value yet has no terms to map,
+            # so its translations are whole values keyed by language
             # falsy values (except emtpy str) are used to void the corresponding translation
             if any(translation and not isinstance(translation, str) for translation in translations.values()):
                 raise UserError(_("Translations for model translated fields only accept falsy values and str"))
@@ -3958,10 +3961,6 @@ class BaseModel(metaclass=MetaModel):
             ))
             self.modified([field_name])
         else:
-            old_values = field._get_stored_translations(self)
-            if not old_values:
-                return False
-
             for lang in translations:
                 # for languages to be updated, use the unconfirmed translated value to replace the language value
                 if f'_{lang}' in old_values:
@@ -4042,9 +4041,11 @@ class BaseModel(metaclass=MetaModel):
                 'value': term_lang if term_lang != term_en else ''
             } for term_en, translations in translation_dictionary.items()
                 for lang, term_lang in translations.items()]
+            if not translations:
+                translations = [{'lang': lang, 'source': '', 'value': ''} for lang in langs]
         context = {}
         context['translation_type'] = 'text' if field.type in ['text', 'html'] else 'char'
-        context['translation_show_source'] = callable(field.translate)
+        context['translation_show_source'] = callable(field.translate) and bool(val_en)
 
         return translations, context
 
