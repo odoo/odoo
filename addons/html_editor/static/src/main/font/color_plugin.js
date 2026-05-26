@@ -288,7 +288,11 @@ export class ColorPlugin extends Plugin {
                                     newFont.classList.add(className);
                                 }
                             });
-                            newFont.append(...font.childNodes);
+                            for (const child of [...font.childNodes]) {
+                                cursors.update(callbacksForCursorUpdate.append(newFont, child));
+                                newFont.append(child);
+                            }
+                            cursors.update(callbacksForCursorUpdate.append(font, newFont));
                             font.append(newFont);
                             font = newFont;
                         }
@@ -326,9 +330,11 @@ export class ColorPlugin extends Plugin {
                     } else {
                         // No <font> found: insert a new one.
                         font = this.document.createElement("font");
+                        cursors.update(callbacksForCursorUpdate.after(node, font));
                         node.after(font);
                     }
                     if (node.textContent) {
+                        cursors.update(callbacksForCursorUpdate.append(font, node));
                         font.appendChild(node);
                         descendants(node).forEach((n) => alreadyWithinFont.add(n));
                     } else {
