@@ -79,11 +79,11 @@
         <h4 class="border-bottom pb-2">
             Images Optimization
         </h4>
-        <t t-if="!this.state.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length > 0">
+        <t t-if="!this.seoContext.altAttributes.filter(alt => !alt.decorative and alt.alt == '').length > 0">
             <p><i class="fa fa-check text-success me-2"></i>No warning on images</p>
         </t>
         <div class="row">
-            <t t-foreach="this.state.altAttributes" t-as="img" t-key="img.id">
+            <t t-foreach="this.seoContext.altAttributes" t-as="img" t-key="img.id">
                 <div class="col-lg-6 col-sm-12 d-flex mb-3">
                     <div class="me-3">
                         <img class="o-img-thumbnail" alt="Preview image" t-att-src="img.src"></img>

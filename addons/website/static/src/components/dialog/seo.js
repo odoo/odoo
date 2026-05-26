@@ -29,6 +29,7 @@ export const seoContext = proxy({
     updatedAlts: [],
     brokenLinks: [],
     generated: false,
+    altAttributes: [],
 });
 
 const LINK_CHECK_BASE_OPTIONS = {
@@ -178,7 +179,26 @@ const getSeo = async (self, onlyKeywords = false) => {
     if (!onlyKeywords) {
         self.seoContext.title = htmlToTextContentInline(self.seoContext.defaultTitle);
         self.seoContext.description = extractDescription();
+        await Promise.all(
+            self.seoContext.altAttributes.map(async (img) => {
+                if (img.alt || img.decorative) {
+                    return;
+                }
+
+                const response = await fetch(img.src, { method: "HEAD" });
+                const contentDisposition = response.headers.get("Content-Disposition");
+
+                if (contentDisposition) {
+                    const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+                    if (filenameMatch?.[1]) {
+                        img.alt = filenameMatch[1];
+                        img.updated = true;
+                    }
+                }
+            })
+        );
     }
+    self.seoContext.updatedAlts = self.seoContext.altAttributes.filter((img) => img.updated);
     self.seoContext.generated = true;
 };
 
@@ -788,7 +808,7 @@ export class SeoChecks extends Component {
         });
         this.imgUpdated = this.imgUpdated.bind(this);
         onWillStart(async () => {
-            this.state.altAttributes = await this.getAltAttributes();
+            this.seoContext.altAttributes = await this.getAltAttributes();
             this.seoContext.updatedAlts = [];
         });
         onMounted(() => {
@@ -798,7 +818,7 @@ export class SeoChecks extends Component {
 
     imgUpdated(img) {
         img.updated = true;
-        this.seoContext.updatedAlts = this.state.altAttributes.filter((img) => img.updated);
+        this.seoContext.updatedAlts = this.seoContext.altAttributes.filter((img) => img.updated);
     }
 
     async getAltAttributes() {
