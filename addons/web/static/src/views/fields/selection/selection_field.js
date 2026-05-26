@@ -60,7 +60,7 @@ export class SelectionField extends Component {
         return choices;
     }
     get isBottomSheet() {
-        return this.env.isSmall && hasTouch();
+        return hasTouch();
     }
     get options() {
         switch (this.type) {

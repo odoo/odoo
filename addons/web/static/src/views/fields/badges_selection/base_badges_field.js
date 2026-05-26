@@ -78,7 +78,7 @@ export class BaseBadgesField extends Component {
     }
 
     get isBottomSheet() {
-        return this.env.isSmall && hasTouch();
+        return hasTouch();
     }
 
     stringify(value) {

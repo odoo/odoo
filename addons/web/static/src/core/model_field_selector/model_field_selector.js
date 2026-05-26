@@ -61,7 +61,7 @@ export class ModelFieldSelector extends Component {
     }
 
     get isBottomSheet() {
-        return this.env.isSmall && hasTouch();
+        return hasTouch();
     }
 
     getPopoverProps() {

@@ -145,7 +145,7 @@ export class Many2ManyTagsField extends Component {
     }
 
     get isBottomSheet() {
-        return this.env.isSmall && hasTouch();
+        return hasTouch();
     }
 
     get relation() {
