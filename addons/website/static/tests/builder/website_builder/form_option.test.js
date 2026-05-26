@@ -1,4 +1,4 @@
-import { insertText, redo, undo } from "@html_editor/../tests/_helpers/user_actions";
+import { bold, insertText, redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { beforeEach, describe, expect, press, queryOne, test, waitFor } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
@@ -1131,6 +1131,26 @@ test("other option attributes are preserved when switching between radio and sel
     expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-allowed");
     expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-label");
     expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-placeholder");
+});
+
+test("label's markup is preserved when switching between field's type", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_website_form");
+    setSelectionOnNodeContent(
+        queryOne(":iframe .s_website_form_label_content:contains(Your Name)")
+    );
+    bold(getEditor());
+    expect(":iframe .s_website_form_label_content:contains(Your Name)").toHaveInnerHTML(
+        "<strong>Your Name</strong>"
+    );
+
+    await contains(":iframe .s_website_form_field:contains(Your Name)").click();
+    await contains("button[id='type_opt']").click();
+    await contains("[data-action-value='selection']").click();
+
+    expect(":iframe .s_website_form_label_content:contains(Your Name)").toHaveInnerHTML(
+        "<strong>Your Name</strong>"
+    );
 });
 
 test("builderList re-renders when the field type changes (custom fields)", async () => {

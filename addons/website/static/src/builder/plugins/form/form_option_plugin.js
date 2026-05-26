@@ -1,4 +1,4 @@
-import { proxy } from "@odoo/owl";
+import { proxy, markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Cache } from "@web/core/utils/cache";
 import { Plugin } from "@html_editor/plugin";
@@ -1277,8 +1277,8 @@ export class CustomFieldAction extends BuilderAction {
     apply({ editingElement: fieldEl, value, loadResult: fields }) {
         this.dependencies.websiteFormOption.clearValidationDataset(fieldEl);
         delete fieldEl.dataset.requirementComparator;
-        const oldLabelText = fieldEl.querySelector(".s_website_form_label_content").textContent;
-        const field = getCustomField(value, oldLabelText);
+        const oldLabel = markup(fieldEl.querySelector(".s_website_form_label_content").innerHTML);
+        const field = getCustomField(value, oldLabel);
         const isFieldRequired = field.required;
         const isCheckbox = (type) => type === "boolean";
 
