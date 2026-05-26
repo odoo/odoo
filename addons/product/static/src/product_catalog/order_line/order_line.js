@@ -83,7 +83,8 @@ export class ProductCatalogOrderLine extends Component {
         return (
             uomDisplayName != productUomDisplayName &&
             this.productUnitPrice &&
-            productUomDisplayName
+            productUomDisplayName &&
+            this.showPrice
         );
     }
 }
