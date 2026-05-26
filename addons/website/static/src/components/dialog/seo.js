@@ -181,7 +181,9 @@ const getSeo = async (self, onlyKeywords = false) => {
 
     const keywords = extractKeywords();
     if (keywords.length) {
-        self.seoContext.keywords = keywords;
+        self.seoContext.keywords.push(
+            ...keywords.filter((kw) => !self.seoContext.keywords.includes(kw))
+        );
     }
     if (!onlyKeywords) {
         self.seoContext.title = htmlToTextContentInline(self.seoContext.defaultTitle);
@@ -471,6 +473,10 @@ class MetaKeywords extends Component {
         getSeo(this, true);
     }
 
+    normalizeKeyword(keyword) {
+        return keyword.replaceAll(/,+\s*/g, " ").trim();
+    }
+
     onKeyup(ev) {
         // Add keyword on enter.
         if (ev.key === "Enter") {
@@ -484,13 +490,13 @@ class MetaKeywords extends Component {
         );
     }
 
-    get isFull() {
+    get hasTooManyKeywords() {
         return this.seoContext.keywords.length >= this.maxKeywords;
     }
 
     addKeyword(keyword) {
-        keyword = keyword.replaceAll(/,\s*/gi, " ").trim();
-        if (keyword && !this.isFull && !this.seoContext.keywords.includes(keyword)) {
+        keyword = this.normalizeKeyword(keyword);
+        if (keyword && !this.seoContext.keywords.includes(keyword)) {
             this.seoContext.keywords.push(keyword);
             this.state.keyword = "";
         }
@@ -498,6 +504,15 @@ class MetaKeywords extends Component {
 
     removeKeyword(keyword) {
         this.seoContext.keywords = this.seoContext.keywords.filter((kw) => kw !== keyword);
+    }
+
+    removeAllKeywords() {
+        this.seoContext.keywords = [];
+    }
+
+    get hasKeyword() {
+        const keyword = this.normalizeKeyword(this.state.keyword);
+        return this.seoContext.keywords.includes(keyword);
     }
 }
 
