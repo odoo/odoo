@@ -16,6 +16,7 @@ export class BlogPageOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [BlogPageOption],
+        force_not_editable_selectors: ["#o_wblog_post_footer"],
     };
 }
 
