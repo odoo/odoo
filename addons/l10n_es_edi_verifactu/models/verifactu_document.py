@@ -12,7 +12,7 @@ import json
 from odoo import _, api, fields, models
 from odoo.addons.certificate.tools import CertificateAdapter
 from odoo.exceptions import UserError
-from odoo.tools import float_repr, float_round, frozendict, zeep
+from odoo.tools import file_open, float_repr, float_round, frozendict, zeep
 
 import odoo.release
 
@@ -21,6 +21,23 @@ _logger = logging.getLogger(__name__)
 # Custom patches to perform the WSDL requests.
 # Avoid failure on servers where the DH key is too small
 EUSKADI_CIPHERS = "DEFAULT:!DH"
+
+_W3C_XMLDSIG_URL = 'http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd'
+
+
+class _W3CLocalTransport(zeep.Transport):
+    """Override Transport.load() to serve the W3C xmldsig schema from a local copy.
+
+    The AEAT WSDL imports this URL via SuministroInformacion.xsd.
+    W3C returns 403 to automated requests, blocking zeep from parsing the WSDL.
+    """
+
+    def load(self, url):
+        if url == _W3C_XMLDSIG_URL:
+            with file_open('l10n_es_edi_verifactu/data/xmldsig-core-schema.xsd', 'rb') as f:
+                return f.read()
+        return super().load(url)
+
 
 VERIFACTU_VERSION = "1.0"
 
@@ -50,6 +67,7 @@ def _get_zeep_operation(company, operation):
     wsdl = company._l10n_es_edi_verifactu_get_endpoints()['wsdl']
     client = zeep.Client(
         wsdl['url'], session=session, settings=settings,
+        transport=_W3CLocalTransport(),
         operation_timeout=20, timeout=20,
     )
 
