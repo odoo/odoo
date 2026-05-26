@@ -447,6 +447,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             return {}
         tax_to_discount = defaultdict(lambda: 0)
         currency = invoice.currency_id
+        sign = -1 if invoice.move_type == 'out_refund' else 1
         # There can be 'epd' lines with a zero amount. We ignore those lines since we do not output
         # the AllowanceTotalAmount / ChargeTotalAmount in the LegalMonetaryTotal node
         # if the total allowance / charge amount are 0 respectively.
@@ -456,7 +457,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # - https://docs.peppol.eu/poacc/billing/3.0/2024-Q2/rules/ubl-tc434/BR-CO-12/
         for line in invoice.line_ids.filtered(lambda l: l.display_type == 'epd' and not currency.is_zero(l.amount_currency)):
             for tax in line.tax_ids:
-                tax_to_discount[tax.amount] += line.amount_currency
+                tax_to_discount[tax.amount] += sign * line.amount_currency
         return tax_to_discount
 
     def _export_invoice_vals(self, invoice):

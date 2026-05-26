@@ -815,6 +815,26 @@ class TestUBLBE(TestUBLCommon):
         )
         self._assert_invoice_attachment(invoice, None, 'from_odoo/bis3_pay_term_discount.xml')
 
+    def test_export_credit_note_with_early_payment_discount(self):
+        """ The early payment discount allowance on a credit note must keep the same
+        (positive) sign as on a regular invoice."""
+        credit_note = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            currency_id=self.env.company.currency_id.id,
+            move_type='out_refund',
+            invoice_payment_term_id=self.pay_term.id,
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 6,
+                    'price_unit': 74,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+            ],
+        )
+        self._assert_invoice_attachment(credit_note, None, 'from_odoo/bis3_credit_note_discount.xml')
+
     def test_export_with_changed_taxes(self):
         invoice = self._generate_move(
             self.partner_1,
