@@ -1,4 +1,4 @@
-import { useExternalListener } from "@web/owl2/utils";
+import { useListener } from "@odoo/owl";
 
 const UserPresenceEvents = ["mousemove", "mousedown", "touchmove", "click", "scroll", "keypress"];
 
@@ -25,7 +25,7 @@ export function useIdleTimer(steps, onAlive) {
     };
 
     for (const event of UserPresenceEvents) {
-        useExternalListener(window, event, onMove);
+        useListener(window, event, onMove);
     }
 
     setInterval(() => {

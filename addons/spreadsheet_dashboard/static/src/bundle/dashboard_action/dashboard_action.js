@@ -1,4 +1,4 @@
-import { render, useLayoutEffect, useExternalListener } from "@web/owl2/utils";
+import { render, useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
@@ -14,7 +14,7 @@ import { Registry } from "@odoo/o-spreadsheet";
 import { router } from "@web/core/browser/router";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, useListener } from "@odoo/owl";
 import { DashboardSearchBar } from "./dashboard_search_bar/dashboard_search_bar";
 
 export const dashboardActionRegistry = new Registry();
@@ -69,7 +69,7 @@ export class SpreadsheetDashboardAction extends Component {
                 return [dashboard?.model, dashboard?.status];
             }
         );
-        useExternalListener(window, "afterprint", this.logExport.bind(this));
+        useListener(window, "afterprint", this.logExport.bind(this));
 
         useSetupAction({
             getLocalState: () => ({

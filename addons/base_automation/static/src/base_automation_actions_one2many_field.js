@@ -1,5 +1,5 @@
-import { render, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { render, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, useListener } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -21,7 +21,7 @@ class ActionsOne2ManyField extends Component {
             adaptCounter++;
             render(this);
         });
-        useExternalListener(window, "resize", throttledRenderAndAdapt);
+        useListener(window, "resize", throttledRenderAndAdapt);
         this.currentActions = this.props.record.data[this.props.name].records;
         this.hiddenActionsCount = 0;
     }

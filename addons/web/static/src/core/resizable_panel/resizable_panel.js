@@ -1,5 +1,13 @@
-import { useComponent, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillUpdateProps, onWillUnmount, props, t } from "@odoo/owl";
+import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
+import {
+    Component,
+    onMounted,
+    onWillUpdateProps,
+    onWillUnmount,
+    props,
+    t,
+    useListener,
+} from "@odoo/owl";
 
 function useResizable({
     containerRef,
@@ -17,10 +25,10 @@ function useResizable({
     let resizeSide = getResizeSide(props);
     let isChangingSize = false;
 
-    useExternalListener(document, "mouseup", () => onMouseUp());
-    useExternalListener(document, "mousemove", (ev) => onMouseMove(ev));
+    useListener(document, "mouseup", () => onMouseUp());
+    useListener(document, "mousemove", (ev) => onMouseMove(ev));
 
-    useExternalListener(window, "resize", () => {
+    useListener(window, "resize", () => {
         const limit = getLimitWidth();
         if (getContainerRect().width >= limit) {
             resize(computeFinalWidth(limit));

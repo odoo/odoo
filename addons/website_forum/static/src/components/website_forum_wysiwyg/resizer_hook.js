@@ -1,4 +1,5 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useListener } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
 
 /**
  * @param {string} targetRefName
@@ -14,13 +15,13 @@ export function useResizer(targetRefName, minHeight = 100) {
         startHeight = targetRef.el.offsetHeight;
         startOffsetTop = ev.pageY;
     };
-    useExternalListener(document, "mousemove", (ev) => {
+    useListener(document, "mousemove", (ev) => {
         if (isMouseDownOnResizer) {
             const offsetTop = ev.pageY - startOffsetTop;
             const newHeight = Math.max(startHeight + offsetTop, minHeight);
             targetRef.el.style.height = `${newHeight}px`;
         }
     });
-    useExternalListener(document, "mouseup", () => (isMouseDownOnResizer = false));
+    useListener(document, "mouseup", () => (isMouseDownOnResizer = false));
     return onResizerMouseDown;
 }

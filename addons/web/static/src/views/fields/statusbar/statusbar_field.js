@@ -1,11 +1,5 @@
-import {
-    onWillRender,
-    render,
-    useExternalListener,
-    useLayoutEffect,
-    useRef,
-} from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { onWillRender, render, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, useListener } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -98,7 +92,7 @@ export class StatusBarField extends Component {
             forceRecomputeItems = false;
         });
 
-        useExternalListener(window, "resize", throttleForAnimation(adjust));
+        useListener(window, "resize", throttleForAnimation(adjust));
 
         // Special data
         if (this.field.type === "many2one") {

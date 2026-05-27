@@ -1,10 +1,4 @@
-import {
-    render,
-    useChildSubEnv,
-    useExternalListener,
-    useLayoutEffect,
-    useRef,
-} from "@web/owl2/utils";
+import { render, useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
@@ -14,7 +8,7 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { ErrorHandler } from "@web/core/utils/components";
 
-import { Component, onWillDestroy, onWillUnmount, proxy } from "@odoo/owl";
+import { Component, onWillDestroy, onWillUnmount, proxy, useListener } from "@odoo/owl";
 
 const systrayRegistry = registry.category("systray");
 
@@ -46,7 +40,7 @@ export class NavBar extends Component {
         this.appSubMenus = useRef("appSubMenus");
         const debouncedAdapt = debounce(this.adapt.bind(this), 250);
         onWillDestroy(() => debouncedAdapt.cancel());
-        useExternalListener(window, "resize", debouncedAdapt);
+        useListener(window, "resize", debouncedAdapt);
 
         let adaptCounter = 0;
         const renderAndAdapt = () => {

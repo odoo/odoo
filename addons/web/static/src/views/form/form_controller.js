@@ -560,6 +560,9 @@ export class FormController extends Component {
     }
 
     async beforeUnload(ev) {
+        if (!this.model.root) {
+            return;
+        }
         const succeeded = await this.model.root.urgentSave();
         if (!succeeded) {
             ev.preventDefault();

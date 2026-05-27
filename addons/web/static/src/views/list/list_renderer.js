@@ -37,6 +37,7 @@ import {
     status,
     proxy,
     t,
+    useListener,
 } from "@odoo/owl";
 import { getCurrencyRates } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
@@ -288,11 +289,11 @@ export class ListRenderer extends Component {
             hasActionsColumn: this.hasActionsColumn,
         }));
 
-        useExternalListener(window, "keydown", (ev) => {
+        useListener(window, "keydown", (ev) => {
             this.state.altKeyMode = ev.altKey;
             this.shiftKeyMode = ev.shiftKey;
         });
-        useExternalListener(window, "keyup", (ev) => {
+        useListener(window, "keyup", (ev) => {
             this.state.altKeyMode = ev.altKey;
             this.shiftKeyMode = ev.shiftKey;
             const hotkey = getActiveHotkey(ev);
@@ -300,7 +301,7 @@ export class ListRenderer extends Component {
                 this.shiftKeyedRecord = undefined;
             }
         });
-        useExternalListener(window, "blur", (ev) => {
+        useListener(window, "blur", (ev) => {
             this.shiftKeyMode = false;
         });
         onPatched(async () => {

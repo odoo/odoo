@@ -23,6 +23,7 @@ import {
     onWillStart,
     onPatched,
     proxy,
+    useListener,
 } from "@odoo/owl";
 
 export class AnalyticDistribution extends Component {
@@ -71,8 +72,8 @@ export class AnalyticDistribution extends Component {
         onWillStart(this.willStart);
         onPatched(this.patched);
 
-        useExternalListener(window, "click", this.onWindowClick, true);
-        useExternalListener(window, "resize", this.onWindowResized);
+        useExternalListener(window, "click", this.onWindowClick.bind(this), true);
+        useListener(window, "resize", this.onWindowResized.bind(this));
         useBus(this.props.record.model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
             detail.proms.push(this.commitChanges())
         );

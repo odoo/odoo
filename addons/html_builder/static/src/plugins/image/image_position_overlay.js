@@ -1,6 +1,6 @@
 import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
-import { Component, onMounted, onWillStart, onWillUnmount, props, t } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, props, t, useListener } from "@odoo/owl";
 
 export class ImagePositionOverlay extends Component {
     static template = "html_builder.ImagePositionOverlay";
@@ -36,9 +36,9 @@ export class ImagePositionOverlay extends Component {
         // Discard when clicking anywhere on the page
         const editableDocument = this.props.editable.ownerDocument;
         useExternalListener(editableDocument, "pointerdown", this.discard.bind(this));
-        useExternalListener(document, "pointerdown", this.discard.bind(this));
+        useListener(document, "pointerdown", this.discard.bind(this));
 
-        useExternalListener(window, "resize", this._dimensionOverlay);
+        useListener(window, "resize", this._dimensionOverlay.bind(this));
         useExternalListener(this.iframeEl.contentWindow, "resize", this._dimensionOverlay);
         useExternalListener(this.iframeEl.contentWindow, "scroll", this._dimensionOverlay);
 

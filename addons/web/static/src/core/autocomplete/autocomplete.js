@@ -1,10 +1,10 @@
-import { onWillRender, useExternalListener, useRef } from "@web/owl2/utils";
+import { onWillRender, useRef } from "@web/owl2/utils";
 import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
-import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, proxy, t, useListener } from "@odoo/owl";
 import { mergeClasses } from "@web/core/utils/classname";
 
 export const autoCompleteProps = {
@@ -94,9 +94,9 @@ export class AutoComplete extends Component {
             }
         }, this.timeout);
 
-        useExternalListener(window, "scroll", this.externalClose, true);
-        useExternalListener(window, "pointerdown", this.externalClose, true);
-        useExternalListener(window, "mousemove", () => (this.mouseSelectionActive = true), true);
+        useListener(window, "scroll", this.externalClose.bind(this), true);
+        useListener(window, "pointerdown", this.externalClose.bind(this), true);
+        useListener(window, "mousemove", () => (this.mouseSelectionActive = true), true);
 
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];

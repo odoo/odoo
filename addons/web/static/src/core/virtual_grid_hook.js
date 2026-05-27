@@ -1,6 +1,7 @@
-import { render, useComponent, useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { render, useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { pick, shallowEqual } from "@web/core/utils/objects";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
+import { useListener } from "@odoo/owl";
 
 /**
  * @template T
@@ -154,7 +155,7 @@ export function useVirtualGrid({ scrollableRef, initialScroll, onChange, bufferC
         },
         () => [scrollableRef.el]
     );
-    useExternalListener(window, "resize", () => throttledCompute());
+    useListener(window, "resize", () => throttledCompute());
     return {
         get columnsIndexes() {
             return current.columnsIndexes;

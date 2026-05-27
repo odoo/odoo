@@ -1,7 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { onWillDestroy } from "@odoo/owl";
+import { onWillDestroy, useListener } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { useExternalListener } from "@web/owl2/utils";
 
 /**
  * Closes the ImageTransformation component when the user clicks or changes
@@ -27,7 +26,7 @@ function useImageTransform({ document, closeImageTransformation, buttonSelector 
     // image it will consider the click as being done outside image transform.
     // So we need to keep track if the pointerdown is inside or outside to know
     // if we want to close the image transform component or not.
-    useExternalListener(document, "pointerdown", (ev) => {
+    useListener(document, "pointerdown", (ev) => {
         if (isNodeInsideTransform(ev.target)) {
             pointerDownInsideTransform = true;
         } else {
@@ -35,7 +34,7 @@ function useImageTransform({ document, closeImageTransformation, buttonSelector 
             pointerDownInsideTransform = false;
         }
     });
-    useExternalListener(
+    useListener(
         document,
         "click",
         (ev) => {
@@ -48,7 +47,7 @@ function useImageTransform({ document, closeImageTransformation, buttonSelector 
     );
     // When we click on any character the image is deleted and we need to close
     // the image transform. We handle this by selectionchange.
-    useExternalListener(document, "selectionchange", (ev) => {
+    useListener(document, "selectionchange", (ev) => {
         closeImageTransformation();
     });
 

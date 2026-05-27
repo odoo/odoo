@@ -1,8 +1,8 @@
-import { useComponent, useEnv, useExternalListener, useRef } from "@web/owl2/utils";
+import { useComponent, useEnv, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
-import { onMounted, onPatched, proxy } from "@odoo/owl";
+import { onMounted, onPatched, proxy, useListener } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 /**
@@ -189,7 +189,7 @@ export function useIsChildLarger(container) {
         }
     };
 
-    useExternalListener(window, "resize", () => {
+    useListener(window, "resize", () => {
         computeSize();
     });
 

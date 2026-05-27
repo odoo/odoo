@@ -4,7 +4,7 @@ import {
     StateChangeManager,
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
-import { Component, onMounted, onWillDestroy, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, onWillUnmount, useListener } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -153,7 +153,7 @@ export class VideoSettings extends Component {
             });
         });
 
-        useExternalListener(document, "pointerdown", (ev) => {
+        useListener(document, "pointerdown", (ev) => {
             if (this.props.dropdown.isOpen) {
                 return;
             }

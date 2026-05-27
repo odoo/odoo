@@ -1,5 +1,4 @@
-import { useExternalListener } from "@web/owl2/utils";
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, proxy, useListener } from "@odoo/owl";
 import { Handles } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/handles/handles";
 import { _t } from "@web/core/l10n/translation";
 import { getColorRGBA, getColors } from "@pos_restaurant/app/services/floor_plan/utils/colors";
@@ -29,7 +28,7 @@ export class EditFloorProperties extends Component {
         this.dialog = useService("dialog");
         this.floorPlanStore = useFloorPlanStore();
         this.state = proxy({ resolution: "" });
-        useExternalListener(window, "resize", this.handleWindowResize);
+        useListener(window, "resize", this.handleWindowResize);
 
         onMounted(() => {
             this.handleWindowResize();

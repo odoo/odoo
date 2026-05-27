@@ -1,5 +1,5 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { onWillUnmount } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onWillUnmount, useListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
 import { scrollTo } from "@web/core/utils/scrolling";
@@ -481,7 +481,7 @@ export function useNavigation(containerRef, options = {}) {
         () => [getContainerEl()]
     );
 
-    useExternalListener(browser, "focus", ({ target }) => navigator._checkFocus(target), true);
+    useListener(browser, "focus", ({ target }) => navigator._checkFocus(target), true);
     onWillUnmount(() => navigator._destroy());
 
     return navigator;
