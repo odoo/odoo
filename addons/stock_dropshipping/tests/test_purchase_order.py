@@ -1,14 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
-
-from odoo import Command
+from odoo.fields import Command
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.tests import Form
 from odoo.tests.common import tagged
 
 
 @tagged('-at_install', 'post_install')
-@skip('Temporary to fast merge new valuation')
 class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
     @classmethod
@@ -108,3 +106,81 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         self.assertTrue(po, "A Purchase Order should be created from the Sale Order.")
         self.assertEqual(po.project_id, project, "The project should be propagated from the Sale Order to the Purchase Order.")
+
+    def test_dropship_serial_return_credit_note(self):
+        '''
+            Ensure that a partial refund after a dropship return of a serial-tracked
+            product displays the right returned serial number on the credit note report.
+        '''
+        self.env.user.write({
+            'group_ids': [
+                Command.link(self.env.ref('stock_account.group_lot_on_invoice').id),
+                Command.link(self.env.ref('sales_team.group_sale_salesman').id),
+            ],
+        })
+        self.dropshipping_route = self.env.ref('stock_dropshipping.route_drop_shipping')
+        supplier = self.env['res.partner'].create({'name': 'Vendor'})
+        customer = self.env['res.partner'].create({'name': 'Customer'})
+
+        serial_dropship_product = self.env['product.product'].create({
+            'name': 'Serial product',
+            'is_storable': True,
+            'tracking': 'serial',
+            'seller_ids': [Command.create({
+                'partner_id': supplier.id,
+            })],
+            'route_ids': [Command.link(self.dropshipping_route.id)],
+        })
+        serials = _, serial2 = self.env['stock.lot'].create([{
+            'name': name,
+            'product_id': serial_dropship_product.id,
+            'company_id': self.env.company.id,
+        } for name in ['SN 1', 'SN 2']])
+
+        so = self.env['sale.order'].create({
+            'partner_id': customer.id,
+            'order_line': [Command.create({
+                'product_id': serial_dropship_product.id,
+                'product_uom_qty': 2,
+                'price_unit': 100.0,
+            })],
+        })
+        so.action_confirm()
+
+        po = so._get_purchase_orders()
+        po.button_confirm()
+
+        dropship = po.picking_ids
+        dropship.move_ids.lot_ids = serials
+        dropship.button_validate()
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+
+        return_wizard_form = Form(self.env['stock.return.picking'].with_context(
+            active_id=dropship.id,
+            active_model='stock.picking',
+        ))
+        return_wizard = return_wizard_form.save()
+        return_wizard.product_return_moves.quantity = 1
+        res = return_wizard.action_create_returns()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking.move_ids.lot_ids = serial2
+        return_picking.button_validate()
+
+        reversal_wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
+            'reason': 'Test Partial Refund',
+            'journal_id': invoice.journal_id.id,
+        })
+        res = reversal_wizard.reverse_moves()
+        credit_note = self.env['account.move'].browse(res['res_id'])
+        credit_note.invoice_line_ids[0].quantity = 1
+        credit_note.action_post()
+
+        self.assertEqual(
+            [(rec['product_name'], rec['lot_id']) for rec in credit_note._get_invoiced_lot_values()],
+            [(serial_dropship_product.name, serial2.id)],
+        )
