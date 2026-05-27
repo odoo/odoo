@@ -23,3 +23,10 @@ class StockRule(models.Model):
                 if bom_line_id:
                     move_values['bom_line_id'] = bom_line_id
         return move_values
+
+    def _notify_responsible_no_bom(self, procurement):
+        super()._notify_responsible_no_bom(procurement)
+        origin_orders = procurement.values.get('reference_ids').sale_ids if procurement.values.get('reference_ids') else False
+        if origin_orders:
+            notified_users = procurement.product_id.responsible_id.partner_id | origin_orders.user_id.partner_id
+            self._post_no_bom_notification(origin_orders, notified_users, procurement.product_id)

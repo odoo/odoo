@@ -3,17 +3,20 @@
 
 import time
 
-from odoo.tests import Form, TransactionCase
+from odoo.tests import Form, TransactionCase, tagged
 from odoo.tools import mute_logger
 from odoo import Command
 
 
+@tagged('post_install', '-at_install')
 class TestSaleMrpProcurement(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('product.group_product_variant').id)]})
+        cls.mto_route = cls.env.ref('stock.route_warehouse0_mto')
+        cls.customer = cls.env['res.partner'].create({'name': 'My Partner'})
 
     def test_sale_mrp(self):
         # Required for `uom_id` to be visible in the view
@@ -339,6 +342,47 @@ class TestSaleMrpProcurement(TransactionCase):
         so.order_line.product_uom_qty = 510 * 2
         self.assertEqual(mo.product_uom_id, uom_gram)
         self.assertEqual(mo.product_qty, 1020)
+
+    def test_mto_no_bom_fallback_to_mts_with_notification(self):
+        """Confirm a SO for a MTO product with no Bill of Material.
+        - The confirmation should not raise an error.
+        - The delivery move should fall back to MTS
+        - No manufacturing order should be created.
+        - A message should be posted on the SO, mentioning the product and
+          pinging the product responsible
+        """
+        self.mto_route.active = True
+        responsible = self.env['res.users'].create({
+            'name': 'Product Responsible MRP',
+            'login': 'product_responsible_mrp_test',
+            'email': 'responsible_mrp@test.com',
+        })
+        product = self.env['product.product'].create({
+            'name': 'MTO Product No BOM',
+            'is_storable': True,
+            'route_ids': [Command.link(self.mto_route.id)],
+            'responsible_id': responsible.id,
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 1,
+            })],
+        })
+
+        so.action_confirm()
+
+        # No manufacturing order should have been created
+        mo = self.env['mrp.production'].search([('reference_ids.name', 'like', so.name)])
+        self.assertFalse(mo, "No manufacturing order should be created when there is no BOM")
+        # Delivery move should have fallen back to MTS
+        delivery_move = so.picking_ids.move_ids
+        self.assertEqual(delivery_move.procure_method, 'make_to_stock')
+        # A warning message should have been posted on the SO
+        notification = so.message_ids.filtered(lambda m: 'this product should be manually replenished' in m.body)
+        self.assertTrue(notification, "Expected a notification message on the SO")
+        self.assertIn(product.display_name, notification[0].body)
 
     def test_sale_mrp_avoid_multiple_pickings(self):
         """

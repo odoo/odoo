@@ -480,9 +480,14 @@ class StockRule(models.Model):
                 continue
             rule = self._get_rule(procurement.product_id, procurement.location_id, procurement.values)
             if not rule:
-                error = _('No rule has been found to replenish "%(product)s" in "%(location)s".\nVerify the routes configuration on the product.',
-                    product=procurement.product_id.display_name, location=procurement.location_id.display_name)
-                procurement_errors.append((procurement, error))
+                if self._should_block_run():
+                    error = _('No rule has been found to replenish "%(product)s" in "%(location)s".\nVerify the routes configuration on the product.',
+                        product=procurement.product_id.display_name, location=procurement.location_id.display_name)
+                    procurement_errors.append((procurement, error))
+                else:
+                    moves = procurement.values.get('move_dest_ids') or self.env['stock.move']
+                    moves.procure_method = 'make_to_stock'
+                    self._notify_responsible(procurement)
             else:
                 action = 'pull' if rule.action == 'pull_push' else rule.action
                 actions_to_run[action].append((procurement, rule))
@@ -502,6 +507,9 @@ class StockRule(models.Model):
         if procurement_errors:
             raise_exception(procurement_errors)
         return True
+
+    def _notify_responsible(self, procurement):
+        pass  # Override in sale_purchase_stock and purchase_mrp to notify salesperson or MO responsible
 
     @api.model
     def _search_rule_for_warehouses(self, route_ids, packaging_uom_id, product_id, warehouse_ids, domain):
@@ -531,8 +539,15 @@ class StockRule(models.Model):
             rule_dict[group[0].id, group[2].id][group[1].id] = group[3].sorted(lambda rule: (rule.route_sequence, rule.sequence))[0]
         return rule_dict
 
+    def _notify_responsible_no_bom(self, procurement):
+        pass
+
     def _filter_warehouse_routes(self, product, warehouses, route):
         return route
+
+    @api.model
+    def _should_block_run(self):
+        return True
 
     def _search_rule(self, route_ids, packaging_uom_id, product_id, warehouse_id, domain):
         """ First find a rule among the ones defined on the procurement

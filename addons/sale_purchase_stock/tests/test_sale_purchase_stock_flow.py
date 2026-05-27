@@ -597,3 +597,37 @@ class TestSalePurchaseStockFlow(TransactionCase):
             so.picking_ids[2].move_ids.quantity = 10
             so.picking_ids[2].button_validate()
         self.assertEqual(self.mto_product.monthly_demand, 10.0)
+
+    def test_mto_no_vendor_fallback_to_mts_with_notification(self):
+        """Confirm a SO for a MTO product with no vendor.
+        - The confirmation should not raise an error.
+        - The delivery move should fall back to MTS (make_to_stock).
+        - A message should be posted on the SO, mentioning the product and
+          pinging both the product responsible.
+        """
+        responsible = self.env['res.users'].create({
+            'name': 'Product Responsible',
+            'login': 'product_responsible_test',
+            'email': 'responsible@test.com',
+        })
+        self.mto_product.route_ids = [Command.set(self.mto_route.ids)]
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': self.mto_product.id,
+                'product_uom_qty': 1,
+            })],
+        })
+
+        so.action_confirm()
+
+        # No purchase order should have been created
+        self.assertFalse(so._get_purchase_orders())
+        # Delivery move should have fallen back to MTS
+        delivery_move = so.picking_ids.move_ids
+        self.assertEqual(delivery_move.procure_method, 'make_to_stock')
+        # A warning message should have been posted on the SO
+        notification = so.message_ids.filtered(lambda m: 'No supplier has been found' in m.body)
+        self.assertTrue(notification, "Expected a notification message on the SO")
+        self.assertIn(self.mto_product.display_name, notification[0].body)
+        self.assertIn(responsible.partner_id, notification[0].partner_ids)

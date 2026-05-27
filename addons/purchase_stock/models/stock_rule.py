@@ -399,6 +399,10 @@ class StockRule(models.Model):
     def _get_partner_id(self, values, rule):
         return values.get("supplierinfo_name") or (values.get("force_uom") and values.get("partner_id"))
 
+    @api.model
+    def _should_block_run(self):
+        return False
+
 
 class StockRoute(models.Model):
     _inherit = "stock.route"
