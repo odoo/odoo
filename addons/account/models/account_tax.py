@@ -2023,6 +2023,28 @@ class AccountTax(models.Model):
                         tax_data[f'base_amount{delta_currency_indicator}'] += amount_to_distribute
 
     @api.model
+    def _should_distribute_base_delta_for_excluded_mode(self, company):
+        """ Hook to allow localizations to opt out of the base rounding delta
+        redistribution on product line balances for price-excluded taxes when
+        the global rounding mode is 'excluded'.
+
+        Default is True to keep the existing behavior (base delta is distributed
+        on product line balances so that sum(balances) == round(sum_raw_bases),
+        which is required by some EDI certifications like Mexican CFDI and
+        Portuguese certification).
+
+        Override to False in localizations where the contractual truth is the
+        HT per line (typical for B2B invoices, e.g. France), so the base
+        rounding delta is absorbed by the payment_term line (TTC) instead,
+        keeping price_subtotal == balance on every product line.
+
+        :param company: The company owning the base lines.
+        :return: True to distribute the base delta on product line balances,
+            False to skip the redistribution (delta absorbed by payment_term).
+        """
+        return True
+
+    @api.model
     def _round_tax_details_base_lines(self, base_lines, company, mode='mixed'):
         """ Additional global rounding depending on if the taxes are included or excluded in price.
 
@@ -2045,6 +2067,11 @@ class AccountTax(models.Model):
         The expected base amount of the whole document is round(12.12 * 12.12 * 2) = 293.79
         The delta in term of base amount is 293.79 - 146.89 - 146.89 = 0.01
 
+        For 'excluded' mode (price-excluded taxes), localizations can opt out
+        of the base delta redistribution via `_should_distribute_base_delta_for_excluded_mode`.
+        When opted out, price_subtotal == balance is preserved on every product
+        line, and the rounding delta is absorbed by the payment_term line.
+
         [!] Mirror of the same method in account_tax.js.
         PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
 
@@ -2061,6 +2088,8 @@ class AccountTax(models.Model):
                 'is_refund': base_line['is_refund'],
                 'computation_key': base_line['computation_key'],
             }
+
+        distribute_excluded_delta = self._should_distribute_base_delta_for_excluded_mode(company)
 
         base_lines_aggregated_values = self._aggregate_base_lines_tax_details(base_lines, grouping_function)
         values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
@@ -2079,6 +2108,9 @@ class AccountTax(models.Model):
                     ):
                         current_mode = 'excluded'
                         break
+
+            if current_mode == 'excluded' and not distribute_excluded_delta:
+                continue
 
             currency = grouping_key['currency']
             for delta_currency_indicator, delta_currency in (
