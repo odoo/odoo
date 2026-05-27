@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_ph_pos.PosVoidLinePopup">
+        <Dialog title="this.title" size="'md'">
+            <div class="mb-3 border rounded p-2 bg-light">
+                <h6 class="fw-bold mb-2" t-if="this.isQuantityDecrease">Affected Item</h6>
+                <h6 class="fw-bold mb-2" t-else="">Item to Void</h6>
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between">
+                        <span><t t-out="this.voidedLine.name"/> x <t t-out="this.voidedLine.qty"/></span>
+                        <span t-out="this.formatCurrency(this.voidedLine.subtotal)"/>
+                    </div>
+                    <div class="d-flex justify-content-between small text-muted" t-if="this.isQuantityDecrease">
+                        <span>Quantity Change</span>
+                        <span><t t-out="this.voidedLine.oldQuantity"/> → <t t-out="this.voidedLine.newQuantity"/></span>
+                    </div>
+                    <div class="d-flex justify-content-between small text-muted" t-if="this.voidedLine.tax">
+                        <span>Tax</span>
+                        <span t-out="this.formatCurrency(this.voidedLine.tax)"/>
+                    </div>
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span t-if="this.isQuantityDecrease">Affected Total</span>
+                        <span t-else="">Refund Total</span>
+                        <span class="text-danger" t-out="this.formatCurrency(this.voidedLine.total)"/>
+                    </div>
+                </div>
+                <hr class="my-2"/>
+                <div class="d-flex justify-content-between small text-muted">
+                    <span>Order Tax Total</span>
+                    <span t-out="this.formatCurrency(this.orderTax)"/>
+                </div>
+                <div class="d-flex justify-content-between fw-semibold">
+                    <span>Order Total</span>
+                    <span t-out="this.formatCurrency(this.orderTotal)"/>
+                </div>
+            </div>
+            <div class="mb-2">
+                <label class="form-label fw-semibold" for="l10n_ph_void_reason">
+                    Reason <span class="text-muted small">(Optional)</span>
+                </label>
+                <textarea id="l10n_ph_void_reason" class="form-control" rows="3"
+                        t-custom-model="this.state.reason"
+                        placeholder="Enter reason for voiding this item..."/>
+            </div>
+            <div t-if="this.requirePasscode">
+                <label class="form-label fw-semibold" for="l10n_ph_void_passcode">
+                    Passcode (Basic / Advanced Rights)
+                </label>
+                <input id="l10n_ph_void_passcode" class="form-control" type="password"
+                        t-custom-model="this.state.passcode"
+                        placeholder="Enter employee PIN"/>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary btn-lg lh-lg" t-att-disabled="!this.isValid" t-on-click="this.confirm">
+                    <t t-out="this.confirmLabel"/>
+                </button>
+                <button class="btn btn-secondary btn-lg lh-lg" t-on-click="this.props.close">
+                    Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

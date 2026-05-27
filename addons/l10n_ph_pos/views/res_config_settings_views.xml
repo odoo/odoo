@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_ph_pos</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='pos_interface_section']" position="after">
+                <block title="Philippines" id="l10n_ph_pos_section" invisible="country_code != 'PH'">
+                    <setting
+                            id="l10n_ph_basic_can_close_register_setting"
+                            string="Allow Close Register for Basic Rights User"
+                            help="Allow employees with basic rights to close the current PoS register."
+                            invisible="not pos_module_pos_hr"
+                    >
+                        <field name="pos_l10n_ph_basic_can_close_register"/>
+                    </setting>
+                    <setting
+                            id="l10n_ph_pos_identification_setting"
+                            string="POS Identification"
+                            help="Internal references used by this PoS in Philippines-specific reports."
+                    >
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="pos_l10n_ph_machine_identification_number" string="Machine Identification Number"
+                                        class="col-lg-4 o_light_label"/>
+                                <field name="pos_l10n_ph_machine_identification_number"/>
+                            </div>
+                            <div class="row mt16">
+                                <label for="pos_l10n_ph_machine_serial_number" string="Machine Serial Number" class="col-lg-4 o_light_label"/>
+                                <field name="pos_l10n_ph_machine_serial_number"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting
+                            id="l10n_ph_pos_audit_metrics_setting"
+                            string="Audit Metrics"
+                            help="Philippines-specific totals and counters tracked for this point of sale."
+                    >
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="l10n_ph_accumulated_total_sales" string="Accumulated Grand Total Sales" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_ph_accumulated_total_sales" readonly="1" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                            </div>
+                            <div class="row mt16">
+                                <label for="l10n_ph_void_counter" string="Void Counter" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_ph_void_counter" readonly="1"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
