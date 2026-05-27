@@ -296,7 +296,7 @@ export const selfClosingHtmlTags = [
     "V:IMAGE",
     "V:FILL",
 ];
-export const selfClosingXmlTags = ["T"];
+export const selfClosingXmlTags = [];
 export const selfClosingElementTags = [...selfClosingHtmlTags, ...selfClosingXmlTags];
 export function isSelfClosingElement(node) {
     return node && selfClosingElementTags.includes(node.nodeName);
