@@ -19,6 +19,7 @@ export class ConfirmationPage extends Component {
         this.state = useState({
             onReload: true,
             payment: this.props.screenMode === "pay",
+            printed: false,
         });
 
         onMounted(() => {
@@ -96,7 +97,12 @@ export class ConfirmationPage extends Component {
     }
 
     async printOrder() {
-        await this.selfOrder.printKioskChanges(this.confirmedOrder.access_token);
+        try {
+            await this.selfOrder.printChanges(this.confirmedOrder.access_token);
+        } catch (error) {
+            console.log("Error while syncing before printing:", error);
+        }
+
         if (this.canPrintReceipt()) {
             try {
                 this.isPrinting = true;
@@ -136,6 +142,8 @@ export class ConfirmationPage extends Component {
                 this.isPrinting = false;
             }
         }
+
+        this.state.printed = true;
     }
 
     get printOptions() {

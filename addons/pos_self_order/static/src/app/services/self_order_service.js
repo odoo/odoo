@@ -27,6 +27,7 @@ import {
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import { initLNA } from "@point_of_sale/app/utils/init_lna";
 import { SnoozedProductTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 const { DateTime } = luxon;
 
@@ -557,16 +558,68 @@ export class SelfOrder extends Reactive {
     }
 
     createPrinter(printer) {
-        if (printer.printer_type === "epson_epos") {
+        if (printer.printer_type === "epson_epos" && this.config.self_ordering_mode === "kiosk") {
             return new EpsonPrinter({ printer: printer });
         }
     }
 
-    async printKioskChanges(access_token = "") {
+    async printChanges(access_token = "") {
         const order = access_token
             ? this.models["pos.order"].find((o) => o.access_token === access_token)
             : this.currentOrder;
 
+        if (this.config.self_ordering_mode === "kiosk") {
+            return await this.printKioskChanges(order);
+        } else {
+            return await this.printMobileChanges(order);
+        }
+    }
+
+    async printMobileChanges(order) {
+        if (this.config.self_ordering_service_mode === "each" && order.state !== "paid") {
+            return;
+        }
+
+        try {
+            const result = await rpc("/pos-self-order/update-last-changes", {
+                access_token: this.access_token,
+                order_id: order.id,
+                order_access_token: order.access_token,
+            });
+            const changes = result.last_order_preparation_change;
+            try {
+                order.last_order_preparation_change = JSON.parse(changes);
+            } catch (error) {
+                logPosMessage(
+                    "ConfirmationPage",
+                    "printOrderChanges",
+                    "Error while getting old preparation changes",
+                    "#ff0000",
+                    [error]
+                );
+                // Do not print changes if we can't parse them, to avoid
+                // printing wrong information and to avoid blocking the
+                // user in case of error.
+                return false;
+            }
+
+            const printed = await this.printKioskChanges(order);
+            if (!printed) {
+                return false;
+            }
+
+            await rpc("/pos-self-order/update-last-changes", {
+                access_token: this.access_token,
+                order_id: order.id,
+                order_access_token: order.access_token,
+                last_order_preparation_change: order.last_order_preparation_change,
+            });
+        } catch {
+            console.info("Offline mode, cannot update the last changes");
+        }
+    }
+
+    async printKioskChanges(order) {
         const orderData = order.getOrderData();
         order.last_order_preparation_change = { lines: {} };
         const changes = changesToOrder(order, this.config.preparationCategories);
@@ -607,19 +660,7 @@ export class SelfOrder extends Reactive {
             }
         }
         order.updateLastOrderChange();
-
-        try {
-            if (printed) {
-                await rpc("/pos-self-order/update-last-changes", {
-                    access_token: this.access_token,
-                    order_id: order.id,
-                    order_access_token: order.access_token,
-                    last_order_preparation_change: order.last_order_preparation_change,
-                });
-            }
-        } catch {
-            console.info("Offline mode, cannot update the last changes");
-        }
+        return printed;
     }
     async initKioskData() {
         if (this.session && this.access_token) {

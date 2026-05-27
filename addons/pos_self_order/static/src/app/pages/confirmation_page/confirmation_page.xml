@@ -50,7 +50,7 @@
                 <span role="button" t-if="selfOrder.showDownloadButton(confirmedOrder) and confirmedOrder.uiState.receiptReady" t-on-click="() => this.selfOrder.downloadReceipt(this.confirmedOrder)" class="mb-4 text-primary">
                     Download your receipt here
                 </span>
-                <button class="btn btn-lg btn-primary w-100 w-md-auto" t-on-click="backToHome">
+                <button class="btn btn-lg btn-primary w-100 w-md-auto" t-on-click="backToHome" t-att-disabled="!this.state.printed">
                     <span t-if="!confirmedOrder?.uiState?.receiptReady" class="spinner-border"/>
                     <t t-elif="this.selfOrder.config.self_ordering_mode === 'kiosk'">Close</t>
                     <t t-else="">Ok</t>
