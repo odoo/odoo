@@ -33,7 +33,7 @@ class ZatcaMixin(models.AbstractModel):
     def _l10n_sa_build_qr(self):
         self.ensure_one()
         if self._l10n_sa_is_phase_2_applicable():
-            return self.l10n_sa_edi_document_id._l10n_sa_get_phase_2_qr(self._l10n_sa_is_simplified())
+            return self.l10n_sa_edi_document_id._l10n_sa_get_phase_2_qr(self.l10n_sa_invoice_type == 'simplified')
         return super()._l10n_sa_build_qr()
 
     def _l10n_sa_get_payment_means_code(self):

@@ -65,10 +65,7 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
                     381 if invoice.move_type == 'out_refund' else
                     386 if invoice._is_downpayment() else 388
                 ),
-                'name': '0%s00%s00' % (
-                    '2' if invoice._l10n_sa_is_simplified() else '1',
-                    '1' if invoice.commercial_partner_id.country_id != invoice.company_id.country_id and not invoice._l10n_sa_is_simplified() else '0',
-                ),
+                'name': invoice._get_l10n_sa_edi_invoice_type_code(),
             },
             'cbc:TaxCurrencyCode': {'_text': vals['company_currency_id'].name},
             'cac:OrderReference': None,
@@ -90,7 +87,7 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
                             'mimeCode': 'text/plain',
                         },
                     },
-                } if invoice._l10n_sa_is_simplified() else None,
+                } if invoice.l10n_sa_invoice_type == 'simplified' else None,
                 {
                     'cbc:ID': {'_text': 'PIH'},
                     'cac:Attachment': {
@@ -112,7 +109,7 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
             'cac:Signature': {
                 'cbc:ID': {'_text': "urn:oasis:names:specification:ubl:signature:Invoice"},
                 'cbc:SignatureMethod': {'_text': "urn:oasis:names:specification:ubl:dsig:enveloped:xades"},
-            } if invoice._l10n_sa_is_simplified() else None,
+            } if invoice.l10n_sa_invoice_type == 'simplified' else None,
             'cac:PaymentTerms': None,
         })
 

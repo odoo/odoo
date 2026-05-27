@@ -171,7 +171,7 @@ class L10nSaEdiDocument(models.Model):
     def _l10n_sa_assert_clearance_status(self, clearance_data):
         """Assert Clearance status. To be overridden in case there are any other cases to be accounted for"""
         self.ensure_one()
-        mode = 'reporting' if self.resource._l10n_sa_is_simplified() else 'clearance'
+        mode = 'reporting' if self.resource.l10n_sa_invoice_type == 'simplified' else 'clearance'
         if mode == 'clearance' and clearance_data.get('clearanceStatus', '') != 'CLEARED':
             return {'error': self.env._("Invoice could not be cleared:\n%s", clearance_data), 'blocking_level': 'error'}
         if mode == 'reporting' and clearance_data.get('reportingStatus', '') != 'REPORTED':
@@ -264,7 +264,7 @@ class L10nSaEdiDocument(models.Model):
         Once an invoice has been successfully submitted, it is returned as a Cleared invoice, on which data
         from ZATCA was applied. To be overridden to account for other cases, such as Reporting.
         """
-        if self.resource._l10n_sa_is_simplified():
+        if self.resource.l10n_sa_invoice_type == 'simplified':
             # if invoice is B2C, it is a SIMPLIFIED invoice, and thus it is only reported and returns
             # no signed invoice. In this case, we just return the original content
             return signed_xml.decode()
@@ -287,7 +287,7 @@ class L10nSaEdiDocument(models.Model):
         return the signed XML
         """
         signed_xml = self._l10n_sa_sign_xml(unsigned_xml, certificate, self.resource.l10n_sa_invoice_signature)
-        if self.resource._l10n_sa_is_simplified():
+        if self.resource.l10n_sa_invoice_type == 'simplified':
             return self._l10n_sa_apply_qr_code(signed_xml)
         return signed_xml
 

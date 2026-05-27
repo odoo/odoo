@@ -12,6 +12,22 @@ class AccountMove(models.Model):
     _name = 'account.move'
     _inherit = ['account.move', 'zatca.mixin']
 
+    l10n_sa_invoice_type = fields.Selection(
+        selection=[("tax", "Tax"), ("simplified", "Simplified")],
+        string="Invoice type",
+        compute="_compute_l10n_sa_invoice_type",
+        store=True,
+        readonly=False,
+    )
+
+    @api.depends('commercial_partner_id')
+    def _compute_l10n_sa_invoice_type(self):
+        for move in self:
+            if move.country_code == 'SA' and move.is_sale_document():
+                move.l10n_sa_invoice_type = 'tax' if move.commercial_partner_id.is_company else 'simplified'
+            else:
+                move.l10n_sa_invoice_type = None
+
     def _get_name_invoice_report(self):
         # EXTENDS account
         self.ensure_one()
@@ -25,7 +41,7 @@ class AccountMove(models.Model):
         if self.company_id.country_code != "SA":
             return super()._l10n_gcc_get_invoice_title()
 
-        if self._l10n_sa_is_simplified():
+        if self.l10n_sa_invoice_type == 'simplified':
             return self.env._("Simplified Tax Invoice")
 
         return self.env._("Tax Invoice")
