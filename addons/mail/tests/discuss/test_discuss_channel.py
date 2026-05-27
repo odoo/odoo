@@ -217,7 +217,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                             {
                                 "all_employee_ids": [],
                                 "should_display_in_call_im_status": False,
-                                "employee_ids": [],
                                 "id": self.test_user.id,
                                 "im_status": "offline",
                                 "im_status_access_token": self.test_user._get_im_status_access_token(),
@@ -275,7 +274,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "id": self.test_user.id,
                                 "im_status": "offline",
                                 "im_status_access_token": self.test_user._get_im_status_access_token(),
-                                "employee_ids": [],
                                 "partner_id": self.test_partner.id,
                                 "share": False,
                             },
@@ -520,7 +518,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                             {
                                 "all_employee_ids": [],
                                 "should_display_in_call_im_status": False,
-                                "employee_ids": [],
                                 "id": self.test_user.id,
                                 "im_status": self.test_user.im_status,
                                 "im_status_access_token": self.test_user._get_im_status_access_token(),
@@ -577,7 +574,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                             {
                                 "all_employee_ids": [],
                                 "should_display_in_call_im_status": False,
-                                "employee_ids": [],
                                 "id": self.test_user.id,
                                 "im_status": self.test_user.im_status,
                                 "im_status_access_token": self.test_user._get_im_status_access_token(),

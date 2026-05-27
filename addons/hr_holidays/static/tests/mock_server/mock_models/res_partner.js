@@ -11,7 +11,6 @@ export class ResPartner extends hrModels.ResPartner {
             mailDataHelpers.Store.one("main_user_id", [
                 "partner_id",
                 mailDataHelpers.Store.many("all_employee_ids", ["leave_date_to"]),
-                mailDataHelpers.Store.many("employee_ids", ["leave_date_to"]),
             ]),
         ];
     }
@@ -22,7 +21,6 @@ export class ResPartner extends hrModels.ResPartner {
             mailDataHelpers.Store.one("main_user_id", [
                 "partner_id",
                 mailDataHelpers.Store.many("all_employee_ids", "leave_date_to"),
-                mailDataHelpers.Store.many("employee_ids", "leave_date_to"),
             ]),
         ];
     }

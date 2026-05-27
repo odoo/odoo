@@ -7,6 +7,7 @@ export class ResUsers extends mailModels.ResUsers {
         relation: "hr.employee",
         inverse: "user_id",
     });
+    all_employee_ids = fields.One2many({ relation: "hr.employee", inverse: "user_id" });
     department_id = fields.Many2one({
         related: "employee_id.department_id",
         relation: "hr.department",
