@@ -79,6 +79,14 @@ describe("Selection collapsed", () => {
             });
         });
 
+        test("should correctly place cursor when backspacing inside a <t> tag", async () => {
+            await testEditor({
+                contentBefore: "<p><t>ab[]c</t></p>",
+                stepFunction: deleteBackward,
+                contentAfter: "<p><t>a[]c</t></p>",
+            });
+        });
+
         test("should delete the last character in a paragraph (1)", async () => {
             await testEditor({
                 contentBefore: "<p>abc[]</p>",
