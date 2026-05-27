@@ -23,7 +23,7 @@
                     btnClasses="'o_guests_button btn-secondary '"
                     onClick="this.clickTableGuests"/>
                 <!-- Split Button -->
-                <t t-call="point_of_sale.controlButton"
+                <t t-if="this.pos.config.iface_splitbill" t-call="point_of_sale.controlButton"
                     iconClasses="'fa fa-files-o'"
                     btnText.translate="Split"
                     btnClasses="'btn-secondary '"
