@@ -129,6 +129,18 @@ export class Navbar extends Component {
         });
     }
 
+    get customerDisplayURL() {
+        const getDeviceUuid = () => {
+            if (!localStorage.getItem("device_uuid")) {
+                localStorage.setItem("device_uuid", uuidv4());
+            }
+            return localStorage.getItem("device_uuid");
+        };
+        return `${this.pos.session._base_url}/pos_customer_display/${
+            this.pos.config.id
+        }/${getDeviceUuid()}?access_token=${this.pos.config.access_token}`;
+    }
+
     openCustomerDisplay() {
         const proxyIP = this.pos.getDisplayDeviceIP();
         if (proxyIP) {
@@ -139,18 +151,8 @@ export class Navbar extends Component {
                 this.notification
             );
         } else {
-            const getDeviceUuid = () => {
-                if (!localStorage.getItem("device_uuid")) {
-                    localStorage.setItem("device_uuid", uuidv4());
-                }
-                return localStorage.getItem("device_uuid");
-            };
-            const customer_display_url = `/pos_customer_display/${
-                this.pos.config.id
-            }/${getDeviceUuid()}?access_token=${this.pos.config.access_token}`;
-
             this.dialog.add(QrCodeCustomerDisplay, {
-                customerDisplayURL: `${this.pos.session._base_url}${customer_display_url}`,
+                customerDisplayURL: this.customerDisplayURL,
             });
             return;
         }
