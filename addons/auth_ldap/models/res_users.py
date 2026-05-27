@@ -55,6 +55,7 @@ class ResUsers(models.Model):
             for conf in Ldap._get_ldap_dicts():
                 changed = Ldap._change_password(conf, self.login, new_passwd)
                 if changed:
+                    self._log_change_password("LDAP password")
                     self._set_empty_password()
                     return True
         return super()._change_password(new_passwd)
