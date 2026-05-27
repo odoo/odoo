@@ -5,7 +5,8 @@ import {
     prettifyMessageText,
 } from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
-import { reactive } from "@web/owl2/utils";
+
+import { proxy } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
@@ -197,7 +198,7 @@ export class Store extends BaseStore {
      */
     makeCachedFetchData(name, params) {
         let promWithResolvers = null;
-        const r = reactive({
+        const r = proxy({
             status: "not_fetched",
             fetch: () => {
                 if (["fetching", "fetched"].includes(r.status)) {

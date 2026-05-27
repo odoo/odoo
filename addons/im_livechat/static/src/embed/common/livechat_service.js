@@ -1,8 +1,8 @@
-import { reactive } from "@web/owl2/utils";
 import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 
-import { rpc } from "@web/core/network/rpc";
+import { proxy } from "@odoo/owl";
 
+import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
@@ -164,7 +164,7 @@ export class LivechatService {
 export const livechatService = {
     dependencies: ["mail.store", "notification"],
     start(env, services) {
-        const livechat = reactive(new LivechatService(env, services));
+        const livechat = proxy(new LivechatService(env, services));
         if (canLoadLivechat()) {
             livechat.initialize();
         }

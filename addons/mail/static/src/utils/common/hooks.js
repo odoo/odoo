@@ -1,12 +1,6 @@
-import {
-    reactive,
-    useComponent,
-    useLayoutEffect,
-    useRef,
-    useState,
-    useSubEnv,
-} from "@web/owl2/utils";
-import { Component, onMounted, onPatched, onWillUnmount, toRaw, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillUnmount, proxy, toRaw, xml } from "@odoo/owl";
+
+import { useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { Reactive } from "@web/core/utils/reactive";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
@@ -662,10 +656,18 @@ export class SearchState extends Reactive {
         super();
         this.initialResults = initialResults;
         this.results = initialResults;
-        if (fetch) this.fetch = fetch;
-        if (filter) this.filter = filter;
-        if (isActive) this.isActiveGetter = isActive;
-        if (deps) this.depsGetter = deps;
+        if (fetch) {
+            this.fetch = fetch;
+        }
+        if (filter) {
+            this.filter = filter;
+        }
+        if (isActive) {
+            this.isActiveGetter = isActive;
+        }
+        if (deps) {
+            this.depsGetter = deps;
+        }
         this.sequential = useSequential();
         useLayoutEffect(
             () => {
@@ -925,7 +927,7 @@ export function useInDiscussCallView() {
  * @see useChildRef
  */
 export function useChildRefs() {
-    return reactive(new Map());
+    return proxy(new Map());
 }
 
 export class UseForwardRefsToParent {

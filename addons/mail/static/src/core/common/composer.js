@@ -1,5 +1,4 @@
 import {
-    reactive,
     useChildSubEnv,
     useExternalListener,
     useLayoutEffect,
@@ -350,13 +349,12 @@ export class Composer extends Component {
         onWillUnmount(() => {
             this.props.composer.isFocused = false;
         });
-        const composerProxy = reactive(this.props.composer);
         onWillDestroy(
             immediateEffect(() => {
                 if (this.status === 2 /* DESTROYED */) {
                     return;
                 }
-                const composerHtml = composerProxy.composerHtml;
+                const composerHtml = this.props.composer.composerHtml;
                 if (this.updateFromEditor) {
                     return;
                 }

@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -50,7 +50,7 @@ export const discussCoreWeb = {
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {
-        const discussCoreWeb = reactive(new DiscussCoreWeb(env, services));
+        const discussCoreWeb = proxy(new DiscussCoreWeb(env, services));
         discussCoreWeb.setup();
         return discussCoreWeb;
     },

@@ -1,5 +1,3 @@
-import { reactive } from "@web/owl2/utils";
-import { markRaw, toRaw } from "@odoo/owl";
 import { Store } from "./store";
 import {
     STORE_SYM,
@@ -15,9 +13,10 @@ import { StoreInternal } from "./store_internal";
 import { ModelInternal } from "./model_internal";
 import { RecordInternal } from "./record_internal";
 
+import { markRaw, proxy, toRaw } from "@odoo/owl";
+
 /** @returns {import("models").Store} */
 export function makeStore(env, { localRegistry } = {}) {
-    const recordByLocalId = reactive(new Map());
     // fake store for now, until it becomes a model
     /** @type {import("models").Store} */
     let store = new Store();
@@ -27,7 +26,7 @@ export function makeStore(env, { localRegistry } = {}) {
     store._raw = store;
     store._proxyInternal = store;
     store._proxy = store;
-    store.recordByLocalId = recordByLocalId;
+    store.recordByLocalId = proxy(new Map());
     Record.store = store;
     /** @type {Object<string, typeof Record>} */
     const Models = {};
@@ -158,7 +157,7 @@ export function makeStore(env, { localRegistry } = {}) {
                         },
                     });
                     record._proxyInternal = recordProxyInternal;
-                    const recordProxy = reactive(recordProxyInternal);
+                    const recordProxy = proxy(recordProxyInternal);
                     record._proxy = recordProxy;
                     if (record?.[STORE_SYM]) {
                         record.recordByLocalId = store.recordByLocalId;
@@ -173,7 +172,7 @@ export function makeStore(env, { localRegistry } = {}) {
         Model._ = markRaw(new ModelInternal());
         Object.assign(Model, {
             Class,
-            records: reactive({}),
+            records: proxy({}),
         });
         Models[Model.getName()] = Model;
         store[Model.getName()] = Model;
