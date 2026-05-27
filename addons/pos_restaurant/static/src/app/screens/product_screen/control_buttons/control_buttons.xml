@@ -23,12 +23,28 @@
                     btnClasses="'o_guests_button btn-secondary '"
                     onClick="this.clickTableGuests"/>
                 <!-- Split Button -->
+<<<<<<< a7567388779dbe02eaa897b7626d96c2e5bea788
                 <t t-call="point_of_sale.controlButton"
                     iconClasses="'fa fa-files-o'"
                     btnText.translate="Split"
                     btnClasses="'btn-secondary '"
                     onClick="this.openSplitPage"
                     disabled="this.pos.getOrder()?.getOrderlines()?.filter((line) => line.isGlobalDiscountApplicable()).reduce((sum, line) => sum + line.qty, 0) lt 2">
+||||||| 7dc368e9135c7cabfe58478712f34a3012567b4c
+                <t t-call="point_of_sale.controlButton">
+                    <t t-set="iconClasses" t-value="'fa fa-files-o'"/>
+                    <t t-set="btnText">Split</t>
+                    <t t-set="btnClasses" t-value="'btn-secondary '"/>
+                    <t t-set="onClick" t-value="this.openSplitPage"/>
+                    <t t-set="disabled" t-value="this.pos.getOrder()?.getOrderlines()?.filter((line) => line.isGlobalDiscountApplicable()).reduce((sum, line) => sum + line.qty, 0) lt 2"/>
+=======
+                <t t-if="this.pos.config.iface_splitbill" t-call="point_of_sale.controlButton">
+                    <t t-set="iconClasses" t-value="'fa fa-files-o'"/>
+                    <t t-set="btnText">Split</t>
+                    <t t-set="btnClasses" t-value="'btn-secondary '"/>
+                    <t t-set="onClick" t-value="this.openSplitPage"/>
+                    <t t-set="disabled" t-value="this.pos.getOrder()?.getOrderlines()?.filter((line) => line.isGlobalDiscountApplicable()).reduce((sum, line) => sum + line.qty, 0) lt 2"/>
+>>>>>>> d6b246846d54e119190b21b2a6d340512d199859
                 </t>
                 <!-- Transfer / Merge Button -->
                 <!-- No t-call controlButton because of t-on-click.stop -->
