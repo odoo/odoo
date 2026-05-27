@@ -1,4 +1,4 @@
-import { animationFrame, expect, test } from "@odoo/hoot";
+import { animationFrame, delay, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { deleteBackward, deleteForward, insertText } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
@@ -6,6 +6,7 @@ import { contains } from "@web/../tests/web_test_helpers";
 import { expectElementCount } from "../_helpers/ui_expectations";
 import { click } from "@odoo/hoot-dom";
 import { expandToolbar } from "../_helpers/toolbar";
+import { DELAY_TOOLBAR_OPEN } from "@html_editor/main/toolbar/toolbar_plugin";
 
 test("should merge successive inline code", async () => {
     await testEditor({
@@ -106,6 +107,14 @@ test("should not open powerbox inside inline code", async () => {
 test.tags("desktop");
 test("should not open toolbar when selection is inside inline code", async () => {
     await setupEditor(`<p>abc<code class="o_inline_code">t[es]t</code>def</p>`);
+    await expectElementCount(".o-we-toolbar", 0);
+});
+
+test("should not open toolbar when selection is around inline code", async () => {
+    await setupEditor(
+        `<p>abc[\ufeff<code class="o_inline_code">\ufefftest\ufeff</code>\ufeff]def</p>`
+    );
+    await delay(DELAY_TOOLBAR_OPEN);
     await expectElementCount(".o-we-toolbar", 0);
 });
 
