@@ -5,6 +5,8 @@ import base64
 import itertools
 import logging
 from ast import literal_eval
+from lxml import html
+import re
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import ValidationError, UserError
@@ -160,6 +162,45 @@ class MailTemplate(models.Model):
         for model in model_names:
             if self.env[model]._abstract:
                 raise ValidationError(_('You may not define a template on an abstract model: %s', model))
+
+    @api.model
+    def _load_records(self, data_list, update=False):
+        """
+        Intercept XML template loading to strip purely-formatting whitespace around QWeb tags.
+        This prevents the WYSIWYG editor's dom_state.js from eagerly converting indentation into `&nbsp;`.
+        """
+        for data in data_list:
+            if data.get('values') and data['values'].get('body_html'):
+                try:
+                    # Parse the body as a fragment to avoid lxml wrapping it in <html>/<body> tags
+                    doc = html.fragment_fromstring(data['values']['body_html'], create_parent="div")
+                    # Target all <t> tags or any tag containing a QWeb directive (t-*)
+                    for node in doc.xpath('//*[@*[starts-with(name(), "t-")]] | //t'):
+                        # 1. Handle text preceding the node (only if it's the first child)
+                        if node.getprevious() is None:
+                            parent = node.getparent()
+                            if parent is not None and parent.text:
+                                # Collapse newlines+indentation to 1 space, but strip if at start of block
+                                t = re.sub(r'\s*\n\s*', ' ', parent.text)
+                                parent.text = re.sub(r' {2,}', ' ', t).lstrip(' ')
+
+                        # 2. Handle text following the node
+                        if node.tail:
+                            # Collapse to 1 space. Strip only if it's the very last node in the container.
+                            t = re.sub(r'\s*\n\s*', ' ', node.tail)
+                            if node.getnext() is None:
+                                t = t.rstrip(' ')
+                            node.tail = re.sub(r' {2,}', ' ', t)
+
+                    # Serialize back to string and remove the temporary <div> parent
+                    result = html.tostring(doc, encoding='unicode')
+                    if result.startswith('<div>') and result.endswith('</div>'):
+                        data['values']['body_html'] = result[5:-6]
+                except (TypeError, html.etree.LxmlError) as e:
+                    _logger.warning("Could not strip whitespace from template %s: %s", data.get('xml_id') or 'unknown', e)
+                    pass
+
+        return super()._load_records(data_list, update=update)
 
     @api.model_create_multi
     def create(self, vals_list):
