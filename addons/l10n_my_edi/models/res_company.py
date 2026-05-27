@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class ResCompany(models.Model):
@@ -9,14 +10,20 @@ class ResCompany(models.Model):
     # Fields declaration
     # ------------------
 
+    l10n_my_edi_is_branch = fields.Boolean(
+        compute="_compute_l10n_my_edi_is_branch",
+        export_string_translation=False,
+    )
     l10n_my_edi_proxy_user_id = fields.Many2one(
         comodel_name="account_edi_proxy_client.user",
         compute="_compute_l10n_my_edi_proxy_user_id",
+        recursive=True,
     )
     l10n_my_identification_type = fields.Selection(related='partner_id.l10n_my_identification_type', readonly=False)
     l10n_my_identification_number = fields.Char(related='partner_id.l10n_my_identification_number', readonly=False)
     l10n_my_identification_number_placeholder = fields.Char(compute="_compute_l10n_my_identification_number_placeholder")
     l10n_my_edi_industrial_classification = fields.Many2one(related='partner_id.l10n_my_edi_industrial_classification', readonly=False)
+    l10n_my_edi_is_sole_proprietor = fields.Boolean()
     l10n_my_edi_mode = fields.Selection(
         selection=[
             ('test', 'Pre-Production'),
@@ -37,15 +44,32 @@ class ResCompany(models.Model):
     # Compute, inverse, search methods
     # --------------------------------
 
-    @api.depends("account_edi_proxy_client_ids", 'l10n_my_edi_mode')
-    def _compute_l10n_my_edi_proxy_user_id(self):
-        """ Each company is expected to have at most one proxy user for malaysia for each mode.
-        Thus, we can easily find said user.
+    @api.depends('account_fiscal_country_id', 'vat', 'l10n_my_identification_number', 'parent_id')
+    def _compute_l10n_my_edi_is_branch(self):
+        """ A company is considered a branch if it shares the same country, VAT, and identification number
+        as its parent. Branches use the parent company's proxy user instead of registering their own.
         """
         for company in self:
-            company.l10n_my_edi_proxy_user_id = company.account_edi_proxy_client_ids.filtered(
-                lambda u: u.proxy_type == 'l10n_my_edi' and u.edi_mode == company.l10n_my_edi_mode
-            )[:1]
+            company.l10n_my_edi_is_branch = (
+                company.account_fiscal_country_id.code == 'MY'
+                and company.parent_id.account_fiscal_country_id.code == 'MY'
+                and company.vat == company.parent_id.vat
+                and company.l10n_my_identification_number == company.parent_id.l10n_my_identification_number
+            )
+
+    @api.depends("account_edi_proxy_client_ids", 'l10n_my_edi_mode',
+                 'l10n_my_edi_is_branch', 'parent_id.l10n_my_edi_proxy_user_id')
+    def _compute_l10n_my_edi_proxy_user_id(self):
+        """ Each company is expected to have at most one proxy user for malaysia for each mode.
+        Branches inherit the proxy user from the parent company.
+        """
+        for company in self:
+            if company.l10n_my_edi_is_branch:
+                company.l10n_my_edi_proxy_user_id = company.parent_id.l10n_my_edi_proxy_user_id
+            else:
+                company.l10n_my_edi_proxy_user_id = company.account_edi_proxy_client_ids.filtered(
+                    lambda u: u.proxy_type == 'l10n_my_edi' and u.edi_mode == company.l10n_my_edi_mode
+                )[:1]
 
     @api.depends('l10n_my_identification_type')
     def _compute_l10n_my_identification_number_placeholder(self):
@@ -71,6 +95,10 @@ class ResCompany(models.Model):
     def _l10n_my_edi_create_proxy_user(self):
         """ This method will create a new proxy user for the current company based on the selected mode, if no users already exists. """
         self.ensure_one()
+        if self.l10n_my_edi_is_branch:
+            raise UserError(self.env._(
+                "This company is a branch. E-invoicing registration is managed by the parent company."
+            ))
         if not self.l10n_my_edi_proxy_user_id:
             self.env['account_edi_proxy_client.user']._register_proxy_user(self, 'l10n_my_edi', self.l10n_my_edi_mode)
 
