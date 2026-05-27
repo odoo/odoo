@@ -35,6 +35,15 @@
     </button>
 </t>
 
+<t t-name="website.TeamBoardHeaderMiddleButtons">
+    <button class="btn btn-success-color-hover ms-0 py-0 px-1 me-1"
+            title="Add new Team Board"
+            aria-label="Add new Team Board"
+            t-on-click="this.onAddBoard">
+        <span class="oi oi-fw oi-plus"/>
+    </button>
+</t>
+
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <team_board_option
