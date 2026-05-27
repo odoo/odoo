@@ -34,6 +34,13 @@ class ResCompany(models.Model):
         compute='_compute_pdp_identifier',
         inverse='_inverse_pdp_identifier',
     )
+    pdp_kyc_status = fields.Selection(
+        selection=[
+            ('processing', "Processing"),
+            ('success', "Success"),
+            ('fail', "Fail"),
+        ],
+    )
 
     @api.depends('peppol_eas', 'peppol_endpoint')
     def _compute_pdp_identifier(self):
