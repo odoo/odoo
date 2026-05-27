@@ -72,7 +72,7 @@ class PosPrinter(models.Model):
         *EPSON_MODELS,
     ], required=True, default='80')
     paper_size_keys = fields.Char(compute='_compute_paper_size_keys')
-    timeout = fields.Integer(string="Connection Timeout (ms)", default=3000, help="Time in milliseconds before considering that the printer is not responding.")
+    timeout = fields.Integer(string="Connection Timeout (ms)", default=15000, help="Time in milliseconds before considering that the printer is not responding.")
 
     def copy_data(self, default=None):
         default = dict(default or {}, pos_config_ids=[(5, 0, 0)], printer_ip="0.0.0.0")
