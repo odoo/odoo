@@ -75,7 +75,7 @@
                                         </div>
                                         <div groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user">
                                             <div groups="!base.group_multi_company">
-                                                    <field name="recruiter_id" widget="many2one_avatar_employee" class="text-muted"
+                                                    <field name="recruiter_id" widget="many2one_avatar_employee" class="text-muted o_user_name_align"
                                                         options="{'display_avatar_name': True}"/>
                                                 </div>
                                                 <div groups="base.group_multi_company">
@@ -178,7 +178,7 @@
                                                     options="{'display_avatar_name': False}"/>
                                             </div>
                                         </div>
-                                        <div class="col align-content-end">
+                                        <div class="col align-content-center">
                                             <div groups="base.group_multi_company">
                                                 <t t-if="record.company_id.raw_value != 0">
                                                     <field name="company_id"/>
