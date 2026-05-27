@@ -11,6 +11,13 @@ const { DESKTOP, MOBILE } = DIMENSIONS;
 const MARGINS = ["margin-top", "margin-right", "margin-bottom", "margin-left"];
 const PADDINGS = ["padding-top", "padding-right", "padding-bottom", "padding-left"];
 
+/**
+ * TODO EGGMAIL: handle vertical alignment? (should be done at a higher level),
+ * eg vertical alignment necessary because a horizontal cell is bigger than
+ * another.
+ * TODO EGGMAIL: handle display-flex alignments as well? They don't use margin
+ * but need centering => to investigate.
+ */
 export class SpacingPlugin extends Plugin {
     static id = "spacing";
     static dependencies = ["referenceNode", "responsiveBlock", "rules", "style"];

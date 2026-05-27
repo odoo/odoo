@@ -371,6 +371,13 @@ export class SpacingNode {
         this.layout = new Layout({ refs });
     }
 
+    /**
+     * TODO EGGMAIL this should be refined as if I want a technical class on
+     * spacing layouts, it will become "relevant" while it's not. There is also
+     * the "style context" concern where some style properties are modified
+     * by adding a table, and we should negate that effect, which would make
+     * the layout become "relevant" while it's not.
+     */
     isRelevant() {
         return [...this.layout.getRefNames()].some(
             (ref) => Object.entries(this.layout.renderAttributes(ref)).length > 0
