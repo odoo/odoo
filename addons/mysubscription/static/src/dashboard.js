@@ -1,4 +1,4 @@
-import { Component, onWillStart, Plugin, providePlugins, plugin, proxy } from "@odoo/owl";
+import { Component, onWillStart, providePlugins, plugin } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { SubscriptionSection } from "./subscription_section";

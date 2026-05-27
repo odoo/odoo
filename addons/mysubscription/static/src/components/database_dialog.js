@@ -94,8 +94,7 @@ export class DatabaseDialog extends Component {
     async _executeAction(action) {
         const formData = this.formData;
         try {
-            // The `rename` action is a `duplicate` followed by a `drop`.
-            const route = `/web/database/${(action === "rename") ? "duplicate" : action}`;
+            const route = `/web/database/${action}`;
             const response = await fetch(route, {
                 method: "POST",
                 body: formData,
@@ -114,12 +113,10 @@ export class DatabaseDialog extends Component {
                     break;
                 case "duplicate":
                     break;
+                case "rename":
                 case "drop":
                     // Reloading leads the user to the database manager.
                     location.reload();
-                    break;
-                case "rename":
-                    this._executeAction("drop");
                     break;
             }
             this.props.close();
