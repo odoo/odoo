@@ -38,6 +38,7 @@ import { WebsiteBuilder } from "@website/builder/website_builder";
 import { session } from "@web/session";
 import { getTranslatedElements } from "./translated_elements_getter.hoot";
 import { BackgroundShapeOptionPlugin } from "@html_builder/plugins/background_option/background_shape_option_plugin";
+import { _t } from "@web/core/l10n/translation";
 
 class Website extends models.Model {
     _name = "website";
@@ -283,8 +284,8 @@ export async function setupWebsiteBuilder(
         getRegistry() {
             return registry;
         },
-        _t() {
-            return (source, ...substitutions) => source;
+        get _t() {
+            return _t;
         },
     });
 

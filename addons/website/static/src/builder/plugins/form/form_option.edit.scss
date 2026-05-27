@@ -24,5 +24,10 @@
 
     .s_website_form_label_content[contenteditable="true"] {
         cursor: text;
+
+        &[data-show-default-label]::after {
+            content: attr(data-default-label-content);
+            opacity: 0.3;
+        }
     }
 }
