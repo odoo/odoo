@@ -79,6 +79,16 @@ class WebsiteLinksCodeEditor extends Interaction {
 
     async onEditCodeFormSubmit() {
         const newCode = this.codeEl.querySelector("#edit-code-form #new_code").value;
+        const formattedNewCode = newCode.replace(/[^a-zA-Z0-9_-]/g, "");
+
+        if (formattedNewCode !== newCode) {
+            this.codeErrorEl.textContent = _t(
+                "Only letters (A–Z, a–z), numbers (0–9), underscores (_) and hyphens (-) are allowed. No spaces."
+            );
+            this.error = true;
+            return;
+        }
+
         if (newCode === "") {
             this.codeErrorEl.textContent = _t("The code cannot be left empty");
             this.error = true;
