@@ -173,7 +173,9 @@ class ApplicantGetRefuseReason(models.TransientModel):
         return {
             'body': body,
             'email_from': email_from,
+            'message_type': 'comment',
             'subject': subject,
+            'subtype_xmlid': 'mail.mt_comment',
             'author_id': self.env.user.partner_id.id,
             'scheduled_date': self.scheduled_date,
             'attachment_ids': [(4, att.id) for att in self.attachment_ids],
