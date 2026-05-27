@@ -947,3 +947,15 @@ class TestCreatePicking(ProductVariantsCommon):
         move = po.picking_ids.move_ids
 
         self.assertEqual(move.description_picking, "[P01] Product 1", f'The vendor reference "{move.description_picking}" is not the expected one.')
+
+    def test_vendor_reference_in_receipt_origin(self):
+        """Ensure the vendor reference is propagated to the receipt source document.
+        """
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.partner_ref = "VEN1-REF"
+        po.button_confirm()
+        self.assertEqual(
+            po.picking_ids.origin,
+            f"{po.name} - VEN1-REF",
+            "The vendor reference should be propagated to the receipt source document.",
+        )
