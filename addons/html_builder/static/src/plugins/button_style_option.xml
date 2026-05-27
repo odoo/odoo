@@ -33,7 +33,7 @@
 
     <t t-if="this.state.currentButtonType === 'custom'">
         <BuilderRow label.translate="Text" level="1">
-            <BuilderColorPicker styleAction="'color'" enabledTabs="['solid', 'custom']" />
+            <BuilderColorPicker styleAction="'color'" enabledTabs="['solid', 'custom', 'gradient']" />
         </BuilderRow>
         <BuilderRow label.translate="Fill" level="1">
             <BuilderColorPicker action="'buttonFillColorAction'" actionParam="{ mainParam: 'background-color', allowImportant: false }" enabledTabs="['solid', 'custom', 'gradient']" />

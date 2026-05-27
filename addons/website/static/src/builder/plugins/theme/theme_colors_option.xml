@@ -143,8 +143,8 @@
                                             <BuilderRow label.translate="Primary Buttons">
                                                 <BuilderColorPicker
                                                     action="'customizeWebsiteColor'"
-                                                    actionParam="`o-cc${preset.id}-btn-primary`"
-                                                    enabledTabs="['solid', 'custom']"
+                                                    actionParam="{ mainParam: `o-cc${preset.id}-btn-primary`, gradientColor: `o-cc${preset.id}-btn-primary-gradient` }"
+                                                    enabledTabs="['solid', 'custom', 'gradient']"
                                                     tooltip.translate="Fill Color"/>
                                                 <BuilderColorPicker
                                                     action="'customizeWebsiteColor'"
@@ -155,8 +155,8 @@
                                             <BuilderRow label.translate="Secondary Buttons">
                                                 <BuilderColorPicker
                                                     action="'customizeWebsiteColor'"
-                                                    actionParam="`o-cc${preset.id}-btn-secondary`"
-                                                    enabledTabs="['solid', 'custom']"
+                                                    actionParam="{ mainParam: `o-cc${preset.id}-btn-secondary`, gradientColor: `o-cc${preset.id}-btn-secondary-gradient` }"
+                                                    enabledTabs="['solid', 'custom', 'gradient']"
                                                     tooltip.translate="Fill Color"/>
                                                 <BuilderColorPicker
                                                     action="'customizeWebsiteColor'"
