@@ -71,9 +71,24 @@
                                 -->
                                 <field name="sequence" invisible="1"/>
                                 <field name="display_type" invisible="1"/>
+                                <field name="product_id" invisible="1"/>
+                                <field name="product_custom_attribute_value_ids" invisible="1">
+                                    <list>
+                                        <field name="custom_product_template_attribute_value_id"/>
+                                        <field name="custom_value"/>
+                                    </list>
+                                </field>
+                                <field name="product_no_variant_attribute_value_ids" invisible="1"/>
                                 <group invisible="display_type">
                                     <group>
-                                        <field name="product_id" required="not display_type"/>
+                                        <field
+                                            name="product_template_id"
+                                            string="Product"
+                                            required="not display_type"
+                                            options="{'show_label_warning': True}"
+                                            widget="sotl_product_many2one"
+                                            placeholder="Type to find a product..."
+                                        />
                                         <label for="product_uom_qty"/>
                                         <div>
                                             <field name="product_uom_qty" class="oe_inline"/>
@@ -102,8 +117,22 @@
                                 <field name="is_optional" column_invisible="True"/>
                                 <field name="collapse_prices" column_invisible="True"/>
                                 <field name="collapse_composition" column_invisible="True"/>
+                                <field name="product_id" column_invisible="True"/>
+                                <field name="product_custom_attribute_value_ids" column_invisible="True">
+                                    <list>
+                                        <field name="custom_product_template_attribute_value_id"/>
+                                        <field name="custom_value"/>
+                                    </list>
+                                </field>
+                                <field name="product_no_variant_attribute_value_ids" column_invisible="True"/>
                                 <field name="sequence" widget="handle"/>
-                                <field name="product_id"/>
+                                <field
+                                    name="product_template_id"
+                                    string="Product"
+                                    options="{'show_label_warning': True}"
+                                    widget="sotl_product_many2one"
+                                    placeholder="Type to find a product..."
+                                />
                                 <field name="name" widget="section_and_note_text"/>
                                 <field name="product_uom_qty"/>
                                 <field
