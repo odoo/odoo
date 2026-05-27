@@ -183,19 +183,21 @@ export class Navbar extends Component {
         });
     }
 
-    openCustomerDisplay() {
+    get customerDisplayURL() {
         const getDeviceUuid = () => {
             if (!localStorage.getItem("device_uuid")) {
                 localStorage.setItem("device_uuid", uuidv4());
             }
             return localStorage.getItem("device_uuid");
         };
-        const customer_display_url = `/pos_customer_display/${
+        return `${this.pos.config._base_url}/pos_customer_display/${
             this.pos.config.id
         }/${getDeviceUuid()}?access_token=${this.pos.config.access_token}`;
+    }
 
+    openCustomerDisplay() {
         this.dialog.add(QrCodeCustomerDisplay, {
-            customerDisplayURL: `${this.pos.config._base_url}${customer_display_url}`,
+            customerDisplayURL: this.customerDisplayURL,
         });
     }
 
