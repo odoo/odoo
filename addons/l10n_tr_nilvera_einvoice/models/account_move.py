@@ -1,4 +1,3 @@
-import base64
 import uuid
 from markupsafe import Markup
 from urllib.parse import quote, urlencode, urlparse
@@ -444,7 +443,7 @@ class AccountMove(models.Model):
             'res_id': invoice.id,
             'res_field': 'l10n_tr_nilvera_pdf_file',
             'res_model': 'account.move',
-            'raw': base64.b64decode(response),
+            'raw': response,
             'type': 'binary',
             'mimetype': 'application/pdf',
         })
