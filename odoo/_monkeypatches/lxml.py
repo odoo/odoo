@@ -1,3 +1,9 @@
+<<<<<<< 37bb2aff42b82167e39c33f312a4a06d5956a947
+||||||| 5f65e92d7fa341193df53f5aba1620b596f9a1ec
+import lxml.html
+=======
+import lxml.html.clean
+>>>>>>> e098e344d6307fb13cb53e776b4ecb1d71c2cc8c
 import re
 from importlib.metadata import version
 
