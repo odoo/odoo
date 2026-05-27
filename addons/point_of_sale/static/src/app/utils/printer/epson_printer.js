@@ -125,6 +125,7 @@ export class EpsonPrinter extends BasePrinter {
         if (this.use_lna) {
             this.lnaTargetAddressSpace = getLNATargetAddressSpace(this.address);
         }
+        this.timeout = printer.timeout || 15000;
     }
 
     get address() {
