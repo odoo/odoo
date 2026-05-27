@@ -8,23 +8,26 @@ import { patch } from "@web/core/utils/patch";
 const StorePatch = {
     setup() {
         super.setup(...arguments);
-        this.initChannelsUnreadCounter = 0;
+        /** Channel IDs that had unread messages at init time, used to count unloaded channels.
+         *  @type {number[]}
+         **/
+        this.initUnreadChannelIds = [];
     },
     computeGlobalCounter() {
         if (!this["discuss.channel"]) {
             return super.computeGlobalCounter();
         }
-        const channelsContribution =
-            this.channels.status !== "fetched"
-                ? this.initChannelsUnreadCounter
-                : Object.values(this.store["discuss.channel"].records).filter(
-                      // Same conditions as the computed value of `initChannelsUnreadCounter`
-                      (channel) =>
-                          channel.self_member_id?.is_pinned &&
-                          !channel.self_member_id?.mute_until_dt &&
-                          (channel.self_member_id?.message_unread_counter ||
-                              channel.message_needaction_counter)
-                  ).length;
+        const loadedIds = new Set(Object.values(this["discuss.channel"].records).map((c) => c.id));
+        const fromLoaded = Object.values(this["discuss.channel"].records).filter(
+            // Same conditions as the computed value of `initChannelsUnreadCounter`
+            (channel) =>
+                channel.self_member_id?.is_pinned &&
+                !channel.self_member_id.mute_until_dt &&
+                (channel.self_member_id.message_unread_counter ||
+                    channel.message_needaction_counter)
+        ).length;
+        const fromUnloaded = this.initUnreadChannelIds.filter((id) => !loadedIds.has(id)).length;
+        const channelsContribution = fromLoaded + fromUnloaded;
         // Needactions are already counted in the super call, but we want to discard them for channel so that there is only +1 per channel.
         const channelsNeedactionCounter = Object.values(
             this.store["discuss.channel"].records

@@ -177,7 +177,7 @@ class DiscussChannelWebclientController(WebclientController):
                 member.message_unread_counter or member.channel_id.message_needaction_counter
             ),
         )
-        res.attr("initChannelsUnreadCounter", len(members_with_unread))
+        res.attr("initUnreadChannelIds", members_with_unread.channel_id.ids)
         # fetch channels data before calling super to benefit from prefetching (channel info might
         # prefetch a lot of data that super could use, about the current user in particular)
         super()._store_init_messaging_global_fields(res, bus_last_id)
