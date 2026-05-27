@@ -24,4 +24,3 @@ export const provideEnv = owl.provideEnv;
 delete owl.provideEnv;
 export const useSubEnv = owl.useSubEnv;
 export const useChildSubEnv = owl.useChildSubEnv;
-export const validate = owl.validate;
