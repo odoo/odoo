@@ -1034,6 +1034,9 @@ class PosSession(models.Model):
                         move = move.with_company(move.company_id)
                         exp_key = move.product_id._get_product_accounts()['expense']
                         out_key = move.product_id.categ_id.property_stock_account_output_categ_id
+                        pos_order = move.picking_id.pos_order_id
+                        if pos_order and pos_order.fiscal_position_id:
+                            exp_key = pos_order.fiscal_position_id.map_account(exp_key)
                         signed_product_qty = move.product_qty
                         if move._is_in():
                             signed_product_qty *= -1
