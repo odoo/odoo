@@ -1,5 +1,7 @@
 from odoo import fields, models
 
+SANDBOX_DEFAULT_HASH = "NWZlY2ViNjZmZmM4NmYzOGQ5NTI3ODZjNmQ2OTZjNzljMmRiYzIzOWRkNGU5MWI0NjcyOWQ3M2EyN2ZiNTdlOQ=="
+
 
 class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
     _name = 'account.edi.xml.ubl_21.zatca'
@@ -43,6 +45,15 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
 
     def _is_document_allowance_charge(self, base_line):
         return base_line['special_type'] == 'early_payment' or base_line['tax_details']['total_excluded_currency'] < 0
+
+    def _l10n_sa_get_pih(self, invoice):
+        if invoice.company_id.l10n_sa_api_mode == 'sandbox':
+            return SANDBOX_DEFAULT_HASH
+        current_index = invoice.l10n_sa_edi_document_id.l10n_sa_chain_index
+        if not current_index or current_index == 1:
+            return SANDBOX_DEFAULT_HASH
+        prev_doc = invoice.journal_id._l10n_sa_get_previous_document(current_index - 1)
+        return prev_doc.l10n_sa_invoice_hash or SANDBOX_DEFAULT_HASH
 
     # -------------------------------------------------------------------------
     # EXPORT: Templates for document header nodes
@@ -92,11 +103,7 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
                     'cbc:ID': {'_text': 'PIH'},
                     'cac:Attachment': {
                         'cbc:EmbeddedDocumentBinaryObject': {
-                            '_text': (
-                                "NWZlY2ViNjZmZmM4NmYzOGQ5NTI3ODZjNmQ2OTZjNzljMmRiYzIzOWRkNGU5MWI0NjcyOWQ3M2EyN2ZiNTdlOQ=="
-                                if invoice.company_id.l10n_sa_api_mode == 'sandbox' or not invoice.journal_id.l10n_sa_latest_submission_hash
-                                else invoice.journal_id.l10n_sa_latest_submission_hash
-                            ),
+                            '_text': self._l10n_sa_get_pih(invoice),
                             'mimeCode': 'text/plain',
                         },
                     },
