@@ -207,7 +207,7 @@ export function createBasicChart(
             title: { text: "test" },
             dataSource: {
                 type: "range",
-                dataSets: [{ dataRange: "A1" }],
+                dataSets: [{ dataRange: "A1", datasetId: "0" }],
             },
             type: "bar",
             background: "#fff",
@@ -236,7 +236,11 @@ export function createScorecardChart(
         sheetId: sheetId,
         definition: {
             title: { text: "test" },
-            keyValue: "A1",
+            dataSource: {
+                type: "range",
+                dataSets: [{ dataRange: "A1", datasetId: "0" }],
+                dataSetsHaveTitle: false,
+            },
             type: "scorecard",
             background: "#fff",
             baselineColorDown: "#DC6965",
@@ -264,7 +268,11 @@ export function createGaugeChart(
             title: { text: "test" },
             type: "gauge",
             background: "#fff",
-            dataRange: "A1",
+            dataSource: {
+                type: "range",
+                dataSets: [{ dataRange: "A1", datasetId: "0" }],
+                dataSetsHaveTitle: false,
+            },
             sectionRule: {
                 rangeMin: "0",
                 rangeMax: "100",
