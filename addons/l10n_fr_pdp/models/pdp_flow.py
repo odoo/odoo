@@ -4,7 +4,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, RedirectWarning
-from odoo.osv import expression
+from odoo.fields import Domain
 
 _logger = logging.getLogger(__name__)
 
@@ -523,7 +523,7 @@ class PdpFlow(models.Model):
         """Open list view of invalid invoices."""
         action = self._get_moves()._get_records_action(name=self.env._("Invalid Invoices"))
         domain = action.get('domain') or []
-        action['domain'] = expression.AND([domain, [('l10n_fr_pdp_has_error', '=', True)]])
+        action['domain'] = Domain.AND([domain, [('l10n_fr_pdp_has_error', '=', True)]])
         return action
 
     def action_open_send_wizard(self):
