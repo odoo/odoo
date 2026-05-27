@@ -35,7 +35,9 @@ libsass==0.20.1 ; python_version < '3.11'
 libsass==0.22.0 ; python_version >= '3.11'  # (Noble) Mostly to have a wheel package
 lxml==4.8.0 ; python_version <= '3.10'
 lxml==4.9.3 ; python_version > '3.10' and python_version < '3.12' # min 4.9.2, pinning 4.9.3 because of missing wheels for darwin in 4.9.3
-lxml==5.2.1; python_version >= '3.12' # (Noble - removed html clean)
+lxml==5.2.1; python_version >= '3.12' and python_version < '3.13'  # (Noble - removed html clean)
+lxml==5.4.0; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
+lxml==6.0.2; python_version >= '3.14'  # (Resolute)
 lxml-html-clean; python_version >= '3.12' # (Noble - removed from lxml, unpinned for futur security patches)
 MarkupSafe==2.0.1 ; python_version <= '3.10'
 MarkupSafe==2.1.2 ; python_version > '3.10' and python_version < '3.12'
