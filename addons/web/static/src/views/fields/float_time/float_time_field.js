@@ -38,13 +38,20 @@ export class FloatTimeField extends Component {
         useNumpadDecimal();
     }
 
-    onValueChange(ev) {
-        const currentInput = ev.target.value;
-        this.state.formattedResult = formatFloatTime(parseFloatTime(currentInput, this.props.unit), {
+    get formatOptions() {
+        return {
             showSeconds: this.props.showSeconds,
             numeric: this.props.numeric,
             unit: this.props.unit,
-        });
+        };
+    }
+
+    onValueChange(ev) {
+        const currentInput = ev.target.value;
+        this.state.formattedResult = formatFloatTime(
+            parseFloatTime(currentInput, this.props.unit),
+            this.formatOptions
+        );
         if (currentInput === this.state.formattedResult && this.resultPopover.isOpen) {
             this.resultPopover.close();
         } else if (currentInput !== this.state.formattedResult && !this.resultPopover.isOpen) {
@@ -56,11 +63,7 @@ export class FloatTimeField extends Component {
 
     openPopover() {
         const duration = parseFloatTime(this.inputFloatTimeRef.el.value, this.props.unit);
-        this.state.formattedResult = formatFloatTime(duration, {
-            showSeconds: this.props.showSeconds,
-            numeric: this.props.numeric,
-            unit: this.props.unit,
-        });
+        this.state.formattedResult = formatFloatTime(duration, this.formatOptions);
         this.resultPopover.open(this.inputFloatTimeRef.el, {
             state: this.state,
         });
@@ -72,13 +75,7 @@ export class FloatTimeField extends Component {
 
     get formattedValue() {
         const value = this.props.record.data[this.props.name];
-        return formatFloatTime(value,
-            {
-                showSeconds: this.props.showSeconds,
-                numeric: this.props.numeric,
-                unit: this.props.unit,
-            },
-        );
+        return formatFloatTime(value, this.formatOptions);
     }
 }
 
