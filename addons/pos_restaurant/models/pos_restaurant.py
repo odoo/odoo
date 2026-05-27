@@ -33,7 +33,7 @@ class RestaurantFloor(models.Model):
     table_ids = fields.One2many('restaurant.table', 'floor_id', string='Tables')
     sequence = fields.Integer('Sequence', default=1)
     active = fields.Boolean(default=True)
-    floor_plan_layout = fields.Json(string='Floor Plan Layout')
+    floor_plan_layout = fields.Json(string='Floor Plan Layout', copy=False)
 
     @api.model
     def _load_pos_data_domain(self, data, config):
