@@ -6,9 +6,40 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//block[@id='account_vendor_bills']" position="after">
-                <block title="Malaysian Electronic Invoicing" id='malaysian_edi' invisible="country_code != 'MY'">
-                    <setting class="col-lg-12" string="MyInvois mode" company_dependent="1">
+                <!-- Branch view: settings managed by parent -->
+                <block title="Malaysian Electronic Invoicing" id='malaysian_edi_branch' invisible="country_code != 'MY' or not l10n_my_edi_is_branch">
+                    <field name="l10n_my_edi_is_branch" invisible="1"/>
+                    <field name="l10n_my_edi_proxy_user_id" invisible="1"/>
+                    <!-- Branch: parent not registered -->
+                    <div class="text-muted" invisible="l10n_my_edi_proxy_user_id">
+                        <span>Electronic invoicing is currently inactive.</span><br/>
+                        <span>These settings are managed by the parent company.</span>
+                    </div>
+                    <!-- Branch: parent registered -->
+                    <div invisible="not l10n_my_edi_proxy_user_id">
+                        <setting class="col-lg-12" string="MyInvois mode"
+                                documentation="/applications/finance/fiscal_localizations/malaysia.html#e-invoicing-integration-with-myinvois">
+                            <div class="content-group">
+                                <field name="l10n_my_edi_parent_mode" widget="radio" readonly="1"/>
+                            </div>
+                            <div class="mt8 content-group col-9" invisible="l10n_my_edi_parent_mode == 'prod'">
+                                <span invisible="l10n_my_edi_parent_mode != 'test'">• In Pre-Production mode Odoo will send the invoices to a non-production service.</span>
+                            </div>
+                            <div class="mt8 text-success">
+                                <div>The electronic invoicing service is in use.</div>
+                            </div>
+                            <div class="mt8">
+                                E-invoicing-related settings are managed on the parent company.
+                            </div>
+                        </setting>
+                    </div>
+                </block>
+                <!-- Non-branch view: standard registration UI -->
+                <block title="Malaysian Electronic Invoicing" id='malaysian_edi' invisible="country_code != 'MY' or l10n_my_edi_is_branch">
+                    <setting class="col-lg-12" string="MyInvois mode" company_dependent="1"
+                            documentation="/applications/finance/fiscal_localizations/malaysia.html#e-invoicing-integration-with-myinvois">
                         <field name="l10n_my_edi_proxy_user_id" invisible="1"/>
+                        <field name="l10n_my_edi_is_branch" invisible="1"/>
                         <div class="content-group">
                             <field name="l10n_my_edi_mode" widget="radio"/>
                         </div>
@@ -18,10 +49,16 @@
                         <!-- No need to show the button if there is already a user for the selected mode and company. -->
                         <div class="mt8 content-group" invisible="not l10n_my_edi_mode or l10n_my_edi_proxy_user_id">
                             <span><field name="l10n_my_accept_processing"/> I accept that Odoo will process my e-invoices.</span>
+                            <t invisible="not l10n_my_edi_show_sole_proprietor">
+                                <br/>
+                                <span>
+                                    <field name="l10n_my_edi_is_sole_proprietor"/> I use my personal TIN for businesses
+                                </span>
+                            </t>
                             <div class="text-muted" invisible="not l10n_my_edi_company_vat">
                                 The TIN
                                 <a name="action_open_company_form" type="object" role="button" class="btn-link">
-                                    <field name="l10n_my_edi_company_vat" class="oe_inline"/>
+                                    <field name="l10n_my_edi_company_vat" class="oe_inline"/><t invisible="not l10n_my_edi_is_sole_proprietor">:<field name="l10n_my_edi_identification_number" class="oe_inline"/></t>
                                 </a>
                                 will be used when sending e-invoices.<br/>
                             </div>

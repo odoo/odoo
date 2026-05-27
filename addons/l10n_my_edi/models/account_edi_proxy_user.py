@@ -47,6 +47,15 @@ class AccountEdiProxyClientUser(models.Model):
                         company_name=company.display_name,
                     )
                 )
+            if company.l10n_my_edi_is_sole_proprietor:
+                if company.l10n_my_identification_type != 'BRN' or not company.l10n_my_identification_number:
+                    raise UserError(
+                        company.env._(
+                            'Please fill the Business Registration Number of company "%(company_name)s" before enabling the integration with MyInvois.',
+                            company_name=company.display_name,
+                        )
+                    )
+                return f"{company.vat}:{company.l10n_my_identification_number}"
             return company.vat
         return super()._get_proxy_identification(company, proxy_type)
 
