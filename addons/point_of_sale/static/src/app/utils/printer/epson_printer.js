@@ -129,7 +129,7 @@ export class EpsonPrinter extends BasePrinter {
 
     get address() {
         const protocol = this.use_lna ? "http:" : "https:";
-        return `${protocol}//${this.printer_ip}/cgi-bin/epos/service.cgi?devid=local_printer&timeout=3000`;
+        return `${protocol}//${this.printer_ip}/cgi-bin/epos/service.cgi?devid=local_printer&timeout=15000`;
     }
 
     openCashbox() {
@@ -152,7 +152,7 @@ export class EpsonPrinter extends BasePrinter {
         const params = {
             method: "POST",
             body: processed,
-            signal: AbortSignal.timeout(3000),
+            signal: AbortSignal.timeout(15000),
         };
 
         if (this.use_lna) {
