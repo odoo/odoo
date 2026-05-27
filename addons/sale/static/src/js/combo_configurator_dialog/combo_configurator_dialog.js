@@ -15,7 +15,7 @@ import { QuantityButtons } from '../quantity_buttons/quantity_buttons';
 
 export class ComboConfiguratorDialog extends Component {
     static template = 'sale.ComboConfiguratorDialog';
-    static components = { Dialog, ProductCard, QuantityButtons };
+    static components = { Dialog, ProductCard,  QuantityButtons, SubItemQuantityButtons: QuantityButtons};
     static props = {
         product_tmpl_id: Number,
         display_name: String,

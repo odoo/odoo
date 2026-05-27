@@ -67,7 +67,7 @@
                             >
                             <t t-if="combo.qty_free > 1" t-set-slot="quantityButtons">
                                 <div t-on-click.stop="() => {}">
-                                    <QuantityButtons
+                                    <SubItemQuantityButtons
                                         quantity="this.state.qty[combo.id][comboItem.id]"
                                         setQuantity="(qty) => this.setItemQuantity(combo.id, comboItem, qty)"
                                     />
