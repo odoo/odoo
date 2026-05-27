@@ -190,25 +190,6 @@ export class ElementLayout extends LayoutModel {
     }
 }
 
-export class SpacingLayout extends LayoutModel {
-    static template = "mail.SpacingLayout";
-
-    constructor(options = {}) {
-        super(options);
-        this.setAttributes({
-            classNames: "o-ci-spacing-wrapper",
-        });
-    }
-
-    get ancestorTag() {
-        return "TABLE";
-    }
-
-    get descendantTag() {
-        return "TD";
-    }
-}
-
 export class TextNodeLayout {
     content = "";
 
@@ -367,14 +348,5 @@ export class EmailNode {
         } else {
             return render(this, context);
         }
-    }
-}
-
-/**
- * Wrapper for a spacing layout, compatible with EmailNode render function.
- */
-export class SpacingNode {
-    constructor({ Layout = SpacingLayout, refs = {} } = {}) {
-        this.layout = new Layout({ refs });
     }
 }

@@ -1,7 +1,7 @@
 import { Plugin } from "../plugin";
 import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
-import { Band, Block, Cluster } from "./responsive_models";
+import { Band, Block, Cluster } from "./responsive_block_models";
 
 export class ResponsiveBlockPlugin extends Plugin {
     static id = "responsiveBlock";

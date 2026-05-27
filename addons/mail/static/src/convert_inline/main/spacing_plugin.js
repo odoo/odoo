@@ -1,11 +1,12 @@
 import { paragraphRelatedElements } from "@html_editor/utils/dom_info";
 import { DIMENSIONS } from "../hooks";
 import { Plugin } from "../plugin";
-import { ElementLayout, SpacingNode } from "./render_models";
-import { StyleInfo } from "./style_models";
-import { Rules } from "./rules_models";
+import { ElementLayout } from "../core/render_models";
+import { StyleInfo } from "../core/style_models";
+import { Rules } from "../core/rules_models";
 import { registry } from "@web/core/registry";
 import { parseCssValue } from "../css_parsers";
+import { SpacingNode } from "./spacing_models";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
 const MARGINS = ["margin-top", "margin-right", "margin-bottom", "margin-left"];
