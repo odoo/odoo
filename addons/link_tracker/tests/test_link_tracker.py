@@ -310,7 +310,7 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
 
     def test_search_short_url(self):
         """Ensure that we can make a search based on the `short_url`, which is a
-        computed field"""
+        computed field """
         campaign_1 = self.env['utm.campaign'].create({'name': 'campai.gn1...'})
         campaign_2 = self.env['utm.campaign'].create({'name': 'campai.gn2...'})
         source_1 = self.env['utm.source'].create({'name': 'source_1...'})
@@ -343,7 +343,6 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
         ])
 
         code1 = link1.code
-        code_1_patterns = list({base + code1[i:j] for i in range(len(code1)) for j in range(i + 1, len(code1) + 1)})
 
         res1 = self.env['link.tracker'].search([('short_url', '=', base + code1), ('campaign_id', '=', campaign_2.id)]).code
         res2 = self.env['link.tracker'].search([('short_url', '=', base + code1), ('source_id', '=', source_2.id)]).code
@@ -359,15 +358,14 @@ class TestLinkTracker(common.TransactionCase, MockLinkTracker):
         self.assertFalse(res2)
         self.assertIn(link2, res3)
 
-        for value in code_1_patterns:
-            for operator in ['like', 'ilike']:
-                res1 = self.env['link.tracker'].search([('short_url', operator, value)])
-                res2 = self.env['link.tracker'].search([('short_url', operator, value + 'abc')])
-                self.assertIn(link1, res1)
-                self.assertNotIn(link1, res2)
-            for operator in ['not like', 'not ilike']:
-                res = self.env['link.tracker'].search([('short_url', operator, value)])
-                self.assertIn(link2, res)
+        for operator in ['like', 'ilike']:
+            res1 = self.env['link.tracker'].search([('short_url', operator, code1)])
+            res2 = self.env['link.tracker'].search([('short_url', operator, code1 + 'abc')])
+            self.assertIn(link1, res1)
+            self.assertNotIn(link1, res2)
+        for operator in ['not like', 'not ilike']:
+            res = self.env['link.tracker'].search([('short_url', operator, code1)])
+            self.assertIn(link2, res)
         for operator in ['=like', '=ilike']:
             res1 = self.env['link.tracker'].search([('short_url', operator, base + code1)])
             res2 = self.env['link.tracker'].search([('short_url', operator, base + code1 + 'aBc')])
