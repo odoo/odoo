@@ -1,13 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import Command
 from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.mail.tests.common import MailCase
+from odoo.addons.payment.tests.common import PaymentCommon
 
 
 @tagged('post_install', '-at_install')
-class TestSaleOrder(WebsiteSaleCommon):
+class TestSaleOrder(WebsiteSaleCommon, MailCase, PaymentCommon):
 
     def test_delivery_methods_match_order_company(self):
         company_1 = self.env['res.company'].create({'name': 'Test Company 1'})
@@ -114,3 +119,33 @@ class TestSaleOrder(WebsiteSaleCommon):
         self.assertTrue(
             self.cart.partner_id.active, "Registered company shouldn't be archived if any contact has a user"
         )
+
+    def test_partner_email_confirmation_automatic_invoice(self):
+        """Partner receives email confirmation for a
+        delivery when automatic_invoice is enabled."""
+        self.company.stock_move_email_validation = True
+        self.env['ir.config_parameter'].sudo().set_bool('sale.automatic_invoice', True)
+        new_so = self._create_so()
+        tx = self._create_transaction(flow='redirect', sale_order_ids=[new_so.id], state='done')
+        with (
+            mute_logger('odoo.addons.sale.models.payment_transaction'),
+            self.mock_mail_gateway(),
+        ):
+            tx._post_process()
+        new_so.picking_ids.button_validate()
+        self.assertTrue(
+            any(partner.email == self.partner.email
+            for partner in new_so.picking_ids.message_ids.notified_partner_ids
+        ))
+
+    def test_partner_email_confirmation_no_automatic_invoice(self):
+        """Partner receives email confirmation for a delivery."""
+        self.company.stock_move_email_validation = True
+        # self.env['ir.config_parameter'].sudo().set_bool('website_sale.automatic_archiving_of_guest_contacts', False)
+        new_so = self._create_so()
+        new_so._validate_order()
+        new_so.picking_ids.button_validate()
+        self.assertTrue(
+            any(partner.email == self.partner.email
+            for partner in new_so.picking_ids.message_ids.notified_partner_ids
+        ))
