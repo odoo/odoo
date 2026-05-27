@@ -129,7 +129,7 @@
           <!-- WZ: The number of the WZ (release) warehouse document related to the invoice TO-CHECK -->
 
         <!-- P_6: Date of supply or completion of service (if different from issue date). -->
-        <P_6 t-if="invoice.delivery_date and invoice.delivery_date != invoice.date" t-out="invoice.delivery_date"/>
+        <P_6 t-if="invoice.delivery_date and invoice.delivery_date != invoice.invoice_date" t-out="invoice.delivery_date"/>
 
           <!-- OkresFa: Element containing the period to which the invoice relates contains P_6_Od and P_6_Do. TO-CHECK -->
         <!--
