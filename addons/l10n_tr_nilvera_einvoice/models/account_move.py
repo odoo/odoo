@@ -301,7 +301,7 @@ class AccountMove(models.Model):
             'name': filename,
             'res_id': invoice.id,
             'res_model': 'account.move',
-            'datas': response,
+            'raw': response,
             'type': 'binary',
             'mimetype': 'application/pdf',
         })
