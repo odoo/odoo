@@ -50,7 +50,7 @@
                             </td>
                             <td t-if="line.is_exchange" colspan="2">
                                 <i class="o_field_widget text-start text-muted text-start">
-                                    <span class="oe_form_field oe_form_field_float oe_form_field_monetary fw-bold">
+                                    <span class="oe_form_field oe_form_field_float oe_form_field_monetary fw-bold" dir="ltr">
                                         <t t-out="line.amount_formatted"/>
                                     </span>
                                     <span> Exchange Difference</span>
@@ -58,7 +58,7 @@
                             </td>
                         </t>
                         <td t-if="!line.is_exchange" class="text-end ps-2 text-nowrap">
-                            <span class="oe_form_field oe_form_field_float oe_form_field_monetary">
+                            <span class="oe_form_field oe_form_field_float oe_form_field_monetary" dir="ltr">
                                 <t t-out="line.amount_formatted"/>
                             </span>
                         </td>
