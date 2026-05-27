@@ -25,6 +25,7 @@ import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { loadGoogleFonts } from "./mass_mailing_iframe_utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { isBlock } from "@html_editor/utils/blocks";
 
 const IFRAME_VALUE_SELECTOR = ".o_mass_mailing_value";
 
@@ -272,12 +273,9 @@ export class MassMailingIframe extends Component {
         const checkAllInline = function (el) {
             return [...el.children].every((child) => {
                 if (child.tagName === "T") {
-                    return this.checkAllInline(child);
+                    return checkAllInline(child);
                 } else {
-                    return (
-                        child.nodeType !== Node.ELEMENT_NODE ||
-                        iframe.contentWindow.getComputedStyle(child).display === "inline"
-                    );
+                    return !isBlock(child);
                 }
             });
         };
