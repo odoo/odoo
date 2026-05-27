@@ -1,4 +1,4 @@
-import lxml.html
+import lxml.html.clean
 import re
 
 from importlib.metadata import version
