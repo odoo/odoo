@@ -20,6 +20,9 @@ ENDPOINTS = {
     'prod': 'https://openapi.baiwang.com/router/rest',
 }
 
+ALLOWED_ENDPOINTS = frozenset(ENDPOINTS.values())
+REQUEST_TIMEOUT = 15
+
 
 class BaiwangClient:
     """
@@ -66,11 +69,34 @@ class BaiwangClient:
 
     @staticmethod
     def _md5(data: str) -> str:
-        return hashlib.md5(data.encode('utf-8')).hexdigest()
+        return hashlib.new('md5', data.encode('utf-8')).hexdigest()
 
     @staticmethod
     def _sha256(data: str) -> str:
-        return hashlib.sha256(data.encode('utf-8')).hexdigest()
+        return hashlib.new('sha256', data.encode('utf-8')).hexdigest()
+
+    def _validated_endpoint(self) -> str:
+        """Only allow requests to Baiwang's known API endpoints."""
+        parsed_endpoint = urlparse(self.endpoint)
+        if (
+            self.endpoint not in ALLOWED_ENDPOINTS
+            or parsed_endpoint.scheme != 'https'
+            or not parsed_endpoint.hostname
+        ):
+            raise UserError("Baiwang endpoint is not configured correctly: %s" % self.endpoint)
+        return self.endpoint
+
+    def _post_json(self, url_params: dict, body_str: str):
+        endpoint = self._validated_endpoint()
+        response = requests.post(
+            endpoint,
+            params=url_params,
+            data=body_str.encode('utf-8'),
+            headers={'Content-Type': 'application/json; charset=utf-8'},
+            timeout=REQUEST_TIMEOUT,
+        )
+        response.raise_for_status()
+        return response
 
     def _hash_password(self) -> str:
         """Hash password as: SHA256(password + salt)"""
@@ -141,14 +167,7 @@ class BaiwangClient:
 
         response = None
         try:
-            response = requests.post(
-                self.endpoint,
-                params=url_params,
-                data=body_str.encode('utf-8'),
-                headers={'Content-Type': 'application/json; charset=utf-8'},
-                timeout=15,
-            )
-            response.raise_for_status()
+            response = self._post_json(url_params, body_str)
         except requests.exceptions.RequestException as exc:
             raise self._network_error(exc) from exc
         result = response.json() if response else {}
@@ -220,14 +239,7 @@ class BaiwangClient:
         # Send request with raw body bytes (not requests' json= which adds spaces)
         response = None
         try:
-            response = requests.post(
-                self.endpoint,
-                params=url_params,
-                data=body_str.encode('utf-8'),
-                headers={'Content-Type': 'application/json; charset=utf-8'},
-                timeout=15,
-            )
-            response.raise_for_status()
+            response = self._post_json(url_params, body_str)
         except requests.exceptions.RequestException as exc:
             raise self._network_error(exc) from exc
         return response.json() if response else {}
