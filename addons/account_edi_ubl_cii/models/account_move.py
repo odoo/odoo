@@ -1,7 +1,6 @@
 from base64 import b64decode
 from contextlib import suppress
 import binascii
-import re
 
 from lxml import etree
 
@@ -14,12 +13,7 @@ from odoo.tools import frozendict
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    ubl_cii_xml_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        string="Attachment",
-        compute=lambda self: self._compute_linked_attachment_id('ubl_cii_xml_id', 'ubl_cii_xml_file'),
-        depends=['ubl_cii_xml_file']
-    )
+    has_grouped_lines = fields.Boolean(help="Is move lines Grouped")
     ubl_cii_xml_file = fields.Binary(
         attachment=True,
         string="UBL/CII File",
@@ -28,6 +22,12 @@ class AccountMove(models.Model):
     ubl_cii_xml_filename = fields.Char(
         string="UBL/CII Filename",
         compute='_compute_filename',
+    )
+    ubl_cii_xml_id = fields.Many2one(
+        comodel_name='ir.attachment',
+        string="Attachment",
+        compute=lambda self: self._compute_linked_attachment_id('ubl_cii_xml_id', 'ubl_cii_xml_file'),
+        depends=['ubl_cii_xml_file']
     )
 
     # -------------------------------------------------------------------------
@@ -117,7 +117,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         self._check_move_for_group_ungroup_lines_by_tax()
 
-        if self._has_lines_grouped():
+        if self.has_grouped_lines:
             self._ungroup_lines()
         else:
             self._group_lines_by_tax()
@@ -141,6 +141,7 @@ class AccountMove(models.Model):
 
         self.invoice_line_ids = [Command.clear()]
         if decoder(self, file_data_group[0]) is None:
+            self.has_grouped_lines = False
             self._message_log(body=self.env._("Ungrouped lines from %s", file_data_group[0]['attachment'].name))
         else:
             raise UserError(error_message)
@@ -156,6 +157,7 @@ class AccountMove(models.Model):
         line_vals = self._get_line_vals_group_by_tax(self.partner_id)
         self.invoice_line_ids = [Command.clear()]
         self.invoice_line_ids = line_vals
+        self.has_grouped_lines = True
         self._message_log(body=self.env._("Grouped lines by tax"))
 
     def _get_line_vals_group_by_tax(self, partner):
@@ -189,8 +191,11 @@ class AccountMove(models.Model):
         for base_line in base_lines:
             taxes = base_line['tax_ids']
             account = base_line['account_id']
+            description = account.name
+            if taxes.mapped('name') and len(base_lines) > 1:
+                description += f" - {taxes.mapped('name')[0]}"
             to_create.append(Command.create({
-                'name': " - ".join([partner.name or self.env._("Unknown partner"), account.code, " / ".join(taxes.mapped('name')) or self.env._("Untaxed")]),
+                'name': description,
                 'quantity': base_line['quantity'],
                 'price_unit': base_line['price_unit'],
                 'extra_tax_data': AccountTax._export_base_line_extra_tax_data(base_line),
@@ -205,18 +210,8 @@ class AccountMove(models.Model):
         self.ensure_one()
         if self.state != 'draft':
             raise UserError(self.env._("You can only (un)group lines of a draft invoice"))
-
-    def _has_lines_grouped(self):
-        """
-        Check if the move has its lines grouped
-        :return: True if lines look like they're grouped, False otherwise
-        """
-        self.ensure_one()
-        partner_name = re.escape(self.partner_id.name or self.env._("Unknown partner")) + r' - \d+ - .*'
-        return any(
-            re.match(partner_name, line.name)
-            for line in self.line_ids.filtered(lambda line: line.name and line.display_type == 'product')
-        )
+        if len(self.invoice_line_ids) <= 1 and not self.has_grouped_lines:
+            raise UserError(self.env._("You need at least two lines to group them."))
 
     @api.model
     def _post_process_link_to_purchase_order(self, invoice):
@@ -241,7 +236,7 @@ class AccountMove(models.Model):
             ('id', '!=', invoice.id),
             *self.env['account.move']._check_company_domain(invoice.company_id),
         ], order='create_date desc', limit=1)
-        if last_bill_from_vendor and last_bill_from_vendor._has_lines_grouped():
+        if last_bill_from_vendor and last_bill_from_vendor.has_grouped_lines:
             invoice._group_lines_by_tax()
 
     # -------------------------------------------------------------------------
