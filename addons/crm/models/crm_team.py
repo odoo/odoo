@@ -785,3 +785,19 @@ class CrmTeam(models.Model):
         if self.use_opportunities:
             return self.action_open_opportunities()
         return super().action_primary_channel_button()
+
+    # ------------------------------------------------------------
+    # UTILS
+    # ------------------------------------------------------------
+
+    @api.model
+    def get_team_switcher_teams(self):
+        """ Retrieve the current user team ids and names for the team switcher.
+        Only considering the teams using opportunities.
+        Limited to own teams if the user doesn't have "All Documents" access.
+        """
+        domain = [("use_opportunities", "=", True)]
+        if not self.env.user.has_group("sales_team.group_sale_salesman_all_leads"):
+            domain = Domain.AND([domain, [("id", "in", self.env.user.crm_team_ids._ids)]])
+        teams = self.env["crm.team"].search(domain, order="sequence, id")
+        return teams.read(["id", "name"])

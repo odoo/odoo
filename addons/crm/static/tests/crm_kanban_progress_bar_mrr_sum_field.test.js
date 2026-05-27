@@ -35,6 +35,12 @@ class Stage extends models.Model {
     ];
 }
 
+class Team extends models.Model {
+    _name = "crm.team";
+
+    name = fields.Char();
+}
+
 class Lead extends models.Model {
     _name = "crm.lead";
 
@@ -112,7 +118,7 @@ class Lead extends models.Model {
     ];
 }
 
-defineModels([Lead, Users, Stage]);
+defineModels([Lead, Users, Stage, Team]);
 defineMailModels();
 beforeEach(() => {
     patchWithCleanup(AnimatedNumber, { enableAnimations: false });

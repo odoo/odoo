@@ -1,6 +1,6 @@
+import { CrmSearchModel } from "@crm/views/crm_search_model";
 import { Domain } from "@web/core/domain";
 import { makeContext } from "@web/core/context";
-import { SearchModel } from "@web/search/search_model";
 import {
     serializeDate,
     serializeDateTime,
@@ -11,7 +11,7 @@ import {
  * explanations of what is done here.
  */
 
-export class ForecastSearchModel extends SearchModel {
+export class ForecastSearchModel extends CrmSearchModel {
     /**
      * @override
      */

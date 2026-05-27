@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="crm.team_switcher">
+        <Dropdown t-if="this.isActive" menuClass="'crm_team_switcher_dropdown'">
+            <button class="o_cp_team_switcher btn btn-secondary" t-att-class="this.env.isSmall ? '' : 'o-dropdown-caret'" data-tooltip="Sales Team">
+                <i class="d-sm-none fa fa-users"/>
+                <span class="d-none d-sm-inline text-truncate" t-out="this.currentLabel"/>
+            </button>
+            <t t-set-slot="content">
+                <DropdownItem onSelected="() => this.onSelect()" class="'text-truncate ' + (!this.selectedTeamId ? 'selected' : '')">
+                    <t t-out="this.allTeamsLabel"/>
+                </DropdownItem>
+                <t t-foreach="this.teams" t-as="team" t-key="team_index">
+                    <DropdownItem onSelected="() => this.onSelect(team.id)" class="'text-truncate ' + (this.selectedTeamId === team.id ? 'selected' : '')">
+                        <t t-out="team.name"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>
