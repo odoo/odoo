@@ -19,6 +19,8 @@ class AccountMove(models.Model):
     )
     l10n_sa_is_csid_ready = fields.Boolean(compute='_compute_l10n_sa_is_csid_ready')
     l10n_sa_compliance_checks_passed = fields.Boolean(related='journal_id.l10n_sa_compliance_checks_passed')
+    l10n_sa_edi_log_ids = fields.One2many(comodel_name='l10n_sa_edi.log', inverse_name='account_move_id')
+    l10n_sa_is_test = fields.Boolean(compute="_compute_l10n_sa_is_test", store=True)
 
     @api.depends('commercial_partner_id.country_id', 'company_id.country_id')
     def _compute_l10n_sa_edi_transaction_type_ids(self):
@@ -32,6 +34,11 @@ class AccountMove(models.Model):
     def _compute_l10n_sa_is_csid_ready(self):
         for move in self:
             move.l10n_sa_is_csid_ready = bool(move.journal_id.sudo().l10n_sa_production_csid_json)
+
+    @api.depends('l10n_sa_edi_log_ids.is_test')
+    def _compute_l10n_sa_is_test(self):
+        for record in self:
+            record.l10n_sa_is_test = all(record.l10n_sa_edi_log_ids.mapped('is_test'))
 
     def _l10n_sa_is_phase_2_applicable(self, check_document=True):
         return self._l10n_sa_is_phase_1_applicable() and self.is_sale_document() and self.state == 'posted' and \
@@ -176,7 +183,7 @@ class AccountMove(models.Model):
             # The "Reset to Draft" button should be hidden in the following cases:
             # - Invoice has been successfully submitted in Production mode.
             # - The invoice submission encountered a timed out, regardless of the API mode.
-            if move.l10n_sa_chain_index and (move.company_id.l10n_sa_edi_is_production or not move.l10n_sa_edi_document_id._l10n_sa_is_in_chain()):
+            if move.l10n_sa_chain_index and move.company_id.l10n_sa_edi_is_production:
                 move.show_reset_to_draft_button = False
 
     def _post(self, soft=True):
@@ -287,13 +294,6 @@ class AccountMove(models.Model):
         for transaction_type in TRANSACTION_TYPES:
             code += '1' if transaction_type in active_transaction_types else '0'
         return code
-
-    def action_open_chain_head(self):
-        """
-        Action to show the chain head of the invoice
-        """
-        self.ensure_one()
-        return self.l10n_sa_edi_document_id.l10n_sa_edi_chain_head_id._get_records_action(name=self.env._("Chain Head"))
 
     def _l10n_sa_generate_zatca_template(self):
         """Render the ZATCA UBL file"""
