@@ -225,6 +225,9 @@ export class Dropdown extends Component {
 
     /** @type {HTMLElement|null} */
     get target() {
+        if (status(this) !== "mounted") {
+            return null;
+        }
         const target = getFirstElementOfNode(this.__owl__.bdom);
         if (!target) {
             throw new Error(
