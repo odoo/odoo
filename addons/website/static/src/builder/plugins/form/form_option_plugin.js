@@ -48,6 +48,7 @@ import { getParsedDataFor } from "@website/js/utils";
 import { isTargetVisible } from "@html_builder/core/visibility_plugin";
 import { nodeSize } from "@html_editor/utils/position";
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
+import { isEmpty, isZWS } from "@html_editor/utils/dom_info";
 
 /**
  * @typedef { Object } FormOptionShared
@@ -79,7 +80,13 @@ export const INNER_SNIPPETS_EXCLUDED_FROM_FORMS = [
 
 export class FormOptionPlugin extends Plugin {
     static id = "websiteFormOption";
-    static dependencies = ["builderActions", "builderOptions", "savePlugin", "websiteBridge"];
+    static dependencies = [
+        "builderActions",
+        "builderOptions",
+        "savePlugin",
+        "websiteBridge",
+        "history",
+    ];
     static shared = [
         "prepareFormModel",
         "getModelsCache",
@@ -193,13 +200,14 @@ export class FormOptionPlugin extends Plugin {
             ".row > div:not(.s_website_form_field, .s_website_form_submit, .s_website_form_field *, .s_website_form_submit *)",
             ".s_website_form_label_content",
         ].map((selector) => `.s_website_form form ${selector}`),
-        clean_for_save_processors: (rootEl) => {
-            this.removeSuccessMessagePreviews(rootEl);
-            return rootEl;
-        },
-        on_will_save_handlers: async (rootEl) => {
-            await this.applyDefaultValues(rootEl);
-        },
+        clean_for_save_processors: [
+            this.removeSuccessMessagePreviews.bind(this),
+            this.writeDefaultLabels.bind(this),
+        ],
+        on_will_save_handlers: [
+            this.applyDefaultValues.bind(this),
+            () => Promise.all([...this.fetchingDefaultLabelProms]),
+        ],
         dropzone_selectors: [
             {
                 selector: [".s_website_form", ...INNER_SNIPPETS_EXCLUDED_FROM_FORMS].join(", "),
@@ -213,6 +221,7 @@ export class FormOptionPlugin extends Plugin {
                 dropLockWithin: "form",
             },
         ],
+        system_attributes: ["data-default-label-content"],
         so_content_addition_selectors: [
             ".s_website_form, .s_website_form_field, .s_website_form_inner_content",
         ],
@@ -240,6 +249,8 @@ export class FormOptionPlugin extends Plugin {
         );
         this.website_t = this.dependencies.websiteBridge._t;
         this.website_registry = this.dependencies.websiteBridge.getRegistry();
+        this.fetchingDefaultLabelMap = new WeakMap();
+        this.fetchingDefaultLabelProms = new Set();
     }
     destroy() {
         super.destroy();
@@ -1056,6 +1067,47 @@ export class FormOptionPlugin extends Plugin {
         }
     }
 
+    writeDefaultLabels(rootEl) {
+        for (const labelEl of selectElements(rootEl, "[data-show-default-label]")) {
+            labelEl.textContent = labelEl.dataset.defaultLabelContent;
+            labelEl.removeAttribute("data-show-default-label");
+            const fieldEl = labelEl.closest(".s_website_form_field");
+            this.updateFieldName({ fieldEl, name: labelEl.textContent });
+        }
+        for (const labelEl of selectElements(rootEl, "[data-default-label-content]")) {
+            labelEl.removeAttribute("data-default-label-content");
+        }
+        return rootEl;
+    }
+
+    normalizeDefaultLabel({ fieldEl, labelEl }) {
+        if (isEmpty(labelEl) || isZWS(labelEl)) {
+            labelEl.setAttribute("data-show-default-label", true);
+            this.fetchingDefaultLabelMap.delete(labelEl);
+            if (isFieldCustom(fieldEl)) {
+                labelEl.setAttribute(
+                    "data-default-label-content",
+                    this.dependencies.websiteBridge._t("Custom Field")
+                );
+            } else {
+                const name = getFieldName(fieldEl);
+                const prom = this.prepareFields({ editingElement: fieldEl })
+                    .then((fields) => {
+                        if (this.fetchingDefaultLabelMap.get(labelEl) === prom) {
+                            const content =
+                                fields[name].string_in_website_lang ?? fields[name].string;
+                            labelEl.setAttribute("data-default-label-content", content);
+                        }
+                    })
+                    .finally(() => this.fetchingDefaultLabelProms.delete(prom));
+                this.fetchingDefaultLabelProms.add(prom);
+                this.fetchingDefaultLabelMap.set(labelEl, prom);
+            }
+        } else {
+            labelEl.removeAttribute("data-show-default-label");
+        }
+    }
+
     /**
      * Normalize input names to match label's text content
      *
@@ -1066,6 +1118,7 @@ export class FormOptionPlugin extends Plugin {
             (labelEl) => {
                 const fieldEl = labelEl.closest(".s_website_form_field");
                 this.updateFieldName({ fieldEl, name: labelEl.textContent });
+                this.normalizeDefaultLabel({ fieldEl, labelEl });
             },
             root,
             { selector: ".s_website_form_label_content:not(.s_website_form_dnone *)" }

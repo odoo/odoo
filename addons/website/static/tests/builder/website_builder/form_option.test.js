@@ -1,4 +1,10 @@
-import { bold, insertText, redo, undo } from "@html_editor/../tests/_helpers/user_actions";
+import {
+    bold,
+    deleteBackward,
+    insertText,
+    redo,
+    undo,
+} from "@html_editor/../tests/_helpers/user_actions";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { beforeEach, describe, expect, press, queryOne, test, waitFor } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
@@ -1267,4 +1273,16 @@ test("snippets that can't be dropped in forms", async () => {
     dragUtils = await contains("#snippet_content [name='Countdown'] .o_snippet_thumbnail").drag();
     expect(":iframe .s_website_form_rows .oe_drop_zone").toHaveCount(0);
     await dragUtils.cancel();
+});
+
+test("default for label when user deletes its content", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_website_form");
+    const labelEl = queryOne(":iframe .s_website_form_label_content:contains(Your Name)");
+    setSelectionOnNodeContent(labelEl);
+    expect(labelEl).not.toHaveAttribute("data-show-default-label");
+    expect(labelEl).not.toHaveAttribute("data-default-label-content");
+    deleteBackward(getEditor());
+    expect(labelEl).toHaveAttribute("data-show-default-label", "true");
+    expect(labelEl).toHaveAttribute("data-default-label-content", "Custom Field");
 });
