@@ -2826,3 +2826,76 @@ class TestPointOfSaleFlow(CommonPosTest):
                 line.qty = 1
                 self.assertEqual(line.price_subtotal, 100)
                 self.assertEqual(line.price_subtotal_incl, 110)
+
+    def test_fiscal_position_mapping_no_invoice(self):
+        """
+        Tests that the mapping of accounts on a fiscal position is correctly
+        done even if no invoices are asked.
+        """
+        default_expense, mapped_expense = self.env['account.account'].create([
+            {
+                'name': 'Default Expense',
+                'code': 'ORI',
+                'account_type': 'expense',
+            },
+            {
+                'name': 'Mapped Expense',
+                'code': 'MAP',
+                'account_type': 'expense',
+            }
+        ])
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'Mapping',
+            'account_ids': [Command.create({
+                'account_src_id': default_expense.id,
+                'account_dest_id': mapped_expense.id,
+            })]
+        })
+        categ = self.env['product.category'].create({
+            'name': 'Category',
+            'property_valuation': 'real_time',
+            'property_cost_method': 'fifo',
+            'property_account_expense_categ_id': default_expense.id,
+        })
+        product = self.env['product.product'].create({
+            'name': 'Mapped',
+            'is_storable': True,
+            'categ_id': categ.id,
+            'standard_price': 10.0,
+            'available_in_pos': True,
+        })
+
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner.id,
+            'fiscal_position_id': fiscal_position.id,
+            'lines': [Command.create({
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 20.0,
+                'discount': 0.0,
+                'qty': 1.0,
+                'price_subtotal': 20.0,
+                'price_subtotal_incl': 20.0,
+            })],
+            'amount_tax': 0.0,
+            'amount_total': 20.0,
+            'amount_paid': 0,
+            'amount_return': 0,
+            'to_invoice': False,
+            'last_order_preparation_change': '{}'
+        })
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(payment_context).create({
+            'amount': 20.0,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        order_payment.with_context(payment_context).check()
+        current_session.action_pos_session_closing_control()
+
+        used_accounts = current_session.move_id.line_ids.mapped('account_id')
+        self.assertIn(mapped_expense, used_accounts)
+        self.assertNotIn(default_expense, used_accounts)
