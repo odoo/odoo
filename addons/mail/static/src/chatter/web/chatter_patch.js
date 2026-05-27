@@ -131,7 +131,7 @@ const chatterPatch = {
                         Promise.all(
                             files.map((file) => this.attachmentUploader.uploadFile(file))
                         ).then(() => {
-                            if (this.webChatterProps.hasParentReloadOnAttachmentsChanged) {
+                            if (this.hasParentReloadOnAttachmentsChanged) {
                                 this.reloadParentView();
                             }
                         });
@@ -401,7 +401,7 @@ const chatterPatch = {
     },
 
     onPostCallback() {
-        if (this.webChatterProps.hasParentReloadOnMessagePosted) {
+        if (this.hasParentReloadOnMessagePosted) {
             this.reloadParentView();
         }
         this.toggleComposer();
@@ -431,7 +431,7 @@ const chatterPatch = {
                     if (!thread.eq(self.state.thread)) {
                         return;
                     }
-                    if (self.webChatterProps.hasParentReloadOnAttachmentsChanged) {
+                    if (self.hasParentReloadOnAttachmentsChanged) {
                         self.reloadParentView();
                     }
                     self.state.activePanel = CHATTER_PANEL.ATTACHMENT;
@@ -501,13 +501,21 @@ const chatterPatch = {
 
     async unlinkAttachment(attachment) {
         await this.attachmentUploader.unlink(attachment);
-        if (this.webChatterProps.hasParentReloadOnAttachmentsChanged) {
+        if (this.hasParentReloadOnAttachmentsChanged) {
             this.reloadParentView();
         }
     },
 
     popoutAttachment() {
         this.attachmentPopout.popout();
+    },
+
+    get hasParentReloadOnMessagePosted() {
+        return this.webChatterProps.hasParentReloadOnMessagePosted;
+    },
+
+    get hasParentReloadOnAttachmentsChanged() {
+        return this.webChatterProps.hasParentReloadOnAttachmentsChanged;
     },
 };
 patch(Chatter.prototype, chatterPatch);
