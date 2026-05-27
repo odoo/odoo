@@ -13,16 +13,27 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _get_alerts(self, moves, moves_data):
         res = super()._get_alerts(moves, moves_data)
+        if error_moves := moves.filtered(
+            lambda m: ('sa_edi' in moves_data[m]['extra_edis'] or 'sa_edi_test' in moves_data[m]['extra_edis'])
+            and m.l10n_sa_invoice_type == 'simplified'
+            and 'export' in m.l10n_sa_edi_transaction_type_ids.mapped('code')
+        ):
+            res['l10n_sa_edi_invalid_invoice_type'] = {
+                'message': self.env._("Export Transaction Type with the Simplified Invoice Type is not permitted as per ZATCA rules."),
+                'level': 'danger',
+                'action_text': self.env._("View Invoices"),
+                'action': error_moves._get_records_action(),
+            }
         res.update(moves._l10n_sa_get_alerts())
         return res
 
     @api.model
     def _is_sa_edi_testing_applicable(self, move):
-        return move._l10n_sa_is_phase_2_applicable() and move.company_id.l10n_sa_api_mode != 'prod' and move.l10n_sa_edi_state not in ('accepted', 'warning')
+        return move._l10n_sa_is_phase_2_applicable() and move.company_id.l10n_sa_api_mode != 'prod' and move.l10n_sa_edi_state not in ('accepted', 'warning') and move.l10n_sa_invoice_type
 
     @api.model
     def _is_sa_edi_production_applicable(self, move):
-        return move._l10n_sa_is_phase_2_applicable() and move.company_id.l10n_sa_api_mode == 'prod' and move.l10n_sa_edi_state not in ('accepted', 'warning')
+        return move._l10n_sa_is_phase_2_applicable() and move.company_id.l10n_sa_api_mode == 'prod' and move.l10n_sa_edi_state not in ('accepted', 'warning') and move.l10n_sa_invoice_type
 
     def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'

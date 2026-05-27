@@ -58,14 +58,6 @@ class ZatcaMixin(models.AbstractModel):
 
         return base64.b64encode(str_to_encode).decode()
 
-    def _l10n_sa_is_simplified(self):
-        """
-            Returns True if the customer is an individual, i.e: The invoice is B2C
-        :return:
-        """
-        self.ensure_one()
-        return not self.commercial_partner_id.is_company
-
     def _compute_qr_code_str(self):
         for record in self:
             if record._l10n_sa_is_phase_1_applicable():

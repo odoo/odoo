@@ -170,6 +170,7 @@ CustomerParty = {
 Delivery = {
     'cbc:ID': {},
     'cbc:ActualDeliveryDate': {},
+    'cbc:LatestDeliveryDate': {},
     'cac:DeliveryLocation': {
         'cbc:ID': {},
         'cac:Address': Address,

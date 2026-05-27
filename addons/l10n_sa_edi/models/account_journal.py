@@ -516,7 +516,7 @@ class AccountJournal(models.Model):
         """
             Return the API to be used for clearance. To be overridden to account for other cases, such as reporting.
         """
-        return ZATCA_API_URLS['apis']['reporting' if invoice._l10n_sa_is_simplified() else 'clearance']
+        return ZATCA_API_URLS['apis']['reporting' if invoice.l10n_sa_invoice_type == 'simplified' else 'clearance']
 
     def _l10n_sa_api_clearance(self, record, xml_content, PCSID_data):
         """
