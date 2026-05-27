@@ -2,16 +2,25 @@ import { _t } from "@web/core/l10n/translation";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { TeamBoardHeaderMiddleButtons } from "./team_board_header_buttons";
 
 const MEMBER_SELECTOR = '.container > .row > [data-name="Team Member"]';
 
 export class TeamBoardOptionPlugin extends Plugin {
     static id = "teamBoardOption";
+    static dependencies = ["builderOptions", "blockTab", "history"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             AddTeamMemberAction,
             SortTeamMembersAlphabeticallyAction,
+        },
+        builder_header_middle_buttons: {
+            Component: TeamBoardHeaderMiddleButtons,
+            selector: ".s_team_board",
+            props: {
+                addBoard: this.addBoard.bind(this),
+            },
         },
         dropzone_selectors: {
             selector: ".s_team_board",
@@ -31,6 +40,18 @@ export class TeamBoardOptionPlugin extends Plugin {
             return false;
         }
         return teamBoardEl.querySelectorAll("[data-name='Team Member']").length === 1;
+    }
+
+    async addBoard(editingElement) {
+        const snippet = this.config.snippetModel.getOriginalSnippet("s_team_board");
+        if (!snippet) {
+            return;
+        }
+        const newEl = snippet.content.cloneNode(true);
+        editingElement.insertAdjacentElement("afterend", newEl);
+        const cancelInsertion = this.dependencies.history.makeSavePoint();
+        this.dependencies.builderOptions.setNextTarget(newEl);
+        await this.dependencies.blockTab.processDroppedSnippet(newEl, cancelInsertion);
     }
 }
 

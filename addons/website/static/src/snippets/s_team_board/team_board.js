@@ -69,7 +69,7 @@ export class TeamBoard extends Interaction {
     extractMember(cardEl) {
         const titleEl = cardEl.querySelector(".card-title");
         const roleEl = cardEl.querySelector(".card-body .text-muted");
-        const bioEl = cardEl.querySelector(".s_team_board_bio");
+        const bioEl = cardEl.querySelector(".o_team_board_bio");
         const imgEl = cardEl.querySelector(".o_card_img");
         return {
             name: (titleEl?.textContent || "").trim(),
@@ -111,10 +111,15 @@ export class TeamBoard extends Interaction {
 
     setButtonLoading(btn, label) {
         btn.disabled = true;
-        btn.innerHTML =
-            `<span class="spinner-border spinner-border-sm me-2"` +
-            ` role="status" aria-hidden="true"></span>` +
-            (label || _t("Working..."));
+        btn.textContent = "";
+
+        const spinner = document.createElement("span");
+        spinner.className = "spinner-border spinner-border-sm me-2";
+        spinner.setAttribute("role", "status");
+        spinner.setAttribute("aria-hidden", "true");
+
+        btn.appendChild(spinner);
+        btn.appendChild(document.createTextNode(label || _t("Working...")));
     }
 
     resetButton(btn, defaultLabel) {
