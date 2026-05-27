@@ -47,6 +47,7 @@ import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
 import { SnoozedProductTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
 import { Domain } from "@web/core/domain";
+import { SIZES } from "@web/core/ui/ui_service";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -3020,6 +3021,10 @@ export class PosStore extends WithLazyGetterTrap {
             );
         }
         return isSyncing;
+    }
+
+    get isSmallProductScreen() {
+        return this.ui.size < SIZES.MD;
     }
 
     get isSelectedLineCombo() {
