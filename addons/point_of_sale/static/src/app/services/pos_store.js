@@ -46,6 +46,7 @@ import { ScaleScreen } from "@point_of_sale/app/screens/scale_screen/scale_scree
 import { Domain } from "@web/core/domain";
 import { PosOrderAccounting } from "@point_of_sale/app/models/accounting/pos_order_accounting";
 import { PosOrderlineAccounting } from "@point_of_sale/app/models/accounting/pos_order_line_accounting";
+import { SIZES } from "@web/core/ui/ui_service";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -2715,6 +2716,10 @@ export class PosStore extends WithLazyGetterTrap {
         this.notification.add(_t("Order saved for later"), { type: "success" });
         this.setOrder(this.getEmptyOrder());
         this.mobile_pane = "right";
+    }
+
+    get isSmallProductScreen() {
+        return this.ui.size < SIZES.MD;
     }
 
     get isSelectedLineCombo() {

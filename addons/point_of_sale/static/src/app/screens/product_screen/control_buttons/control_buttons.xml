@@ -5,7 +5,7 @@
         t-attf-class="control-button btn btn-lg {{btnClasses ? btnClasses : ''}} d-inline-flex flex-md-column justify-content-md-center gap-1 overflow-hidden"
         t-on-click="onClick"
         t-att-disabled="disabled ? 'disabled' : ''">
-            <i t-if="iconClasses" t-attf-class="{{iconClasses}} {{!this.ui.isSmall ? ' fa-2x fa-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true"/>
+            <i t-if="iconClasses" t-attf-class="{{iconClasses}} {{!this.pos.isSmallProductScreen ? ' fa-2x fa-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true"/>
             <t t-if="badge" t-out="badge"/>
             <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-items-md-stretch min-w-0 {{this.ui.isSmall ? ' lh-sm' : ''}} text-start text-md-center">
                 <span class="px-1" t-out="btnText"/>
@@ -26,17 +26,17 @@
                 <span t-if="this.currentOrder.preset_id?.name" t-out="this.currentOrder.preset_id?.name" />
                 <span t-else="">Preset</span>
             </button>
-            <button t-if="!this.ui.isSmall" t-att-disabled="this.pos.getOrder().isEmpty()" t-attf-class="{{ this.buttonClass }} ms-auto" t-on-click="() => this.pos.clickSaveOrder()">
+            <button t-if="!this.pos.isSmallProductScreen" t-att-disabled="this.pos.getOrder().isEmpty()" t-attf-class="{{ this.buttonClass }} ms-auto" t-on-click="() => this.pos.clickSaveOrder()">
                 <i class="fa fa-upload" aria-hidden="true"/>
             </button>
-            <button t-if="!this.ui.isSmall and this.props.onClickMore" class="more-btn btn btn-secondary btn-lg flex-shrink-0 ms-auto lh-lg" t-on-click="this.props.onClickMore">
+            <button t-if="!this.pos.isSmallProductScreen and this.props.onClickMore" class="more-btn btn btn-secondary btn-lg flex-shrink-0 ms-auto lh-lg" t-on-click="this.props.onClickMore">
                 <i class="oi oi-fw oi-ellipsis-v" aria-hidden="true" />
             </button>
         </t>
         <!-- All these buttons will only be displayed in a dialog -->
         <t t-if="this.props.showRemainingButtons">
             <div class="control-buttons control-buttons-modal d-grid grid-auto-flow-columns gap-2">
-                <t t-if="(this.ui.isSmall and this.props.showRemainingButtons)">
+                <t t-if="(this.pos.isSmallProductScreen and this.props.showRemainingButtons)">
                     <InternalNoteButton label.translate="Note" class="'btn-secondary '"/>
                 </t>
                 <NoteButton
