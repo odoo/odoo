@@ -5818,7 +5818,11 @@ class AccountMove(models.Model):
             return sequence_mixin_cache.get(cache_key) is not None
 
         def browse(ids=()):
-            return self.browse(ids).with_prefetch(all_ids)
+            # Use sudo() because the SQL query above has no company filter and may
+            # return IDs from a parent/sibling company that the current user cannot
+            # access.  made_sequence_gap is a purely technical housekeeping flag, so
+            # bypassing record rules here is safe.
+            return self.sudo().browse(ids).with_prefetch(all_ids)
 
         sequence_mixin_cache = self._get_sequence_cache()
         self.env['account.move'].flush_model(['name', 'sequence_prefix', 'sequence_number', 'journal_id'])
