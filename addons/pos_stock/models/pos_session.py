@@ -171,6 +171,9 @@ class PosSession(models.Model):
                 product_accounts = move.with_company(move.company_id).product_id._get_product_accounts()
                 exp_key = product_accounts['expense']
                 stock_key = product_accounts['stock_valuation']
+                pos_order = move.picking_id.pos_order_id
+                if pos_order and pos_order.fiscal_position_id:
+                    exp_key = pos_order.fiscal_position_id.map_account(exp_key)
                 signed_product_qty = move.uom_id._compute_quantity(
                     move.product_uom_qty,
                     move.product_id.uom_id,
