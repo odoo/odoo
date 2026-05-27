@@ -334,7 +334,7 @@ class PurchaseOrderLine(models.Model):
             'price_unit': price_unit,
             'picking_type_id': self.order_id.picking_type_id.id,
             'reference_ids': [Command.set(self.order_id.reference_ids.ids)],
-            'origin': self.order_id.name,
+            'origin': f"{self.order_id.name} - {self.order_id.partner_ref}" if self.order_id.partner_ref else self.order_id.name,
             'propagate_cancel': self.propagate_cancel,
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
