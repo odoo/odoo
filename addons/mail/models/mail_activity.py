@@ -685,7 +685,7 @@ class MailActivity(models.Model):
         res.one("activity_type_id", ["name"])
         res.extend(["can_write", "chaining_type", "create_date"])
         res.one("create_uid", lambda res: res.one("partner_id", ["name"]))
-        res.extend(["date_deadline", "date_done", "icon", "note"])
+        res.extend(["date_deadline", "date_done", "display_name", "icon", "note"])
         res.extend(["res_id", "res_model", "state", "summary"])
         res.one("user_id", lambda res: res.one("partner_id", "_store_partner_fields"))
         res.many("attachment_ids", ["name"])
