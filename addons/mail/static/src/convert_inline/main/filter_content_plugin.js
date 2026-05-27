@@ -1,6 +1,5 @@
 import { Plugin } from "../plugin";
 import { registry } from "@web/core/registry";
-import { Rules } from "../core/rules_models";
 import { DIRECTION_VARIANTS } from "../core/utils";
 import { withSequence } from "@html_editor/utils/resource";
 import { DIMENSIONS } from "../hooks";
@@ -35,7 +34,7 @@ export class FilterContentPlugin extends Plugin {
         "style",
         "referenceNode",
     ];
-    static shared = ["getBodyGlobalStyleInfo", "getBodyTextStyleInfo", "isInvisible"];
+    static shared = ["isInvisible"];
     resources = {
         attribute_rules_processors: [
             [this.provideAttributeRules.bind(this), FilterContentPlugin.id],
@@ -46,17 +45,6 @@ export class FilterContentPlugin extends Plugin {
         should_discard_reference_node_predicates: this.isInvisible.bind(this),
         reference_node_tag_name_processors: this.defineEffectiveTagName.bind(this),
     };
-
-    setup() {
-        this.textStyleRules = new Rules();
-        this.bodyGlobalStyleRules = new Rules();
-        const textRules = this.textStyleRules.forPlugin(FilterContentPlugin.id);
-        textRules.allow("font-size");
-        textRules.allow("font-weight");
-        textRules.allow("line-height");
-        const globalRules = this.bodyGlobalStyleRules.forPlugin(FilterContentPlugin.id);
-        globalRules.allow("direction");
-    }
 
     analyzeElementLayout({ analysis }, { referenceNode, parentEmailNode }) {
         const node = referenceNode;
@@ -92,30 +80,6 @@ export class FilterContentPlugin extends Plugin {
         if (tagName === "SECTION") {
             return "DIV";
         }
-    }
-
-    /**
-     * Return a copy of the body styleInfo filtered with its own rules for
-     * text ancestors (eg presentation table td)
-     */
-    getBodyTextStyleInfo() {
-        return this.filterStyleInfo(
-            this.getRawStyleInfo(this.config.referenceDocument.body),
-            this.config.referenceDocument.body,
-            this.textStyleRules
-        );
-    }
-
-    /**
-     * Return a copy of the body styleInfo filtered with its own rules for
-     * main layout ancestors (eg main table)
-     */
-    getBodyGlobalStyleInfo() {
-        return this.filterStyleInfo(
-            this.getRawStyleInfo(this.config.referenceDocument.body),
-            this.config.referenceDocument.body,
-            this.bodyGlobalStyleRules
-        );
     }
 
     blockUserContextSelectors(complexSelector) {

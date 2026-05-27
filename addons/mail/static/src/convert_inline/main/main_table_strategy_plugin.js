@@ -8,6 +8,7 @@ import { StyleInfo } from "../core/style_models";
 export class MainTableStrategyPlugin extends Plugin {
     static id = "mainTableStrategy";
     static dependencies = [
+        "contextStyle",
         "filterContent",
         "measurementSnapshot",
         "rules",
@@ -22,6 +23,7 @@ export class MainTableStrategyPlugin extends Plugin {
     };
 
     setup() {
+        this.bodyGlobalStyleRules = new Rules();
         this.layoutRulesByRef = {
             root: new Rules(),
         };
@@ -31,6 +33,12 @@ export class MainTableStrategyPlugin extends Plugin {
         };
         this.provideLayoutStyleRules();
         this.provideWrapperStyleRules();
+        this.provideBodyGlobalStyleRules();
+    }
+
+    provideBodyGlobalStyleRules() {
+        const globalRules = this.bodyGlobalStyleRules.forPlugin(MainTableStrategyPlugin.id);
+        globalRules.allow("direction");
     }
 
     provideLayoutStyleRules() {
@@ -47,6 +55,17 @@ export class MainTableStrategyPlugin extends Plugin {
         root.allow(/^margin(-.*)?$/);
 
         td.allow(/^padding(-.*)?$/);
+    }
+
+    /**
+     * Return a copy of the body styleInfo filtered with its own rules.
+     */
+    getBodyGlobalStyleInfo() {
+        return this.filterStyleInfo(
+            this.getRawStyleInfo(this.config.referenceDocument.body),
+            this.config.referenceDocument.body,
+            this.bodyGlobalStyleRules
+        );
     }
 
     identifyLayout() {
@@ -108,7 +127,9 @@ export class MainTableStrategyPlugin extends Plugin {
         }
         refs.td ??= {};
         const tdStyle = refs.td.style ?? {};
-        refs.td.style = this.getBodyTextStyleInfo().merge(StyleInfo.from(tdStyle));
+        refs.td.style = this.getContextStyleInfo(this.config.referenceDocument.body).merge(
+            StyleInfo.from(tdStyle)
+        );
         return new MainTableModel({ refs });
     }
 

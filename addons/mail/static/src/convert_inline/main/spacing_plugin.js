@@ -21,7 +21,7 @@ const PADDINGS = ["padding-top", "padding-right", "padding-bottom", "padding-lef
  */
 export class SpacingPlugin extends Plugin {
     static id = "spacing";
-    static dependencies = ["referenceNode", "responsiveBlock", "rules", "style"];
+    static dependencies = ["contextStyle", "referenceNode", "responsiveBlock", "rules", "style"];
     resources = {
         on_parse_layout_with_dimensions_handlers: this.cacheSpacingStyleInfo.bind(this),
         reference_node_facts_processors: this.addSpacingFacts.bind(this),
@@ -110,12 +110,20 @@ export class SpacingPlugin extends Plugin {
         ) {
             return;
         }
+        // TODO EGGMAIL: arbitrary fallback on body, maybe recursive search on parent is more
+        // appropriate?
+        const contextNode = emailNode.lastReferenceNode ?? this.config.referenceDocument.body;
+        const styleContext = {
+            style: this.getContextStyleInfo(contextNode),
+        };
         const marginNode = this.buildMarginNode(emailNode.analysis.facts);
         if (marginNode) {
+            marginNode.layout.setAttributes(styleContext, "cell");
             emailNode.marginNode = marginNode;
         }
         const paddingNode = this.buildPaddingNode(emailNode.analysis.facts);
         if (paddingNode) {
+            paddingNode.layout.setAttributes(styleContext, "cell");
             emailNode.paddingNode = paddingNode;
         }
     }
