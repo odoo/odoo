@@ -729,10 +729,16 @@ class Base(models.AbstractModel):
     # DISCUSS
     # ------------------------------------------------------------
 
-    def _mail_get_message_subtypes(self):
-        return self.env['mail.message.subtype'].search([
-            '&', ('hidden', '=', False),
-            '|', ('res_model', '=', self._name), ('res_model', '=', False)])
+    def _mail_get_message_subtypes(self, is_internal=False):
+        domain = (
+            Domain("hidden", "=", False)
+            & (Domain("res_model", "=", self._name) | Domain("res_model", "=", False))
+        )
+        if not is_internal:
+            domain = Domain("internal", "=", False) & domain
+        return self.env['mail.message.subtype'].search_fetch(
+            domain, ["name", "res_model", "internal", "sequence", "parent_id"],
+        )
 
     # ------------------------------------------------------------
     # GATEWAY: NOTIFICATION
