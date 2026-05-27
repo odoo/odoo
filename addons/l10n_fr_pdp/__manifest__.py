@@ -9,6 +9,8 @@
     'depends': [
         'l10n_fr_account',
         'account_peppol_response',
+        'auth_totp_mail',
+        'iap',
     ],
     'auto_install': ['l10n_fr_account'],
     'data': [
