@@ -332,3 +332,56 @@ class TestReportStockQuantity(tests.TransactionCase):
             ['product_qty:sum'])
         forecast_report = [qty for __, __, qty in report]
         self.assertEqual(forecast_report, [0, 40])
+
+    def test_move_grams_on_kg_product(self):
+        """Stock moves in g for a kg-tracked product must aggregate in kg
+        in the forecasted report."""
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        uom_g = self.env.ref('uom.product_uom_gram')
+
+        product_kg = self.env['product.product'].create({
+            'name': 'KG product',
+            'is_storable': True,
+            'uom_id': uom_kg.id,
+            'uom_ids': [uom_g.id]
+        })
+
+        receipt_kg_01, receipt_kg_02 = self.env['stock.move'].create([{
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.wh.lot_stock_id.id,
+            'product_id': product_kg.id,
+            'product_uom': uom_kg.id,
+            'product_uom_qty': 10,
+            'quantity': 10,
+            'date': fields.Datetime.now(),
+        } for _ in range(2)])
+        receipt_kg_01._action_confirm()
+        receipt_kg_01.write({'quantity': 10, 'picked': True})
+        receipt_kg_01._action_done()
+        receipt_kg_02._action_confirm()
+
+        delivery_g = self.env['stock.move'].create({
+            'location_id': self.wh.lot_stock_id.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': product_kg.id,
+            'product_uom': uom_g.id,
+            'product_uom_qty': 500,
+            'quantity': 500,
+            'date': fields.Datetime.now(),
+        })
+        delivery_g._action_confirm()
+        delivery_g.write({'quantity': 500, 'picked': True})
+        delivery_g._action_done()
+
+        from_date = fields.Date.to_string(fields.Date.add(fields.Date.today(), days=-1))
+        to_date = fields.Date.to_string(fields.Date.add(fields.Date.today(), days=0))
+        report = self.env['report.stock.quantity']._read_group(
+            [
+                ('date', '>=', from_date), ('date', '<=', to_date),
+                ('product_id', '=', product_kg.id), ('state', '=', 'forecast'),
+            ],
+            ['date:day', 'product_id'],
+            ['product_qty:sum'],
+        )
+        forecast = [qty for __, __, qty in report]
+        self.assertEqual(forecast, [0, 19.5])
