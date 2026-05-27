@@ -373,5 +373,4 @@ class ResUsers(models.Model):
     def _store_im_status_fields(self, res: Store.FieldList):
         super()._store_im_status_fields(res)
         # sudo: res.users - internal users can access employee information for the IM status
-        res.many("employee_ids", "_store_im_status_fields", sudo=True)
         res.many("all_employee_ids", "_store_im_status_fields", sudo=True)

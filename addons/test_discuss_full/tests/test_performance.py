@@ -57,11 +57,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: _init_messaging (mail)
     #       - _get_needaction_count (inbox counter)
     #       - search mail_message (bookmark counter)
-    #   26: _process_request_for_all (discuss):
+    #   25: _process_request_for_all (discuss):
     #       - search_fetch discuss_channel (channels_domain)
     #       2: check permissions
     #       - fetch discuss_channel (chathub given channel ids, missing search_fetch)
-    #       22: store add channel:
+    #       21: store add channel:
     #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #           - read group member (_compute_invited_member_ids)
     #           - search discuss_channel_rtc_session
@@ -76,7 +76,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #                   - search mail_presence (_compute_im_status)
     #                   - fetch mail_presence (_compute_im_status)
     #                   - search hr_employee (_store_im_status_fields override)
-    #                   - search hr_employee (_store_im_status_fields override, from `all_employee_ids`)
     #                   - search hr_employee_location (_store_im_status_fields override)
     #                   - fetch hr_employee (_compute_work_location_type)
     #                   - search hr_leave (_compute_leave_status)
@@ -88,14 +87,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - fetch res_groups (group_public_id)
     #           - select the current db snapshot
-    _query_count_init_messaging = 36
+    _query_count_init_messaging = 35
     # Queries for _query_count_discuss_channels (in order):
     #   3: _search_is_member (for current user, first occurence channels_as_member)
     #       - fetch res_users
     #       - search discuss_channel_member
     #       - search_fetch discuss_channel
     #   1: search_count discuss_channel_member (_add_has_unpinned_channels_to_store)
-    #   34: channel _to_store_defaults:
+    #   33: channel _to_store_defaults:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
@@ -103,10 +102,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search_fetch member (channel_member_ids)
     #       - search channel JOIN member (channel_name_member_ids)
     #       - fetch discuss_channel_member (manual prefetch)
-    #       17: member:
+    #       16: member:
     #           - search im_livechat_channel_member_history (livechat member type)
     #           - fetch im_livechat_channel_member_history (livechat member type)
-    #           13: partner:
+    #           12: partner:
     #               - fetch res_partner (partner)
     #                 [enterprise] search ai_agent (_compute_im_status ai override)
     #               - fetch res_users (_compute_im_status)
@@ -114,7 +113,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #               - search mail_presence (_compute_im_status)
     #               - fetch mail_presence (_compute_im_status)
     #               - search hr_employee (_store_im_status_fields override)
-    #               - search hr_employee (_store_im_status_fields override, from `all_employee_ids`)
     #               - search hr_employee_location (_store_im_status_fields override)
     #               - fetch hr_employee (_compute_work_location_type)
     #               - search hr_leave (_compute_leave_status)
@@ -162,7 +160,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch user (author)
     #       - fetch discuss_call_history
     #       - select the current db snapshot
-    _query_count_discuss_channels = 63
+    _query_count_discuss_channels = 62
 
     def setUp(self):
         super().setUp()
@@ -461,7 +459,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             "res.users": self._filter_users_fields(
                 {
                     "all_employee_ids": [],
-                    "employee_ids": [],
                     "id": self.user_root.id,
                     "partner_id": self.partner_root.id,
                     "share": False,
@@ -473,7 +470,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": user_0.id,
                     "im_status": "online",
                     "im_status_access_token": user_0._get_im_status_access_token(),
-                    "employee_ids": [self.employees[0].id],
                     "is_admin": False,
                     "is_livechat_manager": False,
                     "notification_type": "inbox",
@@ -2004,7 +2000,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": user.id,
                 "im_status": "online",
                 "im_status_access_token": user._get_im_status_access_token(),
-                "employee_ids": user.employee_ids.ids,
                 "should_display_in_call_im_status": False,
                 "partner_id": partner.id,
                 "share": False,
@@ -2015,7 +2010,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": user.id,
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
-                "employee_ids": user.employee_ids.ids,
                 "should_display_in_call_im_status": False,
                 "partner_id": partner.id,
                 "share": False,
@@ -2030,7 +2024,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": user.id,
                     "im_status": "offline",
                     "im_status_access_token": user._get_im_status_access_token(),
-                    "employee_ids": user.employee_ids.ids,
                     "should_display_in_call_im_status": False,
                     "partner_id": partner.id,
                 }
@@ -2040,7 +2033,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": user.id,
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
-                "employee_ids": user.employee_ids.ids,
                 "should_display_in_call_im_status": False,
                 "partner_id": partner.id,
                 "share": False,
@@ -2052,7 +2044,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": user.id,
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
-                "employee_ids": user.employee_ids.ids,
                 "should_display_in_call_im_status": False,
                 "partner_id": partner.id,
                 "share": False,
@@ -2064,7 +2055,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": user.id,
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
-                "employee_ids": user.employee_ids.ids,
                 "should_display_in_call_im_status": False,
                 "partner_id": partner.id,
                 "share": False,
@@ -2076,7 +2066,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": user.id,
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
-                "employee_ids": user.employee_ids.ids,
                 "should_display_in_call_im_status": False,
                 "partner_id": partner.id,
                 "share": False,
@@ -2088,7 +2077,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": user.id,
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
-                "employee_ids": user.employee_ids.ids,
                 "should_display_in_call_im_status": False,
                 "partner_id": partner.id,
                 "share": False,
