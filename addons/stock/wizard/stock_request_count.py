@@ -37,11 +37,10 @@ class StockRequestCount(models.TransientModel):
             return quants_to_count
         # Searches sibling quants for tracked product.
         if tracked_quants:
-            domain = {
+            domain = Domain.OR(
                 Domain('product_id', '=', quant.product_id.id) & Domain('location_id', '=', quant.location_id.id)
                 for quant in tracked_quants
-            }
-            domain = Domain.OR(domain)
+            )
             sibling_quants = self.env['stock.quant'].search(domain)
             quants_to_count |= sibling_quants
         return quants_to_count

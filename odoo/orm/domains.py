@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+# PLW1641 (eq-without-hash) we don't want domains to be hashable, we raise
+# ruff: noqa: PLW1641
 
 """ Domain expression processing
 
@@ -371,7 +373,7 @@ class Domain:
         raise NotImplementedError
 
     def __hash__(self):
-        raise NotImplementedError
+        raise NotImplementedError("Domains are not hashable")
 
     def __iter__(self):
         """For-backward compatibility, return the polish-notation domain list"""
@@ -515,9 +517,6 @@ class DomainBool(Domain):
     def __eq__(self, other):
         return self is other  # because this class has two instances only
 
-    def __hash__(self):
-        return hash(self.value)
-
     def is_true(self) -> bool:
         return self.value
 
@@ -585,9 +584,6 @@ class DomainNot(Domain):
     def __eq__(self, other):
         return self is other or (isinstance(other, DomainNot) and self.child == other.child)
 
-    def __hash__(self):
-        return ~hash(self.child)
-
     def _as_predicate(self, records):
         predicate = self.child._as_predicate(records)
         return lambda rec: not predicate(rec)
@@ -650,9 +646,6 @@ class DomainNary(Domain):
             and self.OPERATOR == other.OPERATOR
             and self.children == other.children
         )
-
-    def __hash__(self):
-        return hash(self.OPERATOR) ^ hash(self.children)
 
     @classproperty
     def INVERSE(cls) -> type[DomainNary]:
@@ -821,9 +814,6 @@ class DomainCustom(Domain):
             and self._optimize_func == other._optimize_func
         )
 
-    def __hash__(self):
-        return hash(self._sql or self._optimize_func)
-
     def __iter__(self):
         yield self
 
@@ -933,9 +923,6 @@ class DomainCondition(Domain):
             and self.value.__class__ is other.value.__class__
             and self.value == other.value
         )
-
-    def __hash__(self):
-        return hash(self.field_expr) ^ hash(self.operator) ^ hash(self.value)
 
     def is_condition(self,
         field_expr: str = '',
