@@ -391,9 +391,21 @@ class Field[T]:
         # file, it is not yet available and we already declare fields:
         # id and display_name
         assert '_models' not in globals() or isinstance(owner, _models.MetaModel)
+        is_model_definition = getattr(owner, 'pool', None) is None  # models.is_model_definition(owner)
+
+        if self._args__ is None:
+            # assert self in FIELD_CACHE.values()
+            assert not is_model_definition  # model registry class
+            assert self._shareable
+            assert self.name in ('id', 'display_name') or self._module is not None
+            assert owner._name == self.model_name
+            assert name == self.name
+            return
+
         self.model_name = owner._name
         self.name = name
-        if getattr(owner, 'pool', None) is None:  # models.is_model_definition(owner)
+
+        if is_model_definition:
             assert '_base_fields__' not in self._args__
             self._module = owner._module
             owner._field_definitions.append(self)
@@ -444,6 +456,8 @@ class Field[T]:
         if name == 'state':
             # by default, `state` fields should be reset on copy
             attrs['copy'] = attrs.get('copy', False)
+        if attrs.get('_shareable'):
+            warnings.warn(f"_shareable attribute shouldn't be set to True on field {self}")
         if attrs.get('compute_sql'):
             if not attrs.get('compute'):
                 warnings.warn(f"compute_sql attribute makes sense only if {self} is a computed field")

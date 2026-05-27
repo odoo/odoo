@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import typing
+import weakref
 
 from collections import defaultdict
 from types import MappingProxyType
@@ -28,6 +29,10 @@ if typing.TYPE_CHECKING:
     from odoo.modules.registry import Registry
 
 _logger = logging.getLogger('odoo.registry')
+
+
+SHARED_FIELD_CACHE: weakref.WeakValueDictionary[tuple[str, tuple[Field, ...]], Field] = weakref.WeakValueDictionary()
+"""Cache of shared registry field instances keyed by (model_name, definition_fields_tuple)."""
 
 # THE MODEL DEFINITIONS, MODEL CLASSES, AND MODEL INSTANCES
 #
@@ -427,8 +432,16 @@ def _setup(model_cls: type[BaseModel], env: Environment):
                     # patch the field definition by adding an override
                     _logger.debug("Patching %s.%s with company_dependent=True", model_cls._name, name)
                     fields_.append(type(fields_[0])(company_dependent=True))
-        if len(fields_) == 1 and fields_[0]._shareable and fields_[0].model_name == model_cls._name:
-            model_cls._fields__[name] = fields_[0]
+        if all(field._shareable for field in fields_):
+            if len(fields_) == 1 and fields_[0].model_name == model_cls._name:
+                model_cls._fields__[name] = fields_[0]
+            else:
+                cache_key = (model_cls._name, tuple(fields_))
+                if (field_ := SHARED_FIELD_CACHE.get(cache_key)) is None:
+                    Field = type(fields_[-1])
+                    field_ = Field(_base_fields__=tuple(fields_))
+                    SHARED_FIELD_CACHE[cache_key] = field_
+                add_field(model_cls, name, field_, shareable=True)
         else:
             Field = type(fields_[-1])
             add_field(model_cls, name, Field(_base_fields__=tuple(fields_)))
@@ -612,8 +625,8 @@ def _add_manual_fields(model_cls: type[BaseModel], env: Environment):
                 _logger.exception("Failed to load field %s.%s: skipped", model_cls._name, field_data['name'])
 
 
-def add_field(model_cls: type[BaseModel], name: str, field: Field):
-    """ Add the given ``field`` under the given ``name`` on the model class of the given ``model``. """
+def add_field(model_cls: type[BaseModel], name: str, field: Field, shareable: bool = False):
+    """Add ``field`` to ``model_cls`` under ``name`` and set its _shareable flag."""
     # Assert the name is an existing field in the model, or any model in the _inherits
     # or a custom field (starting by `x_`)
     is_class_field = any(
@@ -632,7 +645,8 @@ def add_field(model_cls: type[BaseModel], name: str, field: Field):
     if not isinstance(getattr(model_cls, name, field), fields.Field):
         _logger.warning("In model %r, field %r overriding existing value", model_cls._name, name)
     setattr(model_cls, name, field)
-    field._shareable = False
+    if field._shareable != shareable:
+        field._shareable = shareable
     field.__set_name__(model_cls, name)
     # add field as an attribute and in model_cls._fields__ (for reflection)
     model_cls._fields__[name] = field
