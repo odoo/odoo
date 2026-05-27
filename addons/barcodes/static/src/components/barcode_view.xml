@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="barcodes.BarcodeView">
         <div class="o_barcode_view">
-            <div t-if="this.state.barcodeScannerOpened" t-ref="barcode_container">
+            <div t-if="this.state.barcodeScannerOpened" t-ref="this.barcodeRef">
                 <div>
                     <BarcodeVideoScanner
                         t-if="this.state.barcodeScannerSupported"
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div t-else="" t-on-click="this.toggleView">
-                <t t-slot="barcode_preview"/>
+                <t t-call-slot="barcode_preview"/>
             </div>
         </div>
     </t>

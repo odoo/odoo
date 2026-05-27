@@ -1,5 +1,5 @@
 import { useState, useExternalListener } from "@web/owl2/utils";
-import { Component, useRef } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { BarcodeVideoScanner, isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { BarcodeInput } from "./barcode_input";
 
@@ -23,10 +23,10 @@ export class BarcodeView extends Component {
             barcodeScannerOpened: false,
         });
 
-        const barcodeRef = useRef("barcode_container");
+        this.barcodeRef = signal(null);
 
         useExternalListener(window, "click", (ev) => {
-            if (barcodeRef.el && !barcodeRef.el.contains(ev.target)) {
+            if (this.barcodeRef() && !this.barcodeRef().contains(ev.target)) {
                 this.state.barcodeScannerOpened = false;
             }
         });
