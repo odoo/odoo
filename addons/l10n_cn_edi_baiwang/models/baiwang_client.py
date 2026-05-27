@@ -69,10 +69,12 @@ class BaiwangClient:
 
     @staticmethod
     def _md5(data: str) -> str:
+        # nosemgrep: PY005 - Baiwang signing spec requires raw MD5 digest.
         return hashlib.new('md5', data.encode('utf-8')).hexdigest()
 
     @staticmethod
     def _sha256(data: str) -> str:
+        # nosemgrep: PY005 - Baiwang auth spec requires SHA256(password + salt).
         return hashlib.new('sha256', data.encode('utf-8')).hexdigest()
 
     def _validated_endpoint(self) -> str:
@@ -88,6 +90,13 @@ class BaiwangClient:
 
     def _post_json(self, url_params: dict, body_str: str):
         endpoint = self._validated_endpoint()
+        log_params = dict(url_params)
+        if log_params.get('token'):
+            log_params['token'] = '***'
+        if log_params.get('sign'):
+            log_params['sign'] = '***'
+        _logger.debug("Baiwang POST %s with %s and %s", endpoint, log_params, body_str)
+        # nosemgrep: PY006 - endpoint is hard allowlisted by _validated_endpoint() and timeout is enforced.
         response = requests.post(
             endpoint,
             params=url_params,

@@ -57,4 +57,14 @@ class ProductTemplate(models.Model):
                 }
             raise UserError(self.env._("Baiwang could not find any matching tax codes for this product name."))
         err = response.get('errorResponse', {})
-        raise UserError(self.env._("Baiwang API error: %s", err.get('message', 'Unknown')))
+        error_message = err.get('message', 'Unknown')
+        sub_code = err.get('subCode')
+        sub_message = err.get('subMessage')
+        details = []
+        if sub_code:
+            details.append(self.env._("Sub-code: %s", sub_code))
+        if sub_message:
+            details.append(self.env._("Details: %s", sub_message))
+        if details:
+            raise UserError(self.env._("Baiwang API error: %s\n%s", error_message, "\n".join(details)))
+        raise UserError(self.env._("Baiwang API error: %s", error_message))
