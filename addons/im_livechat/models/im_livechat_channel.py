@@ -338,13 +338,15 @@ class Im_LivechatChannel(models.Model):
         # use the same "now" in the whole function to ensure unpin_dt > last_interest_dt
         now = fields.Datetime.now()
         last_interest_dt = now - timedelta(seconds=1)
-        members_to_add = [Command.create(self._get_agent_member_vals(
-            last_interest_dt=last_interest_dt, now=now,
-            chatbot_script=chatbot_script,
-            operator_partner=operator_partner,
-            operator_model=operator_model,
-            **kwargs
-        ))]
+        members_to_add = []
+        if operator_partner:
+            members_to_add.append(Command.create(self._get_agent_member_vals(
+                last_interest_dt=last_interest_dt, now=now,
+                chatbot_script=chatbot_script,
+                operator_partner=operator_partner,
+                operator_model=operator_model,
+                **kwargs
+            )))
         guest = self.env["mail.guest"]._get_guest_from_context()
         if guest and self.env.user._is_public():
             members_to_add.append(
