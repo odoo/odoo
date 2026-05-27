@@ -1,3 +1,9 @@
+<<<<<<< 671e6517d319c163156cf7b457523ab168711caa
+||||||| 5f65e92d7fa341193df53f5aba1620b596f9a1ec
+import lxml.html
+=======
+import lxml.html.clean
+>>>>>>> e098e344d6307fb13cb53e776b4ecb1d71c2cc8c
 import re
 from importlib.metadata import version
 from lxml.etree import LIBXML_VERSION
