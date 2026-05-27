@@ -64,14 +64,6 @@ class Component extends owl.Component {
 owl.Component = Component;
 
 /**
- * @param {any} value
- * @param {any} descr
- */
-owl.validate = function validate(value, descr) {
-    // return owl.validate(...arguments);
-};
-
-/**
  * @param {() => void} cb
  */
 owl.onWillRender = function onWillRender(cb) {
