@@ -1,8 +1,6 @@
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { throttleForAnimation } from "@web/core/utils/timing";
 import { BlockUI } from "./block_ui";
-import { browser } from "@web/core/browser/browser";
 import { getTabableElements, isFocusable } from "@web/core/utils/ui";
 import { getActiveHotkey } from "../hotkeys/hotkey_service";
 
@@ -143,7 +141,8 @@ export function getMediaQueryLists() {
 }
 
 // window size handling.
-const MEDIAS = getMediaQueryLists();
+let MEDIAS = getMediaQueryLists();
+let updateSizeHandler = null;
 
 export const utils = {
     getSize() {
@@ -210,6 +209,11 @@ export const uiService = {
             }
         }
 
+        if (updateSizeHandler) {
+            MEDIAS.forEach((m) => m.removeEventListener?.("change", updateSizeHandler));
+            MEDIAS = getMediaQueryLists();
+        }
+
         const ui = reactive({
             bus,
             size: utils.getSize(),
@@ -228,15 +232,14 @@ export const uiService = {
         });
 
         // listen to media query status changes
-        const updateSize = () => {
-            const prevSize = ui.size;
-            ui.size = utils.getSize();
-            if (ui.size !== prevSize) {
+        updateSizeHandler = (ev) => {
+            if (ev.matches) {
+                ui.size = MEDIAS.indexOf(ev.target);
                 ui.isSmall = utils.isSmall(ui);
                 bus.trigger("resize");
             }
         };
-        browser.addEventListener("resize", throttleForAnimation(updateSize));
+        MEDIAS.forEach((m) => m.addEventListener?.("change", updateSizeHandler));
 
         Object.defineProperty(env, "isSmall", {
             get() {
