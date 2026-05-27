@@ -10,6 +10,8 @@
         'l10n_fr_account',
         'account_edi_ubl_cii_tax_extension',
         'account_peppol_response',
+        'auth_totp_mail_enforce',
+        'iap',
     ],
     'auto_install': ['l10n_fr_account'],
     'data': [
