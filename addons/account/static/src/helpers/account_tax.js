@@ -934,6 +934,18 @@ export const accountTaxHelpers = {
     },
 
     /**
+     * Hook to allow localizations to opt out of the base rounding delta
+     * redistribution on product line balances for price-excluded taxes when
+     * the global rounding mode is 'excluded'. Default keeps existing behavior.
+     *
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
+    should_distribute_base_delta_for_excluded_mode(company) {
+        return true;
+    },
+
+    /**
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
@@ -953,6 +965,8 @@ export const accountTaxHelpers = {
         const values_per_grouping_key = this.aggregate_base_lines_aggregated_values(
             base_lines_aggregated_values
         );
+        const distribute_excluded_delta = this.should_distribute_base_delta_for_excluded_mode(company);
+
         for (const values of Object.values(values_per_grouping_key)) {
             const grouping_key = values.grouping_key;
             let current_mode = mode;
@@ -972,6 +986,10 @@ export const accountTaxHelpers = {
                         break;
                     }
                 }
+            }
+
+            if (current_mode === "excluded" && !distribute_excluded_delta) {
+                continue;
             }
 
             const currency = grouping_key.currency;
