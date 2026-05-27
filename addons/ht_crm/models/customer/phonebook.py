@@ -121,6 +121,7 @@ class PhonebookBatch(models.Model):
         available_phones = self.phone_ids
         
         for phone in available_phones:
+            phone.write({'given_at': False})
             phone.write({'salesperson_id': False})
 
     def action_distribute(self):
@@ -133,6 +134,7 @@ class PhonebookBatch(models.Model):
             return
 
         quota = {emp.id: 0 for emp in employees}
+    
 
         # Track statistic
         received_counter = {}
@@ -163,7 +165,8 @@ class PhonebookBatch(models.Model):
             employee = random.choice(available_emps)
             if self.validate_salesperson_target(employee):
                 continue
-
+            
+            phone.write({'given_at': fields.Datetime.now()})
             phone.write({'salesperson_id': employee.id})
             phone.write({'previous_salesperson_ids': [(4, employee.id)]})
             quota[employee.id] += 1
@@ -219,6 +222,7 @@ class PhoneBook(models.Model):
         domain=[('role_id.code', '=', 'sales')],
         groups="ht_crm.group_ht_executive, ht_crm.group_ht_general_admin"
     )
+    given_at = fields.Datetime(string="Giao vào lúc")
 
     previous_salesperson_ids = fields.Many2many(
         'employee.profile.sales',
@@ -376,29 +380,6 @@ class PhoneBook(models.Model):
         self.ensure_one()
         self.write({'salesperson_id': ""})
         self.write({'previous_salesperson_ids': [(5, 0, 0)]})
-
-    # log_ids = fields.One2many(
-    #     'sale.phonebook.log',
-    #     'phonebook_id',
-    #     string="Logs"
-    # )
-
-    # def write(self, vals):
-    #     for rec in self:
-    #         old_status = rec.status
-
-    #         res = super(PhoneBook, rec).write(vals)
-
-    #         # Log when status changed
-    #         if 'status' in vals and old_status != vals['status']:
-    #             self.env['sale.phonebook.log'].create({
-    #                 'phonebook_id': rec.id,
-    #                 'old_status': old_status,
-    #                 'new_status': vals['status'],
-    #                 'note': vals.get('note', ''),
-    #             })
-
-    #     return True
 
 
 class PhonebookStatusWizard(models.TransientModel):
