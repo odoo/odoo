@@ -1,6 +1,7 @@
 declare module "models" {
     export interface HrEmployee {
         leave_date_to: import("luxon").DateTime;
+        on_public_leave: boolean;
         outOfOfficeDateEndText: Readonly<string>;
     }
     export interface ResPartner {

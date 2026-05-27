@@ -34,6 +34,7 @@ class HrEmployee(models.Model):
         ], groups="hr.group_hr_user")
     leave_date_from = fields.Date('From Date', compute='_compute_leave_status', groups="hr.group_hr_user")
     leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
+    on_public_leave = fields.Boolean(compute='_compute_leave_status')
     allocation_count = fields.Float('Total number of days allocated.', compute='_compute_allocation_count',
                                     groups="hr.group_hr_user")
     allocations_count = fields.Integer('Total number of allocations', compute="_compute_allocation_count",
@@ -213,14 +214,31 @@ class HrEmployee(models.Model):
             employee.leave_date_to = employee_back_on.get(employee.id, latest_emp_holiday.date_to).date()
             employee.current_leave_state = latest_emp_holiday.state
             employee.is_absent = any(e_h.work_entry_type_id.count_as == 'absence' for e_h in emp_holidays)
+            employee.on_public_leave = False
 
-        no_data = self - holidays.employee_id
-        no_data.update({
+        employees_not_on_leave = self - holidays.employee_id
+        employees_not_on_leave.update({
             'leave_date_from': False,
             'leave_date_to': False,
             'current_leave_state': False,
             'is_absent': False,
+            'on_public_leave': False,
         })
+        if employees_not_on_leave:
+            now = fields.Datetime.now()
+            grouped_companies = self.env['resource.calendar.leaves']._read_group(
+                [
+                    ('resource_id', '=', False),
+                    ('company_id', 'in', employees_not_on_leave.company_id.ids),
+                    ('date_from', '<=', now),
+                    ('date_to', '>=', now),
+                ],
+                ['company_id'],
+                ['__count'],
+            )
+            companies_with_public_leave = {company.id for company, _count in grouped_companies}
+            for employee in employees_not_on_leave:
+                employee.on_public_leave = employee.company_id.id in companies_with_public_leave
 
     @api.depends('parent_id')
     def _compute_leave_manager(self):
@@ -752,10 +770,12 @@ class HrEmployee(models.Model):
     def _store_avatar_card_fields(self, res: Store.FieldList):
         super()._store_avatar_card_fields(res)
         res.attr("leave_date_to")
+        res.attr("on_public_leave")
 
     def _store_im_status_fields(self, res: Store.FieldList):
         super()._store_im_status_fields(res)
         res.attr("leave_date_to")
+        res.attr("on_public_leave")
 
     def _get_hours_for_date(self, target_date, day_period=None, count_non_working_days=False):
         """

@@ -6,6 +6,6 @@ export class ResUsers extends hrModels.ResUsers {
 
     _store_main_user_fields(res) {
         super._store_main_user_fields(res);
-        res.many("all_employee_ids", ["leave_date_to"], { internal: true });
+        res.many("all_employee_ids", ["leave_date_to", "on_public_leave"], { internal: true });
     }
 }
