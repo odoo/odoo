@@ -2872,18 +2872,18 @@ export class Model extends Array {
      */
     _compute_related_field(fieldName) {
         const field = this._fields[fieldName];
-        const fieldNames = safeSplit(field.related, ".");
         for (const record of this) {
-            const [value, fieldType] = this._followRelation(record, fieldNames);
-            if (!fieldType) {
+            const related = this._followRelation(record, field);
+            if (!related?.field) {
                 // The related field is not found on the record, so we
                 // remove the compute function.
                 this.env[this._name]._related.delete(fieldName);
                 return;
             }
+            const value = related.record?.[related.field.name];
             if (value === undefined) {
                 // Value is null: assign default value (if null)
-                record[fieldName] ??= DEFAULT_FIELD_VALUES[fieldType]();
+                record[fieldName] ??= DEFAULT_FIELD_VALUES[related.field.type]();
             } else {
                 // Value is not null: override
                 record[fieldName] = value;
@@ -2992,33 +2992,36 @@ export class Model extends Array {
     /**
      * @private
      * @param {ModelRecord} record
-     * @param {string[]} fieldNames
-     * @returns {[any, FieldType]}
+     * @param {FieldDefinition} field
      */
-    _followRelation(record, fieldNames) {
+    _followRelation(record, field) {
+        const fieldNames = safeSplit(field.related, ".");
+        const lastFieldName = fieldNames.pop();
+        let currentField = field;
         let currentModel = this;
         let currentRecord = record;
-        let currentField;
-        let value;
         for (const fieldName of fieldNames) {
             currentField = currentModel._fields[fieldName];
             if (!currentField) {
                 break;
             }
-            if (!currentRecord) {
-                value = undefined;
+
+            currentModel = getRelation(currentField, currentRecord);
+            if (!currentModel) {
                 break;
             }
-            value = currentRecord?.[fieldName];
-            const relation = getRelation(currentField, currentRecord);
-            if (relation) {
-                const ids = ensureArray(currentRecord?.[fieldName]);
-                currentModel = relation;
-                currentRecord = currentModel.find((r) => ids.includes(r.id));
-            }
-        }
 
-        return [value, currentField?.type];
+            const ids = ensureArray(currentRecord?.[fieldName]);
+            currentRecord = currentModel.find((r) => ids.includes(r.id));
+        }
+        const lastField = currentModel._fields[lastFieldName];
+        return currentModel && currentField
+            ? {
+                  field: lastField,
+                  model: currentModel,
+                  record: currentRecord,
+              }
+            : null;
     }
 
     /**
@@ -3287,10 +3290,14 @@ export class Model extends Array {
                 );
             }
             if (field.related) {
-                const fieldNames = safeSplit(field.related, ".");
-                const [value, fieldType] = this._followRelation(record, fieldNames);
-                if (fieldType) {
-                    record[fieldName] = value;
+                const related = this._followRelation(record, field);
+                if (related?.record) {
+                    const fname = related.field.name;
+                    related.model._write(
+                        { [fname]: related.record[fname] },
+                        related.record.id,
+                        options
+                    );
                 }
                 continue;
             }
