@@ -58,7 +58,9 @@ WITH
             OR sl.parent_path LIKE concat(w.view_location_id, '/%%')
     ),
     existing_sm (id, product_id, tmpl_id, product_qty, quantity, date, state, company_id, whs_id, whd_id) AS (
-        SELECT m.id, m.product_id, pt.id, m.product_qty, m.quantity, m.date, m.state, m.company_id, source.w_id, dest.w_id
+        SELECT m.id, m.product_id, pt.id, m.product_qty,
+            m.quantity * move_uom.factor / pt_uom.factor AS quantity,
+            m.date, m.state, m.company_id, source.w_id, dest.w_id
         FROM stock_move m
         LEFT JOIN warehouse_cte source ON source.sl_id = m.location_id
         LEFT JOIN warehouse_cte dest ON dest.sl_id = CASE
@@ -67,6 +69,8 @@ WITH
         END
         LEFT JOIN product_product pp on pp.id=m.product_id
         LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
+        LEFT JOIN uom_uom pt_uom ON pt_uom.id = pt.uom_id
+        LEFT JOIN uom_uom move_uom ON move_uom.id = m.uom_id
         WHERE pt.is_storable = true AND
             source.w_id IS DISTINCT FROM dest.w_id AND
             m.product_qty != 0 AND
