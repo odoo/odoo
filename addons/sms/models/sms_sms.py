@@ -203,6 +203,20 @@ class SmsSms(models.Model):
         } for body, body_sms_records in self.grouped('body').items()]
 
         delivery_reports_url = url_join(self[0].get_base_url(), '/sms/status')
+
+        # A delivery webhook (e.g. Twilio, one per message) can write the
+        # tracking rows while the call below runs. If it writes first, our
+        # write after the call fails with a serialization error and the SMS is
+        # sent again next tick. So lock the rows first: writing a 'process'
+        # status runs an UPDATE, and flushing it takes the lock before the
+        # call, so the webhook waits instead of racing us. Same as
+        # mail.mail._send.
+        tracker_sudo = self.sudo().sms_tracker_id
+        tracker_sudo.with_context(sms_skip_msg_notification=True)._action_update_from_sms_state('process')
+        # _action_update_from_sms_state flushes mailing.trace but not
+        # mail.notification, so flush it here.
+        tracker_sudo.mail_notification_id.flush_recordset(['notification_status', 'failure_type', 'failure_reason'])
+
         try:
             results = sms_api._send_sms_batch(messages, delivery_reports_url=delivery_reports_url)
         except Exception as e:
