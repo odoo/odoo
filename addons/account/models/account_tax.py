@@ -4455,6 +4455,8 @@ class AccountTax(models.Model):
                         cache_key = str(domain)
                     else:
                         cache_key = criteria.get('cache_key')
+                        if cache_key:
+                            cache_key = (cache_key, str(tax_domain))
 
                     # Look at the cache if the value has already been tested with this key.
                     if cache_key and cache_key in cache:
