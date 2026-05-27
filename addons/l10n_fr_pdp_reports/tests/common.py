@@ -263,17 +263,6 @@ class PdpTestCommon(TransactionCase):
         move.action_post()
         return move
 
-    def _run_aggregation(self):
-        # Clean previous flows for deterministic assertions
-        self.env['l10n.fr.pdp.reports.flow'].sudo().search([('company_id', '=', self.company.id)]).unlink()
-        return self._aggregate_company()
-
-    def _aggregate_company(self):
-        """Run the PDP aggregator without clearing existing flows."""
-        return self.env['l10n.fr.pdp.reports.flow.aggregator'].with_context(
-            mail_create_nolog=True, tracking_disable=True,
-        )._cron_process_company(self.company)
-
     def _get_single_flow(self):
         return self.env['l10n.fr.pdp.reports.flow'].search([('company_id', '=', self.company.id)])
 

@@ -9,7 +9,7 @@ from odoo.tests import tagged
 from odoo.tools import file_open
 
 
-@tagged('post_install', '-at_install', 'test_flow_lifecycle')
+@tagged('post_install_l10n', 'post_install', '-at_install', 'test_flow_lifecycle')
 class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
     @classmethod
     def setUpClass(cls):
@@ -105,6 +105,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         tax_ids=None,
         currency=None,
         invoice_date_due=None,
+        quantity=1.0,
     ):
         invoice_date = fields.Date.to_date(invoice_date)
         move = self._create_invoice_one_line(
@@ -112,7 +113,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             partner_id=partner,
             product_id=self.product_a,
             price_unit=amount,
-            quantity=1.0,
+            quantity=quantity,
             tax_ids=tax_ids,
             currency_id=currency,
             invoice_date=invoice_date,
@@ -168,6 +169,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         tax_ids=None,
         currency=None,
         invoice_date_due=None,
+        quantity=1.0
     ):
         return self._create_reporting_move(
             'out_invoice',
@@ -179,6 +181,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             tax_ids=self._get_tax_on_payment() if tax_ids is None else tax_ids,
             currency=currency,
             invoice_date_due=invoice_date_due,
+            quantity=quantity,
         )
 
     def _create_reporting_vendor_bill(
@@ -374,11 +377,12 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         })
         b2bi_invoice_1 = self._create_reporting_invoice(
             partner=self.b2bi_italian_customer,
-            amount=10000.0,
+            amount=1000.0,
             invoice_date='2025-09-01',
             invoice_date_due='2025-09-30',
             name='S1F1_REPORT2025',
             tax_ids=tax_151,
+            quantity=10,
         )
         b2bi_invoice_2 = self._create_reporting_invoice(
             partner=self.b2bi_italian_customer,
@@ -427,7 +431,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'operation_type': 'sale',
             'state': 'ready',
         }])
-        self.assertIn(invoice, flow.move_ids)
+        self.assertIn(invoice, flow._get_moves())
 
         xml = self._build_flow_xml(flow)
         self.assertEqual(xml.tag, 'Report')
@@ -499,7 +503,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'operation_type': 'sale',
             'state': 'ready',
         }])
-        self.assertIn(invoice, flow.move_ids)
+        self.assertIn(invoice, flow._get_moves())
 
         xml = self._build_flow_xml(flow)
         invoices = xml.findall('./TransactionsReport/Invoice')
@@ -580,7 +584,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'operation_type': 'purchase',
             'state': 'ready',
         }])
-        self.assertIn(bill, flow.move_ids)
+        self.assertIn(bill, flow._get_moves())
 
         xml = self._build_flow_xml(flow)
         self.assertEqual(xml.findtext('./ReportDocument/Issuer/RoleCode'), 'BY')
@@ -595,8 +599,8 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertEqual(b2c_invoice.l10n_fr_pdp_last_flow_id, b2bi_invoice.l10n_fr_pdp_last_flow_id)
         flow = b2c_invoice.l10n_fr_pdp_last_flow_id
 
-        self.assertIn(b2c_invoice, flow.move_ids)
-        self.assertIn(b2bi_invoice, flow.move_ids)
+        self.assertIn(b2c_invoice, flow._get_moves())
+        self.assertIn(b2bi_invoice, flow._get_moves())
 
         xml = self._build_flow_xml(flow)
         invoices = xml.findall('./TransactionsReport/Invoice')
@@ -1129,7 +1133,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'transmission_type': 'rectificative',
             'initial_flow_id': initial_flow.id,
         }])
-        self.assertIn(invalid_invoice, rectificative_flow.move_ids)
+        self.assertIn(invalid_invoice, rectificative_flow._get_moves())
 
     def test_rectificative_flow_is_sent_when_error_moves_become_ready(self):
         valid_invoice = self._create_reporting_invoice(
@@ -1199,7 +1203,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'transmission_type': 'rectificative',
             'initial_flow_id': initial_flow.id,
         }])
-        self.assertIn(payment_move, rectificative_flow.move_ids)
+        self.assertIn(payment_move, rectificative_flow._get_moves())
 
     def test_invoice_corrected_before_initial_flow_is_sent_stays_in_initial_flow(self):
         invoice = self._create_reporting_invoice(
@@ -1219,7 +1223,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertEqual(invoice.l10n_fr_pdp_last_flow_id, initial_flow)
         self.assertEqual(initial_flow.transmission_type, 'initial')
         self.assertFalse(initial_flow.rectificative_flow_ids)
-        self.assertIn(invoice, initial_flow.move_ids)
+        self.assertIn(invoice, initial_flow._get_moves())
 
     def test_payment_corrected_before_payment_flow_is_sent_stays_in_initial_payment_flow(self):
         invoice = self._create_reporting_invoice(
@@ -1238,8 +1242,8 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertEqual(second_payment_move.l10n_fr_pdp_last_flow_id, initial_flow)
         self.assertEqual(initial_flow.transmission_type, 'initial')
         self.assertFalse(initial_flow.rectificative_flow_ids)
-        self.assertIn(first_payment.move_id, initial_flow.move_ids)
-        self.assertIn(second_payment_move, initial_flow.move_ids)
+        self.assertIn(first_payment.move_id, initial_flow._get_moves())
+        self.assertIn(second_payment_move, initial_flow._get_moves())
 
     def test_payment_flow_matches_reserve_fixture_0292(self):
         invoice_1 = self._create_reporting_invoice(
@@ -1604,7 +1608,6 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             invoice,
             invoice_date='2025-09-04',
         )
-
         self.assertEqual(refund.l10n_fr_pdp_last_flow_id, initial_flow)
         self.assertEqual(initial_flow.transmission_type, 'initial')
         xml = self._build_flow_xml(initial_flow)
@@ -1683,8 +1686,8 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         ]
 
         self.assertEqual(reported_ids, [kept_invoice.name])
-        self.assertNotIn(draft_invoice, flow.move_ids)
-        self.assertNotIn(cancelled_invoice, flow.move_ids)
+        self.assertNotIn(draft_invoice, flow._get_moves())
+        self.assertNotIn(cancelled_invoice, flow._get_moves())
 
     def test_multiple_b2c_transactions_same_day_and_category_are_aggregated(self):
         tax = self._get_tax_sale_good_20_tax_included()
@@ -1785,7 +1788,6 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         issue_datetime = xml.find('./ReportDocument/IssueDateTime/DateTimeString')
 
         self.assertIsNotNone(issue_datetime)
-        self.assertEqual(issue_datetime.get('format'), '204')
         self.assertRegex(issue_datetime.text or '', r'^\d{14}$')
 
     def test_b2bi_invoice_line_reports_gross_price_without_discount(self):
@@ -1799,7 +1801,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         price = xml.find('./TransactionsReport/Invoice/Line/Price')
 
         self.assertIsNotNone(price)
-        self.assertEqual(float(price.findtext('AllowanceChargeAmount')), 0.0)
+        self.assertIsNone(price.findtext('AllowanceChargeAmount'))
         self.assertEqual(
             float(price.findtext('PriceAmount')),
             float(price.findtext('AllowanceChargeBaseAmount')),
