@@ -893,6 +893,52 @@ class TestSequenceGaps(TestSequenceMixinCommon):
         self.all_moves[2].button_draft()
         self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
 
+    def test_branch_company_user_empty_prefix(self):
+        """Branch-company users must not get an AccessError when creating a journal
+        entry in a journal where one of the first two posted entries had its
+        sequence_prefix emptied by a parent-company admin.
+
+        Regression for bug introduced in 19.0: _update_sequence_made_gap used
+        self.browse() (no sudo) after a raw SQL query that returns IDs across all
+        companies, so the branch user couldn't read/write the parent's moves.
+        """
+
+        first_move = self.all_moves[0]
+        first_move.button_draft()
+        first_move.name = '0001'
+
+        parent_company = self.env.company
+        branch_company = self.env['res.company'].create({
+            'name': 'Branch Company',
+            'parent_id': parent_company.id,
+        })
+        branch_user = self.env['res.users'].create({
+            'login': 'branch_seq_test',
+            'name': 'Branch User',
+            'email': 'branch_seq_test@example.com',
+            'group_ids': [Command.link(self.env.ref('account.group_account_user').id)],
+            'company_ids': [Command.link(branch_company.id)],
+            'company_id': branch_company.id,
+        })
+
+        misc_journal = self.all_moves[0].journal_id
+
+        branch_env = self.env(user=branch_user)
+        account = self.company_data['default_account_revenue']
+        new_move = branch_env['account.move'].create({
+            'move_type': 'entry',
+            'journal_id': misc_journal.id,
+            'date': '2016-01-01',
+            'line_ids': [Command.create({
+                'name': 'branch line',
+                'account_id': account.id,
+            })],
+        })
+        # Writing name triggers _inverse_name → _update_sequence_made_gap.
+        # Must NOT raise an AccessError.
+        new_move.name = '0002'
+        self.assertEqual(new_move.name, '0002')
+
 
 @tagged('post_install', '-at_install')
 class TestSequenceMixinDeletion(TestSequenceMixinCommon):
