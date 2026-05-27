@@ -43,6 +43,12 @@ export class SpacingPlugin extends Plugin {
         });
     }
 
+    // TODO EGGMAIL NOW: generalize the content of this function, there are
+    // multiple aspects to consider for the wrapping table:
+    // - spacing
+    // - horizontal centering (vertical centering does not happen on a spacing table, it should
+    // happen more globally (and requires handling (TODO)))
+    //
     buildMarginNode(facts) {
         // TODO EGGMAIL: discard negative paddings
         // for % values, use computed value in px (desktop mode) instead
