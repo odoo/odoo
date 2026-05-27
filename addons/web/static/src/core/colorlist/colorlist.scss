@@ -8,6 +8,9 @@
         --fieldWidget-display: block;
         --ColorListField-Entry-fontSize: 1.4em;
 
+        @include media-breakpoint-up(md) {
+            grid-template-columns: repeat(var(--ColorListField-columns, 12), 1fr);
+        }
         grid-template-columns: repeat(var(--ColorListField-columns, 6), 1fr);
     }
 
