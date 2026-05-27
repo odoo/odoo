@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { types as t } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -21,10 +21,12 @@ export class LocalOverlayContainer extends MainComponentsContainer {
         const overlayComponents = registry.category(this.props.identifier);
         // todo: remove this somehow
         if (!overlayComponents.validationSchema) {
-            overlayComponents.addValidation({
-                Component: { validate: (c) => c.prototype instanceof Component },
-                props: { type: Object, optional: true },
-            });
+            overlayComponents.addValidation(
+                t.object({
+                    Component: t.component(),
+                    "props?": t.object(),
+                })
+            );
         }
         this.Components = useRegistry(overlayComponents);
         useForwardRefToParent("localOverlay");

@@ -13,7 +13,7 @@ import { useActionLinks } from "@web/views/view_hook";
 import { computeViewClassName } from "./utils";
 import { loadBundle } from "@web/core/assets";
 import { cookie } from "@web/core/browser/cookie";
-import { Component, markRaw, onWillUpdateProps, onWillStart, toRaw } from "@odoo/owl";
+import { Component, markRaw, onWillUpdateProps, onWillStart, toRaw, types as t } from "@odoo/owl";
 import { session } from "@web/session";
 
 /**
@@ -83,11 +83,12 @@ import { session } from "@web/session";
 
 const viewRegistry = registry.category("views");
 
-viewRegistry.addValidation({
-    type: { validate: (t) => t in session.view_info },
-    Controller: { validate: (c) => c.prototype instanceof Component },
-    "*": true,
-});
+viewRegistry.addValidation(
+    t.object({
+        type: t.customValidator(t.string(), (v) => v in session.view_info),
+        Controller: t.component(),
+    })
+);
 
 /**
  * Returns the default config to use if no config, or an incomplete config has
