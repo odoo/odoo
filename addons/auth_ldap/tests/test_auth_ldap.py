@@ -163,7 +163,10 @@ class TestAuthLDAP(HttpCaseWithUserDemo):
         with Form(self.env["change.password.own"]) as form:
             form.new_password = "bar"
             form.confirm_password = "bar"
-        form.record.change_password()
+        with self.assertLogs("odoo.addons.base.models.res_users") as log_catcher:
+            form.record.change_password()
+
+        self.assertIn("LDAP password change for 'demo'", log_catcher.output[0])
 
         # The password must have been updated in the LDAP server
         self.assertEqual(
@@ -225,7 +228,11 @@ class TestAuthLDAP(HttpCaseWithUserDemo):
                 with form.user_ids.edit(index) as form_line:
                     self.assertEqual(form_line.user_login, user.login)
                     form_line.new_passwd = new_password
-        form.record.change_password_button()
+        with self.assertLogs("odoo.addons.base.models.res_users") as log_catcher:
+            form.record.change_password_button()
+
+        self.assertIn("LDAP password change for 'demo'", log_catcher.output[0])
+        self.assertIn("LDAP password change for 'admin'", log_catcher.output[1])
 
         # The passwords must have been updated in the LDAP server
         for user, new_password in [(self.user_demo, "bar"), (self.user_admin, "123")]:

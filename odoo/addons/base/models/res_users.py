@@ -917,15 +917,21 @@ class ResUsers(models.Model):
         if not new_passwd:
             raise UserError(_("Setting empty passwords is not allowed for security reasons!"))
 
-        ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
-        _logger.info(
-            "Password change for %r (#%d) by %r (#%d) from %s",
-             self.login, self.id,
-             self.env.user.login, self.env.user.id,
-             ip
-        )
+        self._log_change_password("Password")
 
         self.password = new_passwd
+
+    def _log_change_password(self, description):
+        ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
+        _logger.info(
+            "%s change for %r (#%d) by %r (#%d) from %s",
+            description,
+            self.login,
+            self.id,
+            self.env.user.login,
+            self.env.user.id,
+            ip,
+        )
 
     def _deactivate_portal_user(self, **post):
         """Try to remove the current portal user.
