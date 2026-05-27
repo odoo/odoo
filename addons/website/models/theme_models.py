@@ -301,6 +301,9 @@ class ThemeUtils(models.AbstractModel):
         for view in self._header_width_templates:
             self.disable_view(view)
 
+        # Reinitialize some page options
+        self.set_page_option("header_overlay", False)
+
     @api.model
     def _toggle_asset(self, key, active):
         ThemeIrAsset = self.env['theme.ir.asset'].sudo().with_context(active_test=False)
@@ -365,6 +368,20 @@ class ThemeUtils(models.AbstractModel):
     @api.model
     def disable_view(self, xml_id):
         self._toggle_view(xml_id, False)
+
+    @api.model
+    def set_page_option(self, page_option, value):
+        website = self.env['website'].get_current_website()
+        # Only for the homepage and if it is a simple page, as it could break
+        # technical pages.
+        homepage_url = website.homepage_url or '/'
+        homepage = self.env['website.page'].search([
+            ('website_id', '=', website.id),
+            ('url', '=', homepage_url),
+        ], limit=1)
+
+        if homepage:
+            homepage.write({page_option: value})
 
 
 class IrUiView(models.Model):
