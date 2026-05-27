@@ -66,5 +66,5 @@ class ProductTemplate(models.Model):
         if sub_message:
             details.append(self.env._("Details: %s", sub_message))
         if details:
-            raise UserError(self.env._("Baiwang API error: %s\n%s", error_message, "\n".join(details)))
-        raise UserError(self.env._("Baiwang API error: %s", error_message))
+            raise UserError("Baiwang API error: %s\n%s", error_message, "\n".join(details))
+        raise UserError("Baiwang API error: %s", error_message)
