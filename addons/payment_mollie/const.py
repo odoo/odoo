@@ -77,6 +77,7 @@ DEFAULT_PAYMENT_METHOD_CODES = {
 PAYMENT_METHODS_MAPPING = {
     "apple_pay": "applepay",
     "card": "creditcard",
+    "google_pay": "creditcard",
     "bank_transfer": "banktransfer",
     "kbc_cbc": "kbc",
     "p24": "przelewy24",

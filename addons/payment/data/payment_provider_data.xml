@@ -298,12 +298,14 @@
         <!-- https://www.mollie.com/en/payments -->
         <field name="payment_method_ids"
                eval="[Command.set([
+                         ref('payment.payment_method_apple_pay'),
                          ref('payment.payment_method_bancontact'),
                          ref('payment.payment_method_bank_transfer'),
                          ref('payment.payment_method_belfius'),
                          ref('payment.payment_method_blik'),
                          ref('payment.payment_method_card'),
                          ref('payment.payment_method_eps'),
+                         ref('payment.payment_method_google_pay'),
                          ref('payment.payment_method_ideal'),
                          ref('payment.payment_method_in3'),
                          ref('payment.payment_method_kbc_cbc'),

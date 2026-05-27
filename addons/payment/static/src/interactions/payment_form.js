@@ -28,6 +28,7 @@ export class PaymentForm extends Interaction {
     }
 
     async willStart() {
+        this._checkAppleGooglePaySupport();
         // Expand the payment form of the selected payment option if there is only one.
         const checkedRadio = document.querySelector('input[name="o_payment_radio"]:checked');
         if (checkedRadio) {
@@ -147,6 +148,61 @@ export class PaymentForm extends Interaction {
     }
 
     // #=== DOM MANIPULATION ===#
+    /**
+     * Check if Apple Pay and Google Pay are supported by the browser and device.
+     * Reveals the option if supported, completely hides and disables it if not.
+     *
+     * @private
+     * @return {void}
+     */
+    async _checkAppleGooglePaySupport() {
+        const applePayInput = this.el.querySelector('input[data-payment-method-code="apple_pay"]');
+        if (applePayInput) {
+            const isApplePaySupported = window.ApplePaySession && window.ApplePaySession.canMakePayments();
+            const optionContainer = applePayInput.closest('[name="o_payment_option"]');
+
+            if (optionContainer) {
+                if (isApplePaySupported) {
+                    optionContainer.classList.remove('d-none');
+                }
+            }
+        }
+
+        const googlePayInput = this.el.querySelector('input[data-payment-method-code="google_pay"]');
+        if (googlePayInput) {
+            const optionContainer = googlePayInput.closest('[name="o_payment_option"]');
+
+            if (optionContainer && window.google && window.google.payments) {
+                try {
+                    const paymentsClient = new window.google.payments.api.PaymentsClient(
+                        { environment: 'PRODUCTION' }
+                    );
+
+                    const isReadyToPayRequest = {
+                        apiVersion: 2,
+                        apiVersionMinor: 0,
+                        allowedPaymentMethods: [
+                            {
+                                type: 'CARD',
+                                parameters: {
+                                    allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+                                    allowedCardNetworks: ['MASTERCARD', 'VISA']
+                                }
+                            }
+                        ]
+                    };
+
+                    const response = await paymentsClient.isReadyToPay(isReadyToPayRequest);
+
+                    if (response.result) {
+                        optionContainer.classList.remove('d-none');
+                    }
+                } catch (err) {
+                    console.error("Google Pay Error:", err);
+                }
+            }
+        }
+    }
 
     /**
      * Check if the submit button can be enabled and do it if so.

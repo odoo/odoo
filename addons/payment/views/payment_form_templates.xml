@@ -97,7 +97,8 @@
                     <ul class="list-group">
                         <t t-foreach="payment_methods_sudo" t-as="pm_sudo">
                             <li name="o_payment_option"
-                                class="list-group-item d-flex flex-column gap-2 py-3 o_outline"
+                                t-att-class="'list-group-item d-flex flex-column gap-2 py-3 o_outline'
+                                    + (' d-none' if pm_sudo.code in ['apple_pay', 'google_pay'] else '')"
                             >
                                 <t t-call="payment.method_form" is_selected="pm_sudo.id == selected_method_id"/>
                             </li>
@@ -123,6 +124,12 @@
             <t t-call="payment.availability_report"/>
         </form>
         <t t-else="" t-call="payment.no_pms_available_warning"/>
+    </template>
+
+    <template id="google_pay_script_assets" inherit_id="web.layout">
+        <xpath expr="//head" position="inside">
+            <script src="https://pay.google.com/gp/p/js/pay.js"></script>
+        </xpath>
     </template>
 
     <template id="payment.token_form" name="Payment Token Form">
