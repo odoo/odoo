@@ -29,20 +29,20 @@ export function registerCallAction(id, definition) {
 
 /** @type {CallActionDefinition} */
 export const muteAction = {
-    badge: ({ owner, store }) => store.rtc.microphonePermission !== "granted",
+    badge: ({ store }) => store.rtc?.microphonePermission !== "granted",
     badgeIcon: "fa fa-exclamation",
     condition: ({ owner, store, channel }) =>
-        channel?.isSelfInCall && (owner.env.inCallMenu || !store.rtc.selfSession?.is_deaf),
-    name: ({ store }) => (store.rtc.selfSession?.isMute ? _t("Unmute") : _t("Mute")),
-    isActive: ({ store }) => store.rtc.selfSession?.isMute,
+        channel?.isSelfInCall && (owner.env.inCallMenu || !store.rtc?.selfSession?.is_deaf),
+    name: ({ store }) => (store.rtc?.selfSession?.isMute ? _t("Unmute") : _t("Mute")),
+    isActive: ({ store }) => store.rtc?.selfSession?.isMute,
     icon: ({ action, owner, store }) =>
         action.isActive
-            ? store.rtc.selfSession?.is_deaf && !owner.env.inCallMenu
+            ? store.rtc?.selfSession?.is_deaf && !owner.env.inCallMenu
                 ? CALL_ICON_DEAFEN
                 : CALL_ICON_MUTED
             : "fa fa-microphone",
     hotkey: "shift+m",
-    onSelected: ({ store }) => store.rtc.toggleMicrophone(),
+    onSelected: ({ store }) => store.rtc?.toggleMicrophone(),
     sequence: 10,
     sequenceGroup: 100,
     tags: ({ action, store }) => {
@@ -50,7 +50,7 @@ export const muteAction = {
         if (action.isActive) {
             tags.push(ACTION_TAGS.DANGER);
         }
-        if (store.rtc.microphonePermission !== "granted") {
+        if (store.rtc?.microphonePermission !== "granted") {
             tags.push(ACTION_TAGS.DANGER, ACTION_TAGS.WARNING_BADGE);
         }
         return tags;
@@ -74,11 +74,11 @@ registerCallAction("quick-voice-settings", quickActionSettings);
 registerCallAction("deafen", {
     condition: ({ owner, store, channel }) =>
         channel?.isSelfInCall && (owner.env.inCallMenu || store.rtc.selfSession?.is_deaf),
-    name: ({ store }) => (store.rtc.selfSession?.is_deaf ? _t("Undeafen") : _t("Deafen")),
-    isActive: ({ store }) => store.rtc.selfSession?.is_deaf,
+    name: ({ store }) => (store.rtc?.selfSession?.is_deaf ? _t("Undeafen") : _t("Deafen")),
+    isActive: ({ store }) => store.rtc?.selfSession?.is_deaf,
     icon: ({ action }) => (action.isActive ? CALL_ICON_DEAFEN : "fa fa-headphones"),
     hotkey: "shift+d",
-    onSelected: ({ store }) => store.rtc.toggleDeafen(),
+    onSelected: ({ store }) => store.rtc?.toggleDeafen(),
     sequence: 10,
     sequenceGroup: 100,
     tags: ({ action }) => [
@@ -91,19 +91,19 @@ export const cameraOnAction = {
     badge: ({ owner, store, channel }) =>
         !owner.env.inCallMenu &&
         channel?.default_display_mode === "video_full_screen" &&
-        store.rtc.cameraPermission !== "granted",
+        store.rtc?.cameraPermission !== "granted",
     badgeIcon: "fa fa-exclamation",
     condition: ({ channel }) => channel?.isSelfInCall,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
         store.rtc?.isRemote
             ? _t("Camera is unavailable outside the call tab.")
-            : store.rtc.selfSession?.is_camera_on
+            : store.rtc?.selfSession?.is_camera_on
             ? _t("Stop camera")
             : _t("Turn camera on"),
-    isActive: ({ store }) => store.rtc.selfSession?.is_camera_on,
+    isActive: ({ store }) => store.rtc?.selfSession?.is_camera_on,
     icon: "fa fa-video-camera",
-    onSelected: ({ owner, store }) => store.rtc.toggleVideo("camera", { env: owner.env }),
+    onSelected: ({ owner, store }) => store.rtc?.toggleVideo("camera", { env: owner.env }),
     sequence: 10,
     sequenceGroup: 120,
     tags: ({ action, store, channel }) => {
@@ -113,7 +113,7 @@ export const cameraOnAction = {
         }
         if (
             channel?.default_display_mode === "video_full_screen" &&
-            store.rtc.cameraPermission !== "granted"
+            store.rtc?.cameraPermission !== "granted"
         ) {
             tags.push(ACTION_TAGS.DANGER, ACTION_TAGS.WARNING_BADGE);
         }
@@ -138,19 +138,20 @@ registerCallAction("quick-video-settings", quickVideoSettings);
 /** @type {CallActionDefinition} */
 export const switchCameraAction = {
     condition: ({ channel, store }) =>
-        channel?.isSelfInCall && isMobileOS() && store.rtc.selfSession?.is_camera_on,
+        channel?.isSelfInCall && isMobileOS() && store.rtc?.selfSession?.is_camera_on,
     name: _t("Switch Camera"),
     isActive: false,
     icon: "fa fa-refresh",
-    onSelected: ({ store }) => store.rtc.toggleCameraFacingMode(),
+    onSelected: ({ store }) => store.rtc?.toggleCameraFacingMode(),
     sequence: 40,
     sequenceGroup: 100,
 };
 registerCallAction("switch-camera", switchCameraAction);
 registerCallAction("raise-hand", {
     condition: ({ channel }) => channel?.isSelfInCall,
-    name: ({ store }) => (store.rtc.selfSession?.raisingHand ? _t("Lower Hand") : _t("Raise Hand")),
-    isActive: ({ store }) => store.rtc.selfSession?.raisingHand,
+    name: ({ store }) =>
+        store.rtc?.selfSession?.raisingHand ? _t("Lower Hand") : _t("Raise Hand"),
+    isActive: ({ store }) => store.rtc?.selfSession?.raisingHand,
     icon: "fa fa-hand-paper-o",
     hotkey: "shift+h",
     onSelected: ({ store }) => store.rtc.raiseHand(!store.rtc.selfSession.raisingHand),
@@ -164,12 +165,12 @@ registerCallAction("share-screen", {
     name: ({ store }) =>
         store.rtc?.isRemote
             ? _t("Screen sharing is unavailable outside the call tab.")
-            : store.rtc.selfSession?.is_screen_sharing_on
+            : store.rtc?.selfSession?.is_screen_sharing_on
             ? _t("Stop Sharing Screen")
             : _t("Share Screen"),
-    isActive: ({ store }) => store.rtc.selfSession?.is_screen_sharing_on,
+    isActive: ({ store }) => store.rtc?.selfSession?.is_screen_sharing_on,
     icon: "fa fa-desktop",
-    onSelected: ({ owner, store }) => store.rtc.toggleVideo("screen", { env: owner.env }),
+    onSelected: ({ owner, store }) => store.rtc?.toggleVideo("screen", { env: owner.env }),
     sequence: 40,
     sequenceGroup: 200,
     tags: ({ action }) => [
@@ -185,16 +186,16 @@ registerCallAction("fullscreen", {
             ),
         }),
     condition: ({ channel, owner }) => channel?.isSelfInCall && !owner.env.pipWindow,
-    name: ({ store }) => (store.rtc.isFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
-    isActive: ({ store }) => store.rtc.isFullscreen,
+    name: ({ store }) => (store.rtc?.isFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
+    isActive: ({ store }) => store.rtc?.isFullscreen,
     icon: ({ action }) => (action.isActive ? "fa fa-compress" : "fa fa-expand"),
     onSelected: ({ channel, store }) => {
         channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
-        if (store.rtc.isFullscreen) {
-            store.rtc.exitFullscreen();
+        if (store.rtc?.isFullscreen) {
+            store.rtc?.exitFullscreen();
         } else {
-            store.rtc.closePip();
-            store.rtc.enterFullscreen();
+            store.rtc?.closePip();
+            store.rtc?.enterFullscreen();
         }
     },
     sequence: 80,
@@ -212,9 +213,9 @@ registerCallAction("picture-in-picture", {
         channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         const isPipMode = store.rtc?.isPipMode;
         if (isPipMode) {
-            store.rtc.closePip();
+            store.rtc?.closePip();
         } else {
-            store.rtc.openPip({ context: owner });
+            store.rtc?.openPip({ context: owner });
         }
     },
     sequence: 70,
@@ -228,7 +229,7 @@ export const acceptWithCamera = {
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Accept with camera"),
     icon: "fa fa-video-camera",
-    onSelected: ({ channel, store }) => store.rtc.toggleCall(channel, { camera: true }),
+    onSelected: ({ channel, store }) => store.rtc?.toggleCall(channel, { camera: true }),
     sequence: 100,
     sequenceGroup: 300,
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
@@ -247,7 +248,7 @@ registerCallAction("join-back", {
     inlineName: ({ owner }) => (owner.env.inCallInvitation ? undefined : _t("Join")),
     name: ({ channel }) => (channel?.useCameraByDefault ? _t("Join Video Call") : _t("Join Call")),
     onSelected: ({ channel, store }) =>
-        store.rtc.toggleCall(channel, { camera: channel.useCameraByDefault }),
+        store.rtc?.toggleCall(channel, { camera: channel.useCameraByDefault }),
     sequence: 110,
     sequenceGroup: 300,
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
@@ -261,7 +262,7 @@ registerCallAction("join-with-camera", {
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Join Video Call"),
     icon: "fa fa-video-camera",
-    onSelected: ({ channel, store }) => store.rtc.toggleCall(channel, { camera: true }),
+    onSelected: ({ channel, store }) => store.rtc?.toggleCall(channel, { camera: true }),
     sequence: 120,
     sequenceGroup: 300,
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
@@ -273,7 +274,7 @@ export const joinAction = {
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Join Call"),
     icon: "fa fa-phone",
-    onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
+    onSelected: ({ channel, store }) => store.rtc?.toggleCall(channel),
     sequence: 130,
     sequenceGroup: 300,
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
@@ -295,10 +296,10 @@ export const rejectAction = {
             : undefined,
     name: _t("Reject"),
     onSelected: ({ channel, store }) => {
-        if (store.rtc.hasPendingRequest) {
+        if (store.rtc?.hasPendingRequest) {
             return;
         }
-        store.rtc.leaveCall(channel);
+        store.rtc?.leaveCall(channel);
     },
     sequence: 140,
     sequenceGroup: 300,
@@ -311,7 +312,7 @@ registerCallAction("disconnect", {
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Disconnect"),
     icon: "fa fa-phone",
-    onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
+    onSelected: ({ channel, store }) => store.rtc?.toggleCall(channel),
     sequence: 150,
     sequenceGroup: 300,
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.DANGER],

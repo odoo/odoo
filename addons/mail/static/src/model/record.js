@@ -229,6 +229,9 @@ export class Record {
             }
             Object.assign(recordProxy, { ...ids });
             Model.records[record.localId] = recordProxy;
+            for (const name of Model._.fieldsOnUpdate.keys()) {
+                record._.prepareFieldOnUpdate(record, name, recordProxy);
+            }
             if (record.Model.getName() === "Store") {
                 Object.assign(record, {
                     env: Model._rawStore.env,

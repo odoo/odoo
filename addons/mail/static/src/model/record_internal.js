@@ -171,11 +171,7 @@ export class RecordInternal {
                 }
                 this.fieldsSortComputing.delete(fieldName);
             });
-            // record._.fieldsSortComputed.set(fieldName, fieldComputed);
-            record._.fieldsSortComputed.set(fieldName, () => {});
-        }
-        if (Model._.fieldsOnUpdate.get(fieldName)) {
-            this.prepareFieldOnUpdate(record, fieldName, recordProxy);
+            record._.fieldsSortComputed.set(fieldName, fieldComputed);
         }
     }
 
