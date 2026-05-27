@@ -138,16 +138,20 @@ export class ComboConfiguratorDialog extends Component {
             );
             currentTotalForProduct = 0;
         }
-        if (quantity > currentTotalForProduct && comboItem.is_configurable && !configuredItem) {
-            await this.handleConfigurableItem(comboId, comboItem);
-            return;
-        }
         const currentTotalForCombo = this.totalQuantityForCombo(comboId);
         const maxAvailable = combo.qty_free - currentTotalForCombo + currentTotalForProduct;
         const newQty = Math.max(0, Math.min(quantity, maxAvailable));
-
         const qtyToBeAdded = newQty - currentTotalForProduct;
         if (qtyToBeAdded > 0) {
+            if (
+                currentTotalForProduct == 0
+                && quantity > currentTotalForProduct
+                && comboItem.is_configurable
+                && !configuredItem
+            ) {
+                await this.handleConfigurableItem(comboId, comboItem);
+                return;
+            }
             for (let i = 0; i < qtyToBeAdded; i++) {
                 this.state.selectedItemsList.push({
                     comboId: comboId,
@@ -168,6 +172,12 @@ export class ComboConfiguratorDialog extends Component {
         this.state.qty[comboId][comboItem.id] = newQty;
     }
 
+    /**
+     * Opens the configurator for a combo item and adds one quantity of the configured variant to the combo.
+     *
+     * @param {Number} comboId The id of the sub-combo
+     * @param {ProductComboItem} comboItem The combo item to configure and add.
+     */
     async handleConfigurableItem(comboId, comboItem) {
         const product = comboItem.product;
 
@@ -213,6 +223,12 @@ export class ComboConfiguratorDialog extends Component {
         return Object.values(this.state.qty[comboId]).reduce((acc, q) => acc + q, 0);
     }
 
+    /**
+     * Returns the display text representing the selected quantity for a combo.
+     *
+     * @param {Object} combo The sub-combo whose selected quantity text should be computed.
+     * @returns {String} The formatted selected quantity text.
+     */
     getSelectedComboItemsText(combo) {
         if (combo.qty_free > 1) {
             const currentQty = this.totalQuantityForCombo(combo.id);

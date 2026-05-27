@@ -1324,17 +1324,24 @@ class SaleOrder(models.Model):
             elif line.selected_combo_items:
                 selected_combo_items = json.loads(line.selected_combo_items)
                 if selected_combo_items:
-                    unique_item_ids = list({item["combo_item_id"] for item in selected_combo_items})
-                    unique_items = self.env["product.combo.item"].browse(unique_item_ids)
+                    # Extract all selected combo item IDs
+                    combo_item_ids = list({item["combo_item_id"] for item in selected_combo_items})
+                    # Fetch the corresponding combo items from the db
+                    combo_items = self.env["product.combo.item"].browse(combo_item_ids)
 
-                    item_to_combo_map = {item.id: item.combo_id.id for item in unique_items}
+                    # Build a lookup:
+                    # combo_item_id -> parent combo_id
+                    item_to_combo_map = {item.id: item.combo_id.id for item in combo_items}
 
+                    # Count how many selections were made for each combo
                     combo_counts = Counter()
                     for item in selected_combo_items:
                         combo_id = item_to_combo_map.get(item["combo_item_id"])
                         if combo_id:
-                            combo_counts[combo_id] += item.get("combo_item_ratio", 1)
+                            combo_counts[combo_id] += item.get("combo_item_ratio")
 
+                    # Validate that the number of selected items matches
+                    # the number of required/free choices for every combo
                     for combo in line.product_template_id.sudo().combo_ids:
                         if combo_counts.get(combo.id, 0) != combo.qty_free:
                             raise ValidationError(
@@ -1348,23 +1355,13 @@ class SaleOrder(models.Model):
                 delete_commands = [
                     Command.delete(linked_line.id) for linked_line in combo_item_lines
                 ]
-
-                grouped_items = {}
-                for item in selected_combo_items:
-                    item_key = json.dumps(item, sort_keys=True)
-                    if item_key not in grouped_items:
-                        grouped_items[item_key] = item.copy()
-                        grouped_items[item_key]["quantity"] = item.get("combo_item_ratio", 1)
-                    else:
-                        grouped_items[item_key]["quantity"] += 1
-
                 # Create a new combo item line for each selected combo item.
                 create_commands = [
                     Command.create({
                         "product_id": combo_item["product_id"],
-                        "product_uom_qty": line.product_uom_qty * combo_item["quantity"],
+                        "product_uom_qty": line.product_uom_qty * combo_item["combo_item_ratio"],
                         "combo_item_id": combo_item["combo_item_id"],
-                        "combo_item_ratio": combo_item.get("quantity", 1),
+                        "combo_item_ratio": combo_item.get("combo_item_ratio"),
                         "product_no_variant_attribute_value_ids": [
                             Command.set(combo_item["no_variant_attribute_value_ids"])
                         ],
@@ -1380,13 +1377,13 @@ class SaleOrder(models.Model):
                         "linked_line_id": line.id if line._origin else False,
                         "linked_virtual_id": line.virtual_id if not line._origin else False,
                     })
-                    for item_index, combo_item in enumerate(grouped_items.values())
+                    for item_index, combo_item in enumerate(selected_combo_items)
                 ]
                 # Shift any lines coming after the combo product line so that the combo item lines
                 # come first.
                 update_commands = [
                     Command.update(
-                        order_line.id, {"sequence": order_line.sequence + len(grouped_items)}
+                        order_line.id, {"sequence": order_line.sequence + len(selected_combo_items)}
                     )
                     for order_line in self.order_line
                     if order_line.sequence > line.sequence

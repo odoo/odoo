@@ -401,9 +401,7 @@ class SaleOrderLine(models.Model):
         string="Collapse Composition", copy=True, default=False
     )  # Whether this section's lines will be hidden in reports and in the portal.
     combo_item_ratio = fields.Float(
-        string="Combo Ratio",
-        default=1.0,
-        help="Remembers the initial quantity configured for this combo item.",
+        string="Combo Ratio", help="Remembers the initial quantity configured for this combo item."
     )
 
     mandatory_product = fields.Boolean(
