@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-import time
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
@@ -91,6 +90,12 @@ class AccountMove(models.Model):
                 and move.l10n_cn_baiwang_state not in ('issued', 'sent')
             )
 
+    def _l10n_cn_baiwang_generate_serial_no(self, prefix: str) -> str:
+        """Generate a stable, human-readable request serial to send to Baiwang."""
+        self.ensure_one()
+        timestamp = fields.Datetime.now().strftime('%Y%m%d%H%M%S')
+        return f"{prefix}_{self.id}_{timestamp}"
+
     # ─── Blue Invoice Issuance ──────────────────────────────────────────
 
     def _l10n_cn_baiwang_issue_invoice(self):
@@ -106,8 +111,13 @@ class AccountMove(models.Model):
 
         client = BaiwangClient(company)
 
-        serial_no = self.l10n_cn_baiwang_serial_no or f"BLUE_{self.id}_{int(time.time())}"
+        # Fail fast if endpoint is not reachable before mutating invoice state/serial.
+        try:
+            client.ensure_connection()
+        except UserError as e:
+            return str(e)
 
+        serial_no = self.l10n_cn_baiwang_serial_no or self._l10n_cn_baiwang_generate_serial_no('BLUE')
 
         # Generate unique serial number (idempotent per invoice)
         self.l10n_cn_baiwang_serial_no = serial_no
@@ -117,6 +127,9 @@ class AccountMove(models.Model):
 
         try:
             result = client.issue_invoice(invoice_data)
+        except UserError as e:
+            # Avoid marking as failed for connectivity/precondition errors; user can retry.
+            return str(e)
         except Exception as e:
             error_msg = str(e)
             self.write({
@@ -260,6 +273,7 @@ class AccountMove(models.Model):
             raise UserError(self.env._("Baiwang API credentials are not configured. Please go to Settings > Invoicing > China Electronic Invoicing (Baiwang)."))
 
         client = BaiwangClient(company)
+        client.ensure_connection()
 
         # Find original blue invoice
         original_move = self.l10n_cn_baiwang_original_invoice_id or self.reversed_entry_id
@@ -276,7 +290,7 @@ class AccountMove(models.Model):
         })
 
         # Build red confirmation payload
-        serial_no = f"RED_{self.name}_{int(time.time())}"
+        serial_no = self._l10n_cn_baiwang_generate_serial_no('RED')
         red_form_data = self._l10n_cn_baiwang_prepare_red_form_data(
             original_move, serial_no
         )

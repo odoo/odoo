@@ -30,6 +30,7 @@ class ProductTemplate(models.Model):
             raise UserError(self.env._("Baiwang API credentials are not configured. Go to Settings > Invoicing > China Electronic Invoicing (Baiwang)."))
 
         client = BaiwangClient(company)
+        client.ensure_connection()
 
         # Call bizinfo search API
         body = {
@@ -39,6 +40,8 @@ class ProductTemplate(models.Model):
 
         try:
             response = client.call_api('baiwang.bizinfo.search', body, version='6.0')
+        except UserError:
+            raise
         except Exception as e:
             raise UserError(self.env._("API error: %s", str(e)))
 

@@ -2,9 +2,11 @@
 import hashlib
 import json
 import logging
+import socket
 import time
 import uuid
 from datetime import timedelta
+from urllib.parse import urlparse
 
 import requests
 
@@ -38,6 +40,27 @@ class BaiwangClient:
         self.org_auth_code = company.l10n_cn_baiwang_org_auth_code
         mode = company.l10n_cn_edi_mode or 'test'
         self.endpoint = ENDPOINTS.get(mode, ENDPOINTS['test'])
+
+    def _network_error(self, exc: Exception) -> UserError:
+        return UserError(
+            "Cannot reach Baiwang API endpoint (%s). Please check DNS/network access from the Odoo server.\n\nTechnical details: %s"
+            % (self.endpoint, str(exc))
+        )
+
+    def ensure_connection(self, timeout: float = 3.0):
+        """Fail fast when Baiwang endpoint is unreachable (DNS/TCP)."""
+        parsed_endpoint = urlparse(self.endpoint)
+        hostname = parsed_endpoint.hostname
+        if not hostname:
+            raise UserError("Baiwang endpoint is not configured correctly: %s" % self.endpoint)
+        port = parsed_endpoint.port or (443 if parsed_endpoint.scheme == 'https' else 80)
+
+        try:
+            socket.getaddrinfo(hostname, port, proto=socket.IPPROTO_TCP)
+            with socket.create_connection((hostname, port), timeout=timeout):
+                pass
+        except OSError as exc:
+            raise self._network_error(exc) from exc
 
     # ─── Hashing ────────────────────────────────────────────────────────
 
@@ -82,6 +105,8 @@ class BaiwangClient:
 
     def _get_token(self) -> str:
         """Get valid access token (cached or fresh)."""
+        self.ensure_connection()
+
         if (self.company.l10n_cn_baiwang_cached_token
                 and self.company.l10n_cn_baiwang_token_expiry
                 and self.company.l10n_cn_baiwang_token_expiry > fields.Datetime.now()):
@@ -114,15 +139,19 @@ class BaiwangClient:
         body_str = json.dumps(body, ensure_ascii=False, separators=(',', ':'))
         url_params['sign'] = self._compute_sign(url_params, body_str)
 
-        response = requests.post(
-            self.endpoint,
-            params=url_params,
-            data=body_str.encode('utf-8'),
-            headers={'Content-Type': 'application/json; charset=utf-8'},
-            timeout=15,
-        )
-        response.raise_for_status()
-        result = response.json()
+        response = None
+        try:
+            response = requests.post(
+                self.endpoint,
+                params=url_params,
+                data=body_str.encode('utf-8'),
+                headers={'Content-Type': 'application/json; charset=utf-8'},
+                timeout=15,
+            )
+            response.raise_for_status()
+        except requests.exceptions.RequestException as exc:
+            raise self._network_error(exc) from exc
+        result = response.json() if response else {}
 
         _logger.debug("Baiwang auth response: %s", result)
 
@@ -191,15 +220,19 @@ class BaiwangClient:
         url_params['sign'] = self._compute_sign(url_params, body_str)
 
         # Send request with raw body bytes (not requests' json= which adds spaces)
-        response = requests.post(
-            self.endpoint,
-            params=url_params,
-            data=body_str.encode('utf-8'),
-            headers={'Content-Type': 'application/json; charset=utf-8'},
-            timeout=15,
-        )
-        response.raise_for_status()
-        return response.json()
+        response = None
+        try:
+            response = requests.post(
+                self.endpoint,
+                params=url_params,
+                data=body_str.encode('utf-8'),
+                headers={'Content-Type': 'application/json; charset=utf-8'},
+                timeout=15,
+            )
+            response.raise_for_status()
+        except requests.exceptions.RequestException as exc:
+            raise self._network_error(exc) from exc
+        return response.json() if response else {}
 
     # ─── Public API ─────────────────────────────────────────────────────
 
@@ -209,6 +242,7 @@ class BaiwangClient:
 
         Automatically retries once on token expiry errors (100001/100002).
         """
+        self.ensure_connection()
         token = self._get_token()
         result = self._raw_call(method, body, version, token)
 

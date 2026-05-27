@@ -18,7 +18,7 @@ class AccountMoveSend(models.AbstractModel):
             and move.company_id.l10n_cn_baiwang_app_key
         )
 
-    def _get_all_extra_edis(self) -> dict:
+    def _get_all_extra_edis(self):
         # EXTENDS 'account'
         res = super()._get_all_extra_edis()
         res.update({
@@ -28,17 +28,7 @@ class AccountMoveSend(models.AbstractModel):
                 'help': self.env._("Submit the invoice to Baiwang for official Chinese e-Fapiao issuance."),
             },
         })
-        return resxtra_edis(self) -> dict:
-    #     # EXTENDS 'account'
-    #     res = super()._get_all_extra_edis()
-    #     res.update({
-    #         'cn_baiwang': {
-    #             'label': self.env._("by Baiwang (Issue E-Fapiao)"),
-    #             'is_applicable': self._is_cn_baiwang_applicable,
-    #             'help': self.env._("Submit the invoice to Baiwang for official Chinese e-Fapiao issuance."),
-    #         },
-    #     })
-    #     return res
+        return res
 
     # ─── Web Service Hook ───────────────────────────────────────────────
 
