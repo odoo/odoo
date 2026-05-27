@@ -2,40 +2,6 @@ from odoo import models, fields, api, exceptions
 import datetime
 import random
 
-class EmployeeSalesLog(models.Model):
-    _name = 'employee.sales.log'
-    _description = 'Sales Statistic Log'
-    _order = 'date desc'
-
-    sales_id = fields.Many2one(
-        'employee.profile.sales',
-        required=True,
-        ondelete='cascade'
-    )
-
-    date = fields.Date(
-        default=fields.Date.today,
-        required=True
-    )
-
-    received = fields.Integer(default=0)
-    handled = fields.Integer(default=0)
-
-    performance = fields.Float(
-        compute='_compute_performance',
-        store=True
-    )
-
-    @api.depends('received', 'handled')
-    def _compute_performance(self):
-        for rec in self:
-            if rec.received:
-                rec.performance = (
-                    rec.handled / rec.received
-                ) * 100
-            else:
-                rec.performance = 0
-
 class PhonebookBatch(models.Model):
     _name = "sale.phonebook.batch"
     _description = "Phone Dataset"
@@ -45,7 +11,7 @@ class PhonebookBatch(models.Model):
     date = fields.Date(string="Ngày tạo", default=fields.Date.today)
 
     # Trường liên kết
-    project_id = fields.Many2one('estate.project')
+    project_id = fields.Many2one('estate.project', string="Thuộc dự án")
 
     phone_ids = fields.One2many(
         "sale.phonebook",
@@ -66,7 +32,7 @@ class PhonebookBatch(models.Model):
         ('processing', 'Đang phân'),
         ('done', 'Hoàn tất'),
         ('failed', 'Lỗi')
-    ], default='draft')
+    ], default='draft', string="")
     distribute_at = fields.Datetime(string="Phân phát lúc", compute='_compute_distribute_at', store=True)
     rest_time = fields.Integer(
         string="Nghỉ (phút)",
@@ -109,6 +75,25 @@ class PhonebookBatch(models.Model):
                 batch.distribute_at = now + datetime.timedelta(
                     minutes=batch.rest_time
                 )
+
+    def update_sales_log(self, received_counter : dict) -> None:
+        today = fields.Date.today()
+        Log = self.env['employee.sales.log']
+
+        for employee_id, quantity in received_counter.items():
+
+            log = Log.search([
+                ('sales_id', '=', employee_id),
+                ('date', '=', today)
+            ], limit=1)
+
+            if not log:
+                log = Log.create({
+                    'sales_id': employee_id,
+                    'date': today,
+                })
+
+            log.received += quantity
 
     def validate_salesperson_target(self, salesperson):
         count = self.env['sale.phonebook'].search_count([
@@ -194,24 +179,8 @@ class PhonebookBatch(models.Model):
             
             all_blocked = False
 
-        # Update statistic log
-        today = fields.Date.today()
-        Log = self.env['employee.sales.log']
 
-        for employee_id, quantity in received_counter.items():
-
-            log = Log.search([
-                ('sales_id', '=', employee_id),
-                ('date', '=', today)
-            ], limit=1)
-
-            if not log:
-                log = Log.create({
-                    'sales_id': employee_id,
-                    'date': today,
-                })
-
-            log.received += quantity
+        self.update_sales_log(received_counter)
 
         if all_blocked:
             self.write({'state': 'done'})

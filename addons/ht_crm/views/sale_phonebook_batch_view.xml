@@ -14,8 +14,8 @@
         <field name="model">sale.phonebook.batch</field>
         <field name="arch" type="xml">
             <list>
-                <field name="name" string="Thời gian"/>
-                <field name="date" string="Người thao tác"/>
+                <field name="name"/>
+                <field name="date"/>
                 <field name="project_id" string="Dự án"/>
                 <field name="state"/>
             </list>
@@ -60,22 +60,14 @@
                     <notebook>
                         <page string="Danh sách số điện thoại">
 
-                            <field name="phone_ids"
-                                options="{'no_create': True, 'no_create_edit': True}">
+                            <field name="phone_ids" options="{'no_create': True">
 
-                                <list editable="bottom">
+                                <list editable="bottom" limit="20">
                                     <field name="name"/>
                                     <field name="phone"/>
                                     <field name="salesperson_id"/>
                                     <field name="is_hot"/>
                                 </list>
-
-                                <!-- <form>
-                                    <group>
-                                        <field name="name"/>
-                                        <field name="phone"/>
-                                    </group>
-                                </form> -->
 
                             </field>
 
@@ -84,7 +76,7 @@
                         <page string="Sales phụ trách">
 
                             <field name="e_p_rel_ids">
-                                <list>
+                                <list limit="5">
                                     <field name="sales_id"/>
                                 </list>
                             </field>

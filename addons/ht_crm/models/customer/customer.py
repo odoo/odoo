@@ -20,8 +20,43 @@ class Customer(models.Model):
     phone = fields.Char(string="Số điện thoại", size=15, required=True)
     email = fields.Char(string="Email")
 
+    # Preview
+    permanent_address_preview = fields.Char(
+        compute="_compute_permanent_address_preview",
+        store=False
+    )
+    contact_address_preview = fields.Char(
+        compute="_compute_contact_address_preview",
+        store=False
+    )
+
+    @api.depends('permanent_address')
+    def _compute_permanent_address_preview(self):
+        for rec in self:
+            if rec.permanent_address:
+                rec.permanent_address_preview = (
+                    rec.permanent_address[:30] + '...'
+                    if len(rec.permanent_address) > 30
+                    else rec.permanent_address
+                )
+            else:
+                rec.permanent_address_preview = False
+
+    @api.depends('permanent_address')
+    def _compute_contact_address_preview(self):
+        for rec in self:
+            if rec.contact_address:
+                rec.contact_address_preview = (
+                    rec.contact_address[:30] + '...'
+                    if len(rec.contact_address) > 30
+                    else rec.contact_address
+                )
+            else:
+                rec.contact_address_preview = False
+
     # Nhân viên đang phụ trách (có thể thay)
     salesperson_id = fields.Many2one(
+        
         'employee.profile.sales',
         string="Nhân viên phụ trách"
     )

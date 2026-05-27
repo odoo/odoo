@@ -230,7 +230,6 @@ class Employee(models.Model):
 
             self.user_id = user.id
 
-
 class EmployeeSales(models.Model):
     _name = 'employee.profile.sales'
     _description = 'Thông Tin Sales'
@@ -314,8 +313,6 @@ class EmployeeSales(models.Model):
                 continue
             rec.performance = (rec.total_handled / rec.total_received) * 100
 
-
-
 class EmployeeRole(models.Model):
     _name = 'employee.profile.role'
     _description = "Thông Tin Chức Danh"
@@ -330,6 +327,41 @@ class EmployeeRole(models.Model):
     _sql_constraints = [
         ('code_unique', 'unique(code)', 'Mã role phải là duy nhất!')
     ]
+
+class EmployeeSalesLog(models.Model):
+    _name = 'employee.sales.log'
+    _description = 'Sales Statistic Log'
+    _order = 'date desc'
+
+    sales_id = fields.Many2one(
+        'employee.profile.sales',
+        required=True,
+        ondelete='cascade'
+    )
+
+    date = fields.Date(
+        default=fields.Date.today,
+        required=True,
+        string="Ngày tạo"
+    )
+
+    received = fields.Integer(default=0, string="Đã nhận")
+    handled = fields.Integer(default=0, string="Đã xử lý")
+
+    performance = fields.Float(
+        compute='_compute_performance',
+        store=True
+    )
+
+    @api.depends('received', 'handled')
+    def _compute_performance(self):
+        for rec in self:
+            if rec.received:
+                rec.performance = (
+                    rec.handled / rec.received
+                ) * 100
+            else:
+                rec.performance = 0
 
 class EmployeeKPI(models.Model):
     _name = 'employee.profile.sales.kpi'

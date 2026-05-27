@@ -6,14 +6,16 @@
         <field name="arch" type="xml">
             <list>
                 <!-- TRƯỜNG CƠ BẢN -->
-                <field name="name"/>
-                <field name="id_number"/>
-                <field name="email"/>
-                <field name="date_of_birth"/>                
-                <field name="issue_date"/>
-                <field name="issue_place"/>
-                <field name="permanent_address"/>
-                <field name="contact_address"/>
+                <field name="name" width="auto"/>
+                <field name="date_of_birth" optional="hide"/>
+                <field name="id_number" width="auto"/>
+                <field name="email" width="auto"/>
+                <field name="phone" width="auto"/>
+                                
+                <field name="issue_date" optional="hide"/>
+                <field name="issue_place" optional="hide"/>
+                <field name="permanent_address_preview" string="Địa chỉ thường trú"/>
+                <field name="contact_address_preview" string="Địa chỉ liên lạc"/>
 
                 <!-- TRƯỜNG BỔ SUNG -->
                 <field name="type" optional="hide"/>

@@ -264,32 +264,5 @@
         </field>
     </record>
 
-    <record id="view_employee_kpi_list" model="ir.ui.view">
-        <field name="name">employee.profile.sales.kpi.list</field>
-        <field name="model">employee.profile.sales.kpi</field>
-        <field name="arch" type="xml">
-            <list string="KPI Nhân Viên" create="false" default_order="year desc, month desc, total_value desc">
-
-                <field name="employee_id" string="Nhân viên"/>
-
-                <!-- Thời gian -->
-                <field name="month" string="Tháng"/>
-                <field name="quarter" string="Quý"/>
-                <field name="year" string="Năm"/>
-
-                <!-- KPI -->
-                <field name="total_value" string="Doanh thu"
-                    widget="monetary"
-                    options="{'currency_field': 'currency_id'}"/>
-
-                <field name="total_deals" string="Số giao dịch"/>
-
-                <!-- Highlight Best Seller -->
-                <field name="is_best_seller_by_value" readonly="1"/>
-                <field name="is_best_seller_by_quantity" readonly="1"/>
-
-            </list>
-        </field>
-    </record>
 
 </odoo>
