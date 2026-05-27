@@ -1,5 +1,5 @@
 import { render } from "@web/owl2/utils";
-import { Component, xml } from "@odoo/owl";
+import { Component, types as t, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useRegistry } from "@web/core/registry_hook";
 import { ErrorHandler } from "@web/core/utils/components";
@@ -7,10 +7,12 @@ import { localization } from "@web/core/l10n/localization";
 
 const mainComponents = registry.category("main_components");
 
-mainComponents.addValidation({
-    Component: { validate: (c) => c.prototype instanceof Component },
-    props: { type: Object, optional: true }
-});
+mainComponents.addValidation(
+    t.object({
+        Component: t.component(),
+        "props?": t.object(),
+    })
+);
 
 export class MainComponentsContainer extends Component {
     static components = { ErrorHandler };
