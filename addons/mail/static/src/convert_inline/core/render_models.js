@@ -372,12 +372,8 @@ export class SpacingNode {
     }
 
     isRelevant() {
-        const result = [...this.layout.getRefNames()].some(
+        return [...this.layout.getRefNames()].some(
             (ref) => Object.entries(this.layout.renderAttributes(ref)).length > 0
         );
-        if (result) {
-            console.log("coucou");
-        }
-        return result;
     }
 }
