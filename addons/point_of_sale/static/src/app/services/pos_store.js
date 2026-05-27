@@ -50,6 +50,7 @@ import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
 import { Domain } from "@web/core/domain";
+import { SIZES } from "@web/core/ui/ui_service";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -3056,6 +3057,10 @@ export class PosStore extends WithLazyGetterTrap {
             );
         }
         return isSyncing;
+    }
+
+    get isSmallProductScreen() {
+        return this.ui.size < SIZES.MD;
     }
 }
 
