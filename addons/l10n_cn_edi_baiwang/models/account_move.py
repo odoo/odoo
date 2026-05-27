@@ -130,7 +130,7 @@ class AccountMove(models.Model):
         except UserError as e:
             # Avoid marking as failed for connectivity/precondition errors; user can retry.
             return str(e)
-        except Exception as e:
+        except (TypeError, ValueError) as e:
             error_msg = str(e)
             self.write({
                 'l10n_cn_baiwang_state': 'failed',
@@ -280,7 +280,7 @@ class AccountMove(models.Model):
         if not original_move or not original_move.l10n_cn_baiwang_invoice_no:
             raise UserError(self.env._(
                 "Cannot find the original invoice number. Please link the original invoice "
-                "or ensure it was issued via Baiwang first."
+                "or ensure it was issued via Baiwang first.",
             ))
 
         # Create EDI document record to track this request
@@ -292,12 +292,12 @@ class AccountMove(models.Model):
         # Build red confirmation payload
         serial_no = self._l10n_cn_baiwang_generate_serial_no('RED')
         red_form_data = self._l10n_cn_baiwang_prepare_red_form_data(
-            original_move, serial_no
+            original_move, serial_no,
         )
 
         try:
             result = client.add_red_confirmation(red_form_data)
-        except Exception as e:
+        except UserError as e:
             edi_doc.write({'state': 'failed', 'error_message': str(e)})
             raise UserError(self.env._("Network error: %s", str(e)))
 
@@ -364,7 +364,7 @@ class AccountMove(models.Model):
         orig_type = original_move.l10n_cn_baiwang_invoice_type_code or '02'
         origin_invoice_type = '01' if orig_type in ('01', '004', '028') else '02'
 
-        red_form_data = {
+        return {
             'redConfirmSerialNo': serial_no,
             'entryIdentity': '01',  # 01=seller side
             'sellerTaxNo': self.company_id.vat,
@@ -400,7 +400,6 @@ class AccountMove(models.Model):
             'originInvoiceSetCode': '',
             'ext': {},
         }
-        return red_form_data
 
     def _l10n_cn_baiwang_prepare_red_form_lines(self, original_move) -> list:
         """Build red form detail lines (negative amounts) from credit note lines."""
@@ -432,16 +431,13 @@ class AccountMove(models.Model):
 
     # ─── Lifecycle Guards ───────────────────────────────────────────────
 
-    def unlink(self):
-        """Prevent deletion of moves with pending Red Forms."""
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_pending_red_forms(self):
+        """Prevent deletion while a red form request is pending."""
         for move in self:
-            pending_docs = move.l10n_cn_edi_document_ids.filtered(
-                lambda d: d.state == 'red_form_pending'
-            )
-            if pending_docs:
+            if move.l10n_cn_edi_document_ids.filtered(lambda d: d.state == 'red_form_pending'):
                 raise UserError(self.env._(
                     "You cannot delete this record because a Red Form Request is "
                     "currently pending on the Baiwang platform.\n\n"
-                    "Please revoke the Red Form first."
+                    "Please revoke the Red Form first.",
                 ))
-        return super().unlink()

@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
 
-
 RED_FORM_TYPES = [
     ('01', '01 Billing Error (开票有误)'),
     ('02', '02 Sales Return (销货退回)'),
@@ -37,7 +36,7 @@ class AccountMoveReversal(models.TransientModel):
         for wizard in self:
             if wizard.l10n_cn_baiwang_use_red_form_reason and wizard.l10n_cn_baiwang_red_form_type:
                 label = dict(RED_FORM_TYPES).get(wizard.l10n_cn_baiwang_red_form_type)
-                wizard.reason = label and label[3:] or False
+                wizard.reason = (label and label[3:]) or False
 
     def _prepare_default_reversal(self, move):
         values = super()._prepare_default_reversal(move)

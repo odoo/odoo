@@ -46,6 +46,3 @@ class AccountMoveSend(models.AbstractModel):
                     'error_title': self.env._("Error when issuing e-Fapiao via Baiwang:"),
                     'errors': [error],
                 }
-
-            if self._can_commit():
-                self.env.cr.commit()

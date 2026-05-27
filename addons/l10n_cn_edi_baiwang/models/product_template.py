@@ -38,12 +38,7 @@ class ProductTemplate(models.Model):
             'data': {'keyword': self.name},
         }
 
-        try:
-            response = client.call_api('baiwang.bizinfo.search', body, version='6.0')
-        except UserError:
-            raise
-        except Exception as e:
-            raise UserError(self.env._("API error: %s", str(e)))
+        response = client.call_api('baiwang.bizinfo.search', body, version='6.0')
 
         if response.get('success'):
             recommendations = response.get('response', [])
@@ -61,6 +56,5 @@ class ProductTemplate(models.Model):
                     },
                 }
             raise UserError(self.env._("Baiwang could not find any matching tax codes for this product name."))
-        else:
-            err = response.get('errorResponse', {})
-            raise UserError(self.env._("Baiwang API error: %s", err.get('message', 'Unknown')))
+        err = response.get('errorResponse', {})
+        raise UserError(self.env._("Baiwang API error: %s", err.get('message', 'Unknown')))

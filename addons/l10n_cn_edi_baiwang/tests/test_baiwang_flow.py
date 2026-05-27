@@ -1,10 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from unittest.mock import patch
 
-from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
-from odoo.addons.l10n_cn_edi_baiwang.models.baiwang_client import BaiwangClient
 from odoo.exceptions import UserError
 from odoo.tests import tagged
+
+from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
+from odoo.addons.l10n_cn_edi_baiwang.models.baiwang_client import BaiwangClient
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')

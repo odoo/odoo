@@ -2,6 +2,7 @@
 import logging
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 from .baiwang_client import BaiwangClient
 
@@ -51,11 +52,7 @@ class L10nCnEdiDocument(models.Model):
             docs_by_company[company] |= doc
 
         for company, docs in docs_by_company.items():
-            try:
-                client = BaiwangClient(company)
-            except Exception as e:
-                _logger.error("Baiwang EDI: Failed to init client for company %s: %s", company.name, e)
-                continue
+            client = BaiwangClient(company)
 
             for doc in docs:
                 try:
@@ -101,8 +98,5 @@ class L10nCnEdiDocument(models.Model):
                         error_msg = result.get('errorResponse', {}).get('message', 'Unknown Error')
                         _logger.warning("Baiwang EDI: Query failed for UUID %s: %s", doc.baiwang_uuid, error_msg)
 
-                except Exception as e:
+                except UserError as e:
                     _logger.error("Baiwang EDI: Error polling UUID %s: %s", doc.baiwang_uuid, e)
-
-        if not self.env.context.get('test_enable'):
-            self.env.cr.commit()

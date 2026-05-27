@@ -44,7 +44,7 @@ class BaiwangClient:
     def _network_error(self, exc: Exception) -> UserError:
         return UserError(
             "Cannot reach Baiwang API endpoint (%s). Please check DNS/network access from the Odoo server.\n\nTechnical details: %s"
-            % (self.endpoint, str(exc))
+            % (self.endpoint, str(exc)),
         )
 
     def ensure_connection(self, timeout: float = 3.0):
@@ -162,7 +162,7 @@ class BaiwangClient:
             raise UserError(
                 f"Baiwang authentication failed [{error_code}]: {error_msg}\n\n"
                 "Please verify your App Key, App Secret, Username, Password, Salt, "
-                "and Org Auth Code in Settings → Accounting → China Electronic Invoicing."
+                "and Org Auth Code in Settings → Accounting → China Electronic Invoicing.",
             )
 
         token_data = result.get('response', {})
@@ -175,13 +175,11 @@ class BaiwangClient:
             'l10n_cn_baiwang_refresh_token': refresh_token,
             'l10n_cn_baiwang_token_expiry': fields.Datetime.now() + timedelta(seconds=expires_in - 300),
         })
-        if not self.company.env.context.get('test_enable'):
-            self.company.env.cr.commit()
         return access_token
 
     # ─── Raw HTTP Call ──────────────────────────────────────────────────
 
-    def _raw_call(self, method: str, body: dict = None, version: str = '6.0', token: str = None):
+    def _raw_call(self, method: str, body: dict | None = None, version: str = '6.0', token: str | None = None):
         """
         Execute a raw API call to Baiwang.
 
@@ -236,7 +234,7 @@ class BaiwangClient:
 
     # ─── Public API ─────────────────────────────────────────────────────
 
-    def call_api(self, method: str, body: dict = None, version: str = '6.0'):
+    def call_api(self, method: str, body: dict | None = None, version: str = '6.0'):
         """
         Public method for all business API calls (auto-handles token).
 
@@ -254,8 +252,6 @@ class BaiwangClient:
                 'l10n_cn_baiwang_cached_token': False,
                 'l10n_cn_baiwang_token_expiry': False,
             })
-            if not self.company.env.context.get('test_enable'):
-                self.company.env.cr.commit()
             token = self._get_token()
             result = self._raw_call(method, body, version, token)
 
@@ -312,7 +308,7 @@ class BaiwangClient:
         }
         return self.call_api('baiwang.output.redinvoice.operate', body, version='7.0')
 
-    def query_red_form_list(self, filters: dict = None):
+    def query_red_form_list(self, filters: dict | None = None):
         """Query red confirmation form list (v7.0, flat body)."""
         body = {
             'taxNo': self.tax_no,
