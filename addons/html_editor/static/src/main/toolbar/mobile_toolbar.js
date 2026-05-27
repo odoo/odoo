@@ -1,5 +1,5 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, useListener } from "@odoo/owl";
 import { Toolbar } from "./toolbar";
 
 export class ToolbarMobile extends Component {
@@ -25,8 +25,8 @@ export class ToolbarMobile extends Component {
             // iframe origin or sandbox restriction
             this.targetWindow = window;
         }
-        useExternalListener(this.targetWindow.visualViewport, "resize", this.fixToolbarPosition);
-        useExternalListener(this.targetWindow.visualViewport, "scroll", this.fixToolbarPosition);
+        useListener(this.targetWindow.visualViewport, "resize", this.fixToolbarPosition.bind(this));
+        useListener(this.targetWindow.visualViewport, "scroll", this.fixToolbarPosition.bind(this));
 
         onMounted(() => this.fixToolbarPosition());
     }

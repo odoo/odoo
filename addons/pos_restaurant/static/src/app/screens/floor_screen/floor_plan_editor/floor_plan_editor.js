@@ -1,5 +1,5 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { onMounted, onWillUnmount } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onMounted, onWillUnmount, useListener } from "@odoo/owl";
 import { EditDecorProperties } from "./edit_decor/edit_decor";
 import { EditTableProperties } from "./edit_table/edit_table";
 import { EditFloorProperties } from "./edit_floor/edit_floor";
@@ -139,13 +139,13 @@ export class FloorPlanEditor extends FloorPlanBase {
         );
         this.state.actionMenuPosition = this.actionMenu.position;
 
-        useExternalListener(document, "mousemove", this.handleMove);
-        useExternalListener(document, "touchmove", this.handleMove, { passive: false });
-        useExternalListener(document, "mouseup", this.handleEnd);
-        useExternalListener(document, "touchend", this.handleEnd, { passive: false });
-        useExternalListener(document, "keydown", this.handleKeyDown);
-        useExternalListener(window, "resize", useDebounced(this.handleWindowResize, 100));
-        useExternalListener(window, "beforeunload", this.handleBeforeUnload);
+        useListener(document, "mousemove", this.handleMove.bind(this));
+        useListener(document, "touchmove", this.handleMove.bind(this), { passive: false });
+        useListener(document, "mouseup", this.handleEnd.bind(this));
+        useListener(document, "touchend", this.handleEnd.bind(this), { passive: false });
+        useListener(document, "keydown", this.handleKeyDown.bind(this));
+        useListener(window, "resize", useDebounced(this.handleWindowResize, 100));
+        useListener(window, "beforeunload", this.handleBeforeUnload.bind(this));
 
         onWillUnmount(() => {
             this.operation?.stop();

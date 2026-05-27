@@ -1,6 +1,7 @@
-import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Dropzone } from "@web/core/dropzone/dropzone";
 import { useService } from "@web/core/utils/hooks";
+import { useListener } from "@odoo/owl";
 
 /**
  * @param {Ref} targetRef - Element on which to place the dropzone.
@@ -28,16 +29,16 @@ export function useCustomDropzone(
     let hasTarget = false;
     let removeDropzone = false;
 
-    useExternalListener(document, "dragenter", onDragEnter, { capture: true });
-    useExternalListener(document, "dragleave", onDragLeave, { capture: true });
+    useListener(document, "dragenter", onDragEnter, { capture: true });
+    useListener(document, "dragleave", onDragLeave, { capture: true });
     // Prevents the browser to open or download the file when it is dropped
     // outside of the dropzone.
-    useExternalListener(window, "dragover", (ev) => {
+    useListener(window, "dragover", (ev) => {
         if (ev.dataTransfer && ev.dataTransfer.types.includes("Files")) {
             ev.preventDefault();
         }
     });
-    useExternalListener(
+    useListener(
         window,
         "drop",
         (ev) => {

@@ -1,5 +1,5 @@
-import { useComponent, useExternalListener, useLayoutEffect } from "@web/owl2/utils";
-import { onMounted } from "@odoo/owl";
+import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { onMounted, useListener } from "@odoo/owl";
 
 export const scrollSymbol = Symbol("scroll");
 
@@ -71,11 +71,11 @@ export function useSetupAction(params = {}) {
     } = params;
 
     if (beforeVisibilityChange) {
-        useExternalListener(document, "visibilitychange", beforeVisibilityChange);
+        useListener(document, "visibilitychange", beforeVisibilityChange);
     }
 
     if (beforeUnload) {
-        useExternalListener(window, "beforeunload", beforeUnload);
+        useListener(window, "beforeunload", beforeUnload);
     }
     if (__beforeLeave__ && beforeLeave) {
         useCallbackRecorder(__beforeLeave__, beforeLeave);

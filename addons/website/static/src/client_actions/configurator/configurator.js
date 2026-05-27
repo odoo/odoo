@@ -1,10 +1,4 @@
-import {
-    useEnv,
-    useExternalListener,
-    useLayoutEffect,
-    useRef,
-    useSubEnv,
-} from "@web/owl2/utils";
+import { useEnv, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 const sessionStorage = browser.sessionStorage;
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -21,7 +15,7 @@ import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { mixCssColors } from "@web/core/utils/colors";
 import { router } from "@web/core/browser/router";
-import { Component, onMounted, onWillStart, proxy, useEffect } from "@odoo/owl";
+import { Component, onMounted, onWillStart, proxy, useEffect, useListener } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { fuzzyLevenshteinLookup } from "@web/core/utils/search";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
@@ -954,7 +948,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
             this.scalePreviewIframes();
         });
 
-        useExternalListener(window, "resize", () => this.scalePreviewIframes());
+        useListener(window, "resize", () => this.scalePreviewIframes());
     }
 
     /**
@@ -1251,7 +1245,7 @@ export class Configurator extends Component {
         this.website = useService("website");
 
         // Using the back button must update the router state.
-        useExternalListener(window, "popstate", (ev) => {
+        useListener(window, "popstate", (ev) => {
             // FIXME: this doesn't work unless this component is already mounted so navigating through
             // history from a different client action will not work.
             if (ev.state && "configuratorStep" in ev.state) {

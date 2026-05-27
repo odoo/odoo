@@ -1,6 +1,6 @@
 import { useExternalListener, useRef } from "@web/owl2/utils";
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
-import { onWillStart, onWillUpdateProps, props, t } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps, props, t, useListener } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useOperation } from "../core/operation_plugin";
@@ -37,8 +37,8 @@ export class OptionsContainer extends BaseOptionComponent {
         useVisibilityObserver("content", useApplyVisibility("root"));
 
         this.rootRef = useRef("root");
-        useExternalListener(browser, "focusin", this.updateOverlayPreview);
-        useExternalListener(browser, "pointermove", this.updateOverlayPreview);
+        useListener(browser, "focusin", this.updateOverlayPreview.bind(this));
+        useListener(browser, "pointermove", this.updateOverlayPreview.bind(this));
         useExternalListener(this.document, "pointermove", this.updateOverlayPreview);
         this.showingOverlayPreview = false;
 

@@ -1,4 +1,4 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
@@ -10,7 +10,15 @@ import { debounce } from "@web/core/utils/timing";
 import { isMacOS, hasTouch } from "@web/core/browser/feature_detection";
 import { highlightText } from "@web/core/utils/html";
 
-import { Component, onWillStart, onWillDestroy, EventBus, markRaw, proxy } from "@odoo/owl";
+import {
+    Component,
+    onWillStart,
+    onWillDestroy,
+    EventBus,
+    markRaw,
+    proxy,
+    useListener,
+} from "@odoo/owl";
 
 const DEFAULT_PLACEHOLDER = _t("Search...");
 const DEFAULT_EMPTY_MESSAGE = _t("No result found");
@@ -119,7 +127,7 @@ export class CommandPalette extends Component {
             bypassEditableProtection: true,
             allowRepeat: true,
         });
-        useExternalListener(window, "mousedown", this.onWindowMouseDown);
+        useListener(window, "mousedown", this.onWindowMouseDown.bind(this));
 
         /**
          * @type {{ commands: CommandItem[],

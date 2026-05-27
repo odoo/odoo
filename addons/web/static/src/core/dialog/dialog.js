@@ -1,8 +1,8 @@
-import { useChildSubEnv, useExternalListener } from "@web/owl2/utils";
+import { useChildSubEnv } from "@web/owl2/utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
 import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
-import { Component, onWillDestroy, props, proxy, t } from "@odoo/owl";
+import { Component, onWillDestroy, props, proxy, t, useListener } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { makeDraggableHook } from "../utils/draggable_hook_builder_owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -98,7 +98,7 @@ export class Dialog extends Component {
                 },
             });
             const throttledResize = throttleForAnimation(this.onResize.bind(this));
-            useExternalListener(window, "resize", throttledResize);
+            useListener(window, "resize", throttledResize);
         }
         onWillDestroy(() => {
             if (this.env.isSmall) {

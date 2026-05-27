@@ -1,5 +1,5 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, proxy, useListener } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
 import { search } from "@api_doc/utils/doc_model_search";
 
@@ -37,13 +37,13 @@ export class SearchModal extends Component {
             this.onScroll(this.scrollRef.el);
         }, 300);
 
-        useExternalListener(window, "keydown", (event) => {
+        useListener(window, "keydown", (event) => {
             if (event.key === "Escape") {
                 this.props.close();
             }
         });
 
-        useExternalListener(window, "click", (event) => {
+        useListener(window, "click", (event) => {
             if (!this.modalRef.el.contains(event.target)) {
                 this.props.close();
             }

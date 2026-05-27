@@ -1,5 +1,5 @@
-import { onWillRender, useExternalListener, useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { onWillRender, useRef } from "@web/owl2/utils";
+import { Component, proxy, useListener } from "@odoo/owl";
 import { localeCompare } from "@web/core/l10n/utils";
 
 export const TABLE_TYPES = {
@@ -34,7 +34,7 @@ export class DocTable extends Component {
             this.items = this.computeItems();
         });
 
-        useExternalListener(window, "click", (event) => {
+        useListener(window, "click", (event) => {
             if (
                 this.subTableRef.el &&
                 this.subTableRef.el !== event.target &&
@@ -44,7 +44,7 @@ export class DocTable extends Component {
             }
         });
 
-        useExternalListener(window, "scroll", () => (this.state.subTable = null));
+        useListener(window, "scroll", () => (this.state.subTable = null));
     }
 
     showDynamicTooltip(event, content) {

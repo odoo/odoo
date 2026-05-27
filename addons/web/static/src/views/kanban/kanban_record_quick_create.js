@@ -1,10 +1,10 @@
-import { useExternalListener, useRef, useSubEnv } from "@web/owl2/utils";
+import { useRef, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { parseXML } from "@web/core/utils/xml";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 
-import { Component, EventBus, onMounted, onWillStart, proxy } from "@odoo/owl";
+import { Component, EventBus, onMounted, onWillStart, proxy, useListener } from "@odoo/owl";
 import { RPCError } from "@web/core/network/rpc";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { useSetupAction } from "@web/search/action_hook";
@@ -112,12 +112,12 @@ export class KanbanQuickCreateController extends Component {
             this.uiActiveElement = this.uiService.activeElement;
         });
         // Close on outside click
-        useExternalListener(window, "mousedown", (/** @type {MouseEvent} */ ev) => {
+        useListener(window, "mousedown", (/** @type {MouseEvent} */ ev) => {
             // This target is kept in order to impeach close on outside click behavior if the click
             // has been initiated from the quickcreate root element (mouse selection in an input...)
             this.mousedownTarget = ev.target;
         });
-        useExternalListener(
+        useListener(
             window,
             "click",
             async (/** @type {MouseEvent} */ ev) => {

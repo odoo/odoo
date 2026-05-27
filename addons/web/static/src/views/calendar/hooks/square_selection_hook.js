@@ -1,8 +1,9 @@
-import { useComponent, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { shallowEqual } from "@web/core/utils/objects";
 import { closest } from "@web/core/utils/ui";
 import { useCallbackRecorder } from "@web/search/action_hook";
+import { useListener } from "@odoo/owl";
 
 const CELL_SELECTOR = `.fc-day:not(.fc-col-header-cell)`;
 const ROW_SELECTOR = `tr[role="row"]`;
@@ -235,6 +236,6 @@ export function useSquareSelection() {
         }
     }
 
-    useExternalListener(window, "keydown", onWindowKeyDown);
-    useExternalListener(window, "keyup", onWindowKeyUp);
+    useListener(window, "keydown", onWindowKeyDown);
+    useListener(window, "keyup", onWindowKeyUp);
 }

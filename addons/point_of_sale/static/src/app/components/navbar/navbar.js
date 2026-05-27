@@ -1,4 +1,3 @@
-import { useExternalListener } from "@web/owl2/utils";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { isDisplayStandalone } from "@web/core/browser/feature_detection";
@@ -6,7 +5,7 @@ import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
 import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, proxy, useListener } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { barcodeService } from "@barcodes/barcode_service";
@@ -46,7 +45,7 @@ export class Navbar extends Component {
         onMounted(async () => {
             this.hasProductCreationAccess = await this.pos.allowProductCreation();
         });
-        useExternalListener(document, "keydown", this.handleKeydown.bind(this));
+        useListener(document, "keydown", this.handleKeydown.bind(this));
         this.openPresetTiming = useAsyncLockedMethod(this.openPresetTiming);
     }
 

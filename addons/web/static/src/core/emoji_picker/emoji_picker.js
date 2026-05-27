@@ -1,10 +1,5 @@
 import { markEventHandled } from "@web/core/utils/misc";
-import {
-    useComponent,
-    useExternalListener,
-    useLayoutEffect,
-    useRef,
-} from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 
 import {
     App,
@@ -15,6 +10,7 @@ import {
     onWillStart,
     onWillUnmount,
     proxy,
+    useListener,
     xml,
 } from "@odoo/owl";
 
@@ -641,7 +637,7 @@ class PickerMobileInDialog extends PickerMobile {
     setup() {
         super.setup();
         this.root = useRef("root");
-        useExternalListener(
+        useListener(
             window,
             "click",
             (ev) => {

@@ -1,6 +1,6 @@
-import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { FloorPlanBase } from "@pos_restaurant/app/screens/floor_screen/floor_plan_base";
-import { markRaw, onWillUnmount } from "@odoo/owl";
+import { markRaw, onWillUnmount, useListener } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { setElementTransform } from "@pos_restaurant/app/services/floor_plan/utils/utils";
@@ -20,7 +20,7 @@ export class FloorPlan extends FloorPlanBase {
         this.pos = usePos();
         this.alert = useService("alert");
         this.ui = useService("ui");
-        useExternalListener(window, "resize", useDebounced(this.handleWindowResize, 100));
+        useListener(window, "resize", useDebounced(this.handleWindowResize, 100));
         this.scrollFloorId = null;
         useLayoutEffect(
             (selectedFloor, isKanban) => {

@@ -1,5 +1,5 @@
-import { proxy } from "@odoo/owl";
-import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { proxy, useListener } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
 
 // Resolve the element backing a ref regardless of its kind, preserving every legacy form and only
 // ADDING the Owl 3 signal case:
@@ -54,7 +54,7 @@ export function useDropdownAutoVisibility(overlayState, popoverRef) {
 }
 
 export function useToolbarDropdownFocus(dropdown, buttonRef) {
-    useExternalListener(
+    useListener(
         document,
         "keydown",
         (ev) => {
