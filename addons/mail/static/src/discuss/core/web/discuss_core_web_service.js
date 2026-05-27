@@ -34,12 +34,6 @@ export class DiscussCoreWeb {
                 chat.openChatWindow({ focus: false });
             }
         });
-        this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
-            if (message.channel_id) {
-                // initChannelsUnreadCounter becomes unreliable
-                this.store.channels.fetch();
-            }
-        });
     }
 }
 

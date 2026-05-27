@@ -299,7 +299,6 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'im_livechat.embed_assets_unit_tests_setup': [
             ('include', 'web.assets_unit_tests_setup'),
-            ('remove', 'mail/static/src/discuss/core/web/discuss_core_common_service_patch.js'),
             'web/static/tests/web_test_helpers.js',
             'bus/static/tests/bus_test_helpers.js',
             'mail/static/tests/mail_test_helpers.js',
