@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.ActionpadWidget">
-        <div class="actionpad d-flex flex-column" t-att-class="{'gap-2': this.showFastPaymentMethods || this.ui.isSmall}">
-            <div t-if="this.ui.isSmall" class="d-flex gap-2">
+        <div class="actionpad d-flex flex-column" t-att-class="{'gap-2': this.showFastPaymentMethods || this.pos.isSmallProductScreen}">
+            <div t-if="this.pos.isSmallProductScreen" class="d-flex gap-2">
                 <BackButton t-if="!this.props.showActionButton and this.pos.showBackButton()" onClick="() => this.pos.onClickBackButton()"/>
                 <t t-if="this.props.onClickMore">
                     <SelectPartnerButton partner="this.partner"/>

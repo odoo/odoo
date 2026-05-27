@@ -24,7 +24,7 @@
                     t-if="!this.currentOrder.isDirectSale and categoryChangesData.length"
                     t-att-disabled="this.doSubmitOrder.status === 'loading'"
                 >
-                    <div t-if="!(this.ui.isSmall or categoryChangesData.length > 2) or (!categoryChangesData.length and this.ui.isSmall)" class="text-truncate text-start">Send</div>
+                    <div t-if="!(this.pos.isSmallProductScreen or categoryChangesData.length > 2) or (!categoryChangesData.length and this.pos.isSmallProductScreen)" class="text-truncate text-start">Send</div>
                     <div t-attf-class="{{ !(categoryChangesData.length > 2) ? 'd-flex flex-column align-items-end gap-1' : 'row row-cols-2 g-1 gx-2' }} {{ categoryChangesData &gt; 4 ? 'mt-n3' : ''}}">
                         <t t-if="categoryChangesData.length">
                             <t t-foreach="categoryChangesData" t-as="categoryCountLine"  t-key="categoryCountLine_index">
