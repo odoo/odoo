@@ -48,9 +48,14 @@ export class FilterContentPlugin extends Plugin {
     };
 
     setup() {
-        this.bodyTextStyleRules = new Rules();
+        this.textStyleRules = new Rules();
         this.bodyGlobalStyleRules = new Rules();
-        this.provideBodyStyleRules();
+        const textRules = this.textStyleRules.forPlugin(FilterContentPlugin.id);
+        textRules.allow("font-size");
+        textRules.allow("font-weight");
+        textRules.allow("line-height");
+        const globalRules = this.bodyGlobalStyleRules.forPlugin(FilterContentPlugin.id);
+        globalRules.allow("direction");
     }
 
     analyzeElementLayout({ analysis }, { referenceNode, parentEmailNode }) {
@@ -89,15 +94,6 @@ export class FilterContentPlugin extends Plugin {
         }
     }
 
-    provideBodyStyleRules() {
-        const textRules = this.bodyTextStyleRules.forPlugin(FilterContentPlugin.id);
-        textRules.allow("font-size");
-        textRules.allow("font-weight");
-        textRules.allow("line-height");
-        const globalRules = this.bodyGlobalStyleRules.forPlugin(FilterContentPlugin.id);
-        globalRules.allow("direction");
-    }
-
     /**
      * Return a copy of the body styleInfo filtered with its own rules for
      * text ancestors (eg presentation table td)
@@ -106,7 +102,7 @@ export class FilterContentPlugin extends Plugin {
         return this.filterStyleInfo(
             this.getRawStyleInfo(this.config.referenceDocument.body),
             this.config.referenceDocument.body,
-            this.bodyTextStyleRules
+            this.textStyleRules
         );
     }
 

@@ -48,43 +48,57 @@ export class SpacingPlugin extends Plugin {
         const marginNode = new SpacingNode();
         const marginLayout = marginNode.layout;
         const styleInfo = facts.desktopSpacingStyleInfo;
+        let isRelevant = false;
+        const setAttributes = (options) => {
+            marginLayout.setAttributes(options);
+            isRelevant = true;
+        };
         if (
             styleInfo.getPropertyValue("margin-left") === "auto" &&
             styleInfo.getPropertyValue("margin-right") === "auto"
         ) {
-            marginLayout.setAttributes({ attributes: { align: "center" } });
-            marginLayout.setAttributes({ attributes: { align: "center" } }, "cell");
+            setAttributes({ attributes: { align: "center" } });
+            setAttributes({ attributes: { align: "center" } }, "cell");
         } else if (styleInfo.getPropertyValue("margin-left") === "auto") {
             // TODO EGGMAIL: consider RTL
-            marginLayout.setAttributes({ attributes: { align: "right" } });
-            marginLayout.setAttributes({ attributes: { align: "right" } }, "cell");
+            setAttributes({ attributes: { align: "right" } });
+            setAttributes({ attributes: { align: "right" } }, "cell");
         } else if (styleInfo.getPropertyValue("margin-right") === "auto") {
             // TODO EGGMAIL: consider RTL
-            marginLayout.setAttributes({ attributes: { align: "left" } });
-            marginLayout.setAttributes({ attributes: { align: "left" } }, "cell");
+            setAttributes({ attributes: { align: "left" } });
+            setAttributes({ attributes: { align: "left" } }, "cell");
         }
         for (const margin of MARGINS) {
             const value = styleInfo.getPropertyValue(margin);
             const { number, unit } = parseCssValue(value);
             if (number > 0 && unit === "px") {
-                marginLayout.setAttributes({ style: { [margin]: value } }, "cell");
+                setAttributes({ style: { [margin]: value } }, "cell");
             }
         }
-        return marginNode;
+        if (isRelevant) {
+            return marginNode;
+        }
     }
 
     buildPaddingNode(facts) {
         const paddingNode = new SpacingNode();
         const paddingLayout = paddingNode.layout;
         const styleInfo = facts.desktopSpacingStyleInfo;
+        let isRelevant = false;
+        const setAttributes = (options) => {
+            paddingLayout.setAttributes(options);
+            isRelevant = true;
+        };
         for (const padding of PADDINGS) {
             const value = styleInfo.getPropertyValue(padding);
             const { number, unit } = parseCssValue(value);
             if (number > 0 && unit === "px") {
-                paddingLayout.setAttributes({ style: { [padding]: value } }, "cell");
+                setAttributes({ style: { [padding]: value } }, "cell");
             }
         }
-        return paddingNode;
+        if (isRelevant) {
+            return paddingNode;
+        }
     }
 
     applyDefaultSpacing(layout, { emailNode }) {
@@ -96,11 +110,11 @@ export class SpacingPlugin extends Plugin {
             return;
         }
         const marginNode = this.buildMarginNode(emailNode.analysis.facts);
-        if (marginNode.isRelevant()) {
+        if (marginNode) {
             emailNode.marginNode = marginNode;
         }
         const paddingNode = this.buildPaddingNode(emailNode.analysis.facts);
-        if (paddingNode.isRelevant()) {
+        if (paddingNode) {
             emailNode.paddingNode = paddingNode;
         }
     }
