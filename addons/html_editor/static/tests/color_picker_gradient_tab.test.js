@@ -10,11 +10,7 @@ test("custom gradient must be defined", async () => {
                 selectedColor: "",
                 defaultTab: "gradient",
             },
-            getUsedCustomColors: () => [],
             applyColor() {},
-            applyColorPreview() {},
-            applyColorResetPreview() {},
-            colorPrefix: "",
             enabledTabs: ["gradient"],
         },
     });
