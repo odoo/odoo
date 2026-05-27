@@ -196,33 +196,67 @@ class HrEmployee(models.Model):
 
     def _compute_leave_status(self):
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
+        now = fields.Datetime.now()
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', 'in', self.ids),
-            ('date_from', '<=', fields.Datetime.now()),
-            ('date_to', '>=', fields.Datetime.now()),
+            ('date_from', '<=', now),
+            ('date_to', '>=', now),
             ('state', '=', 'validate'),
         ], order='date_to desc')
 
-        employee_holidays = holidays.grouped('employee_id')
-        employee_back_on = holidays.employee_id._get_first_working_interval_batch({
-            employee.id: holiday[0].date_to
-            for employee, holiday in employee_holidays.items()
-        })
+        holidays_by_employee_id = holidays.grouped(lambda leave: leave.employee_id.id)
+        leave_end_by_employee_id = {
+            employee_id: emp_holidays[0].date_to
+            for employee_id, emp_holidays in holidays_by_employee_id.items()
+        }
 
-        for employee, emp_holidays in employee_holidays.items():
-            latest_emp_holiday = emp_holidays[0]
-            employee.leave_date_from = min(emp_holidays.mapped('date_from')).date()
-            employee.leave_date_to = employee_back_on.get(employee.id, latest_emp_holiday.date_to).date()
-            employee.current_leave_state = latest_emp_holiday.state
-            employee.is_absent = any(e_h.work_entry_type_id.count_as == 'absence' for e_h in emp_holidays)
+        employees_not_on_leave = self - holidays.employee_id
+        if employees_not_on_leave:
+            # sudo: resource.calendar.leaves - accessing public holidays is allowed for all users
+            leave_end_by_company_and_calendar = {
+                (company.id, calendar.id): date_to
+                for company, calendar, date_to in self.env['resource.calendar.leaves'].sudo()._read_group(
+                    [
+                        ('resource_id', '=', False),
+                        ('count_as', '=', 'absence'),
+                        ('company_id', 'in', employees_not_on_leave.company_id.ids),
+                        ('date_from', '<=', now),
+                        ('date_to', '>=', now),
+                    ],
+                    ['company_id', 'calendar_id'],
+                    ['date_to:max'],
+                )
+            }
+            if leave_end_by_company_and_calendar:
+                for employee in employees_not_on_leave:
+                    calendar = employee.resource_calendar_id or employee.company_id.resource_calendar_id
+                    leave_ends = [
+                        leave_end_by_company_and_calendar[key]
+                        for key in {(employee.company_id.id, False), (employee.company_id.id, calendar.id)}
+                        if key in leave_end_by_company_and_calendar
+                    ]
+                    if leave_ends:
+                        leave_end_by_employee_id[employee.id] = max(leave_ends)
 
-        no_data = self - holidays.employee_id
-        no_data.update({
+        employees_not_on_leave.update({
             'leave_date_from': False,
-            'leave_date_to': False,
             'current_leave_state': False,
             'is_absent': False,
         })
+
+        employees_with_leave_end = self.browse(leave_end_by_employee_id)
+        (employees_not_on_leave - employees_with_leave_end).leave_date_to = False
+
+        back_on_by_employee_id = employees_with_leave_end._get_first_working_interval_batch(leave_end_by_employee_id)
+        for employee in employees_with_leave_end:
+            back_on = back_on_by_employee_id.get(employee.id, leave_end_by_employee_id[employee.id])
+            employee.leave_date_to = back_on.date()
+            emp_holidays = holidays_by_employee_id.get(employee.id)
+            if not emp_holidays:  # the employee is off because of a public holiday
+                continue
+            employee.leave_date_from = min(emp_holidays.mapped('date_from')).date()
+            employee.current_leave_state = emp_holidays[0].state
+            employee.is_absent = any(e_h.work_entry_type_id.count_as == 'absence' for e_h in emp_holidays)
 
     @api.depends('parent_id')
     def _compute_leave_manager(self):
