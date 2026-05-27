@@ -559,7 +559,6 @@ test("record list sort should be manually observable", async () => {
         { id: 2, body: "b", thread },
     ]);
     function sortMessages() {
-        // minimal access through observed variables to reduce unexpected observing
         thread.messages.sort((m1, m2) => {
             if (m1.body < m2.body) {
                 return -1;

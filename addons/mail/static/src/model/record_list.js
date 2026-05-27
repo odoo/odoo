@@ -1,6 +1,6 @@
-import { reactive } from "@web/owl2/utils";
-import { markRaw, toRaw } from "@odoo/owl";
 import { isRecord } from "./misc";
+
+import { markRaw, proxy, toRaw } from "@odoo/owl";
 
 /** @typedef {import("./record").Record} Record */
 
@@ -378,7 +378,7 @@ export class RecordList extends Array {
             },
         });
         recordList._proxyInternal = recordListProxyInternal;
-        recordList._proxy = reactive(recordListProxyInternal);
+        recordList._proxy = proxy(recordListProxyInternal);
         return recordList;
     }
     /** @param {R[]} records */

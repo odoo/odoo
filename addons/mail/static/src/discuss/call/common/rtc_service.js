@@ -1,4 +1,3 @@
-import { reactive } from "@web/owl2/utils";
 import { fields, Record } from "@mail/model/export";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
@@ -8,7 +7,7 @@ import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permi
 import { rpc } from "@web/core/network/rpc";
 import { assignDefined, closeStream } from "@mail/utils/common/misc";
 
-import { toRaw } from "@odoo/owl";
+import { proxy, toRaw } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -317,7 +316,7 @@ export class Rtc extends Record {
     hadFullscreen = false;
     /** @type {RtcLog} */
     logs = {};
-    notifications = reactive(new Map());
+    notifications = proxy(new Map());
     /** @type {Map<string, number>} timeoutId by notificationId for call notifications */
     timeouts = new Map();
     /** @type {Map<number, number>} timeoutId by sessionId for download pausing delay */

@@ -1,5 +1,4 @@
-import { reactive } from "@web/owl2/utils";
-import { markup } from "@odoo/owl";
+import { markup, proxy } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 
@@ -130,7 +129,7 @@ export const discussCoreCommon = {
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {
-        const discussCoreCommon = reactive(new DiscussCoreCommon(env, services));
+        const discussCoreCommon = proxy(new DiscussCoreCommon(env, services));
         discussCoreCommon.setup(env, services);
         return discussCoreCommon;
     },

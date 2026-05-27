@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
@@ -9,7 +9,7 @@ export const composerService = {
      * Enable Html composer with: odoo.__WOWL_DEBUG__.root.env.services["mail.composer"].setHtmlComposer()
      */
     start(env) {
-        const state = reactive({
+        const state = proxy({
             htmlEnabled: JSON.parse(browser.localStorage.getItem("mail.html_composer.enabled")),
             setHtmlComposer() {
                 if (state.htmlEnabled) {

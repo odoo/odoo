@@ -1,7 +1,7 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
+
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-
 import { registry } from "@web/core/registry";
 
 export class DiscussCorePublicWeb {
@@ -74,7 +74,7 @@ export const discussCorePublicWeb = {
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {
-        return reactive(new DiscussCorePublicWeb(env, services));
+        return proxy(new DiscussCorePublicWeb(env, services));
     },
 };
 

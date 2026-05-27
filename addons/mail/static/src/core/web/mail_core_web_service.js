@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 
@@ -116,7 +116,7 @@ export const mailCoreWeb = {
      * @param {import("services").ServiceFactories} services
      */
     start(env, services) {
-        const mailCoreWeb = reactive(new MailCoreWeb(env, services));
+        const mailCoreWeb = proxy(new MailCoreWeb(env, services));
         mailCoreWeb.setup();
         return mailCoreWeb;
     },

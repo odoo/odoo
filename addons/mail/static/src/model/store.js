@@ -1,8 +1,8 @@
-import { reactive } from "@web/owl2/utils";
 import { PgSnapshot } from "@mail/model/field_version";
 import { Record } from "./record";
 import { STORE_SYM, modelRegistry } from "./misc";
-import { immediateEffect, toRaw, untrack } from "@odoo/owl";
+
+import { immediateEffect, proxy, toRaw, untrack } from "@odoo/owl";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
 
@@ -284,10 +284,10 @@ export class Store extends Record {
      * @returns {function} function to call to stop observing changes
      */
     _onChange(record, key, callback) {
-        let proxy;
+        let recordProxy;
         function _observe() {
-            // access proxy[key] only once to avoid triggering reactive get() many times
-            const val = proxy[key];
+            // access recordProxy[key] only once to avoid triggering reactive get() many times
+            const val = recordProxy[key];
             if (typeof val === "object" && val !== null) {
                 void Object.keys(val);
             }
@@ -308,7 +308,7 @@ export class Store extends Record {
             };
         }
         let running = false;
-        proxy = reactive(record);
+        recordProxy = proxy(record);
         const disposeFn = untrack(() =>
             immediateEffect(() => {
                 if (!running) {
