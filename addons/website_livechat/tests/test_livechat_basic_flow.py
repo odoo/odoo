@@ -283,7 +283,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "id": self.operator.id,
                         "im_status": "online",
                         "im_status_access_token": self.operator._get_im_status_access_token(),
-                        "employee_ids": [],
                         "partner_id": self.operator.partner_id.id,
                     },
                 ),
