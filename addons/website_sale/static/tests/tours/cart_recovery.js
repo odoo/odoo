@@ -38,37 +38,32 @@ registry.category("web_tour.tours").add("website_sale.cart_recovery", {
             run: "edit admin",
         },
         {
-            content: "edit hidden redirect input to go to sales orders list",
+            content: "edit hidden redirect input",
             trigger: '.oe_login_form input[name="redirect"]:hidden',
             run() {
-                const url = "/web#action=sale.action_orders&view_type=list";
+                const orderId = browser.localStorage.getItem(orderIdKey);
+                const url = "/odoo/action-sale.action_orders/" + orderId;
                 this.anchor.value = url;
             },
         },
         {
-            content: "login as admin and go to sales orders list",
+            content: "login as admin and go to the SO (backend)",
             trigger: ".oe_login_form .oe_login_buttons button:contains(log in)",
             run: "click",
             expectUnloadPage: true,
         },
         {
-            content: "remove default Sales Orders filter",
-            trigger: 'button.o_facet_remove',
+            content: "click Send",
+            trigger: "span:text(Send)",
             run: "click",
         },
         {
-            content: "check the sales order checkbox",
-            trigger: 'td.o_list_record_selector input.form-check-input',
-            run: "click",
+            content: "Wait for the pdf genrator to appear",
+            trigger: ".preview_document_layout",
         },
         {
-            content: "click the actions button",
-            trigger: 'button.o-dropdown:contains("Actions")',
-            run: "click",
-        },
-        {
-            content: "click Send an Email",
-            trigger: "span:text(Send an email)",
+            content: "click on Continue in the pdf generator",
+            trigger: ".btn:contains(Continue)",
             run: "click",
         },
         {
@@ -89,11 +84,6 @@ registry.category("web_tour.tours").add("website_sale.cart_recovery", {
         {
             content: "click Send email",
             trigger: "button.o_mail_send",
-            run: "click",
-        },
-        {
-            content: "click on the record to open form view",
-            trigger: "tr.o_data_row td[name='name']",
             run: "click",
         },
         {
