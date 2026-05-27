@@ -2315,12 +2315,12 @@ test("composer state: attachments save and restore", async () => {
     await contains(".o-mail-AttachmentCard-info:text('text4.txt')");
 });
 
-test("sidebar: cannot leave channel with group_ids", async () => {
+test("sidebar: cannot leave channel with group auto-subscription", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([
         {
             name: "General",
-            group_ids: [Command.create({ name: "test" })],
+            auto_subscribe_group_ids: [Command.create({ name: "test" })],
         },
         {
             name: "Special",

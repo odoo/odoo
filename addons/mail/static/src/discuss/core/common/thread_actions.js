@@ -288,7 +288,7 @@ registerThreadAction("leave", {
         store.self_user &&
         channel?.self_member_id &&
         channel.allowedToLeaveChannelTypes.includes(channel.channel_type) &&
-        channel.group_ids.length === 0 &&
+        channel.auto_subscribe_group_ids.length === 0 &&
         !owner.isDiscussContent,
     icon: "fa fa-fw fa-sign-out",
     name: _t("Leave Channel"),

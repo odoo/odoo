@@ -112,7 +112,7 @@ class DiscussChannel(models.Model):
         index=True,
         help="Contains the date and time of the last interesting event that happened in this channel. This updates itself when new message posted.",
     )
-    group_ids = fields.Many2many(
+    auto_subscribe_group_ids = fields.Many2many(
         'res.groups', string='Auto Subscription',
         help="Members of those groups will automatically added as followers. "
              "Note that they will be able to manage their subscription manually "
@@ -186,10 +186,10 @@ class DiscussChannel(models.Model):
             if len(ch.channel_member_ids) > 2:
                 raise ValidationError(_("A channel of type 'chat' cannot have more than two users."))
 
-    @api.constrains('group_public_id', 'group_ids')
+    @api.constrains("auto_subscribe_group_ids", "group_public_id")
     def _constraint_group_id_channel(self):
         # sudo: discuss.channel - skipping ACL for constraint, more performant and no sensitive information is leaked
-        failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != 'channel' and (channel.group_public_id or channel.group_ids))
+        failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != 'channel' and (channel.auto_subscribe_group_ids or channel.group_public_id))
         if failing_channels:
             raise ValidationError(_("For %(channels)s, channel_type should be 'channel' to have the group-based authorization or group auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
 
@@ -547,19 +547,19 @@ class DiscussChannel(models.Model):
                         )
                     )
         result = super().write(vals)
-        if vals.get('group_ids'):
+        if vals.get("auto_subscribe_group_ids"):
             self._subscribe_users_automatically()
         return result
 
     def _sync_field_names(self, res):
         # keys are bus subchannel names, values are lists of field names to sync
         super()._sync_field_names(res)
+        res[None].many("auto_subscribe_group_ids", [], predicate=is_channel)
         res[None].attr("avatar_cache_key", predicate=is_channel_or_group)
         # sudo: discuss.category - guests can read categories of accessible channels
         res[None].one("discuss_category_id", "_store_category_fields", sudo=True)
         res[None].extend(["channel_type", "create_uid", "default_display_mode"])
         res[None].attr("description", predicate=is_channel_or_group)
-        res[None].many("group_ids", [], predicate=is_channel)
         res[None].one("group_public_id", ["full_name"], predicate=is_channel)
         res[None].attr("is_readonly", predicate=is_channel)
         res[None].extend(["last_interest_dt", "member_count", "name", "uuid"])
@@ -591,7 +591,7 @@ class DiscussChannel(models.Model):
         """ Return new members per channel ID """
         return dict(
             (channel.id,
-             ((channel.group_ids.all_user_ids.partner_id.filtered(lambda p: p.active) - channel.channel_partner_ids).ids))
+             ((channel.auto_subscribe_group_ids.all_user_ids.partner_id.filtered(lambda p: p.active) - channel.channel_partner_ids).ids))
                 for channel in self
             )
 
@@ -1296,6 +1296,8 @@ class DiscussChannel(models.Model):
             all_members,
             "_store_member_fields",
         )._build_result()
+        # sudo: we are reading only the ids (comodel is inaccessible)
+        res.many("auto_subscribe_group_ids", [], predicate=is_channel, sudo=True)
         res.attr("avatar_cache_key", predicate=is_channel_or_group)
         # sudo: discuss.category - guests can read categories of accessible channels
         res.one("discuss_category_id", "_store_category_fields", sudo=True)
@@ -1312,8 +1314,6 @@ class DiscussChannel(models.Model):
         res.attr("default_display_mode")
         res.attr("description", predicate=is_channel_or_group)
         res.one("from_message_id", "_store_message_fields", predicate=is_channel_or_group)
-        # sudo: we are reading only the ids (comodel is inaccessible)
-        res.many("group_ids", [], predicate=is_channel, sudo=True)
         res.one("group_public_id", ["full_name"], predicate=is_channel)
         res.many("invited_member_ids", "_store_avatar_card_fields", mode="ADD")
         res.attr("is_readonly", predicate=is_channel)
