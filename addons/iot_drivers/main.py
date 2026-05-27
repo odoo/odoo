@@ -25,7 +25,7 @@ unsupported_devices = {}
 
 
 class Manager(Thread):
-    ws_channel = ""
+    ws_client = None
 
     def __init__(self):
         super().__init__(daemon=True)
@@ -112,9 +112,12 @@ class Manager(Thread):
                     timeout=5,
                 )
                 response.raise_for_status()
-                # TODO: remove when v19 is deprecated, ws channel is provided by db
                 data = response.json()
-                self.ws_channel = data.get('result', '')
+                if not self.ws_client:
+                    # TODO: remove when v19 is deprecated, ws channel is provided by db
+                    ws_channel = data.get('result', '')
+                    self.ws_client = WebsocketClient(ws_channel, server_url)
+                    self.ws_client.start()
                 break  # Success, exit the retry loop
             except requests.exceptions.RequestException:
                 if attempt < max_retries:
@@ -159,11 +162,6 @@ class Manager(Thread):
         schedule.every().day.at("00:00").do(certificate.ensure_validity)
         schedule.every().day.at("00:00").do(helpers.reset_log_level)
         schedule.every().monday.at("00:00").do(upgrade.check_git_branch)
-
-        # Set up the websocket connection
-        ws_client = WebsocketClient(self.ws_channel)
-        if ws_client:
-            ws_client.start()
 
         # Check every 3 seconds if the list of connected devices has changed and send the updated
         # list to the connected DB.
