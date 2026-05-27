@@ -138,6 +138,26 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self._assert_export_invoice(self.standard_invoice, "standert_fa3_format.xml")
 
     @freeze_time('2026-01-23')
+    def test_p6_delivery_date_differs_from_invoice_date(self):
+        """
+        P_6 (delivery date) must be emitted when the delivery date differs from the
+        invoice issue date (invoice_date), regardless of the accounting date (date).
+        """
+        invoice = self._create_invoice(
+            partner_id=self.partner_pl,
+            invoice_date='2025-05-27',
+            date='2026-05-04',
+            delivery_date='2026-05-04',
+            post=True
+        )
+
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(
+            self._get_xml_value(xml, "//ns:Fa/ns:P_6"),
+            '2026-05-04',
+        )
+
+    @freeze_time('2026-01-23')
     def test_scenario_correction_standard(self):
         """
         Correction of a Standard Invoice (KOR).
