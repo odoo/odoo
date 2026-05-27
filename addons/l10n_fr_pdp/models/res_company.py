@@ -68,6 +68,18 @@ class ResCompany(models.Model):
         compute='_compute_l10n_fr_pdp_flow_10_start_date',
         groups='base.group_user',
     )
+    pdp_kyc_status = fields.Selection(
+        selection=[
+            ('processing', "Processing"),
+            ('success', "Success"),
+            ('fail', "Fail"),
+        ],
+        groups='base.group_user',
+    )
+    pdp_authentication_uuid = fields.Char(
+        string="Authentication IAP UUID",
+        groups='account.group_account_invoice',
+    )
 
     @api.depends('peppol_eas', 'peppol_endpoint')
     def _compute_pdp_identifier(self):
