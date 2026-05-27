@@ -7,12 +7,14 @@ from odoo.exceptions import ValidationError
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
 from odoo.addons.account.tools.partner_identifiers import ISO_IDENTIFIERS_METADATA
+from odoo.tools import single_email_re
 
 
 PEPPOL_ENDPOINT_INVALIDCHARS_RE = re.compile(r'[^a-zA-Z\d\-._~]')
 PEPPOL_ENDPOINT_INVALID_CHARS_RE_BY_EAS = {
     '0208': re.compile(r'[^0-9]'),
     '9925': re.compile(r'[^beBE0-9]'),
+    'EM': re.compile(r'[^a-zA-Z\d\-._@]'),
 }
 
 
@@ -318,7 +320,10 @@ class ResPartner(models.Model):
             return _("The Peppol endpoint is not valid. "
                      "It should contain exactly 10 digits (Company Registry number)."
                      "The expected format is: 1234567890")
-        if PEPPOL_ENDPOINT_INVALIDCHARS_RE.search(endpoint) or not 1 <= len(endpoint) <= 50:
+        if eas == 'EM' and not single_email_re.match(endpoint):
+            return _("The Peppol endpoint is not valid. A valid email is required")
+        invalid_chars_re = PEPPOL_ENDPOINT_INVALID_CHARS_RE_BY_EAS.get(eas, PEPPOL_ENDPOINT_INVALIDCHARS_RE)
+        if invalid_chars_re.search(endpoint) or not 1 <= len(endpoint) <= 50:
             return _("The Peppol endpoint (%s) is not valid. It should contain only letters and digit.", endpoint)
 
     @api.model
