@@ -238,7 +238,7 @@ $o-we-sidebar-content-field-toggle-control-bg: $o-we-fg-lighter !default;
         // Apply preset styles directly instead of using @extend to avoid
         // specificity issues. This emits the same CSS vars and properties
         // that .o_cc#{N} would provide, without the coupling.
-        @include o-cc-emit-styles($-related-color);
+        @include o-cc-extend($-related-color);
     } @else {
         $-color: o-color($-related-color);
         @if $-color {

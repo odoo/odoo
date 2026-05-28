@@ -26,17 +26,6 @@
 ///      .btn-outline-secondary are defined ONCE, bridging --o-cc-btn-* to
 ///      Bootstrap's own --btn-* variables, replacing the previous per-
 ///      combination @include button-variant / button-outline-variant calls.
-///
-/// Architecture note
-/// -----------------
-/// The split between --o-cc-* (Odoo layer) and --{prefix}* (Bootstrap layer)
-/// is intentional:
-///   • --o-cc-* variables are the design token contract: readable by JS,
-///     usable as fallbacks, stable across Bootstrap upgrades.
-///   • --{prefix}* overrides make every Bootstrap component adaptive without
-///     any extra CSS rules per component per combination.
-///
-
 
 // Top-level declarations required so o-cc-resolve-colors update existing variables
 $resolved-bg-color:                    null !default;
@@ -53,7 +42,7 @@ $resolved-btn-secondary-border-color:  null !default;
 $resolved-btn-secondary-outline-color: null !default;
 
 /// ════════════════════════════════════════════════════════════════════════════════════
-/// BASE COLOR RESOLUTION MIXIN (shared by o-cc-apply, o-cc-emit-styles, o-bg-color-cc)
+/// BASE COLOR RESOLUTION MIXIN (shared by o-cc-apply, o-cc-extend, o-bg-color-cc)
 /// ════════════════════════════════════════════════════════════════════════════════════
 ///
 /// Resolves all color combination colors for a given background and index/preset.
@@ -65,7 +54,7 @@ $resolved-btn-secondary-outline-color: null !default;
 /// @param $text-threshold         Contrast threshold for text color (default: 3.0)
 /// @param $headings-threshold     Contrast threshold for headings (default: 2.0)
 /// @param $link-threshold         Contrast threshold for links (default: 5.0)
-/// @param $btn-fill-threshold     Contrast threshold for button fill colors (default: 1.0)
+/// @param $btn-fill-threshold     Contrast threshold for button fill colors (default: 1.2)
 /// @param $btn-outline-threshold  Contrast threshold for button outline colors (default: 3.0)
 ///
 /// @return Map with keys: bg-color, text-color, headings-color, link-color,
@@ -78,8 +67,8 @@ $resolved-btn-secondary-outline-color: null !default;
     $use-user-palette: true,
     $text-threshold: 3.0,
     $headings-threshold: null,
-    $link-threshold: 5.0,
-    $btn-fill-threshold: 1.0,
+    $link-threshold: 2.0,
+    $btn-fill-threshold: 1.05,
     $btn-outline-threshold: 3.0
 ) {
     // Store in parent scope by prefixing with 'resolved-'
@@ -115,7 +104,7 @@ $resolved-btn-secondary-outline-color: null !default;
     $resolved-btn-primary-color: o-resolve-color-contrast(
             if($has-user-palette, o-color(map-get($o-user-color-palette, 'o-cc#{$index}-btn-primary')), null),
             o-preset-color-key('btn-primary', $index),
-            $bg-color, $btn-fill-threshold
+            $bg-color, $btn-fill-threshold, $color-contrast-dark, $color-contrast-light,
     ) !global;
     $resolved-btn-primary-border-color: if(
             $has-user-palette,
@@ -125,14 +114,14 @@ $resolved-btn-secondary-outline-color: null !default;
     $resolved-btn-primary-outline-color: o-resolve-color-contrast(
             if($has-user-palette, o-color(map-get($o-user-color-palette, 'o-cc#{$index}-btn-primary')), null),
             o-preset-color-key('btn-primary', $index),
-            $bg-color, $btn-outline-threshold
+            $bg-color, $btn-outline-threshold, $color-contrast-dark, $color-contrast-light,
     ) !global;
 
     // Button secondary
     $resolved-btn-secondary-color: o-resolve-color-contrast(
             if($has-user-palette, o-color(map-get($o-user-color-palette, 'o-cc#{$index}-btn-secondary')), null),
             o-preset-color-key('btn-secondary', $index),
-            $bg-color, $btn-fill-threshold
+            $bg-color, $btn-fill-threshold, $color-contrast-dark, $color-contrast-light,
     ) !global;
     $resolved-btn-secondary-border-color: if(
             $has-user-palette,
@@ -142,65 +131,10 @@ $resolved-btn-secondary-outline-color: null !default;
     $resolved-btn-secondary-outline-color: o-resolve-color-contrast(
             if($has-user-palette, o-color(map-get($o-user-color-palette, 'o-cc#{$index}-btn-secondary')), null),
             o-preset-color-key('btn-secondary', $index),
-            $bg-color, $btn-outline-threshold
+            $bg-color, $btn-outline-threshold, $color-contrast-dark, $color-contrast-light,
     ) !global;
 }
 
-
-/// ═════════════════════════════════════════════════════════════════════════════
-/// EMIT STYLES
-/// ═════════════════════════════════════════════════════════════════════════════
-///
-/// Emits the color combination CSS variables and styles for a given $index,
-/// scoped to the current selector context. Does not wrap in .o_cc{N} or :root.
-/// This lets apply color combination behavior to custom classes without using
-/// @extend.
-///
-@mixin o-cc-emit-styles($index) {
-    // Resolve background and heading-level overrides (h2–h6)
-    $-bg: map-get($colors, 'o-cc#{$index}-bg');
-    $-h2: map-get($colors, 'o-cc#{$index}-h2');
-    $-h3: map-get($colors, 'o-cc#{$index}-h3');
-    $-h4: map-get($colors, 'o-cc#{$index}-h4');
-    $-h5: map-get($colors, 'o-cc#{$index}-h5');
-    $-h6: map-get($colors, 'o-cc#{$index}-h6');
-    $-bg-color: o-color($-bg);
-
-    // Resolve all colors using shared logic
-    @include o-cc-resolve-colors(
-        $bg-color: $-bg-color,
-        $index: $index,
-        $use-user-palette: true,
-        $btn-fill-threshold: 1.0    // Lenient for .o_cc{N} preset classes
-    );
-
-    // ── Emit styles on current selector ────────────────────────────────────────
-    @include o-cc-variables(
-            $resolved-bg-color,
-            $resolved-text-color,
-            $resolved-headings-color,
-            $resolved-link-color,
-            $resolved-link-hover-color,
-            $resolved-btn-primary-color,
-            $resolved-btn-primary-border-color,
-            $resolved-btn-primary-outline-color,
-            $resolved-btn-secondary-color,
-            $resolved-btn-secondary-border-color,
-            $resolved-btn-secondary-outline-color,
-            $scope: '&',
-            $nested-scope: '.o_cc &'
-    );
-    background-color: var(--o-cc-bg);
-    color: var(--o-cc-text);
-    :where(.btn-close) { filter: var(--o-cc-btn-close-filter); }
-    // User's arbitrary heading-level overrides (h2–h6; h1 inherits
-    // from text/headings and is rarely pinned per-combination).
-    @if o-color($-h2) { --heading-color: #{o-color($-h2)}; }
-    @if o-color($-h3) { --heading-color: #{o-color($-h3)}; }
-    @if o-color($-h4) { --heading-color: #{o-color($-h4)}; }
-    @if o-color($-h5) { --heading-color: #{o-color($-h5)}; }
-    @if o-color($-h6) { --heading-color: #{o-color($-h6)}; }
-}
 
 /// =============================================================================
 /// CC APPLY
@@ -231,7 +165,6 @@ $resolved-btn-secondary-outline-color: null !default;
         $bg-color: $-bg-color,
         $index: $index,
         $use-user-palette: true,
-        $btn-fill-threshold: 1.0    // Lenient for .o_cc{N} preset classes
     );
 
     // ── :root — named CSS vars for builder JS / color pickers ─────────────
@@ -261,7 +194,7 @@ $resolved-btn-secondary-outline-color: null !default;
     // Those rules are not important so that they can be overridden through
     // bg and text utility classes.
     .o_cc#{$index} {
-        @include o-cc-emit-styles($index);
+        @include o-cc-extend($index);
     }
 }
 
@@ -473,8 +406,8 @@ $resolved-btn-secondary-outline-color: null !default;
         --o-cc-headings: #{$headings-color};
         --o-cc-link-color: #{$link-color};
         --o-cc-link-color-rgb: #{to-rgb($link-color)};
-        --o-cc-link-color-hover: #{$link-color-hover};
-        --o-cc-link-color-hover-rgb: #{to-rgb($link-color-hover)};
+        --o-cc-link-hover-color: #{$link-color-hover};
+        --o-cc-link-hover-color-rgb: #{to-rgb($link-color-hover)};
         --o-cc-border: #{$-border-color};
         --o-cc-hover-bg: #{$-hover-bg};
         --o-cc-muted: #{$-muted-text};
@@ -522,9 +455,9 @@ $resolved-btn-secondary-outline-color: null !default;
 
         // ── Links ────────────────────────────────────────────────────────────
         --link-color:           var(--o-cc-link-color);
-        --link-hover-color:     var(--o-cc-link-color-hover);
-        --link-color-rgb:       var(--o-cc-link-color-color-rgb);
-        --link-hover-color-rgb: var(--o-cc-link-color-hover-color-rgb);
+        --link-color-rgb:       var(--o-cc-link-color-rgb);
+        --link-hover-color:     var(--o-cc-link-hover-color);
+        --link-hover-color-rgb: var(--o-cc-link-hover-color-rgb);
     }
 
 
@@ -675,6 +608,62 @@ $resolved-btn-secondary-outline-color: null !default;
         --progress-bar-bg: #{$btn-primary-color};
     }
 }
+
+
+/// ═════════════════════════════════════════════════════════════════════════════
+/// EXTEND STYLES
+/// ═════════════════════════════════════════════════════════════════════════════
+///
+/// Emits the color combination CSS variables and styles for a given $index,
+/// scoped to the current selector context. Does not wrap in .o_cc{N} or :root.
+/// This lets apply color combination behavior to custom classes without using
+/// @extend.
+///
+@mixin o-cc-extend($index) {
+    // Resolve background and heading-level overrides (h2–h6)
+    $-bg: map-get($colors, 'o-cc#{$index}-bg');
+    $-h2: map-get($colors, 'o-cc#{$index}-h2');
+    $-h3: map-get($colors, 'o-cc#{$index}-h3');
+    $-h4: map-get($colors, 'o-cc#{$index}-h4');
+    $-h5: map-get($colors, 'o-cc#{$index}-h5');
+    $-h6: map-get($colors, 'o-cc#{$index}-h6');
+    $-bg-color: o-color($-bg);
+
+    // Resolve all colors using shared logic
+    @include o-cc-resolve-colors(
+            $bg-color: $-bg-color,
+            $index: $index,
+            $use-user-palette: true,
+    );
+
+    // ── Emit styles on current selector ────────────────────────────────────────
+    @include o-cc-variables(
+                    $resolved-bg-color,
+                    $resolved-text-color,
+                    $resolved-headings-color,
+                    $resolved-link-color,
+                    $resolved-link-hover-color,
+                    $resolved-btn-primary-color,
+                    $resolved-btn-primary-border-color,
+                    $resolved-btn-primary-outline-color,
+                    $resolved-btn-secondary-color,
+                    $resolved-btn-secondary-border-color,
+                    $resolved-btn-secondary-outline-color,
+            $scope: '&',
+            $nested-scope: '.o_cc &'
+    );
+    background-color: var(--o-cc-bg);
+    color: var(--o-cc-text);
+    :where(.btn-close) { filter: var(--o-cc-btn-close-filter); }
+    // User's arbitrary heading-level overrides (h2–h6; h1 inherits
+    // from text/headings and is rarely pinned per-combination).
+    @if o-color($-h2) { --heading-color: #{o-color($-h2)}; }
+    @if o-color($-h3) { --heading-color: #{o-color($-h3)}; }
+    @if o-color($-h4) { --heading-color: #{o-color($-h4)}; }
+    @if o-color($-h5) { --heading-color: #{o-color($-h5)}; }
+    @if o-color($-h6) { --heading-color: #{o-color($-h6)}; }
+}
+
 
 /// =============================================================================
 /// CC BG COLOR
