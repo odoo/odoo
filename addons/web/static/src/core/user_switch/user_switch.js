@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, Portal } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { getLastConnectedUsers, setLastConnectedUsers } from "@web/core/user";
 import { imageUrl } from "@web/core/utils/urls";
@@ -7,6 +7,7 @@ import { imageUrl } from "@web/core/utils/urls";
 export class UserSwitch extends Component {
     static template = "web.login_user_switch";
     static props = {};
+    static components = { Portal };
 
     setup() {
         const users = getLastConnectedUsers();
