@@ -34,7 +34,6 @@ class TestPeppolParticipant(TransactionCase):
         cls.env.company.write({
             'peppol_eas': '0208',
             'peppol_endpoint': '0239843188',
-            'account_peppol_phone_number': '+32483123456',
             'account_peppol_contact_email': 'yourcompany@test.example.com',
         })
 
@@ -170,7 +169,6 @@ class TestPeppolParticipant(TransactionCase):
 
         wizard.write({
             'contact_email': "turlututu@tsointsoin",
-            'phone_number': "+3236656565",
             'peppol_eas': '0208',
             'peppol_endpoint': '0239843188',
         })
@@ -188,7 +186,6 @@ class TestPeppolParticipant(TransactionCase):
             'peppol_eas': '0208',
             'peppol_endpoint': '0477472701',
             'account_peppol_contact_email': "turlututu@tsointsoin",
-            'account_peppol_phone_number': "+3236656565",
         }])
 
         settings = self.env['res.config.settings'].with_context(allowed_company_ids=branch.ids).create({})
@@ -235,7 +232,6 @@ class TestPeppolParticipant(TransactionCase):
             'use_parent_connection_selection': 'use_self',
             'peppol_eas': False,
             'peppol_endpoint': False,
-            'phone_number': False,
             'contact_email': False,
         }])
 
@@ -267,7 +263,6 @@ class TestPeppolParticipant(TransactionCase):
             'use_parent_connection_selection': 'use_parent',
             'peppol_eas': self.env.company.peppol_eas,
             'peppol_endpoint': self.env.company.peppol_endpoint,
-            'phone_number': self.env.company.account_peppol_phone_number,
             'contact_email': self.env.company.account_peppol_contact_email,
         }])
         with mock_can_connect(), mock_connect(peppol_state='sender', id_client='test_id_client_branch'):
@@ -307,7 +302,6 @@ class TestPeppolParticipant(TransactionCase):
             'use_parent_connection_selection': 'use_parent',
             'peppol_eas': self.env.company.peppol_eas,
             'peppol_endpoint': self.env.company.peppol_endpoint,
-            'phone_number': self.env.company.account_peppol_phone_number,
             'contact_email': self.env.company.account_peppol_contact_email,
         }])
 
@@ -391,7 +385,6 @@ class TestPeppolParticipant(TransactionCase):
             wizard = self.env['peppol.registration'].create({
                 'peppol_eas': '0088',
                 'peppol_endpoint': '88888888888',
-                'phone_number': '+32483123456',
                 'contact_email': 'yourcompany@test.example.com',
             })
             wizard.button_register_peppol_participant()

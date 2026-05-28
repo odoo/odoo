@@ -6,10 +6,12 @@ import requests
 from lxml import etree
 from stdnum import get_cc_module, ean
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import ValidationError
 from odoo.tools.urls import urljoin
 from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+from odoo.addons.account_peppol.tools.peppol_iap_connector import PeppolIAPConnector
 
 try:
     import phonenumbers
@@ -182,6 +184,31 @@ class ResCompany(models.Model):
         peppol_dict = PEPPOL_ENDPOINT_WARNINGS if warning else PEPPOL_ENDPOINT_RULES
 
         return True if (endpoint_rule := peppol_dict.get(self.peppol_eas)) is None else endpoint_rule(self.peppol_endpoint)
+
+    @handle_demo
+    def _can_connect(self, flow=None):
+        self.ensure_one()
+        db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
+        peppol_identifier = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
+        connect_token = self._generate_connect_token(peppol_identifier)
+        callback_url = urljoin(self.get_base_url(), '/peppol/authentication/callback')
+        return PeppolIAPConnector(self).can_connect(
+            peppol_identifier=peppol_identifier,
+            db_uuid=db_uuid,
+            callback_url=callback_url,
+            connect_token=connect_token,
+            flow=flow,
+        )
+
+    def _generate_connect_token(self, peppol_identifier):
+        msg = {
+            'peppol_identifier': peppol_identifier,
+            'company_id': self.id,
+            'partner_id': self.env.user.partner_id.id,
+            'create_at': str(fields.Datetime.now()),
+        }
+        payload = tools.hash_sign(self.sudo().env, 'account_peppol_connect', msg, expiration_hours=1)
+        return payload
 
     # -------------------------------------------------------------------------
     # CONSTRAINTS

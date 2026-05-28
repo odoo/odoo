@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="activate_peppol_view" name="Activate peppol">
+        <t t-call="portal.portal_layout" breadcrumbs_searchbar="False">
+            <div class="row justify-content-center mb-4">
+                <div class="col-auto">
+                    <img alt="Odoo" src="/web/static/img/odoo_logo.svg" style="height: 5em;" class="align-baseline w-auto"/>
+                </div>
+            </div>
+            <div class="container py-5 text-center">
+                <t t-if="error">
+                    <div class="alert alert-danger d-inline-block text-start p-4 rounded fs-5">
+                        <h5 class="alert-heading">Unable to activate peppol !</h5>
+                        <t t-if="reason == 'not_legal_rep'">
+                            <div class="mb-2">You don't seem to be a legal representative of <t t-out="company_name"/>.</div>
+                            <div>
+                                - <span class="text-info"
+                                      style="cursor: pointer;"
+                                      t-attf-onclick="navigator.clipboard.writeText('#{no_error_url}'); this.innerText='URL Copied!'; setTimeout(() => { this.innerText='Copy this url' }, 2000);">
+                                    <strong>Copy this url</strong>
+                                </span>
+                                and send it to someone listed on the
+                                <a t-att-href="cbe_url"
+                                   target="_blank"
+                                   class="text-info">
+                                   <strong>BCE.</strong>
+                                </a>
+                            </div>
+                            <div>
+                                - Or, add your phone in the contact data section on
+                                <a class="text-info" href="https://www.myenterprise.be" target="_blank"><strong>myenterprise.be</strong></a>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <span class="mb-2" t-out="error_msg" />
+                            <span t-if="reason == 'cbe_fail'">For further assistance,
+                                <a class="text-info" href="https://www.odoo.com/help-form" target="_blank">
+                                    <strong>Contact us</strong>
+                                </a>
+                            </span>
+                        </t>
+                    </div>
+                </t>
+                <br/>
+                <br/>
+                <h5>
+                    <strong><t t-out="company_name"/></strong> would like to activate peppol to send invoices from odoo.
+                    <br/> If you are a legal representative, authentify yourself to accept the request.
+                </h5>
+                <br/>
+                <a t-att-href="auth_url"
+                   class="btn btn-secondary itsme_button btn-lg mt-4">
+                    <img src="/account_peppol/static/img/itsme.svg"
+                         id="itsme_logo"
+                         alt="Itsme"/>
+                    <b>Authentify with itsme</b>
+                </a>
+
+                <p class="text-muted mt-4">
+                    Not a legal representative ?
+                    <span class="text-info"
+                              style="cursor: pointer;"
+                              t-attf-onclick="navigator.clipboard.writeText('#{no_error_url}'); this.innerText='URL Copied!'; setTimeout(() => { this.innerText='Copy this url' }, 2000);">
+                              <strong>Copy this url</strong>
+                    </span>
+                    and send it to one of the representatives of <t t-out="company_name"/>
+                    <a t-att-href="cbe_url"
+                       target="_blank"
+                       class="text-info">
+                       <strong>(click here to check the list)</strong>
+                    </a>
+                    <br/>Having issues ?
+                    <a class="text-info" href="https://www.odoo.com/help-form" target="_blank"><strong>Contact us</strong></a> for a manual verification.
+                </p>
+            </div>
+        </t>
+    </template>
+</odoo>

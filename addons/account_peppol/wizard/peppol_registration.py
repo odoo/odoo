@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import contextlib
 import logging
 try:
     import phonenumbers
@@ -8,7 +7,7 @@ except ImportError:
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.urls import urljoin
+from odoo.tools import hash_sign
 
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account_peppol.tools.peppol_iap_connector import PeppolIAPConnector
@@ -77,7 +76,6 @@ class PeppolRegistration(models.TransientModel):
         readonly=False,
         required=True,
     )
-    phone_number = fields.Char(related='selected_company_id.account_peppol_phone_number', readonly=False)
     peppol_eas = fields.Selection(related='selected_company_id.peppol_eas', readonly=False, required=True)
     peppol_endpoint = fields.Char(related='selected_company_id.peppol_endpoint', readonly=False, required=True)
     smp_registration = fields.Boolean(  # you're registering to SMP when you register as a sender+receiver
@@ -86,7 +84,6 @@ class PeppolRegistration(models.TransientModel):
     )
     peppol_external_provider = fields.Char(compute='_compute_smp_registration_external_provider')
     peppol_can_connect_data = fields.Json(compute='_compute_peppol_can_connect_data')
-    display_itsme_login = fields.Boolean(compute='_compute_peppol_can_connect_data')
     display_no_auth_buttons = fields.Boolean(compute='_compute_peppol_can_connect_data')
 
     # -------------------------------------------------------------------------
@@ -98,22 +95,6 @@ class PeppolRegistration(models.TransientModel):
         for wizard in self:
             if wizard.peppol_endpoint:
                 wizard.peppol_endpoint = ''.join(char for char in wizard.peppol_endpoint if char.isalnum())
-
-    @api.onchange('phone_number')
-    def _onchange_phone_number(self):
-        self.env['res.company']._check_phonenumbers_import()
-        for wizard in self:
-            if wizard.phone_number:
-                # The `phone_number` we set is not necessarily valid (may fail `_sanitize_peppol_phone_number`)
-                with contextlib.suppress(phonenumbers.NumberParseException):
-                    parsed_phone_number = phonenumbers.parse(
-                        wizard.phone_number,
-                        region=wizard.selected_company_id.country_code,
-                    )
-                    wizard.phone_number = phonenumbers.format_number(
-                        parsed_phone_number,
-                        phonenumbers.PhoneNumberFormat.E164,
-                    )
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -212,9 +193,8 @@ class PeppolRegistration(models.TransientModel):
     @api.depends('peppol_eas', 'peppol_endpoint')
     def _compute_peppol_can_connect_data(self):
         for wizard in self:
-            connect_vals = wizard._can_connect()
+            connect_vals = wizard.company_id._can_connect()
             wizard.peppol_can_connect_data = connect_vals
-            wizard.display_itsme_login = bool(connect_vals.get('available_auths', {}).get('itsme'))
             wizard.display_no_auth_buttons = not bool(connect_vals.get('auth_required'))
 
     # -------------------------------------------------------------------------
@@ -233,8 +213,8 @@ class PeppolRegistration(models.TransientModel):
     def _ensure_mandatory_fields(self):
         if not self.selected_company_id.account_fiscal_country_id.code:
             raise ValidationError(_("Please select a country for your company."))
-        if not self.contact_email or not self.phone_number:
-            raise ValidationError(_("Contact email and phone number are required."))
+        if not self.contact_email:
+            raise ValidationError(_("Contact email is required."))
         if not self.peppol_eas or not self.peppol_endpoint:
             raise ValidationError(_("Peppol Address should be provided."))
         if self._branch_with_same_address():
@@ -244,7 +224,7 @@ class PeppolRegistration(models.TransientModel):
 
     def _action_open_peppol_form(self, reopen=True):
         action_dict = {
-            'name': _("Activate Electronic Invoicing (via Peppol)"),
+            'name': _("Activate Peppol"),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'peppol.registration',
@@ -300,17 +280,6 @@ class PeppolRegistration(models.TransientModel):
             raise UserError(_("Selected authentication method is not available."))
 
     @api.model
-    def _generate_connect_token(self, peppol_identifier, company):
-        msg = {
-            'peppol_identifier': peppol_identifier,
-            'company_id': company.id,
-            'partner_id': self.env.user.partner_id.id,
-            'create_at': str(fields.Datetime.now()),
-        }
-        payload = tools.hash_sign(self.sudo().env, 'account_peppol_connect', msg, expiration_hours=1)
-        return payload
-
-    @api.model
     def _decode_connect_token(self, token: str):
         if not (payload := tools.verify_hash_signed(self.sudo().env, 'account_peppol_connect', token)):
             return None
@@ -324,20 +293,6 @@ class PeppolRegistration(models.TransientModel):
             'company': company,
             'partner': partner,
         }
-
-    @handle_demo
-    def _can_connect(self):
-        self.ensure_one()
-        db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
-        peppol_identifier = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
-        connect_token = self._generate_connect_token(peppol_identifier, self.company_id)
-        callback_url = urljoin(self.get_base_url(), '/peppol/authentication/callback')
-        return PeppolIAPConnector(self.company_id).can_connect(
-            peppol_identifier=peppol_identifier,
-            db_uuid=db_uuid,
-            callback_url=callback_url,
-            connect_token=connect_token,
-        )
 
     @api.model
     @handle_demo
@@ -387,37 +342,41 @@ class PeppolRegistration(models.TransientModel):
             'peppol_company_city': company.city,
             'peppol_company_zip': company.zip,
             'peppol_country_code': company.country_id.code,
-            'peppol_phone_number': company.account_peppol_phone_number,
             'peppol_contact_email': company.account_peppol_contact_email,
             'peppol_migration_key': company.sudo().account_peppol_migration_key,
             'peppol_webhook_endpoint': company._get_peppol_webhook_endpoint(),
             'peppol_webhook_token': self.env['account_edi_proxy_client.user']._generate_webhook_token(company),
         }
 
-    def button_register_with_itsme(self):
+    def kyb_button(self):
         self.ensure_one()
-        return self.button_register_peppol_participant(selected_auth='itsme')
+        self._ensure_mandatory_fields()
+        self.archive_users()
+        base_url = self.env['ir.config_parameter'].sudo().get_str('web.base.url')
+
+        payload = {
+            'company_id': self.company_id.id,
+        }
+
+        url_hash = hash_sign(
+            env=self.env(su=True),
+            scope='peppol_activation',
+            message_values=payload,
+            expiration_hours=24,
+        )
+
+        auth_type = next(iter(self.peppol_can_connect_data["available_auths"]))
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f"{base_url}/peppol/activate/{auth_type}/{url_hash}/0",
+            'target': 'new',
+        }
 
     def button_register_peppol_participant(self, selected_auth=None):
         self.ensure_one()
         self._ensure_mandatory_fields()
 
-        # Make sure we archive possible existing proxy user when (re-)registering
-        old_proxy_users = self.env['account_edi_proxy_client.user'].search([
-            ('company_id', '=', self.company_id.id),
-            ('proxy_type', '=', 'peppol'),
-            ('edi_identification', '=', f'{self.peppol_eas}:{self.peppol_endpoint}')
-        ])
-        old_proxy_users.active = False
-        _logger.debug("De-registering existing Peppol proxy user for company %s", self.company_id.display_name)
-
-        if self.use_parent_connection:
-            self.company_id.write({
-                'peppol_eas': self.peppol_eas,
-                'peppol_endpoint': self.peppol_endpoint,
-                'account_peppol_contact_email': self.contact_email,
-                'account_peppol_phone_number': self.phone_number,
-            })
+        self.archive_users()
         self._ensure_can_connect(self.peppol_can_connect_data, selected_auth=selected_auth)
         if self.peppol_can_connect_data.get('auth_required'):
             return {
@@ -449,3 +408,21 @@ class PeppolRegistration(models.TransientModel):
             title=None,
             message=notifications[self.company_id.account_peppol_proxy_state]['message'],
         )
+
+    def archive_users(self):
+
+        # Make sure we archive possible existing proxy user when (re-)registering
+        old_proxy_users = self.env['account_edi_proxy_client.user'].search([
+            ('company_id', '=', self.company_id.id),
+            ('proxy_type', '=', 'peppol'),
+            ('edi_identification', '=', f'{self.peppol_eas}:{self.peppol_endpoint}')
+        ])
+        old_proxy_users.active = False
+        _logger.debug("De-registering existing Peppol proxy user for company %s", self.company_id.display_name)
+
+        if self.use_parent_connection:
+            self.company_id.write({
+                'peppol_eas': self.peppol_eas,
+                'peppol_endpoint': self.peppol_endpoint,
+                'account_peppol_contact_email': self.contact_email,
+            })
