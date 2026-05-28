@@ -3864,6 +3864,72 @@ test(`form with one2many with dynamic context`, async () => {
     expect.verifySteps(["onchange"]);
 });
 
+test(`form with one2many with domain`, async () => {
+    onRpc("web_read", ({ kwargs }) => {
+        expect.step("web_read");
+        expect(kwargs.specification.child_ids.domain).toEqual([["bar", "=", true]]);
+    });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="child_ids" domain="[['bar', '=', True]]">
+                    <list>
+                        <field name="foo"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 1,
+    });
+    expect.verifySteps(["web_read"]);
+});
+
+test(`form with one2many with domain referencing undefined variable`, async () => {
+    onRpc("web_read", ({ kwargs }) => {
+        expect.step("web_read");
+        expect(kwargs.specification.child_ids.domain).toBe(undefined);
+    });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="child_ids" domain="[['id', 'in', undefined_field_ids]]">
+                    <list>
+                        <field name="foo"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 1,
+    });
+    expect.verifySteps(["web_read"]);
+});
+
+test(`form with one2many with domain containing empty 'in' list`, async () => {
+    onRpc("web_read", ({ kwargs }) => {
+        expect.step("web_read");
+        expect(kwargs.specification.child_ids.domain).toBe(undefined);
+    });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="child_ids" domain="[['id', 'in', []]]">
+                    <list>
+                        <field name="foo"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 1,
+    });
+    expect.verifySteps(["web_read"]);
+});
+
 test(`reference field in one2many list`, async () => {
     Partner._records[0].reference = "partner,2";
     Partner._views = {
