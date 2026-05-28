@@ -611,6 +611,51 @@ test("Shouldn't have the 'Link to country' option if there's no country field", 
     expect(".options-container .hb-row[data-action-id='linkStateToCountry']").toHaveCount(0);
 });
 
+test("Only state fields have data-link-state-to-country attr", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilder(
+        `<section class="s_website_form"><form data-model_name="mail.mail">
+            <div data-name="Country" class="s_website_form_field s_website_form_custom" data-type="many2one">
+                <div>
+                    <label class="s_website_form_label" for="country">
+                        <span class="s_website_form_label_content">Country</span>
+                    </label>
+                    <div>
+                        <select class="form-select s_website_form_input" name="country_id" id="country">
+                            <option value="1" selected="selected">Country 1 (A)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div data-name="State" class="s_website_form_field s_website_form_custom" data-type="many2one">
+                <div>
+                    <label class="s_website_form_label" for="state">
+                        <span class="s_website_form_label_content">State</span>
+                    </label>
+                    <div>
+                        <select class="form-select s_website_form_input" name="state_id" id="state">
+                            <option data-country-id="1" value="s1">State 1 (A)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form></section>`
+    );
+    await contains(":iframe select[name='state_id']").click();
+    await contains(
+        ".options-container .hb-row [data-action-id='linkStateToCountry'] input"
+    ).click();
+    expect(":iframe select[name='state_id']").toHaveAttribute("data-link-state-to-country", "true");
+
+    // Other 'select' elements shouldn't have this attribute
+    await contains(".options-container .btn[title='Add a new field after this one']").click();
+    await contains(".hb-row[data-label='Type'] .dropdown-toggle").click();
+    await contains(".o-hb-select-dropdown-item:contains('Selection')").click();
+    expect(":iframe .s_website_form_field:last-child select").not.toHaveAttribute(
+        "data-link-state-to-country"
+    );
+});
+
 test("Label falls back to default value (data-translated-name) when removed", async () => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(
