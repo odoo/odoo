@@ -18,8 +18,10 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         "getListComputedDomain",
         "getListHeaderValue",
         "getListIdFromPosition",
+        "isDynamicList",
         "getListFieldFromPosition",
         "getListSortDirection",
+        "getListFieldSortDirection",
         "isSortableListHeader",
         "getListCellValueAndFormat",
         "getListDataSource",
@@ -307,6 +309,17 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         return undefined;
     }
 
+    isDynamicList(position) {
+        const cell = this.getters.getCorrespondingFormulaCell(position);
+        if (cell && cell.isFormula) {
+            const listFunction = getFirstListFunction(cell.compiledFormula, this.getters);
+            if (listFunction) {
+                return listFunction.functionName === "ODOO.LIST";
+            }
+        }
+        return false;
+    }
+
     getListFieldFromPosition(position) {
         const listId = this.getListIdFromPosition(position);
         if (listId === undefined) {
@@ -353,6 +366,20 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
             return "none";
         }
         return orderBy.asc ? "asc" : "desc";
+    }
+
+    getListFieldSortDirection(position) {
+        const listId = this.getListIdFromPosition(position);
+        if (!listId) {
+            return "none";
+        }
+        const field = this.getters.getListFieldFromPosition(position);
+        if (!field) {
+            return "none";
+        }
+        const definition = this.getters.getListDefinition(listId);
+        const orderBy = definition.orderBy.find((order) => order.name === field.name);
+        return orderBy ? (orderBy.asc ? "asc" : "desc") : "none";
     }
 
     isSortableListHeader(position) {
