@@ -34,6 +34,7 @@ export class BuilderSlidingPanel extends Component {
         this.openButtonRef = useRef("openButton");
         this.state = useState({
             optionContainerName: "",
+            contentRendered: this.props.openByDefault,
         });
         onMounted(() => {
             this.optionsContainerEls = document.querySelectorAll("div.options-container");
@@ -71,6 +72,7 @@ export class BuilderSlidingPanel extends Component {
     }
 
     showSlidingPanel() {
+        this.state.contentRendered = true;
         this.updateDisplay("hb-panel-slide-in");
         this.updateDisplayTimeout = setTimeout(() => this.updateDisplay("d-block"), 200);
     }

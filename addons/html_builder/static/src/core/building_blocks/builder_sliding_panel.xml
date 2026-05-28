@@ -23,7 +23,7 @@
                     </button>
                 </div>
             </div>
-            <t t-slot="default" close="this.hideSlidingPanel.bind(this)"/>
+            <t t-if="this.state.contentRendered" t-slot="default" close="this.hideSlidingPanel.bind(this)"/>
         </div>
     </div>
 </t>
