@@ -32,6 +32,12 @@
                     </t>
                     <span t-else="">The app cannot be installed with this browser</span>
                 </div>
+                <span class="mt-3 mb-2">or</span>
+                <span class="mb-2">scan QR code</span>
+                <div class="position-relative d-inline-block mb-3">
+                    <img class="bg-white p-2" t-att-src="this.qrCodeSrc"/>
+                    <img style="height:52px;width:52px;" class="position-absolute top-50 start-50 translate-middle object-fit-contain bg-white p-1" t-att-src="this.state.manifest.icons?.[0]?.src"/>
+                </div>
             </div>
         </div>
     </t>
