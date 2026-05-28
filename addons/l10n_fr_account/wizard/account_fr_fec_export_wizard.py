@@ -154,8 +154,10 @@ class L10n_FrFecExportWizard(models.TransientModel):
                     ('account_id.include_initial_balance', '=', True),
                     ('account_id.account_type', 'not in', ['asset_receivable', 'liability_payable']),
                 ])
+                query.groupby = SQL("account_move_line__account_id.id")
+                query.having = SQL("SUM(account_move_line.balance) != 0")
                 aa_code = self.env['account.account']._field_to_sql('account_move_line__account_id', 'code', query)
-                sql_query = query.select(SQL(
+                self.env.cr.execute(query.select(SQL(
                     """
                         'OUV' AS JournalCode,
                         'Balance initiale' AS JournalLib,
@@ -181,8 +183,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                     formatted_date_from=fields.Date.to_string(self.date_from).replace('-', ''),
                     aa_code=aa_code,
                     aa_name=aa_name,
-                ))
-                self.env.cr.execute(SQL('%s GROUP BY account_move_line__account_id.id', sql_query))
+                )))
 
                 currency_digits = 2
                 for row in self.env.cr.fetchall():
@@ -227,8 +228,10 @@ class L10n_FrFecExportWizard(models.TransientModel):
                     ('account_id.account_type', 'in', ['asset_receivable', 'liability_payable']),
                 ])
                 query.left_join('account_move_line', 'partner_id', 'res_partner', 'id', 'partner_id')
+                query.groupby = SQL("account_move_line__partner_id.id, account_move_line__account_id.id")
+                query.having = SQL("SUM(account_move_line.balance) != 0")
                 aa_code = self.env['account.account']._field_to_sql('account_move_line__account_id', 'code', query)
-                sql_query = query.select(SQL(
+                self.env.cr.execute(query.select(SQL(
                     """
                         'OUV' AS JournalCode,
                         'Balance initiale' AS JournalLib,
@@ -254,8 +257,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                     formatted_date_from=fields.Date.to_string(self.date_from).replace('-', ''),
                     aa_code=aa_code,
                     aa_name=aa_name,
-                ))
-                self.env.cr.execute(SQL('%s GROUP BY account_move_line__partner_id.id, account_move_line__account_id.id', sql_query))
+                )))
 
                 for row in self.env.cr.fetchall():
                     listrow = list(row)

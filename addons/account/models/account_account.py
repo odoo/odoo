@@ -55,6 +55,7 @@ class AccountAccount(models.Model):
             ("liability_non_current", "Non-current Liabilities"),
             ("equity", "Equity"),
             ("equity_unaffected", "Current Year Earnings"),
+            ("equity_appropriation", "Current Year Allocation"),
             ("income", "Income"),
             ("income_other", "Other Income"),
             ("expense", "Expenses"),
@@ -638,12 +639,12 @@ class AccountAccount(models.Model):
     @api.depends('account_type')
     def _compute_include_initial_balance(self):
         for account in self:
-            account.include_initial_balance = account.internal_group not in ['income', 'expense'] and account.account_type != 'equity_unaffected'
+            account.include_initial_balance = account.internal_group not in ['income', 'expense'] and account.account_type != 'equity_appropriation'
 
     def _search_include_initial_balance(self, operator, value):
         if operator != 'in':
             return NotImplemented
-        return [('internal_group', 'not in', ['income', 'expense']), ('account_type', '!=', 'equity_unaffected')]
+        return [('internal_group', 'not in', ['income', 'expense']), ('account_type', '!=', 'equity_appropriation')]
 
     def _get_internal_group(self, account_type):
         return account_type.split('_', maxsplit=1)[0]
