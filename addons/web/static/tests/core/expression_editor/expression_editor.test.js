@@ -432,7 +432,7 @@ test("no special fields in fields", async () => {
 
 test("between operator", async () => {
     await makeExpressionEditor({
-        expression: `id == 1`,
+        expression: `int == 1`,
         update(expression) {
             expect.step(expression);
         },
@@ -446,7 +446,7 @@ test("between operator", async () => {
     ]);
     expect.verifySteps([]);
     await selectOperator("between");
-    expect.verifySteps([`id >= 1 and id <= 1`]);
+    expect.verifySteps([`int >= 1 and int <= 1`]);
 });
 
 test(`"in range" operator`, async () => {

@@ -242,7 +242,34 @@ test("building a domain with an invalid path (2)", async () => {
     await clearNotSupported();
     expect(getCurrentPath()).toBe("Id");
     expect(getCurrentOperator()).toBe(label("="));
-    expect(getCurrentValue()).toBe("1");
+    // "id" now uses a record selector (like a many2one), so the value is
+    // displayed as the record's display name instead of the raw id.
+    expect(getCurrentValue()).toBe("first record");
+});
+
+test("id field proposes many2one-like operators and a record selector", async () => {
+    await makeDomainSelector({
+        domain: `[("id", "=", 1)]`,
+    });
+    expect(getCurrentPath()).toBe("Id");
+    expect(getOperatorOptions()).toEqual([
+        label("="),
+        label("!="),
+        label("in"),
+        label("not in"),
+        label("set"),
+        label("not set"),
+    ]);
+    expect(getCurrentValue()).toBe("first record");
+});
+
+test("id field with 'in' operator uses a multi-record selector", async () => {
+    await makeDomainSelector({
+        domain: `[("id", "in", [1, 2])]`,
+    });
+    expect(getCurrentPath()).toBe("Id");
+    expect(getCurrentOperator()).toBe(label("in"));
+    expect(getCurrentValue()).toBe("first record second record");
 });
 
 test("building a domain with an invalid path (3)", async () => {
@@ -546,7 +573,7 @@ test("parse -1", async () => {
         `;
         static props = ["*"];
         setup() {
-            this.domain = `[("id", "=", -1)]`;
+            this.domain = `[("int", "=", -1)]`;
         }
     }
     await mountWithCleanup(Parent);
@@ -561,7 +588,7 @@ test("parse 3-1", async () => {
         `;
         static props = ["*"];
         setup() {
-            this.domain = `[("id", "=", 3-1)]`;
+            this.domain = `[("int", "=", 3-1)]`;
         }
     }
     await mountWithCleanup(Parent);
