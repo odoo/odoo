@@ -15,7 +15,7 @@
                 <div class="d-flex flex-column gap-2">
                     <t t-foreach="latest_delivery_orders" t-as="picking">
                         <t t-set="delivery_report_url"
-                           t-value="'/my/picking/pdf/%s?%s' % (picking.id, keep_query())"/>
+                           t-value="sale_order.get_portal_url(suffix='/picking/%i' % (picking.id))"/>
                         <div name="delivery_order"
                             class="d-flex flex-column">
                             <div name="delivery_details" class="d-flex align-items-center justify-content-between">
@@ -27,7 +27,7 @@
                                         <i class="fa fa-fw fa-truck"/> Shipped
                                     </span>
                                     <a class="badge rounded-pill text-bg-secondary orders_label_text_align" target="_blank"
-                                        t-att-href="'/my/picking/return/pdf/%s?%s' % (picking.id, keep_query())">
+                                        t-att-href="sale_order.get_portal_url(suffix='/picking/%i/return/pdf' % (picking.id))">
                                         RETURN
                                     </a>
                                 </div>

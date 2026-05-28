@@ -43,43 +43,36 @@
 
     <record id="sale_order_personal_rule" model="ir.rule">
         <field name="name">Personal Orders</field>
-        <field ref="model_sale_order" name="model_id"/>
+        <field name="model_id" ref="model_sale_order"/>
         <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
     <record id="sale_order_see_all" model="ir.rule">
         <field name="name">All Orders</field>
-        <field ref="model_sale_order" name="model_id"/>
+        <field name="model_id" ref="model_sale_order"/>
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
 
     <record id="sale_order_report_personal_rule" model="ir.rule">
         <field name="name">Personal Orders Analysis</field>
-        <field ref="model_sale_report" name="model_id"/>
+        <field name="model_id" ref="model_sale_report"/>
         <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
     <record id="sale_order_report_see_all" model="ir.rule">
         <field name="name">All Orders Analysis</field>
-        <field ref="model_sale_report" name="model_id"/>
+        <field name="model_id" ref="model_sale_report"/>
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
 
     <record id="sale_order_line_personal_rule" model="ir.rule">
-        <field name="name">Personal Order Lines</field>
-        <field ref="model_sale_order_line" name="model_id"/>
-        <field name="domain_force">['|',('salesman_id','=',user.id),('salesman_id','=',False)]</field>
+        <field name="name">Order Lines</field>
+        <field name="model_id" ref="model_sale_order_line"/>
+        <field name="domain_force">[('order_id', 'access', 'read')]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
-    </record>
-
-    <record id="sale_order_line_see_all" model="ir.rule">
-        <field name="name">All Orders Lines</field>
-        <field ref="model_sale_order_line" name="model_id"/>
-        <field name="domain_force">[(1,'=',1)]</field>
-        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
 
     <record id="account_invoice_report_rule_see_personal" model="ir.rule">
@@ -133,7 +126,7 @@
     <record id="account_invoice_send_single_rule_see_personal" model="ir.rule">
         <field name="name">Personal Invoice Send and Print (single mode)</field>
         <field name="model_id" ref="account.model_account_move_send_wizard"/>
-        <field name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_id.invoice_user_id', '=', user.id), ('move_id.invoice_user_id', '=', False)]</field>
+        <field name="domain_force">[('move_id', 'access', 'read')]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
     </record>
 
@@ -142,13 +135,6 @@
         <field name="model_id" ref="account.model_account_move_send_batch_wizard"/>
         <field name="domain_force">[('move_ids.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_ids.invoice_user_id', '=', user.id), ('move_ids.invoice_user_id', '=', False)]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
-    </record>
-
-    <record id="account_invoice_send_single_rule_see_all" model="ir.rule">
-        <field name="name">All Invoice Send and Print (single mode)</field>
-        <field name="model_id" ref="account.model_account_move_send_wizard"/>
-        <field name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund'))]</field>
-        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
 
     <record id="account_invoice_send_batch_rule_see_all" model="ir.rule">
@@ -167,6 +153,12 @@
     <record id="sale_mass_cancel_orders_rule" model="ir.rule">
         <field name="name">Sales Mass Cancel Orders: access only your own wizard</field>
         <field name="model_id" ref="model_sale_mass_cancel_orders"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+    </record>
+
+    <record id="sale_order_discount_rule" model="ir.rule">
+        <field name="name">Sales Order Discount: access only your own wizard</field>
+        <field name="model_id" ref="model_sale_order_discount"/>
         <field name="domain_force">[('create_uid', '=', user.id)]</field>
     </record>
 
