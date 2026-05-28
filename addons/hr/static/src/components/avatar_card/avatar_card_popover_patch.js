@@ -18,6 +18,8 @@ export const patchAvatarCardPopover = {
         return this.employee?.work_phone || super.phone;
     },
     get employee() {
+        // Intentionally resolve through the partner: its employee_id may refer to an
+        // employee outside the active company, unlike res.users.employee_id.
         return this.partner?.employee_id;
     },
     get employeeCompany() {
