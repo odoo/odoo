@@ -13,11 +13,13 @@ patch(PosStore.prototype, {
             }
         }
         browser.addEventListener("online", () => {
-            this.employeeBuffer.forEach((employee) =>
-                this.data.write("pos.session", [this.config.current_session_id.id], {
-                    employee_id: employee.id,
-                })
-            );
+            if (this.session?.id) {
+                this.employeeBuffer.forEach((employee) =>
+                    this.data.write("pos.session", [this.session.id], {
+                        employee_id: employee.id,
+                    })
+                );
+            }
             this.employeeBuffer = [];
         });
     },
@@ -57,8 +59,8 @@ patch(PosStore.prototype, {
         super.setCashier(employee);
 
         if (this.config.module_pos_hr) {
-            if (!this.data.network.offline) {
-                this.data.write("pos.session", [this.config.current_session_id.id], {
+            if (!this.data.network.offline && this.session?.id) {
+                this.data.write("pos.session", [this.session.id], {
                     employee_id: employee.id,
                 });
             } else {
