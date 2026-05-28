@@ -2,8 +2,10 @@ import logging
 import re
 from xml.dom.minidom import parseString
 
+from base64 import b64decode, b64encode, urlsafe_b64encode
 from dateutil.relativedelta import relativedelta
 from lxml import etree
+from hashlib import sha256
 from stdnum.pl.nip import compact
 from decimal import Decimal
 
@@ -282,6 +284,29 @@ class AccountMove(models.Model):
         xml_content = self.env['ir.qweb']._render(qweb_template.id, ksef_values)
         return "\n".join([line for line in xml_content.splitlines() if line.strip()])
 
+    def _l10n_pl_edi_generate_qr_link(self):
+        self.ensure_one()
+        if self.l10n_pl_edi_attachment_file:
+            mode = self.env['ir.config_parameter'].sudo().get_param('l10n_pl_edi_ksef.mode') or 'prod'
+            base_link = "https://qr.ksef.mf.gov.pl/invoice/" if mode == 'prod' else "https://qr-test.ksef.mf.gov.pl/invoice/"
+            return (
+                f"{base_link}"
+                f"{self.company_id.vat[2:] if self.company_id.vat[:2] == 'PL' else self.company_id.vat}/"
+                f"{self.invoice_date.strftime('%d-%m-%Y')}/"
+                f"{urlsafe_b64encode(sha256(b64decode(self.l10n_pl_edi_attachment_file)).digest()).decode()}"
+            )
+        return ""
+
+    def _l10n_pl_edi_generate_qr(self):
+        self.ensure_one()
+        return b64encode(self.env['ir.actions.report'].barcode(
+            'QR',
+            self._l10n_pl_edi_generate_qr_link(),
+            width=180,
+            height=180,
+            quiet=0,
+        ))
+
     def _l10n_pl_edi_get_status_mapping(self):
         """
         Returns a dictionary mapping KSeF status codes to (odoo_status, message).
@@ -359,6 +384,34 @@ class AccountMove(models.Model):
             'tag': 'reload',
         }
 
+    def action_l10n_pl_edi_update_invoice_status_and_print_pdf(self):
+        self.ensure_one()
+        need_to_recompute_pdf = not self.l10n_pl_edi_number
+
+        self.action_l10n_pl_edi_update_invoice_status()
+
+        if need_to_recompute_pdf and self.l10n_pl_edi_number:
+            pdf_raw, pdf_extension = self.env['ir.actions.report'] \
+                        ._render_qweb_pdf('account.account_invoices', res_ids=[self.id])
+            if pdf_extension != 'pdf':
+                return
+
+            pdf_filename = self.display_name.replace(self.env._('Draft'), '')
+
+            attachment = self.env['ir.attachment'].create({
+                'name': pdf_filename + '.pdf',
+                'res_id': self.id,
+                'res_model': 'account.move',
+                'raw': pdf_raw,
+                'type': 'binary',
+                'mimetype': 'application/pdf',
+            })
+            self._message_set_main_attachment_id(attachment, force=True, filter_xml=False)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
     def action_l10n_pl_edi_get_invoice_UPO(self):
         self.ensure_one()
         if not self.l10n_pl_edi_ref:
@@ -415,7 +468,7 @@ class AccountMove(models.Model):
         to_update_moves = self.env['account.move'].search([*self.env['account.move']._check_company_domain(self.env.company), ('l10n_pl_edi_status', '=', 'sent')])
         for move in to_update_moves:
             self.env['res.company']._with_locked_records(move)
-            move.action_l10n_pl_edi_update_invoice_status()
+            move.action_l10n_pl_edi_update_invoice_status_and_print_pdf()
 
     def button_draft(self):
         """

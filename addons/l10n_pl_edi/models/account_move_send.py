@@ -1,4 +1,5 @@
 import logging
+from time import sleep
 
 from odoo import fields, models
 
@@ -96,10 +97,23 @@ class AccountMoveSend(models.AbstractModel):
 
                 except Exception as errors:  # noqa: BLE001
                     set_error(move, str(errors))
-
             if self._can_commit():
                 self.env.cr.commit()
 
-        # Check the status already
-        if moves_by_company:
-            self.env.ref('l10n_pl_edi.cron_auto_checks_the_polish_invoice_status')._trigger()
+        # PDF require the l10n_pl_edi_number which come with the status
+        max_attempt = 2
+        for attempt in range(max_attempt):
+            move_to_check_again = []
+            for company, moves in moves_by_company.items():
+                for move in moves.filtered(lambda m: m.l10n_pl_edi_ref and not m.l10n_pl_edi_number):
+                    move.action_l10n_pl_edi_update_invoice_status()
+                    if not move.l10n_pl_edi_number:
+                        move_to_check_again.append(move.id)
+
+            if move_to_check_again:
+                if attempt == max_attempt - 1:
+                    move.message_post(
+                        body=self.env._("Unable to get the KSeF number from KSeF. The PDF was generated without QR. Please 'Check Sending' to get the KSeF number and get the QR Code."),
+                    )
+                else:
+                    sleep(2)

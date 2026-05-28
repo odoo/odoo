@@ -528,9 +528,11 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
     def test_l10n_pl_edi_send_success(self):
         invoice = self.standard_invoice
         invoice.action_post()
+        invoice_status_return_value = {'status': {'code': 200}, 'ksefNumber': '1234567899-20260229-11111111111-11'}
         with (
             patch.object(KsefApiService, 'open_ksef_session') as mock_open_session,
-            patch.object(KsefApiService, 'send_invoice', return_value={'referenceNumber': '999999'}) as mock_send
+            patch.object(KsefApiService, 'send_invoice', return_value={'referenceNumber': '999999'}) as mock_send,
+            patch.object(KsefApiService, 'get_invoice_status', return_value=invoice_status_return_value) as mock_check_status,
         ):
             wizard = self.env['account.move.send.wizard'].with_company(self.company).create({
                 'move_id': invoice.id,
@@ -539,6 +541,29 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             wizard.action_send_and_print()
             self.assertEqual(mock_open_session.call_count, 1)
             self.assertEqual(mock_send.call_count, 1)
+            self.assertEqual(mock_check_status.call_count, 1)
+        self.assertEqual(invoice.l10n_pl_edi_status, 'accepted')
+        self.assertEqual(invoice.l10n_pl_edi_session_id, invoice.company_id.l10n_pl_edi_session_id)
+        self.assertEqual(invoice.l10n_pl_edi_ref, '999999')
+        self.assertEqual(invoice.l10n_pl_edi_attachment_id.name, 'FA3-INV_2026_00001.xml')
+
+    def test_l10n_pl_edi_send_latency(self):
+        invoice = self.standard_invoice
+        invoice.action_post()
+        invoice_status_return_value = {'status': {'code': 150}}
+        with (
+            patch.object(KsefApiService, 'open_ksef_session') as mock_open_session,
+            patch.object(KsefApiService, 'send_invoice', return_value={'referenceNumber': '999999'}) as mock_send,
+            patch.object(KsefApiService, 'get_invoice_status', return_value=invoice_status_return_value) as mock_check_status,
+        ):
+            wizard = self.env['account.move.send.wizard'].with_company(self.company).create({
+                'move_id': invoice.id,
+                'extra_edi_checkboxes': {'pl_ksef': {'checked': True}}
+            })
+            wizard.action_send_and_print()
+            self.assertEqual(mock_open_session.call_count, 1)
+            self.assertEqual(mock_send.call_count, 1)
+            self.assertEqual(mock_check_status.call_count, 2)
         self.assertEqual(invoice.l10n_pl_edi_status, 'sent')
         self.assertEqual(invoice.l10n_pl_edi_session_id, invoice.company_id.l10n_pl_edi_session_id)
         self.assertEqual(invoice.l10n_pl_edi_ref, '999999')
