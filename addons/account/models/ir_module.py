@@ -85,10 +85,11 @@ class IrModule(models.Model):
             # subsequent modules that may depend on them (e.g. point_of_sale
             # demo data needs a bank journal).
             env = self.env
+
             def _precommit_auto_install_template():
                 if hasattr(env.registry, '_auto_install_template'):
-                    env.registry._auto_install_template(env)
-                    del env.registry._auto_install_template
+                    env.registry._auto_install_template(env)    # noqa: PY031
+                    del env.registry._auto_install_template     # noqa: PY031
             self.env.cr.precommit.add(_precommit_auto_install_template)
         return res
 
