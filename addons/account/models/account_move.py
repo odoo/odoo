@@ -1710,12 +1710,30 @@ class AccountMove(models.Model):
         for move in self:
             if move.is_invoice(include_receipts=True):
                 base_lines, _tax_lines = move._get_rounded_base_and_tax_lines()
-                move.tax_totals = self.env['account.tax']._get_tax_totals_summary(
+                new_totals = self.env['account.tax']._get_tax_totals_summary(
                     base_lines=base_lines,
                     currency=move.currency_id,
                     company=move.company_id,
                     cash_rounding=move.invoice_cash_rounding_id,
                 )
+
+                # Protect XML/manual taxes from being wiped out during an onchange.
+                if not move.id and move._origin and move._origin.tax_totals:
+                    # 2. Compute what the origin's totals WOULD be if we stripped away its manual XML taxes
+                    origin_base_lines, origin_tax_lines = move._origin._get_rounded_base_and_tax_lines(round_from_tax_lines=False)
+                    origin_unanchored_totals = self.env['account.tax']._get_tax_totals_summary(
+                        base_lines=origin_base_lines,
+                        currency=move._origin.currency_id,
+                        company=move._origin.company_id,
+                        cash_rounding=move._origin.invoice_cash_rounding_id,
+                    )
+
+                    # If Odoo's raw math hasn't changed, the user only touched non-math fields (like analytics).
+                    # We safely restore the database totals (which preserves the imported XML taxes).
+                    if new_totals == origin_unanchored_totals:
+                        new_totals = move._origin.tax_totals
+
+                move.tax_totals = new_totals
                 move.tax_totals['display_in_company_currency'] = (
                     move.company_id.display_invoice_tax_company_currency
                     and move.company_currency_id != move.currency_id
@@ -3243,7 +3261,11 @@ class AccountMove(models.Model):
                 return
             def update_containers():
                 # Only invoice-like and journal entries in "auto tax mode" are synced
-                tax_container['records'] = container['records'].filtered(lambda m: m.is_invoice(True) or m.line_ids.tax_ids or m.line_ids.tax_repartition_line_id)
+                tax_container['records'] = container['records'].filtered(
+                    lambda m: m.is_invoice(True) or (
+                            not m.origin_payment_id and (m.line_ids.tax_ids or m.line_ids.tax_repartition_line_id)
+                    )
+                )
                 invoice_container['records'] = container['records'].filtered(lambda m: m.is_invoice(True))
                 misc_container['records'] = container['records'].filtered(lambda m: m.is_entry() and not m.tax_cash_basis_origin_move_id)
 

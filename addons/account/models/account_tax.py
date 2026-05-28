@@ -3219,7 +3219,9 @@ class AccountTax(models.Model):
                 tax_details = base_line['tax_details']
                 for tax_data in tax_details['taxes_data']:
                     for tax_rep_data in tax_data['tax_reps_data']:
-                        tax_rep_grouping_key = frozendict(tax_rep_data['grouping_key'])
+                        tax_rep_grouping_key = frozendict({
+                            k: v for k, v in tax_rep_data['grouping_key'].items() if not k.startswith('__')
+                        })
                         if new_values.get('amounts', []) != old_values.get('amounts', []):
                             tax_keys_recompute_amounts.add(tax_rep_grouping_key)
                         elif new_values.get('rates', set()).symmetric_difference(old_values.get('rates', set())):
