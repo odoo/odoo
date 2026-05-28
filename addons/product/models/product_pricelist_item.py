@@ -535,15 +535,15 @@ class ProductPricelistItem(models.Model):
 
     #=== BUSINESS METHODS ===#
 
-    def _is_applicable_for(self, product, quantity, *, uom=None, qty_in_product_uom=False, **kwargs):
+    def _is_applicable_for(self, product, quantity, *, uom=None, **kwargs):
         """Check whether the current rule is valid for the given product, qty and uom.
 
         Note: self.ensure_one()
 
         :param product: product record (product.product/product.template)
         :param float quantity: quantity of products requested (in given uom)
-        :param float qty_in_product_uom: quantity of products requested (in product's base uom)
         :param uom: Selected unit of measure (uom.uom record)
+
         :returns: Whether rules is valid or not
         :rtype: bool
         """
@@ -611,45 +611,42 @@ class ProductPricelistItem(models.Model):
         """
         self and self.ensure_one()  # self is at most one record
         product.ensure_one()
+
+        uom = uom or product._get_main_uom()
         uom.ensure_one()
 
-        # Pricelist specific values are specified according to product UoM
-        # and must be multiplied according to the factor between uoms
-        product_uom = product.uom_id
-        if product_uom != uom:
-            convert = lambda p: product_uom._compute_price(p, uom)
-        else:
-            convert = lambda p: p
-
         if self.compute_price == 'fixed':
-            price = convert(self.fixed_price)
-        elif self.compute_price == 'percentage':
-            base_price = self._compute_base_price(product, quantity, uom, **kwargs)
+            return product.uom_id._compute_price(self.fixed_price, uom)
+
+        base_price = self._compute_base_price(product, quantity, uom, **kwargs)
+        if self.compute_price == 'percentage':
             price = (base_price - (base_price * (self.percent_price / 100))) or 0.0
         elif self.compute_price == 'formula':
-            base_price = self._compute_base_price(product, quantity, uom, **kwargs)
-            # complete formula
-            price_limit = base_price
+            product_uom = product.uom_id
             discount = self.price_discount if self.base != 'standard_price' else -self.price_markup
             price = base_price - (base_price * (discount / 100))
             if self.price_round:
                 price = float_round(price, precision_rounding=self.price_round)
 
             if self.price_surcharge:
-                price += convert(self.price_surcharge)
+                price += product_uom._compute_price(self.price_surcharge, uom)
 
             if self.price_min_margin:
-                price = max(price, price_limit + convert(self.price_min_margin))
+                price = max(
+                    price, base_price + product_uom._compute_price(self.price_min_margin, uom)
+                )
 
             if self.price_max_margin:
-                price = min(price, price_limit + convert(self.price_max_margin))
+                price = min(
+                    price, base_price + product_uom._compute_price(self.price_max_margin, uom)
+                )
         else:  # empty self, or extended pricelist price computation logic
-            price = self._compute_base_price(product, quantity, uom, **kwargs)
+            price = base_price
 
         return price
 
     def _compute_base_price(
-        self, product, quantity, uom, *, currency=None, date=False, depth=0, **kwargs
+        self, product, quantity, uom, *, currency=None, date=False, depth=0, base_prices=None, **kwargs
     ):
         """Compute the base price for a given rule.
 
@@ -665,15 +662,18 @@ class ProductPricelistItem(models.Model):
         """
         rule_base = self.base or 'list_price'
         if rule_base == 'pricelist' and self.base_pricelist_id:
-            price = self.base_pricelist_id._get_product_price(
-                product,
-                quantity,
-                currency=self.base_pricelist_id.currency_id,
-                uom=uom,
-                date=date,
-                depth=depth + 1,
-                **kwargs,
-            )
+            if base_prices:
+                price = base_prices[product.id]
+            else:
+                price = self.base_pricelist_id._get_product_price(
+                    product,
+                    quantity,
+                    currency=self.base_pricelist_id.currency_id,
+                    uom=uom,
+                    date=date,
+                    depth=depth + 1,
+                    **kwargs,
+                )
             src_currency = self.base_pricelist_id.currency_id
         elif rule_base == "standard_price":
             src_currency = product.cost_currency_id

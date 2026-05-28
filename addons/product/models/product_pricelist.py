@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
@@ -221,6 +223,7 @@ class ProductPricelist(models.Model):
         currency=None,
         uom=None,
         compute_price=True,
+        depth=0,
         **kwargs,
     ):
         """Pick the first applicable rule per product and optionally compute its price.
@@ -240,6 +243,7 @@ class ProductPricelist(models.Model):
         :rtype: dict[int, tuple[float, int]]
         """
         results = {}
+        products_by_rule = defaultdict(list)
         for product in products:
             suitable_rule = self.env['product.pricelist.item']
 
@@ -251,15 +255,36 @@ class ProductPricelist(models.Model):
                     suitable_rule = rule
                     break
 
+            price = 0.0
             if compute_price:
-                price = suitable_rule._compute_price(
-                    product, quantity, quantity_uom, date=date, currency=currency, **kwargs
-                )
-            else:
-                # Skip price computation when only the rule is requested.
-                price = 0.0
+                products_by_rule[suitable_rule].append(product.id)
 
             results[product.id] = (price, suitable_rule.id)
+
+        for rule, product_ids in products_by_rule.items():
+            products_for_rule = products.browse(product_ids).with_prefetch(
+                products._prefetch_ids
+            )
+
+            base_prices = None
+            if rule.base == 'pricelist' and rule.base_pricelist_id:
+                base_prices = rule.base_pricelist_id._get_products_price(
+                    products_for_rule, quantity, uom=uom, date=date, depth=depth + 1, **kwargs
+                )
+
+            for product in products_for_rule:
+                price = rule._compute_price(
+                    product,
+                    quantity,
+                    uom,
+                    date=date,
+                    currency=currency,
+                    base_prices=base_prices,
+                    depth=depth,
+                    **kwargs,
+                )
+
+                results[product.id] = (price, rule.id)
 
         return results
 
