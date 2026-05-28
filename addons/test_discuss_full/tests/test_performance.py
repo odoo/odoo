@@ -30,18 +30,19 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: show_livechat_category
     #       - search discuss_channel_member (is_self for ACL check)
     #       - search_count discuss_channel_member
-    #   10: store add odoobot:
+    #   11: store add odoobot:
     #       - fetch res_partner
     #       - search res_users
     #       - search presence (_compute_im_status)
     #       - fetch presence (_compute_im_status)
-    #       - search employee
+    #       - search employee (partner)
+    #       - search employee (user)
     #       - search employee (company specific)
     #       - fetch res_users
-    #       - search hr_employee_location
     #       - fetch employee
+    #       - search hr_employee_location
     #       - search hr_leave
-    _query_count_init_store = 22
+    _query_count_init_store = 23
     # Queries for _query_count_init_messaging (in order):
     #   1: insert res_device_log
     #   3: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
@@ -105,10 +106,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search member (channel_member_ids)
     #       - search member (channel_name_member_ids)
     #       - fetch discuss_channel_member (manual prefetch)
-    #       17: member:
+    #       18: member:
     #           - search im_livechat_channel_member_history (livechat member type)
     #           - fetch im_livechat_channel_member_history (livechat member type)
-    #           13: partner:
+    #           14: partner:
     #               - fetch res_partner (partner)
     #               - fetch res_users (_compute_im_status)
     #               - search mail_presence (_compute_im_status)
@@ -122,6 +123,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #               - fetch res_users_settings (livechat username)
     #               - fetch res_users (_compute_main_user_id)
     #               - fetch res_country (livechat override)
+    #               - search hr_employee (partner)
     #           2: guest:
     #               - fetch mail_presence (_compute_im_status)
     #               - fetch mail_guest
@@ -160,7 +162,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch user (author)
     #       - fetch discuss_call_history
     # TODO use assertQueries
-    _query_count_discuss_channels = 64
+    _query_count_discuss_channels = 65
 
     def setUp(self):
         super().setUp()
@@ -431,6 +433,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "active": False,
                     "avatar_128_access_token": self.partner_root._get_avatar_128_access_token(),
                     "email": "odoobot@example.com",
+                    "employee_ids": [],
                     "id": self.partner_root.id,
                     "im_status": "bot",
                     "im_status_access_token": self.partner_root._get_im_status_access_token(),
@@ -1806,6 +1809,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": "e.e@example.com",
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "im_status": "online",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
@@ -1863,6 +1867,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": "test2@example.com",
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
@@ -1878,6 +1883,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
@@ -1893,6 +1899,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
@@ -1908,6 +1915,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
@@ -1923,6 +1931,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
