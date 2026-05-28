@@ -78,6 +78,7 @@ export class DynamicStyleSheetPlugin extends Plugin {
             );
         }
         styleEl.textContent = cssTextArray.join(separator);
+        styleEl.classList.add("o-ci-dynamic-stylesheet");
         template.content.prepend(styleEl);
     }
 }
