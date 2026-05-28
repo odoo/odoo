@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import fields, models, api
 from dateutil.relativedelta import relativedelta
 
 
@@ -48,6 +48,18 @@ class EstatePropertyModel(models.Model):
         default='new',  # must use one of the values from selection, not label
     )
 
+    # - The name field is a Char which will be represented as a Python unicode str and a SQL VARCHAR.
+    # - Field names, by default, are generated automatically e.g. expected_price => Expected Price
 
-# - The name field is a Char which will be represented as a Python unicode str and a SQL VARCHAR.
-# - Field names, by default, are generated automatically e.g. expected_price => Expected Price
+    # Computed field
+    show_all = fields.Boolean(
+        string='Show all',
+        compute='_compute_show_all',
+        store=True,  # must set so it can be used in xml
+    )
+
+    # depends on the field it reads data field
+    @api.depends('active')
+    def _compute_show_all(self):
+        for record in self:
+            record.show_all = True

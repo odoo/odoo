@@ -1,8 +1,130 @@
 <?xml version="1.0"?>
 <odoo>
+    <!-- Technically, each of the records below is a separate view -->
+
     <record id="estate_property_action" model="ir.actions.act_window">
-        <field name="name">Estate Property</field>
+        <field name="name">Properties</field>
         <field name="res_model">estate_property_model</field>
         <field name="view_mode">list,form</field>
+        <!-- default list and form views will be used if theres no custom view -->
     </record>
+
+    <!--
+    https://www.odoo.com/documentation/19.0/developer/reference/user_interface/view_records.html -->
+    <record id="estate_property_list_view" model="ir.ui.view">
+        <field name="name">estate_property_model.list_view</field>
+        <field name="model">estate_property_model</field> <!-- model name must match -->
+        <field name="arch" type="xml">
+            <list string="Estate Property Custom List View"> <!-- string: The view title -->
+                <!-- field names must match -->
+                <field name="name" />
+                <field name="postcode" />
+                <field name="bedrooms" />
+                <field name="living_area" string="Living Area (sqm)" />
+                <field name="expected_price" />
+                <field name="selling_price" />
+                <field name="date_availability" string="Available From" />
+                <field name="state" />
+                <field name="active" />
+            </list>
+        </field>
+    </record>
+
+    <!-- editable="bottom": inline edit directly on the row, quite annoying -->
+    <!-- cannot have 2 views in a single record: The <field name="arch" type="xml"> tag expects
+    exactly one root XML element inside it -->
+
+    <record id="estate_property_form_view" model="ir.ui.view">
+        <field name="name">estate_property_model.form_view</field>
+        <field name="model">estate_property_model</field>
+        <field name="arch" type="xml">
+            <form string="Estate Property Custom Form View">
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="mb32">
+                            <field name="name" placeholder="Property name" />
+                        </h1>
+                    </div>
+
+                    <!-- The <group> tag is a structural element used in form views to cleanly
+                    organize fields into labeled, left-to-right columns -->
+                    <!-- outside group: row 1 -->
+                    <group>
+                        <!-- col 1 -->
+                        <group>
+                            <field name="postcode" />
+                            <field name="date_availability" string="Available From" />
+                        </group>
+                        <!-- col 2 -->
+                        <group>
+                            <field name="expected_price" />
+                            <field name="selling_price" />
+                        </group>
+                    </group>
+
+                    <!-- notebook: container for tab management -->
+                    <!-- page: tab -->
+                    <notebook>
+                        <page string="Description">
+                            <group>
+                                <field name="description" />
+                                <field name="bedrooms" />
+                                <field name="living_area" string="Living Area (sqm)" />
+                                <field name="facades" />
+                                <field name="garage" />
+                                <field name="garden_area" />
+                                <field name="garden_orientation" string="Garden Orientation" />
+                            </group>
+                        </page>
+
+                        <page string="Technical">
+                            <group>
+                                <field name="active" />
+                                <field name="state" />
+                            </group>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Search view -->
+    <record id="estate_property_search_view" model="ir.ui.view">
+        <field name="name">estate_property_model.search_view</field>
+        <field name="model">estate_property_model</field>
+        <field name="arch" type="xml">
+            <search string="Estate property search view">
+                <field name="name" />
+                <field name="postcode" />
+                <field name="expected_price" />
+                <field name="bedrooms" />
+                <field name="living_area" string="Living Area (sqm)" />
+                <field name="facades" />
+
+                <separator string="New section" />
+                <group>
+                    <filter string="Archived" name="archived" domain="[('active', '=', False)]" />
+                    <!-- Using computed field -->
+                    <filter string="Show all" name="show_all"
+                        domain="['&amp;', ('show_all', '=', True), ('active', 'in', (True, False))]" />
+                    <!-- the global active = True filter is still strictly applied -->
+                    <!-- To force Odoo to disable its automatic global filter, the framework must see the word 'active' explicitly written inside the XML domain attribute. -->
+
+                    <separator />
+                    <filter string="Available (New or Offer received)" name="available"
+                        domain="['|', ('state', '=', 'new'), ('state', '=', 'offer_received')]" />
+                    <!-- writing logics in xml string is very error-prone -> later use computed
+                    fields inside model -->
+
+                    <separator />
+                    <filter string="Postcode" name="postcode"
+                        context="{'group_by': 'postcode'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
 </odoo>
