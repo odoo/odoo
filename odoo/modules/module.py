@@ -178,8 +178,8 @@ class Manifest(Mapping[str, typing.Any]):
 
     def __init__(self, *, path: str, manifest_content: dict):
         assert os.path.isabs(path), "path of module must be absolute"
-        self.path = path
-        _, self.name = os.path.split(path)
+        self.path = os.path.normpath(path)
+        _, self.name = os.path.split(self.path)
         if not MODULE_NAME_RE.match(self.name):
             raise FileNotFoundError(f"Invalid module name: {self.name}")
         self.__manifest_content = manifest_content
