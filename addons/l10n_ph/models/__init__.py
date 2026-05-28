@@ -3,3 +3,4 @@ from . import template_ph
 from . import res_partner
 from . import account_tax
 from . import res_company
+from . import account_payment
