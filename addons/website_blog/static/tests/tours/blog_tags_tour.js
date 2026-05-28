@@ -2,20 +2,15 @@ import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
-    registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
 import { stepUtils } from "@web_tour/tour_utils";
+import { registry } from "@web/core/registry";
 
 /**
  * Makes sure that blog tags can be created and removed.
  */
-registerWebsitePreviewTour(
-    "blog_tags",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    },
-    () => [
-        stepUtils.waitIframeIsReady(),
+registry.category("web_tour.tours").add("blog_tags", {
+    steps: () => [
         {
             content: "Go to the 'Post Test' blog",
             trigger: ":iframe article[name=blog_post] a:contains('Post Test')",
@@ -83,5 +78,5 @@ registerWebsitePreviewTour(
             content: "Verify we are still on the backend",
             trigger: ":iframe span:contains(adventure) i.fa-tag",
         },
-    ]
-);
+    ],
+});

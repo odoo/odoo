@@ -1454,3 +1454,34 @@ test("Prevents loss of value due to debounce when changing state (rendering)", a
     await runAllTimers();
     expect(".o_select_menu-choices .o-dropdown-item").toHaveCount(2);
 });
+
+test("Typing is preserved if choices rerender before the debounced search runs", async () => {
+    class MyParent extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`
+            <SelectMenu
+                value="this.state.value"
+                onInput.bind="this.loadChoice"
+                choices="this.state.choices"
+            />
+        `;
+        setup() {
+            this.state = useState({ choices: [], value: "" });
+        }
+        loadChoice(searchString) {
+            this.state.choices = [{ label: searchString || "test", value: searchString || "test" }];
+        }
+    }
+    const parent = await mountSingleApp(MyParent);
+    await open();
+    for (const char of "test") {
+        await press(char);
+        await animationFrame();
+        if (char === "e") {
+            parent.state.choices = [{ label: "forced rerender", value: "forced" }];
+            await animationFrame();
+        }
+    }
+    expect(".o_select_menu input").toHaveValue("test");
+});

@@ -140,14 +140,13 @@ export class SelectMenu extends Component {
         this.menuRef = useChildRef();
         this.choicesRef = useRef("choicesRef");
         this.props.menuRef?.(this.menuRef);
-        this.debouncedOnInput = useDebounced((ev) => {
+        this.debouncedOnInput = useDebounced((searchValue) => {
+            console.log("[SelectMenu] debouncedOnInput fires, searchValue=", searchValue);
+            this.state.searchValue = searchValue;
             if (!this.dropdownState.isOpen) {
                 this.dropdownState.open();
             }
-            const searchString = ev.target.value;
-            this.state.searchValue = searchString;
-            delete this.pendingValue;
-            this.onInput(searchString);
+            this.onInput(searchValue);
         }, DEBOUNCED_DELAY);
         this.dropdownState = useDropdownState();
 
@@ -209,14 +208,12 @@ export class SelectMenu extends Component {
     }
 
     handleInputDebounced(ev) {
-        this.pendingValue = ev.target.value;
-        this.debouncedOnInput(ev);
+        console.log("[SelectMenu] handleInputDebounced", ev.target.value);
+        this.state.searchValue = ev.target.value;
+        this.debouncedOnInput(this.state.searchValue);
     }
 
     get displayValue() {
-        if (this.pendingValue) {
-            return this.pendingValue;
-        }
         return this.state.searchValue === null
             ? this.selectedChoice?.label || ""
             : this.state.searchValue;
@@ -276,6 +273,7 @@ export class SelectMenu extends Component {
     }
 
     async onBeforeOpen() {
+        console.log("[SelectMenu] onBeforeOpen, searchValue=", this.state.searchValue);
         this.dropdownNextOpenState = "open";
         this.onInput("");
     }
@@ -298,14 +296,19 @@ export class SelectMenu extends Component {
     }
 
     onInputBlur(ev) {
+        console.log("[SelectMenu] onInputBlur, value=", ev.target.value);
         // if the input is not in the toggler, it is in the dropdown.
         // if the input blurs, it means that something else has gained
         // focus, so that the dropdown will be closing.
         if (this.displayInputInToggler) {
             this.state.isFocused = false;
         }
-        if (ev.target.value === "" && this.canDeselect && !this.props.multiSelect) {
-            this.onInputClear();
+        if (ev.target.value === "" && !this.props.multiSelect) {
+            if (this.canDeselect) {
+                this.onInputClear();
+            } else {
+                this.state.searchValue = null;
+            }
         }
     }
 
@@ -321,6 +324,7 @@ export class SelectMenu extends Component {
     }
 
     onStateChanged(open) {
+        console.log("[SelectMenu] onStateChanged", open);
         this.dropdownNextOpenState = undefined;
         if (open) {
             if (this.isBottomSheet) {
@@ -357,6 +361,7 @@ export class SelectMenu extends Component {
     }
 
     async onInput(searchString) {
+        console.log("[SelectMenu] onInput", searchString);
         this.filterOptions(searchString);
         if (this.props.onInput) {
             await this.props.onInput(searchString);
@@ -380,6 +385,7 @@ export class SelectMenu extends Component {
     }
 
     onItemSelected(value) {
+        this.debouncedOnInput.cancel();
         if (this.props.multiSelect) {
             const values = [...this.props.value];
             const valueIndex = values.indexOf(value);
