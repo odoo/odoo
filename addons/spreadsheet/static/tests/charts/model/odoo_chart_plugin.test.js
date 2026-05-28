@@ -932,6 +932,23 @@ test("Every Odoo chart type has a default title", async () => {
     }
 });
 
+test("Cursor change when hovering a chart item", async () => {
+    const { model } = await createSpreadsheetWithChart({ type: "line" });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+    const runtime = model.getters.getChartRuntime(chartId);
+
+    const mockNativeEvent = { type: "click", target: document.createElement("div") };
+    const event = { type: "click", native: mockNativeEvent };
+
+    runtime.chartJsConfig.options.onHover(event, [{ datasetIndex: 0, index: 0 }]);
+    expect(mockNativeEvent.target.style.cursor).toBe("pointer");
+
+    runtime.chartJsConfig.options.onHover(event, []);
+    expect(mockNativeEvent.target.style.cursor).toBe("");
+});
+
 test("See records when clicking on a bar chart bar", async () => {
     mockService("action", fakeActionService);
     const { model } = await createSpreadsheetWithChart({
