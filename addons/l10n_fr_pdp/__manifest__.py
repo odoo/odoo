@@ -10,8 +10,9 @@
         'l10n_fr_account',
         'account_edi_ubl_cii_tax_extension',
         'account_peppol_response',
+        'auth_totp_mail_enforce',
     ],
-    'auto_install': ['l10n_fr_account'],
+    'auto_install': ['l10n_fr_account', 'auth_totp_mail_enforce'],
     'data': [
         'data/ir_cron.xml',
         'security/ir.model.access.csv',
