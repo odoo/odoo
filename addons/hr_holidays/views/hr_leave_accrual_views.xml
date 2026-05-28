@@ -11,45 +11,13 @@
                     </div>
                     <div class="o_accrual_level_form">
                         <group class="o_accrual" string="Accrual Level Options">
-                            <label class="fw-bold" for="added_value" string="Set the employee accrual frequency :"/>
+                            <label class="fw-bold" for="added_value" string="Frequency :"/>
                             <span>
                                 <field nolabel="1" class="me-1 o_hr_narrow_field-5 o_accrual_input" name="added_value"
                                        widget="float_without_trailing_zeros"/>
-                                <field nolabel="1" class="me-1 o_hr_narrow_field-4" name="added_value_type"
+                                <field nolabel="1" class="me-1 o_field_accrual o_hr_narrow_field-4 me-2" name="added_value_type"
                                        readonly="not can_modify_value_type"/>
-                                <field nolabel="1" class="o_hr_narrow_field" name="frequency"/>
-                                <span name="weekly" invisible="frequency != 'weekly'">
-                                    on
-                                    <field nolabel="1" name="week_day" class="o_hr_narrow_field-6" required="frequency == 'weekly'" placeholder="select a weekday"/>
-                                </span>
-                                <span name="monthly" invisible="frequency != 'monthly'">
-                                    on the
-                                    <field nolabel="1" name="first_day" class="o_hr_narrow_field-3" required="frequency == 'monthly'" placeholder="select a day"/>
-                                    of the month.
-                                </span>
-                                <span name="bimonthly" invisible="frequency != 'bimonthly'" style="width: 100%">
-                                    on the
-                                    <field nolabel="1" name="first_day" class="o_hr_narrow_field-3" required="frequency == 'bimonthly'" placeholder="select a day"/>
-                                    and the
-                                    <field nolabel="1" name="second_day" class="o_hr_narrow_field-3" required="frequency == 'bimonthly'" placeholder="select a day"/>
-                                    of the month
-                                </span>
-                                <span name="biyearly" invisible="frequency != 'biyearly'">
-                                    on the
-                                    <field nolabel="1" name="first_month_day" class="o_hr_narrow_field-3" widget="day_selection" month_field="first_month" placeholder="select a day" required="frequency == 'biyearly'"/>
-                                    of
-                                    <field name="first_month" class="o_hr_narrow_field-5" placeholder="select a month" required="frequency == 'biyearly'"/>
-                                    and the
-                                    <field nolabel="1" name="second_month_day" class="o_hr_narrow_field-3" widget="day_selection" month_field="second_month" placeholder="select a day" required="frequency == 'biyearly'"/>
-                                    of
-                                    <field nolabel="1" name="second_month" class="o_hr_narrow_field-5" placeholder="select a month" required="frequency == 'biyearly'"/>
-                                </span>
-                                <span name="yearly" invisible="frequency != 'yearly'">
-                                    on the
-                                    <field nolabel="1" name="yearly_day" class="o_hr_narrow_field-3" widget="day_selection" month_field="yearly_month" required="frequency == 'yearly'" placeholder="select a day"/>
-                                    of
-                                    <field nolabel="1" name="yearly_month" class="o_hr_narrow_field-5" required="frequency == 'yearly'" placeholder="select a month"/>
-                                </span>
+                                <field nolabel="1" class="o_field_accrual o_hr_narrow_field-8 me-2" name="frequency"/>
                             </span>
                             <span name="yearly_gain" class="text-muted">
                                 <label class="fw-bold" for="yearly_gain" string="Gain for the year :" invisible="is_based_on_worked_time"/>
@@ -60,15 +28,55 @@
                                 <field nolabel="1" name="added_value_type" class="o_hr_narrow_field-4" readonly="1"/>
                                 <span invisible="not cap_accrued_time_yearly and not cap_accrued_time" class="ms-3">(Caps can affect that gain)</span>
                             </span>
-                            <label class="fw-bold" for="milestone_date" string="This milestone will be reached :"/>
+                            <label class="fw-bold" for="milestone_date" string="The milestone will start after:"/>
                             <span name="milestone_date">
-                                <field nolabel="1" class="ms-1" name="milestone_date"
-                                       widget="radio_followed_by_element"
-                                       options="{'links': {'after': 'milestone_date_after'}, 'observe': 'milestone_date'}"/>
                                 <span id="milestone_date_after">
-                                    <field nolabel="1" class="ms-1 me-1 o_hr_narrow_field-5 o_accrual_input" name="start_count"/>
-                                    <field nolabel="1" class="me-1 o_hr_narrow_field-4" name="start_type"/>
-                                    from the start of allocation
+                                    <field nolabel="1" class="ms-1 me-2 o_field_accrual" name="start_count"/>
+                                    <field nolabel="1" class="o_field_accrual o_hr_narrow_field-4 me-2" name="start_type"/>
+                                    from allocation start date
+                                </span>
+                            </span>
+                            <label class="fw-bold" for="milestone_date" string="Allocation will be:" invisible="frequency == 'daily' or frequency == 'hourly'"/>
+                            <span invisible="frequency == 'daily' or frequency == 'hourly'">
+                                <field nolabel="1" class="ms-1" name="milestone_date"
+                                widget="radio_followed_by_element"
+                                options="{'links': {'1_on_date': 'milestone_date_on'}, 'observe': 'milestone_date',
+                                    'invisible_items': {
+                                            '2_at_start': 'frequency == &quot;bimonthly&quot; or frequency == &quot;biyearly&quot;',
+                                        }
+                                    }"/>
+                                <span id="milestone_date_on">
+                                    <span name="weekly" invisible="frequency != 'weekly'">
+                                        <field nolabel="1" name="week_day" class="o_field_accrual o_hr_narrow_field-6 ms-1" required="frequency == 'weekly'" placeholder="select a weekday"/>
+                                    </span>
+                                    <span name="monthly" invisible="frequency != 'monthly'">
+                                        the
+                                        <field nolabel="1" name="first_day" class="o_field_accrual o_hr_narrow_field-3 me-2 ms-2" required="frequency == 'monthly'" placeholder="select a day"/>
+                                        of the month.
+                                    </span>
+                                    <span name="bimonthly" invisible="frequency != 'bimonthly'" style="width: 100%">
+                                        the
+                                        <field nolabel="1" name="first_day" class="o_field_accrual o_hr_narrow_field-3 me-2 ms-2" required="frequency == 'bimonthly'" placeholder="select a day"/>
+                                        and the
+                                        <field nolabel="1" name="second_day" class="o_field_accrual o_hr_narrow_field-3 me-2 ms-2" required="frequency == 'bimonthly'" placeholder="select a day"/>
+                                        of the month
+                                    </span>
+                                    <span name="biyearly" invisible="frequency != 'biyearly'">
+                                        the
+                                        <field nolabel="1" name="first_month_day" class="o_field_accrual o_hr_narrow_field-3 me-2 ms-2" widget="day_selection" month_field="first_month" placeholder="select a day" required="frequency == 'biyearly'"/>
+                                        of
+                                        <field name="first_month" class="o_field_accrual o_hr_narrow_field-5 me-2" placeholder="select a month" required="frequency == 'biyearly'"/>
+                                        and the
+                                        <field nolabel="1" name="second_month_day" class="o_field_accrual o_hr_narrow_field-3 me-2 ms-2" widget="day_selection" month_field="second_month" placeholder="select a day" required="frequency == 'biyearly'"/>
+                                        of
+                                        <field nolabel="1" name="second_month" class="o_field_accrual o_hr_narrow_field-5 me-2" placeholder="select a month" required="frequency == 'biyearly'"/>
+                                    </span>
+                                    <span name="yearly" invisible="frequency != 'yearly'">
+                                        the
+                                        <field nolabel="1" name="yearly_day" class="o_field_accrual o_hr_narrow_field-3 me-2 ms-2" widget="day_selection" month_field="yearly_month" required="frequency == 'yearly'" placeholder="select a day"/>
+                                        of
+                                        <field nolabel="1" name="yearly_month" class="o_field_accrual o_hr_narrow_field-5" required="frequency == 'yearly'" placeholder="select a month"/>
+                                    </span>
                                 </span>
                             </span>
                         </group>

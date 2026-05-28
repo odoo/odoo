@@ -30,11 +30,10 @@ class HrLeaveAccrualLevel(models.Model):
         default='day', required=True, export_string_translation=False,
         help="This field defines the unit of time after which the accrual starts.")
     milestone_date = fields.Selection(
-        [('creation', 'At allocation creation'),
-         ('after', 'After')],
-        compute='_compute_milestone_date', inverse='_inverse_milestone_date', readonly=False,
-        store=True, export_string_translation=False,
-        default='creation', required=True
+        [('1_on_date', 'On'),
+        ('2_at_start', 'At start of allocation date')],
+        export_string_translation=False,
+        default='2_at_start', required=True
     )
     # Accrue of
     added_value = fields.Float(digits=(16, 5), required=True, default=1, export_string_translation=False)
@@ -148,7 +147,7 @@ class HrLeaveAccrualLevel(models.Model):
     yearly_gain = fields.Float(compute="_compute_yearly_gain")
 
     _start_count_check = models.Constraint(
-        "CHECK((start_count > 0 AND milestone_date = 'after') OR (start_count = 0 AND milestone_date = 'creation'))",
+        "CHECK(start_count >= 0)",
         'You can not start an accrual in the past.',
     )
     _added_value_greater_than_zero = models.Constraint(
@@ -254,17 +253,6 @@ class HrLeaveAccrualLevel(models.Model):
         for level in self:
             if level.action_with_unused_accruals == 'lost':
                 level.accrual_validity = False
-
-    @api.depends('start_count', 'milestone_date')
-    def _compute_milestone_date(self):
-        for level in self:
-            if level.start_count == 0:
-                level.milestone_date = 'creation'
-
-    def _inverse_milestone_date(self):
-        for level in self:
-            if level.milestone_date == 'creation':
-                level.start_count = 0
 
     @api.depends('frequency', 'added_value')
     def _compute_yearly_gain(self):
