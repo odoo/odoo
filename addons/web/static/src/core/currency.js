@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { parseDate } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
@@ -15,7 +15,7 @@ export function getCurrency(id) {
 }
 
 export async function getCurrencyRates() {
-    const rates = reactive({});
+    const rates = proxy({});
 
     function recordsToRates(records) {
         return Object.fromEntries(
@@ -84,7 +84,7 @@ export async function getCurrencyRates() {
 export function formatCurrency(amount, currencyId, options = {}) {
     const currency = getCurrency(currencyId);
 
-    const digits = (options.digits !== undefined)? options.digits : (currency && currency.digits)
+    const digits = options.digits !== undefined ? options.digits : currency && currency.digits;
 
     let formattedAmount;
     if (options.humanReadable) {
@@ -93,7 +93,11 @@ export function formatCurrency(amount, currencyId, options = {}) {
             minDigits: options.minDigits,
         });
     } else {
-        formattedAmount = formatFloat(amount, { digits, minDigits: options.minDigits, trailingZeros: options.trailingZeros });
+        formattedAmount = formatFloat(amount, {
+            digits,
+            minDigits: options.minDigits,
+            trailingZeros: options.trailingZeros,
+        });
     }
 
     if (!currency || options.noSymbol) {

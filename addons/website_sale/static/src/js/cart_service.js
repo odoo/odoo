@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import {
     ComboConfiguratorDialog
 } from '@sale/js/combo_configurator_dialog/combo_configurator_dialog';
@@ -67,7 +67,7 @@ export class CartService {
     setup(_env, services) {
         this.dialog = services.dialog;
         this.rpc = rpc;  // To be overridable in tests.
-        this.notifications = reactive(new Set());
+        this.notifications = proxy(new Set());
 
         // Register the notification container
         registry.category('main_components').add('CartNotificationContainer',

@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Mutex } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -82,7 +82,7 @@ export class PosStore extends WithLazyGetterTrap {
 
     constructor() {
         super({});
-        return reactive(this);
+        return proxy(this);
     }
     // use setup instead of constructor because setup can be patched.
     async setup(
@@ -3025,7 +3025,7 @@ export const posService = {
     async start(env, deps) {
         const store = new PosStore();
         await store.setup(env, deps);
-        return reactive(store);
+        return proxy(store);
     },
 };
 

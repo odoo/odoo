@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
@@ -20,7 +20,7 @@ export class CustomizeTabPlugin extends Plugin {
     };
 
     setup() {
-        this.customizeComponent = reactive({
+        this.customizeComponent = proxy({
             component: null,
             props: {},
             editingEls: null,

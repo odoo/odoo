@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { getOnNotified } from "@point_of_sale/utils";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
@@ -9,7 +9,7 @@ export const CustomerDisplayDataService = {
         return this.setup(...arguments);
     },
     async setup(env, { bus_service }) {
-        const data = reactive({});
+        const data = proxy({});
         new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY").onmessage = (event) => {
             Object.assign(data, event.data);
         };

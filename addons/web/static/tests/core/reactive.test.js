@@ -1,6 +1,5 @@
-import { reactive } from "@web/owl2/utils";
 import { after, describe, expect, microTick, test } from "@odoo/hoot";
-import { EventBus, effect } from "@odoo/owl";
+import { EventBus, effect, proxy } from "@odoo/owl";
 import { Reactive } from "@web/core/utils/reactive";
 
 describe.current.tags("headless");
@@ -16,7 +15,7 @@ describe("class", () => {
             }
         }
 
-        const obj = reactive(new MyReactiveClass());
+        const obj = proxy(new MyReactiveClass());
         after(
             effect(() => {
                 expect.step(`counter: ${obj.counter}`);
@@ -46,7 +45,7 @@ describe("class", () => {
                 bus.addEventListener("change", () => this.counter++);
             }
         }
-        const obj = reactive(new MyReactiveClass());
+        const obj = proxy(new MyReactiveClass());
         after(
             effect(() => {
                 expect.step(`counter: ${obj.counter}`);

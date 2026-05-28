@@ -1,4 +1,3 @@
-import { reactive } from "@web/owl2/utils";
 import { jsToPyLocale } from "@web/core/l10n/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -7,7 +6,7 @@ import { isVisible } from "@web/core/utils/ui";
 
 import { FullscreenIndication } from "../components/fullscreen_indication/fullscreen_indication";
 import { WebsiteLoader } from "../components/website_loader/website_loader";
-import { EventBus } from "@odoo/owl";
+import { EventBus, proxy } from "@odoo/owl";
 
 const websiteSystrayRegistry = registry.category("website_systray");
 
@@ -47,7 +46,7 @@ export const websiteService = {
         let invalidateSnippetCache = false;
         let lastWebsiteId = null;
 
-        const context = reactive({
+        const context = proxy({
             showResourceEditor: false,
             edition: false,
             isPublicRootReady: false,

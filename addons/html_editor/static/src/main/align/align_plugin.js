@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isVisibleTextNode } from "@html_editor/utils/dom_info";
@@ -76,7 +76,7 @@ export class AlignPlugin extends Plugin {
     };
 
     setup() {
-        this.alignment = reactive({ displayName: "" });
+        this.alignment = proxy({ displayName: "" });
         this.canSetAlignmentMemoized = weakMemoize(
             (selection) => isHtmlContentSupported(selection) && this.getBlocksToAlign().length > 0
         );

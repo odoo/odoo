@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { unwrapContents } from "@html_editor/utils/dom";
 import { childNodeIndex, DIRECTIONS, nodeSize } from "@html_editor/utils/position";
@@ -70,7 +70,7 @@ export class TextEffectPlugin extends Plugin {
         },
     };
     setup() {
-        this.toolbarIconState = reactive({
+        this.toolbarIconState = proxy({
             isActive: undefined,
             isDisabled: undefined,
         });

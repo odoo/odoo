@@ -6,7 +6,7 @@ import { EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 
 /**
  * @typedef { Object } EmojiShared
@@ -61,7 +61,7 @@ export class EmojiPlugin extends Plugin {
         this.emojiListOverlay = this.dependencies.overlay.createOverlay(SuggestionList, {
             className: "popover",
         });
-        this.emojiListState = reactive({ list: [] });
+        this.emojiListState = proxy({ list: [] });
         this.addDomListener(this.document, "keydown", this.onKeyDown);
     }
 

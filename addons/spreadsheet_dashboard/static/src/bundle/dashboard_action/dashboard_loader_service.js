@@ -1,5 +1,4 @@
-import { reactive } from "@web/owl2/utils";
-import { markRaw } from "@odoo/owl";
+import { markRaw, proxy } from "@odoo/owl";
 import { Model } from "@odoo/o-spreadsheet";
 import { registry } from "@web/core/registry";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
@@ -276,7 +275,7 @@ export class DashboardLoader {
             mode: "dashboard",
             defaultCurrency: createDefaultCurrency(serverResult.default_currency),
             external: { geoJsonService: this.geoJsonService },
-            colorScheme: cookie.get("color_scheme")
+            colorScheme: cookie.get("color_scheme"),
         };
     }
 }
@@ -288,7 +287,7 @@ const dashboardLoaderService = {
         env.bus.addEventListener("ACTION_MANAGER:UPDATE", () => {
             loader.clear();
         });
-        return reactive(loader);
+        return proxy(loader);
     },
 };
 

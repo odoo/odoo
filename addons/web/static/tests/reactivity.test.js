@@ -1,6 +1,5 @@
-import { reactive } from "@web/owl2/utils";
 import { describe, expect, test } from "@odoo/hoot";
-import { toRaw } from "@odoo/owl";
+import { toRaw, proxy } from "@odoo/owl";
 
 const {
     DateTime,
@@ -18,7 +17,7 @@ const {
 describe.current.tags("headless");
 
 test(`Luxon objects can't be made reactive`, async () => {
-    const obj = reactive({
+    const obj = proxy({
         DateTime: DateTime.now(),
         Duration: Duration.fromObject({ seconds: 10 }),
         FixedOffsetZone: FixedOffsetZone.instance(0),

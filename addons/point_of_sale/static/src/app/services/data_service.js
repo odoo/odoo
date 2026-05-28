@@ -1,8 +1,7 @@
-import { reactive } from "@web/owl2/utils";
 import { Base, createRelatedModels } from "@point_of_sale/app/models/related_models";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
-import { markRaw } from "@odoo/owl";
+import { markRaw, proxy } from "@odoo/owl";
 import { debounce } from "@web/core/utils/timing";
 import IndexedDB from "../models/utils/indexed_db";
 import { DataServiceOptions } from "../models/data_service_options";
@@ -37,7 +36,7 @@ export class PosData {
             300
         );
 
-        this.network = reactive({
+        this.network = proxy({
             warningTriggered: false,
             offline: false,
             loading: true,
@@ -1055,7 +1054,7 @@ export const PosDataService = {
     async start(env, deps) {
         const data = new PosData();
         await data.setup(env, deps);
-        return reactive(data);
+        return proxy(data);
     },
 };
 

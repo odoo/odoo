@@ -1,5 +1,4 @@
-import { reactive } from "@web/owl2/utils";
-import { onMounted, onWillUnmount } from "@odoo/owl";
+import { onMounted, onWillUnmount, proxy } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
@@ -331,7 +330,7 @@ const termHashes = new Map();
 
 export class TranslationModeService {
     /** @type {TargetedTranslation[]} */
-    currentTranslations = reactive([]);
+    currentTranslations = proxy([]);
     /** @type {Set<Node>} */
     observedNodes = new Set();
     observer = new MutationObserver(this._onMutation.bind(this));

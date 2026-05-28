@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { isEmptyTextNode, isZWS } from "@html_editor/utils/dom_info";
 import { composeToolbarButton, Toolbar } from "./toolbar";
@@ -213,7 +213,7 @@ export class ToolbarPlugin extends Plugin {
                 closeOnPointerdown: false,
             });
         }
-        this.state = reactive({ buttonGroups: [], namespace: undefined });
+        this.state = proxy({ buttonGroups: [], namespace: undefined });
 
         this.onSelectionChangeActive = true;
         this.debouncedUpdateToolbar = debounce(this._updateToolbar, DELAY_TOOLBAR_OPEN);

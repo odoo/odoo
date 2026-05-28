@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
@@ -320,7 +320,7 @@ export class TranslateWebpageOptionPlugin extends Plugin {
     static id = "translateWebpageOption";
     static shared = ["getTranslationState"];
 
-    translationState = reactive({
+    translationState = proxy({
         isTranslating: false,
     });
 

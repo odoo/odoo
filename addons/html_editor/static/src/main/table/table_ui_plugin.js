@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { _t } from "@web/core/l10n/translation";
@@ -161,7 +161,7 @@ export class TableUIPlugin extends Plugin {
     }
 
     createDropdownState(closeMenu) {
-        const dropdownState = reactive({
+        const dropdownState = proxy({
             isOpen: false,
             open: () => {
                 dropdownState.isOpen = true;

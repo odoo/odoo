@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove_plugin";
@@ -375,7 +375,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 { id: c.id, folded: c.folded, foldedIntent: c.foldedIntent },
             ])
         );
-        let containers = reactive(
+        let containers = proxy(
             [...elementToOptions]
                 .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
                 .map(([element, Options]) => ({

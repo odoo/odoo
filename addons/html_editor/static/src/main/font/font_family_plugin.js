@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { FontFamilySelector } from "@html_editor/main/font/font_family_selector";
@@ -32,7 +32,7 @@ export const fontFamilyItems = [
 export class FontFamilyPlugin extends Plugin {
     static id = "fontFamily";
     static dependencies = ["split", "selection", "dom", "format"];
-    fontFamily = reactive({ displayName: defaultFontFamily.nameShort });
+    fontFamily = proxy({ displayName: defaultFontFamily.nameShort });
     /** @type {import("plugins").EditorResources} */
     resources = {
         toolbar_items: [

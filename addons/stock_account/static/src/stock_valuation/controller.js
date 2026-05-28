@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { serializeDateTime } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
@@ -10,7 +10,7 @@ export class StockValuationReportController {
         this.actionService = useService("action");
         this.dialog = useService("dialog");
         this.orm = useService("orm");
-        this.state = reactive({
+        this.state = proxy({
             date: this.action.params?.date_to
                 ? DateTime.fromISO(this.action.params.date_to)
                 : DateTime.now()

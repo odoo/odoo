@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
@@ -66,7 +66,7 @@ export class OverlayButtonsPlugin extends Plugin {
             { sequence: 49 }
         );
         this.target = null;
-        this.state = reactive({
+        this.state = proxy({
             isVisible: true,
             showUi: true,
             buttons: [],

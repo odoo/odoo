@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import {
     serializeGloryXml,
     parseGloryXml,
@@ -196,7 +196,7 @@ export class GloryService {
         this.paymentInProgress = false;
 
         /** @type {import("models".GloryState)} */
-        this.state = reactive({
+        this.state = proxy({
             status: "DISCONNECTED",
             inventory: [],
             amountInserted: 0,
