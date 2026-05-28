@@ -106,7 +106,9 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/views/pivot/**'),
 
             'web/static/src/webclient/**/*',
-            ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
+            ('remove', 'web/static/src/webclient/clickbot/clickbot_overlay.xml'),  # lazy loaded
+            ('remove', 'web/static/src/webclient/clickbot/clickbot_overlay.js'),  # lazy loaded
+            ('remove', 'web/static/src/webclient/clickbot/clickbot.js'),  # lazy loaded
             ('remove', 'web/static/src/views/form/button_box/*.scss'),
 
             # remove the report code and whitelist only what's needed
@@ -515,6 +517,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/core/l10n/utils/normalize.js',
         ],
         'web.assets_clickbot': [
+            'web/static/src/webclient/clickbot/clickbot_overlay.xml',
+            'web/static/src/webclient/clickbot/clickbot_overlay.js',
             'web/static/src/webclient/clickbot/clickbot.js',
         ],
         "web.chartjs_lib" : [

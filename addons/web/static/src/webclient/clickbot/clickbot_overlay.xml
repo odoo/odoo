@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="web.ClickbotOverlay">
+        <div class="position-fixed bottom-0 end-0 m-3 p-3 bg-white border rounded shadow" style="min-width: 280px; z-index: 9999;">
+            <t t-if="this.props.state.done">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong t-if="!this.props.state.error" class="text-success">ClickBot ✓</strong>
+                    <strong t-else="" class="text-danger">ClickBot ✗</strong>
+                    <button class="btn btn-sm btn-secondary" t-on-click="() => this.props.onClose()">Close</button>
+                </div>
+                <div t-if="this.props.state.error" class="mb-2 text-danger small text-wrap" style="max-width: 260px;">
+                    <t t-out="this.props.state.error"/>
+                </div>
+                <table class="table table-sm table-borderless mb-0 small">
+                    <tbody>
+                        <tr>
+                            <td class="text-muted ps-0">Time</td>
+                            <td class="text-end pe-0 fw-bold"><t t-out="this.props.state.timeTaken.toFixed(1)"/>s</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted ps-0">Apps</td>
+                            <td class="text-end pe-0"><t t-out="this.props.state.testedApps.length"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted ps-0">Menus</td>
+                            <td class="text-end pe-0"><t t-out="this.props.state.testedMenus.length"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted ps-0">Views</td>
+                            <td class="text-end pe-0"><t t-out="this.props.state.testedViews"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted ps-0">Form views</td>
+                            <td class="text-end pe-0"><t t-out="this.props.state.testedFormsViews"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted ps-0">Modals</td>
+                            <td class="text-end pe-0"><t t-out="this.props.state.testedModals"/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted ps-0">Filters</td>
+                            <td class="text-end pe-0"><t t-out="this.props.state.testedFilters"/></td>
+                        </tr>
+                        <tr t-if="this.props.state.studioCount">
+                            <td class="text-muted ps-0">Studio</td>
+                            <td class="text-end pe-0"><t t-out="this.props.state.studioCount"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+            <t t-else="">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong>ClickBot</strong>
+                    <button class="btn btn-sm btn-danger" t-on-click="this.onStop">Stop ClickAll!</button>
+                </div>
+                <div t-if="this.props.state.currentApp" class="mb-2 text-muted small text-truncate">
+                    Testing: <t t-out="this.props.state.currentApp"/>
+                </div>
+                <t t-if="!this.props.state.xmlId and this.props.state.totalApps">
+                    <div class="d-flex justify-content-between mb-1">
+                        <small>Applications</small>
+                        <small><t t-out="this.props.state.appIndex"/> / <t t-out="this.props.state.totalApps"/></small>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar" role="progressbar"
+                            t-att-style="'width: ' + (this.props.state.appIndex / this.props.state.totalApps * 100) + '%;'"
+                            t-att-aria-valuenow="this.props.state.appIndex"
+                            aria-valuemin="0"
+                            t-att-aria-valuemax="this.props.state.totalApps"/>
+                    </div>
+                </t>
+                <t t-if="!this.props.state.light">
+                    <div t-if="this.props.state.currentMenu" class="mb-1 text-muted small text-truncate">
+                        Menu: <t t-out="this.props.state.currentMenu"/>
+                    </div>
+                    <t t-if="this.props.state.totalMenus">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small>Menus</small>
+                            <small><t t-out="this.props.state.menuIndex"/> / <t t-out="this.props.state.totalMenus"/></small>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" role="progressbar"
+                                t-att-style="'width: ' + (this.props.state.menuIndex / this.props.state.totalMenus * 100) + '%;'"
+                                t-att-aria-valuenow="this.props.state.menuIndex"
+                                aria-valuemin="0"
+                                t-att-aria-valuemax="this.props.state.totalMenus"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

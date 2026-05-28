@@ -21,8 +21,10 @@ export function runClickTestItem({ env }) {
 }
 
 const currentState = JSON.parse(browser.localStorage.getItem("running.clickbot"));
-if (currentState) {
+if (currentState && !currentState.done) {
     startClickEverywhere(currentState.xmlId, currentState.light, currentState);
+} else if (currentState) {
+    browser.localStorage.removeItem("running.clickbot");
 }
 
 export default {
