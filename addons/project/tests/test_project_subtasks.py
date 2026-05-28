@@ -1,12 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import psycopg2
 from lxml import etree
 
 from odoo import Command
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo.tests import Form, tagged
-from odoo.tools import mute_logger
 from odoo.exceptions import ValidationError
 
 
@@ -82,7 +80,7 @@ class TestProjectSubtasks(TestProjectCommon):
                 - Project should be correct
                 - Should be displayed
             3) Reset the project to False
-                - Should raise an error
+                - Should not be displayed
             3bis) Reset the parent task project to False
                 - Should raise an error
             4) Set project on parent to same project as subtask
@@ -116,8 +114,8 @@ class TestProjectSubtasks(TestProjectCommon):
         task_form = Form(self.task_1.with_context({'tracking_disable': True}))
         with task_form.child_ids.edit(0) as child_task_form:
             child_task_form.project_id = self.env['project.project']
-        with self.assertRaises(psycopg2.errors.CheckViolation), mute_logger('odoo.sql_db'):
             task_form.save()
+            self.assertFalse(child_task_form.display_in_project, "Removing the project from the child task should hide it without raising an error")
 
         # 3bis)
         task_form = Form(self.task_1.with_context({'tracking_disable': True}))
