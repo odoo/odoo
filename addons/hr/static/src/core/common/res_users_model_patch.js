@@ -9,12 +9,16 @@ patch(ResUsers.prototype, {
         this.employee_ids = fields.Many("hr.employee", {
             inverse: "user_id",
         });
+        this.all_employee_ids = fields.Many("hr.employee");
         this.employee_id = fields.One("hr.employee", {
             compute() {
+                const employees = this.all_employee_ids.length
+                    ? this.all_employee_ids
+                    : this.employee_ids;
                 return (
-                    this.employee_ids.find(
+                    employees.find(
                         (employee) => employee.company_id?.id === user.activeCompany.id
-                    ) || this.employee_ids[0]
+                    ) || employees[0]
                 );
             },
         });
