@@ -84,9 +84,20 @@ test("Step Tour validity", async () => {
         [
             {
                 received: steps[0],
-                path: [],
+                path: "",
                 message: "object value has unknown keys",
                 unknownKeys: ["Belgium", "wins", "EURO2024"],
+                expectedKeys: [
+                    "id?",
+                    "content?",
+                    "debugHelp?",
+                    "isActive?",
+                    "run?",
+                    "timeout?",
+                    "tooltipPosition?",
+                    "trigger",
+                    "expectUnloadPage?",
+                ],
             },
         ],
         null,
@@ -96,9 +107,20 @@ test("Step Tour validity", async () => {
         [
             {
                 received: steps[1],
-                path: [],
+                path: "",
                 message: "object value has unknown keys",
                 unknownKeys: ["my_title", "doku"],
+                expectedKeys: [
+                    "id?",
+                    "content?",
+                    "debugHelp?",
+                    "isActive?",
+                    "run?",
+                    "timeout?",
+                    "tooltipPosition?",
+                    "trigger",
+                    "expectUnloadPage?",
+                ],
             },
         ],
         null,
@@ -108,22 +130,22 @@ test("Step Tour validity", async () => {
         [
             {
                 received: steps[2].run,
-                path: ["run"],
+                path: "run",
                 message: "value does not match union type",
                 subIssues: [
                     {
-                        received: steps[2].run,
-                        path: ["run"],
+                        received: "[Known object]",
+                        path: "run",
                         message: "value is not a string",
                     },
                     {
-                        received: steps[2].run,
-                        path: ["run"],
+                        received: "[Known object]",
+                        path: "run",
                         message: "value is not a function",
                     },
                     {
-                        received: steps[2].run,
-                        path: ["run"],
+                        received: "[Known object]",
+                        path: "run",
                         message: "value is not a boolean",
                     },
                 ],
