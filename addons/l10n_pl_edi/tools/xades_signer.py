@@ -61,7 +61,13 @@ class XadesSigner:
         subject_str = ""
         with suppress(Exception):
             subject_str = self.cert.subject.rfc4514_string()
-        identifier_type = "certificateSubject" if nip in subject_str else "certificateFingerprint"
+        clean_nip = nip.replace("-", "").replace(" ", "")
+        is_subject = (
+            clean_nip in subject_str or
+            "VATPL" in subject_str or
+            "PNOPL" in subject_str
+        )
+        identifier_type = "certificateSubject" if is_subject else "certificateFingerprint"
         xml_to_sign_str = f'<AuthTokenRequest xmlns="http://ksef.mf.gov.pl/auth/token/2.0"><Challenge>{challenge_code}</Challenge><ContextIdentifier><Nip>{nip}</Nip></ContextIdentifier><SubjectIdentifierType>{identifier_type}</SubjectIdentifierType></AuthTokenRequest>'
         root = etree.fromstring(xml_to_sign_str)
 
