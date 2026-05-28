@@ -395,16 +395,19 @@ class AccountEdiProxyClientUser(models.Model):
         original_moves = self.env['account.move'].search(origin_domain).grouped('peppol_message_uuid')
 
         for uuid, content in messages.items():
+            # We acknowledge all messages:
+            # The original move / response are outgoing messages created locally. They will not be created later.
             flow_number = content['flow_number']
             if content['document_type'] in {'Invoice', 'CreditNote'}:
+                processed_messages[uuid] = self.env['account.move']
                 origin_uuid = content['origin_peppol_message_uuid']
                 origin_move = original_moves.get(origin_uuid)
                 if not origin_uuid or not origin_move:
                     _logger.warning('[Flow 1] The tax extract from the PPF with UUID %s could not be imported: Original journal entry (UUID %s) not found.', uuid, origin_uuid)
                     continue
-                if origin_move := self._pdp_import_tax_extract(uuid, content, origin_move[:1]):
-                    processed_messages[uuid] = origin_move
+                processed_messages[uuid] = self._pdp_import_tax_extract(uuid, content, origin_move[:1])
             elif content['document_type'] == 'CrossDomainAcknowledgementAndResponse' and flow_number in ('1', '6'):
+                processed_messages[uuid] = self.env['account.peppol.response']
                 origin_uuid = content['origin_peppol_message_uuid']
                 origin_move = original_moves.get(origin_uuid)
                 if not origin_uuid or not origin_move:
@@ -412,11 +415,9 @@ class AccountEdiProxyClientUser(models.Model):
                     _logger.warning('[Flow %s] The %s response from the PPF with UUID %s could not be imported: Original journal entry (UUID %s) not found.', flow_number, flow_description, uuid, origin_uuid)
                     continue
                 if content['direction'] == 'outgoing':
-                    if response := self._pdp_import_outgoing_response(uuid, content, origin_move[:1]):
-                        processed_messages[uuid] = response
+                    processed_messages[uuid] = self._pdp_import_outgoing_response(uuid, content, origin_move[:1])
                 else:
-                    if response := self._pdp_import_incoming_response(uuid, content, origin_move[:1]):
-                        processed_messages[uuid] = response
+                    processed_messages[uuid] = self._pdp_import_incoming_response(uuid, content, origin_move[:1])
 
         return processed_messages
 
@@ -457,9 +458,11 @@ class AccountEdiProxyClientUser(models.Model):
             response
 
         if content.get('error'):
-            body = self.env._("[Flow 6] There was an error when sending a response to the PPF: %s",
-                              content['error'].get('data', {}).get('message') or content['error']['message'])
-            response._message_log(body=body)
+            error_message = content['error'].get('data', {}).get('message') or content['error']['message']
+            status = dict(response._fields['response_code']._description_selection(self.env))[response.response_code]
+            body = self.env._("[Flow 6] There was an error when sending a '%(status)s' response (UUID %(uuid)s) to the PPF: %(error)s",
+                              status=status, uuid=response.peppol_message_uuid, error=error_message)
+            origin_move._message_log(body=body)
             response.pdp_ppf_state = 'error'
         else:
             response.pdp_ppf_state = 'sent'
