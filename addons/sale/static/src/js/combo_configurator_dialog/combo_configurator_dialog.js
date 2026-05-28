@@ -191,7 +191,7 @@ export class ComboConfiguratorDialog extends Component {
                 pricelistId: this.props.pricelist_id,
                 currencyId: this.props.currency_id,
                 soDate: this.props.date,
-                edit: true,
+                edit: true, // Hide the optional products, if any.
                 options: {
                     canChangeVariant: false,
                     showQuantity: false,

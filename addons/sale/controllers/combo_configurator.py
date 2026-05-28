@@ -159,9 +159,7 @@ class SaleComboConfiguratorController(Controller):
             "is_preselected": is_preselected,
             "is_selected": bool(selected_combo_item) or is_preselected,
             "is_configurable": is_configurable,
-            "quantity": selected_combo_item.get("quantity", 1)
-            if isinstance(selected_combo_item, dict)
-            else 1,
+            "quantity": selected_combo_item.get("quantity", 1),
             "product": {
                 "id": combo_item.product_id.id,
                 "product_tmpl_id": combo_item.product_id.product_tmpl_id.id,
