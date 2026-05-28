@@ -1153,8 +1153,21 @@ class BaseAutomation(models.Model):
         relative_until = until + relative_offset
         relative_last_run = last_run + relative_offset
         if date_field.type == 'date':
-            # find records that have a date in past, but were not yet executed that day
-            time_domain = Domain(date_field.name, '>', relative_last_run.date()) & Domain(date_field.name, '<=', relative_until.date())
+            strict_date_domain = Domain(date_field.name, '>', relative_last_run.date())
+            same_day_domain = Domain(date_field.name, '=', relative_last_run.date())
+
+            modification_domain = Domain.FALSE
+            if 'write_date' in Model._fields:
+                modification_domain |= Domain('write_date', '>', last_run)
+            if 'create_date' in Model._fields:
+                modification_domain |= Domain('create_date', '>', last_run)
+
+            if not modification_domain:
+                modification_domain = Domain.TRUE
+
+            same_day_domain &= modification_domain
+            time_domain = (strict_date_domain | same_day_domain) & Domain(date_field.name, '<=', relative_until.date())
+
             if is_date_automation_last:
                 time_domain |= Domain(date_field.name, '=', False) & Domain('create_date', '>', relative_last_run.date()) & Domain('create_date', '<=', relative_until.today())
         else:  # datetime

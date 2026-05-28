@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import fields, Command
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests import Form, tagged
+from datetime import timedelta
 
 
 @tagged('post_install', '-at_install')
@@ -153,6 +154,48 @@ class TestAutomation(TransactionCaseWithUserDemo):
         }
         server_action.with_context(context).run()
         self.assertEqual(partner.name, 'Reset Name', 'The automatic action must not be performed')
+
+    def test_05_on_time_trigger_activity_flow(self):
+        """
+            Ensure time-based automations process records when the trigger date
+            matches the automation's last run date. This prevents skipping records
+            that were created or updated later on the exact same day, while
+            avoiding duplicate processing (infinite loops).
+        """
+        model = self.env.ref("base.model_res_partner")
+
+        custom_field = self.env['ir.model.fields'].create({
+            "name": "x_custom_trigger_field",
+            "model_id": model.id,
+            "ttype": "date",
+        })
+
+        automation = self.env["base.automation"].create({
+            "name": "Flow Time-based Activity",
+            "model_id": model.id,
+            "trigger": "on_time",
+            "trg_date_id": custom_field.id,
+        })
+
+        today = fields.Datetime.today()
+        yesterday = today - timedelta(days=1)
+
+        record = self.env['res.partner'].create({
+            "name": "Kinhosz",
+        })
+        record.x_custom_trigger_field = yesterday
+
+        # 1. Record created/updated after the last_run must be processed
+        automation.last_run = yesterday
+        records = automation._search_time_based_automation_records(until=today)
+        self.assertEqual(len(records), 1)
+
+        # 2. Simulate cron finishing and updating last_run to now
+        automation.last_run = fields.Datetime.now()
+
+        # 3. Ensure the same record is not picked up again
+        records_after_run = automation._search_time_based_automation_records(until=today)
+        self.assertEqual(len(records_after_run), 0)
 
     def test_create_automation_rule_for_valid_model(self):
         """
