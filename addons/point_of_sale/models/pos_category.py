@@ -82,6 +82,13 @@ class PosCategory(models.Model):
             available_categories |= child._get_descendants()
         return available_categories
 
+    def _get_parents(self):
+        available_categories = self
+        if self.parent_id:
+            available_categories |= self.parent_id
+            available_categories |= self.parent_id._get_parents()
+        return available_categories
+
     @api.constrains('hour_until', 'hour_after')
     def _check_hour(self):
         for category in self:

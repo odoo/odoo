@@ -113,30 +113,12 @@ export class ConfirmationPage extends Component {
      * the changes before sending them to the printer.
      */
     async printOrderChanges() {
-        const order = this.confirmedOrder;
-        if (!order) {
+        if (this.selfOrder.config.self_ordering_mode === "mobile") {
             return;
         }
 
-        if (this.selfOrder.config.self_ordering_mode === "mobile") {
-            const result = await rpc("/pos-self-order/update-last-changes", {
-                access_token: this.selfOrder.access_token,
-                order_id: order.id,
-                order_access_token: order.access_token,
-            });
-            this.selfOrder.models.connectNewData(result);
-        }
-
-        // Preparation display part ensure changes are up to date.
+        const order = this.confirmedOrder;
         await this.selfOrder.ticketPrinter.printOrderChanges({ order, webFallback: false });
-        const result = await rpc("/pos-self-order/update-last-changes", {
-            access_token: this.selfOrder.access_token,
-            order_id: order.id,
-            order_access_token: order.access_token,
-            update: true,
-        });
-        this.selfOrder.models.connectNewData(result);
-        this.selfOrder.data.debouncedSynchronizeLocalDataInIndexedDB();
     }
 
     async printOrder() {

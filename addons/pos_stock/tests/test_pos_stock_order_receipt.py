@@ -26,4 +26,4 @@ class TestPosStockOrderReceipt(TestPosStockHttpCommon, TestPosOrderReceipt):
         order_model = self.env.registry.models['pos.order']
         order_model.get_order_frontend_receipt_data = get_order_frontend_receipt_data
         self.start_pos_tour("test_receipt_with_ship_later")
-        self.compare_data(data['frontend_data'], data['backend_data'])
+        self.compare_receipt_data(data['frontend_data'], data['backend_data'])

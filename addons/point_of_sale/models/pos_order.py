@@ -1517,9 +1517,17 @@ class PosOrder(models.Model):
         totalCount = self.search_count(real_domain)
         return {'ordersInfo': list(orders_info.items())[::-1], 'totalCount': totalCount}
 
+    def _should_send_to_preparation(self):
+        """
+        Determine whether the order should be sent to preparation based
+        on its payment status and the config's payment method configuration.
+        """
+        return not self.config_id.has_valid_self_payment_method() or self.state == "paid"
+
     def _send_order(self):
-        # This function is made to be overriden by pos_self_order_preparation_display
-        pass
+        self.ensure_one()
+        if self._should_send_to_preparation():
+            self.env['pos.prep.order'].sudo().update_last_order_change(self.sudo())  # Will send to preparation display if installed.
 
     def _prepare_pos_log(self, body):
         return body
