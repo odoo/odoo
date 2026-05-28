@@ -154,8 +154,8 @@ class AccountFiscalPosition(models.Model):
     def map_tax(self, taxes):
         if not self:
             return taxes
-        if not self.tax_ids and taxes.fiscal_position_ids:  # empty fiscal positions (like those created by tax units) remove all taxes
-            return self.env['account.tax']
+        if not self.tax_ids:
+            return taxes.filtered(lambda tax: not tax.fiscal_position_ids)
         return self.env['account.tax'].browse(unique(
             tax_id
             for tax in taxes
@@ -280,12 +280,18 @@ class AccountFiscalPosition(models.Model):
 
     def action_open_related_taxes(self):
         list_view = self.env.ref('account.account_tax_fiscal_position_view_tree', raise_if_not_found=False)
+        domain = [
+            *self.env['account.tax']._check_company_domain(self.company_id),
+            '|',
+                ('id', 'in', self.tax_ids.ids),
+                ('fiscal_position_ids', '=', False),
+        ]
         return {
             'type': 'ir.actions.act_window',
             'name': self.env._("%s taxes", self.display_name),
             'res_model': 'account.tax',
             'views': [(list_view.id if list_view else False, 'list'), (False, 'form')],
-            'domain': [('id', 'in', self.tax_ids.ids)],
+            'domain': domain,
             'context': {'active_test': False},
         }
 
