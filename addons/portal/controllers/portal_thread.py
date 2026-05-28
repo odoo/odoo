@@ -64,6 +64,7 @@ class PortalChatter(ThreadController):
                     "can_react": bool(can_react),
                     "hasReadAccess": thread.sudo(False).has_access("read"),
                 },
+                ["display_name"],
                 as_thread=True,
             )
         return store.get_result()
