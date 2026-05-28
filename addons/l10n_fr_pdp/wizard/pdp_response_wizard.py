@@ -281,7 +281,7 @@ class PdpResponseWizard(models.TransientModel):
         if self.status == 'PD' and (up_to_date_moves := self.move_ids.filtered(lambda m: not m.pdp_lifecycle_residual)):
             raise UserError(self.env._("Some of the journal entries have no payments to send: %s", format_list(self.env, up_to_date_moves.mapped('display_name'))))
 
-        additional_info = {
+        base_info = {
             field: value for field in ['note', 'reason_code'] if (value := self[field])
         }
 
@@ -296,9 +296,14 @@ class PdpResponseWizard(models.TransientModel):
                 ):
                     forced_amount = self.paid_amount
 
-                for move in moves:
-                    payments = self._get_payments_data(move, forced_amount=forced_amount)
-                    company.account_peppol_edi_user._pdp_send_response(move, 'PD', additional_info={**additional_info, 'payments': payments})
+                additional_info = {
+                    move.peppol_message_uuid: {
+                        **base_info,
+                        'payments': self._get_payments_data(move, forced_amount=forced_amount),
+                    }
+                    for move in moves
+                }
             else:
-                company.account_peppol_edi_user._pdp_send_response(moves, self.status, additional_info=additional_info)
+                additional_info = {move.peppol_message_uuid: base_info for move in moves}
+            company.account_peppol_edi_user._pdp_send_response(moves, self.status, additional_info=additional_info)
         return self.env.context.get('cancel_res', True)

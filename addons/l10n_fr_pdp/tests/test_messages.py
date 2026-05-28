@@ -408,11 +408,13 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
                 'reference_uuids': ['yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy'],
                 'status': 'paid',
                 'additional_info': {
-                    'payments': [
-                        {'amount_changed': False, 'type_code': 'MEN', 'amount': '600.00', 'currency': 'EUR', 'tax_percent': '20.00'},
-                        {'amount_changed': False, 'type_code': 'MEN', 'amount': '1085.00', 'currency': 'EUR', 'tax_percent': '8.50'},
-                    ],
-                    'issue_datetime': '2024-12-05 00:00:00',
+                    move.peppol_message_uuid: {
+                        'payments': [
+                            {'amount_changed': False, 'type_code': 'MEN', 'amount': '600.00', 'currency': 'EUR', 'tax_percent': '20.00'},
+                            {'amount_changed': False, 'type_code': 'MEN', 'amount': '1085.00', 'currency': 'EUR', 'tax_percent': '8.50'},
+                        ],
+                        'issue_datetime': '2024-12-05 00:00:00',
+                    }
                 }})
         self.assertFalse(move.pdp_lifecycle_residual)
 
@@ -442,11 +444,13 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
                 'reference_uuids': ['yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy'],
                 'status': 'paid',
                 'additional_info': {
-                    'payments': [
-                        {'amount_changed': False, 'type_code': 'MEN', 'amount': '600.00', 'currency': 'EUR', 'tax_percent': '20.00'},
-                        {'amount_changed': False, 'type_code': 'MEN', 'amount': '400.00', 'currency': 'EUR', 'tax_percent': '8.50'},
-                    ],
-                    'issue_datetime': '2024-12-05 00:00:00',
+                    move.peppol_message_uuid: {
+                        'payments': [
+                            {'amount_changed': False, 'type_code': 'MEN', 'amount': '600.00', 'currency': 'EUR', 'tax_percent': '20.00'},
+                            {'amount_changed': False, 'type_code': 'MEN', 'amount': '400.00', 'currency': 'EUR', 'tax_percent': '8.50'},
+                        ],
+                        'issue_datetime': '2024-12-05 00:00:00',
+                    }
                 }})
         paid_response = move.peppol_response_ids
         self.assertRecordValues(paid_response, [{
@@ -477,11 +481,13 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
                 'reference_uuids': ['yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy'],
                 'status': 'paid',
                 'additional_info': {
-                    'payments': [
-                        {'amount_changed': False, 'type_code': 'MEN', 'amount': '-600.00', 'currency': 'EUR', 'tax_percent': '20.00'},
-                        {'amount_changed': False, 'type_code': 'MEN', 'amount': '-400.00', 'currency': 'EUR', 'tax_percent': '8.50'},
-                    ],
-                    'issue_datetime': '2024-12-05 00:00:00',
+                    move.peppol_message_uuid: {
+                        'payments': [
+                            {'amount_changed': False, 'type_code': 'MEN', 'amount': '-600.00', 'currency': 'EUR', 'tax_percent': '20.00'},
+                            {'amount_changed': False, 'type_code': 'MEN', 'amount': '-400.00', 'currency': 'EUR', 'tax_percent': '8.50'},
+                        ],
+                        'issue_datetime': '2024-12-05 00:00:00',
+                    }
                 }})
         self.assertEqual(move._pdp_get_paid_lifecycle_total_amount(), 0)
         self.assertFalse(move.pdp_lifecycle_residual)

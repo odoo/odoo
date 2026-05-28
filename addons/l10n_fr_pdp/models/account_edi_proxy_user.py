@@ -300,7 +300,9 @@ class AccountEdiProxyClientUser(models.Model):
 
         try:
             issue_time = fields.Datetime.now()
-            additional_info['issue_datetime'] = fields.Datetime.to_string(issue_time)
+            issue_time_string = fields.Datetime.to_string(issue_time)
+            for move in reference_moves:
+                additional_info.setdefault(move.peppol_message_uuid, {})['issue_datetime'] = issue_time_string
             response = self._call_peppol_proxy(
                 "/api/pdp/1/send_response",
                 params={
@@ -333,15 +335,17 @@ class AccountEdiProxyClientUser(models.Model):
                 bodies={move.id: log_message for move in reference_moves},
             )
             return
-        status_infos = [{'note': additional_info.get('note')}]  # We only put the note since we have all other info
         self.env['account.peppol.response'].create([
             {
                 'peppol_message_uuid': message['message_uuid'],
                 'response_code': status,
                 'peppol_state': 'processing',
                 'move_id': move.id,
-                'pdp_status_info': "\n\n".join([self._format_status_info(status_info) for status_info in status_infos]),
-                'pdp_payment_info': additional_info.get('payments'),
+                'pdp_status_info': "\n\n".join([
+                    # We only put the note since we have all other info
+                    self._format_status_info({'note': additional_info.get(move.peppol_message_uuid, {}).get('note')})
+                ]),
+                'pdp_payment_info': additional_info.get(move.peppol_message_uuid, {}).get('payments'),
                 'pdp_issue_date': issue_time,
                 'pdp_flow_number': '2',
             }
