@@ -376,6 +376,10 @@ class Website(Home):
         response.headers['Cache-Control'] = f'public, max-age={STATIC_CACHE_LONG}'
         return response
 
+    @http.route('/team-board', type='http', auth='public', website=True, sitemap=True, readonly=True)
+    def team_board(self, **kwargs):
+        return request.render('website.team_board')
+
     @http.route('/website/info', type='http', auth="public", website=True, sitemap=False, readonly=True, list_as_website_content=_lt("Website Information"))
     def website_info(self, **kwargs):
         Module = request.env['ir.module.module'].sudo()

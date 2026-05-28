@@ -35,6 +35,7 @@
         'data/ir_cron_data.xml',
         'data/mail_mail_data.xml',
         'data/website_data.xml',
+        'data/team_board_page.xml',
         'data/website_visitor_cron.xml',
         'data/digest_data.xml',
         'views/website_technical_views.xml',

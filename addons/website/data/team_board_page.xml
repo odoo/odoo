@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website.team_board" name="Team Board">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <section class="s_text_block pt64 pb24" data-snippet="s_text_block">
+                        <div class="container s_allow_columns">
+                            <h1>Team Board</h1>
+                            <p class="lead">Meet the people building the next chapter.</p>
+                        </div>
+                    </section>
+                    <section class="s_team_board o_cc o_cc1 pt64 pb64" data-snippet="s_team_board">
+                        <div class="container">
+                            <h2 class="h3-fs">Meet our team</h2>
+                            <p class="lead">The people building the experience you rely on every day.</p>
+                            <div class="row">
+                                <div data-name="Team Member" class="col-6 col-lg-3">
+                                    <div class="s_card o_card_img_top card o_cc o_cc1" data-name="Card" data-snippet="s_card" data-vxml="001" tabindex="0" role="button" aria-haspopup="dialog">
+                                        <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
+                                            <img class="o_card_img card-img-top" src="/web/image/website.s_company_team_image_1"/>
+                                        </figure>
+                                        <div class="card-body">
+                                            <h3 class="card-title h5-fs">Tony Fred</h3>
+                                            <p class="text-muted">Chief Executive Officer</p>
+                                            <p class="o_team_board_bio">Tony shapes product strategy and keeps execution aligned across teams.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div data-name="Team Member" class="col-6 col-lg-3">
+                                    <div class="s_card o_card_img_top card o_cc o_cc1" data-name="Card" data-snippet="s_card" data-vxml="001" tabindex="0" role="button" aria-haspopup="dialog">
+                                        <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
+                                            <img class="o_card_img card-img-top" src="/web/image/website.s_company_team_image_2"/>
+                                        </figure>
+                                        <div class="card-body">
+                                            <h3 class="card-title h5-fs">Mich Stark</h3>
+                                            <p class="text-muted">Chief Commercial Officer</p>
+                                            <p class="o_team_board_bio">Mich leads go-to market initiatives and partner relationships.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div data-name="Team Member" class="col-6 col-lg-3">
+                                    <div class="s_card o_card_img_top card o_cc o_cc1" data-name="Card" data-snippet="s_card" data-vxml="001" tabindex="0" role="button" aria-haspopup="dialog">
+                                        <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
+                                            <img class="o_card_img card-img-top" src="/web/image/website.s_company_team_image_3"/>
+                                        </figure>
+                                        <div class="card-body">
+                                            <h3 class="card-title h5-fs">Aline Turner</h3>
+                                            <p class="text-muted">Chief Technical Officer</p>
+                                            <p class="o_team_board_bio">Aline drives platform architecture and engineering quality.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade s_team_board_modal"
+                             tabindex="-1" role="dialog" aria-modal="true"
+                             aria-labelledby="s_team_board_modal_title" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-body p-4">
+                                        <button type="button" class="btn-close s_team_board_modal_close position-absolute top-0 end-0 m-3"
+                                                data-bs-dismiss="modal" aria-label="Close"/>
+                                        <div class="d-flex flex-column flex-md-row align-items-start gap-4">
+                                            <div class="s_team_board_modal_aside">
+                                                <img class="s_team_board_modal_img rounded mb-3" alt=""/>
+                                                <div class="s_team_board_modal_actions d-flex flex-wrap gap-2"/>
+                                            </div>
+                                            <div class="s_team_board_modal_text flex-grow-1">
+                                                <h3 class="modal-title h3-fs s_team_board_modal_name" id="s_team_board_modal_title">&#8203;</h3>
+                                                <p class="s_team_board_modal_role text-muted mb-2"/>
+                                                <p class="s_team_board_modal_bio"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+
+    <data noupdate="1">
+        <record id="menu_team_board" model="website.menu">
+            <field name="name">Team Board</field>
+            <field name="url">/team-board</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">20</field>
+        </record>
+    </data>
+</odoo>
