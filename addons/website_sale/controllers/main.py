@@ -697,6 +697,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return request.render("website_sale.products", values)
 
+    @route(["/shop/reload"], type="jsonrpc", auth="public", website=True)
+    def shop_reload(self, *args, **kwargs):
+        response = self.shop(*args, **kwargs)
+        html_content = response.render()
+        product_count = response.qcontext.get("search_count", 0)
+
+        return {"product_count": product_count, "html": str(html_content)}
+
     @route(
         [
             f"{SHOP_PATH}/<model('product.template'):product>",
@@ -2056,7 +2064,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     @staticmethod
     def _populate_currency_and_pricelist(kwargs):
-        kwargs.update({"currency_id": request.env.website.currency_id.id, "pricelist_id": request.pricelist.id})
+        kwargs.update({
+            "currency_id": request.env.website.currency_id.id,
+            "pricelist_id": request.pricelist.id,
+        })
 
     @staticmethod
     def _validate_and_get_category(category):

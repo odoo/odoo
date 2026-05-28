@@ -6,13 +6,19 @@ registry.category("web_tour.tours").add("shop_attribute_filters_remain_when_chan
             content: "Select first attribute value",
             trigger: ".products_attributes_filters form.js_attributes input:eq(0)",
             run: "click",
-            expectUnloadPage: true,
+        },
+        {
+            content: "Check that the first filter is applied",
+            trigger: "li.active a.page-link[href*='size']",
         },
         {
             content: "Select last attribute value",
             trigger: ".products_attributes_filters form.js_attributes input:eq(3)",
             run: "click",
-            expectUnloadPage: true,
+        },
+        {
+            content: "Check that the second filter is applied",
+            trigger: "li.active a.page-link[href*='color']",
         },
         {
             content: "Select page 2",

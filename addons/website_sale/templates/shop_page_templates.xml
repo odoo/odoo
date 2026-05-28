@@ -862,7 +862,7 @@
                         t-attf-id="o_wsale_offcanvas_attribute_{{a.id}}_header"
                     >
                         <button
-                            t-attf-class="o_wsale_offcanvas_title accordion-button rounded-0 {{'' if _expand_attributes else 'collapsed'}}"
+                            t-attf-class="o_wsale_offcanvas_title accordion-button px-4 bg-transparent shadow-none {{'' if _expand_attributes else 'collapsed'}}"
                             type="button"
                             data-bs-toggle="collapse"
                             t-attf-data-bs-target="#o_wsale_offcanvas_attribute_{{a.id}}"
@@ -963,9 +963,6 @@
     <template id="website_sale.o_wsale_offcanvas" name="Offcanvas">
         <aside id="o_wsale_offcanvas"
                class="o_website_offcanvas offcanvas offcanvas-end p-0">
-            <div class="offcanvas-header justify-content-end">
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
-            </div>
             <div id="o_wsale_offcanvas_content" class="accordion accordion-flush flex-grow-1 overflow-auto">
                 <!-- Show sorting only if it's not avavailbe in the topbar already -->
                 <div t-if="not is_view_active('website_sale.sort')" class="accordion-item">
@@ -1048,7 +1045,7 @@
                     <t t-call="website_sale.ribbon_filter_pills"/>
                 </div>
             </div>
-            <div class="offcanvas-body d-flex justify-content-between flex-grow-0 flex-shrink-0 border-top overflow-hidden">
+            <div class="offcanvas-body d-flex flex-column flex-grow-0 overflow-hidden">
                 <t
                     t-set="has_active_filters"
                     t-value="(
@@ -1060,7 +1057,7 @@
                     )"
                 />
                 <a
-                    t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2 {{not has_active_filters and 'disabled'}}"
+                    t-attf-class="btn btn-link w-100 py-1 mb-2 {{not has_active_filters and 'disabled'}}"
                     t-att-aria-disabled="'true' if not has_active_filters else 'false'"
                     t-att-href="keep(
                         **reset_attribute_value_params, tags=0,
@@ -1071,6 +1068,20 @@
                 >
                     Clear Filters
                 </a>
+                <button
+                    id="o_wsale_apply_filters_btn"
+                    class="btn btn-primary w-100"
+                    type="button"
+                    data-bs-dismiss="offcanvas"
+                >
+                    Apply Filters
+                    <span
+                        id="o_wsale_offcanvas_product_count"
+                        class="badge rounded-pill bg-o-color-3 text-o-color-1"
+                    >
+                        <t t-out="search_count"/>
+                    </span>
+                </button>
             </div>
         </aside>
     </template>

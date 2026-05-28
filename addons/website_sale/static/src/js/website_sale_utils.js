@@ -1,6 +1,9 @@
 import { browser } from '@web/core/browser/browser';
 import { _t } from '@web/core/l10n/translation';
-import { createElementWithContent } from '@web/core/utils/html';
+import { rpc } from "@web/core/network/rpc";
+import { createElementWithContent, setElementContent } from '@web/core/utils/html';
+import { redirect } from '@web/core/utils/urls';
+import { markup } from "@odoo/owl";
 
 /**
  * Updates both navbar cart
@@ -82,6 +85,53 @@ function updateQuickReorderSidebar(data) {
     }
 }
 
+async function updateShopContent(interaction, {
+    url,
+    searchParams,
+}) {
+    const targetUrl = `${url.pathname}?${searchParams.toString()}`;
+
+    const productGridWrapper = document.querySelector('.o_wsale_products_grid_table_wrapper');
+    productGridWrapper?.classList?.add('opacity-50');
+
+    try {
+        const paramsObject = Object.fromEntries(searchParams.entries());
+        const data = await interaction.waitFor(rpc('/shop/reload', paramsObject));
+        const updatedShopPage = document.createElement('div');
+        setElementContent(updatedShopPage, markup(data.html))
+        const shopPageEl = document.querySelector('.o_wsale_products_page');
+        interaction.services['public.interactions'].stopInteractions(shopPageEl);
+
+        const newSidebar = updatedShopPage.querySelector('#products_grid_before');
+        const currentSidebar = document.querySelector('#products_grid_before');
+        if (newSidebar && currentSidebar) {
+            setElementContent(currentSidebar, markup(newSidebar.innerHTML))
+        }
+
+        const newGrid = updatedShopPage.querySelector('.o_wsale_products_grid_table');
+        const currentGrid = document.querySelector('.o_wsale_products_grid_table');
+        setElementContent(currentGrid, markup(newGrid.innerHTML))
+
+        const newPager = updatedShopPage.querySelector('.products_pager');
+        const currentPager = document.querySelector('.products_pager');
+        setElementContent(currentPager, markup(newPager.innerHTML))
+
+        const newOffcanvas = updatedShopPage.querySelector('.o_website_offcanvas');
+        const currentOffcanvas = document.querySelector('.o_website_offcanvas');
+        setElementContent(currentOffcanvas, markup(newOffcanvas.innerHTML))
+
+        const applyBtn = document.querySelector('#o_wsale_offcanvas_product_count');
+        if (applyBtn) {
+            setElementContent(applyBtn, data.product_count)
+        }
+        history.pushState({}, '', targetUrl);
+        interaction.services['public.interactions'].startInteractions(shopPageEl);
+        productGridWrapper?.classList.remove('opacity-50');
+    } catch {
+        redirect(targetUrl);
+    }
+}
+
 /**
  * Return the selected attribute values from the given container.
  *
@@ -144,4 +194,5 @@ export default {
     unslug: unslug,
     getAttributeValueParams: getAttributeValueParams,
     clearAttributeValueParams: clearAttributeValueParams,
+    updateShopContent: updateShopContent,
 };
