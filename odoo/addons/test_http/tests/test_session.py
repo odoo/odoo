@@ -3,6 +3,19 @@
 import os
 import datetime
 import json
+<<<<<<< f726393267a28cedd5febd2106de17ae3838f3ff
+||||||| 336ecf7177aba349b4a60050d9050c830ac8b328
+from tempfile import TemporaryDirectory
+from unittest.mock import patch
+from urllib.parse import urlencode
+
+=======
+import sys
+from tempfile import TemporaryDirectory
+from unittest.mock import patch
+from urllib.parse import urlencode
+
+>>>>>>> f9ec7dee0550efc69756f09f6f301f06d8a51c2b
 import pytz
 from freezegun import freeze_time
 from urllib.parse import urlencode
@@ -16,6 +29,11 @@ from odoo.tools import config, lazy_property, mute_logger
 from odoo.tests import get_db_name, tagged
 from .test_common import TestHttpBase
 
+
+PicklingError = AttributeError
+if sys.version_info >= (3, 14):
+    from pickle import PicklingError as _PicklingError
+    PicklingError = _PicklingError
 
 GEOIP_ODOO_FARM_2 = {
     'city': 'Ramillies',
@@ -201,10 +219,42 @@ class TestHttpSession(TestHttpBase):
             "foo".startswith,
             datetime.datetime.strftime,
             lambda: 'bar',
+<<<<<<< f726393267a28cedd5febd2106de17ae3838f3ff
         ]
         not_recommended_values = [
             (1, 2, 3),
         ]
+||||||| 336ecf7177aba349b4a60050d9050c830ac8b328
+        ]:
+            with self.assertRaises(AttributeError):
+                session['foo'] = value
+            self.assertFalse(session.foo)
+            with self.assertRaises(AttributeError):
+                session.foo = value
+            self.assertFalse(session.foo)
+            with self.assertRaises(AttributeError):
+                # testing you cannot set a non-serializable value at the creation of the session
+                # e.g. in the __init__ of the session class
+                self.assertFalse(odoo.http.root.session_store.session_class({'foo': value}, 1234).foo)
+            with self.assertRaises(TypeError):
+                dict.update(session, foo=value)
+            self.assertFalse(session.foo)
+=======
+        ]:
+            with self.assertRaises(PicklingError):
+                session['foo'] = value
+            self.assertFalse(session.foo)
+            with self.assertRaises(PicklingError):
+                session.foo = value
+            self.assertFalse(session.foo)
+            with self.assertRaises(PicklingError):
+                # testing you cannot set a non-serializable value at the creation of the session
+                # e.g. in the __init__ of the session class
+                self.assertFalse(odoo.http.root.session_store.session_class({'foo': value}, 1234).foo)
+            with self.assertRaises(TypeError):
+                dict.update(session, foo=value)
+            self.assertFalse(session.foo)
+>>>>>>> f9ec7dee0550efc69756f09f6f301f06d8a51c2b
 
         for value in accepted_values:
             self.assertEqual(check_session_attr(value), True)
