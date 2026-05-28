@@ -155,15 +155,19 @@ class BankAccountVerification(models.Model):
 
             partner_bank2verification = verifications.grouped(lambda verif: verif.partner_bank_account_number)
             for partner_bank in partner_banks:
+                partner_bank_verif = partner_bank2verification.get(partner_bank.sanitized_acc_number)
                 vat = partner_bank.partner_id.vat
                 if not vat or vat in ['/', 'na', 'NA']:  # void vat
-                    create_vals += self._get_creation_vals('incomplete_partner', partner_banks=partner_bank)
+                    if not partner_bank_verif or not partner_bank_verif.filtered(lambda verif:
+                        verif.partner_id == partner_bank.partner_id
+                        and (not verif.partner_vat or verif.partner_vat in ['/', 'na', 'NA'])
+                    ):
+                        create_vals += self._get_creation_vals('incomplete_partner', partner_banks=partner_bank)
                     continue
 
                 # if partner bank already has a verification, check that status is failed and reason is not unknown (incomplete or not_found).
                 # If so, no need to check as we made the search on the same vat/bank account -> the combination (vat/bank account) will still fail.
                 # If the reason is unknown, let's check it again
-                partner_bank_verif = partner_bank2verification.get(partner_bank.sanitized_acc_number)
                 if not partner_bank_verif or partner_bank_verif.verification_status == 'error':
                     partner_banks_to_check |= partner_bank
 
