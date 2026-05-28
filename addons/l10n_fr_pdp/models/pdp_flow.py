@@ -262,14 +262,15 @@ class PdpFlow(models.Model):
 
     def action_send(self, check_totp=True):
         """Send flow payload to transport gateway."""
-        if check_totp and not self.env.user.totp_enabled:
+        auth_totp_disabled = not self.env.user.totp_enabled and not bool(self.env['ir.config_parameter'].sudo().get_str('auth_totp.policy'))
+        if check_totp and auth_totp_disabled:
             raise RedirectWarning(
-                message=self.env._("To be able to register, you need to enable the two-factor authentification."),
+                message=self.env._("To be able to send the report, you need to enable the two-factor authentication."),
                 action=self.env.user._get_records_action(
                     target='new',
-                    views=[(self.env.ref('base.view_users_form_simple_modif').id, "form")]
+                    views=[(self.env.ref('base.view_users_form_simple_modif').id, "form")],
                 ),
-                button_text=self.env._("Go to the preference panel"),
+                button_text=self.env._("Go to the Preferences panel"),
             )
 
         for flow in self:
