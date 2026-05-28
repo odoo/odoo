@@ -195,6 +195,29 @@ class Employee(models.Model):
     # =========================
     # USER SYNC
     # =========================
+    def _sync_sales_record(self):
+        Sales = self.env['employee.profile.sales']
+
+        for rec in self:
+            role_code = rec.role_id.code if rec.role_id else False
+
+            is_sales = role_code in ('sales', 'sales_manager')
+
+            existing = Sales.search([
+                ('employee_id', '=', rec.id)
+            ], limit=1)
+
+            # CASE 1: cần có sales record
+            if is_sales:
+                if not existing:
+                    Sales.create({
+                        'employee_id': rec.id,
+                    })
+            else:
+                # CASE 2: không còn role sales -> xoá hoặc giữ tùy bạn
+                if existing:
+                    existing.unlink()
+
     def action_sync_user(self):
         self.ensure_one()
 
@@ -230,6 +253,17 @@ class Employee(models.Model):
 
             self.user_id = user.id
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._sync_sales_record()
+        return records
+    
+    def write(self, vals):
+        res = super().write(vals)
+        self._sync_sales_record()
+        return res
+
 class EmployeeSales(models.Model):
     _name = 'employee.profile.sales'
     _description = 'Thông Tin Sales'
@@ -258,7 +292,7 @@ class EmployeeSales(models.Model):
     user_id = fields.Many2one(related="employee_id.user_id", store=True)
 
     total_received = fields.Integer(string="Tổng Data đã nhận", default=0)
-    total_handled = fields.Integer(string="Tổng Data đã gọi", default=0)
+    total_handled = fields.Integer(string="Tổng Data đã gọi", default=0, compute='_compute_handled')
     max_received = fields.Integer(string="Nhận tối đa", default=50)
     current_received = fields.Integer(
         string="Đã nhận",
@@ -305,6 +339,21 @@ class EmployeeSales(models.Model):
                 rec.group_ids.mapped('phone_received')
             )
 
+    @api.depends(
+        'group_ids.batch_id.phone_ids',
+        'group_ids.batch_id.phone_ids.salesperson_id',
+        'group_ids.batch_id.phone_ids.status'
+    )
+    def _compute_handled(self):
+        phone_model = self.env['sale.phonebook']
+
+        for rec in self:
+
+            rec.total_handled = phone_model.search_count([
+                ('salesperson_id', '=', rec.id),
+                ('status', 'in', ['contacted', 'callback'])
+            ])
+
     @api.depends('total_received', 'total_handled')
     def _compute_performance(self):
         for rec in self:
@@ -312,6 +361,7 @@ class EmployeeSales(models.Model):
                 rec.performance = 0
                 continue
             rec.performance = (rec.total_handled / rec.total_received) * 100
+
 
 class EmployeeRole(models.Model):
     _name = 'employee.profile.role'

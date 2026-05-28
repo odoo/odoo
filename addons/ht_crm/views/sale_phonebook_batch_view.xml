@@ -1,13 +1,13 @@
 <odoo>
-    <!-- <record id="ir_cron_distribute_hot" model="ir.cron">
-        <field name="name">Distribute Hot</field>
+    <record id="ir_cron_distribute_hot" model="ir.cron">
+        <field name="name">Distribute Batch</field>
         <field name="model_id" ref="model_sale_phonebook_batch"/>
         <field name="state">code</field>
         <field name="code">model.cron_distribute()</field>
         <field name="interval_number">1</field>
         <field name="interval_type">minutes</field>
         <field name="active">True</field>
-    </record> -->
+    </record>
 
     <record id="view_phonebook_batch_list" model="ir.ui.view">
         <field name="name">sale.phonebook.batch.list</field>
@@ -46,11 +46,6 @@
 
                     <button name="action_test_cron"
                             string="Chạy Cron"
-                            type="object"
-                            class="oe_highlight"
-                            groups="ht_crm.group_ht_executive,base.group_system"/>
-                    <button name="action_reclaim_cron"
-                            string="Chạy Thu Hồi"
                             type="object"
                             class="oe_highlight"
                             groups="ht_crm.group_ht_executive,base.group_system"/>
