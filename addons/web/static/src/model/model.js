@@ -103,6 +103,11 @@ export function useModel(ModelClass, params, options = {}) {
     }
     services.orm = services.orm || useService("orm");
     const model = new ModelClass(component.env, params, services);
+
+    const onUpdate = () => render(component, true);
+    model.bus.addEventListener("update", onUpdate);
+    onWillUnmount(() => model.bus.removeEventListener("update", onUpdate));
+
     onWillStart(async () => {
         await options.beforeFirstLoad?.();
         await model.load(getSearchParams(component.props));
