@@ -1487,6 +1487,7 @@ class PosOrderLine(models.Model):
             'pack_lot_ids': PosOrderLineLot,
             'is_total_cost_computed': False,
             'refunded_orderline_id': self.id,
+            'uuid': str(uuid4()),
         }
 
     @api.model_create_multi
