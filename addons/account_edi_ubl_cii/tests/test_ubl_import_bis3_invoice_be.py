@@ -102,9 +102,9 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
             ],
         )
 
-    def test_import_embedded_pdf(self):
+    def test_import_multiple_embedded_pdf(self):
         """
-        Importing an xml with embedded pdf should correctly import the
+        Importing an xml with multiple embedded pdf should correctly import the
         pdf in the newly created bill
         """
         journal = self.company_data['default_journal_purchase']
@@ -112,7 +112,7 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
 
         # Import the document manually
         bill = self._import_invoice_as_attachment_on(attachment=xml_attachment, journal=journal)
-        self.assertEqual(len(bill.attachment_ids), 1)
+        self.assertEqual(len(bill.attachment_ids), 2)
 
         init_vals = {'move_type': 'in_invoice', 'journal_id': journal.id}
         email_raw = self._get_raw_mail_message_str(attachments=xml_attachment, email_to=journal.alias_id.display_name)
@@ -120,4 +120,4 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
         move_id = self.env['mail.thread'].message_process('account.move', email_raw, custom_values=init_vals)
         bill = self.env['account.move'].browse(move_id)
 
-        self.assertEqual(len(bill.attachment_ids), 1)
+        self.assertEqual(len(bill.attachment_ids), 2)

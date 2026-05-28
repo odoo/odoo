@@ -61,12 +61,12 @@ class IrAttachment(models.Model):
             })
             attachments_data = self._extract_additional_documents(xml_tree)
             attachments = self.env['ir.attachment'].create(attachments_data)
-            for attachment in attachments:
+            for idx, attachment in enumerate(attachments, 1):
                 to_process.append({
                     'attachment': attachment,
                     'filename': attachment.name,
                     'content': attachment.raw,
-                    'sort_weight': 11,
+                    'sort_weight': 10 + idx,
                     'type': 'binary',
                 })
         return to_process
