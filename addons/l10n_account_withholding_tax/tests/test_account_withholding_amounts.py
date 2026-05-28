@@ -34,7 +34,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
 
     def test_case_a(self):
         vat_tax_incl_affecting = self.percent_tax(15, price_include_override='tax_included', include_base_amount=True)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -70,7 +70,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
 
     def test_case_b(self):
         vat_tax_incl = self.percent_tax(15, price_include_override='tax_included')
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -106,7 +106,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
 
     def test_case_c(self):
         vat_tax_affecting = self.percent_tax(15, include_base_amount=True)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -142,7 +142,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
 
     def test_case_d(self):
         vat_tax = self.percent_tax(15)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -179,7 +179,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
     def test_case_e(self):
         vat_tax_incl_affecting = self.percent_tax(15, price_include_override='tax_included', include_base_amount=True)
         vat_tax_affecting = self.percent_tax(15, include_base_amount=True)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -216,7 +216,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
     def test_case_f(self):
         vat_tax_incl_affecting = self.percent_tax(15, price_include_override='tax_included', include_base_amount=True)
         vat_tax = self.percent_tax(15)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -253,7 +253,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
     def test_case_g(self):
         vat_tax_incl_affecting = self.percent_tax(15, price_include_override='tax_included', include_base_amount=True)
         vat_tax_affecting_affected = self.percent_tax(15, include_base_amount=True, is_base_affected=False)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -290,7 +290,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
     def test_case_h(self):
         vat_tax_incl_affecting = self.percent_tax(15, price_include_override='tax_included', include_base_amount=True)
         vat_tax_affected = self.percent_tax(15, is_base_affected=False)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -327,7 +327,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
     def test_case_i(self):
         vat_tax_incl = self.percent_tax(15, price_include_override='tax_included')
         vat_tax_affecting = self.percent_tax(15, include_base_amount=True)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -364,7 +364,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
     def test_case_j(self):
         vat_tax_incl = self.percent_tax(15, price_include_override='tax_included')
         vat_tax = self.percent_tax(15)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -402,7 +402,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
 
     def test_case_l(self):
         vat_tax_incl_affecting = self.percent_tax(15, price_include_override='tax_included', include_base_amount=True)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
         vat_tax_affecting = self.percent_tax(15, include_base_amount=True)
 
         invoice = self.env['account.move'].create({
@@ -439,8 +439,8 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
 
     def test_case_m(self):
         vat_tax_affecting = self.percent_tax(15, include_base_amount=True)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
-        wth_tax = self.percent_tax(-10, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax = self.percent_tax(-10, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -483,8 +483,8 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
 
     def test_case_n(self):
         vat_tax_affecting = self.percent_tax(15, include_base_amount=True)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
-        wth_tax_affected = self.percent_tax(-10, is_withholding_tax_on_payment=True, is_base_affected=False, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affected = self.percent_tax(-10, is_withholding_tax=True, is_base_affected=False, withholding_sequence_id=self.withholding_sequence.id)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -528,7 +528,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
     def test_invoice_total_unaffected(self):
         """ Ensure that the invoice total is not affected by a withholding tax set on the line. """
         vat_tax = self.percent_tax(15)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',

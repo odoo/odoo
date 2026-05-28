@@ -48,6 +48,25 @@ class AccountPaymentRegisterWithholdingLine(models.TransientModel):
                 lines.comodel_percentage_paid_factor = 0.0
                 continue
 
+            if wizard.withhold == 'withhold':
+                moves = wizard._get_batches()[0]['lines'].move_id
+                payment_register = self.payment_register_id
+                total_withholding = sum(
+                    move.currency_id._convert(
+                        from_amount=move.withholding_total_amount_currency,
+                        to_currency=payment_register.currency_id,
+                        company=payment_register.company_id,
+                        date=payment_register.payment_date,
+                    )
+                    for move in moves
+                )
+
+                if total_withholding:
+                    lines.comodel_percentage_paid_factor = wizard.amount / total_withholding
+                else:
+                    lines.comodel_percentage_paid_factor = 0.0
+                continue
+
             total_amounts_to_pay = wizard._get_total_amounts_to_pay(wizard._get_batches())
             moves_total_amount = wizard._get_total_amount_in_wizard_currency()
             if total_amounts_to_pay['full_amount']:

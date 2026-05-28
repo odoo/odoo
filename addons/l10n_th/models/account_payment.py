@@ -26,13 +26,13 @@ class AccountPayment(models.Model):
     # Compute, inverse, search methods
     # --------------------------------
 
-    @api.depends('should_withhold_tax', 'country_code')
+    @api.depends('withhold', 'country_code')
     def _compute_l10n_th_wth_condition(self):
         """
         Compute the default value only if relevant for the current payment's country.
         """
         for payment in self:
-            if payment.should_withhold_tax and payment.country_code == 'TH':
+            if payment.withhold != 'payment' and payment.country_code == 'TH':
                 payment.l10n_th_wth_condition = payment.l10n_th_wth_condition or 'at_source'
             else:
                 payment.l10n_th_wth_condition = False
