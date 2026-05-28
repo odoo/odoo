@@ -20,4 +20,23 @@
             </field>
         </record>
 
+        <record id="view_partner_simple_form_calendar" model="ir.ui.view">
+            <field name="name">res.partner.simplified.form.calendar</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <form string="Contact">
+                    <group>
+                        <field id="contact" name="name" default_focus="1" placeholder="e.g. Lumber Inc or Brandon Freeman"  required="type == 'contact'"/>
+                        <field name="parent_id"
+                            widget="res_partner_many2one"
+                            placeholder="Company Name..."
+                            domain="[('parent_id', '=', False)]" context="{'show_vat': True, 'default_user_id': user_id}"/>
+                        <field name="email" widget="email" required="True"/>
+                        <field name="phone" widget="phone" options="{'enable_sms': false}"/>
+                        <field name="function" placeholder="e.g. Sales Director"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
 </odoo>
