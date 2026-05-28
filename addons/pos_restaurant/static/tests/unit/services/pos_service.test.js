@@ -433,6 +433,26 @@ describe("restaurant pos_store.js", () => {
         expect(order2.getCustomerCount()).toBe(8);
     });
 
+    test("mergeOrders keeps kitchen sent quantities when merging identical products", async () => {
+        const store = await setupPosEnv();
+        const table6 = store.models["restaurant.table"].get(2);
+        const table7 = store.models["restaurant.table"].get(3);
+        const product = store.models["product.template"].get(5);
+        const destOrder = store.addNewOrder({ table_id: table6 });
+        await store.addLineToOrder({ product_tmpl_id: product, qty: 2 }, destOrder);
+        destOrder.updateLastOrderChange();
+        const sourceOrder = store.addNewOrder({ table_id: table7 });
+        await store.addLineToOrder({ product_tmpl_id: product, qty: 3 }, sourceOrder);
+        sourceOrder.updateLastOrderChange();
+        await store.mergeOrders(sourceOrder, destOrder);
+        expect(destOrder.lines.length).toBe(1);
+        expect(destOrder.lines[0].qty).toBe(5);
+        expect(destOrder.lines[0].prepQty).toBe(5);
+        const changes = destOrder.getChanges();
+        expect(changes.addedQuantity.length).toBe(0);
+        expect(changes.removedQuantity.length).toBe(0);
+    });
+
     test("getCustomerCount", async () => {
         const store = await setupPosEnv();
         const table = store.models["restaurant.table"].get(2);
