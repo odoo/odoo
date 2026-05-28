@@ -23,6 +23,123 @@ const BLACKLISTED_MENUS = new Set([
     "mail.menu_settings", // menu that leads to another App
     "website_sale.menu_open_shop", // menu that opens a website editor
 ]);
+
+const BLACKLISTED_RECORD_ACTIONS = new Set([
+    "website.menu_website_pages_list", // list/kanban opens the website in website editor not a form
+    "website.menu_website_technical_pages", // list/kanban opens the website in website editor not a form
+    "test_website.menu_test_website_test_model", // list opens the website in website editor not a form
+    "data_cleaning.ir_model_menu_merge_action_manager", // list that checks a checkbox in the list
+    "knowledge.knowledge_menu_article", // list/kanban that opens knowledge articles, in a knowledge article we dont have the breadcrumb and can't go back
+    "sign.sign_template_menu", // opens sign in a iframe.
+    "sign.sign_request_my_documents", // opens sign in a iframe.
+    "sign.sign_request_documents", // opens sign in a iframe.
+    "documents.dashboard", // there is no form view
+    "spreadsheet_dashboard.spreadsheet_dashboard_group_menu_configuration_sections", // there is no form view
+    "website.menu_visitor_view_menu", // there is no form view
+]);
+
+// Actions that don't open a form view when clicking on list/kanban
+const EXCEPTION_RECORD_ACTIONS = {
+    "mail.menu_channel": {
+        list: {
+            toCheck: ".o-mail-ChatWindow",
+            toGoBack: ".o-mail-ChatWindow .o-mail-ActionList-button[name=close]",
+        },
+        kanban: {
+            toCheck: ".o-mail-ChatWindow",
+            toGoBack: ".o-mail-ChatWindow .o-mail-ActionList-button[name=close]",
+        },
+    },
+    "mail.discuss_channel_menu_settings": {
+        list: {
+            toCheck: ".o-mail-ChatWindow",
+            toGoBack: ".o-mail-ChatWindow .o-mail-ActionList-button[name=close]",
+        },
+        kanban: {
+            toCheck: ".o-mail-ChatWindow",
+            toGoBack: ".o-mail-ChatWindow .o-mail-ActionList-button[name=close]",
+        },
+    },
+    "crm.sales_team_menu_team_pipeline": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "sale.report_sales_team": {
+        kanban: {
+            toCheck: ".o_graph_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "ai_app.ai_agent_menu_action": {
+        kanban: {
+            toCheck: ".o-mail-ChatWindow",
+            toGoBack: ".o-mail-ChatWindow .o-mail-ActionList-button[name=close]",
+        },
+    },
+    "ai_app.ai_menu_root": {
+        kanban: {
+            toCheck: ".o-mail-ChatWindow",
+            toGoBack: ".o-mail-ChatWindow .o-mail-ActionList-button[name=close]",
+        },
+    },
+    "project.menu_projects": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "project.menu_main_pm": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "helpdesk.helpdesk_menu_team_dashboard": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "helpdesk.menu_helpdesk_root": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "mass_mailing.menu_email_mass_mailing_lists": {
+        kanban: {
+            toCheck: ".o_list_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "mass_mailing_sms.mailing_list_menu_sms": {
+        kanban: {
+            toCheck: ".o_list_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "im_livechat.support_channels": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "im_livechat.menu_livechat_root": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "fleet.fleet_vehicle_model_brand_menu": {
+        kanban: {
+            toCheck: ".o_list_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+};
+
 // If you change this selector, adapt Studio test "Studio icon matches the clickbot selector"
 const STUDIO_SYSTRAY_ICON_SELECTOR = ".o_web_studio_navbar_item:not(.o_disabled) i";
 
@@ -39,6 +156,7 @@ export class Clickbot {
                 testedFilters: 0,
                 testedModals: 0,
                 testedViews: 0,
+                testedFormsViews: 0,
                 appIndex: 0,
                 menuIndex: 0,
                 errorMenuCount: 0,
@@ -132,6 +250,7 @@ export class Clickbot {
             console.log(`Error found while testing ${this.state.errorMenuCount} menus`);
         }
         console.log(`Tested ${this.state.testedViews} views`);
+        console.log(`Tested ${this.state.testedFormsViews} form views`);
         console.log(`Tested ${this.state.testedModals} modals`);
         console.log(`Tested ${this.state.testedFilters} filters`);
         if (this.state.studioCount > 0) {
@@ -160,7 +279,9 @@ export class Clickbot {
 
     async _triggerClick(target, elDescription) {
         if (!target) {
-            throw new Error(`No element "${elDescription}" found.`);
+            throw new Error(
+                `No element "${elDescription}" found. Testing "${this.currentMenu.name}" ("${this.currentMenu.xmlid}") menu.`
+            );
         }
         if (elDescription) {
             console.log(`Clicking on: ${elDescription}`);
@@ -288,20 +409,149 @@ export class Clickbot {
                         `filter option "${firstOption.innerText.trim()}"`
                     );
                     await this._waitForCondition(() => true);
+                    await this._testClickingRecord();
                 }
             } else {
                 await this._triggerClick(filter, `filter "${filter.innerText.trim()}"`);
                 await this._waitForCondition(() => true);
+                await this._testClickingRecord();
+            }
+        }
+    }
+
+    /**
+     * Test clicking on a record in list or kanban view
+     * @returns {Promise}
+     */
+
+    async _testClickingRecord() {
+        if (BLACKLISTED_RECORD_ACTIONS.has(this.currentMenu.xmlid)) {
+            console.log(
+                `Skipping blacklisted form menu ${this.currentMenu.name} (${this.currentMenu.xmlid})`
+            );
+            return;
+        }
+
+        if (this.recordTested) {
+            return;
+        }
+        const exceptionActions = EXCEPTION_RECORD_ACTIONS[this.currentMenu.xmlid];
+
+        if (document.querySelector(".o_list_view")) {
+            if (this.formviewTested && !exceptionActions?.list) {
+                return;
+            }
+            const records = document.querySelector(".o_view_sample_data")
+                ? false
+                : Boolean(document.querySelector("tr.o_data_row td.o_data_cell.cursor-pointer"));
+            if (records) {
+                this.recordTested = true;
+                const row = document.querySelectorAll(".o_data_row")[0];
+                // Open the first record in the list
+                if (document.querySelector(".o_list_record_open_form_view")) {
+                    await this._triggerClick(
+                        row.querySelector(".o_list_record_open_form_view"),
+                        "open form view from list (View Button)"
+                    );
+                } else {
+                    await this._triggerClick(
+                        row.querySelector(".o_data_cell"),
+                        "open form view from list"
+                    );
+                }
+                if (exceptionActions?.list?.toCheck) {
+                    await this._waitForCondition(
+                        () => document.querySelector(exceptionActions?.list?.toCheck) !== null
+                    );
+                } else {
+                    // Wait for the form view to be loaded or the list to be editable
+                    await this._waitForCondition(
+                        () =>
+                            document.querySelector(".o_form_view") !== null ||
+                            document.querySelector(".o_data_row.o_selected_row") !== null
+                    );
+                }
+
+                // Go back to the list
+                if (exceptionActions?.list?.toGoBack) {
+                    await this._triggerClick(
+                        document.querySelector(exceptionActions?.list?.toGoBack),
+                        "go back to list view"
+                    );
+                } else if (document.querySelector(".o_form_view")) {
+                    this.formviewTested = true;
+                    this.state.testedFormsViews++;
+                    await this._triggerClick(
+                        document.querySelector(".o_back_button"),
+                        "go back to list view"
+                    );
+                } else {
+                    await this._triggerClick(
+                        document.querySelector(".o_list_button_discard"),
+                        "discard the editable list"
+                    );
+                }
+                await this._waitForCondition(() => document.querySelector(`.o_list_view`) !== null);
+            }
+        } else if (document.querySelector(".o_kanban_view")) {
+            if (this.formviewTested && !exceptionActions?.kanban) {
+                return;
+            }
+            const records = document.querySelector(".o_view_sample_data")
+                ? false
+                : Boolean(
+                      document.querySelectorAll(
+                          ".o_kanban_record:not(.o_kanban_ghost).cursor-pointer"
+                      ).length
+                  );
+            if (records) {
+                this.recordTested = true;
+                const card = document.querySelectorAll(
+                    ".o_kanban_record:not(.o_kanban_ghost).cursor-pointer"
+                )[0];
+                // Open the first record in the kanban
+                await this._triggerClick(card, "open form view from kanban");
+                if (exceptionActions?.kanban?.toCheck) {
+                    await this._waitForCondition(
+                        () => document.querySelector(exceptionActions?.kanban?.toCheck) !== null
+                    );
+                } else {
+                    await this._waitForCondition(
+                        () => document.querySelector(`.o_form_view`) !== null
+                    );
+                }
+
+                // Go back to the kanban
+                if (exceptionActions?.kanban?.toGoBack) {
+                    await this._triggerClick(
+                        document.querySelector(exceptionActions?.kanban?.toGoBack),
+                        "go back to kanban view"
+                    );
+                } else {
+                    // form view
+                    this.formviewTested = true;
+                    this.state.testedFormsViews++;
+                    await this._triggerClick(
+                        document.querySelector(".o_back_button"),
+                        "go back to kanban view"
+                    );
+                }
+                await this._waitForCondition(
+                    () => document.querySelector(`.o_kanban_view`) !== null
+                );
             }
         }
     }
 
     async _testView() {
+        this.recordTested = false;
+        await this._testClickingRecord();
         await this._testStudio();
         await this._testFilters();
     }
 
     async _testViews() {
+        this.formviewTested = false;
         await this._testView();
         this.state.testedViews++;
         if (this.state.light === true) {
