@@ -237,6 +237,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                     self.env.user,
                     "mail.record/insert",
                     {
+<<<<<<< da2d9d422a21e0e4d870e7955f29e3c7e08c7ba0
                         "discuss.channel": [{"id": test_group.id, "member_count": 2}],
                         "discuss.channel.member": [
                             {
@@ -278,6 +279,92 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "share": False,
                             },
                         ),
+||||||| 5b1491a3cb2b5661d107fd7c3a27d371aba93362
+                        "type": "mail.record/insert",
+                        "payload": {
+                            "discuss.channel": [{"id": test_group.id, "member_count": 2}],
+                            "discuss.channel.member": [
+                                {
+                                    "channel_role": False,
+                                    "create_date": fields.Datetime.to_string(member.create_date),
+                                    "id": member.id,
+                                    "last_seen_dt": False,
+                                    "partner_id": self.test_partner.id,
+                                    "seen_message_id": False,
+                                    "channel_id": test_group.id,
+                                },
+                            ],
+                            "res.partner": self._filter_partners_fields(
+                                {
+                                    "active": True,
+                                    "avatar_128_access_token": self.test_partner._get_avatar_128_access_token(),
+                                    "email": "test_customer@example.com",
+                                    "id": self.test_partner.id,
+                                    "im_status": "offline",
+                                    "im_status_access_token": self.test_partner._get_im_status_access_token(),
+                                    "is_company": False,
+                                    "main_user_id": self.test_user.id,
+                                    "mention_token": self.test_partner._get_mention_token(),
+                                    "name": "Test Partner",
+                                    "tz": False,
+                                    "write_date": test_partner_write_date,
+                                },
+                            ),
+                            "res.users": self._filter_users_fields(
+                                {
+                                    "active": True,
+                                    "all_employee_ids": [],
+                                    "id": self.test_user.id,
+                                    "employee_ids": [],
+                                    "partner_id": self.test_partner.id,
+                                    "share": False,
+                                },
+                            ),
+                        },
+=======
+                        "type": "mail.record/insert",
+                        "payload": {
+                            "discuss.channel": [{"id": test_group.id, "member_count": 2}],
+                            "discuss.channel.member": [
+                                {
+                                    "channel_role": False,
+                                    "create_date": fields.Datetime.to_string(member.create_date),
+                                    "id": member.id,
+                                    "last_seen_dt": False,
+                                    "partner_id": self.test_partner.id,
+                                    "seen_message_id": False,
+                                    "channel_id": test_group.id,
+                                },
+                            ],
+                            "res.partner": self._filter_partners_fields(
+                                {
+                                    "active": True,
+                                    "avatar_128_access_token": self.test_partner._get_avatar_128_access_token(),
+                                    "email": "test_customer@example.com",
+                                    "employee_ids": [],
+                                    "id": self.test_partner.id,
+                                    "im_status": "offline",
+                                    "im_status_access_token": self.test_partner._get_im_status_access_token(),
+                                    "is_company": False,
+                                    "main_user_id": self.test_user.id,
+                                    "mention_token": self.test_partner._get_mention_token(),
+                                    "name": "Test Partner",
+                                    "tz": False,
+                                    "write_date": test_partner_write_date,
+                                },
+                            ),
+                            "res.users": self._filter_users_fields(
+                                {
+                                    "active": True,
+                                    "all_employee_ids": [],
+                                    "id": self.test_user.id,
+                                    "employee_ids": [],
+                                    "partner_id": self.test_partner.id,
+                                    "share": False,
+                                },
+                            ),
+                        },
+>>>>>>> ba6599af257c29232e3ac318283ffffcae846d88
                     },
                 ),
             ]

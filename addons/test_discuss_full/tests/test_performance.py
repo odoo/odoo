@@ -32,13 +32,24 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: show_livechat_category
     #       - search discuss_channel_member (is_self for ACL check)
     #       - search_count discuss_channel_member
+<<<<<<< da2d9d422a21e0e4d870e7955f29e3c7e08c7ba0
     #   11: store add odoobot:
     #       - fetch res_partner (_read_format)
     #         [enterprise] search ai_agent (_compute_im_status ai override)
     #       - search res_users (_compute_im_status)
     #       - fetch res_users (_compute_im_status)
+||||||| 5b1491a3cb2b5661d107fd7c3a27d371aba93362
+    #   10: store add odoobot:
+    #       - fetch res_partner
+    #       - search res_users
+=======
+    #   11: store add odoobot:
+    #       - fetch res_partner
+    #       - search res_users
+>>>>>>> ba6599af257c29232e3ac318283ffffcae846d88
     #       - search presence (_compute_im_status)
     #       - fetch presence (_compute_im_status)
+<<<<<<< da2d9d422a21e0e4d870e7955f29e3c7e08c7ba0
     #       - search employee (_store_im_status_fields)
     #       - search employee (_store_im_status_fields company specific)
     #       - fetch res_users (_read_format)
@@ -46,6 +57,24 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch hr_employee (_compute_work_location_type)
     #       - search hr_leave (_compute_leave_status)
     _query_count_init_store = 23
+||||||| 5b1491a3cb2b5661d107fd7c3a27d371aba93362
+    #       - search employee
+    #       - search employee (company specific)
+    #       - fetch res_users
+    #       - search hr_employee_location
+    #       - fetch employee
+    #       - search hr_leave
+    _query_count_init_store = 22
+=======
+    #       - search employee (partner)
+    #       - search employee (user)
+    #       - search employee (company specific)
+    #       - fetch res_users
+    #       - fetch employee
+    #       - search hr_employee_location
+    #       - search hr_leave
+    _query_count_init_store = 23
+>>>>>>> ba6599af257c29232e3ac318283ffffcae846d88
     # Queries for _query_count_init_messaging (in order):
     #   2: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
     #       - fetch res_users
@@ -103,10 +132,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search_fetch member (channel_member_ids)
     #       - search channel JOIN member (channel_name_member_ids)
     #       - fetch discuss_channel_member (manual prefetch)
-    #       17: member:
+    #       18: member:
     #           - search im_livechat_channel_member_history (livechat member type)
     #           - fetch im_livechat_channel_member_history (livechat member type)
-    #           13: partner:
+    #           14: partner:
     #               - fetch res_partner (partner)
     #                 [enterprise] search ai_agent (_compute_im_status ai override)
     #               - fetch res_users (_compute_im_status)
@@ -122,6 +151,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #               - fetch res_users_settings (livechat username)
     #               - fetch res_users (_read_format)
     #               - fetch res_country (livechat override)
+    #               - search hr_employee (partner)
     #           2: guest:
     #               - fetch mail_presence (_compute_im_status)
     #               - fetch mail_guest
@@ -160,8 +190,16 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search user (author)
     #       - fetch user (author)
     #       - fetch discuss_call_history
+<<<<<<< da2d9d422a21e0e4d870e7955f29e3c7e08c7ba0
     #       - select the current db snapshot
     _query_count_discuss_channels = 63
+||||||| 5b1491a3cb2b5661d107fd7c3a27d371aba93362
+    # TODO use assertQueries
+    _query_count_discuss_channels = 64
+=======
+    # TODO use assertQueries
+    _query_count_discuss_channels = 65
+>>>>>>> ba6599af257c29232e3ac318283ffffcae846d88
 
     def setUp(self):
         super().setUp()
@@ -431,6 +469,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "agent_ids": [],
                     "avatar_128_access_token": self.partner_root._get_avatar_128_access_token(),
                     "email": "odoobot@example.com",
+                    "employee_ids": [],
                     "id": self.partner_root.id,
                     "is_company": False,
                     "main_user_id": self.user_root.id,
@@ -1797,6 +1836,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "agent_ids": [],
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": "e.e@example.com",
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
@@ -1852,6 +1892,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "agent_ids": [],
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": "test2@example.com",
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
@@ -1867,6 +1908,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "agent_ids": [],
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
@@ -1882,6 +1924,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "agent_ids": [],
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
@@ -1897,6 +1940,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "agent_ids": [],
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,
@@ -1912,6 +1956,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "agent_ids": [],
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "is_company": False,
                 "main_user_id": user.id,

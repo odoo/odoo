@@ -2125,9 +2125,16 @@ class MailCommon(MailCase):
         """ Remove store partner data dependant on other modules if they are not not installed.
         Not written in a modular way to avoid complex override for a simple test tool.
         """
+<<<<<<< da2d9d422a21e0e4d870e7955f29e3c7e08c7ba0
         if "ai.agent" not in self.env:
             for data in partners_data:
                 data.pop("agent_ids", None)
+||||||| 5b1491a3cb2b5661d107fd7c3a27d371aba93362
+=======
+        for data in partners_data:
+            if "hr.leave" not in self.env:
+                data.pop("employee_ids", None)
+>>>>>>> ba6599af257c29232e3ac318283ffffcae846d88
         return list(partners_data)
 
     def _filter_users_fields(self, /, *users_data):

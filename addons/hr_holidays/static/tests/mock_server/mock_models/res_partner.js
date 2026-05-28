@@ -9,6 +9,12 @@ export class ResPartner extends hrModels.ResPartner {
         const employeeFields = ["active", "company_id", "leave_date_to", "user_id"];
         return [
             ...super._to_store_defaults,
+            mailDataHelpers.Store.many("employee_ids", [
+                "active",
+                "company_id",
+                "leave_date_to",
+                "user_id",
+            ]),
             mailDataHelpers.Store.one("main_user_id", [
                 "partner_id",
                 mailDataHelpers.Store.many("all_employee_ids", employeeFields),
