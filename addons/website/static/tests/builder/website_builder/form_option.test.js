@@ -580,11 +580,34 @@ test("Last list entry cannot be removed", async () => {
     expect(".options-container .builder_list_remove_item").toHaveCount(2);
 });
 
+class ResCountryState extends models.Model {
+    _name = "res.country.state";
+    name = fields.Char({ string: "Name" });
+    _records = [
+        { id: 1, name: "State 1 (A)" },
+        { id: 2, name: "State 2 (B)" },
+    ];
+}
+const countryAndStateField = {
+    country_id: {
+        name: "country_id",
+        relation: "res.country",
+        string: "Country",
+        type: "many2one",
+    },
+    state_id: {
+        name: "state_id",
+        relation: "res.country.state",
+        string: "State",
+        type: "many2one",
+    },
+};
 test("Can link states to a country", async () => {
-    onRpc("get_authorized_fields", () => ({}));
+    defineModels([ResCountryState]);
+    onRpc("get_authorized_fields", () => countryAndStateField);
     await setupWebsiteBuilder(
         `<section class="s_website_form"><form data-model_name="mail.mail">
-            <div data-name="Country" class="s_website_form_field s_website_form_custom" data-type="many2one">
+            <div data-name="Country" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="country">
                         <span class="s_website_form_label_content">Country</span>
@@ -598,7 +621,7 @@ test("Can link states to a country", async () => {
                     </div>
                 </div>
             </div>
-            <div data-name="State" class="s_website_form_field s_website_form_custom" data-type="many2one">
+            <div data-name="State" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="state">
                         <span class="s_website_form_label_content">State</span>
@@ -631,10 +654,11 @@ test("Can link states to a country", async () => {
 });
 
 test("Shouldn't have the 'Link to country' option if there's no country field", async () => {
-    onRpc("get_authorized_fields", () => ({}));
+    defineModels([ResCountryState]);
+    onRpc("get_authorized_fields", () => countryAndStateField);
     await setupWebsiteBuilder(
         `<section class="s_website_form"><form data-model_name="mail.mail">
-            <div data-name="State" class="s_website_form_field s_website_form_custom" data-type="many2one">
+            <div data-name="State" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="state">
                         <span class="s_website_form_label_content">State</span>
@@ -702,10 +726,11 @@ test("Min and max character limits should not contradict one another.", async ()
 });
 
 test("Only state fields have data-link-state-to-country attr", async () => {
-    onRpc("get_authorized_fields", () => ({}));
+    defineModels([ResCountryState]);
+    onRpc("get_authorized_fields", () => countryAndStateField);
     await setupWebsiteBuilder(
         `<section class="s_website_form"><form data-model_name="mail.mail">
-            <div data-name="Country" class="s_website_form_field s_website_form_custom" data-type="many2one">
+            <div data-name="Country" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="country">
                         <span class="s_website_form_label_content">Country</span>
@@ -717,7 +742,7 @@ test("Only state fields have data-link-state-to-country attr", async () => {
                     </div>
                 </div>
             </div>
-            <div data-name="State" class="s_website_form_field s_website_form_custom" data-type="many2one">
+            <div data-name="State" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="state">
                         <span class="s_website_form_label_content">State</span>
