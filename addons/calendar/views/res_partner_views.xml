@@ -21,4 +21,25 @@
             </field>
         </record>
 
+        <record id="res_partner_view_form_simplified" model="ir.ui.view">
+            <field name="name">res.partner.view.form.simplified.calendar</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <form string="Contact" class="o_res_partner_form_quick_create">
+                    <group>
+                        <field name="name" default_focus="1" placeholder="e.g. Lumber Inc or Brandon Freeman"  required="1"/>
+                        <field name="parent_id"
+                            string="Company"
+                            widget="res_partner_many2one"
+                            placeholder="e.g. Acme Corporation"
+                            domain="[('parent_id', '=', False)]"
+                            context="{'show_vat': True, 'default_user_id': user_id}"/>
+                        <field name="email" widget="email" required="True" placeholder="e.g. john.doe@email.com"/>
+                        <field name="phone" widget="phone" options="{'enable_sms': false}" placeholder="e.g. (555) 555-0199"/>
+                        <field name="function" placeholder="e.g. Sales Director"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
 </odoo>
