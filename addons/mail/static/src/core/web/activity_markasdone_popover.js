@@ -1,5 +1,5 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useExternalListener, useRef } from "@web/owl2/utils";
+import { Component, onMounted, signal } from "@odoo/owl";
 
 export class ActivityMarkAsDone extends Component {
     static template = "mail.ActivityMarkAsDone";
@@ -18,7 +18,7 @@ export class ActivityMarkAsDone extends Component {
     setup() {
         super.setup();
         this.textArea = useRef("textarea");
-        this.state = useState({ disableDoneButton: false });
+        this.disableDoneButton = signal(false);
         onMounted(() => {
             this.textArea.el.focus();
         });
@@ -32,7 +32,7 @@ export class ActivityMarkAsDone extends Component {
     }
 
     async onClickDone() {
-        if (this.state.disableDoneButton) {
+        if (this.disableDoneButton()) {
             return;
         }
         const { res_id, res_model } = this.props.activity;
@@ -40,7 +40,7 @@ export class ActivityMarkAsDone extends Component {
             model: res_model,
             id: res_id,
         });
-        this.state.disableDoneButton = true;
+        this.disableDoneButton.set(true);
         try {
             if (this.props.onClickDone) {
                 this.props.onClickDone();
@@ -49,7 +49,7 @@ export class ActivityMarkAsDone extends Component {
             this.props.onActivityChanged(thread);
             await thread.fetchNewMessages();
         } finally {
-            this.state.disableDoneButton = false;
+            this.disableDoneButton.set(false);
         }
     }
 

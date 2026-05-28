@@ -39,7 +39,7 @@
                     enabled="true"
                     autofocus="true"
                     onValidate.bind="this.renameChannel"
-                    value="this.props.chatWindow.channel.displayName"
+                    value="this.channelDisplayName"
                 />
                 <i t-if="this.state.editingName" class="fa fa-fw fa-caret-down opacity-50"/>
             </t>
@@ -62,7 +62,7 @@
                     className="'py-1 me-2'"
                     autofocus="true"
                     onValidate.bind="this.renameGuest"
-                    value="this.store.self_guest.name"
+                    value="this.selfGuestName"
                 />
             </t>
         </div>

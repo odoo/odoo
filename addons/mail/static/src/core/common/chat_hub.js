@@ -1,8 +1,9 @@
-import { useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { ChatWindow } from "@mail/core/common/chat_window";
 import { ActionList } from "@mail/core/common/action_list";
 import { useHover, useMovable } from "@mail/utils/common/hooks";
-import { Component } from "@odoo/owl";
+
+import { Component, proxy } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -37,7 +38,7 @@ export class ChatHub extends Component {
         this.more = useDropdownState();
         this.ref = useRef("bubbles");
         this.root = useRef("root");
-        this.position = useState({
+        this.position = proxy({
             dragged: false,
             isDragging: false,
             top: "unset",

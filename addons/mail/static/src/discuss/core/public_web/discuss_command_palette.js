@@ -1,7 +1,6 @@
 import { cleanTerm } from "@mail/utils/common/format";
-import { useState } from "@web/owl2/utils";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -25,7 +24,7 @@ class CreateChannelDialog extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.orm = useService("orm");
-        this.state = useState({
+        this.state = proxy({
             name: this.props.name || "",
             isInvalid: false,
             is_readonly: false,

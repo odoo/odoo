@@ -4,7 +4,7 @@
 <t t-name="mail.DiscussContent">
     <t t-set="partitionedActions" t-value="this.threadActions.partition"/>
     <div class="o-mail-DiscussContent d-flex flex-column h-100 w-100 overflow-auto o-scrollbar-thin" t-custom-ref="root">
-        <div class="o-mail-DiscussContent-header ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-dark o-border-opacity-15 gap-1 z-1 flex-grow-0" t-custom-ref="header" t-att-class="{ 'py-1': !this.state.correspondentLocalDateTimeFormatted }">
+        <div class="o-mail-DiscussContent-header ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-dark o-border-opacity-15 gap-1 z-1 flex-grow-0" t-custom-ref="header" t-att-class="{ 'py-1': !this.correspondentLocalDateTimeFormatted() }">
             <t t-if="this.thread">
                 <div t-if="this.showThreadAvatar" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit">
                     <DiscussAvatar record="this.thread" size="26"/>
@@ -29,7 +29,7 @@
                             className="'o-mail-DiscussContent-threadName fw-bold flex-shrink-1 py-0 ' + (this.showsChatLocalDateTime ? 'fs-5' : 'fs-4')"
                             enabled="!!this.thread.channel?.isAllowedToRename"
                             onValidate.bind="this.renameThread"
-                            value="this.thread.displayName || ''"
+                            value="this.threadDisplayName"
                         />
                         <t t-if="this.thread.channel?.allowDescription and (this.thread.channel?.allowEditDescription or this.thread.description)">
                             <div class="flex-shrink-0 mx-1 py-2 border-start"/>
@@ -39,11 +39,11 @@
                                 enabled="this.thread.channel?.allowEditDescription"
                                 onValidate.bind="this.updateThreadDescription"
                                 placeholder="this.thread.channel?.allowEditDescription ? autogrowDescriptionPlaceholder : ''"
-                                value="this.thread.description or ''"
+                                value="this.threadDescription"
                             />
                         </t>
                     </div>
-                    <div t-if="this.showsChatLocalDateTime" class="text-muted smaller ms-1" t-out="this.state.correspondentLocalDateTimeFormatted"/>
+                    <div t-if="this.showsChatLocalDateTime" class="text-muted smaller ms-1" t-out="this.correspondentLocalDateTimeFormatted()"/>
                 </div>
                 <div class="pe-3 d-print-none">
                     <ActionList actions="[partitionedActions.quick, partitionedActions.other, ...partitionedActions.group.slice().reverse()]" inline="true" odooControlPanelSwitchStyle="true"/>
@@ -51,7 +51,7 @@
                 <div t-if="this.store.inPublicPage and !this.ui.isSmall" class="d-flex align-items-center">
                     <img class="o-mail-DiscussContent-selfAvatar me-1 rounded-3 object-fit-cover flex-shrink-0 smaller" alt="Avatar" t-att-src="this.store.self.avatarUrl"/>
                     <div t-if="this.store.self_user" class="text-nowrap px-1 me-2" t-out="this.store.self_user.name"/>
-                    <AutoresizeInput t-else="" className="'py-1'" onValidate.bind="this.renameGuest" value="this.store.self_guest.name"/>
+                    <AutoresizeInput t-else="" className="'py-1'" onValidate.bind="this.renameGuest" value="this.selfGuestName"/>
                 </div>
             </t>
         </div>

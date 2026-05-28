@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 import { KeepLast } from "@web/core/utils/concurrency";
 import { memoize } from "@web/core/utils/functions";
@@ -49,7 +48,7 @@ export class Gif extends Component {
     });
 
     setup() {
-        this.state = useState({ snapshot: null });
+        this.snapshot = signal(null);
         this.keepLast = new KeepLast();
     }
 
@@ -57,6 +56,6 @@ export class Gif extends Component {
         this.props.onLoad?.(...arguments);
         this.keepLast
             .add(this.generateGifSnapshot(this.props.src))
-            .then((snapshot) => (this.state.snapshot = snapshot));
+            .then((snapshot) => this.snapshot.set(snapshot));
     }
 }

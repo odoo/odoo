@@ -1,8 +1,8 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Gif } from "@mail/core/common/gif";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
@@ -80,7 +80,7 @@ export class GifPicker extends Component {
         this.next = "";
         this.showFavorite = false;
         this.offset = 0;
-        this.state = useState({
+        this.state = proxy({
             favorites: {
                 /** @type {TenorGif[]} */
                 gifs: [],

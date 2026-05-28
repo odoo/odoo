@@ -1,5 +1,5 @@
-import { useExternalListener, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useExternalListener, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { useNavigation } from "@web/core/navigation/navigation";
 import { usePosition } from "@web/core/position/position_hook";
 import { getFirstElementOfNode } from "@web/core/dropdown/dropdown";
@@ -28,7 +28,7 @@ export class CallDropdown extends Component {
     setup() {
         super.setup();
         this.menuRef = useRef("menu");
-        this.state = useState({ isOpen: this.props.openByDefault });
+        this.state = proxy({ isOpen: this.props.openByDefault });
         usePosition("menu", () => this.triggerRef.el, {
             position: this.props.position,
             margin: 4,

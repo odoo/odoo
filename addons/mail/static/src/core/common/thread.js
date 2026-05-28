@@ -1,4 +1,4 @@
-import { onRendered, useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { onRendered, useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
@@ -11,6 +11,7 @@ import {
     onWillDestroy,
     onWillUnmount,
     onWillUpdateProps,
+    proxy,
     toRaw,
     untrack,
     useEffect,
@@ -75,7 +76,7 @@ export class Thread extends Component {
         });
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        this.state = useState({
+        this.state = proxy({
             isReplyingTo: false,
             mountedAndLoaded: false,
             showJumpPresent: false,
@@ -85,9 +86,7 @@ export class Thread extends Component {
         this.orm = useService("orm");
         this.ui = useService("ui");
         /** @type {ReturnType<import('@mail/utils/common/hooks').useMessageScrolling>|null} */
-        this.messageHighlight = this.env.messageHighlight
-            ? useState(this.env.messageHighlight)
-            : null;
+        this.messageHighlight = this.env.messageHighlight;
         this.scrollingToHighlight = false;
         useLayoutEffect(
             () => {
@@ -223,7 +222,7 @@ export class Thread extends Component {
                 }
                 const el = this.messageRefs.get(
                     this.channel?.self_member_id.new_message_separator_ui - 1
-                )?.el;
+                )?.();
                 if (el) {
                     el.querySelector(".o-mail-Message-jumpTarget").scrollIntoView({
                         behavior: "instant",
@@ -482,11 +481,11 @@ export class Thread extends Component {
         if (!firstNewerMessage) {
             return false;
         }
-        const firstNewestMessageRef = this.messageRefs.get(firstNewerMessage.id);
-        if (!firstNewestMessageRef) {
+        const firstNewestMessageEl = this.messageRefs.get(firstNewerMessage.id)?.();
+        if (!firstNewestMessageEl) {
             return false;
         }
-        firstNewestMessageRef.el.querySelector(".o-mail-Message-jumpTarget").scrollIntoView({
+        firstNewestMessageEl.querySelector(".o-mail-Message-jumpTarget").scrollIntoView({
             behavior: "instant",
             block: this.props.order === "asc" ? "start" : "end",
         });
@@ -632,7 +631,7 @@ export class Thread extends Component {
     }
 
     onWheel(ev) {
-        if (this.messageSelection._data.size) {
+        if (this.messageSelection.size) {
             ev.stopPropagation();
             ev.preventDefault();
         }
@@ -674,7 +673,7 @@ export class Thread extends Component {
         if (!this.messageHighlight?.highlightedMessageId || this.scrollingToHighlight) {
             return;
         }
-        const el = this.messageRefs.get(this.messageHighlight.highlightedMessageId)?.el;
+        const el = this.messageRefs.get(this.messageHighlight.highlightedMessageId)?.();
         if (el) {
             this.scrollingToHighlight = true;
             await this.messageHighlight.startupPromise;

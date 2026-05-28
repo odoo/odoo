@@ -1,6 +1,6 @@
-import { useComponent, useState } from "@web/owl2/utils";
+import { useComponent } from "@web/owl2/utils";
 import { isRecord, STORE_SYM } from "@mail/model/misc";
-import { Component, toRaw } from "@odoo/owl";
+import { Component, proxy, toRaw } from "@odoo/owl";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
@@ -717,13 +717,8 @@ export class UseActions extends Reactive {
  * @param {Component} params0.component
  * @returns {InstanceType<UseActionClass_T>}
  */
-function _useActionState({ UseActionClass, component }) {
-    return new UseActionClass(component, useService("mail.store"));
-}
-
-/** @returns {ReturnType<_useActionState>} */
 function useActionState({ UseActionClass, component }) {
-    return useState(_useActionState({ UseActionClass, component }));
+    return proxy(new UseActionClass(component, useService("mail.store")));
 }
 
 /**

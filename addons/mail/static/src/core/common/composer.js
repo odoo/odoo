@@ -1,10 +1,4 @@
-import {
-    useChildSubEnv,
-    useExternalListener,
-    useLayoutEffect,
-    useRef,
-    useState,
-} from "@web/owl2/utils";
+import { useChildSubEnv, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -32,6 +26,8 @@ import {
     EventBus,
     immediateEffect,
     onWillDestroy,
+    proxy,
+    signal,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -162,11 +158,12 @@ export class Composer extends Component {
         this.fakeTextarea = useRef("fakeTextarea");
         this.inputContainerRef = useRef("input-container");
         this.pickerContainerRef = useRef("picker-container");
-        this.state = useState({
+        this.state = proxy({
             active: true,
             isFullComposerOpen: false,
         });
-        this.root = useRef("root");
+        /** @type {import("@odoo/owl").Signal<Element>} */
+        this.rootRef = signal();
         this.fullComposerRecoveryPopover = usePopover(FullComposerRecoveryPopover, {
             closeOnClickAway: false,
             closeOnEscape: false,
@@ -337,7 +334,7 @@ export class Composer extends Component {
             () => [
                 this.state.isFullComposerOpen,
                 this.props.composer.restoredFromFullComposer,
-                this.root.el?.querySelector("button[name='open-full-composer']"),
+                this.rootRef()?.querySelector("button[name='open-full-composer']"),
             ]
         );
         onMounted(() => {

@@ -1,11 +1,11 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { BlurPerformanceWarning } from "@mail/discuss/call/common/blur_performance_warning";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { CallPresentationBar } from "@mail/discuss/call/common/call_presentation_bar";
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
 
-import { Component, onMounted, onPatched, onWillUnmount, toRaw } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillUnmount, proxy, toRaw } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -54,7 +54,7 @@ export class Call extends Component {
         this.rtc = useService("discuss.rtc");
         this.isMobileOs = isMobileOS();
         this.ui = useService("ui");
-        this.state = useState({
+        this.state = proxy({
             sidebar: false,
             tileWidth: 0,
             tileHeight: 0,

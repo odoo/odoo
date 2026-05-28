@@ -1,9 +1,8 @@
-import { useState } from "@web/owl2/utils";
 import { MailColumnProgress } from "@mail/core/web/mail_column_progress";
 import { ActivityCell } from "@mail/views/web/activity/activity_cell";
 import { ActivityRecord } from "@mail/views/web/activity/activity_record";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
@@ -37,7 +36,7 @@ export class ActivityRenderer extends Component {
     static template = "mail.ActivityRenderer";
 
     setup() {
-        this.activeFilter = useState({
+        this.activeFilter = proxy({
             progressValue: {
                 active: null,
             },
@@ -166,7 +165,7 @@ export class ActivityRenderer extends Component {
     setupStorageActiveColumns() {
         const storageActiveColumnsList = browser.localStorage.getItem(this.storageKey)?.split(",");
 
-        this.storageActiveColumns = useState({});
+        this.storageActiveColumns = proxy({});
         for (const activityType of this.props.activityTypes) {
             if (storageActiveColumnsList) {
                 this.storageActiveColumns[activityType.id] = storageActiveColumnsList.includes(
