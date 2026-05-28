@@ -168,6 +168,7 @@ class AccountMoveLine(models.Model):
         )
         posted_cogs_qty_prod_uom = sum(posted_cogs_lines.mapped(
             lambda line: line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id)
+             * (-1 if line.move_id.move_type == "out_refund" else 1)
         ))
         return posted_cogs_qty_prod_uom + super()._get_cogs_qty()
 
