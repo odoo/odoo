@@ -48,12 +48,17 @@ export class ShopPage extends Interaction {
      *
      * @param {Event} ev
      */
-    onChangeAttribute(ev) {
-        const productGrid = this.el.querySelector('.o_wsale_products_grid_table_wrapper');
-        if (productGrid) {
-            productGrid.classList.add('opacity-50');
-        }
+    async onChangeAttribute(ev) {
         const form = ev.currentTarget.closest('form');
+        const searchParams = this._getSearchParams(form);
+        const url = new URL(form.action);
+        await wSaleUtils.updateShopContent(this, {
+            url,
+            searchParams,
+        });
+    }
+
+    _getSearchParams(form) {
         const filters = form.querySelectorAll('input:checked, select');
         const attributeValueSlugs = Array.from(filters).filter(
             filter => filter.name === 'attribute_value' && filter.value
@@ -71,7 +76,7 @@ export class ShopPage extends Interaction {
         if (tagSlugs.length) {
             searchParams.set('tags', [...new Set(tagSlugs)].join(','));
         }
-        redirect(`${url.pathname}?${searchParams.toString()}`);
+        return searchParams;
     }
 
     /**
