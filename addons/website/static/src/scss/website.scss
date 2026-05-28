@@ -3632,6 +3632,28 @@ input[value*="data-oe-translation-source-sha"] {
     border-left-width: 0;
 }
 
+// Apply the input focus shadow only on the bottom side when "Bottom Shadow"
+// theme option is enabled.
+@if o-website-value('input-focus-shadow') == 'bottom' {
+    $-input-focus-bottom-shadow: 0 $input-btn-focus-width $input-btn-focus-color;
+    // Exclude shop/event quantity (`.o_force_shadow`) from the bottom shadow.
+    // Search inputs (`.oe_search_box`) should have no shadow.
+    $-focused-selector: '.form-control:focus:not(.o_force_shadow, .oe_search_box), .form-select:focus';
+
+    #{$-focused-selector} {
+        box-shadow: $-input-focus-bottom-shadow;
+    }
+
+    .input-group:not(.o_force_shadow):has(#{$-focused-selector}) {
+        border-radius: $input-border-radius;
+        box-shadow: $-input-focus-bottom-shadow;
+
+        > :is(.form-control, .form-select):focus {
+            box-shadow: none;
+        }
+    }
+}
+
 .form-control:not(:focus):has(~ .input-group-text-subtle),
 .form-select:not(:focus):not(:hover):has(~ .input-group-text-subtle) {
     border-right-width: 0;

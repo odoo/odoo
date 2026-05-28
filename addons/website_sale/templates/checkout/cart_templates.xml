@@ -171,7 +171,7 @@
             t-value="is_view_active('website_sale.product_quantity')"
         />
         <div
-            t-attf-class="css_quantity input-group justify-content-end h-100"
+            t-attf-class="css_quantity o_prevent_border input-group justify-content-end h-100"
             t-attf-name="{{'website_sale_cart_line_quantity' if not is_mobile else 'website_sale_cart_line_quantity_mobile'}}"
         >
             <t t-if="should_show_quantity_selector and line._is_sellable()">
@@ -185,7 +185,7 @@
                 </button>
                 <input
                     type="text"
-                    class="js_quantity quantity form-control border border-start-0 border-end-0"
+                    class="js_quantity quantity o_force_shadow form-control border border-start-0 border-end-0"
                     t-att-data-line-id="line.id"
                     t-att-data-product-id="line.product_id.id"
                     t-att-value="line._get_displayed_quantity()"
@@ -220,7 +220,7 @@
                 <t t-set="displayed_qty" t-value="line._get_displayed_quantity()"/>
                 <input
                     type="text"
-                    class="js_quantity quantity form-control text-start text-md-end border-0 p-0 shadow-none w-auto"
+                    class="js_quantity quantity o_force_shadow form-control text-start text-md-end border-0 p-0 shadow-none w-auto"
                     t-att-data-line-id="line.id"
                     t-att-data-product-id="line.product_id.id"
                     t-att-value="displayed_qty"
