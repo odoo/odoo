@@ -1063,8 +1063,8 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.ship_later = True
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderShipLater', login="accountman")
-
-        self.assertEqual(sale_order_single.picking_ids.state, 'cancel')
+        # No pickings are created for SO
+        self.assertEqual(sale_order_single.picking_ids.ids, [])
 
         # The pos order is being shipped later so the qty_delivered should still be 0
         self.assertEqual(sale_order_single.order_line[0].qty_delivered, 0)
@@ -1076,10 +1076,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order_single.order_line[0].qty_delivered, 1)
 
         # multi line order checks
+        self.assertEqual(sale_order_multi.picking_ids.ids, [])
         self.assertEqual(sale_order_multi.order_line[0].qty_delivered, 0)
         self.assertEqual(sale_order_multi.order_line[1].qty_delivered, 0)
-
-        self.assertEqual(sale_order_multi.picking_ids.state, 'cancel')
 
     def test_downpayment_invoice(self):
         """This test check that users that don't have the pos user group can invoice downpayments"""
@@ -2318,6 +2317,76 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_pos_tour('test_settle_so_custom_attribute_value', login="accountman")
+
+    def test_purchase_qty_not_duplicated(self):
+        """Check that purchase qty is not duplicated when quotation is settled from pos"""
+        if self.env['ir.module.module']._get('purchase').state != 'installed':
+            self.skipTest("Purchase module is required for this test to run")
+        self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).write({'delivery_steps': 'pick_pack_ship'})
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
+        mto_route.rule_ids.procure_method = "make_to_order"
+        buy_route = self.env['stock.route'].search([('name', '=', 'Buy')])
+
+        self.product_a.write({
+            'route_ids': [Command.set([buy_route.id, mto_route.id])],
+            'seller_ids': [
+                Command.create({
+                    'partner_id': self.partner_b.id,
+                    'min_qty': 1,
+                    'price': 250,
+                }),
+            ]
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'name': 'COMP1 SO', 'product_id': self.product_a.id, 'product_uom_qty': 5})],
+        })
+
+        self.main_pos_config.ship_later = True
+        self.main_pos_config.open_ui()
+        current_session = self.main_pos_config.current_session_id
+
+        pos_order = {
+            'amount_paid': self.product_a.lst_price * 5,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': self.product_a.lst_price * 5,
+            'company_id': self.env.company.id,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'to_invoice': True,
+            'partner_id': self.partner_a.id,
+            'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
+            'lines': [[0,
+                0,
+                {'discount': 0,
+                'pack_lot_ids': [],
+                'price_unit': self.product_a.lst_price,
+                'product_id': self.product_a.id,
+                'price_subtotal': self.product_a.lst_price * 5,
+                'price_subtotal_incl': self.product_a.lst_price * 5,
+                'sale_order_line_id': sale_order.order_line[0].id,
+                'sale_order_origin_id': sale_order.id,
+                'qty': 5,
+                'tax_ids': []}]],
+            'name': 'Order 00044-003-0014',
+            'session_id': current_session.id,
+            'sequence_number': self.main_pos_config.journal_id.id,
+            'payment_ids': [[0,
+                0,
+                {'amount': self.product_a.lst_price * 5,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.main_pos_config.payment_method_ids[0].id}]],
+            'user_id': self.env.uid,
+            'uuid': str(uuid4()),
+            'shipping_date': fields.Date.today(),
+
+        }
+        self.env['pos.order'].sync_from_ui([pos_order])
+
+        po = self.env['purchase.order'].search([('partner_id', '=', self.partner_b.id)])  # noqa: OLS03001
+        self.assertEqual(po.order_line.product_qty, 5.0)
 
 
 @odoo.tests.tagged('post_install', '-at_install')
