@@ -109,7 +109,7 @@
                             name="operations"
                             invisible="type not in ('normal', 'phantom')"
                             groups="mrp.group_mrp_routings">
-                                <field name="operation_ids" invisible="operation_ids.length == 0" 
+                                <field name="operation_ids" invisible="operation_ids.length == 0"
                                 context="{'bom_id_invisible': True, 'default_bom_id': id, 'list_view_ref': 'mrp.mrp_routing_workcenter_bom_tree_view', 'target': 'new'}"/>
                                 <div invisible="operation_ids.length != 0">
                                     <div class="o_mrp_routing_image bill_of_material position-relative">
@@ -169,10 +169,15 @@
                             <group>
                                 <group invisible="type == 'phantom'">
                                     <field name="picking_type_id" options="{'no_quick_create': True}" groups="stock.group_adv_location"/>
-                                    <field name="produce_delay" class="oe_inline"/>days
+                                    <label for="produce_delay"/>
+                                    <div class="o_row">
+                                        <field name="produce_delay" class="oe_inline"/>
+                                        <span>days</span>
+                                    </div>
                                     <label for="days_to_prepare_mo"/>
-                                    <div>
-                                        <field name="days_to_prepare_mo" class="oe_inline"/>days
+                                    <div class="o_row">
+                                        <field name="days_to_prepare_mo" class="oe_inline"/>
+                                        <span>days</span>
                                         <button class="btn btn-link" type="button">
                                             <field name="json_popover" widget="mrp_bom_popover"/>
                                         </button>
