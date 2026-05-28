@@ -21,8 +21,8 @@ export class PlanSection extends Component {
 
     get enterprisePlanButton() {
         return this.dashboardState.hasSubscription
-            ? { href: "https://accounts.odoo.com/my/home", text: "View" }
-            : { href: "https://www.odoo.com/pricing", text: "Upgrade" }
+            ? { href: "https://accounts.odoo.com/my/home", text: "View", class: "btn-primary" }
+            : { href: "https://www.odoo.com/pricing", text: "Upgrade", class: "btn-primary" }
     }
 
     get communityPlan() {
@@ -30,7 +30,11 @@ export class PlanSection extends Component {
             id: "community",
             title: "Odoo Community",
             price: "Free",
-            isEnterprise: false,
+            button: {
+                href: "https://www.odoo.com/page/editions",
+                text: "Compare",
+                class: "btn-outline-secondary"
+            },
             content: {
                 subtitle: "Open Source Apps",
                 addons: [],
@@ -42,9 +46,8 @@ export class PlanSection extends Component {
         return {
             id: "enterprise",
             title: "Odoo Enterprise",
-            price: "46.80€",
+            price: "???€",
             button: this.enterprisePlanButton,
-            isEnterprise: true,
             content: {
                 subtitle: "Open Source Apps +",
                 addons: [
@@ -75,6 +78,6 @@ export class PlanSection extends Component {
     }
 
     showSubscriptionCode() {
-        return this.dashboardState.selectedPlan === "enterprise";
+        return !this.dashboardState.hasSubscription;
     }
 }

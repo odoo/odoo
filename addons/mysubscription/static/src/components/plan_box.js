@@ -1,4 +1,4 @@
-import { Component, plugin, props, types as t } from "@odoo/owl";
+import { Component, effect, plugin, props, types as t } from "@odoo/owl";
 import { DashboardPlugin } from "../dashboard_plugin";
 
 export class PlanBox extends Component {
@@ -12,11 +12,14 @@ export class PlanBox extends Component {
         this.dashboardState = plugin(DashboardPlugin).state;
     };
 
-    onClickPlan() {
-        this.dashboardState.selectedPlan = this.props.data.id;
+    get isCurrentPlan() {
+        const currentPlan = this.dashboardState.hasSubscription
+            ? "enterprise"
+            : "community";
+        return this.props.data.id === currentPlan;
     }
 
-    get isCurrentPlanSelected() {
-        return this.dashboardState.selectedPlan === this.props.data.id;
+    get showPlanButton() {
+        return this.props.data.id === "community" ? this.dashboardState.hasSubscription : true;
     }
 }

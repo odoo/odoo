@@ -29,7 +29,11 @@
                 </div>
                 <div class="flex-grow-1 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
                     <div class="mb-3 mb-md-0">
-                        <h3 class="text-primary mb-1 fw-bold" t-out="this.name"/>
+                        <!-- <h3 class="text-primary mb-1 fw-bold" t-out="this.name"/> -->
+                        <h3 class="text-primary mb-1 fw-bold cursor-pointer custom-hover-link"
+                            t-on-click.stop="() => this.openSettings()"
+                            t-out="this.name"
+                        />
                         <div class="fw-bold fs-5 text-dark" t-out="this.balance"/>
                         <div class="text-muted" t-out="this.description"/>
                     </div>
@@ -43,12 +47,12 @@
                         >
                             Top Up
                         </a>
-                        <button
-                            class="btn btn-outline-secondary px-4 py-2 text-nowrap"
-                            t-on-click.stop="() => this.openSettings()"
-                        >
-                            Settings
-                        </button>
+                        <!-- <button -->
+                            <!-- class="btn btn-outline-secondary px-4 py-2 text-nowrap" -->
+                            <!-- t-on-click.stop="() => this.openSettings()" -->
+                        <!-- > -->
+                            <!-- Settings -->
+                        <!-- </button> -->
                     </div>
 
                 </div>

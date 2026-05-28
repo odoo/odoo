@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { Component, plugin } from "@odoo/owl";
 import { DashboardPlugin } from "./dashboard_plugin";
+import { DashboardBlock } from "./components/dashboard_block";
 
 function capitalize(string) {
     if (string.length > 1) {
@@ -12,6 +13,7 @@ function capitalize(string) {
 
 export class SubscriptionSection extends Component {
     static template = "mysubscription.SubscriptionSection";
+    static components = { DashboardBlock };
     static props;
 
     setup() {

@@ -67,7 +67,14 @@ export class MySubscriptionDashboard extends Component {
     }
 
     get showSubscriptionSection() {
-        return this.state.hasSubscription || this.state.showSub;
+        // return this.state.hasSubscription || this.state.showSub;
+        return this.state.hasSubscription;
+    }
+
+    // TODO: remove this later, it's for debug
+    switchHasSubscription() {
+        this.state.hasSubscription = !this.state.hasSubscription;
+        // this.state.hasSubscription = this.state.hasSubscription ? "XXXXXX" : ""
     }
 }
 

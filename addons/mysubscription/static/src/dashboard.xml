@@ -8,9 +8,6 @@
                 <t t-if="this.showSubscriptionSection">
                     <SubscriptionSection/>
                     <hr class="my-4 text-muted opacity-25"/>
-
-                    <AddressSection/>
-                    <hr class="my-4 text-muted opacity-25"/>
                 </t>
 
                 <PlanSection hasSubscription="this.state.hasSubscription"/>
@@ -28,11 +25,10 @@
                 <hr class="my-2 text-info"/>
                 <button
                     class="btn btn-info px-4 py-2"
-                    t-on-click="() => this.state.showSub = !this.state.showSub"
+                    t-on-click="() => this.switchHasSubscription()"
                 >
                     with/without subscription
                 </button>
-                (*) : Temporary data
 
             </div>
         </div>

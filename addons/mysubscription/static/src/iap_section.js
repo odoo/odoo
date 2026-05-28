@@ -61,7 +61,6 @@ export class IapSection extends Component {
 
         onWillStart(async () => {
             this.iapAccounts = await this.loadIap();
-            console.log(this.iapAccounts);
         });
     }
 

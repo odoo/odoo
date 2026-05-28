@@ -31,8 +31,8 @@
                     title="Your subscription code"
                 />
 
-                <t t-set-slot="buttons">
-                    <button class="btn btn-primary" t-on-click.prevent="this.onCodeSubmit"><t t-out="this.state.buttonText"/></button>
+                <t t-set-slot="content">
+                    <button class="btn btn-primary px-4 py-2" t-on-click.prevent="this.onCodeSubmit"><t t-out="this.state.buttonText"/></button>
                 </t>
             </DashboardBlock>
         </div>

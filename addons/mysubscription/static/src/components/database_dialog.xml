@@ -14,12 +14,6 @@
                 <input type="text" class="form-control text-muted" t-att-value="this.props.dbName" disabled="disabled"/>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label fw-bold">Master Password</label>
-                <input type="password" class="form-control" t-model="this.masterPwd"/>
-            </div>
-
-
             <t t-if="this.props.action === 'backup'">
                 <div class="mb-3">
                     <label class="form-label fw-bold">Filename</label>
@@ -58,6 +52,11 @@
                     <input type="text" class="form-control" t-model="this.duplicateName" autocomplete="off"/>
                 </div>
             </t>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Master Password</label>
+                <input type="password" class="form-control" t-model="this.masterPwd"/>
+            </div>
 
             <t t-set-slot="footer">
                 <button t-att-class="(this.props.action === 'drop') ? 'btn btn-danger' : 'btn btn-primary'" t-att-disabled="this.isProcessing()" t-on-click="this.onSubmit">

@@ -23,7 +23,7 @@
             <DashboardBlock subtitle.translate="Selection">
                 <div>Select the database you want to act on</div>
 
-                <t t-set-slot="buttons">
+                <t t-set-slot="content">
                     <select class="form-control w-50" t-model="this.currentDbName">
                         <option
                             t-foreach="this.databases"
@@ -40,7 +40,7 @@
                 <div>Your version: <strong><t t-out="this.serverVersion"/></strong></div>
                 <!-- <div class="text-muted">You can test saas-19.1 or upgrade directly in production</div> -->
 
-                <t t-set-slot="buttons">
+                <t t-set-slot="content">
                     <a
                         t-att-href="this.upgradeHref"
                         class="btn btn-outline-secondary px-4 py-2"
@@ -57,7 +57,7 @@
                     <a href="#" t-out="this.databaseUrl"/>
                 </div>
 
-                <t t-set-slot="buttons">
+                <t t-set-slot="content">
                     <button class="btn btn-outline-secondary px-4 py-2" t-on-click="this.renameDatabase">
                         Rename
                     </button>
@@ -67,7 +67,7 @@
             <DashboardBlock subtitle.translate="Duplicate" t-if="this.isSystem">
                 <div>Duplicate for testing or production purpose</div>
 
-                <t t-set-slot="buttons">
+                <t t-set-slot="content">
                     <button class="btn btn-outline-secondary px-4 py-2" t-on-click="this.duplicateDatabase">
                         Duplicate
                     </button>
@@ -77,7 +77,7 @@
             <DashboardBlock subtitle.translate="Backups" t-if="this.isSystem">
                 <div>Your data is safe, check our <a href="https://www.odoo.com/cloud-sla" target="_blank">SLA policy</a></div>
 
-                <t t-set-slot="buttons">
+                <t t-set-slot="content">
                     <button class="btn btn-outline-secondary px-4 py-2" t-on-click="this.downloadBackup">
                         Download Backup
                     </button>
@@ -100,7 +100,7 @@
             <DashboardBlock subtitle.translate="Delete Database">
                 <div>This action will delete the database and close the subscription.</div>
 
-                <t t-set-slot="buttons">
+                <t t-set-slot="content">
                     <button class="btn btn-danger px-4 py-2" t-on-click="this.dropDatabase">
                         Delete
                     </button>
