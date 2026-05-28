@@ -339,15 +339,13 @@ export class EmailNode {
     }
 
     render(context = {}) {
+        // Small optimization: if "this" would be rendered as a div with no
+        // style instruction, it does not need to be rendered and we can
+        // keep only the padding and/or the margin, if there is one.
         const isNeutral = this.layout.isNeutral();
         const render = (layoutContainer, renderContext = {}, extraPositionContext = {}) => {
             let renderChildren;
             if (layoutContainer === this.marginNode) {
-                // TODO EGGMAIL: small optimization: if "this" would be a div with no
-                // style instruction, it does not need to be rendered and we can
-                // directly go to the padding or the children
-                // need to check if the layout is an ElementLayout with tag DIV
-                // and all refs are empty
                 if (!isNeutral) {
                     renderChildren = [this];
                 }
