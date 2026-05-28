@@ -2837,7 +2837,7 @@ class AccountEdiUBL(models.AbstractModel):
                 line_tree,
             )
             field = AccountMoveLine._fields.get(field_name)
-            if not field or field.type != config.get('type') or not node_value:
+            if not field or field.type not in config['supported_types'] or not node_value:
                 continue
             vals[field_name] = node_value
         return vals
@@ -3179,7 +3179,7 @@ class AccountEdiUBL(models.AbstractModel):
                 tree,
             )
             field = AccountMove._fields.get(field_name)
-            if not field or field.type != config.get('type') or not node_value:
+            if not field or field.type not in config['supported_types'] or not node_value:
                 continue
             collected_values['to_write'][field_name] = node_value
 
