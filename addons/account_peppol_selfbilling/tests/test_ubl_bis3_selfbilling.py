@@ -91,3 +91,40 @@ class TestUblBis3SelfBilling(TestUblBis3Common, TestUblCiiBECommon):
 
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_selfbilling_credit_note')
+
+    def test_self_billing_sequence_per_partner(self):
+        """Test that self-billing invoices in a self-billing journal get a unique sequence per partner."""
+
+        partner_a = self.partner_a
+        partner_b = self.partner_b
+
+        # Create and post invoice for partner_a
+        invoice_a = self.env['account.move'].create({
+            'partner_id': partner_a.id,
+            'move_type': 'in_invoice',
+            'journal_id': self.self_billing_journal.id,
+            'invoice_date': '2026-04-20',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        invoice_a.action_post()
+
+        # Create and post invoice for partner_b
+        invoice_b = self.env['account.move'].create({
+            'partner_id': partner_b.id,
+            'move_type': 'in_invoice',
+            'journal_id': self.self_billing_journal.id,
+            'invoice_date': '2026-04-20',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        invoice_b.action_post()
+
+        partner_a_id = str(partner_a.commercial_partner_id.id).zfill(5)
+        partner_b_id = str(partner_b.commercial_partner_id.id).zfill(5)
+
+        # Sequences should contain the partner id
+        self.assertTrue((invoice_a.name.split('/')[0] or '').endswith(partner_a_id))
+        self.assertTrue((invoice_b.name.split('/')[0] or '').endswith(partner_b_id))
+
+        # Both should be 0001 since sequences are independent per partner
+        self.assertTrue(invoice_a.name.endswith('0001'))
+        self.assertTrue(invoice_b.name.endswith('0001'))
