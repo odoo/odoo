@@ -80,9 +80,7 @@ class AccountMove(models.Model):
             )
             amount = 0
             if is_relevant:
-                counterpart_move_type = 'out_invoice' if move.move_type == 'out_refund' else 'out_refund'
-                paid_amount = move._pdp_get_paid_amount()
-                amount = paid_amount - already_sent
+                amount = move._pdp_get_paid_amount() - already_sent
             move.pdp_lifecycle_residual = amount
 
     @api.depends('peppol_response_ids', 'peppol_response_ids.peppol_state')
