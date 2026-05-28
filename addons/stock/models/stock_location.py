@@ -414,6 +414,23 @@ class Location(models.Model):
         specified."""
         self.ensure_one()
         if self.storage_category_id:
+            positive_quant = self.quant_ids.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=q.product_id.uom_id.rounding) > 0)
+            # check if only allow new product when empty
+            if self.storage_category_id.allow_new_product == "empty" and positive_quant:
+                return False
+            # check if only allow same product
+            if self.storage_category_id.allow_new_product == "same":
+                # In case it's a package, `product` is not defined, so try to get
+                # the package products from the context
+                product = product or self._context.get('products')
+                if (positive_quant and positive_quant.product_id != product) or len(product) > 1:
+                    return False
+                if self.env['stock.move.line'].search_count([
+                    ('product_id', '!=', product.id),
+                    ('state', 'not in', ('done', 'cancel')),
+                    ('location_dest_id', '=', self.id),
+                ], limit=1):
+                    return False
             forecast_weight = self._get_weight(self.env.context.get('exclude_sml_ids', set()))[self]['forecast_weight']
             # check if enough space
             if package and package.package_type_id:
@@ -434,23 +451,6 @@ class Location(models.Model):
                 if product_capacity and location_qty >= product_capacity.quantity:
                     return False
                 if product_capacity and quantity + location_qty > product_capacity.quantity:
-                    return False
-            positive_quant = self.quant_ids.filtered(lambda q: float_compare(q.quantity, 0, precision_rounding=q.product_id.uom_id.rounding) > 0)
-            # check if only allow new product when empty
-            if self.storage_category_id.allow_new_product == "empty" and positive_quant:
-                return False
-            # check if only allow same product
-            if self.storage_category_id.allow_new_product == "same":
-                # In case it's a package, `product` is not defined, so try to get
-                # the package products from the context
-                product = product or self._context.get('products')
-                if (positive_quant and positive_quant.product_id != product) or len(product) > 1:
-                    return False
-                if self.env['stock.move.line'].search_count([
-                    ('product_id', '!=', product.id),
-                    ('state', 'not in', ('done', 'cancel')),
-                    ('location_dest_id', '=', self.id),
-                ], limit=1):
                     return False
         return True
 
