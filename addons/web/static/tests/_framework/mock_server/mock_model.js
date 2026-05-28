@@ -78,7 +78,10 @@ const {
  *
  * @typedef {import("@web/views/view").ViewType} ViewType
  *
- * @typedef {{ force?: boolean }} WriteOptions
+ * @typedef {{
+ *  force?: boolean;
+ *  originalRecords?: Record<number | false, ModelRecord>;
+ * }} WriteOptions
  */
 
 /**
@@ -1216,10 +1219,10 @@ function traverseElement(node, callback) {
  *
  * @param {Model} model
  * @param {ModelRecord} record record that have been created/updated.
- * @param {ModelRecord} [originalRecord] record before update.
  * @param {WriteOptions} [writeOptions]
  */
-function updateComodelRelationalFields(model, record, originalRecord, writeOptions) {
+function updateComodelRelationalFields(model, record, writeOptions) {
+    const originalRecord = writeOptions?.originalRecords?.[record.id];
     for (const fname in record) {
         const field = model._fields[fname];
         const coModel = getRelation(field, record);
@@ -1361,7 +1364,7 @@ const INHERITED_PRIMITIVE_KEYS = [
     ["_order", null],
     ["_parent_name", null],
     ["_rec_name", null],
-    ["_related", (set) => new Set(set)],
+    ["_related", (related) => new Map(related)],
 ];
 const READ_GROUP_NUMBER_GRANULARITY = [
     "day_of_month",
@@ -1577,8 +1580,8 @@ export class Model extends Array {
     _rec_name = null;
     /** @type {Partial<ModelRecord>[]} */
     _records = [];
-    /** @type {Set<string>} */
-    _related = new Set();
+    /** @type {Map<string, FieldDefinition>} */
+    _related = new Map();
     /** @type {Record<"print" | "action", ActionDefinition[]>} */
     _toolbar = {};
     /** @type {Record<ViewKey, string>} */
@@ -1708,7 +1711,7 @@ export class Model extends Array {
             copyIds.push(recordCopy.id);
             this.push(recordCopy);
         }
-        this.browse(copyIds)._applyComputesAndValidate({}, { force: true });
+        this.browse(copyIds)._applyComputesAndValidate({ force: true });
         return copyIds;
     }
 
@@ -1734,7 +1737,7 @@ export class Model extends Array {
             this._applyDefaults(values, kwargs.context);
             this._write(values, createdRecord.id, writeOptions);
         }
-        this.browse(ids)._applyComputesAndValidate({}, writeOptions);
+        this.browse(ids)._applyComputesAndValidate(writeOptions);
         return shouldReturnList ? ids : ids[0];
     }
 
@@ -2770,7 +2773,7 @@ export class Model extends Array {
             originalRecords[record.id] = { ...record };
             this._write(values, record.id);
         }
-        records._applyComputesAndValidate(originalRecords);
+        records._applyComputesAndValidate({ originalRecords });
         return true;
     }
 
@@ -2780,13 +2783,12 @@ export class Model extends Array {
 
     /**
      * @private
-     * @param {Record<string, ModelRecord>} originalRecords
      * @param {WriteOptions} [writeOptions]
      */
-    _applyComputesAndValidate(originalRecords, writeOptions) {
+    _applyComputesAndValidate(writeOptions) {
         // Compute related fields
-        for (const fieldName of this._related) {
-            this._compute_related_field(fieldName);
+        for (const relatedFields of this._related.values()) {
+            this._compute_related_field(relatedFields);
         }
 
         // Apply compute functions
@@ -2809,7 +2811,7 @@ export class Model extends Array {
                 }
             }
 
-            updateComodelRelationalFields(this, record, originalRecords[record.id], writeOptions);
+            updateComodelRelationalFields(this, record, writeOptions);
         }
     }
 
@@ -2868,25 +2870,20 @@ export class Model extends Array {
 
     /**
      * @private
-     * @param {string} fieldName
+     * @param {FieldDefinition[]} fieldChain
      */
-    _compute_related_field(fieldName) {
-        const field = this._fields[fieldName];
+    _compute_related_field(fieldChain) {
+        const relatedFieldName = fieldChain[0].name;
+        const targetField = fieldChain.at(-1);
         for (const record of this) {
-            const related = this._followRelation(record, field);
-            if (!related?.field) {
-                // The related field is not found on the record, so we
-                // remove the compute function.
-                this.env[this._name]._related.delete(fieldName);
-                return;
-            }
-            const value = related.record?.[related.field.name];
+            const [relatedRecord] = this._followRelatedRecord(record, fieldChain);
+            const value = relatedRecord?.[targetField.name];
             if (value === undefined) {
                 // Value is null: assign default value (if null)
-                record[fieldName] ??= DEFAULT_FIELD_VALUES[related.field.type]();
+                record[relatedFieldName] ??= DEFAULT_FIELD_VALUES[targetField.type]();
             } else {
                 // Value is not null: override
-                record[fieldName] = value;
+                record[relatedFieldName] = value;
             }
         }
     }
@@ -2992,36 +2989,20 @@ export class Model extends Array {
     /**
      * @private
      * @param {ModelRecord} record
-     * @param {FieldDefinition} field
+     * @param {FieldDefinition[]} fieldChain
      */
-    _followRelation(record, field) {
-        const fieldNames = safeSplit(field.related, ".");
-        const lastFieldName = fieldNames.pop();
-        let currentField = field;
+    _followRelatedRecord(record, fieldChain) {
         let currentModel = this;
         let currentRecord = record;
-        for (const fieldName of fieldNames) {
-            currentField = currentModel._fields[fieldName];
-            if (!currentField) {
-                break;
-            }
-
-            currentModel = getRelation(currentField, currentRecord);
+        for (const field of fieldChain.slice(0, -1)) {
+            currentModel = getRelation(field, currentRecord);
             if (!currentModel) {
                 break;
             }
-
-            const ids = ensureArray(currentRecord?.[fieldName]);
+            const ids = ensureArray(currentRecord?.[field.name]);
             currentRecord = currentModel.find((r) => ids.includes(r.id));
         }
-        const lastField = currentModel._fields[lastFieldName];
-        return currentModel && currentField
-            ? {
-                  field: lastField,
-                  model: currentModel,
-                  record: currentRecord,
-              }
-            : null;
+        return [currentModel, currentRecord];
     }
 
     /**
@@ -3280,6 +3261,7 @@ export class Model extends Array {
         let i = 0;
         while (todoValsMap.size > 0 && i < MAX_ITER) {
             let [fieldName, value] = todoValsMap.entries().next().value;
+            let canWrite = options?.force ?? false;
             todoValsMap.delete(fieldName);
             const field = this._fields[fieldName];
             if (!field) {
@@ -3290,16 +3272,19 @@ export class Model extends Array {
                 );
             }
             if (field.related) {
-                const related = this._followRelation(record, field);
-                if (related?.record) {
-                    const fname = related.field.name;
-                    related.model._write(
-                        { [fname]: related.record[fname] },
-                        related.record.id,
+                const fieldChain = this._related.get(fieldName);
+                const lastField = fieldChain.at(-1);
+                const [relatedRecord, relatedModel] = this._followRelatedRecord(record, fieldChain);
+                if (relatedRecord && relatedModel) {
+                    const fname = lastField.name;
+                    relatedModel._write(
+                        { [fname]: relatedRecord[fname] },
+                        relatedRecord.id,
                         options
                     );
                 }
-                continue;
+                // Always update related value
+                canWrite = true;
             }
             if (isX2MField(field)) {
                 let ids = record[fieldName] ? record[fieldName].slice() : [];
@@ -3420,7 +3405,7 @@ export class Model extends Array {
                         record[fieldName][property.name] = value;
                     }
                 }
-            } else if (options?.force || isFieldWritable(field)) {
+            } else if (canWrite || isFieldWritable(field)) {
                 record[fieldName] = value;
             } else {
                 // FIXME: should also take 'readonly' into account

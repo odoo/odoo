@@ -776,6 +776,39 @@ export class MockServer {
     }
 
     /**
+     * @param {Model} model
+     * @param {FieldDefinition} field
+     */
+    _getRelatedFieldChain(model, field) {
+        /** @type {FieldDefinition[]} */
+        const fieldChain = [field];
+        const fieldNames = safeSplit(field.related, ".");
+        const lastFieldName = fieldNames.pop();
+        let currentModel = model;
+        let currentField = field;
+        for (const fieldName of fieldNames) {
+            currentField = currentModel._fields[fieldName];
+            if (!currentField) {
+                break;
+            }
+            fieldChain.push(currentField);
+            const modelName = currentField.relation;
+            currentModel = this._models[modelName];
+            if (!currentModel) {
+                break;
+            }
+        }
+        if (currentModel) {
+            const lastField = currentModel._fields[lastFieldName];
+            if (lastField) {
+                fieldChain.push(lastField);
+                return fieldChain;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @private
      * @param {string | URL} input
      * @param {RequestInit} init
@@ -1028,7 +1061,13 @@ export class MockServer {
                     model._computes[fieldName] = computeFn;
                 } else if (field.related) {
                     // Related field
-                    model._related.add(fieldName);
+                    const relatedFields = this._getRelatedFieldChain(model, field);
+                    if (relatedFields) {
+                        model._related.set(fieldName, relatedFields);
+                    } else {
+                        // Incomplete field chain: remove 'related' attribute
+                        delete field.related;
+                    }
                 }
             }
 
@@ -1075,7 +1114,7 @@ export class MockServer {
             for (const record of model) {
                 model._applyDefaults(record);
             }
-            model._applyComputesAndValidate({}, { force: true });
+            model._applyComputesAndValidate({ force: true });
         }
 
         // creation of the ir.model.fields records, required for tracked fields
