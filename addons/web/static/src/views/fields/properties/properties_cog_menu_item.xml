@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.PropertiesEditMenuItem">
+        <!-- >1 mounted: multiple items (e.g. other tab visited) -->
+        <Dropdown t-if="propertiesFields.length > 1">
+            <button>
+                <i class="fa fa-cogs fa-fw oi-fw me-1"/>
+                <t t-esc="label"/>
+            </button>
+            <t t-set-slot="content">
+                <DropdownItem
+                    t-foreach="propertiesFields"
+                    t-as="field"
+                    t-key="field.name"
+                    class="'o_menu_item'"
+                    onSelected="() => this.editProperty(field.name)"
+                >
+                    <t t-esc="field.string"/>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+        <!-- 1 mounted: simple item (e.g. other tab not yet visited) -->
+        <DropdownItem
+            t-elif="propertiesFields.length === 1"
+            class="'o_menu_item'"
+            onSelected="() => this.editProperty(propertiesFields[0].name)"
+        >
+            <i class="fa fa-cogs fa-fw oi-fw me-1"/>
+            <t t-esc="label"/>
+        </DropdownItem>
+    </t>
+
+</templates>
