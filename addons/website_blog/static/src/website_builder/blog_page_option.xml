@@ -26,7 +26,7 @@
         <BuilderRow label.translate="Author" level="1">
             <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_header_author_avatar_display']}"/>
         </BuilderRow>
-        <BuilderRow label.translate="Share Links" level="1">
+        <BuilderRow label.translate="Share Links" level="1" t-if="this.isActiveItem('regular_cover') or this.isActiveItem('split_cover')">
             <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_header_share_links_display']}"/>
         </BuilderRow>
         <BuilderRow label.translate="Tags" level="1">
@@ -36,7 +36,7 @@
             <BuilderCheckbox t-if="this.isActiveItem('regular_cover')" actionParam="{views: ['website_blog.opt_blog_post_full_width_cover']}"/>
         </BuilderRow>
 
-        <BuilderRow label.translate="Comments" tooltip.translate="Toggle comments">
+        <BuilderRow label.translate="Comments">
             <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_comment']}"/>
         </BuilderRow>
 

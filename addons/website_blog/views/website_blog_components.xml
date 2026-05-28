@@ -118,8 +118,8 @@
     <div t-attf-class="d-flex #{additionnal_classes or ''}">
         <div t-if="blog_post.author_avatar and opt_posts_loop_show_author"
                 t-field="blog_post.author_avatar"
-                t-options='{"widget": "image", "alt": "", "class": "o_not_editable o_wblog_author_avatar o_avatar me-2 rounded-circle"}'
-                t-att-class="'flex-shrink-0 ' + ((opt_blog_list_view or opt_blog_large_list_view) and 'd-none d-lg-flex' or '')"/>
+                t-options='{"widget": "image", "alt": "", "class": "o_wblog_author_avatar o_avatar me-2 rounded-circle"}'
+                t-att-class="'flex-shrink-0 o_not_editable ' + ((opt_blog_list_view or opt_blog_large_list_view) and 'd-none d-lg-flex' or '')"/>
         <div t-attf-class="small lh-sm #{extra_classes or ''} #{opt_blog_cards_design and 'flex-grow-1' or ''}">
             <div t-if="opt_posts_loop_show_author">
                 <t t-call="website_blog.post_author"/>
@@ -132,7 +132,7 @@
 </template>
 
 <template id="post_author">
-    <div class="o_not_editable"><t t-out="blog_post.author_name"/><span t-if="opt_blog_list_view or opt_blog_large_list_view" class="d-lg-none">&#44;</span><span t-if="opt_blog_grid_view and not opt_blog_cards_design">&#44;</span></div>
+    <div class="o_not_editable"><t t-out="blog_post.author_name"/><span t-if="opt_posts_loop_show_date and (opt_blog_list_view or opt_blog_large_list_view)" class="d-lg-none">&#44;</span><span t-if="opt_posts_loop_show_date and opt_blog_grid_view and not opt_blog_cards_design">&#44;</span></div>
 </template>
 
 <template id="post_date">

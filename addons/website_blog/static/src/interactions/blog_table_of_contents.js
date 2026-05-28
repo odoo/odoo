@@ -79,16 +79,8 @@ export class BlogTableOfContents extends Interaction {
         // by more than 1 between consecutive headings, regardless of the raw
         // h1..h6 jumps in the markup.
         const levelStack = [];
-        // Ephemeral fallback ids for posts whose content pre-dates the
-        // editor-time normalization. These are never persisted; once the post
-        // is opened in the editor and saved the stable ids replace them.
-        const usedIds = new Set();
 
-        headingEls.forEach((headingEl, i) => {
-            if (!headingEl.id || usedIds.has(headingEl.id)) {
-                headingEl.id = `table_of_content_heading_1_${i + 1}`;
-            }
-            usedIds.add(headingEl.id);
+        headingEls.forEach((headingEl) => {
             const htmlLevel = parseInt(headingEl.tagName[1]);
             while (levelStack.length && levelStack.at(-1).htmlLevel >= htmlLevel) {
                 levelStack.pop();
@@ -113,6 +105,7 @@ export class BlogTableOfContents extends Interaction {
         this.waitFor(this.services["public.interactions"].startInteractions(listGroupElMobile));
 
         this.refreshOffsets();
+        this.process();
     }
 
     refreshOffsets() {

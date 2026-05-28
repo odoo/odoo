@@ -75,6 +75,12 @@
             @include o-position-absolute(0, 0, auto, auto);
         }
 
+        .o_wblog_split_grid_sticky {
+            @include media-breakpoint-up(xl) {
+                height: calc(100vh - var(--wblog-sticky-top, 0px));
+            }
+        }
+
         .o_wblog_split_grid_view_container {
             &:not(:first-child) {
                 margin-top: 0;

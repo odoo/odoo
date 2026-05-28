@@ -6,13 +6,11 @@ import { useDomState } from "@html_builder/core/utils";
 import { rpc } from "@web/core/network/rpc";
 
 /**
- * Extracts the numeric heading id encoded in a blog post heading element id.
- * Mirrors the pattern used by the website TOC snippet
- * (`table_of_content_heading_<tocId>_<headingId>`), with a fixed tocId of 1
- * since a blog post can only have one TOC.
+ * Extracts the numeric heading id encoded in a blog post heading element id
+ * (`blog_table_of_content_<headingId>`).
  */
 function getHeadingId(headingEl) {
-    const match = /^table_of_content_heading_1_(\d+)$/.exec(
+    const match = /^blog_table_of_content_(\d+)$/.exec(
         headingEl && headingEl.getAttribute("id")
     );
     return match ? parseInt(match[1]) : 0;
@@ -52,6 +50,10 @@ export class BlogPostPageOptionPlugin extends Plugin {
         // Called by SavePlugin when the user saves the page.
         on_ready_to_save_document_handlers: this.onSave.bind(this),
         normalize_processors: this.normalize.bind(this),
+        dropzone_selectors: {
+            selector: ".s_table_of_content",
+            excludeAncestor: ".o_wblog_post_content_field",
+        },
     };
 
     normalize(root) {
@@ -67,6 +69,13 @@ export class BlogPostPageOptionPlugin extends Plugin {
      * duplicates and missing ids are reassigned from a running max.
      */
     assignHeadingIds(contentEl) {
+        // Remove stale TOC ids from non-heading elements (e.g. a heading converted
+        // back to a paragraph
+        for (const el of contentEl.querySelectorAll("[id^='blog_table_of_content_']")) {
+            if (!el.matches("h1, h2, h3, h4, h5, h6")) {
+                el.removeAttribute("id");
+            }
+        }
         const headingEls = [...contentEl.querySelectorAll("h1, h2, h3, h4, h5, h6")];
         let maxHeadingId = Math.max(0, ...headingEls.map(getHeadingId));
         const seenIds = new Set();
@@ -80,7 +89,7 @@ export class BlogPostPageOptionPlugin extends Plugin {
                 headingId = maxHeadingId;
             }
             seenIds.add(headingId);
-            headingEl.setAttribute("id", `table_of_content_heading_1_${headingId}`);
+            headingEl.setAttribute("id", `blog_table_of_content_${headingId}`);
             if (headingEl.dataset.anchor === undefined) {
                 headingEl.dataset.anchor = "true";
             }

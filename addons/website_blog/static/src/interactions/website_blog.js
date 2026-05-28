@@ -158,6 +158,7 @@ export class WebsiteBlog extends Interaction {
 
         if (this.position !== position) {
             this.position = position;
+            this.el.style.setProperty("--wblog-sticky-top", `${position}px`);
             this.updateContent();
         }
     }

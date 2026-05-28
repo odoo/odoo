@@ -4,14 +4,14 @@
 <t t-name="website_blog.blogPostPageOption">
 
     <BuilderContext action="'websiteConfig'">
-        <t t-if="(!state.isOnBlogPage and !this.isActiveItem('blog_posts_simple_list_opt') and !this.isActiveItem('blog_posts_split_grid_opt')) or (state.isOnBlogPage and !this.isActiveItem('blog_layout_simple_list_opt') and !this.isActiveItem('blog_layout_split_grid_opt'))">
-            <!-- Blogs Posts Layout -->
-            <div class="options-container-section-title ps-2 pt-2 pb-1 fw-bold">Layout</div>
-            <hr class="mx-2 mt-0 mb-2"/>
+        <!-- Blogs Posts Layout -->
+        <div class="options-container-section-title ps-2 pt-2 pb-1 fw-bold">Layout</div>
+        <hr class="mx-2 mt-0 mb-2"/>
+        <t t-if="(!this.state.isOnBlogPage and !this.isActiveItem('blog_posts_simple_list_opt') and !this.isActiveItem('blog_posts_split_grid_opt')) or (this.state.isOnBlogPage and !this.isActiveItem('blog_layout_simple_list_opt') and !this.isActiveItem('blog_layout_split_grid_opt'))">
 
             <BuilderRow label.translate="Content Width">
                 <BuilderButtonGroup>
-                    <t t-if="state.isOnBlogPage">
+                    <t t-if="this.state.isOnBlogPage">
                         <BuilderButton
                             title.translate="Regular"
                             classAction="''"
@@ -44,16 +44,16 @@
         <BuilderRow
             label.translate="Top Banner"
             tooltip.translate="Display the blog's cover image and subtitle at the top of each blog page"
-            t-if="state.isOnBlogPage"
+            t-if="this.state.isOnBlogPage"
         >
             <BuilderCheckbox id="'blog_cover_opt'" actionParam="{views: ['website_blog.opt_blog_cover_post']}"/>
         </BuilderRow>
-        <BuilderRow label.translate="Full Width" t-if="state.isOnBlogPage and isActiveItem('blog_cover_opt')" level="1">
+        <BuilderRow label.translate="Full Width" t-if="this.state.isOnBlogPage and this.isActiveItem('blog_cover_opt')" level="1">
             <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_cover_post_fullwidth_design']}"/>
         </BuilderRow>
 
         <!-- Style: global setting for the all-blogs homepage -->
-        <t t-if="!state.isOnBlogPage">
+        <t t-if="!this.state.isOnBlogPage">
             <BuilderRow label.translate="Style">
                 <BuilderSelect>
                     <BuilderSelectItem id="'blog_posts_grid_opt'" actionParam="{views: []}">
@@ -127,7 +127,7 @@
         <!-- Style: per-blog override for a specific blog's page.
              Uses classAction targeting #o_wblog_index_content; the selected class is
              persisted to blog.blog_layout via /blog/config on document save. -->
-        <t t-if="state.isOnBlogPage">
+        <t t-if="this.state.isOnBlogPage">
             <BuilderRow label.translate="Style">
                 <BuilderSelect applyTo="'#o_wblog_index_content'">
                     <BuilderSelectItem id="'blog_layout_grid_opt'" classAction="''">
@@ -195,34 +195,36 @@
         </t>
 
         <!-- Text & content Options -->
-        <div class="options-container-section-title ps-2 pt-3 pb-1 fw-bold">Text &amp; content</div>
-        <hr class="mx-2 mt-0 mb-2"/>
+        <t t-if="!this.isActiveItem('blog_posts_split_grid_opt') and !this.isActiveItem('blog_layout_split_grid_opt')">
+            <div class="options-container-section-title ps-2 pt-3 pb-1 fw-bold">Text &amp; content</div>
+            <hr class="mx-2 mt-0 mb-2"/>
 
-        <t t-if="!this.isActiveItem('blog_posts_simple_list_opt') and !this.isActiveItem('blog_posts_compact_list_opt') and !this.isActiveItem('blog_posts_split_grid_opt')">
-            <BuilderRow label.translate="Cover image">
-                <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_cover']}"/>
+            <t t-if="!this.isActiveItem('blog_posts_simple_list_opt') and !this.isActiveItem('blog_posts_compact_list_opt')">
+                <BuilderRow label.translate="Cover image">
+                    <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_cover']}"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Teaser">
+                    <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_teaser']}"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Tags">
+                    <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_tags']}"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Author">
+                    <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_author']}"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Stats" tooltip.translate="Display the number of comments and views for each blog post">
+                    <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_stats']}"/>
+                </BuilderRow>
+            </t>
+
+            <BuilderRow label.translate="Date">
+                <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_date']}"/>
             </BuilderRow>
-            <BuilderRow label.translate="Teaser">
-                <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_teaser']}"/>
-            </BuilderRow>
-            <BuilderRow label.translate="Tags">
-                <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_tags']}"/>
-            </BuilderRow>
-            <BuilderRow label.translate="Author">
-                <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_author']}"/>
-            </BuilderRow>
-            <BuilderRow label.translate="Stats" tooltip.translate="Display the number of comments and views for each blog post">
-                <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_stats']}"/>
+            <!-- Only display tags on compact list view -->
+            <BuilderRow label.translate="Tags" t-if="this.isActiveItem('blog_posts_compact_list_opt')">
+                <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_compact_list_view_tags']}"/>
             </BuilderRow>
         </t>
-
-        <BuilderRow label.translate="Date">
-            <BuilderCheckbox actionParam="{views: ['website_blog.opt_posts_loop_show_date']}"/>
-        </BuilderRow>
-        <!-- Only display tags on compact list view -->
-        <BuilderRow label.translate="Tags" t-if="this.isActiveItem('blog_posts_compact_list_opt')">
-            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_compact_list_view_tags']}"/>
-        </BuilderRow>
 
         <!-- Sidebar (not available with Split Grid layout) -->
         <t t-if="!this.isActiveItem('blog_posts_split_grid_opt') and !this.isActiveItem('blog_layout_split_grid_opt')">

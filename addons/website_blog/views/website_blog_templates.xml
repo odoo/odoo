@@ -54,6 +54,8 @@ list of filtered posts (by date or tag).
         <t t-set="opt_posts_loop_show_stats" t-value="is_view_active('website_blog.opt_posts_loop_show_stats')"/>
         <!-- Derived: grid view is active when no list/large/simple/compact variant is. -->
         <t t-set="opt_blog_grid_view" t-value="not opt_blog_simple_list_view and not opt_blog_compact_list_view and not opt_blog_list_view and not opt_blog_large_list_view"/>
+        <!-- Derived: split grid sticky layout requires at least 3 posts. -->
+        <t t-set="is_split_grid_sticky" t-value="opt_blog_split_grid_view and len(posts) >= 3"/>
 
         <!-- Container width: use per-blog value when set, else global view toggle. -->
         <t t-set="opt_blog_fullwidth" t-value="(blog.blog_page_container == 'fluid') if (blog and blog.blog_page_container) else is_view_active('website_blog.opt_blog_fullwidth')"/>
@@ -99,8 +101,8 @@ list of filtered posts (by date or tag).
                     ''"/>
         <section id="o_wblog_index_content"
             t-att-data-blog-id="blog and str(blog.id) or ''"
-            t-attf-class="#{_effective_layout_class} #{opt_blog_fullwidth and 'o_wblog_post_opt_container_fluid' or ''}">
-            <div t-attf-class="#{(opt_blog_fullwidth or is_split_grid_sticky) and 'container-fluid' or 'container'} #{is_split_grid_sticky and 'gx-0' or ''} #{(opt_blog_simple_list_view and not opt_blog_sidebar_show) and 'o_container_small' or ''}">
+            t-attf-class="#{_effective_layout_class} #{(opt_blog_fullwidth or is_split_grid_sticky) and 'o_wblog_post_opt_container_fluid' or ''}">
+            <div t-attf-class="#{(opt_blog_fullwidth or is_split_grid_sticky) and 'container-fluid' or 'container'} #{is_split_grid_sticky and 'px-0' or ''} #{(opt_blog_simple_list_view and not opt_blog_sidebar_show) and 'o_container_small' or ''}">
                 <div t-if="original_search and posts" class="alert alert-warning mt8">
                     No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="search"/>'.
                 </div>
@@ -276,19 +278,23 @@ list of filtered posts (by date or tag).
                     use_filters="True"
                     use_size="False"
                     display_opt_name.translate="Blog Post Cover"
-                    additionnal_classes.f="o_wblog_post_page_cover o_half_screen_height o_cc5 py-5">
+                    additionnal_classes.f="o_wblog_post_page_cover o_cc5 pt112 pb112">
                     <div class="o_record_cover_component o_record_cover_filter oe_black" style="opacity: 0.4;"/>
-                    <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
+                    <div class="o_container_small text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
                         <div t-attf-class="o_wblog_post_title">
                             <h1 t-field="blog_post.name" class="o_wblog_post_name o_editable_no_shadow text-wrap-pretty" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Blog Post Title"/>
-                            <div t-field="blog_post.subtitle" class="o_wblog_post_subtitle o_line_clamp o_editable_no_shadow" placeholder="Subtitle"/>
+                            <p t-field="blog_post.subtitle" class="o_wblog_post_subtitle o_editable_no_shadow" placeholder="Subtitle"/>
+                            <div t-if="blog_post.tag_ids and opt_blog_post_header_tags_display" class="mb-4">
+                                <t t-foreach="blog_post.tag_ids" t-as="one_tag">
+                                    <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
+                                </t>
+                            </div>
+                            <t t-if="opt_blog_post_header_author_avatar_display" t-call="website_blog.post_published_info"
+                                is_post_page.f="True"
+                                additionnal_classes.f="o_wblog_post_info flex-column gap-2 mt-3"
+                                opt_posts_loop_show_author.f="True"
+                                opt_posts_loop_show_date.f="True"/>
                         </div>
-                        <t t-set="resize_classes" t-value="set(json.loads(_record.cover_properties).get('resize_class', '').split(' '))"/>
-                        <a t-if="{'o_full_screen_height', 'o_half_screen_height', 'cover_full', 'cover_mid'}.intersection(resize_classes)"
-                            id="o_wblog_post_content_jump" href="#o_wblog_post_main"
-                            class="o_scroll_button css_editable_mode_hidden justify-content-center align-items-center rounded-circle mx-auto mb-5 text-decoration-none">
-                            <i class="fa fa-angle-down fa-3x text-white" aria-label="To blog content" title="To blog content"/>
-                        </a>
                     </div>
                 </t>
             </div>
@@ -297,12 +303,12 @@ list of filtered posts (by date or tag).
             <div t-attf-class="#{(opt_blog_post_split_cover or opt_blog_post_sidebar) and 'row' or ''}">
                 <!-- Sidebar-enabled Layout -->
                 <t t-if="opt_blog_post_sidebar">
-                    <div id="o_wblog_post_content" t-attf-class="col-12 #{'col-lg-7 offset-lg-2' if opt_blog_post_split_cover else 'col-lg-6 offset-lg-1'}">
+                    <div id="o_wblog_post_content" t-attf-class="col-12 #{'col-lg-7 offset-lg-1' if opt_blog_post_split_cover else 'col-lg-6 offset-lg-1'}">
                         <t t-call="website_blog.blog_post_content"
                             opt_blog_post_regular_cover="opt_blog_post_regular_cover"
                             opt_blog_post_breadcrumb="opt_blog_post_breadcrumb"/>
                     </div>
-                    <div id="o_wblog_post_sidebar_col" t-att-class="'col-lg-3 pt-5 pt-lg-0' + (' offset-lg-1 ps-lg-5' if not opt_blog_post_split_cover else ' order-lg-first')">
+                    <div id="o_wblog_post_sidebar_col" t-att-class="('col-lg-4' if opt_blog_post_split_cover else 'col-lg-3') + ' pt-5 pt-lg-0' + (' offset-lg-1' if not opt_blog_post_split_cover else ' order-lg-first')">
                         <t t-call="website_blog.blog_post_sidebar"/>
                     </div>
                 </t>
@@ -338,18 +344,26 @@ list of filtered posts (by date or tag).
     </t>
     <div t-field="blog_post.content"
         class="o_wblog_post_content_field"/>
-        <div class="d-flex align-items-center flex-wrap gap-3 justify-content-between mt-5">
-            <t t-if="opt_blog_post_header_share_links_display" t-snippet-call="website.s_share"
-                _classes.f="no_icon_color"
-                _icon_classes.f="rounded-circle o_sm_custom_size shadow-sm"
-                _style.f="--fa-icon-size: 40px;"
-                _link_classes.f="o_wblog_share_links"/>
+        <div id="o_wblog_post_footer_meta" class="d-flex align-items-center flex-wrap gap-3 justify-content-between mt-5">
             <div t-if="blog_post.tag_ids">
                 <t t-foreach="blog_post.tag_ids" t-as="one_tag">
                     <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
                 </t>
             </div>
         </div>
+</template>
+
+<template id="blog_post_content_share_links" inherit_id="website_blog.blog_post_content">
+    <xpath expr="//div[@id='o_wblog_post_footer_meta']/div[@t-if='blog_post.tag_ids']" position="before">
+        <div t-if="opt_blog_post_header_share_links_display" t-ignore="true">
+            <t t-snippet-call="website.s_share"
+                string="Share"
+                _classes.f="no_icon_color"
+                _icon_classes.f="rounded-circle o_sm_custom_size shadow-sm"
+                _style.f="--fa-icon-size: 40px;"
+                _link_classes.f="o_wblog_share_links"/>
+        </div>
+    </xpath>
 </template>
 
 
@@ -375,13 +389,13 @@ list of filtered posts (by date or tag).
     <xpath expr="//div[@id='title']" position="replace">
         <div t-att-class="'container' if not opt_blog_post_full_width_cover else 'container-fluid'">
 
-            <div id="title" class="blog_header o_wblog_regular_cover_container row g-0">
+            <div id="title" class="blog_header o_wblog_regular_cover_container row">
                 <div class="col-12 col-lg-8 offset-lg-2">
                     <t t-if="opt_blog_post_breadcrumb" t-call="website_blog.post_breadcrumbs"/>
 
                     <div t-attf-class="o_wblog_post_title mb-3" t-ignore="False">
                         <h1 t-field="blog_post.name" class="o_wblog_post_name mb-3 text-wrap-pretty" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Title"/>
-                        <p t-field="blog_post.subtitle" class="o_wblog_post_subtitle o_line_clamp lead"  placeholder="Subtitle"/>
+                        <p t-field="blog_post.subtitle" class="o_wblog_post_subtitle lead"  placeholder="Subtitle"/>
                         <div t-if="blog_post.tag_ids and opt_blog_post_header_tags_display" t-attf-class="mb-2 #{not opt_blog_post_breadcrumb and 'mt-4' or ''}">
                             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
                                 <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
@@ -394,12 +408,7 @@ list of filtered posts (by date or tag).
                             additionnal_classes.f="o_wblog_post_info d-inline-flex me-2 "
                             opt_posts_loop_show_author.f="True"
                             opt_posts_loop_show_date.f="True"/>
-                        <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-3 ms-md-auto">
-                            <t t-if="opt_blog_post_header_share_links_display" t-snippet-call="website.s_share"
-                                _classes.f="no_icon_color"
-                                _icon_classes.f="rounded-circle o_sm_custom_size shadow-sm"
-                                _style.f="--fa-icon-size: 40px;"
-                                _link_classes.f="o_wblog_share_links"/>
+                        <div id="o_wblog_post_header_actions" class="d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-3 ms-md-auto">
                             <t t-call="website_blog.blog_post_comment_count"/>
                         </div>
                     </div>
@@ -409,6 +418,16 @@ list of filtered posts (by date or tag).
                     additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_regular o_cc3 mt-5 ratio"
                     use_size="False"/>
             </div>
+        </div>
+    </xpath>
+    <xpath expr="//div[@id='o_wblog_post_header_actions']/t[@t-call='website_blog.blog_post_comment_count']" position="before">
+        <div t-if="opt_blog_post_header_share_links_display" t-ignore="true">
+            <t t-snippet-call="website.s_share"
+                string="Share"
+                _classes.f="no_icon_color"
+                _icon_classes.f="rounded-circle o_sm_custom_size shadow-sm"
+                _style.f="--fa-icon-size: 40px;"
+                _link_classes.f="o_wblog_share_links"/>
         </div>
     </xpath>
 </template>
@@ -430,7 +449,7 @@ list of filtered posts (by date or tag).
 
                     <div t-attf-class="o_wblog_post_title #{opt_blog_post_breadcrumb and 'mt-4' or ''} mb-3" t-ignore="False">
                         <h1 t-field="blog_post.name" id="o_wblog_post_name" class="mb-3 text-wrap-pretty" data-oe-expression="blog_post.name" t-att-data-blog-id="blog_post.id" placeholder="Title"/>
-                        <p t-field="blog_post.subtitle" class="o_wblog_post_subtitle o_line_clamp lead"  placeholder="Subtitle"/>
+                        <p t-field="blog_post.subtitle" class="o_wblog_post_subtitle lead"  placeholder="Subtitle"/>
                         <div t-if="blog_post.tag_ids and opt_blog_post_header_tags_display" class="mb-2">
                             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
                                 <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
@@ -443,14 +462,7 @@ list of filtered posts (by date or tag).
                             additionnal_classes.f="d-inline-flex me-2"
                             opt_posts_loop_show_author.f="True"
                             opt_posts_loop_show_date.f="True"/>
-                        <div class="d-flex flex-column gap-2">
-                            <t t-if="opt_blog_post_header_share_links_display">
-                                <t t-snippet-call="website.s_share"
-                                    _classes.f="no_icon_color"
-                                    _icon_classes.f="rounded-circle o_sm_custom_size shadow-sm"
-                                    _style.f="--fa-icon-size: 40px;"
-                                    _link_classes.f="o_wblog_share_links"/>
-                            </t>
+                        <div id="o_wblog_post_header_actions" class="d-flex flex-column gap-2">
                             <t t-call="website_blog.blog_post_comment_count"/>
                         </div>
                     </div>
@@ -462,6 +474,16 @@ list of filtered posts (by date or tag).
                         use_size="False"/>
                 </div>
             </div>
+        </div>
+    </xpath>
+    <xpath expr="//div[@id='o_wblog_post_header_actions']/t[@t-call='website_blog.blog_post_comment_count']" position="before">
+        <div t-if="opt_blog_post_header_share_links_display" t-ignore="true">
+            <t t-snippet-call="website.s_share"
+                string="Share"
+                _classes.f="no_icon_color"
+                _icon_classes.f="rounded-circle o_sm_custom_size shadow-sm"
+                _style.f="--fa-icon-size: 40px;"
+                _link_classes.f="o_wblog_share_links"/>
         </div>
     </xpath>
 </template>
@@ -478,19 +500,17 @@ list of filtered posts (by date or tag).
     <div class="mb-4">
         <hr class="mt-5"/>
         <h2 class="h5 mb-3">Recommended</h2>
-        <div class="d-flex gap-4 bg-light rounded-3 p-3">
+        <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next: ' + next_post.name" class="d-flex align-items-center gap-4 bg-light rounded-3 p-3 text-reset text-decoration-none">
             <t t-call="website.record_cover"
                 _record="next_post"
                 use_size="False"
                 additionnal_classes.f="o_cc3 flex-basis-50 rounded shadow-sm overflow-hidden h-100 ratio ratio-16x9"/>
             <div class="d-flex flex-column flex-basis-75">
                 <h3 t-field="next_post.name" class="o_wblog_post_name text-wrap-pretty h5-fs" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title"/>
-                <p t-field="next_post.subtitle" class="o_wblog_post_subtitle o_line_clamp small text-muted" placeholder="Subtitle"/>
-                <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name" class="text-decoration-none">
-                    Read more <i class="oi oi-arrow-right ms-1" aria-hidden="true"/>
-                </a>
+                <p t-field="next_post.subtitle" class="o_wblog_post_subtitle o_line_clamp mb-2 small text-muted" placeholder="Subtitle"/>
+                <small t-field="next_post.published_date" class="text-muted" t-options="{'widget': 'date', 'format': 'MMMM d, yyyy'}"/>
             </div>
-        </div>
+        </a>
     </div>
 </template>
 
@@ -503,7 +523,7 @@ list of filtered posts (by date or tag).
             <t t-call="website.record_cover"
                 _record="next_post"
                 use_filters="True"
-                additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_footer o_record_has_cover o_cc5 py-5">
+                additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_footer o_record_has_cover o_cc5 pt112 pb112">
                 <t t-set="_cp" t-value="json.loads(_record.cover_properties)"/>
                 <div class="o_record_cover_component o_record_cover_filter oe_black" style="opacity: 0.4;"/>
                 <a id="o_wblog_next_post_info" class="d-none"
@@ -513,7 +533,7 @@ list of filtered posts (by date or tag).
                 <t t-set="next_cover_is_full" t-value="bool({'o_full_screen_height', 'cover_full'}.intersection(_cp.get('resize_class', '').split(' ')))"/>
                 <t t-set="next_cover_is_auto" t-value="'cover_auto' in _cp.get('resize_class', '')"/>
 
-                <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
+                <div class="o_container_small text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
                     <div t-attf-class="o_wblog_post_title">
                         <div t-field="next_post.name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title" class="h1 o_wblog_post_name text-wrap-pretty"/>
                         <div t-field="next_post.subtitle" class="o_wblog_post_subtitle o_line_clamp"  placeholder="Subtitle"/>
