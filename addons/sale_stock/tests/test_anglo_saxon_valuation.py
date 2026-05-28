@@ -1035,9 +1035,9 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(len(amls_1), 4)
         stock_out_aml_1 = amls_1.filtered(lambda aml: aml.account_id == self.account_stock_valuation)
         self.assertEqual(stock_out_aml_1.debit, 0)
-        self.assertEqual(stock_out_aml_1.credit, 25)
+        self.assertEqual(stock_out_aml_1.credit, 30)
         cogs_aml_1 = amls_1.filtered(lambda aml: aml.account_id == self.account_expense)
-        self.assertEqual(cogs_aml_1.debit, 25)
+        self.assertEqual(cogs_aml_1.debit, 30)
         self.assertEqual(cogs_aml_1.credit, 0)
         receivable_aml_1 = amls_1.filtered(lambda aml: aml.account_id == self.account_receivable)
         self.assertEqual(receivable_aml_1.debit, 24)
@@ -1060,6 +1060,48 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         income_aml_2 = amls_2.filtered(lambda aml: aml.account_id == self.account_income)
         self.assertEqual(income_aml_2.debit, 0)
         self.assertEqual(income_aml_2.credit, 12)
+
+    def test_fifo_invoice_with_delivery_with_return(self):
+        """ In FIFO, Deliver at $10 -> Return -> Deliver at $20 -> Post invoice
+        The COGS should be $20
+        """
+        self._make_in_move(self.product_fifo_auto, 1, 10)
+
+        # Sell and Deliver product at $10
+        so = self._so_deliver(self.product_fifo_auto, 1, 50)
+        delivery_1 = so.picking_ids
+        self.assertEqual(delivery_1.move_ids.value, 10)
+
+        # Return
+        ctx = {'active_id': delivery_1.id, 'active_model': 'stock.picking'}
+        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
+        return_wizard.product_return_moves.quantity = 1
+        return_picking = return_wizard._create_return()
+        return_picking.move_ids.write({'quantity': 1, 'picked': True})
+        return_picking.button_validate()
+
+        # Change product price from $10 to $20
+        self._make_out_move(self.product_fifo_auto, 1)
+        self._make_in_move(self.product_fifo_auto, 1, 20)
+
+        # Re deliver at $20
+        delivery_2 = delivery_1.copy()
+        delivery_2.action_confirm()
+        delivery_2.move_ids.write({'quantity': 1, 'picked': True})
+        delivery_2.button_validate()
+        self.assertEqual(delivery_2.move_ids.value, 20)
+
+        # Invoice the sale orders
+        invoice = so._create_invoices()
+        invoice.action_post()
+
+        # COGS should ignore the owned product
+        self.assertRecordValues(invoice.line_ids, [
+            {'account_id': self.account_income.id, 'debit': 0, 'credit': 50},
+            {'account_id': self.account_receivable.id, 'debit': 50, 'credit': 0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 20},
+            {'account_id': self.account_expense.id, 'debit': 20, 'credit': 0},
+        ])
 
     def test_fifo_uom_computation(self):
         self.product_fifo_auto.categ_id.property_valuation = 'real_time'
