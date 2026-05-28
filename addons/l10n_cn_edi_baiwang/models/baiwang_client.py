@@ -355,18 +355,3 @@ class BaiwangClient:
         }
         return self.call_api('baiwang.output.redinvoice.redforminfo', body, version='6.0')
 
-    def query_terminals(self):
-        """Query available invoicing terminals (v6.0, data wrapper)."""
-        body = {
-            'taxNo': self.tax_no,
-            'data': {
-                'invoiceTerminalCode': '',
-                'invoiceTerminalName': '',
-                'invoiceTypeCode': '',
-                'machineNo': '',
-                'taxDiskNo': '',
-                'deviceType': '',
-                'defaultInvoiceTypeCodes': '',
-            },
-        }
-        return self.call_api('baiwang.output.terminal.query', body, version='6.0')

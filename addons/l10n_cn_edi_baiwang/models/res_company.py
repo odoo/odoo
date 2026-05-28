@@ -20,7 +20,6 @@ class ResCompany(models.Model):
         help="Unique enterprise identifier issued by Baiwang. Required for third-party apps; "
              "optional for internal enterprise apps. Found in Developer Portal → App Management → Permissions → Authorized Enterprises.",
     )
-    l10n_cn_baiwang_invoice_terminal_code = fields.Char(string="Invoice Terminal Code", help="Only needed for tax-controlled invoices (004/007/028)")
 
     # Token management (auto-managed)
     l10n_cn_baiwang_cached_token = fields.Char(string="Cached Token", copy=False)

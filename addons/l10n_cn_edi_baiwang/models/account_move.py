@@ -11,10 +11,6 @@ _logger = logging.getLogger(__name__)
 INVOICE_TYPE_CODES = [
     ('01', '01 Digital Special Invoice (全电专票)'),
     ('02', '02 Digital General Invoice (全电普票)'),
-    ('004', '004 VAT Special Invoice (纸质专票)'),
-    ('007', '007 VAT General Invoice (纸质普票)'),
-    ('026', '026 VAT Electronic Invoice (电子普票)'),
-    ('028', '028 VAT Electronic Special Invoice (电子专票)'),
 ]
 
 RED_FORM_TYPES = [
@@ -49,7 +45,7 @@ class AccountMove(models.Model):
         selection=INVOICE_TYPE_CODES,
         string="Fapiao Type",
         default='02',
-        help="Type of e-Fapiao to issue. Use '01'/'02' (fully digital) unless you have hardware terminals.",
+        help="Type of e-Fapiao to issue: '01' for special (专票) or '02' for general (普票).",
     )
     l10n_cn_baiwang_invoice_no = fields.Char(string="Baiwang Fapiao Number", copy=False, readonly=True)
     l10n_cn_baiwang_invoice_date = fields.Char(string="Fapiao Date", copy=False, readonly=True)
@@ -210,10 +206,6 @@ class AccountMove(models.Model):
         if self.partner_id.phone:
             invoice_data['buyerPhone'] = self.partner_id.phone
 
-        # Add terminal code if needed for tax-controlled invoices
-        terminal_code = self.company_id.l10n_cn_baiwang_invoice_terminal_code
-        if terminal_code and self.l10n_cn_baiwang_invoice_type_code in ('004', '007', '025', '028'):
-            invoice_data['invoiceTerminalCode'] = terminal_code
 
         return invoice_data
 

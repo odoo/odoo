@@ -20,7 +20,6 @@ class ResConfigSettings(models.TransientModel):
     l10n_cn_baiwang_password = fields.Char(related="company_id.l10n_cn_baiwang_password", readonly=False)
     l10n_cn_baiwang_salt = fields.Char(related="company_id.l10n_cn_baiwang_salt", readonly=False)
     l10n_cn_baiwang_org_auth_code = fields.Char(related="company_id.l10n_cn_baiwang_org_auth_code", readonly=False)
-    l10n_cn_baiwang_invoice_terminal_code = fields.Char(related="company_id.l10n_cn_baiwang_invoice_terminal_code", readonly=False)
 
     # ----------------
     # Action methods
