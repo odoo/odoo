@@ -475,3 +475,15 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         # Only 2 verifications should have been created: 1 for each bank account
         verifications = self.env['l10n_pl.bank.account.verification'].search([])
         self.assertEqual(len(verifications), verification_start_count + 1)
+
+    def test_partner_no_vat_dont_create_multiple_verifications(self):
+        """
+        If a partner has no VAT, only 1 'incomplete_partner' verification should be created
+        """
+        self.pl_supplier.vat = False
+        verification = self.env['l10n_pl.bank.account.verification'].search([])
+        verification_start_count = len(verification)
+        # _check_form_fields triggers the verification computation twice, but it should create only 1 verification
+        self._check_form_fields(self.pl_supplier_move, incomplete_partners=self.pl_supplier)
+        verification = self.env['l10n_pl.bank.account.verification'].search([])
+        self.assertEqual(len(verification), verification_start_count + 1)
