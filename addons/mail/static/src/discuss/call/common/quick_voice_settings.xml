@@ -10,7 +10,7 @@
                 <div class="flex-grow-1"/>
                 <DeviceSelect kind="'audioinput'"/>
             </label>
-            <button class="btn border-transparent d-flex gap-2" t-on-click="() => this.store.settings.usePushToTalk = !this.store.settings.usePushToTalk">
+            <button t-if="!this.isMobile()" class="btn border-transparent d-flex gap-2" t-on-click="() => this.store.settings.usePushToTalk = !this.store.settings.usePushToTalk">
                 <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer">
                     <span class="text-truncate text-wrap me-2">Push-to-Talk</span>
                     <span t-if="this.store.settings.pushToTalkKey" class="opacity-50" t-out="this.pttKeyDisplayText"/>

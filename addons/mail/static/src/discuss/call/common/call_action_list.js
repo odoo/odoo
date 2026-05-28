@@ -1,7 +1,6 @@
 import { useRef } from "@web/owl2/utils";
 import { Component, computed, toRaw } from "@odoo/owl";
 
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
@@ -69,15 +68,7 @@ export class CallActionList extends Component {
         return _t("More");
     }
 
-    get isOfActiveCall() {
-        return Boolean(this.props.channel.eq(this.rtc.channel));
-    }
-
     get isSmall() {
         return Boolean(this.props.compact && this.rtc.isFullscreen);
-    }
-
-    get isMobileOS() {
-        return isMobileOS();
     }
 }
