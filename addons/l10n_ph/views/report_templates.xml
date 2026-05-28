@@ -2,7 +2,7 @@
 <odoo>
     <template id="l10n_ph.external_layout_footer_content" inherit_id="web.external_layout_footer_content">
         <xpath expr="//div[@t-field='company.report_footer']" position="before">
-            <t t-if="is_l10n_ph_disbursement_voucher">
+            <t t-if="l10n_ph_voucher_footer">
                 <t t-call="l10n_ph.report_disbursement_voucher_document_footer"/>
             </t>
         </xpath>

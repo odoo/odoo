@@ -21,6 +21,7 @@
         'views/res_company_views.xml',
         'views/res_partner_views.xml',
         'views/report_disbursement_voucher_template.xml',
+        'views/report_disbursement_voucher_internal_template.xml',
         'views/account_report.xml',
         'views/report_templates.xml',
     ],
