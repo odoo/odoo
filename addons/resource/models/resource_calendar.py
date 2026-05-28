@@ -79,6 +79,13 @@ class ResourceCalendar(models.Model):
         ('fixed', 'Fixed'),
         ('variable', 'Variable')],
         string='Calendar Type', default='fixed', required=True)
+    reference_calendar_id = fields.Many2one(
+        'resource.calendar',
+        string="Reference Calendar",
+        index='btree_not_null',
+        default=lambda self: self.env.company.resource_calendar_id,
+        check_company=True,
+        help="Reference working hours used to compute the full-time equivalent.")
 
     def _get_attendances_to_unlink(self, next_calendar_type=None):
         """ To retrieve attendances with date, to unlink when the calendar will be/is fixed
@@ -138,10 +145,15 @@ class ResourceCalendar(models.Model):
     # Compute Methods
     # --------------------------------------------------
 
-    @api.depends('hours_per_week', 'company_id.resource_calendar_id.hours_per_week')
+    @api.depends('reference_calendar_id', 'reference_calendar_id.hours_per_week', 'hours_per_week', 'company_id.resource_calendar_id.hours_per_week')
     def _compute_full_time_required_hours(self):
-        for calendar in self.filtered("company_id"):
-            calendar.full_time_required_hours = calendar.company_id.resource_calendar_id.hours_per_week
+        for calendar in self:
+            if calendar.reference_calendar_id:
+                calendar.full_time_required_hours = calendar.reference_calendar_id.hours_per_week
+            elif calendar.company_id.resource_calendar_id:
+                calendar.full_time_required_hours = calendar.company_id.resource_calendar_id.hours_per_week
+            else:
+                calendar.full_time_required_hours = calendar.hours_per_week
 
     @api.depends('company_id', 'calendar_type')
     def _compute_attendance_ids(self):
