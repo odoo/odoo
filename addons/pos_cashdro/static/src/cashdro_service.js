@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Logger } from "@bus/workers/bus_worker_utils";
 import { _t } from "@web/core/l10n/translation";
 
@@ -96,7 +96,7 @@ export class CashdroService {
         this.username = null;
         this.password = null;
         this.forceHttp = false;
-        this.state = reactive({ amountInserted: 0 });
+        this.state = proxy({ amountInserted: 0 });
     }
 
     /**

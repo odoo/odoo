@@ -1,4 +1,3 @@
-import { reactive } from "@web/owl2/utils";
 import { uuidv4 } from "@point_of_sale/utils";
 import { RecordStore } from "./record_store";
 import {
@@ -19,7 +18,7 @@ import { Base } from "./base";
 import { processModelDefs } from "./model_defs";
 import { createExtraField, processModelClasses } from "./model_classes";
 import { ormSerialization } from "./serialization";
-import { toRaw } from "@odoo/owl";
+import { toRaw, proxy } from "@odoo/owl";
 const AVAILABLE_EVENT = ["create", "update", "delete"];
 
 export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
@@ -416,7 +415,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             });
 
             if (ModelRecordClass.enableLazyGetters !== false) {
-                record = reactive(record);
+                record = proxy(record);
             }
 
             if (extraFields) {

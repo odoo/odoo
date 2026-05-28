@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
@@ -10,7 +10,7 @@ export const busLogsService = {
      * @param {Partial<import("services").ServiceFactories>} services
      */
     start(env, { bus_service, worker_service }) {
-        const state = reactive({
+        const state = proxy({
             enabled: JSON.parse(localStorage.getItem("bus_log_menu.enabled")),
             enableLogging() {
                 state.enabled = true;

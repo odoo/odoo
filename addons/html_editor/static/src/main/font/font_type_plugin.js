@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { unwrapContents } from "@html_editor/utils/dom";
@@ -233,7 +233,7 @@ export class FontTypePlugin extends Plugin {
     };
 
     setup() {
-        this.fontType = reactive({ displayName: "" });
+        this.fontType = proxy({ displayName: "" });
         this.blockFormatIsAvailableMemoized = weakMemoize(
             (selection) => isHtmlContentSupported(selection) && this.dependencies.dom.canSetBlock()
         );

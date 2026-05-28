@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError } from "@web/core/network/rpc";
@@ -363,7 +363,7 @@ class ProgressBarState {
 }
 
 export function useProgressBar(progressAttributes, model, aggregateFields, activeBars) {
-    const progressBarState = reactive(
+    const progressBarState = proxy(
         new ProgressBarState(progressAttributes, model, aggregateFields, activeBars)
     );
 

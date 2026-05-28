@@ -1,7 +1,6 @@
-import { reactive } from "@web/owl2/utils";
 import { Loader } from "@point_of_sale/app/components/loader/loader";
 import { getTemplate } from "@web/core/templates";
-import { mount, whenReady } from "@odoo/owl";
+import { mount, whenReady, proxy } from "@odoo/owl";
 import { _t, appTranslateFn } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { localization } from "@web/core/l10n/localization";
@@ -10,7 +9,7 @@ import { session } from "@web/session";
 import { mountComponent } from "@web/env";
 import { Chrome } from "@point_of_sale/app/pos_app";
 
-const loader = reactive({ isShown: true, error: false });
+const loader = proxy({ isShown: true, error: false });
 whenReady(() => {
     mount(Loader, document.body, {
         getTemplate,

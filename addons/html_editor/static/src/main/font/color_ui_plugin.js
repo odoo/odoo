@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
@@ -48,7 +48,7 @@ export class ColorUIPlugin extends Plugin {
     };
 
     setup() {
-        this.selectedColors = reactive({ color: "", backgroundColor: "" });
+        this.selectedColors = proxy({ color: "", backgroundColor: "" });
         this.previewableApplyColor = this.dependencies.history.makePreviewableOperation(
             (color, mode, previewMode) =>
                 this.dependencies.color.applyColor(color, mode, previewMode)

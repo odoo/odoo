@@ -1,11 +1,11 @@
 import { registry } from "@web/core/registry";
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 
 const STORAGE_KEY = "web.emoji.frequent";
 
 export const frequentEmojiService = {
     start() {
-        const state = reactive({
+        const state = proxy({
             /** @type {Record<string, number>} */
             all: JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"),
             /**

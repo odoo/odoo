@@ -3,8 +3,7 @@
  * view. On each view, click on each filter.
  */
 
-import { reactive } from "@web/owl2/utils";
-import { App, effect } from "@odoo/owl";
+import { App, effect, proxy } from "@odoo/owl";
 import { rpcBus } from "@web/core/network/rpc";
 
 export const SUCCESS_SIGNAL = "clickbot test succeeded";
@@ -30,7 +29,7 @@ export class Clickbot {
     constructor(env, { xmlId, light, currentState } = {}) {
         this.env = env;
         this.xmlId = xmlId;
-        this.state = reactive(
+        this.state = proxy(
             currentState || {
                 light,
                 studioCount: 0,

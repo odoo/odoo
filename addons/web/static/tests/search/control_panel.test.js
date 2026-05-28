@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { expect, test, getFixture } from "@odoo/hoot";
 import { click, press, keyDown, keyUp, queryAll, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -167,7 +167,7 @@ test("view switcher on mobile", async () => {
 });
 
 test("pager", async () => {
-    const pagerProps = reactive({
+    const pagerProps = proxy({
         offset: 0,
         limit: 10,
         total: 50,

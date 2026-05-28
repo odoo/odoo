@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Cache } from "@web/core/utils/cache";
 import { Plugin } from "@html_editor/plugin";
@@ -754,7 +754,7 @@ export class FormOptionPlugin extends Plugin {
                 await this.fetchFieldRecords(field, formEl);
                 availableRecords = JSON.stringify(field.records);
             }
-            valueList = reactive({
+            valueList = proxy({
                 title: optionText,
                 addItemTitle: _t("Add New Option"),
                 checkType,

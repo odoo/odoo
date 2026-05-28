@@ -1,12 +1,11 @@
-import { reactive } from "@web/owl2/utils";
-import { batched } from "@odoo/owl";
+import { batched, proxy } from "@odoo/owl";
 
 export const HEADINGS = ["H1", "H2", "H3", "H4", "H5", "H6"];
 
 export class TableOfContentManager {
     constructor(containerRef) {
         this.containerRef = containerRef;
-        this.structure = reactive({
+        this.structure = proxy({
             headings: [],
             isNew: true,
         });

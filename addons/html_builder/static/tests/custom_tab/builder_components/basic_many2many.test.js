@@ -1,9 +1,8 @@
-import { reactive } from "@web/owl2/utils";
 import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { xml } from "@odoo/owl";
+import { xml, proxy } from "@odoo/owl";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
 
@@ -33,7 +32,7 @@ test("basic many2many: find tag, select tag, unselect tag", async () => {
             expect(kwargs.domain).toEqual([["id", "not in", [1]]]);
         }
     });
-    const selection = reactive([]);
+    const selection = proxy([]);
     class TestComponent extends BaseOptionComponent {
         static template = xml`<BasicMany2Many selection="this.selection" model="'test'" setSelection="this.setSelection.bind(this)"/>`;
         selection = selection;
@@ -92,7 +91,7 @@ test("basic many2many: toggle dropdown without changing search term or selection
             expect(kwargs.domain).toEqual([]);
         }
     });
-    const selection = reactive([]);
+    const selection = proxy([]);
     class TestComponent extends BaseOptionComponent {
         static template = xml`<BasicMany2Many selection="this.selection" model="'test'" setSelection="this.setSelection.bind(this)" limit="1"/>`;
         selection = selection;
@@ -161,7 +160,7 @@ test("basic many2many: search with uncreated records", async () => {
                 { id: 1, name: "First" },
                 { id: 2, name: "Second" },
                 { id: "new-3", name: "Third" },
-            ]
+            ];
         }
         setSelection() {
             //Not used but necessary for the component

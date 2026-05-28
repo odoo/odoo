@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { unwrapContents } from "@html_editor/utils/dom";
 import { isRedundantElement, isStylable } from "@html_editor/utils/dom_info";
@@ -101,7 +101,7 @@ export class FontSizePlugin extends Plugin {
     };
 
     setup() {
-        this.fontSize = reactive({ displayName: "" });
+        this.fontSize = proxy({ displayName: "" });
         this.isTypingFontSize = false;
     }
 

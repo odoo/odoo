@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { withSequence } from "@html_editor/utils/resource";
@@ -109,7 +109,7 @@ export class ThemeTabPlugin extends Plugin {
         "getFontWeights",
     ];
     grayParams = {};
-    grays = reactive({});
+    grays = proxy({});
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {

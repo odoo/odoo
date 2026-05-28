@@ -1,9 +1,8 @@
-import { reactive } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import { EventBus } from "@odoo/owl";
+import { EventBus, proxy } from "@odoo/owl";
 import { user } from "@web/core/user";
 
 // List of worker events that should not be broadcasted.
@@ -179,7 +178,7 @@ export const busService = {
                 capture: true,
             }
         );
-        const state = reactive({
+        const state = proxy({
             addEventListener: bus.addEventListener.bind(bus),
             addChannel: async (channel) => {
                 await ensureWorkerStarted();

@@ -1,5 +1,4 @@
-import { reactive } from "@web/owl2/utils";
-import { markRaw } from "@odoo/owl";
+import { markRaw, proxy } from "@odoo/owl";
 import { registry } from "../registry";
 import { OverlayContainer } from "./overlay_container";
 
@@ -18,7 +17,7 @@ const services = registry.category("services");
 export const overlayService = {
     start() {
         let nextId = 0;
-        const overlays = reactive({});
+        const overlays = proxy({});
 
         mainComponents.add("OverlayContainer", {
             Component: OverlayContainer,
