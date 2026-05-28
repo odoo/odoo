@@ -138,7 +138,7 @@ $o-color-system-initialized: false;
 // Defined here (not in html_editor.common.cc.scss) so bootstrap_overridden.scss
 // and o-cc-resolve-colors share a single definition; $_d/$_l defaults reference
 // $color-contrast-light which is resolved at call time.
-@function o-resolve-color-contrast($user-color, $preset-key, $bg, $threshold: 2.0, $_d: $color-contrast-light, $_l: $color-contrast-light ) {
+@function o-resolve-color-contrast($user-color, $preset-key, $bg, $threshold: 2.0, $_d: $color-contrast-dark, $_l: $color-contrast-light ) {
     // Tier 1: explicit user choice — always respected, no contrast override
     @if $user-color {
         @return $user-color;
@@ -152,8 +152,13 @@ $o-color-system-initialized: false;
         }
     }
 
-    // Last resort: highest-contrast polar color (according to the grayscale in use)
-    @return color-contrast($bg, $_d, $_l);
+    // Tier 3: highest-contrast polar color (according to the grayscale in use)
+    @if contrast-ratio($bg, $_d) >= $threshold or contrast-ratio($bg, $_l) >= $threshold{
+        @return color-contrast($bg, $_d, $_l);
+    }
+
+    // Last resort: absolute highest-contrast color
+    @return color-contrast($bg, #000, #FFF);
 }
 
 // Same as 'increase-contrast' except that the color is not changed if the given

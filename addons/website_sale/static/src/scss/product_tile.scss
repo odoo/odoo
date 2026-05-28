@@ -1759,7 +1759,7 @@ $_wsale_products_roundness_map: (
 
     .o_wsale_products_opt_cc#{$index} {
         // Apply color combination styles directly to this custom selector
-        @include o-cc-emit-styles($index);
+        @include o-cc-extend($index);
         // Strip the bg the o_cc{x} rule sets on the wrapper itself
         background-color: transparent !important;
         color: inherit !important;
