@@ -3520,6 +3520,15 @@ input[value*="data-oe-translation-source-sha"] {
     border-left-width: 0;
 }
 
+// Apply the input focus shadow only on the bottom side when "Bottom Shadow"
+// theme option is enabled.
+@if o-website-value('input-focus-shadow') == 'bottom' {
+    .form-control:focus:not(.quantity):not(.o_wevent_input_nb_tickets),
+    .form-select:focus {
+        box-shadow: 0 $input-btn-focus-width 0 0 $input-btn-focus-color;
+    }
+}
+
 .form-control:not(:focus):has(~ .input-group-text-subtle),
 .form-select:not(:focus):not(:hover):has(~ .input-group-text-subtle) {
     border-right-width: 0;

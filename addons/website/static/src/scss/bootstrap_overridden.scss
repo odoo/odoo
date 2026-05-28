@@ -420,7 +420,9 @@ $--enable-no-overflow-of-text-columns: false !default;
 
 // A side-specific "form field border width" is only applied if it differs
 // from the global border width that applies to all sides.
-.form-control {
+.form-control,
+.form-control[name="search"],
+.input-group:not(.css_quantity) > .btn {
     @if $input-border-top-width != $input-border-width {
         border-top-width: $input-border-top-width !important;
     }
