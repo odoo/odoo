@@ -18,6 +18,11 @@ export class DiscussCoreWeb {
     }
 
     setup() {
+        this.env.bus.addEventListener("discuss.channel/delete", ({ detail: { channel } }) => {
+            this.store.init_unread_channel_ids = this.store.init_unread_channel_ids.filter(
+                (id) => id !== channel.id
+            );
+        });
         this.busService.subscribe("res.users/connection", async ({ partnerId, username }) => {
             // If the current user invited a new user, and the new user is
             // connecting for the first time while the current user is present

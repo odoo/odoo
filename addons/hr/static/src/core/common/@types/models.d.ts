@@ -18,6 +18,7 @@ declare module "models" {
         employeeId: number|undefined;
     }
     export interface ResUsers {
+        all_employee_ids: HrEmployee[];
         employee_id: HrEmployee;
         employee_ids: HrEmployee[];
     }
