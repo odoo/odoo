@@ -39,7 +39,7 @@ var owl = (() => {
     batched: () => batched,
     blockDom: () => blockDom,
     computed: () => computed,
-    config: () => config2,
+    config: () => config,
     effect: () => effect,
     getScope: () => getScope,
     globalTemplates: () => globalTemplates,
@@ -66,7 +66,7 @@ var owl = (() => {
     toRaw: () => toRaw,
     types: () => types2,
     untrack: () => untrack,
-    useApp: () => useApp,
+    useApp: () => useApp2,
     useEffect: () => useEffect,
     useListener: () => useListener,
     useScope: () => useScope,
@@ -203,13 +203,15 @@ var owl = (() => {
     sources.clear();
   }
   function disposeComputation(computation) {
-    for (const source of computation.sources) {
+    const sources = computation.sources;
+    for (const source of sources) {
       source.observers.delete(computation);
-      if ("compute" in source && source.isDerived && source.observers.size === 0) {
-        disposeComputation(source);
+      const derived = source;
+      if (derived.isDerived && derived.observers.size === 0) {
+        disposeComputation(derived);
       }
     }
-    computation.sources.clear();
+    sources.clear();
     computation.state = 1;
   }
   function markDownstream(computation) {
@@ -250,6 +252,7 @@ var owl = (() => {
   }
   var Scope = class {
     app;
+    pluginManager;
     status = STATUS.NEW;
     computations = [];
     willStart = [];
@@ -257,6 +260,7 @@ var owl = (() => {
     _destroyCbs = null;
     constructor(app) {
       this.app = app;
+      this.pluginManager = app.pluginManager;
     }
     /**
      * Pushes this scope on the stack for the duration of `callback`. Any code
@@ -700,14 +704,19 @@ var owl = (() => {
   }
   function effect(fn) {
     const computation = createComputation(() => {
-      setComputation(void 0);
-      unsubscribeEffect(computation);
-      setComputation(computation);
+      if (computation.value || computation.observers.size) {
+        setComputation(void 0);
+        unsubscribeEffect(computation);
+        setComputation(computation);
+      } else {
+        removeSources(computation);
+      }
       return fn();
     }, false);
     getCurrentComputation()?.observers.add(computation);
     updateComputation(computation);
     return function cleanupEffect2() {
+      computation.state = 0;
       const previousComputation = getCurrentComputation();
       setComputation(void 0);
       unsubscribeEffect(computation);
@@ -717,9 +726,13 @@ var owl = (() => {
   function immediateEffect(fn) {
     const computation = createComputation(
       () => {
-        setComputation(void 0);
-        unsubscribeEffect(computation);
-        setComputation(computation);
+        if (computation.value || computation.observers.size) {
+          setComputation(void 0);
+          unsubscribeEffect(computation);
+          setComputation(computation);
+        } else {
+          removeSources(computation);
+        }
         return fn();
       },
       false,
@@ -729,6 +742,7 @@ var owl = (() => {
     getCurrentComputation()?.observers.add(computation);
     updateComputation(computation);
     return function cleanupImmediateEffect() {
+      computation.state = 0;
       const previousComputation = getCurrentComputation();
       setComputation(void 0);
       unsubscribeEffect(computation);
@@ -740,7 +754,6 @@ var owl = (() => {
     cleanupEffect(effect2);
     for (const childEffect of effect2.observers) {
       childEffect.state = 0;
-      removeSources(childEffect);
       unsubscribeEffect(childEffect);
     }
     effect2.observers.clear();
@@ -817,19 +830,27 @@ var owl = (() => {
     read.dispose = dispose;
     return read;
   }
+  function safeReplacer(knownObjects, _key, value) {
+    if (typeof value === "function") {
+      return value.name || "[Function]";
+    }
+    if (value && typeof value === "object") {
+      const ctor = value.constructor;
+      if (ctor && ctor !== Object && ctor !== Array) {
+        return `[Instance of ${ctor.name || "anonymous"}]`;
+      }
+      if (knownObjects.includes(value)) {
+        return `[Known object]`;
+      }
+      knownObjects.push(value);
+    }
+    return value;
+  }
   function assertType(value, validation, errorMessage = "Value does not match the type") {
     const issues = validateType(value, validation);
     if (issues.length) {
-      const issueStrings = JSON.stringify(
-        issues,
-        (key, value2) => {
-          if (typeof value2 === "function") {
-            return value2.name;
-          }
-          return value2;
-        },
-        2
-      );
+      const knownObjects = [];
+      const issueStrings = JSON.stringify(issues, safeReplacer.bind(null, knownObjects), 2);
       throw new OwlError(`${errorMessage}
 ${issueStrings}`);
     }
@@ -845,7 +866,7 @@ ${issueStrings}`);
       addIssue(issue) {
         issues.push({
           received: this.value,
-          path: this.path,
+          path: this.path.join(" > "),
           ...issue
         });
       },
@@ -970,15 +991,20 @@ ${issueStrings}`);
       return;
     }
     const isShape = !Array.isArray(schema);
-    let shape = schema;
-    if (Array.isArray(schema)) {
+    let shape;
+    let keys;
+    if (isShape) {
+      keys = Object.keys(schema);
+      shape = schema;
+    } else {
+      keys = schema;
       shape = {};
-      for (const key of schema) {
+      for (const key of keys) {
         shape[key] = null;
       }
     }
     const missingKeys = [];
-    for (const key in shape) {
+    for (const key of keys) {
       const property = key.endsWith("?") ? key.slice(0, -1) : key;
       if (context.value[property] === void 0) {
         if (!key.endsWith("?")) {
@@ -993,20 +1019,22 @@ ${issueStrings}`);
     if (missingKeys.length) {
       context.addIssue({
         message: "object value has missing keys",
-        missingKeys
+        missingKeys,
+        expectedKeys: keys
       });
     }
     if (isStrict) {
       const unknownKeys = [];
       for (const key in context.value) {
-        if (!(key in shape) && !(`${key}?` in shape)) {
+        if (!keys.includes(key) && !(`${key}?` in shape)) {
           unknownKeys.push(key);
         }
       }
       if (unknownKeys.length) {
         context.addIssue({
           message: "object value has unknown keys",
-          unknownKeys
+          unknownKeys,
+          expectedKeys: keys
         });
       }
     }
@@ -1224,12 +1252,13 @@ ${issueStrings}`);
     plugins;
     // Resolves once all pending plugin willStart callbacks have settled. The
     // scope transitions to MOUNTED as the last step of this chain. Consumers
-    // (App.mount, providePlugins) await this before treating the manager as
-    // ready. `willStart` itself is inherited from Scope.
+    // (the root's mount(), providePlugins) await this before treating the
+    // manager as ready. `willStart` itself is inherited from Scope.
     ready = Promise.resolve();
     constructor(app, options = {}) {
       super(app);
       this.config = options.config ?? {};
+      this.pluginManager = this;
       if (options.parent) {
         const parent = options.parent;
         parent.onDestroy(() => this.destroy());
@@ -1298,9 +1327,103 @@ ${issueStrings}`);
       );
     }
   }
+  function onWillStart(fn) {
+    const scope = useScope();
+    scope.willStart.push(scope.decorate(fn, "onWillStart"));
+  }
+  function onWillDestroy(fn) {
+    const scope = useScope();
+    scope.onDestroy(scope.decorate(fn, "onWillDestroy"));
+  }
+  function useEffect(fn) {
+    onWillDestroy(effect(fn));
+  }
+  function useListener(target, eventName, handler, eventParams) {
+    if (typeof target === "function") {
+      useEffect(() => {
+        const el = target();
+        if (el) {
+          el.addEventListener(eventName, handler, eventParams);
+          return () => el.removeEventListener(eventName, handler, eventParams);
+        }
+        return;
+      });
+    } else {
+      target.addEventListener(eventName, handler, eventParams);
+      onWillDestroy(() => target.removeEventListener(eventName, handler, eventParams));
+    }
+  }
+  function useApp() {
+    return useScope().app;
+  }
+  function plugin(pluginType) {
+    const scope = useScope();
+    let plugin2 = scope.pluginManager.getPluginById(pluginType.id);
+    if (!plugin2) {
+      if (scope instanceof PluginManager) {
+        plugin2 = scope.pluginManager.startPlugin(pluginType);
+      } else {
+        throw new OwlError(`Unknown plugin "${pluginType.id}"`);
+      }
+    }
+    return plugin2;
+  }
+  function config(key, type, defaultValue) {
+    const scope = useScope();
+    if (!(scope instanceof PluginManager)) {
+      throw new OwlError("Expected to be in a plugin scope");
+    }
+    if (scope.app.dev && type) {
+      assertType(scope.config, types.object({ [key]: type }), "Config does not match the type");
+    }
+    const configValue = scope.config[key.endsWith("?") ? key.slice(0, -1) : key];
+    return configValue === void 0 ? defaultValue : configValue;
+  }
+  var EventBus = class extends EventTarget {
+    trigger(name, payload) {
+      this.dispatchEvent(new CustomEvent(name, { detail: payload }));
+    }
+  };
+  var Markup = class extends String {
+  };
+  function htmlEscape(str) {
+    if (str instanceof Markup) {
+      return str;
+    }
+    if (str === void 0) {
+      return markup("");
+    }
+    if (typeof str === "number") {
+      return markup(String(str));
+    }
+    [
+      ["&", "&amp;"],
+      ["<", "&lt;"],
+      [">", "&gt;"],
+      ["'", "&#x27;"],
+      ['"', "&quot;"],
+      ["`", "&#x60;"]
+    ].forEach((pairs) => {
+      str = String(str).replace(new RegExp(pairs[0], "g"), pairs[1]);
+    });
+    return markup(str);
+  }
+  function markup(valueOrStrings, ...placeholders) {
+    if (!Array.isArray(valueOrStrings)) {
+      return new Markup(valueOrStrings);
+    }
+    const strings = valueOrStrings;
+    let acc = "";
+    let i = 0;
+    for (; i < placeholders.length; ++i) {
+      acc += strings[i] + htmlEscape(placeholders[i]);
+    }
+    acc += strings[i];
+    return new Markup(acc);
+  }
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.31";
+  var version = "3.0.0-alpha.33";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -1373,7 +1496,7 @@ ${issueStrings}`);
     }
     return { modifiers, data: dataList };
   }
-  var config = {
+  var config2 = {
     // whether or not blockdom should normalize DOM whenever a block is created.
     // Normalizing dom mean removing empty text nodes (or containing only spaces)
     shouldNormalizeDom: true,
@@ -1747,11 +1870,6 @@ ${issueStrings}`);
     }
     throw new OwlError("Cannot mount component: the target is not a valid DOM element");
   }
-  var EventBus = class extends EventTarget {
-    trigger(name, payload) {
-      this.dispatchEvent(new CustomEvent(name, { detail: payload }));
-    }
-  };
   function whenReady(fn) {
     return new Promise(function(resolve) {
       if (document.readyState !== "loading") {
@@ -1761,43 +1879,6 @@ ${issueStrings}`);
       }
     }).then(fn || function() {
     });
-  }
-  var Markup = class extends String {
-  };
-  function htmlEscape(str) {
-    if (str instanceof Markup) {
-      return str;
-    }
-    if (str === void 0) {
-      return markup("");
-    }
-    if (typeof str === "number") {
-      return markup(String(str));
-    }
-    [
-      ["&", "&amp;"],
-      ["<", "&lt;"],
-      [">", "&gt;"],
-      ["'", "&#x27;"],
-      ['"', "&quot;"],
-      ["`", "&#x60;"]
-    ].forEach((pairs) => {
-      str = String(str).replace(new RegExp(pairs[0], "g"), pairs[1]);
-    });
-    return markup(str);
-  }
-  function markup(valueOrStrings, ...placeholders) {
-    if (!Array.isArray(valueOrStrings)) {
-      return new Markup(valueOrStrings);
-    }
-    const strings = valueOrStrings;
-    let acc = "";
-    let i = 0;
-    for (; i < placeholders.length; ++i) {
-      acc += strings[i] + htmlEscape(placeholders[i]);
-    }
-    acc += strings[i];
-    return new Markup(acc);
   }
   function createEventHandler(rawEvent) {
     const eventName = rawEvent.split(".")[0];
@@ -1820,7 +1901,7 @@ ${issueStrings}`);
       if (!currentTarget || !inOwnerDocument(currentTarget)) return;
       const data = currentTarget[eventKey];
       if (!data) return;
-      config.mainEventHandler(data, ev, currentTarget);
+      config2.mainEventHandler(data, ev, currentTarget);
     }
     const options = { capture, passive };
     function setup(data) {
@@ -1860,7 +1941,7 @@ ${issueStrings}`);
       const _data = dom[eventKey];
       if (_data) {
         for (const data of Object.values(_data)) {
-          const stopped = config.mainEventHandler(data, event, dom);
+          const stopped = config2.mainEventHandler(data, event, dom);
           if (stopped) return;
         }
       }
@@ -2106,7 +2187,7 @@ ${issueStrings}`);
     }
     const doc = new DOMParser().parseFromString(`<t>${str}</t>`, "text/xml");
     const node = doc.firstChild.firstChild;
-    if (config.shouldNormalizeDom) {
+    if (config2.shouldNormalizeDom) {
       normalizeNode(node);
     }
     const tree = buildTree(node);
@@ -3234,7 +3315,6 @@ ${issueStrings}`);
     willPatch = [];
     patched = [];
     signalComputation;
-    pluginManager;
     constructor(C, props2, app, parent, parentKey) {
       super(app);
       this.parent = parent;
@@ -4111,10 +4191,6 @@ ${issueStrings}`);
     }
     return stopped;
   };
-  function onWillStart(fn) {
-    const scope = useScope();
-    scope.willStart.push(scope.decorate(fn, "onWillStart"));
-  }
   function onWillUpdateProps(fn) {
     const scope = getComponentScope();
     function swapped(s, nextProps) {
@@ -4137,10 +4213,6 @@ ${issueStrings}`);
   function onWillUnmount(fn) {
     const scope = getComponentScope();
     scope.willUnmount.unshift(scope.decorate(fn, "onWillUnmount"));
-  }
-  function onWillDestroy(fn) {
-    const scope = useScope();
-    scope.onDestroy(scope.decorate(fn, "onWillDestroy"));
   }
   function onError(callback) {
     const scope = getComponentScope();
@@ -4251,27 +4323,7 @@ ${issueStrings}`);
       onError((e) => this.props.error.set(e));
     }
   };
-  function useEffect(fn) {
-    onWillDestroy(effect(fn));
-  }
-  function useListener(target, eventName, handler, eventParams) {
-    if (typeof target === "function") {
-      useEffect(() => {
-        const el = target();
-        if (el) {
-          el.addEventListener(eventName, handler, eventParams);
-          return () => el.removeEventListener(eventName, handler, eventParams);
-        }
-        return;
-      });
-    } else {
-      target.addEventListener(eventName, handler, eventParams);
-      onWillDestroy(() => target.removeEventListener(eventName, handler, eventParams));
-    }
-  }
-  function useApp() {
-    return useScope().app;
-  }
+  var useApp2 = useApp;
   var PortalContent = class extends Component {
     static template = xml`<t t-call-slot="default"/>`;
   };
@@ -4373,29 +4425,6 @@ ${issueStrings}`);
     }
     return propValue === void 0 && hasDefault ? args[0] : propValue;
   }
-  function plugin(pluginType) {
-    const scope = useScope();
-    const manager = scope instanceof ComponentNode ? scope.pluginManager : scope;
-    let plugin2 = manager.getPluginById(pluginType.id);
-    if (!plugin2) {
-      if (scope instanceof PluginManager) {
-        plugin2 = manager.startPlugin(pluginType);
-      } else {
-        throw new OwlError(`Unknown plugin "${pluginType.id}"`);
-      }
-    }
-    return plugin2;
-  }
-  function config2(name, type) {
-    const scope = useScope();
-    if (!(scope instanceof PluginManager)) {
-      throw new OwlError("Expected to be in a plugin scope");
-    }
-    if (scope.app.dev && type) {
-      assertType(scope.config, types2.object({ [name]: type }), "Config does not match the type");
-    }
-    return scope.config[name.endsWith("?") ? name.slice(0, -1) : name];
-  }
   function providePlugins(pluginConstructors, config3) {
     const node = getComponentScope();
     const manager = new PluginManager(node.app, { parent: node.pluginManager, config: config3 });
@@ -4406,10 +4435,10 @@ ${issueStrings}`);
       onWillStart(() => manager.ready);
     }
   }
-  config.shouldNormalizeDom = false;
-  config.mainEventHandler = mainEventHandler;
+  config2.shouldNormalizeDom = false;
+  config2.mainEventHandler = mainEventHandler;
   var blockDom = {
-    config,
+    config: config2,
     // bdom entry points
     mount,
     patch,
@@ -4424,8 +4453,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-05-21T09:26:06.769Z",
-    hash: "64885dbf",
+    date: "2026-05-29T08:13:56.334Z",
+    hash: "867bd5c8",
     url: "https://github.com/odoo/owl"
   };
 
