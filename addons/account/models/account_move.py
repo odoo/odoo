@@ -6289,10 +6289,11 @@ class AccountMove(models.Model):
                     product_taxes_after_fp=new_taxes,
                     document_tax_mode=line.document_tax_mode,
                 )
-
-        lines_to_recompute._compute_price_unit()
-        self.invoice_line_ids._compute_tax_ids()
-        self.line_ids._compute_account_id()
+        container = {'records': self}
+        with self._check_balanced(container), self._sync_dynamic_lines(container):
+            self.env.add_to_compute(lines_to_recompute._fields['price_unit'], lines_to_recompute)
+            self.env.add_to_compute(self.invoice_line_ids._fields['tax_ids'], self.invoice_line_ids)
+            self.env.add_to_compute(self.line_ids._fields['account_id'], self.line_ids)
 
     def open_created_caba_entries(self):
         self.ensure_one()
