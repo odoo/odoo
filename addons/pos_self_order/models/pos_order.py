@@ -205,7 +205,6 @@ class PosOrder(models.Model):
             'access_token': order.get('access_token'),
             'customer_count': order.get('customer_count'),
             'self_ordering_table_id': table.id if table else False,
-            'last_order_preparation_change': order.get('last_order_preparation_change'),
             'date_order': str(fields.Datetime.now()),
             'amount_difference': order.get('amount_difference'),
             'amount_tax': order.get('amount_tax'),

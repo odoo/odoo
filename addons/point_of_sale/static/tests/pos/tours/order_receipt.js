@@ -57,3 +57,37 @@ registry.category("web_tour.tours").add("test_receipt_data", {
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_change_receipt_data", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.orderIsEmpty(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Example Partner"),
+            ProductScreen.clickDisplayedProduct("Example Simple Product"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true),
+            {
+                content: "Throw receipt data to check in backend",
+                trigger: "body",
+                run: async () => {
+                    const order = posmodel.getOrder();
+                    const models = posmodel.models;
+                    await posmodel.syncAllOrders({ orders: [order] });
+                    const generator = posmodel.ticketPrinter.getGenerator({ models, order });
+                    const categories = posmodel.config.printerCategories;
+                    const changes = generator.generatePreparationData(new Set(categories));
+                    try {
+                        await posmodel.data.call("pos.order", "get_order_frontend_receipt_data", [
+                            [order.id],
+                            changes,
+                        ]);
+                    } finally {
+                        // Ignore any error, the main test is in the backend
+                    }
+                },
+            },
+        ].flat(),
+});
