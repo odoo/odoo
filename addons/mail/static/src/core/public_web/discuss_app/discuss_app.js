@@ -2,7 +2,7 @@ import { useExternalListener, useLayoutEffect, useRef, useSubEnv } from "@web/ow
 import { DiscussSidebar } from "@mail/core/public_web/discuss_app/sidebar/sidebar";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 import { useService } from "@web/core/utils/hooks";
@@ -68,6 +68,13 @@ export class Discuss extends Component {
                 () => [this.thread, this.ui.isSmall]
             );
         }
+        onMounted(() => {
+            document.body.classList.add("o_mail_discuss");
+        });
+
+        onWillUnmount(() => {
+            document.body.classList.remove("o_mail_discuss");
+        });
     }
 
     get thread() {
