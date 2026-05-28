@@ -183,13 +183,17 @@ class AccountEdiProxyClientUser(models.Model):
 
                     if invoice_type_code in ['389', '527'] or credit_note_type_code == '261':
                         # 389/527: Self-billing invoice; 261: Self-billing credit note
+                        sale_journal_domain = [
+                            *self.env['account.journal']._check_company_domain(company),
+                            ('type', '=', 'sale'),
+                        ]
                         journal = self.env['account.journal'].search(
-                            [
-                                *self.env['account.journal']._check_company_domain(company),
-                                ('type', '=', 'sale'),
-                            ],
+                            [*sale_journal_domain, ('is_self_billing', '=', True)],
                             limit=1,
                         )
+                        if not journal:
+                            journal = self.env['account.journal'].search(sale_journal_domain, limit=1)
+
                         move_type = 'out_invoice' if invoice_type_code else 'out_refund'
                     else:
                         # use the first purchase journal if the Peppol journal is not set up
