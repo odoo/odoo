@@ -648,10 +648,6 @@ class PurchaseOrder(models.Model):
             for line in order.order_line:
                 line.qty_received = line.product_qty
 
-    def print_quotation(self):
-        self._mark_rfqs_as_sent()
-        return self.env.ref('purchase.report_purchase_quotation').report_action(self)
-
     def _mark_rfqs_as_sent(self):
         self.filtered(lambda po: po.state == 'draft').state = 'sent'
 
