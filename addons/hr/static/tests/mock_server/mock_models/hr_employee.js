@@ -1,11 +1,14 @@
-import { fields, models } from "@web/../tests/web_test_helpers";
+import { fields, models, serverState } from "@web/../tests/web_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 export class HrEmployee extends models.ServerModel {
     _name = "hr.employee";
 
     active = fields.Boolean({ related: false });
-    company_id = fields.Many2one({ relation: "res.company" });
+    company_id = fields.Many2one({
+        relation: "res.company",
+        default: () => serverState.companies[0].id,
+    });
     department_id = fields.Many2one({ relation: "hr.department" });
     user_id = fields.Many2one({ relation: "res.users" });
     work_email = fields.Char();

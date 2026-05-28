@@ -216,6 +216,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "active": True,
                                     "avatar_128_access_token": self.test_partner._get_avatar_128_access_token(),
                                     "email": "test_customer@example.com",
+                                    "employee_ids": [],
                                     "id": self.test_partner.id,
                                     "im_status": "offline",
                                     "im_status_access_token": self.test_partner._get_im_status_access_token(),
