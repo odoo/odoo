@@ -129,7 +129,7 @@ test("ImageField is correctly rendered", async () => {
     expect(".o_field_image .o_clear_file_button").toHaveCount(1, {
         message: "the image can be deleted",
     });
-    expect("input.o_input_file").toHaveAttribute("accept", "image/*", {
+    expect("input.o_input_file").toHaveAttribute("accept", "image/*,dummy/allowAndroidCamera", {
         message:
             'the default value for the attribute "accept" on the "image" widget must be "image/*"',
     });
@@ -475,7 +475,7 @@ test("ImageField: option accepted_file_extensions", async () => {
         `,
     });
     // The view must be in edit mode
-    expect("input.o_input_file").toHaveAttribute("accept", ".png,.jpeg", {
+    expect("input.o_input_file").toHaveAttribute("accept", ".png,.jpeg,dummy/allowAndroidCamera", {
         message: "the input should have the correct ``accept`` attribute",
     });
 });
