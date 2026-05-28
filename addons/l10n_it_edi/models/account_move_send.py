@@ -27,7 +27,7 @@ class AccountMoveSend(models.AbstractModel):
     def _get_alerts(self, moves, moves_data):
         # EXTENDS 'account'
         alerts = super()._get_alerts(moves, moves_data)
-        if it_moves := moves.filtered(lambda m: 'it_edi_send' in moves_data[m]['extra_edis'] or moves_data[m]['invoice_edi_format'] == 'it_edi_xml'):
+        if it_moves := moves.filtered(lambda m: 'it_edi_send' in moves_data[m]['extra_edis']):
             if it_alerts := it_moves._l10n_it_edi_export_data_check():
                 alerts.update(**it_alerts)
         return alerts
