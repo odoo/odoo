@@ -11,6 +11,10 @@ patch(ResPartner.prototype, {
         this.employee_ids = fields.Many("hr.employee", {
             inverse: "work_contact_id",
         });
+        /**
+         * The relevant employee among all employees linked to this partner.
+         * Unlike `res.users.employee_id`, this is not restricted to the active company.
+         */
         this.employee_id = fields.One("hr.employee", {
             compute() {
                 return this.store.getRelevantEmployee(this.employee_ids);

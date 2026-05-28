@@ -16,7 +16,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     # Queries for _query_count_init_store (in order):
     #   1: search res_partner (odooot ref exists)
     #   1: search res_groups (internalUserGroupId ref exists)
-    #   8: odoobot format:
+    #   10: odoobot format:
     #       - fetch res_partner (_read_format)
     #       - search res_users (_compute_im_status)
     #       - search presence (_compute_im_status)
@@ -26,7 +26,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch employee (_compute_im_status hr_homeworking override)
     #       - fetch res_users (_read_format)
     #       - fetch hr_employee (res.users _to_store)
-    #   5: settings:
+    #       - search hr_employee (res.partner _to_store)
+    #   6: settings:
     #       - search res_users_settings (_find_or_create_for_user)
     #       - fetch res_users_settings (_format_settings)
     #       - search res_users_settings_volumes (_format_settings)
@@ -36,7 +37,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: hasCannedResponses
     #       - fetch res_groups_users_rel
     #       - search mail_canned_response
-    _query_count_init_store = 19
+    _query_count_init_store = 20
     # Queries for _query_count_init_messaging (in order):
     #   1: insert res_device_log
     #   3: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
@@ -398,6 +399,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "active": False,
                     "avatar_128_access_token": self.user_root.partner_id._get_avatar_128_access_token(),
                     "email": "odoobot@example.com",
+                    "employee_ids": [],
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
                     "im_status_access_token": self.user_root.partner_id._get_im_status_access_token(),
@@ -1614,6 +1616,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": "e.e@example.com",
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "im_status": "online",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
@@ -1669,6 +1672,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": "test2@example.com",
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
@@ -1683,6 +1687,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
@@ -1697,6 +1702,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
@@ -1711,6 +1717,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
@@ -1725,6 +1732,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
+                "employee_ids": user.employee_ids.ids,
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
