@@ -11,7 +11,7 @@
                     <div class="pos-receipt m-0 p-0" style="padding-top: 80px !important;">
                         <div name="receipt-header" class="text-center">
                             <div name="preset-info" class="preset-name text-huge text-bold" t-if="preset">
-                                <span t-out="preset['name']"/>
+                                <span t-if="preset" t-out="preset['name']"/>
                                 <span t-if="extra_data.get('preset_time')"> (<t t-out="extra_data['preset_time']"/>)</span>
                             </div>
                             <div name="employee-info">
