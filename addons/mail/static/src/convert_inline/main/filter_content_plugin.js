@@ -137,8 +137,10 @@ export class FilterContentPlugin extends Plugin {
         rules.allow("opacity");
         rules.allow("direction");
 
-        rules.allow(/^border(-.*)?$/);
-        rules.allow(/^border-(collapse|spacing)$/);
+        rules.allow(/^border(-.*)?$/, {
+            when: ({ propertyName }) =>
+                propertyName !== "border-spacing" && propertyName !== "border-collapse",
+        });
         // TODO EGGMAIL: some strategies require that children don't keep their
         // width/height as specified -> investigate how to handle that (hybrid fluid)
         // rules.allow(/^(width|height)$/);
@@ -171,10 +173,11 @@ export class FilterContentPlugin extends Plugin {
     }
 
     genericTableStyleRules(rules) {
-        rules.allow("table-layout");
-        rules.allow("border-collapse");
-        rules.allow("border-spacing");
-        rules.allow("empty-cells");
+        const isTable = ({ referenceNode }) => referenceNode.nodeName === "TABLE";
+        rules.allow("table-layout", { when: isTable });
+        rules.allow("border-collapse", { when: isTable });
+        rules.allow("border-spacing", { when: isTable });
+        rules.allow("empty-cells", { when: isTable });
     }
 
     genericListStyleRules(rules) {

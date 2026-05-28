@@ -162,6 +162,10 @@ export class LayoutModel {
         nodePositionManager.setNodePositions(fragment);
         return fragment;
     }
+
+    isNeutral() {
+        return false;
+    }
 }
 
 export class ElementLayout extends LayoutModel {
@@ -188,6 +192,15 @@ export class ElementLayout extends LayoutModel {
     getStyleInfo() {
         return this.refToStyleInfo.get("root");
     }
+
+    isNeutral() {
+        return (
+            this.tag === "DIV" &&
+            [...this.getRefNames()].every(
+                (ref) => Object.entries(this.renderAttributes(ref)).length === 0
+            )
+        );
+    }
 }
 
 export class TextNodeLayout {
@@ -203,6 +216,10 @@ export class TextNodeLayout {
         fragment.append(textNode);
         return fragment;
     }
+
+    isNeutral() {
+        return false;
+    }
 }
 
 export class CommentNodeLayout {
@@ -217,6 +234,10 @@ export class CommentNodeLayout {
         const comment = document.createComment(this.content);
         fragment.append(comment);
         return fragment;
+    }
+
+    isNeutral() {
+        return false;
     }
 }
 
@@ -318,10 +339,18 @@ export class EmailNode {
     }
 
     render(context = {}) {
+        const isNeutral = this.layout.isNeutral();
         const render = (layoutContainer, renderContext = {}, extraPositionContext = {}) => {
             let renderChildren;
             if (layoutContainer === this.marginNode) {
-                renderChildren = [this];
+                // TODO EGGMAIL: small optimization: if "this" would be a div with no
+                // style instruction, it does not need to be rendered and we can
+                // directly go to the padding or the children
+                // need to check if the layout is an ElementLayout with tag DIV
+                // and all refs are empty
+                if (!isNeutral) {
+                    renderChildren = [this];
+                }
             } else if (layoutContainer === this && this.paddingNode) {
                 renderChildren = [this.paddingNode];
             }
@@ -344,7 +373,7 @@ export class EmailNode {
         if (this.marginNode) {
             return render(this.marginNode, {}, context);
         } else if (this.paddingNode) {
-            return render(this, context);
+            return render(isNeutral ? this.paddingNode : this, context);
         } else {
             return render(this, context);
         }
