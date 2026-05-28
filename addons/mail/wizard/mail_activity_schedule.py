@@ -122,6 +122,9 @@ class MailActivitySchedule(models.TransientModel):
             warnings = set()
             if scheduler.res_model:
                 applied_on = scheduler._get_applied_on_records()
+                if applied_on and scheduler.activity_user_id != self.env.user:
+                    if applied_on - applied_on._filtered_access('write'):
+                        errors.add(self.env._("You don't have write access on this record to schedule activity for others."))
                 if applied_on and ('company_id' in scheduler.env[applied_on._name]._fields and
                                 len(applied_on.mapped('company_id')) > 1):
                     errors.add(_('The records must belong to the same company.'))
