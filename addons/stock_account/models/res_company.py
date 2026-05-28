@@ -67,7 +67,7 @@ class ResCompany(models.Model):
         last_closing_date = self._get_last_closing_date()
         if at_date and last_closing_date and at_date < fields.Date.to_date(last_closing_date):
             raise UserError(self.env._('It exists closing entries after the selected date. Cancel them before generate an entry prior to them'))
-        aml_vals_list = self.with_context(allowed_company_ids=self.env.company.ids)._action_close_stock_valuation(at_date=at_date)
+        aml_vals_list = self.with_context(allowed_company_ids=self.ids)._action_close_stock_valuation(at_date=at_date)
 
         if not aml_vals_list:
             # No account moves to create, so nothing to display.
@@ -84,7 +84,7 @@ class ResCompany(models.Model):
             'ref': _('Stock Closing'),
             'inventory_closing': True,
             'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
-            'company_id': self.env.company.id,
+            'company_id': self.id,
         }
         account_move = self.env['account.move'].create(moves_vals)
         if auto_post:
