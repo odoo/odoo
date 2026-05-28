@@ -59,12 +59,12 @@ class IrAttachment(models.Model):
                 'sort_weight': 10,
                 'type': 'xml',
             })
-            for attachment in self._extract_additional_documents(xml_tree):
+            for idx, attachment in enumerate(self._extract_additional_documents(xml_tree), 1):
                 to_process.append({
                     'attachment': attachment,
                     'filename': attachment.name,
                     'content': attachment.raw,
-                    'sort_weight': 11,
+                    'sort_weight': 10 + idx,
                     'type': 'binary',
                 })
         return to_process
