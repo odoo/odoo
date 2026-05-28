@@ -38,6 +38,7 @@ export class CallSettings extends Component {
                 return;
             }
         });
+        this.isMobileOS = isMobileOS;
     }
 
     get stopText() {
@@ -46,10 +47,6 @@ export class CallSettings extends Component {
 
     get testText() {
         return _t("Test");
-    }
-
-    get isMobileOS() {
-        return isMobileOS();
     }
 
     _onKeyDown(ev) {

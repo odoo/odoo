@@ -5,8 +5,6 @@ import {
     insertText,
     mockGetMedia,
     openDiscuss,
-    patchUiSize,
-    SIZES,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
@@ -15,7 +13,7 @@ import { pttExtensionServiceInternal } from "@mail/discuss/call/common/ptt_exten
 import { PTT_RELEASE_DURATION } from "@mail/discuss/call/common/rtc_service";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { toRawValue } from "@mail/utils/common/local_storage";
-import { advanceTime, freezeTime, keyDown, mockTouch, mockUserAgent, test } from "@odoo/hoot";
+import { advanceTime, freezeTime, keyDown, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 
@@ -60,35 +58,6 @@ test("no auto-call on joining group chat", async () => {
     await contains(".o-mail-DiscussSidebar-item:contains('Mario, and Luigi')");
     await contains(".o-mail-Message", { count: 0 });
     await contains(".o-discuss-Call", { count: 0 });
-});
-
-test.tags("mobile");
-test("show Push-to-Talk button on mobile", async () => {
-    mockGetMedia();
-    mockTouch(true);
-    mockUserAgent("android");
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    patchWithCleanup(pttExtensionServiceInternal, {
-        onAnswerIsEnabled(pttService) {
-            pttService.isEnabled = false;
-        },
-    });
-    patchUiSize({ size: SIZES.SM });
-    await start();
-    await openDiscuss(channelId);
-    await click(".o-mail-ChatWindow-moreActions:text('General')");
-    await click(".o-dropdown-item:text('Start Call')");
-    // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains("[title='Open Actions Menu']");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Voice & Video Settings')");
-    await click("label[aria-label='Enable Push-to-talk']");
-    // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains("[title='Open Actions Menu']");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Voice & Video Settings')");
-    await contains("button:text('Push-to-talk')");
 });
 
 test.tags("desktop");

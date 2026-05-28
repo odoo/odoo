@@ -25,14 +25,14 @@
                 <t t-set-slot="panels">
                     <TabPanel id="'voice'">
                         <div class="d-flex flex-column my-2 p-1">
-                            <div class="d-flex gap-2" t-att-class="this.props.isCompact or this.isMobileOS ? 'flex-column' : 'flex-row'">
-                                <div class="d-flex flex-column flex-grow-1 gap-1 overflow-hidden" t-att-class="this.props.isCompact or this.isMobileOS ? 'w-100' : 'w-50'" aria-label="Microphone">
+                            <div class="d-flex gap-2" t-att-class="this.props.isCompact or this.isMobileOS() ? 'flex-column' : 'flex-row'">
+                                <div class="d-flex flex-column flex-grow-1 gap-1 overflow-hidden" t-att-class="this.props.isCompact or this.isMobileOS() ? 'w-100' : 'w-50'" aria-label="Microphone">
                                     <span class="flex-shrink-0 fw-bold text-muted small text-uppercase">
                                         <i class="fa fa-microphone text-muted ms-1 me-2"/>Microphone
                                     </span>
                                     <DeviceSelect kind="'audioinput'"/>
                                 </div>
-                                <div class="d-flex flex-column flex-grow-1 gap-1 overflow-hidden" t-att-class="this.props.isCompact or this.isMobileOS ? 'w-100' : 'w-50'" aria-label="Speakers">
+                                <div class="d-flex flex-column flex-grow-1 gap-1 overflow-hidden" t-att-class="this.props.isCompact or this.isMobileOS() ? 'w-100' : 'w-50'" aria-label="Speakers">
                                     <span class="flex-shrink-0 fw-bold text-muted small text-uppercase">
                                         <i class="fa fa-volume-up text-muted ms-1 me-2"/>Speakers
                                     </span>
@@ -40,8 +40,8 @@
                                 </div>
                             </div>
                             <hr class="my-3 border-secondary opacity-75"/>
-                            <div class="d-flex flex-column gap-2">
-                                <span t-if="this.store.settings.usePushToTalk and !this.isMobileOS and !this.pttExtService.isEnabled" class="small text-muted fst-italic alert alert-warning px-3 py-2 m-0" t-out="this.pttExtService.downloadText"/>
+                            <div t-if="!this.isMobileOS()" class="d-flex flex-column gap-2">
+                                <span t-if="this.store.settings.usePushToTalk and !this.isMobileOS() and !this.pttExtService.isEnabled" class="small text-muted fst-italic alert alert-warning px-3 py-2 m-0" t-out="this.pttExtService.downloadText"/>
                                 <div class="d-flex flex-column border rounded">
                                     <t t-call="discuss.CallSettings.textToggler"
                                         text.translate="Enable Push-to-talk"
@@ -52,7 +52,7 @@
                                         <t t-if="!this.store.settings.usePushToTalk">
                                             <div class="d-flex flex-column gap-2">
                                                 <span class="text-muted o-ps-0_5 pt-2"><i class="fa fa-info-circle me-2"/>Adjust the slider to set the voice detection sensitivity.</span>
-                                                <div class="d-flex gap-2" t-att-class="this.props.isCompact or this.isMobileOS ? 'flex-column' : 'flex-row'">
+                                                <div class="d-flex gap-2" t-att-class="this.props.isCompact or this.isMobileOS() ? 'flex-column' : 'flex-row'">
                                                     <button class="btn px-3 flex-shrink-0" t-att-class="this.microphoneVolume.isActive ? 'btn-danger' : 'btn-secondary'" t-on-click="this.microphoneVolume.toggle" t-att-disabled="!this.microphoneVolume.isReady">
                                                         <i class="fa me-2" t-att-class="this.microphoneVolume.isActive ? 'fa-stop' : 'fa-microphone'"/>
                                                         <t t-out="this.microphoneVolume.isActive ? this.stopText : this.testText"/>
@@ -68,12 +68,12 @@
                                             <div class="d-flex flex-column gap-2">
                                                 <span class="text-muted o-ps-0_5 pt-2">
                                                     <i class="fa fa-info-circle me-2"/>
-                                                    <t t-if="this.isMobileOS">Delay after releasing push-to-talk</t>
+                                                    <t t-if="this.isMobileOS()">Delay after releasing push-to-talk</t>
                                                     <t t-elif="this.store.settings.isRegisteringKey">Press any key to register it as your shortcut.</t>
                                                     <t t-else="">Click the button below to register a new shortcut.</t>
                                                 </span>
-                                                <div class="d-flex gap-2" t-att-class="this.props.isCompact or this.isMobileOS ? 'flex-column' : 'flex-row'">
-                                                    <button t-if="!this.isMobileOS" class="btn px-4 flex-shrink-0" t-att-class="this.store.settings.isRegisteringKey ? 'btn-danger' : 'btn-secondary'" t-on-click="this.onClickRegisterKeyButton" aria-label="Register new shortcut">
+                                                <div class="d-flex gap-2" t-att-class="this.props.isCompact or this.isMobileOS() ? 'flex-column' : 'flex-row'">
+                                                    <button t-if="!this.isMobileOS()" class="btn px-4 flex-shrink-0" t-att-class="this.store.settings.isRegisteringKey ? 'btn-danger' : 'btn-secondary'" t-on-click="this.onClickRegisterKeyButton" aria-label="Register new shortcut">
                                                         <i class="fa me-2" t-att-class="this.store.settings.isRegisteringKey ? 'fa-times' : 'fa-keyboard-o'"/>
                                                         <t t-out="this.store.settings.pushToTalkKeyText"/>
                                                     </button>
@@ -108,7 +108,7 @@
                                         onchange="this.onChangeBlur"/>
                                 </t>
                                 <t t-if="this.store.settings.useBlur">
-                                    <div class="d-flex gap-3 o-py-2_5 px-3" t-att-class="this.props.isCompact or this.isMobileOS ? 'flex-column' : 'flex-row'">
+                                    <div class="d-flex gap-3 o-py-2_5 px-3" t-att-class="this.props.isCompact or this.isMobileOS() ? 'flex-column' : 'flex-row'">
                                         <div class="d-flex flex-column flex-grow-1 gap-1" title="Background blur intensity" aria-label="Background blur intensity">
                                             <span class="flex-shrink-0 d-flex justify-content-between fw-bold text-muted small text-uppercase">
                                                 <span>Intensity</span>
