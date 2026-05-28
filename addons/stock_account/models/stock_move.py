@@ -28,6 +28,8 @@ class StockMove(models.Model):
         "Value Description", compute="_compute_value_justification")
     value_computed_justification = fields.Text(
         "Computed Value Description", compute="_compute_value_justification")
+    manual_value_id = fields.One2many('product.value', compute='_compute_manual_value_id')
+
     # Useful for testing and custom valuation
     value_manual = fields.Monetary(
         "Manual Value", currency_field='company_currency_id',
@@ -137,6 +139,19 @@ class StockMove(models.Model):
                 move.remaining_value = ratio * move.value if ratio else 0
             else:
                 move.remaining_value = move.remaining_qty * move.standard_price
+    
+    @api.depends_context('at_date')
+    def _compute_manual_value_id(self):
+        at_date = self.env.context.get('at_date', False)
+        domain = [('move_id', 'in', self.ids)]
+        if at_date:
+            domain.append(('date', '<=', at_date))
+        manual_values = dict(self.env['product.value'].sudo()._read_group(domain, ['move_id'], ['id:recordset']))
+
+        for move in self:
+            manual_value_id = manual_values.get(move)
+            move.manual_value_id = manual_value_id.sorted("date desc, id desc")[0] if manual_value_id else False
+            
 
     def _inverse_picked(self):
         super()._inverse_picked()
@@ -429,9 +444,9 @@ class StockMove(models.Model):
 
     def _get_valued_qty(self, lot=None):
         self.ensure_one()
-        if self._is_in():
+        if self.is_in:
             return sum(self._get_in_move_lines(lot).mapped('quantity_product_uom'))
-        if self._is_out():
+        if self.is_out:
             return sum(self._get_out_move_lines(lot).mapped('quantity_product_uom'))
         if self.is_dropship:
             if lot:
@@ -441,10 +456,7 @@ class StockMove(models.Model):
 
     def _get_manual_value(self, quantity, at_date=None):
         valuation_data = dict(VALUATION_DICT)
-        domain = Domain([('move_id', '=', self.id)])
-        if at_date:
-            domain &= Domain([('date', '<=', at_date)])
-        manual_value = self.env['product.value'].sudo().search(domain, order="date desc, id desc", limit=1)
+        manual_value = self.with_context(at_date=at_date).manual_value_id
         if manual_value:
             valuation_data['value'] = manual_value.value
             valuation_data['quantity'] = quantity
