@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import _, api, models, fields
 
 
 class AccountMove(models.Model):
@@ -14,6 +14,18 @@ class AccountMove(models.Model):
                 move.can_send_as_self_invoice = True
             else:
                 move.can_send_as_self_invoice = False
+
+    @api.depends('partner_id')
+    def _compute_name(self):
+        # EXTENDS 'account'
+        super()._compute_name()
+        for invoice in self:
+            if all([
+                invoice.journal_id.type == 'purchase',
+                invoice.journal_id.is_self_billing,
+                invoice.state == 'draft',
+            ]):
+                invoice._set_next_sequence()
 
     def _get_mail_template(self):
         if all(move.move_type == 'in_invoice' and move.journal_id.is_self_billing for move in self):
@@ -31,3 +43,35 @@ class AccountMove(models.Model):
             and edi_builder._can_export_selfbilling()
             and self.journal_id.is_self_billing
         )
+
+    def _get_last_sequence_domain(self, relaxed=False):
+        # EXTENDS 'account'
+        where_string, param = super()._get_last_sequence_domain(relaxed)
+        if self.journal_id.type == 'purchase' and self.journal_id.is_self_billing:
+            if self.partner_id:
+                where_string += " AND commercial_partner_id = %(partner_id)s "
+                param['partner_id'] = self.partner_id.commercial_partner_id.id
+            else:
+                where_string += " AND false "
+
+        return where_string, param
+
+    def _get_starting_sequence(self):
+        # EXTENDS 'account'
+        self.ensure_one()
+
+        if not (self.journal_id.type == 'purchase' and self.journal_id.is_self_billing):
+            return super()._get_starting_sequence()
+
+        partner_identifier = str(self.partner_id.commercial_partner_id.id) if self.partner_id else _('[Partner id]')
+        starting_sequence = "%s%s/%04d/%02d/0000" % (
+            self.journal_id.code,
+            partner_identifier.zfill(5),
+            self.date.year,
+            self.date.month,
+        )
+        if self.journal_id.refund_sequence and self.move_type in ('out_refund', 'in_refund'):
+            starting_sequence = "R" + starting_sequence
+        if self.journal_id.payment_sequence and self.payment_id:
+            starting_sequence = "P" + starting_sequence
+        return starting_sequence
