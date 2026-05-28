@@ -10,9 +10,9 @@ class AccountTax(models.Model):
     # Fields declaration
     # ------------------
 
-    is_withholding_tax_on_payment = fields.Boolean(
-        string="Withhold On Payment",
-        help="If enabled, this tax will not affect your accounts until the registration of payments.",
+    is_withholding_tax = fields.Boolean(
+        string="Withhold",
+        help="If enabled, this tax will not affect the amount due until applied via the Pay button.",
     )
     withholding_sequence_id = fields.Many2one(
         string='Withholding Sequence',
@@ -26,24 +26,27 @@ class AccountTax(models.Model):
     # Onchange, Constraint methods
     # ----------------------------
 
-    @api.onchange('is_withholding_tax_on_payment')
-    def _onchange_is_withholding_tax_on_payment(self):
+    @api.onchange('is_withholding_tax')
+    def _onchange_is_withholding_tax(self):
         """ Ensure that we don't keep cash basis enabled if it was before checking the withholding tax option. """
-        if self.is_withholding_tax_on_payment:
+        if self.is_withholding_tax:
             self.tax_exigibility = 'on_invoice'
             self.price_include_override = 'tax_excluded'
+            self.amount = -abs(self.amount)
+        else:
+            self.amount = abs(self.amount)
 
     @api.onchange('amount')
     def _onchange_amount(self):
-        """ Reset the is_withholding_tax_on_payment field when the amount is set to positive; as the field will be hidden. """
+        """ Reset the is_withholding_tax field when the amount is set to positive; as the field will be hidden. """
         if self.amount >= 0:
-            self.is_withholding_tax_on_payment = False
+            self.is_withholding_tax = False
 
-    @api.constrains('amount_type', 'is_withholding_tax_on_payment')
+    @api.constrains('amount_type', 'is_withholding_tax')
     def _check_amount_type(self):
         """ The computation of withholding taxes needs to be limited in computation types to ensure that it works as expected. """
         for tax in self:
-            if tax.is_withholding_tax_on_payment and tax.amount_type in ['group', 'division']:
+            if tax.is_withholding_tax and tax.amount_type in ['group', 'division']:
                 raise UserError(tax.env._("Withholding On Payment taxes cannot use the 'Group of Taxes' or the 'Percentage Tax Included' computations."))
 
     # --------------------------------
@@ -57,7 +60,7 @@ class AccountTax(models.Model):
         This gives the user the flexibility to display or not withholding taxes as they need.
         """
         # EXTENDS 'account'
-        withholding_taxes = self.filtered('is_withholding_tax_on_payment')
+        withholding_taxes = self.filtered('is_withholding_tax')
         for tax in withholding_taxes:
             tax.tax_label = tax.invoice_label
 
@@ -75,5 +78,5 @@ class AccountTax(models.Model):
         """
         # EXTENDS 'account'
         if not base_line.get('calculate_withholding_taxes'):
-            base_line['filter_tax_function'] = lambda t: not t.is_withholding_tax_on_payment
+            base_line['filter_tax_function'] = lambda t: not t.is_withholding_tax
         super()._add_tax_details_in_base_line(base_line, company, rounding_method=rounding_method)

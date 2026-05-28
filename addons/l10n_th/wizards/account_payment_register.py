@@ -25,13 +25,13 @@ class AccountPaymentRegister(models.TransientModel):
     # Compute, inverse, search methods
     # --------------------------------
 
-    @api.depends('can_edit_wizard', 'should_withhold_tax', 'country_code')
+    @api.depends('can_edit_wizard', 'withhold', 'country_code')
     def _compute_l10n_th_wth_condition(self):
         """
         Compute the default value only if relevant for the current payment's country.
         """
         for wizard in self:
-            if wizard.can_edit_wizard and wizard.should_withhold_tax and wizard.country_code == 'TH':
+            if wizard.can_edit_wizard and wizard.withhold != 'payment' and wizard.country_code == 'TH':
                 wizard.l10n_th_wth_condition = wizard.l10n_th_wth_condition or 'at_source'
             else:
                 wizard.l10n_th_wth_condition = False
@@ -48,7 +48,7 @@ class AccountPaymentRegister(models.TransientModel):
         # EXTEND 'account'
         payment_vals = super()._create_payment_vals_from_wizard(batch_result)
 
-        if not self.should_withhold_tax or self.country_code != 'TH':
+        if self.withhold == 'payment' or self.country_code != 'TH':
             return payment_vals
 
         payment_vals['l10n_th_wth_condition'] = self.l10n_th_wth_condition

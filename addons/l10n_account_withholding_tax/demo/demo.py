@@ -23,7 +23,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': '2% WTH',
                 'tax_group_id': 'withholding_demo_tax_group',
                 'type_tax_use': 'purchase',
-                'is_withholding_tax_on_payment': True,
+                'is_withholding_tax': True,
                 'amount_type': 'percent',
                 'amount': -2,
                 'price_include_override': 'tax_excluded',

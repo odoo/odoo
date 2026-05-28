@@ -34,7 +34,7 @@ class TestL10nTHWTHPayment(AccountTestInvoicingCommon):
         })
 
     def test_withholding_condition_is_propagated(self):
-        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        withholding_tax = self.percent_tax(-1, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
 
         invoice = self.env['account.move'].create({
             'move_type': 'in_invoice',
