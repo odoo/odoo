@@ -5,6 +5,6 @@ declare module "models" {
     export interface Store {
         getSelfImportantChannels: () => DiscussChannel[];
         getSelfRecentChannels: () => DiscussChannel[];
-        initChannelsUnreadCounter: number;
+        init_unread_channel_ids: number[];
     }
 }

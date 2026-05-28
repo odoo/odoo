@@ -26,7 +26,7 @@ declare module "models" {
     }
     export interface ChatWindow {
         confirmCloseResolver: PromiseWithResolvers<boolean>;
-        feedbackDoneResolver: PromiseWithResolvers<boolean>;
+        feedbackDoneResolver: PromiseWithResolvers<void>;
     }
     export interface DataResponse {
         chatbot_step: ChatbotStep;

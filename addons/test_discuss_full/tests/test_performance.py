@@ -559,16 +559,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": "bookmark",
                     "model": "mail.box",
                 },
-                "initUnreadChannelIds": sorted(
-                    self.env["discuss.channel.member"].search([
-                        ("partner_id", "=", self.users[0].partner_id.id),
-                        ("is_pinned", "=", True),
-                        ("channel_id.active", "=", True),
-                        ("mute_until_dt", "=", False),
-                    ]).filtered(
-                        lambda m: m.message_unread_counter or m.channel_id.message_needaction_counter
-                    ).mapped("channel_id").ids
-                ),
+                "init_unread_channel_ids": (
+                    self.channel_general
+                    | self.channel_channel_public_1
+                    | self.channel_livechat_1
+                    | self.channel_livechat_2
+                ).ids,
             },
         }
 

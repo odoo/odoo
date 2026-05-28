@@ -164,7 +164,7 @@ export class ResUsers extends webModels.ResUsers {
                 id: "bookmark",
                 model: "mail.box",
             },
-            initUnreadChannelIds: members
+            init_unread_channel_ids: members
                 .filter((member) => member.message_unread_counter)
                 .map((member) => member.channel_id),
         });

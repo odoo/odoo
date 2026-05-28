@@ -4,8 +4,9 @@ declare module "models" {
         dateDeadlineFormatted: Readonly<string>;
         dateDoneFormatted: Readonly<string>;
         edit: () => Promise<void>;
+        isNoteEmpty: boolean;
         markAsDone: (attachmentIds: number[]) => Promise<void>;
-        markAsDoneAndScheduleNext: () => Promise<ActionDescription>;
+        markAsDoneAndScheduleNext: () => Promise<import("@web/webclient/actions/action_service").ActionDescription>;
         remove: (param0: { broadcast: boolean }) => void;
     }
     export interface Message {

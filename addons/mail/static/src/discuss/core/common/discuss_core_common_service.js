@@ -60,9 +60,7 @@ export class DiscussCoreCommon {
     async _handleNotificationChannelDelete(channel, metadata) {
         await channel.closeChatWindow();
         channel.messages.splice(0, channel.messages.length);
-        this.store.initUnreadChannelIds = this.store.initUnreadChannelIds.filter(
-            (id) => id !== channel.id
-        );
+        this.env.bus.trigger("discuss.channel/delete", { channel });
         channel.delete();
     }
 

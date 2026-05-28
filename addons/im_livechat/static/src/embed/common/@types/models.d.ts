@@ -19,6 +19,6 @@ declare module "models" {
     export interface Thread {
         _prevComposerDisabled: boolean;
         readyToSwapPromise: Promise<void>;
-        resolveReadyToSwap: (value?: void) => void;
+        resolveReadyToSwap: (value: unknown) => void;
     }
 }
