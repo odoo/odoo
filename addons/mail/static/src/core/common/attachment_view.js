@@ -3,7 +3,7 @@ import { Component, onMounted, onWillUnmount, onWillUpdateProps, signal } from "
 import { useService } from "@web/core/utils/hooks";
 import { deepEqual } from "@web/core/utils/objects";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
-import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect } from "@web/owl2/utils";
 
 class AbstractAttachmentView extends Component {
     static template = "mail.AttachmentView";
@@ -14,16 +14,16 @@ class AbstractAttachmentView extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.uiService = useService("ui");
-        this.iframeViewerPdfRef = useRef("iframeViewerPdf");
+        this.iframeViewerPdfRef = signal();
         /** @type {import("@odoo/owl").Signal<import("models").Thread>} */
         this.thread = signal();
         useLayoutEffect(
             (el) => {
                 if (el) {
-                    hidePDFJSButtons(this.iframeViewerPdfRef.el);
+                    hidePDFJSButtons(this.iframeViewerPdfRef());
                 }
             },
-            () => [this.iframeViewerPdfRef.el]
+            () => [this.iframeViewerPdfRef()]
         );
         this.updateFromProps(this.props);
         onWillUpdateProps((props) => this.updateFromProps(props));

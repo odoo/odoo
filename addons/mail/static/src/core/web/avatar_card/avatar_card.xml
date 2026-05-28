@@ -23,7 +23,7 @@
                         </div>
                         <div t-if="this.store.self_user?.share === false" class="o_avatar_card_buttons d-flex gap-2 mt-2">
                             <button t-if="this.user?.share === false" class="btn btn-secondary btn-sm" t-on-click.stop="this.onSendClick">Send message</button>
-                            <button t-if="this.showViewProfileBtn" class="btn btn-secondary btn-sm" t-custom-click.stop="(ev, isMiddleClick) => this.onClickViewProfile(isMiddleClick)" t-custom-ref="viewProfileBtn">View Profile</button>
+                            <button t-if="this.showViewProfileBtn" class="btn btn-secondary btn-sm" t-custom-click.stop="(ev, isMiddleClick) => this.onClickViewProfile(isMiddleClick)" t-ref="this.viewProfileBtn">View Profile</button>
                         </div>
                     </div>
                 </div>

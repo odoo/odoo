@@ -1,12 +1,12 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillStart, proxy, signal } from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
 export class ChannelInvitation extends Component {
@@ -37,7 +37,8 @@ export class ChannelInvitation extends Component {
             this.fetchPartnersToInvite.bind(this),
             250
         );
-        this.inputRef = useAutofocus({ refName: "input" });
+        this.inputRef = signal();
+        onMounted(() => this.inputRef()?.focus());
         onWillStart(() => {
             if (this.store.self_user) {
                 this.fetchPartnersToInvite();
@@ -136,7 +137,7 @@ export class ChannelInvitation extends Component {
     }
 
     onInput() {
-        this.searchStr = this.inputRef.el.value;
+        this.searchStr = this.inputRef().value;
         this.debouncedFetchPartnersToInvite();
     }
 

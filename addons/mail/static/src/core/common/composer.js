@@ -1,4 +1,4 @@
-import { useChildSubEnv, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useChildSubEnv, useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -154,10 +154,14 @@ export class Composer extends Component {
         );
         this.ui = useService("ui");
         this.composerService = useService("mail.composer");
-        this.ref = useRef("textarea");
-        this.fakeTextarea = useRef("fakeTextarea");
-        this.inputContainerRef = useRef("input-container");
-        this.pickerContainerRef = useRef("picker-container");
+        this.ref = signal();
+        this.fakeTextarea = signal();
+        this.fileUploaderRef = signal();
+        this.inputContainerRef = signal();
+        this.pickerContainerRef = signal();
+        this.quickActionsRef = signal();
+        this.moreActionsRef = signal();
+        this.extraActionsRef = signal();
         this.state = proxy({
             active: true,
             isFullComposerOpen: false,
@@ -172,7 +176,7 @@ export class Composer extends Component {
         });
         this.fullComposerBus = new EventBus();
         this.selection = useSelection({
-            refName: "textarea",
+            ref: this.ref,
             model: this.props.composer.selection,
             preserveOnClickAwayPredicate: async (ev) => {
                 // Let event be handled by bubbling handlers first.
@@ -203,9 +207,9 @@ export class Composer extends Component {
                 if (
                     this.ui.isSmall &&
                     this.composerActions.activeAction &&
-                    this.pickerContainerRef.el &&
-                    ev.target !== this.pickerContainerRef.el &&
-                    !this.pickerContainerRef.el.contains(ev.target)
+                    this.pickerContainerRef() &&
+                    ev.target !== this.pickerContainerRef() &&
+                    !this.pickerContainerRef().contains(ev.target)
                 ) {
                     this.composerActions.activeAction.actionPanelClose();
                 }
@@ -228,9 +232,9 @@ export class Composer extends Component {
         useChildSubEnv({ inComposer: true });
         useLayoutEffect(
             (focus) => {
-                if (focus && this.ref.el) {
+                if (focus && this.ref()) {
                     this.selection.restore();
-                    this.ref.el.focus();
+                    this.ref().focus();
                 }
                 if (focus && this.editor) {
                     this.editor.shared.selection.focusEditable();
@@ -249,20 +253,20 @@ export class Composer extends Component {
         );
         useLayoutEffect(
             () => {
-                if (this.fakeTextarea.el?.scrollHeight) {
+                if (this.fakeTextarea()?.scrollHeight) {
                     let wasEmpty = false;
-                    if (!this.fakeTextarea.el.value) {
+                    if (!this.fakeTextarea().value) {
                         wasEmpty = true;
-                        this.fakeTextarea.el.value = "0";
+                        this.fakeTextarea().value = "0";
                     }
-                    this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
+                    this.ref().style.height = this.fakeTextarea().scrollHeight + "px";
                     if (wasEmpty) {
-                        this.fakeTextarea.el.value = "";
+                        this.fakeTextarea().value = "";
                     }
                 }
                 this.saveContentDebounced();
             },
-            () => [this.props.composer.composerText, this.ref.el]
+            () => [this.props.composer.composerText, this.ref()]
         );
         useLayoutEffect(
             () => {
@@ -338,7 +342,7 @@ export class Composer extends Component {
             ]
         );
         onMounted(() => {
-            this.ref.el?.scrollTo({ top: 0, behavior: "instant" });
+            this.ref()?.scrollTo({ top: 0, behavior: "instant" });
             if (!this.props.composer.composerText) {
                 this.restoreContent();
             }
@@ -546,7 +550,7 @@ export class Composer extends Component {
     get navigableListProps() {
         const { loading, searchTerm, results } = this.suggestion.search;
         const props = {
-            anchorRef: this.inputContainerRef.el,
+            anchorRef: this.inputContainerRef(),
             position: this.env.inChatter ? "bottom-fit" : "top-fit",
             onSelect: (ev, option) => {
                 this.suggestion.insert(option);
@@ -807,7 +811,7 @@ export class Composer extends Component {
             }
             this.clear();
             this.state.active = true;
-            this.ref.el?.focus();
+            this.ref()?.focus();
         }
     }
 

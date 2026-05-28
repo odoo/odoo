@@ -1,4 +1,4 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, signal, xml } from "@odoo/owl";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -30,7 +30,9 @@ export class NotificationSettings extends Component {
         this.ui = useService("ui");
         this.DROPDOWN_NESTING = DROPDOWN_NESTING;
         this.muteConversationDropdownState = useDropdownState();
-        this.muteConversationHover = useHover(["mute-button", "mute-menu"], {
+        this.muteButton = signal();
+        this.muteMenu = signal();
+        this.muteConversationHover = useHover([this.muteButton, this.muteMenu], {
             onHover: () => (this.muteConversationDropdownState.isOpen = true),
             onAway: () => (this.muteConversationDropdownState.isOpen = false),
         });

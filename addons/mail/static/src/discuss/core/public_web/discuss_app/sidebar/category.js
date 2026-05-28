@@ -1,7 +1,7 @@
 import { DiscussSidebarChannel } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel";
 import { useHover } from "@mail/utils/common/hooks";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -16,7 +16,10 @@ export class DiscussSidebarCategory extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.discusscorePublicWebService = useService("discuss.core.public.web");
-        this.hover = useHover(["root", "floating"], {
+        this.root = signal();
+        this.floating = signal();
+        this.floatingCategoryName = signal();
+        this.hover = useHover([this.root, this.floating], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
                     this.onHover(true);
@@ -28,11 +31,11 @@ export class DiscussSidebarCategory extends Component {
                 }
             },
         });
-        this.floating = useDropdownState();
+        this.floatingState = useDropdownState();
     }
 
     onHover(hovering) {
-        this.floating.isOpen = hovering;
+        this.floatingState.isOpen = hovering;
     }
 
     /** @returns {import("models").DiscussAppCategory} */

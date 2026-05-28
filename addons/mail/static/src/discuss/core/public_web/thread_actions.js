@@ -10,7 +10,7 @@ registerThreadAction("show-threads", {
     actionPanelComponentProps: ({ channel }) => ({ channel: channel.parent_channel_id || channel }),
     actionPanelOpen({ owner }) {
         this.popover?.open(
-            owner.root.el.querySelector(`[name="${this.id}"]`),
+            owner.root()?.querySelector(`[name="${this.id}"]`),
             this.actionPanelComponentProps
         );
     },

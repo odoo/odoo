@@ -26,6 +26,7 @@ export class AvatarCard extends Component {
         this.actionService = useService("action");
         this.store = useService("mail.store");
         this.dialog = useService("dialog");
+        this.viewProfileBtn = signal();
         this.partnerLocalDateTimeFormatted = signal("");
         this.store.fetchStoreData("avatar_card", {
             id: this.props.id,

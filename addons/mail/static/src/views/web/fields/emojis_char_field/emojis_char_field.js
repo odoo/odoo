@@ -1,6 +1,6 @@
-import { useRef } from "@web/owl2/utils";
 import { EmojisFieldCommon } from "@mail/views/web/fields/emojis_field_common/emojis_field_common";
 
+import { signal } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { CharField, charField } from "@web/views/fields/char/char_field";
@@ -13,7 +13,8 @@ export class EmojisCharField extends EmojisFieldCommon(CharField) {
     static components = { ...CharField.components };
     setup() {
         super.setup();
-        this.targetEditElement = useRef("input");
+        this.targetEditElement = signal();
+        this.targetReadonlyElement = signal();
         this._setupOverride();
     }
 

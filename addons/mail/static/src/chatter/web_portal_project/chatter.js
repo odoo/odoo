@@ -1,9 +1,9 @@
-import { useChildSubEnv, useRef, useSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv, useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUpdateProps, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, proxy, signal } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { router } from "@web/core/browser/router";
@@ -32,7 +32,8 @@ export class Chatter extends Component {
             messageFetchRouteParams: () => this.messageFetchRouteParams,
         });
         this.highlightMessage = router.current.highlight_message_id;
-        this.rootRef = useRef("root");
+        this.rootRef = signal();
+        this.topRef = signal();
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
         useChildSubEnv(this.childSubEnv);
         useSubEnv(this.subEnv);
@@ -144,6 +145,6 @@ export class Chatter extends Component {
     }
 
     onScroll() {
-        this.state.isTopStickyPinned = this.rootRef.el.scrollTop !== 0;
+        this.state.isTopStickyPinned = this.rootRef().scrollTop !== 0;
     }
 }

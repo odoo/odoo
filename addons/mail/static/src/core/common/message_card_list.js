@@ -2,7 +2,7 @@ import { useSubEnv } from "@web/owl2/utils";
 import { Message } from "@mail/core/common/message";
 import { useVisible } from "@mail/utils/common/hooks";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
@@ -38,8 +38,10 @@ export class MessageCardList extends Component {
         super.setup();
         this.ui = useService("ui");
         this.store = useService("mail.store");
+        this.messageList = signal();
+        this.loadMoreRef = signal();
         useSubEnv({ messageCard: true });
-        useVisible("load-more", (isVisible) => {
+        useVisible("loadMoreRef", (isVisible) => {
             if (isVisible) {
                 this.props.onLoadMoreVisible?.();
             }

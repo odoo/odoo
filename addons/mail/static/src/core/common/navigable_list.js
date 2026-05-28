@@ -1,9 +1,9 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
@@ -30,7 +30,7 @@ export class NavigableList extends Component {
 
     setup() {
         super.setup();
-        this.rootRef = useRef("root");
+        this.rootRef = signal();
         this.state = proxy({
             activeIndex: null,
             open: false,
@@ -39,7 +39,7 @@ export class NavigableList extends Component {
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
         useExternalListener(window, "keydown", this.onKeydown, true);
-        onExternalClick("root", async (ev) => {
+        onExternalClick(this.rootRef, async (ev) => {
             // Let event be handled by bubbling handlers first.
             await new Promise(setTimeout);
             if (isEventHandled(ev, "composer.onClickTextarea")) {
@@ -48,7 +48,7 @@ export class NavigableList extends Component {
             this.close();
         });
         // position and size
-        usePosition("root", () => this.props.anchorRef, { position: this.props.position });
+        usePosition(this.rootRef, () => this.props.anchorRef, { position: this.props.position });
         useLayoutEffect(
             () => {
                 this.open();

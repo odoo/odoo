@@ -16,11 +16,11 @@ const threadPatch = {
                     loadNewer ||
                     !mountedAndLoaded ||
                     !this.channel?.self_member_id ||
-                    !this.scrollableRef.el
+                    !this.scrollableRef()
                 ) {
                     return;
                 }
-                const el = this.scrollableRef.el;
+                const el = this.scrollableRef();
                 if (Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) <= 1) {
                     this.channel.self_member_id.hideUnreadBanner = true;
                 }
@@ -38,13 +38,13 @@ const threadPatch = {
                 }
                 const messageCenter =
                     messageEl.offsetTop -
-                    this.scrollableRef.el.offsetHeight / 2 +
+                    this.scrollableRef().offsetHeight / 2 +
                     messageEl.offsetHeight / 2;
                 this.setScroll(messageCenter);
             } else {
                 const scrollTop =
                     this.props.order === "asc"
-                        ? this.scrollableRef.el.scrollHeight - this.scrollableRef.el.clientHeight
+                        ? this.scrollableRef().scrollHeight - this.scrollableRef().clientHeight
                         : 0;
                 this.setScroll(scrollTop);
             }

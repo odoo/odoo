@@ -109,7 +109,7 @@ registerThreadAction("notification-settings", {
     actionPanelOpen({ owner }) {
         if (owner.isDiscussContent) {
             this.popover?.open(
-                owner.root.el.querySelector(`[name="${this.id}"]`),
+                owner.root()?.querySelector(`[name="${this.id}"]`),
                 this.actionPanelComponentProps
             );
         }
@@ -167,7 +167,7 @@ registerThreadAction("invite-people", {
             });
         } else if (!owner.env.inMeetingView) {
             this.popover?.open(
-                owner.root.el.querySelector(`[name="${this.id}"]`),
+                owner.root()?.querySelector(`[name="${this.id}"]`),
                 this.actionPanelComponentProps
             );
         }

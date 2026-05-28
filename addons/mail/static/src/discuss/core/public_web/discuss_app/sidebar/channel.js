@@ -10,7 +10,7 @@ import { markEventHandled } from "@web/core/utils/misc";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
 export const discussSidebarChannelIndicatorsRegistry = registry.category(
@@ -32,7 +32,11 @@ export class DiscussSidebarChannel extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.hover = useHover(["root"], {
+        this.root = signal();
+        this.floatingRef = signal();
+        this.displayName = signal();
+        this.displayNameAdditionalContent = signal();
+        this.hover = useHover([this.root], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
                     this.floating.isOpen = true;

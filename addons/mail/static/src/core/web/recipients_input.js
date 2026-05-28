@@ -13,7 +13,7 @@ import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook
 import { uniqueId } from "@web/core/utils/functions";
 import { RecipientTag, useRecipientChecker } from "./recipient_tag";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 /**
  * @typedef {Object} Props
@@ -30,6 +30,7 @@ export class RecipientsInput extends Component {
     setup() {
         this.orm = useService("orm");
         this.store = useService("mail.store");
+        this.recipientsInputRef = signal();
         this.recipientCheckerBus = useRecipientChecker(() => this.tags);
         useTagNavigation("recipientsInputRef", {
             delete: this.deleteTagByIndex.bind(this),

@@ -13,7 +13,7 @@
         t-on-keydown="this.onKeydownInput"
         t-on-focus="() => this.isFocused.set(true)"
         t-on-blur="this.onBlurInput"
-        t-custom-ref="input"
+        t-ref="this.inputRef"
         type="text"
     />
 </t>

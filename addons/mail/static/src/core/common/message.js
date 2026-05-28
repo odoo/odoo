@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
 import { mountComponent } from "@html_editor/others/embedded_component_utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
@@ -25,7 +25,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { createElementWithContent } from "@web/core/utils/html";
 import { getOrigin, url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
@@ -131,7 +131,7 @@ export class Message extends Component {
                 delete this.rootRef().dataset.rightClicking;
             },
         });
-        this.rightClickAnchor = useChildRef("rightClickAnchor");
+        this.rightClickAnchor = signal();
         /** @type {import("@odoo/owl").Signal<Element>} */
         this.rootRef = signal();
         if (isMobileOS()) {
@@ -141,7 +141,8 @@ export class Message extends Component {
             });
         }
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
-        this.messageBody = useRef("body");
+        this.messageBody = signal();
+        this.messageContent = signal();
         this.messageActions = useMessageActions(this.messageActionsParams);
         /** @type {import("@odoo/owl").Signal<Element>} */
         this.shadowBody = signal();
@@ -230,7 +231,7 @@ export class Message extends Component {
             () => {
                 const roots = this.isEditing
                     ? []
-                    : this.prepareMessageBody(this.messageBody.el) ?? [];
+                    : this.prepareMessageBody(this.messageBody()) ?? [];
                 return () => {
                     for (const root of roots) {
                         root.destroy();
@@ -507,7 +508,7 @@ export class Message extends Component {
 
     showRightClickMessageActions(ev) {
         this.rootRef().dataset.rightClicking = true;
-        const el = this.rightClickAnchor.el;
+        const el = this.rightClickAnchor();
         el.style.left = ev.clientX + "px";
         el.style.top = ev.clientY + "px";
         this.rightClickDropdownState.open();

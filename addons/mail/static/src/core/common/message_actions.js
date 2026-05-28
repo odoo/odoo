@@ -46,7 +46,7 @@ registerMessageAction("reaction", {
     name: _t("Add a Reaction"),
     onSelected({ owner }) {
         const anchorEl = owner.isMessageContextMenu
-            ? owner.anchor.el
+            ? owner.anchor()
             : owner.rootRef()?.querySelector(`[name="${this.id}"]`);
         return owner.reactionPicker.open({ el: anchorEl });
     },

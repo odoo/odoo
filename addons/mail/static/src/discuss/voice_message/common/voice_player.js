@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, proxy, status } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onMounted, onWillUnmount, proxy, signal, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -49,10 +49,10 @@ export class VoicePlayer extends Component {
 
     setup() {
         super.setup();
-        this.wrapperRef = useRef("wrapper");
-        this.drawerRef = useRef("drawer");
-        this.waveRef = useRef("wave");
-        this.progressRef = useRef("progress");
+        this.wrapperRef = signal();
+        this.drawerRef = signal();
+        this.waveRef = signal();
+        this.progressRef = signal();
         /** @type {import("@mail/discuss/voice_message/common/voice_message_service").VoiceMessageService} */
         this.voiceMessageService = useService("discuss.voice_message");
         this.state = proxy({
@@ -310,19 +310,19 @@ export class VoicePlayer extends Component {
     }
 
     initElements() {
-        this.wrapper = this.wrapperRef.el;
-        this.progressWave = this.drawerRef.el;
+        this.wrapper = this.wrapperRef();
+        this.progressWave = this.drawerRef();
         this.progressColor = getComputedStyle(this.wrapper).getPropertyValue("--primary");
         this.width = this.wrapper.clientWidth;
         this.height = this.wrapper.clientHeight;
 
-        const wave = this.waveRef.el;
+        const wave = this.waveRef();
         wave.width = this.width;
         wave.height = this.height;
         this.waveCtx = wave.getContext("2d");
         this.waveCtx.fillStyle = WAVE_COLOR;
 
-        const progress = this.progressRef.el;
+        const progress = this.progressRef();
         progress.width = this.width;
         progress.height = this.height;
         this.progressCtx = progress.getContext("2d");

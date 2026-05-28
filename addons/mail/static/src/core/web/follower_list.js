@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useVisible } from "@mail/utils/common/hooks";
@@ -23,7 +23,8 @@ export class FollowerList extends Component {
         super.setup();
         this.action = useService("action");
         this.store = useService("mail.store");
-        useVisible("load-more", (isVisible) => {
+        this.loadMoreRef = signal();
+        useVisible(this.loadMoreRef, (isVisible) => {
             if (isVisible) {
                 this.props.thread.loadMoreFollowers();
             }

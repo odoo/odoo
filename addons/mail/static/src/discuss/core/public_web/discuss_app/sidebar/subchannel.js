@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { DiscussSidebarChannelActions } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel_actions";
 import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 import { useService } from "@web/core/utils/hooks";
@@ -15,7 +15,9 @@ export class DiscussSidebarSubchannel extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.hover = useHover(["root"], {
+        this.root = signal();
+        this.floatingRef = signal();
+        this.hover = useHover([this.root], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
                     this.floating.isOpen = true;

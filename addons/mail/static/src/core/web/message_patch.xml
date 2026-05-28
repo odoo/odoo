@@ -9,7 +9,7 @@
                             <t t-out="this.props.messageSearch?.highlight(this.message.subtype_id.description) ?? this.message.subtype_id.description"/>
                         </p>
                     </t>
-                    <div t-if="!this.message.isEmpty and this.message.richBody" t-custom-ref="body">
+                    <div t-if="!this.message.isEmpty and this.message.richBody" t-ref="this.messageBody">
                         <t t-call="mail.Message.bodyAsNotification"/>
                     </div>
                 </div>

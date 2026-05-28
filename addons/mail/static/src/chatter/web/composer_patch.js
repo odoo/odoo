@@ -1,5 +1,6 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { signal } from "@odoo/owl";
 
+import { useLayoutEffect } from "@web/owl2/utils";
 import { patch } from "@web/core/utils/patch";
 
 import { Composer } from "@mail/core/common/composer";
@@ -13,7 +14,8 @@ Object.assign(Composer.components, {
 
 patch(Composer.prototype, {
     setup() {
-        this.subjectInputRef = useRef("subjectInput");
+        /** @type {import("@odoo/owl").Signal<Element>} */
+        this.subjectInput = signal();
         // fill in the "suggested subject" only when it differs from the default
         useLayoutEffect(
             (
@@ -44,7 +46,7 @@ patch(Composer.prototype, {
                 this.props.thread?.defaultSubject,
                 this.props.thread?.suggestedSubject,
                 this.props.thread?.showSubjectInSmallComposer,
-                this.subjectInputRef?.el,
+                this.subjectInput(),
             ]
         );
         return super.setup();
@@ -67,6 +69,6 @@ patch(Composer.prototype, {
     },
 
     get subject() {
-        return this.subjectInputRef.el?.value;
+        return this.subjectInput()?.value;
     },
 });

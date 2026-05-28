@@ -1,6 +1,15 @@
-import { Component, onMounted, onPatched, onWillUnmount, proxy, toRaw, xml } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    proxy,
+    signal,
+    toRaw,
+    xml,
+} from "@odoo/owl";
 
-import { useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { Reactive } from "@web/core/utils/reactive";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
@@ -46,11 +55,10 @@ export function useLazyExternalListener(target, eventName, handler, eventParams)
     });
 }
 
-export function onExternalClick(refOrName, cb) {
+export function onExternalClick(ref, cb) {
     let downTarget, upTarget;
-    const ref = typeof refOrName === "string" ? useRef(refOrName) : refOrName;
     function onClick(ev) {
-        if (ref.el && !ref.el.contains(ev.composedPath()[0])) {
+        if (ref() && !ref().contains(ev.composedPath()[0])) {
             cb(ev, { downTarget, upTarget });
             upTarget = downTarget = null;
         }
@@ -75,15 +83,12 @@ export function onExternalClick(refOrName, cb) {
 
 /**
  * Hook that allows to determine precisely when refs are (mouse-)hovered.
- * Should provide a list of ref names, and can add callbacks when elements are
- * hovered-in (onHover), hovered-out (onAway), hovering for some time (onHovering).
+ * Should provide a list of refs (signals or callables) that determine whether this is in state "hovering".
  *
- * @param {string | string[] | Function} refNames name of refs that determine whether this is in state "hovering".
- *   ref name that end with "*" means it takes parented HTML node into account too. Useful for floating
- *   menu where dropdown menu container is not accessible. Function type is for useChildRef support.
+ * @param {import("@odoo/owl").Signal<Element> | Array<import("@odoo/owl").Signal<Element>>} refs
  * @param {Object} param1
- * @param {() => void} [param1.onHover] callback when hovering the ref names.
- * @param {() => void} [param1.onAway] callback when stop hovering the ref names.
+ * @param {() => void} [param1.onHover] callback when hovering the refs.
+ * @param {() => void} [param1.onAway] callback when stop hovering the refs.
  * @param {number, () => void} [param1.onHovering] array where 1st param is duration until start hovering
  *   and function to be executed at this delay duration after hovering is kept true.
  * @param {() => Array} [param1.stateObserver] when provided, function that, when called, returns list of
@@ -91,20 +96,15 @@ export function onExternalClick(refOrName, cb) {
  *   are removed from DOM, to properly mark the hovered target as non-hovered.
  * @returns {({ isHover: boolean })}
  */
-export function useHover(refNames, { onHover, onAway, stateObserver, onHovering } = {}) {
-    refNames = Array.isArray(refNames) ? refNames : [refNames];
+export function useHover(refs, { onHover, onAway, stateObserver, onHovering } = {}) {
+    refs = Array.isArray(refs) ? refs : [refs];
     const targets = [];
     let wasHovering = false;
     let hoveringTimeout;
     let awayTimeout;
     let lastHoveredTarget;
-    for (const refName of refNames) {
-        if (typeof refName === "function") {
-            // Special case: useChildRef support
-            targets.push({ ref: refName });
-            continue;
-        }
-        targets.push({ ref: useRef(refName) });
+    for (const ref of refs) {
+        targets.push({ ref });
     }
     const state = proxy({
         set isHover(newIsHover) {
@@ -125,11 +125,11 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
             state._targets.push(target);
             const handleMouseenter = (ev) => onmouseenter(ev);
             const handleMouseleave = (ev) => onmouseleave(ev);
-            target.ref.el.addEventListener("mouseenter", handleMouseenter, true);
-            target.ref.el.addEventListener("mouseleave", handleMouseleave, true);
+            target.ref().addEventListener("mouseenter", handleMouseenter, true);
+            target.ref().addEventListener("mouseleave", handleMouseleave, true);
             return () => {
-                target.ref.el.removeEventListener("mouseenter", handleMouseenter, true);
-                target.ref.el.removeEventListener("mouseleave", handleMouseleave, true);
+                target.ref().removeEventListener("mouseenter", handleMouseenter, true);
+                target.ref().removeEventListener("mouseleave", handleMouseleave, true);
                 const idx = state._targets.findIndex((t) => t === target);
                 if (idx !== -1) {
                     state._targets.splice(idx, 1);
@@ -168,10 +168,10 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
             return;
         }
         for (const target of toRaw(state)._targets) {
-            if (!target.ref.el) {
+            if (!target.ref()) {
                 continue;
             }
-            if (target.ref.el.contains(ev.target)) {
+            if (target.ref().contains(ev.target)) {
                 setHover(true);
                 lastHoveredTarget = target;
                 return;
@@ -189,10 +189,10 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
             return;
         }
         for (const target of toRaw(state._targets)) {
-            if (!target.ref.el) {
+            if (!target.ref()) {
                 continue;
             }
-            if (target.ref.el.contains(ev.relatedTarget)) {
+            if (target.ref().contains(ev.relatedTarget)) {
                 return;
             }
         }
@@ -207,13 +207,13 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
 
     for (const target of targets) {
         useLazyExternalListener(
-            () => target.ref.el,
+            () => target.ref(),
             "mouseenter",
             (ev) => onmouseenter(ev),
             true
         );
         useLazyExternalListener(
-            () => target.ref.el,
+            () => target.ref(),
             "mouseleave",
             (ev) => onmouseleave(ev),
             true
@@ -223,9 +223,9 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
     if (stateObserver) {
         useLayoutEffect((open) => {
             // Note: stateObserver is essentially used with useDropdownState()?.isOpen.
-            // While isOpen can become false, the ref.el can still be there for a short period of time.
+            // While isOpen can become false, the ref() can still be there for a short period of time.
             // Relying on isOpen becoming false forces good syncing of isHover state on dropdown close.
-            if ((lastHoveredTarget && !lastHoveredTarget.ref.el) || !open) {
+            if ((lastHoveredTarget && !lastHoveredTarget.ref()) || !open) {
                 setHover(false);
                 lastHoveredTarget = null;
             }
@@ -236,17 +236,17 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
 
 export class UseHoverOverlay extends Component {
     static props = ["slots", "hover"];
-    static template = xml`<div t-custom-ref="root"><t t-call-slot="default"/></div>`;
+    static template = xml`<div t-ref="this.root"><t t-call-slot="default"/></div>`;
 
     setup() {
         super.setup();
-        this.root = useRef("root");
+        this.root = signal();
         const overlayContains = toRaw(this.env[OVERLAY_SYMBOL].contains);
         let removeTarget;
         onMounted(() => {
             this.props.hover._contains.push(overlayContains);
             removeTarget = this.props.hover.addTarget({
-                ref: { el: this.root.el.closest(".o-overlay-item") },
+                ref: () => this.root()?.closest(".o-overlay-item"),
             });
         });
         onWillUnmount(() => {
@@ -319,31 +319,30 @@ export function useScrollState(ref) {
  * Hook that execute the callback function each time the scrollable element hit
  * the bottom minus the threshold.
  *
- * @param {string} refName scrollable t-ref name to observe
+ * @param {import("@odoo/owl").Signal<Element>} ref scrollable element ref signal
  * @param {function} callback function to execute when scroll hit the bottom minus the threshold
  * @param {number} threshold number of threshold pixel to trigger the callback
  */
-export function useOnBottomScrolled(refName, callback, threshold = 1) {
-    const ref = useRef(refName);
+export function useOnBottomScrolled(ref, callback, threshold = 1) {
     function onScroll() {
-        if (Math.abs(ref.el.scrollTop + ref.el.clientHeight - ref.el.scrollHeight) < threshold) {
+        const el = ref();
+        if (Math.abs(el.scrollTop + el.clientHeight - el.scrollHeight) < threshold) {
             callback();
         }
     }
     onMounted(() => {
-        ref.el?.addEventListener("scroll", onScroll);
+        ref()?.addEventListener("scroll", onScroll);
     });
     onWillUnmount(() => {
-        ref.el?.removeEventListener("scroll", onScroll);
+        ref()?.removeEventListener("scroll", onScroll);
     });
 }
 
 /**
- * @param {string} refName
+ * @param {import("@odoo/owl").Signal<Element>} ref
  * @param {function} [cb]
  */
-export function useVisible(refName, cb, { ready = true } = {}) {
-    const ref = useRef(refName);
+export function useVisible(ref, cb, { ready = true } = {}) {
     const state = proxy({
         isVisible: undefined,
         ready,
@@ -365,7 +364,7 @@ export function useVisible(refName, cb, { ready = true } = {}) {
                 };
             }
         },
-        () => [ref.el, state.ready]
+        () => [ref(), state.ready]
     );
     return state;
 }
@@ -557,30 +556,29 @@ export function useMicrophoneVolume() {
     return state;
 }
 
-export function useSelection({ refName, model, preserveOnClickAwayPredicate = () => false }) {
+export function useSelection({ ref, model, preserveOnClickAwayPredicate = () => false }) {
     const ui = useService("ui");
-    const ref = useRef(refName);
     function onSelectionChange() {
-        const activeElement = ref.el?.getRootNode().activeElement;
-        if (activeElement && activeElement === ref.el) {
+        const activeElement = ref()?.getRootNode().activeElement;
+        if (activeElement && activeElement === ref()) {
             Object.assign(model, {
-                start: ref.el.selectionStart,
-                end: ref.el.selectionEnd,
-                direction: ref.el.selectionDirection,
+                start: ref().selectionStart,
+                end: ref().selectionEnd,
+                direction: ref().selectionDirection,
             });
         }
     }
-    onExternalClick(refName, async (ev) => {
+    onExternalClick(ref, async (ev) => {
         if (await preserveOnClickAwayPredicate(ev)) {
             return;
         }
-        if (!ref.el) {
+        if (!ref()) {
             return;
         }
         Object.assign(model, {
-            start: ref.el.value.length,
-            end: ref.el.value.length,
-            direction: ref.el.selectionDirection,
+            start: ref().value.length,
+            end: ref().value.length,
+            direction: ref().selectionDirection,
         });
     });
     onMounted(() => {
@@ -593,14 +591,14 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
     });
     return {
         restore() {
-            ref.el?.setSelectionRange(model.start, model.end, model.direction);
+            ref()?.setSelectionRange(model.start, model.end, model.direction);
         },
         moveCursor(position) {
             model.start = model.end = position;
-            if (ref.el && !ui.isSmall) {
+            if (ref() && !ui.isSmall) {
                 // In mobile, selection seems to adjust correctly.
                 // Don't programmatically adjust, otherwise it shows soft keyboard!
-                ref.el.selectionStart = ref.el.selectionEnd = position;
+                ref().selectionStart = ref().selectionEnd = position;
             }
         },
     };

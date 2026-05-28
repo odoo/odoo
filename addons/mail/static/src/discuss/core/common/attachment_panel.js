@@ -2,7 +2,7 @@ import { DateSection } from "@mail/core/common/date_section";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, signal } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useSequential, useVisible } from "@mail/utils/common/hooks";
 
@@ -22,6 +22,7 @@ export class AttachmentPanel extends Component {
         this.store = useService("mail.store");
         this.ormService = useService("orm");
         this.attachmentUploadService = useService("mail.attachment_upload");
+        this.loadOlderRef = signal();
         onWillStart(() => {
             this.props.channel.fetchMoreAttachments();
         });
@@ -30,7 +31,7 @@ export class AttachmentPanel extends Component {
                 nextProps.channel.fetchMoreAttachments();
             }
         });
-        useVisible("load-older", (isVisible) => {
+        useVisible("loadOlderRef", (isVisible) => {
             if (isVisible) {
                 this.props.channel.fetchMoreAttachments();
             }

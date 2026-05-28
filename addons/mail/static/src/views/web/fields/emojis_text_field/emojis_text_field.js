@@ -1,5 +1,6 @@
 import { EmojisFieldCommon } from "@mail/views/web/fields/emojis_field_common/emojis_field_common";
 
+import { signal } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { TextField, textField } from "@web/views/fields/text/text_field";
 
@@ -12,6 +13,7 @@ export class EmojisTextField extends EmojisFieldCommon(TextField) {
     setup() {
         super.setup();
         this.targetEditElement = this.textareaRef;
+        this.targetReadonlyElement = signal();
         this._setupOverride();
     }
 }

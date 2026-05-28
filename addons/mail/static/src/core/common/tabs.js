@@ -1,14 +1,12 @@
 import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
 import { useChildRefs, useForwardRefsToParent, useScrollState } from "@mail/utils/common/hooks";
 import { Component, signal, useEffect, xml } from "@odoo/owl";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
  * @property {"v"|"h"} [direction] Direction of the tabs. "v" for vertical, "h" for horizontal.
  * @property {any} [initialTabId] Id of the tab that should be active at the start.
- * @property {ReturnType<typeof import("@web/core/utils/hooks").useChildRef>} [ref] Ref function returned
- * by `useChildRef`. Used to forward the Tabs component ref to its parent.
+ * @property {import("@odoo/owl").Signal<Element>} [ref] Signal to forward the Tabs root element to the parent.
  * @property {Record<string, any>} [slots]
  * @extends {Component<Props, Env>}
  */
@@ -25,9 +23,9 @@ export class Tabs extends Component {
     setup() {
         this.activeHeaderId = signal(this.props.initialTabId);
         this.headerRefs = useChildRefs();
+        this.tabsRoot = this.props.ref ?? signal();
         this.navRef = signal();
         this.scrollState = useScrollState(this.navRef);
-        useForwardRefToParent("ref");
         useChildSubEnv({
             tabsContext: {
                 headerRefs: this.headerRefs,
@@ -49,7 +47,7 @@ export class Tabs extends Component {
      * @param {number} direction The direction to scroll (1 for forward, -1 for backward).
      */
     async scroll(direction) {
-        const navEl = this.navRef.el;
+        const navEl = this.navRef();
         if (this.props.direction === "v") {
             navEl?.scrollBy({ top: navEl?.clientHeight * direction, behavior: "smooth" });
         } else {

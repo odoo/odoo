@@ -2,9 +2,9 @@ import { useLayoutEffect } from "@web/owl2/utils";
 import { Gif } from "@mail/core/common/gif";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal } from "@odoo/owl";
 import { user } from "@web/core/user";
-import { useService, useAutofocus } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { rpc } from "@web/core/network/rpc";
 import { PICKER_PROPS, usePicker } from "@web/core/emoji_picker/emoji_picker";
@@ -63,9 +63,10 @@ export class GifPicker extends Component {
         this.orm = useService("orm");
         this.store = useService("mail.store");
         this.sequential = useSequential();
-        this.inputRef = useAutofocus();
+        this.autofocusRef = signal();
+        this.scrollerRef = signal();
         useOnBottomScrolled(
-            "scroller",
+            this.scrollerRef,
             () => {
                 if (!this.state.showCategories) {
                     if (!this.showFavorite) {
@@ -256,7 +257,7 @@ export class GifPicker extends Component {
     async onClickCategory(category) {
         this.clear();
         this.searchTerm = category.searchterm;
-        this.inputRef.el?.focus();
+        this.autofocusRef()?.focus();
         this.closeCategories();
     }
 

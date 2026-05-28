@@ -8,7 +8,7 @@ patch(Message.prototype, {
         this.state.lastReadMoreIndex = 0;
         this.state.isReadMoreByIndex = new Map();
         onWillUnmount(() => {
-            this.messageBody.el?.querySelector(".o-mail-ellipsis")?.remove();
+            this.messageBody()?.querySelector(".o-mail-ellipsis")?.remove();
         });
     },
 

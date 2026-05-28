@@ -1,7 +1,7 @@
-import { useComponent, useRef } from "@web/owl2/utils";
+import { useComponent } from "@web/owl2/utils";
 import { CreatePollDialog } from "@mail/core/common/create_poll_dialog";
 
-import { toRaw } from "@odoo/owl";
+import { signal, toRaw } from "@odoo/owl";
 import { EmojiPicker, useEmojiPickerStoreScroll } from "@web/core/emoji_picker/emoji_picker";
 
 import { _t } from "@web/core/l10n/translation";
@@ -37,9 +37,9 @@ export function pickerGetAnchor({ action, owner }) {
     }
     if (!anchorEl) {
         if (action.sequenceQuick) {
-            anchorEl = owner.quickActionsRef.el;
+            anchorEl = owner.quickActionsRef();
         } else {
-            anchorEl = owner.moreActionsRef.el ?? owner.extraActionsRef.el;
+            anchorEl = owner.moreActionsRef() ?? owner.extraActionsRef();
         }
     }
     return anchorEl;
@@ -47,9 +47,9 @@ export function pickerGetAnchor({ action, owner }) {
 
 export function pickerSetup() {
     const component = useComponent();
-    component.quickActionsRef = useRef("quick-actions");
-    component.moreActionsRef = useRef("more-actions");
-    component.extraActionsRef = useRef("extra-actions");
+    component.quickActionsRef = signal();
+    component.moreActionsRef = signal();
+    component.extraActionsRef = signal();
 }
 
 registerComposerAction("send-message", {
@@ -108,12 +108,12 @@ registerComposerAction("upload-files", {
     icon: "fa fa-paperclip",
     name: _t("Attach Files"),
     onSelected: ({ composer: comp, owner }, ev) => {
-        owner.fileUploaderRef.el?.click();
+        owner.fileUploaderRef()?.click();
         const composer = toRaw(comp);
         markEventHandled(ev, "composer.clickOnAddAttachment");
         composer.autofocus++;
     },
-    setup: ({ owner }) => (owner.fileUploaderRef = useRef("file-uploader")),
+    setup: ({ owner }) => (owner.fileUploaderRef = signal()),
     sequence: 20,
 });
 registerComposerAction("open-full-composer", {

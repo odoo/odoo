@@ -1,7 +1,6 @@
 import { Component, onMounted, props, signal, types, useEffect } from "@odoo/owl";
 
 import { useAutoresize } from "@web/core/utils/autoresize";
-import { useRef } from "@web/owl2/utils";
 
 export class AutoresizeInput extends Component {
     static template = "mail.AutoresizeInput";
@@ -28,12 +27,12 @@ export class AutoresizeInput extends Component {
         this.value = signal("");
         useEffect(() => this.value.set(this.props.value()));
         this.isFocused = signal(false);
-        this.inputRef = useRef("input");
+        this.inputRef = signal();
         useAutoresize(this.inputRef);
         onMounted(() => {
             if (this.props.autofocus) {
-                this.inputRef.el.focus();
-                this.inputRef.el.setSelectionRange(-1, -1);
+                this.inputRef().focus();
+                this.inputRef().setSelectionRange(-1, -1);
             }
         });
     }
@@ -44,12 +43,12 @@ export class AutoresizeInput extends Component {
     onKeydownInput(ev) {
         switch (ev.key) {
             case "Enter":
-                this.inputRef.el.blur();
+                this.inputRef().blur();
                 break;
             case "Escape":
                 ev.stopPropagation();
                 this.value.set(this.props.value());
-                this.inputRef.el.blur();
+                this.inputRef().blur();
                 break;
         }
     }

@@ -1,9 +1,9 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { ChatWindow } from "@mail/core/common/chat_window";
 import { ActionList } from "@mail/core/common/action_list";
 import { useHover, useMovable } from "@mail/utils/common/hooks";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -29,15 +29,17 @@ export class ChatHub extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.busMonitoring = useService("bus.monitoring_service");
-        this.bubblesHover = useHover("bubbles");
-        this.moreHover = useHover(["more-button", "more-menu"], {
+        this.ref = signal();
+        this.root = signal();
+        this.moreButton = signal();
+        this.moreMenu = signal();
+        this.bubblesHover = useHover(this.ref);
+        this.moreHover = useHover([this.moreButton, this.moreMenu], {
             onHover: () => (this.more.isOpen = true),
             onAway: () => (this.more.isOpen = false),
         });
         this.options = useDropdownState();
         this.more = useDropdownState();
-        this.ref = useRef("bubbles");
-        this.root = useRef("root");
         this.position = proxy({
             dragged: false,
             isDragging: false,

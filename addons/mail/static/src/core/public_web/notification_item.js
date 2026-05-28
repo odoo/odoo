@@ -1,10 +1,10 @@
-import { useRef, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { isToday } from "@mail/utils/common/dates";
 import { useHover } from "@mail/utils/common/hooks";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { useService } from "@web/core/utils/hooks";
@@ -43,8 +43,9 @@ export class NotificationItem extends Component {
         this.DateTime = DateTime;
         this.ui = useService("ui");
         this.store = useService("mail.store");
-        this.markAsReadRef = useRef("markAsRead");
-        this.rootHover = useHover("root");
+        this.markAsReadRef = signal();
+        this.root = signal();
+        this.rootHover = useHover(this.root);
         useSubEnv({ inNotificationItem: true });
     }
 
@@ -59,11 +60,10 @@ export class NotificationItem extends Component {
     }
 
     onClick(ev) {
-        this.props.onClick(this.markAsReadRef.el?.contains(ev.target));
+        this.props.onClick(this.markAsReadRef()?.contains(ev.target));
     }
 
     get message() {
         return this.props.thread?.newestPersistentOfAllMessage;
     }
-
 }

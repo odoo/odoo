@@ -3,6 +3,8 @@ import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
 import { onExternalClick } from "@mail/utils/common/hooks";
 
+import { signal } from "@odoo/owl";
+
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -20,7 +22,8 @@ patch(MessagingMenu.prototype, {
             searchOpen: false,
         });
 
-        onExternalClick("selector", () => Object.assign(this.state, { adding: false }));
+        this.selectorRef = signal();
+        onExternalClick(this.selectorRef, () => Object.assign(this.state, { adding: false }));
         useLayoutEffect(
             () => {
                 if (

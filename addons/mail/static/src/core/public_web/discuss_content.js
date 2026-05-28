@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, computed, proxy, signal } from "@odoo/owl";
 
 import { useThreadActions } from "@mail/core/common/thread_actions";
@@ -34,7 +34,11 @@ export class DiscussContent extends Component {
         this.ui = useService("ui");
         this.notification = useService("notification");
         this.threadActions = useThreadActions({ thread: () => this.thread });
-        this.root = useRef("root");
+        this.root = signal();
+        this.header = signal();
+        this.main = signal();
+        this.core = signal();
+        this.mobileTopbar = signal();
         this.correspondentLocalDateTimeFormatted = signal("");
         this.state = proxy({ jumpThreadPresent: 0 });
         this.isDiscussContent = true;
