@@ -260,12 +260,13 @@ class StockMove(models.Model):
 
         if len(self.product_id) > 1:
             return 0
-        total_qty = sum(m._get_valued_qty() for m in self)
+        total_qty = sum(m._get_valued_qty() * (-1 if m.is_in else 1) for m in self)
         valued_consigned_qty = self._get_valued_consigned_qty()
         total_valued_qty = total_qty + valued_consigned_qty
         if total_valued_qty and (self.product_id.cost_method == 'fifo' or valued_consigned_qty or
             (self.product_id.lot_valuated and self.product_id.cost_method == 'average')):
-            return sum(self.mapped('value')) / total_valued_qty
+            total_value = sum(m.value * (-1 if m.is_in else 1) for m in self)
+            return total_value / total_valued_qty
         else:
             return self.product_id.standard_price
 
@@ -680,7 +681,12 @@ class StockMove(models.Model):
         return bool(self.picking_id.return_picking_id)
 
     def _get_valued_consigned_qty(self):
-        return sum(self.move_line_ids.filtered(lambda l: l._is_consigned_valued_line()).mapped('quantity_product_uom'))
+        consigned_lines = self.move_line_ids.filtered(lambda l: l._is_consigned_valued_line())
+        consigned_qty = sum(
+            sml.quantity_product_uom * (-1 if sml.location_dest_id._should_be_valued() else 1)
+            for sml in consigned_lines
+        )
+        return consigned_qty
 
     def _get_price_unit_delivery(self):
         """ Computes the unit price for a set of moves, using a weighted average between
