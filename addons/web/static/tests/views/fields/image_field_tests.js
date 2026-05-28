@@ -171,7 +171,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector("input.o_input_file").getAttribute("accept"),
-            "image/*",
+            "image/*,dummy/allowAndroidCamera",
             'the default value for the attribute "accept" on the "image" widget must be "image/*"'
         );
     });
@@ -434,7 +434,7 @@ QUnit.module("Fields", (hooks) => {
         // The view must be in edit mode
         assert.strictEqual(
             target.querySelector("input.o_input_file").getAttribute("accept"),
-            ".png,.jpeg",
+            ".png,.jpeg,dummy/allowAndroidCamera",
             "the input should have the correct ``accept`` attribute"
         );
     });
