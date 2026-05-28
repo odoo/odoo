@@ -3072,3 +3072,93 @@ test("graph renders percentage widget measures", async () => {
     checkMeasure("Ratio");
     checkTooltip(view, { title: "Ratio", lines: [{ label: "Total", value: "33.33%" }] }, 0);
 });
+
+test.tags("desktop");
+test("monetary chart rendering with a single foreign currency", async () => {
+    // simulate that the company currency is EUR
+    serverState.companies[0].currency_id = 2;
+
+    onRpc("formatted_read_group", ({ kwargs }) => {
+        // FIXME: context.fill_temporal isn't handled in the MockServer
+        expect(kwargs.context.fill_temporal).toBe(true);
+        return [
+            {
+                "date:day": ["2016-01-01", "2016-01-01"],
+                __extra_domain: [
+                    ["date", ">=", "2016-01-01"],
+                    ["date", "<", "2016-01-02"],
+                ],
+                __count: 1,
+                "currency_id:array_agg_distinct": [1],
+                "amount:sum_currency": 300,
+                "amount:sum": 300,
+            },
+            {
+                "date:day": ["2016-01-02", "2016-01-02"],
+                __extra_domain: [
+                    ["date", ">=", "2016-01-02"],
+                    ["date", "<", "2016-01-03"],
+                ],
+                __count: 0,
+                "currency_id:array_agg_distinct": [],
+                "amount:sum_currency": 0,
+                "amount:sum": 0,
+            },
+            {
+                "date:day": ["2016-01-03", "2016-01-03"],
+                __extra_domain: [
+                    ["date", ">=", "2016-01-03"],
+                    ["date", "<", "2016-01-04"],
+                ],
+                __count: 1,
+                "currency_id:array_agg_distinct": [1],
+                "amount:sum_currency": 400,
+                "amount:sum": 400,
+            },
+        ];
+    });
+
+    onRpc("/web/domain/validate", () => true);
+    Foo._fields.amount = fields.Monetary({ currency_field: "currency_id" });
+    Foo._fields.currency_id = fields.Many2one({ relation: "res.currency", default: 1 });
+    Foo._records = [
+        {
+            id: 1,
+            foo: 3,
+            bar: true,
+            product_id: 100,
+            date: "2016-01-01",
+            revenue: 1,
+            color_ids: [2],
+            amount: 300,
+        },
+        {
+            id: 2,
+            foo: 53,
+            bar: true,
+            product_id: 100,
+            color_id: 2,
+            date: "2016-01-03",
+            revenue: 2,
+            color_ids: [1],
+            amount: 400,
+        },
+    ];
+
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        groupBy: ["date:day"],
+        arch: `
+            <graph>
+                <field name="bar" />
+                <field name="amount" type="measure" />
+            </graph>
+        `,
+    });
+
+    expect(".o_graph_canvas_container canvas").toHaveCount(1);
+    // should display the sum in the records currency, i.e. USD
+    checkTooltip(view, { title: "Amount", lines: [{ label: "2016-01-01", value: "$ 300.00" }] }, 0);
+    checkTooltip(view, { title: "Amount", lines: [{ label: "2016-01-03", value: "$ 400.00" }] }, 1);
+});
