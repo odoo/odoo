@@ -64,7 +64,7 @@ chartDataSourceRegistry.add("odoo", {
             labelValues: labels.map((l) => ({ value: l })),
         };
     },
-    onDataSetHover: (chartType, event, items, chart) => {
+    onDataSetHover: (chartType, chartId, event, items, chartJSChart) => {
         if (!event.native) {
             return;
         }
@@ -75,7 +75,7 @@ chartDataSourceRegistry.add("odoo", {
         const item = items[0];
         switch (chartType) {
             case "geo": {
-                const data = chart.data.datasets?.[item.datasetIndex]?.data?.[item.index];
+                const data = chartJSChart.data.datasets?.[item.datasetIndex]?.data?.[item.index];
                 if (
                     typeof data === "object" &&
                     data &&
