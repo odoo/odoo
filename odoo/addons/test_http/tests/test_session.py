@@ -2,6 +2,7 @@
 
 import datetime
 import json
+import sys
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 from urllib.parse import urlencode
@@ -16,6 +17,11 @@ from odoo.tools import config, lazy_property, mute_logger
 
 from .test_common import TestHttpBase
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+
+PicklingError = AttributeError
+if sys.version_info >= (3, 14):
+    from pickle import PicklingError as _PicklingError
+    PicklingError = _PicklingError
 
 GEOIP_ODOO_FARM_2 = {
     'city': 'Ramillies',
@@ -199,13 +205,13 @@ class TestHttpSession(TestHttpBase):
         for value in [
             lambda: 'bar',
         ]:
-            with self.assertRaises(AttributeError):
+            with self.assertRaises(PicklingError):
                 session['foo'] = value
             self.assertFalse(session.foo)
-            with self.assertRaises(AttributeError):
+            with self.assertRaises(PicklingError):
                 session.foo = value
             self.assertFalse(session.foo)
-            with self.assertRaises(AttributeError):
+            with self.assertRaises(PicklingError):
                 # testing you cannot set a non-serializable value at the creation of the session
                 # e.g. in the __init__ of the session class
                 self.assertFalse(odoo.http.root.session_store.session_class({'foo': value}, 1234).foo)
