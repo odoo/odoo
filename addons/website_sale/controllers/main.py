@@ -13,7 +13,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, route
 from odoo.http.stream import content_disposition
-from odoo.tools import SQL, clean_context, float_round, lazy, str2bool
+from odoo.tools import SQL, BinaryBytes, clean_context, float_round, lazy, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate
 
@@ -945,11 +945,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 )
             # Swap records.
             product_images[main_image_idx], product_images[0] = additional_image, main_image
-            # Swap image data.
-            main_image.image_1920, additional_image.image_1920 = (
-                additional_image.image_1920,
-                main_image.image_1920,
-            )
+            # Swap image data. The contents are read eagerly before writing: the images are
+            # stored in attachments, and writing the first field mutates its attachment, which
+            # would invalidate the other value that is still lazily bound to its attachment.
+            main_image_data = main_image.image_1920.content
+            additional_image_data = additional_image.image_1920.content
+            main_image.image_1920 = BinaryBytes(additional_image_data)
+            additional_image.image_1920 = BinaryBytes(main_image_data)
             additional_image.name = main_image.name  # Update image name but not product name.
 
         # Resequence additional images according to the new ordering.
