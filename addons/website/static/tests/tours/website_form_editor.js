@@ -142,7 +142,7 @@ const addField = function (
         ret.push({
             content: "Change the label text",
             trigger: ".o_customize_tab div[data-action-id='setLabelText'] input",
-            run: `edit ${label} && press Tab`,
+            run: `edit ${label} && click body`,
         });
     }
     if (type !== "checkbox" && type !== "radio" && type !== "select") {
@@ -179,7 +179,6 @@ const compareIds = ({ content, firstElSelector, secondElSelector, errorMessage }
 registerWebsitePreviewTour(
     "website_form_editor_tour",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [
