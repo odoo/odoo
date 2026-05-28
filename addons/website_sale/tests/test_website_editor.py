@@ -178,6 +178,28 @@ class TestProductPictureController(HttpCase):
             self.assertListEqual(self._get_product_image_data(), [i2, i3, i4, i5, i6, i1])
             self.assertEqual(self.product.image_1920.content, i2)
 
+    def test_resequence_image_first_with_main_image(self):
+        """Check that reordering an extra image to the first position on a product
+        template updates the template's main image accordingly."""
+        self._create_product_images()
+        # Set a main image whose content differs from the additional image moved to first,
+        # so the swap actually replaces the underlying attachment.
+        self.product.product_tmpl_id.image_1920 = ATTACHMENT_DATA[4]
+        images = self.product._get_images()
+        i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
+        # Invalidate the cached image values so they are read lazily from their attachments
+        # during the swap (as they would be on a real request).
+        self.product.product_tmpl_id.invalidate_recordset(["image_1920"])
+        self.product.product_template_image_ids.invalidate_recordset(["image_1920"])
+        with MockRequest(self.product.env, website=self.website):
+            self.WebsiteSaleController.resequence_product_image(
+                images[2]._name, images[2].id, "first"
+            )
+        self.env["product.image"].invalidate_model()
+        self.product.invalidate_recordset()
+        self.assertListEqual(self._get_product_image_data(), [i3, i1, i2, i4, i5, i6])
+        self.assertEqual(self.product.image_1920.content, i3)
+
     def test_resequence_video_left(self):
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
