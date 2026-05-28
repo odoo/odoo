@@ -1,15 +1,24 @@
-from odoo import models
+from odoo import api, fields, models
 
 
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    def _get_landed_cost(self, at_date=None):
+    valuation_adjustment_line_ids = fields.One2many('stock.valuation.adjustment.lines', compute='_compute_valuation_adjustment_line_ids')
+
+    @api.depends_context('at_date')
+    def _compute_valuation_adjustment_line_ids(self):
+        at_date = self.env.context.get('at_date', False)
         domain = [('move_id', 'in', self.ids), ('cost_id.state', '=', 'done')]
         if at_date:
             domain.append(('cost_id.date', '<=', at_date))
-        landed_cost_group = self.env['stock.valuation.adjustment.lines']._read_group(domain, ['move_id'], ['id:recordset'])
-        return dict(landed_cost_group)
+        valuation_adjustment_lines = dict(self.env['stock.valuation.adjustment.lines']._read_group(domain, ['move_id'], ['id:recordset']))
+
+        for move in self:
+            move.valuation_adjustment_line_ids = valuation_adjustment_lines.get(move, False)
+
+    def _get_landed_cost(self, at_date=None):
+        return {self: self.with_context(at_date=at_date).valuation_adjustment_line_ids}
 
     def _get_value_from_extra(self, quantity, at_date=None):
         self.ensure_one()

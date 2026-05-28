@@ -22,3 +22,6 @@ class ProductTemplate(models.Model):
                 vals['landed_cost_ok'] = False
 
         return super().write(vals)
+
+    def _get_prefetch_move_fields(self):
+        return super()._get_prefetch_move_fields().append('valuation_adjustment_line_ids')
