@@ -109,24 +109,30 @@ patch(PosStore.prototype, {
     handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty) {
         const srcKey = srcLine.preparationKey;
         const destKey = destLine.preparationKey;
-        const srcQty = srcPrep[srcKey]?.quantity;
-        const existingDestQty = destPrep[destKey]?.quantity || 0;
+        const srcEntry = srcPrep[srcKey];
+        const srcQty = srcEntry?.quantity;
+        const destEntry = destPrep[destKey];
+        const existingDestQty = destEntry?.quantity || 0;
+        const existingDestTransferredQty = destEntry?.transferredQty || 0;
 
         if (srcQty) {
+            // Quantity already sent to the kitchen must not be re-sent after split/transfer.
+            const alreadySentQty = srcEntry.transferredQty ?? srcQty;
             if (srcQty <= qty) {
-                const newPrep = {
-                    ...srcPrep[srcKey],
+                destPrep[destKey] = {
+                    ...srcEntry,
                     uuid: destLine.uuid,
                     quantity: existingDestQty + srcQty,
+                    transferredQty: existingDestTransferredQty + alreadySentQty,
                 };
-                destPrep[destKey] = newPrep;
                 delete srcPrep[srcKey];
             } else {
                 srcPrep[srcKey].quantity = srcQty - qty;
                 destPrep[destKey] = {
-                    ...srcPrep[srcKey],
+                    ...srcEntry,
                     uuid: destLine.uuid,
                     quantity: existingDestQty + qty,
+                    transferredQty: existingDestTransferredQty + qty,
                 };
             }
         }
