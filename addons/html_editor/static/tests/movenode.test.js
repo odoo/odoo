@@ -7,7 +7,6 @@ import { getContent } from "./_helpers/selection";
 import { unformat } from "./_helpers/format";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { captionEmbedding } from "@html_editor/others/embedded_components/backend/caption/caption";
 
 describe.current.tags("desktop");
 
@@ -45,9 +44,6 @@ test("should show the hook when hovering a figure element", async () => {
         {
             config: {
                 Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
-                resources: {
-                    embedded_components: [captionEmbedding],
-                },
             },
             styleContent: styles,
         }
