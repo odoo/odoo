@@ -3,6 +3,7 @@ import { getTemplate } from "@web/core/templates";
 import { mount, reactive, whenReady } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
+import { browser } from "@web/core/browser/browser";
 import { localization } from "@web/core/l10n/localization";
 import { user } from "@web/core/user";
 import { session } from "@web/session";
@@ -29,6 +30,15 @@ whenReady(() => {
         isEnterprise: session.server_version_info.slice(-1)[0] === "e",
     };
     await whenReady();
+    // If a deletion beacon was sent on unload for this exact session, reload once so
+    // pos_web assigns a clean session. Removing the flag before reloading prevents looping.
+    const recoverySessionId = browser.sessionStorage.getItem("pos_reload_recovery");
+    if (recoverySessionId && parseInt(recoverySessionId) === odoo.pos_session_id) {
+        browser.sessionStorage.removeItem("pos_reload_recovery");
+        window.location.reload();
+        return;
+    }
+    browser.sessionStorage.removeItem("pos_reload_recovery");
     const app = await mountComponent(Chrome, document.body, {
         name: "Odoo Point of Sale",
         props: { disableLoader: () => (loader.isShown = false) },
@@ -43,6 +53,7 @@ whenReady(() => {
         }
         const pos = app.env.services.pos;
         if (pos?.session?.state === "opening_control") {
+            browser.sessionStorage.setItem("pos_reload_recovery", String(pos.session.id));
             const data = JSON.stringify({
                 jsonrpc: "2.0",
                 method: "call",
