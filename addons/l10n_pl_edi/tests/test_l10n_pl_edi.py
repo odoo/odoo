@@ -739,3 +739,15 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         invoice = self._create_invoice(partner_id=self.partner_pl.id, post=True)
         xml = invoice._l10n_pl_edi_render_xml()
         self.assertEqual(self._get_xml_value(xml, "//ns:Podmiot2/ns:DaneIdentyfikacyjne/ns:NIP"), '1111111111')
+
+    def test_import_invoice_discount_is_correctly_set(self):
+        self._assert_import_invoice('invoice_with_discount.xml', [
+            {
+                "price_unit": 41.37,
+                "price_subtotal": 103.43
+            },
+            {
+                "price_unit": 118.3,
+                "price_subtotal": 1064.7
+            }
+        ])
