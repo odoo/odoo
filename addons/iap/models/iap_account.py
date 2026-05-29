@@ -52,18 +52,6 @@ class IapAccount(models.Model):
     warning_user_ids = fields.Many2many('res.users', string="Email Alert Recipients")
     state = fields.Selection([('banned', 'Banned'), ('registered', "Registered"), ('unregistered', "Unregistered")], readonly=True)
 
-    # Auto-refill
-    auto_refill_threshold = fields.Float(
-        "Auto-refill Threshold",
-        default=0.0,
-        help="Once you have this many credits or less, the system will automatically buy the following pack with your payment method on file. Set to 0 to disable auto-refill.",
-    )
-    auto_refill_pack_id = fields.Many2one(
-        'iap.service.pack',
-        string="Auto-refill Pack",
-        help="The In-App Purchase pack the system will automatically buy when reaching your refill threshold.",
-    )
-
     @api.depends('balance_amount', 'service_id.integer_balance', 'service_id.unit_name')
     def _compute_balance(self):
         for account in self:
@@ -92,9 +80,6 @@ class IapAccount(models.Model):
         return super().web_read(*args, **kwargs)
 
     def write(self, vals):
-        if 'auto_refill_threshold' in vals and vals['auto_refill_threshold'] <= 0:
-            vals['auto_refill_threshold'] = 0.0
-            vals['auto_refill_pack_id'] = False
         res = super().write(vals)
         if (
             not self.env.context.get('disable_iap_update')
@@ -116,26 +101,6 @@ class IapAccount(models.Model):
                     iap_tools.iap_jsonrpc(url=url, params=data)
                 except RequestException as e:
                     _logger.warning("Update of the warning email configuration has failed: %s", str(e))
-        if (
-            not self.env.context.get('disable_iap_update')
-            and any(autorefill_attribute in vals for autorefill_attribute in ('auto_refill_threshold', 'auto_refill_pack_id'))
-        ):
-            route = '/iap/1/update-auto-refill-settings'
-            endpoint = iap_tools.iap_get_endpoint(self.env)
-            url = url_join(endpoint, route)
-            for account in self:
-                data = {
-                    'account_token': account.sudo().account_token,
-                    'dbuuid': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
-                    'auto_refill_threshold': account.auto_refill_threshold,
-                    'auto_refill_pack_id': 0 if not account.auto_refill_pack_id else account.auto_refill_pack_id.iap_service_pack_identifier,
-                }
-                try:
-                    response = iap_tools.iap_jsonrpc(url=url, params=data)
-                    if response.get("status") != "success":
-                        _logger.warning("IAP Auto-Refill failed. Error: %s", response.get("error"))
-                except RequestException as e:
-                    _logger.warning("Update of the auto-refill configuration has failed: %s", str(e))
         return res
 
     def _get_account_information_from_iap(self):
@@ -166,10 +131,7 @@ class IapAccount(models.Model):
                 account_info = self._get_account_info(account, information)
 
                 account = account.with_context(disable_iap_update=True)
-                account.write({
-                    **account_info,
-                    'auto_refill_pack_id': False,
-                })
+                account.write(account_info)
 
                 service_information = information.get("service", {})
                 self.env['iap.service.pack'].search([('service_id', '=', account.service_id.id)]).unlink()
@@ -184,17 +146,11 @@ class IapAccount(models.Model):
                         "iap_service_pack_identifier": pack["id"],
                     }) for pack in service_information.get("packs", [])],
                 })
-                if information.get('auto_refill_pack_id'):
-                    account.auto_refill_pack_id = self.env['iap.service.pack'].search([
-                        ('iap_service_pack_identifier', '=', information['auto_refill_pack_id']),
-                    ], limit=1)
 
     def _get_account_info(self, account_id, information):
         return {
             'balance_amount': information['balance'],
             'warning_threshold': information['warning_threshold'],
-            'auto_refill_threshold': information.get('auto_refill_threshold', 0),
-            'auto_refill_pack_id': information.get('auto_refill_pack_id', False),
             'state': information['registered'],
             'service_locked': True,  # The account exist on IAP, prevent the edition of the service
         }
@@ -310,16 +266,6 @@ class IapAccount(models.Model):
             'view_mode': 'form',
             'res_id': self.id,
             'target': 'self',
-        }
-
-    def action_manage_payment_method(self):
-        return {
-            "type": "ir.actions.act_url",
-            "url": self.env['ir.config_parameter'].sudo().get_str("iap.endpoint", DEFAULT_ENDPOINT) + "/iap/1/update-auto-refill-payment-methods?%s" % werkzeug.urls.url_encode({
-                "account_token": self.sudo().account_token,
-                "dbuuid": self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
-                "client_iap_account_id": self.id,
-            }),
         }
 
     @api.model
