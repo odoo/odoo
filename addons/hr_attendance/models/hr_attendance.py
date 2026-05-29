@@ -676,7 +676,7 @@ class HrAttendance(models.Model):
         result = {}
         for attendance in self:
             localized_start, localized_end = attendance._get_localized_times()
-            result[attendance] = list(rrule(DAILY, dtstart=localized_start, until=localized_end))
+            result[attendance] = list(rrule(DAILY, dtstart=localized_start.date(), until=localized_end.date()))
         return result
 
     def _get_attendance_by_periods_by_employee(self):
