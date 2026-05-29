@@ -17,12 +17,11 @@
 
     <template id="external_layout_standard" inherit_id="web.external_layout_standard" >
         <!-- support for custom header -->
-        <xpath expr="//div[contains(@t-attf-class, 'header')]" position="attributes">
+        <xpath expr="//table" position="attributes">
             <attribute name="t-if">not custom_header</attribute>
         </xpath>
-        <xpath expr="//div[contains(@t-attf-class, 'header')]" position="after">
-            <div t-attf-class="header o_company_#{company.id}_layout"
-                 t-if="custom_header and company._localization_use_documents()">
+        <xpath expr="//table" position="after">
+            <div t-if="custom_header and company._localization_use_documents()">
                 <t t-call="#{custom_header}"/>
             </div>
         </xpath>
@@ -30,12 +29,11 @@
 
     <template id="external_layout_bubble" inherit_id="web.external_layout_bubble">
         <!-- support for custom header -->
-        <xpath expr="//div[contains(@t-attf-class, 'header')]" position="attributes">
+        <xpath expr="//table" position="attributes">
             <attribute name="t-if">not custom_header</attribute>
         </xpath>
-        <xpath expr="//div[contains(@t-attf-class, 'header')]" position="after">
-            <div t-attf-class="header o_company_#{company.id}_layout"
-                 t-if="custom_header and company._localization_use_documents()">
+        <xpath expr="//table" position="after">
+            <div t-if="custom_header and company._localization_use_documents()">
                 <t t-call="#{custom_header}"/>
             </div>
         </xpath>
@@ -43,12 +41,11 @@
 
     <template id="external_layout_wave" inherit_id="web.external_layout_wave">
         <!-- support for custom header -->
-        <xpath expr="//div[contains(@t-attf-class, 'header')]" position="attributes">
+        <xpath expr="//div[contains(@t-attf-class, 'header')]//div" position="attributes">
             <attribute name="t-if">not custom_header</attribute>
         </xpath>
-        <xpath expr="//div[contains(@t-attf-class, 'header')]" position="after">
-            <div t-attf-class="header o_company_#{company.id}_layout"
-                 t-if="custom_header and company._localization_use_documents()">
+        <xpath expr="//div[contains(@t-attf-class, 'header')]//div" position="after">
+            <div t-if="custom_header and company._localization_use_documents()">
                 <t t-call="#{custom_header}"/>
             </div>
         </xpath>
@@ -56,12 +53,11 @@
 
     <template id="external_layout_folder" inherit_id="web.external_layout_folder">
         <!-- support for custom header -->
-        <xpath expr="//div[contains(@t-attf-class, 'header')]" position="attributes">
+        <xpath expr="//div[contains(@t-attf-class, 'header')]//div[hasclass('o_folder_company_info')]" position="attributes">
             <attribute name="t-if">not custom_header</attribute>
         </xpath>
-        <xpath expr="//div[contains(@t-attf-class, 'header')]" position="after">
-            <div t-attf-class="header o_company_#{company.id}_layout"
-                 t-if="custom_header and company._localization_use_documents()">
+        <xpath expr="//div[contains(@t-attf-class, 'header')]//div[hasclass('o_folder_company_info')]" position="after">
+            <div t-if="custom_header and company._localization_use_documents()">
                 <t t-call="#{custom_header}"/>
             </div>
         </xpath>
