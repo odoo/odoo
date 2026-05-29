@@ -93,56 +93,52 @@ class SaleOrderDiscount(models.TransientModel):
         discount_product = self._get_discount_product()
 
         if self.discount_type == 'amount':
-            vals_list = [
-                self._prepare_discount_line_values(
-                    product=discount_product,
-                    amount=self.discount_amount,
-                    taxes=self.env['account.tax'],
-                )
-            ]
-        else: # so_discount
-            total_price_per_tax_groups = defaultdict(float)
-            for line in self.sale_order_id.order_line:
-                if not line.product_uom_qty or not line.price_unit:
-                    continue
-                discounted_price = line.price_unit * (1 - (line.discount or 0.0)/100)
-                total_price_per_tax_groups[line.tax_id] += (discounted_price * line.product_uom_qty)
-
-            discount_dp = self.env['decimal.precision'].precision_get('Discount')
-            context = {'lang': self.sale_order_id._get_lang()}  # noqa: F841
-            if not total_price_per_tax_groups:
-                # No valid lines on which the discount can be applied
+            if not self.sale_order_id.amount_total:
                 return
-            elif len(total_price_per_tax_groups) == 1:
-                # No taxes, or all lines have the exact same taxes
-                taxes = next(iter(total_price_per_tax_groups.keys()))
-                subtotal = total_price_per_tax_groups[taxes]
-                vals_list = [{
-                    **self._prepare_discount_line_values(
-                        product=discount_product,
-                        amount=subtotal * self.discount_percentage,
-                        taxes=taxes,
-                        description=_(
-                            "Discount: %(percent)s%%",
-                            percent=float_repr(self.discount_percentage * 100, discount_dp),
-                        ),
+            discount_percentage = self.discount_amount / self.sale_order_id.amount_total
+        else:  # so_discount
+            discount_percentage = self.discount_percentage
+        total_price_per_tax_groups = defaultdict(float)
+        for line in self.sale_order_id.order_line:
+            if not line.product_uom_qty or not line.price_unit:
+                continue
+            discounted_price = line.price_unit * (1 - (line.discount or 0.0) / 100)
+            total_price_per_tax_groups[line.tax_id] += (discounted_price * line.product_uom_qty)
+        discount_dp = self.env['decimal.precision'].precision_get('Discount')
+        context = {'lang': self.sale_order_id._get_lang()}  # noqa: F841
+        if not total_price_per_tax_groups:
+            # No valid lines on which the discount can be applied
+            return
+        elif len(total_price_per_tax_groups) == 1:
+            # No taxes, or all lines have the exact same taxes
+            taxes = next(iter(total_price_per_tax_groups.keys()))
+            subtotal = total_price_per_tax_groups[taxes]
+            vals_list = [{
+                **self._prepare_discount_line_values(
+                    product=discount_product,
+                    amount=subtotal * discount_percentage,
+                    taxes=taxes,
+                    description=_(
+                        "Discount: %(percent)s%%",
+                        percent=float_repr(discount_percentage * 100, discount_dp),
                     ),
-                }]
-            else:
-                vals_list = []
-                for taxes, subtotal in total_price_per_tax_groups.items():
-                    discount_line_value = self._prepare_discount_line_values(
-                        product=discount_product,
-                        amount=subtotal * self.discount_percentage,
-                        taxes=taxes,
-                        description=_(
-                            "Discount: %(percent)s%%"
-                            "- On products with the following taxes %(taxes)s",
-                            percent=float_repr(self.discount_percentage * 100, discount_dp),
-                            taxes=", ".join(taxes.mapped('name')),
-                        ),
-                    )
-                    vals_list.append(discount_line_value)
+                ),
+            }]
+        else:
+            vals_list = []
+            for taxes, subtotal in total_price_per_tax_groups.items():
+                discount_line_value = self._prepare_discount_line_values(
+                    product=discount_product,
+                    amount=subtotal * discount_percentage,
+                    taxes=taxes,
+                    description=_(
+                        "Discount: %(percent)s%%"
+                        "- On products with the following taxes %(taxes)s",
+                        percent=float_repr(discount_percentage * 100, discount_dp),
+                        taxes=", ".join(taxes.mapped('name')),
+                    ),
+                )
+                vals_list.append(discount_line_value)
         return self.env['sale.order.line'].create(vals_list)
 
     def action_apply_discount(self):
