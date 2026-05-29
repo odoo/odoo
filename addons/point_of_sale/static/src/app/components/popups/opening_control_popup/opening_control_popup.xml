@@ -34,11 +34,13 @@
                 <button class="button btn btn-lg btn-primary"
                 t-if="!(this.pos.cashier._role === 'minimal')"
                     t-on-click="confirm"
-                    t-att-disabled="!env.utils.isValidFloat(state.openingCash)">
+                    t-att-disabled="!env.utils.isValidFloat(state.openingCash)"
+                    name="open_register_btn">
                     Open Register
                 </button>
                 <button class="backend-button button btn btn-lg btn-secondary"
-                    t-on-click="() => this.pos.showLoginScreen()">
+                    t-on-click="() => this.pos.showLoginScreen()"
+                    name="discard_opening_btn">
                     Discard
                 </button>
             </t>

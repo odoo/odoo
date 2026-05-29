@@ -4,25 +4,25 @@
     <t t-name="point_of_sale.CashMoveReceipt">
         <div class="pos-receipt">
             <ReceiptHeader order="props.order" />
-            <div class="pos-receipt-order-data text-center">
+            <div name="date" class="pos-receipt-order-data text-center">
                 <div><t t-esc="props.date" /></div>
             </div>
-            <div class="pos-receipt-center-align">
+            <div name="type" class="pos-receipt-center-align">
                 CASH
                 <t t-esc="props.translatedType.toUpperCase()" />
             </div>
-            <div class="pt-3">
+            <div name="amount" class="pt-3">
                 AMOUNT
                 <span t-esc="props.formattedAmount" class="pos-receipt-right-align" />
             </div>
-            <div>
+            <div name="reason">
                 REASON
                 <span t-esc="props.reason" class="pos-receipt-right-align" />
             </div>
             <t t-set="company" t-value="props.order.company" />
-            <div class="d-flex gap-2 pt-3">
+            <div name="company_info" class="d-flex gap-2 pt-3">
                 <!-- Left: Company Address -->
-                <div class="w-50 text-break text-start" style="font-size: 75%;">
+                <div name="company_info_left" class="w-50 text-break text-start" style="font-size: 75%;">
                     <div t-out="company.name"/>
                     <div>
                         <t t-if="company.street" t-out="company.street"/>
@@ -33,7 +33,7 @@
                 </div>
 
                 <!-- Right: Contact Info -->
-                <div class="w-50 text-break text-end" style="font-size: 75%;">
+                <div name="company_info_right" class="w-50 text-break text-end" style="font-size: 75%;">
                     <div>
                         <div t-if="company.vat" t-out="vatText"/>
                         <div t-if="company.phone">

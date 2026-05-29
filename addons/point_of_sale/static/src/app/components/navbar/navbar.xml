@@ -6,11 +6,11 @@
             <div class="pos-leftheader d-flex align-items-center flex-grow-1 overflow-auto" t-att-class="{'d-none': ui.isSmall and state.searchBarOpen, 'mw-100': this.pos.getOrder()}">
                 <div class="d-flex flex-shrink-0 align-items-center gap-1 position-relative pe-2" t-att-class="{ 'w-100': !ui.isSmall }">
                     <div class="navbar-menu d-flex">
-                        <button class="register-label btn btn-lg btn-light lh-lg" t-att-class="{'active': mainButton === 'register'}" t-on-click="() => this.onClickRegister()">
+                        <button class="register-label btn btn-lg btn-light lh-lg" t-att-class="{'active': mainButton === 'register'}" t-on-click="() => this.onClickRegister()" name="register_navbar_btn">
                             <span t-if="!ui.isSmall">Register</span>
                             <i t-else="" class="fa fa-fw fa-pencil" t-att-class="{'fa-lg' : !ui.isSmall}"/>
                         </button>
-                        <button class="orders-button btn btn-lg btn-light lh-lg" t-att-class="{'active': mainButton === 'order'}" t-on-click="() => this.pos.navigate('TicketScreen')">
+                        <button class="orders-button btn btn-lg btn-light lh-lg" t-att-class="{'active': mainButton === 'order'}" t-on-click="() => this.pos.navigate('TicketScreen')" name="orders_navbar_btn">
                             <t t-if="!ui.isSmall">
                                 <span>Orders</span>
                             </t>
@@ -19,7 +19,7 @@
                     </div>
                     <div t-if="!ui.isSmall" class="navbar-separator"/>
                     <OrderTabs orders="getOrderTabs()" class="'h-50'"/>
-                    <button class="btn btn-secondary d-flex align-items-center gap-1 h-100 ms-2 p-2 preset-time-btn" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime">
+                    <button class="btn btn-secondary d-flex align-items-center gap-1 h-100 ms-2 p-2 preset-time-btn" t-on-click="openPresetTiming" t-if="shouldDisplayPresetTime" name="preset_timing_btn">
                         <i class="fa fa-clock-o" aria-hidden="true"/>
                         <span class="fw-bolder lh-1" t-esc="this.pos.getOrder()?.presetTime || '--:--'" />
                     </button>
@@ -61,29 +61,29 @@
                                 </span>
                             </div>
                             <div class="p-2 pos-burger-menu-items">
-                                <DropdownItem t-if="!isDisplayStandalone and this.pos.cashier._role != 'minimal'" onSelected="() => window.open(this.appUrl)">
+                                <DropdownItem t-if="!isDisplayStandalone and this.pos.cashier._role != 'minimal'" onSelected="() => window.open(this.appUrl)" tag="install_app_item">
                                     Install App
                                 </DropdownItem>
-                                <DropdownItem t-if="showCashMoveButton and this.pos.cashier._role != 'minimal'" onSelected="() => this.pos.cashMove()">
+                                <DropdownItem t-if="showCashMoveButton and this.pos.cashier._role != 'minimal'" onSelected="() => this.pos.cashMove()" tag="cash_move_item">
                                     Cash In/Out
                                 </DropdownItem>
-                                <DropdownItem t-if="!this.pos.data.network.offline" onSelected="() => this.reloadProducts()">
+                                <DropdownItem t-if="!this.pos.data.network.offline" onSelected="() => this.reloadProducts()" tag="reload_data_item">
                                     Reload Data
                                 </DropdownItem>
-                                <DropdownItem t-if="showCreateProductButton" onSelected="() => this.pos.editProduct()">
+                                <DropdownItem t-if="showCreateProductButton" onSelected="() => this.pos.editProduct()" tag="create_product_item">
                                     Create Product
                                 </DropdownItem>
-                                <DropdownItem t-if="isBarcodeScannerSupported() and this.pos.router.state.current == 'ProductScreen' and ui.isSmall and !pos.config.module_pos_restaurant" onSelected="() => this.onClickScan()">
+                                <DropdownItem t-if="isBarcodeScannerSupported() and this.pos.router.state.current == 'ProductScreen' and ui.isSmall and !pos.config.module_pos_restaurant" onSelected="() => this.onClickScan()" tag="barcode_scanner_item">
                                     <span t-if="this.pos.scanning">Stop Barcode Scanner</span>
                                     <span t-else="">Barcode Scanner</span>
                                 </DropdownItem>
-                                <DropdownItem t-if="hardwareProxy.printer" onSelected="() => this.showSaleDetails()">
+                                <DropdownItem t-if="hardwareProxy.printer" onSelected="() => this.showSaleDetails()" tag="print_report_item">
                                     Print Report
                                 </DropdownItem>
-                                <DropdownItem onSelected="() => pos.closePos()">
+                                <DropdownItem onSelected="() => pos.closePos()" tag="backend_item">
                                     Backend
                                 </DropdownItem>
-                                <DropdownItem onSelected="() => this.pos.closeSession()">
+                                <DropdownItem onSelected="() => this.pos.closeSession()" tag="close_register_item">
                                     Close Register
                                 </DropdownItem>
                             </div>

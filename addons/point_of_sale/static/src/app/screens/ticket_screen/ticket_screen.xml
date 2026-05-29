@@ -16,7 +16,7 @@
                         <div class="buttons d-flex gap-1" t-if="usePreset">
                             <button t-foreach="pos.models['pos.preset'].getAll()" t-as="preset" t-key="preset.id"
                                 class="btn btn-lg btn-secondary text-nowrap" t-on-click="() => this.onPresetSelected(preset)"
-                                t-attf-class="{{this.state.selectedPreset === preset ? 'active' : ''}}">
+                                t-attf-class="{{this.state.selectedPreset === preset ? 'active' : ''}}" name="preset_btn">
                                 <t t-esc="preset.name"/>
                             </button>
                         </div>
@@ -39,41 +39,41 @@
                                     <t t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
                                         <tr role="button" class="order-row" t-attf-class="{{ isHighlighted(order) ? 'highlight active': '' }}" t-att-orderUuid="order.uuid"
                                             t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => this.onDblClickOrder(order)" >
-                                            <td class="align-middle">
+                                            <td name="order_date_column" class="align-middle">
                                                 <div class="fs-6 fw-bolder"><t t-esc="this.pos.getDate(order.date_order)"></t></div>
                                                 <div class="small text-muted"><t t-esc="this.pos.getTime(order.date_order)"></t></div>
                                             </td>
-                                            <td class="order-name align-middle">
+                                            <td name="order_name_column" class="order-name_column align-middle">
                                                 <div class="fw-bolder"><t t-esc="order.getName()"></t></div>
                                                 <div class="small text-muted"><t t-esc="order.pos_reference"></t></div>
                                             </td>
-                                            <td class="align-middle">
+                                            <td name="order_partner_column" class="align-middle">
                                                 <div class="fw-bolder"><t t-esc="order.partner_id?.name"></t></div>
                                                 <div id="order-tags" t-if="usePreset" t-attf-class="badge rounded o_colorlist_item_color_{{order.preset_id?.color}}" style="font-size: 0.75rem !important;">
                                                     <t t-esc="order.preset_id?.name"></t>
                                                 </div>
                                             </td>
-                                            <td class="align-middle address-cell">
+                                            <td name="order_partner_address_column" class="align-middle address-cell">
                                                 <span t-if="order.preset_id?.identification === 'address'"
                                                     class="address-text"
                                                     t-out="order.partner_id?.pos_contact_address"/>
                                             </td>
-                                            <td class="align-middle">
+                                            <td name="order_preset_time_column" class="align-middle">
                                                 <t t-if="order.presetTime">
                                                     <div t-if="order.isFutureDate" class="fw-bolder" t-esc="order.presetDate" />
                                                     <div t-attf-class="fs-6 badge rounded {{ this.getPresetTimeColor(order) }}" t-esc="order.presetTime"/>
                                                 </t>
                                             </td>
-                                            <td t-if="showCardholderName()">
+                                            <td name="order_cardholder_name_column" t-if="showCardholderName()">
                                                 <div><t t-esc="getCardholderName(order)"></t></div>
                                             </td>
-                                            <td>
+                                            <td name="order_cashier_column">
                                                 <t t-esc="getCashier(order)"></t>
                                             </td>
-                                            <td class="align-middle">
+                                            <td name="order_total_column" class="align-middle">
                                                 <div class="fw-bolder"><t t-esc="getTotal(order)"></t></div>
                                             </td>
-                                            <td class="align-middle text-end">
+                                            <td name="order_status_column" class="align-middle text-end">
                                                 <t t-set="status" t-value="getStatus(order)" />
                                                 <div t-attf-class="badge rounded fs-6 text-bg-{{
                                                     status === 'Ongoing' || status === 'Payment'
@@ -86,7 +86,7 @@
                                                 </div>
                                             </td>
                                             <td class="text-end delete-column" name="delete-column">
-                                                <button t-if="!shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" t-on-click.stop="() => this.onDeleteOrder(order)" class="btn btn-link btn-lg text-danger">
+                                                <button t-if="!shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" t-on-click.stop="() => this.onDeleteOrder(order)" class="btn btn-link btn-lg text-danger" name="delete_order_btn">
                                                     <i class="fa fa-trash" aria-hidden="true"/>
                                                 </button>
                                             </td>
@@ -98,15 +98,15 @@
                             <t t-if="ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
                                 <div role="button" class="mobileOrderList order-row d-flex flex-row ps-1" t-attf-class="{{ isHighlighted(order) ? 'highlight': '' }}"
                                     t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => this.onDblClickOrder(order)" >
-                                    <div class="p-2">
+                                    <div name="order_date" class="p-2">
                                             <div class="fw-bolder"><t t-esc="this.pos.getDate(order.date_order)"></t></div>
                                             <div class="small text-muted"><t t-esc="this.pos.getTime(order.date_order)"></t></div>
                                     </div>
-                                    <div class="order-name p-2 d-flex flex-column flex-grow-1 justify-content-center align-items-start">
+                                    <div name="order_name" class="order-name p-2 d-flex flex-column flex-grow-1 justify-content-center align-items-start">
                                         <div class="fw-bolder"><t t-esc="order.getName()"></t></div>
                                         <div class="small text-muted"><t t-esc="order.pos_reference"></t></div>
                                     </div>
-                                    <div class="p-2 d-flex flex-column flex-grow-1 justify-content-center align-items-end">
+                                    <div name="order_status" class="p-2 d-flex flex-column flex-grow-1 justify-content-center align-items-end">
                                         <div class="fw-bolder"><t t-esc="getTotal(order)"></t></div>
                                                 <t t-set="status" t-value="getStatus(order)" />
                                                 <div t-attf-class="badge rounded fs-6 text-bg-{{
@@ -134,7 +134,7 @@
                                 icon="this.pos.data.network.loading ? 'fa-circle-o-notch fa-spin' : 'fa-shopping-cart fa-4x'"
                                 text="this.pos.data.network.loading ? 'Loading...' : 'No orders found'"
                                 class="'w-100'"/>
-                            <button class="btn btn-secondary" t-on-click="onClickNewOrder">New Order</button>
+                            <button class="btn btn-secondary" t-on-click="onClickNewOrder" name="new_order_btn">New Order</button>
                         </div>
                     </div>
                     <div class="switchpane d-flex gap-2 m-2" t-if="ui.isSmall">
@@ -142,10 +142,11 @@
                         <button class="btn-switchpane load-order-button primary btn btn-primary btn-lg lh-lg w-50 py-3"
                             t-att-disabled="!_selectedSyncedOrder"
                             t-if="!isOrderSynced"
-                            t-on-click="() => this.setOrder(_selectedSyncedOrder)">
+                            t-on-click="() => this.setOrder(_selectedSyncedOrder)"
+                            name="sw_load_order_btn">
                             <span class="d-block">Load Order</span>
                         </button>
-                        <button class="btn-switchpane btn btn-lg lh-lg py-3 secondary review-button" t-att-class="isOrderSynced ? 'w-100 btn-primary' : 'w-50 btn-light'" t-on-click="switchPane">
+                        <button class="btn-switchpane btn btn-lg lh-lg py-3 secondary review-button" t-att-class="isOrderSynced ? 'w-100 btn-primary' : 'w-50 btn-light'" t-on-click="switchPane" name="review_order_btn">
                             <span class="d-block">Review</span>
                         </button>
                     </div>
@@ -155,7 +156,7 @@
                     <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />
                     <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />
                     <t t-if="_selectedSyncedOrder?.getOrderlines()?.length and !this.pos.scanning" >
-                        <div t-if="isOrderSynced" t-att-class="{ 'highlight text-danger': !getHasItemsToRefund() }" class="py-2 px-3 rounded-3 bg-view text-center">
+                        <div name="refund_help_message" t-if="isOrderSynced" t-att-class="{ 'highlight text-danger': !getHasItemsToRefund() }" class="py-2 px-3 rounded-3 bg-view text-center">
                             Select the product(s) to refund and set the quantity
                         </div>
                         <OrderDisplay order="_selectedSyncedOrder" t-if="_selectedSyncedOrder" t-slot-scope="scope">
@@ -185,17 +186,17 @@
                         <div class="pads">
                             <t t-if="isOrderSynced">
                                 <div class="control-buttons d-flex gap-2 pb-2">
-                                    <button class="edit-order-payment control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.pos.orderDetails(_selectedSyncedOrder)">
+                                    <button class="edit-order-payment control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.pos.orderDetails(_selectedSyncedOrder)" name="order_details_btn">
                                         <i class="fa fa-pencil-square-o me-1" /> Details
                                     </button>
                                     <InvoiceButton
                                         onInvoiceOrder.bind="onInvoiceOrder"
                                         order="_selectedSyncedOrder" />
-                                    <button class="control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => doPrint.call(_selectedSyncedOrder)">
+                                    <button class="control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => doPrint.call(_selectedSyncedOrder)" name="print_receipt_btn">
                                         <i t-attf-class="fa {{doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Receipt
                                     </button>
                                 </div>
-                                <div class="subpads d-flex flex-column">
+                                <div class="subpads d-flex flex-column" name="refund_numpad">
                                     <Numpad class="'pb-2'" buttons="getNumpadButtons()"/>
                                         <ActionpadWidget
                                             partner="getSelectedOrder()?.getPartner()"
@@ -208,12 +209,14 @@
                                 <BackButton t-if="ui.isSmall" onClick="() => pos.onClickBackButton()"/>
                                 <button class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                                     t-on-click="() => this.onClickReprintAll(_selectedSyncedOrder)"
-                                    t-if="this.pos.unwatched.printers.length and _selectedSyncedOrder.uiState.lastPrints.length">
+                                    t-if="this.pos.unwatched.printers.length and _selectedSyncedOrder.uiState.lastPrints.length"
+                                    name="reprint_btn">
                                     <i class="fa fa-cutlery" aria-hidden="true"/>
                                 </button>
                                 <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3"
                                     t-att-disabled="!_selectedSyncedOrder"
-                                    t-on-click="() => this.setOrder(_selectedSyncedOrder)">
+                                    t-on-click="() => this.setOrder(_selectedSyncedOrder)"
+                                    name="load_order_btn">
                                     <span class="d-block">Load Order</span>
                                 </button>
                             </div>

@@ -33,17 +33,18 @@
                     <div class="d-flex gap-2">
                         <button class="button confirm btn btn-lg lh-lg btn-primary"
                             t-on-click="confirm"
-                            t-att-disabled="!isValidCashMove()">
+                            t-att-disabled="!isValidCashMove()"
+                            name="confirm_cash_move_btn">
                             Confirm
                         </button>
-                        <button class="button cancel btn btn-lg lh-lg btn-secondary" t-on-click="() => this.cancel()">
+                        <button class="button cancel btn btn-lg lh-lg btn-secondary" t-on-click="() => this.cancel()" name="discard_cash_move_btn">
                             Discard
                         </button>
                     </div>
 
                     <!-- Second line of buttons -->
                     <div class=" d-flex gap-2">
-                        <button class="button btn btn-secondary btn-lg" t-on-click="() => this.openDetails()">Details</button>
+                        <button class="button btn btn-secondary btn-lg" t-on-click="() => this.openDetails()" name="details_cash_move_btn">Details</button>
                     </div>
                 </div>
             </t>

@@ -5,7 +5,7 @@
             expr="//button[hasclass('more-btn')]"
             position="before">
            <button class="course-btn" t-if="pos.config.module_pos_restaurant and !props.showRemainingButtons and !pos.getOrder()?.isRefund"
-                   t-att-class="buttonClass" t-on-click="()=>this.pos.addCourse()">
+                   t-att-class="buttonClass" t-on-click="()=>this.pos.addCourse()" name="course_btn">
                 <span>Course</span>
            </button>
        </xpath>
@@ -16,10 +16,11 @@
             <t t-if="pos.config.module_pos_restaurant">
                 <button t-if="pos.config.iface_printbill" t-att-class="buttonClass"
                     t-att-disabled="!pos.getOrder()?.getOrderlines()?.length"
-                    t-on-click="clickPrintBill">
+                    t-on-click="clickPrintBill"
+                    name="bill_btn">
                     <i class="fa fa-print me-1"></i>Bill
                 </button>
-                <button t-att-class="buttonClass" t-on-click="clickTableGuests">
+                <button t-att-class="buttonClass" t-on-click="clickTableGuests" name="table_guests_btn">
                     <span t-esc="currentOrder?.getCustomerCount() || 0" t-attf-class="rounded-circle text-bg-dark fw-bolder small me-1 {{ui.isSmall ? 'px-1' : 'px-2 py-1'}}"/>
                     <span>Guests</span>
                 </button>
@@ -27,16 +28,17 @@
             <t t-if="pos.config.module_pos_restaurant">
                 <button t-att-class="buttonClass"
                     t-att-disabled="pos.getOrder()?.getOrderlines()?.filter((line) => line.isGlobalDiscountApplicable()).reduce((sum, line) => sum + line.qty, 0) lt 2"
-                    t-on-click="openSplitPage">
+                    t-on-click="openSplitPage"
+                    name="split_btn">
                     <i class="fa fa-files-o me-1"/>Split
                 </button>
-                <button t-att-class="buttonClass" t-on-click.stop="() => this.clickTransferOrder()">
+                <button t-att-class="buttonClass" t-on-click.stop="() => this.clickTransferOrder()" name="transfer_order_btn">
                     <i class="oi oi-arrow-right me-1" />Transfer / Merge
                 </button>
-                   <button t-att-disabled="!this.showTransferCourse()" t-att-class="buttonClass" t-on-click.stop="() => this.clickTransferCourse()">
+                   <button t-att-disabled="!this.showTransferCourse()" t-att-class="buttonClass" t-on-click.stop="() => this.clickTransferCourse()" name="transfer_course_btn">
                     <i class="oi oi-arrow-down me-1" />Transfer course
                 </button>
-                <button t-if="!pos.getOrder()?.table_id" t-att-class="buttonClass" t-on-click="() => this.pos.editFloatingOrderName(this.pos.getOrder())">
+                <button t-if="!pos.getOrder()?.table_id" t-att-class="buttonClass" t-on-click="() => this.pos.editFloatingOrderName(this.pos.getOrder())" name="edit_order_name_btn">
                     <i class="fa fa-pencil-square-o me-1" />Edit Order Name
                 </button>
             </t>

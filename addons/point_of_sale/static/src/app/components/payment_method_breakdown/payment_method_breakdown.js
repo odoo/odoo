@@ -9,6 +9,7 @@ export class PaymentMethodBreakdown extends Component {
         title: String,
         total_amount: Number,
         transactions: { type: Array, optional: true },
+        name: { type: String, optional: true },
     };
 
     static defaultProps = {

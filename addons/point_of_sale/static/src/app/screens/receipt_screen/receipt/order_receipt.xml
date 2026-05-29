@@ -118,9 +118,9 @@
             </t>
 
             <t t-set="company" t-value="order.company" />
-            <div class="d-flex gap-2 pt-3">
+            <div name="company_info" class="d-flex gap-2 pt-3">
                 <!-- Left: Company Address -->
-                <div class="w-50 text-break text-start" style="font-size: 75%;">
+                <div name="company_info_left" class="w-50 text-break text-start" style="font-size: 75%;">
                     <div class="pos-config-name" t-out="order.config.name"/>
                     <div>
                         <t t-if="company.street" t-out="company.street"/>
@@ -131,7 +131,7 @@
                 </div>
 
                 <!-- Right: Contact Info -->
-                <div class="w-50 text-break text-end" style="font-size: 75%;">
+                <div name="company_info_right" class="w-50 text-break text-end" style="font-size: 75%;">
                     <div>
                         <div t-if="company.vat" t-out="vatText"/>
                         <div t-if="company.phone">

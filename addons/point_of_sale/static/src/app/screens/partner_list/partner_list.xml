@@ -6,6 +6,7 @@
             <t t-set-slot="header">
                 <button t-if="!ui.isSmall and this.pos.cashier._role !== 'minimal'" class="btn btn-primary btn-lg lh-lg me-2" role="img" aria-label="Add a customer"
                         t-on-click="() => this.editPartner()"
+                        name="create_partner_btn"
                         title="Add a customer">
                 Create 
                 </button>
@@ -60,10 +61,11 @@
                 <div class="d-flex flex-row gap-2 w-100">
                     <button t-if="ui.isSmall and this.pos.cashier._role !== 'minimal'" class="btn btn-primary btn-lg lh-lg flex-fill" role="img" aria-label="Add a customer"
                         t-on-click="() => this.editPartner()"
-                        title="Add a customer">
+                        title="Add a customer"
+                        name="new_partner_btn">
                     New 
                     </button>
-                    <button class="btn btn-secondary btn-lg lh-lg flex-fill" t-on-click="() => this.clickPartner(this.props.partner)">Discard</button>
+                    <button class="btn btn-secondary btn-lg lh-lg flex-fill" t-on-click="() => this.clickPartner(this.props.partner)" name="discard_partner_btn">Discard</button>
                 </div>
             </t>
         </Dialog>
