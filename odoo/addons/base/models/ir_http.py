@@ -319,6 +319,7 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _authenticate(cls, endpoint):
         auth = 'none' if is_cors_preflight(request, endpoint) else endpoint.routing['auth']
+        print(endpoint, auth, endpoint.routing['auth'])
         cls._authenticate_explicit(auth, check_identity=endpoint.routing.get('check_identity', True))
 
     @classmethod
