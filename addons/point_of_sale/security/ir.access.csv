@@ -60,3 +60,4 @@ access_res_partner_pos_manager,res.partner.pos.manager,res.partner,point_of_sale
 res_partner_rule_write_self,self user write access,res.partner,point_of_sale.group_pos_manager,u,"[('id', '=', user.partner_id.id)]"
 access_preparation_line,pos.prep.line,pos.prep.line,point_of_sale.group_pos_user,crud,
 access_preparation_order,pos.prep.order,pos.prep.order,point_of_sale.group_pos_user,crud,
+rule_pos_bill_currency,Point Of Sale Coins & Bills,pos.bill,,crud,"[('available_currency_ids', 'in', user.env.companies.mapped('currency_id').ids + [False])]"

@@ -61,66 +61,382 @@
         <record model="pos.bill" id="0_05" forcecreate="0">
             <field name="name">0.05</field>
             <field name="value">0.05</field>
+            <field name="available_currency_ids" eval="[Command.set([
+                ref('base.USD'), ref('base.CAD'), ref('base.CHF'), ref('base.BRL'), ref('base.CNY'),
+                ref('base.PAB'), ref('base.PLN'), ref('base.AUD'), ref('base.RON'), ref('base.TRY'),
+                ref('base.MXN'), ref('base.MYR'), ref('base.PHP'), ref('base.SGD'), ref('base.MUR'),
+                ref('base.HNL'), ref('base.XCD'), ref('base.AWG'), ref('base.AZN'), ref('base.BSD'),
+                ref('base.BHD'), ref('base.BBD'), ref('base.BYN'), ref('base.BZD'), ref('base.BMD'),
+                ref('base.BTN'), ref('base.BAM'), ref('base.BWP'), ref('base.KYD'), ref('base.CUP'),
+                ref('base.ANG'), ref('base.XCG'), ref('base.ERN'), ref('base.ETB'), ref('base.FKP'),
+                ref('base.FJD'), ref('base.GEL'), ref('base.GIP'), ref('base.HTG'), ref('base.JOD'),
+                ref('base.KES'), ref('base.LSL'), ref('base.LYD'), ref('base.MWK'), ref('base.MVR'),
+                ref('base.MDL'), ref('base.MAD'), ref('base.BND'), ref('base.GHS'), ref('base.GMD'),
+                ref('base.MZN'), ref('base.NAD'), ref('base.NIO'), ref('base.KPW'), ref('base.ZMW'),
+                ref('base.EUR'), ref('base.AED'), ref('base.TMT'), ref('base.TND'), ref('base.TTD'),
+                ref('base.TOP'), ref('base.SZL'), ref('base.SRD'), ref('base.SDG'), ref('base.GBP'),
+                ref('base.SLE'), ref('base.SCR'), ref('base.SAR'), ref('base.SHP'), ref('base.QAR'),
+                ref('base.PGK'), ref('base.OMR'), ref('base.GTQ')
+            ])]"/>
         </record>
 
         <record model="pos.bill" id="0_10" forcecreate="0">
             <field name="name">0.10</field>
             <field name="value">0.10</field>
+            <field name="available_currency_ids" eval="[Command.set([
+                ref('base.USD'), ref('base.CAD'), ref('base.CHF'), ref('base.BRL'), ref('base.CNY'),
+                ref('base.CNH'), ref('base.PAB'), ref('base.PLN'), ref('base.AUD'), ref('base.UAH'),
+                ref('base.HKD'), ref('base.RON'), ref('base.TRY'), ref('base.MXN'), ref('base.MYR'),
+                ref('base.NZD'), ref('base.PHP'), ref('base.SGD'), ref('base.ZAR'), ref('base.MUR'),
+                ref('base.HNL'), ref('base.XCD'), ref('base.AWG'), ref('base.AZN'), ref('base.BSD'),
+                ref('base.BHD'), ref('base.BBD'), ref('base.BYN'), ref('base.BZD'), ref('base.BMD'),
+                ref('base.BTN'), ref('base.BOB'), ref('base.BAM'), ref('base.BWP'), ref('base.KYD'),
+                ref('base.ANG'), ref('base.XCG'), ref('base.ERN'), ref('base.ETB'), ref('base.FKP'),
+                ref('base.FJD'), ref('base.GEL'), ref('base.GIP'), ref('base.HTG'), ref('base.ILS'),
+                ref('base.JOD'), ref('base.KES'), ref('base.KGS'), ref('base.LSL'), ref('base.LYD'),
+                ref('base.MOP'), ref('base.MWK'), ref('base.MVR'), ref('base.MDL'), ref('base.MAD'),
+                ref('base.BND'), ref('base.GHS'), ref('base.GMD'), ref('base.MZN'), ref('base.NAD'),
+                ref('base.NIO'), ref('base.KPW'), ref('base.ZMW'), ref('base.EUR'), ref('base.AED'),
+                ref('base.TMT'), ref('base.TND'), ref('base.TTD'), ref('base.TOP'), ref('base.TJS'),
+                ref('base.SZL'), ref('base.SRD'), ref('base.SDG'), ref('base.SSP'), ref('base.GBP'),
+                ref('base.SBD'), ref('base.SLE'), ref('base.SCR'), ref('base.SAR'), ref('base.STD'),
+                ref('base.WST'), ref('base.SHP'), ref('base.QAR'), ref('base.PEN'), ref('base.PGK'),
+                ref('base.OMR'), ref('base.GTQ'), ref('base.STN')
+            ])]"/>
         </record>
 
         <record model="pos.bill" id="0_20" forcecreate="0">
             <field name="name">0.20</field>
             <field name="value">0.20</field>
+            <field name="available_currency_ids" eval="[Command.set([
+                ref('base.CHF'), ref('base.BRL'), ref('base.PLN'), ref('base.AUD'), ref('base.HKD'),
+                ref('base.MXN'), ref('base.MYR'), ref('base.NZD'), ref('base.SGD'), ref('base.ZAR'),
+                ref('base.MUR'), ref('base.HNL'), ref('base.AZN'), ref('base.BYN'), ref('base.BOB'),
+                ref('base.BAM'), ref('base.CUP'), ref('base.FKP'), ref('base.FJD'), ref('base.GEL'),
+                ref('base.GIP'), ref('base.HTG'), ref('base.KES'), ref('base.LSL'), ref('base.MOP'),
+                ref('base.MWK'), ref('base.MRU'), ref('base.MAD'), ref('base.BND'), ref('base.GHS'),
+                ref('base.MZN'), ref('base.EUR'), ref('base.TMT'), ref('base.TND'), ref('base.TOP'),
+                ref('base.TJS'), ref('base.SZL'), ref('base.SDG'), ref('base.SSP'), ref('base.GBP'),
+                ref('base.SBD'), ref('base.SLE'), ref('base.STD'), ref('base.WST'), ref('base.SHP'),
+                ref('base.PEN'), ref('base.STN')
+            ])]"/>
         </record>
 
         <record model="pos.bill" id="0_25" forcecreate="0">
             <field name="name">0.25</field>
             <field name="value">0.25</field>
+            <field name="available_currency_ids" eval="[Command.set([
+                ref('base.USD'), ref('base.CAD'), ref('base.PAB'), ref('base.TRY'), ref('base.PHP'),
+                ref('base.XCD'), ref('base.AWG'), ref('base.BSD'), ref('base.BBD'), ref('base.BZD'),
+                ref('base.BMD'), ref('base.BWP'), ref('base.KYD'), ref('base.ANG'), ref('base.XCG'),
+                ref('base.ERN'), ref('base.ETB'), ref('base.KWD'), ref('base.LYD'), ref('base.MVR'),
+                ref('base.MDL'), ref('base.GMD'), ref('base.NIO'), ref('base.AED'), ref('base.TTD'),
+                ref('base.THB'), ref('base.TJS'), ref('base.SRD'), ref('base.LKR'), ref('base.SCR'),
+                ref('base.SAR'), ref('base.QAR'), ref('base.GTQ')
+            ])]"/>
         </record>
 
         <record model="pos.bill" id="0_50" forcecreate="0">
             <field name="name">0.50</field>
             <field name="value">0.50</field>
+            <field name="available_currency_ids" eval="[Command.set([
+                ref('base.USD'), ref('base.CHF'), ref('base.BRL'), ref('base.CNY'), ref('base.CNH'),
+                ref('base.DKK'), ref('base.PAB'), ref('base.PLN'), ref('base.AUD'), ref('base.UAH'),
+                ref('base.HKD'), ref('base.RON'), ref('base.TRY'), ref('base.MXN'), ref('base.MYR'),
+                ref('base.NZD'), ref('base.SGD'), ref('base.ZAR'), ref('base.MUR'), ref('base.HNL'),
+                ref('base.AWG'), ref('base.AZN'), ref('base.BSD'), ref('base.BHD'), ref('base.BYN'),
+                ref('base.BZD'), ref('base.BMD'), ref('base.BOB'), ref('base.BAM'), ref('base.BWP'),
+                ref('base.ANG'), ref('base.XCG'), ref('base.ERN'), ref('base.ETB'), ref('base.FKP'),
+                ref('base.FJD'), ref('base.GEL'), ref('base.GIP'), ref('base.HTG'), ref('base.ILS'),
+                ref('base.KES'), ref('base.KWD'), ref('base.KGS'), ref('base.LSL'), ref('base.LYD'),
+                ref('base.MOP'), ref('base.MWK'), ref('base.MVR'), ref('base.MDL'), ref('base.MAD'),
+                ref('base.BND'), ref('base.GHS'), ref('base.GMD'), ref('base.MZN'), ref('base.NAD'),
+                ref('base.NIO'), ref('base.NGN'), ref('base.KPW'), ref('base.ZMW'), ref('base.EUR'),
+                ref('base.AED'), ref('base.TMT'), ref('base.TND'), ref('base.TTD'), ref('base.TOP'),
+                ref('base.THB'), ref('base.TJS'), ref('base.SZL'), ref('base.SDG'), ref('base.LKR'),
+                ref('base.SSP'), ref('base.GBP'), ref('base.SBD'), ref('base.SLE'), ref('base.SAR'),
+                ref('base.STD'), ref('base.WST'), ref('base.SHP'), ref('base.QAR'), ref('base.PEN'),
+                ref('base.PGK'), ref('base.OMR'), ref('base.GTQ'), ref('base.VES'), ref('base.STN')
+            ])]"/>
         </record>
 
         <record model="pos.bill" id="1_00" forcecreate="0">
             <field name="name">1.00</field>
             <field name="value">1.00</field>
+            <field name="available_currency_ids" eval="[Command.set([
+                ref('base.USD'), ref('base.CAD'), ref('base.CHF'), ref('base.BRL'), ref('base.CNY'),
+                ref('base.CNH'), ref('base.CZK'), ref('base.DKK'), ref('base.NOK'), ref('base.XPF'),
+                ref('base.PLN'), ref('base.SEK'), ref('base.ARS'), ref('base.INR'), ref('base.AUD'),
+                ref('base.UAH'), ref('base.HKD'), ref('base.JPY'), ref('base.RON'), ref('base.RUB'),
+                ref('base.TRY'), ref('base.MXN'), ref('base.MYR'), ref('base.NZD'), ref('base.PHP'),
+                ref('base.SGD'), ref('base.ZAR'), ref('base.MUR'), ref('base.XOF'), ref('base.XAF'),
+                ref('base.HNL'), ref('base.UYU'), ref('base.AFN'), ref('base.AOA'), ref('base.AWG'),
+                ref('base.AZN'), ref('base.BSD'), ref('base.BHD'), ref('base.BDT'), ref('base.BBD'),
+                ref('base.BYN'), ref('base.BZD'), ref('base.BMD'), ref('base.BTN'), ref('base.BOB'),
+                ref('base.BAM'), ref('base.BWP'), ref('base.BIF'), ref('base.KYD'), ref('base.KMF'),
+                ref('base.CDF'), ref('base.CUP'), ref('base.ANG'), ref('base.XCG'), ref('base.DJF'),
+                ref('base.DOP'), ref('base.ERN'), ref('base.ETB'), ref('base.FKP'), ref('base.FJD'),
+                ref('base.GEL'), ref('base.GIP'), ref('base.GNF'), ref('base.GYD'), ref('base.HTG'),
+                ref('base.ISK'), ref('base.ILS'), ref('base.JMD'), ref('base.JOD'), ref('base.KZT'),
+                ref('base.KES'), ref('base.KWD'), ref('base.KGS'), ref('base.LSL'), ref('base.LYD'),
+                ref('base.MOP'), ref('base.MKD'), ref('base.MGA'), ref('base.MWK'), ref('base.MVR'),
+                ref('base.MRU'), ref('base.MDL'), ref('base.MAD'), ref('base.BND'), ref('base.DZD'),
+                ref('base.GHS'), ref('base.GMD'), ref('base.MZN'), ref('base.NAD'), ref('base.NPR'),
+                ref('base.ALL'), ref('base.NIO'), ref('base.NGN'), ref('base.KPW'), ref('base.ZIG'),
+                ref('base.ZMW'), ref('base.YER'), ref('base.VUV'), ref('base.AED'), ref('base.TMT'),
+                ref('base.TND'), ref('base.TTD'), ref('base.TOP'), ref('base.THB'), ref('base.TJS'),
+                ref('base.TWD'), ref('base.SZL'), ref('base.SRD'), ref('base.LKR'), ref('base.SSP'),
+                ref('base.GBP'), ref('base.SBD'), ref('base.SLE'), ref('base.SCR'), ref('base.RSD'),
+                ref('base.SAR'), ref('base.STD'), ref('base.WST'), ref('base.SHP'), ref('base.QAR'),
+                ref('base.PEN'), ref('base.PGK'), ref('base.PKR'), ref('base.OMR'), ref('base.CVE'),
+                ref('base.GTQ'), ref('base.VES'), ref('base.STN')
+            ])]"/>
         </record>
 
         <record model="pos.bill" id="2_00" forcecreate="0">
             <field name="name">2.00</field>
             <field name="value">2.00</field>
+            <field name="available_currency_ids" eval="[Command.set([
+                ref('base.USD'), ref('base.CAD'), ref('base.CHF'), ref('base.BRL'), ref('base.CZK'),
+                ref('base.DKK'), ref('base.XPF'), ref('base.PLN'), ref('base.SEK'), ref('base.ARS'),
+                ref('base.INR'), ref('base.AUD'), ref('base.UAH'), ref('base.HKD'), ref('base.RUB'),
+                ref('base.MXN'), ref('base.NZD'), ref('base.SGD'), ref('base.ZAR'), ref('base.XAF'),
+                ref('base.HNL'), ref('base.UYU'), ref('base.AFN'), ref('base.BDT'), ref('base.BBD'),
+                ref('base.BYN'), ref('base.BZD'), ref('base.BMD'), ref('base.BOB'), ref('base.BAM'),
+                ref('base.BWP'), ref('base.KMF'), ref('base.DJF'), ref('base.FKP'), ref('base.FJD'),
+                ref('base.GEL'), ref('base.GIP'), ref('base.ILS'), ref('base.KZT'), ref('base.LSL'),
+                ref('base.MOP'), ref('base.MKD'), ref('base.MGA'), ref('base.MVR'), ref('base.MDL'),
+                ref('base.MAD'), ref('base.DZD'), ref('base.GHS'), ref('base.MZN'), ref('base.NPR'),
+                ref('base.NGN'), ref('base.ZIG'), ref('base.ZMW'), ref('base.VUV'), ref('base.TND'),
+                ref('base.TOP'), ref('base.THB'), ref('base.SZL'), ref('base.SDG'), ref('base.LKR'),
+                ref('base.SSP'), ref('base.GBP'), ref('base.SBD'), ref('base.SLE'), ref('base.RSD'),
+                ref('base.SAR'), ref('base.STD'), ref('base.WST'), ref('base.SHP'), ref('base.PEN'),
+                ref('base.PGK'), ref('base.PKR'), ref('base.STN')
+            ])]"/>
         </record>
 
         <record model="pos.bill" id="5_00" forcecreate="0">
             <field name="name">5.00</field>
             <field name="value">5.00</field>
+            <field name="available_currency_ids" eval="[Command.set([
+                ref('base.USD'), ref('base.CAD'), ref('base.CHF'), ref('base.BRL'), ref('base.CNY'),
+                ref('base.CNH'), ref('base.CZK'), ref('base.DKK'), ref('base.HUF'), ref('base.NOK'),
+                ref('base.XPF'), ref('base.PLN'), ref('base.SEK'), ref('base.ARS'), ref('base.INR'),
+                ref('base.AUD'), ref('base.UAH'), ref('base.HKD'), ref('base.JPY'), ref('base.RON'),
+                ref('base.RUB'), ref('base.TRY'), ref('base.MXN'), ref('base.MYR'), ref('base.NZD'),
+                ref('base.PHP'), ref('base.SGD'), ref('base.ZAR'), ref('base.CRC'), ref('base.MUR'),
+                ref('base.XOF'), ref('base.XAF'), ref('base.HNL'), ref('base.UYU'), ref('base.AFN'),
+                ref('base.AOA'), ref('base.XCD'), ref('base.AWG'), ref('base.AZN'), ref('base.BSD'),
+                ref('base.BHD'), ref('base.BDT'), ref('base.BBD'), ref('base.BYN'), ref('base.BZD'),
+                ref('base.BMD'), ref('base.BTN'), ref('base.BOB'), ref('base.BAM'), ref('base.BWP'),
+                ref('base.BIF'), ref('base.KYD'), ref('base.KMF'), ref('base.CDF'), ref('base.CUP'),
+                ref('base.ANG'), ref('base.XCG'), ref('base.DJF'), ref('base.DOP'), ref('base.ERN'),
+                ref('base.ETB'), ref('base.FKP'), ref('base.FJD'), ref('base.GEL'), ref('base.GIP'),
+                ref('base.GNF'), ref('base.GYD'), ref('base.HTG'), ref('base.ISK'), ref('base.ILS'),
+                ref('base.JMD'), ref('base.JOD'), ref('base.KZT'), ref('base.KES'), ref('base.KWD'),
+                ref('base.KGS'), ref('base.LSL'), ref('base.LRD'), ref('base.LYD'), ref('base.MOP'),
+                ref('base.MKD'), ref('base.MGA'), ref('base.MWK'), ref('base.MVR'), ref('base.MRU'),
+                ref('base.MDL'), ref('base.MAD'), ref('base.BND'), ref('base.DZD'), ref('base.GHS'),
+                ref('base.GMD'), ref('base.MZN'), ref('base.NAD'), ref('base.NPR'), ref('base.ALL'),
+                ref('base.NIO'), ref('base.NGN'), ref('base.KPW'), ref('base.ZIG'), ref('base.ZMW'),
+                ref('base.YER'), ref('base.EUR'), ref('base.VUV'), ref('base.AED'), ref('base.TMT'),
+                ref('base.TND'), ref('base.TTD'), ref('base.TOP'), ref('base.THB'), ref('base.TJS'),
+                ref('base.TWD'), ref('base.SZL'), ref('base.SRD'), ref('base.SDG'), ref('base.LKR'),
+                ref('base.SSP'), ref('base.GBP'), ref('base.SBD'), ref('base.SLE'), ref('base.SCR'),
+                ref('base.RSD'), ref('base.SAR'), ref('base.STD'), ref('base.WST'), ref('base.SHP'),
+                ref('base.QAR'), ref('base.PEN'), ref('base.PGK'), ref('base.PKR'), ref('base.OMR'),
+                ref('base.CVE'), ref('base.GTQ'), ref('base.VES'), ref('base.STN')
+            ])]"/>
         </record>
 
         <record model="pos.bill" id="10_00" forcecreate="0">
             <field name="name">10.00</field>
             <field name="value">10.00</field>
+            <field name="available_currency_ids" eval="[Command.set([
+                ref('base.USD'), ref('base.CAD'), ref('base.CHF'), ref('base.BRL'), ref('base.CNY'),
+                ref('base.CNH'), ref('base.CZK'), ref('base.DKK'), ref('base.HUF'), ref('base.NOK'),
+                ref('base.XPF'), ref('base.PLN'), ref('base.SEK'), ref('base.ARS'), ref('base.INR'),
+                ref('base.AUD'), ref('base.UAH'), ref('base.HKD'), ref('base.JPY'), ref('base.RON'),
+                ref('base.RUB'), ref('base.TRY'), ref('base.KRW'), ref('base.MXN'), ref('base.MYR'),
+                ref('base.NZD'), ref('base.PHP'), ref('base.SGD'), ref('base.ZAR'), ref('base.CRC'),
+                ref('base.MUR'), ref('base.XOF'), ref('base.XAF'), ref('base.HNL'), ref('base.CLP'),
+                ref('base.UYU'), ref('base.AFN'), ref('base.AOA'), ref('base.XCD'), ref('base.AMD'),
+                ref('base.AWG'), ref('base.AZN'), ref('base.BSD'), ref('base.BHD'), ref('base.BDT'),
+                ref('base.BBD'), ref('base.BYN'), ref('base.BZD'), ref('base.BMD'), ref('base.BTN'),
+                ref('base.BOB'), ref('base.BAM'), ref('base.BWP'), ref('base.BIF'), ref('base.KYD'),
+                ref('base.KMF'), ref('base.CDF'), ref('base.CUP'), ref('base.ANG'), ref('base.XCG'),
+                ref('base.DJF'), ref('base.DOP'), ref('base.ERN'), ref('base.ETB'), ref('base.FKP'),
+                ref('base.FJD'), ref('base.GEL'), ref('base.GIP'), ref('base.GNF'), ref('base.GYD'),
+                ref('base.HTG'), ref('base.ISK'), ref('base.ILS'), ref('base.JMD'), ref('base.JOD'),
+                ref('base.KZT'), ref('base.KES'), ref('base.KWD'), ref('base.KGS'), ref('base.LSL'),
+                ref('base.LRD'), ref('base.LYD'), ref('base.MOP'), ref('base.MKD'), ref('base.MGA'),
+                ref('base.MWK'), ref('base.MVR'), ref('base.MRU'), ref('base.MDL'), ref('base.MNT'),
+                ref('base.MAD'), ref('base.BND'), ref('base.DZD'), ref('base.GHS'), ref('base.GMD'),
+                ref('base.MZN'), ref('base.NAD'), ref('base.NPR'), ref('base.ALL'), ref('base.NIO'),
+                ref('base.NGN'), ref('base.KPW'), ref('base.ZIG'), ref('base.ZMW'), ref('base.YER'),
+                ref('base.EUR'), ref('base.VUV'), ref('base.AED'), ref('base.TMT'), ref('base.TND'),
+                ref('base.TTD'), ref('base.TOP'), ref('base.THB'), ref('base.TJS'), ref('base.TWD'),
+                ref('base.SYP'), ref('base.SZL'), ref('base.SRD'), ref('base.SDG'), ref('base.LKR'),
+                ref('base.SSP'), ref('base.GBP'), ref('base.SOS'), ref('base.SBD'), ref('base.SLE'),
+                ref('base.SCR'), ref('base.RSD'), ref('base.SAR'), ref('base.STD'), ref('base.WST'),
+                ref('base.SHP'), ref('base.QAR'), ref('base.PEN'), ref('base.PGK'), ref('base.PKR'),
+                ref('base.OMR'), ref('base.CVE'), ref('base.GTQ'), ref('base.VES'), ref('base.STN')
+            ])]"/>
         </record>
 
         <record model="pos.bill" id="20_00" forcecreate="0">
             <field name="name">20.00</field>
             <field name="value">20.00</field>
+            <field name="available_currency_ids" eval="[Command.set([
+                ref('base.USD'), ref('base.CAD'), ref('base.CHF'), ref('base.BRL'), ref('base.CNY'),
+                ref('base.CNH'), ref('base.CZK'), ref('base.DKK'), ref('base.HUF'), ref('base.NOK'),
+                ref('base.XPF'), ref('base.PLN'), ref('base.SEK'), ref('base.ARS'), ref('base.INR'),
+                ref('base.AUD'), ref('base.UAH'), ref('base.HKD'), ref('base.TRY'), ref('base.MXN'),
+                ref('base.MYR'), ref('base.NZD'), ref('base.PHP'), ref('base.SGD'), ref('base.ZAR'),
+                ref('base.MUR'), ref('base.HNL'), ref('base.UYU'), ref('base.AFN'), ref('base.AOA'),
+                ref('base.XCD'), ref('base.AMD'), ref('base.AZN'), ref('base.BSD'), ref('base.BHD'),
+                ref('base.BDT'), ref('base.BBD'), ref('base.BYN'), ref('base.BZD'), ref('base.BMD'),
+                ref('base.BTN'), ref('base.BOB'), ref('base.BAM'), ref('base.BWP'), ref('base.CDF'),
+                ref('base.CUP'), ref('base.XCG'), ref('base.DJF'), ref('base.ERN'), ref('base.FKP'),
+                ref('base.FJD'), ref('base.GEL'), ref('base.GIP'), ref('base.GYD'), ref('base.ILS'),
+                ref('base.JMD'), ref('base.JOD'), ref('base.KZT'), ref('base.KES'), ref('base.KWD'),
+                ref('base.KGS'), ref('base.LSL'), ref('base.LRD'), ref('base.LYD'), ref('base.MOP'),
+                ref('base.MGA'), ref('base.MWK'), ref('base.MVR'), ref('base.MRU'), ref('base.MDL'),
+                ref('base.MNT'), ref('base.MAD'), ref('base.DZD'), ref('base.GHS'), ref('base.GMD'),
+                ref('base.MZN'), ref('base.NAD'), ref('base.NPR'), ref('base.ALL'), ref('base.NIO'),
+                ref('base.NGN'), ref('base.ZIG'), ref('base.ZMW'), ref('base.YER'), ref('base.EUR'),
+                ref('base.VUV'), ref('base.AED'), ref('base.TMT'), ref('base.TND'), ref('base.TTD'),
+                ref('base.TOP'), ref('base.THB'), ref('base.TJS'), ref('base.TWD'), ref('base.SZL'),
+                ref('base.SRD'), ref('base.SDG'), ref('base.LKR'), ref('base.SSP'), ref('base.GBP'),
+                ref('base.SOS'), ref('base.SBD'), ref('base.SLE'), ref('base.RSD'), ref('base.SAR'),
+                ref('base.STD'), ref('base.WST'), ref('base.SHP'), ref('base.QAR'), ref('base.PEN'),
+                ref('base.PGK'), ref('base.PKR'), ref('base.OMR'), ref('base.CVE'), ref('base.GTQ'),
+                ref('base.VES'), ref('base.STN')
+            ])]"/>
         </record>
 
         <record model="pos.bill" id="50_00" forcecreate="0">
             <field name="name">50.00</field>
             <field name="value">50.00</field>
+            <field name="available_currency_ids" eval="[Command.set([
+                ref('base.USD'), ref('base.CAD'), ref('base.CHF'), ref('base.BRL'), ref('base.CNY'),
+                ref('base.CNH'), ref('base.COP'), ref('base.CZK'), ref('base.DKK'), ref('base.HUF'),
+                ref('base.IDR'), ref('base.NOK'), ref('base.XPF'), ref('base.PLN'), ref('base.SEK'),
+                ref('base.ARS'), ref('base.INR'), ref('base.AUD'), ref('base.UAH'), ref('base.HKD'),
+                ref('base.JPY'), ref('base.RON'), ref('base.RUB'), ref('base.TRY'), ref('base.KRW'),
+                ref('base.MXN'), ref('base.MYR'), ref('base.NZD'), ref('base.PHP'), ref('base.SGD'),
+                ref('base.ZAR'), ref('base.CRC'), ref('base.MUR'), ref('base.XOF'), ref('base.XAF'),
+                ref('base.UGX'), ref('base.HNL'), ref('base.CLP'), ref('base.UYU'), ref('base.AFN'),
+                ref('base.AOA'), ref('base.XCD'), ref('base.AMD'), ref('base.AWG'), ref('base.AZN'),
+                ref('base.BSD'), ref('base.BDT'), ref('base.BBD'), ref('base.BYN'), ref('base.BZD'),
+                ref('base.BMD'), ref('base.BTN'), ref('base.BOB'), ref('base.BAM'), ref('base.BWP'),
+                ref('base.BIF'), ref('base.KHR'), ref('base.KYD'), ref('base.KMF'), ref('base.CDF'),
+                ref('base.CUP'), ref('base.ANG'), ref('base.XCG'), ref('base.DJF'), ref('base.DOP'),
+                ref('base.ERN'), ref('base.ETB'), ref('base.FKP'), ref('base.FJD'), ref('base.GEL'),
+                ref('base.GIP'), ref('base.GNF'), ref('base.GYD'), ref('base.HTG'), ref('base.ISK'),
+                ref('base.ILS'), ref('base.JMD'), ref('base.JOD'), ref('base.KZT'), ref('base.KES'),
+                ref('base.KGS'), ref('base.LBP'), ref('base.LSL'), ref('base.LRD'), ref('base.LYD'),
+                ref('base.MOP'), ref('base.MKD'), ref('base.MGA'), ref('base.MWK'), ref('base.MVR'),
+                ref('base.MRU'), ref('base.MDL'), ref('base.MNT'), ref('base.MAD'), ref('base.BND'),
+                ref('base.DZD'), ref('base.GHS'), ref('base.GMD'), ref('base.MZN'), ref('base.MMK'),
+                ref('base.NAD'), ref('base.NPR'), ref('base.ALL'), ref('base.NIO'), ref('base.NGN'),
+                ref('base.KPW'), ref('base.ZIG'), ref('base.ZMW'), ref('base.YER'), ref('base.EUR'),
+                ref('base.VUV'), ref('base.UZS'), ref('base.AED'), ref('base.TMT'), ref('base.TND'),
+                ref('base.TTD'), ref('base.TOP'), ref('base.THB'), ref('base.TZS'), ref('base.TJS'),
+                ref('base.TWD'), ref('base.SYP'), ref('base.SZL'), ref('base.SRD'), ref('base.SDG'),
+                ref('base.LKR'), ref('base.SSP'), ref('base.GBP'), ref('base.SOS'), ref('base.SBD'),
+                ref('base.SCR'), ref('base.RSD'), ref('base.SAR'), ref('base.STD'), ref('base.WST'),
+                ref('base.QAR'), ref('base.PEN'), ref('base.PYG'), ref('base.PGK'), ref('base.PKR'),
+                ref('base.OMR'), ref('base.CVE'), ref('base.GTQ'), ref('base.VES'), ref('base.STN')
+            ])]"/>
         </record>
 
         <record model="pos.bill" id="100_00" forcecreate="0">
             <field name="name">100.00</field>
             <field name="value">100.00</field>
+            <field name="available_currency_ids" eval="[Command.set([
+                ref('base.USD'), ref('base.CAD'), ref('base.CHF'), ref('base.BRL'), ref('base.CNY'),
+                ref('base.CNH'), ref('base.COP'), ref('base.CZK'), ref('base.DKK'), ref('base.HUF'),
+                ref('base.IDR'), ref('base.NOK'), ref('base.XPF'), ref('base.PLN'), ref('base.SEK'),
+                ref('base.ARS'), ref('base.INR'), ref('base.AUD'), ref('base.UAH'), ref('base.VND'),
+                ref('base.HKD'), ref('base.JPY'), ref('base.RON'), ref('base.RUB'), ref('base.TRY'),
+                ref('base.KRW'), ref('base.MXN'), ref('base.MYR'), ref('base.NZD'), ref('base.PHP'),
+                ref('base.SGD'), ref('base.ZAR'), ref('base.CRC'), ref('base.MUR'), ref('base.XOF'),
+                ref('base.XAF'), ref('base.UGX'), ref('base.HNL'), ref('base.CLP'), ref('base.UYU'),
+                ref('base.AFN'), ref('base.XCD'), ref('base.AMD'), ref('base.AWG'), ref('base.AZN'),
+                ref('base.BSD'), ref('base.BDT'), ref('base.BBD'), ref('base.BYN'), ref('base.BZD'),
+                ref('base.BMD'), ref('base.BTN'), ref('base.BOB'), ref('base.BAM'), ref('base.BWP'),
+                ref('base.BIF'), ref('base.KHR'), ref('base.KYD'), ref('base.KMF'), ref('base.CDF'),
+                ref('base.CUP'), ref('base.ANG'), ref('base.XCG'), ref('base.DJF'), ref('base.DOP'),
+                ref('base.ERN'), ref('base.ETB'), ref('base.FJD'), ref('base.GEL'), ref('base.GIP'),
+                ref('base.GYD'), ref('base.HTG'), ref('base.ISK'), ref('base.ILS'), ref('base.JMD'),
+                ref('base.KZT'), ref('base.KES'), ref('base.KGS'), ref('base.LBP'), ref('base.LSL'),
+                ref('base.LRD'), ref('base.MOP'), ref('base.MKD'), ref('base.MGA'), ref('base.MWK'),
+                ref('base.MVR'), ref('base.MRU'), ref('base.MDL'), ref('base.MNT'), ref('base.MAD'),
+                ref('base.DZD'), ref('base.GHS'), ref('base.GMD'), ref('base.MZN'), ref('base.MMK'),
+                ref('base.NAD'), ref('base.NPR'), ref('base.ALL'), ref('base.NIO'), ref('base.NGN'),
+                ref('base.KPW'), ref('base.ZIG'), ref('base.ZMW'), ref('base.YER'), ref('base.EUR'),
+                ref('base.VUV'), ref('base.UZS'), ref('base.AED'), ref('base.TMT'), ref('base.TTD'),
+                ref('base.TOP'), ref('base.THB'), ref('base.TZS'), ref('base.TJS'), ref('base.TWD'),
+                ref('base.SYP'), ref('base.SZL'), ref('base.SRD'), ref('base.SDG'), ref('base.LKR'),
+                ref('base.SSP'), ref('base.SOS'), ref('base.SBD'), ref('base.SCR'), ref('base.RSD'),
+                ref('base.SAR'), ref('base.STD'), ref('base.WST'), ref('base.PEN'), ref('base.PYG'),
+                ref('base.PGK'), ref('base.PKR'), ref('base.CVE'), ref('base.GTQ'), ref('base.VES'),
+                ref('base.STN')
+            ])]"/>
         </record>
 
         <record model="pos.bill" id="200_00" forcecreate="0">
             <field name="name">200.00</field>
             <field name="value">200.00</field>
+            <field name="available_currency_ids" eval="[Command.set([
+                ref('base.CHF'), ref('base.BRL'), ref('base.COP'), ref('base.CZK'), ref('base.DKK'),
+                ref('base.HUF'), ref('base.IDR'), ref('base.NOK'), ref('base.PLN'), ref('base.SEK'),
+                ref('base.ARS'), ref('base.INR'), ref('base.UAH'), ref('base.VND'), ref('base.RON'),
+                ref('base.RUB'), ref('base.TRY'), ref('base.MXN'), ref('base.PHP'), ref('base.ZAR'),
+                ref('base.MUR'), ref('base.XOF'), ref('base.UGX'), ref('base.HNL'), ref('base.UYU'),
+                ref('base.AOA'), ref('base.AMD'), ref('base.AWG'), ref('base.AZN'), ref('base.BDT'),
+                ref('base.BYN'), ref('base.BOB'), ref('base.BAM'), ref('base.BWP'), ref('base.KHR'),
+                ref('base.CDF'), ref('base.CUP'), ref('base.ANG'), ref('base.XCG'), ref('base.DOP'),
+                ref('base.ETB'), ref('base.GEL'), ref('base.ILS'), ref('base.KZT'), ref('base.KES'),
+                ref('base.KGS'), ref('base.LSL'), ref('base.MKD'), ref('base.MGA'), ref('base.MWK'),
+                ref('base.MRU'), ref('base.MDL'), ref('base.MNT'), ref('base.MAD'), ref('base.DZD'),
+                ref('base.GHS'), ref('base.GMD'), ref('base.MZN'), ref('base.MMK'), ref('base.NAD'),
+                ref('base.ALL'), ref('base.NIO'), ref('base.KPW'), ref('base.ZIG'), ref('base.ZMW'),
+                ref('base.YER'), ref('base.EUR'), ref('base.VUV'), ref('base.UZS'), ref('base.AED'),
+                ref('base.TZS'), ref('base.TJS'), ref('base.TWD'), ref('base.SYP'), ref('base.SZL'),
+                ref('base.SRD'), ref('base.SDG'), ref('base.LKR'), ref('base.SCR'), ref('base.RSD'),
+                ref('base.SAR'), ref('base.STD'), ref('base.PEN'), ref('base.CVE'), ref('base.GTQ'),
+                ref('base.VES'), ref('base.STN')
+            ])]"/>
+        </record>
+
+        <record model="pos.bill" id="500_00" forcecreate="0">
+            <field name="name">500.00</field>
+            <field name="value">500.00</field>
+            <field name="available_currency_ids" eval="[Command.set([
+                ref('base.COP'), ref('base.CZK'), ref('base.DKK'), ref('base.HUF'), ref('base.IDR'),
+                ref('base.LVL'), ref('base.NOK'), ref('base.XPF'), ref('base.PLN'), ref('base.SEK'),
+                ref('base.ARS'), ref('base.INR'), ref('base.UAH'), ref('base.VND'), ref('base.HKD'),
+                ref('base.JPY'), ref('base.LTL'), ref('base.RON'), ref('base.HRK'), ref('base.RUB'),
+                ref('base.KRW'), ref('base.MXN'), ref('base.PHP'), ref('base.CRC'), ref('base.MUR'),
+                ref('base.XOF'), ref('base.XAF'), ref('base.UGX'), ref('base.HNL'), ref('base.CLP'),
+                ref('base.UYU'), ref('base.AFN'), ref('base.AOA'), ref('base.AMD'), ref('base.BDT'),
+                ref('base.BYN'), ref('base.BTN'), ref('base.BIF'), ref('base.KHR'), ref('base.KMF'),
+                ref('base.CDF'), ref('base.CUP'), ref('base.CHF'), ref('base.DOP'), ref('base.GNF'),
+                ref('base.GYD'), ref('base.HTG'), ref('base.ISK'), ref('base.IRR'), ref('base.IQD'),
+                ref('base.JMD'), ref('base.KZT'), ref('base.KES'), ref('base.KGS'), ref('base.LBP'),
+                ref('base.LRD'), ref('base.MOP'), ref('base.MKD'), ref('base.MGA'), ref('base.MWK'),
+                ref('base.MVR'), ref('base.MRO'), ref('base.MRU'), ref('base.MDL'), ref('base.MNT'),
+                ref('base.BND'), ref('base.DZD'), ref('base.MZN'), ref('base.MMK'), ref('base.NPR'),
+                ref('base.ALL'), ref('base.NIO'), ref('base.NGN'), ref('base.KPW'), ref('base.ZMW'),
+                ref('base.YER'), ref('base.VUV'), ref('base.UZS'), ref('base.AED'), ref('base.TMT'),
+                ref('base.THB'), ref('base.TZS'), ref('base.TJS'), ref('base.TWD'), ref('base.SYP'),
+                ref('base.SRD'), ref('base.SDG'), ref('base.LKR'), ref('base.SSP'), ref('base.SOS'),
+                ref('base.SCR'), ref('base.RSD'), ref('base.SAR'), ref('base.STD'), ref('base.RWF'),
+                ref('base.QAR'), ref('base.PYG'), ref('base.PKR'), ref('base.CVE'), ref('base.VES'),
+                ref('base.UYI')
+            ])]"/>
         </record>
     </data>
 </odoo>

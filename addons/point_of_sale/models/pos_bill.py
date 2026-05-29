@@ -8,9 +8,13 @@ class PosBill(models.Model):
     _description = "Coin/Bill"
     _inherit = ["pos.load.mixin"]
 
+    def _default_available_currencies(self):
+        return self.env.companies.mapped('currency_id')
+
     name = fields.Char("Name", required=True)
     value = fields.Float("Value", required=True, digits=(16, 4))
     pos_config_ids = fields.Many2many("pos.config", string="Point of Sales")
+    available_currency_ids = fields.Many2many("res.currency", string="Currencies", default=_default_available_currencies)
 
     @api.constrains('value')
     def _check_value_not_zero(self):
