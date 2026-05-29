@@ -8,27 +8,29 @@
                     <t t-call="point_of_sale.pos_order_receipt_style" />
                 </head>
                 <body>
-                    <div class="pos-receipt m-0 p-0" style="padding-top: 80px !important;">
+                    <div class="pos-receipt m-0 p-0 pt-5">
                         <div name="receipt-header" class="text-center">
-                            <div name="preset-info" class="preset-name text-huge text-bold" t-if="preset">
+                            <div name="preset-info" class="preset-name text-huge text-center text-bold" t-if="preset"> <!-- TODO: remove class .preset-name in master -->
                                 <span t-esc="preset['name']"/>
                                 <span t-if="extra_data.get('preset_time')"> (<t t-esc="extra_data['preset_time']"/>)</span>
                             </div>
-                            <div name="employee-info">
+                            <div name="employee-info" class="text-small">
                                 <span><t t-esc="config['name']"/> : <t t-esc="extra_data['time']"/></span><br/>
                                 <span t-if="extra_data.get('employee_name')">By: <t t-esc="extra_data['employee_name']"/></span>
                             </div>
-                            <span class="my-4 text-normal">
-                                <span>
-                                    Order <t t-esc="order['pos_reference']"/>
-                                </span>
-                                <span t-if="order.get('tracking_number')" class="my-3">
+                            <div name="order-info" class="my-2 text-huge">
+                                <div>
+                                    <span t-if="extra_data.get('order_name_prefix')" t-esc="extra_data['order_name_prefix'] + ' '"/>
+                                    <span class="text-bold" t-esc="extra_data['order_name']"/>
+                                </div>
+                                <div t-if="conditions.get('show_tracking_number')">
                                     # <t t-esc="order['tracking_number']"/>
-                                </span>
-                            </span>
+                                </div>
+                            </div>
+                            <div name="order-reference" t-if="conditions.get('show_pos_reference')" t-out="order['pos_reference']" />
                         </div>
                         <hr style="border: none; border-top: 4px dashed black;"/>
-                        <div name="body" class="pos-receipt-body pb-5">
+                        <div name="receipt-body" class="pos-receipt-body pb-5"> <!-- TODO: remove class .pos-receipt-body in master -->
                             <t t-set="hasDataChanges" t-value="changes.get('data') or changes.get('title') or changes.get('groupedData')" />
                             <div t-if="changes.get('title')" class="text-center text-bold text-insane w-100">
                                 <t t-esc="changes['title']" />
@@ -51,15 +53,15 @@
                                 </div>
                             </t>
 
-                            <div t-if="extra_data.get('internal_note')" class="new-changes w-100" t-att-class="{'mb-3': order['general_customer_note']}">
-                                <div class="pos-receipt-title text-center text-huge w-100">
+                            <div t-if="extra_data.get('internal_note')" name="new-changes-internal-note" class="new-changes w-100" t-att-class="{'mb-3': order['general_customer_note']}"> <!-- TODO: remove class .new-changes in master -->
+                                <div class="text-center text-insane w-100 text-bold">
                                     <strong>INTERNAL NOTE</strong>
                                 </div>
                                 <div class="text-center text-huge text-italic" t-esc="extra_data['internal_note']" />
                             </div>
 
-                            <div t-if="extra_data['general_customer_note']" class="new-changes w-100">
-                                <div class="pos-receipt-title text-center text-huge w-100">
+                            <div t-if="extra_data['general_customer_note']" name="new-changes-customer-note" class="new-changes w-100"> <!-- TODO: remove class .new-changes in master -->
+                                <div class="text-center text-insane w-100 text-bold">
                                     <strong>CUSTOMER NOTE</strong>
                                 </div>
                                 <div class="text-center text-large" t-esc="extra_data['general_customer_note']" />
@@ -71,9 +73,10 @@
         </template>
 
         <template id="point_of_sale.pos_order_change_receipt_line">
-            <div t-att-class="{'ps-5': line['combo_parent_uuid']}" class="orderline text-huge">
-                <div>
-                    <span t-esc="line['quantity']"/> <span class="product-name" t-esc="line['basic_name']"/>
+            <div t-att-class="{'ps-5': line['combo_parent_uuid']}" class="orderline text-large">
+                <div class="text-huge">
+                    <span class="d-inline-block me-1 font-monospace" style="min-width: 44px;" t-esc="line['quantity']"/>
+                    <span class="product-name text-break" t-esc="line['basic_name']"/>
                 </div>
                 <div t-if="line.get('attribute_value_names') and len(line['attribute_value_names'])" class="ps-5">
                     <t t-foreach="line['attribute_value_names']" t-as="name">

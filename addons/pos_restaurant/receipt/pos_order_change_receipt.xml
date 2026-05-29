@@ -2,11 +2,17 @@
 <odoo>
     <data>
         <template id="pos_restaurant.pos_order_change_receipt" inherit_id="point_of_sale.pos_order_change_receipt">
-            <div name="receipt-header" position="inside">
-                <div class="pos-customer-info text-bold" t-if="order.get('customer_count') or extra_data.get('order_label')">
-                    <span class="text-large" t-if="extra_data.get('floor_name')"><t t-out="extra_data['floor_name']"/> -</span>
-                    <span class="text-huge" t-if="extra_data.get('order_label')"><t t-out="extra_data['order_label']" /></span>
-                    <span t-if="order.get('customer_count')"><br/>Guest <t t-out="order['customer_count']"/></span>
+            <div name="order-reference" position="before">
+                <div name="pos-customer-info" class="pos-customer-info" t-if="order.get('customer_count') or extra_data.get('table_name')"> <!-- TODO: remove class .pos-customer-info in master -->
+                    <div t-if="extra_data.get('table_name')">
+                        <span t-if="extra_data.get('floor_name')">
+                            <t t-out="extra_data['floor_name']"/> -
+                        </span>
+                        <span>
+                            T <t t-out="extra_data['table_name']" />
+                        </span>
+                    </div>
+                    <div t-if="order.get('customer_count')">Guest <t t-out="order['customer_count']"/></div>
                 </div>
             </div>
         </template>
