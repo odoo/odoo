@@ -97,7 +97,11 @@ export class PosData {
     }
 
     async fetchReceiptTemplate() {
-        const data = await this.orm.call("pos.order", "get_receipt_template_for_pos_frontend");
+        const response = await fetch("/pos/receipt-template");
+        const data =
+            response.ok && !response.redirected
+                ? await response.json()
+                : await this.orm.call("pos.order", "get_receipt_template_for_pos_frontend");
         for (const [name, string] of data) {
             registerPythonTemplate(name, "", string);
         }
