@@ -45,7 +45,7 @@ export class SpreadsheetDashboard extends models.Model {
     _name = "spreadsheet.dashboard";
 
     name = fields.Char({ string: "Name" });
-    spreadsheet_data = fields.Char({});
+    spreadsheet_data = fields.Text({});
     json_data = fields.Char({});
     is_published = fields.Boolean({ string: "Is published" });
     dashboard_group_id = fields.Many2one({ relation: "spreadsheet.dashboard.group" });
