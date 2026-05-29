@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Layout">
-        <t t-if="this.env.inDialog" t-custom-portal="'#' + this.env.dialogId + ' .modal-footer'">
+        <Portal t-if="this.env.inDialog" target="this.footerTarget" t-key="this.rev">
             <t t-call-slot="control-panel-buttons"/>
-        </t>
+        </Portal>
         <t t-component="this.components.ControlPanel" slots="this.controlPanelSlots" t-if="this.props.display.controlPanel" display="this.props.display.controlPanel"/>
         <main t-custom-ref="content" class="o_content" t-attf-class="{{this.props.className}}" t-att-class="{ 'o_component_with_search_panel': this.props.display.searchPanel }">
             <t t-component="this.components.SearchPanel" t-if="this.props.display.searchPanel"/>
