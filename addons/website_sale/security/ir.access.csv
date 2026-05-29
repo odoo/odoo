@@ -37,9 +37,8 @@ access_product_attribute_value_public_employee,product.attribute value public,pr
 access_product_product_attribute_public,product.template.attribute value public,product.template.attribute.value,base.group_public,r,
 access_product_product_attribute_portal,product.template.attribute value public,product.template.attribute.value,base.group_portal,r,
 access_product_product_attribute_employee,product.template.attribute value public,product.template.attribute.value,base.group_user,r,
-access_product_product_attribute_custom_value_public,product.attribute.custom value,product.attribute.custom.value,base.group_public,r,
-access_product_product_attribute_custom_value_portal,product.attribute.custom value,product.attribute.custom.value,base.group_portal,r,
-access_product_product_attribute_custom_value_employee,product.attribute.custom value,product.attribute.custom.value,base.group_user,r,
+access_product_product_attribute_custom_value_public,product.attribute.custom value,product.attribute.custom.value,base.group_public,r,"[('create_uid', '=', user.id)]"
+access_product_product_attribute_custom_value_portal,product.attribute.custom value,product.attribute.custom.value,base.group_portal,r,"[('create_uid', '=', user.id)]"
 access_product_template_attribute_line_public_public,product.template.attribute line public,product.template.attribute.line,base.group_public,r,
 access_product_template_attribute_line_public_portal,product.template.attribute line public,product.template.attribute.line,base.group_portal,r,
 access_product_template_attribute_line_public_employee,product.template.attribute line public,product.template.attribute.line,base.group_user,r,
