@@ -5605,8 +5605,14 @@ class AccountMove(models.Model):
             if move.line_ids.account_id.filtered(lambda account: not account.active) and not self.env.context.get('skip_account_deprecation_check'):
                 validation_msgs.add(_("A line of this move is using a archived account, you cannot post it."))
 
-            move_company_and_parents = move.company_id.sudo().parent_ids
-            mismatched_accounts = move.line_ids.mapped('account_id').filtered(lambda account: not move_company_and_parents & account.sudo().company_ids)
+            move_company_and_parents = move.company_id.sudo().parent_ids.filtered('active')
+            mismatched_accounts = move.line_ids.mapped('account_id').filtered(
+                lambda account: (
+                    move_company_and_parents
+                    and bool(acc_comp := account.sudo().company_ids.filtered('active'))
+                    and not (move_company_and_parents & acc_comp)
+                )
+            )
             if mismatched_accounts:
                 validation_msgs.add(self.env._(
                     "The entry is using accounts (%(accounts_codes_names)s) from a different company.",
