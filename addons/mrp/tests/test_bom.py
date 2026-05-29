@@ -2909,6 +2909,77 @@ class TestBoM(TestMrpCommon):
         self.env['mrp.routing.workcenter'].search([]).unlink()
         self.assertFalse(self.bom_1.show_copy_operations_button, "The copy operations button should be visible even if the current BoM is empty.")
 
+    def test_exploded_bom_lines_hierarchy_order(self):
+        """Ensure that exploded BoM list should keep the specific hierarchy order and not the default sequence order.
+
+        BoM structure:
+       ╒════════════╤═════════════════════╤═════════════════════╤═════════════════════╤═════════════╕
+       │  level 1   │       level 2       │       level 3       │       level 4       │   leval 5   │
+       ╘════════════╧═════════════════════╧═════════════════════╧═════════════════════╧═════════════╛
+        p1 ─────────┬── p3
+                    ├── Product 4 (bom) ──┬── Product 2
+                    │                     └── Product 1
+                    ├── Product 5 (kit) ──┬── Product 4 (bom) ──┬── Product 2
+                    │                     └── Product 3         └── Product 1
+                    └── p2 (bom) ─────────┬── p4
+                                          └── Product 5 (kit) ──┬── Product 4 (bom) ──┬── Product 2
+                                                                └── Product 3         └── Product 1
+        """
+
+        p1, p2, p3, p4 = self.make_prods(4)
+        p1_bom, p2_bom = self.env['mrp.bom'].create([
+            {
+                'product_tmpl_id': p1.product_tmpl_id.id,
+                'bom_line_ids': [
+                    Command.create({'product_id': p3.id}),
+                    Command.create({'product_id': self.product_4.id}),
+                    Command.create({'product_id': self.product_5.id}),
+                    Command.create({'product_id': p2.id}),
+                ],
+            }, {
+                'product_tmpl_id': p2.product_tmpl_id.id,
+                'bom_line_ids': [
+                    Command.create({'product_id': p4.id}),
+                    Command.create({'product_id': self.product_5.id}),
+                ],
+            },
+        ])
+
+        # Check that the exploded BoM lines are in the specific hierarchy order.
+        action = p1_bom.action_open_exploded_bom_lines()
+        exploded_line_ids = self.env['mrp.bom.line'].with_context(action['context']).search(action['domain']).ids
+        expected_line_ids = [
+            p1_bom.bom_line_ids[0].id,
+            p1_bom.bom_line_ids[1].id,
+            self.bom_1.bom_line_ids[0].id,
+            self.bom_1.bom_line_ids[1].id,
+            p1_bom.bom_line_ids[2].id,
+            self.bom_2.bom_line_ids[0].id,
+            self.bom_1.bom_line_ids[0].id,
+            self.bom_1.bom_line_ids[1].id,
+            self.bom_2.bom_line_ids[1].id,
+            p1_bom.bom_line_ids[3].id,
+            p2_bom.bom_line_ids[0].id,
+            p2_bom.bom_line_ids[1].id,
+            self.bom_2.bom_line_ids[0].id,
+            self.bom_1.bom_line_ids[0].id,
+            self.bom_1.bom_line_ids[1].id,
+            self.bom_2.bom_line_ids[1].id,
+        ]
+        self.assertEqual(
+            exploded_line_ids,
+            expected_line_ids,
+            "The exploded BoM lines should follow the hierarchy order, not the default sequence order.",
+        )
+
+        # Check that the search filter returns the expected exploded lines.
+        matching_line_ids = self.env['mrp.bom.line'].with_context(action['context']).search([('product_id', '=', self.product_5.id)]).ids
+        self.assertEqual(
+            matching_line_ids,
+            [p1_bom.bom_line_ids[2].id, p2_bom.bom_line_ids[1].id],
+            "Filtering the exploded BoM list should return only the matching BoM line.",
+        )
+
 
 class TestTourBoM(HttpCase):
     @classmethod
