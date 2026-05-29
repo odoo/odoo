@@ -221,6 +221,16 @@ class StockMove(models.Model):
         customer_loc, __ = self.env['stock.warehouse']._get_partner_locations()
         inter_comp_location = self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False)
         for move in self:
+            # Preserve a sub-destination already set on the move (e.g. a
+            # reception bay) when it is still a child of the final
+            # location. Without this guard, transient ``picking_id`` resets
+            # like the one performed by ``_merge_moves`` on negative
+            # leftovers would clobber the explicit destination, breaking
+            # the merge.
+            if (move.location_dest_id and move.location_final_id
+                    and move.location_dest_id != move.location_final_id
+                    and move.location_dest_id._child_of(move.location_final_id)):
+                continue
             location_dest = False
             if move.picking_id:
                 location_dest = move.picking_id.location_dest_id
