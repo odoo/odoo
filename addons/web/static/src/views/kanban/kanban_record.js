@@ -213,6 +213,10 @@ export class KanbanRecord extends Component {
         return this.dataState.record;
     }
 
+    get isMenuVisible() {
+        return this.showMenu && !this.props.readonly;
+    }
+
     getFormattedValue(fieldId) {
         const { archInfo, record } = this.props;
         const { name } = archInfo.fieldNodes[fieldId];
