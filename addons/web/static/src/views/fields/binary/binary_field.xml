@@ -15,7 +15,7 @@
                                 class="btn btn-link btn-sm lh-1 fa fa-download o_download_file_button"
                                 data-tooltip="Download"
                                 aria-label="Download"
-                                t-on-click="onFileDownload"
+                                t-on-click.stop="onFileDownload"
                             >
                             </button>
                         </t>
@@ -58,7 +58,7 @@
             </t>
         </t>
         <t t-elif="props.record.resId and props.record.data[props.name]">
-            <a class="o_form_uri" href="#" t-on-click.prevent="onFileDownload">
+            <a class="o_form_uri" href="#" t-on-click.prevent.stop="onFileDownload">
                 <span class="fa fa-download me-2" />
                 <t t-if="fileName" t-esc="fileName" />
             </a>
