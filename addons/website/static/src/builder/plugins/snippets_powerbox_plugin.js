@@ -145,6 +145,7 @@ class SnippetsPowerboxPlugin extends Plugin {
                 commandId: "s_hr",
             },
         ],
+        unsplittable_node_predicates: (node) => node.classList?.contains("s_blockquote"),
     };
 
     insertSnippet(name) {
