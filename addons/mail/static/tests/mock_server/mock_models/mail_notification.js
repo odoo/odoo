@@ -45,9 +45,11 @@ export class MailNotification extends models.ServerModel {
                 this.env["mail.message"].browse(notification.mail_message_id),
                 makeKwArgs({ only_id: true })
             );
+            const partner = ResPartner.browse(notification.res_partner_id);
+            const fieldList = partner[0]?.name ? ["name"] : ["name", "display_name"];
             data.persona = mailDataHelpers.Store.one(
-                ResPartner.browse(notification.res_partner_id),
-                makeKwArgs({ fields: ["name"] })
+                partner,
+                makeKwArgs({ fields: fieldList })
             );
             store.add(this.browse(notification.id), data);
         }
