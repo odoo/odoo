@@ -360,3 +360,20 @@ x_religion = fields.Selection(
              'this employee\'s service record.',
         groups='hr.group_hr_user',
     )
+
+    # ── Section 10: Service Status ────────────────────────────────────────
+
+    x_status = fields.Selection(
+        selection=[
+            ('active',   'Active'),
+            ('pending',  'Pending'),
+            ('transfer', 'Transfer'),
+            ('inactive', 'Inactive'),
+        ],
+        string='Status',
+        default='active',
+        index=True,
+        tracking=True,
+        groups='hr.group_hr_user',
+        help='Current service status of the employee within the department.',
+    )
