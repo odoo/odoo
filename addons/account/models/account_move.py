@@ -6197,7 +6197,7 @@ class AccountMove(models.Model):
     def _message_set_main_attachment_id(self, attachments, force=False, filter_xml=True):
         if filter_xml:
             attachments = attachments.filtered(
-                lambda att: not (att.mimetype == 'text/plain' and guess_mimetype(att.raw or '').endswith('/xml'))
+                lambda att: not (att.mimetype == 'text/plain' and guess_mimetype(att.raw or b'').endswith('/xml'))
             )
         super()._message_set_main_attachment_id(attachments, force=force, filter_xml=filter_xml)
 
