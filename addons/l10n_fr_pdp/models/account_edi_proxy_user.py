@@ -487,7 +487,7 @@ class AccountEdiProxyClientUser(models.Model):
         origin_peppol_lifecycle_uuid = content.get("origin_peppol_lifecycle_uuid")
         response = origin_move.peppol_response_ids.filtered(
             lambda r: r.peppol_message_uuid == origin_peppol_lifecycle_uuid
-        )
+        )[:1]
         if not response:
             _logger.warning('[Flow %s] The status response sent to the PPF with UUID %s could not be imported: Original journal entry (UUID %s) not found.',
                             content['flow_number'], uuid, origin_move.peppol_message_uuid)
@@ -495,7 +495,7 @@ class AccountEdiProxyClientUser(models.Model):
 
         # Do not update the transport status if we already received a lifecycle
         if response.pdp_ppf_state:
-            response
+            return response
 
         if content.get('error'):
             error_message = content['error'].get('data', {}).get('message') or content['error']['message']
