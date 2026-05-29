@@ -1108,6 +1108,10 @@ class TransactionCase(BaseCase):
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
         self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
 
+        if ba := self.registry.get('base.automation'):
+            mock_register = self.startPatcher(patch.object(ba, '_register_hook', wraps=ba._register_hook, autospec=True))
+            self.addCleanup(lambda: mock_register.called and self.env['base.automation']._unregister_hook())
+
     def check_attrs(self):
         # has to be an instance level method in order to collaboratively
         # report failures via Outcome / Result.
