@@ -131,6 +131,10 @@ class TestProduct(AccountTestInvoicingCommon):
             "Vendor bill line should use child category's expense account")
 
     def test_retrieve_product_by_name(self):
+        company = self.company_data['company']
+        if 'predict_bill_product' in company._fields:
+            company.predict_bill_product = True
+
         Product = self.env['product.product']
         Product.create({'name': 'Wireless bluetooth speaker battery'})
         product_A = Product.create({'name': 'Network Cables'})
