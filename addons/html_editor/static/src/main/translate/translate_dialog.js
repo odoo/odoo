@@ -150,8 +150,8 @@ export class TranslateDialog extends Component {
             translatedText: translateResult.translatedText,
             isError: translateResult.isError,
         });
-        // only select the new translation if there was no error
-        if (!translateResult.isError) {
+        // only select the new translation if there was no error and under non-debug mode
+        if (!translateResult.isError && !this.env.debug) {
             this.state.selectedMessageId = messageId;
         }
     }

@@ -5,19 +5,32 @@
         <t t-foreach="this.state.messages" t-as="msg" t-key="msg">
             <t t-if="this.env.debug and this.translators.length > 1">
                 <span class="text-muted d-block small"><strong><t t-out="msg_value.translator"/> :</strong></span>
+                <button t-if="msg_value.isError" t-att-data-message-id="msg"
+                    class="o-translator-translated o-message-error border-danger bg-danger rounded-2 ms-3 mb-1 border-0 p-2"  disabled="true">
+                    <t t-out="this.formatContent(msg_value.translatedText)" />
+                </button>
+                <button t-else="" t-att-data-message-id="msg"
+                    t-attf-class="{{msg_value.isError ? 'o-message-error border-danger bg-danger' : ''}} {{this.state.selectedMessageId === msg ? 'o-translate-selected' : 'o-translate'}}
+                    {{msg_value.translator === 'Google Translate' ? 'o-google-translate' : ''}} {{msg_value.translator === 'ChatGPT' ? 'o-chatgpt-translate' : ''}}"
+                    class="o-translator-translated rounded-2 ms-3 mb-1 border-0 p-2"
+                    t-attf-style="{{ this.state.isRTL ? `direction: rtl` : '' }};"
+                    t-on-click="() => { this.state.selectedMessageId = msg; }">
+                    <t t-out="this.formatContent(msg_value.translatedText)" />
+                </button>
             </t>
-            <button t-if="msg_value.isError" t-att-data-message-id="msg"
-                class="o-translator-translated o-message-error border-danger bg-danger rounded-2 ms-3 mb-1 border-0 p-2"  disabled="true">
-                <t t-out="this.formatContent(msg_value.translatedText)" />
-            </button>
-            <button t-else="" t-att-data-message-id="msg"
-                t-attf-class="{{msg_value.isError ? 'o-message-error border-danger bg-danger' : ''}} {{this.state.selectedMessageId === msg ? 'o-translate-selected' : 'o-translate'}}
-                {{msg_value.translator === 'Google Translate' ? 'o-google-translate' : ''}} {{msg_value.translator === 'ChatGPT' ? 'o-chatgpt-translate' : ''}}"
-                class="o-translator-translated rounded-2 ms-3 mb-1 border-0 p-2"
-                t-attf-style="{{ this.state.isRTL ? `direction: rtl` : '' }};"
-                t-on-click="() => { this.state.selectedMessageId = msg; }">
-                <t t-out="this.formatContent(msg_value.translatedText)" />
-            </button>
+            <t t-else="">
+                <div t-if="msg_value.isError" t-att-data-message-id="msg"
+                    class="o-translator-translated o-message-error border-danger bg-danger rounded-2 ms-3 mb-1 border-0 p-2"  disabled="true">
+                    <t t-out="this.formatContent(msg_value.translatedText)" />
+                </div>
+                <div t-else="" t-att-data-message-id="msg"
+                    t-attf-class="{{msg_value.isError ? 'o-message-error border-danger bg-danger' : ''}}
+                    {{msg_value.translator === 'Google Translate' ? 'o-google-translate' : ''}} {{msg_value.translator === 'ChatGPT' ? 'o-chatgpt-translate' : ''}}"
+                    class="o-translator-translated"
+                    t-attf-style="{{ this.state.isRTL ? `direction: rtl` : '' }};">
+                    <t t-out="this.formatContent(msg_value.translatedText)" />
+                </div>
+            </t>
         </t>
         <div t-if="this.state.translationInProgress" class="d-flex">
             <img src="/web/static/img/spin.svg" alt="Loading..." class="me-2"
@@ -30,7 +43,8 @@
 
         <!-- FOOTER -->
         <t t-set-slot="footer">
-            <button class="btn btn-primary" t-on-click="this._confirm"
+            <button class="btn btn-primary"
+                t-attf-class="{{this.state.selectedMessageId === null ? 'disabled' : ''}}" t-on-click="this._confirm"
                 t-att-disabled="this.state.translationInProgress || !this.state.selectedMessageId || this.state.messages.get(this.state.selectedMessageId)?.isError">Insert</button>
             <button class="btn btn-secondary" t-on-click="this._cancel">Cancel</button>
             <t t-if="this.env.debug and this.translators.length > 1">
