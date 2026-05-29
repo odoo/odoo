@@ -10,22 +10,23 @@
                 <body>
                     <div class="pos-receipt m-0 p-0" style="padding-top: 80px !important;">
                         <div name="receipt-header" class="text-center">
-                            <div name="preset-info" class="preset-name text-huge text-bold" t-if="preset">
+                            <div name="preset-info" class="preset-name text-huge text-center text-bold" t-if="preset">
                                 <span t-esc="preset['name']"/>
                                 <span t-if="extra_data.get('preset_time')"> (<t t-esc="extra_data['preset_time']"/>)</span>
                             </div>
-                            <div name="employee-info">
+                            <div name="employee-info" class="text-small">
                                 <span><t t-esc="config['name']"/> : <t t-esc="extra_data['time']"/></span><br/>
                                 <span t-if="extra_data.get('employee_name')">By: <t t-esc="extra_data['employee_name']"/></span>
                             </div>
-                            <span class="my-4 text-normal">
-                                <span>
-                                    Order <t t-esc="order['pos_reference']"/>
-                                </span>
-                                <span t-if="order.get('tracking_number')" class="my-3">
-                                    # <t t-esc="order['tracking_number']"/>
-                                </span>
-                            </span>
+                            <div name="order-info" class="my-2 text-huge">
+                                <div name="tracking-number">
+                                    <span t-esc="extra_data['prefix']"/>
+                                    <span> </span>
+                                    <span class="text-bold" t-esc="order['tracking_number']"/>
+                                </div>
+                                <div t-if="extra_data.get('order_label')" name="order-label" class="text-large" t-esc="extra_data['order_label']" />
+                            </div>
+                            <div name="order-reference" t-esc="order['pos_reference']" />
                         </div>
                         <hr style="border: none; border-top: 4px dashed black;"/>
                         <div name="body" class="pos-receipt-body pb-5">
@@ -51,15 +52,15 @@
                                 </div>
                             </t>
 
-                            <div t-if="extra_data.get('internal_note')" class="new-changes w-100" t-att-class="{'mb-3': order['general_customer_note']}">
-                                <div class="pos-receipt-title text-center text-huge w-100">
+                            <div t-if="extra_data.get('internal_note')" name="new-changes-internal-note" class="new-changes w-100" t-att-class="{'mb-3': order['general_customer_note']}">
+                                <div class="pos-receipt-title text-center text-insane w-100 text-bold">
                                     <strong>INTERNAL NOTE</strong>
                                 </div>
                                 <div class="text-center text-huge text-italic" t-esc="extra_data['internal_note']" />
                             </div>
 
-                            <div t-if="extra_data['general_customer_note']" class="new-changes w-100">
-                                <div class="pos-receipt-title text-center text-huge w-100">
+                            <div t-if="extra_data['general_customer_note']" name="new-changes-customer-note" class="new-changes w-100">
+                                <div class="pos-receipt-title text-center text-insane w-100 text-bold">
                                     <strong>CUSTOMER NOTE</strong>
                                 </div>
                                 <div class="text-center text-large" t-esc="extra_data['general_customer_note']" />
@@ -71,21 +72,18 @@
         </template>
 
         <template id="point_of_sale.pos_order_change_receipt_line">
-            <div t-att-class="{'ps-5': line['combo_parent_uuid']}" class="orderline text-huge">
-                <div>
-                    <span t-esc="line['quantity']"/> <span class="product-name" t-esc="line['basic_name']"/>
+            <div t-att-class="{'ps-5': line['combo_parent_uuid']}" class="orderline text-large">
+                <div class="text-huge">
+                    <span class="me-3 font-monospace" t-esc="line['quantity']"/>
+                    <span class="product-name text-break" t-esc="line['basic_name']"/>
                 </div>
                 <div t-if="line.get('attribute_value_names') and len(line['attribute_value_names'])" class="ps-5">
                     <t t-foreach="line['attribute_value_names']" t-as="name">
-                        <div class="text-large">- <t t-esc="name" /></div>
+                        <div>- <t t-esc="name" /></div>
                     </t>
                 </div>
-                <div t-if="line.get('note')" class="text-italic text-large">
-                    <t t-esc="line['note']"/>
-                </div>
-                <div t-if="line.get('customer_note')" class="text-italic text-large">
-                    <t t-esc="line['customer_note']"/>
-                </div>
+                <div t-if="line.get('note')" class="text-italic" t-esc="line['note']"/>
+                <div t-if="line.get('customer_note')" class="text-italic" t-esc="line['customer_note']"/>
             </div>
         </template>
     </data>

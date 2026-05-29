@@ -21,7 +21,6 @@
         "views/res_config_settings_views.xml",
         "views/point_of_sale_dashboard.xml",
         'receipt/pos_order_receipt.xml',
-        'receipt/pos_order_change_receipt.xml',
     ],
     "demo": [
         "data/kiosk_demo_data.xml",

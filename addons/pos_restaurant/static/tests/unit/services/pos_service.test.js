@@ -565,10 +565,14 @@ describe("restaurant pos_store.js", () => {
         const generator = store.ticketPrinter.getGenerator({ models: store.models, order });
         const orderChange = generator.generatePreparationData(new Set([...pos_categories]), {});
         expect(orderChange[0].extra_data.order_label).toBe(partner.name);
+        expect(orderChange[0].extra_data.table_number).toBeEmpty();
+        expect(orderChange[0].extra_data.floor_name).toBeEmpty();
 
         const table = store.models["restaurant.table"].get(2);
         const tableOrder = await getFilledOrder(store, { table_id: table });
         tableOrder.setPartner(partner);
+        expect(tableOrder.floating_order_name).not.toBe(partner.name);
+
         const tableGenerator = store.ticketPrinter.getGenerator({
             models: store.models,
             order: tableOrder,
@@ -577,6 +581,8 @@ describe("restaurant pos_store.js", () => {
             new Set([...pos_categories]),
             {}
         );
-        expect(tableOrderChange[0].extra_data.order_label).toBe(`T ${table.table_number}`);
+        expect(tableOrderChange[0].extra_data.order_label).toBe(false);
+        expect(tableOrderChange[0].extra_data.table_number).toBe(table.table_number);
+        expect(tableOrderChange[0].extra_data.floor_name).toBe(table.floor_id.name);
     });
 });
