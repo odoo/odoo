@@ -405,6 +405,8 @@ class PosOrderReceipt(models.AbstractModel):
                 'time': format_datetime(self.env, self.date_order),
                 'employee_name': self.user_id.name if self.user_id else '',
                 'preset_time': format_datetime(self.env, preset_time) if preset_time else False,
+                'prefix': _("Order"),
+                'order_label': self.floating_order_name,
                 'reprint': False,
                 'internal_note': _get_str_notes(order_changes.get('internal_note', '')),
                 'general_customer_note': order_changes.get('general_customer_note', ''),
