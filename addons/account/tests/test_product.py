@@ -147,6 +147,10 @@ class TestProduct(AccountTestInvoicingCommon):
         self.assertEqual(fresh_categ.with_company(self.env.company).property_account_income_categ_id, new_income)
 
     def test_retrieve_product_by_name(self):
+        company = self.company_data['company']
+        if 'predict_bill_product' in company._fields:
+            company.predict_bill_product = True
+
         Product = self.env['product.product']
         Product.create({'name': 'Wireless bluetooth speaker battery'})
         product_A = Product.create({'name': 'Network Cables'})
