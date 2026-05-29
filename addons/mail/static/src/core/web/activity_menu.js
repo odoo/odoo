@@ -17,12 +17,12 @@ export class ActivityMenu extends Component {
 
     setup() {
         super.setup();
-        this.discussSystray = useDiscussSystray();
         this.store = useService("mail.store");
         this.action = useService("action");
         this.userId = user.userId;
         this.ui = useService("ui");
         this.dropdown = useDropdownState();
+        this.discussSystray = useDiscussSystray(this.dropdown);
         useCommand(_t("Activity"), () => this.store.scheduleActivity(false, false), {
             category: "activity",
             hotkey: "alt+shift+a",

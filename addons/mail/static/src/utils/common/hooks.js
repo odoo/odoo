@@ -643,8 +643,22 @@ export function useSequential() {
     };
 }
 
-export function useDiscussSystray() {
+/** @param {import("@web/core/dropdown/dropdown_hooks").DropdownState} [dropdownState] */
+export function useDiscussSystray(dropdownState) {
     const ui = useService("ui");
+    if (dropdownState) {
+        useLayoutEffect(
+            (isOpen) => {
+                if (isOpen) {
+                    document.body.classList.add("o-mail-discuss-systray-menu-open");
+                    return () => {
+                        document.body.classList.remove("o-mail-discuss-systray-menu-open");
+                    };
+                }
+            },
+            () => [dropdownState.isOpen]
+        );
+    }
     return {
         class: "o-mail-DiscussSystray-class",
         get contentClass() {
