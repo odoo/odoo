@@ -75,7 +75,7 @@ class Crawler(HttpCaseWithUserDemo):
 
         _logger.info("%s %s", msg, url)
         r = self.url_open(url, allow_redirects=False)
-        if r.status_code in (301, 302, 303):
+        if r.status_code in (301, 302, 303, 307, 308):
             # check local redirect to avoid fetch externals pages
             new_url = r.headers.get('Location')
             current_url = r.url
