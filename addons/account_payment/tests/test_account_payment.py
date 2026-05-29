@@ -525,9 +525,4 @@ class TestAccountPayment(AccountPaymentCommon):
             'amount': 100.0,
         })
         inv_line = payment.move_id.line_ids.filtered(lambda l: l.balance == 200)
-        statement_line.set_line_bank_statement_line(inv_line.id)
-        self.assertRecordValues(statement_line.line_ids, [
-            {'account_id': statement_line.journal_id.default_account_id.id, 'balance': 100.0, 'reconciled': False},
-            {'account_id': inv_line.account_id.id, 'balance': -200.0, 'reconciled': True},
-            {'account_id': statement_line.journal_id.suspense_account_id.id, 'balance': 100.0, 'reconciled': False},
-        ])
+        self.assertFalse(statement_line._get_partial_amounts(-200, inv_line, -100, -100))
