@@ -413,6 +413,54 @@ test("No load more when fetch below fetch limit of 60", async () => {
     await waitStoreFetch([]);
 });
 
+test("Opening discuss app with activeId prefetches messages and members in one store fetch", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["res.partner"].create({});
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "first",
+        date: "2019-04-20 9:59:00",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    for (let i = 59; i >= 0; i--) {
+        pyEnv["mail.message"].create({
+            author_id: partnerId,
+            body: "not empty",
+            date: "2019-04-20 10:00:00",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    let countStoreFetch = 0;
+    listenStoreFetch(["/discuss/channel/messages", "/discuss/channel/members"], {
+        logParams: ["/discuss/channel/messages", "/discuss/channel/members"],
+    });
+    onRpcBefore("/mail/store", () => {
+        countStoreFetch++;
+    });
+    await start({
+        patchInitialWindowLocation: {
+            activeId: `discuss.channel_${channelId}`,
+        },
+    });
+    await openDiscuss(channelId);
+    await waitStoreFetch([
+        ["/discuss/channel/members", { channel_id: channelId }],
+        [
+            "/discuss/channel/messages",
+            { channel_id: channelId, fetch_params: { limit: 60, initial_fetch: true } },
+        ],
+    ]);
+    await contains(".o-mail-Message", { count: 60 });
+    await contains("button:text('Load More')");
+    await contains(".o-mail-Message-content:text('first')", { count: 0 });
+    await waitStoreFetch([]);
+    expect(countStoreFetch).toBe(1); // only 1 store fetch for the discuss app
+});
+
 test("show date separator above mesages of similar date", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });

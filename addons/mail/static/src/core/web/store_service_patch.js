@@ -48,12 +48,15 @@ const StorePatch = {
             },
         });
     },
-    initialize() {
-        super.initialize(...arguments);
+    initialPromises() {
         if (this.self_user?.share === false) {
-            this.fetchStoreData("failures");
-            this.fetchStoreData("systray_get_activities");
+            return [
+                ...super.initialPromises(...arguments),
+                this.fetchStoreData("failures"),
+                this.fetchStoreData("systray_get_activities"),
+            ];
         }
+        return super.initialPromises(...arguments);
     },
     onStarted() {
         super.onStarted(...arguments);

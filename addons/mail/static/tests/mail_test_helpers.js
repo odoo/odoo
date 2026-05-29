@@ -364,6 +364,7 @@ let discussAsTabId = 0;
  *  authenticateAs?: any | { login: string; password: string; };
  *  env?: Partial<OdooEnv>;
  *  waitUntilSubscribe?: boolean;
+ *  patchInitialWindowLocation?: boolean | { path?: string; activeId?: number; };
  * }} [options]
  */
 export async function start(options) {
@@ -406,6 +407,14 @@ export async function start(options) {
             storeData: store.as_dict(),
         });
         registerDebugInfo("session.storeData", session.storeData);
+    }
+    if (options?.patchInitialWindowLocation) {
+        const path = options.patchInitialWindowLocation.path ?? "/odoo/discuss";
+        let discussUrl = `${window.location.origin}${path}`;
+        if (options.patchInitialWindowLocation.activeId) {
+            discussUrl += `?active_id=${options.patchInitialWindowLocation.activeId}`;
+        }
+        browser.location = new URL(discussUrl);
     }
     if (options?.asTab) {
         discussAsTabId++;

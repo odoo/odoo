@@ -1,6 +1,7 @@
 import { AND, fields, Record } from "@mail/model/export";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
+import { toRaw } from "@odoo/owl";
 
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
@@ -29,6 +30,7 @@ import { user } from "@web/core/user";
 export class Thread extends Record {
     static id = AND("model", "id");
     static _name = "mail.thread";
+    initialMessageFetchParams = null;
     /**
      * @param {string} localId
      * @returns {string}
@@ -40,6 +42,34 @@ export class Thread extends Record {
         // Transform "Thread,<model> AND <id>" to "<model>_<id>""
         return localId.split(",").slice(1).join("_").replace(" AND ", "_");
     }
+    static initialDataPromises(data) {
+        const promises = [];
+        if (data.model === "discuss.channel") {
+            const channel = this.store[data.model].get(data.id);
+            if (!channel) {
+                promises.push(
+                    this.getOrFetch(data),
+                    this.store["discuss.channel"].initialFetchChannelMembers(data.id),
+                    this.store["discuss.channel"].initialFetchChannelMessages(data.id)
+                );
+            } else {
+                promises.push(channel.fetchChannelMembers(), channel.thread.fetchInitialMessages());
+            }
+        } else {
+            promises.push(this.getOrFetch(data));
+        }
+        return promises;
+    }
+
+    afterInitialDataFetched() {
+        if (this.channel) {
+            this.channel.fetchMembersState = "fetched";
+            this.initialMessageFetchParams = toRaw(
+                this.channel.self_member_id?.new_message_separator
+            );
+        }
+    }
+
     static async getOrFetch(data, fieldNames = []) {
         if (data.model === "discuss.channel") {
             const channel = await this.store["discuss.channel"].getOrFetch(data.id);
@@ -661,6 +691,18 @@ export class Thread extends Record {
             this.isLoaded = true;
             return;
         }
+        this.afterFetchAround({ messageId, limit });
+    }
+
+    /**
+     * Update the thread state after a fetch around. This method is called after
+     * a fetch around and initial fetch to update the thread state
+     * based on the fetched messages.
+     * @param {Object} options
+     * @param {number} [options.messageId]
+     * @param {number} options.limit
+     */
+    afterFetchAround({ messageId, limit }) {
         this.isLoaded = true;
         this.loadNewer = messageId !== undefined ? true : false;
         this.loadOlder = true;
