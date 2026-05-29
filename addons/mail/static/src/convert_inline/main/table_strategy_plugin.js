@@ -102,25 +102,24 @@ export class TableStrategyPlugin extends Plugin {
         return isTableCandidate;
     }
 
-    buildFragment(referenceNode) {
-        // => about tables
-        // normally, a table will ask that its direct container is not a table nor a row nor a tbody => if it is, we create a row + td to wrap
-        // it => becomes legal again
-        // -> how to handle it => actual constraint should come from the parent (table) if the child is also a table => it should be
-        // wrapped in a tr + td?
+    // buildFragment(referenceNode) {
+    //     // => about tables
+    //     // normally, a table will ask that its direct container is not a table nor a row nor a tbody => if it is, we create a row + td to wrap
+    //     // it => becomes legal again
+    //     // -> how to handle it => actual constraint should come from the parent (table) if the child is also a table => it should be
+    //     // wrapped in a tr + td?
 
-        // TODO EGGMAIL NOW: render fragment
-        // The above heuristic will match a `tbody` and transform it into a
-        // table
-        // => avoid putting a table inside another table
-        // => re-evaluate strategy of parent in such a case
-        // => match a table tagName directly and handle it from that node,
-        // aggregate unsupported sub-parts
-        referenceNode.fragment;
-    }
+    //     // TODO EGGMAIL NOW: render fragment
+    //     // The above heuristic will match a `tbody` and transform it into a
+    //     // table
+    //     // => avoid putting a table inside another table
+    //     // => re-evaluate strategy of parent in such a case
+    //     // => match a table tagName directly and handle it from that node,
+    //     // aggregate unsupported sub-parts
+    //     referenceNode.fragment;
+    // }
 }
 
-// TODO EGGMAIL: enable plugin
-// registry
-//     .category("mail-html-conversion-main-plugins")
-//     .add(TableStrategyPlugin.id, TableStrategyPlugin);
+registry
+    .category("mail-html-conversion-main-plugins")
+    .add(TableStrategyPlugin.id, TableStrategyPlugin);

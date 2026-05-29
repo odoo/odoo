@@ -131,6 +131,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
     analyzeElementLayout({ layout, analysis }, { referenceNode }) {
         const div = this.config.referenceDocument.createElement("DIV");
         if (
+            analysis.facts.isMainTable ||
             !isAllowedContent(referenceNode, [div]) ||
             (!this.detectHybridFluidLayout(referenceNode) &&
                 !this.detectResponsiveElement(referenceNode))

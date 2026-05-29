@@ -10,15 +10,4 @@
                 t-call-context="this.nodePositionManager.renderContext({ renderPositionedNodes: this.renderPositionedNodes })"/>
         </t>
     </t>
-    <t t-name="mail.SpacingLayout">
-        <table role="presentation" cellspacing="0" cellpadding="0" border="0"
-            t-att="this.model.renderAttributes()">
-            <tr>
-                <td t-att="this.model.renderAttributes('cell')">
-                    <t t-call="mail.NodePositionManager"
-                        t-call-context="this.nodePositionManager.renderContext({ renderPositionedNodes: this.renderPositionedNodes })"/>
-                </td>
-            </tr>
-        </table>
-    </t>
 </templates>

@@ -32,10 +32,6 @@ export class NodePositionManager extends Array {
         }
         return { ...context, nodeIds: this.registerNodes(nodes) };
     }
-
-    get template() {
-        return "mail.NodePositionManager";
-    }
 }
 
 /**
