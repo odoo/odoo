@@ -51,6 +51,8 @@ class MrpBom(models.Model):
     sequence = fields.Integer('Sequence')
     operation_ids = fields.One2many('mrp.routing.workcenter', 'bom_id', 'Operations', copy=True)
     operation_count = fields.Integer('Operations Count', compute='_compute_operation_count')
+    exploded_component_count = fields.Integer(compute='_compute_exploded_bom_count')
+    subassembly_count = fields.Integer(compute='_compute_exploded_bom_count')
     show_copy_operations_button = fields.Boolean(
         compute="_compute_show_copy_operations_button",
         help="Technical field used to control the visibility of the 'Copy Existing Operations' button.")
@@ -102,6 +104,13 @@ class MrpBom(models.Model):
     def _compute_possible_product_template_attribute_value_ids(self):
         for bom in self:
             bom.possible_product_template_attribute_value_ids = bom.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids._only_active()
+
+    @api.depends('bom_line_ids')
+    def _compute_exploded_bom_count(self):
+        for bom in self:
+            bom_line_ids, subassembly_count = bom.get_exploded_bom_data()
+            bom.exploded_component_count = len(bom_line_ids)
+            bom.subassembly_count = subassembly_count
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -309,6 +318,14 @@ class MrpBom(models.Model):
         self.with_context(active_test=False).operation_ids.action_unarchive()
         return super().action_unarchive()
 
+    def action_open_exploded_bom_lines(self):
+        bom_line_ids, _ = self.get_exploded_bom_data()
+        action = self.env['ir.actions.act_window']._for_xml_id('mrp.mrp_bom_line_action_used_in_boms')
+        action['display_name'] = self.env._("Exploded BoM Lines")
+        action['domain'] = [('id', 'in', bom_line_ids)]
+        action['context'] = {'forced_order_ids': bom_line_ids}
+        return action
+
     @api.depends('code')
     def _compute_display_name(self):
         for bom in self:
@@ -479,6 +496,25 @@ class MrpBom(models.Model):
 
         lines_done = self._round_last_line_done(lines_done)
         return boms_done, lines_done
+
+    def get_exploded_bom_data(self):
+        """Return the exploded BoM lines IDs in hierarchy order and SubAssembly(Sub BoMs) count.
+        """
+        bom_line_ids = []
+        subassembly_count = 0
+
+        def _traverse_bom_line(bom_line):
+            nonlocal subassembly_count
+            bom_line_ids.append(bom_line.id)
+            if bom_line.child_bom_id:
+                subassembly_count += 1
+                for child_line in bom_line.child_line_ids:
+                    _traverse_bom_line(child_line)
+
+        for bom_line in self.bom_line_ids:
+            _traverse_bom_line(bom_line)
+
+        return bom_line_ids, subassembly_count
 
     @api.model
     def _round_last_line_done(self, lines_done):
@@ -758,6 +794,17 @@ class MrpBomLine(models.Model):
     def _unlink_and_update_outdated_bom(self):
         self.bom_id._set_outdated_bom_in_productions()
 
+    @api.model
+    def search_fetch(self, domain, field_names=None, offset=0, limit=None, order=None):
+        bom_lines = super().search_fetch(domain, field_names, offset, limit, order)
+        if not order and (forced_order_ids := self.env.context.get('forced_order_ids')):
+            # preserve the exploded lines in the proper hierarchy order.
+            bom_line_ids = set(bom_lines.ids)
+            # when user search for a component we need to filter the forced_order_ids otherwise it will return all lines.
+            filtered_forced_order_ids = [bom_line_id for bom_line_id in forced_order_ids if bom_line_id in bom_line_ids]
+            return self.browse(filtered_forced_order_ids)
+        return bom_lines
+
     def _skip_bom_line(self, product, never_attribute_values=False):
         """ Control if a BoM line should be produced, can be inherited to add custom control.
             cases:
@@ -776,11 +823,14 @@ class MrpBomLine(models.Model):
 
     def action_open_parent_bom(self):
         self.ensure_one()
+        ctx = dict(self.env.context)
+        ctx['forced_order_ids'] = False  # to avoid duplicate BoM lines while opening the BoM form view.
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'mrp.bom',
             'res_id': self.bom_id.id,
             'view_mode': 'form',
+            'context': ctx,
         }
 
     # -------------------------------------------------------------------------
