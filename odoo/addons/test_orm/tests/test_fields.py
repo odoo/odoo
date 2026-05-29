@@ -340,6 +340,43 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         cat.invalidate_recordset()
         self.assertFalse(cat.dummy)
 
+    def test_10_non_stored_non_inverse_writable(self):
+        """Test cache consistency for a non-stored Char with compute and no inverse.
+
+        These fields are often ``readonly=False`` so the UI can set a value that
+        lives in cache until the field value is invalidated. A ``default`` can
+        likewise seed the cache with a value that differs from the one ``compute``
+        yields after invalidation.
+        """
+        Category = self.env['test_orm.category']
+        cat = Category.create({'name': 'Customized Writable Test 1', 'dummy_compute': 'dummy create'})
+        self.assertEqual(cat.dummy_compute, 'dummy create')
+        cat.invalidate_recordset(['dummy_compute'])
+        self.assertEqual(cat.dummy_compute, 'dummy compute')
+        cat.dummy_compute = 'dummy write'
+        self.assertEqual(cat.dummy_compute, 'dummy write')
+        cat.invalidate_recordset()
+        self.assertEqual(cat.dummy_compute, 'dummy compute')
+
+        self.patch(self.env.registry['test_orm.category'].dummy_compute, 'default', lambda self: 'dummy default')
+        cat = Category.create({'name': 'Customized Writable Test 2'})
+        self.assertEqual(cat.dummy_compute, 'dummy default')
+        cat.invalidate_recordset(['dummy_compute'])
+        self.assertEqual(cat.dummy_compute, 'dummy compute')
+        cat.dummy_compute = 'dummy write'
+        self.assertEqual(cat.dummy_compute, 'dummy write')
+        cat.invalidate_recordset()
+        self.assertEqual(cat.dummy_compute, 'dummy compute')
+
+        cat = Category.create({'name': 'Customized Writable Test 3', 'dummy_compute': 'dummy create'})
+        self.assertEqual(cat.dummy_compute, 'dummy create')
+        cat.invalidate_recordset(['dummy_compute'])
+        self.assertEqual(cat.dummy_compute, 'dummy compute')
+        cat.dummy_compute = 'dummy write'
+        self.assertEqual(cat.dummy_compute, 'dummy write')
+        cat.invalidate_recordset()
+        self.assertEqual(cat.dummy_compute, 'dummy compute')
+
     def test_11_stored(self):
         """ test stored fields """
         def check_stored(disc):

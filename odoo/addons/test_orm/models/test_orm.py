@@ -33,6 +33,7 @@ class TestOrmCategory(models.Model):
         recursive=True,
     )
     dummy = fields.Char(store=False)
+    dummy_compute = fields.Char(store=False, compute='_compute_dummy', readonly=False)
     discussions = fields.Many2many('test_orm.discussion', 'test_orm_discussion_category',
                                    'category', 'discussion')
 
@@ -77,6 +78,10 @@ class TestOrmCategory(models.Model):
                     child.parent = parent
             # assign name of last category, and reassign display_name (to normalize it)
             cat.name = names[-1].strip()
+
+    def _compute_dummy(self):
+        for cat in self:
+            cat.dummy_compute = 'dummy compute'
 
     def _fetch_query(self, query, fields):
         # DLE P45: `test_31_prefetch`,

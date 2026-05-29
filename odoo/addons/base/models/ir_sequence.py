@@ -109,6 +109,10 @@ class IrSequence(models.Model):
     def _set_number_next_actual(self):
         for seq in self:
             seq.write({'number_next': seq.number_next_actual or 1})
+        if self.env.context.get('create_ir_sequence'):
+            for seq in self:
+                if seq.implementation == 'standard':
+                    _create_sequence(self.env.cr, "ir_sequence_%03d" % seq.id, seq.number_increment or 1, seq.number_next or 1)
 
     @api.model
     def _get_current_sequence(self, sequence_date=None):
@@ -137,7 +141,7 @@ class IrSequence(models.Model):
     prefix = fields.Char(help="Prefix value of the record for the sequence", trim=False)
     suffix = fields.Char(help="Suffix value of the record for the sequence", trim=False)
     number_next = fields.Integer(string='Next Number', required=True, default=1, help="Next number of this sequence")
-    number_next_actual = fields.Integer(compute='_get_number_next_actual', inverse='_set_number_next_actual',
+    number_next_actual = fields.Integer(compute='_get_number_next_actual', inverse='_set_number_next_actual', default=0,
                                         string='Actual Next Number',
                                         help="Next number that will be used. This number can be incremented "
                                         "frequently so the displayed value might already be obsolete")
@@ -172,11 +176,7 @@ class IrSequence(models.Model):
     def create(self, vals_list):
         """ Create a sequence, in implementation == standard a fast gaps-allowed PostgreSQL sequence is used.
         """
-        seqs = super().create(vals_list)
-        for seq in seqs:
-            if seq.implementation == 'standard':
-                _create_sequence(self.env.cr, "ir_sequence_%03d" % seq.id, seq.number_increment or 1, seq.number_next or 1)
-        return seqs
+        return super(IrSequence, self.with_context(create_ir_sequence=True)).create(vals_list)
 
     def unlink(self):
         _drop_sequences(self.env.cr, ["ir_sequence_%03d" % x.id for x in self])
@@ -332,6 +332,11 @@ class IrSequenceDate_Range(models.Model):
     def _set_number_next_actual(self):
         for seq in self:
             seq.write({'number_next': seq.number_next_actual or 1})
+        if self.env.context.get('create_ir_sequence_date_range'):
+            for seq in self:
+                main_seq = seq.sequence_id
+                if main_seq.implementation == 'standard':
+                    _create_sequence(self.env.cr, "ir_sequence_%03d_%03d" % (main_seq.id, seq.id), main_seq.number_increment, seq.number_next or 1)
 
     @api.model
     def default_get(self, fields):
@@ -344,7 +349,7 @@ class IrSequenceDate_Range(models.Model):
     date_to = fields.Date(string='To', required=True)
     sequence_id = fields.Many2one("ir.sequence", string='Main Sequence', required=True, ondelete='cascade')
     number_next = fields.Integer(string='Next Number', required=True, default=1, help="Next number of this sequence")
-    number_next_actual = fields.Integer(compute='_get_number_next_actual', inverse='_set_number_next_actual',
+    number_next_actual = fields.Integer(compute='_get_number_next_actual', inverse='_set_number_next_actual', default=0,
                                         string='Actual Next Number',
                                         help="Next number that will be used. This number can be incremented "
                                              "frequently so the displayed value might already be obsolete")
@@ -364,12 +369,7 @@ class IrSequenceDate_Range(models.Model):
     def create(self, vals_list):
         """ Create a sequence, in implementation == standard a fast gaps-allowed PostgreSQL sequence is used.
         """
-        seqs = super().create(vals_list)
-        for seq in seqs:
-            main_seq = seq.sequence_id
-            if main_seq.implementation == 'standard':
-                _create_sequence(self.env.cr, "ir_sequence_%03d_%03d" % (main_seq.id, seq.id), main_seq.number_increment, seq.number_next_actual or 1)
-        return seqs
+        return super(IrSequenceDate_Range, self.with_context(create_ir_sequence_date_range=True)).create(vals_list)
 
     def unlink(self):
         _drop_sequences(self.env.cr, ["ir_sequence_%03d_%03d" % (x.sequence_id.id, x.id) for x in self])

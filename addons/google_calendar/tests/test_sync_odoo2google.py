@@ -365,6 +365,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
 
     @patch_api
     def test_stop_synchronization(self):
+        self.env['res.users.settings']._find_or_create_for_user(self.env.user)
         self.env.user.stop_google_synchronization()
         self.assertTrue(self.env.user.google_synchronization_stopped, "The google synchronization flag should be switched on")
         self.assertFalse(self.env.user._sync_google_calendar(self.google_service), "The google synchronization should be stopped")
