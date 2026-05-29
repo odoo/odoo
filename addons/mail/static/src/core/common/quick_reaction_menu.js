@@ -1,5 +1,5 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
+import { Component, signal } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
@@ -26,7 +26,7 @@ export class QuickReactionMenu extends Component {
     static DEFAULT_EMOJIS = ["👍", "❤️", "🤣", "😯", "😅", "🙏"];
 
     setup() {
-        this.toggle = useRef("toggle");
+        this.toggle = signal();
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.loadEmoji = useLoadEmoji();
@@ -38,27 +38,25 @@ export class QuickReactionMenu extends Component {
                 popoverClass: "o-mail-QuickReactionMenu-pickerPopover",
             }
         );
-        this.dropdown = useState(
-            useDropdownState({
-                onClose: () => {
-                    const currentThread = this.env.getCurrentThread?.();
-                    if (!currentThread || currentThread.notEq(this.props.message.thread)) {
-                        return;
-                    }
-                    if (currentThread.messageInEdition) {
-                        currentThread.messageInEdition.composer.autofocus++;
-                    } else {
-                        currentThread.composer.autofocus++;
-                    }
-                },
-            })
-        );
+        this.dropdown = useDropdownState({
+            onClose: () => {
+                const currentThread = this.env.getCurrentThread?.();
+                if (!currentThread || currentThread.notEq(this.props.message.thread)) {
+                    return;
+                }
+                if (currentThread.messageInEdition) {
+                    currentThread.messageInEdition.composer.autofocus++;
+                } else {
+                    currentThread.composer.autofocus++;
+                }
+            },
+        });
         this.frequentEmojiService = useService("frequent_emoji");
         useExternalListener(window, "keydown", async (ev) => {
             if (
                 !this.dropdown.isOpen ||
                 this.picker.isOpen ||
-                !this.toggle.el?.contains(ev.target) ||
+                !this.toggle()?.contains(ev.target) ||
                 ["Shift", "Control", "Meta", "Alt"].includes(ev.key)
             ) {
                 return;

@@ -1,5 +1,5 @@
-import { onWillRender, useRef } from "@web/owl2/utils";
-import { Component, toRaw } from "@odoo/owl";
+import { onWillRender } from "@web/owl2/utils";
+import { Component, signal, toRaw } from "@odoo/owl";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
@@ -21,8 +21,8 @@ export class CallActionList extends Component {
         this.rtc = useService("discuss.rtc");
         this.pipService = useService("discuss.pip_service");
         this.callActions = useCallActions(this.callActionsParams);
-        this.more = useRef("more");
-        this.root = useRef("root");
+        this.more = signal();
+        this.root = signal();
         this.popover = usePopover(Tooltip, {
             position: "top-middle",
         });

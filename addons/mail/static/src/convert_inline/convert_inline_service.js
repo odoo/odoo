@@ -1,15 +1,14 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, xml } from "@odoo/owl";
+import { Component, onMounted, signal, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 const mainComponents = registry.category("main_components");
 
 export class ConvertInlineContainer extends Component {
-    static template = xml`<div class="o-convert-inline" t-custom-ref="root"></div>`;
+    static template = xml`<div class="o-convert-inline" t-ref="this.root"></div>`;
     static props = { share: Object };
 
     setup() {
-        this.root = useRef("root");
+        this.root = signal();
         Object.assign(this.props.share, {
             root: this.root,
         });
@@ -33,7 +32,7 @@ export const convertInlineIframeService = {
         });
 
         const add = (iframe) => {
-            share.root.el.append(iframe);
+            share.root().append(iframe);
             return () => iframe.remove();
         };
 

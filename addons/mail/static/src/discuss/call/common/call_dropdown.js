@@ -1,5 +1,5 @@
-import { useExternalListener, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useExternalListener, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { Component, proxy, signal } from "@odoo/owl";
 import { useNavigation } from "@web/core/navigation/navigation";
 import { usePosition } from "@web/core/position/position_hook";
 import { getFirstElementOfNode } from "@web/core/dropdown/dropdown";
@@ -27,9 +27,9 @@ export class CallDropdown extends Component {
 
     setup() {
         super.setup();
-        this.menuRef = useRef("menu");
-        this.state = useState({ isOpen: this.props.openByDefault });
-        usePosition("menu", () => this.triggerRef.el, {
+        this.menuRef = signal();
+        this.state = proxy({ isOpen: this.props.openByDefault });
+        usePosition("menu", () => getFirstElementOfNode(this.__owl__.bdom), {
             position: this.props.position,
             margin: 4,
             flip: true,
@@ -40,8 +40,8 @@ export class CallDropdown extends Component {
         this.navigation = useNavigation(this.menuRef, {
             isNavigationAvailable: () => this.state.isOpen,
             getItems: () => {
-                if (this.state.isOpen && this.menuRef.el) {
-                    return this.menuRef.el.querySelectorAll(
+                if (this.state.isOpen && this.menuRef()) {
+                    return this.menuRef().querySelectorAll(
                         ":scope .o-navigable, :scope .o-dropdown"
                     );
                 }
@@ -56,12 +56,8 @@ export class CallDropdown extends Component {
                     return () => triggerEl.removeEventListener("click", this.handleClick);
                 }
             },
-            () => [this.triggerRef.el]
+            () => [getFirstElementOfNode(this.__owl__.bdom)]
         );
-    }
-
-    get triggerRef() {
-        return { el: getFirstElementOfNode(this.__owl__.bdom) };
     }
 
     get window() {
@@ -95,7 +91,8 @@ export class CallDropdown extends Component {
             return;
         }
         const isOutsideClick =
-            !this.triggerRef.el?.contains(ev.target) && !this.menuRef.el?.contains(ev.target);
+            !getFirstElementOfNode(this.__owl__.bdom)?.contains(ev.target) &&
+            !this.menuRef()?.contains(ev.target);
         if (isOutsideClick) {
             this.close();
         }

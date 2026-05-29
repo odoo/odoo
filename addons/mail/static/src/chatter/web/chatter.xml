@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Chatter">
-    <div t-if="this.state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column bg-inherit" t-att-class="{ 'overflow-auto o-scrollbar-thin': this.props.isChatterAside, 'o-chatter-disabled': this.props.threadId === false }" t-on-scroll="this.onScrollDebounced" t-custom-ref="root">
-        <div class="o-mail-Chatter-top d-print-none position-sticky top-0" t-att-class="{ 'shadow-sm': this.state.isTopStickyPinned }" t-custom-ref="top">
+    <div t-if="this.state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column bg-inherit" t-att-class="{ 'overflow-auto o-scrollbar-thin': this.props.isChatterAside, 'o-chatter-disabled': this.props.threadId === false }" t-on-scroll="this.onScrollDebounced" t-ref="this.rootRef">
+        <div class="o-mail-Chatter-top d-print-none position-sticky top-0" t-att-class="{ 'shadow-sm': this.state.isTopStickyPinned }" t-ref="this.topRef">
             <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 overflow-x-auto o-gap-0_5">
                 <div t-if="this.state.isSearchOpen" class="flex-grow-1">
                     <SearchMessageInput closeSearch.bind="this.closeSearch" messageSearch="this.messageSearch" thread="this.state.thread"/>

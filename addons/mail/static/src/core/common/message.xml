@@ -14,7 +14,7 @@
                 t-on-contextmenu="this.onContextMenu"
                 t-on-mouseenter="this.onMouseenter"
                 t-on-mouseleave="this.onMouseleave"
-                t-custom-ref="root"
+                t-ref="this.rootRef"
                 t-if="this.message.exists()"
             >
                 <MessageContextMenu anchorRef="this.rightClickAnchor" dropdownState="this.rightClickDropdownState" message="this.message" thread="this.props.thread"/>
@@ -36,7 +36,7 @@
                             <t t-elif="this.message.is_bookmarked  and !(this.props.thread?.eq(this.store.bookmarkBox))" t-call="mail.Message.sidebarBookmark"/>
                         </t>
                     </div>
-                    <div class="w-100 min-w-0" t-att-class="{ 'flex-grow-1': this.isEditing }" t-custom-ref="messageContent">
+                    <div class="w-100 min-w-0" t-att-class="{ 'flex-grow-1': this.isEditing }" t-ref="this.messageContent">
                         <div t-if="!this.props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !this.message.isNote, 'pe-2': this.props.asCard and this.isMobileOS }" name="header">
                             <span t-if="this.message.authorName and this.shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="this.getAuthorAttClass()">
                                 <strong class="me-1 o-fw-600" t-out="this.props.messageSearch?.highlight(this.message.authorName) ?? this.message.authorName"/>
@@ -110,12 +110,12 @@
                                                             'o-rounded-bubble': this.props.squashed,
                                                             'align-self-start o-rounded-end-bubble o-rounded-bottom-bubble': !this.isEditing and !this.message.isNote and !this.props.squashed,
                                                             'flex-grow-1': this.isEditing,
-                                                            }" t-custom-ref="body">
+                                                            }" t-ref="this.messageBody">
                                                     <i t-if="this.message.isEmpty" class="text-muted opacity-75" t-out="this.message.inlineBody"/>
                                                     <Composer t-elif="this.isEditing" autofocus="true" composer="this.message.composer" onDiscardCallback.bind="this.exitEditMode" onPostCallback.bind="this.exitEditMode" mode="'compact'" sidebar="false"/>
                                                     <t t-else="">
                                                         <em t-if="this.showSubject" class="d-block text-muted smaller" t-att-class="{ 'mb-2': !this.message.bubbleColor }">Subject: <t t-out="this.props.messageSearch?.highlight(this.message.subject) ?? this.message.subject"/></em>
-                                                        <div class="o-mail-Message-shadowBody overflow-x-auto" t-if="this.message.message_type and this.message.message_type.includes('email')" t-custom-ref="shadowBody"/>
+                                                        <div class="o-mail-Message-shadowBody overflow-x-auto" t-if="this.message.message_type and this.message.message_type.includes('email')" t-ref="this.shadowBody"/>
                                                         <t t-elif="this.message.showTranslation" t-out="this.message.richTranslationValue"/>
                                                         <div class="o-mail-Message-richBody overflow-x-auto" t-elif="this.message.hasTextContent and this.message.richBody and !this.message.linkPreviewSquash" t-out="this.props.messageSearch?.highlight(this.message.richBody) ?? this.message.richBody"/>
                                                         <p class="fst-italic text-muted small" t-if="this.message.showTranslation">

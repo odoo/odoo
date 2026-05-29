@@ -1,9 +1,9 @@
-import { useChildSubEnv, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv, useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUpdateProps } from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, proxy, signal } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { router } from "@web/core/browser/router";
@@ -22,26 +22,24 @@ export class Chatter extends Component {
 
     setup() {
         this.store = useService("mail.store");
-        this.state = useState({
+        this.state = proxy({
             jumpThreadPresent: 0,
             /** @type {import("models").Thread} */
             thread: undefined,
-            aside: false,
-            disabled: !this.props.threadId,
         });
         this.messageHighlight = useMessageScrolling({
             thread: () => this.state.thread,
             messageFetchRouteParams: () => this.messageFetchRouteParams,
         });
         this.highlightMessage = router.current.highlight_message_id;
-        this.rootRef = useRef("root");
+        this.rootRef = signal();
+        this.topRef = signal();
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
         useChildSubEnv(this.childSubEnv);
         useSubEnv(this.subEnv);
 
         onMounted(this._onMounted);
         onWillUpdateProps((nextProps) => {
-            this.state.disabled = !nextProps.threadId;
             if (
                 this.props.threadId !== nextProps.threadId ||
                 this.props.threadModel !== nextProps.threadModel
@@ -147,6 +145,6 @@ export class Chatter extends Component {
     }
 
     onScroll() {
-        this.state.isTopStickyPinned = this.rootRef.el.scrollTop !== 0;
+        this.state.isTopStickyPinned = this.rootRef().scrollTop !== 0;
     }
 }

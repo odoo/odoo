@@ -1,15 +1,13 @@
-import { useRef } from "@web/owl2/utils";
 import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 import { usePopover } from "@web/core/popover/popover_hook";
 
 import { formatDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
-
 
 export class ActivityCell extends Component {
     static components = {
@@ -37,7 +35,7 @@ export class ActivityCell extends Component {
 
     setup() {
         this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
-        this.contentRef = useRef("content");
+        this.contentRef = signal();
     }
 
     get reportingDateFormatted() {
@@ -45,9 +43,9 @@ export class ActivityCell extends Component {
     }
     get displayedSummaries() {
         const summariesWithContent = this.props.summaries.filter((textContent) => !!textContent);
-        const extras = this.props.summaries.length - summariesWithContent.length
+        const extras = this.props.summaries.length - summariesWithContent.length;
         if (summariesWithContent.length > 0 && extras > 0) {
-            summariesWithContent.push(_t("%(extraCount)s more", { extraCount: extras } ));
+            summariesWithContent.push(_t("%(extraCount)s more", { extraCount: extras }));
         }
         return formatList(summariesWithContent);
     }
@@ -68,7 +66,7 @@ export class ActivityCell extends Component {
         if (this.popover.isOpen) {
             this.popover.close();
         } else {
-            this.popover.open(this.contentRef.el, {
+            this.popover.open(this.contentRef(), {
                 activityIds: this.props.activityIds,
                 defaultActivityTypeId: this.props.activityTypeId,
                 onActivityChanged: () => {

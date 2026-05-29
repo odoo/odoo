@@ -1,5 +1,5 @@
 import { useHover } from "@mail/utils/common/hooks";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -19,32 +19,36 @@ export class DiscussSearch extends Component {
         this.store = useService("mail.store");
         this.command = useService("command");
         this.ui = useService("ui");
+        this.root = signal();
+        this.searchFloating = signal();
+        this.meetingFloating = signal();
+        this.meetingBtn = signal();
         this.searchHover = useHover(["search-btn", "search-floating"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
-                    this.searchFloating.isOpen = true;
+                    this.searchFloatingDropdown.isOpen = true;
                 }
             },
             onAway: () => {
                 if (this.store.discuss.isSidebarCompact) {
-                    this.searchFloating.isOpen = false;
+                    this.searchFloatingDropdown.isOpen = false;
                 }
             },
         });
         this.meetingHover = useHover(["meeting-btn", "meeting-floating"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
-                    this.meetingFloating.isOpen = true;
+                    this.meetingFloatingDropdown.isOpen = true;
                 }
             },
             onAway: () => {
                 if (this.store.discuss.isSidebarCompact) {
-                    this.meetingFloating.isOpen = false;
+                    this.meetingFloatingDropdown.isOpen = false;
                 }
             },
         });
-        this.searchFloating = useDropdownState();
-        this.meetingFloating = useDropdownState();
+        this.searchFloatingDropdown = useDropdownState();
+        this.meetingFloatingDropdown = useDropdownState();
     }
 
     get class() {

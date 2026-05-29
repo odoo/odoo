@@ -37,7 +37,7 @@ export const callPipService = {
                 return;
             }
             state.active = true;
-            const isShadowRoot = context?.root?.el?.getRootNode() instanceof ShadowRoot;
+            const isShadowRoot = context?.root?.()?.getRootNode() instanceof ShadowRoot;
             pipWindow = await popout.pip(Meeting, {
                 props: { isPip: true },
                 options: { useAlternativeAssets: isShadowRoot },

@@ -5,7 +5,7 @@
             <Dropdown t-if="this.compact" state="this.floating" position="'right-start'" manual="true" menuClass="'o-mail-DiscussSidebar-floatingMenu ' + this.store.discussDropdownMenuClass(this)">
                 <t t-call="mail.DiscussSidebarCallParticipants.main"/>
                 <t t-set-slot="content">
-                    <div class="p-2" t-custom-ref="floating">
+                    <div class="p-2" t-ref="this.floatingRef">
                         <t t-call="mail.DiscussSidebarCallParticipants.list" isCompact="false"/>
                     </div>
                 </t>
@@ -15,18 +15,18 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCallParticipants.main">
-        <div class="o-mail-DiscussSidebarCallParticipants d-flex pb-1 bg-inherit" t-custom-ref="root" t-att-class="{
+        <div class="o-mail-DiscussSidebarCallParticipants d-flex pb-1 bg-inherit" t-ref="this.root" t-att-class="{
             'justify-content-center': this.compact,
             'ps-3 pe-2': this.props.compact === undefined and !this.compact,
             'px-2': this.props.compact === false,
             'rounded-3': this.props.compact === undefined,
             'opacity-75': this.props.channel.notEq(this.rtc.channel) and this.compact,
         }">
-            <button class="o-mail-DiscussSidebarCallParticipants-expandBtn btn btn-link p-1 my-n1 ms-n1 me-0 align-self-start d-flex rounded-circle" t-if="!this.compact" t-on-click="() => this.state.expanded = !this.state.expanded">
-                <i class="oi o-xxsmaller text-muted text-dark" t-att-class="{'oi-chevron-right': !this.state.expanded, 'oi-chevron-down': this.state.expanded}" t-att-title="this.title"/>
+            <button class="o-mail-DiscussSidebarCallParticipants-expandBtn btn btn-link p-1 my-n1 ms-n1 me-0 align-self-start d-flex rounded-circle" t-if="!this.compact" t-on-click="this.toggle(this.expanded)">
+                <i class="oi o-xxsmaller text-muted text-dark" t-att-class="{'oi-chevron-right': !this.expanded(), 'oi-chevron-down': this.expanded()}" t-att-title="this.title"/>
             </button>
             <AvatarStack
-                t-if="!this.state.expanded"
+                t-if="!this.expanded()"
                 direction="this.compact ? 'v' : 'h'"
                 containerClass="this.compact ? '' : 'cursor-pointer o-mail-DiscussSidebarCallParticipants-avatarStack'"
                 avatarClass="(p) => this.avatarClass(p)"

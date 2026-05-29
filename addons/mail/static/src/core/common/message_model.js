@@ -730,13 +730,12 @@ export class Message extends Record {
 
     /**
      * @param {Object} owner
-     * @param {import("@web/env").OdooEnv} owner.env
      */
     showDeleteConfirm(owner) {
         this.store.env.services.dialog.add(
             discussComponentRegistry.get("MessageDeleteDialog"),
             { message: this, onConfirm: () => this.onShowDeleteConfirm(owner) },
-            { context: owner }
+            { rootRef: owner.rootRef }
         );
     }
 

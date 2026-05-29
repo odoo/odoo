@@ -13,6 +13,7 @@ class DialogWrapper extends Component {
 /**
  *  @typedef {{
  *      onClose?(): void;
+ *      rootRef?: import("@odoo/owl").Signal<Node>;
  *  }} DialogServiceInterfaceAddOptions
  */
 /**
@@ -84,7 +85,7 @@ export const dialogService = {
                             document.body.classList.remove("modal-open");
                         }
                     },
-                    rootId: options.context?.root?.el?.getRootNode()?.host?.id,
+                    rootId: options.rootRef?.()?.getRootNode()?.host?.id,
                 }
             );
 

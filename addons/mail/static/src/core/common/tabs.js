@@ -1,14 +1,12 @@
-import { useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
 import { useChildRefs, useForwardRefsToParent, useScrollState } from "@mail/utils/common/hooks";
-import { Component, xml } from "@odoo/owl";
-import { useForwardRefToParent } from "@web/core/utils/hooks";
+import { Component, signal, useEffect, xml } from "@odoo/owl";
 
 /**
  * @typedef {Object} Props
  * @property {"v"|"h"} [direction] Direction of the tabs. "v" for vertical, "h" for horizontal.
  * @property {any} [initialTabId] Id of the tab that should be active at the start.
- * @property {ReturnType<typeof import("@web/core/utils/hooks").useChildRef>} [ref] Ref function returned
- * by `useChildRef`. Used to forward the Tabs component ref to its parent.
+ * @property {import("@odoo/owl").Signal<Element>} [ref] Signal to forward the Tabs root element to the parent.
  * @property {Record<string, any>} [slots]
  * @extends {Component<Props, Env>}
  */
@@ -23,31 +21,24 @@ export class Tabs extends Component {
     static defaultProps = { direction: "v" };
 
     setup() {
-        this.state = useState({ activeHeaderId: this.props.initialTabId });
+        this.activeHeaderId = signal(this.props.initialTabId);
         this.headerRefs = useChildRefs();
-        this.navRef = useRef("nav");
-        this.scrollState = useScrollState("nav");
-        useForwardRefToParent("ref");
+        this.tabsRoot = this.props.ref ?? signal();
+        this.navRef = signal();
+        this.scrollState = useScrollState(this.navRef);
         useChildSubEnv({
             tabsContext: {
                 headerRefs: this.headerRefs,
-                isActive: (id) => this.state.activeHeaderId === id,
-                setActiveTab: (id) => (this.state.activeHeaderId = id),
+                isActive: (id) => this.activeHeaderId() === id,
+                setActiveTab: (id) => this.activeHeaderId.set(id),
             },
         });
-        useLayoutEffect(
-            (refs, headerEls, activeHeaderId) => {
-                if (!refs.has(activeHeaderId) && headerEls?.length) {
-                    this.state.activeHeaderId = headerEls[0].dataset.headerId;
-                }
-            },
-            () => [
-                this.headerRefs,
-                this.navRef.el?.children,
-                this.state.activeHeaderId,
-                this.headerRefs.size,
-            ]
-        );
+        useEffect(() => {
+            const headerEls = this.navRef()?.children;
+            if (!this.headerRefs.has(this.activeHeaderId()) && headerEls?.length) {
+                this.activeHeaderId.set(headerEls[0].dataset.headerId);
+            }
+        });
     }
 
     /**
@@ -56,7 +47,7 @@ export class Tabs extends Component {
      * @param {number} direction The direction to scroll (1 for forward, -1 for backward).
      */
     async scroll(direction) {
-        const navEl = this.navRef.el;
+        const navEl = this.navRef();
         if (this.props.direction === "v") {
             navEl?.scrollBy({ top: navEl?.clientHeight * direction, behavior: "smooth" });
         } else {
@@ -72,7 +63,7 @@ export class InternalTabHeader extends Component {
 
     setup() {
         super.setup(...arguments);
-        this.root = useRef("root");
+        this.root = signal();
         useForwardRefsToParent("headerRefs", (props) => props.id, this.root);
     }
 

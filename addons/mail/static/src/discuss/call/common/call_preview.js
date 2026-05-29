@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Action, ACTION_TAGS } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
 import {
@@ -12,7 +12,7 @@ import { CallSettingsDialog } from "@mail/discuss/call/common/call_settings";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 import { closeStream, onChange } from "@mail/utils/common/misc";
 
-import { Component, onWillDestroy, status } from "@odoo/owl";
+import { Component, onWillDestroy, proxy, signal, status } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -40,9 +40,9 @@ export class CallPreview extends Component {
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        this.state = useState({ audioStream: null, blurManager: null, videoStream: null });
-        this.audioRef = useRef("audio");
-        this.videoRef = useRef("video");
+        this.state = proxy({ audioStream: null, blurManager: null, videoStream: null });
+        this.audioRef = signal();
+        this.videoRef = signal();
         useLayoutEffect(
             (videoEl, audioEl, audioStream, videoStream, blurStream) => {
                 if (audioEl && !audioEl.srcObject && audioStream) {
@@ -53,8 +53,8 @@ export class CallPreview extends Component {
                 }
             },
             () => [
-                this.videoRef.el,
-                this.audioRef.el,
+                this.videoRef(),
+                this.audioRef(),
                 this.state.audioStream,
                 this.state.videoStream,
                 this.state.blurManager?.stream,
@@ -94,7 +94,9 @@ export class CallPreview extends Component {
             );
             disposeFns.push(
                 onChange(this.store.settings, "audioOutputDeviceId", (deviceId) => {
-                    this.audioRef.el?.setSinkId?.(deviceId).catch(() => {});
+                    this.audioRef()
+                        ?.setSinkId?.(deviceId)
+                        .catch(() => {});
                 })
             );
             disposeFns.push(
@@ -241,8 +243,8 @@ export class CallPreview extends Component {
             closeStream(this.state.audioStream);
             return;
         }
-        if (this.audioRef.el) {
-            this.audioRef.el.srcObject = this.state.audioStream;
+        if (this.audioRef()) {
+            this.audioRef().srcObject = this.state.audioStream;
         }
         this.props.onSettingsChanged?.({ microphone: true });
     }
@@ -250,8 +252,8 @@ export class CallPreview extends Component {
     disableMicrophone() {
         closeStream(this.state.audioStream);
         this.state.audioStream = null;
-        if (this.audioRef.el) {
-            this.audioRef.el.srcObject = null;
+        if (this.audioRef()) {
+            this.audioRef().srcObject = null;
         }
         this.props.onSettingsChanged?.({ microphone: false });
     }
@@ -282,15 +284,15 @@ export class CallPreview extends Component {
         this.state.videoStream = await navigator.mediaDevices.getUserMedia({
             video: this.store.settings.cameraConstraints,
         });
-        if (!this.videoRef.el) {
+        if (!this.videoRef()) {
             return;
         }
         if (status(this) === "destroyed") {
             closeStream(this.state.videoStream);
             return;
         }
-        if (this.videoRef.el) {
-            this.videoRef.el.srcObject = this.state.videoStream;
+        if (this.videoRef()) {
+            this.videoRef().srcObject = this.state.videoStream;
         }
         this.props.onSettingsChanged?.({ camera: true });
         if (this.store.settings.useBlur) {
@@ -303,8 +305,8 @@ export class CallPreview extends Component {
         this.state.videoStream = null;
         this.state.blurManager?.close();
         this.state.blurManager = undefined;
-        if (this.videoRef.el) {
-            this.videoRef.el.srcObject = null;
+        if (this.videoRef()) {
+            this.videoRef().srcObject = null;
         }
         this.props.onSettingsChanged?.({ camera: false });
     }
@@ -327,12 +329,12 @@ export class CallPreview extends Component {
 
     async enableBlur() {
         this.store.settings.useBlur = true;
-        if (!this.videoRef.el) {
+        if (!this.videoRef()) {
             return;
         }
         try {
             this.state.blurManager = await this.rtc.applyBlurEffect(this.state.videoStream);
-            this.videoRef.el.srcObject = await this.state.blurManager.stream;
+            this.videoRef().srcObject = await this.state.blurManager.stream;
         } catch (_e) {
             this.notification.add(_e.message, { type: "warning" });
             this.disableBlur();
@@ -341,8 +343,8 @@ export class CallPreview extends Component {
 
     disableBlur() {
         this.store.settings.useBlur = false;
-        if (this.videoRef.el) {
-            this.videoRef.el.srcObject = this.state.videoStream;
+        if (this.videoRef()) {
+            this.videoRef().srcObject = this.state.videoStream;
         }
         this.state.blurManager?.close();
         this.state.blurManager = undefined;

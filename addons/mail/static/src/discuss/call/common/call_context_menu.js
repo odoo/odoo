@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, proxy } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -22,7 +21,7 @@ export class CallContextMenu extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
-        this.state = useState({
+        this.state = proxy({
             downloadStats: {},
             uploadStats: {},
             producerStats: {},

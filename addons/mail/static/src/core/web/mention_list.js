@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { Component, signal } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { SearchInput } from "@mail/core/common/search_input";
@@ -26,7 +26,7 @@ export class MentionList extends Component {
         this.orm = useService("orm");
         this.store = useService("mail.store");
         this.suggestionService = useService("mail.suggestion");
-        this.ref = useChildRef();
+        this.ref = signal();
         this.search = useSearch({
             fetch: (term) =>
                 this.suggestionService.fetchSuggestions(
@@ -59,7 +59,7 @@ export class MentionList extends Component {
 
     get navigableListProps() {
         return {
-            anchorRef: this.ref.el,
+            anchorRef: this.ref(),
             position: "bottom-fit",
             isLoading: !!this.search.searchTerm && this.search.loading,
             onSelect: (...args) => {

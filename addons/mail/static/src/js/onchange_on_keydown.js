@@ -22,20 +22,21 @@ const onchangeOnKeydownMixin = () => ({
                 this.triggerOnChange,
                 this.props.keydownDebounceDelay
             );
-            useLayoutEffect(() => {
-                if (input.el) {
-                    input.el.addEventListener("keydown", triggerOnChange);
-                    return () => {
-                        input.el.removeEventListener("keydown", triggerOnChange);
-                    };
-                }
-            });
+            useLayoutEffect(
+                (el) => {
+                    if (el) {
+                        el.addEventListener("keydown", triggerOnChange);
+                        return () => el.removeEventListener("keydown", triggerOnChange);
+                    }
+                },
+                () => [input()]
+            );
         }
     },
 
     triggerOnChange() {
         const input = this.input || this.textareaRef;
-        input.el.dispatchEvent(new Event("change"));
+        input()?.dispatchEvent(new Event("change"));
     },
 });
 

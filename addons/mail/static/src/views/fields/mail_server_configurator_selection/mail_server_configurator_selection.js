@@ -1,4 +1,5 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
+
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
@@ -13,7 +14,7 @@ export class MailServerConfiguratorSelection extends SelectionField {
         this.action = useService("action");
         this.orm = useService("orm");
         this.notification = useService("notification");
-        this.state = useState({
+        this.state = proxy({
             value: null,
             connectionFailed: false,
         });

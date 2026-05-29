@@ -1,8 +1,8 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { Gif } from "@mail/core/common/gif";
 import { LinkPreviewConfirmDelete } from "@mail/core/common/link_preview_confirm_delete";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -20,16 +20,16 @@ export class LinkPreview extends Component {
         super.setup();
         this.dialogService = useService("dialog");
         this.ui = useService("ui");
-        this.state = useState({ startVideo: false, videoLoaded: false });
-        this.videoRef = useRef("video");
-        this.imageRef = useRef("image");
+        this.state = proxy({ startVideo: false, videoLoaded: false });
+        this.videoRef = signal();
+        this.imageRef = signal();
         useLayoutEffect(
             (el) => {
                 if (el) {
                     el.onload = () => (this.state.videoLoaded = true);
                 }
             },
-            () => [this.videoRef.el]
+            () => [this.videoRef()]
         );
     }
 
@@ -45,7 +45,7 @@ export class LinkPreview extends Component {
     }
 
     onImageLoaded() {
-        const img = this.imageRef?.el;
+        const img = this.imageRef?.();
         if (!img || !img.naturalWidth || !img.naturalHeight) {
             return;
         }

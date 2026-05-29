@@ -1,8 +1,8 @@
-import { useExternalListener, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { DiscussSidebar } from "@mail/core/public_web/discuss_app/sidebar/sidebar";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 import { useService } from "@web/core/utils/hooks";
@@ -26,7 +26,7 @@ export class Discuss extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.messageHighlight = useMessageScrolling({ thread: () => this.thread });
-        this.root = useRef("root");
+        this.root = signal();
         this.orm = useService("orm");
         this.effect = useService("effect");
         this.ui = useService("ui");

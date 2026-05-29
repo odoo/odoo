@@ -1,6 +1,4 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
-import { useAutofocus, useForwardRefToParent } from "@web/core/utils/hooks";
+import { Component, onMounted, signal, useEffect } from "@odoo/owl";
 
 let nextId = 0;
 
@@ -20,8 +18,8 @@ let nextId = 0;
  * @property {boolean | Parameters<typeof useAutofocus>} [autofocus]
  *  When truthy, focuses the input on mount via `useAutofocus`. Pass an object
  *  to forward `mobile`/`selectAll` options.
- * @property {import("@web/core/utils/hooks").Ref} [inputRef] A ref returned by
- *  `useChildRef`, to expose the `<input>` element to the parent (e.g. for popover anchoring).
+ * @property {import("@odoo/owl").Signal<HTMLInputElement>} [inputRef] A signal to expose the
+ *  `<input>` element to the parent (e.g. for popover anchoring).
  * @property {(ev: KeyboardEvent) => void} [onKeydown]
  * @property {string} [classNames] Extra classes for the outer wrapper.
  * @property {number} [loadingDelay=200] Milliseconds the spinner waits before
@@ -46,25 +44,18 @@ export class SearchInput extends Component {
     setup() {
         super.setup();
         this.uniqueId = `mail.SearchInput.${nextId++}`;
-        this.spinner = useState({ visible: false });
-        useLayoutEffect(
-            () => {
-                if (!this.props.search.loading) {
-                    this.spinner.visible = false;
-                    return;
-                }
-                const timer = setTimeout(
-                    () => (this.spinner.visible = true),
-                    this.props.loadingDelay
-                );
-                return () => clearTimeout(timer);
-            },
-            () => [this.props.search.loading]
-        );
-        this.inputRef = useForwardRefToParent("inputRef");
+        this.spinner = signal(false);
+        useEffect(() => {
+            if (!this.props.search.loading) {
+                this.spinner.set(false);
+                return;
+            }
+            const timer = setTimeout(() => this.spinner.set(true), this.props.loadingDelay);
+            return () => clearTimeout(timer);
+        });
+        this.inputRef = this.props.inputRef ?? signal();
         if (this.props.autofocus) {
-            const opts = typeof this.props.autofocus === "object" ? this.props.autofocus : {};
-            useAutofocus({ ...opts, refName: "inputRef" });
+            onMounted(() => this.inputRef()?.focus());
         }
     }
 }

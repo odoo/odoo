@@ -1,10 +1,10 @@
-import { useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
-import { Component } from "@odoo/owl";
+import { Component, computed, signal, useEffect } from "@odoo/owl";
 
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { useHover } from "@mail/utils/common/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { CountryFlag } from "@mail/core/common/country_flag";
@@ -39,11 +39,12 @@ export class ChatBubble extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        const popoverRef = useChildRef();
+        const popoverRef = signal();
         this.isMobileOS = isMobileOS();
+        this.isPopoverOpen = signal(false);
         this.popover = usePopover(ChatBubblePreview, {
             animation: false,
-            onClose: () => (this.state.isPopoverOpen = false),
+            onClose: () => this.isPopoverOpen.set(false),
             position: "left-middle",
             popoverClass:
                 "dropdown-menu bg-view border-0 p-0 overflow-visible o-rounded-bubble mx-1",
@@ -55,22 +56,18 @@ export class ChatBubble extends Component {
             }
             this.popover.close();
         });
-        this.hover = useHover(["root", popoverRef], {
+        this.rootRef = signal();
+        this.hover = useHover([this.rootRef, popoverRef], {
             onHover: () => {
                 this.env.bus.trigger("ChatBubble:preview-will-open", this);
-                this.popover.open(this.rootRef.el, { chatWindow: this.props.chatWindow });
-                this.state.isPopoverOpen = true;
+                this.popover.open(this.rootRef(), { chatWindow: this.props.chatWindow });
+                this.isPopoverOpen.set(true);
             },
             onAway: () => this.popover.close(),
         });
-        this.rootRef = useRef("root");
-        this.state = useState({ bouncing: false, isPopoverOpen: false });
-        useLayoutEffect(
-            (importantCounter) => {
-                this.state.bouncing = Boolean(importantCounter);
-            },
-            () => [this.channel?.importantCounter]
-        );
+        this.bouncing = signal(false);
+        const isImportant = computed(() => Boolean(this.channel?.importantCounter));
+        useEffect(() => this.bouncing.set(isImportant));
         useSubEnv({ inChatBubble: true });
     }
 

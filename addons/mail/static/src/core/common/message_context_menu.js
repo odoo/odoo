@@ -1,6 +1,5 @@
-import { useRef } from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
-import { useForwardRefToParent, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { ActionList } from "./action_list";
 import { useMessageActions } from "./message_actions";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -12,9 +11,7 @@ export class MessageContextMenu extends Component {
 
     setup() {
         super.setup();
-        useForwardRefToParent("anchorRef");
         this.store = useService("mail.store");
-        this.anchor = useRef("anchorRef");
         this.isMessageContextMenu = true;
         this.messageActions = useMessageActions({
             message: () => this.props.message,

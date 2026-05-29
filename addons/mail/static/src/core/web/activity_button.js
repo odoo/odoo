@@ -1,7 +1,7 @@
-import { useEnv, useRef } from "@web/owl2/utils";
+import { useEnv } from "@web/owl2/utils";
 import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -15,7 +15,7 @@ export class ActivityButton extends Component {
     setup() {
         super.setup();
         this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
-        this.buttonRef = useRef("button");
+        this.buttonRef = signal();
         this.env = useEnv();
         this.defaultActivityStateClass = "text-muted";
         this.defaultActivityDecorationClass = "fa-clock-o btn-link text-dark";
@@ -84,7 +84,7 @@ export class ActivityButton extends Component {
             // If the current record is not selected, ignore the selection
             const resIds =
                 selectedIds.includes(resId) && selectedIds.length > 1 ? selectedIds : undefined;
-            this.popover.open(this.buttonRef.el, {
+            this.popover.open(this.buttonRef(), {
                 activityIds: this.props.record.data.activity_ids.currentIds,
                 onActivityChanged: (thread) => {
                     const recordToLoad = resIds ? selectedRecords : [this.props.record];

@@ -1,9 +1,9 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
-import { useBackButton, useForwardRefToParent, useService } from "@web/core/utils/hooks";
+import { useBackButton, useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
@@ -30,7 +30,7 @@ export class ActionPanel extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        useForwardRefToParent("contentRef");
+        this.contentRef = signal();
         useSubEnv({ inDiscussActionPanel: true });
         useBackButton(
             () => this.props.close(),

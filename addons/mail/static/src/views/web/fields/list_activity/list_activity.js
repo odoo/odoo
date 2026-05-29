@@ -1,6 +1,6 @@
 import { ActivityButton } from "@mail/core/web/activity_button";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -15,6 +15,7 @@ class ListActivityButton extends ActivityButton {
 
     setup() {
         super.setup();
+        this.button = signal();
         this.defaultActivityStateClass = "";
         this.defaultActivityDecorationClass = "fa-clock-o";
     }

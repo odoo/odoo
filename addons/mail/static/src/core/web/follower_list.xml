@@ -24,7 +24,7 @@
             <t t-foreach="this.props.thread.followers" t-as="follower" t-key="follower.id">
                 <Follower follower="follower" onFollowerChanged="this.props.onFollowerChanged" close="this.props.dropdown.close"/>
             </t>
-            <span t-if="!this.props.thread.followersFullyLoaded" class="btn btn-link" t-on-click="this.props.thread.loadMoreFollowers" t-custom-ref="load-more">Load more</span>
+            <span t-if="!this.props.thread.followersFullyLoaded" class="btn btn-link" t-on-click="this.props.thread.loadMoreFollowers" t-ref="this.loadMoreRef">Load more</span>
         </div>
         <div t-elif="!this.props.thread.hasWriteAccess" class="dropdown-item disabled">
             No Followers

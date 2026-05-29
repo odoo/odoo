@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 import { useMessageActions } from "@mail/core/common/message_actions";
 import { MessageReactionList } from "@mail/core/common/message_reaction_list";
@@ -17,7 +16,7 @@ export class MessageReactions extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        this.addRef = useRef("add");
+        this.addRef = signal();
         this.isMobileOS = isMobileOS();
         this.messageActions = useMessageActions({ message: () => this.props.message });
         this.emojiPicker = useEmojiPicker(this.addRef, {

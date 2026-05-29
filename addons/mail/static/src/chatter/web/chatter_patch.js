@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { ScheduledMessage } from "@mail/chatter/web/scheduled_message";
 import { Activity } from "@mail/core/web/activity";
 import { AttachmentList } from "@mail/core/common/attachment_list";
@@ -13,7 +13,7 @@ import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzo
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
 import { SearchMessageResult } from "@mail/core/common/search_message_result";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { status } from "@odoo/owl";
+import { signal, status } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -96,11 +96,11 @@ const chatterPatch = {
                 id: this.props.threadId,
             })
         );
-        this.unfollowHover = useHover("unfollow");
+        this.unfollowRef = signal();
+        this.unfollowHover = useHover(this.unfollowRef);
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
         this.loadingAttachmentTimeout = null;
-        this.subjectInputRef = useRef("subjectInput");
         /** @type {Map<string, Function>} */
         this.uploadHandlers = new Map();
         useCustomDropzone(
@@ -164,12 +164,6 @@ const chatterPatch = {
                 }
             },
             () => [this.state.thread?.status, this.attachments.length]
-        );
-        useLayoutEffect(
-            () => {
-                this.state.aside = this.props.isChatterAside;
-            },
-            () => [this.props.isChatterAside]
         );
     },
 
@@ -345,7 +339,7 @@ const chatterPatch = {
         }
         this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
         if (this.state.isAttachmentBoxOpened) {
-            this.rootRef.el.scrollTop = 0;
+            this.rootRef().scrollTop = 0;
             this.state.thread.scrollTop = "bottom";
         }
     },
@@ -417,8 +411,8 @@ const chatterPatch = {
                         self.reloadParentView();
                     }
                     self.state.isAttachmentBoxOpened = true;
-                    if (self.rootRef.el) {
-                        self.rootRef.el.scrollTop = 0;
+                    if (self.rootRef()) {
+                        self.rootRef().scrollTop = 0;
                     }
                     self.state.thread.scrollTop = "bottom";
                 } finally {
