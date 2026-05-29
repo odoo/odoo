@@ -81,5 +81,12 @@
         <record id="base.default_user" model="res.users">
             <field name="groups_id" eval="[(4,ref('point_of_sale.group_pos_manager'))]"/>
         </record>
+
+    <record id="product_attribute_custom_value_pos_rule" model="ir.rule">
+        <field name="name">product.attribute.custom.value: pos manager read all records</field>
+        <field name="model_id" ref="product.model_product_attribute_custom_value"/>
+        <field name="groups" eval="[(4, ref('group_pos_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
     </data>
 </odoo>
