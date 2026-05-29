@@ -9,7 +9,7 @@ class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
     expiration_date = fields.Datetime(
-        string='Expiration Date', compute='_compute_expiration_date', store=True,
+        string='Expiration Date', compute='_compute_expiration_date', inverse='_inverse_expiration_date', store=True,
         help='This is the date on which the goods with this Serial Number may'
         ' become dangerous and must not be consumed.', init_storage=lambda model: None)
     removal_date = fields.Datetime(string='Removal Date', compute='_compute_removal_date', readonly=False, store=True, init_storage=lambda model: None)
@@ -40,6 +40,18 @@ class StockMoveLine(models.Model):
                     move_line.removal_date = move_line.expiration_date - datetime.timedelta(days=move_line.product_id.removal_time)
                 else:
                     move_line.removal_date = False
+
+    def _inverse_expiration_date(self):
+        for move_line in self:
+            lot_id = move_line.lot_id
+            if not lot_id or lot_id.expiration_date == move_line.expiration_date:
+                continue
+            if not move_line.expiration_date:
+                lot_id.expiration_date = False
+            elif lot_id.expiration_date:
+                time_delta = move_line.expiration_date - lot_id.expiration_date
+                lot_id.expiration_date = move_line.expiration_date
+                lot_id._sync_related_dates(time_delta)
 
     def _prepare_new_lot_vals(self):
         vals = super()._prepare_new_lot_vals()
