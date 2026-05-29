@@ -1440,7 +1440,7 @@ class MailMessage(models.Model):
         res_id = values.get('res_id', self.default_get(['res_id']).get('res_id'))
         email_from = values.get('email_from')
         records = None
-        if model and res_id and self._is_thread_message(thread=self.env[model].browse(res_id)):
+        if model and res_id and self.browse()._is_thread_message(thread=self.env[model].browse(res_id)):
             records = self.env[model].browse([res_id])
         else:
             records = self.env[model] if model else self.env['mail.thread']
@@ -1452,7 +1452,7 @@ class MailMessage(models.Model):
         res_id = values.get('res_id', self.default_get(['res_id']).get('res_id'))
         if values.get('reply_to_force_new', False) is True:
             message_id = tools.mail.generate_tracking_message_id('reply_to')
-        elif model and res_id and self._is_thread_message(thread=self.env[model].browse(res_id)):
+        elif model and res_id and self.browse()._is_thread_message(thread=self.env[model].browse(res_id)):
             message_id = tools.mail.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         else:
             message_id = tools.mail.generate_tracking_message_id('private')
@@ -1460,11 +1460,9 @@ class MailMessage(models.Model):
 
     def _is_thread_message(self, thread=None):
         """ Tool method to compute thread validity in notification methods.
-
-        Thread message has a model and a res_id.
-        """
-        res_model = thread._name if thread else self.model
-        res_id = thread.ids[0] if thread and thread.ids else self.res_id
+        Thread message has a model and a res_id. """
+        res_model = self.model if self else (thread and thread._name)
+        res_id = self.res_id if self else (thread and thread.ids and thread.ids[0])
         return bool(res_id) if (res_model and res_model != 'mail.thread') else False
 
     def _invalidate_documents(self, model=None, res_id=None):

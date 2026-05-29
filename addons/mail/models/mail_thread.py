@@ -4305,7 +4305,7 @@ class MailThread(models.AbstractModel):
                 lambda pdata: pdata['type'] == 'user',
                 {
                     'active': True,
-                    'has_button_access': message._is_thread_message(thread=self if not message else False),
+                    'has_button_access': message._is_thread_message(thread=self),
                 }
             ], [
                 'portal',
@@ -4349,7 +4349,7 @@ class MailThread(models.AbstractModel):
         else:
             view_title = _('View')
 
-        is_thread_message = message._is_thread_message()
+        is_thread_message = message._is_thread_message(thread=self)
 
         # fill group_data with default_values if they are not complete
         for group_name, _group_func, group_data in groups:
