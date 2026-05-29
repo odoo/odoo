@@ -5,6 +5,7 @@ const originalFetch = window.fetch;
 const originalSend = XMLHttpRequest.prototype.send;
 const originalConsoleError = console.error;
 const OFFLINE_MODE_KEY = "pos.tests.offline_mode";
+const OFFLINE_CACHE_NAME = "odoo-pos-cache";
 
 const navigatorPrototype = Object.getPrototypeOf(window.navigator);
 const originalNavigatorOnLine =
@@ -35,9 +36,30 @@ function applyOfflineOverrides() {
     });
     window.dispatchEvent(new Event("offline"));
 
-    window.fetch = () => {
-        throw new ConnectionLostError();
+    // Simulates the service worker's fetchCacheRespond when the network is unavailable.
+    // Mirrors the same filtering logic as service_worker.js fetch listener.
+    window.fetch = async (...args) => {
+        const request = args[0] instanceof Request ? args[0] : new Request(...args);
+        const url = request.url;
+
+        if (
+            url.includes("extension") ||
+            url.includes("web/dataset") ||
+            url.includes("Cashdro3WS/index3.php") ||
+            request.method !== "GET"
+        ) {
+            throw new ConnectionLostError(url);
+        }
+
+        const cache = await caches.open(OFFLINE_CACHE_NAME);
+        const cachedResponse = await cache.match(request);
+        if (cachedResponse) {
+            return cachedResponse;
+        }
+
+        throw new ConnectionLostError(url);
     };
+
     XMLHttpRequest.prototype.send = () => {
         throw new ConnectionLostError();
     };
