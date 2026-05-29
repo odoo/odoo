@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { parseBoxShadow } from "@html_builder/utils/utils_css";
 
 const shadowClass = "shadow";
+const bootstrapShadowClasses = new Set(["shadow", "shadow-sm", "shadow-lg"]);
 
 export class ShadowOptionPlugin extends Plugin {
     static id = "shadowOption";
@@ -76,6 +77,12 @@ registry.category("builder-plugins").add(ShadowOptionPlugin.id, ShadowOptionPlug
 
 export class SetShadowClassAction extends ClassAction {
     static id = "setShadowClass";
+    isApplied({ editingElement, params: { mainParam: shadowClass } = {} }) {
+        if (shadowClass === "o-shadow-custom") {
+            return !!editingElement.style.boxShadow;
+        }
+        return super.isApplied(...arguments);
+    }
     apply({ editingElement, params: { mainParam: shadowClass } }) {
         super.apply(...arguments);
         if (shadowClass === "o-shadow-custom" && editingElement.style.boxShadow === "") {
@@ -86,6 +93,10 @@ export class SetShadowClassAction extends ClassAction {
         super.clean(...arguments);
         if (shadowClass === "o-shadow-custom") {
             editingElement.style.removeProperty("box-shadow");
+            // Some snippets could use shadow, shadow-sm or shadow-lg with an
+            // inline box-shadow as a custom shadow.
+            // Remove both parts when cleaning the custom shadow.
+            editingElement.classList.remove(...bootstrapShadowClasses);
         }
     }
 }
