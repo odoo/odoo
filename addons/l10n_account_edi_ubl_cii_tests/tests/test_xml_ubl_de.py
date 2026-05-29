@@ -119,6 +119,9 @@ class TestUBLDE(TestUBLCommon):
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_invoice_xrechnung(self):
+        if self.env['ir.module.module']._get('account_accountant').state == 'installed':
+            self.company_data['company'].predict_bill_product = True
+
         self.partner_2.write({
             'peppol_eas': '0204',
             'peppol_endpoint': '123456789',
@@ -250,6 +253,9 @@ class TestUBLDE(TestUBLCommon):
         self._assert_imported_invoice_from_etree(refund, attachment)
 
     def test_export_import_refund_xrehnung(self):
+        if self.env['ir.module.module']._get('account_accountant').state == 'installed':
+            self.company_data['company'].predict_bill_product = True
+
         self.partner_2.write({
             'peppol_eas': '0204',
             'peppol_endpoint': '123456789',

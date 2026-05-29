@@ -93,6 +93,9 @@ class TestUBLNL(TestUBLCommon):
     ####################################################
 
     def test_export_import_invoice(self):
+        if self.env['ir.module.module']._get('account_accountant').state == 'installed':
+            self.company_data['company'].predict_bill_product = True
+
         invoice = self._generate_move(
             self.partner_1,
             self.partner_2,
@@ -155,6 +158,9 @@ class TestUBLNL(TestUBLCommon):
         self.test_export_import_invoice()
 
     def test_export_import_refund(self):
+        if self.env['ir.module.module']._get('account_accountant').state == 'installed':
+            self.company_data['company'].predict_bill_product = True
+
         refund = self._generate_move(
             self.partner_1,
             self.partner_2,

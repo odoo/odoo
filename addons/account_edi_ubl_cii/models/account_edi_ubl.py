@@ -3410,10 +3410,15 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _import_ubl_retrieve_products_search_plan(self, collected_values):
         ProductProduct = self.env['product.product']
+        company = collected_values['company']
+        predict_by_name = (
+            not self.module_installed('account_accountant')
+            or company.predict_bill_product
+        )
         return [
             ProductProduct._import_retrieve_product_from_barcode,
             ProductProduct._import_retrieve_product_from_default_code,
-            ProductProduct._import_retrieve_product_from_name,
+            *([ProductProduct._import_retrieve_product_from_name] if predict_by_name else []),
             ProductProduct._import_retrieve_product_from_invoice_predictive,
         ]
 
