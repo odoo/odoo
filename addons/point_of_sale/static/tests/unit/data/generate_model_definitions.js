@@ -108,5 +108,6 @@ export const definePosModels = () => {
         (modelClass) => !posModelNames.includes(modelClass.prototype.constructor._name)
     );
     onRpc("/pos/ping", () => {});
+    onRpc("/pos/receipt-template", () => []);
     defineModels([...modelsFromMail, ...hootPosModels]);
 };
