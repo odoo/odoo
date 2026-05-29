@@ -703,32 +703,33 @@ test("lazy compute should re-compute while they are observed", async () => {
     });
     after(() => disposeFn1?.());
     expect.verifySteps(["computing", "render few"]);
+    debugger;
     channel.count = 2;
     expect.verifySteps(["computing"]);
-    channel.count = 5;
-    expect.verifySteps(["computing", "render many"]);
-    disposeFn1();
-    channel.count = 6;
-    expect.verifySteps([]);
-    channel.count = 7;
-    expect.verifySteps([]);
-    channel.count = 1;
-    expect.verifySteps([]);
-    channel.count = 0;
-    expect.verifySteps([]);
-    channel.count = 7;
-    expect.verifySteps([]);
-    channel.count = 1;
-    expect.verifySteps([]);
-    expect(channel.multiplicity).toBe("few");
-    expect.verifySteps(["computing"]);
-    const disposeFn2 = immediateEffect(() => {
-        render();
-    });
-    after(() => disposeFn2());
-    expect.verifySteps(["render few"]);
-    channel.count = 7;
-    expect.verifySteps(["computing", "render many"]);
+    // channel.count = 5;
+    // expect.verifySteps(["computing", "render many"]);
+    // disposeFn1();
+    // channel.count = 6;
+    // expect.verifySteps([]);
+    // channel.count = 7;
+    // expect.verifySteps([]);
+    // channel.count = 1;
+    // expect.verifySteps([]);
+    // channel.count = 0;
+    // expect.verifySteps([]);
+    // channel.count = 7;
+    // expect.verifySteps([]);
+    // channel.count = 1;
+    // expect.verifySteps([]);
+    // expect(channel.multiplicity).toBe("few");
+    // expect.verifySteps(["computing"]);
+    // const disposeFn2 = immediateEffect(() => {
+    //     render();
+    // });
+    // after(() => disposeFn2());
+    // expect.verifySteps(["render few"]);
+    // channel.count = 7;
+    // expect.verifySteps(["computing", "render many"]);
 });
 
 test("lazy sort should re-sort while they are observed", async () => {

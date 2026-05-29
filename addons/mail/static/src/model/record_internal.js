@@ -139,48 +139,48 @@ export class RecordInternal {
             );
             record._.fieldsComputeComputed.set(fieldName, fieldComputed);
         }
-        if (Model._.fieldsSort.get(fieldName)) {
-            const cont = () => {
-                if (Model._.fieldsEager.get(fieldName)) {
-                    Promise.resolve().then(() =>
-                        untrack(() => record._.fieldsSortComputed.get(fieldName)?.())
-                    );
-                }
-            };
-            const fieldComputed = untrack(() =>
-                computed(() => {
-                    if (this.fieldsSortComputing.get(fieldName)) {
-                        return;
-                    }
-                    this.fieldsSortComputing.set(fieldName, true);
-                    const store = record._rawStore;
-                    const func = Model._.fieldsSort.get(fieldName).bind(record._proxy);
-                    if (isRelation(Model, fieldName)) {
-                        try {
-                            store._.sortRecordList(record._proxy[fieldName]._proxy, func);
-                            cont();
-                        } catch (err) {
-                            store.handleError(err);
-                        } finally {
-                            this.fieldsSortComputing.delete(fieldName);
-                        }
-                    } else {
-                        // sort on copy of list so that reactive observers not triggered while sorting
-                        const copy = untrack(() => [...record._proxy[fieldName]]);
-                        untrack(() => copy.sort(func));
-                        const hasChanged = copy.some(
-                            (item, index) => item !== record[fieldName][index]
-                        );
-                        if (hasChanged) {
-                            record._proxy[fieldName] = copy;
-                        }
-                        cont();
-                    }
-                    this.fieldsSortComputing.delete(fieldName);
-                })
-            );
-            record._.fieldsSortComputed.set(fieldName, fieldComputed);
-        }
+        // if (Model._.fieldsSort.get(fieldName)) {
+        //     const cont = () => {
+        //         if (Model._.fieldsEager.get(fieldName)) {
+        //             Promise.resolve().then(() =>
+        //                 untrack(() => record._.fieldsSortComputed.get(fieldName)?.())
+        //             );
+        //         }
+        //     };
+        //     const fieldComputed = untrack(() =>
+        //         computed(() => {
+        //             if (this.fieldsSortComputing.get(fieldName)) {
+        //                 return;
+        //             }
+        //             this.fieldsSortComputing.set(fieldName, true);
+        //             const store = record._rawStore;
+        //             const func = Model._.fieldsSort.get(fieldName).bind(record._proxy);
+        //             if (isRelation(Model, fieldName)) {
+        //                 try {
+        //                     store._.sortRecordList(record._proxy[fieldName]._proxy, func);
+        //                     cont();
+        //                 } catch (err) {
+        //                     store.handleError(err);
+        //                 } finally {
+        //                     this.fieldsSortComputing.delete(fieldName);
+        //                 }
+        //             } else {
+        //                 // sort on copy of list so that reactive observers not triggered while sorting
+        //                 const copy = untrack(() => [...record._proxy[fieldName]]);
+        //                 untrack(() => copy.sort(func));
+        //                 const hasChanged = copy.some(
+        //                     (item, index) => item !== record[fieldName][index]
+        //                 );
+        //                 if (hasChanged) {
+        //                     record._proxy[fieldName] = copy;
+        //                 }
+        //                 cont();
+        //             }
+        //             this.fieldsSortComputing.delete(fieldName);
+        //         })
+        //     );
+        //     record._.fieldsSortComputed.set(fieldName, fieldComputed);
+        // }
     }
 
     /**

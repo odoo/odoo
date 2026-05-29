@@ -232,7 +232,7 @@ test("Hover on chat bubble shows message preview along with message seen indicat
     await contains(".o-mail-MessageSeenIndicator[title='Seen by Marc']");
 });
 
-test.debug("Chat bubble preview works on author as email address", async () => {
+test("Chat bubble preview works on author as email address", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["discuss.channel"].create({ name: "test channel" });
     const messageId = pyEnv["mail.message"].create({
