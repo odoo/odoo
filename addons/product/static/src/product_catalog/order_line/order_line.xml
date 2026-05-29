@@ -24,7 +24,7 @@
         <div t-else="" class="d-flex justify-content-end align-items-center m-2">
             <div t-if="isInOrder()"
                     class="input-group o_product_catalog_quantity o_product_catalog_cancel_global_click w-50">
-                <div class="d-flex">
+                <div class="d-flex w-100">
                     <button class="btn btn-primary border"
                             t-on-click.stop="this.env.decreaseQuantity"
                             t-att-disabled="disableRemove"
@@ -34,11 +34,11 @@
                     <div class="d-flex w-100">
                         <input class="o_input text-center text-bg-light rounded-0 border border-end-0"
                                 type="number"
-                                t-att-class="this.env.displayUoM ? 'w-50' : 'w-100'"
+                                t-att-class="this.env.displayUoM ? 'w-25' : 'w-100'"
                                 t-att-value="quantity"
                                 t-on-change="this.env.setQuantity"
                                 t-on-focus="_onFocus"/>
-                        <span class="fst-italic text-muted text-bg-light text-truncate w-50 border border-start-0 py-1" t-if="this.env.displayUoM" t-out="props.uomDisplayName"/>
+                        <span class="fst-italic text-muted text-center text-bg-light text-truncate w-75 border border-start-0 py-1" t-if="this.env.displayUoM" t-out="props.uomDisplayName"/>
                     </div>
                     <button class="btn btn-primary border"
                             t-on-click.stop="(ev) => this.env.increaseQuantity()">
