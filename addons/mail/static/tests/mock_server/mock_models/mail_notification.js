@@ -41,9 +41,23 @@ export class MailNotification extends models.ServerModel {
                 ["failure_type", "mail_message_id", "notification_status", "notification_type"],
                 false
             );
+<<<<<<< d6217ef6a30afc57a0718c7b0264634471a57277
+||||||| 1073447ba56e2cc69177ee0ac8eab36d63d907bc
+            data.message = mailDataHelpers.Store.one(
+                this.env["mail.message"].browse(notification.mail_message_id),
+                makeKwArgs({ only_id: true })
+            );
+=======
+            data.message = mailDataHelpers.Store.one(
+                this.env["mail.message"].browse(notification.mail_message_id),
+                makeKwArgs({ only_id: true })
+            );
+            const partner = ResPartner.browse(notification.res_partner_id);
+            const fieldList = partner[0]?.name ? ["name"] : ["name", "display_name"];
+>>>>>>> 0ad819657b0f571c0c2dd99ee6098f8ae90e437a
             data.persona = mailDataHelpers.Store.one(
-                ResPartner.browse(notification.res_partner_id),
-                makeKwArgs({ fields: ["name"] })
+                partner,
+                makeKwArgs({ fields: fieldList })
             );
             store.add(this.browse(notification.id), data);
         }

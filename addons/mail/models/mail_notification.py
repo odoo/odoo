@@ -119,6 +119,7 @@ class MailNotification(models.Model):
 
         return self.filtered(_filter_unimportant_notifications)
 
+<<<<<<< d6217ef6a30afc57a0718c7b0264634471a57277
     def _to_store_defaults(self):
         return [
             "failure_type",
@@ -127,3 +128,29 @@ class MailNotification(models.Model):
             "notification_type",
             Store.One("res_partner_id", ["name", "display_name", "email"], rename="persona"),
         ]
+||||||| 1073447ba56e2cc69177ee0ac8eab36d63d907bc
+    def _to_store(self, store: Store, /):
+        """Returns the current notifications in the format expected by the web
+        client."""
+        for notif in self:
+            data = notif._read_format(
+                ["failure_type", "notification_status", "notification_type"], load=False
+            )[0]
+            data["message"] = Store.one(notif.mail_message_id, only_id=True)
+            # sudo: 'mail.notification' - to show all recipients of message regardless of company in multi-company setup
+            data["persona"] = Store.one(notif.sudo().res_partner_id, fields=["name"])
+            store.add(notif, data)
+=======
+    def _to_store(self, store: Store, /):
+        """Returns the current notifications in the format expected by the web
+        client."""
+        for notif in self:
+            data = notif._read_format(
+                ["failure_type", "notification_status", "notification_type"], load=False
+            )[0]
+            data["message"] = Store.one(notif.mail_message_id, only_id=True)
+            fields = ["name"] if notif.sudo().res_partner_id.name else ["name", "display_name"]
+            # sudo: 'mail.notification' - to show all recipients of message regardless of company in multi-company setup
+            data["persona"] = Store.one(notif.sudo().res_partner_id, fields=fields)
+            store.add(notif, data)
+>>>>>>> 0ad819657b0f571c0c2dd99ee6098f8ae90e437a

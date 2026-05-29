@@ -2050,6 +2050,7 @@ test("Copy Message Link", async () => {
     await press("Enter");
     await contains(".o-mail-Message", { text: url(`/mail/message/${messageId_2}`) });
 });
+<<<<<<< d6217ef6a30afc57a0718c7b0264634471a57277
 
 test("deleted message should not have translate feature", async () => {
     const pyEnv = await startServer();
@@ -2167,3 +2168,34 @@ test("Prevent adding reactions on messages without a mail thread", async () => {
     await contains(".o-mail-Message:eq(0) [title='Add a Reaction']");
     await contains(".o-mail-Message:eq(1):not(:has([title='Add a Reaction']))");
 });
+||||||| 1073447ba56e2cc69177ee0ac8eab36d63d907bc
+=======
+
+test("Notification sent for nameless partner", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create(
+        {
+            type: 'invoice',
+            email: 'invoice@test.example.com',
+            parent_id: serverState.partnerId,
+        }
+    );
+    const messageId = pyEnv["mail.message"].create({
+        body: "Hello",
+        model: "res.partner",
+        partner_ids: [partnerId],
+        res_id: serverState.partnerId,
+        message_type: "comment",
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "email",
+        res_partner_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click(".o-mail-Message-notification");
+    await contains(".o-mail-MessageNotificationPopover", { text: "Mitchell Admin, Invoice Address" });
+});
+>>>>>>> 0ad819657b0f571c0c2dd99ee6098f8ae90e437a
