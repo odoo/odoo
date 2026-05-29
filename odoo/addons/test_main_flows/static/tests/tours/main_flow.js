@@ -5,7 +5,6 @@ import { stepUtils } from "@web_tour/tour_utils";
 import { markup } from "@odoo/owl";
 
 registry.category("web_tour.tours").add('main_flow_tour', {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
 ...stepUtils.toggleHomeMenu().map(step => {
     step.isActive = ["community", "mobile"];
@@ -57,13 +56,6 @@ registry.category("web_tour.tours").add('main_flow_tour', {
     content: _t("Let's enter the name."),
     tooltipPosition: 'left',
     run: "edit the_flow.product",
-}, {
-    trigger: ".o_field_widget[name=tracking] input",
-    content: _t("Un-set product tracking"),
-    tooltipPosition: 'right',
-    run: function({ anchor }) {
-        anchor.value = "";
-    },
 }, {
     trigger: '.o_notebook .nav-link:contains("Inventory")',
     content: _t('Go to inventory tab'),
@@ -143,7 +135,7 @@ stepUtils.autoExpandMoreButtons(),
     tooltipPosition: "right",
     run: "edit the_flow.component1",
 }, {
-    isActive: ["auto", "desktop"],
+    isActive: ["desktop"],
     trigger: ".ui-menu-item > a:contains('the_flow.component1')",
     run: "click",
 }, {
@@ -273,8 +265,12 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: ".o_kanban_record span:contains('Units')",
+    trigger: ".o_kanban_record:contains('Units')",
     run: "click",
+},
+{
+    isActive: ["mobile"],
+    trigger: ".modal:not(.o_inactive_modal) .o_field_widget[name=uom_id] input:value(Units)",
 },
 {
     isActive: ["mobile"],
@@ -296,6 +292,10 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     trigger: "body:not(:has(.modal))",
+},
+{
+    isActive: ["mobile"],
+    trigger: ".o_form_editable",
 },
 {
     isActive: ["mobile"],
@@ -367,7 +367,7 @@ stepUtils.autoExpandMoreButtons(),
     tooltipPosition: "right",
     run: "edit the_flow.component2",
 }, {
-    isActive: ["auto", "desktop"],
+    isActive: ["desktop"],
     trigger: ".ui-menu-item > a:contains('the_flow.component2')",
     run: "click",
 }, {
@@ -420,8 +420,8 @@ stepUtils.autoExpandMoreButtons(),
     tooltipPosition: 'top',
     run: "edit the_flow.vendor",
 }, {
-    isActive: ["auto", "desktop"],
-    trigger: ".ui-menu-item > a:contains('the_flow.vendor')",
+    isActive: ["desktop"],
+    trigger: ".ui-menu-item:first > a:contains('the_flow.vendor')",
     run: "click",
 },
 {
@@ -440,12 +440,12 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: ".o_kanban_record span:contains('Units')",
+    trigger: ".o_kanban_record:contains('Units')",
     run: "click",
 },
 {
     isActive: ["mobile"],
-    trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Vendor')",
+    trigger: ".modal:not(.o_inactive_modal) .o_field_widget[name=uom_id] input:value(Units)",
 },
 {
     isActive: ["mobile"],
@@ -467,6 +467,10 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     trigger: "body:not(:has(.modal))",
+},
+{
+    isActive: ["mobile"],
+    trigger: ".o_form_editable",
 },
 {
     isActive: ["mobile"],
@@ -599,7 +603,7 @@ stepUtils.autoExpandMoreButtons(),
     tooltipPosition: 'left',
     run: "edit the_flow.project",
 }, {
-    isActive: ["auto", "desktop"],
+    isActive: ["desktop"],
     trigger: ".o-autocomplete--dropdown-item > a:contains('the_flow.project')",
     run: "click",
 },
@@ -665,8 +669,8 @@ stepUtils.autoExpandMoreButtons(),
     tooltipPosition: 'left',
     run: "edit the_flow.customer",
 }, {
-    isActive: ["auto", "desktop"],
-    trigger: ".ui-menu-item > a:contains('the_flow.customer')",
+    isActive: ["desktop"],
+    trigger: ".ui-menu-item:first > a:contains('the_flow.customer')",
     run: "click",
 },
 {
@@ -749,8 +753,16 @@ stepUtils.autoExpandMoreButtons(),
     run: "edit the_flow.product",
 }, {
     isActive: ["desktop"],
-    trigger: ".ui-menu-item > a:contains('the_flow.product')",
+    trigger: ".ui-menu-item:first > a:contains('the_flow.product')",
     run: "click",
+},
+{
+    isActive: ["desktop"],
+    trigger: `body:not(:has(.o_popover)) .o_data_row:eq(0) [name=product_template_id] input:value(the_flow.product)`,
+},
+{
+    isActive: ["desktop"],
+    trigger: "[name=tax_totals] .o_list_monetary:contains($ 1.15)",
 },
 {
     isActive: ["mobile"],
@@ -766,7 +778,7 @@ stepUtils.autoExpandMoreButtons(),
 ...stepUtils.mobileKanbanSearchMany2X('Product', 'the_flow.product'),
 {
     isActive: ["desktop"],
-    trigger: ".o_field_widget[name=order_line] .o_field_x2many_list_row_add > button",
+    trigger: ".o_field_widget[name=order_line] button:contains(add a product)",
     content: _t("Click here to add some lines to your quotations."),
     tooltipPosition: "bottom",
     run: "click",
@@ -795,7 +807,7 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["desktop"],
-    trigger: '.o_field_widget[name=order_line] .o_data_row:nth-child(2).o_selected_row',
+    trigger: ".o_field_widget[name=order_line] .o_data_row:nth-child(2).o_selected_row",
 },
 {
     /**
@@ -810,9 +822,18 @@ stepUtils.autoExpandMoreButtons(),
     run: "edit the_flow.service",
 }, {
     isActive: ["desktop"],
-    trigger: ".ui-menu-item > a:contains('the_flow.service')",
+    trigger: ".ui-menu-item:first > a:contains('the_flow.service')",
     run: "click",
-}, {
+}, 
+{
+    isActive: ["desktop"],
+    trigger: `body:not(:has(.o_popover)) .o_data_row:eq(1) [name=product_template_id] input:value(the_flow.service)`,
+},
+{
+    isActive: ["desktop"],
+    trigger: "[name=tax_totals] .o_list_monetary:contains($ 2.30)",
+},
+{
     isActive: ["desktop"],
     content: "click somewhere else to exit cell focus",
     trigger: "body",
@@ -908,7 +929,12 @@ stepUtils.autoExpandMoreButtons(),
     isActive: ["mobile"],
     trigger: ".o_control_panel_navigation .btn .fa-search",
     run: "click",
-}, {
+},
+{
+    isActive: ["desktop"],
+    trigger: ".o_breadcrumb .active:contains('Replenishment')",
+},
+{
     isActive: ["desktop"],
     trigger: "td:contains('the_flow.component2')",
     run: "click",
@@ -938,6 +964,32 @@ stepUtils.autoExpandMoreButtons(),
     trigger: ".o_form_button_save",
     content: markup(_t("<p>Save this reordering rule</p>")),
     tooltipPosition: "bottom",
+    run: "click",
+},
+{
+    isActive: ["mobile"],
+    trigger: ".o_form_saved",
+},
+{
+    isActive: ["mobile"],
+    trigger: ".o_back_button",
+    run: "click",
+},
+{
+    isActive: ["mobile"],
+    content: "Switch to list view to access the replenish buttons",
+    trigger: ".o_cp_switch_buttons .dropdown-toggle",
+    run: "click",
+},
+{
+    isActive: ["mobile"],
+    trigger: ".dropdown-item:has(.oi-view-list)",
+    run: "click",
+},
+{
+    isActive: ["mobile"],
+    content: "Replenish the component to generate a purchase order",
+    trigger: ".o_replenish_buttons",
     run: "click",
 },
 //Go to purchase:
@@ -1060,6 +1112,10 @@ stepUtils.autoExpandMoreButtons(),
 {
     isActive: ["mobile"],
     trigger: '.o_navbar_breadcrumbs .o_breadcrumb:contains("S0")',
+},
+{
+    isActive: ["desktop"],
+    trigger: '.o_breadcrumb .active:contains("S0")',
 },
 stepUtils.autoExpandMoreButtons(true),
 {
@@ -1201,7 +1257,7 @@ stepUtils.autoExpandMoreButtons(true),
     trigger: "body:not(:has(.modal))",
 },
 {
-    isActive: ["auto", "community"],
+    isActive: ["community"],
     content: "wait for payment registration to succeed",
     trigger: "span.text-bg-success:contains('Paid')",
 },
@@ -1240,8 +1296,8 @@ stepUtils.autoExpandMoreButtons(true),
     tooltipPosition: "bottom",
     run: "edit the_flow.customer",
 }, {
-    isActive: ["auto", "desktop", "enterprise"],
-    trigger: ".ui-menu-item > a:contains('the_flow.customer')",
+    isActive: ["desktop", "enterprise"],
+    trigger: ".ui-menu-item:first > a:contains('the_flow.customer')",
     run: "click",
 },
 {
@@ -1277,12 +1333,12 @@ stepUtils.autoExpandMoreButtons(true),
 // exit reconciliation widget
 stepUtils.toggleHomeMenu()[0],
 {
-    isActive: ["auto", "desktop", "enterprise"],
+    isActive: ["desktop", "enterprise"],
     trigger: `.o_app[data-menu-xmlid="accountant.menu_accounting"]`,
     run: "click",
 },
 {
-    isActive: ["auto", "desktop", "enterprise"],
+    isActive: ["desktop", "enterprise"],
     content: "check that we're back on the dashboard",
     trigger: 'a:contains("Sales")',
 }]});
