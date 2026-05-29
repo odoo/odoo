@@ -225,6 +225,10 @@ class ResPartner(models.Model):
 
     def _get_peppol_endpoint_value(self, country_code, field):
         self.ensure_one()
+        # Field `peppol_endpoint` can be used as placeholer for custom logic (by extending this function)
+        if field == 'peppol_endpoint':
+            return None
+
         value = field in self._fields and self[field]
 
         if (
@@ -289,6 +293,8 @@ class ResPartner(models.Model):
             return _("The Peppol endpoint is not valid. "
                      "It should contain exactly 10 digits (Company Registry number)."
                      "The expected format is: 1234567890")
+        if eas == '0225':
+            return self.env._("The Peppol endpoint scheme is reserved. Please install the 'France - E-Invoicing (Approved Platform)' module (l10n_fr_pdp) first")
 
     @api.model
     def _get_edi_builder(self, invoice_edi_format):

@@ -121,6 +121,7 @@ class AccountEdiXmlCII(models.AbstractModel):
             'type_code': '380' if invoice.move_type == 'out_invoice' else '381',
             'issue_date_time': invoice.invoice_date,
             'included_note': html2plaintext(invoice.narration) if invoice.narration else "",
+            'included_note_list': [],
         }
 
     def _export_invoice_vals(self, invoice):
