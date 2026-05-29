@@ -265,7 +265,12 @@ const chatterPatch = {
     },
 
     get onCloseFullComposerRequestList() {
-        return [...super.onCloseFullComposerRequestList, "scheduledMessages"];
+        return [
+            ...super.onCloseFullComposerRequestList,
+            "defaultSubject",
+            "scheduledMessages",
+            "suggestedSubject",
+        ];
     },
 
     get requestList() {
