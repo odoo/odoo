@@ -773,3 +773,15 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertTrue(bad_invoice, "Bad invoice should be created as empty fallback")
         self.assertFalse(bad_invoice.invoice_line_ids, "Bad invoice should have no lines")
         self.assertTrue(any("Simulated error" in body for body in bad_invoice.message_ids.mapped('body')))
+
+    def test_import_invoice_discount_is_correctly_set(self):
+        self._assert_import_invoice('invoice_with_discount.xml', [
+            {
+                "price_unit": 41.37,
+                "price_subtotal": 103.43
+            },
+            {
+                "price_unit": 118.3,
+                "price_subtotal": 1064.7
+            }
+        ])
