@@ -583,6 +583,45 @@ class TestStockLot(TestStockCommon):
         self.assertAlmostEqual(lot.removal_date, expiration_date, delta=delta, msg=err_msg)
         self.assertAlmostEqual(lot.alert_date, expiration_date, delta=delta, msg=err_msg)
 
+    def test_preserve_edited_expiration_date_on_generated_lots(self):
+        """Ensure that the expiration date edited on a move line is preserved
+        on the generated lot after saving the operation.
+        """
+        self.picking_type_in.use_existing_lots = True
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'move_ids': [Command.create({
+                'product_id': self.apple_product.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        move = receipt.move_ids
+        move_line_vals = move.action_generate_lot_line_vals(
+            {
+                'default_company_id': self.env.company.id,
+                'default_picking_id': receipt.id,
+                'default_picking_type_id': self.picking_type_in.id,
+                'default_product_id': self.apple_product.id,
+                'default_location_id': receipt.location_id.id,
+                'default_location_dest_id': receipt.location_dest_id.id,
+                'default_tracking': self.apple_product.tracking,
+                'default_quantity': 1,
+                'default_uom_id': self.apple_product.uom_id.id,
+            },
+            'generate', 'Lot0001', 1, None,
+        )[0]
+        for key, val in move_line_vals.items():
+            if isinstance(val, dict) and 'id' in val:
+                move_line_vals[key] = val['id']
+
+        new_expiration_date = datetime.today() + timedelta(days=7)
+        move_line_vals['expiration_date'] = new_expiration_date
+        move.move_line_ids = [Command.create(move_line_vals)]
+        self.assertAlmostEqual(move.move_line_ids.expiration_date, new_expiration_date, delta=timedelta(seconds=10))
+        self.assertAlmostEqual(move.move_line_ids.lot_id.expiration_date, new_expiration_date, delta=timedelta(seconds=10))
+
     def test_no_expiration_date(self):
         """
         When use_expiration_date is set to True on the Product, but the lot have an expiration_date set to False,
