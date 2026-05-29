@@ -47,7 +47,8 @@ class WebsiteForm(form.WebsiteForm):
     def extract_data(self, model, values):
         data = super().extract_data(model, values)
         if model.sudo().model == 'project.task' and values.get('email_from'):
-            partners_list = request.env['mail.thread'].sudo()._mail_find_partner_from_emails([values['email_from']])
+            company_id = request.env['project.project'].sudo().browse(values.get('project_id')).exists().company_id.id
+            partners_list = request.env['mail.thread'].sudo()._mail_find_partner_from_emails([values['email_from']], extra_domain=[('company_id', 'in', [False, company_id])])
             partner = partners_list[0] if partners_list else self.env['res.partner']
             data['record']['email_from'] = values['email_from']
             if partner:
