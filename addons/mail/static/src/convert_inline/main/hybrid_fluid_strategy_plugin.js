@@ -5,6 +5,7 @@ import { DIMENSIONS } from "../hooks";
 import { Analysis, EmailNode } from "../core/render_models";
 import { HybridFluidCell, HybridFluidEmptyCell, HybridFluidRow } from "./hybrid_fluid_models";
 import { parseCssValue } from "../css_parsers";
+import { isAllowedContent } from "@html_editor/utils/dom_info";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
 // Prevent the last inline-block element from wrapping to the next line due
@@ -128,9 +129,11 @@ export class HybridFluidStrategyPlugin extends Plugin {
     }
 
     analyzeElementLayout({ layout, analysis }, { referenceNode }) {
+        const div = this.config.referenceDocument.createElement("DIV");
         if (
-            !this.detectHybridFluidLayout(referenceNode) &&
-            !this.detectResponsiveElement(referenceNode)
+            !isAllowedContent(referenceNode, [div]) ||
+            (!this.detectHybridFluidLayout(referenceNode) &&
+                !this.detectResponsiveElement(referenceNode))
         ) {
             return;
         }
@@ -155,17 +158,6 @@ export class HybridFluidStrategyPlugin extends Plugin {
             return;
         }
         const cluster = block.bands[0].clusters[0];
-        const childNode = cluster.isBlock ? cluster.nodes[0] : undefined;
-        let marginLeft = 0;
-        let marginRight = 0;
-        if (childNode) {
-            ({ number: marginLeft } = parseCssValue(
-                this.getStylePropertyValue(childNode, "margin-left")
-            ));
-            ({ number: marginRight } = parseCssValue(
-                this.getStylePropertyValue(childNode, "margin-right")
-            ));
-        }
         // check if margin of child + padding of parent ~= block spacing to the left and to the right
         const { number: paddingLeft } = parseCssValue(
             this.getStylePropertyValue(referenceNode, "padding-left")
@@ -174,8 +166,8 @@ export class HybridFluidStrategyPlugin extends Plugin {
             this.getStylePropertyValue(referenceNode, "padding-right")
         );
         const spacing = this.containerPadding(block.rect, cluster.rect);
-        const deltaLeft = spacing.left - ((marginLeft ?? 0) + (paddingLeft ?? 0));
-        const deltaRight = spacing.right - ((marginRight ?? 0) + (paddingRight ?? 0));
+        const deltaLeft = spacing.left - (paddingLeft ?? 0);
+        const deltaRight = spacing.right - (paddingRight ?? 0);
         return (
             (!this.isZero(deltaLeft) && deltaLeft > 0) ||
             (!this.isZero(deltaRight) && deltaRight > 0)
