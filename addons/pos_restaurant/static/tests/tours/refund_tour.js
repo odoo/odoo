@@ -38,6 +38,7 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
             }),
             ProductScreen.clickNumpad("2"),
             TicketScreen.toRefundTextContains("2"),
+            ...Chrome.waitForOrdersSync(),
             TicketScreen.confirmRefund(),
             PaymentScreen.isShown(),
             PaymentScreen.clickBack(),
