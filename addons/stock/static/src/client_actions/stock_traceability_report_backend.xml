@@ -49,7 +49,7 @@
                     <td t-att-class="line.unfoldable ? 'o_stock_reports_unfoldable' : ''">
                         <t t-if="col_first">
                             <span t-attf-style="margin-left: {{line.level}}px"/>
-                            <t t-if="hasUpDown and line.is_used ">
+                            <t t-if="hasUpDown and line.has_children ">
                                 <span role="img" title="Traceability Report" aria-label="Traceability Report" t-on-click.prevent="() => this.onClickUpDownStream(line)">
                                     <i class="fa fa-fw fa-level-up fa-rotate-270"/>
                                 </span>
@@ -64,7 +64,7 @@
                         <span t-if="col.value and line.reference === col.value" t-att-class="!line.unfoldable ? 'o_stock_reports_nofoldable' : ''">
                             <a class="o_stock_reports_web_action" href="#" t-on-click.prevent="() => this.onClickBoundLink(line)" t-out="col.value"/>
                         </span>
-                        <span t-elif="col.value and ((line.picking_type_code == 'incoming' and line.location_source === col.value) or (line.picking_type_code == 'outgoing' and line.location_destination === col.value))">
+                        <span t-elif="col.value and ((line.picking_type_code == 'incoming' and line.source_name === col.value) or (line.picking_type_code == 'outgoing' and line.destination_name === col.value))">
                             <a class="o_stock_report_partner_action" href="#" t-on-click.prevent="() => this.onClickPartner(line)" t-out="col.value"/>
                         </span>
                         <span t-elif="col.value and line.lot_name === col.value">

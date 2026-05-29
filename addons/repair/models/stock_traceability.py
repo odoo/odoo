@@ -17,9 +17,9 @@ class StockTraceabilityReport(models.TransientModel):
 
     @api.model
     def _get_linked_move_lines(self, move_line):
-        move_lines, is_used = super()._get_linked_move_lines(move_line)
-        if not move_lines:
-            move_lines = move_line.move_id.repair_id and move_line.consume_line_ids
-        if not is_used:
-            is_used = move_line.move_id.repair_id and move_line.produce_line_ids
-        return move_lines, is_used
+        parent_lines, children_lines = super()._get_linked_move_lines(move_line)
+        if not parent_lines:
+            parent_lines = move_line.move_id.repair_id and move_line.consume_line_ids
+        if not children_lines:
+            children_lines = move_line.move_id.repair_id and move_line.produce_line_ids
+        return parent_lines, children_lines

@@ -20,10 +20,10 @@ function hasFoldedLine(lines) {
 function extractPrintData(lines) {
     const data = [];
     for (const line of lines) {
-        const { id, model_id, model, unfoldable, level } = line;
+        const { id, record_id, model, unfoldable, level } = line;
         data.push({
             id: id,
-            model_id: model_id,
+            record_id: record_id,
             model_name: model,
             unfoldable,
             level: level || 1,
@@ -182,7 +182,7 @@ export class TraceabilityReport extends Component {
         if (line.isFolded && !line.lines.length) {
             line.lines = (
                 await this.orm.call("stock.traceability.report", "get_lines", [line.id], {
-                    model_id: line.model_id,
+                    record_id: line.record_id,
                     model_name: line.model,
                     level: line.level + 30 || 1,
                 })
