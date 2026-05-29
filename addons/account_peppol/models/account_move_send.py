@@ -110,7 +110,7 @@ class AccountMoveSend(models.AbstractModel):
         else:
             invoice.peppol_move_state = 'error'
             builder = invoice.partner_id.commercial_partner_id._get_edi_builder(invoice_data['invoice_edi_format'])
-            invoice_data['error'] = _(
+            invoice_data['error'] = self.env._(
                 "Errors occurred while creating the EDI document (format: %s):",
                 builder._description
             )
@@ -122,7 +122,7 @@ class AccountMoveSend(models.AbstractModel):
             filename = invoice_data['ubl_cii_xml_attachment_values']['name']
 
         if xml_file.size > 64000000:
-            invoice_data['error'] = _("Invoice %s is too big to send via peppol (64MB limit)", invoice.name)
+            invoice_data['error'] = self.env._("Invoice %s exceeds the size limit of 64 MB to be sent via Peppol.", invoice.name)
             return None, None
 
         receiver_identification = f"{partner.peppol_eas}:{partner.peppol_endpoint}"
