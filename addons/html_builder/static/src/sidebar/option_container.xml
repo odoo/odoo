@@ -12,10 +12,11 @@
                 t-att-class="this.props.toggleFold ? 'options-container-label-actionable o-hb-btn btn' : ''"
                 t-att-aria-expanded="this.props.toggleFold ? `${!this.props.folded}` : undefined"
                 t-att-aria-controls="this.containerId"
+                t-on-pointerover="this.updateTitleTooltip"
                 t-on-click="this.props.toggleFold ?? (() => {})"
             >
-                <i t-if="this.props.toggleFold" class="fa fa-fw mx-1" aria-hidden="true" t-att-class="this.props.folded ? 'fa-caret-right' : 'fa-caret-down'"/>
-                <span t-att-class="{'ms-2': !this.props.toggleFold}" t-out="title"/>
+                <i t-if="this.props.toggleFold" class="fa fa-fw mx-1 flex-shrink-0" aria-hidden="true" t-att-class="this.props.folded ? 'fa-caret-right' : 'fa-caret-down'"/>
+                <span class="text-truncate" t-att-class="{'ms-2': !this.props.toggleFold}" t-out="this.title" t-ref="title"/>
                 <t t-if="props.optionTitleComponents" t-foreach="props.optionTitleComponents" t-as="optionTitleComponent" t-key="optionTitleComponent.id">
                     <t t-component="optionTitleComponent.Component" t-props="optionTitleComponent.props || {}"/>
                 </t>
