@@ -1,4 +1,4 @@
-import { Component, onMounted, onPatched, onWillUnmount, proxy, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillUnmount, proxy, useEffect, xml } from "@odoo/owl";
 
 import { useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { Reactive } from "@web/core/utils/reactive";
@@ -787,8 +787,18 @@ export function useSequential() {
     };
 }
 
-export function useDiscussSystray() {
+/** @param {import("@web/core/dropdown/dropdown_hooks").DropdownState} [dropdownState] */
+export function useDiscussSystray(dropdownState) {
     const ui = useService("ui");
+    if (dropdownState) {
+        useEffect(() => {
+            if (dropdownState.isOpen) {
+                document.body.classList.add("o-mail-discuss-systray-menu-open");
+            } else {
+                document.body.classList.remove("o-mail-discuss-systray-menu-open");
+            }
+        });
+    }
     return {
         class: "o-mail-DiscussSystray-class",
         get contentClass() {
