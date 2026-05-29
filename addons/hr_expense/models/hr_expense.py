@@ -34,7 +34,6 @@ class HrExpense(models.Model):
         comodel_name='hr.employee',
         string="Employee",
         compute='_compute_employee_id', precompute=True, store=True, readonly=False,
-        required=True,
         default=_default_employee_id,
         check_company=True,
         domain=[('filter_for_expense', '=', True)],
@@ -765,6 +764,8 @@ class HrExpense(models.Model):
             raise UserError(_("You cannot report twice the same line!"))
         if not expenses_with_amount:
             raise UserError(_("You cannot report the expenses without amount!"))
+        if self.filtered(lambda expense: not expense.employee_id):
+            raise UserError(_("You cannot report expenses without employee!"))
         if len(expenses_with_amount.mapped('employee_id')) != 1:
             raise UserError(_("You cannot report expenses for different employees in the same report."))
         if any(not expense.product_id for expense in expenses_with_amount):
