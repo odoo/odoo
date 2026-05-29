@@ -397,12 +397,14 @@ test("new member's separator should be at the bottom of existing messages after 
     });
     const demoPartnerId = pyEnv["res.partner"].create({ name: "Newbie" });
     await start();
-    const newMemberIds = await getService("orm").call(
-        "discuss.channel",
-        "add_members",
-        [[channelId]],
-        { partner_ids: [demoPartnerId] }
-    );
+    await getService("mail.store").fetchStoreData("/discuss/channel/add_members", {
+        channel_id: channelId,
+        partner_ids: [demoPartnerId],
+    });
+    const [insertedMember] = pyEnv["discuss.channel.member"].search_read([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", demoPartnerId],
+    ]);
     const [lastMessageId = 0] = pyEnv["mail.message"].search(
         [
             ["model", "=", "discuss.channel"],
@@ -410,5 +412,5 @@ test("new member's separator should be at the bottom of existing messages after 
         ],
         makeKwArgs({ limit: 1, order: "id DESC" })
     );
-    expect(newMemberIds[0].new_message_separator).toBe(lastMessageId + 1);
+    expect(insertedMember.new_message_separator).toBe(lastMessageId + 1);
 });

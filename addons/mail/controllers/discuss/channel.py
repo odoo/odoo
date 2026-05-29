@@ -145,6 +145,18 @@ class DiscussChannelWebclientController(WebclientController):
                 lambda res: res.one("channel", "_store_channel_fields", value=resolve_channel),
             )
 
+    @store_handler("/discuss/channel/add_members", audience="logged_in", readonly=False)
+    def store_discuss_channel_add_members(self, store: Store, channel_id, partner_ids=None, user_ids=None, invite_to_rtc_call=False, post_joined_message=True):
+        channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
+        if not channel:
+            return
+        channel._add_members(
+            partners=request.env["res.partner"].search_fetch([("id", "in", partner_ids or [])]),
+            users=request.env["res.users"].search_fetch([("id", "in", user_ids or [])]),
+            invite_to_rtc_call=invite_to_rtc_call,
+            post_joined_message=post_joined_message,
+        )
+
     @store_handler("/discuss/create_group", audience="everyone", readonly=False)
     def store_create_group(
         self,

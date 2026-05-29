@@ -919,7 +919,7 @@ class CalendarEvent(models.Model):
                         new_partner_ids.append(command[1])
                     elif command[0] == Command.SET:
                         new_partner_ids.extend(command[2])
-                self.videocall_channel_id.add_members(new_partner_ids)
+                self.videocall_channel_id._add_members(partners=self.env["res.partner"].browse(new_partner_ids))
 
         time_fields = self.env['calendar.event']._get_time_fields()
         if any([values.get(key) for key in time_fields]):
