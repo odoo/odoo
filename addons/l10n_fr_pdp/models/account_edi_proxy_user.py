@@ -222,7 +222,8 @@ class AccountEdiProxyClientUser(models.Model):
             processed_uuid_to_record = edi_user._pdp_process_regulatory_messages(all_messages)
 
             if not tools.config['test_enable']:
-                self.env.cr.commit()
+                c = self.env.cr.commit
+                c()
             if processed_uuid_to_record:
                 edi_user._call_peppol_proxy(
                     endpoint=edi_user._get_peppol_proxy_endpoint('1/ack_ppf'),

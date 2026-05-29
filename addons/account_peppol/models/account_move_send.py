@@ -225,7 +225,8 @@ class AccountMoveSend(models.AbstractModel):
             self._send_peppol_documents(invoices_data_peppol, edi_user, params)
 
         if self._can_commit():
-            self.env.cr.commit()
+            c = self.env.cr.commit
+            c()
 
     def _send_peppol_documents(self, invoices_data_peppol, edi_user, params):
         try:
