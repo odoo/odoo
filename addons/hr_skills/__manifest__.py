@@ -41,7 +41,6 @@ This module introduces skills and resume management for employees.
         'data/hr.resume.line.csv',
     ],
     'auto_install': True,
-    'application': True,
     'assets': {
         'web.assets_backend': [
             'hr_skills/static/src/fields/skills_one2many/*',
