@@ -10,22 +10,24 @@
                 <body>
                     <div class="pos-receipt m-0 p-0" style="padding-top: 80px !important;">
                         <div name="receipt-header" class="text-center">
-                            <div name="preset-info" class="preset-name text-huge text-bold" t-if="preset">
+                            <div name="preset-info" class="preset-name text-huge text-center text-bold" t-if="preset">
                                 <span t-if="preset" t-out="preset['name']"/>
                                 <span t-if="extra_data.get('preset_time')"> (<t t-out="extra_data['preset_time']"/>)</span>
                             </div>
-                            <div name="employee-info">
+
+                            <div name="employee-info" class="text-small">
                                 <span><t t-out="config['name']"/> : <t t-out="extra_data['time']"/></span><br/>
                                 <span t-if="extra_data.get('employee_name')">By: <t t-out="extra_data['employee_name']"/></span>
                             </div>
-                            <span class="my-4 text-normal">
-                                <span>
-                                    Order <t t-out="order['pos_reference']"/>
-                                </span>
-                                <span t-if="order.get('tracking_number')" class="my-3">
-                                    # <t t-out="order['tracking_number']"/>
-                                </span>
-                            </span>
+                            <div name="order-info" class="my-2 text-huge">
+                                <div name="tracking-number">
+                                    <span t-out="extra_data['prefix']"/>
+                                    <span> </span>
+                                    <span class="text-bold" t-out="order['tracking_number']"/>
+                                </div>
+                                <div t-if="extra_data.get('order_label')" name="order-label" class="text-large" t-out="extra_data['order_label']" />
+                            </div>
+                            <div name="order-reference" t-out="order['pos_reference']" />
                         </div>
                         <hr style="border: none; border-top: 4px dashed black;"/>
                         <div name="body" class="pos-receipt-body pb-5">
@@ -50,16 +52,17 @@
                                     <t t-call="point_of_sale.pos_order_change_receipt_line" />
                                 </div>
                             </t>
-
-                            <div t-if="extra_data.get('internal_note')" class="new-changes w-100" t-att-class="{'mb-3': order['general_customer_note']}">
-                                <div class="pos-receipt-title text-center text-huge w-100">
+                            <t t-if="extra_data.get('general_customer_note')" t-set="extraNoteClass" t-value="'mb-3'"/>
+                            <t t-else="" t-set="extraNoteClass" t-value="''"/>
+                            <div t-if="extra_data.get('internal_note')" name="new-changes-internal-note" t-attf-class="new-changes w-100 {{extraNoteClass}}">
+                                <div class="pos-receipt-title text-center text-insane w-100 text-bold">
                                     <strong>INTERNAL NOTE</strong>
                                 </div>
                                 <div class="text-center text-large text-italic" t-out="extra_data['internal_note']" />
                             </div>
 
-                            <div t-if="extra_data['general_customer_note']" class="new-changes w-100">
-                                <div class="pos-receipt-title text-center text-huge w-100">
+                            <div t-if="extra_data['general_customer_note']" name="new-changes-customer-note" class="new-changes w-100">
+                                <div class="pos-receipt-title text-center text-insane w-100 text-bold">
                                     <strong>CUSTOMER NOTE</strong>
                                 </div>
                                 <div class="text-center text-large text-italic" t-out="extra_data['general_customer_note']" />
@@ -71,9 +74,12 @@
         </template>
 
         <template id="point_of_sale.pos_order_change_receipt_line">
-            <div t-att-class="{'ps-5': line['combo_parent_uuid']}" class="orderline text-huge">
-                <div>
-                    <span t-out="line['quantity']"/> <span class="product-name" t-out="line['basic_name']"/>
+            <t t-if="line['combo_parent_uuid']" t-set="extraComboLineClass" t-value="'ps-5'"/>
+            <t t-else="" t-set="extraComboLineClass" t-value="''"/>
+            <div t-attf-class="orderline text-large {{extraComboLineClass}}">
+                <div class="text-huge">
+                    <span class="me-3 font-monospace" t-out="line['quantity']"/>
+                    <span class="product-name text-break" t-out="line['basic_name']"/>
                 </div>
                 <div t-if="line.get('attribute_value_names') and len(line['attribute_value_names'])" class="ps-5">
                     <t t-foreach="line['attribute_value_names']" t-as="name">
@@ -85,12 +91,8 @@
                         <div class="text-normal">• <t t-out="name" /></div>
                     </t>
                 </div>
-                <div t-if="line.get('note')" class="text-italic text-large">
-                    <t t-out="line['note']"/>
-                </div>
-                <div t-if="line.get('customer_note')" class="text-italic text-large">
-                    <t t-out="line['customer_note']"/>
-                </div>
+                <div t-if="line.get('note')" class="text-italic" t-out="line['note']"/>
+                <div t-if="line.get('customer_note')" class="text-italic" t-out="line['customer_note']"/>
             </div>
         </template>
     </data>

@@ -380,6 +380,8 @@ class PosOrderReceipt(models.AbstractModel):
                 "changes": change,
                 "extra_data": {
                     **self._get_common_extra_data(),
+                    'prefix': _("Order"),
+                    'order_label': self.floating_order_name,
                     "reprint": False,
                     "time": datetime.now().strftime("%H:%M"),
                     "internal_note": _get_str_notes(change.get("internal_note")) or False,
