@@ -1,6 +1,6 @@
 import { isRecord } from "./misc";
 
-import { markRaw, proxy, toRaw } from "@odoo/owl";
+import { markRaw, proxy, signal, toRaw } from "@odoo/owl";
 
 /** @typedef {import("./record").Record} Record */
 
@@ -114,7 +114,11 @@ export class RecordListInternal {
                     }
                 }
             }
-            recordList._proxy.data = newRecords.map((newRecord) => newRecord.localId);
+            recordList._proxy.data.splice(
+                0,
+                recordList.data.length,
+                ...newRecords.map((newRecord) => newRecord.localId)
+            );
             recordList._.syncLength(recordList);
         });
     }
@@ -208,7 +212,13 @@ export class RecordList extends Array {
     /** @type {import("models").Store} */
     _store;
     /** @type {string[]} */
-    data = [];
+    _data = signal.Array([]);
+    get data() {
+        return this._data();
+    }
+    set data(newData) {
+        this._data = signal.Array(newData);
+    }
     /** @type {this} */
     _raw;
     /** @type {this} */
@@ -446,7 +456,11 @@ export class RecordList extends Array {
                     recordList._proxy.data[0] = list[0];
                 }
             } else {
-                recordList._proxy.data = list;
+                recordList._proxy.data.splice(
+                    start,
+                    deleteCount,
+                    ...newRecordsProxy.map((newRecordProxy) => toRaw(newRecordProxy)._raw.localId)
+                );
             }
             recordList._.syncLength(recordList);
             for (const oldRecord of oldRecords) {
