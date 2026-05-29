@@ -134,19 +134,19 @@ class HrEmployee(models.Model):
     # ── Section 4: Demographic Information ────────────────────────────────
 
    # In hr_employee.py find and update
-x_religion = fields.Selection(
-    selection=[
-        ('hinduism', 'Hindu'),
-        ('islam', 'Muslim'),
-        ('christianity', 'Christian'),
-        ('sikhism', 'Sikhism'),
-        ('buddhism', 'Buddhism'),
-        ('jainism', 'Jainism'),
-        ('other', 'Other'),
-    ],
-    string='Religion',
-    groups='hr.group_hr_user',
-)
+    x_religion = fields.Selection(
+        selection=[
+            ('hinduism', 'Hindu'),
+            ('islam', 'Muslim'),
+            ('christianity', 'Christian'),
+            ('sikhism', 'Sikhism'),
+            ('buddhism', 'Buddhism'),
+            ('jainism', 'Jainism'),
+            ('other', 'Other'),
+        ],
+        string='Religion',
+        groups='hr.group_hr_user',
+    )
     x_community = fields.Selection(
         selection=[
             ('oc', 'OC – Open / General'),
