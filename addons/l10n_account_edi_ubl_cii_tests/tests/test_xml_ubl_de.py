@@ -76,6 +76,10 @@ class TestUBLDE(TestUBLCommon):
     ####################################################
 
     def test_export_import_invoice(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         invoice = self._generate_move(
             self.partner_1,
             self.partner_2,
@@ -114,6 +118,10 @@ class TestUBLDE(TestUBLCommon):
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_invoice_xrechnung(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         self.partner_2.write({
             'routing_identifier': '0204:123456789',
             'additional_identifiers': {'DE_LTW': '123456789'},
@@ -177,6 +185,10 @@ class TestUBLDE(TestUBLCommon):
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_invoice_without_vat_and_routing_endpoint(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         self.partner_2.write({
             'vat': False,
             'routing_identifier': False,
@@ -204,6 +216,10 @@ class TestUBLDE(TestUBLCommon):
         self._assert_imported_invoice_from_etree(invoice, attachment)
 
     def test_export_import_refund(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         refund = self._generate_move(
             self.partner_1,
             self.partner_2,
@@ -242,6 +258,10 @@ class TestUBLDE(TestUBLCommon):
         self._assert_imported_invoice_from_etree(refund, attachment)
 
     def test_export_import_refund_xrehnung(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         self.partner_2.write({
             'routing_identifier': '0204:123456789',
             'additional_identifiers': {'DE_LTW': '123456789'},

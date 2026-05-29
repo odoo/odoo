@@ -216,6 +216,10 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
     @freeze_time('2017-01-01')
     def test_oioubl_export_import_with_discount(self):
         """ Tests that the discount on a line is well exported, then taken into account when imported """
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         line_vals = {
             'product_id': self.product_a.id,
             'quantity': 10.0,
