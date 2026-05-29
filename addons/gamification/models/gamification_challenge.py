@@ -62,6 +62,8 @@ class GamificationChallenge(models.Model):
     _inherit = ['mail.thread']
     _order = 'end_date, start_date, name, id'
 
+    _CUSTOMER_HEADERS_LIMIT_COUNT = 0  # never use X-Msg-To headers
+
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
