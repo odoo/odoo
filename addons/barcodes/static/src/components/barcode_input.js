@@ -1,28 +1,32 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, props, types } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 
 export class BarcodeInput extends Component {
     static template = "barcodes.BarcodeInput";
-    static props = {
-        onSubmit: Function,
-        placeholder: { type: String, optional: true },
-        inputFocus: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        placeholder: _t("Enter a barcode..."),
-        inputFocus: true,
-    };
+
+    props = props(
+        {
+            onSubmit: types.function(),
+            "placeholder?": types.string(),
+            "inputFocus?": types.boolean(),
+        },
+        {
+            placeholder: _t("Enter a barcode..."),
+            inputFocus: true,
+        },
+    );
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             barcode: false,
         });
-        this.barcodeManual = useRef("manualBarcode");
+        this.barcodeManual = signal(null);
         // Autofocus processing was blocked because a document already has a focused element.
         onMounted(() => {
-            if (this.props.inputFocus) this.barcodeManual.el.focus();
+            if (this.props.inputFocus) {
+                this.barcodeManual().focus();
+            }
         });
     }
 

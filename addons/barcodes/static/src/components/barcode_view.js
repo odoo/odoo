@@ -1,5 +1,4 @@
-import { useState, useExternalListener } from "@web/owl2/utils";
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, props, proxy, types, useListener } from "@odoo/owl";
 import { BarcodeVideoScanner, isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { BarcodeInput } from "./barcode_input";
 
@@ -10,22 +9,24 @@ export class BarcodeView extends Component {
         BarcodeInput,
     };
 
-    static props = {
-        ...BarcodeVideoScanner.props,
-        onInputSubmit: { type: Function },
-        slots: { type: Object, optional: true },
-        inputFocus: { type: Boolean, optional: true },
-    }
+    props = props({
+        facingMode: types.selection(["environment", "left", "right", "user"]),
+        onResult: types.function(),
+        onError: types.function(),
+        onInputSubmit: types.function(),
+        "slots?": types.object(),
+        "inputFocus?": types.boolean(),
+    })
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             barcodeScannerSupported: isBarcodeScannerSupported(),
             barcodeScannerOpened: false,
         });
 
         this.barcodeRef = signal(null);
 
-        useExternalListener(window, "click", (ev) => {
+        useListener(window, "click", (ev) => {
             if (this.barcodeRef() && !this.barcodeRef().contains(ev.target)) {
                 this.state.barcodeScannerOpened = false;
             }
