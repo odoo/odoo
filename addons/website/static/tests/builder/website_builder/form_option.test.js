@@ -6,7 +6,16 @@ import {
     undo,
 } from "@html_editor/../tests/_helpers/user_actions";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
-import { beforeEach, describe, expect, press, queryOne, test, waitFor } from "@odoo/hoot";
+import {
+    beforeEach,
+    describe,
+    expect,
+    press,
+    queryAllTexts,
+    queryOne,
+    test,
+    waitFor,
+} from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import {
     contains,
@@ -28,6 +37,7 @@ import {
 import { formSelectXml } from "@website/../tests/interactions/snippets/helpers";
 import { BuilderList } from "@html_builder/core/building_blocks/builder_list";
 import {
+    dummyBase64Img,
     getDragHelper,
     unfoldAllOptionsGroups,
     waitForEndOfOperation,
@@ -1157,6 +1167,53 @@ test("label's markup is preserved when switching between field's type", async ()
     expect(":iframe .s_website_form_label_content:contains(Your Name)").toHaveInnerHTML(
         "<strong>Your Name</strong>"
     );
+});
+
+test("tool to add a link is not available in <label>", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilder("<label><span>text</span></label>");
+    setSelectionOnNodeContent(queryOne(":iframe label span"));
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar .btn[name='link']").toHaveCount(0);
+});
+
+test("powerbox tools that add links are not available in <label>", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    const { getEditor } = await setupWebsiteBuilder(
+        `<span class="out-label">text</span><label><span class="in-label">text</span></label>`
+    );
+    const items = ["Link", "Button", "Upload a file", "Media"];
+
+    setSelection({ anchorNode: queryOne(":iframe span.out-label"), anchorOffset: 0 });
+    await insertText(getEditor(), "/");
+    await animationFrame();
+    for (const item of items) {
+        expect(queryAllTexts(".o-we-command-name")).toInclude(item);
+    }
+
+    setSelection({ anchorNode: queryOne(":iframe span.in-label"), anchorOffset: 0 });
+    await insertText(getEditor(), "/");
+    await animationFrame();
+    for (const item of items) {
+        expect(queryAllTexts(".o-we-command-name")).not.toInclude(item);
+    }
+});
+
+test("img in label should not have the option for link of click", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `<img src="${dummyBase64Img}" class="out-label"/><label><img src="${dummyBase64Img}" class="in-label"/></label>`
+    );
+
+    await contains(":iframe img.out-label").click();
+    await waitSidebarUpdated();
+    expect("[data-action-id='setLink']").toHaveCount(1);
+    expect("[data-class-action='o_image_popup']").toHaveCount(1);
+
+    await contains(":iframe img.in-label").click();
+    await waitSidebarUpdated();
+    expect("[data-action-id='setLink']").toHaveCount(0);
+    expect("[data-class-action='o_image_popup']").toHaveCount(0);
 });
 
 test("builderList re-renders when the field type changes (custom fields)", async () => {
