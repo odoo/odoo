@@ -89,6 +89,22 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
             {}
         )
 
+        bill.button_draft()
+        bill.invoice_line_ids[0].deductible_percentage = 0.99
+        bill.action_post()
+        self.assertInvoiceValues(
+            bill,
+            [
+                {'display_type': 'product',                      'name': 'Partial item',                        'balance': 100.0,  'tax_ids': [self.tax_purchase_a.id]},  # noqa: E241
+                {'display_type': 'non_deductible_product',       'name': 'Partial item',                        'balance': -1.0,   'tax_ids': [self.tax_purchase_a.id]},  # noqa: E241
+                {'display_type': 'tax',                          'name': '15%',                                 'balance': 14.85,  'tax_ids': []},  # noqa: E241
+                {'display_type': 'payment_term',                 'name': False,                                 'balance': -115.0, 'tax_ids': []},  # noqa: E241
+                {'display_type': 'non_deductible_tax',           'name': bill.name + ' - private part (taxes)', 'balance': 0.15,   'tax_ids': []},  # noqa: E241
+                {'display_type': 'non_deductible_product_total', 'name': bill.name + ' - private part',         'balance': 1.0,    'tax_ids': []},  # noqa: E241
+            ],
+            {}
+        )
+
     def test_bill_partial_deductibility_with_identical_lines(self):
         bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
