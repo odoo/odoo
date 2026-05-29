@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api, _
 from odoo.addons.account.tools import is_valid_structured_reference, sanitize_structured_reference
+from odoo.tools import float_repr
 
 
 class ResPartnerBank(models.Model):
@@ -17,18 +18,18 @@ class ResPartnerBank(models.Model):
                 comment = free_communication or ''
 
             qr_code_vals = [
-                'BCD',                                                  # Service Tag
-                '002',                                                  # Version
-                '1',                                                    # Character Set
-                'SCT',                                                  # Identification Code
-                self.bank_bic or '',                                    # BIC of the Beneficiary Bank
-                (self.acc_holder_name or self.partner_id.name)[:71],    # Name of the Beneficiary
-                self.sanitized_acc_number,                              # Account Number of the Beneficiary
-                currency.name + str(amount),                            # Currency + Amount of the Transfer in EUR
-                '',                                                     # Purpose of the Transfer
-                structured_communication,                               # Remittance Information (Structured)
-                comment[:141],                                          # Remittance Information (Unstructured) (can't be set if there is a structured one)
-                '',                                                     # Beneficiary to Originator Information
+                'BCD',                                                        # Service Tag
+                '002',                                                        # Version
+                '1',                                                          # Character Set
+                'SCT',                                                        # Identification Code
+                self.bank_bic or '',                                          # BIC of the Beneficiary Bank
+                (self.acc_holder_name or self.partner_id.name)[:71],          # Name of the Beneficiary
+                self.sanitized_acc_number,                                    # Account Number of the Beneficiary
+                currency.name + float_repr(amount, currency.decimal_places),  # Currency + Amount of the Transfer in EUR
+                '',                                                           # Purpose of the Transfer
+                structured_communication,                                     # Remittance Information (Structured)
+                comment[:141],                                                # Remittance Information (Unstructured) (can't be set if there is a structured one)
+                '',                                                           # Beneficiary to Originator Information
             ]
             return qr_code_vals
         return super()._get_qr_vals(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
