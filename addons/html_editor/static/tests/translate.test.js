@@ -114,8 +114,8 @@ test("text should align to the start for RTL language", async () => {
 
     // Insert the response.
     await waitFor(".o-translator-translated");
-    expect("button.o-translator-translated").toHaveStyle("text-align: start");
-    expect("button.o-translator-translated").toHaveStyle("direction: rtl");
+    expect(".o-translator-translated").toHaveStyle("text-align: start");
+    expect(".o-translator-translated").toHaveStyle("direction: rtl");
 });
 
 test("insert the response from Google translate", async () => {
@@ -180,8 +180,13 @@ test("insert the response from ChatGPT translate in debug mode", async () => {
     await waitFor(".dropdown-menu");
     await contains(".dropdown-menu .translator:contains('ChatGPT')").click();
 
-    // Insert the response.
+    // Select the chatgpt response in the dialog
     await waitFor(".o-translator-translated.o-chatgpt-translate");
+    expect("footer button.btn[disabled]").toHaveCount(1);
+    await contains("button.o-translator-translated.o-chatgpt-translate").click();
+
+    // Insert the response.
+    await animationFrame();
     expect("footer button.btn[disabled]").toHaveCount(0);
     await contains("footer button.btn").click();
 
