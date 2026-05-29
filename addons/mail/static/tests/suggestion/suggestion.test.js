@@ -1025,6 +1025,38 @@ test("Suggestions that begin with the search term should have priority", async (
     });
 });
 
+test("separates mention suggestions by type only", async () => {
+    const pyEnv = await startServer();
+    const [partnerId1, partnerId2] = pyEnv["res.partner"].create([
+        { name: "Ever Partner A" },
+        { name: "Ever Partner B" },
+    ]);
+    const [roleId1, roleId2] = pyEnv["res.role"].create([
+        { name: "Ever Role A" },
+        { name: "Ever Role B" },
+    ]);
+    pyEnv["res.users"].create([
+        { partner_id: partnerId1, role_ids: [roleId1] },
+        { partner_id: partnerId2, role_ids: [roleId2] },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId1 }),
+            Command.create({ partner_id: partnerId2 }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@ever");
+    await contains(".o-mail-Composer-suggestion:has(:text('Ever Partner A'))");
+    await contains(".o-mail-Composer-suggestion:has(:text('Ever Role A'))");
+    await contains(".o-mail-Composer-suggestion:has(:text('@everyone'))");
+    await contains(".o-mail-Composer-suggestionList hr.o-discuss-separator", { count: 2 });
+});
+
 test("[text composer] Mention with @-role", async () => {
     const pyEnv = await startServer();
     const [roleId1, roleId2] = pyEnv["res.role"].create([

@@ -7,8 +7,9 @@
                 <div t-if="this.state.showLoading" t-att-class="{ 'position-absolute bg-inherit smaller o-mail-NavigableList-floatingLoading': this.props.options.length, 'bg-300': this.props.options.length and this.state.activeIndex === 0, 'o-mail-NavigableList-item': !this.props.options.length }">
                     <t t-call="mail.NavigableList.spinner"/>
                 </div>
-                <t t-foreach="this.sortedOptions" t-as="option" t-key="option_index">
-                    <hr class="o-discuss-separator mx-2 my-1" t-if="option.group != lastGroup and option_index != 0"/>
+                <t t-set="options" t-value="this.sortedOptions"/>
+                <t t-foreach="options" t-as="option" t-key="option_index">
+                    <hr class="o-discuss-separator mx-2 my-1" t-if="option_index != 0 and option.group != options[option_index - 1].group"/>
                     <div
                         class="o-mail-NavigableList-item"
                         t-att-class="option.classList"
@@ -22,7 +23,6 @@
                             <t t-else="" t-out="option.label"/>
                         </a>
                     </div>
-                    <t t-set="lastGroup" t-value="option.group"/>
                 </t>
             </div>
         </div>
