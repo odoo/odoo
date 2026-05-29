@@ -3,7 +3,7 @@ import { isEmpty } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
-import { MailFullComposerSuggestionPlugin } from "./mail_full_composer_suggestion_plugin";
+import { MentionPlugin } from "@mail/core/common/plugin/mention_plugin";
 import { ContentExpandablePlugin } from "./content_expandable_plugin";
 import { DisableBannerCommandsPlugin } from "./disable_banner_commands_plugin";
 import { fillEmpty } from "@html_editor/utils/dom";
@@ -51,7 +51,7 @@ export class HtmlComposerMessageField extends HtmlMailField {
         config.Plugins = [
             ...config.Plugins.filter((plugin) => !["video"].includes(plugin.id)),
             DisableBannerCommandsPlugin,
-            MailFullComposerSuggestionPlugin,
+            MentionPlugin,
         ];
         if (this.props.record.data.composition_comment_option === "reply_all") {
             config.Plugins.push(ContentExpandablePlugin);
@@ -74,10 +74,15 @@ export class HtmlComposerMessageField extends HtmlMailField {
             await this.commitChanges();
             this.props.record.data.attachment_ids.linkTo(attachment.id, attachment);
         };
-        config.thread = this.env.services["mail.store"]?.["mail.thread"].get({
-            model: this.props.record.data.model,
-            id: JSON.parse(this.props.record.data.res_ids || "[]")[0],
-        });
+        config.mentionPluginDependencies = {
+            composerType: this.props.record.data.subtype_is_log
+                ? COMPOSER_TYPES.NOTE
+                : COMPOSER_TYPES.MESSAGE,
+            thread: this.env.services["mail.store"]?.["mail.thread"].get({
+                model: this.props.record.data.model,
+                id: JSON.parse(this.props.record.data.res_ids || "[]")[0],
+            }),
+        };
         config.onEditorReady = () => {
             this.attachmentObserver = new MutationObserver(
                 this._commitChangesIfInlineAttachmentsHasChanged.bind(this)
@@ -89,9 +94,6 @@ export class HtmlComposerMessageField extends HtmlMailField {
                 subtree: true,
             });
         };
-        config.composerType = this.props.record.data.subtype_is_log
-            ? COMPOSER_TYPES.NOTE
-            : COMPOSER_TYPES.MESSAGE;
         return config;
     }
 

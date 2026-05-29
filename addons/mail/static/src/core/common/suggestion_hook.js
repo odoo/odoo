@@ -1,16 +1,16 @@
-import { useComponent, useLayoutEffect, useState } from "@web/owl2/utils";
-import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
-import { rightPos } from "@html_editor/utils/position";
+import { onWillUnmount, proxy, status } from "@odoo/owl";
+
+import { ConnectionAbortedError } from "@web/core/network/rpc";
+import { useService } from "@web/core/utils/hooks";
+import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+
 import {
+    generateChannelMentionElement,
     generatePartnerMentionElement,
     generateRoleMentionElement,
     generateSpecialMentionElement,
-    generateChannelMentionElement,
 } from "@mail/utils/common/format";
-import { status } from "@odoo/owl";
-import { ConnectionAbortedError } from "@web/core/network/rpc";
-import { useService } from "@web/core/utils/hooks";
-import { useSearch } from "@mail/utils/common/hooks";
+import { SearchState } from "@mail/utils/common/hooks";
 
 /**
  * @typedef {Object} Option
@@ -40,94 +40,83 @@ import { useSearch } from "@mail/utils/common/hooks";
  *   | import("@mail/core/common/store_service").SpecialMention} Suggestion
  */
 
-function _useDetectionState() {
-    return {
-        /** @type {string|undefined} */
-        delimiter: undefined,
-        /** @type {number|undefined} */
-        position: undefined,
-        term: "",
-    };
-}
+/**
+ * Encapsulates suggestion detection and search state shared by both
+ * {@link UseSuggestion} (plain-text composer hook) and {@link MentionPlugin}
+ * (html composer plugin).
+ *
+ * Uses only `proxy` and `SearchState` — no Owl lifecycle hooks — so it works in
+ * any context. Call `dispose()` to clean up (from `onWillUnmount` in a
+ * component, or via the plugin's cleanups).
+ */
+export class SuggestionCore {
+    /** @type {AbortController|undefined} */
+    abortController;
+    /** @type {() => boolean} */
+    canFetch;
+    /** @type {{ delimiter: string|undefined, position: number|undefined, term: string }} */
+    detection;
+    /** @type {(() => string|undefined)|undefined} */
+    getComposerType;
+    /** @type {(() => import("models").Thread|undefined)|undefined} */
+    getThread;
+    /** @type {import("@mail/utils/common/hooks").SearchState} */
+    search;
+    /** @type {Object} The `mail.suggestion` service. */
+    suggestionService;
 
-/** @return {ReturnType<_useDetectionState>} */
-function useDetectionState() {
-    return useState(_useDetectionState());
-}
-
-export class UseSuggestion {
-    constructor(comp) {
-        this.comp = comp;
-        this.suggestionService = useService("mail.suggestion");
-        this.detection = useDetectionState();
-        this.search = useSearch({
+    /**
+     * @param {Object} options
+     * @param {() => boolean} [options.canFetch] Guards the server fetch (e.g.
+     *   destroyed / guest checks). Defaults to always-true.
+     * @param {() => string|undefined} [options.getComposerType]
+     * @param {() => import("models").Thread|undefined} [options.getThread]
+     * @param {Object} options.suggestionService
+     */
+    constructor({ canFetch, getComposerType, getThread, suggestionService } = {}) {
+        this.canFetch = canFetch ?? (() => true);
+        this.getComposerType = getComposerType;
+        this.getThread = getThread;
+        this.suggestionService = suggestionService;
+        this.detection = proxy({ delimiter: undefined, position: undefined, term: "" });
+        this.search = new SearchState({
             fetch: this.fetchSuggestions.bind(this),
             filter: this.update.bind(this),
             deps: () => [this.detection.delimiter, this.detection.position],
             isActive: () => !!this.detection.delimiter,
         });
-        useLayoutEffect(
-            () => {
-                this.detect();
-            },
-            () => [
-                this.composer.selection.start,
-                this.composer.selection.end,
-                this.composer.composerText,
-                this.composer.composerHtml,
-            ]
-        );
     }
-    /** @type {import("@mail/core/common/composer").Composer} */
-    comp;
-    get composer() {
-        return this.comp.props.composer;
+
+    /** @returns {string|undefined} */
+    get composerType() {
+        return this.getComposerType?.();
     }
-    clearRawMentions() {
-        this.composer.mentionedChannels.length = 0;
-        this.composer.mentionedPartners.length = 0;
-        this.composer.mentionedRoles.length = 0;
+
+    /** @returns {import("models").Thread|undefined} */
+    get thread() {
+        return this.getThread?.();
     }
-    clearCannedResponses() {
-        this.composer.cannedResponses = [];
-    }
+
     clearSearch() {
-        Object.assign(this.detection, {
-            delimiter: undefined,
-            position: undefined,
-            term: "",
-        });
+        Object.assign(this.detection, { delimiter: undefined, position: undefined, term: "" });
         this.search.reset();
     }
-    detect() {
-        let start = 0;
-        let end = 0;
-        let text = "";
-        if (this.comp.composerService.htmlEnabled) {
-            const selection = this.comp.editor.shared.selection.getEditableSelection();
-            if (
-                !isTextNode(selection.startContainer) ||
-                !isContentEditable(selection.startContainer) ||
-                !selection.isCollapsed
-            ) {
-                this.clearSearch();
-                return;
-            }
-            start = selection.startOffset;
-            end = selection.endOffset;
-            text = selection.anchorNode.textContent;
-        } else {
-            start = this.composer.selection.start;
-            end = this.composer.selection.end;
-            text = this.composer.composerText;
-        }
-        if (start !== end) {
-            // avoid interfering with multi-char selection
-            this.clearSearch();
-            return;
-        }
+
+    /** Stops the internal `SearchState` effect and resets state. */
+    dispose() {
+        this.search.dispose();
+    }
+
+    /**
+     * Scans backward from `start` in `text` for a suggestion delimiter, then
+     * updates `detection` + `search.searchTerm` on success, or clears the
+     * search when no delimiter is found.
+     *
+     * @param {number} start Cursor offset within `text`.
+     * @param {string} text Full text content of the current editor node.
+     */
+    processDetection(start, text) {
         const candidatePositions = [];
-        // consider the chars before the current cursor position
         let numberOfSpaces = 0;
         for (let index = start - 1; index >= 0; --index) {
             if (/\s/.test(text[index])) {
@@ -142,105 +131,70 @@ export class UseSuggestion {
             }
             candidatePositions.push(index);
         }
-        // keep the current delimiter if it is still valid
         if (this.detection.position !== undefined && this.detection.position < start) {
             candidatePositions.push(this.detection.position);
         }
-        const supportedDelimiters = this.suggestionService.getSupportedDelimiters(
-            this.thread,
-            this.comp.env
-        );
+        const supportedDelimiters = this.suggestionService.getSupportedDelimiters(this.thread);
         for (const candidatePosition of candidatePositions) {
             if (candidatePosition < 0 || candidatePosition >= text.length) {
                 continue;
             }
-
-            const findAppropriateDelimiter = () => {
-                let goodCandidate;
-                for (const [delimiter, allowedPosition, minCharCountAfter] of supportedDelimiters) {
-                    if (
-                        text.substring(candidatePosition).startsWith(delimiter) && // delimiter is used
-                        (allowedPosition === undefined || allowedPosition === candidatePosition) && // delimiter is allowed position
-                        (minCharCountAfter === undefined ||
-                            start - candidatePosition - delimiter.length + 1 > minCharCountAfter) && // delimiter is allowed (enough custom char typed after)
-                        (!goodCandidate || delimiter.length > goodCandidate) // delimiter is more specific
-                    ) {
-                        goodCandidate = delimiter;
-                    }
-                }
-                return goodCandidate;
-            };
-
-            const candidateDelimiter = findAppropriateDelimiter();
-            if (!candidateDelimiter) {
+            const delimiter = this.findDelimiter(text, candidatePosition, start, supportedDelimiters);
+            if (!delimiter) {
                 continue;
             }
-            const charBeforeCandidate = text[candidatePosition - 1];
-            if (charBeforeCandidate && !/\s/.test(charBeforeCandidate)) {
+            const charBefore = text[candidatePosition - 1];
+            if (charBefore && !/\s/.test(charBefore)) {
                 continue;
             }
             Object.assign(this.detection, {
-                delimiter: candidateDelimiter,
+                delimiter,
                 position: candidatePosition,
-                term: text.substring(candidatePosition + candidateDelimiter.length, start),
+                term: text.substring(candidatePosition + delimiter.length, start),
             });
             this.search.searchTerm = this.detection.term;
             return;
         }
         this.clearSearch();
     }
-    get thread() {
-        return this.composer.thread || this.composer.message?.thread;
+
+    /**
+     * Returns the most specific matching delimiter at `candidatePosition`, or
+     * `undefined` if none qualify.
+     *
+     * @param {string} text
+     * @param {number} candidatePosition
+     * @param {number} start
+     * @param {Array<[string, number|undefined, number|undefined]>} supportedDelimiters
+     * @returns {string|undefined}
+     */
+    findDelimiter(text, candidatePosition, start, supportedDelimiters) {
+        let goodCandidate;
+        for (const [delimiter, allowedPosition, minCharCountAfter] of supportedDelimiters) {
+            if (
+                text.substring(candidatePosition).startsWith(delimiter) && // delimiter is used
+                (allowedPosition === undefined || allowedPosition === candidatePosition) && // delimiter is allowed position
+                (minCharCountAfter === undefined ||
+                    start - candidatePosition - delimiter.length + 1 > minCharCountAfter) && // delimiter is allowed (enough custom char typed after)
+                (!goodCandidate || delimiter.length > goodCandidate) // delimiter is more specific
+            ) {
+                goodCandidate = delimiter;
+            }
+        }
+        return goodCandidate;
     }
-    insert(option) {
-        let position = this.detection.position + 1;
-        if (
-            [":", "::"].includes(this.detection.delimiter) ||
-            (this.comp.composerService.htmlEnabled && this.detection.delimiter !== "/")
-        ) {
-            position = this.detection.position;
-        }
-        if (this.comp.composerService.htmlEnabled) {
-            const { startContainer, endContainer, endOffset } =
-                this.comp.editor.shared.selection.getEditableSelection();
-            this.comp.editor.shared.selection.setSelection({
-                anchorNode: startContainer,
-                anchorOffset: position,
-                focusNode: endContainer,
-                focusOffset: endOffset,
-            });
-        }
-        if (option.partner) {
-            this.composer.mentionedPartners.add({ id: option.partner.id });
-        } else if (option.role) {
-            this.composer.mentionedRoles.add(option.role);
-        } else if (option.channel) {
-            this.composer.mentionedChannels.add(option.channel.id);
-        } else if (option.cannedResponse) {
-            this.composer.cannedResponses.push(option.cannedResponse);
-        }
-        if (this.comp.composerService.htmlEnabled) {
-            const inlineElement = makeMentionFromOption(option, { thread: this.thread });
-            this.comp.editor.shared.dom.insert(inlineElement);
-            const [anchorNode, anchorOffset] = rightPos(inlineElement);
-            this.comp.editor.shared.selection.setSelection({ anchorNode, anchorOffset });
-            this.comp.editor.shared.dom.insert("\u00A0");
-            this.comp.editor.shared.history.addStep();
-        } else {
-            // remove the user-typed search delimiter
-            this.composer.composerText =
-                this.composer.composerText.substring(0, position) +
-                this.composer.composerText.substring(this.composer.selection.end);
-            this.clearSearch();
-            this.composer.insertText(`${option.label} `, position);
-        }
-    }
+
+    /**
+     * `SearchState` filter: synchronous local lookup capped at 8 results.
+     *
+     * @returns {{ type: string, suggestions: Suggestion[] }|undefined}
+     */
     update() {
         if (!this.detection.delimiter) {
             return undefined;
         }
         const { type, suggestions } = this.suggestionService.searchSuggestions(this.detection, {
-            composerType: this.comp.props.type,
+            composerType: this.composerType,
             thread: this.thread,
         });
         if (!suggestions.length) {
@@ -253,20 +207,24 @@ export class UseSuggestion {
         return { type, suggestions };
     }
 
+    /**
+     * `SearchState` fetch: aborts any in-flight request, then resolves to
+     * `false` when the server returns nothing (lets `SearchState` skip
+     * narrower fetches via `lastEmptyTerm`).
+     *
+     * @returns {Promise<false|undefined>}
+     */
     async fetchSuggestions() {
-        if (!this.thread || status(this.comp) === "destroyed") {
+        if (!this.canFetch()) {
             return;
-        }
-        if (!this.composer.store.self_user) {
-            return; // guests cannot access fetch suggestion method
         }
         try {
             this.abortController?.abort();
             this.abortController = new AbortController();
             await this.suggestionService.fetchSuggestions(this.detection, {
-                thread: this.thread,
                 abortSignal: this.abortController.signal,
-                composerType: this.comp.props.type,
+                composerType: this.composerType,
+                thread: this.thread,
             });
         } catch (e) {
             if (e instanceof ConnectionAbortedError) {
@@ -274,13 +232,83 @@ export class UseSuggestion {
             }
             throw e;
         }
-        if (!this.thread || status(this.comp) === "destroyed") {
+        if (!this.canFetch()) {
             return;
         }
         const { suggestions } = this.suggestionService.searchSuggestions(this.detection, {
             thread: this.thread,
         });
         return suggestions.length === 0 ? false : undefined;
+    }
+}
+
+export class UseSuggestion {
+    /** @type {import("@mail/core/common/composer").Composer} */
+    comp;
+
+    constructor(comp) {
+        this.comp = comp;
+        this.suggestion = new SuggestionCore({
+            canFetch: () =>
+                !!this.thread &&
+                status(this.comp) !== "destroyed" &&
+                !!this.composer.store.self_user,
+            getComposerType: () => this.comp.props.type,
+            getThread: () => this.thread,
+            suggestionService: useService("mail.suggestion"),
+        });
+        useLayoutEffect(
+            () => this.detect(),
+            () => [this.composer.selection.start, this.composer.selection.end, this.composer.composerText]
+        );
+        onWillUnmount(() => this.suggestion.dispose());
+    }
+    get composer() {
+        return this.comp.props.composer;
+    }
+    /** @returns {import("@mail/utils/common/hooks").SearchState} */
+    get search() {
+        return this.suggestion.search;
+    }
+    get thread() {
+        return this.composer.thread || this.composer.message?.thread;
+    }
+    clearRawMentions() {
+        this.composer.mentionedChannels.length = 0;
+        this.composer.mentionedPartners.length = 0;
+        this.composer.mentionedRoles.length = 0;
+    }
+    clearCannedResponses() {
+        this.composer.cannedResponses = [];
+    }
+    detect() {
+        const start = this.composer.selection.start;
+        if (start !== this.composer.selection.end) {
+            // avoid interfering with multi-char selection
+            this.suggestion.clearSearch();
+            return;
+        }
+        this.suggestion.processDetection(start, this.composer.composerText);
+    }
+    insert(option) {
+        if (option.partner) {
+            this.composer.mentionedPartners.add({ id: option.partner.id });
+        } else if (option.role) {
+            this.composer.mentionedRoles.add(option.role);
+        } else if (option.channel) {
+            this.composer.mentionedChannels.add(option.channel.id);
+        } else if (option.cannedResponse) {
+            this.composer.cannedResponses.push(option.cannedResponse);
+        }
+        // plain-text: ":"/"::" anchor on the delimiter, others step past it
+        const { delimiter, position } = this.suggestion.detection;
+        const insertAt = [":", "::"].includes(delimiter) ? position : position + 1;
+        // remove the user-typed search delimiter
+        this.composer.composerText =
+            this.composer.composerText.substring(0, insertAt) +
+            this.composer.composerText.substring(this.composer.selection.end);
+        this.suggestion.clearSearch();
+        this.composer.insertText(`${option.label} `, insertAt);
     }
 }
 

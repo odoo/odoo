@@ -437,6 +437,11 @@ export class Composer extends Component {
             placeholder: this.placeholder,
             baseContainers: ["DIV", "P"],
             Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
+            mentionPluginDependencies: {
+                composer: this.props.composer,
+                composerType: this.props.type,
+                suggestionPosition: this.env.inChatter ? "bottom-fit" : "top-fit",
+            },
             composerPluginDependencies: {
                 onBeforePaste: (selection, ev) => this.onPaste(ev),
                 onFocusin: this.onFocusin.bind(this),

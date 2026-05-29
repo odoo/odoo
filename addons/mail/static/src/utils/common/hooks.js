@@ -1,4 +1,4 @@
-import { Component, onMounted, onPatched, onWillUnmount, proxy, toRaw, xml } from "@odoo/owl";
+import { Component, effect, onMounted, onPatched, onWillUnmount, proxy, toRaw, xml } from "@odoo/owl";
 
 import { useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { Reactive } from "@web/core/utils/reactive";
@@ -635,6 +635,8 @@ export class SearchState extends Reactive {
     isActiveGetter = null;
     /** @type {(() => any[]) | null} */
     depsGetter = null;
+    /** @type {() => void} Stops the reactive search effect. */
+    effectCleanup;
 
     /**
      * @param {Object} [options]
@@ -669,20 +671,22 @@ export class SearchState extends Reactive {
             this.depsGetter = deps;
         }
         this.sequential = useSequential();
-        useLayoutEffect(
-            () => {
-                if (!this.isActive) {
-                    this.reset();
-                    return;
-                }
-                if (this.filter) {
-                    this.results = this.filter(this.searchTerm);
-                }
-                this.run();
-            },
-            () => [this.searchTerm, ...this.deps]
-        );
-        onWillUnmount(() => this.reset());
+        this.effectCleanup = effect(() => {
+            void this.deps; // subscribe to custom deps for reactive tracking
+            if (!this.isActive) {
+                this.reset();
+                return;
+            }
+            if (this.filter) {
+                this.results = this.filter(this.searchTerm);
+            }
+            this.run();
+        });
+    }
+
+    dispose() {
+        this.effectCleanup();
+        this.reset();
     }
 
     get isActive() {
@@ -745,7 +749,9 @@ export class SearchState extends Reactive {
  * @returns {SearchState}
  */
 export function useSearch(options = {}) {
-    return useState(new SearchState(options));
+    const state = useState(new SearchState(options));
+    onWillUnmount(() => state.dispose());
+    return state;
 }
 
 export function useSequential() {
