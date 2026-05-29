@@ -185,10 +185,10 @@ class ResPartner(models.Model):
 
     @api.model
     @handle_demo
-    def _get_peppol_verification_state(self, peppol_endpoint, peppol_eas, invoice_edi_format):
+    def _get_peppol_verification_state(self, peppol_endpoint, peppol_eas, invoice_edi_format, process_type='billing'):
         proxy_type, edi_identification = self._get_peppol_proxy_identification_info(peppol_eas, peppol_endpoint)
         if proxy_type != 'pdp' or self.env.company._get_peppol_proxy_type() != 'pdp':
-            return super()._get_peppol_verification_state(peppol_endpoint, peppol_eas, invoice_edi_format)
+            return super()._get_peppol_verification_state(peppol_endpoint, peppol_eas, invoice_edi_format, process_type=process_type)
         return self._get_pdp_annuaire_verification_state(edi_identification, invoice_edi_format)
 
     @api.model
