@@ -169,7 +169,7 @@ class AccountMove(models.Model):
     @api.depends('company_id')
     def _compute_pdp_uses_pdp(self):
         for move in self:
-            move.pdp_uses_pdp = self.company_id._get_peppol_proxy_type() == 'pdp'
+            move.pdp_uses_pdp = move.company_id._get_peppol_proxy_type() == 'pdp'
 
     @api.depends('peppol_is_sent', 'pdp_uses_pdp', 'move_type')
     def _compute_pdp_is_sent(self):
