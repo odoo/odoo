@@ -38,6 +38,26 @@
                 <form string="Bill of Material">
                     <sheet>
                         <div class="oe_button_box" name="button_box" invisible="context.get('parent_production_id')">
+                            <button name="action_open_exploded_bom_lines"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="account_tree"
+                                invisible="component_count == 0">
+                                <div class="o_stat_info">
+                                    <div class="d-flex align-items-baseline gap-1">
+                                        <span class="o_stat_value order-1">
+                                            <field name="component_count"/>
+                                        </span>
+                                        <span class="o_stat_text order-2">Components</span>
+                                    </div>
+                                    <div class="d-flex align-items-baseline gap-1">
+                                        <span class="o_stat_value order-1">
+                                            <field name="subassembly_count"/>
+                                        </span>
+                                        <span class="o_stat_text order-2">Sub Assemblies</span>
+                                    </div>
+                                </div>
+                            </button>
                             <button name="%(action_mrp_routing_time)d" type="action" class="oe_stat_button" icon="schedule" groups="mrp.group_mrp_routings">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_text">Operations<br/>Performance</span>
@@ -308,6 +328,27 @@
             </field>
         </record>
 
+        <record id="mrp_bom_line_view_list_exploded_components" model="ir.ui.view">
+            <field name="name">mrp.bom.line.view.list.exploded.components</field>
+            <field name="model">mrp.bom.line</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_line_view_list"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <list action="action_open_parent_bom" position="attributes">
+                    <attribute name="action">action_open_product</attribute>
+                </list>
+                <field name="bom_product_tmpl_id" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="bom_id" position="attributes">
+                    <attribute name="column_invisible">1</attribute>
+                </field>
+                <field name="product_id" position="after">
+                    <field name="bom_id" readonly="1" string="Bill of Material" optional="show"/>
+                </field>
+            </field>
+        </record>
+
         <record id="mrp_bom_line_view_pivot" model="ir.ui.view">
             <field name="name">mrp.bom.line.view.pivot</field>
             <field name="model">mrp.bom.line</field>
@@ -326,8 +367,9 @@
             <field name="model">mrp.bom.line</field>
             <field name="arch" type="xml">
                 <search string="Search BoM Line">
+                    <field name="product_id" string="Component" invisible="not context.get('forced_order_ids')"/>
                     <field name="bom_code" string="Bill of Materials" filter_domain="['|', ('bom_code', 'ilike', self), ('bom_product_tmpl_id', 'ilike', self)]"/>
-                    <field name="product_id" string="Component"/>
+                    <field name="product_id" string="Component" invisible="context.get('forced_order_ids')"/>
                     <field name="bom_product_tmpl_id" string="Final Product"/>
                     <field name="operation_id" groups="mrp.group_mrp_routings"/>
                     <field name="bom_product_template_attribute_value_ids"/>
