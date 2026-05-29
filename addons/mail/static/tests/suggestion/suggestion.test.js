@@ -1493,3 +1493,77 @@ test("Recent message authors should be displayed before other partners", async (
     await contains(".o-mail-Composer-suggestion:eq(2) strong:text('Person A')");
     await contains(".o-mail-Composer-suggestion:eq(3) strong:text('Person C')");
 });
+
+test("[text composer] one separator between partner and role mention suggestions", async () => {
+    const pyEnv = await startServer();
+    const [roleId] = pyEnv["res.role"].create([
+        { name: "rd-Discuss" },
+    ]);
+    const [userId] = pyEnv["res.users"].create([
+        { role_ids: [roleId] },
+    ]);
+    const [partnerA, partnerB] = pyEnv["res.partner"].create([
+        { name: "Alpha Person A", user_ids: [userId] },
+        { name: "Alpha Person B" },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerA }),
+            Command.create({ partner_id: partnerB }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestionList .o-discuss-separator", { count: 1 });
+    await contains(".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))", {
+        before: [".o-mail-Composer-suggestionList .o-discuss-separator"],
+    });
+    await contains(".o-mail-Composer-suggestion:has(:text('rd-Discuss'))", {
+        after: [".o-mail-Composer-suggestionList .o-discuss-separator"],
+    });
+});
+
+test.tags("html composer");
+test("one separator between partner and role mention suggestions", async () => {
+    const pyEnv = await startServer();
+    const [roleId] = pyEnv["res.role"].create([
+        { name: "rd-Discuss" },
+    ]);
+    const [userId] = pyEnv["res.users"].create([
+        { role_ids: [roleId] },
+    ]);
+    const [partnerA, partnerB] = pyEnv["res.partner"].create([
+        { name: "Alpha Person A", user_ids: [userId] },
+        { name: "Alpha Person B" },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerA }),
+            Command.create({ partner_id: partnerB }),
+        ],
+    });
+    await start();
+    getService("mail.composer").setHtmlComposer();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    await htmlInsertText(editor, "@");
+    await contains(".o-mail-Composer-suggestionList .o-discuss-separator", { count: 1 });
+    await contains(".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))", {
+        before: [".o-mail-Composer-suggestionList .o-discuss-separator"],
+    });
+    await contains(".o-mail-Composer-suggestion:has(:text('rd-Discuss'))", {
+        after: [".o-mail-Composer-suggestionList .o-discuss-separator"],
+    });
+});
