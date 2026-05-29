@@ -79,6 +79,8 @@ export class Persona extends Record {
     type;
     /** @type {string} */
     name;
+    /** @type {string} */
+    displayName;
     country = Record.one("Country");
     /** @type {string} */
     email;
