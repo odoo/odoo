@@ -345,7 +345,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
 
         order_sessions = orders.mapped('session_id')
         session_name = False
-        if len(order_sessions) == 1:
+        if len(order_sessions) == 1 and session_ids:
             state = order_sessions[0].state
             date_start = order_sessions[0].start_at
             date_stop = order_sessions[0].stop_at

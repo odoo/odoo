@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
+
 import odoo
 
 from odoo import Command
@@ -474,6 +476,7 @@ class TestReportSession(TestPoSCommon):
         # Session 2: open, create an order, intentionally leave open.
         self.config.open_ui()
         session2 = self.config.current_session_id
+        session2.set_opening_control(0, None)
         order2 = self.env['pos.order'].create({**order_vals, 'session_id': session2.id})
         self.make_payment(order2, self.bank_pm1, 100)
 
@@ -497,6 +500,20 @@ class TestReportSession(TestPoSCommon):
         self.assertEqual(report2['state'], 'multiple',
             "Two closed sessions in range must still produce state='multiple'")
         self.assertEqual(report2['nbr_orders'], 2)
+
+        # Query a window strictly inside session2 (date range, no session_ids)
+        # that contains one of session2's orders. The header must show that
+        # window, not session2's start_at/stop_at.
+        date_start = session2.start_at + timedelta(minutes=1)
+        date_stop = date_start + timedelta(hours=1)
+        order2.date_order = date_start + timedelta(minutes=10)
+        report3 = self.env['report.point_of_sale.report_saledetails'].get_sale_details(
+            date_start=date_start, date_stop=date_stop, config_ids=self.config.ids,
+        )
+        self.assertEqual(report3['nbr_orders'], 1)
+        self.assertEqual(report3['state'], 'multiple')
+        self.assertEqual(report3['date_start'], date_start)
+        self.assertEqual(report3['date_stop'], date_stop)
 
     def test_report_sale_details_total_with_cash_rounding(self):
         """Test that the sale details report shows the cash rounding amount."""
