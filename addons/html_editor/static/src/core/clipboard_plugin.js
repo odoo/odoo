@@ -707,6 +707,16 @@ export class ClipboardPlugin extends Plugin {
                 deleteAndSetSelection(range.startContainer, range.startOffset);
             }
         }
+        if (
+            this.delegateTo(
+                "html_drop_overrides",
+                this.dependencies.selection.getEditableSelection(),
+                ev.dataTransfer.getData("text")
+            )
+        ) {
+            this.dependencies.history.commit();
+            return;
+        }
         if (odooEditorHtml) {
             const fragment = parseHTML(this.document, odooEditorHtml);
             this.dependencies.sanitize.sanitize(fragment);

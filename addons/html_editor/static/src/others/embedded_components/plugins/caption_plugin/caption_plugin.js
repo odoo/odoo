@@ -13,17 +13,13 @@ import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
+
+const CAPTION_SPAN_SELECTOR = "span.o_caption_editable";
 
 export class CaptionPlugin extends Plugin {
     static id = "caption";
-    static dependencies = [
-        "image",
-        "split",
-        "history",
-        "embeddedComponents",
-        "selection",
-        "baseContainer",
-    ];
+    static dependencies = ["image", "split", "history", "selection", "baseContainer", "clipboard"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -45,13 +41,27 @@ export class CaptionPlugin extends Plugin {
             }),
         ],
         clean_for_save_processors: this.cleanForSave.bind(this),
-        on_will_mount_component_handlers: this.setupNewCaption.bind(this),
         on_deleted_handlers: this.afterDelete.bind(this),
         on_will_cut_handlers: this.expandSelectionToCaption.bind(this),
         on_will_drag_handlers: this.expandSelectionToCaption.bind(this),
         delete_image_overrides: this.handleDeleteImage.bind(this),
         on_media_dialog_saved_handlers: this.onImageReplaced.bind(this),
-        hints: [{ selector: "FIGCAPTION", text: _t("Write a caption...") }],
+        hints: [{ selector: "FIGCAPTION > .o_caption_editable", text: _t("Write a caption...") }],
+        hint_targets_providers: (selectionData) => {
+            const captionSpan = closestElement(
+                selectionData.editableSelection.anchorNode,
+                CAPTION_SPAN_SELECTOR
+            );
+            if (captionSpan) {
+                return [captionSpan];
+            }
+            return [];
+        },
+        is_formattable_node_predicates: (node) => {
+            if (closestElement(node, CAPTION_SPAN_SELECTOR)) {
+                return false;
+            }
+        },
         is_node_splittable_predicates: [
             (node) => {
                 // avoid merge
@@ -65,6 +75,44 @@ export class CaptionPlugin extends Plugin {
                 return true;
             }
         },
+        toolbar_namespace_providers: withSequence(70, (targetedNodes) => {
+            if (
+                targetedNodes.length &&
+                targetedNodes.every((node) => closestElement(node, CAPTION_SPAN_SELECTOR))
+            ) {
+                return DISABLED_NAMESPACE;
+            }
+        }),
+        html_drop_overrides: this.onDrop.bind(this),
+        paste_text_overrides: this.onPaste.bind(this),
+        paste_html_overrides: this.onPaste.bind(this),
+        paste_odoo_editor_html_overrides: this.onPaste.bind(this),
+        normalize_processors: (root) => {
+            let figures = [];
+            if (root.matches(CAPTION_SPAN_SELECTOR)) {
+                figures = [closestElement(root, "figure")];
+            } else {
+                figures = [...root.querySelectorAll("figure")];
+            }
+            figures.forEach((figure) => {
+                const captionSpan = figure.querySelector(CAPTION_SPAN_SELECTOR);
+                const image = figure.querySelector("IMG");
+                if (image && image.getAttribute("data-caption") !== captionSpan.textContent) {
+                    image.setAttribute("data-caption", captionSpan.textContent);
+                }
+                if (captionSpan.textContent) {
+                    const figcaption = figure.querySelector("figcaption");
+                    figcaption.setAttribute("placeholder", captionSpan.textContent);
+                }
+            });
+        },
+        split_element_block_overrides: (params) => {
+            if (closestElement(params.targetNode, CAPTION_SPAN_SELECTOR)) {
+                return true;
+            }
+        },
+        powerbox_blacklist_selectors: CAPTION_SPAN_SELECTOR,
+        are_inlines_allowed_at_root_predicates: (node) => node.matches(CAPTION_SPAN_SELECTOR),
         // Consider a <figure> element as empty if it only contains a
         // <figcaption> element (e.g. when its image has just been
         // removed).
@@ -86,7 +134,6 @@ export class CaptionPlugin extends Plugin {
 
     setup() {
         for (const figure of this.editable.querySelectorAll("figure")) {
-            // Embed the captions.
             const image = figure.querySelector("img");
             figure.before(image);
             const caption = figure.querySelector("figcaption")?.textContent;
@@ -96,20 +143,40 @@ export class CaptionPlugin extends Plugin {
         }
     }
 
+    onDrop(selection, text) {
+        if (closestElement(selection.anchorNode, CAPTION_SPAN_SELECTOR)) {
+            this.dependencies.clipboard.pasteText(text.replace(/\r?\n|\r/g, ""));
+            return true;
+        }
+    }
+
+    onPaste(selection, clipboardRoot) {
+        if (closestElement(selection.anchorNode, CAPTION_SPAN_SELECTOR)) {
+            const pastedTextContent = clipboardRoot.textContent;
+            this.dependencies.clipboard.pasteText(pastedTextContent.replace(/\r?\n|\r/g, ""));
+            return true;
+        }
+    }
+
     cleanForSave(root) {
         for (const figure of root.querySelectorAll("figure")) {
             figure.removeAttribute("contenteditable");
             const image = figure.querySelector("img");
-            // Remove embedding and convert caption attribute to text.
+            const span = figure.querySelector(CAPTION_SPAN_SELECTOR);
+            const captionText = span?.textContent || image.getAttribute("data-caption") || "";
             figure.querySelector("figcaption").remove();
-            const caption = root.ownerDocument.createElement("figcaption");
-            caption.textContent = image.getAttribute("data-caption");
+            const newFigcaption = root.ownerDocument.createElement("figcaption");
+            newFigcaption.textContent = captionText;
             image.removeAttribute("data-caption");
             image.removeAttribute("data-caption-id");
             image.classList.remove(EDITABLE_MEDIA_CLASS);
-            image.after(caption);
+            image.after(newFigcaption);
         }
         return root;
+    }
+
+    getCaptionId() {
+        return "" + Math.floor(Math.random() * Date.now());
     }
 
     hasImageCaption(image) {
@@ -117,9 +184,7 @@ export class CaptionPlugin extends Plugin {
             return;
         }
         const block = closestBlock(image.parentElement);
-        return (
-            block.nodeName === "FIGURE" && !!block.querySelector("[data-embedded='caption'] input")
-        );
+        return block.nodeName === "FIGURE" && !!block.querySelector(CAPTION_SPAN_SELECTOR);
     }
 
     toggleImageCaption(image = this.dependencies.image.getTargetedImage()) {
@@ -134,11 +199,7 @@ export class CaptionPlugin extends Plugin {
         }
     }
 
-    getCaptionId() {
-        return "" + Math.floor(Math.random() * Date.now());
-    }
-
-    addImageCaption(image, captionText = "", focusInput = true) {
+    addImageCaption(image, captionText = "") {
         // Move the image within a figure element.
         const figure = this.document.createElement("figure");
         const link = image.parentElement.nodeName === "A" && image.parentElement;
@@ -163,28 +224,35 @@ export class CaptionPlugin extends Plugin {
             // => <figure><img/></figure></p>
             // but still <p><a><figure><img/></figure></p>
             unwrapContents(figure.parentElement);
-            // Figure is contenteditable="false", so selection would jump
-            // to the nearest editable sibling <div>. Setting cursor at
-            // the end ensures caption input receives focus correctly.
-            this.dependencies.selection.setCursorEnd(figure);
         }
         // Set the caption and its ID.
         const captionId = this.getCaptionId();
         image.setAttribute("data-caption-id", captionId);
         image.setAttribute("data-caption", captionText || "");
-        // Ensure it's not possible to write inside the figure.
         figure.setAttribute("contenteditable", "false");
         image.classList.add(EDITABLE_MEDIA_CLASS);
-        // Add the caption component.
-        // => <p><figure><img/><figcaption>...</figcaption></figure></p>
-        // or <p><a><figure><img/><figcaption>...</figcaption></figure></a></p>
-        const caption = renderToElement("html_editor.EmbeddedCaptionBlueprint", {
-            embeddedProps: JSON.stringify({
-                id: captionId,
-                focusInput,
-            }),
+        const figcaptionEl = renderToElement("html_editor.EmbeddedCaptionBlueprint", {
+            captionId,
         });
-        figure.append(caption);
+        figure.append(figcaptionEl);
+        this.setupCaption(figcaptionEl, image);
+    }
+
+    /**
+     * Initialize a figcaption
+     * @param {HTMLElement} figcaption
+     * @param {HTMLImageElement} image
+     */
+    setupCaption(figcaption, image) {
+        const span = figcaption.querySelector(CAPTION_SPAN_SELECTOR);
+        if (span) {
+            const captionText = image.getAttribute("data-caption") || "";
+            if (captionText) {
+                span.textContent = captionText;
+                figcaption.setAttribute("placeholder", captionText);
+            }
+            this.dependencies.selection.setCursorEnd(span);
+        }
     }
 
     removeImageCaption(image) {
@@ -204,7 +272,7 @@ export class CaptionPlugin extends Plugin {
             unwrapContents(figure);
             image.removeAttribute("data-caption-id"); // (keep the data-caption for if we toggle again)
             image.classList.remove(EDITABLE_MEDIA_CLASS);
-            // Select the image.
+
             const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(image);
             this.dependencies.selection.setSelection({
                 anchorNode,
@@ -214,45 +282,6 @@ export class CaptionPlugin extends Plugin {
             });
             this.dependencies.selection.focusEditable();
             this.dependencies.history.commit();
-        }
-    }
-
-    setupNewCaption({ name, props }) {
-        if (name === "caption") {
-            const id = props.id;
-            delete props.id;
-            const image = this.editable.querySelector(`img[data-caption-id="${id}"]`);
-            const previousCaption = image.getAttribute("data-caption");
-            Object.assign(props, {
-                image,
-                onUpdateCaption: (caption = "") => {
-                    const figcaption = image.parentElement.querySelector("figcaption");
-                    const didCaptionChanged = previousCaption !== caption;
-                    if (
-                        caption &&
-                        figcaption &&
-                        figcaption.getAttribute("placeholder") !== caption
-                    ) {
-                        // Adapt the figcaption element's placeholder to the new
-                        // caption for screen reader users.
-                        figcaption.setAttribute("placeholder", caption);
-                    }
-                    if (didCaptionChanged) {
-                        image.setAttribute("data-caption", caption);
-                        // If the caption is being added, we update without
-                        // adding a history commit because it will be added at the
-                        // end of adding the caption, by `addImageCaption`.
-                        this.dependencies.history.commit();
-                    }
-                },
-                onEditorHistoryApply: (redo = false) => {
-                    if (redo) {
-                        this.dependencies.history.redo();
-                    } else {
-                        this.dependencies.history.undo();
-                    }
-                },
-            });
         }
     }
 
@@ -283,7 +312,8 @@ export class CaptionPlugin extends Plugin {
         if (figure) {
             if (media.nodeName === "IMG") {
                 [anchorNode, anchorOffset] = rightPos(figure);
-                const caption = figure.querySelector("[data-embedded='caption'] input")?.value;
+                const span = figure.querySelector(CAPTION_SPAN_SELECTOR);
+                const caption = span?.textContent || "";
                 figure.before(media);
                 figure.remove();
                 this.addImageCaption(media, caption, false);
@@ -299,7 +329,8 @@ export class CaptionPlugin extends Plugin {
         const { anchorNode } = this.dependencies.selection.getEditableSelection();
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
         for (const figure of this.editable.querySelectorAll("figure:not(:has(img))")) {
-            const isSelectionInFigure = targetedNodes.includes(figure) || anchorNode === figure;
+            const isSelectionInFigure =
+                targetedNodes.some((node) => figure.contains(node)) || anchorNode === figure;
             const sibling = figure.nextSibling || figure.previousSibling;
             figure.remove();
             if (isSelectionInFigure) {
