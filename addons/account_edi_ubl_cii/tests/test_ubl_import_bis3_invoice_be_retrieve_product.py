@@ -18,6 +18,11 @@ class TestUblImportBis3InvoiceBERetrieveProduct(TestUblImportBis3InvoiceBE):
         }])
 
     def test_partial_import_product_name(self):
+        # enable predict_bill_product
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         product = self._create_product(name='important product1')
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_product_name')
         self.assertRecordValues(invoice.invoice_line_ids, [
@@ -48,6 +53,9 @@ class TestUblImportBis3InvoiceBERetrieveProduct(TestUblImportBis3InvoiceBE):
         }])
 
     def test_import_ignored_uom_category_mismatch(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
         # If the XML UoM category does not match the matched product's UoM
         # category, the product is still matched but the UoM is left empty.
         product = self._create_product(name='XYZ', uom_id=self.env.ref('uom.product_uom_unit').id)
@@ -60,8 +68,9 @@ class TestUblImportBis3InvoiceBERetrieveProduct(TestUblImportBis3InvoiceBE):
 
     @freeze_time('2020-01-01')
     def test_partial_import_product_invoice_predictive(self):
-        self.ensure_installed('account_accountant')
-        self.env.company.predict_bill_product = True
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
 
         # First invoice to train the prediction.
         product = self._create_product(name='XYZ')
