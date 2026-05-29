@@ -291,8 +291,8 @@
                                             <t t-set="english_name" t-value="line.with_context(lang='en_US').product_id.display_name"/>
                                             <t t-set="arabic_name" t-value="line.with_context(lang='ar_001').product_id.display_name"/>
 
-                                            <span t-out="arabic_name + '\n'" t-if="arabic_name not in line.name" t-options="{'widget': 'text'}"/>
-                                            <span t-out="english_name + '\n'" t-if="(english_name != arabic_name) and (english_name not in line.name)" t-options="{'widget': 'text'}"/>
+                                            <span t-out="arabic_name + '\n'" t-if="line.name and arabic_name not in line.name" t-options="{'widget': 'text'}"/>
+                                            <span t-out="english_name + '\n'" t-if="line.name and (english_name != arabic_name) and (english_name not in line.name)" t-options="{'widget': 'text'}"/>
                                         </t>
                                         <span t-out="line.name" t-options="{'widget': 'text'}"/>
                                     </td>
