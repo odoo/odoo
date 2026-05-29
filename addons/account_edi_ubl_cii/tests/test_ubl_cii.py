@@ -71,6 +71,10 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         super().setUp()
 
     def test_export_import_product(self):
+        companies = self.company_data['company'] + self.company_data_2['company']
+        if 'predict_bill_product' in companies._fields:
+            companies.predict_bill_product = True
+
         products = self.env['product.product'].create([{
             'name': 'XYZ',
             'default_code': '1234',
@@ -343,6 +347,10 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
     def test_export_import_billing_dates(self):
         if self.env.ref('base.module_accountant').state != 'installed':
             self.skipTest("payment_custom module is not installed")
+
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
 
         invoice = self.env['account.move'].create({
             'partner_id': self.partner_a.id,
