@@ -67,9 +67,9 @@ def _mock_pdp_annuaire_lookup_participant(func, self, edi_identification):
     return {'in_annuaire': peppol_eas == '0225'}
 
 
-def _mock_get_peppol_verification_state(func, self, peppol_endpoint, peppol_eas, invoice_edi_format):
+def _mock_get_peppol_verification_state(func, self, peppol_endpoint, peppol_eas, invoice_edi_format, process_type='billing'):
     if peppol_eas != '0225':
-        return func(self, peppol_endpoint, peppol_eas, invoice_edi_format)
+        return func(self, peppol_endpoint, peppol_eas, invoice_edi_format, process_type=process_type)
     if not invoice_edi_format:
         return 'not_valid'
     if invoice_edi_format != 'ubl_21_fr':
