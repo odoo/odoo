@@ -165,7 +165,7 @@ class AccountEdiProxyClientUser(models.Model):
             try:
                 # b64encode returns a bytestring, we need it as a string
                 response = self._make_request(self._get_server_url(proxy_type, edi_mode) + self._get_peppol_proxy_endpoint("1/connect", proxy_type='pdp'), params={
-                    'dbuuid': company.env['ir.config_parameter'].get_param('database.uuid'),
+                    'dbuuid': company.env['ir.config_parameter'].sudo().get_param('database.uuid'),
                     'company_id': company.id,
                     'peppol_identifier': peppol_identifier,
                     'public_key': private_key_sudo._get_public_key_bytes(encoding='pem').decode(),
@@ -490,7 +490,7 @@ class AccountEdiProxyClientUser(models.Model):
         origin_peppol_lifecycle_uuid = content.get("origin_peppol_lifecycle_uuid")
         response = origin_move.peppol_response_ids.filtered(
             lambda r: r.peppol_message_uuid == origin_peppol_lifecycle_uuid
-        )
+        )[:1]
         if not response:
             _logger.warning('[Flow %s] The status response sent to the PPF with UUID %s could not be imported: Original journal entry (UUID %s) not found.',
                             content['flow_number'], uuid, origin_move.peppol_message_uuid)
@@ -498,7 +498,7 @@ class AccountEdiProxyClientUser(models.Model):
 
         # Do not update the transport status if we already received a lifecycle
         if response.pdp_ppf_state:
-            response
+            return response
 
         if content.get('error'):
             error_message = content['error'].get('data', {}).get('message') or content['error']['message']
