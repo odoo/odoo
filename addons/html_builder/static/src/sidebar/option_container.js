@@ -45,6 +45,7 @@ export class OptionsContainer extends BaseOptionComponent {
         useVisibilityObserver("content", useApplyVisibility("root"));
 
         this.rootRef = useRef("root");
+        this.titleRef = useRef("title");
         useExternalListener(browser, "focusin", this.updateOverlayPreview);
         useExternalListener(browser, "pointermove", this.updateOverlayPreview);
         useExternalListener(this.document, "pointermove", this.updateOverlayPreview);
@@ -93,6 +94,15 @@ export class OptionsContainer extends BaseOptionComponent {
             : "";
 
         return (title || getSnippetName(this.env.getEditingElement())) + titleExtraInfo;
+    }
+
+    updateTitleTooltip(ev) {
+        if (!ev.currentTarget.dataset.tooltip) {
+            const titleEl = this.titleRef.el;
+            if (titleEl.offsetWidth < titleEl.scrollWidth) {
+                ev.currentTarget.dataset.tooltip = this.title;
+            }
+        }
     }
 
     /** @param {PointerEvent | FocusEvent} ev */
