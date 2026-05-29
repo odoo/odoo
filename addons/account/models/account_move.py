@@ -4773,7 +4773,7 @@ class AccountMove(models.Model):
     # this override is to make sure that the main attachment is not an xml
     def _message_set_main_attachment_id(self, attachment_ids):
         attachments = self.env['ir.attachment'].browse(attachment_ids).filtered(
-            lambda att: not (att.mimetype == 'text/plain' and guess_mimetype(att.raw or '').endswith('/xml'))
+            lambda att: not (att.mimetype == 'text/plain' and guess_mimetype(att.raw or b'').endswith('/xml'))
         )
         super()._message_set_main_attachment_id(attachments.ids)
 
