@@ -18,6 +18,11 @@ class TestUblImportBis3InvoiceBERetrieveProduct(TestUblImportBis3InvoiceBE):
         }])
 
     def test_partial_import_product_name(self):
+        # enable predict_bill_product
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         product = self._create_product(name='important product1')
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_product_name')
         self.assertRecordValues(invoice.invoice_line_ids, [
@@ -30,6 +35,21 @@ class TestUblImportBis3InvoiceBERetrieveProduct(TestUblImportBis3InvoiceBE):
                 'product_id': None,
             },
         ])
+        # disable predict_bill_product
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = False
+
+            invoice_2 = self._import_invoice_as_attachment_on(test_name='test_partial_import_product_name')
+            self.assertRecordValues(invoice_2.invoice_line_ids, [
+                {
+                    'name': 'important product',
+                    'product_id': False,
+                },
+                {
+                    'name': 'XYZ',
+                    'product_id': False,
+                },
+            ])
 
     def test_partial_import_product_barcode(self):
         product = self._create_product(name='XYZ', barcode='12345678912345')
@@ -48,6 +68,9 @@ class TestUblImportBis3InvoiceBERetrieveProduct(TestUblImportBis3InvoiceBE):
         }])
 
     def test_import_ignored_uom_category_mismatch(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
         # If the XML UoM category does not match the matched product's UoM
         # category, the product is still matched but the UoM is left empty.
         product = self._create_product(name='XYZ', uom_id=self.env.ref('uom.product_uom_unit').id)
