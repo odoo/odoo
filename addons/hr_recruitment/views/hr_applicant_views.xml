@@ -395,6 +395,8 @@
                         <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
                         <a role="menuitem" name="action_talent_pool_add_applicants" type="object" class="dropdown-item"
                         invisible="is_pool_applicant or is_applicant_in_pool">Add to Pool</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <field name="color" widget="kanban_color_picker"/>
                     </t>
                     <t t-name="card">
                         <widget name="web_ribbon" title="Hired" bg_color="text-bg-success" invisible="not date_closed"/>
