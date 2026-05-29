@@ -1,17 +1,11 @@
-import { browser } from "@web/core/browser/browser";
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { session } from "@web/session";
 import { EventBus, proxy } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
+import { session } from "@web/session";
 
 // List of worker events that should not be broadcasted.
-const INTERNAL_EVENTS = new Set([
-    "BUS:INITIALIZED",
-    "BUS:OUTDATED",
-    "BUS:NOTIFICATION",
-    "BUS:PROVIDE_LOGS",
-]);
+const INTERNAL_EVENTS = new Set(["BUS:INITIALIZED", "BUS:NOTIFICATION", "BUS:PROVIDE_LOGS"]);
 // Slightly delay the reconnection when coming back online as the network is not
 // ready yet and the exponential backoff would delay the reconnection by a lot.
 export const BACK_ONLINE_RECONNECT_DELAY = 5000;
@@ -24,19 +18,12 @@ export const BACK_ONLINE_RECONNECT_DELAY = 5000;
  *  @emits BUS:RECONNECT
  *  @emits BUS:RECONNECTING
  *  @emits BUS:WORKER_STATE_UPDATED
+ *  @emits BUS:OUTDATED
  */
 export const busService = {
-    dependencies: ["bus.parameters", "localization", "multi_tab", "notification", "worker_service"],
+    dependencies: ["bus.parameters", "localization", "multi_tab", "worker_service"],
 
-    start(
-        env,
-        {
-            multi_tab: multiTab,
-            notification,
-            "bus.parameters": params,
-            worker_service: workerService,
-        }
-    ) {
+    start(env, { multi_tab: multiTab, "bus.parameters": params, worker_service: workerService }) {
         const bus = new EventBus();
         const notificationBus = new EventBus();
         const subscribeFnToWrapper = new Map();
@@ -97,25 +84,6 @@ export const busService = {
                     if (data.unregisterMultiTab) {
                         multiTab.unregister();
                     }
-                    notification.add(
-                        _t(
-                            "Save your work and refresh to get the latest updates and avoid potential issues."
-                        ),
-                        {
-                            title: _t("The page is out of date"),
-                            type: "warning",
-                            sticky: true,
-                            buttons: [
-                                {
-                                    name: _t("Refresh"),
-                                    primary: true,
-                                    onClick: () => {
-                                        browser.location.reload();
-                                    },
-                                },
-                            ],
-                        }
-                    );
                     break;
                 }
             }
