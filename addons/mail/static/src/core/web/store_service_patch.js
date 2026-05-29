@@ -48,10 +48,16 @@ const StorePatch = {
     computeGlobalCounter() {
         return this.inbox?.counter ?? 0;
     },
-    initialize() {
-        super.initialize(...arguments);
-        this.fetchStoreData("failures");
-        this.fetchStoreData("systray_get_activities");
+    initialPromises() {
+        return [
+            ...super.initialPromises(...arguments),
+            this.fetchStoreData("failures"),
+            this.fetchStoreData("systray_get_activities"),
+        ];
+    },
+    onPushNotificationDisplayed() {
+        super.onPushNotificationDisplayed(...arguments);
+        this.updateAppBadge();
     },
     onStarted() {
         super.onStarted(...arguments);
@@ -79,10 +85,6 @@ const StorePatch = {
             // BroadcastChannel API is not supported (e.g. Safari < 15.4), so disabling it.
             this.activityBroadcastChannel = null;
         }
-    },
-    onPushNotificationDisplayed() {
-        super.onPushNotificationDisplayed(...arguments);
-        this.updateAppBadge();
     },
     onUpdateActivityGroups() {},
     /**

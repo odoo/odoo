@@ -54,14 +54,29 @@ const threadPatch = {
             super.applyScrollContextually(...arguments);
         }
     },
-    /** @override */
-    fetchInitialMessages() {
+    shouldFetchInitialMessages() {
         if (this.channel?.self_member_id && this.props.thread.scrollUnread) {
-            this.props.thread.loadAround({
+            return (
+                !this.props.thread.initialMessageFetchParams ||
+                this.channel.self_member_id.new_message_separator !==
+                    this.props.thread.initialMessageFetchParams
+            );
+        }
+        return super.shouldFetchInitialMessages(...arguments);
+    },
+    /** @override */
+    async fetchInitialMessages() {
+        if (this.channel?.self_member_id && this.props.thread.scrollUnread) {
+            if (!this.shouldFetchInitialMessages()) {
+                return;
+            }
+            this.props.thread.initialMessageFetchParams =
+                this.channel.self_member_id.new_message_separator;
+            await this.props.thread.loadAround({
                 messageId: this.channel.self_member_id.new_message_separator,
             });
         } else {
-            super.fetchInitialMessages();
+            await super.fetchInitialMessages();
         }
     },
     get newMessageBannerText() {

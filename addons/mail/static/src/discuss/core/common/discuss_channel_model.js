@@ -591,6 +591,18 @@ export class DiscussChannel extends Record {
         }
     }
 
+    static async initialFetchChannelMessages(channelId) {
+        await this.store.fetchStoreData("/discuss/channel/messages", {
+            channel_id: channelId,
+            fetch_params: { limit: 60, initial_fetch: true },
+        });
+    }
+    static async initialFetchChannelMembers(channelId) {
+        await this.store.fetchStoreData("/discuss/channel/members", {
+            channel_id: channelId,
+        });
+    }
+
     async fetchChannelMembers() {
         if (this.fetchMembersState === "pending") {
             return;

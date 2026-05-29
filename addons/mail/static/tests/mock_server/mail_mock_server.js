@@ -1107,6 +1107,12 @@ function _process_request_for_all(store, name, params, context = {}) {
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
         const channel = this.env["discuss.channel"].browse(params.channel_id);
+        if ("initial_fetch" in Object.keys(params.fetch_params)) {
+            delete params.fetch_params.initial_fetch;
+            params.fetch_params.around = params.fetch_params.initial_fetch
+                ? channel.new_message_separator
+                : undefined;
+        }
         const messages = _resolve_messages.call(this, store, {
             ...params.fetch_params,
             domain: [],

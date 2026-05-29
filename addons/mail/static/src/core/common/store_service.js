@@ -10,6 +10,7 @@ import { proxy } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
+import { router } from "@web/core/browser/router";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -204,10 +205,36 @@ export class Store extends BaseStore {
      * Override to add data to be fetched. Do not call directly: use `ensureInitialized`
      * to ensure the store is only initialized once.
      */
-    initialize() {
-        this.fetchStoreData("init_messaging").then(() => {
-            this._resolveIsReady();
-        });
+    initialPromises({ model, id } = {}) {
+        const promises = [this.fetchStoreData("init_messaging")];
+        // TODO: check it works for non discuss channel as well
+        if (model && id) {
+            promises.push(this.store["mail.thread"].initialDataPromises({ model, id }));
+        }
+        return promises;
+    }
+
+    /** Import data received from init_messaging */
+    async initialize() {
+        const activeId = router.current?.active_id;
+        let data = { action: router.current?.action };
+        if (typeof activeId === "number") {
+            data = { model: "discuss.channel", id: activeId };
+        } else if (typeof activeId === "string") {
+            const match = activeId.match(/(.*)_(\d+)/);
+            if (match) {
+                data.model = match[1];
+                data.id = parseInt(match[2]);
+            }
+        }
+        await Promise.all(this.initialPromises(data));
+        this._resolveIsReady();
+        if (data.model && data.id) {
+            const thread = await this["mail.thread"].get({ model: data.model, id: data.id });
+            if (thread) {
+                thread.afterInitialDataFetched();
+            }
+        }
     }
 
     /**

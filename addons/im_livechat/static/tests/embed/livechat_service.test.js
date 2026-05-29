@@ -87,12 +87,17 @@ test("Only necessary requests are made when creating a new chat", async () => {
     listenStoreFetch(undefined, { logParams: ["init_livechat"] });
     await start({ authenticateAs: false, waitUntilSubscribe: false });
     await contains(".o-livechat-LivechatButton");
-    await waitStoreFetch([
-        "init_messaging",
-        "failures", // called because mail/core/web is loaded in test bundle
-        "systray_get_activities", // called because mail/core/web is loaded in test bundle
-        ["init_livechat", livechatChannelId],
-    ]);
+    await waitStoreFetch(
+        [
+            "failures", // called because mail/core/web is loaded in test bundle
+            "systray_get_activities", // called because mail/core/web is loaded in test bundle
+            "init_messaging",
+            ["init_livechat", livechatChannelId],
+        ],
+        {
+            ignoreOrder: true,
+        }
+    );
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
     await expect.waitForSteps([
