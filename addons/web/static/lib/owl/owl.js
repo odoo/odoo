@@ -110,7 +110,7 @@ var owl = (() => {
   var observers = [];
   var immediateObservers = [];
   var currentComputation;
-  function createComputation(compute, isDerived, state = 1, immediate = false) {
+  function createComputation(compute, isDerived, state = 1, priority, immediate = false) {
     return {
       state,
       value: void 0,
@@ -118,6 +118,7 @@ var owl = (() => {
       sources: /* @__PURE__ */ new Set(),
       observers: /* @__PURE__ */ new Set(),
       isDerived,
+      priority,
       immediate
     };
   }
@@ -154,9 +155,18 @@ var owl = (() => {
   function processEffects() {
     const pending = observers;
     observers = [];
+    pending.sort(compareByPriority);
     for (let i = 0; i < pending.length; i++) {
       updateComputation(pending[i]);
     }
+  }
+  function compareByPriority(a, b) {
+    const pa = a.priority;
+    const pb = b.priority;
+    if (pa === pb) return 0;
+    if (pa === void 0) return 1;
+    if (pb === void 0) return -1;
+    return pa - pb;
   }
   function getCurrentComputation() {
     return currentComputation;
@@ -737,7 +747,10 @@ var owl = (() => {
       },
       false,
       1,
+      void 0,
+      // priority
       true
+      // immediate
     );
     getCurrentComputation()?.observers.add(computation);
     updateComputation(computation);
@@ -3056,10 +3069,8 @@ ${issueStrings}`);
   function makeRootFiber(node) {
     let current = node.fiber;
     if (current) {
-      let root = current.root;
-      root.locked = true;
+      const root = current.root;
       root.setCounter(root.counter + 1 - cancelFibers(current.children));
-      root.locked = false;
       current.children = [];
       current.childrenMap = {};
       current.bdom = null;
@@ -3116,6 +3127,11 @@ ${issueStrings}`);
     appliedToDom = false;
     deep = false;
     childrenMap = {};
+    // Set to true while initiateRender is awaiting willStart on a *root* fiber
+    // (mount path). The scheduler enqueues such fibers up front so task order
+    // matches the order roots were prepared, but skips rendering them in the
+    // rAF render pass until willStart resolves and clears this flag.
+    pending = false;
     constructor(node, parent) {
       this.node = node;
       this.parent = parent;
@@ -3130,44 +3146,50 @@ ${issueStrings}`);
       }
     }
     render() {
-      const scheduler = this.root.node.app.scheduler;
-      if (scheduler.tasks.size > 1) {
-        let prev = this.root.node;
-        let current = prev.parent;
-        while (current) {
-          if (current.fiber) {
-            let root2 = current.fiber.root;
-            if (root2.counter === 0 && prev.parentKey in current.fiber.childrenMap) {
-              current = root2.node;
-            } else {
-              scheduler.delayedRenders.push(this);
-              return;
-            }
-          }
-          prev = current;
-          current = current.parent;
-        }
-      }
       const node = this.node;
       const root = this.root;
-      if (root) {
-        const c = getCurrentComputation();
-        removeSources(node.signalComputation);
-        setComputation(node.signalComputation);
-        node.signalComputation.state = ComputationState.EXECUTED;
-        try {
-          this.bdom = true;
-          this.bdom = node.renderFn();
-        } catch (e) {
-          handleError({ node, error: e });
-        } finally {
+      if (!root) {
+        return;
+      }
+      const c = getCurrentComputation();
+      removeSources(node.signalComputation);
+      setComputation(node.signalComputation);
+      node.signalComputation.state = ComputationState.EXECUTED;
+      const previousChildren = node.children;
+      try {
+        this.bdom = true;
+        this.bdom = node.renderFn();
+      } catch (e) {
+        if (e && e.__owlHandled) {
           setComputation(c);
+          throw e;
         }
-        const newCounter = root.counter - 1;
-        root.counter = newCounter;
-        if (newCounter === 0) {
-          scheduler.flush();
+        try {
+          handleError({ node, error: e });
+        } catch (rethrown) {
+          if (rethrown && typeof rethrown === "object") {
+            rethrown.__owlHandled = true;
+          }
+          setComputation(c);
+          throw rethrown;
         }
+      }
+      setComputation(c);
+      const newChildren = this.childrenMap;
+      for (const key in previousChildren) {
+        if (!(key in newChildren)) {
+          const orphan = previousChildren[key];
+          const orphanFiber = orphan.fiber;
+          if (orphanFiber) {
+            orphanFiber.root = null;
+            orphan.fiber = null;
+          }
+        }
+      }
+      const newCounter = root.counter - 1;
+      root.counter = newCounter;
+      if (newCounter === 0) {
+        node.app.scheduler.flush();
       }
     }
   };
@@ -3177,12 +3199,8 @@ ${issueStrings}`);
     willPatch = [];
     patched = [];
     mounted = [];
-    // A fiber is typically locked when it is completing and the patch has not, or is being applied.
-    // i.e.: render triggered in onWillUnmount or in willPatch will be delayed
-    locked = false;
     complete() {
       const node = this.node;
-      this.locked = true;
       let current = void 0;
       let mountedFibers = this.mounted;
       try {
@@ -3197,7 +3215,6 @@ ${issueStrings}`);
         }
         current = void 0;
         node._patch();
-        this.locked = false;
         while (current = mountedFibers.pop()) {
           current = current;
           if (current.appliedToDom) {
@@ -3219,7 +3236,6 @@ ${issueStrings}`);
         for (let fiber of mountedFibers) {
           fiber.node.willUnmount = [];
         }
-        this.locked = false;
         handleError({ fiber: current || this, error: e });
       }
     }
@@ -3315,16 +3331,22 @@ ${issueStrings}`);
     willPatch = [];
     patched = [];
     signalComputation;
+    // Depth in the component tree (root = 0). Used as the priority for
+    // signalComputation so that when multiple components schedule re-renders in
+    // the same microtask batch, ancestors run before descendants.
+    depth;
     constructor(C, props2, app, parent, parentKey) {
       super(app);
       this.parent = parent;
       this.parentKey = parentKey;
       this.pluginManager = parent ? parent.pluginManager : app.pluginManager;
       this.componentName = C.name;
+      this.depth = parent ? parent.depth + 1 : 0;
       this.signalComputation = createComputation(
         () => this.render(false),
         false,
-        ComputationState.EXECUTED
+        ComputationState.EXECUTED,
+        this.depth
       );
       this.props = props2;
       const previousComputation = getCurrentComputation();
@@ -3354,7 +3376,7 @@ ${issueStrings}`);
       }
       return f.bind(component, scope);
     }
-    async initiateRender(fiber) {
+    initiateRender(fiber) {
       this.fiber = fiber;
       if (this.mounted.length) {
         fiber.root.mounted.push(fiber);
@@ -3362,29 +3384,49 @@ ${issueStrings}`);
       const component = this.component;
       let prev = getCurrentComputation();
       setComputation(void 0);
+      let promises;
       try {
-        let promises = this.willStart.map((f) => f.call(component));
-        setComputation(prev);
-        await Promise.all(promises);
+        promises = this.willStart.map((f) => f.call(component));
       } catch (e) {
-        if (isAbortError(e) && this.status > STATUS.MOUNTED) {
-          return;
-        }
+        setComputation(prev);
         handleError({ node: this, error: e });
         return;
       }
+      setComputation(prev);
+      if (promises.every((p) => !p || typeof p.then !== "function")) {
+        this._completeWillStart(fiber);
+        return;
+      }
+      Promise.all(promises).then(
+        () => this._completeWillStart(fiber),
+        (e) => {
+          if (isAbortError(e) && this.status > STATUS.MOUNTED) {
+            return;
+          }
+          handleError({ node: this, error: e });
+        }
+      );
+    }
+    _completeWillStart(fiber) {
       if (this.status === STATUS.NEW && this.fiber === fiber) {
-        fiber.render();
+        if (fiber.parent) {
+          fiber.render();
+        } else {
+          fiber.pending = false;
+          this.app.scheduler.flush();
+        }
       }
     }
     async render(deep) {
       if (this.status >= STATUS.CANCELLED) {
         return;
       }
-      let current = this.fiber;
-      if (current && (current.root.locked || current.bdom === true)) {
-        await Promise.resolve();
-        current = this.fiber;
+      const current = this.fiber;
+      const scheduler = this.app.scheduler;
+      const inError = current !== null && (fibersInError.has(current) || current.root !== null && fibersInError.has(current.root));
+      if (!inError && (scheduler.committing || current !== null && current.bdom === true)) {
+        scheduler.deferRender(this, deep);
+        return;
       }
       if (current) {
         if (!current.bdom && !fibersInError.has(current)) {
@@ -3401,12 +3443,19 @@ ${issueStrings}`);
       fiber.deep = deep;
       this.fiber = fiber;
       this.app.scheduler.addFiber(fiber);
-      await Promise.resolve();
-      if (this.status >= STATUS.CANCELLED) {
-        return;
-      }
-      if (this.fiber === fiber && (current || !fiber.parent)) {
-        fiber.render();
+      if (current) {
+        this.app.scheduler.pendingFiberRenders++;
+        try {
+          await Promise.resolve();
+          if (this.status >= STATUS.CANCELLED) {
+            return;
+          }
+          if (this.fiber === fiber) {
+            fiber.render();
+          }
+        } finally {
+          this.app.scheduler.pendingFiberRenders--;
+        }
       }
     }
     cancel() {
@@ -3514,60 +3563,168 @@ ${issueStrings}`);
     }
     return scope;
   }
-  var requestAnimationFrame;
-  if (typeof window !== "undefined") {
-    requestAnimationFrame = window.requestAnimationFrame.bind(window);
-  }
   var Scheduler = class _Scheduler {
-    // capture the value of requestAnimationFrame as soon as possible, to avoid
-    // interactions with other code, such as test frameworks that override them
-    static requestAnimationFrame = requestAnimationFrame;
+    // Per-tick work budget for the commit pass. Once exceeded inside
+    // processTasks, the scheduler yields *to the browser* (paint, input,
+    // scroll handlers, etc.) and resumes on the following macrotask.
+    // 5ms is React's Scheduler default and Chrome Aurora's recommendation:
+    // leaves room in a 16ms frame for the browser's own work, keeps
+    // Interaction-to-Next-Paint in the snappy zone, and the per-yield
+    // MessageChannel overhead stays well under 1% of total time even for
+    // heavy commits. Not a true time-slicer: individual fiber.complete()
+    // calls are still atomic. Set to Infinity to disable (drain in one
+    // pass) or 0 to force-yield after every fiber.
+    static frameBudgetMs = 5;
     tasks = /* @__PURE__ */ new Set();
-    requestAnimationFrame;
-    frame = 0;
-    delayedRenders = [];
+    scheduled = false;
     cancelledNodes = /* @__PURE__ */ new Set();
     processing = false;
-    constructor() {
-      this.requestAnimationFrame = _Scheduler.requestAnimationFrame;
+    // Number of component_node.render calls that are currently between
+    // addFiber and their `await Promise.resolve()` continuation. Each one
+    // owes the scheduler a fiber.render() that decrements counters and may
+    // orphan-cancel siblings. processTasks defers itself one microtask while
+    // any are pending so it doesn't commit unrelated roots prematurely.
+    pendingFiberRenders = 0;
+    // True only while processTasks is in its destroy + commit phase, i.e. while it
+    // is mutating the live fiber tree and the DOM. component_node.render checks
+    // this to defer any render requested from a lifecycle hook firing in that
+    // window (onWillDestroy / onWillPatch / onMounted / onWillUnmount / onPatched)
+    // out of the critical section — running makeRootFiber there would corrupt the
+    // tree the in-flight patch is still walking. This is the macrotask-scheduler
+    // equivalent of the old RootFiber.locked flag.
+    committing = false;
+    // Renders deferred out of the commit phase (see `committing`). Drained at the
+    // start of the next tick, before the render pass, so a hook-triggered update
+    // is built and committed in the very next pass — collapsing into the next
+    // paint instead of a later frame as the rAF scheduler forced. The value is the
+    // `deep` flag, OR-ed together if the same node is deferred more than once.
+    deferredRenders = /* @__PURE__ */ new Map();
+    // Lazily-initialised MessageChannel that drives the scheduler. postMessage
+    // queues a real *macrotask*, so a tick runs only after the microtask queue
+    // has fully drained: instantly-resolved promises (e.g. cache-warm awaits in
+    // willStart/event handlers) settle *before* we render+commit, collapsing
+    // state written across those awaits into a single render+patch instead of
+    // one per await-segment. It also gives the browser a chance to paint,
+    // dispatch input, and run scroll/IntersectionObserver callbacks between
+    // ticks. Using MessageChannel (not setTimeout) avoids the 4ms minimum-delay
+    // clamp that nested setTimeouts incur — same trick React's Scheduler uses.
+    _channel = null;
+    // The scheduler's single scheduling primitive: queue processTasks on the
+    // next macrotask. Used both to kick off a render+commit pass and to resume
+    // after a budget-exhaustion yield. The macrotask boundary (not a microtask)
+    // is deliberate — see the channel comment above.
+    //
+    // processTasks is invoked through `() => this.processTasks()` (late binding)
+    // rather than a reference captured once: that keeps it monkey-patchable from
+    // the outside (Odoo's waitUntilIdle helper reassigns scheduler.processTasks),
+    // even on an already-created channel. For the same reason it is not bound in
+    // a constructor.
+    _schedule() {
+      if (typeof MessageChannel !== "undefined") {
+        if (!this._channel) {
+          this._channel = new MessageChannel();
+          this._channel.port1.onmessage = () => this.processTasks();
+        }
+        this._channel.port2.postMessage(null);
+      } else {
+        setTimeout(() => this.processTasks());
+      }
     }
     addFiber(fiber) {
       this.tasks.add(fiber.root);
+      if (!this.scheduled) {
+        this.scheduled = true;
+        this._schedule();
+      }
     }
     scheduleDestroy(node) {
       this.cancelledNodes.add(node);
-      if (this.frame === 0) {
-        this.frame = this.requestAnimationFrame(() => this.processTasks());
+      if (!this.scheduled) {
+        this.scheduled = true;
+        this._schedule();
       }
     }
     /**
-     * Process all current tasks. This only applies to the fibers that are ready.
-     * Other tasks are left unchanged.
+     * Ensure pending tasks will be processed at the next macrotask. Called
+     * from setCounter when a root reaches counter 0, and from the async
+     * resumption of initiateRender — both are paths that complete *outside*
+     * the scheduler's own tick. When called from inside processTasks (e.g. a
+     * sub-fiber render brings the root counter to 0), this is a no-op: the
+     * commit pass in the same tick will pick it up.
      */
     flush() {
-      if (this.delayedRenders.length) {
-        let renders = this.delayedRenders;
-        this.delayedRenders = [];
-        for (let f of renders) {
-          if (f.root && f.node.status !== STATUS.DESTROYED && f.node.fiber === f) {
-            f.render();
-          }
-        }
+      if (this.processing) {
+        return;
       }
-      if (this.frame === 0) {
-        this.frame = this.requestAnimationFrame(() => this.processTasks());
+      if (!this.scheduled) {
+        this.scheduled = true;
+        this._schedule();
+      }
+    }
+    /**
+     * Queue a render requested from inside the commit phase (a lifecycle hook
+     * calling render() while `committing` is true). Coalesces repeated requests
+     * for the same node — the deep flag is OR-ed — and ensures a tick is
+     * scheduled. The queue is drained at the top of the next processTasks.
+     */
+    deferRender(node, deep) {
+      this.deferredRenders.set(node, deep || this.deferredRenders.get(node) || false);
+      if (!this.scheduled) {
+        this.scheduled = true;
+        this._schedule();
       }
     }
     processTasks() {
       if (this.processing) {
         return;
       }
+      if (this.pendingFiberRenders > 0) {
+        queueMicrotask(this.processTasks);
+        return;
+      }
       this.processing = true;
-      this.frame = 0;
+      this.scheduled = false;
+      if (this.deferredRenders.size) {
+        const deferred = this.deferredRenders;
+        this.deferredRenders = /* @__PURE__ */ new Map();
+        for (const [node, deep] of deferred) {
+          if (node.status >= STATUS.CANCELLED) {
+            continue;
+          }
+          if (!node.fiber && !node.bdom) {
+            continue;
+          }
+          const fiber = makeRootFiber(node);
+          fiber.deep = deep;
+          node.fiber = fiber;
+          this.tasks.add(fiber.root);
+        }
+      }
+      let safety = 0;
+      while (safety++ < 10) {
+        let renderedAny = false;
+        for (let fiber of this.tasks) {
+          if (fiber.root !== fiber) continue;
+          if (fiber.node.status === STATUS.DESTROYED) continue;
+          if (fibersInError.has(fiber)) continue;
+          if (fiber.pending) continue;
+          if (fiber.bdom === null) {
+            fiber.render();
+            renderedAny = true;
+          }
+        }
+        processEffects();
+        if (!renderedAny) {
+          break;
+        }
+      }
+      this.committing = true;
       for (let node of this.cancelledNodes) {
         node._destroy();
       }
       this.cancelledNodes.clear();
+      const deadline = performance.now() + _Scheduler.frameBudgetMs;
+      let yielded = false;
       for (let fiber of this.tasks) {
         if (fiber.root !== fiber) {
           this.tasks.delete(fiber);
@@ -3589,14 +3746,23 @@ ${issueStrings}`);
           if (fiber.appliedToDom) {
             this.tasks.delete(fiber);
           }
+          if (performance.now() >= deadline) {
+            yielded = true;
+            break;
+          }
         }
       }
+      this.committing = false;
       for (let task of this.tasks) {
         if (task.node.status === STATUS.DESTROYED) {
           this.tasks.delete(task);
         }
       }
       this.processing = false;
+      if (yielded && this.tasks.size > 0 && !this.scheduled) {
+        this.scheduled = true;
+        this._schedule();
+      }
     }
   };
   var Component = class {
@@ -4032,13 +4198,29 @@ ${issueStrings}`);
     roots = /* @__PURE__ */ new Set();
     pluginManager;
     destroyed = false;
+    // True while startPlugins is running. Roots prepared during plugin setup
+    // defer their initiateRender until the flag clears, so we can decide
+    // whether to add the plugin gate based on the *final* pluginManager state
+    // (after all plugin setups have run).
+    _inPluginSetup = false;
+    _deferredInitiateRenders = [];
     constructor(config3 = {}) {
       super(config3);
       this.name = config3.name || "";
       apps.add(this);
       this.pluginManager = new PluginManager(this, { config: config3.config });
       if (config3.plugins) {
-        startPlugins(this.pluginManager, config3.plugins);
+        this._inPluginSetup = true;
+        try {
+          startPlugins(this.pluginManager, config3.plugins);
+        } finally {
+          this._inPluginSetup = false;
+        }
+        const deferred = this._deferredInitiateRenders;
+        this._deferredInitiateRenders = [];
+        for (const fn of deferred) {
+          fn();
+        }
       } else {
         this.pluginManager.status = STATUS.MOUNTED;
       }
@@ -4093,22 +4275,39 @@ ${issueStrings}`);
           resolve(node.component);
           handlers.shift();
         });
-        this.scheduler.addFiber(fiber);
-        if (this.pluginManager.status < STATUS.MOUNTED) {
+        if (this._inPluginSetup && this.pluginManager.status < STATUS.MOUNTED) {
+          const f = fiber;
+          f.pending = true;
+          this.scheduler.addFiber(f);
+          this._deferredInitiateRenders.push(() => {
+            if (this.pluginManager.status < STATUS.MOUNTED) {
+              node.willStart.unshift(() => this.pluginManager.ready);
+            }
+            if (node.willStart.length) {
+              node.initiateRender(f);
+            } else {
+              f.pending = false;
+              node.fiber = f;
+              if (node.mounted.length) {
+                f.root.mounted.push(f);
+              }
+            }
+          });
+        } else if (this.pluginManager.status < STATUS.MOUNTED) {
           node.willStart.unshift(() => this.pluginManager.ready);
-        }
-        if (node.willStart.length) {
+          fiber.pending = true;
+          this.scheduler.addFiber(fiber);
+          node.initiateRender(fiber);
+        } else if (node.willStart.length) {
+          fiber.pending = true;
+          this.scheduler.addFiber(fiber);
           node.initiateRender(fiber);
         } else {
           node.fiber = fiber;
           if (node.mounted.length) {
             fiber.root.mounted.push(fiber);
           }
-          try {
-            fiber.render();
-          } catch (e) {
-            reject(e);
-          }
+          this.scheduler.addFiber(fiber);
         }
         return preparedPromise;
       };
@@ -4392,6 +4591,9 @@ ${issueStrings}`);
       nodeErrorHandlers.set(root.node, [forwardErrorToParent(suspenseNode)]);
       root.prepare().then(() => this.prepared.set(true));
       const fiber = root.node.fiber;
+      if (fiber && fiber.bdom === null) {
+        fiber.render();
+      }
       if (fiber && fiber.counter === 0) {
         this.prepared.set(true);
       }
@@ -4453,8 +4655,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-05-29T08:13:56.334Z",
-    hash: "867bd5c8",
+    date: "2026-05-29T14:51:35.883Z",
+    hash: "dd1cfc84",
     url: "https://github.com/odoo/owl"
   };
 
