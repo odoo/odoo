@@ -173,12 +173,13 @@ test("unnamed group chat should display correct name just after being invited", 
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Jane and Mitchell Admin')", {
         count: 0,
     });
-    const currentPartnerId = serverState.partnerId;
-    await withUser(userId, async () => {
-        await getService("orm").call("discuss.channel", "add_members", [[channelId]], {
-            partner_ids: [currentPartnerId],
-        });
-    });
+    const currentUserId = serverState.userId;
+    await withUser(userId, () =>
+        getService("mail.store").fetchStoreData("/discuss/channel/add_members", {
+            channel_id: channelId,
+            user_ids: [currentUserId],
+        })
+    );
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Jane and Mitchell Admin')");
     await contains(".o_notification:text('You have been invited to #Jane and Mitchell Admin')");
 });

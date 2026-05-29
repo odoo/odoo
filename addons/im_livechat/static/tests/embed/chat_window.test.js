@@ -62,13 +62,14 @@ test("The name of the conversation changes based on the agents' names", async ()
     const userId = pyEnv["res.users"].create({
         name: "James",
     });
-    const secondAgent = pyEnv["res.partner"].create({
+    pyEnv["res.partner"].create({
         lang: "en",
         name: "James",
         user_ids: [userId],
     });
-    getService("orm").call("discuss.channel", "add_members", [[channelId]], {
-        partner_ids: [secondAgent],
+    await getService("mail.store").fetchStoreData("/discuss/channel/add_members", {
+        channel_id: channelId,
+        user_ids: [userId],
     });
     await contains(".o-mail-ChatWindow-header", { text: "MitchellOp, James" });
 });

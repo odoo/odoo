@@ -1049,6 +1049,17 @@ function _process_request_for_all(store, name, params, context = {}) {
         });
         MailMessage.set_message_done(messages.map((message) => message.id));
     }
+    if (name === "/discuss/channel/add_members") {
+        DiscussChannel._add_members(
+            [params.channel_id],
+            makeKwArgs({
+                partner_ids: params.partner_ids,
+                user_ids: params.user_ids,
+                invite_to_rtc_call: params.invite_to_rtc_call,
+                post_joined_message: params.post_joined_message,
+            })
+        );
+    }
     if (name === "/discuss/channel/favorite") {
         const memberIds = DiscussChannelMember.search([
             ["channel_id", "=", params.channel_id],

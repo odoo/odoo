@@ -119,13 +119,22 @@ export class DiscussChannel extends models.ServerModel {
     /**
      * @param {number[]} ids
      * @param {number[]} partner_ids
+     * @param {number[]} user_ids
      * @param {boolean} [invite_to_rtc_call=undefined]
      */
-    add_members(ids, partner_ids, invite_to_rtc_call) {
-        const kwargs = getKwArgs(arguments, "ids", "partner_ids", "invite_to_rtc_call");
+    _add_members(ids, partner_ids, user_ids, invite_to_rtc_call) {
+        const kwargs = getKwArgs(arguments, "ids", "partner_ids", "user_ids", "invite_to_rtc_call");
         ids = kwargs.ids;
         delete kwargs.ids;
-        partner_ids = kwargs.partner_ids || [];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
+        partner_ids = [...(kwargs.partner_ids || [])];
+        for (const userId of kwargs.user_ids || []) {
+            const [user] = ResUsers.browse(userId);
+            if (user) {
+                partner_ids.push(user.partner_id);
+            }
+        }
 
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];

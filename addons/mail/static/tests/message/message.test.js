@@ -2390,11 +2390,12 @@ test("display the notification message's posting date and time", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await withUser(userId, () => {
-        getService("orm").call("discuss.channel", "add_members", [[channelId]], {
-            partner_ids: [partnerId],
-        });
-    });
+    await withUser(userId, () =>
+        getService("mail.store").fetchStoreData("/discuss/channel/add_members", {
+            channel_id: channelId,
+            user_ids: [userId],
+        })
+    );
     await contains(".o-mail-NotificationMessage:text('Tom Riddle joined the channel1:00 PM')");
 });
 

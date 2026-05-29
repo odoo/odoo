@@ -206,7 +206,8 @@ export class ChannelInvitation extends Component {
             }
         } else if (this.selectedPartners.length) {
             invitePromises.push(
-                this.orm.call("discuss.channel", "add_members", [[channelId]], {
+                this.store.fetchStoreData("/discuss/channel/add_members", {
+                    channel_id: channelId,
                     partner_ids: this.selectedPartners.map((partner) => partner.id),
                     invite_to_rtc_call: this.rtc.localChannel?.eq(this.props.channel),
                 })

@@ -43,15 +43,17 @@ export class DiscussChannel extends mailModels.DiscussChannel {
      * @override
      * @param {number[]} ids
      * @param {number[]} partner_ids
+     * @param {number[]} user_ids
      * @param {boolean} [invite_to_rtc_call=undefined]
      */
-    add_members(ids, partner_ids, invite_to_rtc_call) {
-        const kwargs = getKwArgs(arguments, "ids", "partner_ids", "invite_to_rtc_call");
+    _add_members(ids, partner_ids, user_ids, invite_to_rtc_call) {
+        const kwargs = getKwArgs(arguments, "ids", "partner_ids", "user_ids", "invite_to_rtc_call");
         ids = kwargs.ids;
         delete kwargs.ids;
         partner_ids = kwargs.partner_ids || [];
+        user_ids = kwargs.user_ids || [];
         const channels = this.browse(
-            Array.from(super.add_members(ids, partner_ids, invite_to_rtc_call)).map(
+            Array.from(super._add_members(ids, partner_ids, user_ids, invite_to_rtc_call)).map(
                 ({ channel_id }) => channel_id
             )
         );
@@ -183,7 +185,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         if (channel.livechat_status !== "need_help") {
             return false;
         }
-        this.add_members([channel.id], [this.env.user.partner_id]);
+        this._add_members([channel.id], [this.env.user.partner_id]);
         return true;
     }
 

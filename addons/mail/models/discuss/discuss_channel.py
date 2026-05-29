@@ -629,22 +629,6 @@ class DiscussChannel(models.Model):
             )
         member.unlink()
 
-    def add_members(
-        self,
-        partner_ids=None,
-        guest_ids=None,
-        invite_to_rtc_call=False,
-        post_joined_message=True,
-    ):
-        """Adds the given partner_ids and guest_ids as member of self channels.
-        Prefer calling _add_members with recordsets directly when possible."""
-        return self._add_members(
-            partners=self.env["res.partner"].browse(partner_ids or []).exists(),
-            guests=self.env["mail.guest"].browse(guest_ids or []).exists(),
-            invite_to_rtc_call=invite_to_rtc_call,
-            post_joined_message=post_joined_message,
-        )
-
     def _add_members(
         self,
         *,
