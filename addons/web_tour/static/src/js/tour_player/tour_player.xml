@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="web_tour.TourPlayer">
+    <div t-custom-ref="tour_player" class="d-flex position-fixed ms-2 mb-2 p-1 rounded bg-primary shadow-sm o_tour_player" t-attf-style="left: {{this.state.position.x}}px; bottom: {{this.state.position.y}}px;">
+        <div class="d-flex align-items-center">
+            <div class="bg-primary text-secondary o_tour_player_handler px-1" style="cursor: grab;">
+                <span class="oi oi-draggable"/>
+            </div>
+
+            <button class="o_tour_player_play btn btn-primary px-2 rounded-0" t-on-click.prevent.stop="() => this.next()" data-tooltip="Next" t-att-disabled="!this.state.currentTrigger">
+                <i class="fa fa-play"></i>
+            </button>
+
+            <button class="o_tour_player_forward btn btn-primary px-2 rounded-0" t-on-click.prevent.stop="() => this.forward()" data-tooltip="Fast Forward" t-att-disabled="!this.state.currentTrigger">
+                <i class="fa fa-forward"></i>
+            </button>
+            
+            <Dropdown position="'bottom-end'" menuClass="'p-0'" onOpened.bind="this.onDropdownStepOpened">
+                <button class="o_button_steps btn btn-primary mx-1">
+                    <span t-out="this.props.tour.name"/> | current step: <span t-out="this.currentStep.trigger"/>
+                </button>
+                <t t-set-slot="content">
+                    <div style="height: 400px; min-width: 500px">
+                        <table class="table">
+                            <thead class="fw-bold bg-secondary-subtle position-sticky top-0">
+                                <tr>
+                                    <td></td>
+                                    <td>#</td>
+                                    <td style="width: 25rem">Trigger</td>
+                                    <td style="width: 5rem">Run</td>
+                                    <td style="width: 5rem">Active</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="this.tour.steps" t-as="step" t-key="step_index">
+                                    <tr t-att-data-key="step_index" t-att-class="!step.active || step_index &lt; this.currentStepIndex ? 'text-muted' : step_index === this.currentStepIndex ? 'bg-secondary' : ''">
+                                        <td>
+                                            <button class="btn btn-link fa fa-forward mx-1" t-on-click.prevent.stop="() => this.jumpTo(step_index)" t-att-disabled="!step.active || step_index &lt; this.currentStepIndex"/>
+                                        </td>
+                                        <td>
+                                            <t t-out="step_index + 1"/>.
+                                        </td>
+                                        <td>
+                                            <t t-out="step.trigger"/>
+                                        </td>
+                                        <td>
+                                            <t t-out="step.run"/>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" t-att-checked="step.active" disabled="true"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </Dropdown>
+
+            <button class="o_tour_player_close btn btn-primary px-2 rounded-0" t-on-click="() => this.close()" data-tooltip="Close">
+                <i class="fa fa-close"></i>
+            </button>
+        </div>
+    </div>
+</t>
+</templates>

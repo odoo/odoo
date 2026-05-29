@@ -15,9 +15,9 @@ import { pick } from "@web/core/utils/objects";
  * You can change this value to lengthen or shorten the time before the error occurs [ms].
  */
 export class TourStep {
-    constructor(data, tour) {
+    constructor(data, mode) {
         Object.assign(this, data);
-        this.tour = tour;
+        this.mode = mode;
     }
 
     /**
@@ -26,8 +26,6 @@ export class TourStep {
      * When a step is not active, it's just skipped and the tour continues to the next step.
      */
     get active() {
-        this.checkHasTour();
-        const mode = this.tour.mode;
         const isSmall = utils.isSmall();
         const standardKeyWords = ["enterprise", "community", "mobile", "desktop", "auto", "manual"];
         const isActiveArray = Array.isArray(this.isActive) ? this.isActive : [];
@@ -45,7 +43,7 @@ export class TourStep {
             }
         }
         const checkMode =
-            isActiveArray.includes(mode) ||
+            isActiveArray.includes(this.mode) ||
             (!isActiveArray.includes("manual") && !isActiveArray.includes("auto"));
         const edition =
             (session.server_version_info || "").at(-1) === "e" ? "enterprise" : "community";
@@ -61,17 +59,9 @@ export class TourStep {
         return checkEdition && checkDevice && checkMode;
     }
 
-    checkHasTour() {
-        if (!this.tour) {
-            throw new Error(`TourStep instance must have a tour`);
-        }
-    }
-
     get describeMe() {
-        this.checkHasTour();
         return (
-            `[${this.index + 1}/${this.tour.steps.length}] Tour ${this.tour.name} → Step ` +
-            (this.content ? `${this.content} (trigger: ${this.trigger})` : this.trigger)
+            "Step " + (this.content ? `${this.content} (trigger: ${this.trigger})` : this.trigger)
         );
     }
 
@@ -86,7 +76,8 @@ export class TourStep {
                     "run",
                     "tooltipPosition",
                     "timeout",
-                    "expectUnloadPage"
+                    "expectUnloadPage",
+                    "pause"
                 ),
                 (_key, value) => {
                     if (typeof value === "function") {

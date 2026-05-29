@@ -33,4 +33,8 @@ registerWebsitePreviewTour("visitor_tracking", {}, () => [
         run: "click",
         expectUnloadPage: true,
     },
+    {
+        content: "Wait for the page to reload",
+        trigger: "main",
+    },
 ]);

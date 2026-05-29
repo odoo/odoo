@@ -1,4 +1,3 @@
-import { tourState } from "@web_tour/js/tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { TourHelpers } from "@web_tour/js/tour_automatic/tour_helpers";
 import { TourStep } from "@web_tour/js/tour_step";
@@ -7,11 +6,6 @@ import { getTag } from "@web/core/utils/xml";
 export class TourStepAutomatic extends TourStep {
     skipped = false;
     error = "";
-    constructor(data, tour, index) {
-        super(data, tour);
-        this.index = index;
-        this.tourConfig = tourState.getCurrentConfig();
-    }
 
     get describeWhyIFailed() {
         const errors = [];
