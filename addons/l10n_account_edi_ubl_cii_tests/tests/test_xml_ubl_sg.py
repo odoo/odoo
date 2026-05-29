@@ -47,6 +47,10 @@ class TestUBLSG(TestUBLCommon):
     ####################################################
 
     def test_export_import_invoice(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         tax_10 = self.percent_tax(10)
         tax_0 = self.percent_tax(0)
         invoice = self._generate_move(
@@ -99,6 +103,10 @@ class TestUBLSG(TestUBLCommon):
         self.test_export_import_invoice()
 
     def test_export_import_refund(self):
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
         tax_10 = self.percent_tax(10)
         tax_0 = self.percent_tax(0)
         refund = self._generate_move(
