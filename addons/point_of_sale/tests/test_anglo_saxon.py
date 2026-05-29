@@ -139,18 +139,30 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         """
         # check fifo Costing Method of product.category
         self.product.categ_id.property_cost_method = 'fifo'
-        self.product.standard_price = 5.0
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
+        move = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'inventory_quantity': 5.0,
-            'location_id': self.warehouse.lot_stock_id.id,
-        }).action_apply_inventory()
-        self.product.standard_price = 1.0
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'product_uom_qty': 5,
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'value_manual': 5 * 5,
+            'price_unit': 5,
+        })
+        move.quantity = move.product_uom_qty
+        move.picked = True
+        move._action_done()
+        move = self.env['stock.move'].create({
             'product_id': self.product.id,
-            'inventory_quantity': 10.0,
-            'location_id': self.warehouse.lot_stock_id.id,
-        }).action_apply_inventory()
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'product_uom_qty': 5,
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'value_manual': 5 * 1,
+            'price_unit': 1,
+        })
+        move.quantity = move.product_uom_qty
+        move.picked = True
+        move._action_done()
         self.assertEqual(self.product.total_value, 30, "Value should be (5*5 + 5*1) = 30")
         self.assertEqual(self.product.virtual_available, 10)
 
