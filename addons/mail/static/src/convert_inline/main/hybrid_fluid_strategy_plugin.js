@@ -2,8 +2,9 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { zip } from "@web/core/utils/arrays";
 import { DIMENSIONS } from "../hooks";
-import { Analysis, ElementLayout, EmailNode } from "../core/render_models";
+import { Analysis, EmailNode } from "../core/render_models";
 import { HybridFluidCell, HybridFluidEmptyCell, HybridFluidRow } from "./hybrid_fluid_models";
+import { parseCssValue } from "../css_parsers";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
 // Prevent the last inline-block element from wrapping to the next line due
@@ -127,7 +128,10 @@ export class HybridFluidStrategyPlugin extends Plugin {
     }
 
     analyzeElementLayout({ layout, analysis }, { referenceNode }) {
-        if (!this.detectHybridFluidLayout(referenceNode)) {
+        if (
+            !this.detectHybridFluidLayout(referenceNode) &&
+            !this.detectResponsiveElement(referenceNode)
+        ) {
             return;
         }
         Object.assign(analysis.parsingFacts, {
@@ -140,6 +144,42 @@ export class HybridFluidStrategyPlugin extends Plugin {
         // is no positioning consideration between the 2
         analysis.facts.isHybridFluidContainer = true;
         layout.pluginIds.add(HybridFluidStrategyPlugin.id);
+    }
+
+    /**
+     * TODO EGGMAIL: also consider mobile dimensions?
+     */
+    detectResponsiveElement(referenceNode) {
+        const block = this.getLayoutBlock(referenceNode);
+        if (!block || block.bands.length !== 1 || block.bands[0].clusters.length !== 1) {
+            return;
+        }
+        const cluster = block.bands[0].clusters[0];
+        const childNode = cluster.isBlock ? cluster.nodes[0] : undefined;
+        let marginLeft = 0;
+        let marginRight = 0;
+        if (childNode) {
+            ({ number: marginLeft } = parseCssValue(
+                this.getStylePropertyValue(childNode, "margin-left")
+            ));
+            ({ number: marginRight } = parseCssValue(
+                this.getStylePropertyValue(childNode, "margin-right")
+            ));
+        }
+        // check if margin of child + padding of parent ~= block spacing to the left and to the right
+        const { number: paddingLeft } = parseCssValue(
+            this.getStylePropertyValue(referenceNode, "padding-left")
+        );
+        const { number: paddingRight } = parseCssValue(
+            this.getStylePropertyValue(referenceNode, "padding-right")
+        );
+        const spacing = this.containerPadding(block.rect, cluster.rect);
+        const deltaLeft = spacing.left - ((marginLeft ?? 0) + (paddingLeft ?? 0));
+        const deltaRight = spacing.right - ((marginRight ?? 0) + (paddingRight ?? 0));
+        return (
+            (!this.isZero(deltaLeft) && deltaLeft > 0) ||
+            (!this.isZero(deltaRight) && deltaRight > 0)
+        );
     }
 
     /**
@@ -229,14 +269,14 @@ export class HybridFluidStrategyPlugin extends Plugin {
     }
 
     buildCellWithOffset(emailNode, offsetWidth, cluster, styleContext, isLast = false) {
-        const clusterWidth = cluster.rect.width - (isLast ? ZOOM_WIDTH_CORRECTION : 0);
+        const clusterWidth = cluster.rect.width - (isLast ? ZOOM_WIDTH_CORRECTION / 2 : 0);
         const offsetEmailNode = this.buildEmptyCell(offsetWidth);
-        const cellEmailNode = this.buildCell(emailNode, cluster, styleContext);
+        const cellEmailNode = this.buildCell(emailNode, cluster, styleContext, isLast);
         const refs = {
             root: { style: { "max-width": `${offsetWidth + clusterWidth}px` } },
         };
         const cellWithOffsetEmailNode = new EmailNode({
-            layout: new ElementLayout({ refs }),
+            layout: new HybridFluidCell({ refs }),
             analysis: new Analysis({
                 facts: {
                     isHybridFluidCell: true,

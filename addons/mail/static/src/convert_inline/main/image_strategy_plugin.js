@@ -160,7 +160,7 @@ export class ImageStrategyPlugin extends Plugin {
         const width = parseCssValue(styleInfo.getPropertyValue("width"));
         const height = parseCssValue(styleInfo.getPropertyValue("height"));
         const maxWidth = parseCssValue(styleInfo.getPropertyValue("max-width"));
-        width.rendered = this.getStyleWidth(referenceNode);
+        width.rendered = parseCssValue(this.getStylePropertyValue(referenceNode, "width"));
         width.natural = referenceNode.naturalWidth;
         height.natural = referenceNode.naturalHeight;
         if (height.unit === "px") {
@@ -168,7 +168,7 @@ export class ImageStrategyPlugin extends Plugin {
                 if (width.natural > 0 && height.natural > 0) {
                     width.number = (height.number * width.natural) / height.natural;
                 } else {
-                    width.number = width.rendered || 0;
+                    width.number = width.rendered.number || 0;
                 }
                 width.unit = "px";
             }
@@ -189,7 +189,7 @@ export class ImageStrategyPlugin extends Plugin {
                 attributes.width = `${Math.round(maxWidth.number)}`;
                 style["max-width"] = `${maxWidth.number}px`;
             } else {
-                attributes.width = `${Math.round(width.rendered)}`;
+                attributes.width = `${Math.round(width.rendered.number)}`;
             }
         }
         return { attributes, style };

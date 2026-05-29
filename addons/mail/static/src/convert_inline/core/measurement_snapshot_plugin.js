@@ -20,8 +20,6 @@ export class MeasurementSnapshotPlugin extends Plugin {
         "getNodeClusterRange",
         "getRectValue",
         "getStylePropertyValue",
-        "getStyleHeight",
-        "getStyleWidth",
         "isBlock",
         "registerStyleProperty",
     ];
@@ -319,22 +317,6 @@ export class MeasurementSnapshotPlugin extends Plugin {
      */
     getStylePropertyValue(element, propertyName, layoutDimensions = this.layoutDimensions) {
         return this.getComputedStyle(element, layoutDimensions).getPropertyValue(propertyName);
-    }
-
-    /**
-     * @param {HtmlElement} element
-     * @returns {Number} width
-     */
-    getStyleWidth(element, layoutDimensions = this.layoutDimensions) {
-        return parseFloat(this.getStylePropertyValue(element, "width", layoutDimensions)) || 0;
-    }
-
-    /**
-     * @param {HtmlElement} element
-     * @returns {Number} height
-     */
-    getStyleHeight(element, layoutDimensions = this.layoutDimensions) {
-        return parseFloat(this.getStylePropertyValue(element, "height", layoutDimensions)) || 0;
     }
 
     /**
