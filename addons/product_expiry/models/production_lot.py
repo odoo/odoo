@@ -74,9 +74,15 @@ class StockLot(models.Model):
                 # when change
                 elif lot._origin.expiration_date:
                     time_delta = lot.expiration_date - lot._origin.expiration_date
-                    lot.use_date = lot._origin.use_date and lot._origin.use_date + time_delta
-                    lot.removal_date = lot._origin.removal_date and lot._origin.removal_date + time_delta
-                    lot.alert_date = lot._origin.alert_date and lot._origin.alert_date + time_delta
+                    lot._update_expiry_dates(time_delta)
+
+    def _update_expiry_dates(self, delta):
+        if not delta:
+            return
+        lot = self._origin
+        self.use_date = lot.use_date and lot.use_date + delta
+        self.removal_date = lot.removal_date and lot.removal_date + delta
+        self.alert_date = lot.alert_date and lot.alert_date + delta
 
     @api.model
     def _alert_date_exceeded(self):
