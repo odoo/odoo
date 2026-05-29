@@ -36,7 +36,7 @@ class DiscussSettingsController(Controller):
         :param channel_id: (integer) id of the discuss.channel record, if not set, set for res.users.settings
         """
         if channel_id:
-            channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+            channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
             if not channel:
                 raise request.not_found()
             member = channel._find_or_create_member_for_self()

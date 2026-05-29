@@ -781,12 +781,12 @@ class MailActivity(models.Model):
         Activity = self.env['mail.activity']
 
         # 1. Retrieve all ongoing and completed activities according to the parameters
-        activity_types = self.env['mail.activity.type'].search([('res_model', 'in', (res_model, False))])
+        activity_types = self.env['mail.activity.type'].search_fetch([('res_model', 'in', (res_model, False))])
         activity_domain = [('res_model', '=', res_model)]
         is_filtered = domain or limit or offset
         if is_filtered:
             activity_domain.append(('res_id', 'in', DocModel._search(domain or [], offset, limit, DocModel._order) if is_filtered else []))
-        all_activities = Activity.with_context(active_test=not fetch_done).search(
+        all_activities = Activity.with_context(active_test=not fetch_done).search_fetch(
             activity_domain, order='date_done DESC, date_deadline ASC')
         all_ongoing = all_activities.filtered('active')
         all_completed = all_activities.filtered(lambda act: not act.active)
@@ -922,7 +922,9 @@ class MailActivity(models.Model):
                             "which is invalid. Skipping gc routine.")
             return
         deadline_threshold_dt = datetime.now() - relativedelta(years=year_threshold)
-        old_overdue_activities = self.env['mail.activity'].search([('date_deadline', '<', deadline_threshold_dt)], limit=10_000)
+        old_overdue_activities = self.env["mail.activity"].search_fetch(
+            [("date_deadline", "<", deadline_threshold_dt)], limit=10_000
+        )
         old_overdue_activities.unlink()
 
     def _get_activity_done_message_extra_values(self, activity):

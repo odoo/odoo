@@ -70,7 +70,7 @@ class DiscussChannelWebclientController(WebclientController):
 
     @store_handler("discuss.channel", audience="everyone")
     def store_add_discuss_channel_to_context(self, store: Store, *channel_id):
-        channels = request.env["discuss.channel"].search([("id", "in", channel_id)])
+        channels = request.env["discuss.channel"].search_fetch([("id", "in", channel_id)])
         request.update_context(channels=request.env.context["channels"] | channels)
 
     @store_handler("/discuss/channel/members", audience="everyone")
@@ -81,7 +81,7 @@ class DiscussChannelWebclientController(WebclientController):
         search_term=None,
         known_member_ids=None,
     ):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
         if not channel:
             return
         domain = Domain("channel_id", "=", channel.id)
@@ -100,14 +100,14 @@ class DiscussChannelWebclientController(WebclientController):
 
     @store_handler("/discuss/channel/favorite", audience="everyone", readonly=False)
     def store_set_discuss_channel_favorite(self, store: Store, channel_id, is_favorite):
-        if member := request.env["discuss.channel.member"].search(
+        if member := request.env["discuss.channel.member"].search_fetch(
             [("channel_id", "=", channel_id), ("is_self", "=", True)],
         ):
             member.is_favorite = is_favorite
 
     @store_handler("/discuss/channel/messages", audience="everyone", readonly=False)
     def store_get_discuss_channel_messages(self, store: Store, channel_id, fetch_params=None):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
         if channel:
             messages = self._resolve_messages(
                 store,
@@ -186,14 +186,14 @@ class DiscussChannelWebclientController(WebclientController):
 class ChannelController(http.Controller):
     @mail_route("/discuss/channel/update_avatar", methods=["POST"], type="jsonrpc")
     def discuss_channel_avatar_update(self, channel_id, data):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
         if not channel or not data:
             raise NotFound()
         channel.write({"image_128": data})
 
     @mail_route("/discuss/channel/mark_as_read", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_mark_as_read(self, channel_id, last_message_id):
-        member = request.env["discuss.channel.member"].search([
+        member = request.env["discuss.channel.member"].search_fetch([
             ("channel_id", "=", channel_id),
             ("is_self", "=", True),
         ])
@@ -203,7 +203,7 @@ class ChannelController(http.Controller):
 
     @mail_route("/discuss/channel/set_new_message_separator", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_set_new_message_separator(self, channel_id, message_id):
-        member = request.env["discuss.channel.member"].search([
+        member = request.env["discuss.channel.member"].search_fetch([
             ("channel_id", "=", channel_id),
             ("is_self", "=", True),
         ])
@@ -213,7 +213,7 @@ class ChannelController(http.Controller):
 
     @mail_route("/discuss/channel/notify_typing", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_notify_typing(self, channel_id, is_typing):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
         if not channel:
             raise request.not_found()
         # Do not create member automatically when setting typing to `False`
@@ -230,7 +230,7 @@ class ChannelController(http.Controller):
         :param limit: maximum number of attachments to return
         :param before: id of the attachment from which to load older attachments
         """
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
         domain = [
@@ -246,7 +246,7 @@ class ChannelController(http.Controller):
 
     @mail_route("/discuss/channel/sub_channel/create", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_sub_channel_create(self, parent_channel_id, from_message_id=None, name=None):
-        channel = request.env["discuss.channel"].search([("id", "=", parent_channel_id)])
+        channel = request.env["discuss.channel"].search_fetch([("id", "=", parent_channel_id)])
         if not channel:
             raise NotFound()
         if channel.is_readonly and not channel.can_self_edit_readonly_channel:
@@ -269,7 +269,7 @@ class ChannelController(http.Controller):
             domain.append(("id", "<", before))
         if search_term:
             domain.append(("name", "ilike", search_term))
-        sub_channels = request.env["discuss.channel"].search(domain, order="id desc", limit=limit)
+        sub_channels = request.env["discuss.channel"].search_fetch(domain, order="id desc", limit=limit)
         store = Store()
         store.add(sub_channels, "_store_channel_fields")
         store.add(sub_channels._get_last_messages(), "_store_message_fields")
@@ -305,14 +305,14 @@ class ChannelController(http.Controller):
 
     @mail_route("/discuss/channel/remove_member", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_remove_member(self, member_id):
-        channel_member = request.env["discuss.channel.member"].search([("id", "=", member_id)])
+        channel_member = request.env["discuss.channel.member"].search_fetch([("id", "=", member_id)])
         if not channel_member:
             raise NotFound()
         channel_member.unlink()
 
     @mail_route("/discuss/channel/member/set_role", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_set_channel_member_role(self, member_id, channel_role):
-        channel_member = request.env["discuss.channel.member"].search([("id", "=", member_id)])
+        channel_member = request.env["discuss.channel.member"].search_fetch([("id", "=", member_id)])
         if not channel_member:
             raise NotFound()
         channel = channel_member.channel_id

@@ -256,7 +256,7 @@ class ChatbotScriptStep(models.Model):
         domain = Domain('chatbot_script_id', '=', self.chatbot_script_id.id) & Domain('sequence', '>', self.sequence)
         if selected_answer_ids:
             domain &= Domain('triggering_answer_ids', 'in', selected_answer_ids.ids + [False])
-        steps = self.env['chatbot.script.step'].search(domain)
+        steps = self.env['chatbot.script.step'].search_fetch(domain)
         for step in steps:
             if not step.triggering_answer_ids:
                 return step

@@ -578,7 +578,7 @@ class DiscussChannel(models.Model):
     @api.autovacuum
     def _gc_bot_only_ongoing_sessions(self):
         """Garbage collect bot-only livechat sessions with no activity for over 1 day."""
-        stale_sessions = self.search([
+        stale_sessions = self.search_fetch([
             ("channel_type", "=", "livechat"),
             ("livechat_end_dt", "=", False),
             ("last_interest_dt", "<=", "-1d"),

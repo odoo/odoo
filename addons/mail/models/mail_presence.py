@@ -112,6 +112,6 @@ class MailPresence(models.Model):
 
     @api.autovacuum
     def _gc_bus_presence(self):
-        self.search(
+        self.search_fetch(
             [("last_poll", "<", fields.Datetime.now() - timedelta(seconds=PRESENCE_OUTDATED_TIMER))]
         ).unlink()

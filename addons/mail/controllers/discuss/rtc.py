@@ -84,7 +84,7 @@ class RtcController(Controller):
         :param int channel_id: id of the channel from which to disconnect
         :param int session_id: id of the leaving session
         """
-        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        member = request.env["discuss.channel.member"].search_fetch([("channel_id", "=", channel_id), ("is_self", "=", True)])
         if not member:
             raise NotFound()
         # sudo: discuss.channel.rtc.session - member of current user can leave call
@@ -92,7 +92,7 @@ class RtcController(Controller):
 
     @route("/mail/rtc/channel/upgrade_connection", methods=["POST"], type="jsonrpc", auth="user")
     def channel_upgrade(self, channel_id):
-        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        member = request.env["discuss.channel.member"].search_fetch([("channel_id", "=", channel_id), ("is_self", "=", True)])
         if not member:
             raise NotFound()
         member.sudo()._join_sfu(force=True)
@@ -103,7 +103,7 @@ class RtcController(Controller):
         :param member_ids: members whose invitation is to cancel
         :type member_ids: list(int) or None
         """
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
         # sudo: discuss.channel.rtc.session - can cancel invitations in accessible channel
@@ -127,7 +127,9 @@ class RtcController(Controller):
 
     @mail_route("/discuss/channel/ping", methods=["POST"], type="jsonrpc", auth="public")
     def channel_ping(self, channel_id, rtc_session_id=None, check_rtc_session_ids=None):
-        member = request.env["discuss.channel.member"].search([("channel_id", "=", channel_id), ("is_self", "=", True)])
+        member = request.env["discuss.channel.member"].search_fetch(
+            [("channel_id", "=", channel_id), ("is_self", "=", True)]
+        )
         if not member:
             raise NotFound()
         # sudo: discuss.channel.rtc.session - member of current user can access related sessions

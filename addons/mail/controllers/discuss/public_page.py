@@ -53,7 +53,7 @@ class PublicPageController(http.Controller):
     @mail_route("/discuss/channel/<int:channel_id>", methods=["GET"], type="http", auth="public")
     def discuss_channel(self, channel_id, *, highlight_message_id=None, fullscreen=None):
         # highlight_message_id and fullscreen are used JS side by parsing the query string
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
         return self._response_discuss_public_template(Store(), channel)
@@ -63,7 +63,7 @@ class PublicPageController(http.Controller):
         if not request.env["ir.config_parameter"].sudo().get_bool("mail.chat_from_token"):
             raise NotFound()
         # sudo: discuss.channel - channel access is validated with invitation_token
-        channel_sudo = request.env["discuss.channel"].sudo().search([("uuid", "=", create_token)])
+        channel_sudo = request.env["discuss.channel"].sudo().search_fetch([("uuid", "=", create_token)])
         if not channel_sudo:
             try:
                 channel_sudo = channel_sudo.create(
@@ -79,7 +79,7 @@ class PublicPageController(http.Controller):
                 # concurrent insert attempt: another request created the channel.
                 # commit the current transaction and get the channel.
                 request.env.cr.commit()
-                channel_sudo = channel_sudo.search([("uuid", "=", create_token)])
+                channel_sudo = channel_sudo.search_fetch([("uuid", "=", create_token)])
         store = Store().add_global_values(isChannelTokenSecret=False)
         return self._response_discuss_channel_invitation(store, channel_sudo.sudo(False))
 

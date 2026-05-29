@@ -1222,7 +1222,11 @@ class MailMessage(models.Model):
         if msg_vals:
             scheduled_dt_by_msg = {m: msg_vals.get("scheduled_date", False) for m in self}
         elif self:
-            schedulers = self.env["mail.message.schedule"].sudo().search([("mail_message_id", "in", self.ids)])
+            schedulers = (
+                self.env["mail.message.schedule"]
+                .sudo()
+                .search_fetch([("mail_message_id", "in", self.ids)])
+            )
             for scheduler in schedulers:
                 scheduled_dt_by_msg[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
         record_by_message = self._record_by_message()
@@ -1238,7 +1242,7 @@ class MailMessage(models.Model):
                 )
                 domain &= Domain("partner_id", "=", target_user.partner_id.id)
                 # sudo: mail.followers - reading followers of current partner
-                followers = self.env["mail.followers"].sudo().search(domain)
+                followers = self.env["mail.followers"].sudo().search_fetch(domain)
             else:
                 followers = followers.get(self.env)
             for follower in followers:

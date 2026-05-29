@@ -90,11 +90,11 @@ class ResPartner(models.Model):
         )
         channel = self.env["discuss.channel"]
         if channel_id:
-            channel = self.env["discuss.channel"].search([("id", "=", int(channel_id))])
+            channel = self.env["discuss.channel"].search_fetch([("id", "=", int(channel_id))])
             domain &= Domain("channel_ids", "not in", channel.id)
             if channel.group_public_id:
                 domain &= Domain("user_ids.all_group_ids", "in", channel.group_public_id.id)
-        selectable_partners = self.search(domain, limit=limit + 1, order="name, id")
+        selectable_partners = self.search_fetch(domain, limit=limit + 1, order="name, id")
         store.add(
             selectable_partners,
             "_store_channel_invite_fields",
@@ -112,7 +112,7 @@ class ResPartner(models.Model):
         Prioritize partners that are also (internal) users, and then extend the research to all partners.
         Only members of the given channel are returned.
         """
-        channel = self.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = self.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
         if not channel:
             return []
         domain = Domain([
@@ -132,7 +132,7 @@ class ResPartner(models.Model):
             ("channel_id", "in", (channel.parent_channel_id | channel).ids),
             ("partner_id", "in", partners.ids)
         ]
-        members = self.env["discuss.channel.member"].search(members_domain)
+        members = self.env["discuss.channel.member"].search_fetch(members_domain)
         store = Store()
         store.add(members, "_store_identifying_fields")
         store.add(
@@ -147,7 +147,7 @@ class ResPartner(models.Model):
             for p in partners:
                 store.add(p, {"group_ids": [("ADD", (allowed_group & p.user_ids.all_group_ids).ids)]})
         try:
-            roles = self.env["res.role"].search([("name", "ilike", search)], limit=8)
+            roles = self.env["res.role"].search_fetch([("name", "ilike", search)], limit=8)
             store.add(roles, ["name", "user_ids_count"])
         except AccessError:
             pass

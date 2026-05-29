@@ -55,7 +55,7 @@ class DiscussChannel(models.Model):
                 "discuss_channel_ids",
                 "_store_channel_fields",
                 # Not batched by simplicity as it is always called on a single channel.
-                value=lambda visitor: visitor.env["discuss.channel"].search(
+                value=lambda visitor: visitor.env["discuss.channel"].search_fetch(
                     [
                         ("channel_type", "=", "livechat"),
                         ("livechat_visitor_id", "=", visitor.id),

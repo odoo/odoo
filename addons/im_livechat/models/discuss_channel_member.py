@@ -149,7 +149,7 @@ class DiscussChannelMember(models.Model):
     def _gc_unpin_livechat_sessions(self):
         """ Unpin read livechat sessions with no activity for at least one day to
             clean the operator's interface """
-        members = self.env['discuss.channel.member'].search([
+        members = self.env['discuss.channel.member'].search_fetch([
             ('is_pinned', '=', True),
             ('last_seen_dt', '<=', datetime.now() - timedelta(days=1)),
             ('channel_id.channel_type', '=', 'livechat'),

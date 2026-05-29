@@ -101,7 +101,7 @@ class DiscussGifController(Controller):
         ir_config = request.env["ir.config_parameter"].sudo()
         if not ir_config.get_bool("discuss.use_tenor_api"):
             return
-        tenor_gif_ids = request.env["discuss.gif.favorite"].search(
+        tenor_gif_ids = request.env["discuss.gif.favorite"].search_fetch(
             [("create_uid", "=", request.env.user.id)], limit=20, offset=offset
         )
         return (self._gif_posts(tenor_gif_ids.mapped("tenor_gif_id")) or [],)

@@ -416,7 +416,7 @@ class Im_LivechatChannel(models.Model):
                 self.env["chatbot.script"]
                 .sudo()
                 .with_context(lang=self.env["chatbot.script"]._get_chatbot_language())
-                .search([("id", "=", chatbot_script_id)])
+                .search_fetch([("id", "=", chatbot_script_id)])
             )
             operator_partner = chatbot_script.operator_partner_id
             operator_model = 'chatbot.script'
@@ -708,12 +708,12 @@ class Im_LivechatChannelRule(models.Model):
         # first, search the country specific rules (the first match is returned)
         if country_id: # don't include the country in the research if geoIP is not installed
             domain = [('country_ids', 'in', [country_id]), ('channel_id', '=', channel_id)]
-            rule = _match(self.search(domain))
+            rule = _match(self.search_fetch(domain))
             if rule:
                 return rule
         # second, fallback on the rules without country
         domain = [('country_ids', '=', False), ('channel_id', '=', channel_id)]
-        return _match(self.search(domain))
+        return _match(self.search_fetch(domain))
 
     def _is_bot_configured(self):
         return bool(self.chatbot_script_id)

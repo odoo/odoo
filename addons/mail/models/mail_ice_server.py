@@ -23,7 +23,7 @@ class MailIceServer(models.Model):
         :return: List of up to 5 dict, each of which representing a stun or turn server
         """
         # firefox has a hard cap of 5 ice servers
-        ice_servers = self.sudo().search([], limit=5)
+        ice_servers = self.sudo().search_fetch([], limit=5)
         formatted_ice_servers = []
         for ice_server in ice_servers:
             formatted_ice_server = {

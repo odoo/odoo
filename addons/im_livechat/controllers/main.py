@@ -90,7 +90,7 @@ class LivechatController(http.Controller):
             request.env["im_livechat.channel"]
             .with_context(lang=False)
             .sudo()
-            .search([("id", "=", channel_id)])
+            .search_fetch([("id", "=", channel_id)])
         )
         if not livechat_channel:
             raise NotFound()
@@ -211,13 +211,13 @@ class LivechatController(http.Controller):
     def email_livechat_transcript(self, channel_id, email):
         if not request.env.user._is_internal():
             raise NotFound()
-        if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
+        if channel := request.env["discuss.channel"].search_fetch([("id", "=", channel_id)]):
             channel._email_livechat_transcript(email)
 
     @http.route("/im_livechat/download_transcript/<int:channel_id>", type="http", auth="public")
     @add_guest_to_context
     def download_livechat_transcript(self, channel_id):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
         tz = channel._get_livechat_customer_timezone()
@@ -272,5 +272,5 @@ class LivechatController(http.Controller):
         This will clean the chat request and warn the operator that the conversation is over.
         This allows also to re-send a new chat request to the visitor, as while the visitor is
         in conversation with an operator, it's not possible to send the visitor a chat request."""
-        if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
+        if channel := request.env["discuss.channel"].search_fetch([("id", "=", channel_id)]):
             channel._close_livechat_session(message=channel._get_visitor_leave_message())

@@ -20,7 +20,7 @@ class WebClient(WebclientController):
 
     @store_handler("im_livechat.channel")
     def store_im_livechat_channel(self, store: Store):
-        store.add(request.env["im_livechat.channel"].search([]), ["are_you_inside", "name"])
+        store.add(request.env["im_livechat.channel"].search_fetch([]), ["are_you_inside", "name"])
 
     @store_handler("/im_livechat/looking_for_help")
     def store_im_livechat_looking_for_help(self, store: Store):
