@@ -19,7 +19,6 @@ import {
     makeMockServer,
     mockService,
     mountView,
-    mountViewInDialog,
     onRpc,
     patchWithCleanup,
     serverState,
@@ -29,6 +28,7 @@ import {
     contains as waitForContains,
     defineMailModels,
     mailModels,
+    openDiscuss,
     openFormView,
     openView,
     registerArchs,
@@ -147,9 +147,6 @@ test("media dialog: upload", async function () {
 });
 
 test("mention a partner", async () => {
-    onRpc("res.partner", "get_mention_suggestions", ({ kwargs }) => {
-        expect.step(`get_mention_suggestions: ${kwargs.search}`);
-    });
     const pyEnv = await startServer();
     registerArchs({
         "mail.compose.message,false,form": `
@@ -170,17 +167,11 @@ test("mention a partner", async () => {
     });
     const anchorNode = queryOne(`.odoo-editor-editable p`);
     setSelection({ anchorNode, anchorOffset: 0 });
-    await insertText(htmlEditor, "@");
-    await animationFrame();
-    expect(".overlay .o-mail-MentionList input[placeholder='Search for a user...']").toBeFocused();
-    expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
-
-    await press("a");
+    await insertText(htmlEditor, "@a");
     await waitFor(".overlay .o-mail-NavigableList .o-mail-NavigableList-item");
     expect(queryAllTexts(".overlay .o-mail-NavigableList .o-mail-NavigableList-item")).toEqual([
         "Mitchell Admin",
     ]);
-    expect.verifySteps(["get_mention_suggestions: a"]);
 
     await press("enter");
     expect("[name='body'] .odoo-editor-editable").toHaveInnerHTML(`
@@ -192,27 +183,44 @@ test("mention a partner", async () => {
 });
 
 test("mention a channel", async () => {
-    onRpc("discuss.channel", "get_mention_suggestions", ({ kwargs }) => {
-        expect.step(`get_mention_suggestions: ${kwargs.search}`);
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
     });
-    await mountViewInDialog({
-        type: "form",
-        resModel: "mail.compose.message",
-        arch: `
+    registerArchs({
+        "mail.compose.message,false,form": `
         <form>
             <field name="body" type="html" widget="html_composer_message"/>
         </form>`,
     });
-    const anchorNode = queryOne(`[name='body'] .odoo-editor-editable div.o-paragraph`);
+    const composerId = pyEnv["mail.compose.message"].create({
+        subject: "Greetings",
+        body: "<p><br></p>",
+        model: "res.partner",
+    });
+    await start();
+    await openDiscuss(channelId); // To load channel date to store for searching
+    await openView({
+        res_model: "mail.compose.message",
+        res_id: composerId,
+        views: [["mail.compose.message,false,form", "form"]],
+    });
+    const anchorNode = queryOne(`.odoo-editor-editable p`);
     setSelection({ anchorNode, anchorOffset: 0 });
-    await insertText(htmlEditor, "#");
-    await animationFrame();
-    expect(".overlay .o-mail-MentionList input[placeholder='Search for a channel...']").toBeFocused();
-    expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
+    await insertText(htmlEditor, "#a");
+    await waitFor(".overlay .o-mail-NavigableList .o-mail-NavigableList-item");
 
-    await press("a");
-    await animationFrame();
-    expect.verifySteps(["get_mention_suggestions: a"]);
+    await press("enter");
+    expect(
+        `[name='body'] .odoo-editor-editable a.o_channel_redirect[data-oe-model='discuss.channel'][data-oe-id='${channelId}']`
+    ).toHaveCount(1);
+    expect("[name='body'] .odoo-editor-editable").toHaveInnerHTML(`
+    <p>
+        <a href="/odoo/discuss.channel/${channelId}" class="o_channel_redirect" data-oe-id="${channelId}" data-oe-model="discuss.channel" target="_blank" contenteditable="false">
+            #General
+        </a>
+    </p>`);
 });
 
 describe("Remove attachments", () => {

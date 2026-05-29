@@ -129,7 +129,7 @@
             </div>
         </div>
     </div>
-    <NavigableList t-if="this.suggestion" class="'o-mail-Composer-suggestionList'" t-props="this.navigableListProps"/>
+    <NavigableList t-if="this.suggestion and !this.composerService.htmlEnabled" class="'o-mail-Composer-suggestionList'" t-props="this.navigableListProps"/>
 </t>
 
 <t t-name="mail.Composer.sendButton">

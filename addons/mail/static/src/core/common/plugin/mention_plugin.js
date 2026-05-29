@@ -1,11 +1,44 @@
+import { effect, proxy } from "@odoo/owl";
+
 import { Plugin } from "@html_editor/plugin";
+import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
+import { rightPos } from "@html_editor/utils/position";
+
+import { NavigableList } from "@mail/core/common/navigable_list";
+import {
+    SuggestionCore,
+    makeMentionFromOption,
+    mapSuggestionsToOptions,
+} from "@mail/core/common/suggestion_hook";
 import { generateChannelMentionElement } from "@mail/utils/common/format";
 
+/**
+ * Detects/validates mention links in the html composer AND drives the mention
+ * suggestion dropdown (the overlay-based {@link NavigableList}). Used by both
+ * the inline composer (via `MAIL_CORE_PLUGINS`) and the full composer (added in
+ * `HtmlComposerMessageField.getConfig`).
+ *
+ * Configuration is read from `config.mentionPluginDependencies`: the inline
+ * composer passes `{ composer, composerType, suggestionPosition }` (so
+ * selections are recorded on `composer.mentionedPartners` etc.), while the full
+ * composer passes `{ thread, composerType }` and extracts mentions from the html
+ * server-side instead.
+ *
+ * @typedef {Object} MentionPluginDependencies
+ * @property {import("@mail/core/common/composer_model").Composer} [composer]
+ * @property {string} [composerType]
+ * @property {import("models").Thread} [thread]
+ * @property {string} [suggestionPosition]
+ */
 export class MentionPlugin extends Plugin {
     static id = "mention";
-    static dependencies = ["baseContainer", "selection", "history"];
+    static dependencies = ["baseContainer", "dom", "history", "input", "overlay", "selection"];
     resources = {
-        on_selectionchange_handlers: this.detectMentions.bind(this),
+        on_deleted_handlers: this.detectSuggestion.bind(this),
+        on_input_handlers: this.detectSuggestion.bind(this),
+        on_redone_handlers: this.detectSuggestion.bind(this),
+        on_selectionchange_handlers: this.validateMentions.bind(this),
+        on_undone_handlers: this.detectSuggestion.bind(this),
         selectors_for_feff_providers: () =>
             this.MENTION_SELECTORS.map(({ selector }) => selector).join(", "),
     };
@@ -14,6 +47,46 @@ export class MentionPlugin extends Plugin {
         super.setup();
         /** @type {import("models").Store} */
         this.store = this.services["mail.store"];
+        /** @type {MentionPluginDependencies} */
+        this.mentionDeps = this.config.mentionPluginDependencies ?? {};
+        this.suggestionList = this.dependencies.overlay.createOverlay(NavigableList, {
+            className: "shadow",
+            hasAutofocus: false,
+        });
+        this.suggestionListProps = proxy({
+            anchorRef: undefined,
+            isLoading: false,
+            onSelect: (ev, option) => this.insert(option),
+            options: [],
+            optionTemplate: undefined,
+            position: this.mentionDeps.suggestionPosition ?? "bottom-fit",
+        });
+        this.suggestion = new SuggestionCore({
+            canFetch: () => !!this.thread && !this.isDestroyed && !!this.store.self_user,
+            getComposerType: () => this.mentionDeps.composerType,
+            getThread: () => this.thread,
+            suggestionService: this.services["mail.suggestion"],
+        });
+        this._cleanups.push(
+            () => this.suggestion.dispose(),
+            effect(() => {
+                if (this.suggestion.search.results) {
+                    this.updateSuggestionListProps();
+                    this.suggestionList.open({ props: this.suggestionListProps });
+                } else {
+                    this.suggestionList.close();
+                }
+            })
+        );
+    }
+
+    /** @returns {import("models").Thread|undefined} */
+    get thread() {
+        return (
+            this.mentionDeps.thread ??
+            this.mentionDeps.composer?.thread ??
+            this.mentionDeps.composer?.message?.thread
+        );
     }
 
     get MENTION_SELECTORS() {
@@ -37,7 +110,7 @@ export class MentionPlugin extends Plugin {
         ];
     }
 
-    async detectMentions(ev) {
+    async validateMentions(ev) {
         for (const { selector, checker, validMentionsHandler } of this.MENTION_SELECTORS) {
             const mentionLinks = Array.from(this.editable.querySelectorAll(selector)) || [];
             const validMentionLinks = (
@@ -53,6 +126,66 @@ export class MentionPlugin extends Plugin {
             this.prepareValidMentionLinks(validMentionLinks);
             validMentionsHandler?.(validMentionLinks);
         }
+    }
+
+    detectSuggestion() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        if (
+            !isTextNode(selection.startContainer) ||
+            !isContentEditable(selection.startContainer) ||
+            !selection.isCollapsed
+        ) {
+            this.suggestion.clearSearch();
+            return;
+        }
+        this.suggestion.processDetection(selection.startOffset, selection.anchorNode.textContent);
+    }
+
+    insert(option) {
+        const { composer } = this.mentionDeps;
+        if (composer) {
+            if (option.partner) {
+                composer.mentionedPartners.add({ id: option.partner.id });
+            } else if (option.role) {
+                composer.mentionedRoles.add(option.role);
+            } else if (option.channel) {
+                composer.mentionedChannels.add(option.channel.id);
+            } else if (option.cannedResponse) {
+                composer.cannedResponses.push(option.cannedResponse);
+            }
+        }
+        const { detection } = this.suggestion;
+        // only "/" steps the cursor past the delimiter; others anchor on it
+        const position =
+            detection.delimiter === "/" ? detection.position + 1 : detection.position;
+        const { selection } = this.dependencies;
+        const { startContainer, endContainer, endOffset } = selection.getEditableSelection();
+        selection.setSelection({
+            anchorNode: startContainer,
+            anchorOffset: position,
+            focusNode: endContainer,
+            focusOffset: endOffset,
+        });
+        const inlineElement = makeMentionFromOption(option, { thread: this.thread });
+        this.dependencies.dom.insert(inlineElement);
+        const [anchorNode, anchorOffset] = rightPos(inlineElement);
+        selection.setSelection({ anchorNode, anchorOffset });
+        this.dependencies.dom.insert("\u00A0");
+        this.dependencies.history.addStep();
+    }
+
+    updateSuggestionListProps() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const { type, suggestions } = this.suggestion.search.results;
+        const { optionTemplate, options } = mapSuggestionsToOptions(type, suggestions, {
+            thread: this.thread,
+        });
+        Object.assign(this.suggestionListProps, {
+            anchorRef: selection.anchorNode?.el,
+            isLoading: !!this.suggestion.detection.term && this.suggestion.search.loading,
+            optionTemplate,
+            options,
+        });
     }
 
     prepareValidMentionLinks(validMentionLinks) {
