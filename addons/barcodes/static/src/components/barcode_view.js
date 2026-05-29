@@ -57,4 +57,14 @@ export class BarcodeView extends Component {
     onError(error) {
         this.state.barcodeScannerSupported = false;
     }
+
+    /**
+     * Invoked when input button is pressed
+     * We need to close the view in this case
+     */
+    inputButtonSubmit(barcode) {
+        const inputResult = this.props.onInputSubmit(barcode);
+        this.toggleView();
+        return inputResult;
+    }
 }

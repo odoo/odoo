@@ -25,14 +25,15 @@
                 </div>
                 <div class="mt-2">
                     <BarcodeInput
-                        onSubmit.bind="this.props.onInputSubmit"
+                        onSubmit.bind="this.inputButtonSubmit"
                         placeholder="this.props.placeholder"
                         inputFocus="false"
                     />
                 </div>
             </div>
-            <div t-else="" t-on-click="this.toggleView">
+            <div t-else="" class="d-flex gap-1 align-items-center">
                 <t t-call-slot="barcode_preview"/>
+                <t t-call-slot="barcode_open_button" t-on-click="this.toggleView"/>
             </div>
         </div>
     </t>
