@@ -48,6 +48,17 @@ function isLinkActive(selection) {
 }
 
 /**
+ * @param {Node} node
+ */
+export function allowedToCreateLink(node) {
+    return !closestElement(node, "label, button");
+}
+
+export function isLinkSupported(selection) {
+    return isHtmlContentSupported(selection) && allowedToCreateLink(selection.anchorNode);
+}
+
+/**
  * @param { HTMLAnchorElement } link
  * @param {number} offset
  * @returns {"start"|"end"|false}
@@ -191,7 +202,7 @@ export class LinkPlugin extends Plugin {
                     const linkEl = findInSelection(selection, "a");
                     return linkEl
                         ? this.getResource("link_popovers").some((p) => p.isAvailable(linkEl))
-                        : isHtmlContentSupported(selection);
+                        : isLinkSupported(selection);
                 },
             },
             {

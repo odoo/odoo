@@ -40,6 +40,10 @@ export const ATTACHMENT_PENDING_RECORD_ID = "o_attachment_pending_record_id";
  *  }[]} media_dialog_extra_tabs
  */
 
+function isMediaSupported(selection) {
+    return isHtmlContentSupported(selection) && !closestElement(selection.anchorNode, "label");
+}
+
 export class MediaPlugin extends Plugin {
     static id = "media";
     static dependencies = ["selection", "history", "dom", "dialog"];
@@ -69,7 +73,7 @@ export class MediaPlugin extends Plugin {
                     this.openMediaDialog({
                         activeTab: this.getActiveDialogTab(context.searchTerm),
                     }),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: isMediaSupported,
             },
         ],
         toolbar_groups: withSequence(31, { id: "image_actions", namespaces: ["image"] }),

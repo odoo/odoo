@@ -1,5 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
+import { allowedToCreateLink } from "@html_editor/main/link/link_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
@@ -19,7 +20,8 @@ export class ReplaceMediaOption extends BaseOptionComponent {
             isImageSupportedForStyle(editingElement) &&
             !searchSupportedParentLinkEl(editingElement).matches("a[data-oe-xpath]") &&
             !editingElement.classList.contains("media_iframe_video") &&
-            !editingElement.closest(".s_social_media")
+            !editingElement.closest(".s_social_media") &&
+            allowedToCreateLink(editingElement)
         );
     }
     hasHref(editingElement) {

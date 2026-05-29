@@ -7,11 +7,11 @@ import { closestElement, firstLeaf, lastLeaf } from "@html_editor/utils/dom_trav
 import { nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { DISABLED_NAMESPACE } from "../toolbar/toolbar_plugin";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { FileModel } from "@web/core/file_viewer/file_model";
 import { downloadFile } from "@web/core/network/download";
+import { isLinkSupported } from "../link/link_plugin";
 
 export class FilePlugin extends Plugin {
     static id = "file";
@@ -28,7 +28,7 @@ export class FilePlugin extends Plugin {
             icon: "fa-upload",
             run: this.uploadAndInsertFiles.bind(this),
             isAvailable: (selection) =>
-                this.isUploadCommandAvailable(selection) && isHtmlContentSupported(selection),
+                this.isUploadCommandAvailable(selection) && isLinkSupported(selection),
         },
         powerbox_items: {
             categoryId: "media",

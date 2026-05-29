@@ -1,4 +1,4 @@
-import { expect, press, test } from "@odoo/hoot";
+import { expect, press, queryOne, test, waitFor } from "@odoo/hoot";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
@@ -18,4 +18,12 @@ test("copy in a savable button should not copy branding attributes", async () =>
     await press(["ctrl", "c"], { dataTransfer: clipboardData });
     expect(clipboardData.getData("text/plain")).toBe("c");
     expect(clipboardData.getData("text/html")).toBe(`<b>c</b>`);
+});
+
+test("tool to add a link is not available in <button>", async () => {
+    await setupWebsiteBuilder("<button><span>text</span></button>");
+    const spanEl = queryOne(":iframe button span");
+    setSelection({ anchorNode: spanEl, anchorOffset: 0, focusOffset: spanEl.childNodes.length });
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar .btn[name='link']").toHaveCount(0);
 });
