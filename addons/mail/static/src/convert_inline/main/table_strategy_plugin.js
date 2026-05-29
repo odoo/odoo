@@ -4,7 +4,9 @@ import { zip } from "@web/core/utils/arrays";
 import { DIMENSIONS } from "../hooks";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
-
+/**
+ * TODO EGGMAIL: WORKING HERE
+ */
 export class TableStrategyPlugin extends Plugin {
     static id = "tableStrategy";
     static dependencies = ["responsiveBlock", "referenceNode"];
@@ -13,29 +15,18 @@ export class TableStrategyPlugin extends Plugin {
         element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
     };
 
-    analyzeElementLayout({ layout, analysis }, { referenceNode, parentEmailNode }) {
-        if (analysis.facts.isMainTable || !this.detectTableLayout(referenceNode)) {
-            // See MainTableStrategyPlugin (more specific representation of a table)
-            return;
-        }
-        if (parentEmailNode.layout.descendantTag === "TABLE") {
-            analysis.parsingFacts.canParentMerge = true;
-        }
-        analysis.parsingFacts.canMerge = false;
-        analysis.facts.isTable = true;
-        layout.pluginIds.add(TableStrategyPlugin.id);
-    }
-
     // TODO EGGMAIL NOW: special case for the first element inside the reference:
     // - basic editor case (investigate)
     // - builder case (convert to mega wrapper table + background color -> smaller table (mail_wrapper) with margin)
     // - unknown case (add mega wrapper table -> can use "reference" element for this, if mega table strategy was not applied
     // below)
-    applyLayoutStrategy(referenceNode) {
+    analyzeElementLayout({ layout, analysis }, { referenceNode, parentEmailNode }) {
         // TODO EGGMAIL NOW: check that `hasTableLayout` can capture a table
         // if so, maybe we shouldn't hardcode "table" here, because we want to
         // allow a table to be an "hybrid" and match other strategies.
-        if (!this.detectTableLayout(referenceNode)) {
+        if (analysis.facts.isMainTable || !this.detectTableLayout(referenceNode)) {
+            // See MainTableStrategyPlugin (more specific representation of a table)
+
             // look at element tag, if it's a table.
             // look in // at desktopBlocks and mobileBlocks, they should have:
             // - always the same amount of bands, and the same amount of clusters per band?
@@ -44,9 +35,12 @@ export class TableStrategyPlugin extends Plugin {
             // look for a block with multiple bands, every band has 1 cluster
             return;
         }
-        this.buildFragment(referenceNode);
-        referenceNode.defineLayoutStrategy({ pluginId: TableStrategyPlugin.id });
-        return true;
+        if (parentEmailNode.layout.descendantTag === "TABLE") {
+            analysis.parsingFacts.canParentMerge = true;
+        }
+        analysis.parsingFacts.canMerge = false;
+        analysis.facts.isTable = true;
+        layout.pluginIds.add(TableStrategyPlugin.id);
     }
 
     // TODO EGGMAIL: evaluate how float: left/right behave, will it match
@@ -62,6 +56,19 @@ export class TableStrategyPlugin extends Plugin {
     // and few exceptions (table) should verify that they don't have a table
     // as their direct ancestor
     detectTableLayout(referenceNode) {
+        // => about tables
+        // normally, a table will ask that its direct container is not a table nor a row nor a tbody => if it is, we create a row + td to wrap
+        // it => becomes legal again
+        // -> how to handle it => actual constraint should come from the parent (table) if the child is also a table => it should be
+        // wrapped in a tr + td?
+
+        // TODO EGGMAIL NOW: render fragment
+        // The above heuristic will match a `tbody` and transform it into a
+        // table
+        // => avoid putting a table inside another table
+        // => re-evaluate strategy of parent in such a case
+        // => match a table tagName directly and handle it from that node,
+        // aggregate unsupported sub-parts
         let isTableCandidate;
         const mobileBlock = this.getLayoutBlock(referenceNode, MOBILE);
         const desktopBlock = this.getLayoutBlock(referenceNode, DESKTOP);
@@ -74,52 +81,47 @@ export class TableStrategyPlugin extends Plugin {
             return;
         }
         for (const [dBand, mBand] of zip(desktopBlock.bands, mobileBlock.bands)) {
-            if (
-                dBand.clusters.length !== mBand.clusters.length ||
-                dBand.clusters.length !== 1 ||
-                !dBand.clusters[0].isBlock ||
-                !mBand.clusters[0].isBlock
-            ) {
+            if (dBand.clusters.length !== mBand.clusters.length) {
                 return;
             }
-            const dRowEl = dBand.clusters[0].nodes[0];
-            const mRowEl = mBand.clusters[0].nodes[0];
-            const dRowBlock = this.getLayoutBlock(dRowEl, MOBILE);
-            const mRowBlock = this.getLayoutBlock(mRowEl, DESKTOP);
             if (
-                !dRowBlock ||
-                !mRowBlock ||
-                dRowBlock.bands.length !== mRowBlock.bands.length ||
-                dRowBlock.bands.length !== 1 ||
-                dRowBlock.bands[0].clusters.length !== dRowBlock.bands[0].clusters.length
+                dBand.clusters.length === 1 &&
+                dBand.clusters[0].isBlock &&
+                mBand.clusters[0].isBlock
             ) {
-                return;
-            }
-            if (dRowBlock.bands[0].clusters.length > 1) {
+                // matching a real table row
+                const dRowEl = dBand.clusters[0].nodes[0];
+                const mRowEl = mBand.clusters[0].nodes[0];
+                const dRowBlock = this.getLayoutBlock(dRowEl, MOBILE);
+                const mRowBlock = this.getLayoutBlock(mRowEl, DESKTOP);
+                if (
+                    !dRowBlock ||
+                    !mRowBlock ||
+                    dRowBlock.bands.length !== mRowBlock.bands.length ||
+                    dRowBlock.bands.length !== 1 ||
+                    dRowBlock.bands[0].clusters.length !== dRowBlock.bands[0].clusters.length
+                ) {
+                    return;
+                }
+                if (dRowBlock.bands[0].clusters.length > 1) {
+                    isTableCandidate = true;
+                }
+            } else if (
+                dBand.clusters.length === mBand.clusters.length &&
+                dBand.clusters.length > 1
+            ) {
+                // matching a table-like row where the row is implicit
+                // matching a table-like (eg bootstrap) where rows are implicit
+                // (need synthetic nodes)
                 isTableCandidate = true;
+            } else {
+                return;
             }
         }
         return isTableCandidate;
     }
-
-    // buildFragment(referenceNode) {
-    //     // => about tables
-    //     // normally, a table will ask that its direct container is not a table nor a row nor a tbody => if it is, we create a row + td to wrap
-    //     // it => becomes legal again
-    //     // -> how to handle it => actual constraint should come from the parent (table) if the child is also a table => it should be
-    //     // wrapped in a tr + td?
-
-    //     // TODO EGGMAIL NOW: render fragment
-    //     // The above heuristic will match a `tbody` and transform it into a
-    //     // table
-    //     // => avoid putting a table inside another table
-    //     // => re-evaluate strategy of parent in such a case
-    //     // => match a table tagName directly and handle it from that node,
-    //     // aggregate unsupported sub-parts
-    //     referenceNode.fragment;
-    // }
 }
 
-registry
-    .category("mail-html-conversion-main-plugins")
-    .add(TableStrategyPlugin.id, TableStrategyPlugin);
+// registry
+//     .category("mail-html-conversion-main-plugins")
+//     .add(TableStrategyPlugin.id, TableStrategyPlugin);
