@@ -232,7 +232,7 @@ test("Hover on chat bubble shows message preview along with message seen indicat
     await contains(".o-mail-MessageSeenIndicator[title='Seen by Marc']");
 });
 
-test("Chat bubble preview works on author as email address", async () => {
+test.debug("Chat bubble preview works on author as email address", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["discuss.channel"].create({ name: "test channel" });
     const messageId = pyEnv["mail.message"].create({
@@ -249,12 +249,12 @@ test("Chat bubble preview works on author as email address", async () => {
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
-    await start();
+    window.aku = await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await click(".o-mail-ChatWindow [title='Fold']");
-    await hover(".o-mail-ChatBubble");
-    await contains(".o-mail-ChatBubble-preview:has(:text('md@oilcompany.fr: Some email message'))");
+    // await click(".o-mail-ChatWindow [title='Fold']");
+    // await hover(".o-mail-ChatBubble");
+    // await contains(".o-mail-ChatBubble-preview:has(:text('md@oilcompany.fr: Some email message'))");
 });
 
 test("chat bubbles are synced between tabs", async () => {

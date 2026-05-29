@@ -690,6 +690,7 @@ var owl = (() => {
       }
       return newValue;
     }, true);
+    computation.getter = getter;
     function readComputed() {
       if (computation.state !== 0) {
         updateComputation(computation);

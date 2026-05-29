@@ -169,6 +169,8 @@ export class Message extends Record {
     threadAsNeedaction = fields.One("mail.thread", {
         compute() {
             if (this.needaction) {
+                console.log("aku - 2");
+                debugger;
                 return this.thread;
             }
         },

@@ -114,6 +114,9 @@ export class RecordListInternal {
                     }
                 }
             }
+            if (recordList._.name === "menuThreads") {
+                debugger;
+            }
             recordList._proxy.data.splice(
                 0,
                 recordList.data.length,
@@ -255,11 +258,11 @@ export class RecordList extends Array {
                 if (!recordList._.owner._.fieldsComputeComputing.get(recordList._.name)) {
                     recordList._.owner._.fieldsComputeComputed.get(recordList._.name)?.();
                 }
-                if (name === "length") {
-                    return recordListFullProxy.data.length;
-                }
                 if (!recordList._.owner._.fieldsSortComputing.get(recordList._.name)) {
                     recordList._.owner._.fieldsSortComputed.get(recordList._.name)?.();
+                }
+                if (name === "length") {
+                    return recordListFullProxy.data.length;
                 }
                 if (typeof name !== "symbol" && !window.isNaN(parseInt(name))) {
                     // support for "array[index]" syntax

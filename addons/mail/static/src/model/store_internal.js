@@ -165,6 +165,9 @@ export class StoreInternal extends RecordInternal {
     /** @param {RecordList<Record>} recordListFullProxy */
     sortRecordList(recordListFullProxy, func) {
         const recordList = toRaw(recordListFullProxy)._raw;
+        if (recordList._.name === "menuThreads") {
+            debugger;
+        }
         // sort on copy of list so that reactive observers not triggered while sorting
         const recordsFullProxy = recordListFullProxy.data.map((localId) =>
             recordListFullProxy._store.recordByLocalId.get(localId)
