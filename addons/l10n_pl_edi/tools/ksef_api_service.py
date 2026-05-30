@@ -17,7 +17,7 @@ from odoo.addons.l10n_pl_edi.exceptions import KSeFRateLimitError
 
 
 _logger = logging.getLogger(__name__)
-TIMEOUT = 10
+TIMEOUT = 30
 
 
 class KsefApiService:
