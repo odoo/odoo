@@ -217,8 +217,7 @@ class PaymentTransaction(models.Model):
                 # edi postprocessing of invoice and displaying the sale order on the portal
                 for invoice in invoices:
                     invoice._portal_ensure_token()
-                if invoices:
-                    tx.invoice_ids = [Command.set(invoices.ids)]
+                tx.invoice_ids = [Command.set(invoices.ids)]
 
     @api.model
     def _compute_reference_prefix(self, separator, **values):

@@ -32,16 +32,14 @@ class PosLoadMixin(models.AbstractModel):
         if domain is False:
             return domain
 
-        if last_server_date := self._last_server_date_to_load():
-            domain = Domain.AND([domain, [('write_date', '>', last_server_date)]])
-
-        return domain
-
-    def _last_server_date_to_load(self):
         last_server_date = self.env.context.get('pos_last_server_date', False)
         limited_loading = self.env.context.get('pos_limited_loading', True)
         model_included = self._name not in ['pos.session', 'pos.config']
-        return limited_loading and model_included and last_server_date
+
+        if limited_loading and last_server_date and model_included:
+            domain = Domain.AND([domain, [('write_date', '>', last_server_date)]])
+
+        return domain
 
     @api.model
     def _load_pos_data_read(self, records, config):

@@ -50,12 +50,11 @@ export const getPreValue = (pre) => {
     const hasTrailingBr = /<br\s*\/?>$/i.test(html);
     let text = html
         .replace(/<br\s*\/?>/gi, "\n")
-        .replace(/<span\b[^>]*\bclass=["']oe-tabs["'][^>]*>.*?<\/span>/gi, "    ")
         .replace(/<[^>]+>|[\u200B\uFEFF]/g, "")
         .replace(
-            /&(amp|lt|gt|#x27|quot|#x60|nbsp);/g,
+            /&(amp|lt|gt|#x27|quot|#x60);/g,
             (_, entity) =>
-                ({ amp: "&", lt: "<", gt: ">", "#x27": "'", quot: '"', "#x60": "`", nbsp: " " }[entity])
+                ({ amp: "&", lt: "<", gt: ">", "#x27": "'", quot: '"', "#x60": "`" }[entity])
         );
     if (hasTrailingBr && text.endsWith("\n")) {
         text = text.slice(0, -1);

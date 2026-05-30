@@ -3,6 +3,8 @@ import uuid
 from odoo.tools import _
 from odoo.exceptions import ValidationError
 
+DEMO_PRIVATE_KEY = 'l10n_dk_nemhandel/tools/private_key.pem'
+
 # -------------------------------------------------------------------------
 # HELPERS
 # -------------------------------------------------------------------------

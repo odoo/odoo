@@ -15,8 +15,6 @@ from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import content_disposition, request
 from odoo.tools import osutil
-from odoo.tools.misc import split_every
-from odoo.tools.constants import PREFETCH_MAX
 
 
 _logger = logging.getLogger(__name__)
@@ -611,13 +609,8 @@ class ExportFormat(object):
 
             response_data = self.from_group_data(fields, columns_headers, tree)
         else:
-            all_rows = []
-            for batch in split_every(PREFETCH_MAX, records.ids, Model.browse):
-                export_data = batch.export_data(field_names).get('datas', [])
-                all_rows.extend(export_data)
-                batch.invalidate_recordset()
-
-            response_data = self.from_data(fields, columns_headers, all_rows)
+            export_data = records.export_data(field_names).get('datas', [])
+            response_data = self.from_data(fields, columns_headers, export_data)
 
         _logger.info(
             "User %d exported %d %r records from %s. Fields: %s. %s: %s",

@@ -72,11 +72,7 @@ class SaleOrder(models.Model):
             online_payments_invoices = sale_order.transaction_ids.filtered(lambda tx_move: tx_move.state in ('authorized', 'done')).mapped('invoice_ids')
             invoice_lines = sale_order.order_line.invoice_lines.filtered(lambda l: l.parent_state in ('draft', 'posted') and l.move_id not in online_payments_invoices)
             total_invoices_paid = sum(invoice_lines.mapped(lambda l: math.copysign(l.price_total, -l.balance)))
-            pos_order_lines = sale_order.order_line.filtered(lambda l: not l.display_type).mapped('pos_order_line_ids')
-            total_pos_paid = sum(
-                -pol.price_subtotal_incl if pol.order_id.is_refund else pol.price_subtotal_incl
-                for pol in pos_order_lines
-            )
+            total_pos_paid = sum(sale_order.order_line.filtered(lambda l: not l.display_type).mapped('pos_order_line_ids.price_subtotal_incl'))
             sale_order.amount_unpaid = max(sale_order.amount_total - total_invoices_paid - total_pos_paid - sale_order.amount_paid, 0.0)
 
     @api.depends('order_line.pos_order_line_ids')
@@ -131,7 +127,7 @@ class SaleOrderLine(models.Model):
     def _load_pos_data_fields(self, config):
         return ['discount', 'display_name', 'price_total', 'price_unit', 'product_id', 'product_uom_qty', 'qty_delivered',
             'qty_invoiced', 'qty_to_invoice', 'display_type', 'name', 'tax_ids', 'is_downpayment', 'extra_tax_data',
-            'write_date', 'product_custom_attribute_value_ids', 'product_no_variant_attribute_value_ids'
+            'write_date', 'product_custom_attribute_value_ids'
         ]
 
     @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state', 'pos_order_line_ids.refund_orderline_ids.order_id.picking_ids.state')

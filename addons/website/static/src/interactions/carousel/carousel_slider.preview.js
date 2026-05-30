@@ -39,8 +39,6 @@ const CarouselSliderPreview = (I) =>
             carousel.pause();
             carousel.to(0);
         }
-
-        focusNextIndicator() {}
     };
 
 registry.category("public.interactions.preview").add("website.carousel_slider", {

@@ -54,7 +54,9 @@ export class BillGuide extends Component {
             type: "ir.actions.act_window",
             res_model: "account.move",
             views: [[false, "form"]],
-            context: this.context || this.env.searchModel.context,
+            context: {
+                default_move_type: "in_invoice",
+            },
         });
     }
 }

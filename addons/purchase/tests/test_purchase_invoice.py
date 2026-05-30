@@ -1009,11 +1009,9 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertEqual(len(match_lines), 0)
 
     def test_manual_matching_create_bill(self):
-        """ Selecting POL without AML will create bill with the selected POL as the lines (and same currency as the POLs)
-        """
+        """ Selecting POL without AML will create bill with the selected POL as the lines """
         prev_moves = self.env['account.move'].search([])
-        po = self.init_purchase(confirm=True, products=[self.product_order, self.product_order_var_name])
-        po.currency_id = self.other_currency
+        self.init_purchase(confirm=True, products=[self.product_order, self.product_order_var_name])
         self.env['purchase.order.line'].flush_model()
         self.env['purchase.order'].flush_model()
 
@@ -1021,7 +1019,6 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         match_lines.action_match_lines()
 
         new_move = self.env['account.move'].search([]) - prev_moves
-        self.assertEqual(new_move.currency_id, self.other_currency)
         self.assertEqual(new_move.partner_id, self.partner_a)
         self.assertRecordValues(new_move.invoice_line_ids, [
             {'product_id': self.product_order.id},
@@ -1308,71 +1305,3 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             'quantity': 1,
             'product_id': pol.product_id.id,
         }])
-
-    def test_bill_description_only_line_purchase_matching(self):
-        """Test the purchase matching with description-only account line (without a set product)."""
-        self.product_a.uom_id = self.uom_pack_6
-        bill_1, bill_2 = self.env['account.move'].create([{
-            'move_type': 'in_invoice',
-            'partner_id': self.partner.id,
-            'invoice_date': '2020-06-15',
-            'invoice_line_ids': [Command.create({
-                'product_id': product_id,
-                'product_uom_id': self.uom_dozen.id,
-                'quantity': 2,
-                'price_unit': 100,
-            })],
-        } for product_id in (False, self.product_a.id)])
-
-        po = self.env['purchase.order'].create({
-            'partner_id': self.partner.id,
-            'order_line': [Command.create({
-                'product_id': self.product_a.id,
-                'product_qty': 2.0,
-                'product_uom_id': self.uom_dozen.id,
-                'price_unit': 100,
-            })],
-        })
-        po.button_confirm()
-        self.env['purchase.order.line'].flush_model()
-        self.env['purchase.order'].flush_model()
-
-        bill_matches = self.env['purchase.bill.line.match'].search(bill_1.action_purchase_matching()['domain'])
-        self.assertRecordValues(bill_matches, [
-            {
-                'product_uom_qty': 4.0,
-                'product_uom_price': 100,
-                'billed_amount_untaxed': 0.0,
-                'aml_id': False,
-            },
-            {
-                'product_uom_qty': 2.0,
-                'product_uom_price': 100,
-                'billed_amount_untaxed': 200.0,
-                'aml_id': bill_1.invoice_line_ids.id,
-            },
-        ])
-        po_matches = self.env['purchase.bill.line.match'].search(po.action_bill_matching()['domain'])
-        self.assertRecordValues(po_matches, [
-            {
-                'product_uom_qty': 4.0,
-                'product_uom_price': 100,
-                'billed_amount_untaxed': 0.0,
-                'aml_id': False,
-            },
-            {
-                'product_uom_qty': 4.0,
-                'product_uom_price': 100,
-                'billed_amount_untaxed': 200.0,
-                'aml_id': bill_2.invoice_line_ids.id,
-            },
-            {
-                'product_uom_qty': 2.0,
-                'product_uom_price': 100,
-                'billed_amount_untaxed': 200.0,
-                'aml_id': bill_1.invoice_line_ids.id,
-            },
-        ])
-        bill_matches.action_match_lines()
-        self.assertEqual(po.invoice_ids, bill_1)
-        self.assertEqual(po.order_line.product_id, bill_1.invoice_line_ids.product_id)

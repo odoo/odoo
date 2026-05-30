@@ -21,7 +21,9 @@ class AccountMoveSendWizard(models.TransientModel):
 
             nemhandel_partner = wizard.move_id.partner_id.commercial_partner_id.with_company(wizard.company_id)
             nemhandel_proxy_mode = wizard.company_id._get_nemhandel_edi_mode()
-            if nemhandel_partner.nemhandel_verification_state == 'not_verified' or not nemhandel_partner.vat:
+            if nemhandel_partner.nemhandel_verification_state == 'not_valid':
+                addendum_disable_reason = _(' (Customer not on Nemhandel)')
+            elif nemhandel_partner.nemhandel_verification_state == 'not_verified':
                 addendum_disable_reason = _(' (no VAT)')
             else:
                 addendum_disable_reason = ''

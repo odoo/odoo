@@ -332,12 +332,7 @@ export function useColorPicker(refName, props, options = {}) {
     const root = useRef(refName);
 
     function onClick() {
-        if (colorPicker.isOpen) {
-            colorPicker.close();
-        } else {
-            colorPicker.open(root.el, props);
-            options.onOpen?.();
-        }
+        colorPicker.isOpen ? colorPicker.close() : colorPicker.open(root.el, props);
     }
 
     useEffect(

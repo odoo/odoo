@@ -190,8 +190,7 @@ class EventLeadRule(models.Model):
                                 'registration_ids': [(4, reg.id) for reg in group_registrations],
                             })
                     elif group_registrations:
-                        for registrations_grouped_by_event in group_registrations.grouped('event_id').values():
-                            lead_vals_list.append(registrations_grouped_by_event._get_lead_values(rule))
+                        lead_vals_list.append(group_registrations._get_lead_values(rule))
 
         return self.env['crm.lead'].create(lead_vals_list)
 

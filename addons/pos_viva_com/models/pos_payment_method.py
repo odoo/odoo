@@ -132,10 +132,9 @@ class PosPaymentMethod(models.Model):
                 'config_id': pos_session_sudo.config_id.id,
                 'session_id': data.get('sessionId'),
                 'success': data.get('success', False),
-                'transactionId': data.get('transactionId'),
-                'cardType': data.get('cardType'),
-                'applicationLabel': data.get('applicationLabel'),
-                'primaryAccountNumberMasked': data.get('primaryAccountNumberMasked'),
+                'transaction_id': data.get('transactionId'),
+                'card_type': data.get('applicationLabel'),
+                'cardholder_name': data.get('FullName', ''),
             })
 
     def _load_pos_data_fields(self, config):

@@ -550,11 +550,6 @@ export class ListPlugin extends Plugin {
             element.classList.add("oe-nested");
         }
 
-        element.classList.toggle(
-            "o_checked_has_nested_list",
-            element.classList.contains("o_checked") && !!element.querySelector("ul, ol")
-        );
-
         if (
             [...element.children].some(
                 (child) =>

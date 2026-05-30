@@ -232,12 +232,7 @@ class MyInvoisDocument(models.Model):
         """ Make sure that the sequence date range follows the company's fiscal year """
         if reset == 'year_range':
             company = self.company_id
-            date_start, date_end = date_utils.get_fiscal_year(
-                self.myinvois_issuance_date,
-                day=company.fiscalyear_last_day,
-                month=int(company.fiscalyear_last_month),
-            )
-            return (date_start, date_end) + (None, None)
+            return date_utils.get_fiscal_year(self.myinvois_issuance_date, day=company.fiscalyear_last_day, month=int(company.fiscalyear_last_month))
         return super()._get_sequence_date_range(reset)
 
     @api.ondelete(at_uninstall=False)

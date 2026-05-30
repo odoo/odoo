@@ -5,7 +5,6 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.tools import format_amount, frozendict
 from odoo.tools.misc import split_every
-from odoo.tools.constants import PREFETCH_MAX
 
 
 ACCOUNT_DOMAIN = "[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
@@ -333,23 +332,15 @@ class ProductProduct(models.Model):
             except ValueError:
                 similarity_threshold = 0.9
 
-            all_product_ids = self.search(
+            products = self.search(
                 Domain.AND([
                     [('name', 'ilike', name)],
                     values['static_domain'],
                 ]),
-            ).ids
-            lowered_name = name.lower()
-            for products in split_every(PREFETCH_MAX, all_product_ids, self.browse):
-                products.fetch(['product_tmpl_id'])
-                templates = products.product_tmpl_id
-                templates.fetch(['name'])
-                for product in products:
-                    if SequenceMatcher(None, lowered_name, product.name.lower()).ratio() >= similarity_threshold:
-                        return product
-                products.invalidate_recordset()
-                templates.invalidate_recordset()
-            return self.env['product.product']
+            )
+            for product in products:
+                if SequenceMatcher(None, name.lower(), product.name.lower()).ratio() >= similarity_threshold:
+                    return product
 
         if name and '\n' in name:
             # cut Sales Description from the name

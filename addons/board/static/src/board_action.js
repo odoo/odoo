@@ -39,8 +39,7 @@ export class BoardAction extends Component {
                 resModel: result.res_model,
                 type: viewMode,
                 display: { controlPanel: false },
-                selectRecord: (resId, { newWindow } = {}) =>
-                    this.selectRecord(result.res_model, resId, newWindow),
+                selectRecord: (resId) => this.selectRecord(result.res_model, resId),
             };
             const view = result.views.find((v) => v[1] === viewMode);
             if (view) {
@@ -67,15 +66,12 @@ export class BoardAction extends Component {
             }
         });
     }
-    selectRecord(resModel, resId, newWindow) {
-        this.actionService.doAction(
-            {
-                type: "ir.actions.act_window",
-                res_model: resModel,
-                views: [[this.formViewId, "form"]],
-                res_id: resId,
-            },
-            { newWindow }
-        );
+    selectRecord(resModel, resId) {
+        this.actionService.doAction({
+            type: "ir.actions.act_window",
+            res_model: resModel,
+            views: [[this.formViewId, "form"]],
+            res_id: resId,
+        });
     }
 }

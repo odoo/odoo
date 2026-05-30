@@ -170,20 +170,17 @@ ul.o_checklist {
                 justify-content: center;
                 padding-left: 1px #{"/*rtl:ignore*/"};
                 padding-top: 1px;
-                transition: opacity .5s;
-                opacity: 1;
             }
 
-            &.o_checked_has_nested_list::before {
+            &:has(ul, ol)::before {
                 opacity: 0.5;
             }
 
-            &:not(.o_checked_has_nested_list) {
+            &:not(:has(ul, ol)) {
                 text-decoration: line-through;
                 opacity: 0.5;
             }
-
-            &.o_checked_has_nested_list > :not(ul, ol) {
+            &:has(ul, ol) > :not(ul, ol) {
                 text-decoration: line-through;
                 opacity: 0.5;
             }

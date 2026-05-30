@@ -198,10 +198,9 @@ export class PaymentVivaCom extends PaymentInterface {
     }
 
     handleSuccessResponse(line, notification) {
-        line.transaction_id = notification.transactionId;
-        line.card_type = notification.cardType;
-        line.card_brand = notification.applicationLabel;
-        line.card_no = notification.primaryAccountNumberMasked;
+        line.transaction_id = notification.transaction_id;
+        line.card_type = notification.card_type;
+        line.cardholder_name = notification.cardholder_name;
     }
 
     _show_error(msg, title) {
