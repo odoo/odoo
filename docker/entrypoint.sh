@@ -28,8 +28,8 @@ gevent_port    = 8072
 workers          = ${ODOO_WORKERS:-9}
 max_cron_threads = 2
 
-limit_memory_soft = 671088640
-limit_memory_hard = 805306368
+limit_memory_soft = 2147483648
+limit_memory_hard = 2684354560
 limit_request     = 65536
 limit_time_cpu           = 60
 limit_time_real          = 120

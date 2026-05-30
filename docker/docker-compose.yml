@@ -26,6 +26,10 @@ services:
       - "127.0.0.1:5432:5432"   # reachable by DB tools via SSH tunnel
     networks:
       - backend
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-odoo}"]
       interval: 10s
@@ -47,7 +51,7 @@ services:
       DB_PASSWORD:          ${DB_PASSWORD:-odoo}
       DB_NAME:              ${DB_NAME:-odoo-db}
       ODOO_MASTER_PASSWORD: ${ODOO_MASTER_PASSWORD:-rkpassword}
-      ODOO_WORKERS:         ${ODOO_WORKERS:-9}
+      ODOO_WORKERS:         ${ODOO_WORKERS:-4}
     volumes:
       - odoo_data:/var/lib/odoo
       - odoo_logs:/var/log/odoo
@@ -79,6 +83,49 @@ services:
     healthcheck:
       disable: true
 
+  # ── Netdata (host + container monitoring) ────────────────────────────────
+  netdata:
+    image: netdata/netdata:stable
+    restart: always
+    hostname: rkpos-01
+    cap_add:
+      - SYS_PTRACE
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - netdata_config:/etc/netdata
+      - netdata_lib:/var/lib/netdata
+      - netdata_cache:/var/cache/netdata
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "19999:19999"   # LAN + SSH tunnel
+    networks:
+      - frontend
+
+  # ── IoT Box (custom ESC/POS bridge for generic network printers) ─────────
+  iot:
+    build: ./iot-box
+    image: rkpos/rkpos-odoo:iot
+    restart: always
+    environment:
+      RECEIPT_PRINTER_IP: ${RECEIPT_PRINTER_IP:-}
+      KITCHEN_PRINTER_IP: ${KITCHEN_PRINTER_IP:-}
+      PRINTER_PORT:       ${PRINTER_PORT:-9100}
+      LAN_SUBNET:         ${LAN_SUBNET:-192.168.50}
+    volumes:
+      - iot_config:/app/config   # persists printer config across restarts
+    ports:
+      - "8073:8069"   # IoT Box — LAN access at server-ip:8073
+    networks:
+      - frontend
+
   # ── Nginx (HTTP only — SSL handled by Cloudflare Tunnel) ──────────────────
   nginx:
     image: nginx:alpine
@@ -102,6 +149,10 @@ volumes:
   odoo_data:
   odoo_logs:
   portainer_data:
+  netdata_config:
+  netdata_lib:
+  netdata_cache:
+  iot_config:
 
 # ── Networks ─────────────────────────────────────────────────────────────────
 networks:
