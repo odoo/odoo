@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:36+0000\n"
+"POT-Creation-Date: 2026-05-29 17:39+0000\n"
 "PO-Revision-Date: 2026-05-16 10:06+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -545,8 +545,8 @@ msgstr ""
 "            kreditfaktura\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (med referensnummer: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"            (med referensnummer: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
 "        som uppgår till <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$143 "
@@ -558,8 +558,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
-"Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -664,9 +664,9 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "Hej <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
 "Tack, betalningen har genomförts.\n"
-"Här kommer kvitto på betalningen <span style=\"font-weight:bold;\" t-out=\""
-"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> som "
-"uppgår\n"
+"Här kommer kvitto på betalningen <span style=\"font-weight:bold;\" t-"
+"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
+"som uppgår\n"
 "till <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, "
 "object.currency_id) or ''\">$10,00</span> från <t t-"
 "out=\"object.company_id.name or ''\">DittFöretag</t>.\n"
@@ -678,8 +678,8 @@ msgstr ""
 "container=\"1\">\n"
 "    <br/><br/>\n"
 "    <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
-"\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "</t>\n"
 "    </p>\n"
 "</div>\n"
@@ -833,8 +833,8 @@ msgstr ""
 "<span class=\"d-flex gap-2 w-100\">\n"
 "    <span invisible=\"allow_out_payment\" class=\"text-muted\">Icke-betrodd</"
 "span>\n"
-"    <span invisible=\"not allow_out_payment\" class=\"text-success\">"
-"Betrodd</span>\n"
+"    <span invisible=\"not allow_out_payment\" class=\"text-"
+"success\">Betrodd</span>\n"
 "</span>"
 
 #. module: account
@@ -866,8 +866,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
-"%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
+"'fixed'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1134,7 +1134,8 @@ msgstr "<span>5,00</span>"
 #. module: account
 #: model_terms:web_tour.tour,rainbow_man_message:account.account_tour
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
-msgstr "<span><b>Grattis!</b> Du har nu gått igenom hela introduktionen.</span>"
+msgstr ""
+"<span><b>Grattis!</b> Du har nu gått igenom hela introduktionen.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2213,8 +2214,9 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
-"Periodiseringspost som skapades den %(date)s: %(accrual_entry)"
-"s.                Samt dess bokföringsorder: %(reverse_entry)s."
+"Periodiseringspost som skapades den %(date)s: %"
+"(accrual_entry)s.                Samt dess bokföringsorder: %"
+"(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -4137,14 +4139,15 @@ msgstr ""
 msgid ""
 "Cannot get aggregation details from a line not using 'aggregation' engine"
 msgstr ""
-"Kan inte hämta samlingsinformation för en rad som inte använder sig av en ’"
-"samlings’-motor"
+"Kan inte hämta samlingsinformation för en rad som inte använder sig av en "
+"’samlings’-motor"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Cannot identify the invoices in the generated PDF: %s"
-msgstr "Det gick inte att identifiera fakturorna i den genererade PDF-filen: %s"
+msgstr ""
+"Det gick inte att identifiera fakturorna i den genererade PDF-filen: %s"
 
 #. module: account
 #: model:account.account,name:account.1_capital
@@ -4278,7 +4281,8 @@ msgstr "Skatteavdrag för kontantrabatter"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_gain_account_id
 msgid "Cash Discount Write-Off Gain Account"
-msgstr "Konto för vinst från avskrivningar för rabatter på kontanta betalningar"
+msgstr ""
+"Konto för vinst från avskrivningar för rabatter på kontanta betalningar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_early_pay_discount_loss_account_id
@@ -8446,7 +8450,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_company__message_needaction
 #: model:ir.model.fields,help:account.field_res_partner_bank__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Om ikryssad, så finns det nya meddelanden som kräver din uppmärksamhet."
+msgstr ""
+"Om ikryssad, så finns det nya meddelanden som kräver din uppmärksamhet."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_has_error
@@ -8602,7 +8607,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid ""
 "If you have not installed a chart of account, please install one first.<br>"
-msgstr "Om du inte har installerat en kontoplan bör du först installera en.<br>"
+msgstr ""
+"Om du inte har installerat en kontoplan bör du först installera en.<br>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10960,7 +10966,8 @@ msgstr "Sökbart namn"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
-msgstr "Navigera enkelt genom rapporterna och se vad som ligger bakom siffrorna"
+msgstr ""
+"Navigera enkelt genom rapporterna och se vad som ligger bakom siffrorna"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
@@ -12876,6 +12883,7 @@ msgstr "Produktkategorier"
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -14410,7 +14418,8 @@ msgstr "Ange ett värde större än 0,0 för att aktivera en kreditgränskontrol
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
-msgstr "Ändra aktiv till falskt för att dölja Kontotaggen utan att ta bort den."
+msgstr ""
+"Ändra aktiv till falskt för att dölja Kontotaggen utan att ta bort den."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__active
@@ -14669,9 +14678,9 @@ msgid ""
 "Specify an arbitrary value that will be accrued on a         default account "
 "for the entire order, regardless of the products on the different lines."
 msgstr ""
-"Ange ett godtyckligt värde för hela ordern som kommer att läggas in på ett"
-"          konto som väljs som standard, oavsett vilka produkter som finns på "
-"de olika raderna."
+"Ange ett godtyckligt värde för hela ordern som kommer att läggas in på "
+"ett          konto som väljs som standard, oavsett vilka produkter som finns "
+"på de olika raderna."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post
@@ -15986,7 +15995,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_users__property_account_position_id
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
-msgstr "Skatteområdet avgör vilka skatter/konton som används för denna kontakt."
+msgstr ""
+"Skatteområdet avgör vilka skatter/konton som används för denna kontakt."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -18533,7 +18543,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 msgid "You can only resequence items from the same journal"
-msgstr "Det är endast möjligt att återställa affärshändelser från samma journal"
+msgstr ""
+"Det är endast möjligt att återställa affärshändelser från samma journal"
 
 #. module: account
 #. odoo-python
@@ -19196,7 +19207,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot validate a document with an inactive currency: %s"
-msgstr "Det är inte möjligt att validera ett dokument med en inaktiv valuta: %s"
+msgstr ""
+"Det är inte möjligt att validera ett dokument med en inaktiv valuta: %s"
 
 #. module: account
 #. odoo-python
