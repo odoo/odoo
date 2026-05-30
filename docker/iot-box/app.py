@@ -443,13 +443,14 @@ def default_printer_action():
         return jsonify({"id": req_id, "jsonrpc": "2.0",
                         "result": {"status": "error", "message": "No receipt data"}})
 
-    caller    = request.remote_addr or ""
-    is_server = caller.startswith("172.") or caller.startswith("127.")
+    caller     = request.remote_addr or ""
+    user_agent = request.headers.get("User-Agent", "").lower()
+    is_server  = "python" in user_agent or "odoo" in user_agent
     printer_type = "KITCHEN" if is_server else "RECEIPT"
     target_ip = (cfg["kitchen_printer_ip"] or cfg["receipt_printer_ip"]) if is_server \
                 else cfg["receipt_printer_ip"]
 
-    log.info(f"[{printer_type}] Print request from {caller} → {target_ip}")
+    log.info(f"[{printer_type}] Print request from {caller} (ua: {user_agent[:40]}) → {target_ip}")
 
     printer = None
     try:

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Attendance button in navbar — opens the kiosk overlay -->
+    <t t-name="pos_kitchen_lock.AttendanceButton">
+        <button class="btn btn-light btn-lg lh-lg attendance-nav-btn"
+                t-on-click="() => state.open = true"
+                title="Employee Attendance">
+            <i class="fa fa-fw fa-clock-o"/>
+        </button>
+        <AttendanceKiosk t-if="state.open" onClose="() => state.open = false"/>
+    </t>
+
+    <!-- Login-screen variant — large button matching Open Register -->
+    <t t-name="pos_kitchen_lock.AttendanceLoginButton">
+        <button class="attendance-login-btn btn btn-light btn-lg d-flex flex-column align-items-center flex-grow-1 flex-basis-100 gap-2 p-5 rounded-4 lh-lg"
+                t-on-click="() => state.open = true">
+            <i class="fa fa-clock-o fa-3x" aria-hidden="true"/>
+            <span class="d-flex flex-grow-1 align-items-center">Attendance</span>
+        </button>
+        <AttendanceKiosk t-if="state.open" onClose="() => state.open = false"/>
+    </t>
+
+    <!-- Full-screen kiosk overlay -->
+    <t t-name="pos_kitchen_lock.AttendanceKiosk">
+        <div class="attendance-kiosk-overlay">
+
+            <!-- Header -->
+            <div class="att-header">
+                <button class="att-back-btn" t-on-click="props.onClose">
+                    <i class="fa fa-arrow-left"/> Back to POS
+                </button>
+                <div class="att-header-center">
+                    <h2 class="att-title">Employee Attendance</h2>
+                    <span class="att-subtitle">
+                        <t t-esc="checkedInCount"/> on site
+                    </span>
+                </div>
+                <div class="att-header-right"/>
+            </div>
+
+            <!-- Toast notification -->
+            <div t-if="state.toast" class="att-toast">
+                <t t-esc="state.toast.employee_name"/>
+                <t t-if="state.toast.action === 'check_in'"> — Checked In ✓</t>
+                <t t-else=""> — Checked Out ✓</t>
+            </div>
+
+            <!-- Loading -->
+            <div t-if="state.loading" class="att-loading">
+                <i class="fa fa-spinner fa-spin fa-2x"/>
+            </div>
+
+            <!-- Employee grid -->
+            <div t-else="" class="att-grid">
+                <t t-foreach="state.employees" t-as="emp" t-key="emp.id">
+                    <div class="att-emp-card"
+                         t-att-class="{'is-in': emp.is_checked_in}"
+                         t-on-click="() => this.onEmployeeClick(emp)">
+
+                        <div t-att-class="'att-status-bar ' + (emp.is_checked_in ? 'bar-in' : 'bar-out')">
+                            <t t-esc="emp.is_checked_in ? 'On Site' : 'Absent'"/>
+                        </div>
+
+                        <div class="att-avatar-wrap">
+                            <t t-if="emp.image">
+                                <img class="att-avatar-img"
+                                     t-att-src="'data:image/png;base64,' + emp.image"/>
+                            </t>
+                            <t t-else="">
+                                <div class="att-avatar-initial">
+                                    <t t-esc="emp.name[0].toUpperCase()"/>
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="att-emp-name" t-esc="emp.name"/>
+                        <div class="att-emp-role" t-esc="emp.department || emp.job_title || ''"/>
+                    </div>
+                </t>
+            </div>
+
+        </div>
+    </t>
+
+</templates>

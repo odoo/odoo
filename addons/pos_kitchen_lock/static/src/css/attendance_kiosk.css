@@ -1,0 +1,191 @@
+/* ── Attendance nav button (navbar) ─────────────────────────────────────── */
+.attendance-nav-btn {
+    position: relative;
+}
+
+/* ── Attendance button on lock screen ───────────────────────────────────── */
+.saver-attendance-wrap {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.saver-attendance-wrap .attendance-nav-btn {
+    background: rgba(255,255,255,0.85);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a2e;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    cursor: pointer;
+    white-space: nowrap;
+}
+.saver-attendance-wrap .attendance-nav-btn::after {
+    content: " Attendance";
+}
+
+/* ── Full-screen overlay ─────────────────────────────────────────────────── */
+.attendance-kiosk-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #f0f2f5;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+.att-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    flex-shrink: 0;
+}
+
+.att-back-btn {
+    background: #875a7b;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+.att-back-btn:hover { background: #6d4a65; }
+
+.att-header-center { text-align: center; }
+.att-title { margin: 0; font-size: 22px; font-weight: 700; color: #1a1a2e; }
+.att-subtitle { font-size: 14px; color: #666; }
+.att-header-right { width: 140px; }
+
+/* ── Toast ───────────────────────────────────────────────────────────────── */
+.att-toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #28a745;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 24px;
+    font-size: 16px;
+    font-weight: 600;
+    z-index: 10000;
+    box-shadow: 0 4px 16px rgba(0,0,0,.2);
+    animation: fadeInUp 0.3s ease;
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ── Loading ─────────────────────────────────────────────────────────────── */
+.att-loading {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #875a7b;
+}
+
+/* ── Employee grid ───────────────────────────────────────────────────────── */
+.att-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    padding: 24px;
+    overflow-y: auto;
+    align-content: start;
+}
+
+/* ── Employee card ───────────────────────────────────────────────────────── */
+.att-emp-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 0 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    border: 2px solid transparent;
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    overflow: hidden;
+    user-select: none;
+}
+.att-emp-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,.12);
+}
+.att-emp-card.is-in {
+    border-color: #28a745;
+}
+
+/* ── Status bar (top strip) ──────────────────────────────────────────────── */
+.att-status-bar {
+    width: 100%;
+    text-align: center;
+    padding: 4px 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+.att-status-bar.bar-in  { background: #d4edda; color: #155724; }
+.att-status-bar.bar-out { background: #f8d7da; color: #721c24; }
+
+/* ── Avatar ──────────────────────────────────────────────────────────────── */
+.att-avatar-wrap {
+    margin: 20px auto 12px;
+    width: 80px;
+    height: 80px;
+}
+.att-avatar-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.att-avatar-initial {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #875a7b;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+/* ── Name / role ─────────────────────────────────────────────────────────── */
+.att-emp-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a2e;
+    text-align: center;
+    padding: 0 12px;
+    margin-bottom: 4px;
+}
+.att-emp-role {
+    font-size: 12px;
+    color: #888;
+    text-align: center;
+    padding: 0 12px;
+}
