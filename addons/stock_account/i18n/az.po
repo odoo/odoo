@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-02-07 18:01+0000\n"
+"PO-Revision-Date: 2026-05-26 15:17+0000\n"
 "Last-Translator: ERPGo Odoo <erpgo.odoo@gmail.com>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-18/"
 "stock_account/az/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: stock_account
 #. odoo-python
@@ -75,7 +75,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr ""
+msgstr "<b>Fərqli giriş/çıxış hesabları təyin edin müəyyən </b>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
@@ -111,7 +111,7 @@ msgstr "Hesab Hərəkəti"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
-msgstr ""
+msgstr "Anbar Hesabı Parametrləri"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__accounting_date
@@ -184,7 +184,7 @@ msgstr "Analitik Planlar"
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
 msgid "Automated"
-msgstr ""
+msgstr "Avtomatlaşdırılmış"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_stock_accounting_automatic
@@ -224,6 +224,8 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on "
 "the product category, or on the location, before processing this operation."
 msgstr ""
+"%s məhsulu üçün stok giriş hesabı tapılmadı. Bu əməliyyatı icra etməzdən "
+"əvvəl məhsul kateqoriyasında və ya lokasiyada bir hesab təyin etməlisiniz."
 
 #. module: stock_account
 #. odoo-python
@@ -233,6 +235,8 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"%s məhsulu üçün stok çıxış hesabı tapılmadı. Bu əməliyyatı icra etməzdən "
+"əvvəl məhsul kateqoriyasında və ya lokasiyada bir hesab təyin etməlisiniz."
 
 #. module: stock_account
 #. odoo-python
@@ -294,7 +298,7 @@ msgstr "Maya dəyəri"
 #: model:ir.model.fields,field_description:stock_account.field_product_template__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__cost_method
 msgid "Costing Method"
-msgstr ""
+msgstr "Maya Dəyəri Metodu"
 
 #. module: stock_account
 #. odoo-python
@@ -303,6 +307,8 @@ msgid ""
 "Costing method change for product category %(category)s: from %(old_method)s "
 "to %(new_method)s."
 msgstr ""
+"%(category)s məhsul kateqoriyası üçün maya dəyəri metodu %(old_method)s "
+"metodundan %(new_method)s metoduna dəyişdirildi."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -401,6 +407,9 @@ msgid ""
 "(new_category)s), the costing method has changed for product %(product)s: "
 "from %(old_method)s to %(new_method)s."
 msgstr ""
+"Məhsul kateoriyasının %(old_category)s kateqoriyasından %(new_category)s "
+"kateqoriyasına dəyişdirilməsi səbəbindən %(product)s məhsulu üçün maya "
+"dəyəri metodu %(old_method)s metodundan %(new_method)s metoduna dəyişdirildi."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -449,7 +458,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Inventory Valuation"
-msgstr "İntentarın Qiymətləndirilməsi"
+msgstr "İnventarın Qiymətləndirilməsi"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_line_id
@@ -750,7 +759,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
 msgid "Standard Price"
-msgstr ""
+msgstr "Standart Qiymət"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_cost_method
@@ -766,6 +775,13 @@ msgid ""
 "that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
+"Standart Qiymət: Məhsullar, məhsul üzərində təyin edilmiş standart maya "
+"dəyəri əsasında qiymətləndirilir.\n"
+"        Orta Maya Dəyəri (AVCO): Məhsullar çəkili orta maya dəyəri əsasında "
+"qiymətləndirilir.\n"
+"        İlk Daxil Olan İlk Çıxar (FIFO): Məhsullar, şirkətə ilk daxil olan "
+"məhsulların ilk çıxacağını əsas götürərək qiymətləndirilir.\n"
+"        "
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_stock_accounting_automatic
@@ -775,12 +791,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
 msgid "Stock Input Account"
-msgstr ""
+msgstr "Stok Giriş Hesabı"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
 msgid "Stock Journal"
-msgstr ""
+msgstr "Stok Jurnalı"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -793,7 +809,7 @@ msgstr "Stokun Hərəkəti"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
 msgid "Stock Output Account"
-msgstr ""
+msgstr "Stok Çıxış Hesabı"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quantity_history
@@ -822,7 +838,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
 msgid "Stock Valuation Account"
-msgstr ""
+msgstr "Stok Qiymətləndirmə Hesabı"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_in_account_id
@@ -1050,6 +1066,12 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Real vaxt rejimində inventar qiymətləndirilməsi üçün istifadə olunur. "
+"Virtual lokasiyada (daxili tip olmayan) təyin edildikdə, bu hesab məhsullar "
+"daxili lokasiyadan bu lokasiyaya köçürüldükdə onların dəyərini saxlamaq üçün "
+"istifadə ediləcək. Bu halda məhsul üzərində təyin edilmiş ümumi Stok Çıxış "
+"Hesabı istifadə olunmayacaq. Bu parametr daxili lokasiyalar üçün təsir "
+"göstərmir."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -1060,6 +1082,12 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Real vaxt rejimində inventar qiymətləndirilməsi üçün istifadə olunur. "
+"Virtual lokasiyada (daxili tip olmayan) təyin edildikdə, bu hesab məhsullar "
+"bu lokasiyadan daxili lokasiyaya köçürüldükdə onların dəyərini saxlamaq üçün "
+"istifadə ediləcək. Bu halda məhsul üzərində təyin edilmiş ümumi Stok Çıxış "
+"Hesabı istifadə olunmayacaq. Bu parametr daxili lokasiyalar üçün təsir "
+"göstərmir."
 
 #. module: stock_account
 #: model:ir.ui.menu,name:stock_account.menu_valuation
@@ -1192,6 +1220,8 @@ msgid ""
 "You cannot change the costing method of product valuated by lot/serial "
 "number."
 msgstr ""
+"Lot/seriya nömrəsi üzrə qiymətləndirilən məhsulun maya dəyəri metodunu "
+"dəyişdirə bilməzsiniz."
 
 #. module: stock_account
 #. odoo-python
@@ -1252,6 +1282,8 @@ msgid ""
 "You don't have any stock input account defined on your product category. You "
 "must define one before processing this operation."
 msgstr ""
+"Məhsul kateqoriyanız üçün stok giriş hesabı təyin edilməyib. Bu əməliyyatı "
+"icra etməzdən əvvəl hesab təyin etməlisiniz."
 
 #. module: stock_account
 #. odoo-python
@@ -1290,7 +1322,7 @@ msgstr "üçün"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
-msgstr ""
+msgstr "lokasiyalarda"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document

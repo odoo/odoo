@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2026-05-17 05:48+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-05-26 04:55+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/base_setup/"
 "lo/>\n"
 "Language: lo\n"
@@ -25,6 +26,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-users\" aria-label=\"ຈຳນວນຜູ້ໃຊ້ທີ່ໃຊ້ງານຢູ່\"/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -36,6 +38,14 @@ msgid ""
 "                                        Active Users\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', "
+"'&gt;', '1')]}\">\n"
+"                                        ຜູ້ໃຊ້ທີ່ໃຊ້ງານຢູ່\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" attrs=\""
+"{'invisible':[('active_user_count', '&lt;=', '1')]}\">\n"
+"                                        ຜູ້ໃຊ້ທີ່ໃຊ້ງານຢູ່\n"
+"                                    </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -48,6 +58,15 @@ msgid ""
 "                                    </span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&gt;', "
+"'1')]}\">\n"
+"                                        ບໍລິສັດ\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" attrs=\""
+"{'invisible':[('company_count', '&lt;=', '1')]}\">\n"
+"                                        ບໍລິສັດ\n"
+"                                    </span>\n"
+"                                    <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -59,118 +78,133 @@ msgid ""
 "                                            Languages\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', "
+"'&gt;', '1')]}\">\n"
+"                                            ພາສາ\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" attrs=\""
+"{'invisible':[('language_count', '&lt;=', '1')]}\">\n"
+"                                            ພາສາ\n"
+"                                        </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "<strong>Save</strong> this page and come back here to choose your Geo Provider."
 msgstr ""
+"<strong>ບັນທຶກ</strong> ໜ້ານີ້ ແລະ ກັບຄືນມາບ່ອນນີ້ເພື່ອເລືອກຜູ້ໃຫ້ບໍລິການ Geo ຂອງທ່ານ."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "<strong>Save</strong> this page and come back here to set up Cloudflare turnstile."
 msgstr ""
+"<strong>ບັນທຶກ</strong> ໜ້ານີ້ ແລະ ກັບຄືນມາບ່ອນນີ້ເພື່ອຕັ້ງຄ່າ Cloudflare turnstile."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "<strong>Save</strong> this page and come back here to set up reCaptcha."
 msgstr ""
+"<strong>ບັນທຶກ</strong> ໜ້ານີ້ ແລະ ກັບຄືນມາບ່ອນນີ້ເພື່ອຕັ້ງຄ່າ reCaptcha."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
+"<strong>ບັນທຶກ</strong> ໜ້ານີ້ ແລະ ກັບຄືນມາບ່ອນນີ້ເພື່ອຕັ້ງຄ່າຄຸນສົມບັດ."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "API Keys"
-msgstr ""
+msgstr "ຄີ API"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "API Keys allow your users to access Odoo with external tools when multi-factor authentication is enabled."
 msgstr ""
+"ຄີ API ອະນຸຍາດໃຫ້ຜູ້ໃຊ້ຂອງທ່ານເຂົ້າເຖິງ Odoo ດ້ວຍເຄື່ອງມືພາຍນອກ ເມື່ອເປີດໃຊ້ການຢືນຢັນຕົວຕົນແບບຫຼາຍປັດ"
+"ໄຈ."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "About"
-msgstr ""
+msgstr "ກ່ຽວກັບ"
 
 #. module: base_setup
 #. odoo-python
 #: code:addons/base_setup/controllers/main.py:0
 msgid "Access Denied"
-msgstr ""
+msgstr "ການເຂົ້າເຖິງຖືກປະຕິເສດ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Add Languages"
-msgstr ""
+msgstr "ເພີ່ມພາສາ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Add fun feedback and motivate your employees"
-msgstr ""
+msgstr "ເພີ່ມຄຳຕິຊົມທີ່ໜ້າສົນໃຈ ແລະ ສ້າງແຮງຈູງໃຈໃຫ້ພະນັກງານຂອງທ່ານ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_mail_plugin
 msgid "Allow integration with the mail plugins"
-msgstr ""
+msgstr "ອະນຸຍາດໃຫ້ເຊື່ອມຕໍ່ກັບປລັກອິນອີເມລ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
-msgstr ""
+msgstr "ອະນຸຍາດໃຫ້ຜູ້ໃຊ້ຊິງຄ໌ປະຕິທິນຂອງພວກເຂົາກັບ Google Calendar"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_microsoft_calendar
 msgid "Allow the users to synchronize their calendar with Outlook Calendar"
-msgstr ""
+msgstr "ອະນຸຍາດໃຫ້ຜູ້ໃຊ້ຊິງຄ໌ປະຕິທິນຂອງພວກເຂົາກັບ Outlook Calendar"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-msgstr ""
+msgstr "ອະນຸຍາດໃຫ້ຜູ້ໃຊ້ນຳເຂົ້າຂໍ້ມູນຈາກໄຟລ໌ CSV/XLS/XLSX/ODS"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr ""
+msgstr "ອະນຸຍາດໃຫ້ເຮັດວຽກໃນສະພາບແວດລ້ອມທີ່ຮອງຮັບຫຼາຍສະກຸນເງິນ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_voip
 msgid "Asterisk (VoIP)"
-msgstr ""
+msgstr "Asterisk (VoIP)"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Automatically enrich your contact base with company data"
-msgstr ""
+msgstr "ປັບປຸງຂໍ້ມູນຜູ້ຕິດຕໍ່ຂອງທ່ານໂດຍອັດຕະໂນມັດດ້ວຍຂໍ້ມູນບໍລິສັດ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Automatically generate counterpart documents for orders/invoices between companies"
-msgstr ""
+msgstr "ສ້າງເອກະສານຄູ່ສັນຍາໂດຍອັດຕະໂນມັດສຳລັບຄຳສັ່ງຊື້/ໃບແຈ້ງໜີ້ລະຫວ່າງບໍລິສັດ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "By default, new users get highest access rights for all installed apps."
 msgstr ""
+"ໂດຍຄ່າເລີ່ມຕົ້ນ, ຜູ້ໃຊ້ໃໝ່ຈະໄດ້ຮັບສິດການເຂົ້າເຖິງສູງສຸດສຳລັບທຸກແອັບທີ່ຕິດຕັ້ງແລ້ວ."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Choose the layout of your documents"
-msgstr ""
+msgstr "ເລືອກຮູບແບບເອກະສານຂອງທ່ານ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_website_cf_turnstile
 msgid "Cloudflare Turnstile"
-msgstr ""
+msgstr "Cloudflare Turnstile"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Companies"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_id
@@ -180,301 +214,305 @@ msgstr "ບໍລິສັດ"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_code
 msgid "Company Country Code"
-msgstr ""
+msgstr "ລະຫັດປະເທດຂອງບໍລິສັດ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_informations
 msgid "Company Informations"
-msgstr ""
+msgstr "ຂໍ້ມູນບໍລິສັດ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_name
 msgid "Company Name"
-msgstr ""
+msgstr "ຊື່ບໍລິສັດ"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າການກຳນົດຄ່າ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Configure Document Layout"
-msgstr ""
+msgstr "ກຳນົດຄ່າຮູບແບບເອກະສານ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
 msgstr ""
+"ກຳນົດຄ່າກົດລະບຽບບໍລິສັດເພື່ອສ້າງ SO/PO ໂດຍອັດຕະໂນມັດ ເມື່ອບໍລິສັດໜຶ່ງຂອງທ່ານຂາຍ/ຊື້ກັບອີກບໍລິສັດໜຶ່ງຂອງທ່າ"
+"ນ."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Contacts"
-msgstr ""
+msgstr "ຜູ້ຕິດຕໍ່"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__report_footer
 msgid "Custom Report Footer"
-msgstr ""
+msgstr "ສ່ວນທ້າຍລາຍງານແບບກຳນົດເອງ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__user_default_rights
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "ສິດການເຂົ້າເຖິງເລີ່ມຕົ້ນ"
 
 #. module: base_setup
 #. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
 msgid "Default User Template not found."
-msgstr ""
+msgstr "ບໍ່ພົບແມ່ແບບຜູ້ໃຊ້ເລີ່ມຕົ້ນ."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Document Layout"
-msgstr ""
+msgstr "ຮູບແບບເອກະສານ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
 msgid "Document Template"
-msgstr ""
+msgstr "ແມ່ແບບເອກະສານ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Documentation"
-msgstr ""
+msgstr "ເອກະສານຄູ່ມື"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Edit Layout"
-msgstr ""
+msgstr "ແກ້ໄຂຮູບແບບ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Enable the profiling tool. Profiling may impact performance while being active."
 msgstr ""
+"ເປີດໃຊ້ເຄື່ອງມືການວິເຄາະປະສິດທິພາບ (Profiling). ການວິເຄາະອາດສົ່ງຜົນກະທົບຕໍ່ປະສິດທິພາບໃນຂະນະທີ່ເປີ"
+"ດໃຊ້ງານ."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Find free high-resolution images from Unsplash"
-msgstr ""
+msgstr "ຄົ້ນຫາຮູບພາບຄວາມລະອຽດສູງຟຣີຈາກ Unsplash"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__report_footer
 msgid "Footer text displayed at the bottom of all reports."
-msgstr ""
+msgstr "ຂໍ້ຄວາມສ່ວນທ້າຍທີ່ຈະສະແດງຢູ່ລຸ່ມສຸດຂອງທຸກລາຍງານ."
 
 #. module: base_setup
 #: model:ir.ui.menu,name:base_setup.menu_config
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "General Settings"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າທົ່ວໄປ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Geo Localization"
-msgstr ""
+msgstr "ການກຳນົດຕຳແໜ່ງທາງພູມສາດ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_geolocalize
 msgid "GeoLocalize"
-msgstr ""
+msgstr "GeoLocalize"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "GeoLocalize your partners"
-msgstr ""
+msgstr "ກຳນົດຕຳແໜ່ງທາງພູມສາດໃຫ້ກັບຄູ່ຄ້າຂອງທ່ານ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_product_images
 msgid "Get product pictures using barcode"
-msgstr ""
+msgstr "ດຶງຮູບພາບຜະລິດຕະພັນໂດຍໃຊ້ບາໂຄດ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Google Calendar"
-msgstr ""
+msgstr "Google Calendar"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "ການກຳນົດເສັ້ນທາງ HTTP"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Import & Export"
-msgstr ""
+msgstr "ນຳເຂົ້າ ແລະ ສົ່ງອອກ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Integrate with mail client plugins"
-msgstr ""
+msgstr "ເຊື່ອມຕໍ່ກັບປລັກອິນຂອງໄຄລເອັນອີເມລ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Integrations"
-msgstr ""
+msgstr "ການເຊື່ອມຕໍ່"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Inter-Company Transactions"
-msgstr ""
+msgstr "ທຸລະກຳລະຫວ່າງບໍລິສັດ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "LDAP Authentication"
-msgstr ""
+msgstr "ການຢືນຢັນຕົວຕົນດ້ວຍ LDAP"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Languages"
-msgstr ""
+msgstr "ພາສາ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Layout"
-msgstr ""
+msgstr "ຮູບແບບ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Mail Plugin"
-msgstr ""
+msgstr "ປລັກອິນອີເມລ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage API Keys"
-msgstr ""
+msgstr "ຈັດການຄີ API"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Companies"
-msgstr ""
+msgstr "ຈັດການບໍລິສັດ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_account_inter_company_rules
 msgid "Manage Inter Company"
-msgstr ""
+msgstr "ຈັດການລະຫວ່າງບໍລິສັດ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Languages"
-msgstr ""
+msgstr "ຈັດການພາສາ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Users"
-msgstr ""
+msgstr "ຈັດການຜູ້ໃຊ້"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_currency
 msgid "Multi-Currencies"
-msgstr ""
+msgstr "ຫຼາຍສະກຸນເງິນ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__active_user_count
 msgid "Number of Active Users"
-msgstr ""
+msgstr "ຈຳນວນຜູ້ໃຊ້ທີ່ໃຊ້ງານຢູ່"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_count
 msgid "Number of Companies"
-msgstr ""
+msgstr "ຈຳນວນບໍລິສັດ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__language_count
 msgid "Number of Languages"
-msgstr ""
+msgstr "ຈຳນວນພາສາ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "OAuth Authentication"
-msgstr ""
+msgstr "ການຢືນຢັນຕົວຕົນດ້ວຍ OAuth"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "On Apple Store"
-msgstr ""
+msgstr "ໃນ Apple Store"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "On Google Play"
-msgstr ""
+msgstr "ໃນ Google Play"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Outlook Calendar"
-msgstr ""
+msgstr "Outlook Calendar"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
 msgid "Partner Autocomplete"
-msgstr ""
+msgstr "ຕື່ມຂໍ້ມູນຄູ່ຄ້າອັດຕະໂນມັດ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Performance"
-msgstr ""
+msgstr "ປະສິດທິພາບ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Permissions"
-msgstr ""
+msgstr "ສິດການເຂົ້າເຖິງ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Preview Document"
-msgstr ""
+msgstr "ເບິ່ງຕົວຢ່າງເອກະສານ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__profiling_enabled_until
 msgid "Profiling enabled until"
-msgstr ""
+msgstr "ເປີດໃຊ້ການວິເຄາະປະສິດທິພາບຈົນຮອດ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms from spam and abuse."
-msgstr ""
+msgstr "ປົກປ້ອງຟອມຂອງທ່ານຈາກສະແປມ ແລະ ການລະເມີດ."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms with CF Turnstile."
-msgstr ""
+msgstr "ປົກປ້ອງຟອມຂອງທ່ານດ້ວຍ CF Turnstile."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Send SMS"
-msgstr ""
+msgstr "ສົ່ງ SMS"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Send texts to your contacts"
-msgstr ""
+msgstr "ສົ່ງຂໍ້ຄວາມຫາຜູ້ຕິດຕໍ່ຂອງທ່ານ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set custom access rights for new users"
-msgstr ""
+msgstr "ກຳນົດສິດການເຂົ້າເຖິງແບບກຳນົດເອງສຳລັບຜູ້ໃຊ້ໃໝ່"
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
 msgid "Settings"
-msgstr "ການກໍານົດຄ່າ"
+msgstr "ການຕັ້ງຄ່າ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__show_effect
 msgid "Show Effect"
-msgstr ""
+msgstr "ສະແດງເອັບເຟັກ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Synchronize your calendar with Google Calendar"
-msgstr ""
+msgstr "ຊິງຄ໌ປະຕິທິນຂອງທ່ານກັບ Google Calendar"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Synchronize your calendar with Outlook"
-msgstr ""
+msgstr "ຊິງຄ໌ປະຕິທິນຂອງທ່ານກັບ Outlook"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__company_country_code
@@ -482,59 +520,62 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"ລະຫັດປະເທດ ISO ໃນສອງຕົວອັກສອນ. ທ່ານສາມາດນຳໃຊ້ຟິວນີ້ເພື່ອການຄົ້ນຫາແບບວ່ອງໄວ."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
 msgid "Unsplash Image Library"
-msgstr ""
+msgstr "ຄັງຮູບພາບ Unsplash"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Update Info"
-msgstr ""
+msgstr "ອັບເດດຂໍ້ມູນ"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_email_server_default
 msgid "Use Custom Email Servers"
-msgstr ""
+msgstr "ນຳໃຊ້ເຊີບເວີອີເມລແບບກຳນົດເອງ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use LDAP credentials to log in"
-msgstr ""
+msgstr "ນຳໃຊ້ຂໍ້ມູນເຂົ້າລະບົບ LDAP ເພື່ອເຂົ້າສູ່ລະບົບ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use external accounts to log in (Google, Facebook, etc.)"
-msgstr ""
+msgstr "ນຳໃຊ້ບັນຊີພາຍນອກເພື່ອເຂົ້າສູ່ລະບົບ (Google, Facebook, ແລະອື່ນໆ)"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_oauth
 msgid "Use external authentication providers (OAuth)"
-msgstr ""
+msgstr "ນຳໃຊ້ຜູ້ໃຫ້ບໍລິການຢືນຢັນຕົວຕົນພາຍນອກ (OAuth)"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_res_users
 msgid "User"
-msgstr ""
+msgstr "ຜູ້ໃຊ້"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Users"
-msgstr ""
+msgstr "ຜູ້ໃຊ້"
 
 #. module: base_setup
 #. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
 msgid "VAT"
-msgstr ""
+msgstr "ອາກອນມູນຄ່າເພີ່ມ (VAT)"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "When populating your address book, Odoo provides a list of matching companies. When selecting one item, the company data and logo are auto-filled."
 msgstr ""
+"ເມື່ອປ້ອນຂໍ້ມູນໃນປຶ້ມທີ່ຢູ່, Odoo ຈະສະແດງລາຍຊື່ບໍລິສັດທີ່ກົງກັນ. ເມື່ອເລືອກລາຍການໃດໜຶ່ງ, ຂໍ້ມູນບໍລິສັດ ແລະ ໂລ"
+"ໂກ້ຈະຖືກຕື່ມໃຫ້ໂດຍອັດຕະໂນມັດ."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha
 msgid "reCAPTCHA"
-msgstr ""
+msgstr "reCAPTCHA"

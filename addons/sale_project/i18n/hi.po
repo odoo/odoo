@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-05-17 05:49+0000\n"
+"PO-Revision-Date: 2026-05-26 04:54+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/"
 "sale_project/hi/>\n"
@@ -36,18 +36,26 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"               <p class=\"o_view_nocontent_smiling_face\"> \n"
+"                    कोई माइलस्टोन नहीं मिला. आइए, एक बनाएं!\n"
+"               </p><p> \n"
+"                    सफलता हासिल करने के लिए जिन मुख्य प्रगति बिंदुओं तक पहुंचना ज़रूरी "
+"है, उन्हें ट्रैक करें.\n"
+"               </p> \n"
+"            "
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Sales Order Items"
-msgstr ""
+msgstr "%(name)s के सेल्स ऑर्डर आइटम"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Sales Orders"
-msgstr ""
+msgstr "%(name)s के सेल्स ऑर्डर"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -58,6 +66,11 @@ msgid ""
 "the cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
+"order associated with this project has been cancelled. We recommend either "
+"updating the sales order item or cancelling this project in alignment with "
+"the cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -68,6 +81,11 @@ msgid ""
 "cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"The sales "
+"order associated with this task has been cancelled. We recommend either "
+"updating the sales order item or cancelling this task in alignment with the "
+"cancellation of the sales order.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -80,6 +98,12 @@ msgid ""
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            <span class=\"o_stat_value\">0</span> सेल्स ऑर्डर\n"
+"                       </span>\n"
+"                        <span class=\"o_stat_text\"> \n"
+"                            बिल करने लायक बनाएं\n"
+"                       </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -88,6 +112,9 @@ msgid ""
 "                            Sales Orders\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            सेल्स ऑर्डर\n"
+"                       </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -95,18 +122,20 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                        <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">ग्राहक</span>\n"
+"                        <span class=\"o_stat_text\">प्रीव्यू</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">सेल्स ऑर्डर</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "<span class=\"o_stat_text\">Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">टास्क</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -122,6 +151,10 @@ msgid ""
 "The following product need a project in which to put its task: %"
 "(product_name)s"
 msgstr ""
+"कोटेशन %(order)s पर या ऑर्डर पर टास्क बनाने वाले प्रॉडक्ट के फॉर्म पर एक प्रोजेक्ट "
+"परिभाषित होना चाहिए\n"
+"नीचे दिए गए प्रॉडक्ट को अपना टास्क रखने के लिए एक प्रोजेक्ट की आवश्यकता है: %"
+"(product_name)s"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -130,6 +163,9 @@ msgid ""
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
+"सेल्स ऑर्डर कन्फर्म होने पर प्रोजेक्ट के तहत एक टास्क बनाया जाएगा. इस प्रोजेक्ट का "
+"एनालिटिक डिस्ट्रीब्यूशन नए बनाए गए सेल्स ऑर्डर आइटम्स के लिए भी एक रेफ़रेंस के रूप में काम "
+"करेगा।"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -153,13 +189,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Delivered Quantity (Manual)"
-msgstr ""
+msgstr "डिलीवर की गई मात्रा के आधार पर (मैन्युअल)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Milestones"
-msgstr ""
+msgstr "माइलस्टोन के आधार पर"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__allow_billable
@@ -188,12 +224,12 @@ msgstr "बेचे गए सामानों की कीमत"
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Cost of Goods Sold Items"
-msgstr ""
+msgstr "बेचे गए सामानों की कीमत"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
 msgid "Create Project"
-msgstr ""
+msgstr "प्रोजेक्ट बनाएं"
 
 #. module: sale_project
 #. odoo-python
@@ -205,7 +241,7 @@ msgstr "ग्राहक का इनवॉइस बनाएं"
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Create a new quotation, the first step of a new sale!"
-msgstr ""
+msgstr "एक नया कोटेशन बनाएं, एक नए सेल का पहला कदम!"
 
 #. module: sale_project
 #. odoo-python
@@ -214,12 +250,15 @@ msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
 msgstr ""
+"ऑर्डर के लिए एक प्रोजेक्ट बनाएं, जिसमें प्रत्येक सेल्स ऑर्डर लाइन के लिए समय ट्रैक करने हेतु एक "
+"टास्क हो।"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create a task in an existing project to track the time spent."
 msgstr ""
+"बिताए गए समय को ट्रैक करने के लिए किसी मौजूदा प्रोजेक्ट में एक टास्क बनाएं।"
 
 #. module: sale_project
 #. odoo-python
@@ -231,7 +270,7 @@ msgstr "वेंडर बिल बनाएं"
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create an empty project for the order to track the time spent."
-msgstr ""
+msgstr "बिताए गए समय को ट्रैक करने के लिए ऑर्डर के लिए एक खाली प्रोजेक्ट बनाएं।"
 
 #. module: sale_project
 #. odoo-python
@@ -248,6 +287,7 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your vendors."
 msgstr ""
+"इनवॉइस बनाएं, पेमेंट रजिस्टर करें और अपने वेंडर के साथ चर्चाओं पर नज़र रखें।"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
@@ -262,6 +302,7 @@ msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
 msgstr ""
+"बाद में प्रोजेक्ट या टास्क बनाएं और बिताए गए समय को ट्रैक करने के लिए उन्हें ऑर्डर से लिंक करें।"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
@@ -278,7 +319,7 @@ msgstr "कस्टमर इनवॉइस"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Defined on quotation"
-msgstr ""
+msgstr "कोटेशन में बताया गया"
 
 #. module: sale_project
 #. odoo-javascript
@@ -289,12 +330,12 @@ msgstr "डिलीवर किया गया"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_only_product_template
 msgid "Digital Marketing Campaign (project)"
-msgstr ""
+msgstr "डिजिटल मार्केटिंग कैंपेन (प्रोजेक्ट)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
 msgid "Display Sales Order"
-msgstr ""
+msgstr "सेल्स ऑर्डर दिखाएं"
 
 #. module: sale_project
 #. odoo-python
@@ -311,12 +352,12 @@ msgstr "डाउन पेमेंट"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Empty project"
-msgstr ""
+msgstr "खाली प्रोजेक्ट"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_flooring_product_template
 msgid "Flooring Services"
-msgstr ""
+msgstr "फ़्लोरिंग सर्विस"
 
 #. module: sale_project
 #. odoo-python
@@ -328,13 +369,13 @@ msgstr "प्रगति में है"
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Invoice your milestones when they are reached."
-msgstr ""
+msgstr "अपने माइलस्टोन पूरे होने पर उनके लिए इनवॉइस बनाएं।"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Invoice your time and material to customers"
-msgstr ""
+msgstr "ग्राहकों को अपने समय और सामग्री के लिए इनवॉइस भेजें"
 
 #. module: sale_project
 #. odoo-javascript
@@ -397,7 +438,7 @@ msgstr "सामग्री"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "डिलीवर की गई मात्रा को अपडेट करने का तरीका"
 
 #. module: sale_project
 #. odoo-python
@@ -411,24 +452,24 @@ msgstr "माइलस्टोन"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "New Sales Order Item"
-msgstr ""
+msgstr "नया सेल्स ऑर्डर आइटम"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Non-billable"
-msgstr ""
+msgstr "गैर-बिल योग्य"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "Not Billed"
-msgstr ""
+msgstr "बिल नहीं किया गया"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_task_only_product_template
 msgid "Office Furniture Set (task)"
-msgstr ""
+msgstr "ऑफ़िस फ़र्नीचर सेट (टास्क)"
 
 #. module: sale_project
 #. odoo-python
@@ -436,17 +477,18 @@ msgstr ""
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 msgstr ""
+"एक बार जब ग्राहक द्वारा कोटेशन की पुष्टि हो जाती है, तो यह एक सेल्स ऑर्डर बन जाता है।"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "Other Services"
-msgstr ""
+msgstr "अन्य सेवाएं"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
 msgid "Painting"
-msgstr ""
+msgstr "पेंटिंग"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
@@ -454,23 +496,24 @@ msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once "
 "the milestone is reached."
 msgstr ""
+"माइलस्टोन पूरा होने पर ऑर्डर की गई मात्रा का वह प्रतिशत जो अपने-आप डिलीवर हो जाएगा।"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_plumbing_product_template
 msgid "Plumbing Services"
-msgstr ""
+msgstr "प्लंबिंग से जुड़ी सेवाएं"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_task.py:0
 msgid "Portal Sale Order"
-msgstr ""
+msgstr "पोर्टल सेल ऑर्डर"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Prepaid/Fixed Price"
-msgstr ""
+msgstr "प्रीपेड/फिक्स कीमत"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
@@ -489,6 +532,9 @@ msgid ""
 "generate analytic costs, will be re-invoiced in this sales order if they are "
 "set up for it."
 msgstr ""
+"स्टॉक पिकिंग्स में जोड़े गए प्रॉडक्ट, जिनका ऑपरेशन प्रकार एनालिटिक लागत जनरेट करने के लिए "
+"कॉन्फ़िगर किया गया है, इस सेल्स ऑर्डर में फिर से इनवॉइस किए जाएंगे अगर वे इसके लिए सेट अप "
+"किए गए हैं।"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project
@@ -503,7 +549,7 @@ msgstr "प्रोजेक्ट"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "प्रोजेक्ट और टास्क"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_account_id
@@ -518,7 +564,7 @@ msgstr "प्रोजेक्ट माइलस्टोन"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr ""
+msgstr "प्रोजेक्ट माइलस्टोन"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -529,7 +575,7 @@ msgstr "प्रोजेक्ट टेंप्लेट"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr ""
+msgstr "प्रोजेक्ट का सेल ऑर्डर"
 
 #. module: sale_project
 #. odoo-python
@@ -547,17 +593,17 @@ msgstr "मात्रा"
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Quantity (%)"
-msgstr ""
+msgstr "मात्रा (%)"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "कोटेशन टेम्पलेट लाइन"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales & Invoicing"
-msgstr ""
+msgstr "सेल्स और इनवॉइसिंग"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_report
@@ -591,7 +637,7 @@ msgstr "सेल्स ऑर्डर आइटम"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
 msgid "Sales Order Item that will be updated once the milestone is reached."
-msgstr ""
+msgstr "सेल्स ऑर्डर आइटम जिसे माइलस्टोन पूरा होने पर अपडेट किया जाएगा।"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -617,7 +663,7 @@ msgstr ""
 #: code:addons/sale_project/models/project_project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/components/project_profitability_section.xml:0
 msgid "Sales Order Items"
-msgstr ""
+msgstr "सेल्स ऑर्डर आइटम"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
@@ -649,18 +695,18 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "सेल्स ऑर्डर जिससे टास्क जुड़ा हुआ है।"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_screw_driver_product_template
 msgid "Screw Driver"
-msgstr ""
+msgstr "स्क्रू ड्राइवर"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 msgid "Search in Invoice"
-msgstr ""
+msgstr "इनवॉइस में खोजें"
 
 #. module: sale_project
 #. odoo-python
@@ -671,13 +717,13 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 msgid "Select who to bill..."
-msgstr ""
+msgstr "चुनें कि बिल किसे भेजा जाए..।"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_policy
 msgid "Service Invoicing Policy"
-msgstr ""
+msgstr "सर्विस इनवॉइसिंग से जुड़ी नीति"
 
 #. module: sale_project
 #. odoo-javascript
@@ -700,7 +746,7 @@ msgstr "टास्क"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Task Created (%(name)s): %(link)s"
-msgstr ""
+msgstr "टास्क बनाया गया (%(name)s): %(link)s"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
@@ -721,7 +767,7 @@ msgstr "टास्क का विश्लेषण"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "The Sale Order Item should contain a service product."
-msgstr ""
+msgstr "सेल ऑर्डर आइटम में एक सर्विस प्रॉडक्ट होना चाहिए।"
 
 #. module: sale_project
 #. odoo-python
@@ -730,6 +776,7 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
+"%s प्रॉडक्ट के पास एक ग्लोबल प्रोजेक्ट नहीं होना चाहिए, क्योंकि यह एक प्रोजेक्ट जनरेट करेगा।"
 
 #. module: sale_project
 #. odoo-python
@@ -738,6 +785,8 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"%s प्रॉडक्ट में न तो कोई प्रोजेक्ट होना चाहिए और न ही कोई प्रोजेक्ट टेम्पलेट, क्योंकि यह "
+"कोई प्रोजेक्ट जेनरेट नहीं करेगा।"
 
 #. module: sale_project
 #. odoo-python
@@ -746,6 +795,8 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"%s प्रॉडक्ट में प्रोजेक्ट टेम्पलेट नहीं होना चाहिए, क्योंकि यह एक ग्लोबल प्रोजेक्ट में एक टास्क "
+"जनरेट करेगा।"
 
 #. module: sale_project
 #. odoo-python
@@ -754,18 +805,20 @@ msgid ""
 "The project couldn't be created as the Sales Order must be confirmed, is "
 "already linked to a project, or doesn't involve any services."
 msgstr ""
+"प्रोजेक्ट नहीं बनाया जा सका, क्योंकि सेल्स ऑर्डर का कन्फर्म होना ज़रूरी है, यह पहले से ही "
+"किसी प्रोजेक्ट से जुड़ा है या इसमें कोई सेवाएं शामिल नहीं हैं।"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "This Sales Order must contain at least one product of type \"Service\"."
-msgstr ""
+msgstr "इस सेल्स ऑर्डर में \"सर्विस\" टाइप का कम से कम एक प्रॉडक्ट होना चाहिए।"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "This task has been created from: %(order_link)s (%(product_name)s)"
-msgstr ""
+msgstr "यह टास्क से बनाया गया है: %(order_link)s (%(product_name)s)"
 
 #. module: sale_project
 #. odoo-python
@@ -782,7 +835,7 @@ msgstr "इनवॉइस के लिए"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_type
 msgid "Track Service"
-msgstr ""
+msgstr "सर्विस ट्रैक करें"
 
 #. module: sale_project
 #. odoo-python
@@ -794,17 +847,17 @@ msgstr "वेंडर बिल"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr ""
+msgstr "सेल्स ऑर्डर देखें"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
 msgid "Website Redesign Service (project & task)"
-msgstr ""
+msgstr "वेबसाइट रीडिज़ाइन सर्विस (प्रोजेक्ट और टास्क)"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_wiring_product_template
 msgid "Wiring Services"
-msgstr ""
+msgstr "वायरिंग से जुड़ी सेवाएं"
 
 #. module: sale_project
 #. odoo-python
@@ -813,9 +866,11 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"आप ऑर्डर आइटम %(order_id)s - %(product_id)s को इस टास्क से लिंक नहीं कर सकते, "
+"क्योंकि यह फिर से बनाया गया इनवॉइस का खर्च है।"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "You will be able to create an invoice and collect the payment."
-msgstr ""
+msgstr "आप एक इनवॉइस बना सकेंगे और पेमेंट ले सकेंगे।"

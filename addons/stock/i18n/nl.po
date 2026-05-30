@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-05-22 08:15+0000\n"
+"PO-Revision-Date: 2026-05-27 15:26+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/stock/nl/>"
 "\n"
@@ -72,9 +72,9 @@ msgid ""
 "measure."
 msgstr ""
 "\n"
-"Het aantal gereed voor het product %(product)s komt niet overeen met de "
+"Het aantal voltooid voor het product %(product)s komt niet overeen met de "
 "afrondingsprecisie gedefinieerd op de maateenheid %(unit)s.\n"
-"Wijzig het aantal gereed of de afrondingsprecisie van je maateenheid."
+"Wijzig het aantal voltooid of de afrondingsprecisie van je maateenheid."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -110,7 +110,7 @@ msgstr ""
 "gereserveerd.\n"
 "(b) Het verzendbeleid is \"Wanneer alle producten beschikbaar zijn\": alle "
 "producten zijn gereserveerd.\n"
-" * Gereed: de overdracht is verwerkt.\n"
+" * Voltooid: de overdracht is verwerkt.\n"
 " * Geannuleerd: de overdracht is geannuleerd."
 
 #. module: stock
@@ -370,7 +370,7 @@ msgstr ""
 "* In afwachting van beschikbaarheid: De voorraadverplaatsing is bevestigd, "
 "maar het product kan niet worden gereserveerd.\n"
 "* Beschikbaar: Het product van de voorraadverplaatsing is gereserveerd.\n"
-"* Gereed: Het product is verplaatst en de verplaatsing is bevestigd."
+"* Voltooid: Het product is verplaatst en de verplaatsing is bevestigd."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -3330,7 +3330,7 @@ msgstr "Documentatie"
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Done"
-msgstr "Gereed"
+msgstr "Voltooid"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
@@ -8471,15 +8471,15 @@ msgstr "Verkoop- en inkoopproducten in verschillende maateenheden"
 msgid ""
 "Send an automatic confirmation SMS Text Message when Delivery Orders are done"
 msgstr ""
-"Stuur een automatische bevestiging per SMS-bericht als de leveringen gereed "
-"zijn"
+"Stuur een automatische bevestiging per SMS-bericht als de leveringen "
+"voltooid zijn"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Send an automatic confirmation email when Delivery Orders are done"
 msgstr ""
-"Verzend een automatische bevestiging per e-mail wanneer leveringen gereed "
-"zijn"
+"Verzend een automatische bevestiging per e-mail wanneer leveringsorders "
+"voltooid zijn"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_lead_mass_mail
@@ -9614,9 +9614,9 @@ msgid ""
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
-"Het aantal gereed voor het product \"%(product)s\" komt niet overeen met de "
-"afrondingsprecisie gedefinieerd op de maateenheid \"%(unit)s\". Wijzig het "
-"aantal gereed van de afrondingsprecisie van je maateenheid."
+"Het aantal voltooid voor het product \"%(product)s\" komt niet overeen met "
+"de afrondingsprecisie gedefinieerd op de maateenheid \"%(unit)s\". Wijzig "
+"het aantal voltooid van de afrondingsprecisie van je maateenheid."
 
 #. module: stock
 #. odoo-python
@@ -11107,8 +11107,8 @@ msgid ""
 "When the picking is not done this allows changing the initial demand. When "
 "the picking is done this allows changing the done quantities."
 msgstr ""
-"Wanneer een levering nog niet gereed is geeft je dit de mogelijkheid om de "
-"initiële aanvraag te wijzigen. Wanneer een levering gereed is geeft je dit "
+"Wanneer een levering nog niet voltooid is geeft je dit de mogelijkheid om de "
+"initiële aanvraag te wijzigen. Wanneer een levering voltooid is geeft je dit "
 "de mogelijkheid om de geregistreerde hoeveelheid te wijzigen."
 
 #. module: stock
@@ -11445,7 +11445,7 @@ msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
 msgstr ""
-"Je kunt een voorraadverplaatsing die is ingesteld op 'Gereed' niet "
+"Je kunt een voorraadverplaatsing die is ingesteld op 'Voltooid' niet "
 "annuleren. Maak een terugkeer om de zetten die plaatsvonden terug te draaien."
 
 #. module: stock
@@ -11470,7 +11470,7 @@ msgstr ""
 msgid "You cannot change the UoM for a stock move that has been set to 'Done'."
 msgstr ""
 "Je kunt de maateenheid niet wijzigen voor een voorraadverplaatsing die is "
-"ingesteld op 'Gereed'."
+"ingesteld op 'Voltooid'."
 
 #. module: stock
 #. odoo-python
@@ -11599,8 +11599,8 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
-"Je kunt een voorraadverplaatsing die ingesteld is op 'Gereed' of 'Annuleren' "
-"niet splitsen."
+"Je kunt een voorraadverplaatsing die ingesteld is op 'Voltooid' of "
+"'Annuleren' niet splitsen."
 
 #. module: stock
 #. odoo-python
@@ -11617,8 +11617,8 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
-"Het is niet mogelijk om van een voorraadverplaatsing de reservering ongedaan "
-"te maken welke in de 'Gereed' fase is."
+"Je kunt de reservering van een voorraadverplaatsing in de fase 'voltooid' "
+"niet ongedaan maken."
 
 #. module: stock
 #. odoo-python
@@ -11692,7 +11692,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "You may only return Done pickings."
-msgstr "Je kunt alleen pickings die gereed zijn retourneren."
+msgstr "Je kunt alleen pickings die voltooid zijn retourneren."
 
 #. module: stock
 #. odoo-python
