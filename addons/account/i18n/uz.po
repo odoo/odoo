@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2025-10-18 14:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2259,9 +2259,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-#, fuzzy
-msgid "A fiscal position with a foreign VAT already exists in this country."
-msgstr "Bu mamlakatda chet el QQSli soliq pozitsiyasi allaqachon mavjud."
+msgid "A fiscal position with a foreign Tax ID already exists in this country."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3678,9 +3677,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
-#, fuzzy
-msgid "Allow Foreign VAT"
-msgstr "Xorijiy QQSga ruxsat berish"
+msgid "Allow Foreign Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -4228,19 +4226,15 @@ msgstr "Faqat yetkazib berish mamlakati mos kelganda qo‘llash."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
-#, fuzzy
-msgid "Apply only if partner has a VAT number."
-msgstr "Faqat hamkorning QQS raqami mavjud bo‘lganda qo‘llash."
+msgid "Apply only if partner has a Tax ID."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
-#, fuzzy
 msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
-"criterias (VAT/Country) are met."
+"criterias (Tax ID/Country) are met."
 msgstr ""
-"Agar moslik mezonlari (QQS/Mamlakat) bajarilsa, hisob-fakturalarda soliq va "
-"hisob xaritalarini avtomatik qo‘llash."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_profit_or_loss_appropriation
@@ -4525,6 +4519,11 @@ msgid "Automatic sequence"
 msgstr "Avtomatik ketma-ketlik"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Automatically compute US and Canadian tax rates."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_partner__autopost_bills
 #: model:ir.model.fields,help:account.field_res_users__autopost_bills
 #, fuzzy
@@ -4557,6 +4556,12 @@ msgstr "Avtomatik hisob-kitoblar"
 #, fuzzy
 msgid "Autopost Bills Wizard"
 msgstr "Avtomatik hisob-kitoblar yordamchisi"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "AvaTax"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
@@ -6179,6 +6184,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
 #: model:ir.model.fields,field_description:account.field_account_move__commercial_partner_id
+#: model:ir.model.fields,field_description:account.field_account_payment__commercial_partner_id
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
 #, fuzzy
 msgid "Commercial Entity"
@@ -6667,9 +6673,8 @@ msgstr "Qarshi tomonlar"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
-#, fuzzy
-msgid "Countries for which the company has a VAT number"
-msgstr "Kompaniya QQS raqamiga ega bo‘lgan mamlakatlar"
+msgid "Countries for which the company has a Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -10318,17 +10323,16 @@ msgid "Foreign Tax ID"
 msgstr "Xorijiy soliq identifikatori"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign Tax ID countries"
+msgstr ""
+
+#. module: account
 #: model:account.fiscal.position,name:account.21_template_generic_export_fiscal_position
 #: model:account.fiscal.position,name:account.22_account_fiscal_position_us_export
 #, fuzzy
 msgid "Foreign Trade"
 msgstr "Tashqi savdo"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
-#, fuzzy
-msgid "Foreign VAT countries"
-msgstr "Xorijiy QQS mamlakatlari"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -20163,6 +20167,11 @@ msgid "Tax ID"
 msgstr "Soliq raqami"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
+msgid "Tax ID required"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_price_include__tax_included
 #, fuzzy
@@ -21054,13 +21063,10 @@ msgstr "Ushbu soliq qo‘llaniladigan mamlakat."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-#, fuzzy
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a "
+"The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
-"Xorijiy QQS raqamining mamlakati aniqlanmadi. Iltimos, fiskal pozitsiyaga "
-"mamlakat tayinlang."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -22108,7 +22114,7 @@ msgstr "Bu hisob mijoz hisob-fakturasini tasdiqlashda ishlatiladi."
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
-"this screen."
+"this screen.  -  This action will affect your current company only."
 msgstr ""
 
 #. module: account
@@ -22212,8 +22218,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
 
 #. module: account
@@ -22236,6 +22242,13 @@ msgstr "Bu yozuv %s dan nusxalangan"
 #, fuzzy
 msgid "This entry has been reversed from %s"
 msgstr "Bu yozuv %s dan qaytarilgan"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -23519,12 +23532,6 @@ msgid ""
 msgstr "Jurnal elementining storno hisobga olinishini ko‘rsatuvchi maydon"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
-#, fuzzy
-msgid "VAT required"
-msgstr "QQS talab qilinadi"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 #, fuzzy
 msgid "Valid for"
@@ -24038,14 +24045,6 @@ msgid "You are about to unsubscribe"
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You are attempting to validate opening entries belonging to another company. "
-"Please switch to the correct company."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 #, fuzzy
 msgid ""
@@ -24394,13 +24393,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-#, fuzzy
 msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
+"You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"O‘z soliq mamlakatingiz ichida xorijiy QQSni davlatga biriktirmasdan soliq "
-"pozitsiyasini yarata olmaysiz."
 
 #. module: account
 #. odoo-python
@@ -25698,6 +25694,54 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} o‘z-o‘zini hisoblash hisob-fakturasi (Havola "
 "{{ object.name or 'mavjud emas' }})"
+
+#, fuzzy
+#~ msgid "A fiscal position with a foreign VAT already exists in this country."
+#~ msgstr "Bu mamlakatda chet el QQSli soliq pozitsiyasi allaqachon mavjud."
+
+#, fuzzy
+#~ msgid "Allow Foreign VAT"
+#~ msgstr "Xorijiy QQSga ruxsat berish"
+
+#, fuzzy
+#~ msgid "Apply only if partner has a VAT number."
+#~ msgstr "Faqat hamkorning QQS raqami mavjud bo‘lganda qo‘llash."
+
+#, fuzzy
+#~ msgid ""
+#~ "Apply tax & account mappings on invoices automatically if the matching "
+#~ "criterias (VAT/Country) are met."
+#~ msgstr ""
+#~ "Agar moslik mezonlari (QQS/Mamlakat) bajarilsa, hisob-fakturalarda soliq "
+#~ "va hisob xaritalarini avtomatik qo‘llash."
+
+#, fuzzy
+#~ msgid "Countries for which the company has a VAT number"
+#~ msgstr "Kompaniya QQS raqamiga ega bo‘lgan mamlakatlar"
+
+#, fuzzy
+#~ msgid "Foreign VAT countries"
+#~ msgstr "Xorijiy QQS mamlakatlari"
+
+#, fuzzy
+#~ msgid ""
+#~ "The country of the foreign VAT number could not be detected. Please "
+#~ "assign a country to the fiscal position."
+#~ msgstr ""
+#~ "Xorijiy QQS raqamining mamlakati aniqlanmadi. Iltimos, fiskal pozitsiyaga "
+#~ "mamlakat tayinlang."
+
+#, fuzzy
+#~ msgid "VAT required"
+#~ msgstr "QQS talab qilinadi"
+
+#, fuzzy
+#~ msgid ""
+#~ "You cannot create a fiscal position with a foreign VAT within your fiscal "
+#~ "country without assigning it a state."
+#~ msgstr ""
+#~ "O‘z soliq mamlakatingiz ichida xorijiy QQSni davlatga biriktirmasdan "
+#~ "soliq pozitsiyasini yarata olmaysiz."
 
 #, fuzzy
 #~ msgid "Add a payment QR-code to your invoices"

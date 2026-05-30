@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
 "PO-Revision-Date: 2026-05-04 13:46+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-3/sale/"
@@ -3188,11 +3188,6 @@ msgid "Has Confirmed Order"
 msgstr "주문이 확인되었습니다"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
-msgid "Has Fiscal Position Changed"
-msgstr "재정 위치가 변경되었습니다."
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
 msgid "Has Message"
 msgstr "메시지가 있습니다"
@@ -4569,12 +4564,6 @@ msgid "Product prices have been recomputed."
 msgstr "품목 가격이 다시 계산되었습니다."
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr "품목 관련 세금이 재정 위치 %s 기준으로 다시 계산되었습니다."
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
 #: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.menu_reporting_product
@@ -4786,11 +4775,6 @@ msgstr "'장바구니에 담기' 또는 견적 시 추천됩니다"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
 msgstr "이 가격표를 기준하여 모든 가격 재계산"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Recompute all taxes based on this fiscal position"
-msgstr "이 재정 상태를 기준으로 모든 세금 내역을 다시 계산합니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -6004,12 +5988,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
-"This will update all taxes based on the currently selected fiscal position."
-msgstr "현재 설정된 재정 위치를 기준으로 모든 세금을 업데이트합니다."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr "새로운 가격표를 기준으로 모든 품목의 단가를 업데이트합니다."
 
@@ -6216,11 +6194,6 @@ msgstr "공급가액 합계"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
 msgstr "가격 업데이트"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Update Taxes"
-msgstr "업데이트: 세금"
 
 #. module: sale
 #. odoo-javascript
@@ -6662,6 +6635,23 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Has Fiscal Position Changed"
+#~ msgstr "재정 위치가 변경되었습니다."
+
+#~ msgid "Product taxes have been recomputed according to fiscal position %s."
+#~ msgstr "품목 관련 세금이 재정 위치 %s 기준으로 다시 계산되었습니다."
+
+#~ msgid "Recompute all taxes based on this fiscal position"
+#~ msgstr "이 재정 상태를 기준으로 모든 세금 내역을 다시 계산합니다."
+
+#~ msgid ""
+#~ "This will update all taxes based on the currently selected fiscal "
+#~ "position."
+#~ msgstr "현재 설정된 재정 위치를 기준으로 모든 세금을 업데이트합니다."
+
+#~ msgid "Update Taxes"
+#~ msgstr "업데이트: 세금"
 
 #~ msgid "Communication history"
 #~ msgstr "대화 이력"

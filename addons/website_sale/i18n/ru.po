@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2026-01-13 16:09+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -5808,6 +5808,7 @@ msgid "Salesperson"
 msgstr "Продавец"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_and_ribbon
 msgid "Sample"
 msgstr "Пример"
@@ -6763,6 +6764,12 @@ msgstr "У товара нет действующей комбинации."
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
 msgid "This product is no longer available."
 msgstr "Этот товар больше не доступен."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "This product is not available (anymore) in this unit of measure."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form

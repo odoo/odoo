@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2026-04-13 19:32+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -839,8 +839,11 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_cookie_policy_link
 msgid ""
-"<a href=\"/cookie-policy\" class=\"oe_unremovable btn btn-link btn-sm px-0 "
-"o_translate_inline\">Cookie Policy</a>"
+"<a href=\"/website/cookie-policy\" class=\"oe_unremovable small "
+"o_translate_inline\">Cookie Policy</a>\n"
+"                <span class=\"text-muted  mx-2\">•</span>\n"
+"                <a href=\"#\" class=\"o_cookies_bar_toggle oe_unremovable "
+"small o_translate_inline\">Update Cookie Preferences</a>"
 msgstr ""
 
 #. module: website
@@ -2095,9 +2098,9 @@ msgstr "<span class=\"o_stat_text\">آفلاین</span>"
 msgid ""
 "<span class=\"pe-1\">We use cookies to provide you a better user experience "
 "on this website.</span>\n"
-"                                            <a href=\"/cookie-policy\" "
-"class=\"o_cookies_bar_text_policy btn btn-link btn-sm px-0 "
-"o_translate_inline\">Cookie Policy</a>"
+"                                            <a href=\"/website/cookie-"
+"policy\" class=\"o_cookies_bar_text_policy small o_translate_inline\">Cookie "
+"Policy</a>"
 msgstr ""
 
 #. module: website
@@ -2446,6 +2449,13 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_boxed
 msgid "<strong>More leads</strong>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to choose your Cookie "
+"Policy Configuration."
 msgstr ""
 
 #. module: website
@@ -3136,6 +3146,12 @@ msgstr "اضافه کردن یک فیلد جدید در انتها"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Add an icon to the labels of required or optional fields"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/media_list_item_option.xml:0
+msgid "Add an image"
 msgstr ""
 
 #. module: website
@@ -3935,8 +3951,15 @@ msgstr "گروه‌های مجاز"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
 msgid "Auto"
 msgstr "خودکار"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+msgid "Auto means it will inherit the parent value"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_partner__publish_on
@@ -4254,6 +4277,12 @@ msgid "Birth Year"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Black"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
 msgstr "ممنوعیت این فیلد برای فرم‌های وب"
@@ -4351,6 +4380,8 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/header/header_navigation_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 msgid "Bold"
 msgstr "<b>پررنگ</b>"
 
@@ -5038,6 +5069,12 @@ msgid "Chart"
 msgstr "نمودار"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Chart Data"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_form_aside
 msgid ""
 "Chat with us through or fill in this form to get information about anything "
@@ -5450,6 +5487,7 @@ msgstr "ستون"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Columns"
@@ -5812,8 +5850,19 @@ msgid "Cookie Policy Link"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__cookie_policy_id
+#: model:ir.model.fields,field_description:website.field_website__cookie_policy_id
+msgid "Cookie Policy Page"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 msgid "Cookie bar"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Cookie policy page"
 msgstr ""
 
 #. module: website
@@ -7382,6 +7431,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Edit Chart Data"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.xml:0
 msgid "Edit Head and Body Code"
 msgstr "ویرایش کد هد و بادی"
@@ -8081,6 +8136,12 @@ msgstr "آیدی خارجی"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Extra Bold"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 msgid "Extra Content"
 msgstr ""
@@ -8090,6 +8151,12 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 msgid "Extra Large"
 msgstr "خیلی بزرگ"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Extra Light"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -8551,6 +8618,12 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 msgid "Font Size"
 msgstr "اندازه فونت"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+msgid "Font Weight"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -9421,6 +9494,7 @@ msgstr "مخفی برای"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/progress_bar_option.xml:0
 msgid "Hide"
 msgstr "پنهان"
@@ -9887,6 +9961,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/media_list_item_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navbar_logo_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__partner_image
@@ -11401,6 +11476,8 @@ msgstr "کتابخانه"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 msgid "Light"
 msgstr "روشن"
 
@@ -11830,6 +11907,7 @@ msgstr "میز بوفه مدیترانه‌ای شامل پیش‌غذاها، �
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/whatsapp_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 msgid "Medium"
 msgstr "متوسط"
 
@@ -12748,7 +12826,6 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/announcement_scroll_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/blockquote_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_option.xml:0
@@ -13724,6 +13801,12 @@ msgstr ""
 #: code:addons/website/static/src/client_actions/website_preview/publish_website_systray_item.js:0
 msgid "Page title not set."
 msgstr "عنوان صفحه تنظیم نشده است."
+
+#. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__cookie_policy_id
+#: model:ir.model.fields,help:website.field_website__cookie_policy_id
+msgid "Page used as the Cookie Policy link in the cookies bar."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__copy_ids
@@ -14755,6 +14838,7 @@ msgstr "به‌روزرسانی لیست مسیرها"
 #: code:addons/website/static/src/builder/plugins/options/header/header_template_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navtabs_style_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 msgid "Regular"
 msgstr "عادی"
 
@@ -15240,6 +15324,18 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Rows"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Rows × Columns"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor.js:0
 msgid "SCSS file: %s"
 msgstr "فایل SCSS: %s"
@@ -15654,6 +15750,11 @@ msgid "Select your birth date"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Select your custom cookie policy page"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Selection"
@@ -15679,6 +15780,12 @@ msgstr "فروش بیشتر با یک فروشگاه اینترنتی"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/new_content_systray_item.js:0
 msgid "Sell online"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Semi Bold"
 msgstr ""
 
 #. module: website
@@ -17249,12 +17356,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/dialog/seo.xml:0
-msgid "The language of the keyword and related keywords."
-msgstr "زبان کلمه کلیدی و کلمات کلیدی مرتبط."
-
-#. module: website
 #: model:ir.model.fields,help:website.field_website_snippet_filter__limit
 msgid "The limit is the maximum number of records retrieved"
 msgstr "حد، حداکثر تعداد رکوردهای بازیابی شده است"
@@ -17452,6 +17553,7 @@ msgstr "ضخامت"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/content_width_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 msgid "Thin"
 msgstr "نازک"
 
@@ -17574,6 +17676,12 @@ msgid ""
 msgstr ""
 "این فونت از قبل وجود دارد، شما فقط می‌توانید آن را به عنوان یک فونت محلی "
 "اضافه کنید تا به جای نسخه سرور استفاده شود."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.js:0
+msgid "This font is missing font weight"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -18149,13 +18257,13 @@ msgstr "ترجمه سرآیند در متن. منو به صورت خودکار �
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/translation/options/translate_webpage_option.xml:0
-msgid "Translate the whole content with AI"
+msgid "Translate to"
 msgstr ""
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/translation/options/translate_webpage_option.xml:0
-msgid "Translate to"
+msgid "Translate your content (yellow part) with AI"
 msgstr ""
 
 #. module: website
@@ -18421,6 +18529,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "Upload"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
+msgid "Upload a zip with multiple weights for best results."
 msgstr ""
 
 #. module: website
@@ -21561,6 +21675,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr ""
+
+#~ msgid "The language of the keyword and related keywords."
+#~ msgstr "زبان کلمه کلیدی و کلمات کلیدی مرتبط."
 
 #~ msgid "Google Analytics"
 #~ msgstr "آنالیتیک گوگل"

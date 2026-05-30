@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
 "PO-Revision-Date: 2026-01-16 05:49+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s19-1/sale/hi/"
@@ -2537,11 +2537,6 @@ msgid "Has Confirmed Order"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
-msgid "Has Fiscal Position Changed"
-msgstr "वित्तीय स्थितियां बदल गई हैं"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
 msgid "Has Message"
 msgstr "मैसेज है"
@@ -3894,12 +3889,6 @@ msgid "Product prices have been recomputed."
 msgstr ""
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr ""
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
 #: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.menu_reporting_product
@@ -4110,11 +4099,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Recompute all taxes based on this fiscal position"
 msgstr ""
 
 #. module: sale
@@ -5278,12 +5262,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
-"This will update all taxes based on the currently selected fiscal position."
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr ""
 
@@ -5488,11 +5466,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
 msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Update Taxes"
-msgstr "टैक्स को अपडेट करें"
 
 #. module: sale
 #. odoo-javascript
@@ -5917,6 +5890,12 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Has Fiscal Position Changed"
+#~ msgstr "वित्तीय स्थितियां बदल गई हैं"
+
+#~ msgid "Update Taxes"
+#~ msgstr "टैक्स को अपडेट करें"
 
 #~ msgid "Communication history"
 #~ msgstr "कम्यूनिकेशन का इतिहास"

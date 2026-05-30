@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2026-05-08 04:45+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -2059,8 +2059,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "A fiscal position with a foreign VAT already exists in this country."
-msgstr "此國家/地區已有國外增值稅的財務規則。"
+msgid "A fiscal position with a foreign Tax ID already exists in this country."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3254,8 +3254,8 @@ msgstr "在所選日期之前，所有未對賬的銀行結單資料行。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
-msgid "Allow Foreign VAT"
-msgstr "允許外國增值稅"
+msgid "Allow Foreign Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -3712,15 +3712,15 @@ msgstr "僅當交貨國家/地區符合時適用."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
-msgid "Apply only if partner has a VAT number."
-msgstr "僅應用於有增值稅編碼的合作夥伴."
+msgid "Apply only if partner has a Tax ID."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
 msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
-"criterias (VAT/Country) are met."
-msgstr "若條件相符（增值稅/國家/地區），發票會自動套用稅項及賬戶對應。"
+"criterias (Tax ID/Country) are met."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_profit_or_loss_appropriation
@@ -3970,6 +3970,11 @@ msgid "Automatic sequence"
 msgstr "自動序列"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Automatically compute US and Canadian tax rates."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_partner__autopost_bills
 #: model:ir.model.fields,help:account.field_res_users__autopost_bills
 msgid "Automatically post bills for this trusted partner"
@@ -3997,6 +4002,12 @@ msgstr "自動過賬賬單"
 #: model:ir.model,name:account.model_account_autopost_bills_wizard
 msgid "Autopost Bills Wizard"
 msgstr "自動過賬賬單精靈"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "AvaTax"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
@@ -5392,6 +5403,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
 #: model:ir.model.fields,field_description:account.field_account_move__commercial_partner_id
+#: model:ir.model.fields,field_description:account.field_account_payment__commercial_partner_id
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
 msgid "Commercial Entity"
 msgstr "商業實體"
@@ -5802,8 +5814,8 @@ msgstr "對應項目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Countries for which the company has a VAT number"
-msgstr "公司擁有增值稅編號的國家"
+msgid "Countries for which the company has a Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -8943,15 +8955,15 @@ msgid "Foreign Tax ID"
 msgstr "外幣稅金編號"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign Tax ID countries"
+msgstr ""
+
+#. module: account
 #: model:account.fiscal.position,name:account.21_template_generic_export_fiscal_position
 #: model:account.fiscal.position,name:account.22_account_fiscal_position_us_export
 msgid "Foreign Trade"
 msgstr "國外貿易"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Foreign VAT countries"
-msgstr "國外增值稅國家"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -17354,6 +17366,11 @@ msgid "Tax ID"
 msgstr "稅務編號"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
+msgid "Tax ID required"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_price_include__tax_included
 msgid "Tax Included"
@@ -18111,9 +18128,9 @@ msgstr "此稅金適用的國家/地區."
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a "
+"The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
-msgstr "未能偵測外國增值稅號碼所屬的國家/地區。請為財務規則設定一個國家/地區。"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -18987,7 +19004,7 @@ msgstr "在驗證客戶應收憑單時使用這個科目."
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
-"this screen."
+"this screen.  -  This action will affect your current company only."
 msgstr ""
 
 #. module: account
@@ -19074,8 +19091,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
 
 #. module: account
@@ -19095,6 +19112,13 @@ msgstr "記項已從 %s 複製"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "記項已從 %s 撤銷"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20172,11 +20196,6 @@ msgid ""
 msgstr "表示日記帳項目是否受 storno 會計約束的實用工具欄位"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
-msgid "VAT required"
-msgstr "必須有增值稅號(VAT)"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Valid for"
 msgstr "對以下項目有效："
@@ -20611,14 +20630,6 @@ msgid "You are about to unsubscribe"
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You are attempting to validate opening entries belonging to another company. "
-"Please switch to the correct company."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid ""
 "You are changing decimals in your entire database, including invoices,\n"
@@ -20895,10 +20906,9 @@ msgstr "你不可使用所選國家/地區組別以外的國家/地區，建立�
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
+"You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"您不能在不為其分配狀態的情況下在您的財政國家內建立具有外國增值稅的財政政策."
 
 #. module: account
 #. odoo-python
@@ -21971,6 +21981,42 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} 自助開立賬單發票 (參考編號：{{ object.name or "
 "'不適用' }})"
+
+#~ msgid "A fiscal position with a foreign VAT already exists in this country."
+#~ msgstr "此國家/地區已有國外增值稅的財務規則。"
+
+#~ msgid "Allow Foreign VAT"
+#~ msgstr "允許外國增值稅"
+
+#~ msgid "Apply only if partner has a VAT number."
+#~ msgstr "僅應用於有增值稅編碼的合作夥伴."
+
+#~ msgid ""
+#~ "Apply tax & account mappings on invoices automatically if the matching "
+#~ "criterias (VAT/Country) are met."
+#~ msgstr "若條件相符（增值稅/國家/地區），發票會自動套用稅項及賬戶對應。"
+
+#~ msgid "Countries for which the company has a VAT number"
+#~ msgstr "公司擁有增值稅編號的國家"
+
+#~ msgid "Foreign VAT countries"
+#~ msgstr "國外增值稅國家"
+
+#~ msgid ""
+#~ "The country of the foreign VAT number could not be detected. Please "
+#~ "assign a country to the fiscal position."
+#~ msgstr ""
+#~ "未能偵測外國增值稅號碼所屬的國家/地區。請為財務規則設定一個國家/地區。"
+
+#~ msgid "VAT required"
+#~ msgstr "必須有增值稅號(VAT)"
+
+#~ msgid ""
+#~ "You cannot create a fiscal position with a foreign VAT within your fiscal "
+#~ "country without assigning it a state."
+#~ msgstr ""
+#~ "您不能在不為其分配狀態的情況下在您的財政國家內建立具有外國增值稅的財政政"
+#~ "策."
 
 #~ msgid "Add a payment QR-code to your invoices"
 #~ msgstr "在你的應收憑單上增加支付二維碼"

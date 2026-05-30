@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2026-04-13 19:33+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -917,11 +917,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_cookie_policy_link
 msgid ""
-"<a href=\"/cookie-policy\" class=\"oe_unremovable btn btn-link btn-sm px-0 "
-"o_translate_inline\">Cookie Policy</a>"
+"<a href=\"/website/cookie-policy\" class=\"oe_unremovable small "
+"o_translate_inline\">Cookie Policy</a>\n"
+"                <span class=\"text-muted  mx-2\">•</span>\n"
+"                <a href=\"#\" class=\"o_cookies_bar_toggle oe_unremovable "
+"small o_translate_inline\">Update Cookie Preferences</a>"
 msgstr ""
-"<a href=\"/cookie-policy\" class=\"oe_unremovable btn btn-link btn-sm px-0 "
-"o_translate_inline\">Chính sách cookie</a>"
 
 #. module: website
 #. odoo-javascript
@@ -2329,14 +2330,10 @@ msgstr "<span class=\"o_stat_text\">Offline</span>"
 msgid ""
 "<span class=\"pe-1\">We use cookies to provide you a better user experience "
 "on this website.</span>\n"
-"                                            <a href=\"/cookie-policy\" "
-"class=\"o_cookies_bar_text_policy btn btn-link btn-sm px-0 "
-"o_translate_inline\">Cookie Policy</a>"
+"                                            <a href=\"/website/cookie-"
+"policy\" class=\"o_cookies_bar_text_policy small o_translate_inline\">Cookie "
+"Policy</a>"
 msgstr ""
-"<span class=\"pe-1\">Chúng tôi sử dụng cookie để mang đến cho bạn trải "
-"nghiệm người dùng tốt hơn trên trang web này.</span>\n"
-"<a href=\"/cookie-policy\" class=\"o_cookies_bar_text_policy btn btn-link "
-"btn-sm px-0 o_translate_inline\">Chính sách cookie</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_badge
@@ -2733,6 +2730,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_boxed
 msgid "<strong>More leads</strong>"
 msgstr "<strong>More leads</strong>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to choose your Cookie "
+"Policy Configuration."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
@@ -3456,6 +3460,12 @@ msgstr "Thêm trường mới vào cuối"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Add an icon to the labels of required or optional fields"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/media_list_item_option.xml:0
+msgid "Add an image"
 msgstr ""
 
 #. module: website
@@ -4280,8 +4290,15 @@ msgstr "Nhóm được ủy quyền"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
 msgid "Auto"
 msgstr "Tự động"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+msgid "Auto means it will inherit the parent value"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_partner__publish_on
@@ -4597,6 +4614,12 @@ msgid "Birth Year"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Black"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
 msgstr "Đưa trường này vào danh sách đen của biểu mẫu web"
@@ -4696,6 +4719,8 @@ msgstr "Làm mờ"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/header/header_navigation_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 msgid "Bold"
 msgstr "In đậm"
 
@@ -5399,6 +5424,12 @@ msgid "Chart"
 msgstr "Biểu đồ"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Chart Data"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_form_aside
 msgid ""
 "Chat with us through or fill in this form to get information about anything "
@@ -5826,6 +5857,7 @@ msgstr "Cột"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Columns"
@@ -6194,8 +6226,19 @@ msgid "Cookie Policy Link"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__cookie_policy_id
+#: model:ir.model.fields,field_description:website.field_website__cookie_policy_id
+msgid "Cookie Policy Page"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 msgid "Cookie bar"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Cookie policy page"
 msgstr ""
 
 #. module: website
@@ -7800,6 +7843,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Edit Chart Data"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.xml:0
 msgid "Edit Head and Body Code"
 msgstr "Chỉnh sửa mã tiêu đề và nội dung"
@@ -8545,6 +8594,12 @@ msgstr "ID bên ngoài"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Extra Bold"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 msgid "Extra Content"
 msgstr "Nội dung bổ sung"
@@ -8554,6 +8609,12 @@ msgstr "Nội dung bổ sung"
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 msgid "Extra Large"
 msgstr "Cực lớn"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Extra Light"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -9022,6 +9083,12 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 msgid "Font Size"
 msgstr "Cỡ Font"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+msgid "Font Weight"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -9913,6 +9980,7 @@ msgstr "Ẩn cho"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/progress_bar_option.xml:0
 msgid "Hide"
 msgstr "Ẩn"
@@ -10382,6 +10450,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/media_list_item_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navbar_logo_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__partner_image
@@ -11915,6 +11984,8 @@ msgstr "Thư viện"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 msgid "Light"
 msgstr "Sáng"
 
@@ -12350,6 +12421,7 @@ msgstr "Buffet Địa Trung Hải gồm món khai vị, món chính và món tr�
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/whatsapp_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 msgid "Medium"
 msgstr "Phương tiện"
 
@@ -13274,7 +13346,6 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/announcement_scroll_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/blockquote_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_option.xml:0
@@ -14297,6 +14368,12 @@ msgstr "Không tìm thấy trang"
 #: code:addons/website/static/src/client_actions/website_preview/publish_website_systray_item.js:0
 msgid "Page title not set."
 msgstr "Chưa thiết lập tiêu đề trang."
+
+#. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__cookie_policy_id
+#: model:ir.model.fields,help:website.field_website__cookie_policy_id
+msgid "Page used as the Cookie Policy link in the cookies bar."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__copy_ids
@@ -15340,6 +15417,7 @@ msgstr "Làm mới danh sách tuyến"
 #: code:addons/website/static/src/builder/plugins/options/header/header_template_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navtabs_style_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 msgid "Regular"
 msgstr "Thông thường"
 
@@ -15832,6 +15910,18 @@ msgstr "Hàng"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Rows"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Rows × Columns"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor.js:0
 msgid "SCSS file: %s"
 msgstr "Tệp SCSS: %s"
@@ -16255,6 +16345,11 @@ msgid "Select your birth date"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Select your custom cookie policy page"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Selection"
@@ -16281,6 +16376,12 @@ msgstr "Kinh doanh tốt hơn nhờ eCommerce"
 #: code:addons/website/static/src/client_actions/website_preview/new_content_systray_item.js:0
 msgid "Sell online"
 msgstr "Bán online"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Semi Bold"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -17888,12 +17989,6 @@ msgstr ""
 "người dùng mà không cần chuyên môn kỹ thuật."
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/dialog/seo.xml:0
-msgid "The language of the keyword and related keywords."
-msgstr "Ngôn ngữ của từ khóa và các từ khóa liên quan."
-
-#. module: website
 #: model:ir.model.fields,help:website.field_website_snippet_filter__limit
 msgid "The limit is the maximum number of records retrieved"
 msgstr "Giới hạn là số lượng dữ liệu tối đa được truy xuất"
@@ -18101,6 +18196,7 @@ msgstr "Độ dày"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/content_width_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 msgid "Thin"
 msgstr "Mỏng"
 
@@ -18228,6 +18324,12 @@ msgid ""
 msgstr ""
 "Phông chữ này đã tồn tại, bạn chỉ có thể thêm nó làm phông chữ cục bộ để "
 "thay thế phiên bản máy chủ."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.js:0
+msgid "This font is missing font weight"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -18816,14 +18918,14 @@ msgstr "Dịch header trên trong văn bản. Menu được tạo tự động."
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/translation/options/translate_webpage_option.xml:0
-msgid "Translate the whole content with AI"
-msgstr "Dịch toàn bộ nội dung bằng AI"
+msgid "Translate to"
+msgstr "Dịch sang"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/translation/options/translate_webpage_option.xml:0
-msgid "Translate to"
-msgstr "Dịch sang"
+msgid "Translate your content (yellow part) with AI"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -19092,6 +19194,12 @@ msgstr "Cập nhật và cải tiến"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "Upload"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
+msgid "Upload a zip with multiple weights for best results."
 msgstr ""
 
 #. module: website
@@ -22555,6 +22663,31 @@ msgstr "✽  Pizza"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  Chúng tôi mang đến những gì"
+
+#~ msgid ""
+#~ "<a href=\"/cookie-policy\" class=\"oe_unremovable btn btn-link btn-sm "
+#~ "px-0 o_translate_inline\">Cookie Policy</a>"
+#~ msgstr ""
+#~ "<a href=\"/cookie-policy\" class=\"oe_unremovable btn btn-link btn-sm "
+#~ "px-0 o_translate_inline\">Chính sách cookie</a>"
+
+#~ msgid ""
+#~ "<span class=\"pe-1\">We use cookies to provide you a better user "
+#~ "experience on this website.</span>\n"
+#~ "                                            <a href=\"/cookie-policy\" "
+#~ "class=\"o_cookies_bar_text_policy btn btn-link btn-sm px-0 "
+#~ "o_translate_inline\">Cookie Policy</a>"
+#~ msgstr ""
+#~ "<span class=\"pe-1\">Chúng tôi sử dụng cookie để mang đến cho bạn trải "
+#~ "nghiệm người dùng tốt hơn trên trang web này.</span>\n"
+#~ "<a href=\"/cookie-policy\" class=\"o_cookies_bar_text_policy btn btn-link "
+#~ "btn-sm px-0 o_translate_inline\">Chính sách cookie</a>"
+
+#~ msgid "The language of the keyword and related keywords."
+#~ msgstr "Ngôn ngữ của từ khóa và các từ khóa liên quan."
+
+#~ msgid "Translate the whole content with AI"
+#~ msgstr "Dịch toàn bộ nội dung bằng AI"
 
 #~ msgid "Google Analytics"
 #~ msgstr "Google Analytics"

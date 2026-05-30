@@ -41,7 +41,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
 "PO-Revision-Date: 2026-05-05 08:30+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-3/sale/"
@@ -3239,11 +3239,6 @@ msgid "Has Confirmed Order"
 msgstr "On vahvistanut tilauksen"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
-msgid "Has Fiscal Position Changed"
-msgstr "Sisältää muuttuneen verokantasäännön"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
 msgid "Has Message"
 msgstr "Sisältää viestin"
@@ -4622,12 +4617,6 @@ msgid "Product prices have been recomputed."
 msgstr "Tuotteiden hinnat on laskettu uudelleen."
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr "Tuoteverot on laskettu uudelleen verokantasäännön %s mukaisesti."
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
 #: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.menu_reporting_product
@@ -4839,11 +4828,6 @@ msgstr "Suositellaan 'Lisää ostoskoriin' tai tarjouksen yhteydessä"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
 msgstr "Laske uudelleen hinnoittelu tämän hinnaston perusteella"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Recompute all taxes based on this fiscal position"
-msgstr "Laske kaikki verot uudelleen tämän verokantasäännön perusteella"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -6081,12 +6065,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
-"This will update all taxes based on the currently selected fiscal position."
-msgstr "Tämä päivittää kaikki verot nykyisen verokantasäännön perusteella."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr ""
 "Tämä päivittää kaikkien tuotteiden yksikköhinnat uuden hinnaston perusteella."
@@ -6295,11 +6273,6 @@ msgstr "Veroton summa"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
 msgstr "Päivitä hinnat"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Update Taxes"
-msgstr "Päivitä verot"
 
 #. module: sale
 #. odoo-javascript
@@ -6753,6 +6726,23 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Has Fiscal Position Changed"
+#~ msgstr "Sisältää muuttuneen verokantasäännön"
+
+#~ msgid "Product taxes have been recomputed according to fiscal position %s."
+#~ msgstr "Tuoteverot on laskettu uudelleen verokantasäännön %s mukaisesti."
+
+#~ msgid "Recompute all taxes based on this fiscal position"
+#~ msgstr "Laske kaikki verot uudelleen tämän verokantasäännön perusteella"
+
+#~ msgid ""
+#~ "This will update all taxes based on the currently selected fiscal "
+#~ "position."
+#~ msgstr "Tämä päivittää kaikki verot nykyisen verokantasäännön perusteella."
+
+#~ msgid "Update Taxes"
+#~ msgstr "Päivitä verot"
 
 #~ msgid "Communication history"
 #~ msgstr "Viestintähistoria"

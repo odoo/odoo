@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
 "PO-Revision-Date: 2026-05-06 06:25+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/sale/"
@@ -3225,11 +3225,6 @@ msgid "Has Confirmed Order"
 msgstr "検証済オーダあり"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
-msgid "Has Fiscal Position Changed"
-msgstr "会計ポジション変更済"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
 msgid "Has Message"
 msgstr "メッセージあり"
@@ -4610,12 +4605,6 @@ msgid "Product prices have been recomputed."
 msgstr "プロダクト価格が再計算されました。"
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr "会計ポジション%sに基づいて、プロダクトの税金が再計算されました。"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
 #: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.menu_reporting_product
@@ -4827,11 +4816,6 @@ msgstr "「カートに入れる」、又は見積の際に推奨"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
 msgstr "この価格表に基づいてすべての価格を再計算します"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Recompute all taxes based on this fiscal position"
-msgstr "この会計ポジションに基づいて、すべての税を再計算します"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -6062,12 +6046,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
-"This will update all taxes based on the currently selected fiscal position."
-msgstr "選択された会計ポジションに基づいて、すべての税が更新されます。"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr ""
 "これにより、すべてのプロダクトの単価が新しい価格表に基づいて更新されます。"
@@ -6276,11 +6254,6 @@ msgstr "税抜合計"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
 msgstr "価格の更新"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Update Taxes"
-msgstr "税の更新"
 
 #. module: sale
 #. odoo-javascript
@@ -6738,6 +6711,23 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and '見積' "
 "or 'オーダ' }} {{ object.name or '該当なし' }}"
+
+#~ msgid "Has Fiscal Position Changed"
+#~ msgstr "会計ポジション変更済"
+
+#~ msgid "Product taxes have been recomputed according to fiscal position %s."
+#~ msgstr "会計ポジション%sに基づいて、プロダクトの税金が再計算されました。"
+
+#~ msgid "Recompute all taxes based on this fiscal position"
+#~ msgstr "この会計ポジションに基づいて、すべての税を再計算します"
+
+#~ msgid ""
+#~ "This will update all taxes based on the currently selected fiscal "
+#~ "position."
+#~ msgstr "選択された会計ポジションに基づいて、すべての税が更新されます。"
+
+#~ msgid "Update Taxes"
+#~ msgstr "税の更新"
 
 #~ msgid "Communication history"
 #~ msgstr "通信履歴"

@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
 "PO-Revision-Date: 2026-04-04 13:04+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -2720,11 +2720,6 @@ msgid "Has Confirmed Order"
 msgstr "有已确定订单"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
-msgid "Has Fiscal Position Changed"
-msgstr "有已变更财政状况"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
 msgid "Has Message"
 msgstr "有消息"
@@ -4086,12 +4081,6 @@ msgid "Product prices have been recomputed."
 msgstr "产品价格已重新计算。"
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr "产品税款已根据财政状况%s重新计算。"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
 #: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.menu_reporting_product
@@ -4303,11 +4292,6 @@ msgstr "在“添加到购物车”或报价时推荐"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
 msgstr "根据该价格表重新计算所有价格"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Recompute all taxes based on this fiscal position"
-msgstr "根据该财政状况重新计算所有税费"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -5498,12 +5482,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
-"This will update all taxes based on the currently selected fiscal position."
-msgstr "此操作将根据当前选定的财政状况更新所有税费。"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr "这将根据新的价格表更新所有产品的单价。"
 
@@ -5710,11 +5688,6 @@ msgstr "未税总计"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
 msgstr "更新价格"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Update Taxes"
-msgstr "更新税费"
 
 #. module: sale
 #. odoo-javascript
@@ -6151,6 +6124,23 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Has Fiscal Position Changed"
+#~ msgstr "有已变更财政状况"
+
+#~ msgid "Product taxes have been recomputed according to fiscal position %s."
+#~ msgstr "产品税款已根据财政状况%s重新计算。"
+
+#~ msgid "Recompute all taxes based on this fiscal position"
+#~ msgstr "根据该财政状况重新计算所有税费"
+
+#~ msgid ""
+#~ "This will update all taxes based on the currently selected fiscal "
+#~ "position."
+#~ msgstr "此操作将根据当前选定的财政状况更新所有税费。"
+
+#~ msgid "Update Taxes"
+#~ msgstr "更新税费"
 
 #~ msgid "Communication history"
 #~ msgstr "沟通历程"

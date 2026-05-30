@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
 "PO-Revision-Date: 2025-10-08 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2919,12 +2919,6 @@ msgid "Has Confirmed Order"
 msgstr "Tasdiqlangan buyurtmaga ega"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
-#, fuzzy
-msgid "Has Fiscal Position Changed"
-msgstr "Moliyaviy holat o‘zgardimi"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
 #, fuzzy
 msgid "Has Message"
@@ -4521,13 +4515,6 @@ msgid "Product prices have been recomputed."
 msgstr "Mahsulot narxlari qayta hisoblandi."
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-#, fuzzy
-msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr "Mahsulot soliqlari %s soliq pozitsiyasiga muvofiq qayta hisoblandi."
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
 #: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.menu_reporting_product
@@ -4774,12 +4761,6 @@ msgstr "\"Savatga qo‘shish\" yoki narxnoma tayyorlashda tavsiya eting"
 #, fuzzy
 msgid "Recompute all prices based on this pricelist"
 msgstr "Ushbu narxlar ro‘yxati asosida barcha narxlarni qayta hisoblang"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-#, fuzzy
-msgid "Recompute all taxes based on this fiscal position"
-msgstr "Ushbu soliq pozitsiyasi asosida barcha soliqlarni qayta hisoblang"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -6201,14 +6182,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, fuzzy
 msgid ""
-"This will update all taxes based on the currently selected fiscal position."
-msgstr ""
-"Bu hozirda tanlangan soliq pozitsiyasi asosida barcha soliqlarni yangilaydi."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-#, fuzzy
-msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr ""
 "Bu yangi narxlar ro‘yxati asosida barcha mahsulotlarning birlik narxini "
@@ -6448,12 +6421,6 @@ msgstr "Soliqsiz umumiy summa"
 #, fuzzy
 msgid "Update Prices"
 msgstr "Narxlarni yangilash"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-#, fuzzy
-msgid "Update Taxes"
-msgstr "Soliqlarni yangilash"
 
 #. module: sale
 #. odoo-javascript
@@ -6971,6 +6938,30 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Has Fiscal Position Changed"
+#~ msgstr "Moliyaviy holat o‘zgardimi"
+
+#, fuzzy
+#~ msgid "Product taxes have been recomputed according to fiscal position %s."
+#~ msgstr "Mahsulot soliqlari %s soliq pozitsiyasiga muvofiq qayta hisoblandi."
+
+#, fuzzy
+#~ msgid "Recompute all taxes based on this fiscal position"
+#~ msgstr "Ushbu soliq pozitsiyasi asosida barcha soliqlarni qayta hisoblang"
+
+#, fuzzy
+#~ msgid ""
+#~ "This will update all taxes based on the currently selected fiscal "
+#~ "position."
+#~ msgstr ""
+#~ "Bu hozirda tanlangan soliq pozitsiyasi asosida barcha soliqlarni "
+#~ "yangilaydi."
+
+#, fuzzy
+#~ msgid "Update Taxes"
+#~ msgstr "Soliqlarni yangilash"
 
 #, fuzzy
 #~ msgid "Communication history"

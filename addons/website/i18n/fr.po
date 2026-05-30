@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2026-04-30 09:33+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -930,11 +930,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_cookie_policy_link
 msgid ""
-"<a href=\"/cookie-policy\" class=\"oe_unremovable btn btn-link btn-sm px-0 "
-"o_translate_inline\">Cookie Policy</a>"
+"<a href=\"/website/cookie-policy\" class=\"oe_unremovable small "
+"o_translate_inline\">Cookie Policy</a>\n"
+"                <span class=\"text-muted  mx-2\">•</span>\n"
+"                <a href=\"#\" class=\"o_cookies_bar_toggle oe_unremovable "
+"small o_translate_inline\">Update Cookie Preferences</a>"
 msgstr ""
-"<a href=\"/cookie-policy\" class=\"oe_unremovable btn btn-link btn-sm px-0 "
-"o_translate_inline\">Politique de cookies</a>"
 
 #. module: website
 #. odoo-javascript
@@ -2398,15 +2399,10 @@ msgstr "<span class=\"o_stat_text\">Hors ligne</span>"
 msgid ""
 "<span class=\"pe-1\">We use cookies to provide you a better user experience "
 "on this website.</span>\n"
-"                                            <a href=\"/cookie-policy\" "
-"class=\"o_cookies_bar_text_policy btn btn-link btn-sm px-0 "
-"o_translate_inline\">Cookie Policy</a>"
+"                                            <a href=\"/website/cookie-"
+"policy\" class=\"o_cookies_bar_text_policy small o_translate_inline\">Cookie "
+"Policy</a>"
 msgstr ""
-"<span class=\"pe-1\">Nous utilisons des cookies pour vous offrir une "
-"meilleure expérience utilisateur sur ce site web.</span>\n"
-"                                            <a href=\"/cookie-policy\" "
-"class=\"o_cookies_bar_text_policy btn btn-link btn-sm px-0 "
-"o_translate_inline\">Politique de cookies</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_badge
@@ -2809,6 +2805,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_boxed
 msgid "<strong>More leads</strong>"
 msgstr "<strong>Plus de pistes</strong>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to choose your Cookie "
+"Policy Configuration."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
@@ -3538,6 +3541,12 @@ msgstr "Ajouter un nouveau champ à la fin"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Add an icon to the labels of required or optional fields"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/media_list_item_option.xml:0
+msgid "Add an image"
 msgstr ""
 
 #. module: website
@@ -4368,8 +4377,15 @@ msgstr "Groupes autorisés"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
 msgid "Auto"
 msgstr "Automatique"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+msgid "Auto means it will inherit the parent value"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_partner__publish_on
@@ -4686,6 +4702,12 @@ msgid "Birth Year"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Black"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
 msgstr "Mettez ce champ sur liste noire pour les formulaires web"
@@ -4785,6 +4807,8 @@ msgstr "Flou"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/header/header_navigation_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 msgid "Bold"
 msgstr "Gras"
 
@@ -5491,6 +5515,12 @@ msgid "Chart"
 msgstr "Graphique"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Chart Data"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_form_aside
 msgid ""
 "Chat with us through or fill in this form to get information about anything "
@@ -5919,6 +5949,7 @@ msgstr "Colonne"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Columns"
@@ -6290,9 +6321,20 @@ msgid "Cookie Policy Link"
 msgstr "Lien vers la politique de cookies"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__cookie_policy_id
+#: model:ir.model.fields,field_description:website.field_website__cookie_policy_id
+msgid "Cookie Policy Page"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 msgid "Cookie bar"
 msgstr "Barre de cookies"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Cookie policy page"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega
@@ -7905,6 +7947,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Edit Chart Data"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.xml:0
 msgid "Edit Head and Body Code"
 msgstr "Modifier le code de l'en-tête et du corps"
@@ -8660,6 +8708,12 @@ msgstr "ID externe"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Extra Bold"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 msgid "Extra Content"
 msgstr "Contenu supplémentaire"
@@ -8669,6 +8723,12 @@ msgstr "Contenu supplémentaire"
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 msgid "Extra Large"
 msgstr "Extra large"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Extra Light"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -9138,6 +9198,12 @@ msgstr "Police monospace"
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 msgid "Font Size"
 msgstr "Taille caractères"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+msgid "Font Weight"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -10036,6 +10102,7 @@ msgstr "Masqué pour"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/progress_bar_option.xml:0
 msgid "Hide"
 msgstr "Masquer"
@@ -10508,6 +10575,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/media_list_item_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navbar_logo_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__partner_image
@@ -12045,6 +12113,8 @@ msgstr "Bibliothèque"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 msgid "Light"
 msgstr "Léger"
 
@@ -12485,6 +12555,7 @@ msgstr "Buffet méditerranéen d'entrées, de plats principaux et de desserts"
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/whatsapp_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 msgid "Medium"
 msgstr "Médium"
 
@@ -13413,7 +13484,6 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/announcement_scroll_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/blockquote_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_option.xml:0
@@ -14439,6 +14509,12 @@ msgstr "Page introuvable"
 #: code:addons/website/static/src/client_actions/website_preview/publish_website_systray_item.js:0
 msgid "Page title not set."
 msgstr "Aucun titre fourni pour la page."
+
+#. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__cookie_policy_id
+#: model:ir.model.fields,help:website.field_website__cookie_policy_id
+msgid "Page used as the Cookie Policy link in the cookies bar."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__copy_ids
@@ -15484,6 +15560,7 @@ msgstr "Actualiser la liste des itinéraires"
 #: code:addons/website/static/src/builder/plugins/options/header/header_template_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navtabs_style_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 msgid "Regular"
 msgstr "Régulier"
 
@@ -15976,6 +16053,18 @@ msgstr "Ligne"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Rows"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Rows × Columns"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor.js:0
 msgid "SCSS file: %s"
 msgstr "Fichier SCSS : %s"
@@ -16399,6 +16488,11 @@ msgid "Select your birth date"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Select your custom cookie policy page"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Selection"
@@ -16425,6 +16519,12 @@ msgstr "Vendez plus avec un eCommerce"
 #: code:addons/website/static/src/client_actions/website_preview/new_content_systray_item.js:0
 msgid "Sell online"
 msgstr "Vendez en ligne"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Semi Bold"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -18044,12 +18144,6 @@ msgstr ""
 "l'expérience utilisateur sans nécessiter d'expertise technique."
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/dialog/seo.xml:0
-msgid "The language of the keyword and related keywords."
-msgstr "Langue du mot-clé et des mots-clés associés."
-
-#. module: website
 #: model:ir.model.fields,help:website.field_website_snippet_filter__limit
 msgid "The limit is the maximum number of records retrieved"
 msgstr "La limite est le nombre maximum d'enregistrements récupérés"
@@ -18255,6 +18349,7 @@ msgstr "Épaisseur"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/content_width_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 msgid "Thin"
 msgstr "Fin"
 
@@ -18380,6 +18475,12 @@ msgid ""
 msgstr ""
 "Cette police existe déjà, vous pouvez seulement l'ajouter en tant que police "
 "local pour remplacer la version du serveur."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.js:0
+msgid "This font is missing font weight"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -18975,14 +19076,14 @@ msgstr "Traduire l'en-tête dans le texte. Le menu est généré automatiquement
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/translation/options/translate_webpage_option.xml:0
-msgid "Translate the whole content with AI"
-msgstr "Traduire tout le contenu avec l’IA"
+msgid "Translate to"
+msgstr "Traduire en"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/translation/options/translate_webpage_option.xml:0
-msgid "Translate to"
-msgstr "Traduire en"
+msgid "Translate your content (yellow part) with AI"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -19255,6 +19356,12 @@ msgstr "Mises à jour et améliorations"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "Upload"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
+msgid "Upload a zip with multiple weights for best results."
 msgstr ""
 
 #. module: website
@@ -22756,6 +22863,32 @@ msgstr "✽  Pizzas"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  Notre offre"
+
+#~ msgid ""
+#~ "<a href=\"/cookie-policy\" class=\"oe_unremovable btn btn-link btn-sm "
+#~ "px-0 o_translate_inline\">Cookie Policy</a>"
+#~ msgstr ""
+#~ "<a href=\"/cookie-policy\" class=\"oe_unremovable btn btn-link btn-sm "
+#~ "px-0 o_translate_inline\">Politique de cookies</a>"
+
+#~ msgid ""
+#~ "<span class=\"pe-1\">We use cookies to provide you a better user "
+#~ "experience on this website.</span>\n"
+#~ "                                            <a href=\"/cookie-policy\" "
+#~ "class=\"o_cookies_bar_text_policy btn btn-link btn-sm px-0 "
+#~ "o_translate_inline\">Cookie Policy</a>"
+#~ msgstr ""
+#~ "<span class=\"pe-1\">Nous utilisons des cookies pour vous offrir une "
+#~ "meilleure expérience utilisateur sur ce site web.</span>\n"
+#~ "                                            <a href=\"/cookie-policy\" "
+#~ "class=\"o_cookies_bar_text_policy btn btn-link btn-sm px-0 "
+#~ "o_translate_inline\">Politique de cookies</a>"
+
+#~ msgid "The language of the keyword and related keywords."
+#~ msgstr "Langue du mot-clé et des mots-clés associés."
+
+#~ msgid "Translate the whole content with AI"
+#~ msgstr "Traduire tout le contenu avec l’IA"
 
 #~ msgid "Google Analytics"
 #~ msgstr "Google Analytics"

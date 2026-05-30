@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2026-05-06 06:25+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -801,6 +801,11 @@ msgstr "すべての未確認購買オーダ"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Sent RFQs"
 msgstr "すべての送信済見積依頼"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_supplierinfo_tree_view2
+msgid "All variants"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
@@ -3279,11 +3284,9 @@ msgstr "プロダクトの単位あたりの単価"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid ""
-"The following purchase orders %(invalid_orders) can't be received. Cancelled "
-"all receptions."
+"The following purchase orders %(invalid_orders)s can't be received. "
+"Cancelled all receptions."
 msgstr ""
-"次の購買オーダ %(invalid_orders) c は入荷できません。すべての入荷処理をキャン"
-"セルしました。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
@@ -3882,11 +3885,24 @@ msgid "with"
 msgstr "と:"
 
 #. module: purchase
-#: model:mail.template,subject:purchase.email_template_edi_purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} オーダ (Ref {{ object.name or 'n/a' }})"
+
+#. module: purchase
+#: model:mail.template,subject:purchase.email_template_edi_purchase
+msgid ""
+"{{ object.company_id.name }} Request for Quotation (Ref {{ object.name or 'n/"
+"a' }})"
+msgstr ""
+
+#~ msgid ""
+#~ "The following purchase orders %(invalid_orders) can't be received. "
+#~ "Cancelled all receptions."
+#~ msgstr ""
+#~ "次の購買オーダ %(invalid_orders) c は入荷できません。すべての入荷処理を"
+#~ "キャンセルしました。"
 
 #~ msgid "Communication history"
 #~ msgstr "通信履歴"

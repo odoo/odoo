@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:46+0000\n"
+"POT-Creation-Date: 2026-05-29 17:39+0000\n"
 "PO-Revision-Date: 2025-11-21 14:45+0000\n"
 "Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -202,6 +202,11 @@ msgid "Ancillary and Defence Leave"
 msgstr "Yardımcı ve Savunma İzni"
 
 #. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__4
+msgid "April"
+msgstr ""
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Archived"
@@ -244,6 +249,11 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_attendance
 msgid "Attendance"
 msgstr "Katılım"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__8
+msgid "August"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_available_not_working
@@ -419,6 +429,8 @@ msgid "Civic or Judicial Duty"
 msgstr ""
 
 #. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_tree
 msgid "Code"
@@ -430,14 +442,29 @@ msgid "Code used in manual exports"
 msgstr ""
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.res_company_view_form_inherit_hr_work_entry
+msgid "Code used in work entry exports"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__color
 msgid "Color"
 msgstr "Renk"
 
 #. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 #: model:ir.model,name:hr_work_entry.model_res_company
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__company_id
 msgid "Company"
 msgstr "Firma"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
+msgid "Company External Code"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_compassionate_leave
@@ -552,12 +579,16 @@ msgid "Create a new Time type"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__create_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__create_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_uid
 msgid "Created by"
 msgstr "Tarafından oluşturuldu"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__create_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__create_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_date
 msgid "Created on"
@@ -567,6 +598,12 @@ msgstr "Oluşturuldu"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_credit_time
 msgid "Credit Time"
 msgstr "Kredi Süresi"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
+msgid "Date"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_day_overtime
@@ -599,6 +636,11 @@ msgid "Death of Partner or Child"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__12
+msgid "December"
+msgstr ""
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_attendance_view_tree
 msgid "Default: Attendance"
 msgstr ""
@@ -620,6 +662,11 @@ msgid "Disability due to illness (IMSS)"
 msgstr "Disability due to illness (IMSS)"
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_export_work_entries_wizard
+msgid "Discard"
+msgstr ""
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_tree
 msgid "Display"
@@ -632,6 +679,8 @@ msgstr "Ekran Kodu"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_name
@@ -647,6 +696,18 @@ msgstr "İsim Göster"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_double
 msgid "Double Time Hours"
 msgstr "Çift Zamanlı Saatler"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
+msgid "Download Export"
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
+msgid "Duration"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_economic_unemployment
@@ -681,12 +742,18 @@ msgid "Educational Time Off"
 msgstr "Eğitim İzni"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__eligible_employee_line_ids
+msgid "Eligible Employees"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_emergency
 msgid "Emergency Leave"
 msgstr "Acil Durum İzni"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_employee
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__employee_id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__employee_id
 msgid "Employee"
 msgstr "Çalışan"
@@ -695,6 +762,18 @@ msgstr "Çalışan"
 #: model:ir.model,name:hr_work_entry.model_hr_version
 msgid "Employee Contract"
 msgstr "Personel Sözleşmesi"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
+msgid "Employee Ext. Code"
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
+msgid "Employee Name"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_adoption_company
@@ -727,6 +806,26 @@ msgid "Exemption from end-of-career benefits"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__export_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_export_work_entries_wizard
+msgid "Export"
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/export_cog_menu/export_cog_menu.xml:0
+#: model:ir.actions.act_window,name:hr_work_entry.action_open_export_wizard
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_export_work_entries_wizard
+msgid "Export Time Entries"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_export_work_entries
+msgid "Export Work Entries"
+msgstr ""
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Exports Code"
 msgstr ""
@@ -737,6 +836,8 @@ msgid "External"
 msgstr ""
 
 #. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__external_code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__external_code
 #: model:ir.model.fields,field_description:hr_work_entry.field_res_company__external_code
@@ -787,6 +888,11 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_family_reason_leave
 msgid "Family Reason Time Off"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__2
+msgid "February"
 msgstr ""
 
 #. module: hr_work_entry
@@ -1000,6 +1106,8 @@ msgstr "Askeri İzin Durumunda Saatlik Maaş"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__id
@@ -1182,6 +1290,21 @@ msgid "JRU"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__1
+msgid "January"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__7
+msgid "July"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__6
+msgid "June"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_justified_reason_paid
 msgid "Justified Reason (Paid)"
 msgstr ""
@@ -1197,12 +1320,16 @@ msgid "LTS"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__write_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__write_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_uid
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__write_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__write_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_date
 msgid "Last Updated on"
@@ -1258,6 +1385,11 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_maternity_leave
 msgid "MTY"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__3
+msgid "March"
 msgstr ""
 
 #. module: hr_work_entry
@@ -1323,6 +1455,11 @@ msgid ""
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__5
+msgid "May"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__user_id
 msgid "Me"
 msgstr "Bana"
@@ -1365,6 +1502,11 @@ msgid "Missing timezone for work entries generation."
 msgstr "İş girişlerinin oluşturulması için eksik zaman dilimi."
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__reference_month
+msgid "Month"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_monthly_wt
 msgid "Monthly Salary"
 msgstr "Aylık Maaş"
@@ -1390,6 +1532,8 @@ msgid "NTS"
 msgstr ""
 
 #. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__name
 msgid "Name"
 msgstr "Adı"
@@ -1433,6 +1577,11 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_notice
 msgid "Notice (Unprovided)"
 msgstr "Bildirim (Sağlanmamış)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__11
+msgid "November"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_needaction_counter
@@ -1481,6 +1630,8 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_overtime
 #: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_overtime
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_id_work_entry_type_overtime_1
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_id_work_entry_type_overtime_2
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_overtime
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_overtime
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_overtime
@@ -1502,6 +1653,11 @@ msgstr "OT (Mesai Saat)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_occupational_disease_unpaid
 msgid "Occupational Disease (Unpaid)"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__10
+msgid "October"
 msgstr ""
 
 #. module: hr_work_entry
@@ -1586,6 +1742,11 @@ msgid "Overtime"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_overtime_1
+msgid "Overtime 1"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_overtime_wt
 msgid "Overtime 100%"
 msgstr "Fazla Mesai 100%"
@@ -1594,6 +1755,11 @@ msgstr "Fazla Mesai 100%"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_overtime_125_wt
 msgid "Overtime 125%"
 msgstr "Fazla mesai 125%"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_overtime_2
+msgid "Overtime 2"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_overtime
@@ -1910,6 +2076,16 @@ msgid "Payroll Code"
 msgstr "Bordro Kodu"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__period_start
+msgid "Period Start"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__period_stop
+msgid "Period Stop"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_personal_leave
 msgid "Personal Leave"
 msgstr "Kişisel İzin"
@@ -2155,6 +2331,11 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sdrcl
 msgid "Second Degree Relatives Compassionate Leave"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__9
+msgid "September"
 msgstr ""
 
 #. module: hr_work_entry
@@ -2687,6 +2868,11 @@ msgid ""
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__version_ids
+msgid "Version"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_first_week
 msgid "WA1"
 msgstr ""
@@ -2795,6 +2981,11 @@ msgid "Work Entries Employee"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_export_work_entries_employee
+msgid "Work Entry Export Employee"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
 msgid "Work Entry Type"
 msgstr "Puantaj Kaydı Türü"
@@ -2860,6 +3051,11 @@ msgid "YSO"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__reference_year
+msgid "Year"
+msgstr ""
+
+#. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
 msgid ""
@@ -2890,4 +3086,10 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "e.g. WORK100, LEAVE210, OUT, ..."
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
+msgid "workentries_"
 msgstr ""

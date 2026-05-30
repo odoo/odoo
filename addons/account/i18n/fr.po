@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2026-05-06 14:28+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -2628,8 +2628,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "A fiscal position with a foreign VAT already exists in this country."
-msgstr "Une position fiscale avec une TVA étrangère existe déjà dans ce pays."
+msgid "A fiscal position with a foreign Tax ID already exists in this country."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3878,8 +3878,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
-msgid "Allow Foreign VAT"
-msgstr "Autoriser la TVA étrangère"
+msgid "Allow Foreign Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -4359,18 +4359,15 @@ msgstr "Appliquer uniquement si le pays de livraison correspond."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
-msgid "Apply only if partner has a VAT number."
+msgid "Apply only if partner has a Tax ID."
 msgstr ""
-"S'applique seulement si le partenaire a un numéro de TVA intracommunautaire."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
 msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
-"criterias (VAT/Country) are met."
+"criterias (Tax ID/Country) are met."
 msgstr ""
-"Appliquez les correspondances de taxes & de comptes sur les factures "
-"automatiquement si les critères de lettrage (TVA/pays) sont remplis."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_profit_or_loss_appropriation
@@ -4626,6 +4623,11 @@ msgid "Automatic sequence"
 msgstr "Séquence automatique"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Automatically compute US and Canadian tax rates."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_partner__autopost_bills
 #: model:ir.model.fields,help:account.field_res_users__autopost_bills
 msgid "Automatically post bills for this trusted partner"
@@ -4654,6 +4656,12 @@ msgstr "Comptabilisation automatique de factures"
 #: model:ir.model,name:account.model_account_autopost_bills_wizard
 msgid "Autopost Bills Wizard"
 msgstr "Assistant comptabilisation automatique de factures"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "AvaTax"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
@@ -6106,6 +6114,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
 #: model:ir.model.fields,field_description:account.field_account_move__commercial_partner_id
+#: model:ir.model.fields,field_description:account.field_account_payment__commercial_partner_id
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
 msgid "Commercial Entity"
 msgstr "Entité commerciale"
@@ -6537,8 +6546,8 @@ msgstr "Éléments de contrepartie"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Countries for which the company has a VAT number"
-msgstr "Pays pour lesquels l'entreprise possède un numéro de TVA"
+msgid "Countries for which the company has a Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -9763,15 +9772,15 @@ msgid "Foreign Tax ID"
 msgstr "Numéro d'identification fiscal étranger"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign Tax ID countries"
+msgstr ""
+
+#. module: account
 #: model:account.fiscal.position,name:account.21_template_generic_export_fiscal_position
 #: model:account.fiscal.position,name:account.22_account_fiscal_position_us_export
 msgid "Foreign Trade"
 msgstr "Commerce extérieur"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Foreign VAT countries"
-msgstr "Pays étrangers à la TVA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -18472,6 +18481,11 @@ msgid "Tax ID"
 msgstr "N° TVA"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
+msgid "Tax ID required"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_price_include__tax_included
 msgid "Tax Included"
@@ -19300,11 +19314,9 @@ msgstr "Le pays pour lequel cette taxe est applicable."
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a "
+"The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
-"Le pays du numéro de TVA intracommunautaire n’a pas pu être identifié. "
-"Veuillez attribuer un pays à la position fiscale."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -20286,10 +20298,8 @@ msgstr "Ce compte sera utilisé lors de la validation d'une facture client."
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
-"this screen."
+"this screen.  -  This action will affect your current company only."
 msgstr ""
-"Cette action est irréversible : le crédit/débit ne pourra plus être modifié "
-"depuis cet écran."
 
 #. module: account
 #. odoo-python
@@ -20384,11 +20394,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
-"Cette écriture a déjà été vérifiée. Le rôle de comptable est requis pour la "
-"modifier."
 
 #. module: account
 #. odoo-python
@@ -20407,6 +20415,13 @@ msgstr "Cette pièce comptable a été dupliquée depuis %s"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "Cette pièce comptable a été extournée depuis %s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21532,11 +21547,6 @@ msgstr ""
 "comptabilité storno"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
-msgid "VAT required"
-msgstr "TVA requise"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Valid for"
 msgstr "Valide pour"
@@ -22011,16 +22021,6 @@ msgid "You are about to unsubscribe"
 msgstr "Vous êtes sur le point de vous désinscrire"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You are attempting to validate opening entries belonging to another company. "
-"Please switch to the correct company."
-msgstr ""
-"Vous essayez de valider des écritures d’ouverture d’une autre société. "
-"Veuillez sélectionner la société correspondante."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid ""
 "You are changing decimals in your entire database, including invoices,\n"
@@ -22352,11 +22352,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
+"You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"Vous ne pouvez pas créer une position fiscale avec une TVA étrangère dans "
-"votre pays fiscal sans lui attribuer un état."
 
 #. module: account
 #. odoo-python
@@ -23535,6 +23533,69 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Facture en autofacturation (Réf. {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "A fiscal position with a foreign VAT already exists in this country."
+#~ msgstr ""
+#~ "Une position fiscale avec une TVA étrangère existe déjà dans ce pays."
+
+#~ msgid "Allow Foreign VAT"
+#~ msgstr "Autoriser la TVA étrangère"
+
+#~ msgid "Apply only if partner has a VAT number."
+#~ msgstr ""
+#~ "S'applique seulement si le partenaire a un numéro de TVA "
+#~ "intracommunautaire."
+
+#~ msgid ""
+#~ "Apply tax & account mappings on invoices automatically if the matching "
+#~ "criterias (VAT/Country) are met."
+#~ msgstr ""
+#~ "Appliquez les correspondances de taxes & de comptes sur les factures "
+#~ "automatiquement si les critères de lettrage (TVA/pays) sont remplis."
+
+#~ msgid "Countries for which the company has a VAT number"
+#~ msgstr "Pays pour lesquels l'entreprise possède un numéro de TVA"
+
+#~ msgid "Foreign VAT countries"
+#~ msgstr "Pays étrangers à la TVA"
+
+#~ msgid ""
+#~ "The country of the foreign VAT number could not be detected. Please "
+#~ "assign a country to the fiscal position."
+#~ msgstr ""
+#~ "Le pays du numéro de TVA intracommunautaire n’a pas pu être identifié. "
+#~ "Veuillez attribuer un pays à la position fiscale."
+
+#~ msgid ""
+#~ "This action is irreversible: the credit/debit cannot be modified again "
+#~ "from this screen."
+#~ msgstr ""
+#~ "Cette action est irréversible : le crédit/débit ne pourra plus être "
+#~ "modifié depuis cet écran."
+
+#~ msgid ""
+#~ "This entry has already been reviewed. You need the bookkeeper role to "
+#~ "change it."
+#~ msgstr ""
+#~ "Cette écriture a déjà été vérifiée. Le rôle de comptable est requis pour "
+#~ "la modifier."
+
+#~ msgid "VAT required"
+#~ msgstr "TVA requise"
+
+#~ msgid ""
+#~ "You are attempting to validate opening entries belonging to another "
+#~ "company. Please switch to the correct company."
+#~ msgstr ""
+#~ "Vous essayez de valider des écritures d’ouverture d’une autre société. "
+#~ "Veuillez sélectionner la société correspondante."
+
+#~ msgid ""
+#~ "You cannot create a fiscal position with a foreign VAT within your fiscal "
+#~ "country without assigning it a state."
+#~ msgstr ""
+#~ "Vous ne pouvez pas créer une position fiscale avec une TVA étrangère dans "
+#~ "votre pays fiscal sans lui attribuer un état."
 
 #~ msgid "Add a payment QR-code to your invoices"
 #~ msgstr "Ajouter un code QR aux factures"

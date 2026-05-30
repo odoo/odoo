@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:46+0000\n"
+"POT-Creation-Date: 2026-05-29 17:39+0000\n"
 "PO-Revision-Date: 2026-04-23 11:53+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -198,6 +198,11 @@ msgid "Ancillary and Defence Leave"
 msgstr "Congé pour fonctions annexes et service de défense"
 
 #. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__4
+msgid "April"
+msgstr ""
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Archived"
@@ -240,6 +245,11 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_attendance
 msgid "Attendance"
 msgstr "Présences"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__8
+msgid "August"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_available_not_working
@@ -415,6 +425,8 @@ msgid "Civic or Judicial Duty"
 msgstr ""
 
 #. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_tree
 msgid "Code"
@@ -426,14 +438,29 @@ msgid "Code used in manual exports"
 msgstr "Code utilisé dans les exports manuels"
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.res_company_view_form_inherit_hr_work_entry
+msgid "Code used in work entry exports"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__color
 msgid "Color"
 msgstr "Couleur"
 
 #. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 #: model:ir.model,name:hr_work_entry.model_res_company
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__company_id
 msgid "Company"
 msgstr "Société"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
+msgid "Company External Code"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_compassionate_leave
@@ -557,12 +584,16 @@ msgid "Create a new Time type"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__create_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__create_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_uid
 msgid "Created by"
 msgstr "Créé par"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__create_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__create_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__create_date
 msgid "Created on"
@@ -572,6 +603,12 @@ msgstr "Créé le"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_credit_time
 msgid "Credit Time"
 msgstr "Crédit-temps"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
+msgid "Date"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_day_overtime
@@ -604,6 +641,11 @@ msgid "Death of Partner or Child"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__12
+msgid "December"
+msgstr ""
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_attendance_view_tree
 msgid "Default: Attendance"
 msgstr "Par défaut : présence"
@@ -627,6 +669,11 @@ msgid "Disability due to illness (IMSS)"
 msgstr "Incapacité due à une maladie (IMSS)"
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_export_work_entries_wizard
+msgid "Discard"
+msgstr ""
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_tree
 msgid "Display"
@@ -639,6 +686,8 @@ msgstr "Afficher le code"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__display_name
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_name
@@ -654,6 +703,18 @@ msgstr "Nom d'affichage"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_double
 msgid "Double Time Hours"
 msgstr "Heures à taux double"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
+msgid "Download Export"
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
+msgid "Duration"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_economic_unemployment
@@ -688,12 +749,18 @@ msgid "Educational Time Off"
 msgstr "Congé éducation"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__eligible_employee_line_ids
+msgid "Eligible Employees"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_emergency
 msgid "Emergency Leave"
 msgstr "Congé pour raison impérieuse"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_employee
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__employee_id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__employee_id
 msgid "Employee"
 msgstr "Employé"
@@ -702,6 +769,18 @@ msgstr "Employé"
 #: model:ir.model,name:hr_work_entry.model_hr_version
 msgid "Employee Contract"
 msgstr "Contrat de l'employé"
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
+msgid "Employee Ext. Code"
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
+msgid "Employee Name"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_adoption_company
@@ -734,6 +813,26 @@ msgid "Exemption from end-of-career benefits"
 msgstr "Exonération des avantages de fin de carrière"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__export_id
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_export_work_entries_wizard
+msgid "Export"
+msgstr ""
+
+#. module: hr_work_entry
+#. odoo-javascript
+#: code:addons/hr_work_entry/static/src/export_cog_menu/export_cog_menu.xml:0
+#: model:ir.actions.act_window,name:hr_work_entry.action_open_export_wizard
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_export_work_entries_wizard
+msgid "Export Time Entries"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_export_work_entries
+msgid "Export Work Entries"
+msgstr ""
+
+#. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Exports Code"
 msgstr "Code d’exportation"
@@ -744,6 +843,8 @@ msgid "External"
 msgstr "Externe"
 
 #. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__external_code
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__external_code
 #: model:ir.model.fields,field_description:hr_work_entry.field_res_company__external_code
@@ -795,6 +896,11 @@ msgstr "FSJ"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_family_reason_leave
 msgid "Family Reason Time Off"
 msgstr "Congé pour raisons familiales"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__2
+msgid "February"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_fdrcl
@@ -1009,6 +1115,8 @@ msgstr "Salaire horaire en cas de congé militaire"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__id
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_version__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__id
@@ -1204,6 +1312,21 @@ msgid "JRU"
 msgstr "JRU"
 
 #. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__1
+msgid "January"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__7
+msgid "July"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__6
+msgid "June"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_justified_reason_paid
 msgid "Justified Reason (Paid)"
 msgstr "Motif justifié (payé)"
@@ -1219,12 +1342,16 @@ msgid "LTS"
 msgstr "LTS"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__write_uid
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__write_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_uid
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_uid
 msgid "Last Updated by"
 msgstr "Mis à jour par"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__write_date
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__write_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__write_date
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__write_date
 msgid "Last Updated on"
@@ -1280,6 +1407,11 @@ msgstr "MLC"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_maternity_leave
 msgid "MTY"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__3
+msgid "March"
 msgstr ""
 
 #. module: hr_work_entry
@@ -1347,6 +1479,11 @@ msgstr ""
 "d’hospitalisation de la mère"
 
 #. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__5
+msgid "May"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__user_id
 msgid "Me"
 msgstr "Moi"
@@ -1389,6 +1526,11 @@ msgid "Missing timezone for work entries generation."
 msgstr "Fuseau horaire manquant pour la génération des prestations."
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__reference_month
+msgid "Month"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_monthly_wt
 msgid "Monthly Salary"
 msgstr "Salaire mensuel"
@@ -1414,6 +1556,8 @@ msgid "NTS"
 msgstr "NTS"
 
 #. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__name
 msgid "Name"
 msgstr "Nom"
@@ -1457,6 +1601,11 @@ msgstr "Jours normaux d’inactivité dans l’horaire de travail"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_notice
 msgid "Notice (Unprovided)"
 msgstr "Préavis (non fourni)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__11
+msgid "November"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_needaction_counter
@@ -1505,6 +1654,8 @@ msgstr "OSC"
 #: model:hr.work.entry.type,display_code:hr_work_entry.it_work_entry_type_overtime
 #: model:hr.work.entry.type,display_code:hr_work_entry.jo_work_entry_type_overtime
 #: model:hr.work.entry.type,display_code:hr_work_entry.ke_work_entry_type_overtime
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_id_work_entry_type_overtime_1
+#: model:hr.work.entry.type,display_code:hr_work_entry.l10n_id_work_entry_type_overtime_2
 #: model:hr.work.entry.type,display_code:hr_work_entry.lt_work_entry_type_overtime
 #: model:hr.work.entry.type,display_code:hr_work_entry.lu_work_entry_type_overtime
 #: model:hr.work.entry.type,display_code:hr_work_entry.ma_work_entry_type_overtime
@@ -1527,6 +1678,11 @@ msgstr "OT"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_occupational_disease_unpaid
 msgid "Occupational Disease (Unpaid)"
 msgstr "Maladie professionnelle (non payée)"
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__10
+msgid "October"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_hr_work_entry_type_out_of_contract
@@ -1610,6 +1766,11 @@ msgid "Overtime"
 msgstr "Heures supplémentaires"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_overtime_1
+msgid "Overtime 1"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_overtime_wt
 msgid "Overtime 100%"
 msgstr "Heures supplémentaires 100 %"
@@ -1618,6 +1779,11 @@ msgstr "Heures supplémentaires 100 %"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_overtime_125_wt
 msgid "Overtime 125%"
 msgstr "Heures supplémentaires 125 %"
+
+#. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_overtime_2
+msgid "Overtime 2"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_overtime
@@ -1936,6 +2102,16 @@ msgid "Payroll Code"
 msgstr "Code Paie"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__period_start
+msgid "Period Start"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__period_stop
+msgid "Period Stop"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_personal_leave
 msgid "Personal Leave"
 msgstr "Congé personnel"
@@ -2181,6 +2357,11 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sdrcl
 msgid "Second Degree Relatives Compassionate Leave"
+msgstr ""
+
+#. module: hr_work_entry
+#: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__9
+msgid "September"
 msgstr ""
 
 #. module: hr_work_entry
@@ -2735,6 +2916,11 @@ msgstr ""
 "vacances"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__version_ids
+msgid "Version"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_first_week
 msgid "WA1"
 msgstr "WA1"
@@ -2843,6 +3029,11 @@ msgid "Work Entries Employee"
 msgstr "Entrées de travail de l’employé"
 
 #. module: hr_work_entry
+#: model:ir.model,name:hr_work_entry.model_hr_export_work_entries_employee
+msgid "Work Entry Export Employee"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
 msgid "Work Entry Type"
 msgstr "Type de prestation"
@@ -2913,6 +3104,11 @@ msgid "YSO"
 msgstr "YSO"
 
 #. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__reference_year
+msgid "Year"
+msgstr ""
+
+#. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
 msgid ""
@@ -2944,6 +3140,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "e.g. WORK100, LEAVE210, OUT, ..."
 msgstr "par ex. WORK100, LEAVE210, OUT, ..."
+
+#. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
+msgid "workentries_"
+msgstr ""
 
 #~ msgid "Configuration"
 #~ msgstr "Configuration"

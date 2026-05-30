@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:39+0000\n"
 "PO-Revision-Date: 2026-04-04 12:48+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-2/hr/sv/"
@@ -53,11 +53,6 @@ msgstr " Handlingar"
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email_amount
 msgid "# emails to send"
 msgstr "# e-post att skicka"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__eligible_employee_count
-msgid "#Employees"
-msgstr ""
 
 #. module: hr
 #. odoo-python
@@ -432,11 +427,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton_inherited
 msgid "<span class=\"o_stat_text\">Contacts</span>"
 msgstr "<span class=\"o_stat_text\">Kontakter</span>"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
-msgid "<span class=\"o_stat_text\">Eligible Employees</span>"
-msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
@@ -1391,8 +1381,6 @@ msgstr "Bolag"
 #: model:ir.model.fields,field_description:hr.field_hr_department__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__company_id
-#: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__company_id
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__company_id
@@ -1617,11 +1605,6 @@ msgid "Create Employee"
 msgstr "Lägg upp anställd"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__create_uid
-msgid "Create Uid"
-msgstr ""
-
-#. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model:ir.actions.server,name:hr.action_hr_employee_create_users
@@ -1715,11 +1698,6 @@ msgstr "Skapad av"
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__create_date
 msgid "Created on"
 msgstr "Skapad den"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__creation_date
-msgid "Creation Date"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__currency_id
@@ -2046,8 +2024,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_type__display_name
-#: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__display_name
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_mixin__display_name
@@ -2180,14 +2156,6 @@ msgid "Element to observe"
 msgstr ""
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_export_mixin.py:0
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__eligible_employee_line_ids
-#: model_terms:ir.ui.view,arch_db:hr.hr_export_employee_mixin_list_view
-msgid "Eligible Employees"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__email
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__email
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2225,7 +2193,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_departure__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_id
-#: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_version__employee_id
 #: model:ir.model.fields,field_description:hr.field_res_partner__employee
@@ -2603,26 +2570,6 @@ msgid "Expiring Work Permit"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__export_id
-msgid "Export"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_list_view
-msgid "Export Employee"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__export_file
-msgid "Export File"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__export_filename
-msgid "Export Filename"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__share
 #: model:ir.model.fields,help:hr.field_hr_employee_public__share
 msgid ""
@@ -2812,11 +2759,6 @@ msgid "Generate"
 msgstr "Skapa"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
-msgid "Generate Export File"
-msgstr ""
-
-#. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0
 msgid "Go to contact"
@@ -2855,21 +2797,6 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.server,name:hr.ir_cron_data_employee_update_current_version_ir_actions_server
 msgid "HR Employee: Update Current Version"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
-msgid "HR Export"
-msgstr ""
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_export_employee_mixin
-msgid "HR Export Employee"
-msgstr ""
-
-#. module: hr
-#: model:ir.model,name:hr.model_hr_export_mixin
-msgid "HR Export Mixin"
 msgstr ""
 
 #. module: hr
@@ -3026,8 +2953,6 @@ msgstr "Personalchef"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_location__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_type__id
-#: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__id
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__id
 #: model:ir.model.fields,field_description:hr.field_hr_job__id
 #: model:ir.model.fields,field_description:hr.field_hr_manager_department_report__id
 #: model:ir.model.fields,field_description:hr.field_hr_mixin__id
@@ -4164,16 +4089,6 @@ msgid "Perfect written English"
 msgstr "Perfekt skriftlig engelska"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__period_start
-msgid "Period Start"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_export_mixin__period_stop
-msgid "Period Stop"
-msgstr ""
-
-#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -4290,11 +4205,6 @@ msgstr ""
 "- partner: endast autentiserade partner\n"
 "- följare: endast följare av det relaterade dokumentet eller medlemmar av "
 "följande kanaler\n"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
-msgid "Populate"
-msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_simple_modif
@@ -6057,12 +5967,6 @@ msgstr ""
 #: code:addons/hr/models/hr_employee.py:0
 msgid "You do not have access to this document."
 msgstr "Du har inte tillgång till detta dokument."
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_export_mixin.py:0
-msgid "You must be logged in a %(country_code)s company to use this feature"
-msgstr ""
 
 #. module: hr
 #. odoo-python

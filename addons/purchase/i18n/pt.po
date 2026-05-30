@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2026-01-15 20:35+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -705,6 +705,11 @@ msgstr "Todas as OPs não reconhecidas"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Sent RFQs"
 msgstr "Todas as solicitações de cotação enviadas"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_supplierinfo_tree_view2
+msgid "All variants"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
@@ -3215,8 +3220,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid ""
-"The following purchase orders %(invalid_orders) can't be received. Cancelled "
-"all receptions."
+"The following purchase orders %(invalid_orders)s can't be received. "
+"Cancelled all receptions."
 msgstr ""
 
 #. module: purchase
@@ -3827,13 +3832,19 @@ msgid "with"
 msgstr "com"
 
 #. module: purchase
-#: model:mail.template,subject:purchase.email_template_edi_purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "Pedido: {{ object.company_id.name }} (Ref: {{ object.name or 'não "
 "disponível' }})"
+
+#. module: purchase
+#: model:mail.template,subject:purchase.email_template_edi_purchase
+msgid ""
+"{{ object.company_id.name }} Request for Quotation (Ref {{ object.name or 'n/"
+"a' }})"
+msgstr ""
 
 #~ msgid "Communication history"
 #~ msgstr "Histórico de comunicação"

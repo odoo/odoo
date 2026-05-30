@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -773,6 +773,11 @@ msgstr "Barcha tasdiqlanmagan xarid buyurtmalari"
 #, fuzzy
 msgid "All Sent RFQs"
 msgstr "Barcha yuborilgan so‘rovlar"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_supplierinfo_tree_view2
+msgid "All variants"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
@@ -3674,8 +3679,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid ""
-"The following purchase orders %(invalid_orders) can't be received. Cancelled "
-"all receptions."
+"The following purchase orders %(invalid_orders)s can't be received. "
+"Cancelled all receptions."
 msgstr ""
 
 #. module: purchase
@@ -4367,7 +4372,6 @@ msgid "with"
 msgstr "bilan"
 
 #. module: purchase
-#: model:mail.template,subject:purchase.email_template_edi_purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 #, fuzzy
@@ -4375,6 +4379,13 @@ msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} buyurtmasi (Havola {{ object.name or 'mavjud "
 "emas' }})"
+
+#. module: purchase
+#: model:mail.template,subject:purchase.email_template_edi_purchase
+msgid ""
+"{{ object.company_id.name }} Request for Quotation (Ref {{ object.name or 'n/"
+"a' }})"
+msgstr ""
 
 #, fuzzy
 #~ msgid "Communication history"

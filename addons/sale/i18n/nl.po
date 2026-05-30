@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
 "PO-Revision-Date: 2026-05-07 09:59+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/sale/nl/"
@@ -2803,11 +2803,6 @@ msgid "Has Confirmed Order"
 msgstr "Heeft een bevestigde order"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
-msgid "Has Fiscal Position Changed"
-msgstr "Is fiscale positie gewijzigd"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
 msgid "Has Message"
 msgstr "Heeft bericht"
@@ -4208,12 +4203,6 @@ msgid "Product prices have been recomputed."
 msgstr "De productprijzen werden herberekend."
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr "De btw's van de producten zijn herberekend volgens fiscale positie %s."
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
 #: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.menu_reporting_product
@@ -4425,11 +4414,6 @@ msgstr "Aanbevelen bij 'Toevoegen aan winkelmandje' of offerte"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
 msgstr "Bereken alle prijzen opnieuw op basis van deze prijslijst"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Recompute all taxes based on this fiscal position"
-msgstr "Bereken alle btw's opnieuw op basis van deze fiscale positie"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -5689,14 +5673,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
-"This will update all taxes based on the currently selected fiscal position."
-msgstr ""
-"Hiermee worden alle btw's bijgewerkt op basis van de nu geselecteerde "
-"fiscale positie."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr ""
 "Hierdoor wordt de prijs van alle producten bijgewerkt op basis van de nieuwe "
@@ -5906,11 +5882,6 @@ msgstr "Totaal excl. btw"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
 msgstr "Prijzen bijwerken"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Update Taxes"
-msgstr "Btw bijwerken"
 
 #. module: sale
 #. odoo-javascript
@@ -6379,6 +6350,26 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Offerte' or 'Order' }} {{ object.name or 'n.v.t.' }}"
+
+#~ msgid "Has Fiscal Position Changed"
+#~ msgstr "Is fiscale positie gewijzigd"
+
+#~ msgid "Product taxes have been recomputed according to fiscal position %s."
+#~ msgstr ""
+#~ "De btw's van de producten zijn herberekend volgens fiscale positie %s."
+
+#~ msgid "Recompute all taxes based on this fiscal position"
+#~ msgstr "Bereken alle btw's opnieuw op basis van deze fiscale positie"
+
+#~ msgid ""
+#~ "This will update all taxes based on the currently selected fiscal "
+#~ "position."
+#~ msgstr ""
+#~ "Hiermee worden alle btw's bijgewerkt op basis van de nu geselecteerde "
+#~ "fiscale positie."
+
+#~ msgid "Update Taxes"
+#~ msgstr "Btw bijwerken"
 
 #~ msgid "Communication history"
 #~ msgstr "Communicatiegeschiedenis"

@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
 "PO-Revision-Date: 2026-01-15 23:12+0000\n"
 "Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-1/sale/"
@@ -2666,11 +2666,6 @@ msgid "Has Confirmed Order"
 msgstr "Onaylanmış Sipariş Var"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
-msgid "Has Fiscal Position Changed"
-msgstr "Mali Koşul Değişti mi"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
 msgid "Has Message"
 msgstr "Mesaj Var"
@@ -4059,12 +4054,6 @@ msgid "Product prices have been recomputed."
 msgstr "Ürün fiyatları yeniden hesaplandı."
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr "Ürün vergileri  %s mali pozisyonuna göre yeniden hesaplandı."
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
 #: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.menu_reporting_product
@@ -4276,11 +4265,6 @@ msgstr "'Sepete Eklerken' veya teklif verirken tavsiye edin"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
 msgstr "Tüm fiyatları bu fiyat listesine göre yeniden hesaplayın"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Recompute all taxes based on this fiscal position"
-msgstr "Tüm vergileri bu mali koşula göre yeniden hesaplayın"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -5521,12 +5505,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
-"This will update all taxes based on the currently selected fiscal position."
-msgstr "Bu, seçili olan mali konuma göre tüm vergileri güncelleyecektir."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr ""
 "Bu, tüm ürünlerin birim fiyatını yeni fiyat listesine göre güncelleyecektir."
@@ -5735,11 +5713,6 @@ msgstr "Vergi Hariç Toplam"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
 msgstr "Fiyatları Güncelle"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Update Taxes"
-msgstr "Vergileri Güncelle"
 
 #. module: sale
 #. odoo-javascript
@@ -6194,6 +6167,23 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Has Fiscal Position Changed"
+#~ msgstr "Mali Koşul Değişti mi"
+
+#~ msgid "Product taxes have been recomputed according to fiscal position %s."
+#~ msgstr "Ürün vergileri  %s mali pozisyonuna göre yeniden hesaplandı."
+
+#~ msgid "Recompute all taxes based on this fiscal position"
+#~ msgstr "Tüm vergileri bu mali koşula göre yeniden hesaplayın"
+
+#~ msgid ""
+#~ "This will update all taxes based on the currently selected fiscal "
+#~ "position."
+#~ msgstr "Bu, seçili olan mali konuma göre tüm vergileri güncelleyecektir."
+
+#~ msgid "Update Taxes"
+#~ msgstr "Vergileri Güncelle"
 
 #~ msgid "Communication history"
 #~ msgstr "İletişim Geçmişi"

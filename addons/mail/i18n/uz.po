@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:39+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2000,12 +2000,6 @@ msgid "Applies to"
 msgstr "Qo‘llaniladi"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/follower_subtype_dialog.xml:0
-msgid "Apply"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
@@ -2876,6 +2870,7 @@ msgstr "Yozuv yoki foydalanuvchisiz faoliyatlarni rejalashtirish mumkin emas."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/scheduled_message.xml:0
+#: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.js:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, fuzzy
 msgid "Cancel"
@@ -5115,6 +5110,13 @@ msgid "Edit"
 msgstr "Tahrirlash"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/follower.xml:0
+#: code:addons/mail/static/src/core/web/follower_list.xml:0
+msgid "Edit Notification Preferences"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
 #, fuzzy
@@ -5127,21 +5129,6 @@ msgstr "Rejalashtirilgan xabarni tahrirlash"
 #, fuzzy
 msgid "Edit Scheduled Note"
 msgstr "Rejalashtirilgan eslatmani tahrirlash"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/follower_subtype_dialog.js:0
-#, fuzzy
-msgid "Edit Subscription of %(name)s"
-msgstr "%(name)s obunasini tahrirlash"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/follower.xml:0
-#: code:addons/mail/static/src/core/web/follower_list.xml:0
-#, fuzzy
-msgid "Edit subscription"
-msgstr "Obunani tahrirlash"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__email
@@ -6288,8 +6275,8 @@ msgid "Groups"
 msgstr "Guruhlar"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/controllers/discuss/public_page.py:0
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_model.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__guest_id
@@ -9608,6 +9595,12 @@ msgstr "Bildirishnoma parametri"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/web/follower_subtype_dialog.js:0
+msgid "Notification Preferences"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 #, fuzzy
@@ -9625,6 +9618,12 @@ msgstr "Bildirishnoma turi"
 #, fuzzy
 msgid "Notification parameters"
 msgstr "Bildirishnoma parametrlari"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/follower_subtype_dialog.js:0
+msgid "Notification preferences updated."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -13155,7 +13154,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/voice_message/common/composer_actions_patch.js:0
+#: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.js:0
 #, fuzzy
 msgid "Stop Recording"
 msgstr "Yozib olishni to‘xtatish"
@@ -13632,9 +13631,8 @@ msgstr "Joriy foydalanuvchi shablonni tahrirlashi mumkin."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.js:0
-#, fuzzy
-msgid "The duration of voice messages is limited to 1 minute."
-msgstr "Ovozli xabarlarning davomiyligi 1 daqiqa bilan cheklangan."
+msgid "The duration of voice messages is limited to %s minute(s)."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -13886,13 +13884,6 @@ msgstr ""
 #, fuzzy
 msgid "The server \"%s\" cannot be used because it is archived."
 msgstr "\"%s\" serveri arxivlangani uchun foydalanib bo‘lmaydi."
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/follower_subtype_dialog.js:0
-#, fuzzy
-msgid "The subscription preferences were successfully applied."
-msgstr "Obuna sozlamalari muvaffaqiyatli qo‘llanildi."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__preview
@@ -14946,6 +14937,12 @@ msgstr "Xat tartibini yangilash"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/web/follower_subtype_dialog.xml:0
+msgid "Update Notifications"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_content.xml:0
 #, fuzzy
 msgid "Upload Avatar"
@@ -15609,7 +15606,6 @@ msgstr "Ovoz va video sozlamalari"
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/core/common/attachment_model.js:0
 #: code:addons/mail/static/src/discuss/voice_message/common/composer_actions_patch.js:0
-#: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.xml:0
 #, fuzzy
 msgid "Voice Message"
 msgstr "Ovozli xabar"
@@ -17093,6 +17089,22 @@ msgstr ""
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Edit Subscription of %(name)s"
+#~ msgstr "%(name)s obunasini tahrirlash"
+
+#, fuzzy
+#~ msgid "Edit subscription"
+#~ msgstr "Obunani tahrirlash"
+
+#, fuzzy
+#~ msgid "The duration of voice messages is limited to 1 minute."
+#~ msgstr "Ovozli xabarlarning davomiyligi 1 daqiqa bilan cheklangan."
+
+#, fuzzy
+#~ msgid "The subscription preferences were successfully applied."
+#~ msgstr "Obuna sozlamalari muvaffaqiyatli qo‘llanildi."
 
 #, fuzzy
 #~ msgid "Blur video background"

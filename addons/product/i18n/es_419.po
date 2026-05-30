@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:36+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
 "PO-Revision-Date: 2026-05-09 01:13+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -84,6 +84,16 @@ msgstr "%(percentage)s %% de descuento en el precio de venta"
 #: code:addons/product/models/product_template.py:0
 msgid "%s (copy)"
 msgstr "%s (copia)"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.report_label_contour_marks
+#: model_terms:ir.ui.view,arch_db:product.report_simple_label2x7
+#: model_terms:ir.ui.view,arch_db:product.report_simple_label4x12
+#: model_terms:ir.ui.view,arch_db:product.report_simple_label4x12_gs1
+#: model_terms:ir.ui.view,arch_db:product.report_simple_label4x7
+#: model_terms:ir.ui.view,arch_db:product.report_simple_label_dymo
+msgid "&amp;nbsp;"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_2x7
@@ -300,11 +310,6 @@ msgstr "<span>en</span>"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "<span>per</span>"
 msgstr "<span>por</span>"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "<strong>Qty: </strong>"
-msgstr "<strong>Cant.: </strong>"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_uom_barcode_uniq
@@ -826,6 +831,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_uom_uom__product_uom_ids
 msgid "Barcodes"
 msgstr "Códigos de barras"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_label_base
+msgid "Base Product Label Report"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__base_unit_name
@@ -1519,6 +1529,8 @@ msgstr "Mostrar aplicado en"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__display_name
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_name
 #: model:ir.model.fields,field_description:product.field_product_uom__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_label_base__display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_packagingbarcode__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel2x7__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12__display_name
@@ -1642,11 +1654,6 @@ msgstr "Dyson"
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
 msgstr "Cada valor debe definirse una sola vez por atributo y por producto."
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "Eco-friendly Wooden Chair"
-msgstr "Silla de madera amigable con el ambiente"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
@@ -2038,6 +2045,8 @@ msgstr "Alojamiento en hotel"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__id
 #: model:ir.model.fields,field_description:product.field_product_uom__id
+#: model:ir.model.fields,field_description:product.field_report_product_label_base__id
+#: model:ir.model.fields,field_description:product.field_report_product_report_packagingbarcode__id
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__id
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel2x7__id
 #: model:ir.model.fields,field_description:product.field_report_product_report_producttemplatelabel4x12__id
@@ -2939,11 +2948,6 @@ msgid "Overhead shelves"
 msgstr "Estantes superiores"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "Package Type A"
-msgstr "Paquete tipo A"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__uom_id
 msgid "Packaging"
 msgstr "Embalajes"
@@ -3363,6 +3367,11 @@ msgstr "Reporte ZPL de etiquetas del producto"
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 msgid "Product Name"
 msgstr "Nombre del producto"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_packagingbarcode
+msgid "Product Packaging Barcode Report"
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
@@ -4490,7 +4499,6 @@ msgstr "Unidad de medida para el precio por unidad en productos."
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_model.js:0
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Units"
 msgstr "Unidades"
 
@@ -5370,6 +5378,15 @@ msgstr "para"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid "<strong>Qty: </strong>"
+#~ msgstr "<strong>Cant.: </strong>"
+
+#~ msgid "Eco-friendly Wooden Chair"
+#~ msgstr "Silla de madera amigable con el ambiente"
+
+#~ msgid "Package Type A"
+#~ msgstr "Paquete tipo A"
 
 #~ msgid "On hand:"
 #~ msgstr "A la mano:"

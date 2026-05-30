@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:39+0000\n"
 "PO-Revision-Date: 2026-04-13 19:31+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -1801,12 +1801,6 @@ msgid "Applies to"
 msgstr "應用於"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/follower_subtype_dialog.xml:0
-msgid "Apply"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
@@ -2576,6 +2570,7 @@ msgstr "沒有記錄或使用者的情況下，無法安排活動。"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/scheduled_message.xml:0
+#: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.js:0
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Cancel"
 msgstr "取消"
@@ -4544,6 +4539,13 @@ msgid "Edit"
 msgstr "編輯"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/follower.xml:0
+#: code:addons/mail/static/src/core/web/follower_list.xml:0
+msgid "Edit Notification Preferences"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid "Edit Scheduled Message"
@@ -4554,19 +4556,6 @@ msgstr "編輯已預定訊息"
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid "Edit Scheduled Note"
 msgstr "編輯已預定備註"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/follower_subtype_dialog.js:0
-msgid "Edit Subscription of %(name)s"
-msgstr "編輯 %(name)s 的訂閱"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/follower.xml:0
-#: code:addons/mail/static/src/core/web/follower_list.xml:0
-msgid "Edit subscription"
-msgstr "編輯訂閱"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist_remove__email
@@ -5575,8 +5564,8 @@ msgid "Groups"
 msgstr "群組"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/controllers/discuss/public_page.py:0
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_model.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__guest_id
@@ -8476,6 +8465,12 @@ msgstr "通知參數"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/web/follower_subtype_dialog.js:0
+msgid "Notification Preferences"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 #: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
 msgid "Notification Settings"
@@ -8490,6 +8485,12 @@ msgstr "通知類型"
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__notification_parameters
 msgid "Notification parameters"
 msgstr "通知參數"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/follower_subtype_dialog.js:0
+msgid "Notification preferences updated."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -11575,7 +11576,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/voice_message/common/composer_actions_patch.js:0
+#: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.js:0
 msgid "Stop Recording"
 msgstr "停止錄制"
 
@@ -11993,8 +11994,8 @@ msgstr "目前使用者可編輯範本。"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.js:0
-msgid "The duration of voice messages is limited to 1 minute."
-msgstr "語音訊息的時長限制為 1 分鐘。"
+msgid "The duration of voice messages is limited to %s minute(s)."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -12210,12 +12211,6 @@ msgstr ""
 #: code:addons/mail/models/fetchmail.py:0
 msgid "The server \"%s\" cannot be used because it is archived."
 msgstr "伺服器「%s」無法使用，因為它已封存。"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/web/follower_subtype_dialog.js:0
-msgid "The subscription preferences were successfully applied."
-msgstr "訂閱優先選項已成功應用。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__preview
@@ -13143,6 +13138,12 @@ msgstr "更新郵件版面"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/web/follower_subtype_dialog.xml:0
+msgid "Update Notifications"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_content.xml:0
 msgid "Upload Avatar"
 msgstr "上載頭像"
@@ -13712,7 +13713,6 @@ msgstr "語音及視訊設定"
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/core/common/attachment_model.js:0
 #: code:addons/mail/static/src/discuss/voice_message/common/composer_actions_patch.js:0
-#: code:addons/mail/static/src/discuss/voice_message/common/voice_recorder.xml:0
 msgid "Voice Message"
 msgstr "語音訊息"
 
@@ -15005,6 +15005,18 @@ msgstr ""
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr ""
+
+#~ msgid "Edit Subscription of %(name)s"
+#~ msgstr "編輯 %(name)s 的訂閱"
+
+#~ msgid "Edit subscription"
+#~ msgstr "編輯訂閱"
+
+#~ msgid "The duration of voice messages is limited to 1 minute."
+#~ msgstr "語音訊息的時長限制為 1 分鐘。"
+
+#~ msgid "The subscription preferences were successfully applied."
+#~ msgstr "訂閱優先選項已成功應用。"
 
 #~ msgid "Blur video background"
 #~ msgstr "模糊視訊背景"

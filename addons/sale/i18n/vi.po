@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
 "PO-Revision-Date: 2026-03-14 13:05+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -2765,11 +2765,6 @@ msgid "Has Confirmed Order"
 msgstr "Có đơn hàng đã xác nhận"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
-msgid "Has Fiscal Position Changed"
-msgstr "Vị trí tài chính đã thay đổi"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
 msgid "Has Message"
 msgstr "Có tin nhắn"
@@ -4152,12 +4147,6 @@ msgid "Product prices have been recomputed."
 msgstr "Giá sản phẩm đã được tính lại."
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr "Thuế sản phẩm đã được tính lại dựa theo vị trí tài chính %s."
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
 #: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.menu_reporting_product
@@ -4369,11 +4358,6 @@ msgstr "Đề xuất khi 'Thêm vào giỏ hàng' hoặc báo giá"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
 msgstr "Tính lại toàn bộ giá cả dựa vào bảng giá này"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Recompute all taxes based on this fiscal position"
-msgstr "Tính lại toàn bộ thuế dựa vào vị trí tài chính này"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -5610,14 +5594,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
-"This will update all taxes based on the currently selected fiscal position."
-msgstr ""
-"Việc này sẽ cập nhật mọi loại thuế dựa theo vị trí tài chính đang được lựa "
-"chọn."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr ""
 "Việc này sẽ cập nhật đơn giá của tất cả sản phẩm dựa trên bảng giá mới."
@@ -5826,11 +5802,6 @@ msgstr "Tổng trước thuế"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
 msgstr "Cập nhật giá"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Update Taxes"
-msgstr "Cập nhật thuế"
 
 #. module: sale
 #. odoo-javascript
@@ -6283,6 +6254,25 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Has Fiscal Position Changed"
+#~ msgstr "Vị trí tài chính đã thay đổi"
+
+#~ msgid "Product taxes have been recomputed according to fiscal position %s."
+#~ msgstr "Thuế sản phẩm đã được tính lại dựa theo vị trí tài chính %s."
+
+#~ msgid "Recompute all taxes based on this fiscal position"
+#~ msgstr "Tính lại toàn bộ thuế dựa vào vị trí tài chính này"
+
+#~ msgid ""
+#~ "This will update all taxes based on the currently selected fiscal "
+#~ "position."
+#~ msgstr ""
+#~ "Việc này sẽ cập nhật mọi loại thuế dựa theo vị trí tài chính đang được "
+#~ "lựa chọn."
+
+#~ msgid "Update Taxes"
+#~ msgstr "Cập nhật thuế"
 
 #~ msgid "Communication history"
 #~ msgstr "Lịch sử trao đổi"

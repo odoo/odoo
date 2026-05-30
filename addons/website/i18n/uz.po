@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1001,8 +1001,11 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_cookie_policy_link
 msgid ""
-"<a href=\"/cookie-policy\" class=\"oe_unremovable btn btn-link btn-sm px-0 "
-"o_translate_inline\">Cookie Policy</a>"
+"<a href=\"/website/cookie-policy\" class=\"oe_unremovable small "
+"o_translate_inline\">Cookie Policy</a>\n"
+"                <span class=\"text-muted  mx-2\">•</span>\n"
+"                <a href=\"#\" class=\"o_cookies_bar_toggle oe_unremovable "
+"small o_translate_inline\">Update Cookie Preferences</a>"
 msgstr ""
 
 #. module: website
@@ -2499,18 +2502,13 @@ msgstr "<span class=\"o_stat_text\">Oflayn</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
-#, fuzzy
 msgid ""
 "<span class=\"pe-1\">We use cookies to provide you a better user experience "
 "on this website.</span>\n"
-"                                            <a href=\"/cookie-policy\" "
-"class=\"o_cookies_bar_text_policy btn btn-link btn-sm px-0 "
-"o_translate_inline\">Cookie Policy</a>"
+"                                            <a href=\"/website/cookie-"
+"policy\" class=\"o_cookies_bar_text_policy small o_translate_inline\">Cookie "
+"Policy</a>"
 msgstr ""
-"<span class=\"pe-1\">Ushbu veb-saytda sizga yaxshiroq foydalanuvchi "
-"tajribasini taqdim etish uchun kuki-fayllardan foydalanamiz.</span> <a "
-"href=\"/cookie-policy\" class=\"o_cookies_bar_text_policy btn btn-link btn-"
-"sm px-0 o_translate_inline\">Kuki-fayllar siyosati</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_badge
@@ -2933,6 +2931,13 @@ msgstr ""
 #, fuzzy
 msgid "<strong>More leads</strong>"
 msgstr "<strong>Ko‘proq potensial mijozlar</strong>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to choose your Cookie "
+"Policy Configuration."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_third_party_domains
@@ -3733,6 +3738,12 @@ msgstr "Oxiriga yangi maydon qo‘shish"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Add an icon to the labels of required or optional fields"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/media_list_item_option.xml:0
+msgid "Add an image"
 msgstr ""
 
 #. module: website
@@ -4665,9 +4676,16 @@ msgstr "Ruxsat berilgan guruhlar"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/scroll_button_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
 #, fuzzy
 msgid "Auto"
 msgstr "Avto"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+msgid "Auto means it will inherit the parent value"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_partner__publish_on
@@ -5021,6 +5039,12 @@ msgid "Birth Year"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Black"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_ir_model_fields__website_form_blacklisted
 #, fuzzy
 msgid "Blacklist this field for web forms"
@@ -5135,6 +5159,8 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/header/header_navigation_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 #, fuzzy
 msgid "Bold"
 msgstr "Qalin"
@@ -5929,6 +5955,12 @@ msgid "Chart"
 msgstr "Grafik"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Chart Data"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_form_aside
 #, fuzzy
 msgid ""
@@ -6412,6 +6444,7 @@ msgstr "Ustun"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #, fuzzy
@@ -6829,8 +6862,19 @@ msgid "Cookie Policy Link"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__cookie_policy_id
+#: model:ir.model.fields,field_description:website.field_website__cookie_policy_id
+msgid "Cookie Policy Page"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 msgid "Cookie bar"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Cookie policy page"
 msgstr ""
 
 #. module: website
@@ -8629,6 +8673,12 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Edit Chart Data"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.xml:0
 #, fuzzy
 msgid "Edit Head and Body Code"
@@ -9463,6 +9513,12 @@ msgstr "Tashqi ID"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Extra Bold"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/avatars_option.xml:0
 msgid "Extra Content"
 msgstr ""
@@ -9473,6 +9529,12 @@ msgstr ""
 #, fuzzy
 msgid "Extra Large"
 msgstr "Juda katta"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Extra Light"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -10000,6 +10062,12 @@ msgstr ""
 #, fuzzy
 msgid "Font Size"
 msgstr "Shrift o‘lchami"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+msgid "Font Weight"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -11009,6 +11077,7 @@ msgstr "Uchun yashirilgan"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/progress_bar_option.xml:0
 #, fuzzy
 msgid "Hide"
@@ -11531,6 +11600,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
+#: code:addons/website/static/src/builder/plugins/options/media_list_item_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navbar_logo_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__partner_image
@@ -13278,6 +13348,8 @@ msgstr "Kutubxona"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 #, fuzzy
 msgid "Light"
 msgstr "Yorug‘"
@@ -13769,6 +13841,7 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/popup_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/whatsapp_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 #, fuzzy
 msgid "Medium"
 msgstr "O‘rta"
@@ -14834,7 +14907,6 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/announcement_scroll_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/blockquote_option.xml:0
-#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/cover_properties_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_option.xml:0
@@ -15988,6 +16060,12 @@ msgstr "Sahifa topilmadi"
 #, fuzzy
 msgid "Page title not set."
 msgstr "Sahifa sarlavhasi belgilanmagan."
+
+#. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__cookie_policy_id
+#: model:ir.model.fields,help:website.field_website__cookie_policy_id
+msgid "Page used as the Cookie Policy link in the cookies bar."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__copy_ids
@@ -17180,6 +17258,7 @@ msgstr "Yo‘nalishlar ro‘yxatini yangilash"
 #: code:addons/website/static/src/builder/plugins/options/header/header_template_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navtabs_style_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 #, fuzzy
 msgid "Regular"
 msgstr "Oddiy"
@@ -17728,6 +17807,18 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Rows"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/chart_option.xml:0
+msgid "Rows × Columns"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor.js:0
 #, fuzzy
 msgid "SCSS file: %s"
@@ -18207,6 +18298,11 @@ msgid "Select your birth date"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Select your custom cookie policy page"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #, fuzzy
@@ -18238,6 +18334,12 @@ msgstr "E-tijorat bilan ko‘proq soting"
 #, fuzzy
 msgid "Sell online"
 msgstr "Onlayn soting"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
+msgid "Semi Bold"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -20049,13 +20151,6 @@ msgstr ""
 "qilmasdan foydalanuvchi tajribasini yaxshilaydi."
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/dialog/seo.xml:0
-#, fuzzy
-msgid "The language of the keyword and related keywords."
-msgstr "Kalit so‘z va u bilan bog‘liq kalit so‘zlarning tili."
-
-#. module: website
 #: model:ir.model.fields,help:website.field_website_snippet_filter__limit
 #, fuzzy
 msgid "The limit is the maximum number of records retrieved"
@@ -20286,6 +20381,7 @@ msgstr "Qalinlik"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/content_width_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
+#: code:addons/website/static/src/builder/plugins/theme/theme_tab_plugin.js:0
 #, fuzzy
 msgid "Thin"
 msgstr "Ingichka"
@@ -20423,6 +20519,12 @@ msgid ""
 msgstr ""
 "Bu shrift allaqachon mavjud, uni faqat server versiyasini almashtirish uchun "
 "mahalliy shrift sifatida qo‘shishingiz mumkin."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.js:0
+msgid "This font is missing font weight"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -21088,15 +21190,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/translation/options/translate_webpage_option.xml:0
 #, fuzzy
-msgid "Translate the whole content with AI"
-msgstr "Butun kontentni sun'iy intellekt yordamida tarjima qilish"
+msgid "Translate to"
+msgstr "Tarjima tili"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/translation/options/translate_webpage_option.xml:0
-#, fuzzy
-msgid "Translate to"
-msgstr "Tarjima tili"
+msgid "Translate your content (yellow part) with AI"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -21397,6 +21498,12 @@ msgstr "Yangilanishlar va takomillashtirishlar"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "Upload"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
+msgid "Upload a zip with multiple weights for best results."
 msgstr ""
 
 #. module: website
@@ -25266,6 +25373,27 @@ msgstr "✽ Pitsalar"
 #, fuzzy
 msgid "✽  What We Offer"
 msgstr "✽ Biz nimalarni taklif etamiz"
+
+#, fuzzy
+#~ msgid ""
+#~ "<span class=\"pe-1\">We use cookies to provide you a better user "
+#~ "experience on this website.</span>\n"
+#~ "                                            <a href=\"/cookie-policy\" "
+#~ "class=\"o_cookies_bar_text_policy btn btn-link btn-sm px-0 "
+#~ "o_translate_inline\">Cookie Policy</a>"
+#~ msgstr ""
+#~ "<span class=\"pe-1\">Ushbu veb-saytda sizga yaxshiroq foydalanuvchi "
+#~ "tajribasini taqdim etish uchun kuki-fayllardan foydalanamiz.</span> <a "
+#~ "href=\"/cookie-policy\" class=\"o_cookies_bar_text_policy btn btn-link "
+#~ "btn-sm px-0 o_translate_inline\">Kuki-fayllar siyosati</a>"
+
+#, fuzzy
+#~ msgid "The language of the keyword and related keywords."
+#~ msgstr "Kalit so‘z va u bilan bog‘liq kalit so‘zlarning tili."
+
+#, fuzzy
+#~ msgid "Translate the whole content with AI"
+#~ msgstr "Butun kontentni sun'iy intellekt yordamida tarjima qilish"
 
 #, fuzzy
 #~ msgid "Google Analytics"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:39+0000\n"
 "PO-Revision-Date: 2026-04-14 09:05+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -65,10 +65,10 @@ msgstr "'Leggi la documentazione'"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
 "<br/>\n"
-"                                        <span class=\"text-muted\">When "
-"enabled, only the first check-in within the scheduled working hours "
-"(Including tolerance) is recorded. Further check-ins are allowed only after "
-"an automatic check-out.</span>"
+"                                    <span class=\"text-muted\">When enabled, "
+"only the first check-in within the scheduled working hours (including "
+"tolerance) is recorded. Further check-ins are allowed only after an "
+"automatic check-out.</span>"
 msgstr ""
 
 #. module: hr_attendance
@@ -116,6 +116,11 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span class=\"me-2\">Based on</span>"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"me-2\">Time Period </span>"
 msgstr "<span class=\"me-2\">Periodo di tempo </span>"
 
@@ -123,6 +128,11 @@ msgstr "<span class=\"me-2\">Periodo di tempo </span>"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"me-2\">Time Period</span>"
 msgstr "<span class=\"me-2\">Periodo di tempo</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span class=\"me-2\">Time</span>"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -477,6 +487,17 @@ msgid "Attendances from Backend"
 msgstr "Presenze dal backend"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__auto_check_out_mode
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_mode
+msgid "Auto Check Out Mode"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_specific_time
+msgid "Auto Check Out Specific Time"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_tolerance
 msgid "Auto Check Out Tolerance"
 msgstr "Tolleranza check out automatico"
@@ -499,20 +520,17 @@ msgid "Automatically Approved"
 msgstr "Approvato automaticamente"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-msgid ""
-"Automatically Check-Out Employees based on their working schedule with an "
-"additional tolerance. Does not apply to employees with a flexible working "
-"schedule."
-msgstr ""
-"Esegui il check out dei dipendenti automaticamente in base agli orari di "
-"lavoro con una tolleranza aggiuntiva. Non si applica ai dipendenti con orari "
-"di lavoro flessibili."
-
-#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Automatically Checked-Out"
 msgstr "Check out effettuato automaticamente"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Automatically check out employees based on their working schedule with an "
+"additional tolerance, or at a specific time each day. Does not apply to "
+"employees with a flexible working schedule."
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2238,6 +2256,16 @@ msgid "Single Check-In Attendance System"
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__auto_check_out_mode__specific_time
+msgid "Specific Time"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.constraint,message:hr_attendance.constraint_res_company_check_auto_check_out_specific_time_range
+msgid "Specific Time must be within a 24-hour range (0h 0m 0s to 23h 59m 59s)."
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__time_start
 msgid "Start"
 msgstr "Inizio"
@@ -2377,6 +2405,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid ""
+"This attendance was automatically checked out based on company specific time "
+"configuration."
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+msgid ""
 "This attendance was automatically checked out because the employee exceeded "
 "the allowed time for their scheduled work hours."
 msgstr ""
@@ -2441,6 +2477,11 @@ msgstr "Oggi"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__today_attendance_ids
 msgid "Today Attendance"
 msgstr "Presenze di oggi"
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__auto_check_out_mode__tolerance
+msgid "Tolerance"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_company_threshold
@@ -2804,6 +2845,15 @@ msgstr "con un tasso di"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "con codice PIN opzionale"
+
+#~ msgid ""
+#~ "Automatically Check-Out Employees based on their working schedule with an "
+#~ "additional tolerance. Does not apply to employees with a flexible working "
+#~ "schedule."
+#~ msgstr ""
+#~ "Esegui il check out dei dipendenti automaticamente in base agli orari di "
+#~ "lavoro con una tolleranza aggiuntiva. Non si applica ai dipendenti con "
+#~ "orari di lavoro flessibili."
 
 #~ msgid "There are no employees without an overtime ruleset."
 #~ msgstr "Non ci sono dipendenti senza un regolamento sugli straordinari."

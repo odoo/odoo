@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
 "PO-Revision-Date: 2026-05-06 14:30+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/sale/"
@@ -2796,11 +2796,6 @@ msgid "Has Confirmed Order"
 msgstr "A une commande confirmée"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
-msgid "Has Fiscal Position Changed"
-msgstr "A changé de position fiscale"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
 msgid "Has Message"
 msgstr "A un message"
@@ -4198,14 +4193,6 @@ msgid "Product prices have been recomputed."
 msgstr "Les prix des produits ont été recalculés."
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr ""
-"Les taxes sur les produits ont été recalculées en fonction de la position "
-"fiscale %s."
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
 #: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.menu_reporting_product
@@ -4417,11 +4404,6 @@ msgstr "À recommander lors de l'ajout au panier ou d'un devis"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
 msgstr "Recalculer les prix à partir de cette liste de prix"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Recompute all taxes based on this fiscal position"
-msgstr "Recalculer toutes les taxes en fonction de cette position fiscale"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -5678,14 +5660,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
-"This will update all taxes based on the currently selected fiscal position."
-msgstr ""
-"Ceci mettra à jour toutes les taxes basées sur la position fiscale "
-"actuellement sélectionnée."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr ""
 "Ceci met à jour le prix unitaire de tous les produits en fonction de la "
@@ -5895,11 +5869,6 @@ msgstr "Total hors taxes"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
 msgstr "Mettre à jour les prix"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Update Taxes"
-msgstr "Mettre à jour les taxes"
 
 #. module: sale
 #. odoo-javascript
@@ -6366,6 +6335,27 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Devis' or 'Commande' }} {{ object.name or 'n/a' }}"
+
+#~ msgid "Has Fiscal Position Changed"
+#~ msgstr "A changé de position fiscale"
+
+#~ msgid "Product taxes have been recomputed according to fiscal position %s."
+#~ msgstr ""
+#~ "Les taxes sur les produits ont été recalculées en fonction de la position "
+#~ "fiscale %s."
+
+#~ msgid "Recompute all taxes based on this fiscal position"
+#~ msgstr "Recalculer toutes les taxes en fonction de cette position fiscale"
+
+#~ msgid ""
+#~ "This will update all taxes based on the currently selected fiscal "
+#~ "position."
+#~ msgstr ""
+#~ "Ceci mettra à jour toutes les taxes basées sur la position fiscale "
+#~ "actuellement sélectionnée."
+
+#~ msgid "Update Taxes"
+#~ msgstr "Mettre à jour les taxes"
 
 #~ msgid "Communication history"
 #~ msgstr "Historique de la communication"

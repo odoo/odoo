@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:39+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -69,10 +69,10 @@ msgstr "'Hujjatlarni o‘qish'"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
 "<br/>\n"
-"                                        <span class=\"text-muted\">When "
-"enabled, only the first check-in within the scheduled working hours "
-"(Including tolerance) is recorded. Further check-ins are allowed only after "
-"an automatic check-out.</span>"
+"                                    <span class=\"text-muted\">When enabled, "
+"only the first check-in within the scheduled working hours (including "
+"tolerance) is recorded. Further check-ins are allowed only after an "
+"automatic check-out.</span>"
 msgstr ""
 
 #. module: hr_attendance
@@ -121,6 +121,11 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span class=\"me-2\">Based on</span>"
+msgstr ""
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 #, fuzzy
 msgid "<span class=\"me-2\">Time Period </span>"
 msgstr "<span class=\"me-2\">Vaqt oralig‘i </span>"
@@ -130,6 +135,11 @@ msgstr "<span class=\"me-2\">Vaqt oralig‘i </span>"
 #, fuzzy
 msgid "<span class=\"me-2\">Time Period</span>"
 msgstr "<span class=\"me-2\">Vaqt oralig‘i</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span class=\"me-2\">Time</span>"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -518,6 +528,17 @@ msgid "Attendances from Backend"
 msgstr "Backend davomatlari"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__auto_check_out_mode
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_mode
+msgid "Auto Check Out Mode"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_specific_time
+msgid "Auto Check Out Specific Time"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_tolerance
 #, fuzzy
 msgid "Auto Check Out Tolerance"
@@ -544,22 +565,18 @@ msgid "Automatically Approved"
 msgstr "Avtomatik tasdiqlangan"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
-#, fuzzy
-msgid ""
-"Automatically Check-Out Employees based on their working schedule with an "
-"additional tolerance. Does not apply to employees with a flexible working "
-"schedule."
-msgstr ""
-"Xodimlarni ish jadvaliga asosan qo‘shimcha chidamlilik bilan avtomatik "
-"ravishda ro‘yxatdan chiqarish. Moslashuvchan ish jadvaliga ega xodimlarga "
-"nisbatan qo‘llanilmaydi."
-
-#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #, fuzzy
 msgid "Automatically Checked-Out"
 msgstr "Avtomatik ro‘yxatdan chiqarilgan"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Automatically check out employees based on their working schedule with an "
+"additional tolerance, or at a specific time each day. Does not apply to "
+"employees with a flexible working schedule."
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2503,6 +2520,16 @@ msgid "Single Check-In Attendance System"
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__auto_check_out_mode__specific_time
+msgid "Specific Time"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.constraint,message:hr_attendance.constraint_res_company_check_auto_check_out_specific_time_range
+msgid "Specific Time must be within a 24-hour range (0h 0m 0s to 23h 59m 59s)."
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__time_start
 #, fuzzy
 msgid "Start"
@@ -2651,6 +2678,14 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
+msgid ""
+"This attendance was automatically checked out based on company specific time "
+"configuration."
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
 #, fuzzy
 msgid ""
 "This attendance was automatically checked out because the employee exceeded "
@@ -2724,6 +2759,11 @@ msgstr "Bugun"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__today_attendance_ids
 msgid "Today Attendance"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__auto_check_out_mode__tolerance
+msgid "Tolerance"
 msgstr ""
 
 #. module: hr_attendance
@@ -3125,6 +3165,16 @@ msgstr "narxi bilan"
 #, fuzzy
 msgid "with optional PIN code"
 msgstr "ixtiyoriy PIN kodi bilan"
+
+#, fuzzy
+#~ msgid ""
+#~ "Automatically Check-Out Employees based on their working schedule with an "
+#~ "additional tolerance. Does not apply to employees with a flexible working "
+#~ "schedule."
+#~ msgstr ""
+#~ "Xodimlarni ish jadvaliga asosan qo‘shimcha chidamlilik bilan avtomatik "
+#~ "ravishda ro‘yxatdan chiqarish. Moslashuvchan ish jadvaliga ega xodimlarga "
+#~ "nisbatan qo‘llanilmaydi."
 
 #, fuzzy
 #~ msgid "Check IN"

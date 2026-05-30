@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2026-03-20 07:01+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -3133,16 +3133,6 @@ msgid "Demo Display Name"
 msgstr "Tên hiển thị demo"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
-msgid "Demo Lot/SN"
-msgstr "Số lô/sê-ri demo"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
-msgid "Demo Product"
-msgstr "Sản phẩm demo"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
 #: model:ir.model.fields,help:stock.field_product_template__route_ids
 msgid ""
@@ -3408,6 +3398,7 @@ msgstr "Hiển thị số lô & sê-ri trên phiếu giao hàng"
 #: model:ir.model.fields,field_description:stock.field_product_template__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_label_lot_template_view__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__display_name
+#: model:ir.model.fields,field_description:stock.field_report_stock_report_lot_label__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_reception__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:stock.field_res_company__display_name
@@ -4162,6 +4153,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_template__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_label_lot_template_view__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__id
+#: model:ir.model.fields,field_description:stock.field_report_stock_report_lot_label__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_reception__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:stock.field_res_company__id
@@ -5422,6 +5414,7 @@ msgstr "Định dạng nhãn lô để tự động in"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+#: model:ir.model,name:stock.model_report_stock_report_lot_label
 msgid "Lot Label Report"
 msgstr "Báo cáo nhãn lô"
 
@@ -6627,6 +6620,7 @@ msgstr "Kiểu đóng gói"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
+#: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_has_serial_move_line
 msgid "Pack of 6"
 msgstr "Gói 6 sản phẩm"
 
@@ -10826,6 +10820,7 @@ msgid "View Diagram"
 msgstr "View Diagram"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_product_template_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
 msgid "View Forecast"
 msgstr ""
@@ -11950,6 +11945,12 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Lệnh giao hàng (Mã {{ object.name or 'không "
 "có' }})"
+
+#~ msgid "Demo Lot/SN"
+#~ msgstr "Số lô/sê-ri demo"
+
+#~ msgid "Demo Product"
+#~ msgstr "Sản phẩm demo"
 
 #~ msgid "Final Location"
 #~ msgstr "Vị trí cuối cùng"

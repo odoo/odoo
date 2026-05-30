@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3543,18 +3543,6 @@ msgid "Demo Display Name"
 msgstr "Namoyish ko‘rsatish nomi"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
-#, fuzzy
-msgid "Demo Lot/SN"
-msgstr "Namoyish partiya/seriya raqami"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
-#, fuzzy
-msgid "Demo Product"
-msgstr "Namoyish mahsulot"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
 #: model:ir.model.fields,help:stock.field_product_template__route_ids
 #, fuzzy
@@ -3862,6 +3850,7 @@ msgstr "Yuk xatlarida partiya va seriya raqamlarini ko‘rsatish"
 #: model:ir.model.fields,field_description:stock.field_product_template__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_label_lot_template_view__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__display_name
+#: model:ir.model.fields,field_description:stock.field_report_stock_report_lot_label__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_reception__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:stock.field_res_company__display_name
@@ -4730,6 +4719,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_template__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_label_lot_template_view__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__id
+#: model:ir.model.fields,field_description:stock.field_report_stock_report_lot_label__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_reception__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:stock.field_res_company__id
@@ -6174,6 +6164,7 @@ msgstr "Avtomatik chop etish uchun partiya yorlig‘i formati"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+#: model:ir.model,name:stock.model_report_stock_report_lot_label
 #, fuzzy
 msgid "Lot Label Report"
 msgstr "Partiya yorlig‘i hisoboti"
@@ -7570,6 +7561,7 @@ msgstr "O‘rash turi"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
+#: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_has_serial_move_line
 #, fuzzy
 msgid "Pack of 6"
 msgstr "6 donali o‘ram"
@@ -12390,6 +12382,7 @@ msgid "View Diagram"
 msgstr "Diagrammani ko‘rish"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_product_template_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
 msgid "View Forecast"
 msgstr ""
@@ -13667,6 +13660,14 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Yetkazib berish buyurtmasi (Havola "
 "{{ object.name or 'mavjud emas' }})"
+
+#, fuzzy
+#~ msgid "Demo Lot/SN"
+#~ msgstr "Namoyish partiya/seriya raqami"
+
+#, fuzzy
+#~ msgid "Demo Product"
+#~ msgstr "Namoyish mahsulot"
 
 #, fuzzy
 #~ msgid "Final Location"

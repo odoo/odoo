@@ -44,7 +44,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
 "PO-Revision-Date: 2026-04-30 07:36+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-3/mrp/pl/"
@@ -2368,6 +2368,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_product_product__display_name
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__display_name
 #: model:ir.model.fields,field_description:mrp.field_product_template__display_name
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_label_production_view_pdf__display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_bom_structure__display_name
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mo_overview__display_name
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_reception__display_name
@@ -2907,6 +2908,7 @@ msgstr "Godziny tygodniowo"
 #: model:ir.model.fields,field_description:mrp.field_product_product__id
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__id
 #: model:ir.model.fields,field_description:mrp.field_product_template__id
+#: model:ir.model.fields,field_description:mrp.field_report_mrp_label_production_view_pdf__id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_bom_structure__id
 #: model:ir.model.fields,field_description:mrp.field_report_mrp_report_mo_overview__id
 #: model:ir.model.fields,field_description:mrp.field_report_stock_report_reception__id
@@ -3531,6 +3533,11 @@ msgstr "ZP do zamknięcia"
 #: code:addons/mrp/static/src/widgets/mrp_boolean_icon_field.js:0
 msgid "MRP Boolean Icon"
 msgstr "Ikona logiczna MRP"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_mrp_label_production_view_pdf
+msgid "MRP Finished Product Label Report"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.mrp_reception_action
@@ -5201,7 +5208,7 @@ msgstr "Referencje"
 
 #. module: mrp
 #. odoo-javascript
-#: code:addons/mrp/static/src/widgets/mrp_remaining_days_unformatted_field.js:0
+#: code:addons/mrp/static/src/widgets/mrp_relative_date_unformatted_field.js:0
 msgid "Remaining Days"
 msgstr "Pozostałe dni"
 
@@ -6604,6 +6611,7 @@ msgstr "Jednostka miary (JM) to jednostka do wyrażania wielkości w zapasach"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
+#: model_terms:ir.ui.view,arch_db:mrp.report_simple_label4x12
 msgid "Units"
 msgstr "Jednostki"
 

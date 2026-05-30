@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:47+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
 "PO-Revision-Date: 2026-01-16 05:53+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-"
@@ -2595,11 +2595,6 @@ msgid "Has Confirmed Order"
 msgstr "Har bekreftet ordre"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
-msgid "Has Fiscal Position Changed"
-msgstr "Har endret skatteposisjon"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
 msgid "Has Message"
 msgstr "Har melding"
@@ -3978,13 +3973,6 @@ msgid "Product prices have been recomputed."
 msgstr "Produktpriser har blitt beregnet på nytt."
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr ""
-"Produktavgifter har blitt beregnet på nytt i henhold til skatteposisjon %s."
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
 #: model:ir.ui.menu,name:sale.menu_product_template_action
 #: model:ir.ui.menu,name:sale.menu_reporting_product
@@ -4196,11 +4184,6 @@ msgstr "Anbefal ved \"Legg i handlekurv\" eller ved tilbud"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
 msgstr "Beregne alle priser på nytt basert på denne prislisten."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Recompute all taxes based on this fiscal position"
-msgstr "Beregne alle avgifter på nytt basert på denne skatteposisjonen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -5410,14 +5393,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
-"This will update all taxes based on the currently selected fiscal position."
-msgstr ""
-"Dette vil oppdatere alle avgifter basert på den nåværende skatteposisjonen "
-"som er valgt."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
 "This will update the unit price of all products based on the new pricelist."
 msgstr ""
 "Dette vil oppdatere enhetsprisen for alle produkter basert på den nye "
@@ -5627,11 +5602,6 @@ msgstr "Total (eks. mva)"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
 msgstr "Oppdater priser"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Update Taxes"
-msgstr "Oppdater Mva"
 
 #. module: sale
 #. odoo-javascript
@@ -6076,6 +6046,27 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Has Fiscal Position Changed"
+#~ msgstr "Har endret skatteposisjon"
+
+#~ msgid "Product taxes have been recomputed according to fiscal position %s."
+#~ msgstr ""
+#~ "Produktavgifter har blitt beregnet på nytt i henhold til skatteposisjon "
+#~ "%s."
+
+#~ msgid "Recompute all taxes based on this fiscal position"
+#~ msgstr "Beregne alle avgifter på nytt basert på denne skatteposisjonen."
+
+#~ msgid ""
+#~ "This will update all taxes based on the currently selected fiscal "
+#~ "position."
+#~ msgstr ""
+#~ "Dette vil oppdatere alle avgifter basert på den nåværende "
+#~ "skatteposisjonen som er valgt."
+
+#~ msgid "Update Taxes"
+#~ msgstr "Oppdater Mva"
 
 #~ msgid "Communication history"
 #~ msgstr "Kommunikasjonshistorikk"
