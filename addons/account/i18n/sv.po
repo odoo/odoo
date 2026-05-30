@@ -42,7 +42,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-01 17:35+0000\n"
-"PO-Revision-Date: 2026-05-23 09:49+0000\n"
+"PO-Revision-Date: 2026-05-30 09:38+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/account/"
 "sv/>\n"
@@ -16265,17 +16265,17 @@ msgstr "Självfakturering"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Self Billing Credit Note"
-msgstr "Kreditfaktura för självfakturering"
+msgstr "Självfakturerad kreditfaktura"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_self_billing_credit_note
 msgid "Self-billing credit note: Sending"
-msgstr "Kreditfaktura för självfakturering: Skickas"
+msgstr "Självfakturerad kreditfaktura: Skickas"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_self_billing_invoice
 msgid "Self-billing invoice: Sending"
-msgstr "Egenutfärdad faktura: Skickas"
+msgstr "Självfakturerad faktura: Skickas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16428,7 +16428,7 @@ msgstr "Skickas till kunder med kreditfakturan bifogad"
 #. module: account
 #: model:mail.template,description:account.email_template_edi_self_billing_credit_note
 msgid "Sent to customers with the self-billing credit note in attachment"
-msgstr "Skickas till kunder med egenskapade kreditfakturan bifogade"
+msgstr "Skickas till kunder med den självfakturerade kreditfakturan bifogad"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_invoice
@@ -16438,7 +16438,7 @@ msgstr "Skickas till kunder med deras fakturor bifogade"
 #. module: account
 #: model:mail.template,description:account.email_template_edi_self_billing_invoice
 msgid "Sent to customers with their self-billing invoices in attachment"
-msgstr "Skickas till kunder med deras egenskapade fakturor bifogade"
+msgstr "Skickas till kunder med de självfakturerade fakturorna bifogade"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_discount_expense_allocation_id
@@ -19337,8 +19337,8 @@ msgid ""
 "This journal is for self-billing invoices. Invoices will be created using a "
 "different sequence per partner."
 msgstr ""
-"Journalen är avsedd för egenutfärdade fakturor. Fakturorna skapas med olika "
-"sekvenser för varje partner."
+"Journalen är avsedd för självfakturerade fakturor. Fakturorna skapas med "
+"olika sekvenser för varje partner."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -21008,7 +21008,7 @@ msgid ""
 "without access to parent company."
 msgstr ""
 "Det är inte möjligt att skapa betalningar för verifikat som tillhör olika "
-"filialer utan åtkomst till moderbolaget."
+"filialer utan åtkomst till det överordnade företaget."
 
 #. module: account
 #. odoo-python
@@ -22223,7 +22223,7 @@ msgstr "taggdomän"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
-msgstr "moderbolaget"
+msgstr "det överordnade företaget"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -22362,8 +22362,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Kreditfaktura för självfakturering (Ref "
-"{{ object.name or 'n/a' }})"
+"{{ object.company_id.name }} Självfakturerad kreditfaktura (Ref {{ "
+"object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_self_billing_invoice
@@ -22371,8 +22371,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
-"{{ object.company_id.name }} Egenutfärdad faktura (Referensnummer "
-"{{ object.name or 'n/a' }})"
+"{{ object.company_id.name }} Självfakturerad faktura (Referensnummer {{ "
+"object.name or 'n/a' }})"
 
 #~ msgid "Quick search: %s"
 #~ msgstr "Snabbsökning: %s"
