@@ -47,7 +47,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-05-23 09:34+0000\n"
+"PO-Revision-Date: 2026-05-30 09:33+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/base/fi/>"
 "\n"
@@ -15729,20 +15729,20 @@ msgid ""
 "* Analysis graph for costs\n"
 msgstr ""
 "\n"
-"Kulkuneuvot, leasing, vakuutukset, kustannukset\n"
+"Ajoneuvot, leasing, vakuutukset, kustannukset\n"
 "==================================\n"
-"Tämän moduulin avulla Odoo auttaa sinua hallinnoimaan kaikkia "
-"kulkuneuvojasi, \n"
+"Tämän moduulin kautta Odoo auttaa sinua hallinnoimaan kaikkia ajoneuvojasi, "
+"\n"
 "niihin liittyviä sopimuksia sekä palveluita, kustannuksia\n"
-"sekä monia muita ominaisuuksia, jotka ovat välttämättömiä ajokaluston\n"
+"sekä monia muita ominaisuuksia, jotka ovat välttämättömiä kuljetuskalustosi\n"
 "hallinnoimiseksi\n"
 "\n"
-"Keskeisimmät ominaisuudet\n"
+"Keskeiset ominaisuudet\n"
 "-------------\n"
-"* Ajoneuvojen lisääminen kuljetuskalustoosi\n"
-"* Ajoneuvosopimusten hallinta\n"
+"* Lisää ajoneuvoja kuljetuskalustoosi\n"
+"* Hallinnoi ajoneuvojen sopimuksia\n"
 "* Muistutus, kun sopimus saavuttaa eräpäivänsä\n"
-"* Lisää palveluita sekä matkamittarin arvot kaikille ajoneuvoille\n"
+"* Lisää palveluita sekä matkamittarin arvoja kaikille ajoneuvoille\n"
 "* Näytä kaikki ajoneuvoon tai palvelutyyppiin liittyvät kustannukset\n"
 "* Kustannusten analyysikaavio\n"
 
@@ -16418,7 +16418,7 @@ msgstr "<code>dateuntil</code> (Python-moduuli)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: environment on which the action is triggered"
-msgstr "<code>env</code>: ympäristö, jossa toiminto käynnistetään/laukaistaan"
+msgstr "<code>env</code>: ympäristö, jossa toiminto käynnistetään"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -16450,7 +16450,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>record</code>: record on which the action is triggered"
-msgstr "<code>record</code>: kirjaus, johon toiminto kohdistuu"
+msgstr "<code>record</code>: tietue, jossa toiminto käynnistetään"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -35842,7 +35842,7 @@ msgstr "Yhdistä kumppanirivi"
 #. module: base
 #: model:ir.model,name:base.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "Kumppanin yhdistämistyökalu"
+msgstr "Ohjattu kumppaneiden yhdistämistoiminto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -44889,7 +44889,7 @@ msgstr "Aikataulutetut toiminnot"
 #: model:ir.actions.act_window,name:base.ir_cron_trigger_action
 #: model:ir.ui.menu,name:base.ir_cron_trigger_menu
 msgid "Scheduled Actions Triggers"
-msgstr "Aikataulutetut toiminnot laukaisijat"
+msgstr "Aikataulutettujen toimintojen laukaisijat"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__user_id
@@ -49888,7 +49888,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_cron_trigger
 msgid "Triggered actions"
-msgstr "Liipaisintoimenpiteet"
+msgstr "Laukaistut toiminnot"
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -50006,17 +50006,19 @@ msgid ""
 "actions\n"
 msgstr ""
 "Palvelintoiminnon tyyppi. Saatavilla seuraavat arvot:\n"
-"- 'Päivitä tietue': päivitä tietueen arvot\n"
+"- 'Päivitä kirjaus': päivittää kirjauksen arvot\n"
 "- 'Luo toimenpide': luo toimenpiteen (Viestintä)\n"
-"- 'Lähetä sähköposti': lähetä viesti, huomautus tai sähköposti (Viestintä)\n"
-"- 'Lähetä tekstiviesti': lähetä tekstiviestejä, kirjaa ne asiakirjoihin "
-"(Tekstiviesti)- 'Lisää/Poista seuraajia': lisää tai poista tietueen "
-"seuraajia (Viestintä)\n"
-"- 'Luo tietue': luo uusi tietue uusilla arvoilla\n"
-"- 'Suorita koodi': Python-koodin pätkä, joka suoritetaan\n"
-"- 'Lähetä Webhook-ilmoitus': lähetä POST-pyyntö ulkoiseen järjestelmään, "
-"joka tunnetaan myös nimellä Webhook\n"
-"- 'Monitoiminnot': Määritä toiminto, joka käynnistää useita muita "
+"- 'Lähetä sähköposti': lähettää viestin, huomautuksen tai sähköpostin "
+"(Viestintä)\n"
+"- 'Lähetä tekstiviesti': lähettää tekstiviestejä, kirjaa ne asiakirjoihin "
+"(Tekstiviesti)\n"
+"- 'Lisää/poista seuraajia': lisää tai poistaa tietueen seuraajia (Viestintä)"
+"\n"
+"- 'Luo kirjaus': luo uuden kirjauksen uusilla arvoilla\n"
+"- 'Suorita koodi': pätkä Python-koodia, joka suoritetaan\n"
+"- 'Lähetä Webhook-ilmoitus': lähettää JULKAISU-pyynnön ulkoiseen "
+"järjestelmään, joka tunnetaan myös nimellä Webhook\n"
+"- 'Useita toimintoja': määrittää toiminnon, joka laukaisee useita muita "
 "palvelintoimintoja\n"
 
 #. module: base

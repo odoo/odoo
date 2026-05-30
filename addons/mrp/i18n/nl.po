@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-05-06 09:06+0000\n"
+"PO-Revision-Date: 2026-05-30 09:41+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/mrp/nl/>\n"
 "Language: nl\n"
@@ -1490,7 +1490,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "Cannot delete a manufacturing order in done state."
 msgstr ""
-"Het is niet mogelijk om een productieorder met status gereed te annuleren."
+"Het is niet mogelijk om een productieorder met status voltooid te annuleren."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__capacity
@@ -2363,7 +2363,7 @@ msgstr "Documentatie"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 msgid "Done"
-msgstr "Gereed"
+msgstr "Voltooid"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__draft
@@ -2955,7 +2955,7 @@ msgid ""
 "report labels of a MO when it is done."
 msgstr ""
 "Als dit vakje is aangevinkt, zal Odoo de labels van het toewijzingsrapport "
-"van een PO automatisch afdrukken als het gereed is."
+"van een PO automatisch afdrukken als het voltooid is."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_mrp_reception_report
@@ -2964,7 +2964,7 @@ msgid ""
 "report of a MO when it is done and has assigned moves."
 msgstr ""
 "Als dit vakje is aangevinkt, zal Odoo het toewijzingsrapport van een PO "
-"automatisch afdrukken als het gereed is en toegewezen verplaatsingen heeft."
+"automatisch afdrukken als het voltooid is en toegewezen verplaatsingen heeft."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_lot
@@ -2972,8 +2972,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN label "
 "of a MO when it is done."
 msgstr ""
-"Als dit vakje is aangevinkt, zal ODoo het partij/serienummer label van een "
-"PO automatisch afdrukken als het gereed is."
+"Als dit vakje is aangevinkt, zal Odoo het partij-/serienummerlabel van een "
+"PO automatisch afdrukken als het voltooid is."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
@@ -2982,7 +2982,7 @@ msgid ""
 "of a MO when it is done."
 msgstr ""
 "Als dit vakje is aangevinkt, zal Odoo de productlabels van een PO "
-"automatisch afdrukken als het gereed is."
+"automatisch afdrukken als het voltooid is."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_production_order
@@ -2991,7 +2991,7 @@ msgid ""
 "order of a MO when it is done."
 msgstr ""
 "Als dit vakje is aangevinkt, zal Odoo de productieorder van een PO "
-"automatisch afdrukken als het gereed is."
+"automatisch afdrukken als het voltooid is."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -3728,7 +3728,7 @@ msgstr "Marc Demo"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_mark_done
 msgid "Mark as Done"
-msgstr "Markeren als gereed"
+msgstr "Markeren als voltooid"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_mps
@@ -4576,7 +4576,7 @@ msgstr "Afdrukken wanneer \"Maak nieuw partij/SN\""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Print when done"
-msgstr "Afdrukken wanneer gereed"
+msgstr "Afdrukken wanneer voltooid"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__priority
@@ -4954,7 +4954,7 @@ msgstr "Hoeveelheid"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_produced
 msgid "Quantity Done"
-msgstr "Aantal gereed"
+msgstr "Aantal voltooid"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__qty_produced
@@ -5488,7 +5488,7 @@ msgid ""
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Sommige werkorders zijn al gereed, dus je kunt deze productieorder niet "
+"Sommige werkorders zijn al voltooid, dus je kunt deze productieorder niet "
 "ongedaan maken. \n"
 "\n"
 "Het zou toch zonde zijn om al die vooruitgang te verspillen?"
@@ -7069,7 +7069,7 @@ msgid ""
 "cancel state."
 msgstr ""
 "Je kunt de geproduceerde hoeveelheid van een werkorder niet wijzigen als "
-"deze de status 'gereed' of 'geannuleerd' heeft."
+"deze de status 'voltooid' of 'geannuleerd' heeft."
 
 #. module: mrp
 #. odoo-python
@@ -7102,7 +7102,7 @@ msgstr "Je kunt een productieorder die al afgerond is niet verwijderen."
 msgid "You cannot delete an unbuild order if the state is 'Done'."
 msgstr ""
 "Het is niet mogelijk een demontageorder te verwijderen welke in de fase "
-"'Gereed' is."
+"'Voltooid' is."
 
 #. module: mrp
 #. odoo-python
@@ -7160,7 +7160,7 @@ msgstr "Je kunt geen werkorder starten die al is uitgevoerd of geannuleerd"
 msgid "You cannot unbuild a undone manufacturing order."
 msgstr ""
 "Het is niet mogelijk een demontageorder te maken van een productieorder "
-"welke niet gereed is."
+"welke niet voltooid is."
 
 #. module: mrp
 #. odoo-python
@@ -7250,8 +7250,8 @@ msgstr ""
 msgid ""
 "You need to generate Lot/Serial Number(s) to mark as done some productions"
 msgstr ""
-"Je moet partij-/serienummer(s) genereren om sommige producties als gereed te "
-"markeren"
+"Je moet partij-/serienummer(s) genereren om sommige producties als voltooid "
+"te markeren"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
