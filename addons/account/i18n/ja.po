@@ -8,7 +8,7 @@
 # Noma Yuki, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # 江口和志 <sandwhale1010@gmail.com>, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
+# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025, 2026.
 # Martin Trigaux, 2023
 # Andy Yiu, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:41+0000\n"
-"PO-Revision-Date: 2026-05-23 12:02+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
+"PO-Revision-Date: 2026-05-30 12:37+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "account/ja/>\n"
@@ -830,8 +830,8 @@ msgstr ""
 "object.timesheet_count\">\n"
 "            <br/><br/>\n"
 "            備考：タイムシートは<a t-att-href=\"'/my/timesheets?"
-"search_in=invoice&amp;search=%s' % object.name\">ポータルよりご確認いただけま"
-"す。</a>\n"
+"search_in=invoice&amp;search=%s' % object.name\">ポータルより</a>ご確認いただ"
+"けます。\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "        ご不明な点がございましたら、お気軽にお問い合わせください。何卒よろし"
@@ -2614,8 +2614,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "A fiscal position with a foreign VAT already exists in this country."
-msgstr "国外付加価値税の会計ポジションは、すでにこの国に存在しています。"
+msgid "A fiscal position with a foreign Tax ID already exists in this country."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3837,8 +3837,8 @@ msgstr "選択した日付以前の、未消込の銀行明細書の全明細。
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
-msgid "Allow Foreign VAT"
-msgstr "国外VATを許可"
+msgid "Allow Foreign Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -4299,17 +4299,15 @@ msgstr "配送先国が一致する場合のみ適用されます。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
-msgid "Apply only if partner has a VAT number."
-msgstr "取引先がVAT番号を持つ場合のみ、適用されます。"
+msgid "Apply only if partner has a Tax ID."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
 msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
-"criterias (VAT/Country) are met."
+"criterias (Tax ID/Country) are met."
 msgstr ""
-"一致条件 (VAT/国)が満たされた場合、自動的に請求書に税・勘定マッピングを適用し"
-"ます。"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_profit_or_loss_appropriation
@@ -4591,7 +4589,7 @@ msgstr "仕入先請求書の自動記帳ウィザード"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
 msgid "Availability"
-msgstr "適用条件"
+msgstr "利用条件"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__available_additional_identifiers_metadata
@@ -6430,8 +6428,8 @@ msgstr "相手方項目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Countries for which the company has a VAT number"
-msgstr "会社がVAT番号を取得している国"
+msgid "Countries for which the company has a Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -9597,15 +9595,15 @@ msgid "Foreign Tax ID"
 msgstr "国外登録番号"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign Tax ID countries"
+msgstr ""
+
+#. module: account
 #: model:account.fiscal.position,name:account.21_template_generic_export_fiscal_position
 #: model:account.fiscal.position,name:account.22_account_fiscal_position_us_export
 msgid "Foreign Trade"
 msgstr "外国貿易"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Foreign VAT countries"
-msgstr "海外VAT対象国"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -12960,7 +12958,7 @@ msgstr "交通費(走行距離・タクシー・駐車場)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Misc. Operations"
-msgstr "雑仕訳"
+msgstr "その他処理"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_misc
@@ -15357,6 +15355,7 @@ msgstr "プロダクトカテゴリ"
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -18115,6 +18114,11 @@ msgid "Tax ID"
 msgstr "登録番号"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
+msgid "Tax ID required"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_price_include__tax_included
 msgid "Tax Included"
@@ -18896,11 +18900,9 @@ msgstr "この税金が適用される国。"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a "
+"The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
-"国外VAT番号の国を検出できませんでした。会計ポジションに国を割り当ててくださ"
-"い。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -20173,7 +20175,7 @@ msgstr "未払"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "To Review"
-msgstr "要確認"
+msgstr "要レビュー"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -21044,11 +21046,6 @@ msgid ""
 msgstr "仕訳明細はStorno会計の対象かどうかを設定するユーティリティフィールド"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
-msgid "VAT required"
-msgstr "要登録番号"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Valid for"
 msgstr "次に有効:"
@@ -21804,11 +21801,9 @@ msgstr "選択した国グループ以外の国で会計ポジションを作成
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
+"You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"国外VATを持つ会計ポジションは、そのVATにステータスを割り当てなければ、会計上"
-"の国で作成することはできません。"
 
 #. module: account
 #. odoo-python
@@ -22945,6 +22940,45 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Self-billing請求書 (参照番号 {{ object.name or "
 "'n/a' }})"
+
+#~ msgid "A fiscal position with a foreign VAT already exists in this country."
+#~ msgstr "国外付加価値税の会計ポジションは、すでにこの国に存在しています。"
+
+#~ msgid "Allow Foreign VAT"
+#~ msgstr "国外VATを許可"
+
+#~ msgid "Apply only if partner has a VAT number."
+#~ msgstr "取引先がVAT番号を持つ場合のみ、適用されます。"
+
+#~ msgid ""
+#~ "Apply tax & account mappings on invoices automatically if the matching "
+#~ "criterias (VAT/Country) are met."
+#~ msgstr ""
+#~ "一致条件 (VAT/国)が満たされた場合、自動的に請求書に税・勘定マッピングを適"
+#~ "用します。"
+
+#~ msgid "Countries for which the company has a VAT number"
+#~ msgstr "会社がVAT番号を取得している国"
+
+#~ msgid "Foreign VAT countries"
+#~ msgstr "海外VAT対象国"
+
+#~ msgid ""
+#~ "The country of the foreign VAT number could not be detected. Please "
+#~ "assign a country to the fiscal position."
+#~ msgstr ""
+#~ "国外VAT番号の国を検出できませんでした。会計ポジションに国を割り当ててくだ"
+#~ "さい。"
+
+#~ msgid "VAT required"
+#~ msgstr "要登録番号"
+
+#~ msgid ""
+#~ "You cannot create a fiscal position with a foreign VAT within your fiscal "
+#~ "country without assigning it a state."
+#~ msgstr ""
+#~ "国外VATを持つ会計ポジションは、そのVATにステータスを割り当てなければ、会計"
+#~ "上の国で作成することはできません。"
 
 #~ msgid ""
 #~ "This action is irreversible: the credit/debit cannot be modified again "

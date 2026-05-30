@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-05-23 12:30+0000\n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
+"PO-Revision-Date: 2026-05-30 12:39+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/stock/"
 "nl/>\n"
@@ -142,7 +142,7 @@ msgstr ""
 "gereserveerd.\n"
 "(b) Het verzendbeleid is \"Wanneer alle producten beschikbaar zijn\": alle "
 "producten zijn gereserveerd.\n"
-" * Gereed: de overdracht is verwerkt.\n"
+" * Voltooid: de overdracht is verwerkt.\n"
 " * Geannuleerd: de overdracht is geannuleerd."
 
 #. module: stock
@@ -396,7 +396,7 @@ msgstr ""
 "* In afwachting : De voorraadbeweging is bevestigd maar het product kan niet "
 "worden gereserveerd.\n"
 "* Beschikbaar: Het product van de voorraadbeweging is gereserveerd.\n"
-"* Gereed: Het product is overgedragen en de overdracht is bevestigd."
+"* Voltooid: Het product is overgedragen en de overdracht is bevestigd."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -609,8 +609,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
-",<br/><br/>\n"
+"        Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
+"<br/><br/>\n"
 "        <t t-if=\"hasattr(object, 'delivery_type') and object.delivery_type "
 "== 'in_store'\">\n"
 "            Je bestelling is opgehaald.\n"
@@ -626,8 +626,8 @@ msgstr ""
 "                <t t-set=\"multiple_carrier_tracking\" t-"
 "value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
-"\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
 "                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
 "out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
@@ -643,8 +643,8 @@ msgstr ""
 "            </strong>\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        In de bijlage kun je de leveringsorder terugvinden voor meer "
-"details.<br/><br/>\n"
+"        In de bijlage kun je de leveringsorder terugvinden voor meer details."
+"<br/><br/>\n"
 "        Bedankt,\n"
 "        <t t-if=\"user.signature\">\n"
 "            <br/>\n"
@@ -3578,7 +3578,7 @@ msgstr "Documentatie"
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Done"
-msgstr "Gereed"
+msgstr "Voltooid"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
@@ -6745,6 +6745,7 @@ msgstr "Verpakkingssoort"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
+#: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_has_serial_move_line
 msgid "Pack of 6"
 msgstr "Verpakking van 6"
 
@@ -8800,8 +8801,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Send an automatic confirmation email when Delivery Orders are done"
 msgstr ""
-"Verzend een automatische bevestiging per e-mail wanneer leveringen gereed "
-"zijn"
+"Verzend een automatische bevestiging per e-mail wanneer leveringsorders "
+"voltooid zijn"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_lead_mass_mail
@@ -11346,9 +11347,9 @@ msgid ""
 "When the picking is not done this allows changing the initial demand. When "
 "the picking is done this allows changing the done quantities."
 msgstr ""
-"Wanneer een levering nog niet gereed is geeft je dit de mogelijkheid om de "
-"initiële aanvraag te wijzigen. Wanneer een levering gereed is geeft je dit "
-"de mogelijkheid om de geregistreerde hoeveelheid te wijzigen."
+"Wanneer een levering nog niet voltooid is, kun je de initiële aanvraag te "
+"wijzigen. Wanneer een levering voltooid is, kun je de geregistreerde "
+"hoeveelheid wijzigen."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
@@ -11618,7 +11619,7 @@ msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
 msgstr ""
-"Je kunt een voorraadverplaatsing die is ingesteld op 'Gereed' niet "
+"Je kunt een voorraadverplaatsing die is ingesteld op 'Voltooid' niet "
 "annuleren. Maak een terugkeer om de zetten die plaatsvonden terug te draaien."
 
 #. module: stock
@@ -11642,7 +11643,7 @@ msgstr ""
 msgid "You cannot change the UoM for a stock move that has been set to 'Done'."
 msgstr ""
 "Je kunt de maateenheid niet wijzigen voor een voorraadverplaatsing die is "
-"ingesteld op 'Gereed'."
+"ingesteld op 'Voltooid'."
 
 #. module: stock
 #. odoo-python
@@ -11710,8 +11711,8 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
-"Je kunt een voorraadverplaatsing die ingesteld is op 'Gereed' of 'Annuleren' "
-"niet splitsen."
+"Je kunt een voorraadverplaatsing die ingesteld is op 'Voltooid' of "
+"'Annuleren' niet splitsen."
 
 #. module: stock
 #. odoo-python
@@ -11728,8 +11729,8 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
-"Het is niet mogelijk om van een voorraadverplaatsing de reservering ongedaan "
-"te maken welke in de 'Gereed' fase is."
+"Je kunt de reservering van een voorraadverplaatsing in de fase 'voltooid' "
+"niet ongedaan maken."
 
 #. module: stock
 #. odoo-python

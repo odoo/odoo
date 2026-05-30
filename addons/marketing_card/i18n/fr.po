@@ -10,16 +10,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-03-14 12:58+0000\n"
+"PO-Revision-Date: 2026-05-30 12:25+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/"
 "marketing_card/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: marketing_card
 #. odoo-python
@@ -34,6 +34,9 @@ msgid ""
 "                    <span>We were not able to get an authorization to post "
 "in your stead.</span>"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                <span>Nous n'avons pas pu obtenir une autorisation pour "
+"publier en votre nom.</span>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
@@ -247,7 +250,7 @@ msgstr "Nombre de cartes"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__card_lang
 msgid "Card Language"
-msgstr ""
+msgstr "Langue de la carte"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -281,7 +284,7 @@ msgstr "Modèle de carte"
 #: code:addons/marketing_card/models/card_campaign.py:0
 #: model:card.campaign,content_header:marketing_card.card_campaign_campaign_1
 msgid "Card Title"
-msgstr ""
+msgstr "Titre de la carte"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.mailing_mailing_view_form_inherit_marketing_card
@@ -296,7 +299,7 @@ msgstr "Centrer"
 #. module: marketing_card
 #: model_terms:card.campaign,reward_message:marketing_card.card_campaign_campaign_1
 msgid "Check out odoo.com for more!"
-msgstr ""
+msgstr "Rendez-vous sur odoo.com pour en savoir plus !"
 
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_circles
@@ -364,6 +367,8 @@ msgstr "Arrière-plan par défaut"
 msgid ""
 "Description below the card and default text when sharing on X and LinkedIn"
 msgstr ""
+"Description sous la carte et texte par défaut lors du partage sur X et "
+"LinkedIn"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__card_template_id
@@ -374,7 +379,7 @@ msgstr "Conception"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Details"
-msgstr ""
+msgstr "Détails"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__display_name
@@ -411,7 +416,7 @@ msgstr "Image dynamique 2"
 #. module: marketing_card
 #: model:ir.model.constraint,message:marketing_card.constraint_card_card_campaign_record_lang_unique
 msgid "Each record should be unique for a campaign and language"
-msgstr ""
+msgstr "Chaque enregistrement doit être unique pour une campagne et langue"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_mail_compose_message
@@ -423,30 +428,31 @@ msgstr "Assistant de composition d'e-mails"
 #: code:addons/marketing_card/utils/linkedin_api.py:0
 msgid "Error on generating an authorization url: %(iap_error_string)s"
 msgstr ""
+"Erreur lors de la génération d'une URL d'autorisation : %(iap_error_string)s"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/utils/linkedin_api.py:0
 msgid "Error when fetching user info"
-msgstr ""
+msgstr "Erreur lors de la récupération des informations utilisateur"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/utils/linkedin_api.py:0
 msgid "Error when posting an image"
-msgstr ""
+msgstr "Erreur lors de la publication d'une image"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/utils/linkedin_api.py:0
 msgid "Error when registering an image upload"
-msgstr ""
+msgstr "Erreur lors de l'enregistrement d'un chargement d'image"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/utils/linkedin_api.py:0
 msgid "Error when uploading an image"
-msgstr ""
+msgstr "Erreur lors du chargement d'une image"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_follower_ids
@@ -498,13 +504,13 @@ msgstr "Aidez-nous à partager la nouvelle"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Hi everyone!"
-msgstr ""
+msgstr "Bonjour à tous !"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Home page"
-msgstr ""
+msgstr "Page d'accueil"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__id
@@ -594,7 +600,7 @@ msgstr "Langue"
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_mailing_mailing__card_lang
 msgid "Language in which the cards will be rendered"
-msgstr ""
+msgstr "Langue dans laquelle les cartes seront affichées"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__write_uid
@@ -694,7 +700,7 @@ msgstr "Messages"
 #. odoo-python
 #: code:addons/marketing_card/utils/linkedin_api.py:0
 msgid "Missing LinkedIn app credentials."
-msgstr ""
+msgstr "Identifiants de l'application LinkedIn manquants."
 
 #. module: marketing_card
 #. odoo-python
@@ -703,6 +709,8 @@ msgid ""
 "Missing target language for card campaign mailings:\n"
 "\t- %(mailing_names)s"
 msgstr ""
+"Langue cible manquante pour les mailings de campagne de cartes :\n"
+"\t- %(mailing_names)s"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_ir_model
@@ -827,12 +835,12 @@ msgstr "Suggestion de publication"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_linkedin_share_composer
 msgid "Post Text"
-msgstr ""
+msgstr "Texte de la publication"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_linkedin_share_composer
 msgid "Post on LinkedIn"
-msgstr ""
+msgstr "Publier sur LinkedIn"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
@@ -906,6 +914,8 @@ msgid ""
 "Redirection link for clicks on the cards, defaults to the relevant record or "
 "the home page."
 msgstr ""
+"Lien de redirection pour les clics sur les cartes, redirige par défaut vers "
+"l'enregistrement concerné ou la page d'accueil."
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__render_model
@@ -1027,7 +1037,7 @@ msgstr "Partager le modèle"
 #. module: marketing_card
 #: model:card.campaign,request_title:marketing_card.card_campaign_campaign_1
 msgid "Share the news with your community"
-msgstr ""
+msgstr "Partagez la nouvelle avec votre communauté"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
@@ -1043,7 +1053,7 @@ msgstr "Partagé"
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_card_view_search
 msgid "Status"
-msgstr ""
+msgstr "Statut"
 
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__activity_state
@@ -1107,13 +1117,13 @@ msgstr "Les étiquettes ne peuvent pas reprendre des noms existants."
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__target_url_placeholder
 msgid "Target Url Placeholder"
-msgstr ""
+msgstr "Placeholder de l'URL cible"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Target record (if published) or Home page"
-msgstr ""
+msgstr "Enregistrement cible (s'il est publié) ou page d'accueil"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__reward_message
@@ -1124,12 +1134,12 @@ msgstr "Message de remerciement"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Thanks for your support."
-msgstr ""
+msgstr "Merci pour votre soutien."
 
 #. module: marketing_card
 #: model:card.campaign,request_description:marketing_card.card_campaign_campaign_1
 msgid "That will help us"
-msgstr ""
+msgstr "Cela nous aidera"
 
 #. module: marketing_card
 #. odoo-python
@@ -1145,12 +1155,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/marketing_card/utils/linkedin_api.py:0
 msgid "The image is too large: %(image_size_human_readable)s"
-msgstr ""
+msgstr "L'image est trop volumineuse : %(image_size_human_readable)s"
 
 #. module: marketing_card
 #: model:card.campaign,content_section:marketing_card.card_campaign_campaign_1
 msgid "This section is static"
-msgstr ""
+msgstr "Cette section est statique"
 
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__activity_exception_decoration
@@ -1190,6 +1200,8 @@ msgid ""
 "We'd love your help in getting the word out. Feel free to post these on your "
 "social channels!"
 msgstr ""
+"Nous serions ravis de pouvoir compter sur votre aide pour faire passer le "
+"message. N'hésitez pas à les partager sur vos réseaux sociaux !"
 
 #. module: marketing_card
 #. odoo-python
@@ -1198,6 +1210,8 @@ msgid ""
 "We've created these personalized cards to make it easy for you to share your "
 "involvement with your network."
 msgstr ""
+"Nous avons créé ces cartes personnalisées pour vous permettre de partager "
+"facilement votre participation avec votre réseau."
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__website_message_ids
@@ -1212,7 +1226,7 @@ msgstr "Historique de communication du site web"
 #. module: marketing_card
 #: model:card.campaign,content_sub_header:marketing_card.card_campaign_campaign_1
 msgid "Welcome to Odoo"
-msgstr ""
+msgstr "Bienvenue sur Odoo"
 
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_card__requires_sync
@@ -1229,13 +1243,13 @@ msgstr "Carte du monde"
 #. module: marketing_card
 #: model_terms:card.campaign,reward_message:marketing_card.card_campaign_campaign_1
 msgid "You just leveled up your exposure!"
-msgstr ""
+msgstr "Vous venez d'augmenter votre visibilité !"
 
 #. module: marketing_card
 #. odoo-python
 #: code:addons/marketing_card/utils/linkedin_api.py:0
 msgid "You must be authentified with LinkedIn to do this."
-msgstr ""
+msgstr "Vous devez être connecté à LinkedIn pour effectuer cette action."
 
 #. module: marketing_card
 #. odoo-python

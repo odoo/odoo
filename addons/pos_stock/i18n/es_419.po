@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"POT-Creation-Date: 2026-05-29 17:40+0000\n"
 "PO-Revision-Date: 2026-05-16 14:37+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -448,15 +448,15 @@ msgstr "NS:"
 
 #. module: pos_stock
 #. odoo-javascript
-#: code:addons/pos_stock/static/src/app/components/popups/date_picker_popup/date_picker_popup.xml:0
-msgid "Select Date:"
-msgstr "Seleccionar fecha:"
-
-#. module: pos_stock
-#. odoo-javascript
 #: code:addons/pos_stock/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Select the shipping date"
 msgstr "Selecciona la fecha de envío"
+
+#. module: pos_stock
+#. odoo-javascript
+#: code:addons/pos_stock/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
+msgid "Selected date cannot be in the past."
+msgstr ""
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
@@ -592,6 +592,12 @@ msgstr ""
 "consumen de su ubicación de origen predeterminada."
 
 #. module: pos_stock
+#. odoo-javascript
+#: code:addons/pos_stock/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
+msgid "Validation Error"
+msgstr ""
+
+#. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_warehouse
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__warehouse_id
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
@@ -649,6 +655,9 @@ msgstr "disponible,"
 #: code:addons/pos_stock/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "forecasted"
 msgstr "pronosticado"
+
+#~ msgid "Select Date:"
+#~ msgstr "Seleccionar fecha:"
 
 #~ msgid "<strong>Lot number: </strong>"
 #~ msgstr "<strong>Número de lote: </strong>"

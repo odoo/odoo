@@ -5,21 +5,22 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-22 17:43+0000\n"
-"PO-Revision-Date: 2026-01-15 21:54+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-1/"
+"PO-Revision-Date: 2026-05-30 12:43+0000\n"
+"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-3/"
 "pos_self_order/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -30,7 +31,7 @@ msgstr "“QR โค้ด”"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "(require Odoo Enterprise)"
-msgstr ""
+msgstr "(จำเป็นต้องใช้ Odoo Enterprise)"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -120,6 +121,34 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                   <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/> \n"
+"                   <div>\n"
+"                        <t t-if=\"client_name\">สวัสดีค่ะ/ครับ<t t-"
+"out=\"client_name\">ชื่อลูกค้า</t>,</t>\n"
+"                        <t t-else=\"\">สวัสดีค่ะ/ครับ</t>\n"
+"                    </div>\n"
+"                   <br/>\n"
+"                    <div>คำสั่งซื้อของคุณ<t t-out=\"object.tracking_number\">...</"
+"t> รวมเป็นเงิน<t t-out=\"format_amount(object.amount_total,object.currency_id)"
+"\">$xx.xx</t> ได้รับการยืนยันแล้วค่ะ/ครับ<span t-if=\"object.preset_time\">จะพร้อมใ"
+"น<t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">เวลา 12:00 น.</t></span></div>\n"
+"                    <br/> \n"
+"                   <div> ขอบคุณค่ะ/ครับ</div>\n"
+"                    <br/>\n"
+"                   <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>แนบมาด้วยคือใบเสร็จรับเงินของคุณ</div>\n"
+"                        <br/>\n"
+"                   </div>\n"
+"                    <t t-out=\"store_name\">ชื่อร้าน</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id

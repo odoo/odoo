@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-22 17:43+0000\n"
-"PO-Revision-Date: 2026-05-23 13:40+0000\n"
+"PO-Revision-Date: 2026-05-30 12:22+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-3/spreadsheet/zh_Hans/>\n"
@@ -1100,7 +1100,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Any real value to calculate the hyperbolic cotangent of."
-msgstr ""
+msgstr "任意实数，用于计算双曲余切值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2984,13 +2984,13 @@ msgstr "费率日期。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Date range"
-msgstr ""
+msgstr "日期范围"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Date time"
-msgstr ""
+msgstr "日期时间"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9730,7 +9730,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first matrix in the matrix multiplication operation."
-msgstr ""
+msgstr "矩阵乘法运算的第一个矩阵。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9742,19 +9742,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first number in the sequence"
-msgstr ""
+msgstr "序列中的第一个数字"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first number to compare."
-msgstr ""
+msgstr "第一个要比较的数值。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first string to compare."
-msgstr ""
+msgstr "第一个要比较的字符串。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9766,7 +9766,7 @@ msgstr "第一个值必须是一个数字"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first value."
-msgstr ""
+msgstr "第一个值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9774,37 +9774,37 @@ msgstr ""
 msgid ""
 "The first_period (%(first)s) must be smaller or equal to the last_period (%"
 "(last)s)."
-msgstr ""
+msgstr "first_period (%(first)s) 必须小于或等于 last_period (%(last)s)。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first_period (%s) must be strictly positive."
-msgstr ""
+msgstr "first_period（%s）须为正数。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The format entered is not valid."
-msgstr ""
+msgstr "输入的格式无效。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The format of the returned data."
-msgstr ""
+msgstr "返回数据的格式。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The formatting unit should be 'k', 'm' or 'b'."
-msgstr ""
+msgstr "格式单位应为 'k'、'm' 或 'b'。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The formatting unit. Use 'k', 'm', or 'b' to force the unit"
-msgstr ""
+msgstr "格式化单位。使用 'k'、'm' 或 'b' 强制单位"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9822,7 +9822,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The full URL of the link enclosed in quotation marks."
-msgstr ""
+msgstr "链接的完整URL用引号括起来。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9831,6 +9831,8 @@ msgid ""
 "The function [[FUNCTION_NAME]] expects a boolean value, but '%s' is a text, "
 "and cannot be coerced to a boolean."
 msgstr ""
+"函数 [[FUNCTION_NAME]] 希望得到一个布尔值，但“%s”是文本，不能强制转换为布尔值"
+"。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9846,7 +9848,7 @@ msgstr ""
 msgid ""
 "The function [[FUNCTION_NAME]] expects a number value to be greater than or "
 "equal to 1, but receives %s."
-msgstr ""
+msgstr "函数[[FUNCTION_NAME]]希望接收大于或等于 1 的数值，但接收到的是%s。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9855,12 +9857,14 @@ msgid ""
 "The function [[FUNCTION_NAME]] expects a number value, but '%s' is a string, "
 "and cannot be coerced to a number."
 msgstr ""
+"函数[[FUNCTION_NAME]]希望得到一个数字值，但'%s'是一个字符串，不能被胁迫为一个"
+"数字。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The function [[FUNCTION_NAME]] expects a reference to a cell or range."
-msgstr ""
+msgstr "函数 [[FUNCTION_NAME]] 需要一个单元格或区域的引用。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9868,13 +9872,13 @@ msgstr ""
 msgid ""
 "The function [[FUNCTION_NAME]] has an argument with value '%s'. It should be "
 "one of: %s."
-msgstr ""
+msgstr "函数 [[FUNCTION_NAME]] 有一个值为 '%s' 的参数。它应该是以下参数之一：%s。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The function [[FUNCTION_NAME]] result cannot be negative"
-msgstr ""
+msgstr "函数[[FUNCTION_NAME]]的结果不能是负数"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9882,19 +9886,19 @@ msgstr ""
 msgid ""
 "The function [[FUNCTION_NAME]] result must be greater than or equal "
 "01/01/1900."
-msgstr ""
+msgstr "函数[[FUNCTION_NAME]]的结果必须大于或等于01/01/1900。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The function code (%s) must be between 1 to 11 or 101 to 111."
-msgstr ""
+msgstr "函数代码 (%s) 必须在 1 到 11 或 101 到 111 之间。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The function to use in subtotal aggregation."
-msgstr ""
+msgstr "用于小计聚合的函数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9906,25 +9910,25 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The future value of the investment."
-msgstr ""
+msgstr "投资的未来价值。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The future value remaining after the final payment has been made."
-msgstr ""
+msgstr "支付最后一笔款项后剩余的未来价值。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The future_value (%s) must be strictly positive."
-msgstr ""
+msgstr "future_value（%s ）必须严格为正值。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The header row of a table can't be moved."
-msgstr ""
+msgstr "表格的标题行无法移动。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9950,7 +9954,7 @@ msgstr ""
 msgid ""
 "The index from the left of string from which to begin extracting. The first "
 "character in string has the index 1."
-msgstr ""
+msgstr "从字符串左侧开始提取的索引。字符串中的第一个字符的索引为 1。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9958,7 +9962,7 @@ msgstr ""
 msgid ""
 "The index of the column in range or a range outside of range containing the "
 "value by which to sort."
-msgstr ""
+msgstr "范围内列的索引或范围外包含排序值的范围的索引。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9966,7 +9970,7 @@ msgstr ""
 msgid ""
 "The index of the column to be returned from within the reference range of "
 "cells."
-msgstr ""
+msgstr "在单元格参考范围内要返回的列的索引。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9985,7 +9989,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The initial cost of the asset."
-msgstr ""
+msgstr "资产的初始成本。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9996,24 +10000,27 @@ msgid ""
 "however, if occurrence_number is specified, only the indicated instance of "
 "search_for is replaced."
 msgstr ""
+"text_to_search 中要替换为 replace_with 的 search_for 实例。默认情况下，将替换"
+"所有出现的 search_for;但是，如果指定了occurrence_number，则仅替换指示的 "
+"search_for 实例。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The instance_num (%s) must not be zero."
-msgstr ""
+msgstr "instance_num (%s) 不能为零。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The interest rate paid on funds invested."
-msgstr ""
+msgstr "投资资金的利率。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The interest rate."
-msgstr ""
+msgstr "利率。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10025,13 +10032,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The investment's current value."
-msgstr ""
+msgstr "投资现值。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The investment's desired future value."
-msgstr ""
+msgstr "投资的预期未来价值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10140,7 +10147,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The maximum (%s) must be greater than or equal to the minimum (%s)."
-msgstr ""
+msgstr "最大值（%s）必须大于或等于最小值 （%s）。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10323,26 +10330,26 @@ msgstr ""
 msgid ""
 "The number of columns in the expanded array. If missing, columns will not be "
 "expanded."
-msgstr ""
+msgstr "扩展数组中的列数。如缺少，则不会展开列。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The number of columns must be positive."
-msgstr ""
+msgstr "列数必须为正数。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "The number of columns of the range to return starting at the offset target."
-msgstr ""
+msgstr "从目标偏移开始起计，要传回范围的列数。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The number of columns to be returned."
-msgstr ""
+msgstr "要返回的列数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10350,19 +10357,19 @@ msgstr ""
 msgid ""
 "The number of columns to exclude. A negative value drops from the end of the "
 "array."
-msgstr ""
+msgstr "要排除的列数。负值表示从数组末尾开始倒数。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The number of columns to offset by."
-msgstr ""
+msgstr "要偏移的列数。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The number of columns to return"
-msgstr ""
+msgstr "要返回的列数"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10382,7 +10389,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The number of days between start_date and end_date"
-msgstr ""
+msgstr "start_date 和 end_date 之间的天数"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10390,7 +10397,7 @@ msgstr ""
 msgid ""
 "The number of days between start_date and end_date after subtracting whole "
 "months"
-msgstr ""
+msgstr "减去整月后 start_date 和 end_date 之间的天数"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10554,7 +10561,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "The number of significant digits to the right of the decimal point to retain."
-msgstr ""
+msgstr "小数点右边要保留的有效位数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10562,7 +10569,7 @@ msgstr ""
 msgid ""
 "The number of the character to look up from the current Unicode table in "
 "decimal format."
-msgstr ""
+msgstr "要从当前 Unicode 表中以十进制格式查找的字符的编号。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10708,7 +10715,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The number_of_characters (%s) must be positive or null."
-msgstr ""
+msgstr "字符数（%s）必须是正数或空数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10720,13 +10727,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The number_of_periods (%s) must be strictly positive."
-msgstr ""
+msgstr "number_of_periods (%s) 必须严格为正数。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The occurrenceNumber (%s) must be positive or null."
-msgstr ""
+msgstr "occurrenceNumber（%s）必须是正数或空数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10738,25 +10745,25 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The order of the polynomial to fit the data, between 1 and 6."
-msgstr ""
+msgstr "拟合数据的多项式阶数，在 1 到 6 之间。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The pattern or test to apply to criteria_range."
-msgstr ""
+msgstr "应用于 criteria_range 的模式或测试。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The pattern or test to apply to range."
-msgstr ""
+msgstr "应用于范围的模式或测试。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The percentile whose value within data will be calculated and returned."
-msgstr ""
+msgstr "将计算并返回数据中的百分位数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10794,7 +10801,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The period for which you want to view the interest payment."
-msgstr ""
+msgstr "您要查看的利息支付期。"
 
 #. module: spreadsheet
 #. odoo-javascript

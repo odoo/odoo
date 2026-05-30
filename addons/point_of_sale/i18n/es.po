@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-15 17:35+0000\n"
-"PO-Revision-Date: 2026-05-23 12:35+0000\n"
+"PO-Revision-Date: 2026-05-30 12:19+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-3/"
 "point_of_sale/es/>\n"
@@ -431,7 +431,7 @@ msgstr "<span name=\"served_by\">Atendido por:</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_header
 msgid "<span name=\"ticket\">Ticket</span>"
-msgstr ""
+msgstr "<span name=\"ticket\">N.º</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -624,7 +624,7 @@ msgstr "IMPORTE"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept customer tips or convert their change to a tip"
-msgstr "Acepte propinas de los clientes o convierta su cambio en una propina"
+msgstr "Aceptar propinas de los clientes o convertir el cambio en propina"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2128,13 +2128,13 @@ msgstr "Cambiar propina"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
 msgid "Change:"
-msgstr ""
+msgstr "Cambio:"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Changes Receipt"
-msgstr ""
+msgstr "Ticket de cambios"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5793,7 +5793,7 @@ msgstr "No hay una sesión abierta. Abra una nueva sesión para tomar el pedido.
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
 msgid "No order to print changes for."
-msgstr ""
+msgstr "No hay ningún cambio en el pedido para imprimir."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form
@@ -7552,7 +7552,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Print changes receipt"
-msgstr ""
+msgstr "Imprimir ticket de cambios"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7987,7 +7987,7 @@ msgstr "Encabezado del recibo"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__pos_reference
 msgid "Receipt Number"
-msgstr "Número de recibo"
+msgstr "Número de ticket"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10154,6 +10154,11 @@ msgid ""
 " Please pay the exact amount or add a cash payment method in the point of "
 "sale settings."
 msgstr ""
+"No hay ningún método de pago en efectivo disponible en este punto de venta "
+"para gestionar el cambio.\n"
+"\n"
+" Por favor, efectúa el pago de la cantidad exacta o añade un método de pago "
+"en efectivo en los ajustes del punto de venta."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10908,7 +10913,7 @@ msgstr "Uuid"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_header
 msgid "VAT"
-msgstr "NIF"
+msgstr "de ticket"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11126,6 +11131,8 @@ msgid ""
 "You are not allowed to change the rounding configuration while a pos session "
 "using it is already opened."
 msgstr ""
+"No puedes modificar la configuración de redondeo mientras haya una sesión de "
+"punto de venta abierta que la esté usando."
 
 #. module: point_of_sale
 #. odoo-javascript

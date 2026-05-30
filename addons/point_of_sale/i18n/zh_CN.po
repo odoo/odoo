@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-15 17:35+0000\n"
-"PO-Revision-Date: 2026-05-23 13:07+0000\n"
+"PO-Revision-Date: 2026-05-30 12:23+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-3/point_of_sale/zh_Hans/>\n"
@@ -1056,7 +1056,7 @@ msgstr "允许知道是否全部成本是否已经被计算"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_printbill
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_printbill
 msgid "Allows to print the Bill before payment."
-msgstr ""
+msgstr "允许在付款前打印账单。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2911,7 +2911,7 @@ msgstr "客户显示"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.xml:0
 msgid "Customer Info"
-msgstr ""
+msgstr "客户信息"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5040,6 +5040,8 @@ msgid ""
 "feature. Please note that IOS devices do not support Local Network Access "
 "yet."
 msgstr ""
+"本地网络访问配置已启用，但您的浏览器并非基于 Chromium。请使用基于 Chromium 的"
+"浏览器以使用此功能。请注意，iOS 设备目前尚不支持本地网络访问。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9657,14 +9659,14 @@ msgstr "交易由 Adyen 处理。 在相关付款方式上设置您的 Adyen 凭
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "The transactions are processed by DPO Pay on the terminal."
-msgstr ""
+msgstr "交易由 DPO Pay 在终端上处理。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_dpopay
 msgid ""
 "The transactions are processed by DPO Pay. Set your DPO Pay credentials on "
 "the related payment method."
-msgstr ""
+msgstr "交易由 DPO Pay 处理。请在相关支付方式中设置您的 DPO Pay 凭据。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -9693,14 +9695,14 @@ msgstr "交易由 Pine Labs 处理，请在对应支付方式中设置 Pine Labs
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "The transactions are processed by QFPay on the terminal."
-msgstr ""
+msgstr "交易由 QFPay 在终端上处理。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_qfpay
 msgid ""
 "The transactions are processed by QFPay. Set your QFPay credentials on the "
 "related payment method."
-msgstr ""
+msgstr "交易由 QFPay 处理。请在相关支付方式中，设置您的 QFPay 凭据。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_razorpay
@@ -9733,7 +9735,7 @@ msgstr "支付卡的类型（例如：信用卡或借记卡）"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_bill.py:0
 msgid "The value of a coin/bill must be greater than 0."
-msgstr ""
+msgstr "硬币/纸币的面值必须大于 0。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
@@ -9808,6 +9810,9 @@ msgid ""
 " Please pay the exact amount or add a cash payment method in the point of "
 "sale settings."
 msgstr ""
+"该 POS 目前没有可用的现金支付方式来处理找零。\n"
+"\n"
+" 请支付准确金额，或在 POS 设置中添加现金支付方式。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9857,7 +9862,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 msgid "This device"
-msgstr ""
+msgstr "此设备"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -9947,7 +9952,7 @@ msgstr "这个订单还没有同步到服务器。请确认它已被同步，然
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid ""
 "This orderline has already been sent to the kitchen and cannot be edited."
-msgstr ""
+msgstr "此订单行已发送至厨房，无法编辑。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -10077,7 +10082,7 @@ msgstr "提示产品"
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_tip_receipt
 msgid "Tip Receipt"
-msgstr ""
+msgstr "小费收据"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_tip_receipt
@@ -10304,7 +10309,7 @@ msgstr "可信的 POS 配置"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 msgid "Try on other printer"
-msgstr ""
+msgstr "尝试其他打印机"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
@@ -10463,7 +10468,7 @@ msgstr "加售&交叉销售"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__use_lna
 msgid "Use Local Network Access"
-msgstr ""
+msgstr "使用本地网络访问"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_presets
@@ -10612,19 +10617,19 @@ msgstr "警告，支付的金额高于总金额。（差值：%s）"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "We duly advise you to use Chrome or Brave browser."
-msgstr ""
+msgstr "我们郑重建议您使用 Chrome 或 Brave 浏览器。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__custom_website
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_custom_website
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Website"
-msgstr ""
+msgstr "网站"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__custom_website_placeholder
 msgid "Website Link"
-msgstr ""
+msgstr "网站链接"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__website_message_ids

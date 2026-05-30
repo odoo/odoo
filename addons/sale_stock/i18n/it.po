@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-15 17:37+0000\n"
-"PO-Revision-Date: 2026-05-23 13:25+0000\n"
+"PO-Revision-Date: 2026-05-30 12:21+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-3/"
 "sale_stock/it/>\n"
@@ -107,6 +107,14 @@ msgid ""
 "this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"A seconda della configurazione del prodotto, la quantità consegnata può "
+"essere calcolata automaticamente tramite:\n"
+"  - intervento manuale, la quantità viene impostata manualmente sulla riga\n"
+"  - analisi delle spese, la quantità è la somma delle quantità delle spese "
+"registrate\n"
+"  - fogli ore: la quantità è la somma delle ore registrate sulle attività "
+"collegate a questa riga\n"
+"  - movimenti di magazzino: la quantità proviene dai prelievi confermati\n"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
@@ -429,7 +437,7 @@ msgstr "Metodo per aggiornare le q.tà consegnate"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by <br/>"
-msgstr ""
+msgstr "Anticipa le date di consegna attese di <br/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
@@ -464,6 +472,7 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products"
 msgstr ""
+"Numero di giorni tra la conferma dell'ordine e la spedizione dei prodotti"
 
 #. module: sale_stock
 #. odoo-javascript
