@@ -77,6 +77,6 @@ export class TextDirectionPlugin extends Plugin {
                 element.style.setProperty("text-align", "right");
             }
         }
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 }

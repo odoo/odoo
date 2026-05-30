@@ -15,8 +15,8 @@ export class DisableSnippetsPlugin extends Plugin {
     /** @type {import("plugins").BuilderResources} */
     resources = {
         on_removed_handlers: this.disableUndroppableSnippets.bind(this),
-        on_undone_handlers: this.disableUndroppableSnippets.bind(this),
-        on_redone_handlers: this.disableUndroppableSnippets.bind(this),
+        on_history_commit_undone_handlers: this.disableUndroppableSnippets.bind(this),
+        on_history_commit_redone_handlers: this.disableUndroppableSnippets.bind(this),
         on_mobile_view_switched_handlers: withSequence(
             20,
             this.disableUndroppableSnippets.bind(this)

@@ -19,7 +19,7 @@ import { unformat } from "./_helpers/format";
 import {
     deleteBackward,
     deleteForward,
-    ensureDistinctHistoryStep,
+    ensureDistinctHistoryCommit,
     insertText,
 } from "./_helpers/user_actions";
 import { cleanHints } from "./_helpers/dispatch";
@@ -352,7 +352,7 @@ test("can't use the toolbar in a caption", async () => {
             editor.document.execCommand("insertText", false, "a");
             expect(input.value).toBe("a");
             await click("h1"); // Blur the input.
-            await animationFrame(); // Wait for the focus event to trigger a step.
+            await animationFrame(); // Wait for the focus event to trigger a commit.
             editor.shared.selection.setCursorStart(queryOne("h1"));
         },
         contentAfter: unformat(
@@ -373,7 +373,7 @@ test("undo in a caption undoes the last caption action then returns to regular e
         contentBefore: `<p><img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption="${caption}"></p><h1>[]Heading</h1>`,
         stepFunction: async (editor) => {
             await insertText(editor, "a");
-            await ensureDistinctHistoryStep();
+            await ensureDistinctHistoryCommit();
             const heading = queryOne("h1");
             expect(heading.textContent).toBe("aHeading");
             await toggleCaption();
@@ -384,7 +384,7 @@ test("undo in a caption undoes the last caption action then returns to regular e
             await editor.document.execCommand("insertText", false, "b");
             await editor.document.execCommand("insertText", false, "c");
             await editor.document.execCommand("insertText", false, "d");
-            await ensureDistinctHistoryStep();
+            await ensureDistinctHistoryCommit();
             await editor.document.execCommand("delete", false, null); // Backspace.
             expect(input.value).toBe(`${caption}bc`);
 

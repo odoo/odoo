@@ -83,7 +83,11 @@ describe("Popup options: popup in page before edit", () => {
                     //   modal, and verifies that it did not add mutations
                     // TODO: once the service website_edit runs during the
                     // tests, this plugin should be removed
-                    is_mutation_record_savable_predicates: (record) => {
+                    /**
+                     * @param {import("@html_editor/core/dom_observer_plugin").NativeMutation} record
+                     * @returns { boolean | undefined}
+                     */
+                    is_classlist_mutation_savable_predicates: (record) => {
                         if (record.target.matches?.(".s_popup") && record.className === "d-none") {
                             return false;
                         }
@@ -130,9 +134,9 @@ describe("Popup options: popup in page before edit", () => {
         expect(":iframe .s_popup .modal").not.toBeVisible();
         expect(":iframe .s_popup").toHaveClass("d-none");
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
-        // Ensure that no mutations were registered in the history.
-        // `addStep` return the created step, or false if there was no mutations
-        expect(builder.getEditor().shared.history.addStep()).toBe(false);
+        // Ensure that no mutations were registered in the `domObserver` plugin.
+        // `commit` returns the written commit, or `false` if there were no mutations.
+        expect(builder.getEditor().shared.history.commit()).toBe(false);
     });
 
     test("editing s_popup, then closing it, then undo show it again", async () => {

@@ -1338,7 +1338,7 @@ describe("tab", () => {
 
         expect(getContent(el)).toBe(expectedContent);
 
-        // Check that it was registed as a history step.
+        // Check that it was registed as a history commit.
         undo(editor);
         expect(getContent(el)).toBe(
             unformat(`

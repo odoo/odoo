@@ -11,7 +11,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class InstagramOptionPlugin extends Plugin {
     static id = "instagramOption";
-    static dependencies = ["history"];
+    static dependencies = ["domObserver"];
     static shared = ["instagramPageNameFromUrl"];
 
     /** @type {import("plugins").WebsiteResources} */
@@ -49,9 +49,9 @@ export class InstagramOptionPlugin extends Plugin {
         if (res && res[0].social_instagram) {
             this.instagramUrl = this.instagramPageNameFromUrl(res[0].social_instagram);
 
-            // WARNING: the call to ignoreDOMMutations is very dangerous,
+            // WARNING: the call to ignore is very dangerous,
             // and should be avoided in most cases (if you think you need those, ask html_editor team)
-            const hasChanged = this.dependencies.history.ignoreDOMMutations(() =>
+            const hasChanged = this.dependencies.domObserver.ignore(() =>
                 this.setPage(nodes)
             );
 

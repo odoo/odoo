@@ -205,7 +205,7 @@ export async function testEditor(config) {
     // If the selection of the editor would be programatically set upon start
     // (like an autofocus feature), it would be the role of the autofocus
     // feature to trigger the stageSelection.
-    editor.shared.history.stageSelection();
+    editor.shared.selection.stageSelection();
 
     if (config.props?.iframe) {
         expect(".o-wysiwyg iframe").toHaveCount(1);

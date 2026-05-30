@@ -8,9 +8,11 @@ declare module "plugins" {
     import { content_editable_providers, content_not_editable_providers, contenteditable_to_remove_selector, is_valid_contenteditable_predicates } from "@html_editor/core/content_editable_plugin";
     import { on_will_delete_handlers, delete_backward_line_overrides, delete_backward_overrides, delete_backward_word_overrides, delete_forward_line_overrides, delete_forward_overrides, delete_forward_word_overrides, on_deleted_handlers, delete_range_overrides, DeleteShared, is_functional_empty_node_predicates, removable_descendants_providers, system_node_selectors, is_node_removable_predicates } from "@html_editor/core/delete_plugin";
     import { DialogShared } from "@html_editor/core/dialog_plugin";
+    import { DomObserverShared, attributes_mutation_value_processors, on_will_filter_mutations_handlers, set_attribute_overrides, on_content_updated_handlers, on_pending_mutations_staged_handlers, serializable_descendants_processors, on_pending_mutations_normalized_handlers, is_mutation_savable_predicates, is_classlist_mutation_savable_predicates } from "@html_editor/core/dom_observer_plugin";
     import { on_inserted_handlers, before_insert_processors, on_will_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties, are_inlines_allowed_at_root_predicates } from "@html_editor/core/dom_plugin";
+    import { DomReferenceMapShared } from "@html_editor/core/dom_reference_map_plugin";
     import { is_format_class_predicates, format_selection_overrides, FormatShared, has_format_predicates, on_all_formats_removed_handlers } from "@html_editor/core/format_plugin";
-    import { on_attribute_changed_handlers, attribute_change_processors, on_will_add_step_handlers, on_will_filter_mutation_record_handlers, on_content_updated_handlers, on_external_step_added_handlers, on_new_records_handled_handlers, on_history_cleaned_handlers, on_history_reset_from_steps_handlers, on_history_reset_handlers, history_step_processors, HistoryShared, on_redone_handlers, on_undone_handlers, on_savepoint_restored_handlers, is_mutation_record_savable_predicates, serializable_descendants_processors, set_attribute_overrides, on_step_added_handlers, is_step_reversible_predicates } from "@html_editor/core/history_plugin";
+    import { HistoryShared, history_commit_data_properties, on_apply_history_commit_handlers, on_history_commit_restored_handlers, on_irreversible_history_commit_applied_handlers, on_revert_history_commit_handlers, on_committed_to_history_handlers, on_will_reset_history_handlers, on_history_commit_redone_handlers, on_history_commit_undone_handlers, on_savepoint_restored_handlers, on_will_rebase_history_handlers, on_history_rebased_handlers, on_remote_history_commit_applied_handlers, on_will_preview_handlers, on_pending_changes_unstashed_handlers, on_history_reset_handlers, on_will_invalidate_pending_changes_handlers, has_history_commit_changes_predicates, is_history_commit_reversible_predicates, pending_history_commit_data_processors, save_point_history_commit_data_processors, snapshot_history_commit_data_processors } from "@html_editor/core/history_plugin";
     import { on_beforeinput_handlers, on_input_handlers } from "@html_editor/core/input_plugin";
     import { on_will_break_line_handlers, insert_line_break_element_overrides, LineBreakShared } from "@html_editor/core/line_break_plugin";
     import { OverlayShared } from "@html_editor/core/overlay_plugin";
@@ -50,7 +52,7 @@ declare module "plugins" {
     import { toolbar_groups, toolbar_items, toolbar_namespaces, ToolbarShared } from "@html_editor/main/toolbar/toolbar_plugin";
 
     import { CollaborationOdooShared } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
-    import { CollaborationShared, on_external_history_step_added_handlers } from "@html_editor/others/collaboration/collaboration_plugin";
+    import { CollaborationShared, on_remote_history_commits_applied_handlers } from "@html_editor/others/collaboration/collaboration_plugin";
     import { DynamicPlaceholderShared } from "@html_editor/others/dynamic_placeholder_plugin";
     import { EmbeddedComponentShared, on_will_mount_component_handlers, on_component_mounted_handlers } from "@html_editor/others/embedded_component_plugin";
 
@@ -72,6 +74,8 @@ declare module "plugins" {
         delete: DeleteShared;
         dialog: DialogShared;
         dom: DomShared;
+        domReferenceMap: DomReferenceMapShared;
+        domObserver: DomObserverShared;
         format: FormatShared;
         history: HistoryShared;
         lineBreak: LineBreakShared;
@@ -126,18 +130,21 @@ declare module "plugins" {
     export interface EditorResourcesList {
         // Handlers
         on_all_formats_removed_handlers: on_all_formats_removed_handlers;
-        on_attribute_changed_handlers: on_attribute_changed_handlers;
+        on_apply_history_commit_handlers: on_apply_history_commit_handlers;
         on_beforeinput_handlers: on_beforeinput_handlers;
+        on_committed_to_history_handlers: on_committed_to_history_handlers;
         on_component_mounted_handlers: on_component_mounted_handlers;
         on_content_updated_handlers: on_content_updated_handlers;
         on_deleted_handlers: on_deleted_handlers;
         on_editor_started_handlers: on_editor_started_handlers;
         on_element_split_handlers: on_element_split_handlers;
-        on_external_history_step_added_handlers: on_external_history_step_added_handlers;
-        on_external_step_added_handlers: on_external_step_added_handlers;
-        on_history_cleaned_handlers: on_history_cleaned_handlers;
-        on_history_reset_from_steps_handlers: on_history_reset_from_steps_handlers;
+        on_history_commit_redone_handlers: on_history_commit_redone_handlers;
+        on_history_commit_restored_handlers: on_history_commit_restored_handlers;
+        on_history_commit_undone_handlers: on_history_commit_undone_handlers;
         on_history_reset_handlers: on_history_reset_handlers;
+        on_history_rebased_handlers: on_history_rebased_handlers;
+        on_irreversible_history_commit_applied_handlers: on_irreversible_history_commit_applied_handlers;
+        on_pending_changes_unstashed_handlers: on_pending_changes_unstashed_handlers;
         on_image_added_handlers: on_image_added_handlers;
         on_image_processed_handlers: on_image_processed_handlers;
         on_image_saved_handlers: on_image_saved_handlers;
@@ -150,21 +157,25 @@ declare module "plugins" {
         on_media_dialog_saved_handlers: on_media_dialog_saved_handlers;
         on_media_replaced_handlers: on_media_replaced_handlers;
         on_movable_element_set_handlers: on_movable_element_set_handlers;
-        on_new_records_handled_handlers: on_new_records_handled_handlers;
         on_pasted_handlers: on_pasted_handlers;
-        on_redone_handlers: on_redone_handlers;
+        on_pending_mutations_normalized_handlers: on_pending_mutations_normalized_handlers;
+        on_pending_mutations_staged_handlers: on_pending_mutations_staged_handlers;
+        on_remote_history_commit_applied_handlers: on_remote_history_commit_applied_handlers;
+        on_remote_history_commits_applied_handlers: on_remote_history_commits_applied_handlers;
+        on_revert_history_commit_handlers: on_revert_history_commit_handlers;
         on_savepoint_restored_handlers: on_savepoint_restored_handlers;
         on_selection_leave_handlers: on_selection_leave_handlers;
         on_selectionchange_handlers: on_selectionchange_handlers;
-        on_step_added_handlers: on_step_added_handlers;
-        on_undone_handlers: on_undone_handlers;
-        on_will_add_step_handlers: on_will_add_step_handlers;
-        on_will_break_line_handlers: on_will_break_line_handlers;
         on_will_delete_handlers: on_will_delete_handlers;
-        on_will_filter_mutation_record_handlers: on_will_filter_mutation_record_handlers;
+        on_will_break_line_handlers: on_will_break_line_handlers;
+        on_will_filter_mutations_handlers: on_will_filter_mutations_handlers;
+        on_will_invalidate_pending_changes_handlers: on_will_invalidate_pending_changes_handlers;
         on_will_mount_component_handlers: on_will_mount_component_handlers;
         on_will_paste_handlers: on_will_paste_handlers;
+        on_will_preview_handlers: on_will_preview_handlers;
         on_will_process_image_handlers: on_will_process_image_handlers;
+        on_will_rebase_history_handlers: on_will_rebase_history_handlers;
+        on_will_reset_history_handlers: on_will_reset_history_handlers;
         on_will_save_media_dialog_handlers: on_will_save_media_dialog_handlers;
         on_will_set_tag_handlers: on_will_set_tag_handlers;
         on_will_split_block_handlers: on_will_split_block_handlers;
@@ -195,20 +206,22 @@ declare module "plugins" {
 
         // Predicates
         has_format_predicates: has_format_predicates;
+        has_history_commit_changes_predicates: has_history_commit_changes_predicates;
         is_char_tangible_for_keyboard_navigation_predicates: is_char_tangible_for_keyboard_navigation_predicates;
+        is_classlist_mutation_savable_predicates: is_classlist_mutation_savable_predicates;
         is_empty_link_legit_predicates: is_empty_link_legit_predicates;
         is_format_class_predicates: is_format_class_predicates;
         is_functional_empty_node_predicates: is_functional_empty_node_predicates;
+        is_history_commit_reversible_predicates: is_history_commit_reversible_predicates;
         is_link_allowed_on_selection_predicates: is_link_allowed_on_selection_predicates;
         is_link_editable_predicates: is_link_editable_predicates;
         is_link_eligible_for_visual_indication_predicates: is_link_eligible_for_visual_indication_predicates;
         is_link_eligible_for_zwnbsp_predicates: is_link_eligible_for_zwnbsp_predicates;
-        is_mutation_record_savable_predicates: is_mutation_record_savable_predicates;
+        is_mutation_savable_predicates: is_mutation_savable_predicates;
         is_node_editable_predicates: is_node_editable_predicates;
         is_node_fully_selected_predicates: is_node_fully_selected_predicates;
         is_node_removable_predicates: is_node_removable_predicates;
         is_node_splittable_predicates: is_node_splittable_predicates;
-        is_step_reversible_predicates: is_step_reversible_predicates;
         is_valid_contenteditable_predicates: is_valid_contenteditable_predicates;
         is_valid_for_base_container_predicates: is_valid_for_base_container_predicates;
         should_bypass_paste_image_files_predicates: should_bypass_paste_image_files_predicates;
@@ -218,7 +231,7 @@ declare module "plugins" {
 
         // Processors
         apply_background_color_processors: apply_background_color_processors;
-        attribute_change_processors: attribute_change_processors;
+        attributes_mutation_value_processors: attributes_mutation_value_processors;
         background_color_processors: background_color_processors;
         before_insert_processors: before_insert_processors;
         before_insert_within_pre_processors: before_insert_within_pre_processors;
@@ -226,10 +239,12 @@ declare module "plugins" {
         clipboard_content_processors: clipboard_content_processors;
         clipboard_text_processors: clipboard_text_processors;
         deselect_custom_selected_nodes_processors: deselect_custom_selected_nodes_processors;
-        history_step_processors: history_step_processors;
         node_to_insert_processors: node_to_insert_processors;
         normalize_processors: normalize_processors;
+        pending_history_commit_data_processors: pending_history_commit_data_processors;
+        save_point_history_commit_data_processors: save_point_history_commit_data_processors;
         serializable_descendants_processors: serializable_descendants_processors;
+        snapshot_history_commit_data_processors: snapshot_history_commit_data_processors;
         targeted_nodes_processors: targeted_nodes_processors;
         to_inline_code_processors: to_inline_code_processors;
 
@@ -250,6 +265,7 @@ declare module "plugins" {
         contenteditable_to_remove_selector: contenteditable_to_remove_selector;
         font_type_items: font_type_items,
         hints: hints;
+        history_commit_data_properties: history_commit_data_properties;
         immutable_link_selectors: immutable_link_selectors;
         link_popovers: link_popovers;
         media_dialog_extra_tabs: media_dialog_extra_tabs;

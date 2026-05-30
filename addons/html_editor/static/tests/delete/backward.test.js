@@ -15,7 +15,7 @@ import { unformat } from "../_helpers/format";
 import { getContent, setSelection } from "../_helpers/selection";
 import {
     deleteBackward,
-    ensureDistinctHistoryStep,
+    ensureDistinctHistoryCommit,
     insertText,
     tripleClick,
     undo,
@@ -171,7 +171,7 @@ describe("Selection collapsed", () => {
                 contentBefore: "<p>ab<b>c[]</b>de</p>",
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
-                    await ensureDistinctHistoryStep();
+                    await ensureDistinctHistoryCommit();
                     await insertText(editor, "x");
                     undo(editor);
                 },

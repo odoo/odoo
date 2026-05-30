@@ -216,8 +216,8 @@ export class FontTypePlugin extends Plugin {
             READ,
             this.updateFontTypeSelectorParams.bind(this)
         ),
-        on_undone_handlers: this.updateFontTypeSelectorParams.bind(this),
-        on_redone_handlers: this.updateFontTypeSelectorParams.bind(this),
+        on_history_commit_undone_handlers: this.updateFontTypeSelectorParams.bind(this),
+        on_history_commit_redone_handlers: this.updateFontTypeSelectorParams.bind(this),
         normalize_processors: this.normalize.bind(this),
 
         /** Overrides */

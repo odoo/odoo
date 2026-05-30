@@ -12,7 +12,7 @@ import { Operation } from "./operation";
 
 export class OperationPlugin extends Plugin {
     static id = "operation";
-    static dependencies = ["history"];
+    static dependencies = ["domObserver", "history"];
     static shared = ["next", "hasTimedOut"];
 
     setup() {
@@ -89,7 +89,7 @@ export function useOperation() {
     return (apply, ...args) => {
         comp.env.editor.shared.operation.next(async (...args) => {
             await apply(...args);
-            comp.env.editor.shared.history.addStep();
+            comp.env.editor.shared.history.commit();
         }, ...args);
     };
 }

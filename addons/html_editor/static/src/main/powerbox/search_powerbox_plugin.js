@@ -17,8 +17,8 @@ export class SearchPowerboxPlugin extends Plugin {
         on_beforeinput_handlers: this.onBeforeInput.bind(this),
         on_input_handlers: this.onInput.bind(this),
         on_deleted_handlers: this.update.bind(this),
-        on_undone_handlers: this.update.bind(this),
-        on_redone_handlers: this.update.bind(this),
+        on_history_commit_undone_handlers: this.update.bind(this),
+        on_history_commit_redone_handlers: this.update.bind(this),
         user_commands: {
             id: "openSearchPowerbox",
             run: () => {

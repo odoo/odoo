@@ -32,10 +32,11 @@ export class HintPlugin extends Plugin {
     resources = {
         /** Handlers */
         on_selectionchange_handlers: this.triggerDebouncedUpdateHints.bind(this),
-        on_external_history_step_added_handlers: () => {
+        on_remote_history_commits_applied_handlers: () => {
             this.clearHints();
             this.updateHints();
         },
+        on_pending_mutations_staged_handlers: this.updateHints.bind(this),
         on_content_updated_handlers: this.updateHints.bind(this),
 
         /** Predicates */

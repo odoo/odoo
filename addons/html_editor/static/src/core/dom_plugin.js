@@ -761,7 +761,7 @@ export class DomPlugin extends Plugin {
             }
         }
         cursors.restore();
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     removeEmptyClassAndStyleAttributes(root) {

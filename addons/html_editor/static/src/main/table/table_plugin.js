@@ -160,10 +160,10 @@ export class TablePlugin extends Plugin {
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         resize_target_processors: this.processTableResizeTargets.bind(this),
         targeted_nodes_processors: this.adjustTargetedNodes.bind(this),
-        on_undone_handlers: () => {
+        on_history_commit_undone_handlers: () => {
             delete this.tableGridMap;
         },
-        on_redone_handlers: () => {
+        on_history_commit_redone_handlers: () => {
             delete this.tableGridMap;
         },
 
@@ -371,7 +371,7 @@ export class TablePlugin extends Plugin {
             if (shouldAddNewRow) {
                 this.addRow("after", findInSelection(selection, "tr"));
                 this.shiftCursorToTableCell(1);
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
             }
             return true;
         }
@@ -451,7 +451,7 @@ export class TablePlugin extends Plugin {
         this.dependencies.selection.setCursorStart(
             table.querySelector(baseContainerGlobalSelector)
         );
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
     /**
      * @param {'before'|'after'} position

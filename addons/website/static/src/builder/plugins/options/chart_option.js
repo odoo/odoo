@@ -389,7 +389,7 @@ export class ChartOption extends BaseOptionComponent {
                 return;
             }
             editingElement.dataset.data = JSON.stringify(data);
-            this.dependencies.history.addStep({ batchable: true });
+            this.dependencies.history.commit({ batchable: true });
         });
     }
 }

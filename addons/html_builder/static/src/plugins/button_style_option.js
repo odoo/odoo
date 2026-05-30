@@ -36,7 +36,7 @@ export class ButtonStyleOption extends BaseOptionComponent {
         BuilderNumberInput,
         BorderConfigurator,
     };
-    static dependencies = ["history"];
+    static dependencies = ["domObserver"];
 
     buttonSizesData = BUTTON_SIZES;
     buttonShapesData = BUTTON_SHAPES;
@@ -109,12 +109,12 @@ export class ButtonStyleOption extends BaseOptionComponent {
         for (const [variantName, variantClass] of Object.entries(buttonVariants)) {
             const tempButtonEl = iframeDocument.createElement("a");
             tempButtonEl.className = `btn ${variantClass}`;
-            this.dependencies.history.ignoreDOMMutations(() =>
+            this.dependencies.domObserver.ignore(() =>
                 el.insertAdjacentElement("afterend", tempButtonEl)
             );
             const computedStyle = getComputedStyle(tempButtonEl);
             copyStyle(computedStyle, variantName);
-            this.dependencies.history.ignoreDOMMutations(() => tempButtonEl.remove());
+            this.dependencies.domObserver.ignore(() => tempButtonEl.remove());
         }
 
         // The style for btn-custom is always a copy of the current button style.
@@ -124,12 +124,12 @@ export class ButtonStyleOption extends BaseOptionComponent {
         // the customization begins. The button is cloned to prevent copying its
         // hovered style.
         const tempButtonEl = el.cloneNode(true);
-        this.dependencies.history.ignoreDOMMutations(() =>
+        this.dependencies.domObserver.ignore(() =>
             el.insertAdjacentElement("afterend", tempButtonEl)
         );
         const computedStyle = getComputedStyle(tempButtonEl);
         copyStyle(computedStyle, "custom");
-        this.dependencies.history.ignoreDOMMutations(() => tempButtonEl.remove());
+        this.dependencies.domObserver.ignore(() => tempButtonEl.remove());
 
         return styles;
     }

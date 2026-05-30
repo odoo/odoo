@@ -215,7 +215,7 @@ export class MediaPlugin extends Plugin {
         const [anchorNode, anchorOffset] = rightPos(element);
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         this.trigger("on_media_dialog_saved_handlers", element);
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     async addMedia(element) {

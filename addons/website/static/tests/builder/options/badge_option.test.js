@@ -12,6 +12,6 @@ test("adjacent s_badge elements should not be merged", async () => {
     );
     const editor = getEditor();
     // Trigger mergeAdjacentInlines
-    editor.shared.history.addStep();
+    editor.shared.history.commit();
     expect(editor.editable.querySelectorAll(".s_badge")).toHaveLength(2);
 });

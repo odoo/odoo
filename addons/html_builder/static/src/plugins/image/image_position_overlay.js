@@ -1,11 +1,6 @@
 import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
-import {
-    Component,
-    onMounted,
-    onWillStart,
-    onWillUnmount,
-} from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
 
 export class ImagePositionOverlay extends Component {
     static template = "html_builder.ImagePositionOverlay";
@@ -76,8 +71,7 @@ export class ImagePositionOverlay extends Component {
         });
 
         onMounted(() => {
-            const makeSavePoint = this.props.history?.makeSavePoint;
-            this.reloadSavePoint = makeSavePoint ? makeSavePoint() : () => {};
+            this.reloadSavePoint = this.props.history?.makeSavePoint() ?? (() => {});
             this.dimensionOverlay();
             this.props.targetEl.classList.add("o_we_image_positioning");
         });

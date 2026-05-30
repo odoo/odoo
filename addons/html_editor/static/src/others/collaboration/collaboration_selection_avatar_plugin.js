@@ -8,7 +8,7 @@ import { user } from "@web/core/user";
 
 /**
  * @typedef {Object} SelectionInfo
- * @property {import("@html_editor/core/history_plugin").SerializedSelection} selection
+ * @property {import("@html_editor/core/selection_plugin").SerializedSelection} selection
  * @property {string} color
  * @property {string} peerId
  * @property {string} peerName
@@ -21,12 +21,12 @@ export const AVATAR_SIZE = 25;
 
 export class CollaborationSelectionAvatarPlugin extends Plugin {
     static id = "collaborationSelectionAvatar";
-    static dependencies = ["history", "position", "localOverlay", "collaborationOdoo"];
+    static dependencies = ["domReferenceMap", "position", "localOverlay", "collaborationOdoo"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
         on_collaboration_notification_handlers: this.handleCollaborationNotification.bind(this),
-        on_external_history_step_added_handlers: this.refreshSelection.bind(this),
+        on_remote_history_commits_applied_handlers: this.refreshSelection.bind(this),
         on_layout_geometry_change_handlers: this.refreshSelection.bind(this),
         on_movable_element_set_handlers: this.disableAvatarForElement.bind(this),
         on_will_unset_movable_element_handlers: this.enableAvatars.bind(this),
@@ -76,8 +76,8 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
             return;
         }
         const { avatarUrl, peerName = _t("Anonymous") } = peerMetadata;
-        const anchorNode = this.dependencies.history.getNodeById(selection.anchorNodeId);
-        const focusNode = this.dependencies.history.getNodeById(selection.focusNodeId);
+        const anchorNode = this.dependencies.domReferenceMap.getNodeById(selection.anchorNodeId);
+        const focusNode = this.dependencies.domReferenceMap.getNodeById(selection.focusNodeId);
         if (!anchorNode || !focusNode || !anchorNode.isConnected || !focusNode.isConnected) {
             return;
         }

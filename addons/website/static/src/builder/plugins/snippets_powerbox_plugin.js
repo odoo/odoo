@@ -143,7 +143,7 @@ export class SnippetsPowerboxPlugin extends Plugin {
         const snippet = this.config.snippetModel.getSnippetByName("snippet_content", name);
         const content = snippet.content.cloneNode(true);
         this.dependencies.dom.insert(content);
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 }
 

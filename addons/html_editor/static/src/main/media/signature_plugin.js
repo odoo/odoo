@@ -39,7 +39,7 @@ export class SignaturePlugin extends Plugin {
                 img.style = "width: 50%";
                 img.src = signature.signatureImage;
                 this.dependencies.dom.insert(img);
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
                 close();
             },
         });

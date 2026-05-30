@@ -272,14 +272,14 @@ test("should remove empty strikeThrough when changing selection", async () => {
     expect(getContent(el)).toBe(`<p>a[]bcd</p>`);
 });
 
-test("should not add history step for strikethrough on collapsed selection", async () => {
+test("should not add history commit for strikethrough on collapsed selection", async () => {
     const { editor, el } = await setupEditor("<p>abcd[]</p>");
 
     patchWithCleanup(console, { warn: () => {} });
 
     // Collapsed formatting shortcuts (e.g. Ctrl+5) shouldn’t create a history
-    // step. The empty inline tag is temporary: auto-cleaned if unused. We want
-    // to avoid having a phantom step in the history.
+    // commit. The empty inline tag is temporary: auto-cleaned if unused. We want
+    // to avoid having a phantom commit in the history.
     await press(["ctrl", "5"]);
     expect(getContent(el)).toBe(`<p>abcd<s data-oe-zws-empty-inline="">\u200B[]</s></p>`);
 

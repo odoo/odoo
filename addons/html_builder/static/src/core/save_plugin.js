@@ -3,6 +3,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { uniqueId } from "@web/core/utils/functions";
 import { isZWS } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
+import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 /**
@@ -31,11 +32,11 @@ import { _t } from "@web/core/l10n/translation";
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
     static shared = ["save", "ignoreDirty", "groupElements"];
-    static dependencies = ["history"];
+    static dependencies = ["history", "domReferenceMap"];
 
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_new_records_handled_handlers: this.handleMutations.bind(this),
+        on_pending_mutations_staged_handlers: this.handleMutations.bind(this),
         on_editor_started_handlers: this.startObserving.bind(this),
         // Resource definitions:
         clean_for_save_processors: [
@@ -137,23 +138,28 @@ export class SavePlugin extends Plugin {
     /**
      * Handles the flag of the closest savable element to the mutation as dirty
      *
-     * @param {Object} records - The observed mutations
-     * @param {String} currentOperation - The name of the current operation
+     * @param {import("@html_editor/core/dom_observer_plugin").SerializedMutation[]} mutations - The observed mutations
      */
-    handleMutations(records, currentOperation) {
+    handleMutations(mutations) {
         if (!this.canObserve) {
             return;
         }
-        if (currentOperation === "undo" || currentOperation === "redo") {
-            // Do nothing as `o_dirty` has already been handled by the history
-            // plugin.
-            return;
-        }
-        for (const record of records) {
-            if (record.attributeName === "contenteditable") {
+        for (const mutation of mutations) {
+            if (
+                mutation.type === EDITOR_MUTATION_TYPES.ATTRIBUTES &&
+                mutation.attributeName === "contenteditable"
+            ) {
                 continue;
             }
-            let targetEl = record.target;
+            let targetId = mutation.nodeId;
+            // TODO: Wouldn't doing this only for "remove" be enough?
+            if (
+                [EDITOR_MUTATION_TYPES.ADD, EDITOR_MUTATION_TYPES.REMOVE].includes(mutation.type) &&
+                mutation.parentNodeId
+            ) {
+                targetId = mutation.parentNodeId;
+            }
+            let targetEl = this.dependencies.domReferenceMap.getNodeById(targetId);
             if (!targetEl.isConnected) {
                 continue;
             }

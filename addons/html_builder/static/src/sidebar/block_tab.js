@@ -28,7 +28,7 @@ export class BlockTab extends Component {
     static components = { Snippet, CustomInnerSnippet };
     static props = {
         snippetsName: String,
-        newInstalledModule: { type: String, optional: true }
+        newInstalledModule: { type: String, optional: true },
     };
 
     setup() {
@@ -51,7 +51,7 @@ export class BlockTab extends Component {
         onMounted(() => {
             this.makeSnippetDraggable();
             if (this.props.newInstalledModule) {
-                this.handlePostModuleInstall(this.props.newInstalledModule)
+                this.handlePostModuleInstall(this.props.newInstalledModule);
             }
         });
 
@@ -456,9 +456,7 @@ export class BlockTab extends Component {
      * the snippet group to open.
      */
     async handlePostModuleInstall(newInstalledModule) {
-        const { snippetTitle } = JSON.parse(
-            decodeURIComponent(newInstalledModule)
-        );
+        const { snippetTitle } = JSON.parse(decodeURIComponent(newInstalledModule));
         if (snippetTitle) {
             const snippet = this.snippetModel.snippetGroups.find(
                 (snippetEl) => snippetEl.title === snippetTitle

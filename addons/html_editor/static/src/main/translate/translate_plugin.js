@@ -51,7 +51,7 @@ export class TranslatePlugin extends Plugin {
         const dialogParams = {
             insert: (content) => {
                 const insertedNodes = this.dependencies.dom.insert(content);
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
                 // Add a frame around the inserted content to highlight it for 2
                 // seconds.
                 const start = insertedNodes?.length && closestElement(insertedNodes[0]);

@@ -458,7 +458,7 @@ export class LinkPlugin extends Plugin {
             link = this.createLink(url, label);
             this.dependencies.dom.insert(link);
         }
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
         const linkParent = link.parentElement;
         const linkOffset = Array.from(linkParent.childNodes).indexOf(link);
         this.dependencies.selection.setSelection(
@@ -482,7 +482,7 @@ export class LinkPlugin extends Plugin {
                     this.dependencies.selection.getEditableSelection()
                 );
                 this.dependencies.dom.insert(this.createLink(url, text));
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
             },
         };
         return pasteAsURLCommand;
@@ -546,7 +546,7 @@ export class LinkPlugin extends Plugin {
         ) {
             this.extendLinkToSelection(linkElement, selection);
             linkElement = findInSelection(selection, "a");
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
             cursorsToRestore = this.dependencies.selection.preserveSelection();
         }
         this.linkInDocument = linkElement;
@@ -628,13 +628,12 @@ export class LinkPlugin extends Plugin {
             linkElement,
             isImage: isImage,
             containerElement: closestElement(selection.anchorNode),
-            ignoreDOMMutations: this.dependencies.history.ignoreDOMMutations,
             onApply: (...args) => {
                 delete this._isNavigatingByMouse;
                 applyCallback(...args);
                 this.closeLinkTools(cursorsToRestore);
                 this.dependencies.selection.focusEditable();
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
             },
             onChange: applyCallback,
             onDiscard: () => {
@@ -914,7 +913,7 @@ export class LinkPlugin extends Plugin {
         cursors.restore();
         this.linkInDocument = null;
         this.dependencies.selection.focusEditable();
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     removeLinkFromSelectionIsDisabled(selection) {
@@ -991,12 +990,12 @@ export class LinkPlugin extends Plugin {
                 ];
             }
             cursors.restore();
-            // when only unlink an inline image, add step after the unwrapping
+            // when only unlink an inline image, commit after the unwrapping
             if (
                 selectedImageNodes.length === 1 &&
                 selectedImageNodes.length === targetedNodes.length
             ) {
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
                 return;
             }
         }
@@ -1058,7 +1057,7 @@ export class LinkPlugin extends Plugin {
         if (endBlock && endBlock !== startBlock) {
             this.removeEmptyLinks(endBlock);
         }
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     removeEmptyLinks(root) {
@@ -1132,7 +1131,7 @@ export class LinkPlugin extends Plugin {
         if (this.convertToLink) {
             if (ev.inputType === "insertParagraph" || ev.inputType === "insertLineBreak") {
                 this.convertToLink();
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
                 delete this.convertToLink;
             }
         }
@@ -1142,7 +1141,7 @@ export class LinkPlugin extends Plugin {
         if (this.convertToLink) {
             if (ev.inputType === "insertText" && ev.data === " ") {
                 this.convertToLink();
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
                 delete this.convertToLink;
             }
         }
@@ -1179,7 +1178,7 @@ export class LinkPlugin extends Plugin {
             cursors.update(callbacksForCursorUpdate.remove(imageToDelete));
             imageToDelete.remove();
             this.closeLinkTools(cursors);
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
             return true;
         }
         return false;

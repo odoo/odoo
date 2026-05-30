@@ -5,7 +5,7 @@ import { preloadBundle } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { expectElementCount } from "./_helpers/ui_expectations";
-import { ensureDistinctHistoryStep, insertText, undo } from "./_helpers/user_actions";
+import { ensureDistinctHistoryCommit, insertText, undo } from "./_helpers/user_actions";
 
 preloadBundle("web.assets_emoji");
 
@@ -40,7 +40,7 @@ test("undo an emoji", async () => {
     expect(getContent(el)).toBe("<p>ab[]</p>");
 
     await insertText(editor, "test");
-    await ensureDistinctHistoryStep();
+    await ensureDistinctHistoryCommit();
     await insertText(editor, "/emoji");
     await press("enter");
     await waitFor(".o-EmojiPicker", { timeout: 1000 });

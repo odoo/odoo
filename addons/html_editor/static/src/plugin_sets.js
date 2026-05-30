@@ -1,3 +1,4 @@
+import { LegacyCompatibilityPlugin } from "./core/legacy_compatibility_plugin";
 import { BaseContainerPlugin } from "./core/base_container_plugin";
 import { ClipboardPlugin } from "./core/clipboard_plugin";
 import { CommentPlugin } from "./core/comment_plugin";
@@ -79,8 +80,11 @@ import { StylePlugin } from "./core/style_plugin";
 import { ContentEditablePlugin } from "./core/content_editable_plugin";
 import { SelectionPlaceholderPlugin } from "./main/selection_placeholder_plugin";
 import { ResizePlugin } from "./main/resize_plugin";
+import { DomReferenceMapPlugin } from "./core/dom_reference_map_plugin";
+import { DomObserverPlugin } from "./core/dom_observer_plugin";
 
 export const CORE_PLUGINS = [
+    LegacyCompatibilityPlugin,
     BaseContainerPlugin,
     ClipboardPlugin,
     CommentPlugin,
@@ -89,6 +93,8 @@ export const CORE_PLUGINS = [
     DomPlugin,
     FormatPlugin,
     HistoryPlugin,
+    DomReferenceMapPlugin,
+    DomObserverPlugin,
     InputPlugin,
     LineBreakPlugin,
     NoInlineRootPlugin,
