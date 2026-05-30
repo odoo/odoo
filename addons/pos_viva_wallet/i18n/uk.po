@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-03-29 12:12+0000\n"
-"Last-Translator: Yana Bystrytska <yana.bystrytska@erp.co.ua>\n"
+"PO-Revision-Date: 2026-05-26 04:55+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/"
 "pos_viva_wallet/uk/>\n"
 "Language: uk\n"
@@ -23,7 +23,7 @@ msgstr ""
 "? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
 "14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
 "100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,field_description:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key
@@ -90,6 +90,7 @@ msgstr "Повідомлення з Viva Wallet: %s"
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 msgid "Only 'group_pos_user' are allowed to cancel a Viva Wallet payment"
 msgstr ""
+"Тільки користувач 'group_pos_user' може скасувати платіж через Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -97,12 +98,16 @@ msgstr ""
 msgid ""
 "Only 'group_pos_user' are allowed to get the payment status from Viva Wallet"
 msgstr ""
+"Тільки користувачі групи 'group_pos_user' можуть отримувати статус платежу "
+"від Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 msgid "Only 'group_pos_user' are allowed to send a Viva Wallet payment request"
 msgstr ""
+"Тільки користувач 'group_pos_user' може надсилати запити на оплату через "
+"Viva Wallet"
 
 #. module: pos_viva_wallet
 #: model:ir.model,name:pos_viva_wallet.model_pos_payment_method
@@ -143,6 +148,8 @@ msgid ""
 "Unable to retrieve Viva Wallet Bearer Token: Please verify that the Client "
 "ID and Client Secret are correct"
 msgstr ""
+"Не вдалося отримати токен власника гаманця Viva: Перевірте правильність "
+"ідентифікатора клієнта та секретного номера клієнта"
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key
@@ -196,8 +203,7 @@ msgstr "Ключ верифікації Viva Wallet Webhook"
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 msgid "Your transaction with Viva Wallet failed. Please try again later."
-msgstr ""
-"Ваша трансакція з Viva Wallet не вдалася. Будь-ласка спробуйте пізніше."
+msgstr "Ваша трансакція з Viva Wallet не вдалася. Будь-ласка спробуйте пізніше."
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_terminal_id

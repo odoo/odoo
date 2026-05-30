@@ -3,13 +3,14 @@
 # * account_tax_python
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2026-05-17 05:50+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-05-29 07:24+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/"
 "account_tax_python/lo/>\n"
 "Language: lo\n"
@@ -33,12 +34,22 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - ກຸ່ມອາກອນ: ອາກອນແມ່ນຊຸດຂອງອາກອນຍ່ອຍ.\n"
+"    - ຄົງທີ່: ມູນຄ່າອາກອນຈະຄືເກົ່າບໍ່ວ່າລາຄາຈະເປັນເທົ່າໃດ.\n"
+"    - ເປີເຊັນຂອງລາຄາ: ມູນຄ່າອາກອນແມ່ນ % ຂອງລາຄາ:\n"
+"        ຕົວຢ່າງ: 100 * (1 + 10%) = 110 (ບໍ່ລວມລາຄາ)\n"
+"        ຕົວຢ່າງ: 110 / (1 + 10%) = 100 (ລວມລາຄາ)\n"
+"    - ເປີເຊັນຂອງລາຄາລວມອາກອນ: ມູນຄ່າອາກອນແມ່ນສ່ວນແບ່ງຂອງລາຄາ:\n"
+"        ຕົວຢ່າງ: 180 / (1 - 10%) = 200 (ບໍ່ລວມລາຄາ)\n"
+"        ຕົວຢ່າງ: 200 * (1 - 10%) = 180 (ລວມລາຄາ)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
-msgstr ""
+msgstr "ລະຫັດທີ່ນຳໃຊ້"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
@@ -52,6 +63,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"ຄິດໄລ່ມູນຄ່າອາກອນໂດຍການກຳນົດຕົວປ່ຽນ 'result'.\n"
+"\n"
+":param base_amount: float, ມູນຄ່າຕົວຈິງທີ່ນຳໃຊ້ອາກອນ\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton ຫຼື None\n"
+":param partner: res.partner recordset singleton ຫຼື None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
@@ -64,6 +83,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"ຄິດໄລ່ມູນຄ່າອາກອນໂດຍການກຳນົດຕົວປ່ຽນ 'result'.\n"
+"\n"
+":param base_amount: float, ມູນຄ່າຕົວຈິງທີ່ນຳໃຊ້ອາກອນ\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton ຫຼື None\n"
+":param partner: res.partner recordset singleton ຫຼື None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -76,6 +102,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"ກຳນົດວ່າຈະນຳໃຊ້ອາກອນຫຼືບໍ່ ໂດຍການກຳນົດຕົວປ່ຽນ 'result' ເປັນ True ຫຼື False.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton ຫຼື None\n"
+":param partner: res.partner recordset singleton ຫຼື None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
@@ -87,6 +120,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"ກຳນົດວ່າຈະນຳໃຊ້ອາກອນຫຼືບໍ່ ໂດຍການກຳນົດຕົວປ່ຽນ 'result' ເປັນ True ຫຼື False.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton ຫຼື None\n"
+":param partner: res.partner recordset singleton ຫຼື None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
@@ -94,7 +133,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
 msgid "Python Code"
-msgstr ""
+msgstr "ລະຫັດ Python"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
@@ -105,9 +144,9 @@ msgstr "ອາກອນ"
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
-msgstr ""
+msgstr "ການຄິດໄລ່ອາກອນ"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "ແບບຟອມຕົວຢ່າງສຳລັບອາກອນ"

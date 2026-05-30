@@ -25,13 +25,14 @@
 # Kristoffer Grundström <lovaren@gmail.com>, 2024
 # Larissa Manderfeld, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2025
+# Mikael Akerberg <mikael.akerberg@mariaakerberg.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2025-09-15 11:38+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>\n"
+"PO-Revision-Date: 2026-05-29 14:15+0000\n"
+"Last-Translator: Mikael Akerberg <mikael.akerberg@mariaakerberg.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/project/"
 "sv/>\n"
 "Language: sv\n"
@@ -39,7 +40,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: project
 #. odoo-python
@@ -195,7 +196,7 @@ msgstr "# Betyg"
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_model.js:0
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
 msgid "# of Tasks"
-msgstr "# av aktiviteter"
+msgstr "# av Uppgifter"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -754,12 +755,12 @@ msgstr "<span class=\"o_stat_text\">Föräldrauppgift</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
-msgstr "<span class=\"o_stat_text\">Underarbetsuppgifter</span>"
+msgstr "<span class=\"o_stat_text\">Underuppgifter</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"o_stat_text\">Tasks</span>"
-msgstr "<span class=\"o_stat_text\">Arbetsuppgifter</span>"
+msgstr "<span class=\"o_stat_text\">Uppgifter</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -880,7 +881,7 @@ msgstr "En privat uppgift kan inte ha en förälder."
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
 msgid "A subtask cannot be recurrent."
-msgstr "En deluppgift kan inte vara återkommande."
+msgstr "En underuppgift kan inte vara återkommande."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -1323,7 +1324,7 @@ msgstr "Författare"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Auto-generate tasks for regular activities"
-msgstr "Autogenerera aktiviteter för vanliga uppgifter"
+msgstr "Autogenerera uppgifter för vanliga aktiviteter"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_state
@@ -1525,7 +1526,7 @@ msgstr "Stäng listan med underuppgifter"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__closed_depend_on_count
 msgid "Closed Depending on Tasks"
-msgstr "Stängt beroende på arbetsuppgifter"
+msgstr "Stängt beroende på uppgifter"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -1536,7 +1537,7 @@ msgstr "Stängt på"
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Closed Tasks"
-msgstr "Avslutade uppgifter"
+msgstr "Avslutade Uppgifter"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
@@ -1547,7 +1548,7 @@ msgstr "Stängt tillstånd"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__closed
 msgid "Closed tasks"
-msgstr "Avslutade uppgifter"
+msgstr "Avslutade Uppgifter"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__is_closed
@@ -1679,14 +1680,14 @@ msgstr "Kontakt"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid "Convert Task"
-msgstr "Konvertera uppgift"
+msgstr "Konvertera Uppgift"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #: model:ir.actions.server,name:project.action_server_convert_to_subtask
 msgid "Convert to Task/Sub-Task"
-msgstr "Konvertera till uppgift/underuppgift"
+msgstr "Konvertera till Uppgift/Underuppgift"
 
 #. module: project
 #. odoo-javascript
@@ -1829,7 +1830,7 @@ msgstr "Aktuellt projekt för uppgiften"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Current stage of this task"
-msgstr "Aktivitetens nuvarande etapp"
+msgstr "Uppgiftens nuvarande etapp"
 
 #. module: project
 #. odoo-javascript
@@ -2090,12 +2091,12 @@ msgstr "Levererade"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Dependent Tasks"
-msgstr "Beroende uppgifter"
+msgstr "Beroende Uppgifter"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__depend_on_count
 msgid "Depending on Tasks"
-msgstr "Beroende på arbetsuppgifter"
+msgstr "Beroende av Uppgifter"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
@@ -2524,8 +2525,8 @@ msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them "
 "in the chatter of the tasks."
 msgstr ""
-"Hantera din idéinsamling inom Tasks i ditt nya projekt och diskutera dem i "
-"chatten för Tasks."
+"Hantera din idéinsamling inom Uppgifter i ditt nya projekt och diskutera dem "
+"i chatten för Uppgifter."
 
 #. module: project
 #. odoo-javascript
@@ -2561,7 +2562,7 @@ msgstr "Dölj avslutade uppgifter"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Hide the sub-task in your pipeline"
-msgstr "Dölj deluppgiften i din pipeline"
+msgstr "Dölj underuppgiften i din pipeline"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
@@ -3205,7 +3206,7 @@ msgstr "Mina projekt"
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 msgid "My Tasks"
-msgstr "Mina uppgifter"
+msgstr "Mina Uppgifter"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
@@ -3230,7 +3231,7 @@ msgstr "Namn"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the Tasks"
-msgstr "Namn på uppgifterna"
+msgstr "Namn på Uppgifterna"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
@@ -3296,7 +3297,7 @@ msgstr "Ny begäran"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_controller.js:0
 msgid "New Task"
-msgstr "Ny uppgift"
+msgstr "Ny Uppgift"
 
 #. module: project
 #. odoo-python
@@ -3414,7 +3415,7 @@ msgstr "Inga taggar hittades. Låt oss skapa en!"
 #: model_terms:ir.actions.act_window,help:project.project_task_action_from_partner
 #: model_terms:ir.actions.act_window,help:project.project_task_action_sub_task
 msgid "No tasks found. Let's create one!"
-msgstr "Ingen aktivitet hittad. Låt oss skapa en!"
+msgstr "Ingen uppgift hittad. Låt oss skapa en!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
@@ -3531,7 +3532,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Open Tasks"
-msgstr "Öppna aktiviteter"
+msgstr "Öppna Uppgifter"
 
 #. module: project
 #. odoo-javascript
@@ -3595,7 +3596,7 @@ msgstr "Försenad"
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
-msgstr "Övertrasserade aktiviteter"
+msgstr "Redan utförda Uppgifter"
 
 #. module: project
 #. odoo-javascript
@@ -3619,7 +3620,7 @@ msgstr "Överordnad post tråd ID"
 #: model:ir.model.fields,field_description:project.field_project_task__parent_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__parent_id
 msgid "Parent Task"
-msgstr "Överliggande uppgift"
+msgstr "Överliggande Uppgift"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_model_id
@@ -3630,7 +3631,7 @@ msgid ""
 msgstr ""
 "Överordnad modell som innehåller alias. Modellen som innehåller "
 "aliasreferensen är inte nödvändigtvis den modell som ges av alias_model_id "
-"(exempel: projekt (parent_model) och aktivitet (modell))"
+"(exempel: projekt (parent_model) och uppgift (modell))"
 
 #. module: project
 #. odoo-python
@@ -3745,7 +3746,7 @@ msgstr "Personligt stadium Stat"
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
 msgid "Personal Task Stage"
-msgstr "Personlig uppgift Steg"
+msgstr "Personlig etapp för Uppgift"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3840,7 +3841,7 @@ msgstr "Privat"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Private Tasks"
-msgstr "Privata uppgifter"
+msgstr "Privata Uppgifter"
 
 #. module: project
 #. odoo-python
@@ -3971,12 +3972,12 @@ msgstr "Projektetiketter"
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Task Stage Delete Wizard"
-msgstr "Guiden Ta bort projektuppgift steg"
+msgstr "Guide för borttagning av projektuppgiftsfaser"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "Project Tasks"
-msgstr "Projektaktiviteter"
+msgstr "ProjektUppgifter"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.quick_create_project_form
@@ -4013,7 +4014,7 @@ msgstr "Projektstatus - {{ object.name }}"
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr "Projektets aktiviteter"
+msgstr "Projektets Uppgifter"
 
 #. module: project
 #: model:mail.template,name:project.project_done_email_template
@@ -4266,7 +4267,7 @@ msgstr "Återkommande uppgifter"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Recurring Tasks"
-msgstr "Återkommande aktiviteter"
+msgstr "Återkommande Uppgifter"
 
 #. module: project
 #. odoo-javascript
@@ -4586,7 +4587,7 @@ msgstr "Dela Projekt"
 #: model:ir.actions.act_window,name:project.portal_share_action
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Share Task"
-msgstr "Dela uppgift"
+msgstr "Dela Uppgift"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__show_display_in_project
@@ -4794,7 +4795,7 @@ msgstr "Status tid"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr "Underaktivitet"
+msgstr "Underuppgift"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -4849,7 +4850,7 @@ msgstr "Etiketter"
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task"
-msgstr "Aktivitet"
+msgstr "Uppgift"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
@@ -4883,7 +4884,7 @@ msgstr "Uppgift konverterad från Att göra"
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr "Aktivitet skapad"
+msgstr "Uppgift skapad"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_task_dependencies
@@ -4907,7 +4908,7 @@ msgstr "Pågående uppgift"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
 msgid "Task Logs"
-msgstr "Aktivitetsloggar"
+msgstr "Uppgiftsloggar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_properties_definition
@@ -4930,31 +4931,31 @@ msgstr "Återkommande uppgifter"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
-msgstr "Aktivitetsetapper"
+msgstr "Uppgiftsetapper"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr "Aktivitetsetapp ändrad"
+msgstr "Uppgiftsetapp ändrad"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.actions.act_window,name:project.open_task_type_form_domain
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Task Stages"
-msgstr "Uppgiftsstadier"
+msgstr "Uppgiftsetapper"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "Task Title"
-msgstr "Aktivitetens titel"
+msgstr "Uppgiftens namn"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
-msgstr "Aktivitetstitel..."
+msgstr "Uppgiftsnamn..."
 
 #. module: project
 #. odoo-python
@@ -4985,7 +4986,7 @@ msgstr "Uppgift avbruten"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
 msgid "Task done"
-msgstr "Task done"
+msgstr "Uppgift klar"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
@@ -5024,7 +5025,7 @@ msgstr "Uppgift: Begäran om betyg"
 #: model_terms:ir.ui.view,arch_db:project.view_task_partner_info_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Tasks"
-msgstr "Aktiviteter"
+msgstr "Uppgifter"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -5035,25 +5036,25 @@ msgstr "Aktiviteter"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tasks Analysis"
-msgstr "Aktivietetsanalys"
+msgstr "Uppgiftsanalys"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Tasks Management"
-msgstr "Aktivitetshantering"
+msgstr "Uppgiftshantering"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_search
 msgid "Tasks Stages"
-msgstr "Aktivitetsetapper"
+msgstr "Uppgiftsetapper"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
 msgid "Tasks in Recurrence"
-msgstr "Uppgifter i återkommande"
+msgstr "Återkommande Uppgifter "
 
 #. module: project
 #. odoo-javascript
@@ -5075,7 +5076,7 @@ msgstr "Den aktuella användarens personliga scen."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
-msgstr "Den aktuella användarens personliga uppgiftssteg."
+msgstr "Den aktuella användarens personliga uppgiftsetapper."
 
 #. module: project
 #. odoo-python
@@ -5114,7 +5115,7 @@ msgid ""
 msgstr ""
 "Klassen (Odoo-dokumenttyp) som detta alias är knutet till. All inkommande e-"
 "post som inte ingår i en pågående diskussion skapar en ny post av denna "
-"klass (t ex Aktivitet)"
+"klass (t.ex. Projekt Uppgift)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -5192,7 +5193,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "The task description was empty at the time."
-msgstr "Uppdragsbeskrivningen var då tom."
+msgstr "Uppgiftsbeskrivningen var då tom."
 
 #. module: project
 #. odoo-python
@@ -5224,7 +5225,7 @@ msgstr "Det finns för närvarande inga betyg för detta projekt"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
-msgstr "Det saknas aktiviteter."
+msgstr "Det saknas uppgifter."
 
 #. module: project
 #. odoo-python
@@ -5503,7 +5504,7 @@ msgstr "Intäkter totalt"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
-msgstr "Spåra kundnöjdhet på aktiviteter"
+msgstr "Spåra kundnöjdhet på uppgifter"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5535,7 +5536,7 @@ msgstr "Följ utvecklingen av dina projekt"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr "Spåra tid som spenderas på projekt och aktiviteter"
+msgstr "Spåra tid som spenderas på projekt och uppgifter"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_tags__color
@@ -5635,7 +5636,7 @@ msgstr "Använd betyg på projekt"
 #. module: project
 #: model:res.groups,name:project.group_project_recurring_tasks
 msgid "Use Recurring Tasks"
-msgstr "Använd återkommande aktiviteter"
+msgstr "Använd återkommande Uppgifter"
 
 #. module: project
 #: model:res.groups,name:project.group_project_stages
@@ -5726,13 +5727,13 @@ msgstr "Visa"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "View Task"
-msgstr "Visa uppgift"
+msgstr "Visa Uppgift"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "View Tasks"
-msgstr "Visa uppgifter"
+msgstr "Visa Uppgifter"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
@@ -5846,7 +5847,7 @@ msgstr "Skulle du också vilja avarkivera alla projekt som ingår i dessa faser?
 msgid ""
 "Would you like to unarchive all of the tasks contained in these stages as "
 "well?"
-msgstr "Vill du också avarkivera alla uppgifter som ingår i dessa steg?"
+msgstr "Vill du också avarkivera alla uppgifter som ingår i dessa etapper?"
 
 #. module: project
 #. odoo-javascript
@@ -5895,7 +5896,7 @@ msgstr "Du kan ändra statusen för underuppgiften här!"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You can only set a personal stage on a private task."
-msgstr "Du kan bara ställa in en personlig scen på en privat uppgift."
+msgstr "Du kan bara ställa in en personlig etapp på en privat uppgift."
 
 #. module: project
 #. odoo-javascript
@@ -5927,7 +5928,7 @@ msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
 msgstr ""
-"Du kan inte radera steg som innehåller uppgifter. Du kan antingen arkivera "
+"Du kan inte radera etapp som innehåller uppgifter. Du kan antingen arkivera "
 "dem eller först radera alla deras uppgifter."
 
 #. module: project
@@ -5936,14 +5937,14 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr ""
-"Du kan inte radera steg som innehåller uppgifter. Du bör först ta bort alla "
-"deras uppgifter."
+"Du kan inte radera etapp som innehåller uppgifter. Du bör först ta bort alla "
+"dess uppgifter."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "You cannot read the following fields on tasks: %(field_list)s"
-msgstr "Du kan inte läsa följande fält på uppdrag: %(field_list)s"
+msgstr "Du kan inte läsa följande fält på uppgifter: %(field_list)s"
 
 #. module: project
 #. odoo-python
@@ -5971,7 +5972,7 @@ msgstr "Du har blivit inbjuden att följa %s"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
 msgid "You have been invited to follow Task Document :"
-msgstr "Du har blivit inbjuden att följa Task Document :"
+msgstr "Du har blivit inbjuden att följa Uppgift Dokument :"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -6077,7 +6078,7 @@ msgstr "t.ex. Skicka inbjudningar"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "e.g. Tasks"
-msgstr "t.ex. uppgifer"
+msgstr "t.ex. Uppgifter"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form

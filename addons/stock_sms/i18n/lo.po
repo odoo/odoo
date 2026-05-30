@@ -3,13 +3,14 @@
 # * stock_sms
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-05-17 05:48+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-05-26 04:55+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/stock_sms/"
 "lo/>\n"
 "Language: lo\n"
@@ -26,21 +27,29 @@ msgid ""
 "                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
 "            "
 msgstr ""
+"\n"
+"                {{ (object.company_id.name + ': We are glad to inform you "
+"that your order n° ' + object.origin + ' has been shipped.' if object.origin "
+"else object.company_id.name + ': We are glad to inform you that your order "
+"has been shipped.') + (' Your tracking reference is ' + "
+"(object.carrier_tracking_ref) + '.' if hasattr(object, "
+"'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"            "
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid "Cancel"
-msgstr "ຍົກເລີອກ"
+msgstr "ຍົກເລີກ"
 
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າລະບົບ"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -50,93 +59,93 @@ msgstr "ຢືນຢັນ"
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_confirm_stock_sms
 msgid "Confirm Stock SMS"
-msgstr ""
+msgstr "ຢືນຢັນ SMS ສະຕັອກ"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: stock_sms
 #: model:sms.template,name:stock_sms.sms_template_data_stock_delivery
 msgid "Delivery: Send by SMS Text Message"
-msgstr ""
+msgstr "ການຈັດສົ່ງ: ສົ່ງໂດຍຂໍ້ຄວາມ SMS"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid "Disable SMS"
-msgstr ""
+msgstr "ປິດການໃຊ້ງານ SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ທີ່ສະແດງ"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__has_received_warning_stock_sms
 msgid "Has Received Warning Stock Sms"
-msgstr ""
+msgstr "ໄດ້ຮັບຂໍ້ຄວາມແຈ້ງເຕືອນ SMS ສະຕັອກແລ້ວ"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
 msgid "ID"
-msgstr ""
+msgstr "ລະຫັດ (ID)"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ອັບເດດລ່າສຸດໂດຍ"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ອັບເດດລ່າສຸດເມື່ອ"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__pick_ids
 msgid "Pick"
-msgstr ""
+msgstr "ເລືອກ"
 
 #. module: stock_sms
 #. odoo-python
 #: code:addons/stock_sms/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_move_sms_validation
 #: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
 msgid "SMS Confirmation"
-msgstr ""
+msgstr "ການຢືນຢັນຜ່ານ SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_sms_confirmation_template_id
 #: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
 #: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
 msgid "SMS Template"
-msgstr ""
+msgstr "ແບບຢ່າງ SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_move_sms_validation
 msgid "SMS Validation with stock move"
-msgstr ""
+msgstr "ການກວດສອບ SMS ພ້ອມກັບການເຄື່ອນຍ້າຍສະຕັອກ"
 
 #. module: stock_sms
 #: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
 #: model:ir.model.fields,help:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
 msgid "SMS sent to the customer once the order is delivered."
-msgstr ""
+msgstr "SMS ຈະຖືກສົ່ງໃຫ້ລູກຄ້າ ເມື່ອຄຳສັ່ງຊື້ຖືກຈັດສົ່ງແລ້ວ."
 
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_stock_picking
 msgid "Transfer"
-msgstr "ໂອນ"
+msgstr "ການໂອນ"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -144,3 +153,6 @@ msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
 "                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""
+"ທ່ານກຳລັງຈະຢືນຢັນໃບບິນສົ່ງສິນຄ້ານີ້ ຜ່ານທາງຂໍ້ຄວາມ SMS.<br/>\n"
+"                ຄຸນສົມບັດນີ້ສາມາດປິດການໃຊ້ງານໄດ້ງ່າຍໆ ຈາກການຕັ້ງຄ່າຂອງສາງສິນຄ້າ ຫຼື ໂດຍການຄລິກ"
+"ທີ່ \"ປິດການໃຊ້ງານ SMS\".<br/>"

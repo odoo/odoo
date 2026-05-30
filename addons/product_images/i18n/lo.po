@@ -3,13 +3,14 @@
 # * product_images
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-05-17 05:50+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-05-26 04:55+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/"
 "product_images/lo/>\n"
 "Language: lo\n"
@@ -26,6 +27,7 @@ msgid ""
 "%(matching_images_count)s matching images have been found for "
 "%(product_count)s products."
 msgstr ""
+"ພົບຮູບພາບທີ່ກົງກັນ %(matching_images_count)s ຮູບ ສຳລັບສິນຄ້າ %(product_count)s ລາຍການ."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -35,6 +37,11 @@ msgid ""
 "                            done tomorrow.\n"
 "                        </span>"
 msgstr ""
+"<span invisible=\"nb_products_selected &lt;= 10000\">\n"
+"                            ເນື່ອງຈາກສາມາດປະມວນຜົນສິນຄ້າໄດ້ພຽງ 10,000 ລາຍການຕໍ່ມື້, ສ່ວນ"
+"ທີ່ເຫຼືອຈະຖືກ\n"
+"                            ດຳເນີນການໃນມື້ອື່ນ.\n"
+"                        </span>"
 
 #. module: product_images
 #. odoo-python
@@ -43,94 +50,95 @@ msgid ""
 "A task to process products in the background is already running. Please try "
 "againlater."
 msgstr ""
+"ມີໜ້າວຽກປະມວນຜົນສິນຄ້າໃນເບື້ອງຫຼັງກຳລັງເຮັດວຽກຢູ່. ກະລຸນາລອງໃໝ່ອີກຄັ້ງໃນພາຍຫຼັງ."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
 msgid "API Key"
-msgstr ""
+msgstr "ຄີ API"
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "Cancel"
-msgstr "ຍົກເລີອກ"
+msgstr "ຍົກເລີກ"
 
 #. module: product_images
 #: model:ir.model,name:product_images.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າກຳນົດຄ່າ"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ທີ່ສະແດງ"
 
 #. module: product_images
 #: model:ir.model,name:product_images.model_product_fetch_image_wizard
 msgid ""
 "Fetch product images from Google Images based on the product's barcode "
 "number."
-msgstr ""
+msgstr "ດຶງຮູບພາບສິນຄ້າຈາກ Google Images ໂດຍອີງຕາມເລກບາໂຄດຂອງສິນຄ້າ."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "Get Pictures"
-msgstr ""
+msgstr "ເອົາຮູບພາບ"
 
 #. module: product_images
 #: model:ir.actions.act_window,name:product_images.product_product_action_get_pic_with_barcode
 #: model:ir.actions.act_window,name:product_images.product_template_action_get_pic_with_barcode
 msgid "Get Pictures from Google Images"
-msgstr ""
+msgstr "ເອົາຮູບພາບຈາກ Google Images"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_custom_search_key
 msgid "Google Custom Search API Key"
-msgstr ""
+msgstr "ຄີ API ຂອງ Google Custom Search"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__id
 msgid "ID"
-msgstr ""
+msgstr "ໄອດີ"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_product__image_fetch_pending
 msgid "Image Fetch Pending"
-msgstr ""
+msgstr "ພວມລໍຖ້າການດຶງຮູບພາບ"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ອັບເດດລ້າສຸດໂດຍ"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ອັບເດດລ້າສຸດເມື່ອ"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_unable_to_process
 msgid "Number of product unprocessable"
-msgstr ""
+msgstr "ຈຳນວນສິນຄ້າທີ່ບໍ່ສາມາດປະມວນຜົນໄດ້"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_to_process
 msgid "Number of products to process"
-msgstr ""
+msgstr "ຈຳນວນສິນຄ້າທີ່ຈະປະມວນຜົນ"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_selected
 msgid "Number of selected products"
-msgstr ""
+msgstr "ຈຳນວນສິນຄ້າທີ່ເລືອກ"
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -138,27 +146,29 @@ msgid ""
 "Please note that some images might not be royalty-free. You should not\n"
 "                        publish these on your website."
 msgstr ""
+"ກະລຸນາຮັບຊາບວ່າ ບາງຮູບພາບອາດມີລິຂະສິດ. ທ່ານບໍ່ຄວນ\n"
+"                        ເຜີຍແຜ່ຮູບເຫຼົ່ານີ້ລົງໃນເວັບໄຊທ໌ຂອງທ່ານ."
 
 #. module: product_images
 #: model:ir.actions.server,name:product_images.ir_cron_fetch_image_ir_actions_server
 msgid "Product Images: Get product images from Google"
-msgstr ""
+msgstr "ຮູບພາບສິນຄ້າ: ເອົາຮູບພາບສິນຄ້າຈາກ Google"
 
 #. module: product_images
 #: model:ir.model,name:product_images.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "ຮູບແບບສິນຄ້າ"
 
 #. module: product_images
 #. odoo-python
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 msgid "Product images"
-msgstr ""
+msgstr "ຮູບພາບສິນຄ້າ"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__products_to_process
 msgid "Products To Process"
-msgstr ""
+msgstr "ສິນຄ້າທີ່ຈະປະມວນຜົນ"
 
 #. module: product_images
 #. odoo-python
@@ -166,18 +176,18 @@ msgstr ""
 msgid ""
 "Products are processed in the background. Images will be updated "
 "progressively."
-msgstr ""
+msgstr "ສິນຄ້າກຳລັງຖືກປະມວນຜົນໃນເບື້ອງຫຼັງ. ຮູບພາບຈະຖືກອັບເດດໄປຕາມລຳດັບ."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
 msgid "Search Engine ID"
-msgstr ""
+msgstr "ໄອດີເຄື່ອງມືຄົ້ນຫາ"
 
 #. module: product_images
 #. odoo-python
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 msgid "The API Key and Search Engine ID must be set in the General Settings."
-msgstr ""
+msgstr "ຕ້ອງຕັ້ງຄ່າ ຄີ API ແລະ ໄອດີເຄື່ອງມືຄົ້ນຫາ ໃນການຕັ້ງຄ່າທົ່ວໄປ."
 
 #. module: product_images
 #. odoo-python
@@ -187,18 +197,21 @@ msgid ""
 "your Google Cloud Platform project page and enable it, then retry. If you "
 "enabled this API recently, please wait a few minutes and retry."
 msgstr ""
+"ຍັງບໍ່ທັນໄດ້ເປີດໃຊ້ Custom Search API ໃນໂຄງການ Google ຂອງທ່ານ. ກະລຸນາເຂົ້າໄປທີ່ໜ້າໂຄງການ "
+"Google Cloud Platform ຂອງທ່ານເພື່ອເປີດໃຊ້, ແລ້ວລອງໃໝ່ອີກຄັ້ງ. ຖ້າທ່ານຫາກກໍ່ເປີດໃຊ້ API ນີ້, ກະລຸ"
+"ນາລໍຖ້າຈັກຄາວແລ້ວຈຶ່ງລອງໃໝ່."
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_pse_id
 msgid "The identifier of the Google Programmable Search Engine"
-msgstr ""
+msgstr "ຕົວລະບຸຂອງ Google Programmable Search Engine"
 
 #. module: product_images
 #: model:ir.model.fields,help:product_images.field_product_fetch_image_wizard__products_to_process
 msgid ""
 "The list of selected products that meet the criteria (have a barcode and no "
 "image)"
-msgstr ""
+msgstr "ລາຍຊື່ສິນຄ້າທີ່ເລືອກ ເຊິ່ງກົງຕາມເງື່ອນໄຂ (ມີບາໂຄດ ແລະ ບໍ່ມີຮູບພາບ)"
 
 #. module: product_images
 #. odoo-python
@@ -208,38 +221,41 @@ msgid ""
 "been deleted. Please contact your administrator to have the action restored "
 "or to reinstall the module \"product_images\"."
 msgstr ""
+"ການດຳເນີນການທີ່ກຳນົດໄວ້ \"ຮູບພາບສິນຄ້າ: ເອົາຮູບພາບສິນຄ້າຈາກ Google\" ຖືກລຶບອອກແລ້ວ. ກະລຸນາຕິດຕໍ່"
+"ຜູ້ດູແລລະບົບຂອງທ່ານເພື່ອຄືນຄ່າການດຳເນີນການ ຫຼື ຕິດຕັ້ງໂມດູນ \"product_images\" ຄືນໃໝ່."
 
 #. module: product_images
 #. odoo-python
 #: code:addons/product_images/models/ir_cron_trigger.py:0
 msgid "This action is already scheduled. Please try again later."
-msgstr ""
+msgstr "ການດຳເນີນການນີ້ໄດ້ຖືກກຳນົດໄວ້ແລ້ວ. ກະລຸນາລອງໃໝ່ອີກຄັ້ງໃນພາຍຫຼັງ."
 
 #. module: product_images
 #: model:ir.model,name:product_images.model_ir_cron_trigger
 msgid "Triggered actions"
-msgstr ""
+msgstr "ການດຳເນີນການທີ່ຖືກກະຕຸ້ນ"
 
 #. module: product_images
 #: model:ir.model.fields,help:product_images.field_product_product__image_fetch_pending
 msgid "Whether an image must be fetched for this product. Handled by a cron."
 msgstr ""
+"ລະບຸວ່າຕ້ອງດຶງຮູບພາບສຳລັບສິນຄ້ານີ້ຫຼືບໍ່. ຈັດການໂດຍລະບົບເຮັດວຽກອັດຕະໂນມັດ (Cron)."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "You selected"
-msgstr ""
+msgstr "ທ່ານໄດ້ເລືອກ"
 
 #. module: product_images
 #. odoo-python
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 msgid "Your API Key or your Search Engine ID is incorrect."
-msgstr ""
+msgstr "ຄີ API ຫຼື ໄອດີເຄື່ອງມືຄົ້ນຫາ ຂອງທ່ານບໍ່ຖືກຕ້ອງ."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "of which will be processed."
-msgstr ""
+msgstr "ເຊິ່ງຈະຖືກປະມວນຜົນ."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -248,8 +264,11 @@ msgid ""
 "                            processed because they either already have an image or their barcode\n"
 "                            number is not set."
 msgstr ""
+"ສິນຄ້າຈະບໍ່ຖືກ\n"
+"                            ປະມວນຜົນ ເນື່ອງຈາກພວກມັນມີຮູບພາບຢູ່ແລ້ວ ຫຼື ບໍ່ໄດ້\n"
+"                            ກຳນົດເລກບາໂຄດ."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "products,"
-msgstr ""
+msgstr "ສິນຄ້າ,"

@@ -2,18 +2,22 @@
 # This file contains the translation of the following modules:
 # * hr_recruitment_survey
 #
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Language-Team: Lao (https://www.transifex.com/odoo/teams/41243/lo/)\n"
+"PO-Revision-Date: 2026-05-26 04:55+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/"
+"hr_recruitment_survey/lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,body_html:hr_recruitment_survey.mail_template_applicant_interview_invite
@@ -41,6 +45,32 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        ຮຽນ <t t-out=\"object.partner_id.name or 'applicant'\">[ຊື່ຜູ້ສະໝັກ]</t>"
+"<br><br>\n"
+"        <t>\n"
+"            ທ່ານໄດ້ຜ່ານເຂົ້າສູ່ຂັ້ນຕອນການຄັດເລືອກແລ້ວ ແລະ ພວກເຮົາຢາກໃຫ້ທ່ານຕອບບາງຄຳຖາມ.\n"
+"        </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-"
+"color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t>\n"
+"                    ເລີ່ມການສຳພາດແບບຂຽນ\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            ກະລຸນາຕອບແບບສຳພາດພາຍໃນວັນທີ <t t-out=\"format_date(object.deadline)"
+"\">[ວັນທີກຳນົດສິ້ນສຸດ]</t>.<br><br>\n"
+"        </t>\n"
+"        <t>\n"
+"            ພວກເຮົາຂໍໃຫ້ທ່ານໂຊກດີ! ຂໍຂອບໃຈລ່ວງໜ້າສຳລັບການຮ່ວມມືຂອງທ່ານ.\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -48,141 +78,147 @@ msgid ""
 "<span class=\"o_stat_text\">Consult</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">ປຶກສາ</span>\n"
+"                        <span class=\"o_stat_text\">ການສຳພາດ</span>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
 msgid "About you"
-msgstr ""
+msgstr "ກ່ຽວກັບທ່ານ"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q7
 msgid "Activities"
-msgstr ""
+msgstr "ກິດຈະກຳ"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_applicant
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_invite__applicant_id
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_survey_user_input__applicant_id
 msgid "Applicant"
-msgstr ""
+msgstr "ຜູ້ສະໝັກ"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,name:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Applicant: Interview"
-msgstr ""
+msgstr "ຜູ້ສະໝັກ: ການສຳພາດ"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_job__survey_id
 msgid "Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"
 msgstr ""
+"ເລືອກແບບຟອມການສຳພາດສຳລັບຕຳແໜ່ງງານນີ້ ແລະ ທ່ານຈະສາມາດພິມ/ຕອບແບບສຳພາດນີ້ໃຫ້ກັບຜູ້ສະໝັກທຸກຄົນທີ່ສະ"
+"ໝັກວຽກນີ້"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Display Interview Form"
-msgstr ""
+msgstr "ສະແດງແບບຟອມການສຳພາດ"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q4
 msgid "Education"
-msgstr ""
+msgstr "ການສຶກສາ"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
 msgid "From which university did or will you graduate?"
-msgstr ""
+msgstr "ທ່ານຈົບການສຶກສາ ຫຼື ຈະຈົບການສຶກສາຈາກມະຫາວິທະຍາໄລໃດ?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row2
 msgid "Getting on with colleagues"
-msgstr ""
+msgstr "ການເຂົ້າກັບເພື່ອນຮ່ວມງານໄດ້ດີ"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row8
 msgid "Getting perks such as free parking, gym passes"
-msgstr ""
+msgstr "ການໄດ້ຮັບສິດທິພິເສດ ເຊັ່ນ: ບ່ອນຈອດລົດຟຣີ, ບັດເຂົ້າຫ້ອງອອກກຳລັງກາຍ"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row1
 msgid "Having a good pay"
-msgstr ""
+msgstr "ການມີຄ່າຕອບແທນທີ່ດີ"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row3
 msgid "Having a nice office environment"
-msgstr ""
+msgstr "ການມີສະພາບແວດລ້ອມໃນຫ້ອງການທີ່ດີ"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row7
 msgid "Having freebies such as tea, coffee and stationery"
-msgstr ""
+msgstr "ການມີຂອງແຈກຟຣີ ເຊັ່ນ: ຊາ, ກາເຟ ແລະ ເຄື່ອງຂຽນ"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col2
 msgid "Important"
-msgstr ""
+msgstr "ສຳຄັນ"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job__survey_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interview Form"
-msgstr ""
+msgstr "ແບບຟອມການສຳພາດ"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 msgid "Interview Form: %s"
-msgstr ""
+msgstr "ແບບຟອມການສຳພາດ: %s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
 msgid "Interview Survey"
-msgstr ""
+msgstr "ແບບສຳຫຼວດການສຳພາດ"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interviews"
-msgstr ""
+msgstr "ການສຳພາດ"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
 msgid "Job Position"
-msgstr ""
+msgstr "ຕຳແໜ່ງງານ"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid "Knowledge"
-msgstr ""
+msgstr "ຄວາມຮູ້"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row6
 msgid "Management quality"
-msgstr ""
+msgstr "ຄຸນນະພາບການບໍລິຫານ"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col1
 msgid "Not important"
-msgstr ""
+msgstr "ບໍ່ສຳຄັນ"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row5
 msgid "Office location"
-msgstr ""
+msgstr "ສະຖານທີ່ຕັ້ງຫ້ອງການ"
 
 #. module: hr_recruitment_survey
 #: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Participate to {{ object.survey_id.display_name }} interview"
-msgstr ""
+msgstr "ເຂົ້າຮ່ວມການສຳພາດ {{ object.survey_id.display_name }}"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
 msgid "Past work experiences"
-msgstr ""
+msgstr "ປະສົບການເຮັດວຽກທີ່ຜ່ານມາ"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
 msgid "Please answer those questions to help recruitment officers to preprocess your application."
 msgstr ""
+"ກະລຸນາຕອບຄຳຖາມເຫຼົ່ານີ້ ເພື່ອຊ່ວຍໃຫ້ເຈົ້າໜ້າທີ່ສັນຫາບຸກຄະລາກອນ ດຳເນີນການກວດສອບໃບສະໝັກຂອງທ່ານໃນເບື້ອ"
+"ງຕົ້ນ."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
@@ -190,110 +226,113 @@ msgid ""
 "Please fill information about you: who you are, what are your education, experience, and activities.\n"
 "    It will help us managing your application."
 msgstr ""
+"ກະລຸນາຕື່ມຂໍ້ມູນກ່ຽວກັບທ່ານ: ທ່ານແມ່ນໃຜ, ການສຶກສາ, ປະສົບການ ແລະ ກິດຈະກຳຂອງທ່ານມີຫຍັງແດ່.\n"
+"    ມັນຈະຊ່ວຍໃຫ້ພວກເຮົາຈັດການໃບສະໝັກຂອງທ່ານໄດ້ດີຂຶ້ນ."
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Please provide an applicant name."
-msgstr ""
+msgstr "ກະລຸນາລະບຸຊື່ຜູ້ສະໝັກ."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
 msgid "Please summarize your education history: schools, location, diplomas, ..."
-msgstr ""
+msgstr "ກະລຸນາສະຫຼຸບປະຫວັດການສຶກສາຂອງທ່ານ: ໂຮງຮຽນ, ສະຖານທີ່, ປະກາສະນີຍະບັດ, ..."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
 msgid "Please tell us a bit more about yourself: what are your main activities, ..."
 msgstr ""
+"ກະລຸນາບອກພວກເຮົາຕື່ມອີກເລັກນ້ອຍກ່ຽວກັບຕົວທ່ານ: ກິດຈະກຳຫຼັກຂອງທ່ານແມ່ນຫຍັງ, ..."
 
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
 msgid "Recruitment Form"
-msgstr ""
+msgstr "ແບບຟອມການຮັບສະໝັກ"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
 msgid "Responses"
-msgstr ""
+msgstr "ຄຳຕອບ"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "See interview report"
-msgstr ""
+msgstr "ເບິ່ງລາຍງານການສຳພາດ"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "Send Interview"
-msgstr ""
+msgstr "ສົ່ງແບບສຳພາດ"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 msgid "Send an interview"
-msgstr ""
+msgstr "ສົ່ງການສຳພາດ"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
 msgid "Survey"
-msgstr ""
+msgstr "ແບບສຳຫຼວດ"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_invite
 msgid "Survey Invitation Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍສ້າງການເຊີນຕອບແບບສຳຫຼວດ"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
 msgid "Survey User Input"
-msgstr ""
+msgstr "ຂໍ້ມູນທີ່ຜູ້ໃຊ້ປ້ອນໃນແບບສຳຫຼວດ"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
 msgid "Thank you for answering this survey. We will come back to you soon."
-msgstr ""
+msgstr "ຂໍຂອບໃຈທີ່ຕອບແບບສຳຫຼວດນີ້. ພວກເຮົາຈະຕິດຕໍ່ຫາທ່ານໃນໄວໆນີ້."
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/survey_user_input.py:0
 msgid "The applicant \"%s\" has finished the survey."
-msgstr ""
+msgstr "ຜູ້ສະໝັກ \"%s\" ໄດ້ເຮັດແບບສຳຫຼວດສຳເລັດແລ້ວ."
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/survey_invite.py:0
 msgid "The survey %(survey_link)s has been sent to %(partner_link)s"
-msgstr ""
+msgstr "ແບບສຳຫຼວດ %(survey_link)s ໄດ້ຖືກສົ່ງໄປຫາ %(partner_link)s ແລ້ວ"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col3
 msgid "Very important"
-msgstr ""
+msgstr "ສຳຄັນຫຼາຍ"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q3
 msgid "Were you referred by an employee?"
-msgstr ""
+msgstr "ທ່ານໄດ້ຮັບການແນະນຳໂດຍພະນັກງານບໍ່?"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid "What are your main knowledge regarding the job you are applying to?"
-msgstr ""
+msgstr "ຄວາມຮູ້ຫຼັກຂອງທ່ານກ່ຽວກັບວຽກທີ່ທ່ານກຳລັງສະໝັກແມ່ນຫຍັງ?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
 msgid "What is important for you?"
-msgstr ""
+msgstr "ສິ່ງໃດທີ່ສຳຄັນສຳລັບທ່ານ?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q1
 msgid "Which country are you from?"
-msgstr ""
+msgstr "ທ່ານມາຈາກປະເທດໃດ?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
 msgid "Working with state of the art technology"
-msgstr ""
+msgstr "ການໄດ້ເຮັດວຽກກັບເຕັກໂນໂລຊີທີ່ທັນສະໄໝ"

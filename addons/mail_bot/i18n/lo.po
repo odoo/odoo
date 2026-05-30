@@ -3,13 +3,14 @@
 # * mail_bot
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-05-18 08:08+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-05-26 04:55+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/mail_bot/lo/>"
 "\n"
 "Language: lo\n"
@@ -26,6 +27,8 @@ msgid ""
 "Aaaaaw that's really cute but, you know, bots don't work that way. You're "
 "too human for me! Let's keep it professional ❤️"
 msgstr ""
+"ໂອ້ຍຍຍ ໜ້າຮັກຫຼາຍ! ແຕ່ເຈົ້າກໍຮູ້ເນາະວ່າບອດບໍ່ໄດ້ເຮັດວຽກແບບນັ້ນ. ເຈົ້າເປັນມະນຸດເກີນໄປສຳລັບຂ້ອຍ! ໃຫ້ເຮົາຮັ"
+"ກສາຄວາມເປັນມືອາຊີບໄວ້ເຖາະ ❤️"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__disabled
@@ -35,7 +38,7 @@ msgstr "ປິດໃຊ້ງານ"
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_discuss_channel
 msgid "Discussion Channel"
-msgstr ""
+msgstr "ຊ່ອງທາງການສົນທະນາ"
 
 #. module: mail_bot
 #. odoo-python
@@ -47,6 +50,10 @@ msgid ""
 "conversation%(bold_end)s or start the tour again with typing "
 "%(command_start)sstart the tour%(command_end)s. Enjoy discovering Odoo!"
 msgstr ""
+"ດີຫຼາຍ, ເຈົ້າສາມາດປັບແຕ່ງການຕອບກັບແບບສຳເລັດຮູບໄດ້ໃນແອັບ Discuss.%(new_line)s%(new_line)"
+"s%(bold_start)sນີ້ຄືການສິ້ນສຸດການແນະນຳເບື້ອງຕົ້ນ%(bold_end)s, ຕອນນີ້ເຈົ້າສາມາດ %"
+"(bold_start)sປິດການສົນທະນານີ້%(bold_end)s ຫຼື ເລີ່ມຕົ້ນການແນະນຳໃໝ່ອີກຄັ້ງໂດຍການພິມ %"
+"(command_start)sstart the tour%(command_end)s. ຂໍໃຫ້ມ່ວນກັບການຄົ້ນຫາ Odoo!"
 
 #. module: mail_bot
 #. odoo-python
@@ -56,24 +63,26 @@ msgid ""
 "sentence with%(bold_end)s %(command_start)s/%(command_end)s. Try getting "
 "help."
 msgstr ""
+"ຢ້ຽມເລີຍ! 👍%(new_line)sເພື່ອເຂົ້າເຖິງຄຳສັ່ງພິເສດ, %(bold_start)sເລີ່ມຕົ້ນປະໂຫຍກຂອງເຈົ້າດ້ວຍ%"
+"(bold_end)s %(command_start)s/%(command_end)s. ລອງຂໍຄວາມຊ່ວຍເຫຼືອເບິ່ງ."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/res_users.py:0
 msgid "Hello,"
-msgstr ""
+msgstr "ສະບາຍດີ,"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "Hmmm..."
-msgstr ""
+msgstr "ອືມມມ..."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "I'm afraid I don't understand. Sorry!"
-msgstr ""
+msgstr "ຂ້ອຍເກງວ່າຂ້ອຍຈະບໍ່ເຂົ້າໃຈ. ຂໍໂທດເດີ!"
 
 #. module: mail_bot
 #. odoo-python
@@ -82,16 +91,18 @@ msgid ""
 "I'm not smart enough to answer your question.%(new_line)sTo follow my guide,"
 " ask: %(command_start)sstart the tour%(command_end)s."
 msgstr ""
+"ຂ້ອຍຍັງບໍ່ສະຫຼາດພໍທີ່ຈະຕອບຄຳຖາມຂອງເຈົ້າ.%(new_line)sເພື່ອຕິດຕາມການແນະນຳຂອງຂ້ອຍ, ໃຫ້ຖາມວ່າ: %"
+"(command_start)sstart the tour%(command_end)s."
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__idle
 msgid "Idle"
-msgstr ""
+msgstr "ວ່າງ"
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_mail_bot
 msgid "Mail Bot"
-msgstr ""
+msgstr "ບອດຂໍ້ຄວາມ"
 
 #. module: mail_bot
 #. odoo-python
@@ -101,11 +112,13 @@ msgid ""
 "%(bold_start)stype%(bold_end)s%(command_start)s :)%(command_end)s and press "
 "enter."
 msgstr ""
+"ຍັງບໍ່ທັນແມ່ນເທື່ອ. ເພື່ອສືບຕໍ່ການແນະນຳ, ໃຫ້ສົ່ງອີໂມຈິ: %(bold_start)sພິມ%(bold_end)s%"
+"(command_start)s :)%(command_end)s ແລ້ວກົດ enter."
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__not_initialized
 msgid "Not initialized"
-msgstr ""
+msgstr "ຍັງບໍ່ທັນເລີ່ມລະບົບ"
 
 #. module: mail_bot
 #. odoo-python
@@ -115,6 +128,8 @@ msgid ""
 "and wait for the propositions. Select %(command_start)shelp%(command_end)s "
 "and press enter."
 msgstr ""
+"ບໍ່ແນ່ໃຈວ່າເຈົ້າກຳລັງເຮັດຫຍັງຢູ່. ກະລຸນາພິມ %(command_start)s/%(command_end)s ແລະ ລໍຖ້າຕົວເລືອ"
+"ກທີ່ສະແດງຂຶ້ນມາ. ເລືອກ %(command_start)shelp%(command_end)s ແລ້ວກົດ enter."
 
 #. module: mail_bot
 #. odoo-python
@@ -123,6 +138,8 @@ msgid ""
 "Not sure what you are doing. Please, type %(command_start)s:%(command_end)s "
 "and wait for the propositions. Select one of them and press enter."
 msgstr ""
+"ບໍ່ແນ່ໃຈວ່າເຈົ້າກຳລັງເຮັດຫຍັງຢູ່. ກະລຸນາພິມ %(command_start)s:%(command_end)s ແລະ ລໍຖ້າຕົວເລືອ"
+"ກທີ່ສະແດງຂຶ້ນມາ. ເລືອກເອົາອັນໃດອັນໜຶ່ງແລ້ວກົດ enter."
 
 #. module: mail_bot
 #. odoo-python
@@ -131,41 +148,43 @@ msgid ""
 "Odoo's chat helps employees collaborate efficiently. I'm here to help you "
 "discover its features."
 msgstr ""
+"ລະບົບແຊັດຂອງ Odoo ຊ່ວຍໃຫ້ພະນັກງານເຮັດວຽກຮ່ວມກັນໄດ້ຢ່າງມີປະສິດທິພາບ. ຂ້ອຍຢູ່ບ່ອນນີ້ເພື່ອຊ່ວຍເຈົ້າຄົ້ນຫາຄຸ"
+"ນສົມບັດຕ່າງໆຂອງມັນ."
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__odoobot_state
 msgid "OdooBot Status"
-msgstr ""
+msgstr "ສະຖານະ OdooBot"
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__odoobot_failed
 msgid "Odoobot Failed"
-msgstr ""
+msgstr "Odoobot ລົ້ມເຫຼວ"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_attachement
 msgid "Onboarding attachment"
-msgstr ""
+msgstr "ການແນະນຳການແນບໄຟລ໌"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_canned
 msgid "Onboarding canned"
-msgstr ""
+msgstr "ການແນະນຳການຕອບກັບແບບສຳເລັດຮູບ"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_command
 msgid "Onboarding command"
-msgstr ""
+msgstr "ການແນະນຳຄຳສັ່ງ"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_emoji
 msgid "Onboarding emoji"
-msgstr ""
+msgstr "ການແນະນຳການໃຊ້ອີໂມຈິ"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_ping
 msgid "Onboarding ping"
-msgstr ""
+msgstr "ການແນະນຳການປິງ (ping)"
 
 #. module: mail_bot
 #. odoo-python
@@ -175,6 +194,9 @@ msgid ""
 "human language...%(new_line)sI can show you features if you write: "
 "%(command_start)sstart the tour%(command_end)s."
 msgstr ""
+"ຂໍໂທດເດີ ຂ້ອຍງ້ວງນອນແລ້ວ. ຫຼື ບໍ່ແມ່ນ! ບາງທີຂ້ອຍອາດຈະພະຍາຍາມປິດບັງຄວາມບໍ່ເຂົ້າໃຈໃນພາສາມະນຸດຢູ່...%"
+"(new_line)sຂ້ອຍສາມາດສະແດງຄຸນສົມບັດຕ່າງໆໃຫ້ເຈົ້າເບິ່ງໄດ້ ຖ້າເຈົ້າພິມວ່າ: %(command_start)"
+"sstart the tour%(command_end)s."
 
 #. module: mail_bot
 #. odoo-python
@@ -184,30 +206,33 @@ msgid ""
 "him%(bold_end)s. Write %(command_start)s@OdooBot%(command_end)s and select "
 "me."
 msgstr ""
+"ຂໍໂທດເດີ, ຂ້ອຍບໍ່ໄດ້ຟັງຢູ່. ເພື່ອຮຽກຮ້ອງຄວາມສົນໃຈຈາກໃຜບາງຄົນ, ໃຫ້ %(bold_start)sປິງ (ping) ຫາ"
+"ເຂົາເຈົ້າ%(bold_end)s. ພິມ %(command_start)s@OdooBot%(command_end)s ແລ້ວເລືອກຂ້ອຍ."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "Thanks"
-msgstr ""
+msgstr "ຂອບໃຈ"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "Thanks for your feedback. Goodbye!"
-msgstr ""
+msgstr "ຂອບໃຈສຳລັບຄຳຄິດເຫັນ. ລາກ່ອນ!"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "That's not nice! I'm a bot but I have feelings... 💔"
-msgstr ""
+msgstr "ແບບນັ້ນບໍ່ດີເລີຍ! ຂ້ອຍເປັນບອດແຕ່ຂ້ອຍກໍມີຄວາມຮູ້ສຶກ... 💔"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "This is a temporary canned response to see how canned responses work."
 msgstr ""
+"ນີ້ຄືການຕອບກັບແບບສຳເລັດຮູບຊົ່ວຄາວ ເພື່ອເບິ່ງວ່າການຕອບກັບແບບສຳເລັດຮູບເຮັດວຽກແນວໃດ."
 
 #. module: mail_bot
 #. odoo-python
@@ -216,18 +241,20 @@ msgid ""
 "To %(bold_start)ssend an attachment%(bold_end)s, click on the "
 "%(paperclip_icon)s icon and select a file."
 msgstr ""
+"ເພື່ອ %(bold_start)sສົ່ງໄຟລ໌ແນບ%(bold_end)s, ໃຫ້ຄລິກທີ່ໄອຄອນ %(paperclip_icon)s ແລ້ວເລືອ"
+"ກໄຟລ໌."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "To start, try to send me an emoji :)"
-msgstr ""
+msgstr "ເພື່ອເລີ່ມຕົ້ນ, ລອງສົ່ງອີໂມຈິໃຫ້ຂ້ອຍເບິ່ງ :)"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/res_users.py:0
 msgid "Try to send me an emoji"
-msgstr ""
+msgstr "ລອງສົ່ງອີໂມຈິໃຫ້ຂ້ອຍເບິ່ງ"
 
 #. module: mail_bot
 #. odoo-python
@@ -238,6 +265,9 @@ msgid ""
 "documentation%(document_link_end)s or %(slides_link_start)sour "
 "videos%(slides_link_end)s."
 msgstr ""
+"ໜ້າເສຍດາຍ, ຂ້ອຍເປັນພຽງແຕ່ບອດ 😞 ຂ້ອຍບໍ່ເຂົ້າໃຈ! ຖ້າເຈົ້າຕ້ອງການຄວາມຊ່ວຍເຫຼືອໃນການຄົ້ນຫາຜະລິດຕະພັນ"
+"ຂອງພວກເຮົາ, ກະລຸນາກວດເບິ່ງ %(document_link_start)sຄູ່ມືການໃຊ້ງານຂອງພວກເຮົາ%"
+"(document_link_end)s ຫຼື %(slides_link_start)sວິດີໂອຂອງພວກເຮົາ%(slides_link_end)s."
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_res_users
@@ -251,6 +281,8 @@ msgid ""
 "Wonderful! 😇%(new_line)sTry typing %(command_start)s:%(command_end)s to use "
 "canned responses. I've created a temporary one for you."
 msgstr ""
+"ສຸດຍອດເລີຍ! 😇%(new_line)sລອງພິມ %(command_start)s:%(command_end)s ເພື່ອໃຊ້ການຕອບກັບ"
+"ແບບສຳເລັດຮູບ. ຂ້ອຍໄດ້ສ້າງອັນຊົ່ວຄາວໄວ້ໃຫ້ເຈົ້າແລ້ວ."
 
 #. module: mail_bot
 #. odoo-python
@@ -260,6 +292,9 @@ msgid ""
 "attention. %(bold_start)sTry to ping me using%(bold_end)s "
 "%(command_start)s@OdooBot%(command_end)s in a sentence."
 msgstr ""
+"ວ້າວ ເຈົ້າເກັ່ງຫຼາຍ!%(new_line)sປິງ (Ping) ຫາໃຜບາງຄົນດ້ວຍ @username ເພື່ອຮຽກຮ້ອງຄວາມສົນໃຈຈ"
+"າກເຂົາເຈົ້າ. %(bold_start)sລອງປິງຫາຂ້ອຍໂດຍໃຊ້%(bold_end)s %(command_start)"
+"s@OdooBot%(command_end)s ໃນປະໂຫຍກເບິ່ງ."
 
 #. module: mail_bot
 #. odoo-python
@@ -268,33 +303,35 @@ msgid ""
 "Yep, I am here! 🎉 %(new_line)sNow, try %(bold_start)ssending an "
 "attachment%(bold_end)s, like a picture of your cute dog..."
 msgstr ""
+"ແມ່ນແລ້ວ, ຂ້ອຍຢູ່ບ່ອນນີ້! 🎉 %(new_line)sບາດນີ້, ລອງ %(bold_start)sສົ່ງໄຟລ໌ແນບ%(bold_end)"
+"s, ເຊັ່ນ ຮູບໝານ້ອຍໜ້າຮັກຂອງເຈົ້າ..."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "fuck"
-msgstr ""
+msgstr "ຄຳຫຍາບ"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "help"
-msgstr ""
+msgstr "ຊ່ວຍເຫຼືອ"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "i love you"
-msgstr ""
+msgstr "ຂ້ອຍຮັກເຈົ້າ"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "love"
-msgstr ""
+msgstr "ຮັກ"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "start the tour"
-msgstr ""
+msgstr "ເລີ່ມຕົ້ນການແນະນຳ"
