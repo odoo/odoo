@@ -1,5 +1,6 @@
 import io
 import logging
+import re
 
 from markupsafe import Markup
 
@@ -11,6 +12,7 @@ from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     GST_COUNTRY_CODES,
     UOM_TO_UNECE_CODE,
 )
+from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
 
 _logger = logging.getLogger(__name__)
 
@@ -2371,11 +2373,19 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _import_ubl_invoice_add_invoice_origin(self, collected_values):
         tree = collected_values['tree']
-        if invoice_origin := (
-            tree.findtext('./{*}OrderReference/{*}ID')
-            or ' '.join([desc.text for desc in tree.findall('.//{*}Item/{*}Description') if desc.text])
-            or None
-        ):
+        invoice_origin = tree.findtext('./{*}OrderReference/{*}ID')
+        if not invoice_origin and self.module_installed('purchase'):
+            sequence = self.env['ir.sequence'].search([
+                ('code', '=', 'purchase.order'),
+                ('company_id', 'in', [collected_values['company'].id, False]),
+            ], order='company_id', limit=1)
+            if sequence:
+                prefix, suffix = sequence._get_prefix_suffix()
+                pattern = f'{prefix}\\d{{{sequence.padding}}}{suffix}'
+                refs = re.findall(pattern, ' '.join([desc.text for desc in tree.findall('.//{*}Item/{*}Description') if desc.text]))
+                invoice_origin = ' '.join(refs)
+
+        if invoice_origin:
             collected_values['to_write']['invoice_origin'] = invoice_origin
 
     def _import_ubl_invoice_add_narration(self, collected_values):
@@ -2534,9 +2544,11 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _import_ubl_invoice_line_add_name(self, collected_values):
         line_tree = collected_values['line_tree']
+        item_ref = line_tree.findtext('.//{*}Item/{*}SellersItemIdentification/{*}ID')
+        item_name = line_tree.findtext('.//{*}Item/{*}Name')
         name = collected_values['name'] = (
             line_tree.findtext('.//{*}Item/{*}Description')
-            or line_tree.findtext('.//{*}Item/{*}Name')
+            or (f"[{item_ref}] {item_name}" if (item_ref and item_name) else item_name)
         )
         if name:
             collected_values['to_write']['name'] = name
@@ -2626,7 +2638,7 @@ class AccountEdiUBL(models.AbstractModel):
                 price_subtotal = price_allowance_base_amount
             elif price_allowance_amount:
                 price_discount_amount = -price_allowance_amount
-                price_subtotal = price_amount
+                price_subtotal = price_amount - price_allowance_amount
             else:
                 price_discount_amount = 0.0
                 price_subtotal = price_amount
@@ -2846,6 +2858,32 @@ class AccountEdiUBL(models.AbstractModel):
             if tax_values:
                 taxes_values.append(tax_values)
 
+    def _import_ubl_invoice_line_add_optional_fields(self, collected_values):
+        line_tree = collected_values['line_tree']
+        invoice = collected_values['invoice']
+
+        if not invoice.is_purchase_document():
+            return {}
+
+        line_fields = {}
+        if invoice.move_type == 'in_invoice':
+            line_fields = PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS
+        elif invoice.move_type == 'in_refund':
+            line_fields = PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
+
+        vals = {}
+        AccountMoveLine = self.env['account.move.line']
+        for field_name, config in line_fields.items():
+            node_value = self._find_value(
+                './/' + '/'.join(config.get('path')),
+                line_tree,
+            )
+            field = AccountMoveLine._fields.get(field_name)
+            if not field or field.type not in config['supported_types'] or not node_value:
+                continue
+            vals[field_name] = node_value
+        return vals
+
     def _import_ubl_invoice_add_invoice_line_values(self, collected_values):
         lines_collected_values = collected_values['lines_collected_values'] = []
         tree = collected_values['tree']
@@ -2991,6 +3029,11 @@ class AccountEdiUBL(models.AbstractModel):
             base_line_kwargs['_create_values']['deferred_start_date'] = deferred_start_date
         if deferred_end_date := to_write.get('deferred_end_date'):
             base_line_kwargs['_create_values']['deferred_end_date'] = deferred_end_date
+
+        base_line_kwargs['_create_values'] = {
+            **base_line_kwargs['_create_values'],
+            **self._import_ubl_invoice_line_add_optional_fields(collected_values),
+        }
         return base_line_kwargs
 
     def _import_ubl_invoice_get_allowance_charge_line_kwargs(self, collected_values):
@@ -3147,7 +3190,7 @@ class AccountEdiUBL(models.AbstractModel):
         for base_line in base_lines:
             for tax_data in base_line['tax_details']['taxes_data']:
                 if tax_data['tax'].price_include:
-                    base_line['price_unit'] += tax_data['raw_tax_amount_currency']
+                    base_line['price_unit'] += tax_data['raw_tax_amount_currency'] / (base_line['quantity'] if base_line['quantity'] else 1)
 
         # Remove lines having a zero amount except 100% discounts
         collected_values['base_lines'] = [
@@ -3155,6 +3198,30 @@ class AccountEdiUBL(models.AbstractModel):
             for base_line in collected_values['base_lines']
             if (not base_line['currency_id'].is_zero(base_line['tax_details']['total_included_currency']) or base_line.get('discount'))
         ]
+
+    def _import_ubl_invoice_optional_fields(self, collected_values):
+        invoice = collected_values.get('invoice')
+        tree = collected_values.get('tree')
+
+        if not invoice.is_purchase_document():
+            return
+
+        invoice_fields = {}
+        if invoice.move_type == 'in_invoice':
+            invoice_fields = PEPPOL_INVOICE_OPTIONAL_FIELDS
+        elif invoice.move_type == 'in_refund':
+            invoice_fields = PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS
+
+        AccountMove = self.env['account.move']
+        for field_name, config in invoice_fields.items():
+            node_value = self._find_value(
+                './/' + '/'.join(config.get('path')),
+                tree,
+            )
+            field = AccountMove._fields.get(field_name)
+            if not field or field.type not in config['supported_types'] or not node_value:
+                continue
+            collected_values['to_write'][field_name] = node_value
 
     def _import_ubl_invoice_write_collected_values(self, collected_values):
         invoice = collected_values['invoice']
@@ -3420,6 +3487,9 @@ class AccountEdiUBL(models.AbstractModel):
         self._import_ubl_invoice_add_narration(collected_values)
         self._import_ubl_invoice_add_payment_reference(collected_values)
         self._import_ubl_invoice_add_delivery(collected_values)
+
+        # optional fields
+        self._import_ubl_invoice_optional_fields(collected_values)
 
         # invoice_incoterm_id
         self._import_ubl_invoice_add_incoterm_values(collected_values)

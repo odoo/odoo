@@ -145,6 +145,26 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self._assert_export_invoice(self.standard_invoice, "standert_fa3_format.xml")
 
     @freeze_time('2026-01-23')
+    def test_p6_delivery_date_differs_from_invoice_date(self):
+        """
+        P_6 (delivery date) must be emitted when the delivery date differs from the
+        invoice issue date (invoice_date), regardless of the accounting date (date).
+        """
+        invoice = self._create_invoice(
+            partner_id=self.partner_pl,
+            invoice_date='2025-05-27',
+            date='2026-05-04',
+            delivery_date='2026-05-04',
+            post=True
+        )
+
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(
+            self._get_xml_value(xml, "//ns:Fa/ns:P_6"),
+            '2026-05-04',
+        )
+
+    @freeze_time('2026-01-23')
     def test_scenario_correction_standard(self):
         """
         Correction of a Standard Invoice (KOR).
@@ -719,3 +739,44 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         invoice = self._create_invoice(partner_id=self.partner_pl.id, post=True)
         xml = invoice._l10n_pl_edi_render_xml()
         self.assertEqual(self._get_xml_value(xml, "//ns:Podmiot2/ns:DaneIdentyfikacyjne/ns:NIP"), '1111111111')
+
+    def test_cron_creates_empty_move_on_parsing_error(self):
+        """ Create empty journal entry for malformed XML """
+
+        def query_invoice_metadata(query_criteria, page_size=100, page_offset=0):
+            return {
+                'hasMore': False,
+                'invoices': [
+                    {
+                        'ksefNumber': 'GOOD'
+                    },
+                    {
+                        'ksefNumber': 'BAD'
+                    },
+                ],
+            }
+
+        def get_invoice_by_ksef_number(ksef_number):
+            return {'xml_content': b'<bad/>' if ksef_number == 'BAD' else b'<good/>'}
+
+        def mock_parse(self_obj, xml):
+            if xml == b'<bad/>':
+                raise UserError("Simulated error")
+            return {
+                'move_type': 'in_invoice',
+                'invoice_line_ids': [Command.create({'name': 'Test Line', 'price_unit': 100.0})],
+            }
+        with (
+            patch.object(KsefApiService, 'query_invoice_metadata', side_effect=query_invoice_metadata),
+            patch.object(KsefApiService, 'get_invoice_by_ksef_number', side_effect=get_invoice_by_ksef_number),
+            patch('odoo.addons.l10n_pl_edi.models.account_move.AccountMove.l10n_pl_edi_get_ksef_bill_vals_from_xml', mock_parse)
+        ):
+            self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
+
+        bad_invoice = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'BAD')])
+        good_invoice = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'GOOD')])
+
+        self.assertTrue(good_invoice, "Good invoice should be created")
+        self.assertTrue(bad_invoice, "Bad invoice should be created as empty fallback")
+        self.assertFalse(bad_invoice.invoice_line_ids, "Bad invoice should have no lines")
+        self.assertTrue(any("Simulated error" in body for body in bad_invoice.message_ids.mapped('body')))

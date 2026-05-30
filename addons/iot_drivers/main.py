@@ -61,11 +61,13 @@ class Manager(Thread):
         # IP address change
         new_domain = self._get_domain()
         if self.domain != new_domain:
+            _logger.warning("IoT Box %s: IP address has changed from %s to %s", self.identifier, self.domain, new_domain)
             self.domain = new_domain
             changed = True
         # Version change
         new_version = helpers.get_version(detailed_version=True)
         if self.version != new_version:
+            _logger.info("IoT Box %s: Version has changed from %s to %s", self.identifier, self.version, new_version)
             self.version = new_version
             changed = True
 
