@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:37+0000\n"
+"POT-Creation-Date: 2026-05-22 17:41+0000\n"
 "PO-Revision-Date: 2025-10-08 18:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -68,6 +68,7 @@ msgid "Confirm Registration"
 msgstr "Ro‘yxatdan o‘tishni tasdiqlash"
 
 #. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_event_event_ticket__display_name
 #: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__display_name
 #: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item__display_name
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__display_name
@@ -89,6 +90,11 @@ msgstr "Tadbir savdosi hisoboti"
 #, fuzzy
 msgid "Event Subtitle"
 msgstr "Tadbir qo‘shimcha sarlavhasi"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_event_event_ticket
+msgid "Event Ticket"
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
@@ -121,6 +127,7 @@ msgid "Go to Payment"
 msgstr "To‘lovga o‘tish"
 
 #. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_event_event_ticket__id
 #: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__id
 #: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item__id
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__id
@@ -184,8 +191,8 @@ msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
 "ticket for the %(event)s event%(slot)s."
 msgstr ""
-"Kechirasiz, %(event)s tadbiri%(slot)s uchun %(ticket)s chiptasidan faqat "
-"%(remaining_seats)d ta joy qoldi."
+"Kechirasiz, %(event)s tadbiri%(slot)s uchun %(ticket)s chiptasidan faqat %"
+"(remaining_seats)d ta joy qoldi."
 
 #. module: website_event_sale
 #. odoo-python

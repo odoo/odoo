@@ -32,8 +32,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:36+0000\n"
-"PO-Revision-Date: 2026-05-16 16:54+0000\n"
+"POT-Creation-Date: 2026-05-29 17:36+0000\n"
+"PO-Revision-Date: 2026-05-23 17:22+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-2/"
 "account/es/>\n"
@@ -99,6 +99,8 @@ msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"Por favor, ponte en contacto con el administrador."
 
 #. module: account
 #. odoo-python
@@ -193,13 +195,13 @@ msgstr "%(exception)s para %(user)s%(end_datetime_string)s%(reason)s."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(label)s at %(currency_amount)s"
-msgstr ""
+msgstr "%(label)s en %(currency_amount)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(label)s at %(currency_amount)s (Draft)"
-msgstr ""
+msgstr "%(label)s a %(currency_amount)s (Borrador)"
 
 #. module: account
 #. odoo-python
@@ -233,6 +235,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
 "delivered at %(unit_price)s"
 msgstr ""
+"%(order)s - %(order_line)s; %(qty_invoiced)s facturado, %(qty_delivered)s "
+"entregado a %(unit_price)s"
 
 #. module: account
 #. odoo-python
@@ -258,7 +262,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
+msgstr "%(order)s - %(order_line)s; diferencia de precio para %(product)s"
 
 #. module: account
 #. odoo-python
@@ -1512,7 +1516,7 @@ msgstr "<span><span class=\"oe_currency_value\">19.250,00</span> €</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>1.00</span>"
-msgstr ""
+msgstr "<span>1,00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -2587,8 +2591,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "A fiscal position with a foreign VAT already exists in this country."
-msgstr "Ya existe una posición fiscal con un IVA extranjero en este país."
+msgid "A fiscal position with a foreign Tax ID already exists in this country."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3830,8 +3834,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
-msgid "Allow Foreign VAT"
-msgstr "Permitir un IVA extranjero"
+msgid "Allow Foreign Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -4309,22 +4313,20 @@ msgstr "Aplicar solo si el país de entrega coincide."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
-msgid "Apply only if partner has a VAT number."
-msgstr "Aplicar solo si el cliente tiene un número de identificación fiscal."
+msgid "Apply only if partner has a Tax ID."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
 msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
-"criterias (VAT/Country) are met."
+"criterias (Tax ID/Country) are met."
 msgstr ""
-"Aplique automáticamente el mapeo de impuestos y cuentas en las facturas "
-"cuando se cumplan los criterios de correspondencia (IVA/País)."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Appropriation of the profit or loss"
-msgstr ""
+msgstr "Aplicación de resultados"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -4482,7 +4484,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_vendor_bill_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_vendor_bill_id
 msgid "Auto-complete from a previous bill or refund."
-msgstr ""
+msgstr "Autocompletar a partir de una factura o reembolso previo."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_ids
@@ -4930,7 +4932,7 @@ msgstr "Banco de Odoo"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
-msgstr ""
+msgstr "Configuración bancaria"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -6294,7 +6296,7 @@ msgstr "Coste del mobiliario de oficina, instalaciones y equipos empresariales"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Cost of revenue"
-msgstr ""
+msgstr "Coste de ingresos"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_postage
@@ -6349,8 +6351,8 @@ msgstr "Apuntes de contrapartida"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Countries for which the company has a VAT number"
-msgstr "Países en los que la compañía tiene un NIF"
+msgid "Countries for which the company has a Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -6884,7 +6886,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_retained_earnings
 msgid "Cumulative undistributed profits and losses"
-msgstr ""
+msgstr "Resultados acumulados no distribuidos"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -7163,7 +7165,7 @@ msgstr "Cierre {label} {percent}%"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "D"
-msgstr ""
+msgstr "D"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -9453,15 +9455,15 @@ msgid "Foreign Tax ID"
 msgstr "Identificación fiscal extranjera"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign Tax ID countries"
+msgstr ""
+
+#. module: account
 #: model:account.fiscal.position,name:account.1_template_generic_export_fiscal_position
 #: model:account.fiscal.position,name:account.2_account_fiscal_position_us_export
 msgid "Foreign Trade"
 msgstr "Comercio extranjero"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Foreign VAT countries"
-msgstr "Países con NIF extranjero"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -9751,13 +9753,13 @@ msgstr "Bienes"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Goods Delivered not Invoiced (perpetual valuation)"
-msgstr ""
+msgstr "Bienes entregados no facturados (valoración permanente)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Goods Invoiced not Delivered (perpetual valuation)"
-msgstr ""
+msgstr "Bienes facturados no entregados (valoración permanente)"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_ground_transportation
@@ -11414,7 +11416,7 @@ msgstr "Son asientos"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
 #: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
 msgid "Is Exact Move Duplicate"
-msgstr ""
+msgstr "Es un asiento duplicado exacto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -12997,7 +12999,7 @@ msgstr "Solicitud de cancelación necesaria"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Need to update"
-msgstr ""
+msgstr "Necesita actualización"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -15075,6 +15077,7 @@ msgstr "Categorías de producto"
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -15164,7 +15167,7 @@ msgstr "Cuenta de ganancias"
 #: model:account.account,name:account.1_profit_or_loss
 #: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
 msgid "Profit or Loss Appropriation"
-msgstr ""
+msgstr "Aplicación del resultado"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -16465,7 +16468,7 @@ msgstr "Seleccione un tipo"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Select an old purchase document"
-msgstr ""
+msgstr "Selecciona un documento de compra antiguo"
 
 #. module: account
 #. odoo-javascript
@@ -17767,6 +17770,11 @@ msgid "Tax ID"
 msgstr "NIF"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
+msgid "Tax ID required"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_price_include__tax_included
 msgid "Tax Included"
@@ -18425,6 +18433,8 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"La cuenta bancaria de tu empresa no es de confianza. Pídele a un "
+"administrador o a alguien con derechos de aprobación que la verifique."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -18515,6 +18525,10 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"La cuenta bancaria de la empresa (%(account_number)s) vinculada a esta "
+"factura no es de confianza. Dirígete a la configuración bancaria, comprueba "
+"que sea correcta o corrige el número y haz clic en «Enviar dinero» para "
+"validarla."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -18535,11 +18549,9 @@ msgstr "El país al que aplica este impuesto."
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a "
+"The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
-"No se ha podido detectar el país del NIF extranjero. Asigne un país a la "
-"posición fiscal."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -18683,7 +18695,7 @@ msgstr "El asiento está asegurado con un hash inalterable."
 msgid ""
 "The entry is using accounts (%(accounts_codes_names)s) from a different "
 "company."
-msgstr ""
+msgstr "El asiento usa cuentas (%(accounts_codes_names)s) de otra empresa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -19075,6 +19087,8 @@ msgid ""
 "The scheduled action 'Send Invoices automatically' is archived. You won't be "
 "able to send invoices in batch."
 msgstr ""
+"La acción programada «Enviar facturas automáticamente» se ha archivado. No "
+"podrás enviar facturas por lotes."
 
 #. module: account
 #. odoo-python
@@ -19421,6 +19435,8 @@ msgid ""
 "There was an error while importing the bill, you can find attached the "
 "incoming XML"
 msgstr ""
+"Se ha producido un error al importar la factura; adjunto encontrarás el XML "
+"recibido"
 
 #. module: account
 #. odoo-python
@@ -19493,7 +19509,7 @@ msgstr "Esta cuenta se utilizará al validar una factura de cliente."
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
-"this screen."
+"this screen.  -  This action will affect your current company only."
 msgstr ""
 
 #. module: account
@@ -19589,10 +19605,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
-"Este asiento ya se ha revisado. Necesitas el rol de contable para cambiarlo."
 
 #. module: account
 #. odoo-python
@@ -19611,6 +19626,13 @@ msgstr "Este asiento se ha duplicado a partir de %s"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "Este asiento se ha revertido a partir de %s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20169,7 +20191,7 @@ msgstr "Transferir a %s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
 msgid "Translated Product Name"
-msgstr ""
+msgstr "Nombre del producto traducido"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_661
@@ -20334,7 +20356,7 @@ msgstr "Precio unitario:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Units"
-msgstr ""
+msgstr "Unidades"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20501,7 +20523,7 @@ msgstr "Actualizar términos y condiciones"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Update app"
-msgstr ""
+msgstr "Actualizar la aplicación"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20718,11 +20740,6 @@ msgstr ""
 "contabilidad Storno."
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
-msgid "VAT required"
-msgstr "Requiere IVA"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Valid for"
 msgstr "Válido para"
@@ -20789,6 +20806,25 @@ msgid ""
 "    • the second group captures the decimal part (last two digits)\n"
 "    "
 msgstr ""
+"Valor para el importe de la línea de ajuste\n"
+"    * Porcentaje: porcentaje del saldo, entre 0 y 100.\n"
+"    * Fijo: el valor fijo del ajuste. El importe se contabilizará como "
+"débito si es negativo y, como crédito, si es positivo.\n"
+"    * Desde etiqueta: no es necesario indicar delimitadores de expresión "
+"regular (regex), solo la regex. Por ejemplo, si quieres extraer el importe "
+"de:\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Podrías introducir:\n"
+"BRT: ([\\d,]+)\n"
+"    Si la etiqueta es “01870912 0009065 00115” y necesitas el importe en "
+"formato decimal\n"
+"    (por ejemplo, 90.65), puedes usar una regex con grupos de captura, por "
+"ejemplo:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    En este caso:\n"
+"    • el primer grupo captura la parte entera\n"
+"    • el segundo grupo captura la parte decimal (los dos últimos dígitos)\n"
+"    "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -21167,14 +21203,6 @@ msgid "You are about to unsubscribe"
 msgstr "Estás a punto de darte de baja"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You are attempting to validate opening entries belonging to another company. "
-"Please switch to the correct company."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid ""
 "You are changing decimals in your entire database, including invoices,\n"
@@ -21464,6 +21492,7 @@ msgstr ""
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
 msgstr ""
+"No se puede modificar el importe de un pago con varias líneas de liquidez."
 
 #. module: account
 #. odoo-python
@@ -21498,11 +21527,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
+"You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"No puede crear una posición fiscal con un NIF extranjero dentro de su país "
-"fiscal sin asignarle una provincia."
 
 #. module: account
 #. odoo-python
@@ -21552,7 +21579,7 @@ msgstr ""
 msgid ""
 "You cannot delete taxes that are currently in use. Consider archiving them "
 "instead."
-msgstr ""
+msgstr "No es posible eliminar los impuestos que se están usando. Archívalos."
 
 #. module: account
 #. odoo-python
@@ -21742,7 +21769,7 @@ msgstr "No puede publicar un asiento en un diario archivado (%(journal)s)"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr ""
+msgstr "No puedes registrar un asiento con una cuenta analítica archivada: %s"
 
 #. module: account
 #. odoo-python
@@ -21861,6 +21888,8 @@ msgstr ""
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
 msgstr ""
+"No se puede cambiar el tipo de un documento cuyo número de secuencia ya "
+"existe."
 
 #. module: account
 #. odoo-python
@@ -22675,6 +22704,53 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Factura de autofacturación (ref. {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "A fiscal position with a foreign VAT already exists in this country."
+#~ msgstr "Ya existe una posición fiscal con un IVA extranjero en este país."
+
+#~ msgid "Allow Foreign VAT"
+#~ msgstr "Permitir un IVA extranjero"
+
+#~ msgid "Apply only if partner has a VAT number."
+#~ msgstr ""
+#~ "Aplicar solo si el cliente tiene un número de identificación fiscal."
+
+#~ msgid ""
+#~ "Apply tax & account mappings on invoices automatically if the matching "
+#~ "criterias (VAT/Country) are met."
+#~ msgstr ""
+#~ "Aplique automáticamente el mapeo de impuestos y cuentas en las facturas "
+#~ "cuando se cumplan los criterios de correspondencia (IVA/País)."
+
+#~ msgid "Countries for which the company has a VAT number"
+#~ msgstr "Países en los que la compañía tiene un NIF"
+
+#~ msgid "Foreign VAT countries"
+#~ msgstr "Países con NIF extranjero"
+
+#~ msgid ""
+#~ "The country of the foreign VAT number could not be detected. Please "
+#~ "assign a country to the fiscal position."
+#~ msgstr ""
+#~ "No se ha podido detectar el país del NIF extranjero. Asigne un país a la "
+#~ "posición fiscal."
+
+#~ msgid "VAT required"
+#~ msgstr "Requiere IVA"
+
+#~ msgid ""
+#~ "You cannot create a fiscal position with a foreign VAT within your fiscal "
+#~ "country without assigning it a state."
+#~ msgstr ""
+#~ "No puede crear una posición fiscal con un NIF extranjero dentro de su "
+#~ "país fiscal sin asignarle una provincia."
+
+#~ msgid ""
+#~ "This entry has already been reviewed. You need the bookkeeper role to "
+#~ "change it."
+#~ msgstr ""
+#~ "Este asiento ya se ha revisado. Necesitas el rol de contable para "
+#~ "cambiarlo."
 
 #~ msgid "Quick search: %s"
 #~ msgstr "Búsqueda rápida: %s"

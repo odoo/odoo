@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:37+0000\n"
+"POT-Creation-Date: 2026-05-22 17:40+0000\n"
 "PO-Revision-Date: 2026-04-17 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,9 +23,12 @@ msgid ""
 "\n"
 "        Defines the source for work entries generation\n"
 "\n"
-"        Working Schedule: Work entries will be generated from the working hours below.\n"
-"        Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)\n"
-"        Planning: Work entries will be generated from the employee's planning. (requires Planning app)\n"
+"        Working Schedule: Work entries will be generated from the working "
+"hours below.\n"
+"        Attendances: Work entries will be generated from the employee's "
+"attendances. (requires Attendance app)\n"
+"        Planning: Work entries will be generated from the employee's "
+"planning. (requires Planning app)\n"
 "    "
 msgstr ""
 
@@ -34,7 +38,8 @@ msgstr ""
 msgid ""
 "\n"
 "Cannot insert \"%(insert_name)s\":\n"
-"Work entry type \"%(name)s\" of code \"%(code)s\" already exists for country \"%(country)s\".\n"
+"Work entry type \"%(name)s\" of code \"%(code)s\" already exists for country "
+"\"%(country)s\".\n"
 "                    "
 msgstr ""
 
@@ -44,7 +49,8 @@ msgstr ""
 msgid ""
 "\n"
 "Cannot insert \"%(insert_name)s\":\n"
-"Work entry type \"%(name)s\" of code \"%(code)s\", with no country assigned, already exists.\n"
+"Work entry type \"%(name)s\" of code \"%(code)s\", with no country assigned, "
+"already exists.\n"
 "                    "
 msgstr ""
 
@@ -410,8 +416,8 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paid_compensatory_rest
 msgid ""
-"Compensatory rest as part of a reduction in working time paid at the time of"
-" recovery"
+"Compensatory rest as part of a reduction in working time paid at the time of "
+"recovery"
 msgstr ""
 
 #. module: hr_work_entry
@@ -942,6 +948,13 @@ msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_common_law_illness_attributable_to_worker
+msgid ""
+"Illness or accident under common law, not covered by the guaranteed salary, "
+"during the theoretical legal period of guaranteed salary for reasons "
+"attributable to the worker"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_common_law_illness_non_attributable_to_worker
 msgid ""
 "Illness or accident under common law, not covered by the guaranteed salary, "
@@ -1620,8 +1633,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid ""
-"Provide a description of the Work Entry Type, in which case should it be "
-"used"
+"Provide a description of the Work Entry Type, in which case should it be used"
 msgstr ""
 
 #. module: hr_work_entry
@@ -2033,6 +2045,11 @@ msgid ""
 msgstr ""
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_force_majeure
+msgid "Temporary unemployment due to force majeure"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_force_majeure_medical
 msgid "Temporary unemployment due to force majeure for medical reasons"
 msgstr ""
@@ -2043,7 +2060,6 @@ msgid "Temporary unemployment due to strike or lockout"
 msgstr ""
 
 #. module: hr_work_entry
-#: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_force_majeure
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_incident
 msgid "Temporary unemployment due to technical incident"
 msgstr ""
@@ -2426,8 +2442,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
 msgid ""
-"You cannot create more than one work entry type of code \"%(code)s\" for the"
-" same country (%(country)s)"
+"You cannot create more than one work entry type of code \"%(code)s\" for the "
+"same country (%(country)s)"
 msgstr ""
 
 #. module: hr_work_entry

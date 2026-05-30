@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:36+0000\n"
+"POT-Creation-Date: 2026-05-29 17:36+0000\n"
 "PO-Revision-Date: 2026-04-11 14:22+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -2563,10 +2563,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "A fiscal position with a foreign VAT already exists in this country."
+msgid "A fiscal position with a foreign Tax ID already exists in this country."
 msgstr ""
-"Một vị trí tài chính với mã số thuế GTGT nước ngoài đã tồn tại ở quốc gia "
-"này."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3797,8 +3795,8 @@ msgstr "Tất cả dòng sao kê ngân hàng chưa đối chiếu trước ngày
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
-msgid "Allow Foreign VAT"
-msgstr "Cho phép thuế GTGT nước ngoài"
+msgid "Allow Foreign Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -4278,17 +4276,15 @@ msgstr "Chỉ áp dụng khi quốc gia giao hàng trùng khớp."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
-msgid "Apply only if partner has a VAT number."
-msgstr "Chỉ áp dụng khi đối tác có mã số GTGT."
+msgid "Apply only if partner has a Tax ID."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
 msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
-"criterias (VAT/Country) are met."
+"criterias (Tax ID/Country) are met."
 msgstr ""
-"Tự động áp dụng mapping tài khoản và thuế trên hóa đơn nếu đáp ứng các tiêu "
-"chí phù hợp (VAT/Quốc gia)."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
@@ -6324,8 +6320,8 @@ msgstr "Hạng mục đối ứng"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Countries for which the company has a VAT number"
-msgstr "Quốc gia mà công ty có mã số thuế GTGT"
+msgid "Countries for which the company has a Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -9411,15 +9407,15 @@ msgid "Foreign Tax ID"
 msgstr "Mã số thuế nước ngoài"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign Tax ID countries"
+msgstr ""
+
+#. module: account
 #: model:account.fiscal.position,name:account.1_template_generic_export_fiscal_position
 #: model:account.fiscal.position,name:account.2_account_fiscal_position_us_export
 msgid "Foreign Trade"
 msgstr "Ngoại thương"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Foreign VAT countries"
-msgstr "Mã thuế GTGT nước ngoài"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -15012,6 +15008,7 @@ msgstr "Danh mục sản phẩm"
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -17686,6 +17683,11 @@ msgid "Tax ID"
 msgstr "Mã số thuế"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
+msgid "Tax ID required"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_price_include__tax_included
 msgid "Tax Included"
@@ -18445,11 +18447,9 @@ msgstr "Quốc gia áp dụng thuế này."
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a "
+"The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
-"Không thể phát hiện quốc gia của mã số thuế GTGT nước ngoài. Vui lòng chỉ "
-"định quốc gia cho vị trí tài chính."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -19386,10 +19386,8 @@ msgstr "Tài khoản này sẽ được sử dụng khi xác thực hóa đơn b
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
-"this screen."
+"this screen.  -  This action will affect your current company only."
 msgstr ""
-"Hành động này không thể hoàn tác: số tiền nợ/có sẽ không thể chỉnh sửa lại "
-"từ màn hình này."
 
 #. module: account
 #. odoo-python
@@ -19483,10 +19481,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
-"Bút toán này đã được rà soát. Bạn cần có vai trò kế toán để thay đổi nó."
 
 #. module: account
 #. odoo-python
@@ -19505,6 +19502,13 @@ msgstr "Bút toán này đã được sao chép từ %s"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "Bút toán này đã được đảo từ %s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20601,11 +20605,6 @@ msgstr ""
 "toán storno hay không"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
-msgid "VAT required"
-msgstr "Phải có thuế GTGT"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Valid for"
 msgstr "Hợp lệ cho"
@@ -21062,16 +21061,6 @@ msgid "You are about to unsubscribe"
 msgstr "Bạn sắp hủy đăng ký"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You are attempting to validate opening entries belonging to another company. "
-"Please switch to the correct company."
-msgstr ""
-"Bạn đang cố gắng xác minh các bút toán đầu kỳ thuộc về một công ty khác. Vui "
-"lòng chuyển sang đúng công ty."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid ""
 "You are changing decimals in your entire database, including invoices,\n"
@@ -21392,11 +21381,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
+"You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"Bạn không thể tạo vị trí tài chính với thuế GTGT nước ngoài trong quốc gia "
-"tài chính của mình mà không xác định tỉnh thành."
 
 #. module: account
 #. odoo-python
@@ -22568,6 +22555,67 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Hóa đơn tự lập (Tham chiếu {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "A fiscal position with a foreign VAT already exists in this country."
+#~ msgstr ""
+#~ "Một vị trí tài chính với mã số thuế GTGT nước ngoài đã tồn tại ở quốc gia "
+#~ "này."
+
+#~ msgid "Allow Foreign VAT"
+#~ msgstr "Cho phép thuế GTGT nước ngoài"
+
+#~ msgid "Apply only if partner has a VAT number."
+#~ msgstr "Chỉ áp dụng khi đối tác có mã số GTGT."
+
+#~ msgid ""
+#~ "Apply tax & account mappings on invoices automatically if the matching "
+#~ "criterias (VAT/Country) are met."
+#~ msgstr ""
+#~ "Tự động áp dụng mapping tài khoản và thuế trên hóa đơn nếu đáp ứng các "
+#~ "tiêu chí phù hợp (VAT/Quốc gia)."
+
+#~ msgid "Countries for which the company has a VAT number"
+#~ msgstr "Quốc gia mà công ty có mã số thuế GTGT"
+
+#~ msgid "Foreign VAT countries"
+#~ msgstr "Mã thuế GTGT nước ngoài"
+
+#~ msgid ""
+#~ "The country of the foreign VAT number could not be detected. Please "
+#~ "assign a country to the fiscal position."
+#~ msgstr ""
+#~ "Không thể phát hiện quốc gia của mã số thuế GTGT nước ngoài. Vui lòng chỉ "
+#~ "định quốc gia cho vị trí tài chính."
+
+#~ msgid "VAT required"
+#~ msgstr "Phải có thuế GTGT"
+
+#~ msgid ""
+#~ "You cannot create a fiscal position with a foreign VAT within your fiscal "
+#~ "country without assigning it a state."
+#~ msgstr ""
+#~ "Bạn không thể tạo vị trí tài chính với thuế GTGT nước ngoài trong quốc "
+#~ "gia tài chính của mình mà không xác định tỉnh thành."
+
+#~ msgid ""
+#~ "This action is irreversible: the credit/debit cannot be modified again "
+#~ "from this screen."
+#~ msgstr ""
+#~ "Hành động này không thể hoàn tác: số tiền nợ/có sẽ không thể chỉnh sửa "
+#~ "lại từ màn hình này."
+
+#~ msgid ""
+#~ "This entry has already been reviewed. You need the bookkeeper role to "
+#~ "change it."
+#~ msgstr ""
+#~ "Bút toán này đã được rà soát. Bạn cần có vai trò kế toán để thay đổi nó."
+
+#~ msgid ""
+#~ "You are attempting to validate opening entries belonging to another "
+#~ "company. Please switch to the correct company."
+#~ msgstr ""
+#~ "Bạn đang cố gắng xác minh các bút toán đầu kỳ thuộc về một công ty khác. "
+#~ "Vui lòng chuyển sang đúng công ty."
 
 #~ msgid "Quick search: %s"
 #~ msgstr "Tìm nhanh: %s"

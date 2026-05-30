@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:36+0000\n"
-"PO-Revision-Date: 2026-05-16 16:43+0000\n"
-"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
+"POT-Creation-Date: 2026-05-29 17:36+0000\n"
+"PO-Revision-Date: 2026-05-25 17:04+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-2/account/es_419/>\n"
 "Language: es_419\n"
@@ -2567,10 +2567,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "A fiscal position with a foreign VAT already exists in this country."
+msgid "A fiscal position with a foreign Tax ID already exists in this country."
 msgstr ""
-"Ya existe una posición fiscal con un número de identificación fiscal "
-"extranjero en este país."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3819,8 +3817,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
-msgid "Allow Foreign VAT"
-msgstr "Permitir número de identificación fiscal extranjero"
+msgid "Allow Foreign Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -4303,18 +4301,15 @@ msgstr "Aplicar solo si el país de entrega que coincide."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
-msgid "Apply only if partner has a VAT number."
-msgstr "Aplicar solo si el contacto tiene un número fiscal."
+msgid "Apply only if partner has a Tax ID."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
 msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
-"criterias (VAT/Country) are met."
+"criterias (Tax ID/Country) are met."
 msgstr ""
-"Aplicar automáticamente el mapeo de impuestos y cuentas en las facturas "
-"cuando se cumplan los criterios de correspondencia (Número de identificación "
-"fiscal/País)."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
@@ -6359,8 +6354,8 @@ msgstr "Apuntes de contrapartida"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Countries for which the company has a VAT number"
-msgstr "Países en los que la empresa tiene un número de identificación fiscal"
+msgid "Countries for which the company has a Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -9470,15 +9465,15 @@ msgid "Foreign Tax ID"
 msgstr "Identificación fiscal extranjera"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign Tax ID countries"
+msgstr ""
+
+#. module: account
 #: model:account.fiscal.position,name:account.1_template_generic_export_fiscal_position
 #: model:account.fiscal.position,name:account.2_account_fiscal_position_us_export
 msgid "Foreign Trade"
 msgstr "Comercio extranjero"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Foreign VAT countries"
-msgstr "Países con IVA extranjero"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -15109,6 +15104,7 @@ msgstr "Categorías de productos"
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -17800,6 +17796,11 @@ msgid "Tax ID"
 msgstr "Número de identificación fiscal"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
+msgid "Tax ID required"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_price_include__tax_included
 msgid "Tax Included"
@@ -18575,11 +18576,9 @@ msgstr "El país al que aplica este impuesto."
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a "
+"The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
-"No se pudo detectar el país del número de identificación fiscal extranjero. "
-"Asigne un país a la posición fiscal."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -19538,10 +19537,10 @@ msgstr "Esta cuenta se utilizará al validar una factura del cliente."
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
-"this screen."
+"this screen.  -  This action will affect your current company only."
 msgstr ""
-"Esta acción es irreversible. No podrás volver a modificar el crédito o "
-"débito desde esta pantalla."
+"Esta acción es irreversible, ya no podrás modificar el crédito o débito "
+"desde esta pantalla. Esta acción solo afectará a tu empresa actual."
 
 #. module: account
 #. odoo-python
@@ -19636,9 +19635,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
-msgstr "Ya se revisó el asiento. Necesitas el rol de contador para cambiarlo."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
+msgstr ""
+"Este asiento ya fue revisado. Necesitas el rol de gerente de contabilidad "
+"para cambiarlo."
 
 #. module: account
 #. odoo-python
@@ -19657,6 +19658,14 @@ msgstr "Este asiento se duplicó desde %s"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "Este asiento se revirtió desde %s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
+"Este asiento ya fue revisado. Necesitas el rol de contador para cambiarlo."
 
 #. module: account
 #. odoo-python
@@ -20764,11 +20773,6 @@ msgstr ""
 "contabilidad Storno"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
-msgid "VAT required"
-msgstr "Requiere número de identificación tributaria"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Valid for"
 msgstr "Válido para"
@@ -21228,16 +21232,6 @@ msgid "You are about to unsubscribe"
 msgstr "Estás a punto de cancelar tu suscripción"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You are attempting to validate opening entries belonging to another company. "
-"Please switch to the correct company."
-msgstr ""
-"Estás intentando validar asientos de apertura que pertenecen a otra empresa. "
-"Cambia a la empresa correcta."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid ""
 "You are changing decimals in your entire database, including invoices,\n"
@@ -21560,11 +21554,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
+"You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"No puede crear una posición fiscal con un número de identificación fiscal "
-"extranjero dentro de su país fiscal sin asignarle un estado."
 
 #. module: account
 #. odoo-python
@@ -22749,6 +22741,69 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Factura autofacturada (Referencia "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid "A fiscal position with a foreign VAT already exists in this country."
+#~ msgstr ""
+#~ "Ya existe una posición fiscal con un número de identificación fiscal "
+#~ "extranjero en este país."
+
+#~ msgid "Allow Foreign VAT"
+#~ msgstr "Permitir número de identificación fiscal extranjero"
+
+#~ msgid "Apply only if partner has a VAT number."
+#~ msgstr "Aplicar solo si el contacto tiene un número fiscal."
+
+#~ msgid ""
+#~ "Apply tax & account mappings on invoices automatically if the matching "
+#~ "criterias (VAT/Country) are met."
+#~ msgstr ""
+#~ "Aplicar automáticamente el mapeo de impuestos y cuentas en las facturas "
+#~ "cuando se cumplan los criterios de correspondencia (Número de "
+#~ "identificación fiscal/País)."
+
+#~ msgid "Countries for which the company has a VAT number"
+#~ msgstr ""
+#~ "Países en los que la empresa tiene un número de identificación fiscal"
+
+#~ msgid "Foreign VAT countries"
+#~ msgstr "Países con IVA extranjero"
+
+#~ msgid ""
+#~ "The country of the foreign VAT number could not be detected. Please "
+#~ "assign a country to the fiscal position."
+#~ msgstr ""
+#~ "No se pudo detectar el país del número de identificación fiscal "
+#~ "extranjero. Asigne un país a la posición fiscal."
+
+#~ msgid "VAT required"
+#~ msgstr "Requiere número de identificación tributaria"
+
+#~ msgid ""
+#~ "You cannot create a fiscal position with a foreign VAT within your fiscal "
+#~ "country without assigning it a state."
+#~ msgstr ""
+#~ "No puede crear una posición fiscal con un número de identificación fiscal "
+#~ "extranjero dentro de su país fiscal sin asignarle un estado."
+
+#~ msgid ""
+#~ "This action is irreversible: the credit/debit cannot be modified again "
+#~ "from this screen."
+#~ msgstr ""
+#~ "Esta acción es irreversible. No podrás volver a modificar el crédito o "
+#~ "débito desde esta pantalla."
+
+#~ msgid ""
+#~ "This entry has already been reviewed. You need the bookkeeper role to "
+#~ "change it."
+#~ msgstr ""
+#~ "Ya se revisó el asiento. Necesitas el rol de contador para cambiarlo."
+
+#~ msgid ""
+#~ "You are attempting to validate opening entries belonging to another "
+#~ "company. Please switch to the correct company."
+#~ msgstr ""
+#~ "Estás intentando validar asientos de apertura que pertenecen a otra "
+#~ "empresa. Cambia a la empresa correcta."
 
 #~ msgid "Quick search: %s"
 #~ msgstr "Búsqueda rápida: %s"

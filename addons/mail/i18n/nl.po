@@ -15,11 +15,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:35+0000\n"
-"PO-Revision-Date: 2026-05-08 11:07+0000\n"
+"POT-Creation-Date: 2026-05-22 17:40+0000\n"
+"PO-Revision-Date: 2026-05-27 15:10+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/mail/nl/"
-">\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/mail/"
+"nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1145,7 +1145,7 @@ msgid ""
 "automatically mark as done when a document is uploaded"
 msgstr ""
 "Acties kunnen specifiek gedrag triggeren, zoals het openen van de "
-"kalenderweergave of automatisch als gereed markeren wanneer een bestand "
+"kalenderweergave of automatisch als voltooid markeren wanneer een bestand "
 "geüpload is"
 
 #. module: mail
@@ -3945,6 +3945,11 @@ msgid "Default Recipients"
 msgstr "Standaard geadresseerden"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+msgid "Default Subject"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
 msgid "Default Summary"
 msgstr "Standaard samenvatting"
@@ -4471,25 +4476,25 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Done"
-msgstr "Gereed"
+msgstr "Voltooid"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
 msgid "Done & Schedule Next"
-msgstr "Gereed & nieuwe activiteit"
+msgstr "Voltooid & nieuwe activiteit"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_done
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Done Date"
-msgstr "Datum gereed"
+msgstr "Datum voltooid"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_markasdone_popover.xml:0
 msgid "Done and Schedule Next"
-msgstr "Gereed en volgende plannen"
+msgstr "Voltooid en volgende plannen"
 
 #. module: mail
 #. odoo-javascript
@@ -5671,8 +5676,8 @@ msgid "Groups"
 msgstr "Groepen"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/controllers/discuss/public_page.py:0
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_model.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__guest_id
@@ -7630,7 +7635,7 @@ msgstr "Markeren als gelezen"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 msgid "Mark Done"
-msgstr "Markeren als gereed"
+msgstr "Markeren als voltooid"
 
 #. module: mail
 #. odoo-javascript
@@ -7662,7 +7667,7 @@ msgstr "Markeren als niet gelezen"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover_item.xml:0
 msgid "Mark as done"
-msgstr "Markeren als gereed"
+msgstr "Markeren als voltooid"
 
 #. module: mail
 #. odoo-javascript
@@ -8764,8 +8769,8 @@ msgstr "Iedereen melden"
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
 msgid "Notify multiple people at once by @-mentioning roles in conversations."
 msgstr ""
-"Meerdere mensen tegelijk op de hoogte brengen door rollen te @-vermelden in "
-"gesprekken."
+"Breng meerdere mensen tegelijk op de hoogte door rollen met @ te vermelden "
+"in gesprekken."
 
 #. module: mail
 #. odoo-javascript
@@ -11756,7 +11761,7 @@ msgstr "Brontaal"
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 #: code:addons/mail/static/src/discuss/call/common/quick_voice_settings.xml:0
 msgid "Speakers"
-msgstr "Speakers"
+msgstr "Luidsprekers"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__followers_type__specific
@@ -14983,7 +14988,7 @@ msgstr "document"
 #: code:addons/mail/static/src/views/web/activity/activity_renderer.js:0
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "done"
-msgstr "gereed"
+msgstr "voltooid"
 
 #. module: mail
 #. odoo-javascript

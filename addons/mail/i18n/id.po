@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:35+0000\n"
-"PO-Revision-Date: 2026-05-08 10:50+0000\n"
+"POT-Creation-Date: 2026-05-22 17:40+0000\n"
+"PO-Revision-Date: 2026-05-23 17:22+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-2/"
 "mail/id/>\n"
@@ -819,20 +819,20 @@ msgstr ""
 "                                        Pesan akan dikirim sebagai email ke "
 "penerima\n"
 "                                        templat dan tidak akan muncul di "
-"sejarah pesan.\n"
+"riwayat pesan.\n"
 "                                    </span>\n"
 "                                    <span invisible=\"mail_post_method != "
 "'note'\">\n"
 "                                        Pesan akan diposting sebagai catatan "
 "internal yang terlihat untuk user\n"
-"                                        internal di sejarah pesan.\n"
+"                                        internal di riwayat pesan.\n"
 "                                    </span>\n"
 "                                    <span invisible=\"mail_post_method != "
 "'comment'\">\n"
 "                                        Pesan akan dipost sebagai pesan di "
 "rekaman,\n"
 "                                        menotifikasi semua pengikut. Pesan "
-"akan muncul di sejarah pesan.\n"
+"akan muncul di riwayat pesan.\n"
 "                                    </span>"
 
 #. module: mail
@@ -2498,17 +2498,17 @@ msgstr "Panggilan"
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_tree
 msgid "Call History"
-msgstr "Sejarah Panggilan"
+msgstr "Riwayat Panggilan"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_channel_id_not_null_constraint
 msgid "Call history must have a channel"
-msgstr "Sejarah panggilan harus memiliki channel"
+msgstr "Riwayat panggilan harus memiliki channel"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_start_dt_is_not_null_constraint
 msgid "Call history must have a start date"
-msgstr "Sejarah panggilan harus memiliki tanggal mulai"
+msgstr "Riwayat panggilan harus memiliki tanggal mulai"
 
 #. module: mail
 #. odoo-javascript
@@ -3803,7 +3803,7 @@ msgstr "Hari"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_duration_mixin__rotting_days
 msgid "Days Rotting"
-msgstr "Hari-Hari Membusuk"
+msgstr "Hari Membusuk"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -3892,6 +3892,11 @@ msgstr "Catatan Default"
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
 msgid "Default Recipients"
 msgstr "Penerima Default"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+msgid "Default Subject"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
@@ -5602,8 +5607,8 @@ msgid "Groups"
 msgstr "Kelompok"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/controllers/discuss/public_page.py:0
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_model.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__guest_id
@@ -6885,7 +6890,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_call_history
 msgid "Keep the call history"
-msgstr "Simpan sejarah panggilan"
+msgstr "Simpan riwayat panggilan"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -7920,7 +7925,7 @@ msgstr "Cari pesan"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_message_id_unique_constraint
 msgid "Messages can only be linked to one call history"
-msgstr "Pesan hanya dapat dihubungkan ke satu sejarah panggilan"
+msgstr "Pesan hanya dapat dihubungkan ke satu riwayat panggilan"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
@@ -7931,7 +7936,7 @@ msgstr "Pesan-pesan hanya bisa di-link ke satu sub-channel"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
 msgid "Messages marked as read will appear in the history."
-msgstr "Pesan yang ditandai sebagai dibaca akan muncul di sejarah."
+msgstr "Pesan yang ditandai sebagai dibaca akan muncul di riwayat."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__internal
@@ -8362,7 +8367,7 @@ msgstr "Tidak ada dokumen yang ditemukan untuk record terpilih."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
 msgid "No history messages"
-msgstr "Tidak ada sejarah pesan"
+msgstr "Tidak ada riwayat pesan"
 
 #. module: mail
 #. odoo-python

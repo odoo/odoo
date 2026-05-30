@@ -41,7 +41,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:36+0000\n"
+"POT-Creation-Date: 2026-05-29 17:36+0000\n"
 "PO-Revision-Date: 2026-01-15 15:58+0000\n"
 "Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -2114,8 +2114,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "A fiscal position with a foreign VAT already exists in this country."
-msgstr "Bu ülkede yabancı KDV'li bir mali durum zaten mevcuttur."
+msgid "A fiscal position with a foreign Tax ID already exists in this country."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3339,8 +3339,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
-msgid "Allow Foreign VAT"
-msgstr "Yabancı KDV'ye İzin Ver"
+msgid "Allow Foreign Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -3813,17 +3813,15 @@ msgstr "Yalnızca teslimat ülkesi eşleşiyorsa uygulayın."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
-msgid "Apply only if partner has a VAT number."
-msgstr "Yalnızca iş ortağının bir KDV numarası varsa uygula."
+msgid "Apply only if partner has a Tax ID."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
 msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
-"criterias (VAT/Country) are met."
+"criterias (Tax ID/Country) are met."
 msgstr ""
-"Eşleşme kriterlerinin (KDV/Ülke) karşılanması durumunda faturalara vergi ve "
-"hesap eşlemelerini otomatik olarak uygulayın."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
@@ -5842,8 +5840,8 @@ msgstr "Emsal Öğeler"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Countries for which the company has a VAT number"
-msgstr "Şirketin KDV numarasına sahip olduğu ülkeler"
+msgid "Countries for which the company has a Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -8921,15 +8919,15 @@ msgid "Foreign Tax ID"
 msgstr "Yabancı Vergi Kimliği"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign Tax ID countries"
+msgstr ""
+
+#. module: account
 #: model:account.fiscal.position,name:account.1_template_generic_export_fiscal_position
 #: model:account.fiscal.position,name:account.2_account_fiscal_position_us_export
 msgid "Foreign Trade"
 msgstr "Dış Ticaret"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Foreign VAT countries"
-msgstr "Yabancı Vergi Ülkeleri"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -14513,6 +14511,7 @@ msgstr "Ürün Kategorileri"
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -17187,6 +17186,11 @@ msgid "Tax ID"
 msgstr "VKN/TCKN"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
+msgid "Tax ID required"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_price_include__tax_included
 msgid "Tax Included"
@@ -17934,11 +17938,9 @@ msgstr "Bu verginin uygulanabilen ülke."
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a "
+"The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
-"Yabancı KDV numarasının ülkesi tespit edilemedi. Lütfen mali pozisyona bir "
-"ülke atayın."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -18864,7 +18866,7 @@ msgstr "Bu hesap müşteri faturası doğrulandığında kullanılacak."
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
-"this screen."
+"this screen.  -  This action will affect your current company only."
 msgstr ""
 
 #. module: account
@@ -18958,8 +18960,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
 
 #. module: account
@@ -18979,6 +18981,13 @@ msgstr "Bu kayıt %s kaydından kopyalanmıştır"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "Bu kayıt %s kaydından ters çevrilmiştir"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20080,11 +20089,6 @@ msgstr ""
 "yardımcı alan"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
-msgid "VAT required"
-msgstr "VKN/TCKN Zorunlu"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Valid for"
 msgstr "Geçerlilik"
@@ -20526,14 +20530,6 @@ msgid "You are about to unsubscribe"
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You are attempting to validate opening entries belonging to another company. "
-"Please switch to the correct company."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid ""
 "You are changing decimals in your entire database, including invoices,\n"
@@ -20849,11 +20845,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
+"You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"Bir durum atamadan, mali ülkenizde yabancı bir vergi ile mali koşul "
-"oluşturamazsınız."
 
 #. module: account
 #. odoo-python
@@ -22011,6 +22005,45 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Kendi kendine faturalandırma faturası (Ref "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid "A fiscal position with a foreign VAT already exists in this country."
+#~ msgstr "Bu ülkede yabancı KDV'li bir mali durum zaten mevcuttur."
+
+#~ msgid "Allow Foreign VAT"
+#~ msgstr "Yabancı KDV'ye İzin Ver"
+
+#~ msgid "Apply only if partner has a VAT number."
+#~ msgstr "Yalnızca iş ortağının bir KDV numarası varsa uygula."
+
+#~ msgid ""
+#~ "Apply tax & account mappings on invoices automatically if the matching "
+#~ "criterias (VAT/Country) are met."
+#~ msgstr ""
+#~ "Eşleşme kriterlerinin (KDV/Ülke) karşılanması durumunda faturalara vergi "
+#~ "ve hesap eşlemelerini otomatik olarak uygulayın."
+
+#~ msgid "Countries for which the company has a VAT number"
+#~ msgstr "Şirketin KDV numarasına sahip olduğu ülkeler"
+
+#~ msgid "Foreign VAT countries"
+#~ msgstr "Yabancı Vergi Ülkeleri"
+
+#~ msgid ""
+#~ "The country of the foreign VAT number could not be detected. Please "
+#~ "assign a country to the fiscal position."
+#~ msgstr ""
+#~ "Yabancı KDV numarasının ülkesi tespit edilemedi. Lütfen mali pozisyona "
+#~ "bir ülke atayın."
+
+#~ msgid "VAT required"
+#~ msgstr "VKN/TCKN Zorunlu"
+
+#~ msgid ""
+#~ "You cannot create a fiscal position with a foreign VAT within your fiscal "
+#~ "country without assigning it a state."
+#~ msgstr ""
+#~ "Bir durum atamadan, mali ülkenizde yabancı bir vergi ile mali koşul "
+#~ "oluşturamazsınız."
 
 #~ msgid "Quick search: %s"
 #~ msgstr "Hızlı arama: %s"

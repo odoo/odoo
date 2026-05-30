@@ -50,7 +50,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:36+0000\n"
+"POT-Creation-Date: 2026-05-29 17:36+0000\n"
 "PO-Revision-Date: 2026-05-16 16:40+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -2598,8 +2598,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "A fiscal position with a foreign VAT already exists in this country."
-msgstr "Tälle maalle on jo olemassa verokantasääntö ulkomaan arvonlisäverolla."
+msgid "A fiscal position with a foreign Tax ID already exists in this country."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3819,8 +3819,8 @@ msgstr "Kaikki täsmäyttämättömät tilioterivit ennen valittua päivämäär
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
-msgid "Allow Foreign VAT"
-msgstr "Salli ulkomainen ALV"
+msgid "Allow Foreign Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -4296,17 +4296,15 @@ msgstr "Sovella vain, jos toimitusmaa täsmää."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
-msgid "Apply only if partner has a VAT number."
-msgstr "Sovella vain, jos kumppanilla on ALV-numero."
+msgid "Apply only if partner has a Tax ID."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
 msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
-"criterias (VAT/Country) are met."
+"criterias (Tax ID/Country) are met."
 msgstr ""
-"Sovellat vero- ja tilikkartoituksia laskuihin automaattisesti, jos "
-"yhteensopivuuskriteerit (ALV/maa) täyttyvät."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
@@ -6326,8 +6324,8 @@ msgstr "Vastakappaleet"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Countries for which the company has a VAT number"
-msgstr "Maat, joissa yrityksellä on ALV-numero"
+msgid "Countries for which the company has a Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -9409,15 +9407,15 @@ msgid "Foreign Tax ID"
 msgstr "Ulkomaan verotunniste"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign Tax ID countries"
+msgstr ""
+
+#. module: account
 #: model:account.fiscal.position,name:account.1_template_generic_export_fiscal_position
 #: model:account.fiscal.position,name:account.2_account_fiscal_position_us_export
 msgid "Foreign Trade"
 msgstr "Ulkomaankauppa"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Foreign VAT countries"
-msgstr "Ulkomaiset ALV-maat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -15003,6 +15001,7 @@ msgstr "Tuotekategoriat"
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -17673,6 +17672,11 @@ msgid "Tax ID"
 msgstr "Verotunniste"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
+msgid "Tax ID required"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_price_include__tax_included
 msgid "Tax Included"
@@ -18439,10 +18443,9 @@ msgstr "Maa, johon tätä veroa sovelletaan."
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a "
+"The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
-"Ulkomaisen ALV-numeron maata ei tunnistettu. Määritä maa verokantasäännölle."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -19373,10 +19376,8 @@ msgstr "Tätä tiliä käytetään asiakkaan laskua vahvistettaessa."
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
-"this screen."
+"this screen.  -  This action will affect your current company only."
 msgstr ""
-"Tämä toiminto on peruuttamaton: kreditiä/debetiä ei voi muuttaa uudelleen "
-"tästä näytöstä."
 
 #. module: account
 #. odoo-python
@@ -19469,11 +19470,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
-"Tämä kirjaus on jo tarkastettu. Sen muuttamiseen tarvitaan kirjanpitäjän "
-"rooli."
 
 #. module: account
 #. odoo-python
@@ -19492,6 +19491,13 @@ msgstr "Tämä kirjaus on monistettu kohteesta %s"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "Tämä kirjaus on kumottu kohteesta %s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20590,11 +20596,6 @@ msgid ""
 msgstr "Apukenttä ilmaisee, sovelletaanko kirjausriviin storno-kirjanpitoa"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
-msgid "VAT required"
-msgstr "ALV vaaditaan"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Valid for"
 msgstr "Voimassa"
@@ -21051,16 +21052,6 @@ msgid "You are about to unsubscribe"
 msgstr "Olet poistamassa tilauksen"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You are attempting to validate opening entries belonging to another company. "
-"Please switch to the correct company."
-msgstr ""
-"Yrität vahvistaa toiselle yritykselle kuuluvia avauskirjauksia. Vaihda "
-"oikeaan yritykseen."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid ""
 "You are changing decimals in your entire database, including invoices,\n"
@@ -21375,11 +21366,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
+"You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"Et voi luoda veromaasi sisäistä verokantasääntöä ulkomaisella "
-"arvonlisäverolla ilman, että sille määritetään osavaltio."
 
 #. module: account
 #. odoo-python
@@ -22541,6 +22530,67 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Itselaskutettu lasku (viite {{ object.name or "
 "'n/a' }})"
+
+#~ msgid "A fiscal position with a foreign VAT already exists in this country."
+#~ msgstr ""
+#~ "Tälle maalle on jo olemassa verokantasääntö ulkomaan arvonlisäverolla."
+
+#~ msgid "Allow Foreign VAT"
+#~ msgstr "Salli ulkomainen ALV"
+
+#~ msgid "Apply only if partner has a VAT number."
+#~ msgstr "Sovella vain, jos kumppanilla on ALV-numero."
+
+#~ msgid ""
+#~ "Apply tax & account mappings on invoices automatically if the matching "
+#~ "criterias (VAT/Country) are met."
+#~ msgstr ""
+#~ "Sovellat vero- ja tilikkartoituksia laskuihin automaattisesti, jos "
+#~ "yhteensopivuuskriteerit (ALV/maa) täyttyvät."
+
+#~ msgid "Countries for which the company has a VAT number"
+#~ msgstr "Maat, joissa yrityksellä on ALV-numero"
+
+#~ msgid "Foreign VAT countries"
+#~ msgstr "Ulkomaiset ALV-maat"
+
+#~ msgid ""
+#~ "The country of the foreign VAT number could not be detected. Please "
+#~ "assign a country to the fiscal position."
+#~ msgstr ""
+#~ "Ulkomaisen ALV-numeron maata ei tunnistettu. Määritä maa "
+#~ "verokantasäännölle."
+
+#~ msgid "VAT required"
+#~ msgstr "ALV vaaditaan"
+
+#~ msgid ""
+#~ "You cannot create a fiscal position with a foreign VAT within your fiscal "
+#~ "country without assigning it a state."
+#~ msgstr ""
+#~ "Et voi luoda veromaasi sisäistä verokantasääntöä ulkomaisella "
+#~ "arvonlisäverolla ilman, että sille määritetään osavaltio."
+
+#~ msgid ""
+#~ "This action is irreversible: the credit/debit cannot be modified again "
+#~ "from this screen."
+#~ msgstr ""
+#~ "Tämä toiminto on peruuttamaton: kreditiä/debetiä ei voi muuttaa uudelleen "
+#~ "tästä näytöstä."
+
+#~ msgid ""
+#~ "This entry has already been reviewed. You need the bookkeeper role to "
+#~ "change it."
+#~ msgstr ""
+#~ "Tämä kirjaus on jo tarkastettu. Sen muuttamiseen tarvitaan kirjanpitäjän "
+#~ "rooli."
+
+#~ msgid ""
+#~ "You are attempting to validate opening entries belonging to another "
+#~ "company. Please switch to the correct company."
+#~ msgstr ""
+#~ "Yrität vahvistaa toiselle yritykselle kuuluvia avauskirjauksia. Vaihda "
+#~ "oikeaan yritykseen."
 
 #~ msgid "Quick search: %s"
 #~ msgstr "Pikahaku: %s"

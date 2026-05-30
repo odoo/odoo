@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:35+0000\n"
-"PO-Revision-Date: 2026-04-13 19:26+0000\n"
+"POT-Creation-Date: 2026-05-29 17:36+0000\n"
+"PO-Revision-Date: 2026-05-23 17:11+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-2/"
 "point_of_sale/ar/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -294,6 +294,36 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">مرحباً <t t-"
+"out=\"client_name\">\"اسم العميل\"</t>،</t>\n"
+"                        <t t-else=\"\">مرحباً،</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>نشكرك على طلبك من <t t-out=\"store_name\">\"اسم "
+"المتجر\"</t>!</div>\n"
+"                    <div>ستجد في المرفقات الإيصال الخاص بطلبك <span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">التاريخ</t> <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">الوقت</t>.</"
+"span>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>مع وافر الشكر والتقدير،</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">\"اسم المتجر\"</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -5138,6 +5168,10 @@ msgid ""
 "browser communicate with \n"
 "                your devices without the need for importing certificates."
 msgstr ""
+"الوصول إلى الشبكة المحلية (LNA) هي ميزة في Chrome تسمح لمتصفحك بالتواصل \n"
+"                مباشرة مع شبكتك المحلية. وهذا يعني أنه يمكنك جعل متصفحك "
+"يتواصل مع \n"
+"                أجهزتك دون الحاجة إلى استيراد الشهادات."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5148,6 +5182,9 @@ msgid ""
 "feature. Please note that IOS devices do not support Local Network Access "
 "yet."
 msgstr ""
+"تم تمكين تكوين الوصول إلى الشبكة المحلية، ولكن متصفحك لا يعتمد على Chromium. "
+"يرجى استخدام متصفح يعتمد على Chromium للاستفادة من هذه الميزة. يرجى ملاحظة "
+"أن أجهزة IOS لا تدعم الوصول إلى الشبكة المحلية حتى الآن."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8583,12 +8620,6 @@ msgid "Select"
 msgstr "تحديد"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.xml:0
-msgid "Select Date:"
-msgstr ""
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Select PoS to start sharing orders"
 msgstr "قم بتحديد نقطة البيع لبدء مشاركة الطلبات"
@@ -8639,6 +8670,12 @@ msgstr "قم بتحديد تاريخ الشحن"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__attribute_value_ids
 msgid "Selected Attributes"
 msgstr "تحديد الخصائص"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
+msgid "Selected date cannot be in the past."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -9543,6 +9580,9 @@ msgid ""
 "The rounding precision is %(rounding)s so you should set %(expectedAmount)s "
 "as payment amount instead of %(paidAmount)s."
 msgstr ""
+"يجب تقريب مبلغ بنود الدفع الخاصة بك حتى تتمكن من تصديق المعاملة.\n"
+"دقة التقريب هي %(rounding)s ، لذا يجب عليك تعيين %(expectedAmount)s كمبلغ "
+"الدفع بدلاً من %(paidAmount)s."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
@@ -10094,6 +10134,10 @@ msgid ""
 "may cause it to crash or become unresponsive. It is strongly recommended to "
 "use Limited Synchronization instead. Do you still want to proceed?"
 msgstr ""
+"توجد %(count)sمنتجات متاحة في نقطة البيع هذه (الحد الذي تم تعيينه: %"
+"(limit)s). سيؤدي تحميل هذا العدد الكبير من المنتجات إلى إبطاء النظام بشكل "
+"كبير، وقد يتسبب في تعطله أو عدم استجابته. يوصى بشدة باستخدام ”المزامنة "
+"المحدودة“ بدلاً من ذلك. هل ما زلت ترغب في المتابعة؟"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10150,6 +10194,9 @@ msgid ""
 " Please pay the exact amount or add a cash payment method in the point of "
 "sale settings."
 msgstr ""
+"لا توجد طريقة دفع نقدية متاحة في نقطة البيع هذه للتعامل مع الفكة/الباقي.\n"
+"\n"
+" يرجى دفع المبلغ المحدد أو إضافة طريقة دفع نقدية في إعدادات نقطة البيع."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10890,6 +10937,12 @@ msgstr "ضريبة القيمة المضافة"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Validate"
 msgstr "تصديق"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
+msgid "Validation Error"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

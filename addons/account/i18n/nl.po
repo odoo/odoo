@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:36+0000\n"
-"PO-Revision-Date: 2026-05-16 16:45+0000\n"
+"POT-Creation-Date: 2026-05-29 17:36+0000\n"
+"PO-Revision-Date: 2026-05-23 17:18+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/account/"
 "nl/>\n"
@@ -2572,9 +2572,8 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "A fiscal position with a foreign VAT already exists in this country."
+msgid "A fiscal position with a foreign Tax ID already exists in this country."
 msgstr ""
-"Er bestaat al een fiscale positie met een buitenlandse btw in dit land."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3805,8 +3804,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
-msgid "Allow Foreign VAT"
-msgstr "Buitenlandse btw toestaan"
+msgid "Allow Foreign Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -4286,17 +4285,15 @@ msgstr "Alleen toepassen als het land van levering overeenkomt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
-msgid "Apply only if partner has a VAT number."
-msgstr "Alleen toepassen als de partner een btw-nummer heeft."
+msgid "Apply only if partner has a Tax ID."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
 msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
-"criterias (VAT/Country) are met."
+"criterias (Tax ID/Country) are met."
 msgstr ""
-"Pas automatisch btw & boekhoudkundige mapping toe op facturen als aan de "
-"overeenstemmingscriteria (btw/land) is voldaan."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
@@ -6278,7 +6275,7 @@ msgstr "Kosten van kantoormeubilair, inrichting en bedrijfsuitrusting"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Cost of revenue"
-msgstr ""
+msgstr "Kostprijs van de omzet"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_postage
@@ -6331,8 +6328,8 @@ msgstr "Tegenhangers"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Countries for which the company has a VAT number"
-msgstr "Landen waarvoor het bedrijf een btw-nummer heeft"
+msgid "Countries for which the company has a Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -9421,15 +9418,15 @@ msgid "Foreign Tax ID"
 msgstr "Buitenlandse btw-ID"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign Tax ID countries"
+msgstr ""
+
+#. module: account
 #: model:account.fiscal.position,name:account.1_template_generic_export_fiscal_position
 #: model:account.fiscal.position,name:account.2_account_fiscal_position_us_export
 msgid "Foreign Trade"
 msgstr "Buitenlandse handel"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Foreign VAT countries"
-msgstr "Btw buitenlandse landen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -15064,6 +15061,7 @@ msgstr "Productcategorieën"
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -17753,6 +17751,11 @@ msgid "Tax ID"
 msgstr "Btw nr."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
+msgid "Tax ID required"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_price_include__tax_included
 msgid "Tax Included"
@@ -18519,11 +18522,9 @@ msgstr "Het land waarvoor deze btw geldt."
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a "
+"The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
-"Het land van het buitenlandse btw-nummer kon niet worden gedetecteerd. Wijs "
-"een land toe aan de fiscale positie."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -19486,10 +19487,8 @@ msgstr "Deze rekening wordt gebruikt als een klantfactuur wordt bevestigd."
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
-"this screen."
+"this screen.  -  This action will affect your current company only."
 msgstr ""
-"Deze actie is onomkeerbaar: het credit/debet kan vanaf dit scherm niet meer "
-"worden gewijzigd."
 
 #. module: account
 #. odoo-python
@@ -19583,11 +19582,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
-"Deze boeking al gecontroleerd. Je hebt de rol van boekhouder nodig om dit te "
-"wijzigen."
 
 #. module: account
 #. odoo-python
@@ -19606,6 +19603,13 @@ msgstr "Deze boeking is gedupliceerd van %s"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "Deze boeking is teruggeboekt van %s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20711,11 +20715,6 @@ msgstr ""
 "boekhouding"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
-msgid "VAT required"
-msgstr "Btw verplicht"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Valid for"
 msgstr "Geldig voor"
@@ -21179,16 +21178,6 @@ msgid "You are about to unsubscribe"
 msgstr "Je staat op het punt"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You are attempting to validate opening entries belonging to another company. "
-"Please switch to the correct company."
-msgstr ""
-"Je probeert beginbalansboekingen te valideren van een ander bedrijf. Schakel "
-"over naar het correcte bedrijf."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid ""
 "You are changing decimals in your entire database, including invoices,\n"
@@ -21515,11 +21504,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
+"You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"Je kunt geen fiscale positie aanmaken met een buitenlandse btw binnen je "
-"fiscale land zonder er een staat aan toe te kennen."
 
 #. module: account
 #. odoo-python
@@ -22707,6 +22694,67 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Self-billing verkoopfactuur (Ref {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "A fiscal position with a foreign VAT already exists in this country."
+#~ msgstr ""
+#~ "Er bestaat al een fiscale positie met een buitenlandse btw in dit land."
+
+#~ msgid "Allow Foreign VAT"
+#~ msgstr "Buitenlandse btw toestaan"
+
+#~ msgid "Apply only if partner has a VAT number."
+#~ msgstr "Alleen toepassen als de partner een btw-nummer heeft."
+
+#~ msgid ""
+#~ "Apply tax & account mappings on invoices automatically if the matching "
+#~ "criterias (VAT/Country) are met."
+#~ msgstr ""
+#~ "Pas automatisch btw & boekhoudkundige mapping toe op facturen als aan de "
+#~ "overeenstemmingscriteria (btw/land) is voldaan."
+
+#~ msgid "Countries for which the company has a VAT number"
+#~ msgstr "Landen waarvoor het bedrijf een btw-nummer heeft"
+
+#~ msgid "Foreign VAT countries"
+#~ msgstr "Btw buitenlandse landen"
+
+#~ msgid ""
+#~ "The country of the foreign VAT number could not be detected. Please "
+#~ "assign a country to the fiscal position."
+#~ msgstr ""
+#~ "Het land van het buitenlandse btw-nummer kon niet worden gedetecteerd. "
+#~ "Wijs een land toe aan de fiscale positie."
+
+#~ msgid "VAT required"
+#~ msgstr "Btw verplicht"
+
+#~ msgid ""
+#~ "You cannot create a fiscal position with a foreign VAT within your fiscal "
+#~ "country without assigning it a state."
+#~ msgstr ""
+#~ "Je kunt geen fiscale positie aanmaken met een buitenlandse btw binnen je "
+#~ "fiscale land zonder er een staat aan toe te kennen."
+
+#~ msgid ""
+#~ "This action is irreversible: the credit/debit cannot be modified again "
+#~ "from this screen."
+#~ msgstr ""
+#~ "Deze actie is onomkeerbaar: het credit/debet kan vanaf dit scherm niet "
+#~ "meer worden gewijzigd."
+
+#~ msgid ""
+#~ "This entry has already been reviewed. You need the bookkeeper role to "
+#~ "change it."
+#~ msgstr ""
+#~ "Deze boeking al gecontroleerd. Je hebt de rol van boekhouder nodig om dit "
+#~ "te wijzigen."
+
+#~ msgid ""
+#~ "You are attempting to validate opening entries belonging to another "
+#~ "company. Please switch to the correct company."
+#~ msgstr ""
+#~ "Je probeert beginbalansboekingen te valideren van een ander bedrijf. "
+#~ "Schakel over naar het correcte bedrijf."
 
 #~ msgid "Quick search: %s"
 #~ msgstr "Snelzoeken: %s"

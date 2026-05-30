@@ -21,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:36+0000\n"
-"PO-Revision-Date: 2026-05-16 16:43+0000\n"
+"POT-Creation-Date: 2026-05-29 17:36+0000\n"
+"PO-Revision-Date: 2026-05-23 17:25+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-2/account/"
 "th/>\n"
@@ -1930,7 +1930,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "A fiscal position with a foreign VAT already exists in this country."
+msgid "A fiscal position with a foreign Tax ID already exists in this country."
 msgstr ""
 
 #. module: account
@@ -3122,7 +3122,7 @@ msgstr "รายการใบแจ้งยอดธนาคารทั้
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
-msgid "Allow Foreign VAT"
+msgid "Allow Foreign Tax ID"
 msgstr ""
 
 #. module: account
@@ -3574,15 +3574,15 @@ msgstr "ใช้เมื่อประเทศที่จัดส่งต
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
-msgid "Apply only if partner has a VAT number."
-msgstr "ใช้งานเมื่อคู้ค้ามีหมายเลขกำกับภาษีเท่านั้น"
+msgid "Apply only if partner has a Tax ID."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
 msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
-"criterias (VAT/Country) are met."
-msgstr "ใช้การจับคู่ภาษีและบัญชีในใบแจ้งหนี้โดยอัตโนมัติ หากตรงตามเกณฑ์การจับคู่ (VAT/ประเทศ)"
+"criterias (Tax ID/Country) are met."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
@@ -4258,7 +4258,7 @@ msgstr "ขึ้นอยู่กับลูกค้า"
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__invoice
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_exigibility__on_invoice
 msgid "Based on Invoice"
-msgstr "วิธีการจ่ายเงิน"
+msgstr "เกิดภาระภาษีเมื่อออกใบแจ้งหนี้"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__tax_exigibility
@@ -4273,7 +4273,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_exigibility__on_payment
 msgid "Based on Payment"
-msgstr "เงินดาวน์"
+msgstr "เกิดภาระภาษีเมื่อมีการชำระ/รับเงินจริง"
 
 #. module: account
 #: model:res.groups,name:account.group_account_basic
@@ -5552,8 +5552,8 @@ msgstr "รายการที่ตรงกัน"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Countries for which the company has a VAT number"
-msgstr "ประเทศที่บริษัทมีหมายเลขภาษีมูลค่าเพิ่ม"
+msgid "Countries for which the company has a Tax ID"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -8590,15 +8590,15 @@ msgid "Foreign Tax ID"
 msgstr "หมายเลขประจำตัวผู้เสียภาษีต่างประเทศ"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign Tax ID countries"
+msgstr ""
+
+#. module: account
 #: model:account.fiscal.position,name:account.1_template_generic_export_fiscal_position
 #: model:account.fiscal.position,name:account.2_account_fiscal_position_us_export
 msgid "Foreign Trade"
 msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
-msgid "Foreign VAT countries"
-msgstr "ภาษีมูลค่าเพิ่มต่างประเทศ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -13132,7 +13132,7 @@ msgstr "ชำระแล้ว"
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Paid on"
-msgstr "จ่ายโดย"
+msgstr "จ่ายเมื่อ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__paired_internal_transfer_payment_id
@@ -14060,6 +14060,7 @@ msgstr "หมวดหมู่สินค้า"
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -16657,7 +16658,7 @@ msgstr "ไม่รวมภาษี"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_exigibility
 msgid "Tax Exigibility"
-msgstr "ภาษีสรรพสามิต"
+msgstr "ความต้องเสียภาษี"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -16690,6 +16691,11 @@ msgstr "กลุ่มภาษี"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax ID"
 msgstr "เลขประจำตัวผู้เสียภาษี"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
+msgid "Tax ID required"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
@@ -17410,7 +17416,7 @@ msgstr "ประเทศที่ภาษีนี้มีผลบังค
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"The country of the foreign VAT number could not be detected. Please assign a "
+"The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
 
@@ -17563,9 +17569,10 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
-"ค่าใช้จ่ายจะถูกบันทึกเมื่อมีการตรวจสอบความถูกต้องของใบเรียกเก็บเงินของผู้จำหน่าย ยกเว้นในการบัญชี"
-"แบบ anglo-saxon ที่มีการประเมินมูลค่าคลังสินค้าแบบไม่สิ้นสุด ซึ่งในกรณีนี้ ค่าใช้จ่าย (บัญชีต้นทุนของสิ"
-"นค้าที่ขาย) จะมีการยอมรับในการตรวจสอบความถูกต้องของใบแจ้งหนี้ของลูกค้า"
+"ค่าใช้จ่ายจะถูกบันทึกเมื่อมีการตรวจสอบความถูกต้องของใบเรียกเก็บเงินของผู้จำหน่าย "
+"ยกเว้นในการบัญชีแบบ anglo-saxon ที่มีการประเมินมูลค่าคลังสินค้าแบบไม่สิ้นสุด ซึ่งในกรณีนี้ "
+"ค่าใช้จ่าย (บัญชีต้นทุนของสินค้าที่ขาย) "
+"จะมีการยอมรับในการตรวจสอบความถูกต้องของใบแจ้งหนี้ของลูกค้า"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_expression_line_label_uniq
@@ -18298,7 +18305,7 @@ msgstr "บัญชีนี้จะใช้เมื่อตรวจสอ
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
-"this screen."
+"this screen.  -  This action will affect your current company only."
 msgstr ""
 
 #. module: account
@@ -18386,8 +18393,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid ""
-"This entry has already been reviewed. You need the bookkeeper role to change "
-"it."
+"This entry has already been supervised. You need the accounting manager role "
+"to change it."
 msgstr ""
 
 #. module: account
@@ -18407,6 +18414,13 @@ msgstr "รายการนี้ได้รับการคัดลอก
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
 msgstr "รายการนี้ได้ถูกย้อนหลังจาก %s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"This entry has been reviewed, You need the bookkeeper role to change it."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19477,11 +19491,6 @@ msgid ""
 msgstr "ช่องยูทิลิตี้จะแสดงว่ารายการในสมุดรายวันอยู่ภายใต้บัญชี Storno หรือไม่"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
-msgid "VAT required"
-msgstr "ภาษีมูลค่าเพิ่ม VAT"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "Valid for"
 msgstr "ใช้ได้สำหรับ"
@@ -19906,14 +19915,6 @@ msgid "You are about to unsubscribe"
 msgstr ""
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You are attempting to validate opening entries belonging to another company. "
-"Please switch to the correct company."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid ""
 "You are changing decimals in your entire database, including invoices,\n"
@@ -20201,11 +20202,9 @@ msgstr "คุณไม่สามารถสร้างสถานะทา
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid ""
-"You cannot create a fiscal position with a foreign VAT within your fiscal "
+"You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"คุณไม่สามารถสร้างสถานะทางบัญชีที่มี VAT "
-"ต่างประเทศภายในประเทศทางบัญชีของคุณโดยไม่มีกำหนดจากรัฐได้"
 
 #. module: account
 #. odoo-python
@@ -21305,6 +21304,31 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "Apply only if partner has a VAT number."
+#~ msgstr "ใช้งานเมื่อคู้ค้ามีหมายเลขกำกับภาษีเท่านั้น"
+
+#~ msgid ""
+#~ "Apply tax & account mappings on invoices automatically if the matching "
+#~ "criterias (VAT/Country) are met."
+#~ msgstr ""
+#~ "ใช้การจับคู่ภาษีและบัญชีในใบแจ้งหนี้โดยอัตโนมัติ หากตรงตามเกณฑ์การจับคู่ (VAT/ประเทศ)"
+
+#~ msgid "Countries for which the company has a VAT number"
+#~ msgstr "ประเทศที่บริษัทมีหมายเลขภาษีมูลค่าเพิ่ม"
+
+#~ msgid "Foreign VAT countries"
+#~ msgstr "ภาษีมูลค่าเพิ่มต่างประเทศ"
+
+#~ msgid "VAT required"
+#~ msgstr "ภาษีมูลค่าเพิ่ม VAT"
+
+#~ msgid ""
+#~ "You cannot create a fiscal position with a foreign VAT within your fiscal "
+#~ "country without assigning it a state."
+#~ msgstr ""
+#~ "คุณไม่สามารถสร้างสถานะทางบัญชีที่มี VAT "
+#~ "ต่างประเทศภายในประเทศทางบัญชีของคุณโดยไม่มีกำหนดจากรัฐได้"
 
 #~ msgid "Quick search: %s"
 #~ msgstr "ค้นหาด่วน: %s"

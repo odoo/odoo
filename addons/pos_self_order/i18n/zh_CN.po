@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:36+0000\n"
+"POT-Creation-Date: 2026-05-22 17:41+0000\n"
 "PO-Revision-Date: 2026-04-28 14:40+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -134,8 +134,8 @@ msgstr ""
 "                    </div>\n"
 "                   <br/>\n"
 "                    <div> 您的订单<t t-out=\"object.tracking_number\">...</"
-"t> 金额为<t t-out=\"format_amount(object.amount_total,object.currency_id)\">"
-"$xx.xx</t> 已确认。<span t-if=\"object.preset_time\">订单将于<t t-"
+"t> 金额为<t t-out=\"format_amount(object.amount_total,object.currency_id)"
+"\">$xx.xx</t> 已确认。<span t-if=\"object.preset_time\">订单将于<t t-"
 "out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
 "lang_code=lg)\">下午 12:00</t></span></div>\n"
 "                    <br/> \n"
@@ -317,12 +317,6 @@ msgstr "选择自订模式"
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
 msgid "Choose when the customer will pay"
 msgstr "选择客户付款时间"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "Choose your"
-msgstr "选择"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -607,6 +601,12 @@ msgstr "输入您的追踪链接编号"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Evening"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "Extra:"
 msgstr ""
 
 #. module: pos_self_order
@@ -1781,8 +1781,8 @@ msgstr "https://odoo.com"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "included"
-msgstr "已包括"
+msgid "included &"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1803,10 +1803,22 @@ msgstr "odoo"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "per extra unit"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr ""
+
+#~ msgid "Choose your"
+#~ msgstr "选择"
+
+#~ msgid "included"
+#~ msgstr "已包括"
 
 #~ msgid "Select your address"
 #~ msgstr "选择您的地址"

@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-04 18:36+0000\n"
-"PO-Revision-Date: 2026-05-08 13:21+0000\n"
+"PO-Revision-Date: 2026-05-23 17:16+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-2/"
 "auth_signup/ar/>\n"
@@ -232,6 +232,19 @@ msgid ""
 "--<br/>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> Team\n"
 "            </t>"
 msgstr ""
+"<t>\n"
+"عزيزنا <t t-out=\"object.name or ''\">ميتشل آدمن</t>،<br/> <br/>\n"
+"لقد قمت بإضافة المستخدمين التاليين إلى قاعدة بياناتك ولكنهم لم يسجلوا بعد:\n"
+"<ul>\n"
+"    <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
+"        <li t-out=\"invited_user or ''\">demo@example.com</li>\n"
+"    </t>\n"
+"</ul>\n"
+"تواصل معهم حتى يتمكنوا من الوصول إلى قاعدة بياناتك والبدء في العمل معك.\n"
+"<br/><br/>\n"
+"يوماً سعيداً!<br/>\n"
+"--<br/>فريق<t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
+"            </t>"
 
 #. module: auth_signup
 #. odoo-python
@@ -400,7 +413,7 @@ msgstr "رمز التسجيل غير صالح"
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Invited"
-msgstr ""
+msgstr "تمت دعوته"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup

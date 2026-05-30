@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:35+0000\n"
-"PO-Revision-Date: 2026-04-13 19:25+0000\n"
+"POT-Creation-Date: 2026-05-22 17:40+0000\n"
+"PO-Revision-Date: 2026-05-23 17:34+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-2/mail/"
 "ar/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -3874,6 +3874,11 @@ msgid "Default Recipients"
 msgstr "المستلمون الافتراضيون"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+msgid "Default Subject"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
 msgid "Default Summary"
 msgstr "الملخص الافتراضي"
@@ -4328,6 +4333,10 @@ msgid ""
 "\n"
 "This action cannot be reverted."
 msgstr ""
+"هل ترغب في تعيين ”%(member_name)s“ كمالك للقناة؟ هذا يعني أن العضو سيتمتع "
+"بالسيطرة الكاملة على القناة وإعداداتها.\n"
+"\n"
+"لا يمكن التراجع عن هذا الإجراء."
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_upload_document
@@ -5567,8 +5576,8 @@ msgid "Groups"
 msgstr "المجموعات"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/controllers/discuss/public_page.py:0
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_model.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__guest_id
@@ -14116,6 +14125,12 @@ msgid ""
 "All Activities: the synchronization user will count all the activities of "
 "this type, whatever their owner"
 msgstr ""
+"ما إذا كان ينبغي عرض هذا النوع من الأنشطة في API مُزود مؤشر الأداء الرئيسي "
+"(KPI).\n"
+"لا شيء: لا يتم عرض هذا النوع من الأنشطة أبدًا\n"
+"الأنشطة الخاصة: سيقوم مستخدم المزامنة بحساب أنشطته الخاصة من هذا النوع فقط\n"
+"جميع الأنشطة: سيقوم مستخدم المزامنة بحساب جميع الأنشطة من هذا النوع، بغض "
+"النظر عن مالكها"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__track_recipients

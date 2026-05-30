@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:37+0000\n"
-"PO-Revision-Date: 2026-04-25 12:35+0000\n"
+"POT-Creation-Date: 2026-05-22 17:40+0000\n"
+"PO-Revision-Date: 2026-05-28 08:55+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-2/website_sale/zh_Hant/>\n"
@@ -228,7 +228,7 @@ msgstr "/shop"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__prevent_sale_for__zero_price
 msgid "0 price products"
-msgstr ""
+msgstr "價錢為零的產品"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2181,7 +2181,7 @@ msgstr "公司名稱"
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.add_to_compare
 msgid "Compare"
-msgstr ""
+msgstr "比較"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
@@ -3124,13 +3124,13 @@ msgstr "健身"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Fixed"
-msgstr ""
+msgstr "固定"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Fixed - On Hover"
-msgstr ""
+msgstr "固定 - 滑鼠經過時"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3221,7 +3221,7 @@ msgstr "食物盒"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "For"
-msgstr ""
+msgstr "適用於"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
@@ -3433,7 +3433,7 @@ msgstr "隱藏"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__prevent_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_sale
 msgid "Hide Add To Cart"
-msgstr ""
+msgstr "隱藏「加入購物車」"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3950,7 +3950,7 @@ msgstr "連結顏色"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__contact_us_link_url
 #: model:ir.model.fields,field_description:website_sale.field_website__contact_us_link_url
 msgid "Link URL"
-msgstr ""
+msgstr "連結網址"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5165,7 +5165,7 @@ msgstr "促銷代碼"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Promote"
-msgstr "升職"
+msgstr "亮眼"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -5890,7 +5890,7 @@ msgstr "購物車"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Show \"Contact Us\" for zero-priced products or specific categories."
-msgstr ""
+msgstr "針對無售價或特定類別產品，改為顯示「聯絡我們」。"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6080,7 +6080,7 @@ msgstr "間距"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__prevent_sale_for__specific_categories
 msgid "Specific categories"
-msgstr ""
+msgstr "特定產品類別"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6155,7 +6155,7 @@ msgstr "樣式"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Subtle"
-msgstr "微妙"
+msgstr "淺色"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -6524,6 +6524,12 @@ msgstr "本產品沒有有效的組合"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
 msgid "This product is no longer available."
 msgstr "此產品不可使用。"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "This product is not available (anymore) in this unit of measure."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
@@ -7094,7 +7100,7 @@ msgstr "更寬（21:9）"
 #: model_terms:ir.ui.view,arch_db:website_sale.header_wishlist_link
 #: model_terms:ir.ui.view,arch_db:website_sale.product_cart_lines
 msgid "Wishlist"
-msgstr ""
+msgstr "願望清單"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__wishlist_grid_columns
