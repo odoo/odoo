@@ -1,4 +1,3 @@
-import { onWillRender } from "@web/owl2/utils";
 import { parseEmail } from "@mail/utils/common/format";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { _t } from "@web/core/l10n/translation";
@@ -13,7 +12,7 @@ import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook
 import { uniqueId } from "@web/core/utils/functions";
 import { RecipientTag, useRecipientChecker } from "./recipient_tag";
 
-import { Component } from "@odoo/owl";
+import { Component, computed } from "@odoo/owl";
 
 /**
  * @typedef {Object} Props
@@ -30,14 +29,10 @@ export class RecipientsInput extends Component {
     setup() {
         this.orm = useService("orm");
         this.store = useService("mail.store");
-        this.recipientCheckerBus = useRecipientChecker(() => this.tags);
+        this.tags = computed(() => this.getTagsFromMailThread());
+        this.recipientCheckerBus = useRecipientChecker(this.tags);
         useTagNavigation("recipientsInputRef", {
             delete: this.deleteTagByIndex.bind(this),
-        });
-
-        this.tags = [];
-        onWillRender(() => {
-            this.tags = this.getTagsFromMailThread();
         });
 
         this.openListViewToSelectResPartner = useSelectCreate({
@@ -65,9 +60,7 @@ export class RecipientsInput extends Component {
     }
 
     deleteTagByIndex(index) {
-        if (this.tags[index]) {
-            this.tags[index].onDelete();
-        }
+        this.tags()[index]?.onDelete();
     }
 
     getAutoCompleteSources() {

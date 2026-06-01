@@ -7,7 +7,7 @@
                 <SearchInput search="this.search" placeholder.translate="Search members"/>
                 <button name="inviteButton" t-on-click="() => this.onClickInviteButton()" class="btn btn-outline-secondary" title="Invite People" aria-label="Invite People"><i class="oi oi-user-plus"/></button>
             </div>
-            <t t-foreach="this.categories" t-as="category" t-key="category_index">
+            <t t-foreach="this.categories()" t-as="category" t-key="category_index">
                 <t t-if="category.filtered.length > 0">
                     <t t-call="discuss.ChannelMemberList.section" sectionName="category.showCount ? `${category.label} - ${category.filtered.length}` : category.label"/>
                     <div class="d-flex flex-column bg-inherit gap-1">
@@ -15,7 +15,7 @@
                     </div>
                 </t>
             </t>
-            <span t-if="this.search.searchTerm and !this.search.loading and !this.hasFilteredMembers(this.categories)" class="mx-2 mt-2 text-muted">No members found.</span>
+            <span t-if="this.search.searchTerm and !this.search.loading and !this.hasFilteredMembers(this.categories())" class="mx-2 mt-2 text-muted">No members found.</span>
             <span t-if="this.isSearchResultCapped" class="smaller text-muted mx-1 mb-1 fst-italic" t-out="this.searchResultCapHint"/>
             <t t-if="!this.search.searchTerm">
                 <span t-if="this.props.channel.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>

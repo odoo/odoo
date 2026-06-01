@@ -4,9 +4,8 @@ import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_di
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 import { SearchInput } from "@mail/core/common/search_input";
 
-import { Component, onWillUpdateProps, onWillStart } from "@odoo/owl";
+import { Component, computed, onWillUpdateProps, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { onWillRender } from "@web/owl2/utils";
 
 import { useService } from "@web/core/utils/hooks";
 import { useSearch } from "@mail/utils/common/hooks";
@@ -51,10 +50,7 @@ export class ChannelMemberList extends Component {
                 return this.hasFilteredMembers(this.computeCategories(term));
             },
         });
-        this.categories = [];
-        onWillRender(() => {
-            this.categories = this.computeCategories(this.search.searchTerm);
-        });
+        this.categories = computed(() => this.computeCategories(this.search.searchTerm));
         onWillStart(() => {
             if (this.props.channel.fetchMembersState === "not_fetched") {
                 this.props.channel.fetchChannelMembers();
@@ -80,7 +76,7 @@ export class ChannelMemberList extends Component {
             return false;
         }
         return (
-            this.categories.reduce((sum, c) => sum + c.matching.length, 0) >= SEARCH_RESULT_LIMIT
+            this.categories().reduce((sum, c) => sum + c.matching.length, 0) >= SEARCH_RESULT_LIMIT
         );
     }
 

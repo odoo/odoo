@@ -72,6 +72,10 @@ export class RecipientTag extends Component {
     }
 }
 
+/**
+ * @param {() => {id: string, email: string}[]} getTags
+ * @returns {EventBus}
+ */
 export function useRecipientChecker(getTags) {
     const bus = new EventBus();
     useLayoutEffect(

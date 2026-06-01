@@ -3,7 +3,7 @@
     <t t-name="mail.RecipientsInput">
         <div class="o-mail-RecipientsInput d-flex flex-wrap flex-grow-1 align-items-center gap-1 mx-1" t-custom-ref="recipientsInputRef">
             <BadgeTag t-if="this.otherFollowersCount gt 0" t-props="this.followersBadge"/>
-            <t t-foreach="this.tags" t-as="tag" t-key="tag.id">
+            <t t-foreach="this.tags()" t-as="tag" t-key="tag.id">
                 <RecipientTag t-props="tag"/>
             </t>
             <div class="flex-grow-1">
