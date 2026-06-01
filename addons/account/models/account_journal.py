@@ -260,7 +260,9 @@ class AccountJournal(models.Model):
     journal_group_id = fields.Many2one(
         comodel_name='account.journal.group',
         string="Ledger",
-        index='btree_not_null'
+        index='btree_not_null',
+        help="By default, all journals post to the Statutory Ledger (Local GAAP). \n"
+             "Specifying a ledger allows you to isolate IFRS, Tax, or Intercompany adjustments without affecting local statutory accounts.",
     )
 
     available_payment_method_ids = fields.Many2many(

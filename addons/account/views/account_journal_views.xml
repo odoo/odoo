@@ -267,7 +267,7 @@
             <field name="arch" type="xml">
                 <list editable="bottom">
                     <field name="sequence"  widget="handle"/>
-                    <field name="name" placeholder="e.g. GAAP, IFRS, ..."/>
+                    <field name="name" placeholder="e.g. CONSO, IFRS, ..."/>
                     <field name="included_journal_ids" widget="many2many_tags" options="{'no_create': True}" context="{'show_company_journal': True}" optional="show"/>
                 </list>
             </field>
@@ -281,7 +281,7 @@
                 <form string="Multi-ledger">
                     <sheet>
                         <group>
-                            <field name="name" placeholder="e.g. GAAP, IFRS, ..."/>
+                            <field name="name" placeholder="e.g. CONSO, IFRS, ..."/>
                             <field name="sequence" groups="base.group_no_one"/>
                             <field name="included_journal_ids" options="{'no_create': True}" context="{'show_company_journal': True}" optional="hide"/>
                         </group>
