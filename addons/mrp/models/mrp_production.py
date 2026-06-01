@@ -1133,6 +1133,14 @@ class MrpProduction(models.Model):
             self.env['stock.reference'].create(reference_vals_list)
         return res
 
+    def copy(self, default=None):
+        default = dict(default or {})
+        res = super().copy(default)
+        (res.move_raw_ids | res.move_finished_ids).write({
+            'reference': res.name,
+        })
+        return res
+
     def unlink(self):
         self.action_cancel()
         workorders_to_delete = self.workorder_ids.filtered(lambda wo: wo.state != 'done')
@@ -2076,7 +2084,8 @@ class MrpProduction(models.Model):
                 for backorder in production_to_backorders[production]:
                     move_vals = dict(
                         initial_move_vals,
-                        product_uom_qty=backorder.product_qty * unit_factor
+                        product_uom_qty=backorder.product_qty * unit_factor,
+                        reference=backorder.name,
                     )
                     if move.raw_material_production_id:
                         move_vals['raw_material_production_id'] = backorder.id

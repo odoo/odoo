@@ -998,6 +998,72 @@ class TestMrpProductionBackorder(TestMrpCommon):
         mo.production_group_id.production_ids[-1].action_cancel()
         self.assertFalse(mo.picking_ids.filtered(lambda p: p.state == 'cancel' and p.product_id == self.product_6))
 
+    def test_split_mo_move_reference(self):
+        """Check that the move reference is correct after a split."""
+        product_finish = self.env['product.product'].create({
+            'name': 'Product Finished Split',
+            'type': 'consu',
+            'is_storable': True,
+        })
+        product_comp = self.env['product.product'].create({
+            'name': 'Component Split',
+            'type': 'consu',
+            'is_storable': True,
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product_finish.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [(0, 0, {'product_id': product_comp.id, 'product_qty': 1.0})],
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': product_finish.id,
+            'bom_id': bom.id,
+            'product_qty': 2.0,
+        })
+        mo.action_confirm()
+        mo._split_productions({mo: [1.0, 1.0]})
+        backorders = mo.production_group_id.production_ids
+        self.assertEqual(len(backorders), 2, "There should be 2 manufacturing orders after the split.")
+        for production in backorders:
+            for move in (production.move_raw_ids | production.move_finished_ids):
+                self.assertEqual(
+                    move.reference,
+                    production.name,
+                    f"Split failed: the reference {move.reference} does not match the manufacturing order name {production.name}",
+                )
+
+    def test_duplicate_mo_move_reference(self):
+        """Check that the move reference is correct after a duplication (copy)."""
+        product_finish = self.env['product.product'].create({
+            'name': 'Product Finished duplicated',
+            'type': 'consu',
+            'is_storable': True,
+        })
+        product_comp = self.env['product.product'].create({
+            'name': 'Component duplicated',
+            'type': 'consu',
+            'is_storable': True,
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product_finish.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [(0, 0, {'product_id': product_comp.id, 'product_qty': 1.0})],
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': product_finish.id,
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+        })
+        mo.action_confirm()
+        mo_copy = mo.copy()
+        self.assertNotEqual(mo_copy.name, mo.name, "The new manufacturing order should have a different name.")
+        for move in (mo_copy.move_raw_ids | mo_copy.move_finished_ids):
+            self.assertEqual(
+                move.reference,
+                mo_copy.name,
+                f"Copy failed: the reference {move.reference} does not match the manufacturing order name {mo_copy.name}",
+            )
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpWorkorderBackorder(TransactionCase):
