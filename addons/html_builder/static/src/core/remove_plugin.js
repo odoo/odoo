@@ -13,6 +13,7 @@ import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 /**
  * @typedef { Object } RemoveShared
  * @property { RemovePlugin['removeElement'] } removeElement
+ * @property { RemovePlugin['isEmptyAndRemovable'] } isEmptyAndRemovable
  */
 
 /**
@@ -72,7 +73,7 @@ export class RemovePlugin extends Plugin {
             }
         },
     };
-    static shared = ["removeElement"];
+    static shared = ["removeElement", "isEmptyAndRemovable"];
 
     setup() {
         this.bootstrap = usePlugin(BootstrapInstance);
