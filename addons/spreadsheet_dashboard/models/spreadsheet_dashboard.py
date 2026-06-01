@@ -14,9 +14,9 @@ class SpreadsheetDashboard(models.Model):
     dashboard_group_id = fields.Many2one('spreadsheet.dashboard.group', required=True, index=True, string="Section")
     sequence = fields.Integer()
     sample_dashboard_file_path = fields.Char(export_string_translation=False)
-    is_published = fields.Boolean(default=True)
+    is_published = fields.Boolean(default=True, string="Published")
     company_ids = fields.Many2many('res.company', string="Companies")
-    group_ids = fields.Many2many('res.groups', default=lambda self: self.env.ref('base.group_user'))
+    group_ids = fields.Many2many('res.groups', string="Access Groups", default=lambda self: self.env.ref('base.group_user'))
     favorite_user_ids = fields.Many2many(
         'res.users',
         domain=lambda self: [('id', '=', self.env.uid)],
@@ -29,6 +29,7 @@ class SpreadsheetDashboard(models.Model):
         help='Indicates whether the dashboard is favorited by the current user'
     )
     main_data_model_ids = fields.Many2many('ir.model', copy=False)
+    allowed_user_ids = fields.Many2many('res.users', 'spreadsheet_dashboard_allowed_users_rel', string="Allowed Users", help="Users allowed to access this dashboard")
 
     @api.depends_context('uid')
     @api.depends('favorite_user_ids')
