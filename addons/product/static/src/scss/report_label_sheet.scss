@@ -1,3 +1,12 @@
+// These labels are rendered for CMYK print/PDF output, where modern layout
+// features such as flexbox and CSS grid are unreliable. Keep the layout based
+// on fixed dimensions and table/table-cell rules so printed labels stay
+// predictable.
+$o-label-contour-mark-color: #222222;
+$o-label-contour-mark-gap: 1mm;
+$o-label-contour-mark-length: 1.25mm;
+$o-label-contour-mark-width: 0.35mm;
+
 .o_label_sheet {
     margin-left: -4mm;
     margin-right: -4mm;
@@ -5,87 +14,517 @@
     width: 210mm;
     height: 297mm;
     page-break-before: always;
-    &.o_label_dymo {
-        font-size:90%;
-        width: 57mm;
-        height: 32mm;
-    }
-    div {
-        padding: 2px 4px;
-    }
-    div.o_label_small_text {
-        font-size: 60%;
-        line-height: 130%;
-    }
-    div.o_label_name {
-        background-color: ghostwhite;
-        height: 3em;
-        overflow: hidden;
-    }
+
     div.o_label_full {
-        overflow: hidden;
-        padding: 0;
+        width: 100%;
+        height: 100%;
         margin: auto;
-    }
-    div.o_label_left_column {
-        float: left;
-        font-size: .6em;
-        overflow:hidden;
-        width: 40%;
-        &.o_label_full_with {
-            width: 100%
-        }
-    }
-    div.o_label_right_column {
-        float: right;
-    }
-    div.o_label_small_barcode {
-        font-size: .6em;
-        padding: 0 4px;
-        line-height: normal;
-    }
-    strong.o_label_price {
-        font-size: 2em;
-    }
-    strong.o_label_price_medium {
-        font-size: 1.3em;
-        line-height: normal;
         padding: 0;
-        padding-right: 2mm;
-    }
-    strong.o_label_price_small {
-        font-size: 0.9em;
-        padding: 0 4px;
-        padding-right: 2mm;
-    }
-    strong.o_label_unit_medium {
-        font-size: 0.8em;
-        padding: 0;
-    }
-    strong.o_label_unit_small {
-        font-size: 0.4em;
-        padding: 0;
-    }
-    div.o_label_extra_data {
         overflow: hidden;
-        height: 2.5em;
-        padding: 0;
-        .img {
-            max-height: 100%;
-            max-width: 100%;
+
+        div {
+            padding: 0;
         }
-    }
-    div.o_label_clear {
-        clear: both;
+
+        .o_label_content,
+        .o_label_barcode_block,
+        .o_label_barcode,
+        .o_label_table {
+            margin: 0;
+            padding: 0;
+        }
+
+        .o_label_barcode,
+        .o_label_identifier_text,
+        .o_product_code,
+        .o_label_meta_block,
+        .o_label_price,
+        .o_label_meta_line {
+            line-height: 1;
+        }
+
+        .o_label_title,
+        .o_product_code,
+        .o_label_price,
+        .o_label_meta_line {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .o_label_title {
+            text-align: center;
+            line-height: 1;
+        }
+
+        .o_label_content {
+            overflow: hidden;
+        }
+
+        .o_label_barcode_block,
+        .o_label_identifier_text {
+            text-align: center;
+        }
+
+        .o_label_table {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+
+            > * {
+                display: table-cell;
+                vertical-align: top;
+                padding: 0;
+            }
+        }
+
+        .o_product_code {
+            text-align: left;
+            width: 42%;
+        }
+
+        .o_label_meta_block {
+            text-align: right;
+            width: 58%;
+        }
+
+        .o_label_price {
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+
+        .o_label_centering_table {
+            display: table;
+            height: 100%;
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        .o_label_centered_content {
+            box-sizing: border-box;
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        &.o_label_2x7,
+        &.o_label_4x7,
+        &.o_label_4x12,
+        &.o_label_4x12_gs1 {
+            box-sizing: border-box;
+            overflow: visible;
+            position: relative;
+        }
+
+        .o_label_contour_mark {
+            box-sizing: border-box;
+            color: transparent;
+            display: block;
+            font-size: 0;
+            height: 0;
+            line-height: 0;
+            position: absolute;
+            width: 0;
+            z-index: 10;
+
+            .o_label_contour_mark_horizontal,
+            .o_label_contour_mark_vertical {
+                background-color: $o-label-contour-mark-color;
+                display: block;
+                position: absolute;
+            }
+
+            .o_label_contour_mark_horizontal {
+                height: $o-label-contour-mark-width;
+                line-height: $o-label-contour-mark-width;
+                width: $o-label-contour-mark-length;
+            }
+
+            .o_label_contour_mark_vertical {
+                height: $o-label-contour-mark-length;
+                line-height: $o-label-contour-mark-length;
+                width: $o-label-contour-mark-width;
+            }
+        }
+
+        .o_label_contour_mark_top_left {
+            left: 0;
+            top: 0;
+
+            .o_label_contour_mark_horizontal {
+                right: $o-label-contour-mark-gap;
+                top: -$o-label-contour-mark-width;
+            }
+
+            .o_label_contour_mark_vertical {
+                bottom: $o-label-contour-mark-gap;
+                right: 0;
+            }
+        }
+
+        .o_label_contour_mark_top_right {
+            right: 0;
+            top: 0;
+
+            .o_label_contour_mark_horizontal {
+                left: $o-label-contour-mark-gap;
+                top: -$o-label-contour-mark-width;
+            }
+
+            .o_label_contour_mark_vertical {
+                bottom: $o-label-contour-mark-gap;
+                left: 0;
+            }
+        }
+
+        .o_label_contour_mark_bottom_left {
+            bottom: 0;
+            left: 0;
+
+            .o_label_contour_mark_horizontal {
+                bottom: -$o-label-contour-mark-width;
+                right: $o-label-contour-mark-gap;
+            }
+
+            .o_label_contour_mark_vertical {
+                right: 0;
+                top: $o-label-contour-mark-gap;
+            }
+        }
+
+        .o_label_contour_mark_bottom_right {
+            bottom: 0;
+            right: 0;
+
+            .o_label_contour_mark_horizontal {
+                bottom: -$o-label-contour-mark-width;
+                left: $o-label-contour-mark-gap;
+            }
+
+            .o_label_contour_mark_vertical {
+                left: 0;
+                top: $o-label-contour-mark-gap;
+            }
+        }
+
+        &.o_label_2x7 {
+            height: 37.1mm;
+            width: 97mm;
+
+            .o_label_title,
+            .o_label_price {
+                font-weight: 700;
+            }
+
+            .o_label_barcode_side {
+                width: 38%;
+                text-align: center;
+                padding: 3mm 0 0.2mm 2.5mm;
+            }
+
+            .o_label_info_side {
+                width: 62%;
+                padding: 3mm 3mm 2mm 2mm;
+            }
+
+            .o_label_identifier_text {
+                font-size: 0.75em;
+                margin-top: 0.4mm;
+            }
+
+            .o_label_title {
+                text-align: left;
+                font-size: 1em;
+                line-height: 1.05;
+                height: 1.35em;
+                margin: 0 0 1mm 0;
+            }
+
+            .o_product_code {
+                display: block;
+                width: auto;
+                font-size: 0.78em;
+                margin: 0 0 2.2mm 0;
+            }
+
+            .o_label_extra_content {
+                text-align: left;
+                font-size: 0.8em;
+                line-height: 1.1;
+                height: 8mm;
+                overflow: hidden;
+                margin: 0 0 1.5mm 0;
+            }
+
+            .o_label_meta_block {
+                text-align: right;
+                line-height: 1;
+                width: 100%;
+            }
+
+            .o_label_price {
+                font-size: 1.85em;
+            }
+
+            .o_label_meta_line {
+                font-size: 0.8em;
+                margin-top: 0.5mm;
+            }
+        }
+
+        &.o_label_4x7 {
+            height: 37.1mm;
+            width: 47mm;
+
+            .o_label_centered_content {
+                padding: 1.5mm 2.2mm;
+            }
+
+            .o_label_identifier_text,
+            .o_product_code,
+            .o_label_meta_line {
+                font-size: 0.6em;
+            }
+
+            .o_label_title {
+                font-size: 0.75em;
+                height: 2.3em;
+                padding: 3.5mm 1mm 0 1mm;
+                margin: 0 0 4mm 0;
+            }
+
+            .o_label_identifier_text {
+                margin: 0.3mm 0 4mm 0;
+            }
+
+            .o_label_price {
+                font-size: 1em;
+            }
+
+            .o_label_meta_line {
+                margin-top: 0.25mm;
+            }
+        }
+
+        &.o_label_4x7,
+        &.o_label_4x12,
+        &.o_label_4x12_gs1 {
+            padding: 0;
+        }
+
+        &.o_label_4x12 {
+            height: 19mm;
+            width: 43mm;
+
+            .o_label_centered_content {
+                padding: 1.5mm;
+            }
+
+            .o_label_table {
+                .o_label_title,
+                .o_label_price {
+                    font-weight: 700;
+                }
+
+                .o_label_title {
+                    width: 58%;
+                    text-align: left;
+                    font-size: 0.55em;
+                    line-height: 1.05;
+                    height: 1.2em;
+                    padding-right: 1mm;
+                }
+
+                .o_label_meta_block {
+                    width: 42%;
+                    text-align: right;
+                }
+
+                .o_label_identifier_text {
+                    width: 52%;
+                    text-align: left;
+                    font-size: 0.5em;
+                }
+
+                .o_product_code {
+                    width: 48%;
+                    text-align: right;
+                    font-size: 0.5em;
+                }
+            }
+
+            .o_label_centered_content > .o_label_table,
+            .o_label_content > .o_label_table {
+                margin: 0;
+            }
+
+            .o_label_header {
+                margin-bottom: 0;
+            }
+
+            .o_label_footer {
+                margin-top: 0;
+            }
+
+            .o_label_price {
+                font-size: 0.9em;
+            }
+
+            .o_label_meta_line {
+                font-size: 0.5em;
+                margin-top: 0.15mm;
+            }
+
+            .o_label_barcode_block {
+                margin: 1mm 0;
+            }
+
+            &.o_label_without_meta_block {
+                .o_label_barcode_block {
+                    margin: 2mm 0;
+                }
+            }
+
+            &.o_label_with_price {
+                .o_label_title {
+                    padding-top: 0.75mm;
+                }
+            }
+        }
+
+        &.o_label_4x12_gs1 {
+            height: 19mm;
+            width: 43mm;
+
+            .o_label_centered_content {
+                padding: 1.2mm 1.5mm;
+            }
+
+            .o_label_barcode_side {
+                width: 40%;
+                text-align: center;
+                padding-right: 1.2mm;
+            }
+
+            .o_label_info_side {
+                width: 60%;
+                vertical-align: middle;
+            }
+
+            .o_label_info_frame {
+                box-sizing: border-box;
+                height: 16mm;
+                position: relative;
+                width: 100%;
+            }
+
+            .o_label_info_top,
+            .o_label_info_bottom {
+                left: 0;
+                position: absolute;
+                right: 0;
+            }
+
+            .o_label_info_top {
+                top: 0;
+            }
+
+            .o_label_info_bottom {
+                bottom: 0;
+            }
+
+            .o_label_title,
+            .o_product_code,
+            .o_label_identifier_text,
+            .o_label_price,
+            .o_label_meta_line {
+                display: block;
+                text-align: left;
+                width: 100%;
+            }
+
+            .o_label_title {
+                font-size: 0.55em;
+                font-weight: 700;
+                line-height: 1.05;
+                margin: 0 0 0.45mm 0;
+            }
+
+            .o_label_identifier_text,
+            .o_label_meta_line {
+                font-size: 0.5em;
+            }
+
+            .o_product_code {
+                font-size: 0.45em;
+            }
+
+            .o_product_code,
+            .o_label_identifier_text {
+                margin: 0 0 0.35mm 0;
+            }
+
+            .o_label_meta_block {
+                text-align: left;
+                line-height: 1;
+                width: 100%;
+            }
+
+            .o_label_price {
+                font-size: 0.8em;
+                margin: 0 0 0.2mm 0;
+            }
+        }
     }
 
-    // generic 4x12 label w/ all same size font
-    div.o_label_4x12 {
-        padding:0;
-        line-height:1;
-        font-size:55%;
-        overflow:hidden;
-        white-space:nowrap;
-        text-overflow: ellipsis;
+    &.o_label_dymo {
+        font-size: 90%;
+        width: 57mm;
+        height: 32mm;
+
+        div.o_label_full {
+            .o_label_identifier_text,
+            .o_product_code,
+            .o_label_meta_line {
+                font-size: 0.6em;
+            }
+
+            .o_label_title {
+                font-size: 0.9em;
+                height: 1.5em;
+                padding: 0;
+                margin: 0.6mm 0;
+            }
+
+            .o_label_identifier_text {
+                margin: 0.2mm 0 1mm 0;
+            }
+
+            .o_label_barcode_block {
+                margin: 1mm 0;
+            }
+
+            .o_label_no_unit_price_spacer {
+                height: 2mm;
+                font-size: 0;
+                line-height: 2mm;
+            }
+
+            .o_label_price {
+                font-size: 1.4em;
+            }
+
+            .o_label_meta_line {
+                margin-top: 0.2mm;
+            }
+        }
+
+        &.o_label_without_meta_block {
+            .o_label_full {
+                .o_label_barcode_block {
+                    margin: 3mm 0;
+                }
+            }
+        }
     }
 }
