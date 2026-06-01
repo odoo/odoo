@@ -8,7 +8,8 @@
             <list create="false" expand="1">
                 <field name="sequence" widget="handle" groups="spreadsheet_dashboard.group_dashboard_manager"/>
                 <field name="name"/>
-                <field name="group_ids" widget="many2many_tags" required="1"/>
+                <field name="group_ids" widget="many2many_tags"/>
+                <field name="allowed_user_ids" widget="many2many_avatar_user"/>
                 <field name="company_ids" options="{'no_create': True}" widget="many2many_tags" groups="base.group_multi_company" placeholder="Visible to all"/>
                 <field name="is_published" widget="boolean_toggle"/>
                 <button name="action_open_dashboard" type="object" string="View" icon="fa-eye"/>
@@ -55,7 +56,8 @@
                     </div>
                     <group>
                         <field name="dashboard_group_id" string="Dashboard Section" placeholder="Choose a dashboard section..."/>
-                        <field name="group_ids" string="Access Groups" widget="many2many_tags" required="1"/>
+                        <field name="group_ids" widget="many2many_tags"/>
+                        <field name="allowed_user_ids" widget="many2many_avatar_user"/>
                         <field name="company_ids" string="Companies" options="{'no_create': True}" widget="many2many_tags" groups="base.group_multi_company" placeholder="Visible to all"/>
                         <field name="is_published" widget="boolean_toggle"/>
                         <field name="spreadsheet_binary_data" string="Spreadsheet file" invisible="not id" widget="binary_spreadsheet" class="w-50"/>

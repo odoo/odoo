@@ -1,5 +1,6 @@
 import json
 
+from odoo import Command
 from odoo.exceptions import UserError
 
 from odoo.tests import tagged
@@ -96,3 +97,25 @@ class TestSpreadsheetDashboard(DashboardTestCommon):
 
         self.assertFalse(dashboard.is_favorite)
         self.assertNotIn(self.user, dashboard.favorite_user_ids)
+
+    def test_allowed_user_ids_grants_access(self):
+        group = self.env["spreadsheet.dashboard.group"].create({"name": "a group"})
+        dashboard = self.env["spreadsheet.dashboard"].create({
+            "name": "user-restricted dashboard",
+            "dashboard_group_id": group.id,
+            "group_ids": [],
+            "allowed_user_ids": [Command.link(self.user.id)],
+        })
+        result = self.env["spreadsheet.dashboard"].with_user(self.user).search([("id", "=", dashboard.id)])
+        self.assertEqual(result, dashboard)
+
+    def test_user_not_in_allowed_user_ids_cannot_access(self):
+        group = self.env["spreadsheet.dashboard.group"].create({"name": "a group"})
+        dashboard = self.env["spreadsheet.dashboard"].create({
+            "name": "private dashboard",
+            "dashboard_group_id": group.id,
+            "group_ids": [],
+            "allowed_user_ids": [],
+        })
+        result = self.env["spreadsheet.dashboard"].with_user(self.user).search([("id", "=", dashboard.id)])
+        self.assertFalse(result)
