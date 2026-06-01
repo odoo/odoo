@@ -204,7 +204,7 @@ export class FormatPlugin extends Plugin {
             ) {
                 continue;
             }
-            this.formatSelection(format, { applyStyle: false, removeFormat: true });
+            this.formatSelection(format, { applyStyle: false, commit: false });
         }
     }
 
@@ -391,14 +391,8 @@ export class FormatPlugin extends Plugin {
         this.trigger("on_format_requested_handlers");
     }
 
-    formatSelection(formatName, options) {
-        if (this._formatSelection(formatName, options) && !options?.removeFormat) {
-            this.dependencies.history.commit();
-        }
-    }
-
     // @todo phoenix: refactor this method.
-    _formatSelection(formatName, { applyStyle, formatProps } = {}) {
+    formatSelection(formatName, { applyStyle, formatProps, commit = true } = {}) {
         this.dependencies.selection.selectAroundNonEditable();
         // note: does it work if selection is in opposite direction?
         this.dependencies.split.splitSelection();
@@ -546,11 +540,10 @@ export class FormatPlugin extends Plugin {
                 focusNode,
                 focusOffset,
             });
-            // To ensure history step is added when overrides apply formatting.
-            // @see formatSelection
-            return !!formattedNodes.size;
         }
-        return true;
+        if (commit) {
+            this.dependencies.history.commit();
+        }
     }
 
     normalize(root) {
@@ -698,7 +691,7 @@ export class FormatPlugin extends Plugin {
         for (const [formatName, { applyStyle, formatProps }] of Object.entries(
             this.activeFormats
         )) {
-            this.formatSelection(formatName, { applyStyle, formatProps });
+            this.formatSelection(formatName, { applyStyle, formatProps, commit: false });
         }
         this.activeFormats = {};
     }
