@@ -73,13 +73,11 @@ class IrActionsReport(models.Model):
                     for invoice_id, stream in qr_res.items():
                         qr_pdf = OdooPdfFileReader(stream['stream'], strict=False)
                         header_pdf = OdooPdfFileReader(header_res[invoice_id]['stream'], strict=False)
-
-                        page = header_pdf.getPage(0)
-                        page.mergePage(qr_pdf.getPage(0))
-
                         output_pdf = OdooPdfFileWriter()
-                        output_pdf.addPage(page)
-                        output_pdf.getPage(-1).compressContentStreams()
+                        output_pdf.addPage(header_pdf.getPage(0))
+                        page = output_pdf.getPage(-1)
+                        page.mergePage(qr_pdf.getPage(0))
+                        page.compressContentStreams()
                         new_pdf_stream = io.BytesIO()
                         output_pdf.write(new_pdf_stream)
                         streams_to_append[invoice_id] = {'stream': new_pdf_stream}
