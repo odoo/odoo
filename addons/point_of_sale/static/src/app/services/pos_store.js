@@ -32,7 +32,6 @@ import { user } from "@web/core/user";
 import { localeCompare, normalize } from "@web/core/l10n/utils";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
-import DevicesSynchronisation from "../utils/devices_synchronisation";
 import { formatDate } from "@web/core/l10n/dates";
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
@@ -523,16 +522,6 @@ export class PosStore extends WithLazyGetterTrap {
             "": this.models["res.partner"].length,
         };
 
-        const models = Object.keys(this.models);
-        const dynamicModels = this.data.opts.dynamicModels;
-        const staticModels = models.filter((model) => !dynamicModels.includes(model));
-        const deviceSync = new DevicesSynchronisation(dynamicModels, staticModels, this);
-
-        this.deviceSync = deviceSync;
-        this.data.deviceSync = deviceSync;
-
-        await this.deviceSync.readDataFromServer();
-
         // Check cashier
         this.checkPreviousLoggedCashier();
 
@@ -837,8 +826,6 @@ export class PosStore extends WithLazyGetterTrap {
                     : null;
             }
         }
-
-        await this.deviceSync.readDataFromServer();
     }
 
     get productViewMode() {
@@ -1622,7 +1609,6 @@ export class PosStore extends WithLazyGetterTrap {
 
         // We are now syncing orders one by one to avoid cancelling all sync
         // when one order fails, this also avoid timeout issues with a lot of orders
-        let errorOccurred = false;
         let newSession = false;
         const syncedOrders = [];
 
@@ -1675,19 +1661,10 @@ export class PosStore extends WithLazyGetterTrap {
                         "Offline mode active, order will be synced later",
                         CONSOLE_COLOR
                     );
-                } else {
-                    errorOccurred = true;
                 }
             } finally {
                 orders.forEach((order) => this.syncingOrders.delete(order.uuid));
             }
-        }
-
-        if (errorOccurred) {
-            // In that case we assume the order data isn't valid anymore, so we
-            // try to read data from server, to be sure to have the latest state
-            // the order can be deleted from the server side during the sync_from_ui call
-            this.deviceSync.readDataFromServer();
         }
 
         if (newSession) {

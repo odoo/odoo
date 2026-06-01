@@ -70,7 +70,8 @@ class PosMakePayment(models.TransientModel):
             order._process_saved_order(False)
             if order.state in {'paid', 'done'}:
                 order._send_order()
-                order.config_id.notify_synchronisation(order.config_id.current_session_id.id, 0)
+                order_pos = order._load_pos_data_read(order, order.config_id)
+                order.config_id.notify_synchronisation({'pos.order': order_pos})
             return {'type': 'ir.actions.act_window_close'}
 
         return self.launch_payment()

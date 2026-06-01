@@ -69,6 +69,8 @@ whenReady(() => {
                     new Blob([data], { type: "application/json" })
                 );
             }
+
+            app.env.services.webrtc?.leave();
         });
         const classList = document.body.classList;
         if (localization.direction === "rtl") {

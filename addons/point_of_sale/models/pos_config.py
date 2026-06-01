@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import logging
 from collections import defaultdict
 from datetime import datetime, timedelta
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from babel.dates import format_date
 
@@ -19,6 +20,8 @@ from odoo.addons.point_of_sale.models.pos_printer import format_epson_certified_
 
 DEFAULT_LIMIT_LOAD_PRODUCT = 5000
 DEFAULT_LIMIT_LOAD_PARTNER = 100
+
+_logger = logging.getLogger(__name__)
 
 
 class PosConfig(models.Model):
@@ -218,63 +221,15 @@ class PosConfig(models.Model):
         tracking_number = f"{int(next_number) % 1000}"
         return f"{year_2_digits}{device_identifier}-{self.id}-{next_number}", tracking_number
 
-    def notify_synchronisation(self, session_id, device_identifier, records={}):
-        self._notify_synchronisation(session_id, device_identifier, records)
-
-    def _notify_synchronisation(self, session_id, device_identifier, records={}, deleted_record_ids=None):
+    def notify_synchronisation(self, records=None, deleted_record_ids=None):
         self.ensure_one()
-        static_records = {}
-
-        for model, ids in records.items():
-            records = self.env[model].browse(ids).exists()
-            static_records[model] = self.env[model]._load_pos_data_read(records, self)
-
-        self._notify('SYNCHRONISATION', {
-            'static_records': static_records,
-            'deleted_record_ids': deleted_record_ids,
-            'session_id': session_id,
-            'device_identifier': device_identifier,
-            'records': records
-        })
-
-        for config in self.trusted_config_ids:
-            config._notify('SYNCHRONISATION', {
-                'static_records': static_records,
-                'session_id': config.current_session_id.id,
-                'login_number': 0,
-                'records': records
-            })
-
-    def read_config_open_orders(self, domain, record_ids=[]):
-        delete_record_ids = {}
-        dynamic_records = {}
-
-        for model, dom in domain.items():
-            ids = record_ids.get(model, [])
-            browsed = self.env[model].browse(ids)
-
-            dynamic_records[model] = self.env[model].search(dom)
-            delete_record_ids[model] = browsed.filtered(lambda r: not r.exists()).ids
-            # Cancelled orders must be forced deleted from the user interface.
-            if model == "pos.order":
-                delete_record_ids[model] += browsed.exists().filtered(lambda r: r.state == "cancel").ids
-
-        pos_order_data = dynamic_records.get('pos.order') or self.env['pos.order']
-        data = pos_order_data.read_pos_data([], self)
-
-        for key, records in dynamic_records.items():
-            fields = self.env[key]._load_pos_data_fields(self)
-            ids = list(set(records.ids + [record['id'] for record in data.get(key, [])]))
-            dynamic_records[key] = self.env[key].browse(ids).read(fields, load=False)
-
-        for key, value in data.items():
-            if key not in dynamic_records:
-                dynamic_records[key] = value
-
-        return {
-            'dynamic_records': dynamic_records,
-            'deleted_record_ids': delete_record_ids,
-        }
+        payload = {}
+        if records is not None:
+            payload['records'] = records
+        if deleted_record_ids is not None:
+            payload['deleted_record_ids'] = deleted_record_ids
+        if payload:
+            self._notify('SERVER_SYNCHRONISATION', payload)
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -1025,10 +980,6 @@ class PosConfig(models.Model):
         fee_products = self.env['pos.preset'].search([('service_fee', '=', True)]).mapped('service_fee_product_id')
         return default_tip | default_fee | fee_products
 
-    def update_customer_display(self, order, device_uuid):
-        self.ensure_one()
-        self._notify(f"UPDATE_CUSTOMER_DISPLAY-{device_uuid}", order)
-
     def _get_customer_display_data(self):
         self.ensure_one()
         return {
@@ -1335,3 +1286,65 @@ class PosConfig(models.Model):
 
     def _is_quantities_set(self):
         return self.use_closing_entry_by_product
+
+    _WEBRTC_PEER_GROUPS = frozenset({"terminal", "customer_display"})
+
+    def webrtc_announce(self, peer_id, peer_group, device_uuid=None):
+        self.ensure_one()
+        if not self.env.user.has_group("point_of_sale.group_pos_user"):
+            raise AccessError(_("Access denied"))
+
+        try:
+            UUID(peer_id, version=4)
+        except (ValueError, AttributeError, TypeError):
+            raise ValidationError(_("Invalid peer ID."))
+        if peer_group not in self._WEBRTC_PEER_GROUPS:
+            raise ValidationError(_("Invalid peer group."))
+        if device_uuid is not None:
+            try:
+                UUID(device_uuid, version=4)
+            except (ValueError, AttributeError, TypeError):
+                raise ValidationError(_("Invalid device UUID."))
+
+        session = self.env["pos.session"].search([
+            ("config_id", "=", self.id),
+            ("state", "in", ["opened", "opening_control"]),
+        ], limit=1)
+        if not session:
+            raise AccessError(_("Access denied"))
+
+        self._notify("WEBRTC_PEER_ANNOUNCE", {
+            "peer_id": peer_id,
+            "peer_group": peer_group,
+            "peer_device_uuid": device_uuid,
+        })
+
+        return {
+            "uuid": peer_id,
+            "bus_channel": self.access_token,
+            "peer_group": peer_group,
+        }
+
+    def webrtc_signal(self, msg):
+        self.ensure_one()
+        if not self.env.user.has_group("point_of_sale.group_pos_user"):
+            raise AccessError(_("Access denied"))
+
+        session = self.env["pos.session"].search([
+            ("config_id", "=", self.id),
+            ("state", "in", ["opened", "opening_control"]),
+        ], limit=1)
+        if not session:
+            raise AccessError(_("Access denied"))
+
+        sig_type = msg.get("type")
+        if sig_type not in ("offer", "answer", "ice"):
+            raise ValidationError(_("Invalid WebRTC signal type."))
+        if not isinstance(msg.get("to"), str) or not isinstance(msg.get("from"), str):
+            raise ValidationError(_("Invalid WebRTC signal payload."))
+        if sig_type in ("offer", "answer") and not isinstance(msg.get("sdp"), dict):
+            raise ValidationError(_("Invalid WebRTC signal payload."))
+        if sig_type == "ice" and not isinstance(msg.get("candidate"), dict):
+            raise ValidationError(_("Invalid WebRTC signal payload."))
+
+        self._notify("WEBRTC_SIGNAL", msg)

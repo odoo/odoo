@@ -26,6 +26,11 @@ export const setupPosEnv = async () => {
         isEnterprise: true,
     };
 
+    onRpc("pos.config", "webrtc_announce", () => ({
+        uuid: uuidv4(),
+        bus_channel: "pos-ch",
+        peer_group: odoo.screen_type || "terminal",
+    }));
     await makeDialogMockEnv();
     onRpc("/css", () => "");
     const store = getService("pos");
@@ -185,3 +190,9 @@ export const normalizeFunctionsInObject = (obj) =>
             typeof value === "function" ? "function" : value,
         ])
     );
+
+export const freezeDate = (date) => {
+    const timestamp = typeof date === "number" ? date : new Date(date).getTime();
+    patchWithCleanup(Date, { now: () => timestamp });
+    return timestamp;
+};
