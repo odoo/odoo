@@ -1,5 +1,5 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 
 export class ImportDataProgress extends Component {
     static template = "ImportDataProgress";
@@ -12,7 +12,7 @@ export class ImportDataProgress extends Component {
     setup() {
         this.timer = undefined;
         this.timeStart = Date.now();
-        this.state = useState({
+        this.state = proxy({
             isInterrupted: false,
             timeLeft: null,
         });

@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { _t } from '@web/core/l10n/translation';
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { UploadDropZone } from "@account/components/upload_drop_zone/upload_drop_zone";
@@ -13,7 +13,7 @@ export class FileUploadListRenderer extends ListRenderer {
 
     setup() {
         super.setup();
-        this.dropzoneState = useState({ visible: false });
+        this.dropzoneState = proxy({ visible: false });
         this.uploadFileFromData = uploadFileFromData();
         this.dropZoneTitle = _t("Drop and let the AI process your bills automatically.");
     }

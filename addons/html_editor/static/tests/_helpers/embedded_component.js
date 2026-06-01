@@ -1,4 +1,4 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import {
     applyObjectPropertyDifference,
     getEmbeddedProps,
@@ -6,14 +6,14 @@ import {
     useEmbeddedState,
     StateChangeManager,
 } from "@html_editor/others/embedded_component_utils";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 
 export class Counter extends Component {
     static props = ["*"];
     static template = xml`
         <span t-custom-ref="root" class="counter" t-on-click="this.increment">Counter:<t t-out="this.state.value"/></span>`;
 
-    state = useState({ value: 0 });
+    state = proxy({ value: 0 });
     ref = useRef("root");
 
     increment() {
@@ -48,7 +48,7 @@ export class EmbeddedWrapper extends Component {
 
     setup() {
         this.editableDescendants = useEditableDescendants(this.props.host);
-        this.state = useState({
+        this.state = proxy({
             switch: false,
         });
     }
@@ -61,7 +61,7 @@ export class OffsetCounter extends Component {
 
     setup() {
         this.embeddedState = useEmbeddedState(this.props.host);
-        this.state = useState({
+        this.state = proxy({
             value: 0,
         });
     }

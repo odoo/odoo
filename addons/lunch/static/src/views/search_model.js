@@ -1,15 +1,14 @@
-import { useState } from "@web/owl2/utils";
 import { Domain } from '@web/core/domain';
 import { rpc } from "@web/core/network/rpc";
 import { SearchModel } from '@web/search/search_model';
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, proxy } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export class LunchSearchModel extends SearchModel {
     setup() {
         super.setup(...arguments);
 
-        this.lunchState = useState({
+        this.lunchState = proxy({
             locationId: false,
             userId: false,
             date: DateTime.now(),

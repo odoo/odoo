@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, onWillUnmount, proxy } from "@odoo/owl";
 import { BuilderComponent } from "./builder_component";
 import { BuilderRow } from "./builder_row";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -29,7 +29,7 @@ export class BuilderSlidingPanel extends Component {
         useBuilderComponent();
         this.slidingPanelRef = useRef("slidingPanel");
         this.openButtonRef = useRef("openButton");
-        this.state = useState({
+        this.state = proxy({
             optionContainerName: "",
         });
         onMounted(() => {

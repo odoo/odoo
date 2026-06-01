@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -24,7 +23,7 @@ export class ActivityMenu extends Component {
         this.notification = useService("notification");
         this.dialogService = useService("dialog");
         this.employee = false;
-        this.state = useState({
+        this.state = proxy({
             checkedIn: false,
             isDisplayed: false,
             captureCheckInImage: false,

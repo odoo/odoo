@@ -1,9 +1,9 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { memoize } from "@web/core/utils/functions";
-import { Component, onMounted, markup, onWillStart } from "@odoo/owl";
+import { Component, onMounted, markup, onWillStart, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
@@ -39,7 +39,7 @@ export class HistoryDialog extends Component {
         embeddedComponents: [...READONLY_MAIN_EMBEDDINGS],
     };
 
-    state = useState({
+    state = proxy({
         revisionsData: [],
         currentView: "content", // "content" or "comparison"
         isComparisonSplit: false, // true for side-by-side, false for unified diff
@@ -77,11 +77,9 @@ export class HistoryDialog extends Component {
             );
             revisionData.push({
                 revision_id: revisionId,
-                create_date: DateTime.fromFormat(
-                    record[0]["create_date"],
-                    "yyyy-MM-dd HH:mm:ss",
-                    { zone: "utc" }
-                ).toISO(),
+                create_date: DateTime.fromFormat(record[0]["create_date"], "yyyy-MM-dd HH:mm:ss", {
+                    zone: "utc",
+                }).toISO(),
                 create_uid: record[0]["create_uid"][0],
                 create_user_name: record[0]["create_uid"][1],
             });

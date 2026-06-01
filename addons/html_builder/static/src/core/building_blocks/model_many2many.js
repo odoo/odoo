@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps, status } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, status, proxy } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { useDomState } from "@html_builder/core/utils";
@@ -32,7 +31,7 @@ export class ModelMany2Many extends Component {
     setup() {
         this.fields = useService("field");
         this.cachedModel = useCachedModel();
-        this.state = useState({
+        this.state = proxy({
             searchModel: undefined,
         });
         this.modelEdit = undefined;

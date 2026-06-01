@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import {
     addBuilderAction,
     addBuilderOption,
@@ -10,7 +9,7 @@ import { SavePlugin } from "@html_builder/core/save_plugin";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, tick } from "@odoo/hoot-dom";
-import { xml } from "@odoo/owl";
+import { xml, proxy } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -76,7 +75,7 @@ test("Prepare is triggered on props updated", async () => {
         static template = xml`<BuilderCheckbox action="'customAction'" actionParam="this.state.param"/>`;
         setup() {
             super.setup();
-            this.state = useState({ param: "old param" });
+            this.state = proxy({ param: "old param" });
             newPropDeferred.promise.then(() => {
                 this.state.param = "new param";
             });

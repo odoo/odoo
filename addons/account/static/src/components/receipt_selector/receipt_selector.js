@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { radioField, RadioField } from "@web/views/fields/radio/radio_field";
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { deepCopy } from "@web/core/utils/objects";
 
@@ -27,7 +26,7 @@ export class ReceiptSelector extends RadioField {
     setup() {
         super.setup();
         this.lazySession = useService("lazy_session");
-        this.show_sale_receipts = useState({ value: false });
+        this.show_sale_receipts = proxy({ value: false });
         onWillStart(()=> {
             this.lazySession.getValue("show_sale_receipts", (show_sale_receipts) => {
                 this.show_sale_receipts.value = show_sale_receipts;

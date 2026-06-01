@@ -1,5 +1,5 @@
-import { onWillRender, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { onWillRender, useRef } from "@web/owl2/utils";
+import { Component, onMounted, onWillUnmount, proxy } from "@odoo/owl";
 import { loadBundle, loadCSS } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -37,7 +37,7 @@ export class AddSnippetDialog extends Component {
         useAutofocus();
         this.iframeRef = useRef("iframe");
         this.modalRef = useChildRef();
-        this.state = useState({
+        this.state = proxy({
             search: "",
             groupSelected: this.props.selectedSnippet.groupName,
             showIframe: false,

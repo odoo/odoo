@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { RATING } from "@im_livechat/embed/common/livechat_service";
 import { TranscriptSender } from "@im_livechat/core/common/transcript_sender";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { session } from "@web/session";
@@ -30,7 +29,7 @@ export class FeedbackPanel extends Component {
         this.session = session;
         this.livechatService = useService("im_livechat.livechat");
         this.store = useService("mail.store");
-        this.state = useState({
+        this.state = proxy({
             step: this.STEP.RATING,
             rating: null,
             feedback: "",

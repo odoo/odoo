@@ -1,6 +1,6 @@
-import { useExternalListener, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../utils/hooks";
-import { Component, onWillDestroy, xml } from "@odoo/owl";
+import { Component, onWillDestroy, xml, proxy } from "@odoo/owl";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { getIFrame } from "@web/core/position/utils";
@@ -109,7 +109,7 @@ export class EditorOverlay extends Component {
         };
         position = usePosition("root", getTarget, positionOptions);
 
-        this.overlayState = useState({ isOverlayVisible: true });
+        this.overlayState = proxy({ isOverlayVisible: true });
         useSubEnv({ overlayState: this.overlayState });
     }
 

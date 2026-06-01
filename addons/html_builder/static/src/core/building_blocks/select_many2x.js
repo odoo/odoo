@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, onWillDestroy } from "@odoo/owl";
+import { Component, onWillUpdateProps, onWillDestroy, proxy } from "@odoo/owl";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useCachedModel } from "@html_builder/core/cached_model_utils";
 import { _t } from "@web/core/l10n/translation";
@@ -58,7 +57,7 @@ export class SelectMany2X extends Component {
         this.cachedModel = useCachedModel();
         this.prevSelectedIds = undefined;
         this.prevSearchValue = undefined;
-        this.state = useState({
+        this.state = proxy({
             nameToCreate: "",
             searchResults: [],
             limit: this.props.limit,

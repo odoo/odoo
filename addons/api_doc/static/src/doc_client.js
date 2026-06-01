@@ -1,5 +1,5 @@
-import { useState, useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { ModelStore } from "@api_doc/doc_model_store";
 import { useDocUI } from "@api_doc/utils/doc_ui_store";
 import { ApiKeyModal } from "@api_doc/components/doc_modal_api_key";
@@ -24,10 +24,10 @@ export class DocClient extends Component {
         this.setTheme(localStorage.getItem("theme") || "odoo-dark");
 
         this.ui = useDocUI();
-        this.modelStore = useState(new ModelStore());
+        this.modelStore = proxy(new ModelStore());
         useSubEnv({ modelStore: this.modelStore });
 
-        this.state = useState({ showSearchModal: false });
+        this.state = proxy({ showSearchModal: false });
 
         onMounted(async () => {
             await this.modelStore.loadModels();

@@ -1,5 +1,5 @@
-import { useExternalListener, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 
 export class TablePicker extends Component {
     static template = "html_editor.TablePicker";
@@ -13,7 +13,7 @@ export class TablePicker extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             cols: 3,
             rows: 3,
         });

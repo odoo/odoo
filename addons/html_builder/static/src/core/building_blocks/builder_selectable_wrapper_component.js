@@ -1,7 +1,6 @@
 import { useActionInfo, useSelectableLtrRtlComponent } from "@html_builder/core/utils";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
 import { omit } from "@web/core/utils/objects";
-import { useState } from "@web/owl2/utils";
 
 export class BuilderSelectableWrapperComponent extends Component {
     static template = "";
@@ -14,7 +13,7 @@ export class BuilderSelectableWrapperComponent extends Component {
 
     setup() {
         const info = useActionInfo({ stringify: false });
-        this.itemPropsState = useState({
+        this.itemPropsState = proxy({
             className: this.props.className,
             label: this.props.label,
             title: this.props.title,

@@ -1,10 +1,10 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useService, useChildRef } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { iconClasses } from "@html_editor/utils/dom_info";
 import { TABS, renderMedia } from "./media_dialog_utils";
 
@@ -37,7 +37,7 @@ export class MediaDialog extends Component {
         this.orm = useService("orm");
         this.notificationService = useService("notification");
 
-        this.selectedMedia = useState({});
+        this.selectedMedia = proxy({});
 
         this.addButtonRef = useRef("add-button");
 
@@ -50,7 +50,7 @@ export class MediaDialog extends Component {
 
         this.errorMessages = {};
 
-        this.state = useState({
+        this.state = proxy({
             activeTab: this.initialActiveTab,
             isSaving: false,
         });

@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { localeCompare } from "@web/core/l10n/utils";
@@ -15,7 +14,7 @@ export class BuilderListDialog extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             excludedRecords: [...this.props.excludedRecords].sort(this.sortByName),
             includedRecords: [...this.props.includedRecords],
             searchString: "",

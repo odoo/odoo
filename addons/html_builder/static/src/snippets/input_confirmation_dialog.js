@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export class InputConfirmationDialog extends ConfirmationDialog {
@@ -12,7 +12,7 @@ export class InputConfirmationDialog extends ConfirmationDialog {
 
     setup() {
         super.setup();
-        this.inputState = useState({
+        this.inputState = proxy({
             value: this.props.defaultValue,
         });
     }

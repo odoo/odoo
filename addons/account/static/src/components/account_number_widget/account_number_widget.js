@@ -1,9 +1,8 @@
-import { useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { CharField, charField } from "@web/views/fields/char/char_field";
 import { useDebounced } from "@web/core/utils/timing";
 import { useService } from "@web/core/utils/hooks";
-import { onMounted, onPatched } from "@odoo/owl";
+import { onMounted, onPatched, proxy } from "@odoo/owl";
 
 export const DELAY = 400;
 
@@ -11,7 +10,7 @@ export class AccountNumberWidget extends CharField {
     static template = "account.AccountNumberWidget";
     setup() {
         super.setup();
-        this.state = useState({ label: "" });
+        this.state = proxy({ label: "" });
         this.orm = useService("orm");
         this.validateAccountNumberDebounced = useDebounced(async () => {
             await this.validateAccountNumber();

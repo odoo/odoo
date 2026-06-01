@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
@@ -21,7 +20,7 @@ export class NewEmployeeDialog extends Component {
     setup() {
         this.dialogService = useService("dialog");
         this.notification = useService("notification");
-        this.state = useState({
+        this.state = proxy({
             employeeName: "",
             badgeId: "",
             value: null,

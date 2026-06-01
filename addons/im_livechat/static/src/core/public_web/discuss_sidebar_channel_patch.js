@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { DiscussSidebarChannel } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel";
 import { useDynamicInterval } from "@mail/utils/common/misc";
-
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
@@ -10,7 +9,7 @@ import { patch } from "@web/core/utils/patch";
 const discussSidebarChannelPatch = {
     setup() {
         super.setup(...arguments);
-        this.helpState = useState({ text: "" });
+        this.helpState = proxy({ text: "" });
         useDynamicInterval(
             (dt) => {
                 if (!dt) {

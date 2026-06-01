@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -72,7 +72,7 @@ export class TriggerSelectionField extends SelectionField {
     static template = "base_automation.TriggerSelectionField";
     setup() {
         super.setup();
-        this.groupedOptions = useState([]);
+        this.groupedOptions = proxy([]);
 
         const orm = useService("orm");
         let lastRelatedModelId;

@@ -1,11 +1,11 @@
-import { render, useState } from "@web/owl2/utils";
+import { render } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
-import { onEmployeeSubRedirect } from './hooks';
-import { Component } from "@odoo/owl";
+import { onEmployeeSubRedirect } from "./hooks";
+import { Component, proxy } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
@@ -18,7 +18,7 @@ class HrOrgChartPopover extends Component {
     async setup() {
         super.setup();
 
-        this.orm = useService('orm');
+        this.orm = useService("orm");
         this.actionService = useService("action");
         this._onEmployeeSubRedirect = onEmployeeSubRedirect();
     }
@@ -31,22 +31,24 @@ class HrOrgChartPopover extends Component {
      * @returns {Promise} action loaded
      */
     async _onEmployeeRedirect(employeeId) {
-        const action = await this.orm.call('hr.employee', 'get_record_default_action', [employeeId]);
+        const action = await this.orm.call("hr.employee", "get_record_default_action", [
+            employeeId,
+        ]);
         this.actionService.doAction(action);
     }
 }
 
 export class HrOrgChart extends Component {
     static template = "hr.hr_org_chart";
-    static props = {...standardFieldProps};
+    static props = { ...standardFieldProps };
     async setup() {
         super.setup();
 
-        this.orm = useService('orm');
+        this.orm = useService("orm");
         this.actionService = useService("action");
         this.popover = usePopover(HrOrgChartPopover);
 
-        this.state = useState({'employee_id': null});
+        this.state = proxy({ employee_id: null });
         this.max_level = null;
         this.lastEmployeeId = null;
         this.lastJobTitle = null;
@@ -56,7 +58,11 @@ export class HrOrgChart extends Component {
             const newParentId = record.data.parent_id?.id || false;
             const newEmployeeId = record.resId || false;
             const newJobTitle = record.data.job_title || false;
-            if (this.lastParent !== newParentId || this.state.employee_id !== newEmployeeId || this.lastJobTitle !== newJobTitle) {
+            if (
+                this.lastParent !== newParentId ||
+                this.state.employee_id !== newEmployeeId ||
+                this.lastJobTitle !== newJobTitle
+            ) {
                 this.lastParent = newParentId;
                 this.max_level = null; // Reset max_level to default
                 this.lastJobTitle = newJobTitle;
@@ -76,14 +82,12 @@ export class HrOrgChart extends Component {
             this.view_employee_id = null;
         } else if (employeeId !== this.view_employee_id || force) {
             this.view_employee_id = employeeId;
-            let orgData = await rpc(
-                '/hr/get_org_chart',
-                {
-                    employee_id: employeeId,
-                    new_parent_id: newParentId,
-                    new_job_title: newJobTitle,
-                    context: {
-                        ...user.context,
+            let orgData = await rpc("/hr/get_org_chart", {
+                employee_id: employeeId,
+                new_parent_id: newParentId,
+                new_job_title: newJobTitle,
+                context: {
+                    ...user.context,
                     max_level: this.max_level,
                 },
             });
@@ -91,7 +95,7 @@ export class HrOrgChart extends Component {
                 orgData = {
                     managers: [],
                     children: [],
-                }
+                };
             }
             this.managers = orgData.managers;
             this.children = orgData.children;
@@ -113,7 +117,9 @@ export class HrOrgChart extends Component {
      * @returns {Promise} action loaded
      */
     async _onEmployeeRedirect(employeeId) {
-        const action = await this.orm.call('hr.employee', 'get_record_default_action', [employeeId]);
+        const action = await this.orm.call("hr.employee", "get_record_default_action", [
+            employeeId,
+        ]);
         this.actionService.doAction(action);
     }
 

@@ -1,6 +1,6 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Image } from "@html_builder/core/img";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
 
@@ -18,7 +18,7 @@ export class CustomInnerSnippet extends Component {
         this.renameInputRef = useRef("rename-input");
         useAutofocus({ refName: "rename-input" });
 
-        this.state = useState({ isRenaming: false });
+        this.state = proxy({ isRenaming: false });
 
         this.renameButtonTooltip = _t("Rename %(snippetTitle)s", {
             snippetTitle: this.snippet.title,

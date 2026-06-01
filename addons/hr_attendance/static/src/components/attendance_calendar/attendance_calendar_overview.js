@@ -1,5 +1,5 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -12,7 +12,7 @@ export class AttendanceCalendarOverview extends Component {
     setup() {
         this.orm = useService("orm");
         this.floatTime = registry.category("formatters").get("float_time");
-        this.state = useState({
+        this.state = proxy({
             workedHours: 0,
             extraHours: 0,
         });

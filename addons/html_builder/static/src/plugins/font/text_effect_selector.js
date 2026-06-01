@@ -1,5 +1,5 @@
-import { useChildEnv, useChildSubEnv, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useChildEnv, useChildSubEnv, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -24,7 +24,7 @@ export class TextEffectOption extends BaseOptionComponent {
         super.setup();
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-        this.state = useState({
+        this.state = proxy({
             presets: this.getPresets(),
             showBack: false,
         });

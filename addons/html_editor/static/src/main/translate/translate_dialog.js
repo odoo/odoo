@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onWillDestroy, markup } from "@odoo/owl";
+import { Component, onWillDestroy, markup, proxy } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { GoogleTranslator, ChatGPTTranslator } from "./translator";
@@ -85,7 +84,7 @@ export class TranslateDialog extends Component {
         const isRTL = RTL_LANGUAGES.has(lang_base);
 
         this.notificationService = useService("notification");
-        this.state = useState({
+        this.state = proxy({
             selectedMessageId: null,
             selectedTranslator: google_translate,
             messages: new Map(),

@@ -1,4 +1,4 @@
-import { useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useRef, useSubEnv } from "@web/owl2/utils";
 import { Editor } from "@html_editor/editor";
 import {
     Component,
@@ -8,6 +8,7 @@ import {
     onWillStart,
     onWillUnmount,
     status,
+    proxy,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
@@ -74,13 +75,13 @@ export class Builder extends Component {
     setup() {
         this.ThemeTab = this.props.getThemeTab?.();
         this.builder_sidebarRef = useRef("builder_sidebar");
-        this.state = useState({
+        this.state = proxy({
             canUndo: false,
             canRedo: false,
             activeTab: this.props.onlyCustomizeTab ? "customize" : this.props.initialTab,
             currentOptionsContainers: undefined,
         });
-        this.invisibleElementsPanelState = useState({
+        this.invisibleElementsPanelState = proxy({
             invisibleEls: [],
             invisibleSelector: "",
         });

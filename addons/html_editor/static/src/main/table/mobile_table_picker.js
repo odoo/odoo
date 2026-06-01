@@ -1,5 +1,5 @@
-import { useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 
 export class MobileTablePicker extends Component {
     static template = "html_editor.MobileTablePicker";
@@ -12,7 +12,7 @@ export class MobileTablePicker extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             rowCount: 3,
             columnCount: 3,
         });

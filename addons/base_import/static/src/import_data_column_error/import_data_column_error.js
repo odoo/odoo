@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class ImportDataColumnError extends Component {
@@ -13,7 +12,7 @@ export class ImportDataColumnError extends Component {
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
-        this.state = useState({
+        this.state = proxy({
             isExpanded: false,
             moreInfoContent: undefined,
         });

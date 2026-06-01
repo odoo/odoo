@@ -1,4 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -15,7 +16,7 @@ export class AutoResizeImage extends Attachment {
         this.image = useRef("auto-resize-image");
         this.container = useRef("auto-resize-image-container");
 
-        this.state = useState({
+        this.state = proxy({
             loaded: false,
         });
     }

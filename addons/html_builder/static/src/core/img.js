@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps, xml } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, onWillStart, onWillUpdateProps, xml, proxy } from "@odoo/owl";
 import { Cache } from "@web/core/utils/cache";
 
 const svgCache = new Cache(async (src) => {
@@ -56,7 +56,7 @@ export class Image extends Component {
     setup() {
         this.svgRef = useRef("svg");
         this.svg = {};
-        this.state = useState({ loaded: false });
+        this.state = proxy({ loaded: false });
 
         onWillStart(async () => this.handleImgLoad(this.props.src));
         onWillUpdateProps(async (nextProps) => {

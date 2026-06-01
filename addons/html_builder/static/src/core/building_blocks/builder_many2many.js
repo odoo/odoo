@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import {
     basicContainerBuilderComponentProps,
@@ -31,7 +30,7 @@ export class BuilderMany2Many extends Component {
         this.applyOperation = this.env.editor.shared.history.makePreviewableAsyncOperation(
             this.callApply.bind(this)
         );
-        this.state = useState({
+        this.state = proxy({
             searchModel: undefined,
         });
         this.domState = useDomState((el) => {

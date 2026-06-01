@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { CustomColorPicker as ColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import {
     isColorGradient,
@@ -27,19 +27,19 @@ export class GradientPicker extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             type: "linear",
             repeating: false,
             angle: 135,
             currentColorIndex: 0,
             size: "closest-side",
         });
-        this.positions = useState({ x: 25, y: 25 });
-        this.colors = useState([
+        this.positions = proxy({ x: 25, y: 25 });
+        this.colors = proxy([
             { hex: "#DF7CC4", percentage: 0 },
             { hex: "#6C3582", percentage: 100 },
         ]);
-        this.cssGradients = useState({ preview: "", linear: "", radial: "", sliderThumbStyle: "" });
+        this.cssGradients = proxy({ preview: "", linear: "", radial: "", sliderThumbStyle: "" });
         this.knobRef = useRef("gradientAngleKnob");
 
         this.onToggleRepeatingBound = this.onToggleRepeating.bind(this);

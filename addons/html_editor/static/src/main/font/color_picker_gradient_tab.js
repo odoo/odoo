@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { applyOpacityToGradient, isColorGradient } from "@web/core/utils/colors";
@@ -36,7 +36,7 @@ export class ColorPickerGradientTab extends Component {
         "*": { optional: true },
     };
     setup() {
-        this.state = useState({
+        this.state = proxy({
             showGradientPicker: false,
         });
         this.applyOpacityToGradient = applyOpacityToGradient;

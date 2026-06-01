@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { FloatTimeSelectionPopover } from "./float_time_selection_popover";
@@ -28,7 +27,7 @@ export class FloatTimeSelectionField extends FloatTimeField {
         this.popover = usePopover(FloatTimeSelectionPopover, {
             onClose: this.onClose.bind(this),
         });
-        this.timeValues = useState({
+        this.timeValues = proxy({
             hours: "00",
             minutes: "00",
             floatValue: 0,

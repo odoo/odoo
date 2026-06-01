@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -11,7 +10,7 @@ export class SelectMenuWrapper extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             choices: [],
             value: this.props.el.value,
         });

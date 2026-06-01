@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { App, whenReady, Component } from "@odoo/owl";
+import { App, whenReady, Component, proxy } from "@odoo/owl";
 import { CardLayout } from "@hr_attendance/components/card_layout/card_layout";
 import { KioskManualSelection } from "@hr_attendance/components/manual_selection/manual_selection";
 import { makeEnv, startServices } from "@web/env";
@@ -51,7 +50,7 @@ class kioskAttendanceApp extends Component {
         this.companyImageUrl = url("/web/binary/company_logo", {
             company: this.props.companyId,
         });
-        this.state = useState({
+        this.state = proxy({
             active_display: "settings",
             displayDemoMessage:
                 browser.localStorage.getItem("hr_attendance.ShowDemoMessage") !== "false",

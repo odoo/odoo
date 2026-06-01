@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
@@ -17,7 +17,7 @@ export class LivechatButton extends Component {
             leading: true,
         });
         this.ref = useRef("button");
-        this.state = useState({ animateNotification: this.isShown });
+        this.state = proxy({ animateNotification: this.isShown });
         useLayoutEffect(
             (isShown, rootNodeClassList) => {
                 if (isShown && rootNodeClassList) {

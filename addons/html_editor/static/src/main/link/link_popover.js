@@ -1,8 +1,8 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../../utils/hooks";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { cleanZWChars, deduceURLfromText } from "./utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
@@ -86,7 +86,7 @@ export class LinkPopover extends Component {
             },
             {}
         );
-        this.state = useState({
+        this.state = proxy({
             editing: this.props.LinkPopoverState.editing,
             // `.getAttribute("href")` instead of `.href` to keep relative url
             url: linkElement.getAttribute("href") || this.deduceUrl(textContent),

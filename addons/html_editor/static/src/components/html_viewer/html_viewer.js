@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import {
     Component,
     markup,
@@ -6,6 +6,7 @@ import {
     onWillStart,
     onWillUnmount,
     onWillUpdateProps,
+    proxy,
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
@@ -31,7 +32,7 @@ export class HtmlViewer extends Component {
         this.htmlUpgradeManager = new HtmlUpgradeManager();
         this.iframeRef = useRef("iframe");
 
-        this.state = useState({
+        this.state = proxy({
             iframeVisible: false,
             value: this.formatValue(this.props.config.value),
         });
@@ -290,7 +291,13 @@ export class HtmlViewer extends Component {
             env,
             props,
         });
-        const { root, mountPromise } = mountComponent(this.__owl__.app, Component, host, props, env);
+        const { root, mountPromise } = mountComponent(
+            this.__owl__.app,
+            Component,
+            host,
+            props,
+            env
+        );
         // Don't show mounting errors as they will happen often when the host
         // is disconnected from the DOM because of a patch
         mountPromise.catch();

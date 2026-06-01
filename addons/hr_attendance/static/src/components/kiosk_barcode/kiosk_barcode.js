@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { BarcodeScanner } from "@barcodes/components/barcode_scanner";
 import { scanBarcode } from "@web/core/barcode/barcode_dialog";
 import { isDisplayStandalone } from "@web/core/browser/feature_detection";
@@ -22,7 +22,7 @@ export class KioskBarcodeScanner extends BarcodeScanner {
         super.setup();
         this.isDisplayStandalone = isDisplayStandalone();
         this.scanBarcode = () => scanBarcode(this.env, this.facingMode);
-        this.state = useState({
+        this.state = proxy({
             streamAvailable: null,
         });
     }

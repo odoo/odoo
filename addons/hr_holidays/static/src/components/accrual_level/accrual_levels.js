@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -13,19 +12,26 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 export class AccrualLevels extends Component {
     static template = "hr_holidays.AccrualLevels";
     static props = {
-        ...standardFieldProps
+        ...standardFieldProps,
     };
 
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
         this.dialog = useService("dialog");
-        this.state = useState({});
+        this.state = proxy({});
 
         useRecordObserver(async (record) => {
             this.state.carryOverDate = this.getCarryOverDate(record);
-            this.state.data = await this.orm.read("hr.leave.accrual.level", record.data[this.props.name]._currentIds);
-            if (!this.state.newMilestoneIds.some(id => record.data[this.props.name]._currentIds.includes(id))) {
+            this.state.data = await this.orm.read(
+                "hr.leave.accrual.level",
+                record.data[this.props.name]._currentIds
+            );
+            if (
+                !this.state.newMilestoneIds.some((id) =>
+                    record.data[this.props.name]._currentIds.includes(id)
+                )
+            ) {
                 this.state.newMilestoneIds = record.data[this.props.name]._currentIds;
             }
         });
@@ -50,10 +56,11 @@ export class AccrualLevels extends Component {
 
     getFullMonth(month) {
         return luxon.DateTime.fromFormat(month, "M", {
-            locale: this.env.model.config.context.lang.replace("_","-")}).toLocaleString({ month: "long" });
+            locale: this.env.model.config.context.lang.replace("_", "-"),
+        }).toLocaleString({ month: "long" });
     }
 
-    getNewMilestoneClass(id){
+    getNewMilestoneClass(id) {
         return this.state.newMilestoneIds.includes(id) ? "" : "new";
     }
 
@@ -67,19 +74,26 @@ export class AccrualLevels extends Component {
                 return luxon.DateTime.fromFormat(
                     `${planRecord._values.carryover_day} ${planRecord._values.carryover_month} 2020`,
                     "d M y",
-                    {locale: this.env.model.config.context.lang.replace("_","-")})
-                    .toLocaleString({ day:"numeric", month: "long" });
+                    { locale: this.env.model.config.context.lang.replace("_", "-") }
+                ).toLocaleString({ day: "numeric", month: "long" });
         }
     }
 
     async openMilestone(id) {
         let action;
         if (id) {
-            action = await this.orm.call("hr.leave.accrual.plan", "action_open_accrual_plan_level",
-                [this.props.record.evalContext.id], { level_id: id });
+            action = await this.orm.call(
+                "hr.leave.accrual.plan",
+                "action_open_accrual_plan_level",
+                [this.props.record.evalContext.id],
+                { level_id: id }
+            );
         } else {
-            action = await this.orm.call("hr.leave.accrual.plan", "action_create_accrual_plan_level",
-                [this.props.record.evalContext.id]);
+            action = await this.orm.call(
+                "hr.leave.accrual.plan",
+                "action_create_accrual_plan_level",
+                [this.props.record.evalContext.id]
+            );
         }
         this.action.doAction(action, {
             additionalContext: {
@@ -96,12 +110,16 @@ export class AccrualLevels extends Component {
         this.props.record.data[this.props.name].delete(milestoneRecord);
     }
 
-    async editMilestone(id){
+    async editMilestone(id) {
         if (this.props.record.dirty) {
             this.dialog.add(ConfirmationDialog, {
-                body: id ?
-                    _t("Do you want to save the changes made to the accrual plan before editing this milestone?") :
-                    _t("Do you want to save the changes made to the accrual plan before creating a new milestone?"),
+                body: id
+                    ? _t(
+                          "Do you want to save the changes made to the accrual plan before editing this milestone?"
+                      )
+                    : _t(
+                          "Do you want to save the changes made to the accrual plan before creating a new milestone?"
+                      ),
                 confirmLabel: _t("Yes, save changes"),
                 cancelLabel: _t("No, keep the old version"),
                 cancel: async () => await this.openMilestone(id),
@@ -118,9 +136,7 @@ export class AccrualLevels extends Component {
 
 export const accrualLevels = {
     component: AccrualLevels,
-    fieldDependencies: [
-        { name: "carryover_day", type: "integer" }
-    ],
+    fieldDependencies: [{ name: "carryover_day", type: "integer" }],
     relatedFields: () => [{ name: "id", type: "integer" }],
 };
 
