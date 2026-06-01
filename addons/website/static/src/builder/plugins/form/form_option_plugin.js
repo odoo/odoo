@@ -164,6 +164,7 @@ export class FormOptionPlugin extends Plugin {
             PromptSaveRedirectAction,
             UpdateLabelsMarkAction,
             SetMarkAction,
+            MarkColorAction,
             OnSuccessAction,
             ToggleEndMessageAction,
             FormToggleRecaptchaLegalAction,
@@ -1269,6 +1270,24 @@ export class SetMarkAction extends BuilderAction {
     getValue({ editingElement: el }) {
         const mark = getMark(el);
         return mark;
+    }
+}
+
+export class MarkColorAction extends BuilderAction {
+    static id = "markColor";
+    static dependencies = ["builderActions"];
+    setup() {
+        this.colorVarName = "--form-label-required-mark-color";
+        this.style = this.dependencies.builderActions.getAction("styleAction");
+    }
+    getValue(args) {
+        return (
+            this.style.getValue({ ...args, params: { mainParam: this.colorVarName } }) ||
+            this.style.getValue({ ...args, params: { mainParam: "color" } })
+        );
+    }
+    apply(args) {
+        this.style.apply({ ...args, params: { mainParam: this.colorVarName } });
     }
 }
 
