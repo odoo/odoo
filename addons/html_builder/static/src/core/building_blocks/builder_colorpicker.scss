@@ -33,7 +33,7 @@
     }
 
     & > div:not(:first-child) {
-        .btn:not(.o-hb-edit-color-combination) {
+        .btn:not(.o-hb-theme-tab-link) {
             @include button-variant(
                 $background: $o-we-item-clickable-bg,
                 $border: transparent,
@@ -98,19 +98,6 @@
             0 0 0 1px $o-we-bg-darker,
             0 0 0 3px var(--o-color-picker-active-color);
         outline: none;
-    }
-
-    .o-hb-edit-color-combination {
-        color: $o-we-color-global;
-        border: none;
-
-        &:hover {
-            color: $o-we-fg-lighter;
-        }
-
-        &:not(:focus-visible) {
-            border: 1px solid transparent; // keep size stable on focus
-        }
     }
 
     // Gradients

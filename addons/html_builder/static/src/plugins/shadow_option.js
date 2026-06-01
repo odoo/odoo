@@ -10,6 +10,6 @@ export class ShadowOption extends BaseOptionComponent {
     });
 
     getOnClick(shadowClass) {
-        return () => this.env.editShadow(shadowClass);
+        return () => this.env.editThemeOption(shadowClass, "theme-shadow");
     }
 }
