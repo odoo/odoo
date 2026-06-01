@@ -1155,7 +1155,9 @@ class OrderedSet(MutableSet):
         return reduce(OrderedSet.__and__, others, self)
 
     def copy(self):
-        return self.__class__(self)
+        new_set = OrderedSet()
+        new_set._map = self._map.copy()  # Atomic dict copy
+        return new_set
 
 
 class LastOrderedSet(OrderedSet):
@@ -1163,6 +1165,11 @@ class LastOrderedSet(OrderedSet):
     def add(self, elem):
         OrderedSet.discard(self, elem)
         OrderedSet.add(self, elem)
+
+    def copy(self):
+        new_set = LastOrderedSet()
+        new_set._map = self._map.copy()  # Atomic dict copy
+        return new_set
 
 
 class Callbacks:
