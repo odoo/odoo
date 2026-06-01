@@ -28,7 +28,7 @@ import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
 import { EditInteractionPlugin } from "@website/builder/plugins/edit_interaction_plugin";
-import { WebsiteSessionPlugin } from "@website/builder/plugins/website_session_plugin";
+import { WebsiteBridgePlugin } from "@website/builder/plugins/website_bridge_plugin";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
 import { mockImageRequests } from "./image_test_helpers";
@@ -277,9 +277,15 @@ export async function setupWebsiteBuilder(
         },
     });
 
-    patchWithCleanup(WebsiteSessionPlugin.prototype, {
+    patchWithCleanup(WebsiteBridgePlugin.prototype, {
         getSession() {
             return {};
+        },
+        getRegistry() {
+            return registry;
+        },
+        _t() {
+            return (source, ...substitutions) => source;
         },
     });
 

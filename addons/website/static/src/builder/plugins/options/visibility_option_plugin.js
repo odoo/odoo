@@ -18,7 +18,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 export const DEVICE_VISIBILITY_OPTION_SELECTOR = "section .row > div";
 export class VisibilityOptionPlugin extends Plugin {
     static id = "visibilityOption";
-    static dependencies = ["visibility", "websiteSession"];
+    static dependencies = ["visibility", "websiteBridge"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {

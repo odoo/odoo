@@ -34,7 +34,7 @@ declare module "plugins" {
     import { on_nodes_marked_translatable_handlers, TranslationShared } from "@website/builder/plugins/translation/translation_plugin";
     import { WebsiteSaveShared } from "@website/builder/plugins/website_save_plugin";
     import { force_background_translation_state_selectors } from "@website/builder/plugins/translation/repeat_translation_state_plugin";
-    import { WebsiteSessionShared } from "@website/builder/plugins/website_session_plugin";
+    import { WebsiteBridgeShared } from "@website/builder/plugins/website_bridge_plugin";
 
     interface SharedMethods {
         animateOption: AnimateOptionShared;
@@ -67,7 +67,7 @@ declare module "plugins" {
         websitePageConfigOptionPlugin: WebsitePageConfigOptionShared;
         websiteParallaxPlugin: WebsiteParallaxShared;
         websiteSavePlugin: WebsiteSaveShared;
-        websiteSession: WebsiteSessionShared;
+        websiteBridge: WebsiteBridgeShared;
     }
 
     interface GlobalResources extends WebsiteResourcesAccess {}
