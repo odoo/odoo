@@ -118,7 +118,7 @@ export class ChannelInvitation extends Component {
         const selectablePartners = results.partner_ids.map((id) =>
             this.store["res.partner"].get(id)
         );
-        this.selectablePartners = this.suggestionService.sortPartnerSuggestions(
+        this.selectablePartners = this.suggestionService.sortPersonSuggestions(
             selectablePartners,
             this.searchStr,
             this.props.channel?.thread

@@ -199,10 +199,22 @@ export class SuggestionService {
                     composerType,
                     thread,
                 });
+                const users = this.searchUserSuggestions(cleanedSearchTerm, {
+                    composerType,
+                    thread,
+                });
+                partners.suggestions = partners.suggestions.filter(
+                    (partner) => !users.suggestions.some((user) => user.partner_id === partner)
+                );
+                const partnersOrUsers = this.sortPersonSuggestions(
+                    [...partners.suggestions, ...users.suggestions],
+                    cleanedSearchTerm,
+                    thread
+                );
                 const roles = this.searchRoleSuggestions(cleanedSearchTerm);
                 return {
                     type: "Partner",
-                    suggestions: [...partners.suggestions, ...roles.suggestions],
+                    suggestions: [...partnersOrUsers, ...roles.suggestions],
                 };
             }
             case "#":
@@ -306,23 +318,56 @@ export class SuggestionService {
         );
         return {
             type: "Partner",
-            suggestions: [...this.sortPartnerSuggestions(suggestions, cleanedSearchTerm, thread)],
+            suggestions: suggestions,
         };
     }
 
+    getUserSuggestions({ composerType, thread }) {
+        return Object.values(this.store["res.users"].records).filter((user) =>
+            this.isPartnerSuggestionValid(user.partner_id, { composerType, thread })
+        );
+    }
+
+    searchUserSuggestions(cleanedSearchTerm, { composerType, thread } = {}) {
+        const users = this.getUserSuggestions({ composerType, thread });
+        const suggestions = [];
+        for (const user of users) {
+            if (!user.name) {
+                continue;
+            }
+            if (
+                cleanTerm(user.name).includes(cleanedSearchTerm) ||
+                (user.email && cleanTerm(user.email).includes(cleanedSearchTerm))
+            ) {
+                suggestions.push(user);
+            }
+        }
+        return {
+            type: "Users",
+            suggestions: suggestions,
+        };
+    }
+
+    getRawPartnerFromSuggestion(partnerOrUser) {
+        if (partnerOrUser.Model.getName() === "res.users") {
+            return toRaw(partnerOrUser.partner_id);
+        }
+        return toRaw(partnerOrUser);
+    }
+
     /**
-     * @param {[import("models").Persona | import("@mail/core/common/store_service").SpecialMention]} [partners]
+     * @param {[import("models").Persona | import("@mail/core/common/store_service").SpecialMention] | import("models").ResUsers} [partners]
      * @param {String} [searchTerm]
      * @param {import("models").Thread} thread
      * @returns {[import("models").Persona]}
      */
-    sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
+    sortPersonSuggestions(partnersOrUsers, searchTerm = "", thread = undefined) {
         const cleanedSearchTerm = cleanTerm(searchTerm);
         const compareFunctions = partnerCompareRegistry.getAll();
         const context = this.sortPartnerSuggestionsContext(thread);
-        return partners.sort((p1, p2) => {
-            p1 = toRaw(p1);
-            p2 = toRaw(p2);
+        return partnersOrUsers.sort((p1, p2) => {
+            p1 = this.getRawPartnerFromSuggestion(p1);
+            p2 = this.getRawPartnerFromSuggestion(p2);
             if (p1.isSpecial || p2.isSpecial) {
                 return 0;
             }

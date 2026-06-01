@@ -184,7 +184,8 @@
     </t>
 
     <t t-name="mail.Composer.suggestionPartner">
-        <t t-set="partner" t-value="option.partner"/>
+        <t t-if="option.user" t-set="partner" t-value="option.user.partner_id"/>
+        <t t-else="" t-set="partner" t-value="option.partner"/>
         <t t-set="title" t-value="partner.name"/>
         <t t-if="partner.email" t-set="title" t-value="`${title} (${partner.email})`"/>
         <DiscussAvatar t-if="partner" record="partner" size="24"/>
