@@ -269,13 +269,14 @@ def add_banner(pdf_stream: io.BytesIO, text: str, logo: bool = False, thickness:
     # Merge the old pages with the watermark
     watermark_pdf = PdfFileReader(packet, overwriteWarnings=False)
     new_pdf = PdfFileWriter()
-    for new_page, wm_page in zip(old_pdf.pages, watermark_pdf.pages):
+    for old_page, wm_page in zip(old_pdf.pages, watermark_pdf.pages):
+        new_pdf.add_page(old_page)
+        new_page = new_pdf.pages[-1]
         # Remove annotations (if any), to prevent errors in PyPDF2
         if '/Annots' in new_page:
             del new_page['/Annots']
         new_page.merge_page(wm_page)
-        new_pdf.add_page(new_page)
-        new_pdf.pages[-1].compress_content_streams()
+        new_page.compress_content_streams()
 
     # Write the new pdf into a new output stream
     output = io.BytesIO()
