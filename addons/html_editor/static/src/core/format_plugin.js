@@ -44,6 +44,7 @@ const NOT_A_NUMBER = /[^\d]/g;
  * }) => void | boolean)[]} format_selection_overrides
  * @typedef {(() => void)[]} on_all_formats_removed_handlers
  * @typedef {(() => void)[]} on_format_requested_handlers
+ * @typedef {(() => void)[]} on_collapsed_formats_removed_handlers
  * @typedef {((root: Node) => void)[]} on_will_merge_adjacent_siblings_handlers
  * @typedef {((root: Node) => void)[]} on_merged_adjacent_siblings_handlers
  *
@@ -295,7 +296,7 @@ export class FormatPlugin extends Plugin {
                     this.activeFormats[format] = { applyStyle: false };
                 }
             }
-            this.trigger("on_format_requested_handlers");
+            this.trigger("on_collapsed_formats_removed_handlers");
             return;
         }
         this.removeFormats(Object.keys(formatsSpecs), targetedNodes);

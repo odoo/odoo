@@ -38,7 +38,7 @@ import { compareListTypes, createList, insertListAfter, isListItem } from "./uti
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "@html_editor/utils/resource";
 import { FONT_SIZE_CLASSES, getFontSizeOrClass, getHtmlStyle } from "@html_editor/utils/formatting";
-import { getTextColorOrClass, TEXT_CLASSES_REGEX } from "@html_editor/utils/color";
+import { getColorOrClass, TEXT_CLASSES_REGEX } from "@html_editor/utils/color";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { ListSelector } from "./list_selector";
 import { composeToolbarButton } from "../toolbar/toolbar";
@@ -761,7 +761,7 @@ export class ListPlugin extends Plugin {
         // Preserve style properties
         const dir = li.getAttribute("dir") || ul.getAttribute("dir");
         const textAlign = li.style.getPropertyValue("text-align");
-        const liColorStyle = getTextColorOrClass(li);
+        const liColorStyle = getColorOrClass(li);
         const liFontSizeStyle = getFontSizeOrClass(li);
         const wrapChildren = (parent, tag) => {
             const wrapper = this.document.createElement(tag);

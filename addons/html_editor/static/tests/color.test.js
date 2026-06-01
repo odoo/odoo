@@ -1,7 +1,8 @@
 import { after, before, describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
-import { setColor } from "./_helpers/user_actions";
+import { insertText, setColor } from "./_helpers/user_actions";
+import { execCommand } from "./_helpers/userCommands";
 import { getContent } from "./_helpers/selection";
 import { animationFrame, press } from "@odoo/hoot-dom";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
@@ -47,19 +48,44 @@ test("should apply a background color to a slice of text in a span in a font", a
 });
 
 test("should get ready to type with a different color", async () => {
-    await testEditor({
-        contentBefore: "<p>ab[]cd</p>",
-        stepFunction: setColor("rgb(255, 0, 0)", "color"),
-        contentAfter: '<p>ab<font style="color: rgb(255, 0, 0);">\u200B[]</font>cd</p>',
-    });
+    const { el, editor } = await setupEditor("<p>ab[]cd</p>");
+    await setColor("rgb(255, 0, 0)", "color")(editor);
+    expect(getContent(el)).toBe("<p>ab[]cd</p>");
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe('<p>ab<font style="color: rgb(255, 0, 0);">x[]</font>cd</p>');
 });
 
 test("should get ready to type with a different background color", async () => {
-    await testEditor({
-        contentBefore: "<p>ab[]cd</p>",
-        stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
-        contentAfter: '<p>ab<font style="background-color: rgb(255, 0, 0);">\u200B[]</font>cd</p>',
-    });
+    const { el, editor } = await setupEditor("<p>ab[]cd</p>");
+    await setColor("rgb(255, 0, 0)", "backgroundColor")(editor);
+    expect(getContent(el)).toBe("<p>ab[]cd</p>");
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(
+        '<p>ab<font style="background-color: rgb(255, 0, 0);">x[]</font>cd</p>'
+    );
+});
+
+test("should get ready to type without color after removing format on a collapsed selection", async () => {
+    const { el, editor } = await setupEditor(
+        '<p>ab<font style="color: rgb(255, 0, 0);">cd[]ef</font>gh</p>'
+    );
+    execCommand(editor, "removeFormat");
+    expect(getContent(el)).toBe('<p>ab<font style="color: rgb(255, 0, 0);">cd[]ef</font>gh</p>');
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(
+        '<p>ab<font style="color: rgb(255, 0, 0);">cd</font>x[]<font style="color: rgb(255, 0, 0);">ef</font>gh</p>'
+    );
+});
+
+test("collapsed remove-format defers color removal when the color is on an ancestor", async () => {
+    const { el, editor } = await setupEditor(
+        '<p><font style="color: rgb(255, 0, 0);"><strong>ab[]cd</strong></font></p>'
+    );
+    execCommand(editor, "removeFormat");
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(
+        `<p><font style="color: rgb(255, 0, 0);"><strong>ab</strong></font>x[]<font style="color: rgb(255, 0, 0);"><strong>cd</strong></font></p>`
+    );
 });
 
 test("should apply a color on empty selection", async () => {

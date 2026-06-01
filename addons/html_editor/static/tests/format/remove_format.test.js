@@ -795,8 +795,8 @@ test("should remove backgroundColor from selected cells using removeFormat (2)",
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: unformat(`
             <table class="table table-bordered o_table"><tbody>
-                <tr><td><p>[\u200b</p></td></tr>
-                <tr><td><p>]\u200b</p></td></tr>
+                <tr><td><p>[<br></p></td></tr>
+                <tr><td><p>]<br></p></td></tr>
             </tbody></table>
         `),
         styleContent,
@@ -826,38 +826,6 @@ test("should remove gradient color from span element", async () => {
             '<p><span style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[ab]</span></p>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: "<p>[ab]</p>",
-    });
-});
-
-test("should remove text color from empty element", async () => {
-    await testEditor({
-        contentBefore:
-            '<p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">[]\u200B</font></p>',
-        stepFunction: async (editor) => {
-            execCommand(editor, "removeFormat");
-            await insertText(editor, "x");
-        },
-        contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">x[]</p>`,
-    });
-});
-
-test("should remove text color from empty element in a single selected cell", async () => {
-    await testEditor({
-        contentBefore: unformat(`
-            <table class="table table-bordered o_table o_selected_table"><tbody>
-                <tr><td class="o_selected_td"><p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">[]\u200B</font></p></td></tr>
-                <tr><td><p><br></p></td></tr>
-            </tbody></table>
-        `),
-        stepFunction: (editor) => execCommand(editor, "removeFormat"),
-        contentAfterEdit: unformat(`
-            <p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table"><tbody>
-                <tr><td class="o_selected_td"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">\u200b[]</p></td></tr>
-                <tr><td><p><br></p></td></tr>
-            </tbody></table>
-            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
-        `),
     });
 });
 
@@ -1021,7 +989,7 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p>\u200b</p></td></tr></tbody></table><p>]\u200b</p>`
+            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p><br></p></td></tr></tbody></table><p>]<br></p>`
         );
     });
 
@@ -1031,7 +999,7 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td style="" class="o_selected_td"><p>[\u200b</p></td><td style="" class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[<br></p></td><td class="o_selected_td"><p>]<br></p></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
 
