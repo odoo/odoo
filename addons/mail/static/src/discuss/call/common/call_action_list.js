@@ -1,5 +1,5 @@
-import { onWillRender, useRef } from "@web/owl2/utils";
-import { Component, toRaw } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, computed, toRaw } from "@odoo/owl";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
@@ -26,7 +26,7 @@ export class CallActionList extends Component {
         this.popover = usePopover(Tooltip, {
             position: "top-middle",
         });
-        onWillRender(() => {
+        this.actions = computed(() => {
             const partition = toRaw(this.callActions).partition;
             const other = partition.other.filter((a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT));
             const group2 = [];
@@ -57,7 +57,7 @@ export class CallActionList extends Component {
                     : quickActions;
                 group2.push(newGroup);
             }
-            this.actions = [...group2, other];
+            return [...group2, other];
         });
     }
 
