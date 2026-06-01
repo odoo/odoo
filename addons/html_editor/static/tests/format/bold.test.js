@@ -128,7 +128,7 @@ test("should make a whole heading not bold after a triple click (heading is cons
     });
     await tripleClick(el.querySelector("h1"));
     bold(editor);
-    expect(getContent(el)).toBe(`<h1><span style="font-weight: normal;">[ab]</span></h1><p>cd</p>`);
+    expect(getContent(el)).toBe(`<h1 style="font-weight: normal;">[ab]</h1><p>cd</p>`);
 });
 
 test("should make a selection starting with bold text fully bold", async () => {
