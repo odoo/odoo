@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── List View ──────────────────────────────────────────────────────── -->
+    <record id="view_prison_vacancy_list" model="ir.ui.view">
+        <field name="name">prison.vacancy.list</field>
+        <field name="model">prison.vacancy</field>
+        <field name="arch" type="xml">
+            <list string="Prison Vacancies"
+                  decoration-success="vacancy_count &gt; 0"
+                  decoration-muted="not active">
+                <field name="prison_name"/>
+                <field name="prison_type"/>
+                <field name="prison_code" optional="show"/>
+                <field name="sanctioned_strength"/>
+                <field name="occupied_count"/>
+                <field name="vacancy_count"
+                       decoration-success="vacancy_count &gt; 0"
+                       decoration-danger="vacancy_count == 0"/>
+                <field name="active" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ── Form View ──────────────────────────────────────────────────────── -->
+    <record id="view_prison_vacancy_form" model="ir.ui.view">
+        <field name="name">prison.vacancy.form</field>
+        <field name="model">prison.vacancy</field>
+        <field name="arch" type="xml">
+            <form string="Prison Vacancy">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="prison_name"/>
+                        <h1><field name="prison_name" placeholder="Prison Name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Prison Details">
+                            <field name="prison_id"/>
+                            <field name="prison_code" readonly="1"/>
+                            <field name="prison_type"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Staff Strength">
+                            <field name="sanctioned_strength"/>
+                            <field name="occupied_count"/>
+                            <field name="vacancy_count"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ── Search View ────────────────────────────────────────────────────── -->
+    <record id="view_prison_vacancy_search" model="ir.ui.view">
+        <field name="name">prison.vacancy.search</field>
+        <field name="model">prison.vacancy</field>
+        <field name="arch" type="xml">
+            <search string="Search Vacancies">
+                <field name="prison_name" string="Prison"/>
+                <field name="prison_code" string="Code"/>
+                <separator/>
+                <filter name="has_vacancy" string="Has Vacancy"
+                        domain="[('vacancy_count', '&gt;', 0), ('active', '=', True)]"/>
+                <filter name="no_vacancy" string="No Vacancy"
+                        domain="[('vacancy_count', '=', 0), ('active', '=', True)]"/>
+                <filter name="inactive" string="Closed / Inactive"
+                        domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="central_prison" string="Central Prisons"
+                        domain="[('prison_type', '=', 'central_prison')]"/>
+                <filter name="district_jail" string="District Jails"
+                        domain="[('prison_type', '=', 'district_jail')]"/>
+                <filter name="sub_jail" string="Sub Jails"
+                        domain="[('prison_type', '=', 'sub_jail')]"/>
+                <filter name="women_prison" string="Special Prisons for Women"
+                        domain="[('prison_type', '=', 'special_prison_women')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_type" string="Prison Type"
+                            context="{'group_by': 'prison_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ── Window Action ──────────────────────────────────────────────────── -->
+    <record id="action_prison_vacancy" model="ir.actions.act_window">
+        <field name="name">Prison Vacancies</field>
+        <field name="res_model">prison.vacancy</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No vacancy records found.</p>
+            <p>Vacancy records are loaded automatically on module installation.</p>
+        </field>
+    </record>
+
+    <record id="action_prison_vacancy_available" model="ir.actions.act_window">
+        <field name="name">Vacancies Available</field>
+        <field name="res_model">prison.vacancy</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('vacancy_count', '&gt;', 0), ('active', '=', True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No vacancies available at this time.</p>
+        </field>
+    </record>
+
+    <record id="action_prison_vacancy_central" model="ir.actions.act_window">
+        <field name="name">Central Prisons – Vacancy</field>
+        <field name="res_model">prison.vacancy</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('prison_type', '=', 'central_prison')]</field>
+    </record>
+
+    <record id="action_prison_vacancy_district" model="ir.actions.act_window">
+        <field name="name">District Jails – Vacancy</field>
+        <field name="res_model">prison.vacancy</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('prison_type', '=', 'district_jail')]</field>
+    </record>
+
+    <record id="action_prison_vacancy_sub" model="ir.actions.act_window">
+        <field name="name">Sub Jails – Vacancy</field>
+        <field name="res_model">prison.vacancy</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('prison_type', '=', 'sub_jail')]</field>
+    </record>
+
+</odoo>

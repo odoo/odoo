@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Root menu — reuse the existing Prison Management root if present,
+         otherwise create a top-level entry. -->
+    <menuitem
+        id="menu_prison_vacancy_root"
+        name="Prison Management"
+        sequence="50"/>
+
+    <menuitem
+        id="menu_prison_vacancy_parent"
+        name="Vacancy Management"
+        parent="menu_prison_vacancy_root"
+        sequence="20"/>
+
+    <menuitem
+        id="menu_prison_vacancy_all"
+        name="All Prisons"
+        parent="menu_prison_vacancy_parent"
+        action="action_prison_vacancy"
+        sequence="10"/>
+
+    <menuitem
+        id="menu_prison_vacancy_available"
+        name="Vacancies Available"
+        parent="menu_prison_vacancy_parent"
+        action="action_prison_vacancy_available"
+        sequence="20"/>
+
+    <menuitem
+        id="menu_prison_vacancy_central"
+        name="Central Prisons"
+        parent="menu_prison_vacancy_parent"
+        action="action_prison_vacancy_central"
+        sequence="30"/>
+
+    <menuitem
+        id="menu_prison_vacancy_district"
+        name="District Jails"
+        parent="menu_prison_vacancy_parent"
+        action="action_prison_vacancy_district"
+        sequence="40"/>
+
+    <menuitem
+        id="menu_prison_vacancy_sub"
+        name="Sub Jails"
+        parent="menu_prison_vacancy_parent"
+        action="action_prison_vacancy_sub"
+        sequence="50"/>
+
+</odoo>

@@ -28,6 +28,8 @@ Features
 
     'data': [
         'security/ir.model.access.csv',
+        'views/prison_vacancy_views.xml',
+        'views/menu_items.xml',
         'data/prison_jail_extra.xml',
         'data/prison_vacancy_data.xml',
     ],
