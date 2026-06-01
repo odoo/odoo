@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
+from json import JSONDecodeError
 
 from odoo.http import request
 
@@ -24,7 +25,10 @@ class WebclientController(ThreadController):
         return store
 
     def _is_mail_fetch_readonly(self):
-        fetch_params = request.get_json_data().get("params", {}).get("fetch_params", [])
+        try:
+            fetch_params = request.get_json_data().get("params", {}).get("fetch_params", [])
+        except JSONDecodeError:
+            return True
         return store_handler_registry.is_fetch_readonly(fetch_params)
 
     def _process_request_loop(self, store: Store, fetch_params):
