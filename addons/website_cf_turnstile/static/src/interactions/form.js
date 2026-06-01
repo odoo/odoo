@@ -17,10 +17,14 @@ patch(Form.prototype, {
             !this.el.querySelector(".s_turnstile") &&
             session.turnstile_site_key
         ) {
+            // To be removed in master.
+            const formSendEl = this.el.querySelector(".s_website_form_send, .o_website_form_send");
+            if (!formSendEl) {
+                return;
+            }
             this.uniq = uniqueId("turnstile_");
             this.el.classList.add(this.uniq);
             const turnstile = new TurnStile("website_form");
-            const formSendEl = this.el.querySelector(".s_website_form_send, .o_website_form_send");
             TurnStile.disableSubmit(formSendEl);
             formSendEl.parentNode.insertBefore(turnstile.turnstileEl, formSendEl);
             turnstile.insertScripts(this.el);
