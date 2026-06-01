@@ -1,11 +1,17 @@
+import typing
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.api import CommandValue
+
+if typing.TYPE_CHECKING:
+    from odoo.api import CommandValue
 
 
 class MailMessage(models.Model):
     _inherit = 'mail.message'
 
-    # tracking
+    # values tracking
     tracking_value_ids = fields.One2many(
         'mail.tracking.value', 'mail_message_id',
         string='Tracking values',
@@ -34,7 +40,7 @@ class MailMessage(models.Model):
         messages._create_tracking_data(tracking_values_list)
         return messages
 
-    def _create_tracking_data(self, tracking_values_ids_list):
+    def _create_tracking_data(self, tracking_values_ids_list: list[CommandValue]):
         for message, tracking_values_cmd in zip(self, tracking_values_ids_list):
             if not tracking_values_cmd:
                 continue

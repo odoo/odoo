@@ -1009,23 +1009,37 @@ class MailComposeMessage(models.TransientModel):
         MAIL
             STA - 'auto_delete',
             DYN - 'body_html',
-            STA - 'force_send',  (notify parameter)
-            STA - 'model',
-            DYN - 'recipient_ids',  (from partner_ids)
-            DYN - 'res_id',
+            DYN - 'email_cc',                # from template
+            DYN - 'email_to',                # from template
+            POST- 'failure_type',            # error detection
+            STA - 'force_send',              # notify parameter (msg) / wizard parameter (mail)
+            DYN - 'headers',                 # record-based (for msg: see notification process)
             STA - 'is_notification',
+            POST- 'mailing_id',              # - mass_mailing
+            POST- 'mailing_trace_ids',       # - mass_mailing
+            STA - 'model',
+            DYN - 'recipient_ids',           # (from partner_ids)
+            DYN - 'res_id',
+            POST- 'state',                   # error detection
 
         MESSAGE
             DYN - 'body',
             STA - 'email_add_signature',
             STA - 'email_layout_xmlid',
-            DYN - 'force_email_lang',  # notify parameter
-            STA - 'record_alias_domain_id',  # monorecord only
-            STA - 'record_company_id',  # monorecord only
+            DYN - 'force_email_lang',        # notify parameter
+            STA - 'force_footer',            # notify parameter
+            STA - 'force_header',            # notify parameter
+            STA - 'mail_auto_delete',        # notify parameter
+            STA - 'model_description',       # notify parameter
+            STA - 'notify_author',           # notify parameter
+            STA - 'notify_author_mention',   # notify parameter
+            STA - 'notify_skip_followers',   # notify parameter
+            DYN - 'record_alias_domain_id',
+            DYN - 'record_company_id',
 
         BOTH
             DYN - 'attachment_ids',
-            STA - 'author_id',  (to improve with template)
+            STA - 'author_id',
             DYN - 'email_from',
             STA - 'mail_activity_type_id',
             STA - 'mail_server_id',
@@ -1221,7 +1235,7 @@ class MailComposeMessage(models.TransientModel):
                  'email_to',
                  'email_cc',
                  'partner_ids',
-                 'report_template_ids',
+                 'report_template_ids',  # returned as 'attachments'
                  'scheduled_date',
                 ],
                 allow_suggested=(
