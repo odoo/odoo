@@ -265,6 +265,8 @@ class AccountMove(models.Model):
                 company.l10n_in_is_gst_registered
                 and company.l10n_in_hsn_code_digit
                 and (filtered_lines := move.invoice_line_ids.filtered(line_filter_func))
+                and (not company.l10n_in_disable_b2c_hsn_reporting
+                     or move.l10n_in_gst_treatment in self._l10n_in_get_b2b_gst_treatments())
             ):
                 lines = self.env['account.move.line']
                 for line in filtered_lines:
@@ -640,6 +642,10 @@ class AccountMove(models.Model):
             return ""
         matches = re.findall(r"\d+", string)
         return "".join(matches)
+
+    @api.model
+    def _l10n_in_get_b2b_gst_treatments(self):
+        return ('regular', 'composition', 'deemed_export', 'uin_holders', 'special_economic_zone')
 
     @api.model
     def _l10n_in_is_service_hsn(self, hsn_code):

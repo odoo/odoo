@@ -118,6 +118,14 @@
                                      company_dependent="1">
                                 <field name="l10n_in_fetch_vendor_edi_feature" widget="upgrade_boolean"/>
                             </setting>
+                            <setting string="Disable B2C HSN Reporting"
+                                     company_dependent="1"
+                                     help="Select this option to exclude HSN details from B2C supplies.
+                                           This is allowed only if your aggregate turnover in the preceding
+                                           financial year did not exceed ₹5 crore, in accordance
+                                           with Notification No. 78/2020 – Central Tax.">
+                                <field name="l10n_in_disable_b2c_hsn_reporting"/>
+                            </setting>
                             <setting string="HSN/SAC Validation"
                                      help="HSN/SAC Digit Validation for GST Compliance based on your Aggregate Annual Turnover (AATO)."
                                      company_dependent="1">
