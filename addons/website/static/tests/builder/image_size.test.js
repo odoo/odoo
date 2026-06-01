@@ -251,7 +251,7 @@ test("media resize bar does not appear in grid mode", async () => {
         <div class="container">
             <div class="row o_grid_mode" data-row-count="6">
                 <div class="image-test o_grid_item g-height-5 g-col-lg-5 col-lg-5" data-name="Block" style="z-index: 1; grid-area: 2 / 6 / 7 / 11;">
-                    <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt="" loading="lazy" data-mimetype="image/webp">
+                    <img src="/web/image/website.set_2_square_md_5" class="img img-fluid mx-auto" alt="" loading="lazy" data-mimetype="image/webp">
                 </div>
                 <div class="video-test o_grid_item g-height-5 g-col-lg-5 col-lg-5" data-name="Block" style="z-index: 1; grid-area: 2 / 1 / 7 / 6;">
                     <div data-oe-expression="//www.youtube.com/embed/G8b4UZIcTfg?rel=0&amp;autoplay=0" class="mx-auto media_iframe_video">

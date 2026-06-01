@@ -35,15 +35,15 @@ function getDefaultGallery(bsRide = false, bsInterval = 0, showPopup = false) {
                             <div class="carousel-indicators">
                                 <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" class="active">
                                     <span class="visually-hidden">Slide 1 of 3</span>
-                                    <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_08"/>
+                                    <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.landscape_md_5"/>
                                 </button>
                                 <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="1">
                                     <span class="visually-hidden">Slide 2 of 3</span>
-                                    <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_03"/>
+                                    <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.set_2_square_md_1"/>
                                 </button>
                                 <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="2">
                                     <span class="visually-hidden">Slide 3 of 3</span>
-                                    <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_02"/>
+                                    <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.landscape_md_1"/>
                                 </button>
                             </div>
                             <button class="carousel-control-next o_not_editable" contenteditable="false" data-bs-target="#slideshow_sample" data-bs-slide="next" aria-label="Next" title="Next">
@@ -53,13 +53,13 @@ function getDefaultGallery(bsRide = false, bsInterval = 0, showPopup = false) {
                         </div>
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_08" data-name="Image" data-index="0" alt=""/>
+                                <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.landscape_md_5" data-name="Image" data-index="0" alt=""/>
                             </div>
                             <div class="carousel-item">
-                                <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_03" data-name="Image" data-index="1" alt=""/>
+                                <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.set_2_square_md_1" data-name="Image" data-index="1" alt=""/>
                             </div>
                             <div class="carousel-item">
-                                <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.library_image_02" data-name="Image" data-index="2" alt=""/>
+                                <img class="img img-fluid d-block mh-100 mw-100 mx-auto rounded object-fit-cover" src="/web/image/website.landscape_md_1" data-name="Image" data-index="2" alt=""/>
                             </div>
                         </div>
                     </div>
@@ -83,27 +83,27 @@ const defaultLightbox = /*xml*/ `
                 <div class="carousel-indicators s_image_gallery_indicators_bars">
                     <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="0" class="active">
                         <span class="visually-hidden">Slide 1 of 6</span>
-                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_03" aria-hidden="true"/>
+                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.set_2_square_md_1" aria-hidden="true"/>
                     </button>
                     <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="1">
                         <span class="visually-hidden">Slide 2 of 6</span>
-                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_10" aria-hidden="true"/>
+                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.set_2_square_md_3" aria-hidden="true"/>
                     </button>
                     <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="2">
                         <span class="visually-hidden">Slide 3 of 6</span>
-                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_13" aria-hidden="true"/>
+                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.set_1_landscape_md_2" aria-hidden="true"/>
                     </button>
                     <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="3">
                         <span class="visually-hidden">Slide 4 of 6</span>
-                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_05" aria-hidden="true"/>
+                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.set_2_square_md_4" aria-hidden="true"/>
                     </button>
                     <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="4">
                         <span class="visually-hidden">Slide 5 of 6</span>
-                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_14" aria-hidden="true"/>
+                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.set_2_square_md_6" aria-hidden="true"/>
                     </button>
                     <button type="button" data-bs-target="#slideshow_3" data-bs-slide-to="5">
                         <span class="visually-hidden">Slide 6 of 6</span>
-                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.library_image_16" aria-hidden="true"/>
+                        <img class="object-fit-cover w-100 h-100" src="/web/image/website.set_2_square_md_2" aria-hidden="true"/>
                     </button>
                 </div>
                 <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" data-bs-slide="next" aria-label="Next" title="Next" data-bs-target="#slideshow_3">
@@ -113,22 +113,22 @@ const defaultLightbox = /*xml*/ `
             </div>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_03" alt="">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_1" alt="">
                 </div>
                 <div class="carousel-item undefined">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_10" alt="">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_3" alt="">
                 </div>
                 <div class="carousel-item undefined">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_13" alt="">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_1_landscape_md_2" alt="">
                 </div>
                 <div class="carousel-item undefined">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_05" alt="">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_4" alt="">
                 </div>
                 <div class="carousel-item undefined">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_14" alt="">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_6" alt="">
                 </div>
                 <div class="carousel-item undefined">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_16" alt="">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_2" alt="">
                 </div>
             </div>
         </div>
@@ -143,33 +143,33 @@ const defaultOldLightbox = `
         <div class="carousel slide" style="margin: 0 12px;" id="slideshow_3" data-bs-ride="false" data-bs-interval="0">
             <div class="carousel-inner" style="padding: 0;">
                 <div class="carousel-item active">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_03" alt="">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_1" alt="">
                 </div>
                 <div class="carousel-item">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_10" alt="">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_3" alt="">
                 </div>
                 <div class="carousel-item">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_13" alt="">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_1_landscape_md_2" alt="">
                 </div>
                 <div class="carousel-item">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_05" alt="">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_4" alt="">
                 </div>
                 <div class="carousel-item">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_14" alt="">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_6" alt="">
                 </div>
                 <div class="carousel-item undefined">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_16" alt="">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_2" alt="">
                 </div>
             </div>
             <ul class="carousel-indicators">
                 <li class="o_indicators_left text-center d-none" aria-label="Previous" title="Previous">
                     <i class="oi oi-chevron-left"></i>
                 </li>
-                <li data-bs-target="#slideshow_3" data-bs-slide-to="0" class="" style="background-image: url(/web/image/website.library_image_03)"></li>
-                <li data-bs-target="#slideshow_3" data-bs-slide-to="1" style="background-image: url(/web/image/website.library_image_10)" class=""></li>
-                <li data-bs-target="#slideshow_3" data-bs-slide-to="2" style="background-image: url(/web/image/website.library_image_13)" class=""></li>
-                <li data-bs-target="#slideshow_3" data-bs-slide-to="3" style="background-image: url(/web/image/website.library_image_05)" class="active" aria-current="true"></li><li data-bs-target="#slideshow_3" data-bs-slide-to="4" style="background-image: url(/web/image/website.library_image_14)"></li>
-                <li data-bs-target="#slideshow_3" data-bs-slide-to="5" style="background-image: url(/web/image/website.library_image_16)" class=""></li>
+                <li data-bs-target="#slideshow_3" data-bs-slide-to="0" class="" style="background-image: url(/web/image/website.set_2_square_md_1)"></li>
+                <li data-bs-target="#slideshow_3" data-bs-slide-to="1" style="background-image: url(/web/image/website.set_2_square_md_3)" class=""></li>
+                <li data-bs-target="#slideshow_3" data-bs-slide-to="2" style="background-image: url(/web/image/website.set_1_landscape_md_2)" class=""></li>
+                <li data-bs-target="#slideshow_3" data-bs-slide-to="3" style="background-image: url(/web/image/website.set_2_square_md_4)" class="active" aria-current="true"></li><li data-bs-target="#slideshow_3" data-bs-slide-to="4" style="background-image: url(/web/image/website.set_2_square_md_6)"></li>
+                <li data-bs-target="#slideshow_3" data-bs-slide-to="5" style="background-image: url(/web/image/website.set_2_square_md_2)" class=""></li>
                 <li class="o_indicators_right text-center d-none" aria-label="Next" title="Next">
                     <i class="oi oi-chevron-right"></i>
                 </li>
@@ -183,7 +183,7 @@ const singleImagePopupGallery = `
         <div id="slideshow_sample" class="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.library_image_16" alt="">
+                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_2" alt="">
                 </div>
             </div>
         </div>

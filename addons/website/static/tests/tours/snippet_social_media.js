@@ -51,7 +51,7 @@ const replaceIconByImage = function (url) {
         {
             content: "Select the image",
             trigger:
-                ".o_select_media_dialog .o_button_area[aria-label='s_banner_default_image.jpg']",
+                ".o_select_media_dialog .o_button_area[aria-label='landscape_md_1.jpg']",
             run: "click",
         },
         ...preventRaceConditionStep,

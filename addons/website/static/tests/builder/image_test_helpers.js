@@ -11,10 +11,10 @@ export function onRpcImg(route) {
     onRpc(route, async () => (await imgCache.get(route)).clone());
 }
 
-export const testImgSrc = "/web/image/website.s_text_image_default_image";
+export const testImgSrc = "/web/image/website.landscape_md_9";
 
 export const testImg = `
-    <img src='/web/image/website.s_text_image_default_image'
+    <img src='/web/image/website.landscape_md_9'
         data-attachment-id="1" data-original-id="1"
         data-original-src="/website/static/src/img/snippets_demo/s_text_image.webp"
         data-mimetype-before-conversion="image/webp"
@@ -75,7 +75,7 @@ export function mockImageRequests() {
         onRpcImg("/html_builder/static/image_shapes/geometric/geo_shuriken.svg");
         onRpcImg("/html_builder/static/image_shapes/pattern/pattern_wave_4.svg");
         onRpcImg("/html_builder/static/image_shapes/geometric/geo_tetris.svg");
-        onRpcImg("/web/image/website.s_text_image_default_image");
+        onRpcImg("/web/image/website.landscape_md_9");
         onRpcImg("/website/static/src/img/snippets_demo/s_text_image.webp");
         onRpcImg("/website/static/src/img/snippets_options/header_effect_fade_out.gif");
         onRpcImg("/web/image/123/transparent.png");

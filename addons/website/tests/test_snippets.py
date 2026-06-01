@@ -73,7 +73,7 @@ class TestSnippets(HttpCase):
             'social_tiktok': 'https://www.tiktok.com/@odoo',
             'social_discord': 'https://discord.com/servers/discord-town-hall-169256939211980800',
         })
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_banner_default_image.jpg')
+        create_image_attachment(self.env, '/web/image/website.landscape_md_1', 'landscape_md_1.jpg')
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_social_media', login="admin")
 
     def test_06_snippet_popup_add_remove(self):
@@ -86,8 +86,8 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_table_of_content', login='admin')
 
     def test_09_snippet_image_gallery(self):
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_default_image.jpg')
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image_2', 's_default_image2.webp')
+        create_image_attachment(self.env, '/web/image/website.landscape_md_1', 's_default_image.jpg')
+        create_image_attachment(self.env, '/web/image/website.portrait_lg_3', 's_default_image2.webp')
         self.start_tour(self.env['website'].get_client_action_url('/', True), "snippet_image_gallery_remove", login='admin')
 
     def test_10_parallax(self):
@@ -122,8 +122,8 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/', True), "snippet_image_gallery_reorder", login='admin')
 
     def test_snippet_image_gallery_thumbnail_update(self):
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_default_image.jpg')
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image_2', 's_default_image_2.jpg')
+        create_image_attachment(self.env, '/web/image/website.landscape_md_1', 's_default_image.jpg')
+        create_image_attachment(self.env, '/web/image/website.portrait_lg_3', 's_default_image_2.jpg')
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_image_gallery_thumbnail_update', login='admin')
 
     def test_dropdowns_and_header_hide_on_scroll(self):
@@ -134,7 +134,7 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'dropdowns_and_header_hide_on_scroll', login='admin')
 
     def test_snippet_image(self):
-        create_image_attachment(self.env, '/web/image/website.s_banner_default_image', 's_default_image.jpg')
+        create_image_attachment(self.env, '/web/image/website.landscape_md_1', 's_default_image.jpg')
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_image', login='admin')
 
     def test_rating_snippet(self):
@@ -162,7 +162,7 @@ class TestSnippets(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_shape_image', login='admin')
 
     def test_snippet_pill_shape(self):
-        res = self.url_open('/html_editor/image_shape/website.s_intro_pill_default_image/html_builder/geometric_round/geo_round_pill.svg')
+        res = self.url_open('/html_editor/image_shape/website.portrait_lg_1/html_builder/geometric_round/geo_round_pill.svg')
         svg = html.fromstring(res.text)
         self.assertEqual(float(svg.attrib['width']), 1000, "SVG should have the width of the original image")
         self.assertEqual(float(svg.attrib['height']), 2000, "SVG height should be double the width because the pill shape has a default aspect ratio of 1/2")

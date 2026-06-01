@@ -203,7 +203,7 @@ registerWebsitePreviewTour(
         {
             content: "Check that the thumbnail of the first image has not been changed",
             trigger:
-                ":iframe .s_image_gallery div.carousel-indicators button:first-child img[src='/web/image/website.library_image_08']",
+                ":iframe .s_image_gallery div.carousel-indicators button:first-child img[src='/web/image/website.landscape_md_5']",
         },
         ...clickOnSave(),
         ...clickOnEditAndWaitEditMode(),
