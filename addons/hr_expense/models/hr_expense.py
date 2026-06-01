@@ -221,6 +221,24 @@ class HrExpense(models.Model):
     currency_rate = fields.Float(compute='_compute_currency_rate', digits=(16, 9), readonly=True, tracking=True)
     label_currency_rate = fields.Char(compute='_compute_currency_rate', readonly=True)
 
+    # Limit fields
+    has_expense_job_position_limit = fields.Boolean(
+        compute='_compute_has_expense_job_position_limit',
+    )
+    expense_job_position_limit_amount = fields.Monetary(
+        string="Job Position Limit",
+        currency_field='company_currency_id',
+        compute='_compute_expense_job_position_limit_amount',
+    )
+    expense_job_position_limit_amount_currency = fields.Monetary(
+        string="Job Position Limit in Currency",
+        currency_field='currency_id',
+        compute='_compute_expense_job_position_limit_amount_currency',
+    )
+    is_expense_exceeding_job_position_limit = fields.Boolean(
+        compute='_compute_is_expense_exceeding_job_position_limit',
+    )
+
     # Account fields
     journal_id = fields.Many2one(
         comodel_name='account.journal',
@@ -300,6 +318,7 @@ class HrExpense(models.Model):
     # Security fields
     is_editable = fields.Boolean(string="Is Editable By Current User", compute='_compute_is_editable', readonly=True)
     can_edit_account = fields.Boolean(compute='_compute_can_edit_account')
+    is_own_expense = fields.Boolean(compute='_compute_is_own_expense')
     can_reset = fields.Boolean(string='Can Reset', compute='_compute_can_reset', readonly=True)
     can_approve = fields.Boolean(string='Can Approve', compute='_compute_can_approve', readonly=True)
 
@@ -347,6 +366,12 @@ class HrExpense(models.Model):
         for expense in self:
             if expense.product_has_cost and expense.state == 'draft':
                 expense.currency_id = expense.company_currency_id
+
+    @api.depends_context('uid')
+    @api.depends('employee_id.user_id')
+    def _compute_is_own_expense(self):
+        for expense in self:
+            expense.is_own_expense = expense.employee_id.user_id == self.env.user
 
     @api.depends_context('uid')
     @api.depends('employee_id', 'manager_id', 'state')
@@ -604,6 +629,70 @@ class HrExpense(models.Model):
                 expense.untaxed_amount = expense.untaxed_amount_currency
             expense.currency_rate = expense.total_amount / expense.total_amount_currency if expense.total_amount_currency else 1.0
             expense.price_unit = expense.total_amount / expense.quantity if expense.quantity else expense.total_amount
+
+    def _get_expense_job_position_limit(self):
+        self.ensure_one()
+        limit_lines = self.product_id.expense_job_position_limit_ids
+        job_limit = limit_lines.filtered(lambda line: self.employee_id.job_id in line.job_ids)
+        default_limit = limit_lines.filtered(lambda line: not line.job_ids)
+        return job_limit[:1] or default_limit[:1]
+
+    @api.depends(
+        'payment_mode',
+        'employee_id.job_id',
+        'product_id.expense_job_position_limit_ids',
+        'product_id.expense_job_position_limit_ids.job_ids',
+    )
+    def _compute_has_expense_job_position_limit(self):
+        for expense in self:
+            expense.has_expense_job_position_limit = (
+                expense.payment_mode == 'own_account'
+                and bool(expense._get_expense_job_position_limit())
+            )
+
+    @api.depends(
+        'has_expense_job_position_limit',
+        'employee_id.job_id',
+        'product_id.expense_job_position_limit_ids',
+        'product_id.expense_job_position_limit_ids.job_ids',
+        'product_id.expense_job_position_limit_ids.limit_amount',
+    )
+    def _compute_expense_job_position_limit_amount(self):
+        for expense in self:
+            expense.expense_job_position_limit_amount = 0
+            if not expense.has_expense_job_position_limit:
+                continue
+
+            expense.expense_job_position_limit_amount = expense._get_expense_job_position_limit().limit_amount
+
+    @api.depends(
+        'expense_job_position_limit_amount',
+        'currency_rate',
+        'currency_id',
+        'company_currency_id',
+    )
+    def _compute_expense_job_position_limit_amount_currency(self):
+        for expense in self:
+            expense.expense_job_position_limit_amount_currency = (
+                expense.currency_id.round(expense.expense_job_position_limit_amount / expense.currency_rate)
+                if expense.currency_rate
+                else 0
+            )
+
+    @api.depends(
+        'total_amount',
+        'has_expense_job_position_limit',
+        'expense_job_position_limit_amount',
+    )
+    def _compute_is_expense_exceeding_job_position_limit(self):
+        for expense in self:
+            expense.is_expense_exceeding_job_position_limit = (
+                expense.has_expense_job_position_limit
+                and expense.company_currency_id.compare_amounts(
+                    expense.total_amount,
+                    expense.expense_job_position_limit_amount,
+                ) > 0
+            )
 
     @api.depends('product_id', 'company_id')
     def _compute_tax_ids(self):
@@ -1363,6 +1452,49 @@ class HrExpense(models.Model):
         )
         draft_moves_sudo.unlink()
         self._do_reset_approval()
+
+    def action_cap_reimbursement_to_policy(self):
+        self.ensure_one()
+        self._check_can_approve()
+
+        if self.state != 'submitted' or not self.is_expense_exceeding_job_position_limit:
+            raise UserError(self.env._("Only submitted expenses exceeding a job position limit can be capped."))
+
+        capped_amount_currency = self.expense_job_position_limit_amount_currency
+        exceeded_amount_currency = self.currency_id.round(
+            self.total_amount_currency - capped_amount_currency
+        )
+
+        split_values = self._get_split_values()
+        split_values[0]['total_amount_currency'] = capped_amount_currency
+        split_values[1]['total_amount_currency'] = exceeded_amount_currency
+
+        split_origin = self.split_expense_origin_id or self
+        previous_split_expenses = self.search([
+            ('split_expense_origin_id', '=', split_origin.id),
+        ])
+
+        wizard = self.env['hr.expense.split.wizard'].create([{
+            'expense_id': self.id,
+            'expense_split_line_ids': [Command.create(values) for values in split_values],
+        }])
+        action = wizard.action_split_expense()
+
+        current_split_expenses = self.search([
+            ('split_expense_origin_id', '=', split_origin.id),
+        ])
+        exceeded_expense = current_split_expenses - previous_split_expenses - self
+
+        self._validate_distribution(
+            account=self.account_id.id,
+            product=self.product_id.id,
+            business_domain='expense',
+            company_id=self.company_id.id,
+        )
+        self._do_approve()
+        exceeded_expense._do_refuse(self.env._("Exceeds company limit"))
+
+        return action
 
     def attach_document(self, **kwargs):
         """When an attachment is uploaded as a receipt, set it as the main attachment."""

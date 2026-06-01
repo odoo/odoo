@@ -122,7 +122,7 @@ registry.category("web_tour.tours").add("change_expense_product_price_tour", {
         },
         {
             content: "Wait until we are back to the list view",
-            trigger: ".o_list_view",
+            trigger: ".o_data_row .o_data_cell[data-tooltip='product_c with no cost']",
         },
     ],
 });
