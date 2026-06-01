@@ -19,6 +19,16 @@
     .o-mail-Thread & {
         margin-top: map-get($spacers, 1);
     }
+
+    &:has(.o-mail-template-body) {
+        .o-mail-Message-body {
+            overflow-x: auto;
+        }
+
+        .o-mail-Message-richBody {
+            min-width: 450px;
+        }
+    }
 }
 
 .o-mail-Message-date {
