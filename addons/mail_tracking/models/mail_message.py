@@ -41,10 +41,10 @@ class MailMessage(models.Model):
         return messages
 
     def _create_tracking_data(self, tracking_values_ids_list: list[CommandValue]):
+        track_vals_lst = []
         for message, tracking_values_cmd in zip(self, tracking_values_ids_list):
             if not tracking_values_cmd:
                 continue
-            track_vals_lst = []
             for cmd in tracking_values_cmd:
                 if len(cmd) == 3 and cmd[0] == 0:
                     track_values = dict(cmd[2])  # copy to avoid altering original dict
@@ -53,10 +53,10 @@ class MailMessage(models.Model):
                     track_values['mail_message_id'] = message.id
                     track_vals_lst.append(track_values)
             other_cmd = [cmd for cmd in tracking_values_cmd if len(cmd) != 3 or cmd[0] != 0]
-            if track_vals_lst:
-                self.env['mail.tracking.value'].sudo().create(track_vals_lst)
             if other_cmd:
                 message.sudo().write({'tracking_value_ids': tracking_values_cmd})
+        if track_vals_lst:
+            self.env['mail.tracking.value'].sudo().create(track_vals_lst)
 
     def _filter_empty(self):
         # override to support mail.tracking.value records in addition to tracking
