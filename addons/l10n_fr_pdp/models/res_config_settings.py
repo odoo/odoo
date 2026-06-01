@@ -46,17 +46,6 @@ class ResConfigSettings(models.TransientModel):
             return super().action_open_peppol_form()
         return self.action_open_pdp_form()
 
-    def button_open_pdp_config_wizard(self):
-        self.ensure_one()
-        config_wizard = self.env['pdp.config.wizard'].create({'company_id': self.company_id.id})
-        return config_wizard._action_open()
-
-    def button_open_peppol_config_wizard(self):
-        self.ensure_one()
-        if self.company_id._get_peppol_proxy_type() == 'pdp':
-            return self.button_open_pdp_config_wizard()
-        return super().button_open_peppol_config_wizard()
-
     @api.depends('company_id.l10n_fr_pdp_pilot_phase')
     def _compute_l10n_fr_pdp_pilot_phase(self):
         for record in self:
