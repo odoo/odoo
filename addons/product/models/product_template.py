@@ -820,9 +820,6 @@ class ProductTemplate(models.Model):
             # User duplicating the template might not have access to pricings
             template_sudo = template.sudo()
 
-            if not template_sudo._duplicate_pricelist_rules_on_copy():
-                continue
-
             # Force the order to be on id, since the others keys will have the same value/order
             # This guarantees the order of the copied pricings is the same as the original ones
             # regardless of the 'id desc' in the _order of product.pricelist.item model.
@@ -839,13 +836,23 @@ class ProductTemplate(models.Model):
 
             # Duplicate variant-specific rules
             if variant_specific_pricings:
-                variant_mapping = dict(
-                    zip(
-                        template_sudo.product_variant_ids.ids,
-                        template_copy.product_variant_ids.ids,
-                        strict=True,
+                def get_combination_key(variant):
+                    return frozenset(
+                        variant.product_template_attribute_value_ids
+                        .mapped(lambda v: (v.attribute_id.id, v.product_attribute_value_id.id))
                     )
-                )
+
+                copy_variant_by_attribute_combo = {
+                    get_combination_key(v): v.id
+                    for v in template_copy.product_variant_ids
+                }
+
+                template_sudo = template.sudo()
+                variant_mapping = {}
+                for variant in template_sudo.product_variant_ids:
+                    key = get_combination_key(variant)
+                    if key in copy_variant_by_attribute_combo:
+                        variant_mapping[variant.id] = copy_variant_by_attribute_combo[key]
 
                 for product_id, pricings in variant_specific_pricings.grouped(
                     lambda pricing: pricing.product_id.id
@@ -859,11 +866,6 @@ class ProductTemplate(models.Model):
                         'product_id': variant_mapping.get(product_id),
                     })
         return copied_tmpls
-
-    def _duplicate_pricelist_rules_on_copy(self):
-        # Safety net, the current heuristic/approach might not be safe enough
-        # to be applied by default on all products (inactive variants, exclusions, ...)
-        return False
 
     @api.depends('name', 'default_code')
     @api.depends_context('formatted_display_name', 'display_default_code')
