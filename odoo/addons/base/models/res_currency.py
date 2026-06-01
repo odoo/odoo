@@ -7,7 +7,7 @@ from datetime import date
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import ormcache, parse_date, SQL
+from odoo.tools import float_compare, ormcache, parse_date, SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -50,6 +50,7 @@ class ResCurrency(models.CachedModel):
     currency_unit_label = fields.Char(string="Currency Unit", translate=True)
     currency_subunit_label = fields.Char(string="Currency Subunit", translate=True)
     is_current_company_currency = fields.Boolean(compute='_compute_is_current_company_currency')
+    is_current_company_currency_rates_balanced = fields.Boolean(compute='_compute_is_current_company_currency_rates_balanced')
 
     _unique_name = models.Constraint(
         'unique (name)',
@@ -183,6 +184,19 @@ class ResCurrency(models.CachedModel):
                 currency.rate_string = '1 %s = %.6f %s' % (to_currency.name, currency.rate, currency.name)
             else:
                 currency.rate_string = ''
+
+    @api.depends("rate_ids")
+    def _compute_is_current_company_currency_rates_balanced(self):
+        current_company = self.env['res.company'].browse(self.env.context.get('company_id')) or self.env.company
+        for currency in self:
+            if currency == current_company.currency_id:
+                currency.is_current_company_currency_rates_balanced = not any(
+                    float_compare(rate.rate, 1.0, precision_rounding=currency.rounding) != 0
+                    for rate in currency.rate_ids
+                    if rate.company_id == current_company or not rate.company_id
+                )
+            else:
+                currency.is_current_company_currency_rates_balanced = True
 
     @api.depends('rounding')
     def _compute_decimal_places(self):
