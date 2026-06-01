@@ -1058,9 +1058,10 @@ class AccountMove(models.Model):
                 move.partner_bank_id = payment_method.journal_id.bank_account_id
                 continue
 
-            move.partner_bank_id = move.bank_partner_id.bank_ids.filtered(
-                lambda bank: not bank.company_id or bank.company_id == move.company_id
-            ).sorted(key=_bank_selection_key)[:1]
+            move.partner_bank_id = move.bank_partner_id.bank_ids.filtered_domain([
+                *self.env['res.partner.bank']._check_company_domain(move.company_id),
+                ('active', '=', True),  # active_test could be False in the context
+            ]).sorted(key=_bank_selection_key)[:1]
 
     @api.depends('partner_id')
     def _compute_invoice_payment_term_id(self):
