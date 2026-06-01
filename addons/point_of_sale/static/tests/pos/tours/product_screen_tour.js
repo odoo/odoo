@@ -792,25 +792,40 @@ registry.category("web_tour.tours").add("test_product_create_update_from_fronten
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            ProductScreen.clickSubcategory("Chair test"),
             Chrome.clickMenuOption("Create Product"),
 
             // Verify that the "New Product" dialog is displayed.
             Dialog.is({ title: "New Product" }),
+            {
+                trigger: ".modal:not(.o_inactive_modal) .modal-footer button:contains('Add & New')",
+            },
+            {
+                trigger:
+                    ".modal:not(.o_inactive_modal) .modal-footer button:contains('Add & Close')",
+            },
 
             // Create a new product from frontend.
             ProductScreen.createProductFromFrontend(
                 "Test Frontend Product",
                 "710535977349",
-                "20.0",
-                "Chair test"
+                "20.0"
             ),
-            Dialog.confirm(),
+            Dialog.confirm("Add & New", ".btn-primary"),
+            // A fresh "New Product" dialog should reopen for the second product.
+            Dialog.is({ title: "New Product" }),
+            ProductScreen.createProductFromFrontend(
+                "Test Frontend Product 2",
+                "710535977350",
+                "30.0"
+            ),
+            Dialog.confirm("Add & Close", ".btn-secondary"),
             {
                 trigger: ".product-list article:contains(Test Frontend Product)",
             },
-
-            // Click on the category button for "Chair test" to verify the product's addition.
-            ProductScreen.clickSubcategory("Chair test"),
+            {
+                trigger: ".product-list article:contains(Test Frontend Product 2)",
+            },
 
             ProductScreen.longPressProduct("Test Frontend Product"),
             Dialog.confirm("Edit", ".btn-secondary"),
@@ -823,9 +838,8 @@ registry.category("web_tour.tours").add("test_product_create_update_from_fronten
                 "710535977348",
                 "50.0"
             ),
-            Dialog.confirm(),
+            Dialog.confirm("save"),
 
-            ProductScreen.clickSubcategory("Chair test"),
             ProductScreen.clickDisplayedProduct("Test Frontend Product Edited"),
             inLeftSide([
                 ...ProductScreen.selectedOrderlineHasDirect(

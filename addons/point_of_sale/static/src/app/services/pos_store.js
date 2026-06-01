@@ -2037,6 +2037,9 @@ export class PosStore extends WithLazyGetterTrap {
      */
     async editProduct(product) {
         const orderContainsProduct = product && this.orderContainsProduct(product);
+        const defaultCategoryId =
+            !product &&
+            (this.selectedCategory?.id || this.config.iface_available_categ_ids?.[0]?.id);
         this.action.doAction(
             product
                 ? "point_of_sale.product_template_action_edit_pos"
@@ -2044,17 +2047,23 @@ export class PosStore extends WithLazyGetterTrap {
             {
                 props: {
                     resId: product?.id,
-                    onSave: async (record) => {
+                    buttonDialogTemplate: "point_of_sale.ProductQuickCreateDialogButtons",
+                    onSave: async (record, params) => {
                         await this.loadNewProducts([["id", "=", record.evalContext.id]]);
                         this.action.doAction({
                             type: "ir.actions.act_window_close",
                         });
+                        if (params?.saveAndNew) {
+                            this.editProduct();
+                        }
                     },
                 },
                 additionalContext: {
                     taxes_readonly: orderContainsProduct,
                     pos_session_id: this.session.id,
                     is_pos_product_action: true,
+                    is_pos_product_quick_create: !product,
+                    ...(defaultCategoryId ? { default_pos_categ_ids: [defaultCategoryId] } : {}),
                 },
             }
         );

@@ -815,13 +815,19 @@ export function ensureTaxesInputIsReadonly() {
 }
 
 export function createProductFromFrontend(name, barcode, list_price, category) {
-    return [
+    const steps = [
         ...productInputSteps(name, barcode, list_price),
         {
             content: "Remove default tax 15%.",
             trigger: 'div[name="taxes_id"] .o_delete',
             run: "click",
         },
+    ];
+    if (!category) {
+        return steps;
+    }
+    return [
+        ...steps,
         {
             content: "Open category selector.",
             trigger: 'div[name="pos_categ_ids"] input',
