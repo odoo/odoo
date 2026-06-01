@@ -123,12 +123,10 @@ export class RecordInternal {
                     let newValue;
                     try {
                         newValue = Model._.fieldsCompute.get(fieldName).call(record._proxy);
-                        untrack(() => store._.updateFields(record, { [fieldName]: newValue }));
-                        if (Model._.fieldsEager.get(fieldName)) {
-                            Promise.resolve().then(() =>
-                                untrack(() => record._.fieldsComputeComputed.get(fieldName)?.())
-                            );
+                        if (fieldName === "menuThreads") {
+                            console.log("AKU - ", newValue);
                         }
+                        untrack(() => store._.updateFields(record, { [fieldName]: newValue }));
                     } catch (err) {
                         store.handleError(err);
                     } finally {
@@ -139,48 +137,31 @@ export class RecordInternal {
             );
             record._.fieldsComputeComputed.set(fieldName, fieldComputed);
         }
-        // if (Model._.fieldsSort.get(fieldName)) {
-        //     const cont = () => {
-        //         if (Model._.fieldsEager.get(fieldName)) {
-        //             Promise.resolve().then(() =>
-        //                 untrack(() => record._.fieldsSortComputed.get(fieldName)?.())
-        //             );
-        //         }
-        //     };
-        //     const fieldComputed = untrack(() =>
-        //         computed(() => {
-        //             if (this.fieldsSortComputing.get(fieldName)) {
-        //                 return;
-        //             }
-        //             this.fieldsSortComputing.set(fieldName, true);
-        //             const store = record._rawStore;
-        //             const func = Model._.fieldsSort.get(fieldName).bind(record._proxy);
-        //             if (isRelation(Model, fieldName)) {
-        //                 try {
-        //                     store._.sortRecordList(record._proxy[fieldName]._proxy, func);
-        //                     cont();
-        //                 } catch (err) {
-        //                     store.handleError(err);
-        //                 } finally {
-        //                     this.fieldsSortComputing.delete(fieldName);
-        //                 }
-        //             } else {
-        //                 // sort on copy of list so that reactive observers not triggered while sorting
-        //                 const copy = untrack(() => [...record._proxy[fieldName]]);
-        //                 untrack(() => copy.sort(func));
-        //                 const hasChanged = copy.some(
-        //                     (item, index) => item !== record[fieldName][index]
-        //                 );
-        //                 if (hasChanged) {
-        //                     record._proxy[fieldName] = copy;
-        //                 }
-        //                 cont();
-        //             }
-        //             this.fieldsSortComputing.delete(fieldName);
-        //         })
-        //     );
-        //     record._.fieldsSortComputed.set(fieldName, fieldComputed);
-        // }
+        if (Model._.fieldsSort.get(fieldName)) {
+            const fieldComputed = untrack(() =>
+                computed(() => {
+                    if (this.fieldsSortComputing.get(fieldName)) {
+                        return;
+                    }
+                    this.fieldsSortComputing.set(fieldName, true);
+                    const store = record._rawStore;
+                    const func = Model._.fieldsSort.get(fieldName).bind(record._proxy);
+                    if (isRelation(Model, fieldName)) {
+                        try {
+                            store._.sortRecordList(record._proxy[fieldName]._proxy, func);
+                        } catch (err) {
+                            store.handleError(err);
+                        } finally {
+                            this.fieldsSortComputing.delete(fieldName);
+                        }
+                    } else {
+                        record._proxy[fieldName].sort(func);
+                    }
+                    this.fieldsSortComputing.delete(fieldName);
+                })
+            );
+            record._.fieldsSortComputed.set(fieldName, fieldComputed);
+        }
     }
 
     /**
@@ -204,24 +185,23 @@ export class RecordInternal {
     onUpdate(record, fieldName) {
         const store = record._rawStore;
         const Model = record.Model;
-        if (!Model._.fieldsOnUpdate.get(fieldName)) {
-            return;
-        }
         this.fieldsOnUpdateStop.get(fieldName)?.();
         const recordProxy = record._proxy;
-        untrack(() => {
-            try {
-                /**
-                 * Forward internal proxy for performance as onUpdate does not
-                 * need reactive (observe is called separately).
-                 */
-                Model._.fieldsOnUpdate
-                    .get(fieldName)
-                    .forEach((fn) => fn.call(recordProxy, recordProxy[fieldName]));
-            } catch (err) {
-                store.handleError(err);
-            }
-        });
+        if (Model._.fieldsOnUpdate.get(fieldName)) {
+            untrack(() => {
+                try {
+                    /**
+                     * Forward internal proxy for performance as onUpdate does not
+                     * need reactive (observe is called separately).
+                     */
+                    Model._.fieldsOnUpdate
+                        .get(fieldName)
+                        .forEach((fn) => fn.call(recordProxy, recordProxy[fieldName]));
+                } catch (err) {
+                    store.handleError(err);
+                }
+            });
+        }
         this.prepareFieldOnUpdate(record, fieldName, recordProxy);
     }
 }

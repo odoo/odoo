@@ -229,7 +229,11 @@ export class Record {
             }
             Object.assign(recordProxy, { ...ids });
             Model.records[record.localId] = recordProxy;
-            for (const name of Model._.fieldsOnUpdate.keys()) {
+            const eagetFieldNames = new Set([
+                ...Model._.fieldsOnUpdate.keys(),
+                ...Model._.fieldsEager.keys(),
+            ]);
+            for (const name of eagetFieldNames) {
                 record._.prepareFieldOnUpdate(record, name, recordProxy);
             }
             if (record.Model.getName() === "Store") {
@@ -239,12 +243,6 @@ export class Record {
                 });
             }
             Model._rawStore.recordByLocalId.set(record.localId, recordProxy);
-            for (const fieldName of record.Model._.fields.keys()) {
-                if (record.Model._.fieldsEager.get(fieldName)) {
-                    record._.fieldsComputeComputed.get(fieldName)?.();
-                    record._.fieldsSortComputed.get(fieldName)?.();
-                }
-            }
             return recordProxy;
         });
     }

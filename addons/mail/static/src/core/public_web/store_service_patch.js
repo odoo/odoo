@@ -35,11 +35,9 @@ patch(Store.prototype, {
         this.discuss = fields.One("DiscussApp");
         /** @type {number|undefined} */
         this.action_discuss_id;
-        // window.akuSignal = signal(0);
         this.menuThreads = fields.Many("mail.thread", {
             /** @this {import("models").Store} */
             compute() {
-                // void window.akuSignal();
                 debugger;
                 const res = this.aku();
                 return res;
