@@ -16,8 +16,9 @@ import {
     press,
     queryAll,
     manuallyDispatchProgrammaticEvent,
+    queryOne,
 } from "@odoo/hoot-dom";
-import { animationFrame, tick } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
 import { nodeSize } from "@html_editor/utils/position";
 
 function expectContentToBe(el, html) {
@@ -121,6 +122,276 @@ describe("custom selection", () => {
 
         expect(firstTd.clientWidth).not.toBe(initialCellWidth); // Resize worked
         expect(firstTd).toHaveClass("o_selected_td");
+    });
+
+    test.tags("mobile");
+    test("should extend table cell selection while dragging on touch devices (Forward selection)", async () => {
+        const content = unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td class="a"><p>[]<br></p></td>
+                        <td class="b"><p><br></p></td>
+                        <td class="c"><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="d"><p><br></p></td>
+                        <td class="e"><p><br></p></td>
+                        <td class="f"><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        const { el } = await setupEditor(content);
+
+        const getClientPosition = (selector) => {
+            const el = queryOne(selector);
+            const rect = el.getBoundingClientRect();
+            return new Touch({
+                identifier: Date.now(),
+                target: el,
+                clientX: rect.left + rect.width / 2,
+                clientY: rect.top + rect.height / 2,
+            });
+        };
+
+        // Moving before the long press delay should keep the touch available for scrolling.
+        await manuallyDispatchProgrammaticEvent(queryOne("td.a"), "touchstart", {
+            touches: [getClientPosition("td.a")],
+        });
+        await manuallyDispatchProgrammaticEvent(queryOne("td.b"), "touchmove", {
+            touches: [getClientPosition("td.b")],
+        });
+        await animationFrame();
+        expect(queryOne("td.a")).not.toHaveClass("o_selected_td");
+        expect(queryOne("td.b")).not.toHaveClass("o_selected_td");
+        await manuallyDispatchProgrammaticEvent(queryOne("td.b"), "touchend", {
+            touches: [getClientPosition("td.b")],
+        });
+
+        // Start touch on cell a and wait for the long press selection.
+        await manuallyDispatchProgrammaticEvent(queryOne("td.a"), "touchstart", {
+            touches: [getClientPosition("td.a")],
+        });
+        await advanceTime(200);
+
+        // Drag to cell b, should select a and b
+        await manuallyDispatchProgrammaticEvent(queryOne("td.b"), "touchmove", {
+            touches: [getClientPosition("td.b")],
+        });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="a o_selected_td"><p>[<br></p></td>
+                        <td class="b o_selected_td"><p>]<br></p></td>
+                        <td class="c"><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="d"><p><br></p></td>
+                        <td class="e"><p><br></p></td>
+                        <td class="f"><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `)
+        );
+
+        // Drag to cell c, should select a, b, and c
+        await manuallyDispatchProgrammaticEvent(queryOne("td.c"), "touchmove", {
+            touches: [getClientPosition("td.c")],
+        });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="a o_selected_td"><p>[<br></p></td>
+                        <td class="b o_selected_td"><p><br></p></td>
+                        <td class="c o_selected_td"><p>]<br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="d"><p><br></p></td>
+                        <td class="e"><p><br></p></td>
+                        <td class="f"><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `)
+        );
+
+        // Drag to cell f, should select all cells
+        await manuallyDispatchProgrammaticEvent(queryOne("td.f"), "touchmove", {
+            touches: [getClientPosition("td.f")],
+        });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="a o_selected_td"><p>[<br></p></td>
+                        <td class="b o_selected_td"><p><br></p></td>
+                        <td class="c o_selected_td"><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="d o_selected_td"><p><br></p></td>
+                        <td class="e o_selected_td"><p><br></p></td>
+                        <td class="f o_selected_td"><p>]<br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `)
+        );
+
+        // End touch
+        await manuallyDispatchProgrammaticEvent(queryOne("td.f"), "touchend", {
+            touches: [getClientPosition("td.f")],
+        });
+    });
+
+    test.tags("mobile");
+    test("should extend table cell selection while dragging on touch devices (Backward selection)", async () => {
+        const content = unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td class="a"><p><br></p></td>
+                        <td class="b"><p><br></p></td>
+                        <td class="c"><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="d"><p><br></p></td>
+                        <td class="e"><p><br></p></td>
+                        <td class="f"><p>[]<br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+        const { el } = await setupEditor(content);
+
+        const getClientPosition = (selector) => {
+            const el = queryOne(selector);
+            const rect = el.getBoundingClientRect();
+            return new Touch({
+                identifier: Date.now(),
+                target: el,
+                clientX: rect.left + rect.width / 2,
+                clientY: rect.top + rect.height / 2,
+            });
+        };
+
+        // Moving before the long press delay should keep the touch available for scrolling.
+        await manuallyDispatchProgrammaticEvent(queryOne("td.f"), "touchstart", {
+            touches: [getClientPosition("td.f")],
+        });
+        await manuallyDispatchProgrammaticEvent(queryOne("td.e"), "touchmove", {
+            touches: [getClientPosition("td.e")],
+        });
+        await animationFrame();
+        expect(queryOne("td.f")).not.toHaveClass("o_selected_td");
+        expect(queryOne("td.e")).not.toHaveClass("o_selected_td");
+        await manuallyDispatchProgrammaticEvent(queryOne("td.e"), "touchend", {
+            touches: [getClientPosition("td.e")],
+        });
+
+        // Start touch on cell f and wait for the long press selection.
+        await manuallyDispatchProgrammaticEvent(queryOne("td.f"), "touchstart", {
+            touches: [getClientPosition("td.f")],
+        });
+        await advanceTime(200);
+
+        // Drag to cell e, should select e and f
+        await manuallyDispatchProgrammaticEvent(queryOne("td.e"), "touchmove", {
+            touches: [getClientPosition("td.e")],
+        });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="a"><p><br></p></td>
+                        <td class="b"><p><br></p></td>
+                        <td class="c"><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="d"><p><br></p></td>
+                        <td class="e o_selected_td"><p>]<br></p></td>
+                        <td class="f o_selected_td"><p>[<br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `)
+        );
+
+        // Drag to cell d, should select d, e, and f
+        await manuallyDispatchProgrammaticEvent(queryOne("td.d"), "touchmove", {
+            touches: [getClientPosition("td.d")],
+        });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="a"><p><br></p></td>
+                        <td class="b"><p><br></p></td>
+                        <td class="c"><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="d o_selected_td"><p>]<br></p></td>
+                        <td class="e o_selected_td"><p><br></p></td>
+                        <td class="f o_selected_td"><p>[<br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `)
+        );
+
+        // Drag to cell a, should select all cells
+        await manuallyDispatchProgrammaticEvent(queryOne("td.a"), "touchmove", {
+            touches: [getClientPosition("td.a")],
+        });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+            <p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="a o_selected_td"><p>]<br></p></td>
+                        <td class="b o_selected_td"><p><br></p></td>
+                        <td class="c o_selected_td"><p><br></p></td>
+                    </tr>
+                    <tr>
+                        <td class="d o_selected_td"><p><br></p></td>
+                        <td class="e o_selected_td"><p><br></p></td>
+                        <td class="f o_selected_td"><p>[<br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `)
+        );
+
+        // End touch
+        await manuallyDispatchProgrammaticEvent(queryOne("td.a"), "touchend", {
+            touches: [getClientPosition("td.a")],
+        });
     });
 });
 
