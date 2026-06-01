@@ -109,8 +109,23 @@ export class CashierSelector {
         }
 
         if (login && employee) {
+<<<<<<< e9ebd2f1393e6ec7e2f4d121c3085cbc8e95b2d7
             this.pos.hasLoggedIn = true;
             this.pos.setCashier(employee);
+||||||| bfa39854e56da4bf23295d62f63d66973ad0d78e
+            pos.hasLoggedIn = true;
+            const result = pos.setCashier(employee);
+
+            if (!result) {
+                return false;
+            }
+=======
+            if (!pos.canLoginCashier(employee)) {
+                return false;
+            }
+            pos.hasLoggedIn = true;
+            pos.setCashier(employee);
+>>>>>>> 044da011d829fedac29c411af16a81c52f9a94bc
         }
 
         const currentScreen = this.pos.router.state.current;

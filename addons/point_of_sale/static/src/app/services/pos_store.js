@@ -306,6 +306,15 @@ export class PosStore extends WithLazyGetterTrap {
 
         this.cashier = user;
         this._storeConnectedCashier(user);
+<<<<<<< e9ebd2f1393e6ec7e2f4d121c3085cbc8e95b2d7
+||||||| bfa39854e56da4bf23295d62f63d66973ad0d78e
+        return true;
+=======
+    }
+
+    canLoginCashier(user) {
+        return Boolean(user);
+>>>>>>> 044da011d829fedac29c411af16a81c52f9a94bc
     }
 
     _getConnectedCashier() {
