@@ -7,9 +7,9 @@ import typing
 from io import BytesIO
 from os.path import join as opj
 from pathlib import Path
+from urllib.parse import quote
 from zlib import adler32
 
-from werkzeug.urls import url_quote
 from werkzeug.utils import send_file as _send_file
 
 from odoo.tools import config, file_path
@@ -43,10 +43,7 @@ def content_disposition(filename: str, disposition_type: typing.Literal['attachm
     if disposition_type not in ('attachment', 'inline'):
         e = f"Invalid disposition_type: {disposition_type!r}"
         raise ValueError(e)
-    return "{}; filename*=UTF-8''{}".format(
-        disposition_type,
-        url_quote(filename, safe='', unsafe='()<>@,;:"/[]?={}\\*\'%'),  # RFC6266
-    )
+    return "{}; filename*=UTF-8''{}".format(disposition_type, quote(filename, safe=''))
 
 
 class Stream:

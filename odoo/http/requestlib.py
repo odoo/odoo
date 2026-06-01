@@ -10,7 +10,7 @@ import time
 import typing
 import warnings
 from contextlib import contextmanager
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urlencode
 
 import babel.core
 from werkzeug.datastructures import (
@@ -20,7 +20,7 @@ from werkzeug.datastructures import (
 )
 from werkzeug.exceptions import NotFound
 from werkzeug.local import LocalStack
-from werkzeug.urls import URL, url_encode, url_parse
+from werkzeug.urls import URL
 from werkzeug.utils import redirect
 
 from odoo.tools import consteq, json_default
@@ -308,15 +308,14 @@ class Request:
         if isinstance(location, URL):
             location = location.to_url()
         if local:
-            location = url_parse(location).replace(scheme='', netloc='').to_url().lstrip('/\\')
-            location = '/' + urlsplit(location).geturl().lstrip('/\\')
+            location = '/' + urlsplit(location)._replace(scheme='', netloc='').geturl().lstrip('/\\')
         if self.db:
             return self.env['ir.http']._redirect(location, code)
         return redirect(location, code, Response=Response)
 
     def redirect_query(self, location: str, query: dict | None = None, code: int = 303, local: bool = True) -> Response:
         if query:
-            location += '?' + url_encode(query)
+            location += '?' + urlencode(query)
         return self.redirect(location, code=code, local=local)
 
     def render(self, template: str, qcontext: dict | None = None, lazy: bool = True, **kw) -> Response:

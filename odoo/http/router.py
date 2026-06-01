@@ -8,7 +8,7 @@ import threading
 import typing
 from contextlib import nullcontext
 from os.path import join as opj
-from urllib.parse import urlparse
+from urllib.parse import urlsplit, urlencode
 
 import psycopg2
 import werkzeug.routing
@@ -20,7 +20,6 @@ from werkzeug.exceptions import (
     UnsupportedMediaType,
 )
 from werkzeug.security import safe_join
-from werkzeug.urls import url_encode  # TODO: use urllib
 
 # TODO: drop the fallback
 try:
@@ -171,7 +170,7 @@ class Application:
         the given ``host``.
         """
 
-        netloc, path = urlparse(url)[1:3]  # TODO: use urllib3
+        netloc, path = urlsplit(url)[1:3]
         try:
             path_netloc, module, static, resource = path.split('/', 3)
         except ValueError:
@@ -281,7 +280,7 @@ class Application:
                             # ensure_db() protected routes, remove ?db= from the query string
                             args_nodb = request.httprequest.args.copy()
                             args_nodb.pop('db', None)
-                            request.reroute(httprequest.path, url_encode(args_nodb))
+                            request.reroute(httprequest.path, urlencode(args_nodb))
                         response = serve_nodb(request)
                 else:
                     response = serve_nodb(request)
