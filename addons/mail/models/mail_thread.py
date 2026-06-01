@@ -52,6 +52,9 @@ from odoo.tools.mail import (
 )
 
 if typing.TYPE_CHECKING:
+    from odoo.addons.base.models.ir_ui_view import IrUiView
+    from odoo.addons.mail.models.mail_mail import MailMail
+    from odoo.addons.mail.models.mail_message import MailMessage
     from odoo.api import ValuesType
     from odoo.models import BaseModel
 
@@ -2301,7 +2304,7 @@ class MailThread(models.AbstractModel):
         # preliminary value safety check
         self._raise_for_invalid_parameters(
             set(kwargs.keys()),
-            forbidden_names={'model', 'res_id', 'subtype'}
+            forbidden_names={'model', 'res_id', 'subtype'},
         )
         if self._name == 'mail.thread' or not self.id:
             raise ValueError(_("Posting a message should be done on a business document. Use message_notify to send a notification to an user."))
@@ -2617,10 +2620,11 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------------
 
     def message_mail_with_source(
-        self, source_ref, *,
-        render_values=None, message_type='notification', auto_commit=False,
+        self, source_ref: str | IrUiView, *,
+        render_values: dict | None = None, message_type: str = 'notification',
+        auto_commit: bool = False,
         **kwargs,
-    ):
+    ) -> MailMail:
         """ Send a mass mail on self, using an external source to render part
         of the content. It can be either a 'mail.template', either a view used
         to render the body using QWeb.
@@ -2634,7 +2638,7 @@ class MailThread(models.AbstractModel):
 
         * subtype_id: will be False, forced by composer in mass mode;
 
-        :param record/str source_ref: reference to a source for rendering.
+        :param str | IrUiView source_ref: reference to a source for rendering.
           It can be one of
 
           * a MailTemplate record. It will be used to render the various
@@ -2644,7 +2648,7 @@ class MailThread(models.AbstractModel):
             (body). Other fields are left to the caller and/or default values
             computation;
           * an XmlID of a MailTemplate or of an IrUiView: see above;
-        :param dict render_values: additional rendering values for qweb context;
+        :param dict | None render_values: additional rendering values for qweb context;
 
         :param str message_type: one of 'notification' or 'comment';
         :param bool auto_commit: auto commit after each batch of emails sent
@@ -2703,10 +2707,11 @@ class MailThread(models.AbstractModel):
         return mails_su
 
     def message_post_with_source(
-        self, source_ref, *,
-        render_values=None, message_type='notification', subtype_xmlid=False, subtype_id=False,
+        self, source_ref: str | IrUiView, *,
+        render_values: dict | None = None, message_type: str = 'notification',
+        subtype_xmlid: str = False, subtype_id: int = False,
         **kwargs,
-    ):
+    ) -> MailMessage:
         """ Post a message on each record of self, using a view to render the
         body using QWeb.
 
@@ -2715,7 +2720,7 @@ class MailThread(models.AbstractModel):
         * subtype_id: if not given, fallback on ``note`` to be consistent
           with what message_post does;
 
-        :param record/str source_ref: reference to a source for rendering.
+        :param str | IrUiView source_ref: reference to a source for rendering.
           It can be one of
 
           * a MailTemplate record. It will be used to render the various
@@ -2725,7 +2730,7 @@ class MailThread(models.AbstractModel):
             (body). Other fields are left to the caller and/or default values
             computation;
           * an XmlID of a MailTemplate or of an IrUiView: see above
-        :param dict render_values: additional rendering values for qweb context;
+        :param dict | None render_values: additional rendering values for qweb context;
 
         :param str message_type: one of 'notification' or 'comment';
         :param str subtype_xmlid: optional xml id of a mail.message.subtype to
@@ -3358,6 +3363,7 @@ class MailThread(models.AbstractModel):
         :param set restricting_names: set of parameters restricting given
           parameter_names, parameters not belonging to this list are rejected;
         """
+        conflicting_names = []
         if forbidden_names:
             conflicting_names = parameter_names & forbidden_names
         elif restricting_names:
@@ -5193,6 +5199,7 @@ class MailThread(models.AbstractModel):
 
     def _store_message_update_extra_fields(self, res: Store.FieldList):
         pass
+
     # ------------------------------------------------------
     # STORE
     # ------------------------------------------------------
