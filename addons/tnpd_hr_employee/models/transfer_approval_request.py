@@ -2,6 +2,7 @@
 # License: LGPL-3
 
 import logging
+from datetime import date
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -21,14 +22,48 @@ class TransferApprovalRequest(models.Model):
     at save time (covers API / batch writes that bypass onchange).
 
     State machine:
-        pending  →  approved  (updates employee jail posting)
-        pending  →  rejected
+        draft     →  pending   (action_submit)
+        pending   →  approved  (action_approve — updates employee jail posting)
+        pending   →  rejected  (action_reject)
+        pending   →  returned  (action_return — returned for correction)
+        draft     →  cancelled (action_cancel)
+        pending   →  cancelled (action_cancel)
     """
 
     _name = 'transfer.approval.request'
     _description = 'Transfer Approval Request'
     _rec_name = 'employee_id'
     _order = 'create_date desc'
+
+    # ── Transfer classification ───────────────────────────────────────────────
+
+    transfer_type = fields.Selection(
+        selection=[
+            ('request', 'Transfer Request'),
+            ('tenure', 'Tenure Transfer'),
+            ('admin_grounds', 'Administrative Grounds'),
+        ],
+        string='Transfer Type',
+        required=True,
+        default='request',
+        index=True,
+    )
+
+    transfer_reason = fields.Text(
+        string='Transfer Reason',
+        help='Reason provided by the employee for requesting the transfer.',
+    )
+
+    priority = fields.Selection(
+        selection=[
+            ('low', 'Low'),
+            ('medium', 'Medium'),
+            ('high', 'High'),
+        ],
+        string='Priority',
+        default='medium',
+        required=False,
+    )
 
     # ── Employee ──────────────────────────────────────────────────────────────
 
@@ -39,6 +74,26 @@ class TransferApprovalRequest(models.Model):
         ondelete='restrict',
         index=True,
     )
+
+    # ── Computed: tenure at current station ───────────────────────────────────
+
+    tenure_years = fields.Float(
+        string='Tenure at Current Station (Years)',
+        compute='_compute_tenure_years',
+        store=True,
+        digits=(6, 2),
+        help='Years since employee was posted to the current station.',
+    )
+
+    @api.depends('employee_id', 'employee_id.x_date_present_station')
+    def _compute_tenure_years(self):
+        today = date.today()
+        for rec in self:
+            posting_date = rec.employee_id.x_date_present_station if rec.employee_id else False
+            if posting_date:
+                rec.tenure_years = (today - posting_date).days / 365.25
+            else:
+                rec.tenure_years = 0.0
 
     # ── Current posting (read-only snapshot at request time) ──────────────────
 
@@ -99,12 +154,15 @@ class TransferApprovalRequest(models.Model):
     )
     state = fields.Selection(
         selection=[
+            ('draft', 'Draft'),
             ('pending', 'Pending'),
             ('approved', 'Approved'),
             ('rejected', 'Rejected'),
+            ('cancelled', 'Cancelled'),
+            ('returned', 'Returned'),
         ],
         string='State',
-        default='pending',
+        default='draft',
         required=True,
         index=True,
     )
@@ -231,6 +289,34 @@ class TransferApprovalRequest(models.Model):
             'current_district_jail':  self._lookup_jail('district_jail', employee.x_district_jail),
             'current_sub_jail':       self._lookup_jail('sub_jail', employee.x_sub_jail),
         }
+
+    # ── Actions: Submit / Cancel / Return ────────────────────────────────────
+
+    def action_submit(self):
+        """Move draft → pending."""
+        self.ensure_one()
+        if self.state != 'draft':
+            raise UserError('Only draft requests can be submitted.')
+        self.write({'state': 'pending'})
+
+    def action_cancel(self):
+        """Move draft/pending → cancelled."""
+        self.ensure_one()
+        if self.state not in ('draft', 'pending'):
+            raise UserError('Only draft or pending requests can be cancelled.')
+        self.write({'state': 'cancelled'})
+
+    def action_return(self):
+        """Move pending → returned (for correction). Approver only."""
+        self.ensure_one()
+        if self.approval_user_id != self.env.user:
+            raise UserError(
+                'Only the designated approver (%s) can return this request.'
+                % self.approval_user_id.name
+            )
+        if self.state != 'pending':
+            raise UserError('Only pending requests can be returned for correction.')
+        self.write({'state': 'returned'})
 
     # ── Actions: Approve / Reject ─────────────────────────────────────────
 
