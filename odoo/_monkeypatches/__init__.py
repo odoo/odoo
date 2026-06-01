@@ -78,3 +78,6 @@ def patch_init():
         'stdnum', 'urllib3', 'werkzeug', 'xlsxwriter', 'xlwt', 'zeep'
     ):
         HOOK_IMPORT.add_hook(name, functools.partial(patch_module, name))
+
+    # becuase it imports odoo.tools, patch it after all the other modules
+    patch_module('_cpython')
