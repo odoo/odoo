@@ -1,9 +1,18 @@
-import { animationFrame, describe, expect, queryFirst, queryOne, test } from "@odoo/hoot";
+import {
+    animationFrame,
+    describe,
+    expect,
+    queryFirst,
+    queryOne,
+    test,
+    getFixture,
+} from "@odoo/hoot";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
 import { contains } from "@web/../tests/web_test_helpers";
+import { delay } from "@web/core/utils/concurrency";
 
 describe.current.tags("desktop");
 defineWebsiteModels();
@@ -112,12 +121,33 @@ test("should preview button styles in dropdown", async () => {
 });
 
 test("should have a button linking to theme tab", async () => {
-    await setupWebsiteBuilder('<p><a href="#" class="btn btn-primary test-target">clickme</a></p>');
+    await setupWebsiteBuilder(
+        `<p>
+            <a href="#" class="btn btn-custom test-target">clickme</a>
+        </p>`,
+        {
+            loadIframeBundles: true,
+        }
+    );
+    const fixture = getFixture();
+    fixture.classList.add("allow-transitions");
 
     await contains(":iframe p > a.test-target").click();
-    await contains("a.o-hb-button-style-btn-edit").click();
+    await contains("a.o-hb-theme-tab-link").click();
+
+    // Fade out
+    await delay(180);
     await animationFrame();
+    expect("button[data-name='customize']").toHaveClass("active");
+    expect("button[data-name='theme']").not.toHaveClass("active");
+
+    // Theme tab is loaded
+    await delay(200);
+    await animationFrame();
+    expect("button[data-name='customize']").not.toHaveClass("active");
     expect("button[data-name='theme']").toHaveClass("active");
+
+    fixture.classList.remove("allow-transitions");
 });
 
 test("button border width is not previewed", async () => {

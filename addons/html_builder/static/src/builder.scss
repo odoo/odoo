@@ -114,6 +114,13 @@
     scrollbar-color: $o-we-bg-lightest $o-we-bg-darker;
     scrollbar-width: thin;
     will-change: scroll-position;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+
+    &.o-is-faded {
+        opacity: 0;
+        pointer-events: none;
+    }
 }
 
 .o_theme_tab {
@@ -213,4 +220,18 @@
 .larger_button_icon {
     --btn-padding-y: 0.05rem !important;
     font-size: 14px;
+}
+
+.o-hb-theme-tab-link {
+    align-self: center;
+    border: none;
+    color: $o-we-color-global;
+
+    &:hover {
+        color: $o-we-fg-lighter;
+    }
+
+    &:not(:focus-visible) {
+        border: 1px solid transparent; // keep size stable on focus
+    }
 }

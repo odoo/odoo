@@ -2,24 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="website.ThemeShadowOption">
-    <div t-custom-ref="root" />
     <BuilderContext action="'customizeWebsiteVariable'">
-        <BuilderRow label.translate="Normal" initialExpandAnim="this.shadowSizeToShow === 'shadow'" tooltip.translate="Horizontal and Vertical Offset">
-            <BuilderNumberInput actionParam="'box-shadow-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
-            <BuilderNumberInput actionParam="'box-shadow-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
-            <t t-set-slot="collapse">
-                <BuilderRow label.translate="Color" level="1">
-                    <BuilderColorPicker actionParam="'box-shadow-color'" enabledTabs="['solid', 'custom']"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Blur" level="1">
-                    <BuilderNumberInput actionParam="'box-shadow-blur-radius'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Spread" level="1">
-                    <BuilderNumberInput actionParam="'box-shadow-spread-radius'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-            </t>
-        </BuilderRow>
-        <BuilderRow label.translate="Small" initialExpandAnim="this.shadowSizeToShow === 'shadow-sm'" tooltip.translate="Horizontal and Vertical Offset">
+        <BuilderRow label.translate="Small" initialExpandAnim="this.env.targetRowId === 'shadow-sm'" tooltip.translate="Horizontal and Vertical offset">
             <BuilderNumberInput actionParam="'box-shadow-sm-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
             <BuilderNumberInput actionParam="'box-shadow-sm-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
             <t t-set-slot="collapse">
@@ -34,7 +18,22 @@
                 </BuilderRow>
             </t>
         </BuilderRow>
-        <BuilderRow label.translate="Large" initialExpandAnim="this.shadowSizeToShow === 'shadow-lg'" tooltip.translate="Horizontal and Vertical Offset">
+        <BuilderRow label.translate="Normal" initialExpandAnim="this.env.targetRowId === 'shadow'" tooltip.translate="Horizontal and Vertical offset">
+            <BuilderNumberInput actionParam="'box-shadow-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
+            <BuilderNumberInput actionParam="'box-shadow-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Color" level="1">
+                    <BuilderColorPicker actionParam="'box-shadow-color'" enabledTabs="['solid', 'custom']"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Blur" level="1">
+                    <BuilderNumberInput actionParam="'box-shadow-blur-radius'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Spread" level="1">
+                    <BuilderNumberInput actionParam="'box-shadow-spread-radius'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Large" initialExpandAnim="this.env.targetRowId === 'shadow-lg'" tooltip.translate="Horizontal and Vertical offset">
             <BuilderNumberInput actionParam="'box-shadow-lg-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
             <BuilderNumberInput actionParam="'box-shadow-lg-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
             <t t-set-slot="collapse">

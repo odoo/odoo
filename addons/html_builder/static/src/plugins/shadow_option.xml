@@ -5,13 +5,13 @@
     <BuilderRow label.translate="Shadow">
         <BuilderSelect action="this.props.setShadowClassAction">
             <BuilderSelectItem actionParam="''">None</BuilderSelectItem>
-            <BuilderSelectItem actionParam="'shadow'">
-                <t t-set="onClick" t-value="this.getOnClick('shadow')"/>
-                <t t-call="html_builder.ShadowOptionItem">Normal</t>
-            </BuilderSelectItem>
             <BuilderSelectItem actionParam="'shadow-sm'">
                 <t t-set="onClick" t-value="this.getOnClick('shadow-sm')"/>
                 <t t-call="html_builder.ShadowOptionItem">Small</t>
+            </BuilderSelectItem>
+            <BuilderSelectItem actionParam="'shadow'">
+                <t t-set="onClick" t-value="this.getOnClick('shadow')"/>
+                <t t-call="html_builder.ShadowOptionItem">Normal</t>
             </BuilderSelectItem>
             <BuilderSelectItem actionParam="'shadow-lg'">
                 <t t-set="onClick" t-value="this.getOnClick('shadow-lg')"/>
@@ -50,11 +50,11 @@
 
 <t t-name="html_builder.ShadowOptionItem">
     <div class="d-flex">
-        <div class="o-hb-shadow-text">
+        <div class="flex-grow-1">
             <t t-out="0"/>
         </div>
-        <a class="fa fa-pencil btn o-hb-shadow-button"
-                title="Edit"
+        <a class="fa fa-pencil btn o-hb-theme-tab-link"
+                title="Edit in Theme Tab"
                 t-on-click="onClick"/>
     </div>
 </t>

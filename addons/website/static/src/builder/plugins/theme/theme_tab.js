@@ -9,14 +9,16 @@ export class ThemeTab extends Component {
     props = props({
         // optionsContainers: t.array().optional([]),
         colorPresetToShow: t.or([t.number(), t.literal(null)]).optional(),
-        shadowSizeToShow: t.or([t.string(), t.literal(null)]).optional(),
+        targetRowId: t.or([t.string(), t.literal(null)]).optional(),
+        targetContainerId: t.or([t.string(), t.literal(null)]).optional(),
     });
 
     setup() {
         useOptionsSubEnv(() => [this.env.editor.document.body]);
         useSubEnv({
             colorPresetToShow: this.props.colorPresetToShow,
-            shadowSizeToShow: this.props.shadowSizeToShow,
+            targetRowId: this.props.targetRowId,
+            targetContainerId: this.props.targetContainerId,
         });
         this.state = proxy({
             fontsData: {},
