@@ -71,6 +71,7 @@ class ResCompany(models.Model):
         store=True,
     )
     l10n_in_gstin_status_feature = fields.Boolean(string="Check GST Number Status")
+    l10n_in_is_b2c_hsn_reporting = fields.Boolean(string="B2C HSN Reporting", default=True)
 
     @api.depends('l10n_in_upi_id')
     def _compute_qr_code(self):
