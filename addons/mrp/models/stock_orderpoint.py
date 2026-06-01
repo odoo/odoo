@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import datetime, time
 
 from odoo import _, api, fields, models
@@ -66,11 +67,30 @@ class StockWarehouseOrderpoint(models.Model):
         """ Extend to add more depends values """
         super()._compute_qty_to_order_computed()
 
+    def _get_matching_boms(self):
+        matching_boms = defaultdict(lambda: self.env['mrp.bom'])
+        orderpoints_by_company = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
+        for orderpoint in self.filtered('product_id'):
+            orderpoints_by_company[orderpoint.company_id.id] |= orderpoint
+
+        for company_id, orderpoints in orderpoints_by_company.items():
+            boms = self.env['mrp.bom']._bom_find(
+                orderpoints.product_id,
+                bom_type='normal',
+                company_id=company_id,
+            )
+            for orderpoint in orderpoints:
+                matching_boms[orderpoint.id] = orderpoint.bom_id or boms[orderpoint.product_id]
+        return matching_boms
+
     def _compute_allowed_replenishment_uom_ids(self):
         super()._compute_allowed_replenishment_uom_ids()
-        for orderpoint in self:
-            if 'manufacture' in orderpoint.rule_ids.mapped('action'):
-                orderpoint.allowed_replenishment_uom_ids += orderpoint.product_id.bom_ids.product_uom_id
+        manufacture_orderpoints = self.filtered(lambda orderpoint: 'manufacture' in orderpoint.rule_ids.mapped('action'))
+        matching_boms = manufacture_orderpoints._get_matching_boms()
+        for orderpoint in manufacture_orderpoints:
+            bom = matching_boms[orderpoint.id]
+            if bom:
+                orderpoint.allowed_replenishment_uom_ids += bom.product_uom_id
 
     def _compute_show_supply_warning(self):
         for orderpoint in self:
