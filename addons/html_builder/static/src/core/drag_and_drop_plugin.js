@@ -80,7 +80,7 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 
 export class DragAndDropPlugin extends Plugin {
     static id = "dragAndDrop";
-    static dependencies = ["dropzone", "history", "operation", "builderOptions"];
+    static dependencies = ["dropzone", "history", "operation", "builderOptions", "remove"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         has_overlay_options: { hasOption: (el) => this.isDraggable(el) },
@@ -448,6 +448,12 @@ export class DragAndDropPlugin extends Plugin {
                         startParentEl === parentEl;
                 }
                 if (!hasSamePositionAsStart) {
+                    // Check if the old parent is now empty and needs to be
+                    // removed.
+                    if (this.dependencies.remove.isEmptyAndRemovable(startParentEl, [])) {
+                        this.dependencies.remove.removeElement(startParentEl, false);
+                    }
+
                     this.dependencies.history.commit();
                 } else {
                     this.cancelDragAndDrop();
