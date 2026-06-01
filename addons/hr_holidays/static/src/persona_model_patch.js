@@ -11,7 +11,7 @@ patch(Persona.prototype, {
             return "";
         }
         const date = deserializeDateTime(this.out_of_office_date_end);
-        const fdate = date.toLocaleString(DateTime.DATE_MED);
+        const fdate = date.toLocaleString({ ...DateTime.DATE_MED, timeZone:"UTC" });
         return _t("Back on %s", fdate);
     },
 });
