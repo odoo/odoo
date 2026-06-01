@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Additional prison.jail records required for vacancy tracking.
+    Loaded once on module install (noupdate="1").
+
+    Includes:
+    - Special Prisons for Women (5 standalone central-level facilities)
+    - Women-specific sub-jails and annexures (16 records)
+    - Open Air prisons / Special Sub Jails not in base hierarchy (4 records)
+    - Closed sub-jails that still require vacancy records (10 records)
+    - Sub Jail, Nanguneri (omitted from base hierarchy)
+-->
+<odoo>
+<data noupdate="1">
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SPECIAL PRISONS FOR WOMEN  (standalone — treated as Central Jail tier)
+══════════════════════════════════════════════════════════════════════ -->
+
+<record id="jail_spw_chennai" model="prison.jail">
+    <field name="name">Special Prison for Women, Chennai</field>
+    <field name="jail_type">central_jail</field>
+    <field name="sequence">15</field>
+</record>
+<record id="jail_spw_vellore" model="prison.jail">
+    <field name="name">Special Prison for Women, Vellore</field>
+    <field name="jail_type">central_jail</field>
+    <field name="sequence">25</field>
+</record>
+<record id="jail_spw_coimbatore" model="prison.jail">
+    <field name="name">Special Prison for Women, Coimbatore</field>
+    <field name="jail_type">central_jail</field>
+    <field name="sequence">65</field>
+</record>
+<record id="jail_spw_trichy" model="prison.jail">
+    <field name="name">Special Prison for Women, Tiruchirappalli</field>
+    <field name="jail_type">central_jail</field>
+    <field name="sequence">45</field>
+</record>
+<record id="jail_spw_madurai" model="prison.jail">
+    <field name="name">Special Prison for Women, Madurai</field>
+    <field name="jail_type">central_jail</field>
+    <field name="sequence">75</field>
+</record>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     WOMEN SUB JAILS / ANNEXURES
+══════════════════════════════════════════════════════════════════════ -->
+
+<!-- Under Chennai controlling area -->
+<record id="jail_ssj_poonnamallee" model="prison.jail">
+    <field name="name">Special Sub Jail, Poonnamallee</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_chennai"/>
+    <field name="sequence">30</field>
+</record>
+
+<!-- Under Chengalpattu District Jail -->
+<record id="jail_sj_chengalpattu_women" model="prison.jail">
+    <field name="name">D.J. Chengalpattu Women Annex</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dj_chengalpattu"/>
+    <field name="sequence">10</field>
+</record>
+
+<!-- Under Villupuram District -->
+<record id="jail_sj_villupuram_women" model="prison.jail">
+    <field name="name">Women Sub Jail, Villupuram</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_villupuram"/>
+    <field name="sequence">30</field>
+</record>
+
+<!-- Under Cuddalore District -->
+<record id="jail_sj_cuddalore_women" model="prison.jail">
+    <field name="name">Women Sub Jail, Cuddalore</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_cuddalore"/>
+    <field name="sequence">40</field>
+</record>
+
+<!-- Under Salem District -->
+<record id="jail_ssj_salem_women" model="prison.jail">
+    <field name="name">Special Sub Jail for Women, Salem</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_salem"/>
+    <field name="sequence">30</field>
+</record>
+
+<!-- Under Dharmapuri District -->
+<record id="jail_sj_dharmapuri_women" model="prison.jail">
+    <field name="name">Women Sub Jail, Dharmapuri</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_dharmapuri"/>
+    <field name="sequence">10</field>
+</record>
+
+<!-- Under D.J. Tiruppur -->
+<record id="jail_dj_tiruppur_women" model="prison.jail">
+    <field name="name">D.J. Tiruppur Women Annexure</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dj_tiruppur"/>
+    <field name="sequence">10</field>
+</record>
+
+<!-- Under Coimbatore District (Open Air) -->
+<record id="jail_oaj_singanallur" model="prison.jail">
+    <field name="name">Open Air Jail, Singanallur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_coimbatore"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- Under Dindigul District -->
+<record id="jail_sj_nilakottai_women" model="prison.jail">
+    <field name="name">Sub Jail Women, Nilakottai</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_dindigul"/>
+    <field name="sequence">30</field>
+</record>
+
+<!-- Under Ramanathapuram District -->
+<record id="jail_sj_paramakudi_women" model="prison.jail">
+    <field name="name">Sub Jail Women, Paramakudi</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_ramanathapuram"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- Open Air Prison under Ramanathapuram -->
+<record id="jail_oap_purasadai" model="prison.jail">
+    <field name="name">Open Air Prison, Purasadai Udaippu</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_ramanathapuram"/>
+    <field name="sequence">30</field>
+</record>
+
+<!-- Under Thiruvarur District -->
+<record id="jail_sj_thiruvarur_women" model="prison.jail">
+    <field name="name">Female Sub Jail, Thiruvarur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_thiruvarur"/>
+    <field name="sequence">40</field>
+</record>
+
+<!-- Under Tirunelveli District -->
+<record id="jail_sj_nanguneri" model="prison.jail">
+    <field name="name">S.J. Nanguneri</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_tirunelveli"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_ssj_kokkirakulam" model="prison.jail">
+    <field name="name">Special Sub Jail, Kokkirakulam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_tirunelveli"/>
+    <field name="sequence">30</field>
+</record>
+
+<!-- Under Kanniyakumari District -->
+<record id="jail_sj_thukalay_women" model="prison.jail">
+    <field name="name">Sub Jail for Women, Thukalay</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_kanniyakumari"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- Under Thoothukudi District -->
+<record id="jail_sj_perurani_women" model="prison.jail">
+    <field name="name">Female Jail, Perurani</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_thoothukudi"/>
+    <field name="sequence">30</field>
+</record>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     CLOSED / INACTIVE SUB JAILS  (active=False; vacancy records still created)
+══════════════════════════════════════════════════════════════════════ -->
+
+<record id="jail_sj_maduranthagam_closed" model="prison.jail">
+    <field name="name">S.J. Maduranthagam (Closed)</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_kancheepuram"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_sj_arani_closed" model="prison.jail">
+    <field name="name">S.J. Arani (Closed)</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_tirupattur"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_sj_cheyyar_closed" model="prison.jail">
+    <field name="name">S.J. Cheyyar (Closed)</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_tirupattur"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">40</field>
+</record>
+<record id="jail_sj_cuddalore_closed" model="prison.jail">
+    <field name="name">S.J. Cuddalore (Closed)</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_cuddalore"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">50</field>
+</record>
+<record id="jail_sj_parangipet_closed" model="prison.jail">
+    <field name="name">S.J. Parangipet (Closed)</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_cuddalore"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">60</field>
+</record>
+<record id="jail_sj_keeranur_closed" model="prison.jail">
+    <field name="name">S.J. Keeranur (Closed)</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_pudukkottai"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_sj_pattukottai_closed" model="prison.jail">
+    <field name="name">S.J. Pattukottai (Closed)</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_thanjavur"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">60</field>
+</record>
+<record id="jail_sj_manapparai_closed" model="prison.jail">
+    <field name="name">S.J. Manapparai (Closed)</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_trichy"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_sj_musiri_closed" model="prison.jail">
+    <field name="name">S.J. Musiri (Closed)</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_trichy"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">40</field>
+</record>
+<record id="jail_sj_rasipuram_closed" model="prison.jail">
+    <field name="name">S.J. Rasipuram (Closed)</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_namakkal"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_sj_paramathivelur_closed" model="prison.jail">
+    <field name="name">S.J. Paramathivelur (Closed)</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_namakkal"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">40</field>
+</record>
+<record id="jail_sj_mettupalayam_closed" model="prison.jail">
+    <field name="name">S.J. Mettupalayam (Closed)</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_coimbatore"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_sj_thiruvadanai_closed" model="prison.jail">
+    <field name="name">S.J. Thiruvadanai (Closed)</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_ramanathapuram"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">40</field>
+</record>
+<record id="jail_sj_thiruchendur_closed" model="prison.jail">
+    <field name="name">S.J. Thiruchendur (Closed)</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_thoothukudi"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">40</field>
+</record>
+<record id="jail_sj_kodaikanal_closed" model="prison.jail">
+    <field name="name">S.J. Kodaikanal (Closed)</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_dist_dindigul"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">40</field>
+</record>
+<record id="jail_dj_attur_closed" model="prison.jail">
+    <field name="name">D.J. Attur (Closed)</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="prison_jail_master.jail_central_salem"/>
+    <field name="active" eval="False"/>
+    <field name="sequence">60</field>
+</record>
+
+</data>
+</odoo>

@@ -1,0 +1,1327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Tamil Nadu Prison Staff Vacancy Seed Data
+    ==========================================
+    Source: Staff Strength Details.xlsx (June 2026)
+    Loaded once on module install (noupdate="1").
+
+    Figures: Sanctioned Strength / Occupied Count / Vacancy Count
+    One record per prison facility.  Update via /api/vacancy/update or
+    /api/vacancy/import without code deployment.
+
+    Totals across all facilities:
+      Sanctioned = 5,489  |  Occupied = 4,915  |  Vacant = 574
+-->
+<odoo>
+<data noupdate="1">
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     CENTRAL PRISONS  (8 + 5 Special Prisons for Women = 13 records)
+══════════════════════════════════════════════════════════════════════ -->
+
+<!-- CP-I and CP-II, Chennai combined (single master record) -->
+<record id="vac_cp_chennai" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_central_chennai"/>
+    <field name="prison_name">Central Prison-I &amp; II, Chennai</field>
+    <field name="prison_type">central_prison</field>
+    <field name="sanctioned_strength">533</field>
+    <field name="occupied_count">499</field>
+    <field name="vacancy_count">34</field>
+</record>
+
+<record id="vac_cp_vellore" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_central_vellore"/>
+    <field name="prison_name">Central Prison, Vellore</field>
+    <field name="prison_type">central_prison</field>
+    <field name="sanctioned_strength">310</field>
+    <field name="occupied_count">292</field>
+    <field name="vacancy_count">17</field>
+</record>
+
+<record id="vac_cp_cuddalore" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_central_cuddalore"/>
+    <field name="prison_name">Central Prison, Cuddalore</field>
+    <field name="prison_type">central_prison</field>
+    <field name="sanctioned_strength">271</field>
+    <field name="occupied_count">258</field>
+    <field name="vacancy_count">13</field>
+</record>
+
+<record id="vac_cp_trichy" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_central_trichy"/>
+    <field name="prison_name">Central Prison, Tiruchirappalli</field>
+    <field name="prison_type">central_prison</field>
+    <field name="sanctioned_strength">335</field>
+    <field name="occupied_count">312</field>
+    <field name="vacancy_count">23</field>
+</record>
+
+<record id="vac_cp_salem" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_central_salem"/>
+    <field name="prison_name">Central Prison, Salem</field>
+    <field name="prison_type">central_prison</field>
+    <field name="sanctioned_strength">319</field>
+    <field name="occupied_count">301</field>
+    <field name="vacancy_count">18</field>
+</record>
+
+<record id="vac_cp_coimbatore" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_central_coimbatore"/>
+    <field name="prison_name">Central Prison, Coimbatore</field>
+    <field name="prison_type">central_prison</field>
+    <field name="sanctioned_strength">415</field>
+    <field name="occupied_count">369</field>
+    <field name="vacancy_count">47</field>
+</record>
+
+<record id="vac_cp_madurai" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_central_madurai"/>
+    <field name="prison_name">Central Prison, Madurai</field>
+    <field name="prison_type">central_prison</field>
+    <field name="sanctioned_strength">292</field>
+    <field name="occupied_count">278</field>
+    <field name="vacancy_count">14</field>
+</record>
+
+<record id="vac_cp_palayamkottai" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_central_palayamkottai"/>
+    <field name="prison_name">Central Prison, Palayamkottai</field>
+    <field name="prison_type">central_prison</field>
+    <field name="sanctioned_strength">331</field>
+    <field name="occupied_count">321</field>
+    <field name="vacancy_count">10</field>
+</record>
+
+<!-- Special Prisons for Women -->
+<record id="vac_spw_chennai" model="prison.vacancy">
+    <field name="prison_id" ref="jail_spw_chennai"/>
+    <field name="prison_name">Special Prison for Women, Chennai</field>
+    <field name="prison_type">special_prison_women</field>
+    <field name="sanctioned_strength">84</field>
+    <field name="occupied_count">78</field>
+    <field name="vacancy_count">6</field>
+</record>
+
+<record id="vac_spw_vellore" model="prison.vacancy">
+    <field name="prison_id" ref="jail_spw_vellore"/>
+    <field name="prison_name">Special Prison for Women, Vellore</field>
+    <field name="prison_type">special_prison_women</field>
+    <field name="sanctioned_strength">87</field>
+    <field name="occupied_count">74</field>
+    <field name="vacancy_count">13</field>
+</record>
+
+<record id="vac_spw_coimbatore" model="prison.vacancy">
+    <field name="prison_id" ref="jail_spw_coimbatore"/>
+    <field name="prison_name">Special Prison for Women, Coimbatore</field>
+    <field name="prison_type">special_prison_women</field>
+    <field name="sanctioned_strength">37</field>
+    <field name="occupied_count">34</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<record id="vac_spw_trichy" model="prison.vacancy">
+    <field name="prison_id" ref="jail_spw_trichy"/>
+    <field name="prison_name">Special Prison for Women, Tiruchirappalli</field>
+    <field name="prison_type">special_prison_women</field>
+    <field name="sanctioned_strength">99</field>
+    <field name="occupied_count">76</field>
+    <field name="vacancy_count">23</field>
+</record>
+
+<record id="vac_spw_madurai" model="prison.vacancy">
+    <field name="prison_id" ref="jail_spw_madurai"/>
+    <field name="prison_name">Special Prison for Women, Madurai</field>
+    <field name="prison_type">special_prison_women</field>
+    <field name="sanctioned_strength">38</field>
+    <field name="occupied_count">34</field>
+    <field name="vacancy_count">4</field>
+</record>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     DISTRICT JAILS
+══════════════════════════════════════════════════════════════════════ -->
+
+<record id="vac_dj_chengalpattu" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_dj_chengalpattu"/>
+    <field name="prison_name">D.J. Chengalpattu</field>
+    <field name="prison_type">district_jail</field>
+    <field name="sanctioned_strength">30</field>
+    <field name="occupied_count">27</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<record id="vac_dj_villupuram" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_dj_villuppuram"/>
+    <field name="prison_name">D.J. Villupuram</field>
+    <field name="prison_type">district_jail</field>
+    <field name="sanctioned_strength">35</field>
+    <field name="occupied_count">32</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<record id="vac_dj_dharmapuri" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_dj_dharmapuri"/>
+    <field name="prison_name">D.J. Dharmapuri</field>
+    <field name="prison_type">district_jail</field>
+    <field name="sanctioned_strength">35</field>
+    <field name="occupied_count">28</field>
+    <field name="vacancy_count">8</field>
+</record>
+
+<record id="vac_dj_erode" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_dj_erode"/>
+    <field name="prison_name">D.J. Erode @ Gobichettipalayam</field>
+    <field name="prison_type">district_jail</field>
+    <field name="sanctioned_strength">36</field>
+    <field name="occupied_count">31</field>
+    <field name="vacancy_count">5</field>
+</record>
+
+<record id="vac_dj_tiruppur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_dj_tiruppur"/>
+    <field name="prison_name">D.J. Tiruppur</field>
+    <field name="prison_type">district_jail</field>
+    <field name="sanctioned_strength">26</field>
+    <field name="occupied_count">21</field>
+    <field name="vacancy_count">5</field>
+</record>
+
+<record id="vac_dj_nagapattinam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_dj_nagapattinam"/>
+    <field name="prison_name">D.J. Nagapattinam</field>
+    <field name="prison_type">district_jail</field>
+    <field name="sanctioned_strength">35</field>
+    <field name="occupied_count">22</field>
+    <field name="vacancy_count">13</field>
+</record>
+
+<record id="vac_dj_pudukkottai" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_dj_pudukkottai"/>
+    <field name="prison_name">D.J. Pudukkottai</field>
+    <field name="prison_type">district_jail</field>
+    <field name="sanctioned_strength">95</field>
+    <field name="occupied_count">73</field>
+    <field name="vacancy_count">22</field>
+</record>
+
+<record id="vac_dj_dindigul" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_dj_dindigul"/>
+    <field name="prison_name">D.J. Dindigul</field>
+    <field name="prison_type">district_jail</field>
+    <field name="sanctioned_strength">35</field>
+    <field name="occupied_count">30</field>
+    <field name="vacancy_count">5</field>
+</record>
+
+<record id="vac_dj_ramanathapuram" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_dj_ramanathapuram"/>
+    <field name="prison_name">D.J. Ramanathapuram</field>
+    <field name="prison_type">district_jail</field>
+    <field name="sanctioned_strength">35</field>
+    <field name="occupied_count">33</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<record id="vac_dj_virudhunagar" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_dj_virudhunagar"/>
+    <field name="prison_name">D.J. Virudhunagar</field>
+    <field name="prison_type">district_jail</field>
+    <field name="sanctioned_strength">35</field>
+    <field name="occupied_count">31</field>
+    <field name="vacancy_count">4</field>
+</record>
+
+<record id="vac_dj_theni" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_dj_theni"/>
+    <field name="prison_name">D.J. Theni</field>
+    <field name="prison_type">district_jail</field>
+    <field name="sanctioned_strength">35</field>
+    <field name="occupied_count">31</field>
+    <field name="vacancy_count">4</field>
+</record>
+
+<record id="vac_dj_thoothukudi" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_dj_thoothukudi"/>
+    <field name="prison_name">D.J. Thoothukudi @ Perurani</field>
+    <field name="prison_type">district_jail</field>
+    <field name="sanctioned_strength">37</field>
+    <field name="occupied_count">34</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<record id="vac_dj_nagercoil" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_dj_kanniyakumari"/>
+    <field name="prison_name">D.J. Kanniyakumari @ Nagercoil</field>
+    <field name="prison_type">district_jail</field>
+    <field name="sanctioned_strength">30</field>
+    <field name="occupied_count">29</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<!-- Closed District Jail -->
+<record id="vac_dj_attur_closed" model="prison.vacancy">
+    <field name="prison_id" ref="jail_dj_attur_closed"/>
+    <field name="prison_name">D.J. Attur (Closed)</field>
+    <field name="prison_type">district_jail</field>
+    <field name="sanctioned_strength">36</field>
+    <field name="occupied_count">9</field>
+    <field name="vacancy_count">27</field>
+    <field name="active" eval="False"/>
+</record>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SUB JAILS — Chennai Region
+══════════════════════════════════════════════════════════════════════ -->
+
+<record id="vac_sj_saidapet" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_saidapet"/>
+    <field name="prison_name">S.J. Saidapet</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">14</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<record id="vac_ssj_poonnamallee" model="prison.vacancy">
+    <field name="prison_id" ref="jail_ssj_poonnamallee"/>
+    <field name="prison_name">Special Sub Jail, Poonnamallee</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">12</field>
+    <field name="occupied_count">6</field>
+    <field name="vacancy_count">6</field>
+</record>
+
+<record id="vac_sj_kanchipuram" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_kanchipuram"/>
+    <field name="prison_name">S.J. Kancheepuram</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_chengalpattu_women" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_chengalpattu_women"/>
+    <field name="prison_name">D.J. Chengalpattu Women Annex</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">3</field>
+    <field name="occupied_count">3</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_tiruttani" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_tiruttani"/>
+    <field name="prison_name">S.J. Tiruttani</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">12</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_ponneri" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_ponneri"/>
+    <field name="prison_name">S.J. Ponneri</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_thiruvallur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_thiruvallur"/>
+    <field name="prison_name">S.J. Thiruvallur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">11</field>
+    <field name="occupied_count">9</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<!-- Closed sub-jails (Chennai region) -->
+<record id="vac_sj_maduranthagam" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_maduranthagam_closed"/>
+    <field name="prison_name">S.J. Maduranthagam (Closed)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">9</field>
+    <field name="vacancy_count">4</field>
+    <field name="active" eval="False"/>
+</record>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SUB JAILS — Vellore Region
+══════════════════════════════════════════════════════════════════════ -->
+
+<record id="vac_sj_ambur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_ambur"/>
+    <field name="prison_name">S.J. Ambur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_gudiyatham" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_gudiyatham"/>
+    <field name="prison_name">S.J. Gudiyatham</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_tirupattur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_tirupattur"/>
+    <field name="prison_name">S.J. Tirupattur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">10</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<record id="vac_sj_vaniyambadi" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_vaniyambadi"/>
+    <field name="prison_name">S.J. Vaniyambadi</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_walaja" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_walaja"/>
+    <field name="prison_name">S.J. Walaja</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_arakkonam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_arakkonam"/>
+    <field name="prison_name">S.J. Arakkonam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_chengam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_chengam"/>
+    <field name="prison_name">S.J. Chengam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_polur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_polur"/>
+    <field name="prison_name">S.J. Polur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">10</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<record id="vac_sj_thiruvannamalai" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_thiruvannamalai"/>
+    <field name="prison_name">S.J. Thiruvannamalai</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_vandavasi" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_vandavasi"/>
+    <field name="prison_name">S.J. Vandavasi</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<!-- Closed (Vellore region) -->
+<record id="vac_sj_arani" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_arani_closed"/>
+    <field name="prison_name">S.J. Arani (Closed)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">9</field>
+    <field name="vacancy_count">4</field>
+    <field name="active" eval="False"/>
+</record>
+<record id="vac_sj_cheyyar" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_cheyyar_closed"/>
+    <field name="prison_name">S.J. Cheyyar (Closed)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">12</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">1</field>
+    <field name="active" eval="False"/>
+</record>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SUB JAILS — Cuddalore Region
+══════════════════════════════════════════════════════════════════════ -->
+
+<record id="vac_sj_chidambaram" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_chidambaram"/>
+    <field name="prison_name">S.J. Chidambaram</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_virudhachalam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_virudhachalam"/>
+    <field name="prison_name">S.J. Virudhachalam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">10</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_panruti" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_panruti"/>
+    <field name="prison_name">S.J. Panruti</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_cuddalore_women" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_cuddalore_women"/>
+    <field name="prison_name">Women Sub Jail, Cuddalore</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_tindivanam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_tindivanam"/>
+    <field name="prison_name">S.J. Tindivanam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_gingee" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_gingee"/>
+    <field name="prison_name">S.J. Gingee</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_kallakurichi" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_kallakurichi"/>
+    <field name="prison_name">S.J. Kallakurichi</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_ulundurpet" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_ulundurpet"/>
+    <field name="prison_name">S.J. Ulundurpet</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_thirukovilur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_thirukovilur"/>
+    <field name="prison_name">S.J. Thirukovilur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_villupuram_women" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_villupuram_women"/>
+    <field name="prison_name">Women Sub Jail, Villupuram</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<!-- Closed (Cuddalore region) -->
+<record id="vac_sj_cuddalore_closed" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_cuddalore_closed"/>
+    <field name="prison_name">S.J. Cuddalore (Closed)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">19</field>
+    <field name="occupied_count">16</field>
+    <field name="vacancy_count">3</field>
+    <field name="active" eval="False"/>
+</record>
+<record id="vac_sj_parangipet" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_parangipet_closed"/>
+    <field name="prison_name">S.J. Parangipet (Closed)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">8</field>
+    <field name="vacancy_count">7</field>
+    <field name="active" eval="False"/>
+</record>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SUB JAILS — Salem Region
+══════════════════════════════════════════════════════════════════════ -->
+
+<record id="vac_sj_omalur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_omalur"/>
+    <field name="prison_name">S.J. Omalur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_sankagiri" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_sankagiri"/>
+    <field name="prison_name">S.J. Sankagiri</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_namakkal" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_namakkal"/>
+    <field name="prison_name">S.J. Namakkal</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_thiruchengodu" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_thiruchengodu"/>
+    <field name="prison_name">S.J. Thiruchengodu</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_ssj_salem_women" model="prison.vacancy">
+    <field name="prison_id" ref="jail_ssj_salem_women"/>
+    <field name="prison_name">Special Sub Jail for Women, Salem</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">40</field>
+    <field name="occupied_count">34</field>
+    <field name="vacancy_count">6</field>
+</record>
+
+<record id="vac_sj_harur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_harur"/>
+    <field name="prison_name">S.J. Harur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_hosur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_hosur"/>
+    <field name="prison_name">S.J. Hosur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_krishnagiri" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_krishnagiri"/>
+    <field name="prison_name">S.J. Krishnagiri</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_uthangarai" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_uthangarai"/>
+    <field name="prison_name">S.J. Uthangarai</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_dharmapuri_women" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_dharmapuri_women"/>
+    <field name="prison_name">Women Sub Jail, Dharmapuri</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<!-- Closed (Salem region) -->
+<record id="vac_sj_rasipuram" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_rasipuram_closed"/>
+    <field name="prison_name">S.J. Rasipuram (Closed)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">8</field>
+    <field name="vacancy_count">5</field>
+    <field name="active" eval="False"/>
+</record>
+<record id="vac_sj_paramathivelur" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_paramathivelur_closed"/>
+    <field name="prison_name">S.J. Paramathivelur (Closed)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">9</field>
+    <field name="vacancy_count">4</field>
+    <field name="active" eval="False"/>
+</record>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SUB JAILS — Coimbatore Region
+══════════════════════════════════════════════════════════════════════ -->
+
+<record id="vac_sj_erode" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_erode"/>
+    <field name="prison_name">S.J. Erode</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">12</field>
+    <field name="occupied_count">10</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_bhavani" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_bhavani"/>
+    <field name="prison_name">S.J. Bhavani</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_sathyamangalam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_sathyamangalam"/>
+    <field name="prison_name">S.J. Sathyamangalam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_perundurai" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_perundurai"/>
+    <field name="prison_name">S.J. Perundurai</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">4</field>
+</record>
+
+<record id="vac_dj_tiruppur_women" model="prison.vacancy">
+    <field name="prison_id" ref="jail_dj_tiruppur_women"/>
+    <field name="prison_name">D.J. Tiruppur Women Annexure</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">10</field>
+    <field name="occupied_count">10</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_avinashi" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_avinashi"/>
+    <field name="prison_name">S.J. Avinashi</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_udumalaipet" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_udumalaipet"/>
+    <field name="prison_name">S.J. Udumalaipet</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_dharapuram" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_dharapuram"/>
+    <field name="prison_name">S.J. Dharapuram</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_palladam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_palladam"/>
+    <field name="prison_name">S.J. Palladam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">8</field>
+    <field name="vacancy_count">5</field>
+</record>
+
+<record id="vac_sj_ooty" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_ooty"/>
+    <field name="prison_name">S.J. Ooty</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">10</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<record id="vac_sj_coonoor" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_coonoor"/>
+    <field name="prison_name">S.J. Coonoor</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">8</field>
+    <field name="vacancy_count">5</field>
+</record>
+
+<record id="vac_sj_gudalur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_gudalur"/>
+    <field name="prison_name">S.J. Gudalur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">8</field>
+    <field name="vacancy_count">5</field>
+</record>
+
+<record id="vac_sj_pollachi" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_pollachi"/>
+    <field name="prison_name">S.J. Pollachi</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">14</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<record id="vac_oaj_singanallur" model="prison.vacancy">
+    <field name="prison_id" ref="jail_oaj_singanallur"/>
+    <field name="prison_name">Open Air Jail, Singanallur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">20</field>
+    <field name="occupied_count">16</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<!-- Closed (Coimbatore region) -->
+<record id="vac_sj_mettupalayam" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_mettupalayam_closed"/>
+    <field name="prison_name">S.J. Mettupalayam (Closed)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">5</field>
+    <field name="vacancy_count">8</field>
+    <field name="active" eval="False"/>
+</record>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SUB JAILS — Tiruchirappalli Region
+══════════════════════════════════════════════════════════════════════ -->
+
+<record id="vac_sj_lalgudi" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_lalgudi"/>
+    <field name="prison_name">S.J. Lalgudi</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_thuraiyur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_thuraiyur"/>
+    <field name="prison_name">S.J. Thuraiyur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_perambalur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_perambalur"/>
+    <field name="prison_name">S.J. Perambalur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_ariyalur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_ariyalur"/>
+    <field name="prison_name">S.J. Ariyalur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_jayamkondam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_jayamkondam"/>
+    <field name="prison_name">S.J. Jayamkondam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_karur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_karur"/>
+    <field name="prison_name">S.J. Karur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_kulithalai" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_kulithalai"/>
+    <field name="prison_name">S.J. Kulithalai</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<!-- Closed (Trichy region) -->
+<record id="vac_sj_manapparai" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_manapparai_closed"/>
+    <field name="prison_name">S.J. Manapparai (Closed)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">9</field>
+    <field name="vacancy_count">4</field>
+    <field name="active" eval="False"/>
+</record>
+<record id="vac_sj_musiri" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_musiri_closed"/>
+    <field name="prison_name">S.J. Musiri (Closed)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">9</field>
+    <field name="vacancy_count">4</field>
+    <field name="active" eval="False"/>
+</record>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SUB JAILS — Delta / Pudukkottai Region (standalone)
+══════════════════════════════════════════════════════════════════════ -->
+
+<record id="vac_sj_thirumayam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_thirumayam"/>
+    <field name="prison_name">S.J. Thirumayam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">10</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<record id="vac_sj_aranthangi" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_aranthangi"/>
+    <field name="prison_name">S.J. Aranthangi</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">9</field>
+    <field name="vacancy_count">4</field>
+</record>
+
+<record id="vac_sj_thanjavur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_thanjavur"/>
+    <field name="prison_name">S.J. Thanjavur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">15</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<record id="vac_sj_kumbakonam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_kumbakonam"/>
+    <field name="prison_name">S.J. Kumbakonam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_papanasam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_papanasam"/>
+    <field name="prison_name">S.J. Papanasam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_thiruvidaimaruthur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_thiruvidaimaruthur"/>
+    <field name="prison_name">S.J. Thiruvidaimaruthur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_mannarkudi" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_mannarkudi"/>
+    <field name="prison_name">S.J. Mannarkudi</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_nannilam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_nannilam"/>
+    <field name="prison_name">S.J. Nannilam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_thiruturaipoondi" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_thiruturaipoondi"/>
+    <field name="prison_name">S.J. Thiruturaipoondi</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">8</field>
+    <field name="vacancy_count">5</field>
+</record>
+
+<record id="vac_sj_sirkali" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_sirkali"/>
+    <field name="prison_name">S.J. Sirkali</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_mayiladuthurai" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_mayiladuthurai"/>
+    <field name="prison_name">S.J. Mayiladuthurai</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_tharangambadi" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_tharangambadi"/>
+    <field name="prison_name">S.J. Tharangambadi</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_thiruvarur_women" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_thiruvarur_women"/>
+    <field name="prison_name">Female Sub Jail, Thiruvarur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">9</field>
+    <field name="vacancy_count">4</field>
+</record>
+
+<!-- Closed (Delta region) -->
+<record id="vac_sj_keeranur" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_keeranur_closed"/>
+    <field name="prison_name">S.J. Keeranur (Closed)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">5</field>
+    <field name="vacancy_count">8</field>
+    <field name="active" eval="False"/>
+</record>
+<record id="vac_sj_pattukottai" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_pattukottai_closed"/>
+    <field name="prison_name">S.J. Pattukottai (Closed)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">6</field>
+    <field name="vacancy_count">7</field>
+    <field name="active" eval="False"/>
+</record>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SUB JAILS — Madurai Region
+══════════════════════════════════════════════════════════════════════ -->
+
+<record id="vac_sj_vedasandur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_vedasandur"/>
+    <field name="prison_name">S.J. Vedasandur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_palani" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_palani"/>
+    <field name="prison_name">S.J. Palani</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_uthamapalayam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_uthamapalayam"/>
+    <field name="prison_name">S.J. Uthamapalayam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_periyakulam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_periyakulam"/>
+    <field name="prison_name">S.J. Periyakulam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_usilampatti" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_usilampatti"/>
+    <field name="prison_name">S.J. Usilampatti</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_melur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_melur"/>
+    <field name="prison_name">S.J. Melur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_thirumangalam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_thirumangalam"/>
+    <field name="prison_name">S.J. Thirumangalam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_sivagangai" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_sivagangai"/>
+    <field name="prison_name">S.J. Sivagangai</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_tiruppattur_sivagangai" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_tiruppattur_sivagangai"/>
+    <field name="prison_name">S.J. Tiruppattur (Sivagangai)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_mudukulathur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_mudukulathur"/>
+    <field name="prison_name">S.J. Mudukulathur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">10</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<record id="vac_sj_aruppukottai" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_aruppukottai"/>
+    <field name="prison_name">S.J. Aruppukottai</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_srivilliputhur" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_srivilliputhur"/>
+    <field name="prison_name">S.J. Srivilliputhur</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_nilakottai_women" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_nilakottai_women"/>
+    <field name="prison_name">Sub Jail Women, Nilakottai</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">14</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_paramakudi_women" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_paramakudi_women"/>
+    <field name="prison_name">Sub Jail Women, Paramakudi</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">14</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_oap_purasadai" model="prison.vacancy">
+    <field name="prison_id" ref="jail_oap_purasadai"/>
+    <field name="prison_name">Open Air Prison, Purasadai Udaippu</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">18</field>
+    <field name="occupied_count">15</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<!-- Closed (Madurai region) -->
+<record id="vac_sj_kodaikanal" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_kodaikanal_closed"/>
+    <field name="prison_name">S.J. Kodaikanal (Closed)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+    <field name="active" eval="False"/>
+</record>
+<record id="vac_sj_thiruvadanai" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_thiruvadanai_closed"/>
+    <field name="prison_name">S.J. Thiruvadanai (Closed)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">10</field>
+    <field name="vacancy_count">3</field>
+    <field name="active" eval="False"/>
+</record>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     SUB JAILS — Palayamkottai Region
+══════════════════════════════════════════════════════════════════════ -->
+
+<record id="vac_sj_ambasamudram" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_ambasamudram"/>
+    <field name="prison_name">S.J. Ambasamudram</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_tenkasi" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_tenkasi"/>
+    <field name="prison_name">S.J. Tenkasi</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_sankarankoil" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_sankarankoil"/>
+    <field name="prison_name">S.J. Sankarankoil</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">13</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_nanguneri" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_nanguneri"/>
+    <field name="prison_name">S.J. Nanguneri</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">20</field>
+    <field name="occupied_count">20</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_kovilpatti" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_kovilpatti"/>
+    <field name="prison_name">S.J. Kovilpatti</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">12</field>
+    <field name="vacancy_count">1</field>
+</record>
+
+<record id="vac_sj_srivaikundam" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_srivaikundam"/>
+    <field name="prison_name">S.J. Srivaikundam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<record id="vac_sj_perurani_women" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_perurani_women"/>
+    <field name="prison_name">Female Jail, Perurani</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">8</field>
+    <field name="occupied_count">8</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_kuzhithurai" model="prison.vacancy">
+    <field name="prison_id" ref="prison_jail_master.jail_sj_kuzhithurai"/>
+    <field name="prison_name">S.J. Kuzhithurai</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">10</field>
+    <field name="vacancy_count">3</field>
+</record>
+
+<record id="vac_ssj_kokkirakulam" model="prison.vacancy">
+    <field name="prison_id" ref="jail_ssj_kokkirakulam"/>
+    <field name="prison_name">Special Sub Jail, Kokkirakulam</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">21</field>
+    <field name="occupied_count">21</field>
+    <field name="vacancy_count">0</field>
+</record>
+
+<record id="vac_sj_thukalay_women" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_thukalay_women"/>
+    <field name="prison_name">Sub Jail for Women, Thukalay</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">11</field>
+    <field name="vacancy_count">2</field>
+</record>
+
+<!-- Closed (Palayamkottai region) -->
+<record id="vac_sj_thiruchendur" model="prison.vacancy">
+    <field name="prison_id" ref="jail_sj_thiruchendur_closed"/>
+    <field name="prison_name">S.J. Thiruchendur (Closed)</field>
+    <field name="prison_type">sub_jail</field>
+    <field name="sanctioned_strength">13</field>
+    <field name="occupied_count">10</field>
+    <field name="vacancy_count">3</field>
+    <field name="active" eval="False"/>
+</record>
+
+</data>
+</odoo>
