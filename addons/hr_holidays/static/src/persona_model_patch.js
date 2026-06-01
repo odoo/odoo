@@ -7,7 +7,7 @@ const { DateTime } = luxon;
 
 /** @param {string} datetime */
 export function getOutOfOfficeDateEndText(datetime) {
-    const foptions = { ...DateTime.DATE_MED };
+    const foptions = { ...DateTime.DATE_MED, timeZone:"UTC" };
     const dt = deserializeDateTime(datetime);
     if (dt.year === DateTime.now().year) {
         foptions.year = undefined;
