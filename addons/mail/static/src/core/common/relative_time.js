@@ -1,5 +1,4 @@
-import { render } from "@web/owl2/utils";
-import { Component, onWillDestroy, onWillUpdateProps, props, types, xml } from "@odoo/owl";
+import { Component, computed, onWillDestroy, props, signal, types, xml } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 
@@ -7,38 +6,33 @@ const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
 
 export class RelativeTime extends Component {
-    static template = xml`<t t-out="this.relativeTime"/>`;
+    static template = xml`<t t-out="this.relativeTime()"/>`;
 
+    recompute = signal(0);
     setup() {
         super.setup();
         this.props = props({
-            datetime: types.object(),
+            datetime: types.instanceOf(luxon.DateTime),
         });
         this.timeout = null;
-        this.computeRelativeTime(this.props.datetime);
         onWillDestroy(() => clearTimeout(this.timeout));
-        onWillUpdateProps((nextProps) => {
+        this.relativeTime = computed(() => {
+            void this.recompute();
             clearTimeout(this.timeout);
-            this.computeRelativeTime(nextProps.datetime);
+            return this.computeRelativeTime();
         });
     }
 
-    computeRelativeTime(datetime) {
-        if (!datetime) {
-            this.relativeTime = "";
-            return;
-        }
-        const delta = Date.now() - datetime.ts;
+    computeRelativeTime() {
+        const delta = Date.now() - this.props.datetime.ts;
         const absDelta = Math.abs(delta);
-        if (absDelta < 45 * 1000) {
-            this.relativeTime = delta < 0 ? _t("in a few seconds") : _t("now");
-        } else {
-            this.relativeTime = datetime.toRelative();
-        }
         const updateDelay = absDelta < MINUTE ? absDelta : absDelta < HOUR ? MINUTE : HOUR;
         this.timeout = setTimeout(() => {
-            this.computeRelativeTime(this.props.datetime);
-            render(this);
+            this.recompute.set(this.recompute() + 1);
         }, updateDelay);
+        if (absDelta < 45 * 1000) {
+            return delta < 0 ? _t("in a few seconds") : _t("now");
+        }
+        return this.props.datetime.toRelative();
     }
 }

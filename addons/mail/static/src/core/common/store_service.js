@@ -6,7 +6,7 @@ import {
 } from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { proxy } from "@odoo/owl";
+import { proxy, untrack } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
@@ -181,13 +181,15 @@ export class Store extends BaseStore {
      * @param {boolean} [options.silent=true]
      */
     async fetchStoreData(name, params, { requestData = false, silent = true } = {}) {
-        /** @type {import("models").DataResponse} */
-        const dataRequest = this.DataResponse.createRequest();
-        dataRequest._autoResolve = !requestData;
-        this.fetchParams.push([name, params, dataRequest]);
-        this.fetchSilent = this.fetchSilent && silent;
-        this._fetchStoreDataDebounced();
-        return dataRequest._resultResolvers.promise;
+        return untrack(() => {
+            /** @type {import("models").DataResponse} */
+            const dataRequest = this.DataResponse.createRequest();
+            dataRequest._autoResolve = !requestData;
+            this.fetchParams.push([name, params, dataRequest]);
+            this.fetchSilent = this.fetchSilent && silent;
+            this._fetchStoreDataDebounced();
+            return dataRequest._resultResolvers.promise;
+        });
     }
 
     /**

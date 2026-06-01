@@ -3,7 +3,7 @@ import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUpdateProps, proxy, signal, types } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, types, useEffect } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { router } from "@web/core/browser/router";
@@ -38,19 +38,20 @@ export class Chatter extends Component {
         useSubEnv(this.subEnv);
 
         onMounted(this._onMounted);
-        onWillUpdateProps((nextProps) => {
-            if (
-                this.props.threadId !== nextProps.threadId ||
-                this.props.threadModel !== nextProps.threadModel
-            ) {
-                this.changeThread(nextProps.threadModel, nextProps.threadId);
-            }
-            if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
-                if (this.env.chatter) {
-                    this.env.chatter.fetchThreadData = false;
+        let sameThread = true;
+        useEffect(() => {
+            void this.props.threadModel;
+            void this.props.threadId;
+            if (!sameThread) {
+                this.changeThread(this.props.threadModel, this.props.threadId);
+                if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
+                    if (this.env.chatter) {
+                        this.env.chatter.fetchThreadData = false;
+                    }
+                    this.load(this.state.thread, this.requestList);
                 }
-                this.load(this.state.thread, this.requestList);
             }
+            sameThread = false;
         });
     }
 

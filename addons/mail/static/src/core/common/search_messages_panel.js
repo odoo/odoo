@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, props, types } from "@odoo/owl";
+import { Component, useEffect, props, types } from "@odoo/owl";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -18,10 +18,13 @@ export class SearchMessagesPanel extends Component {
             thread: types.instanceOf(this.store["mail.thread"].Class),
         });
         this.messageSearch = this.env.messageSearch ?? useMessageSearch(this.props.thread);
-        onWillUpdateProps((nextProps) => {
-            if (this.props.thread.notEq(nextProps.thread)) {
+        let sameThread = true;
+        useEffect(() => {
+            void this.props.thread;
+            if (!sameThread) {
                 this.env.searchMenu?.close();
             }
+            sameThread = false;
         });
     }
 
