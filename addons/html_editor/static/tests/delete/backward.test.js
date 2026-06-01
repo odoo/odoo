@@ -212,8 +212,7 @@ describe("Selection collapsed", () => {
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
                 },
-                contentAfterEdit:
-                    '<p>uv<span data-oe-zws-empty-inline="" style="color:red">[]\u200B</span>xy</p>',
+                contentAfterEdit: "<p>uv[]xy</p>",
                 contentAfter: "<p>uv[]xy</p>",
             });
         });
@@ -225,8 +224,8 @@ describe("Selection collapsed", () => {
                     deleteBackward(editor);
                     await insertText(editor, "i");
                 },
-                contentAfterEdit: '<p>uv<span style="color:red"><em>i[]</em></span>xy</p>',
-                contentAfter: '<p>uv<span style="color:red"><em>i[]</em></span>xy</p>',
+                contentAfterEdit: '<p>uv<font style="color: red;"><em>i[]</em></font>xy</p>',
+                contentAfter: '<p>uv<font style="color: red;"><em>i[]</em></font>xy</p>',
             });
         });
 

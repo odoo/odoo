@@ -149,7 +149,7 @@ describe("not collapsed selection", () => {
             contentBefore:
                 '<h1><font style="background-color: red;">[abc]</font><br></h1><p>def</p>',
             stepFunction: async (editor) => await insertText(editor, "g"),
-            contentAfter: '<h1><font style="background-color: red;">g[]</font><br></h1><p>def</p>',
+            contentAfter: '<h1><font style="background-color: red;">g[]</font></h1><p>def</p>',
         });
     });
 
@@ -161,7 +161,7 @@ describe("not collapsed selection", () => {
                 deleteBackward(editor);
                 await insertText(editor, "g");
             },
-            contentAfter: '<h1><font style="background-color: red;">g[]</font><br></h1><p>def</p>',
+            contentAfter: '<h1><font style="background-color: red;">g[]</font></h1><p>def</p>',
         });
     });
 
