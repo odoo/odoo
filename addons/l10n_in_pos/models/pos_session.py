@@ -12,6 +12,7 @@ class PosSession(models.Model):
             ('order_id.account_move', '=', False),
             ('l10n_in_hsn_code', '=', False),
             ('tax_ids', '!=', False),
+            ('company_id.l10n_in_disable_b2c_hsn_reporting', '=', False)
         ]
 
         # Lines where product already has HSN
