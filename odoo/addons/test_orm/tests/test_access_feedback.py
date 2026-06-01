@@ -218,6 +218,7 @@ If you really, really need access, perhaps you can win over your friendly admini
         )
         # create access on ChildModel requires create access on parent model
         self._make_rule('rule 1', '[]', attr='create')
+        self._make_rule('rule 2', '[]', attr='read')  # because `some_id` has `bypass_search_access` equals to `True`
         ChildModel = self.env['test_access_right.inherits']
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             ChildModel.with_user(self.user).create({'some_id': self.record.id, 'val': 2})

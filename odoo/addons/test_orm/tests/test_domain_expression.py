@@ -2,8 +2,9 @@ import unittest
 from unittest.mock import patch
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
+from odoo.exceptions import AccessError
 from odoo.fields import Command, Domain
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, new_test_user
 from odoo.tools import mute_logger
 from odoo.tests import tagged
 
@@ -1583,6 +1584,47 @@ class TestBypassAccess(TransactionExpressionCase):
         partners = self._search(partner_obj, [('state_id.country_id.code', 'like', name_test)])
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
             "bypass_search_access on: ('state_id.country_id.code', 'like', '..') incorrect result")
+
+        # --------------------------------------------------
+        # Test: many2one security
+        # --------------------------------------------------
+
+        # Do: many2one check read access read on comodel record if
+        # bypass_search_access is set during create/write
+        internal_user = new_test_user(self.env, 'internal')
+
+        self.env['ir.access'].create({
+            'name': 'test_state_access',
+            'model_id': self.env['ir.model']._get('res.country.state').id,
+            'group_id': self.env.ref('base.group_user').id,
+            'operation': 'crud',
+        })
+        country_access = self.env['ir.access'].search([
+            ('model_id.model', '=', 'res.country'),
+        ])
+        country_access.write({'operation': 'c'})
+
+        patch_bypass_search_access(state_obj, 'country_id', False)
+        # internal_user has create access right
+        state = state_obj.with_user(internal_user).create({
+            'name': 'without bypass',
+            'code': 'AAA',
+            'country_id': country_us.id,
+        })
+        # internal_user has write access right
+        state.with_user(internal_user).write({'country_id': country_us.id})
+
+        patch_bypass_search_access(state_obj, 'country_id', True)
+        # prevent linking to a record that internal_user does not have
+        # read access right
+        with self.assertRaises(AccessError):
+            state_obj.with_user(internal_user).create({
+                'name': 'with bypass',
+                'code': 'BBB',
+                'country_id': country_us.id,
+            })
+        with self.assertRaises(AccessError):
+            state.with_user(internal_user).write({'country_id': country_us.id})
 
         # --------------------------------------------------
         # Test: domain attribute on one2many fields
