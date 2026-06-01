@@ -4584,8 +4584,9 @@ test("editable o2m with onchange and required field: delete an invalid line", as
     expect.verifySteps(["get_views", "web_read"]);
     await contains(".o_data_cell").click();
     await contains(".o_field_widget[name=product_id] input").clear();
+    await runAllTimers();
     // no onchange should be done as line is invalid
-    expect.verifySteps([]);
+    expect.verifySteps(["web_name_search"]);
     await contains(".o_list_record_remove").click();
     // onchange should have been done
     expect.verifySteps(["onchange"]);
