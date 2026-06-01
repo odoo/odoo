@@ -6,6 +6,7 @@ from freezegun import freeze_time
 from json import loads
 
 from odoo.tests import Form
+from odoo.tests.common import new_test_user
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo import fields, Command
 
@@ -391,6 +392,54 @@ class TestMrpReplenish(TestMrpCommon):
             'product_id': self.bom_2.product_id.id,
         })
         self.assertEqual(orderpoint.company_id, company_2)
+
+    def test_orderpoint_bom_uom_filtered_by_company(self):
+        """The allowed replenishment UoMs must not read another company's BoM."""
+        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        warehouse_2 = self.env['stock.warehouse'].create({
+            'name': 'Company 2 Warehouse',
+            'code': 'C2RR',
+            'company_id': company_2.id,
+        })
+        company_2_user = new_test_user(
+            self.env,
+            login='company_2_mrp_user',
+            groups='stock.group_stock_manager,mrp.group_mrp_user',
+            company_id=company_2.id,
+            company_ids=[Command.set(company_2.ids)],
+        )
+        other_company_uom = self.uom_dozen.copy({'name': 'Other Company Pack'})
+        product = self.env['product.product'].create({
+            'name': 'Shared Manufactured Product',
+            'is_storable': True,
+            'uom_id': self.uom_unit.id,
+        })
+        self.env['mrp.bom'].create([{
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': other_company_uom.id,
+            'product_qty': 1,
+            'company_id': self.env.company.id,
+        }, {
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': self.uom_dozen.id,
+            'product_qty': 1,
+            'company_id': company_2.id,
+        }])
+
+        orderpoint_model = self.env['stock.warehouse.orderpoint'].with_user(company_2_user).with_company(company_2).with_context(
+            allowed_company_ids=company_2.ids,
+        )
+        orderpoint = orderpoint_model.create({
+            'product_id': product.id,
+            'location_id': warehouse_2.lot_stock_id.id,
+            'route_id': warehouse_2.manufacture_pull_id.route_id.id,
+            'company_id': company_2.id,
+        })
+
+        self.assertIn(self.uom_dozen, orderpoint.allowed_replenishment_uom_ids)
+        self.assertNotIn(other_company_uom, orderpoint.allowed_replenishment_uom_ids)
 
     def test_product_replenish_wizard_multiple_manufacture_routes(self):
         self.route_manufacture.copy()
