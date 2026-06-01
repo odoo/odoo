@@ -1,6 +1,6 @@
-import { useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { useChildRefs, useForwardRefsToParent, useScrollState } from "@mail/utils/common/hooks";
-import { Component, xml } from "@odoo/owl";
+import { Component, proxy, xml } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 
 /**
@@ -23,7 +23,7 @@ export class Tabs extends Component {
     static defaultProps = { direction: "v" };
 
     setup() {
-        this.state = useState({ activeHeaderId: this.props.initialTabId });
+        this.state = proxy({ activeHeaderId: this.props.initialTabId });
         this.headerRefs = useChildRefs();
         this.navRef = useRef("nav");
         this.scrollState = useScrollState("nav");

@@ -1,8 +1,8 @@
-import { useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useHover } from "@mail/utils/common/hooks";
@@ -64,7 +64,7 @@ export class ChatBubble extends Component {
             onAway: () => this.popover.close(),
         });
         this.rootRef = useRef("root");
-        this.state = useState({ bouncing: false, isPopoverOpen: false });
+        this.state = proxy({ bouncing: false, isPopoverOpen: false });
         useLayoutEffect(
             (importantCounter) => {
                 this.state.bouncing = Boolean(importantCounter);

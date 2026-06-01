@@ -1,10 +1,9 @@
-import { useState } from "@web/owl2/utils";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay } from "@mail/utils/common/dates";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { FileUploader } from "@web/views/fields/file_handler";
@@ -29,7 +28,7 @@ export class ActivityListPopoverItem extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({ hasMarkDoneView: false });
+        this.state = proxy({ hasMarkDoneView: false });
         if (this.props.activity.activity_category === "upload_file") {
             this.attachmentUploader = useAttachmentUploader(
                 this.env.services["mail.store"]["mail.thread"].insert({

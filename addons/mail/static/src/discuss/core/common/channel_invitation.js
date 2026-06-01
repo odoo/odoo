@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -23,7 +22,7 @@ export class ChannelInvitation extends Component {
         this.notification = useService("notification");
         this.suggestionService = useService("mail.suggestion");
         this.sequential = useSequential();
-        this.state = useState({
+        this.state = proxy({
             hasPendingRequest: false,
             searchResultCount: 0,
             searchStr: "",

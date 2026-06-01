@@ -1,7 +1,7 @@
-import { useComponent, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { CreatePollDialog } from "@mail/core/common/create_poll_dialog";
 
-import { toRaw } from "@odoo/owl";
+import { proxy, toRaw } from "@odoo/owl";
 import { EmojiPicker, useEmojiPickerStoreScroll } from "@web/core/emoji_picker/emoji_picker";
 
 import { _t } from "@web/core/l10n/translation";
@@ -69,7 +69,7 @@ registerComposerAction("send-message", {
             : _t("Send"),
     onSelected: ({ owner }) => owner.sendMessage(),
     setup: ({ owner }) => {
-        owner.sendMessageState = useState({ active: false });
+        owner.sendMessageState = proxy({ active: false });
         useLayoutEffect(
             () => {
                 owner.sendMessageState.active = !owner.isSendButtonDisabled;

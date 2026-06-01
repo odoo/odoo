@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect, useState } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
 import { rightPos } from "@html_editor/utils/position";
 import {
@@ -7,7 +7,7 @@ import {
     generateSpecialMentionElement,
     generateChannelMentionElement,
 } from "@mail/utils/common/format";
-import { status } from "@odoo/owl";
+import { proxy, status } from "@odoo/owl";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { useSearch } from "@mail/utils/common/hooks";
@@ -52,7 +52,7 @@ function _useDetectionState() {
 
 /** @return {ReturnType<_useDetectionState>} */
 function useDetectionState() {
-    return useState(_useDetectionState());
+    return proxy(_useDetectionState());
 }
 
 export class UseSuggestion {

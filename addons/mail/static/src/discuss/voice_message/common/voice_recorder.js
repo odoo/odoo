@@ -1,5 +1,5 @@
-import { useComponent, useState } from "@web/owl2/utils";
-import { Component, onWillUnmount, status } from "@odoo/owl";
+import { useComponent } from "@web/owl2/utils";
+import { Component, onWillUnmount, proxy, status } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -49,7 +49,7 @@ export function useVoiceRecorder(params = {}) {
     /** @type {Function} */
     let disconnectAudioMonitor;
 
-    const state = useState({
+    const state = proxy({
         limitWarning: false,
         isActionPending: false,
         recording: component.props.state?.recording ?? false,

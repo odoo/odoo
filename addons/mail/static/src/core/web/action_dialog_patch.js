@@ -1,13 +1,12 @@
-import { useState } from "@web/owl2/utils";
-
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { ActionDialog } from "@web/webclient/actions/action_dialog";
+import { proxy } from "@odoo/owl";
 
 patch(ActionDialog.prototype, {
     setup() {
         super.setup();
-        this.expanded = useState({ value: false });
+        this.expanded = proxy({ value: false });
     },
 
     get canExpand() {

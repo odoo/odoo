@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, onMounted } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onWillUpdateProps, onMounted, proxy } from "@odoo/owl";
 
 import { useAutoresize } from "@web/core/utils/autoresize";
 
@@ -23,7 +23,7 @@ export class AutoresizeInput extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({
+        this.state = proxy({
             value: this.props.value,
             isFocused: false,
         });

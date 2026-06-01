@@ -1,5 +1,5 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useExternalListener, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
@@ -38,7 +38,7 @@ export class QuickReactionMenu extends Component {
                 popoverClass: "o-mail-QuickReactionMenu-pickerPopover",
             }
         );
-        this.dropdown = useState(
+        this.dropdown = proxy(
             useDropdownState({
                 onClose: () => {
                     const currentThread = this.env.getCurrentThread?.();

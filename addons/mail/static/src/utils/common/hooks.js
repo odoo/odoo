@@ -1,6 +1,6 @@
 import { Component, onMounted, onPatched, onWillUnmount, proxy, toRaw, xml } from "@odoo/owl";
 
-import { useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { Reactive } from "@web/core/utils/reactive";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
@@ -106,7 +106,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
         }
         targets.push({ ref: useRef(refName) });
     }
-    const state = useState({
+    const state = proxy({
         set isHover(newIsHover) {
             if (this._isHover !== newIsHover) {
                 this._isHover = newIsHover;
@@ -271,7 +271,7 @@ export class UseHoverOverlay extends Component {
  */
 export function useScrollState(refName) {
     const ref = useRef(refName);
-    const state = useState({
+    const state = proxy({
         hasScrollbar: false,
         canScrollBefore: false,
         canScrollAfter: false,
@@ -345,7 +345,7 @@ export function useOnBottomScrolled(refName, callback, threshold = 1) {
  */
 export function useVisible(refName, cb, { ready = true } = {}) {
     const ref = useRef(refName);
-    const state = useState({
+    const state = proxy({
         isVisible: undefined,
         ready,
     });
@@ -391,7 +391,7 @@ export function useMessageScrolling({
     duration = 1500,
 }) {
     let timeout;
-    const state = useState({
+    const state = proxy({
         clear() {
             if (this.highlightedMessageId) {
                 browser.clearTimeout(timeout);
@@ -475,7 +475,7 @@ export function useMessageScrolling({
 
 export function useMessageSelection() {
     let selectedMessageId;
-    const state = useState({
+    const state = proxy({
         _data: new Set(),
         clearSelected() {
             this._data.delete(selectedMessageId);
@@ -500,7 +500,7 @@ export function useMicrophoneVolume() {
     let disconnectAudioMonitor;
     let audioMonitorPromise;
     const store = useService("mail.store");
-    const state = useState({
+    const state = proxy({
         isReady: true,
         isActive: false,
         value: 0,
@@ -745,7 +745,7 @@ export class SearchState extends Reactive {
  * @returns {SearchState}
  */
 export function useSearch(options = {}) {
-    return useState(new SearchState(options));
+    return proxy(new SearchState(options));
 }
 
 export function useSequential() {

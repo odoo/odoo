@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -21,7 +20,7 @@ export class FollowerSubtypeDialog extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.state = useState({
+        this.state = proxy({
             /** @type {import("models").MailMessageSubtype[]} */
             subtypes: [],
         });

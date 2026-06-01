@@ -1,5 +1,5 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useExternalListener, useRef } from "@web/owl2/utils";
+import { Component, onMounted, proxy } from "@odoo/owl";
 
 export class ActivityMarkAsDone extends Component {
     static template = "mail.ActivityMarkAsDone";
@@ -18,7 +18,7 @@ export class ActivityMarkAsDone extends Component {
     setup() {
         super.setup();
         this.textArea = useRef("textarea");
-        this.state = useState({ disableDoneButton: false });
+        this.state = proxy({ disableDoneButton: false });
         onMounted(() => {
             this.textArea.el.focus();
         });

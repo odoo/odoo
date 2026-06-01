@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
 import { mountComponent } from "@html_editor/others/embedded_component_utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
@@ -17,7 +17,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 import { nbsp } from "@web/core/utils/strings";
 
-import { Component, onMounted, toRaw } from "@odoo/owl";
+import { Component, onMounted, proxy, toRaw } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
@@ -113,7 +113,7 @@ export class Message extends Component {
         this.nbsp = nbsp;
         this.store = useService("mail.store");
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
-        this.state = useState({
+        this.state = proxy({
             isHovered: false,
             isClicked: false,
             expandOptions: false,

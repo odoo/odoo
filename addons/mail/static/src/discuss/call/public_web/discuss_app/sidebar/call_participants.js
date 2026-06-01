@@ -1,5 +1,5 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { CALL_ICON_DEAFEN, CALL_ICON_MUTED } from "@mail/discuss/call/common/call_actions";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
@@ -28,7 +28,7 @@ export class DiscussSidebarCallParticipants extends Component {
             onHover: () => (this.floating.isOpen = true),
             onAway: () => (this.floating.isOpen = false),
         });
-        this.state = useState({ expanded: false });
+        this.state = proxy({ expanded: false });
         this.floating = useDropdownState();
         this.CALL_ICON_DEAFEN = CALL_ICON_DEAFEN;
         this.CALL_ICON_MUTED = CALL_ICON_MUTED;

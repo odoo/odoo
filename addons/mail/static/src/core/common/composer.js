@@ -1,10 +1,4 @@
-import {
-    useChildSubEnv,
-    useExternalListener,
-    useLayoutEffect,
-    useRef,
-    useState,
-} from "@web/owl2/utils";
+import { useChildSubEnv, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -32,6 +26,7 @@ import {
     EventBus,
     immediateEffect,
     onWillDestroy,
+    proxy,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -162,7 +157,7 @@ export class Composer extends Component {
         this.fakeTextarea = useRef("fakeTextarea");
         this.inputContainerRef = useRef("input-container");
         this.pickerContainerRef = useRef("picker-container");
-        this.state = useState({
+        this.state = proxy({
             active: true,
             isFullComposerOpen: false,
         });

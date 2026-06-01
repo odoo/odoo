@@ -1,5 +1,5 @@
-import { useExternalListener, useState } from "@web/owl2/utils";
-import { Component, onWillStart, xml } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
+import { Component, onWillStart, proxy, xml } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -25,7 +25,7 @@ export class CallSettings extends Component {
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
         this.microphoneVolume = useMicrophoneVolume();
-        this.state = useState({
+        this.state = proxy({
             userDevices: [],
         });
         this.pttExtService = useService("discuss.ptt_extension");

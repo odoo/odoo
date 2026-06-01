@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 import { KeepLast } from "@web/core/utils/concurrency";
 import { memoize } from "@web/core/utils/functions";
@@ -49,7 +48,7 @@ export class Gif extends Component {
     });
 
     setup() {
-        this.state = useState({ snapshot: null });
+        this.state = proxy({ snapshot: null });
         this.keepLast = new KeepLast();
     }
 

@@ -1,6 +1,6 @@
-import { useComponent, useState } from "@web/owl2/utils";
+import { useComponent } from "@web/owl2/utils";
 import { isRecord, STORE_SYM } from "@mail/model/misc";
-import { Component, toRaw } from "@odoo/owl";
+import { Component, proxy, toRaw } from "@odoo/owl";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
@@ -723,7 +723,7 @@ function _useActionState({ UseActionClass, component }) {
 
 /** @returns {ReturnType<_useActionState>} */
 function useActionState({ UseActionClass, component }) {
-    return useState(_useActionState({ UseActionClass, component }));
+    return proxy(_useActionState({ UseActionClass, component }));
 }
 
 /**

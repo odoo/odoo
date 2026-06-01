@@ -1,10 +1,5 @@
-import { useComponent, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import {
-    Component,
-    onMounted,
-    onWillUnmount,
-    onWillUpdateProps,
-} from "@odoo/owl";
+import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, onMounted, onWillUnmount, onWillUpdateProps, proxy } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { deepEqual } from "@web/core/utils/objects";
@@ -20,7 +15,7 @@ class AbstractAttachmentView extends Component {
         this.store = useService("mail.store");
         this.uiService = useService("ui");
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
-        this.state = useState({
+        this.state = proxy({
             /** @type {import("models").Thread|undefined} */
             thread: undefined,
         });

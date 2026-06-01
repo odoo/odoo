@@ -1,4 +1,4 @@
-import { onRendered, useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { onRendered, useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
@@ -11,6 +11,7 @@ import {
     onWillDestroy,
     onWillUnmount,
     onWillUpdateProps,
+    proxy,
     toRaw,
     untrack,
     useEffect,
@@ -75,7 +76,7 @@ export class Thread extends Component {
         });
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        this.state = useState({
+        this.state = proxy({
             isReplyingTo: false,
             mountedAndLoaded: false,
             showJumpPresent: false,
@@ -85,9 +86,7 @@ export class Thread extends Component {
         this.orm = useService("orm");
         this.ui = useService("ui");
         /** @type {ReturnType<import('@mail/utils/common/hooks').useMessageScrolling>|null} */
-        this.messageHighlight = this.env.messageHighlight
-            ? useState(this.env.messageHighlight)
-            : null;
+        this.messageHighlight = this.env.messageHighlight ? proxy(this.env.messageHighlight) : null;
         this.scrollingToHighlight = false;
         useLayoutEffect(
             () => {

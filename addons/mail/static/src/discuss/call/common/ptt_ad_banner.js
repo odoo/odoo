@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
@@ -13,7 +12,7 @@ export class PttAdBanner extends Component {
         super.setup();
         this.pttExtService = useService("discuss.ptt_extension");
         this.store = useService("mail.store");
-        this.state = useState({
+        this.state = proxy({
             wasDiscarded: browser.localStorage.getItem(PttAdBanner.LOCAL_STORAGE_KEY),
         });
     }

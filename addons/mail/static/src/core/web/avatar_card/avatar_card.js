@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 import { formatLocalDateTime } from "@mail/utils/common/dates";
@@ -27,7 +26,7 @@ export class AvatarCard extends Component {
         this.actionService = useService("action");
         this.store = useService("mail.store");
         this.dialog = useService("dialog");
-        this.state = useState({ partnerLocalDateTimeFormatted: "" });
+        this.state = proxy({ partnerLocalDateTimeFormatted: "" });
         this.store.fetchStoreData("avatar_card", {
             id: this.props.id,
             model: this.props.model,

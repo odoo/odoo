@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
-
 import { useService } from "@web/core/utils/hooks";
+import { proxy } from "@odoo/owl";
 
 export function dataUrlToBlob(data, type) {
     const binData = window.atob(data);
@@ -44,5 +43,5 @@ export class AttachmentUploader {
  * @param {function} [param1.onFileUploaded]
  */
 export function useAttachmentUploader(thread, { composer, onFileUploaded } = {}) {
-    return useState(new AttachmentUploader(...arguments));
+    return proxy(new AttachmentUploader(...arguments));
 }
