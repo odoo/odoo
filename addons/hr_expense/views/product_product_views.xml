@@ -71,6 +71,16 @@
                                        context="{'default_type_tax_use':'purchase', 'default_price_include': 1}"
                                        options="{'no_quick_create': True}" placeholder="no taxes"/>
                             </group>
+                            <group string="Limits" name="expense_limits">
+                                <field name="expense_job_position_limit_ids" nolabel="1" colspan="2">
+                                    <list editable="bottom" class="o_expense_job_position_limits">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="currency_id" column_invisible="1"/>
+                                        <field name="job_ids" widget="many2many_tags"/>
+                                        <field name="limit_amount" widget="monetary"/>
+                                    </list>
+                                </field>
+                            </group>
                         </group>
                     </sheet>
                 </form>

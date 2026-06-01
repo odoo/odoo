@@ -145,6 +145,32 @@
                 <div class="alert alert-warning oe_edit_only" role="alert" name="warning_duplicate_expense" invisible="not duplicate_expense_ids">
                     An <a type="object" name="action_show_duplicate_expense_ids">expense</a> with the same category, date, amount, and employee already exists.
                 </div>
+                <div class="alert alert-warning" role="alert" name="warning_expense_job_position_limit"
+                    invisible="state not in ('draft', 'submitted') or not is_own_expense or not is_expense_exceeding_job_position_limit">
+                    Your job position has a limit of
+                    <field name="expense_job_position_limit_amount_currency"
+                           widget="monetary"
+                           options="{'currency_field': 'currency_id'}"
+                           class="oe_inline"/>
+                    for this expense. You may not be fully reimbursed!
+                </div>
+                <div class="alert alert-warning" role="alert" name="warning_manager_expense_job_position_limit"
+                    invisible="state not in ('draft', 'submitted') or not can_approve or is_own_expense or not is_expense_exceeding_job_position_limit">
+                    This expense exceeds the limit of
+                    <field name="expense_job_position_limit_amount_currency"
+                           widget="monetary"
+                           options="{'currency_field': 'currency_id'}"
+                           class="oe_inline"/>
+                    defined for this job position.
+                    <div class="mt-1">
+                        <button name="action_cap_reimbursement_to_policy"
+                                string="Cap Reimbursement to Policy"
+                                type="object"
+                                class="btn btn-link p-0"
+                                invisible="state != 'submitted'"/>
+                    </div>
+                </div>
+
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_open_split_expense"
@@ -188,6 +214,8 @@
                             <field name="currency_rate" invisible="1"/>
                             <field name="selectable_payment_method_line_ids" invisible="1"/>
                             <field name="can_edit_account" invisible="1"/>
+                            <field name="is_own_expense" invisible="1"/>
+                            <field name="is_expense_exceeding_job_position_limit" invisible="1"/>
 
                             <label for="product_id"/>
                             <div>
