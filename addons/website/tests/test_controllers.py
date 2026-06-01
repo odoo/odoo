@@ -256,3 +256,17 @@ class TestControllers(tests.HttpCase):
         res = self.url_open('/llms.txt')
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, content)
+
+    def test_robots_and_meta(self):
+        # 1. Check robots.txt content
+        res = self.url_open('/robots.txt')
+        self.assertEqual(res.status_code, 200)
+        self.assertIn('Disallow: /web/login', res.text)
+        self.assertIn('Disallow: /web/signup', res.text)
+        self.assertIn('Disallow: /web/reset_password', res.text)
+        self.assertIn('Disallow: /my/', res.text)
+
+        # 2. Check that the login layout does not contain the noindex meta tag anymore
+        res_login = self.url_open('/web/login')
+        self.assertEqual(res_login.status_code, 200)
+        self.assertNotIn('meta name="robots" content="noindex', res_login.text)

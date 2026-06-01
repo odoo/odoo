@@ -428,15 +428,6 @@
     </xpath>
 </template>
 
-<template id="auth_pages_meta_robots" inherit_id="web.login_layout" name="Auth Pages - No Index">
-    <xpath expr="t[@t-call]" position="before">
-        <t t-set="head">
-            <t t-out="head"/>
-            <meta name="robots" content="noindex, nofollow"/>
-        </t>
-    </xpath>
-</template>
-
 <template id="custom_code_layout" name="Custom Code Layout" inherit_id="website.layout" priority="55">
     <xpath expr="//head" position="inside">
         <t t-out="website._control_third_party_trackers_in_html(website.custom_code_head)"/>
@@ -3149,6 +3140,10 @@ Sitemap: <t t-out="website.domain"/>/sitemap.xml
 </t>
 <t t-else="">
 Sitemap: <t t-out="url_root"/>sitemap.xml
+Disallow: /web/login
+Disallow: /web/signup
+Disallow: /web/reset_password
+Disallow: /my/
 <t id="robots_module_rules"/>
 
 ##############
