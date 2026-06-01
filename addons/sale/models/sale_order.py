@@ -1320,8 +1320,8 @@ class SaleOrder(models.Model):
     @api.onchange("pricelist_id")
     def _onchange_pricelist_id_recompute_prices(self):
         # DO NOT ADD the `pricelist_id` as dependency to the order lines compute methods as it
-        # would trigger unwanted recomputations as the orm recomputes all depending fields regardless
-        # of whether the field was effectively modified.
+        # would trigger unwanted recomputations as the orm recomputes all depending fields
+        # regardless of whether the field was effectively modified.
         if self.order_line:
             self._recompute_prices()
 
@@ -2757,6 +2757,28 @@ class SaleOrder(models.Model):
                 "template": "/sale/static/xls/quotations_import_template.xlsx",
             }
         ]
+
+    @api.model
+    def batch_onchange_sol(self, lines_data, order_changes, fields_spec):
+        """Batch `sale.order.line` onchange calls into a single RPC.
+
+        :param dict lines_data: {line_id: {"ids", "changes", "field_name"}}, one entry per line
+        :param dict fields_spec: onchange fields spec, shared by every line
+        :return: {line_id: recomputed values}
+        :rtype: dict
+        """
+        SaleOrderLine = self.env["sale.order.line"]
+        result = {}
+        for line_id, data in lines_data.items():
+            onchange_values = {**data["changes"], **order_changes}
+            values = (
+                SaleOrderLine
+                .browse(data["ids"])
+                .onchange(onchange_values, data["changed_fields"], fields_spec)
+                .get("value", {})
+            )
+            result[line_id] = values
+        return result
 
     # For `sale_management`, to control optional products on portal
     def _can_be_edited_on_portal(self):

@@ -52,7 +52,7 @@
                     invisible="not (locked or state == 'cancel')"
                 />
             </button>
-            <xpath expr="//list//field[@name='product_uom_qty']" position="before">
+            <xpath expr="//list//column[@name='sol_qty']" position="before">
                 <field name="is_reward_line" column_invisible="True"/>
             </xpath>
             <xpath expr="//list//field[@name='product_uom_qty']" position="attributes">

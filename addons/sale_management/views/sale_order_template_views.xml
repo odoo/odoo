@@ -105,12 +105,29 @@
                                 <field name="sequence" widget="handle"/>
                                 <field name="product_id"/>
                                 <field name="name"/>
-                                <field name="product_uom_qty"/>
-                                <field
-                                    name="product_uom_id"
-                                    groups="uom.group_uom"
-                                    required="not display_type"
-                                />
+                                <column name="sotl_qty">
+                                    <field name="product_uom_qty" invisible="display_type"/>
+                                    <field
+                                        name="section_qty"
+                                        invisible="display_type not in ('line_section', 'line_subsection')"
+                                        widget="section_qty"
+                                        class="fw-normal text-muted"
+                                    />
+                                </column>
+                                <column name="sotl_uom" groups="uom.group_uom">
+                                    <field
+                                        name="product_uom_id"
+                                        invisible="display_type"
+                                        required="not display_type"
+                                    />
+                                    <field
+                                        name="section_uom_id"
+                                        invisible="display_type not in ('line_section', 'line_subsection')"
+                                        widget="section_uom"
+                                        options="{'no_open': True, 'no_create': True}"
+                                        class="fw-normal text-muted"
+                                    />
+                                </column>
                                 <field
                                     name="price_unit"
                                     column_invisible="not parent.has_productless_lines"

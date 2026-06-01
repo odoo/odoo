@@ -88,7 +88,7 @@ export class Many2OneUomField extends Component {
     }
 }
 
-registry.category("fields").add("many2one_uom", {
+export const many2oneUomField = {
     ...buildM2OFieldDescription(Many2OneUomField),
     additionalClasses: ["o_field_many2one"],
     extractProps(staticInfo, dynamicInfo) {
@@ -113,4 +113,6 @@ registry.category("fields").add("many2one_uom", {
             availableTypes: ["many2one"],
         },
     ],
-});
+};
+
+registry.category("fields").add("many2one_uom", many2oneUomField);

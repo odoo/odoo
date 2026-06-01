@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add("test_basic_sale_flow_with_minimal_acces
         },
         {
             content: "Wait for the UoM to be set by the onchange",
-            trigger: ".o_many2one_uom_cell input:value('Dozens')",
+            trigger: "td[name=sol_uom] input:value('Dozens')",
         },
         {
             trigger: "button[name=action_confirm]",

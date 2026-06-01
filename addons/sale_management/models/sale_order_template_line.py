@@ -18,6 +18,10 @@ class SaleOrderTemplateLine(models.Model):
         "CHECK(display_type IS NULL OR (product_id IS NULL AND product_uom_qty = 0 AND product_uom_id IS NULL))",  # noqa: E501
         "Forbidden product, quantity and UoM on non-accountable sale quote line",
     )
+    _section_fields_null = models.Constraint(
+        "CHECK(display_type IN ('line_section', 'line_subsection') OR (section_qty = 0 AND section_uom_id IS NULL))",  # noqa: E501
+        "Forbidden section quantity or section UoM on non section sale quote line",
+    )
 
     sale_order_template_id = fields.Many2one(
         comodel_name="sale.order.template",
@@ -72,6 +76,22 @@ class SaleOrderTemplateLine(models.Model):
     is_optional = fields.Boolean(string="Optional Line", copy=True, default=False)
     collapse_composition = fields.Boolean()
     collapse_prices = fields.Boolean()
+    section_qty = fields.Float(
+        string="Section Quantity",
+        digits="Product Unit",
+        compute="_compute_section_qty",
+        precompute=True,
+        store=True,
+        readonly=False,
+    )
+    section_uom_id = fields.Many2one(
+        comodel_name="uom.uom",
+        string="Section Unit of Measure",
+        compute="_compute_section_uom_id",
+        precompute=True,
+        store=True,
+        readonly=False,
+    )
 
     # Technical fields which stores values for product SO line without product_id
     discount = fields.Float(string="Discount (%)", digits="Discount")
@@ -128,6 +148,23 @@ class SaleOrderTemplateLine(models.Model):
             self.env["ir.config_parameter"].sudo().get_bool("sale.mandatory_product")
         )
 
+    @api.depends("display_type")
+    def _compute_section_qty(self):
+        for line in self:
+            if line.display_type in {"line_section", "line_subsection"}:
+                line.section_qty = 1.0
+            else:
+                line.section_qty = False
+
+    @api.depends("display_type")
+    def _compute_section_uom_id(self):
+        default_uom_id = self.env.ref("uom.product_uom_unit").id
+        for line in self:
+            if line.display_type in {"line_section", "line_subsection"}:
+                line.section_uom_id = default_uom_id
+            else:
+                line.section_uom_id = False
+
     # === CRUD METHODS ===#
 
     @api.model_create_multi
@@ -178,6 +215,8 @@ class SaleOrderTemplateLine(models.Model):
             "product_uom_qty": self.product_uom_qty,
             "product_uom_id": self.product_uom_id.id,
             "sequence": self.sequence,
+            "section_qty": self.section_qty,
+            "section_uom_id": self.section_uom_id.id,
         }
         if self.name:
             vals["name"] = self.name
