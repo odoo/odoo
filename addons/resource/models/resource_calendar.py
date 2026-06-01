@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import DAILY, rrule
 
-from odoo import api, fields, models
+from odoo import api, fields, _, models
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Command, Domain
 from odoo.tools import float_compare, ormcache
@@ -84,6 +84,7 @@ class ResourceCalendar(models.Model):
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
     work_resources_count = fields.Integer("Work Resources count", compute='_compute_work_resources_count')
+    employees_count = fields.Integer("Employees count", compute='_compute_employees_count', store=True)
     work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', store=True,
         help='Work time rate versus full time working schedule, should be between 0 and 100 %.')
 
@@ -178,6 +179,16 @@ class ResourceCalendar(models.Model):
         for calendar in self:
             calendar.work_resources_count = resources_per_calendar.get(calendar, 0)
 
+    def _compute_employees_count(self):
+        print(">> _compute_employees_count")
+        employees_per_calendar = dict(self.env['resource.resource']._read_group(
+            domain=[('calendar_id', 'in', self.ids), ('resource_type', '=','user')],
+            groupby=['calendar_id'],
+            aggregates=['__count']))
+        for calendar in self:
+            calendar.employees_count = employees_per_calendar.get(calendar, 0)
+            print(f">> calendar {calendar.id} has {calendar.employees_count} employees")
+
     @api.depends('hours_per_week', 'full_time_required_hours')
     def _compute_is_fulltime(self):
         for calendar in self:
@@ -214,6 +225,28 @@ class ResourceCalendar(models.Model):
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
         return [dict(vals, name=self.env._("%s (copy)", calendar.name)) for calendar, vals in zip(self, vals_list)]
+
+    '''def write(self, vals):
+        if vals:
+            for calendar in self:
+                if calendar.employees_count > 1:
+                    # Create the wizard and return its view as an action
+                    wizard = self.env['resource.calendar.update.wizard'].create({
+                        'calendar_id': calendar.id,
+                        'new_vals': str(vals), # Store intended changes to apply later
+                        'employee_id': self.env.context.get('active_id') if self.env.context.get('active_model') == 'hr.employee' else False
+                    })
+                    
+                    return {
+                        'name': _('Working schedule update?'),
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'resource.calendar.update.wizard',
+                        'view_mode': 'form',
+                        'res_id': wizard.id,
+                        'target': 'new',
+                    }
+        return super().write(vals)'''
+
 
     # --------------------------------------------------
     # Computation API
@@ -900,3 +933,21 @@ class ResourceCalendar(models.Model):
         for attendance in self.attendance_ids:
             working_days[attendance.week_type][attendance.dayofweek] = True
         return working_days
+
+    def action_copy_and_reassign(self, changes, employee_id=False):
+        """
+        Creates a copy of the current calendar, applies changes, 
+        and optionally reassigns an employee to the new one.
+        """
+        self.ensure_one()
+        # 1. Create a copy with the changes passed from the UI
+        # We use super().copy(changes) so the ORM handles Command objects automatically
+        new_calendar = self.copy(default=changes)
+        
+        # 2. If we have an employee ID, re-link that employee to the new calendar
+        if employee_id:
+            employee = self.env['hr.employee'].browse(employee_id)
+            if employee.exists():
+                employee.resource_calendar_id = new_calendar.id
+                
+        return new_calendar.id

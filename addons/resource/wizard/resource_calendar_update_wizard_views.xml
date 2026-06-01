@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="resource_calendar_update_wizard_view_form" model="ir.ui.view">
+        <field name="name">resource.calendar.update.wizard.form</field>
+        <field name="model">resource.calendar.update.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Working schedule update ?">
+                <sheet>
+                    <div class="text-center">
+                        <field name="message" nolabel="1" class="fw-bold fs-4"/>
+                    </div>
+                    <p class="text-muted text-center">
+                        Modifying this schedule will affect all linked employees. 
+                        Choose <strong>Update</strong> to apply changes to everyone, 
+                        or <strong>Create new</strong> to create a separate schedule for your current selection.
+                    </p>
+                    <field name="calendar_id" invisible="1"/>
+                    <field name="new_vals" invisible="1"/>
+                    <field name="employee_id" invisible="1"/>
+                </sheet>
+                <footer>
+                    <button name="action_update" 
+                            string="Update" 
+                            type="object" 
+                            class="btn-primary" 
+                            data-hotkey="q"/>
+                    <button name="action_create_new" 
+                            string="Create new" 
+                            type="object" 
+                            class="btn-secondary" 
+                            data-hotkey="w"/>
+                    <button string="Cancel" 
+                            class="btn-secondary" 
+                            special="cancel" 
+                            data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
