@@ -41,6 +41,7 @@ export class Clickbot {
                 testedViews: 0,
                 appIndex: 0,
                 menuIndex: 0,
+                errorMenuCount: 0,
             }
         );
         this._actionCount = 0;
@@ -70,7 +71,11 @@ export class Clickbot {
             }
 
             this._logStatistics();
-            console.log(SUCCESS_SIGNAL);
+            if (this.state.errorMenuCount === 0) {
+                console.log(SUCCESS_SIGNAL);
+            } else {
+                console.error(FAILURE_SIGNAL);
+            }
         } catch (err) {
             this._logStatistics();
             if (err instanceof ClickbotStopError) {
@@ -121,13 +126,16 @@ export class Clickbot {
 
     _logStatistics() {
         console.log(`Test took ${(performance.now() - this.state.startTime) / 1000} seconds`);
-        console.log(`Successfully tested ${this.state.testedApps.length} apps`);
-        console.log(`Successfully tested ${this.state.testedMenus.length} menus`);
-        console.log(`Successfully tested ${this.state.testedViews} views`);
-        console.log(`Successfully tested ${this.state.testedModals} modals`);
-        console.log(`Successfully tested ${this.state.testedFilters} filters`);
+        console.log(`Tested ${this.state.testedApps.length} apps`);
+        console.log(`Tested ${this.state.testedMenus.length} menus`);
+        if (this.state.errorMenuCount > 0) {
+            console.log(`Error found while testing ${this.state.errorMenuCount} menus`);
+        }
+        console.log(`Tested ${this.state.testedViews} views`);
+        console.log(`Tested ${this.state.testedModals} modals`);
+        console.log(`Tested ${this.state.testedFilters} filters`);
         if (this.state.studioCount > 0) {
-            console.log(`Successfully tested ${this.state.studioCount} views in Studio`);
+            console.log(`Tested ${this.state.studioCount} views in Studio`);
         }
     }
     _onRPCRequest = ({ detail }) => {
@@ -186,7 +194,9 @@ export class Clickbot {
                     );
                 }
                 throw new Error(
-                    "Error dialog detected" + document.querySelector(".o_error_dialog").innerHTML
+                    `Error dialog detected ${
+                        document.querySelector(".o_error_dialog").innerHTML
+                    }\n on testing menu ${this.currentMenu.name} (${this.currentMenu.xmlid})`
                 );
             }
             return false;
@@ -353,8 +363,11 @@ export class Clickbot {
                 await this._testViews();
             }
         } catch (err) {
-            console.error(`Error while testing ${menu.name} (${menu.xmlid})`);
-            throw err;
+            if (err instanceof ClickbotStopError) {
+                throw err;
+            }
+            this.state.errorMenuCount++;
+            console.error(err.message);
         }
     }
 
