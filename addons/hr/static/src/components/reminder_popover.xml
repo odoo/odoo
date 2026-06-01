@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="hr.ReminderPopover">
+    <button class="d-flex align-items-center gap-2 p-3 w-100 border-0 bg-transparent text-start"
+            t-on-click="this.props.onAction">
+        <i t-attf-class="fa {{ this.props.iconClass }} text-primary" aria-hidden="true"/>
+        <span t-out="this.props.message"/>
+    </button>
+</t>
+
+</templates>
