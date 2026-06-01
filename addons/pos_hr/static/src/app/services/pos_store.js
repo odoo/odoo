@@ -81,7 +81,6 @@ patch(PosStore.prototype, {
                 this.numpadMode = "quantity";
             }
         }
-        return true;
     },
     addLineToCurrentOrder(vals, opt = {}, configure = true) {
         vals.employee_id = false;
