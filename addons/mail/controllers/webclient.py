@@ -24,6 +24,9 @@ class WebclientController(ThreadController):
         return store
 
     def _is_mail_fetch_readonly(self):
+        if request.httprequest.method == "OPTIONS":
+            # CORS preflight request has an empty body, nothing to parse
+            return True
         fetch_params = request.get_json_data().get("params", {}).get("fetch_params", [])
         return store_handler_registry.is_fetch_readonly(fetch_params)
 
