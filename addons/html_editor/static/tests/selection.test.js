@@ -1438,3 +1438,10 @@ describe("Focus changes", () => {
         expect(getContent(el)).toBe("<p>ab[]cd</p>");
     });
 });
+
+test.tags("desktop");
+test("Triple click shouldn't escape contenteditable context", async () => {
+    const { el } = await setupEditor(`<p>a<span contenteditable="true">c</span>b</p>`);
+    await tripleClick(el.querySelector("span"));
+    expect(getContent(el)).toBe(`<p>a<span contenteditable="true">[c]</span>b</p>`);
+});
