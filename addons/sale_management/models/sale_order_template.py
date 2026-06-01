@@ -254,6 +254,8 @@ class SaleOrderTemplate(models.Model):
                 "name": self.env._("Regular Section"),
                 "display_type": "line_section",
                 "product_uom_qty": 0,
+                "section_qty": 1,
+                "section_uom_id": self.env.ref("uom.product_uom_unit").id,
             }),
             Command.create({
                 "product_id": self.env.ref(
@@ -266,6 +268,8 @@ class SaleOrderTemplate(models.Model):
                 "display_type": "line_section",
                 "collapse_composition": True,
                 "product_uom_qty": 0,
+                "section_qty": 1,
+                "section_uom_id": self.env.ref("uom.product_uom_unit").id
             }),
             Command.create({"product_id": self.env.ref("product.consu_delivery_02").id}),
             Command.create({
@@ -277,6 +281,8 @@ class SaleOrderTemplate(models.Model):
                 "display_type": "line_section",
                 "collapse_prices": True,
                 "product_uom_qty": 0,
+                "section_qty": 1,
+                "section_uom_id": self.env.ref("uom.product_uom_unit").id
             }),
             Command.create({"product_id": acoustic_bloc_screen_product.id}),
             Command.create({"product_id": chair_protection_product.id, "product_uom_qty": 8}),
@@ -285,6 +291,8 @@ class SaleOrderTemplate(models.Model):
                 "display_type": "line_section",
                 "is_optional": True,
                 "product_uom_qty": 0,
+                "section_qty": 1,
+                "section_uom_id": self.env.ref("uom.product_uom_unit").id
             }),
             Command.create({
                 "product_id": self.env.ref("product.product_product_16").id,
@@ -294,6 +302,8 @@ class SaleOrderTemplate(models.Model):
                 "name": self.env._("Subsection"),
                 "display_type": "line_subsection",
                 "product_uom_qty": 0,
+                "section_qty": 1,
+                "section_uom_id": self.env.ref("uom.product_uom_unit").id
             }),
             Command.create({
                 "product_id": self.env.ref("product.product_product_12").id,

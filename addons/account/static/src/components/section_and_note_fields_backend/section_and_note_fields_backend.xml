@@ -6,6 +6,20 @@
         </xpath>
     </t>
     <t t-name="account.SectionAndNoteListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow">
+        <xpath expr="//tr[hasclass('o_data_row')]" position="attributes">
+            <attribute name="t-on-mouseenter">
+                () => this.onSectionMouseEnter(record)
+            </attribute>
+            <attribute name="t-on-mouseleave">
+                () => this.onSectionMouseLeave(record)
+            </attribute>
+            <attribute name="t-on-focusin">
+                () => this.onSectionFocusIn(record)
+            </attribute>
+            <attribute name="t-on-focusout">
+                (ev) => this.onSectionFocusOut(record, ev)
+            </attribute>
+        </xpath>
         <xpath expr="//td[hasclass('o_list_record_remove')]" position="attributes">
             <attribute name="t-if">!this.isSection(record)</attribute>
         </xpath>

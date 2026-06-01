@@ -769,6 +769,10 @@
                                         <t t-if="not show_section_total">
                                             <t t-set="section_name_colspan" t-value="99"/>
                                         </t>
+                                        <t
+                                            t-set="show_section_qty_uom"
+                                            t-value="line.section_qty != 1 or line.section_uom_id.name != 'Units'"
+                                        />
                                         <!-- Some columns (e.g. Discount and Unit Price)
                                         are not displayed on smaller viewports -->
                                         <td
@@ -777,6 +781,18 @@
                                             t-attf-class="d-sm-none {{padding_class}}"
                                         >
                                             <span t-field="line.name"/>
+                                            <span
+                                                t-if="line.section_qty != 1 or line.section_uom_id.name != 'Units'"
+                                                class="text-muted fw-normal ms-1"
+                                            >(<span
+                                                    t-if="line.section_qty == int(line.section_qty)"
+                                                    t-field="line.section_qty"
+                                                    t-options="{'widget': 'integer'}"
+                                                /><span
+                                                    t-else=""
+                                                    t-field="line.section_qty"
+                                                    t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"
+                                                /> <span t-field="line.section_uom_id"/>)</span>
                                         </td>
                                         <td
                                             name="td_section_name_sm"
@@ -784,6 +800,18 @@
                                             t-attf-class="d-none d-sm-table-cell d-md-none {{padding_class}}"
                                         >
                                             <span t-field="line.name"/>
+                                            <span
+                                                t-if="line.section_qty != 1 or line.section_uom_id.name != 'Units'"
+                                                class="text-muted fw-normal ms-1"
+                                            >(<span
+                                                    t-if="line.section_qty == int(line.section_qty)"
+                                                    t-field="line.section_qty"
+                                                    t-options="{'widget': 'integer'}"
+                                                /><span
+                                                    t-else=""
+                                                    t-field="line.section_qty"
+                                                    t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"
+                                                /> <span t-field="line.section_uom_id"/>)</span>
                                         </td>
                                         <td
                                             name="td_section_name"
@@ -791,6 +819,18 @@
                                             t-attf-class="d-none d-md-table-cell {{padding_class}}"
                                         >
                                             <span t-field="line.name"/>
+                                            <span
+                                                t-if="line.section_qty != 1 or line.section_uom_id.name != 'Units'"
+                                                class="text-muted fw-normal ms-1"
+                                            >(<span
+                                                    t-if="line.section_qty == int(line.section_qty)"
+                                                    t-field="line.section_qty"
+                                                    t-options="{'widget': 'integer'}"
+                                                /><span
+                                                    t-else=""
+                                                    t-field="line.section_qty"
+                                                    t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"
+                                                /> <span t-field="line.section_uom_id"/>)</span>
                                         </td>
                                         <td
                                             t-if="show_section_total"
@@ -921,7 +961,8 @@
                                             </span>
                                         </td>
                                         <td name="td_section_group_quantity" class="text-end text-nowrap">
-                                            <span>1.00 Units</span>
+                                            <span t-field="line.section_qty" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                                            <span t-field="line.section_uom_id"/>
                                         </td>
                                         <td name="td_section_group_priceunit" class="d-none d-sm-table-cell text-end text-nowrap">
                                             <span
