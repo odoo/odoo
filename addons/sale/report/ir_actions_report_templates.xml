@@ -132,7 +132,7 @@
                     <t t-set="current_section" t-value="None"/>
                     <t t-set="current_subsection" t-value="None"/>
                     <t t-set="price_field" t-value="'price_total' if (hide_taxes_details or doc.company_price_include == 'tax_included') else 'price_subtotal'"/>
-
+                    <t t-set="default_section_uom" t-value="doc.env.ref('uom.product_uom_unit')"/>
 
                     <t t-foreach="lines_to_report" t-as="line">
 
@@ -189,6 +189,11 @@
                                 <t t-if="not show_section_total">
                                     <t t-set="section_name_colspan" t-value="99"/>
                                 </t>
+                                <t
+                                    t-set="show_section_qty_uom"
+                                    t-value="line.section_qty != 1 or line.section_uom_id != default_section_uom"
+                                />
+
                                 <td
                                     t-if="line_counter"
                                     name="td_section_line_no"
@@ -204,6 +209,13 @@
                                     t-att-style="padding_style"
                                 >
                                     <span t-field="line.name">A section title</span>
+                                    <span
+                                        t-if="show_section_qty_uom"
+                                        class="text-muted fw-normal ms-1"
+                                    >(<span
+                                            t-field="line.section_qty"
+                                            t-options="{'widget': 'float', 'min_precision': 0}"
+                                        /> <span t-field="line.section_uom_id"/>)</span>
                                 </td>
                                 <td t-if="show_section_total" name="td_section_price" class="text-end o_price_total">
                                     <span
@@ -363,7 +375,8 @@
                                     </span>
                                 </td>
                                 <td name="td_section_group_quantity" class="text-end text-nowrap">
-                                    <span>1.00 Units</span>
+                                    <span t-field="line.section_qty"/>
+                                    <span t-field="line.section_uom_id"/>
                                 </td>
                                 <td name="td_section_group_priceunit" class="text-end text-nowrap">
                                     <span

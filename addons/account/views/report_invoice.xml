@@ -311,12 +311,7 @@
                                                         colspan="1"
                                                         t-if="hide_details or (hide_prices and grouped_line['display_type'] not in ('line_section', 'line_subsection'))"
                                                         class="o_td_quantity text-end">
-                                                        <!-- If line is hide composition, always show 1 unit -->
-                                                        <div t-if="hide_details">
-                                                            <span>1.00</span>
-                                                            <span groups="uom.group_uom">Units</span>
-                                                        </div>
-                                                        <!-- Else, show the line quantity -->
+                                                        <!-- Show the line quantity -->
                                                         <div t-if="hide_prices and grouped_line['display_type'] not in ('line_section', 'line_subsection')">
                                                             <span t-out="grouped_line['quantity']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}">1.00</span>
                                                             <t t-if="grouped_line.get('line_uom')">

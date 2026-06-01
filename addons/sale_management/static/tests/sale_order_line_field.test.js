@@ -28,6 +28,7 @@ class SaleOrderLine extends saleManagementModels.SaleOrderLine {
     price_total = fields.Float({ default: 3.00 });
     price_subtotal = fields.Float({ default: 3.50 });
     product_uom_qty = fields.Float({ default: 1.00 });
+    section_qty = fields.Float({ default: 0.00 });
 
     _records = [
         { id: 1, name: "r1", sequence: 1 },
@@ -142,7 +143,14 @@ class SaleOrder extends saleManagementModels.SaleOrder {
                         </control>
                         <field name="sequence" widget="handle"/>
                         <field name="name"/>
-                        <field name="product_uom_qty"/>
+                        <column name="sol_qty">
+                            <field name="product_uom_qty" invisible="display_type"/>
+                            <field
+                                name="section_qty"
+                                invisible="display_type not in ('line_section', 'line_subsection')"
+                                widget="section_qty"
+                            />
+                        </column>
                         <field name="price_unit"/>
                         <field name="price_total"/>
                         <field name="price_subtotal"/>
@@ -444,4 +452,49 @@ test("Selecting a section template should append its section and lines to the or
         "line1",
         "line2",
     ]);
+});
+
+test("Editing a subsection's quantity applies the ratio to its line and recomputes its price", async () => {
+    SaleOrderLine._records.find(record => record.name === "Sec3-sub2").section_qty = 2;
+    SaleOrderLine._records.find(record => record.name === "Sec3-sub2-r1").product_uom_qty = 3;
+
+    onRpc("batch_onchange_sol", ({ args }) => {
+        expect.step("batch_onchange_sol");
+        const [sectionLinesData] = args;
+
+        expect(Object.keys(sectionLinesData)).toEqual(["11"], {
+            message: "Only the subsection's own line should be part of the batch onchange call",
+        });
+        expect(sectionLinesData[11].changes.product_uom_qty).toEqual(6, {
+            message: "Sec3-sub2-r1's quantity should be doubled (ratio 4/2 applied to the subsection)",
+        });
+
+        return { 11: { price_subtotal: 42 } };
+    });
+
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        const commands = args[1].order_line;
+
+        expect(commands.find(c => c[1] === 10)[2]).toEqual({ section_qty: 4 }, {
+            message: "The subsection's own quantity change should be saved",
+        });
+        expect(commands.find(c => c[1] === 11)[2]).toEqual({ product_uom_qty: 6, price_subtotal: 42 }, {
+            message: "Its line's quantity and recomputed price should both be saved",
+        });
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: 1,
+    });
+
+    expect(queryAllTexts(".o_data_row .o_list_text")).toEqual(EXPECTED_LINE_RECORDS);
+
+    await contains(".o_data_row:contains(Sec3-sub2):first [name=name]").click();
+    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("4");
+    await clickSave();
+
+    await expect.verifySteps(["batch_onchange_sol", "web_save"]);
 });

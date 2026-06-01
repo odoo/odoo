@@ -57,7 +57,7 @@ registry
             tourUtils.checkSOLDescriptionContains("Product B2"),
             {
                 content: "Verify the combo item quantities",
-                trigger: 'td[name="product_uom_qty"]:contains(3.00)',
+                trigger: 'td[name="sol_qty"]:contains(3.00)',
             },
             {
                 content: "Verify the first combo item's unit price",
@@ -85,7 +85,7 @@ registry
             tourUtils.checkSOLDescriptionContains("Product B2"),
             {
                 content: "Verify the combo item quantities",
-                trigger: 'td[name="product_uom_qty"]:contains(2.00)',
+                trigger: 'td[name="sol_qty"]:contains(2.00)',
             },
             {
                 content: "Verify the first combo item's unit price",

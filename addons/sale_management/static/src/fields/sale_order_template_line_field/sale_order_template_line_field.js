@@ -7,6 +7,7 @@ import {
 import { makeContext } from '@web/core/context';
 import { x2ManyCommands } from '@web/core/orm_plugin';
 import { registry } from '@web/core/registry';
+import { useSubEnv } from '@web/owl2/utils';
 
 export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRenderer {
     static recordRowTemplate = 'sale_management.ListRenderer.RecordRow';
@@ -14,6 +15,105 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
     setup() {
         super.setup();
         this.copyFields.push('is_optional');
+        useSubEnv({ adjustSectionQuantities: this.adjustSectionQuantities.bind(this) });
+    }
+
+    get sectionColumns() {
+        return [...super.sectionColumns, "sotl_qty", "sotl_uom"];
+    }
+
+    getActiveColumns() {
+        const activeColumns = super.getActiveColumns();
+
+        // Hide the UOM column if the field is optional and not active
+        const uomCol = activeColumns.find((col) => col.name == "sotl_uom");
+        if (uomCol) {
+            const uomField = uomCol.fields.find((field) => field.name === "product_uom_id");
+            if (!uomField || (uomField.optional && !this.optionalActiveFields[uomField.name])) {
+                return activeColumns.filter((col) => col.name !== "sotl_uom");
+            }
+        }
+
+        return activeColumns;
+    }
+
+    async adjustSectionQuantities(record, ratio) {
+        if (ratio === 1) {
+            return;
+        }
+
+        const commands = [];
+        const sectionLines = getSectionRecords(
+            this.props.list,
+            record,
+            this.isSubSection(record)
+        ).filter((line) => !this.isNote(line) && line !== record);
+
+        for (const line of sectionLines) {
+            const qtyField = this.isSection(line) ? "section_qty" : "product_uom_qty";
+            commands.push(
+                x2ManyCommands.update(line.resId || line._virtualId, {
+                    [qtyField]: line.data[qtyField] * ratio,
+                })
+            );
+        }
+        await this.props.list.applyCommands(commands);
+    }
+
+    /**
+     * @override
+     */
+    getSectionAndNoteColumns(columns, record) {
+        if (this.isNote(record)) {
+            return super.getSectionAndNoteColumns(columns, record);
+        }
+        return this.getSectionColumns(columns);
+    }
+
+    getSectionColumns(columns) {
+        const isSectionCol = (col) =>
+            [this.titleField, ...this.sectionColumns].includes(col.name) || col.widget === "handle";
+
+        let titleColspan = 1;
+        let absorbingColumns = true;
+        let titleCol;
+
+        const sectionCols = [];
+
+        for (const col of columns) {
+            if (col.name === this.titleField) {
+                titleCol = col;
+                continue;
+            }
+
+            if (isSectionCol(col)) {
+                if (titleCol) {
+                    // Stop absorbing at the first section column after the title.
+                    absorbingColumns = false;
+                    sectionCols.push({ ...titleCol, colspan: titleColspan }, col);
+                    // Empty titleCol so that we don't add it again if there are multiple section
+                    // columns after this.
+                    titleCol = null;
+                } else {
+                    sectionCols.push(col);
+                }
+                continue;
+            }
+
+            if (absorbingColumns) {
+                // Absorb non-section columns into the title's colspan.
+                titleColspan++;
+                continue;
+            }
+
+            sectionCols.push({ ...col, invisible: "1", readonly: "1" });
+        }
+
+        if (titleCol) {
+            sectionCols.push({ ...titleCol, colspan: titleColspan });
+        }
+
+        return sectionCols;
     }
 
     /**

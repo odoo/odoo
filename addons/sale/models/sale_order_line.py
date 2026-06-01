@@ -29,6 +29,10 @@ class SaleOrderLine(models.Model):
         "CHECK(display_type IS NULL OR (product_id IS NULL AND price_unit = 0 AND product_uom_qty = 0 AND product_uom_id IS NULL AND customer_lead = 0))",  # noqa: E501
         "Forbidden values on non-accountable sale order line",
     )
+    _section_fields_null = models.Constraint(
+        "CHECK(display_type IN ('line_section', 'line_subsection') OR (section_qty = 0 AND section_uom_id IS NULL))",  # noqa: E501
+        "Forbidden section quantity or section UoM on non section sale order line",
+    )
 
     # Fields are ordered according by tech & business logics
     # and computed fields are defined after their dependencies.
@@ -408,6 +412,22 @@ class SaleOrderLine(models.Model):
     mandatory_product = fields.Boolean(
         string="Is Product Mandatory", compute="_compute_mandatory_product"
     )
+    section_qty = fields.Float(
+        string="Section Quantity",
+        digits="Product Unit",
+        compute="_compute_section_qty",
+        precompute=True,
+        store=True,
+        readonly=False,
+    )  # The total quantity of the section
+    section_uom_id = fields.Many2one(
+        comodel_name="uom.uom",
+        string="Section Unit of Measure",
+        compute="_compute_section_uom_id",
+        precompute=True,
+        store=True,
+        readonly=False,
+    )  # The unit of measure of the section
 
     # === COMPUTE METHODS ===#
 
@@ -1566,6 +1586,23 @@ class SaleOrderLine(models.Model):
         self.mandatory_product = (
             self.env["ir.config_parameter"].sudo().get_bool("sale.mandatory_product")
         )
+
+    @api.depends("display_type")
+    def _compute_section_qty(self):
+        for line in self:
+            if line.display_type in {"line_section", "line_subsection"}:
+                line.section_qty = 1.0
+            else:
+                line.section_qty = False
+
+    @api.depends("display_type")
+    def _compute_section_uom_id(self):
+        default_uom_id = self.env.ref("uom.product_uom_unit").id
+        for line in self:
+            if line.display_type in {"line_section", "line_subsection"}:
+                line.section_uom_id = default_uom_id
+            else:
+                line.section_uom_id = False
 
     # === CONSTRAINT METHODS ===#
 

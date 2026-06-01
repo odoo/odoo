@@ -122,7 +122,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
             run: "click",
         },
         {
-            trigger: '.o_field_cell.o_data_cell.o_list_number:contains("4.00")',
+            trigger: 'td[name=sol_qty]:contains("4.00")',
         },
         {
             trigger: '.o_form_button_save',
@@ -147,7 +147,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
             run: "click",
         },
         {
-            trigger: ".o_field_cell.o_data_cell.o_list_number:contains(8.20)",
+            trigger: "td[name=sol_qty]:contains(8.20)",
         },
         ...stepUtils.saveForm(),
     ],

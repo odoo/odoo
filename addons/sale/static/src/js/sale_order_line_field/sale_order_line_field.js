@@ -3,9 +3,14 @@ import {
     ProductLabelSectionAndNoteListRender,
     productLabelSectionAndNoteOne2Many,
     ProductLabelSectionAndNoteOne2Many,
-} from '@account/components/product_label_section_and_note_field/product_label_section_and_note_field_o2m';
-import { sectionAndNoteFieldOne2Many } from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
-import { registry } from '@web/core/registry';
+} from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field_o2m";
+import {
+    getSectionRecords,
+    sectionAndNoteFieldOne2Many,
+} from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
+import { x2ManyCommands } from "@web/core/orm_plugin";
+import { registry } from "@web/core/registry";
+import { getFieldsSpec } from "@web/model/relational_model/utils";
 
 function getComboRecords(listRecords, record) {
     const comboRecords = [];
@@ -60,9 +65,11 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
     setup() {
         super.setup();
         this.priceColumns.push('discount');
+        this.adjustingSectionQuantities = false;
 
         useSubEnv({
             shouldCollapse: this.shouldCollapse.bind(this),
+            adjustSectionQuantities: this.adjustSectionQuantities.bind(this),
         });
     }
 
@@ -74,6 +81,10 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         return [this.titleField, ...this.props.aggregatedFields, 'product_uom_qty', 'discount'];
     }
 
+    get sectionColumns() {
+        return [...super.sectionColumns, "line_number", "sol_qty", "sol_uom"];
+    }
+
     getActiveColumns() {
         let activeColumns = super.getActiveColumns();
         const productTmplCol = activeColumns.find((col) => col.name === 'product_template_id');
@@ -82,6 +93,15 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         if (productCol && productTmplCol) {
             // Hide the template column if the variant one is enabled.
             activeColumns = activeColumns.filter((col) => col.name != 'product_template_id')
+        }
+
+        // Hide the UOM column if the field is optional and not active
+        const uomCol = activeColumns.find((col) => col.name === "sol_uom");
+        if (uomCol) {
+            const uomField = uomCol.fields.find((field) => field.name === "product_uom_id");
+            if (!uomField || (uomField.optional && !this.optionalActiveFields[uomField.name])) {
+                activeColumns = activeColumns.filter((col) => col.name !== "sol_uom");
+            }
         }
 
         return activeColumns;
@@ -101,6 +121,140 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
             classNames.push("o_invalid_cell o_required_modifier");
         }
         return classNames.join(" ");
+    }
+
+    /**
+     * @override
+     */
+    focusToName(editRec) {
+        if (editRec && editRec.isNew && this.isSection(editRec)) {
+            // Don't always focus on `titleField` for sections since we are adding section_qty and
+            // section_uom_id fields in section row.
+            return;
+        }
+        super.focusToName(editRec);
+    }
+
+    async adjustSectionQuantities(record, ratio) {
+        if (ratio === 1 || this.adjustingSectionQuantities) {
+            return;
+        }
+
+        const sectionLines = getSectionRecords(
+            this.props.list,
+            record,
+            this.isSubSection(record)
+        ).filter((line) => !this.isNote(line) && !this.isComboItem(line) && line !== record);
+
+        if (!sectionLines.length) {
+            return;
+        }
+
+        const linesById = {};
+        const sectionLinesData = {};
+        const commands = [];
+        const orderChanges = {
+            order_id: {
+                ...(await this.props.list._parent.getChanges()),
+                ...(!this.props.list._parent.isNew && { id: this.props.list._parent.resId }),
+            },
+        };
+
+        for (const sectionLine of sectionLines) {
+            const qtyField = this.isSection(sectionLine) ? "section_qty" : "product_uom_qty";
+            const lineId = sectionLine.resId || sectionLine._virtualId;
+            linesById[lineId] = sectionLine;
+            sectionLinesData[lineId] = {
+                ids: sectionLine.resId ? [sectionLine.resId] : [],
+                changes: {
+                    ...(await sectionLine.getChanges({ withReadonly: true })),
+                    [qtyField]: sectionLine.data[qtyField] * ratio,
+                },
+                changed_fields: [qtyField],
+            };
+            commands.push(
+                x2ManyCommands.update(lineId, {
+                    [qtyField]: sectionLine.data[qtyField] * ratio,
+                })
+            );
+        }
+
+        const fieldsSpec = getFieldsSpec(
+            this.props.list.activeFields,
+            this.props.list.fields,
+            this.props.list.evalContext,
+            { withInvisible: true }
+        );
+        const results = await this.orm.call("sale.order", "batch_onchange_sol", [
+            sectionLinesData,
+            orderChanges,
+            fieldsSpec,
+        ]);
+
+        commands.push(
+            ...Object.entries(results).map(([lineId, values]) => {
+                const id = linesById[lineId].resId || linesById[lineId]._virtualId;
+                return x2ManyCommands.update(id, values);
+            })
+        );
+
+        // To make sure rpc isn't called recursively for subsections when updating the quantities of
+        // parent section lines.
+        this.adjustingSectionQuantities = true;
+        await this.props.list.applyCommands(commands);
+        this.adjustingSectionQuantities = false;
+    }
+
+    /**
+     * @override
+     */
+    getSectionAndNoteColumns(columns, record) {
+        if (this.isNote(record)) {
+            return super.getSectionAndNoteColumns(columns, record);
+        }
+        return this.getSectionColumns(columns);
+    }
+
+    getSectionColumns(columns) {
+        const isSectionCol = (col) =>
+            [this.titleField, ...this.sectionColumns].includes(col.name) || col.widget === "handle";
+
+        let titleColspan = 1;
+        let absorbingColumns = true;
+        let titleCol;
+
+        const sectionCols = [];
+
+        for (const col of columns) {
+            if (col.name === this.titleField) {
+                titleCol = col;
+                continue;
+            }
+
+            if (isSectionCol(col)) {
+                if (titleCol) {
+                    // Stop absorbing at the first section column after the title.
+                    absorbingColumns = false;
+                    sectionCols.push({ ...titleCol, colspan: titleColspan }, col);
+                    // Empty titleCol so that we don't add it again if there are multiple section
+                    // columns after this.
+                    titleCol = null;
+                } else {
+                    sectionCols.push(col);
+                }
+                continue;
+            }
+
+            if (absorbingColumns) {
+                // Absorb non-section columns into the title's colspan.
+                titleColspan++;
+                continue;
+            }
+
+            sectionCols.push({ ...col, invisible: "1", readonly: "1" });
+        }
+
+        return sectionCols;
     }
 
     isCellReadonly(column, record) {

@@ -42,6 +42,10 @@ function getRecordsUntilSection(list, record, asc, subSection) {
 
     const sectionRecords = [];
     let index = list.records.findIndex(listRecord => listRecord.id === record.id);
+    if (index === -1) {
+        // The record is no longer part of the list
+        return { sectionRecords, sectionIndex: index };
+    }
     if (asc) {
         sectionRecords.push(list.records[index]);
         index++;
@@ -314,6 +318,10 @@ export class SectionAndNoteListRenderer extends ListRenderer {
 
     isSection(record = null) {
         return [DISPLAY_TYPES.SECTION, DISPLAY_TYPES.SUBSECTION].includes(record.data.display_type);
+    }
+
+    isNote(record = null) {
+        return record.data.display_type === DISPLAY_TYPES.NOTE;
     }
 
     isSectionInPage(record) {
