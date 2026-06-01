@@ -7,7 +7,6 @@ import {
     setupPosEnv,
     waitUntilOrdersSynced,
 } from "@point_of_sale/../tests/unit/utils";
-import { MockServer } from "@web/../tests/web_test_helpers";
 
 const { DateTime } = luxon;
 
@@ -83,241 +82,104 @@ describe("restaurant pos_store.js", () => {
         expect(line.basic_name).toBe("TEST");
     });
 
-    describe("class DevicesSynchronisation", () => {
-        test("Synchronization for a filled table has arrived", async () => {
-            // If a local order is already create on a table when another device send another order
-            // for the same table, we merge the orderlines of the local order with the synced order.
-            const store = await setupPosEnv();
-            const sync = store.deviceSync;
-            const table = store.models["restaurant.table"].get(2);
-            const filledOrder = await getFilledOrder(store);
-            const product1 = filledOrder.lines[0].product_id;
-            const product2 = filledOrder.lines[1].product_id;
-            filledOrder.table_id = table;
-
-            expect(table.getOrder()).toBe(filledOrder);
-            MockServer.env["pos.order"].create({
-                config_id: store.config.id,
-                session_id: store.session.id,
-                table_id: table.id,
-                lines: filledOrder.lines.map((line) => [
-                    0,
-                    0,
-                    {
-                        product_id: line.product_id.id,
-                        price_unit: line.price_unit,
-                        qty: 1,
-                    },
-                ]),
-            });
-
-            await sync.collect({
-                static_records: {},
-                session_id: 1,
-                device_identifier: 0,
-                records: {},
-            });
-
-            expect(store.models["pos.order"].length).toEqual(1);
-            const order = store.models["pos.order"].get(1);
-            expect(order.lines).toHaveLength(4);
-            expect(table.getOrders()).toHaveLength(1);
-            expect(order.lines[0].product_id).toEqual(product1);
-            expect(order.lines[1].product_id).toEqual(product2);
-            expect(order.lines[2].product_id).toEqual(product1);
-            expect(order.lines[3].product_id).toEqual(product2);
-            expect(order.lines[0].qty).toEqual(1);
-            expect(order.lines[1].qty).toEqual(1);
-            expect(order.lines[2].qty).toEqual(3);
-            expect(order.lines[3].qty).toEqual(2);
-            expect(order.lines[0].id).toBeOfType("number");
-            expect(order.lines[1].id).toBeOfType("number");
-            expect(order.lines[2].id).toBeOfType("string");
-            expect(order.lines[3].id).toBeOfType("string");
-            await store.syncAllOrders();
-            expect(order.lines[0].id).toBeOfType("number");
-            expect(order.lines[1].id).toBeOfType("number");
-            expect(order.lines[2].id).toBeOfType("number");
-            expect(order.lines[3].id).toBeOfType("number");
-        });
-
-        test("Orders must be downloaded by opening a table.", async () => {
-            const store = await setupPosEnv();
-            const filledOrder = await getFilledOrder(store);
-            const table = store.models["restaurant.table"].get(2);
-            MockServer.env["pos.order"].create({
-                config_id: store.config.id,
-                session_id: store.session.id,
-                table_id: table.id,
-                lines: filledOrder.lines.map((line) => [
-                    0,
-                    0,
-                    {
-                        product_id: line.product_id.id,
-                        price_unit: line.price_unit,
-                        qty: 1,
-                    },
-                ]),
-            });
-
-            // This function is called by setTable in pos_store, but it is not awaited.
-            // So we need to await it here to ensure the test runs correctly.
-            await store.deviceSync.readDataFromServer();
-            expect(table.getOrder().id).toEqual(1);
-        });
-
-        test("Orders updated from another device must be synchronized directly.", async () => {
-            const store = await setupPosEnv();
-            const filledOrder = await getFilledOrder(store);
-            const table = store.models["restaurant.table"].get(2);
-            filledOrder.table_id = table;
-            await store.syncAllOrders();
-
-            expect(filledOrder.id).toBeOfType("number");
-            expect(filledOrder.lines).toHaveLength(2);
-            expect(filledOrder.table_id).toBe(table);
-            MockServer.env["pos.order"].write([filledOrder.id], {
-                lines: filledOrder.lines.map((line) => [
-                    0,
-                    0,
-                    {
-                        product_id: line.product_id.id,
-                        price_unit: line.price_unit,
-                        qty: 40,
-                    },
-                ]),
-            });
-
-            await store.deviceSync.readDataFromServer();
-            expect(filledOrder.lines).toHaveLength(4);
-            expect(filledOrder.lines[2].qty).toEqual(40);
-            expect(filledOrder.lines[3].qty).toEqual(40);
-            expect(filledOrder.lines[2].id).toBeOfType("number");
-            expect(filledOrder.lines[3].id).toBeOfType("number");
-        });
-
-        test("paid state from server is synchronized", async () => {
+    describe("_resolveTableDuplicates", () => {
+        test("merges lines of local order into incoming canonical for same table", async () => {
             const store = await setupPosEnv();
             const table = store.models["restaurant.table"].get(2);
 
-            MockServer.env["pos.order"].create({
-                config_id: store.config.id,
-                session_id: store.session.id,
-                table_id: table.id,
-                lines: [
-                    [
-                        0,
-                        0,
-                        {
-                            product_id: 5,
-                            qty: 50,
-                            price_unit: 2.2,
-                        },
-                    ],
-                    [
-                        0,
-                        0,
-                        {
-                            product_id: 6,
-                            qty: 30,
-                            price_unit: 2.2,
-                        },
-                    ],
-                ],
-                state: "draft",
-            });
+            const localOrder = await getFilledOrder(store);
+            localOrder.table_id = table;
+            const lineCount = localOrder.lines.length;
 
-            await store.deviceSync.readDataFromServer();
-            const syncedOrder = table.getOrder();
-            expect(syncedOrder.state).toBe("draft");
-            expect(syncedOrder.lines).toHaveLength(2);
-
-            MockServer.env["pos.order"].write([syncedOrder.id], {
-                state: "paid",
-            });
-
-            await store.deviceSync.readDataFromServer();
-            const latestSyncedOrder = store.models["pos.order"].getFirst();
-            expect(latestSyncedOrder.state).toBe("paid");
-            expect(latestSyncedOrder.lines[0].qty).toBe(50);
-            expect(latestSyncedOrder.lines[1].qty).toBe(30);
-        });
-
-        test("Data from other devices overrides local data", async () => {
-            const store = await setupPosEnv();
-            const filledOrder = await getFilledOrder(store);
-            const table = store.models["restaurant.table"].get(2);
-            filledOrder.table_id = table;
-            filledOrder.internal_note = "Hey give me a discount!";
-            await store.syncAllOrders();
-
-            expect(filledOrder.id).toBeOfType("number");
-            expect(filledOrder.internal_note).toEqual("Hey give me a discount!");
-
-            filledOrder.internal_note = "Hey give me a discount! But not too much!";
-            MockServer.env["pos.order"].write([filledOrder.id], {
-                internal_note: "Hey give me a discount!",
-            });
-
-            await store.deviceSync.readDataFromServer();
-            expect(filledOrder.internal_note).toEqual("Hey give me a discount!");
-        });
-
-        test("There should only be one order per table.", async () => {
-            const store = await setupPosEnv();
-            const table = store.models["restaurant.table"].get(2);
-            const date = DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
-            const filledOrder = await getFilledOrder(store);
-            filledOrder.table_id = table;
-            await store.syncAllOrders();
-
-            let id = 1;
-            let lineId = 1;
-            const createOrderForTable = async () => {
-                const orderId = `${id++}_string`;
-                const lines = [
+            store.models.connectNewData({
+                "pos.order": [
                     {
-                        id: `${lineId++}_string`,
-                        order_id: orderId,
-                        product_id: 5,
-                        qty: 1,
-                        write_date: date,
-                    },
-                    {
-                        id: `${lineId++}_string`,
-                        order_id: orderId,
-                        product_id: 6,
-                        qty: 1,
-                        write_date: date,
-                    },
-                ];
-                const order = [
-                    {
-                        id: orderId,
-                        lines: lines.map((line) => line.id),
-                        write_date: date,
+                        id: 9001,
+                        uuid: "canonical-uuid",
                         table_id: table.id,
-                        pos_reference: "000-0-000000",
                         session_id: store.session.id,
                         config_id: store.config.id,
                     },
-                ];
-                const newData = {
-                    "pos.order": order,
-                    "pos.order.line": lines,
-                };
+                ],
+            });
 
-                await store.deviceSync.processDynamicRecords(newData);
-            };
+            store.data._resolveTableDuplicates(new Set(["canonical-uuid"]), [
+                { uuid: localOrder.uuid, tableId: table.id },
+            ]);
 
-            for (let i = 0; i < 8; i++) {
-                await createOrderForTable();
-                expect(table.getOrders()).toHaveLength(1);
-                expect(table.getOrder().id).toBeOfType("number");
-                expect(table.getOrder().lines).toHaveLength(4 + i * 2);
-            }
+            const canonical = store.models["pos.order"].getBy("uuid", "canonical-uuid");
+            expect(store.models["pos.order"].getBy("uuid", localOrder.uuid)).toBe(undefined);
+            expect(canonical.lines).toHaveLength(lineCount);
+        });
 
-            expect(store.models["pos.order"].length).toEqual(1);
+        test("does not touch orders for a different table", async () => {
+            const store = await setupPosEnv();
+            const table2 = store.models["restaurant.table"].get(2);
+            const table3 = store.models["restaurant.table"].get(3);
+
+            const orderOnTable2 = store.addNewOrder();
+            orderOnTable2.table_id = table2;
+
+            store.models.connectNewData({
+                "pos.order": [
+                    {
+                        id: 9001,
+                        uuid: "canonical-t3",
+                        table_id: table3.id,
+                        session_id: store.session.id,
+                        config_id: store.config.id,
+                    },
+                ],
+            });
+
+            store.data._resolveTableDuplicates(new Set(["canonical-t3"]), [
+                { uuid: orderOnTable2.uuid, tableId: table2.id },
+            ]);
+
+            expect(store.models["pos.order"].getBy("uuid", orderOnTable2.uuid)).not.toBe(undefined);
+            expect(
+                store.models["pos.order"].filter(
+                    (o) => !o.finalized && o.table_id?.id === table3.id
+                )
+            ).toHaveLength(1);
+        });
+
+        test("skips finalized orders", async () => {
+            const store = await setupPosEnv();
+            const table = store.models["restaurant.table"].get(2);
+
+            const finalizedOrder = store.addNewOrder();
+            finalizedOrder.table_id = table;
+            finalizedOrder.state = "done";
+
+            store.models.connectNewData({
+                "pos.order": [
+                    {
+                        id: 9001,
+                        uuid: "canonical-uuid",
+                        table_id: table.id,
+                        session_id: store.session.id,
+                        config_id: store.config.id,
+                    },
+                ],
+            });
+
+            store.data._resolveTableDuplicates(new Set(["canonical-uuid"]), [
+                { uuid: finalizedOrder.uuid, tableId: table.id },
+            ]);
+
+            expect(store.models["pos.order"].getBy("uuid", finalizedOrder.uuid)).not.toBe(
+                undefined
+            );
+        });
+
+        test("no-op when preexisting list is empty", async () => {
+            const store = await setupPosEnv();
+            const initialCount = store.models["pos.order"].getAll().length;
+
+            store.data._resolveTableDuplicates(new Set(), []);
+
+            expect(store.models["pos.order"].getAll()).toHaveLength(initialCount);
         });
     });
 

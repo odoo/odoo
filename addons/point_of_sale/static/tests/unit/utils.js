@@ -29,6 +29,7 @@ export const setupPosEnv = async () => {
     };
 
     assignDialogTestEnv();
+    onRpc("pos.config", "webrtc_announce", () => true);
     await makeTestApp();
     onRpc("/css", () => "");
     const store = getService("pos");
@@ -601,3 +602,9 @@ export function enableCashRounding(store, method = "UP", onlyCash = true) {
     store.config.only_round_cash_method = onlyCash;
     return rounding;
 }
+
+export const freezeDate = (date) => {
+    const timestamp = typeof date === "number" ? date : new Date(date).getTime();
+    patchWithCleanup(Date, { now: () => timestamp });
+    return timestamp;
+};

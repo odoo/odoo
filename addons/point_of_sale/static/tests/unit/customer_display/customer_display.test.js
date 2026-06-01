@@ -51,7 +51,7 @@ test("click order uses selected order for customer display dispatch", async () =
         },
     });
 
-    const adapter = new CustomerDisplayPosAdapter();
+    const adapter = new CustomerDisplayPosAdapter({ registerSnapshot() {} });
     const fakeChrome = {
         pos: store,
         adapter,
