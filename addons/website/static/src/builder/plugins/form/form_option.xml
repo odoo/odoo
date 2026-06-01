@@ -18,8 +18,9 @@
             <BuilderSelectItem classAction="'o_mark_optional'" id="'form_optional_opt'">Optional</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Marker" level="1">
-        <BuilderTextInput action="'setMark'" default="''" t-if="this.isActiveItem('form_required_opt') || this.isActiveItem('form_optional_opt')"/>
+    <BuilderRow label.translate="Marker" level="1" t-if="this.isActiveItem('form_required_opt') || this.isActiveItem('form_optional_opt')">
+        <BuilderTextInput action="'setMark'" default="''"/>
+        <BuilderColorPicker enabledTabs="['solid', 'custom']" styleAction="'--form-label-required-mark-color'"/>
     </BuilderRow>
     <BuilderRow t-if="this.canChangeFieldsLayout" label.translate="Labels Position">
         <BuilderButtonGroup action="'selectLabelsPosition'">
