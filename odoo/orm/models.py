@@ -4061,6 +4061,8 @@ class BaseModel(metaclass=MetaModel):
                 # against (re)computation
                 if (field.compute and (not field.readonly or field.precompute)) or key in cached_only:
                     protected.update(self.pool.field_computed.get(field, [field]))
+                if field.type == 'many2one' and field.bypass_search_access and not self.env.su:
+                    self.env[field.comodel_name].browse(field.convert_to_cache(val, self)).check_access('read')
 
             data_list.append(data)
 
