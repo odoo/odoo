@@ -136,6 +136,7 @@ class HrEmployee(models.Model):
     company_id = fields.Many2one('res.company', required=True, tracking=True)
     company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True, groups="base.group_system,hr.group_hr_user")
     company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True, groups="base.group_system,hr.group_hr_user", string='Company Country Code')
+    parent_company_id = fields.Many2one(related="company_id.parent_id", groups="hr.group_hr_user", readonly=True)
     work_phone = fields.Char('Work Phone', store=True, readonly=False, tracking=True, compute="_compute_work_contact_details", inverse='_inverse_work_contact_details')
     mobile_phone = fields.Char('Work Mobile')
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
