@@ -162,11 +162,11 @@ test("clickbot clickeverywhere test", async () => {
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
         "Test took 0 seconds",
-        "Successfully tested 2 apps",
-        "Successfully tested 3 menus",
-        "Successfully tested 4 views",
-        "Successfully tested 0 modals",
-        "Successfully tested 8 filters",
+        "Tested 2 apps",
+        "Tested 3 menus",
+        "Tested 4 views",
+        "Tested 0 modals",
+        "Tested 8 filters",
         SUCCESS_SIGNAL,
     ]);
 });
@@ -241,13 +241,13 @@ test("only one app", async () => {
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
         "Test took 0 seconds",
-        "Successfully tested 1 apps",
-        "Successfully tested 1 menus",
-        "Successfully tested 2 views",
-        "Successfully tested 0 modals",
-        "Successfully tested 4 filters",
+        "Tested 1 apps",
+        "Tested 1 menus",
+        "Tested 2 views",
+        "Tested 0 modals",
+        "Tested 4 filters",
         SUCCESS_SIGNAL,
-        'savedState: {"studioCount":0,"testedApps":["app1"],"testedMenus":["app1"],"testedFilters":4,"testedModals":0,"testedViews":2,"appIndex":0,"menuIndex":0,"startTime":43554.39999999106,"xmlId":"app1"}',
+        'savedState: {"studioCount":0,"testedApps":["app1"],"testedMenus":["app1"],"testedFilters":4,"testedModals":0,"testedViews":2,"appIndex":0,"menuIndex":0,"errorMenuCount":0,"startTime":43554.39999999106,"xmlId":"app1"}',
     ]);
 });
 
@@ -326,11 +326,11 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
         "Test took 0 seconds",
-        "Successfully tested 1 apps",
-        "Successfully tested 2 menus",
-        "Successfully tested 2 views",
-        "Successfully tested 0 modals",
-        "Successfully tested 4 filters",
+        "Tested 1 apps",
+        "Tested 2 menus",
+        "Tested 2 views",
+        "Tested 0 modals",
+        "Tested 4 filters",
         SUCCESS_SIGNAL,
     ]);
 });
@@ -433,6 +433,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
     onRpc("web_search_read", () => {
         if (clickBotStarted) {
             if (id === 3) {
+                id++;
                 // click on the Second Filter
                 throw makeServerError({
                     message: "This is a server Error, it should be displayed in an error dialog",
@@ -442,14 +443,6 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
             id++;
         }
     });
-    defineActions([
-        {
-            id: 1,
-            name: "App1",
-            res_model: "foo",
-            views: [[false, "list"]],
-        },
-    ]);
     defineMenus([
         {
             id: 1,
@@ -457,6 +450,13 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
             appID: 1,
             actionID: 1001,
             xmlid: "app1",
+        },
+        {
+            id: 2,
+            name: "App2",
+            appID: 2,
+            actionID: 1002,
+            xmlid: "app2",
         },
     ]);
     const webClient = await mountWithCleanup(WebClient);
@@ -557,14 +557,20 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
         'Clicking on: filter "Date"',
         'Clicking on: filter option "April"',
         `A RPC in error was detected, maybe it's related to the error dialog : ${expectedRpcData}`,
-        "Error while testing App1 (app1)",
+        `Error dialog detected ${expectedModalHtml}\n on testing menu App1 (app1)`,
+        "Testing app: App2 (app2)",
+        "Testing menu App2 (app2)",
+        "Testing 2 filters",
+        'Clicking on: filter "Not Bar"',
+        'Clicking on: filter "Date"',
+        'Clicking on: filter option "April"',
         "Test took 0 seconds",
-        "Successfully tested 1 apps",
-        "Successfully tested 1 menus",
-        "Successfully tested 0 views",
-        "Successfully tested 0 modals",
-        "Successfully tested 2 filters",
-        `Error: Error dialog detected${expectedModalHtml}`,
+        "Tested 2 apps",
+        "Tested 2 menus",
+        "Error found while testing 1 menus",
+        "Tested 1 views",
+        "Tested 0 modals",
+        "Tested 4 filters",
         FAILURE_SIGNAL,
     ]);
 });
@@ -704,11 +710,11 @@ test("clickbot clickeverywhere menu modal", async () => {
         "Modal detected: App Modal (test.modal)",
         "Clicking on: modal close button",
         "Test took 0 seconds",
-        "Successfully tested 2 apps",
-        "Successfully tested 2 menus",
-        "Successfully tested 2 views",
-        "Successfully tested 1 modals",
-        "Successfully tested 4 filters",
+        "Tested 2 apps",
+        "Tested 2 menus",
+        "Tested 2 views",
+        "Tested 1 modals",
+        "Tested 4 filters",
         SUCCESS_SIGNAL,
     ]);
 });
