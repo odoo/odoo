@@ -35,7 +35,11 @@ class AccountMoveSendWizard(models.TransientModel):
         return ""
 
     def action_send_and_print(self, allow_fallback_pdf=False):
-        auth_totp_disabled = not self.env.user.totp_enabled and not bool(self.env['ir.config_parameter'].sudo().get_param('auth_totp.policy'))
+        auth_totp_disabled = (
+            not self.env.user.totp_enabled
+            and not bool(self.env['ir.config_parameter'].sudo().get_param('auth_totp.policy'))
+            and self.env.company._get_peppol_edi_mode() != 'demo'
+        )
         if self.company_id._get_peppol_proxy_type() == 'pdp' and auth_totp_disabled:
             raise RedirectWarning(
                 message=self.env._("To use the French e-invoicing, you need to enable the two-factor authentication."),
