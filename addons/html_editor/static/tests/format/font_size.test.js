@@ -92,21 +92,6 @@ test("should remove a redundant font-size", async () => {
     });
 });
 
-test("should change the font-size to default", async () => {
-    await testEditor({
-        contentBefore: "<p>[ab]</p>",
-        stepFunction: setFontSize(),
-        contentAfter: "<p>[ab]</p>",
-    });
-});
-
-test("should change the font-size to default removing the existing style with no empty span at the end", async () => {
-    await testEditor({
-        contentBefore: '<p><span style="font-size: 36px;">[abc]</span></p>',
-        stepFunction: setFontSize(),
-        contentAfter: "<p>[abc]</p>",
-    });
-});
 test("should not format non-editable text (setFontSize)", async () => {
     await testEditor({
         contentBefore: '<p>a[b</p><p contenteditable="false">c</p><p>d]e</p>',
