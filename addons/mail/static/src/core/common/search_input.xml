@@ -9,7 +9,7 @@
                 class="position-absolute top-50 px-2 translate-middle-y smaller opacity-50"
                 role="status"
             >
-                <t t-if="this.spinner.visible">
+                <t t-if="this.spinner()">
                     <i class="fa fa-spin fa-circle-o-notch" title="Loading..." aria-hidden="true"/>
                     <p class="visually-hidden">Search is loading...</p>
                 </t>

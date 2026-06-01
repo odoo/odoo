@@ -1,9 +1,8 @@
-import { useState } from "@web/owl2/utils";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Dialog } from "@web/core/dialog/dialog";
 import { today } from "@web/core/l10n/dates";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export class ScheduledDateDialog extends Component {
     static template = "mail.ScheduledDateDialog";
@@ -26,7 +25,7 @@ export class ScheduledDateDialog extends Component {
             .plus({ days: (1 - today().weekday + 7) % 7 || 7 })
             .set({ hour: 8 });
 
-        this.state = useState({
+        this.state = proxy({
             customDateTime: now
                 .plus({ hours: 1 })
                 .set({ minutes: Math.ceil(now.minute / 5) * 5, seconds: 0, milliseconds: 0 }),

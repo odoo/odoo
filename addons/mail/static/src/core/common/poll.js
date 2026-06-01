@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { PollVotesPanel } from "@mail/core/common/poll_votes_panel";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 
@@ -18,7 +17,7 @@ export class Poll extends Component {
     static props = ["poll"];
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             isShowingResults: false,
             selectedOptionIds: new Set(),
             voting: false,

@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 import { formatLocalDateTime } from "@mail/utils/common/dates";
@@ -27,7 +26,7 @@ export class AvatarCard extends Component {
         this.actionService = useService("action");
         this.store = useService("mail.store");
         this.dialog = useService("dialog");
-        this.state = useState({ partnerLocalDateTimeFormatted: "" });
+        this.partnerLocalDateTimeFormatted = signal("");
         this.store.fetchStoreData("avatar_card", {
             id: this.props.id,
             model: this.props.model,
@@ -43,8 +42,8 @@ export class AvatarCard extends Component {
      * @param {string} currentUserTz
      */
     onChangeTz(partnerTz, currentUserTz) {
-        this.state.partnerLocalDateTimeFormatted = formatLocalDateTime(partnerTz, currentUserTz);
-        if (!this.state.partnerLocalDateTimeFormatted) {
+        this.partnerLocalDateTimeFormatted.set(formatLocalDateTime(partnerTz, currentUserTz));
+        if (!this.partnerLocalDateTimeFormatted()) {
             return;
         }
         return 60000 - (Date.now() % 60000);

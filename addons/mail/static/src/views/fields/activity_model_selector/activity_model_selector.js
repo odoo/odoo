@@ -1,6 +1,6 @@
-import { useState } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
+
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
 import { memoize } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { ModelSelector } from "@web/core/model_selector/model_selector";
@@ -28,7 +28,7 @@ class ActivityModelSelector extends Component {
         // Use a state for the model to not write on the record the model without record id
         this.orm = useService("orm");
         this.dialog = useService("dialog");
-        this.state = useState({
+        this.state = proxy({
             resModel: this.props.record.data.res_model,
             resModelName: this.props.record.data.res_model_name || "",
             models: [],

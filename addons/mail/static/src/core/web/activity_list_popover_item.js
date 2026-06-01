@@ -1,10 +1,10 @@
-import { useState } from "@web/owl2/utils";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay } from "@mail/utils/common/dates";
+import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { FileUploader } from "@web/views/fields/file_handler";
@@ -29,7 +29,8 @@ export class ActivityListPopoverItem extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({ hasMarkDoneView: false });
+        this.hasMarkDoneView = signal(false);
+        this.toggleFn = toggleFn;
         if (this.props.activity.activity_category === "upload_file") {
             this.attachmentUploader = useAttachmentUploader(
                 this.env.services["mail.store"]["mail.thread"].insert({
@@ -38,11 +39,6 @@ export class ActivityListPopoverItem extends Component {
                 })
             );
         }
-        this.closeMarkAsDone = this.closeMarkAsDone.bind(this);
-    }
-
-    closeMarkAsDone() {
-        this.state.hasMarkDoneView = false;
     }
 
     get delayLabel() {
@@ -77,10 +73,6 @@ export class ActivityListPopoverItem extends Component {
     onClickEditActivityButton() {
         this.props.onClickEditActivityButton();
         this.props.activity.edit().then(() => this.props.onActivityChanged?.());
-    }
-
-    onClickMarkAsDone() {
-        this.state.hasMarkDoneView = !this.state.hasMarkDoneView;
     }
 
     async onFileUploaded(data) {

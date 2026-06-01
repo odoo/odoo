@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, status } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, onMounted, onWillUnmount, proxy, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -55,7 +55,7 @@ export class VoicePlayer extends Component {
         this.progressRef = useRef("progress");
         /** @type {import("@mail/discuss/voice_message/common/voice_message_service").VoiceMessageService} */
         this.voiceMessageService = useService("discuss.voice_message");
-        this.state = useState({
+        this.state = proxy({
             paused: true,
             playing: false,
             repeat: false,

@@ -1,4 +1,4 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { useExternalListener, useRef } from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -38,21 +38,19 @@ export class QuickReactionMenu extends Component {
                 popoverClass: "o-mail-QuickReactionMenu-pickerPopover",
             }
         );
-        this.dropdown = useState(
-            useDropdownState({
-                onClose: () => {
-                    const currentThread = this.env.getCurrentThread?.();
-                    if (!currentThread || currentThread.notEq(this.props.message.thread)) {
-                        return;
-                    }
-                    if (currentThread.messageInEdition) {
-                        currentThread.messageInEdition.composer.autofocus++;
-                    } else {
-                        currentThread.composer.autofocus++;
-                    }
-                },
-            })
-        );
+        this.dropdown = useDropdownState({
+            onClose: () => {
+                const currentThread = this.env.getCurrentThread?.();
+                if (!currentThread || currentThread.notEq(this.props.message.thread)) {
+                    return;
+                }
+                if (currentThread.messageInEdition) {
+                    currentThread.messageInEdition.composer.autofocus++;
+                } else {
+                    currentThread.composer.autofocus++;
+                }
+            },
+        });
         this.frequentEmojiService = useService("frequent_emoji");
         useExternalListener(window, "keydown", async (ev) => {
             if (

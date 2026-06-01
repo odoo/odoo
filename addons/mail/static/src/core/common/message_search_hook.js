@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 import { SearchState } from "@mail/utils/common/hooks";
 import { getInnerHtml } from "@mail/utils/common/html";
-import { effect, onMounted, onWillDestroy, onWillUnmount } from "@odoo/owl";
+import { effect, onMounted, onWillDestroy, onWillUnmount, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 import { escapeRegExp } from "@web/core/utils/strings";
@@ -158,8 +157,7 @@ export class MessageSearchState extends SearchState {
 
 /**
  * @param {import('models').Thread} [initialThread]
- * @returns {MessageSearchState}
  */
 export function useMessageSearch(initialThread) {
-    return useState(new MessageSearchState(initialThread));
+    return proxy(new MessageSearchState(initialThread));
 }

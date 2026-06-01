@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { useChannelMemberActions } from "@mail/discuss/core/common/channel_member_actions";
@@ -17,7 +16,6 @@ export class ChannelMember extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({});
         this.store = useService("mail.store");
         this.actions = useChannelMemberActions({ member: () => this.props.member });
         this.showingActions = useDropdownState();

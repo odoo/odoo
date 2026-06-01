@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillDestroy, onWillStart } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, proxy } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -38,7 +37,7 @@ export class DeviceSelect extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.notification = useService("notification");
-        this.state = useState({
+        this.state = proxy({
             userDevices: [],
             selectedDevice: undefined,
         });

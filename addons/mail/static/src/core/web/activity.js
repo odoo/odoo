@@ -3,14 +3,15 @@ import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, signal } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { render, useState } from "@web/owl2/utils";
+import { render } from "@web/owl2/utils";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 /**
@@ -28,7 +29,8 @@ export class Activity extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.state = useState({ showDetails: false });
+        this.showDetails = signal(false);
+        this.toggleFn = toggleFn;
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
         this.avatarCard = usePopover(AvatarCard);
         onMounted(() => {
@@ -55,10 +57,6 @@ export class Activity extends Component {
 
     get delay() {
         return computeDelay(this.props.activity.date_deadline);
-    }
-
-    toggleDetails() {
-        this.state.showDetails = !this.state.showDetails;
     }
 
     async onClickMarkAsDone(ev) {

@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -44,5 +44,5 @@ export class AttachmentUploader {
  * @param {function} [param1.onFileUploaded]
  */
 export function useAttachmentUploader(thread, { composer, onFileUploaded } = {}) {
-    return useState(new AttachmentUploader(...arguments));
+    return proxy(new AttachmentUploader(...arguments));
 }

@@ -9,7 +9,7 @@
                     <button type="button" class="btn btn-sm btn-primary" aria-label="Done and Schedule Next" t-on-click="this.onClickDoneAndScheduleNext">
                         Done &amp; Schedule Next
                     </button>
-                    <button type="button" class="btn btn-sm btn-primary mx-2" aria-label="Done" t-on-click="this.onClickDone" t-att-disabled="this.state.disableDoneButton">
+                    <button type="button" class="btn btn-sm btn-primary mx-2" aria-label="Done" t-on-click="this.onClickDone" t-att-disabled="this.disableDoneButton()">
                         Done
                     </button>
                     <button type="button" class="btn btn-sm btn-link" t-on-click="this.props.close">

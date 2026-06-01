@@ -47,7 +47,7 @@ registerMessageAction("reaction", {
     onSelected({ owner }) {
         const anchorEl = owner.isMessageContextMenu
             ? owner.anchor.el
-            : owner.root?.el?.querySelector(`[name="${this.id}"]`);
+            : owner.rootRef?.()?.querySelector(`[name="${this.id}"]`);
         return owner.reactionPicker.open({ el: anchorEl });
     },
     setup: ({ message, owner, thread }) =>
@@ -137,7 +137,7 @@ registerMessageAction("reactions", {
     icon: "fa fa-smile-o",
     name: _t("View Reactions"),
     onSelected: ({ message, owner, store }) => {
-        store.env.services.dialog.add(MessageReactionMenu, { message }, { context: owner });
+        store.env.services.dialog.add(MessageReactionMenu, { message }, { rootRef: owner.rootRef });
     },
     sequence: 60,
 });

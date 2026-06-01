@@ -1,6 +1,6 @@
-import { useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect } from "@web/owl2/utils";
 import { useChildRefs, useForwardRefsToParent, useScrollState } from "@mail/utils/common/hooks";
-import { Component, xml } from "@odoo/owl";
+import { Component, signal, useEffect, xml } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 
 /**
@@ -23,31 +23,24 @@ export class Tabs extends Component {
     static defaultProps = { direction: "v" };
 
     setup() {
-        this.state = useState({ activeHeaderId: this.props.initialTabId });
+        this.activeHeaderId = signal(this.props.initialTabId);
         this.headerRefs = useChildRefs();
-        this.navRef = useRef("nav");
-        this.scrollState = useScrollState("nav");
+        this.navRef = signal();
+        this.scrollState = useScrollState(this.navRef);
         useForwardRefToParent("ref");
         useChildSubEnv({
             tabsContext: {
                 headerRefs: this.headerRefs,
-                isActive: (id) => this.state.activeHeaderId === id,
-                setActiveTab: (id) => (this.state.activeHeaderId = id),
+                isActive: (id) => this.activeHeaderId() === id,
+                setActiveTab: (id) => this.activeHeaderId.set(id),
             },
         });
-        useLayoutEffect(
-            (refs, headerEls, activeHeaderId) => {
-                if (!refs.has(activeHeaderId) && headerEls?.length) {
-                    this.state.activeHeaderId = headerEls[0].dataset.headerId;
-                }
-            },
-            () => [
-                this.headerRefs,
-                this.navRef.el?.children,
-                this.state.activeHeaderId,
-                this.headerRefs.size,
-            ]
-        );
+        useEffect(() => {
+            const headerEls = this.navRef()?.children;
+            if (!this.headerRefs.has(this.activeHeaderId()) && headerEls?.length) {
+                this.activeHeaderId.set(headerEls[0].dataset.headerId);
+            }
+        });
     }
 
     /**
@@ -72,8 +65,8 @@ export class InternalTabHeader extends Component {
 
     setup() {
         super.setup(...arguments);
-        this.root = useRef("root");
-        useForwardRefsToParent("headerRefs", (props) => props.id, this.root);
+        this.rootRef = signal();
+        useForwardRefsToParent("headerRefs", (props) => props.id, this.rootRef);
     }
 
     onClick() {
