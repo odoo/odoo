@@ -359,7 +359,7 @@ $resolved-btn-secondary-outline-color: null !default;
     $btn-secondary-border-color,
     $btn-secondary-outline-color,
     $scope: '&',
-    $nested-scope: null,
+    $nested-scope: '.o_cc &',
 ) {
 
     // ── Main CSS selector ────────────────────────────────────────────────────
@@ -522,7 +522,7 @@ $resolved-btn-secondary-outline-color: null !default;
 
 
     // ── Cards ────────────────────────────────────────────────────────────────
-    #{if($nested-scope, '.card, #{$nested-scope} .card', '.card')} {
+    #{if($nested-scope, '.card, #{$nested-scope}.card, #{$nested-scope} .card', '.card')} {
         --card-color: #{$text-color};
         --card-bg: #{$bg-color};
         --card-border-color: #{$-border-color};
@@ -607,6 +607,29 @@ $resolved-btn-secondary-outline-color: null !default;
         --progress-bg: #{$-progress-bg};
         --progress-bar-bg: #{$btn-primary-color};
     }
+
+    // ── Check-inputs ─────────────────────────────────────────────────────────
+    :where(.form-check-input) {
+        &:checked {
+            --form-check-bg: #{$text-color};
+
+            &[type="checkbox"] {
+                $_check: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{color-contrast($text-color)}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/></svg>");
+                --form-check-bg-image: #{escape-svg($_check)} #{if($enable-gradients, ', var(--gradient)', '')};
+            }
+
+            &[type="radio"] {
+                $_radio: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='#{color-contrast($text-color)}'/></svg>") !default;
+                --form-check-bg-image: #{escape-svg($_radio)} #{if($enable-gradients, ', var(--gradient)', '')};
+            }
+        }
+
+        &[type="checkbox"]:indeterminate {
+            $_indeterminate: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{color-contrast($text-color)}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/></svg>");
+            --form-check-bg: #{$text-color};
+            --form-check-bg-image: #{escape-svg($_indeterminate)} #{if($enable-gradients, ', var(--gradient)', '')};
+        }
+    }
 }
 
 
@@ -649,8 +672,8 @@ $resolved-btn-secondary-outline-color: null !default;
                     $resolved-btn-secondary-color,
                     $resolved-btn-secondary-border-color,
                     $resolved-btn-secondary-outline-color,
-            $scope: '&',
-            $nested-scope: '.o_cc &'
+            //$scope: '&',
+            //$nested-scope: '.o_cc &'
     );
     background-color: var(--o-cc-bg);
     color: var(--o-cc-text);
@@ -718,8 +741,8 @@ $resolved-btn-secondary-outline-color: null !default;
             $resolved-btn-secondary-color,
             $resolved-btn-secondary-color,
             $resolved-btn-secondary-outline-color,
-            $scope: '&',
-            $nested-scope: '.o_cc &'
+            //$scope: '&',
+            //$nested-scope: '.o_cc &'
     );
     // Mirror .o_cc{N} behavior: ensure .btn-close is visible on the bg.
     :where(.btn-close) { filter: var(--o-cc-btn-close-filter); }

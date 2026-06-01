@@ -509,6 +509,15 @@ pre {
     @include o-cc-make-btn-secondary-outline();
 }
 
+// ── Forms ──────────────────────────────────────────────────────────────────────
+
+.form-check-input {
+    &:checked, &[type="checkbox"]:indeterminate {
+        background-color: var(--form-check-bg, #{$form-check-input-checked-bg-color});
+        border-color:     var(--form-check-border, #{$form-check-input-checked-border-color});
+    }
+}
+
 
 // Buttons with custom colors
 .btn-custom:hover, .btn-fill-custom:hover {
