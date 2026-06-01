@@ -2,15 +2,30 @@
 
 import base64
 import logging
+from datetime import datetime
+from types import SimpleNamespace
+from zeep.cache import InMemoryCache
 
 from odoo import api, fields, models, modules, tools
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Command, Domain
-from odoo.tools import html2plaintext, file_open, ormcache
+from odoo.tools import html2plaintext, file_open, ormcache, zeep
 from odoo.tools.image import image_process
 
 _logger = logging.getLogger(__name__)
+
+
+class ZeepOrmCache(InMemoryCache):
+    """Zeep cache for XSD/WSDL resources backed by the ORM cache."""
+
+    def __init__(self, company, timeout=3600):
+        super().__init__(timeout=timeout)
+        self.company = company
+
+    @property
+    def _cache(self) -> dict[str, tuple[datetime, bytes | str]]:
+        return self.company._get_zeep_cache()._cache__
 
 
 class ResCompany(models.Model):
@@ -491,3 +506,17 @@ class ResCompany(models.Model):
     @ormcache()
     def _get_company_partner_ids(self):
         return tuple(self.env['res.company'].sudo().with_context(active_test=False).search([]).partner_id.ids)
+
+    @ormcache('self.id', cache='stable')
+    def _get_zeep_cache(self):
+        """Return a cache bucket used by ``odoo.tools.zeep`` for XSDs/WSDLs."""
+        return SimpleNamespace(_cache__={})
+
+    def _get_zeep_client(self, url, *args, **kwargs):
+        self.ensure_one()
+        transport = kwargs.get('transport')
+        if not transport:
+            transport = kwargs['transport'] = zeep.Transport()
+        if not transport.cache:
+            transport.cache = ZeepOrmCache(self)
+        return zeep.Client(url, *args, **kwargs)

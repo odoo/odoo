@@ -44,14 +44,13 @@ def _get_zeep_operation(company, operation):
     def response_hook(resp, *args, **kwargs):
         info['raw_response'] = resp.text
 
-    session.hooks['response'] = response_hook
-
     settings = zeep.Settings(forbid_entities=False, strict=False)
     wsdl = company._l10n_es_edi_verifactu_get_endpoints()['wsdl']
-    client = zeep.Client(
+    client = company._get_zeep_client(
         wsdl['url'], session=session, settings=settings,
         operation_timeout=20, timeout=20,
     )
+    session.hooks['response'] = response_hook  # To avoid storing XSD/WSDL in info
 
     if operation == 'registration':
         # Note: using the "certificate" before creating `client` causes an error during the `client` creation

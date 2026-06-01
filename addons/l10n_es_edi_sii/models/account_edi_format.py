@@ -451,7 +451,7 @@ class AccountEdiFormat(models.Model):
         session.cert = company.l10n_es_sii_certificate_id
         session.mount('https://', CertificateAdapter(ciphers=EUSKADI_CIPHERS))
 
-        client = zeep.Client(connection_vals['url'], operation_timeout=60, timeout=60, session=session)
+        client = company._get_zeep_client(connection_vals['url'], session=session)
 
         if connection_vals.get('custom_navarra'):
             # We Inject the namespaces directly in the header dictionary
