@@ -6,6 +6,7 @@ import {
     click,
     manuallyDispatchProgrammaticEvent,
     press,
+    queryOne,
     tick,
     waitFor,
 } from "@odoo/hoot-dom";
@@ -450,3 +451,14 @@ export async function tripleClick(node) {
     }
     await tick();
 }
+
+export function getElementTouchPosition(selector) {
+    const el = queryOne(selector);
+    const rect = el.getBoundingClientRect();
+    return new Touch({
+        identifier: Date.now(),
+        target: el,
+        clientX: rect.left + rect.width / 2,
+        clientY: rect.top + rect.height / 2,
+    });
+};
