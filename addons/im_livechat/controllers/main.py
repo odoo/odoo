@@ -48,7 +48,7 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/material_symbols_outlined', type='http', auth='none', cors="*")
     def material_symbols(self, **kwargs):
-        return Stream.from_path('web/static/src/libs/materialsymbols/MaterialSymbolsOutlined_wgth-400_opsz-24.woff2').get_response()
+        return Stream.from_path('web/static/src/libs/materialsymbols/material_symbols_outlined_subset.woff2').get_response()
 
     @http.route('/im_livechat/odoo_ui_icons', type='http', auth='none', cors="*")
     def odoo_ui_icons(self, **kwargs):

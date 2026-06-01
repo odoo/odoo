@@ -18,7 +18,6 @@ $ms-size-multiplier: 1.214285; // Compensate pictogram's inner spacing
     font-family: var(--icon-font-family, #{$ms-font-family});
     font-style: normal;
     font-size: var(--oi-font-size, #{$default-icon-size});
-    font-variation-settings: "FILL" var(--o-mi-fill, 0), "opsz" 24;
     font-weight: 400 !important;
     line-height: 1;
     letter-spacing: normal;
@@ -34,11 +33,14 @@ $ms-size-multiplier: 1.214285; // Compensate pictogram's inner spacing
     -moz-font-feature-settings: 'liga';
 
     &:before {
-        transform: scale(var(--oi-before-scale, 1.214285));
+        transform: scale(var(--oi-before-scale, #{$ms-size-multiplier}));
         display: inline-block;
         content: attr(data-icon);
         text-rendering: geometricPrecision;
         font-size: var(--oi-font-size, $oi-default-size);
+    }
+    &.oi-filled[data-icon]:not([data-icon=""]):before {
+        content: attr(data-icon) "_f";
     }
 }
 
@@ -46,6 +48,11 @@ $ms-size-multiplier: 1.214285; // Compensate pictogram's inner spacing
     &::before {
         content: $icon-name;
     }
+}
+
+@mixin oi-icon-content($content) {
+    --icon-font-family: #{$oi-font-family};
+    @include icon-content($content);
 }
 
 @mixin rotate($degrees) {
@@ -136,31 +143,31 @@ $icon-sizes: (
 // ODOO ICONS override mapping
 /* Kept for compatibility with website made prior saas-19.3 */
 /* ---------------------------------------------------------------------------- */
-.oi-threads:before { content: '\e818'; }
+.oi-threads { @include oi-icon-content('\e818'); }
 
-.oi-kickstarter:before { content: '\e819'; }
+.oi-kickstarter { @include oi-icon-content('\e819'); }
 
-.oi-x:before { content: '\e81a'; }
+.oi-x { @include oi-icon-content('\e81a'); }
 
-.oi-x-square:before { content: '\e848'; }
+.oi-x-square { @include oi-icon-content('\e848'); }
 
-.oi-tiktok:before { content: '\e81b'; }
+.oi-tiktok { @include oi-icon-content('\e81b'); }
 
-.oi-bluesky:before { content: '\e81c'; }
+.oi-bluesky { @include oi-icon-content('\e81c'); }
 
-.oi-google-play:before { content: '\e81d'; }
+.oi-google-play { @include oi-icon-content('\e81d'); }
 
-.oi-strava:before { content: '\e80f'; }
+.oi-strava { @include oi-icon-content('\e80f'); }
 
-.oi-discord:before { content: '\e811'; }
+.oi-discord { @include oi-icon-content('\e811'); }
 
-.oi-view-pivot:before { content: '\e800'; }
+.oi-view-pivot { @include oi-icon-content('\e800'); }
 
-.oi-view-cohort:before { content: '\e816'; }
+.oi-view-cohort { @include oi-icon-content('\e816'); }
 
-.oi-studio:before { content: '\e813'; }
+.oi-studio { @include oi-icon-content('\e813'); }
 
-.oi-odoo:before { content: '\e806'; }
+.oi-odoo { @include oi-icon-content('\e806'); }
 
 /* Custom icon mapping */
 /* ---------------------------------------------------------------------------- */
@@ -700,14 +707,12 @@ $ms-rtl-icons:
 
 .oi-user-plus {
     @include material-icon-base;
-    @include icon-content("person_add");
-    --o-mi-fill: 1;
+    @include icon-content("person_add_f");
 }
 
 .oi-users {
     @include material-icon-base;
-    @include icon-content("group");
-    --o-mi-fill: 1;
+    @include icon-content("group_f");
 }
 
 .oi-ellipsis-h {
@@ -770,13 +775,11 @@ $ms-rtl-icons:
 // ================================
 
 .fa-500px {
-    @include icon-content("\e80d");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e80d");
 }
 
 .fa-address-book {
-    @include icon-content("contact_page");
-    --o-mi-fill: 1;
+    @include icon-content("contact_page_f");
 }
 
 .fa-address-book-o {
@@ -785,8 +788,7 @@ $ms-rtl-icons:
 
 .fa-address-card,
 .fa-vcard {
-    @include icon-content("contact_mail");
-    --o-mi-fill: 1;
+    @include icon-content("contact_mail_f");
 }
 
 .fa-address-card-o,
@@ -799,8 +801,7 @@ $ms-rtl-icons:
 }
 
 .fa-adn {
-    @include icon-content("\e80e");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e80e");
 }
 
 .fa-align-center {
@@ -820,8 +821,7 @@ $ms-rtl-icons:
 }
 
 .fa-amazon {
-    @include icon-content("\e801");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e801");
 }
 
 .fa-ambulance {
@@ -838,13 +838,11 @@ $ms-rtl-icons:
 }
 
 .fa-android {
-    @include icon-content("\e810");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e810");
 }
 
 .fa-angellist {
-    @include icon-content("\e802");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e802");
 }
 
 .fa-angle-double-down {
@@ -880,8 +878,7 @@ $ms-rtl-icons:
 }
 
 .fa-apple {
-    @include icon-content("\e812");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e812");
 }
 
 .fa-archive {
@@ -893,13 +890,11 @@ $ms-rtl-icons:
 }
 
 .fa-arrow-circle-down {
-    @include icon-content("arrow_circle_down");
-    --o-mi-fill: 1;
+    @include icon-content("arrow_circle_down_f");
 }
 
 .fa-arrow-circle-left {
-    @include icon-content("arrow_circle_left");
-    --o-mi-fill: 1;
+    @include icon-content("arrow_circle_left_f");
 }
 
 .fa-arrow-circle-o-down {
@@ -919,13 +914,11 @@ $ms-rtl-icons:
 }
 
 .fa-arrow-circle-right {
-    @include icon-content("arrow_circle_right");
-    --o-mi-fill: 1;
+    @include icon-content("arrow_circle_right_f");
 }
 
 .fa-arrow-circle-up {
-    @include icon-content("arrow_circle_up");
-    --o-mi-fill: 1;
+    @include icon-content("arrow_circle_up_f");
 }
 
 .fa-arrow-down {
@@ -994,8 +987,7 @@ $ms-rtl-icons:
 }
 
 .fa-bandcamp {
-    @include icon-content("\e803");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e803");
 }
 
 .fa-bank,
@@ -1061,18 +1053,15 @@ $ms-rtl-icons:
 }
 
 .fa-behance {
-    @include icon-content("\e815");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e815");
 }
 
 .fa-behance-square {
-    @include icon-content("\e814");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e814");
 }
 
 .fa-bell {
-    @include icon-content("notifications");
-    --o-mi-fill: 1;
+    @include icon-content("notifications_f");
 }
 
 .fa-bell-o {
@@ -1080,8 +1069,7 @@ $ms-rtl-icons:
 }
 
 .fa-bell-slash {
-    @include icon-content("notifications_off");
-    --o-mi-fill: 1;
+    @include icon-content("notifications_off_f");
 }
 
 .fa-bell-slash-o {
@@ -1093,8 +1081,7 @@ $ms-rtl-icons:
 }
 
 .fa-binoculars {
-    @include icon-content("\e804");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e804");
 }
 
 .fa-birthday-cake {
@@ -1102,13 +1089,11 @@ $ms-rtl-icons:
 }
 
 .fa-bitbucket {
-    @include icon-content("\e807");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e807");
 }
 
 .fa-bitbucket-square {
-    @include icon-content("\e805");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e805");
 }
 
 .fa-bitcoin,
@@ -1117,8 +1102,7 @@ $ms-rtl-icons:
 }
 
 .fa-black-tie {
-    @include icon-content("\e808");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e808");
 }
 
 .fa-blind {
@@ -1143,8 +1127,7 @@ $ms-rtl-icons:
 }
 
 .fa-bomb {
-    @include icon-content("\e809");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e809");
 }
 
 .fa-book {
@@ -1152,8 +1135,7 @@ $ms-rtl-icons:
 }
 
 .fa-bookmark {
-    @include icon-content("bookmark");
-    --o-mi-fill: 1;
+    @include icon-content("bookmark_f");
 }
 
 .fa-bookmark-o {
@@ -1174,7 +1156,6 @@ $ms-rtl-icons:
 
 .fa-building {
     @include icon-content("business");
-    --o-mi-fill: 1;
 }
 
 .fa-building-o {
@@ -1194,8 +1175,7 @@ $ms-rtl-icons:
 }
 
 .fa-buysellads {
-    @include icon-content("\e80a");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e80a");
 }
 
 .fa-cab,
@@ -1208,8 +1188,7 @@ $ms-rtl-icons:
 }
 
 .fa-calendar {
-    @include icon-content("calendar_today");
-    --o-mi-fill: 1;
+    @include icon-content("calendar_today_f");
 }
 
 .fa-calendar-check-o {
@@ -1232,12 +1211,9 @@ $ms-rtl-icons:
     @include icon-content("event_busy");
 }
 
-.fa-camera {
-    @include icon-content("photo_camera");
-}
-
+.fa-camera,
 .fa-camera-retro {
-    @include icon-content("camera_alt");
+    @include icon-content("photo_camera");
 }
 
 .fa-caret-down {
@@ -1289,43 +1265,35 @@ $ms-rtl-icons:
 }
 
 .fa-cc-amex {
-    @include icon-content("\e80b");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e80b");
 }
 
 .fa-cc-diners-club {
-    @include icon-content("\e8c5");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8c5");
 }
 
 .fa-cc-discover {
-    @include icon-content("\e8cb");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8cb");
 }
 
 .fa-cc-jcb {
-    @include icon-content("\e8c8");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8c8");
 }
 
 .fa-cc-mastercard {
-    @include icon-content("\e8ca");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8ca");
 }
 
 .fa-cc-paypal {
-    @include icon-content("\e81f");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e81f");
 }
 
 .fa-cc-stripe {
-    @include icon-content("\e8c6");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8c6");
 }
 
 .fa-cc-visa {
-    @include icon-content("\e8c7");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8c7");
 }
 
 .fa-certificate {
@@ -1347,8 +1315,7 @@ $ms-rtl-icons:
 }
 
 .fa-check-circle {
-    @include icon-content("check_circle");
-    --o-mi-fill: 1;
+    @include icon-content("check_circle_f");
 }
 
 .fa-check-circle-o {
@@ -1356,8 +1323,7 @@ $ms-rtl-icons:
 }
 
 .fa-check-square {
-    @include icon-content("check_box");
-    --o-mi-fill: 1;
+    @include icon-content("check_box_f");
 }
 
 .fa-check-square-o {
@@ -1365,23 +1331,19 @@ $ms-rtl-icons:
 }
 
 .fa-chevron-circle-down {
-    @include icon-content("expand_circle_down");
-    --o-mi-fill: 1;
+    @include icon-content("expand_circle_down_f");
 }
 
 .fa-chevron-circle-left {
-    @include icon-content("arrow_circle_left");
-    --o-mi-fill: 1;
+    @include icon-content("arrow_circle_left_f");
 }
 
 .fa-chevron-circle-right {
-    @include icon-content("arrow_circle_right");
-    --o-mi-fill: 1;
+    @include icon-content("arrow_circle_right_f");
 }
 
 .fa-chevron-circle-up {
-    @include icon-content("expand_circle_up");
-    --o-mi-fill: 1;
+    @include icon-content("expand_circle_up_f");
 }
 
 .fa-chevron-down {
@@ -1405,13 +1367,11 @@ $ms-rtl-icons:
 }
 
 .fa-chrome {
-    @include icon-content("\e822");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e822");
 }
 
 .fa-circle {
-    @include icon-content("circle");
-    --o-mi-fill: 1;
+    @include icon-content("circle_f");
 }
 
 .fa-circle-o {
@@ -1472,13 +1432,11 @@ $ms-rtl-icons:
 }
 
 .fa-codepen {
-    @include icon-content("\e823");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e823");
 }
 
 .fa-codiepie {
-    @include icon-content("\e824");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e824");
 }
 
 .fa-coffee {
@@ -1487,8 +1445,7 @@ $ms-rtl-icons:
 
 .fa-cog,
 .fa-gear {
-    @include icon-content("settings");
-    --o-mi-fill: 1;
+    @include icon-content("settings_f");
 }
 
 .fa-cogs,
@@ -1501,8 +1458,7 @@ $ms-rtl-icons:
 }
 
 .fa-comment {
-    @include icon-content("chat_bubble");
-    --o-mi-fill: 1;
+    @include icon-content("chat_bubble_f");
 }
 
 .fa-comment-o {
@@ -1510,8 +1466,7 @@ $ms-rtl-icons:
 }
 
 .fa-commenting {
-    @include icon-content("mode_comment");
-    --o-mi-fill: 1;
+    @include icon-content("mode_comment_f");
 }
 
 .fa-commenting-o {
@@ -1519,8 +1474,7 @@ $ms-rtl-icons:
 }
 
 .fa-comments {
-    @include icon-content("forum");
-    --o-mi-fill: 1;
+    @include icon-content("forum_f");
 }
 
 .fa-comments-o {
@@ -1536,13 +1490,11 @@ $ms-rtl-icons:
 }
 
 .fa-connectdevelop {
-    @include icon-content("\e825");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e825");
 }
 
 .fa-contao {
-    @include icon-content("\e826");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e826");
 }
 
 .fa-copy,
@@ -1555,8 +1507,7 @@ $ms-rtl-icons:
 }
 
 .fa-creative-commons {
-    @include icon-content("\e827");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e827");
 }
 
 .fa-credit-card {
@@ -1576,8 +1527,7 @@ $ms-rtl-icons:
 }
 
 .fa-css3 {
-    @include icon-content("\e828");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e828");
 }
 
 .fa-cube {
@@ -1603,8 +1553,7 @@ $ms-rtl-icons:
 }
 
 .fa-dashcube {
-    @include icon-content("\e8c9");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8c9");
 }
 
 .fa-database {
@@ -1623,8 +1572,7 @@ $ms-rtl-icons:
 }
 
 .fa-delicious {
-    @include icon-content("\e82a");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e82a");
 }
 
 .fa-desktop {
@@ -1632,8 +1580,7 @@ $ms-rtl-icons:
 }
 
 .fa-deviantart {
-    @include icon-content("\e82b");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e82b");
 }
 
 .fa-diamond {
@@ -1641,8 +1588,7 @@ $ms-rtl-icons:
 }
 
 .fa-digg {
-    @include icon-content("\e82c");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e82c");
 }
 
 .fa-dollar,
@@ -1659,14 +1605,12 @@ $ms-rtl-icons:
 }
 
 .fa-dribbble {
-    @include icon-content("\e82d");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e82d");
 }
 
 .fa-drivers-license,
 .fa-id-card {
-    @include icon-content("badge");
-    --o-mi-fill: 1;
+    @include icon-content("badge_f");
 }
 
 .fa-drivers-license-o,
@@ -1675,28 +1619,23 @@ $ms-rtl-icons:
 }
 
 .fa-dropbox {
-    @include icon-content("\e82e");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e82e");
 }
 
 .fa-drupal {
-    @include icon-content("\e82f");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e82f");
 }
 
 .fa-edge {
-    @include icon-content("\e830");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e830");
 }
 
 .fa-edit {
-    @include icon-content("edit");
-    --o-mi-fill: 1;
+    @include icon-content("edit_f");
 }
 
 .fa-eercast {
-    @include icon-content("\e831");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e831");
 }
 
 .fa-eject {
@@ -1713,13 +1652,11 @@ $ms-rtl-icons:
 
 .fa-empire,
 .fa-ge {
-    @include icon-content("\e832");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e832");
 }
 
 .fa-envelope {
-    @include icon-content("mail");
-    --o-mi-fill: 1;
+    @include icon-content("mail_f");
 }
 
 .fa-envelope-o {
@@ -1727,8 +1664,7 @@ $ms-rtl-icons:
 }
 
 .fa-envelope-open {
-    @include icon-content("drafts");
-    --o-mi-fill: 1;
+    @include icon-content("drafts_f");
 }
 
 .fa-envelope-open-o {
@@ -1736,13 +1672,11 @@ $ms-rtl-icons:
 }
 
 .fa-envelope-square {
-    @include icon-content("mail");
-    --o-mi-fill: 1;
+    @include icon-content("mail_f");
 }
 
 .fa-envira {
-    @include icon-content("\e833");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e833");
 }
 
 .fa-eraser {
@@ -1750,8 +1684,7 @@ $ms-rtl-icons:
 }
 
 .fa-etsy {
-    @include icon-content("\e834");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e834");
 }
 
 .fa-eur,
@@ -1781,8 +1714,7 @@ $ms-rtl-icons:
 }
 
 .fa-expeditedssl {
-    @include icon-content("\e835");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e835");
 }
 
 .fa-external-link {
@@ -1807,24 +1739,20 @@ $ms-rtl-icons:
 
 .fa-fa,
 .fa-font-awesome {
-    @include icon-content("\e83e");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e83e");
 }
 
 .fa-facebook,
 .fa-facebook-f {
-    @include icon-content("\e839");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e839");
 }
 
 .fa-facebook-official {
-    @include icon-content("\e837");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e837");
 }
 
 .fa-facebook-square {
-    @include icon-content("\e838");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e838");
 }
 
 .fa-fast-backward {
@@ -1853,8 +1781,7 @@ $ms-rtl-icons:
 }
 
 .fa-file {
-    @include icon-content("description");
-    --o-mi-fill: 1;
+    @include icon-content("description_f");
 }
 
 .fa-file-archive-o,
@@ -1899,8 +1826,7 @@ $ms-rtl-icons:
 }
 
 .fa-file-text {
-    @include icon-content("article");
-    --o-mi-fill: 1;
+    @include icon-content("article_f");
 }
 
 .fa-file-text-o {
@@ -1916,8 +1842,7 @@ $ms-rtl-icons:
 }
 
 .fa-filter {
-    @include icon-content("filter_alt");
-    --o-mi-fill: 1;
+    @include icon-content("filter_alt_f");
 }
 
 .fa-fire {
@@ -1929,18 +1854,15 @@ $ms-rtl-icons:
 }
 
 .fa-firefox {
-    @include icon-content("\e83a");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e83a");
 }
 
 .fa-first-order {
-    @include icon-content("\e83b");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e83b");
 }
 
 .fa-flag {
-    @include icon-content("flag");
-    --o-mi-fill: 1;
+    @include icon-content("flag_f");
 }
 
 .fa-flag-checkered {
@@ -1956,8 +1878,7 @@ $ms-rtl-icons:
 }
 
 .fa-flickr {
-    @include icon-content("\e83c");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e83c");
 }
 
 .fa-floppy-o,
@@ -1966,8 +1887,7 @@ $ms-rtl-icons:
 }
 
 .fa-folder {
-    @include icon-content("folder");
-    --o-mi-fill: 1;
+    @include icon-content("folder_f");
 }
 
 .fa-folder-o {
@@ -1975,8 +1895,7 @@ $ms-rtl-icons:
 }
 
 .fa-folder-open {
-    @include icon-content("folder_open");
-    --o-mi-fill: 1;
+    @include icon-content("folder_open_f");
 }
 
 .fa-folder-open-o {
@@ -1988,18 +1907,15 @@ $ms-rtl-icons:
 }
 
 .fa-fonticons {
-    @include icon-content("\e83d");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e83d");
 }
 
 .fa-fort-awesome {
-    @include icon-content("\e83e");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e83e");
 }
 
 .fa-forumbee {
-    @include icon-content("\e83f");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e83f");
 }
 
 .fa-forward {
@@ -2007,13 +1923,11 @@ $ms-rtl-icons:
 }
 
 .fa-foursquare {
-    @include icon-content("\e840");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e840");
 }
 
 .fa-free-code-camp {
-    @include icon-content("\e841");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e841");
 }
 
 .fa-frown-o {
@@ -2043,18 +1957,15 @@ $ms-rtl-icons:
 }
 
 .fa-get-pocket {
-    @include icon-content("\e842");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e842");
 }
 
 .fa-gg {
-    @include icon-content("\e844");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e844");
 }
 
 .fa-gg-circle {
-    @include icon-content("\e843");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e843");
 }
 
 .fa-gift {
@@ -2062,39 +1973,32 @@ $ms-rtl-icons:
 }
 
 .fa-git {
-    @include icon-content("\e846");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e846");
 }
 
 .fa-git-square {
-    @include icon-content("\e845");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e845");
 }
 
 .fa-github {
-    @include icon-content("\e849");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e849");
 }
 
 .fa-github-alt {
-    @include icon-content("\e847");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e847");
 }
 
 .fa-github-square {
-    @include icon-content("\e80c");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e80c");
 }
 
 .fa-gitlab {
-    @include icon-content("\e84a");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e84a");
 }
 
 .fa-gittip,
 .fa-gratipay {
-    @include icon-content("\e84b");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e84b");
 }
 
 .fa-glass {
@@ -2102,13 +2006,11 @@ $ms-rtl-icons:
 }
 
 .fa-glide {
-    @include icon-content("\e84d");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e84d");
 }
 
 .fa-glide-g {
-    @include icon-content("\e84c");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e84c");
 }
 
 .fa-globe {
@@ -2116,29 +2018,24 @@ $ms-rtl-icons:
 }
 
 .fa-google {
-    @include icon-content("\e852");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e852");
 }
 
 .fa-google-plus {
-    @include icon-content("\e850");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e850");
 }
 
 .fa-google-plus-circle,
 .fa-google-plus-official {
-    @include icon-content("\e84e");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e84e");
 }
 
 .fa-google-plus-square {
-    @include icon-content("\e84f");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e84f");
 }
 
 .fa-google-wallet {
-    @include icon-content("\e851");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e851");
 }
 
 .fa-graduation-cap,
@@ -2147,14 +2044,12 @@ $ms-rtl-icons:
 }
 
 .fa-grav {
-    @include icon-content("\e853");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e853");
 }
 
 .fa-group,
 .fa-users {
-    @include icon-content("group");
-    --o-mi-fill: 1;
+    @include icon-content("group_f");
 }
 
 .fa-h-square {
@@ -2164,8 +2059,7 @@ $ms-rtl-icons:
 .fa-hacker-news,
 .fa-y-combinator-square,
 .fa-yc-square {
-    @include icon-content("\e854");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e854");
 }
 
 .fa-hand-grab-o,
@@ -2174,8 +2068,7 @@ $ms-rtl-icons:
 }
 
 .fa-hand-lizard-o {
-    @include icon-content("\e855");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e855");
 }
 
 .fa-hand-o-down {
@@ -2200,8 +2093,7 @@ $ms-rtl-icons:
 }
 
 .fa-hand-peace-o {
-    @include icon-content("\e856");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e856");
 }
 
 .fa-hand-pointer-o {
@@ -2209,13 +2101,11 @@ $ms-rtl-icons:
 }
 
 .fa-hand-scissors-o {
-    @include icon-content("\e857");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e857");
 }
 
 .fa-hand-spock-o {
-    @include icon-content("\e858");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e858");
 }
 
 .fa-handshake-o {
@@ -2239,8 +2129,7 @@ $ms-rtl-icons:
 }
 
 .fa-heart {
-    @include icon-content("favorite");
-    --o-mi-fill: 1;
+    @include icon-content("favorite_f");
 }
 
 .fa-heart-o {
@@ -2287,13 +2176,11 @@ $ms-rtl-icons:
 }
 
 .fa-houzz {
-    @include icon-content("\e859");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e859");
 }
 
 .fa-html5 {
-    @include icon-content("\e85a");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e85a");
 }
 
 .fa-i-cursor {
@@ -2317,8 +2204,7 @@ $ms-rtl-icons:
 }
 
 .fa-imdb {
-    @include icon-content("\e85b");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e85b");
 }
 
 .fa-inbox {
@@ -2347,13 +2233,11 @@ $ms-rtl-icons:
 }
 
 .fa-instagram {
-    @include icon-content("\e85c");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e85c");
 }
 
 .fa-internet-explorer {
-    @include icon-content("\e85d");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e85d");
 }
 
 .fa-intersex,
@@ -2362,8 +2246,7 @@ $ms-rtl-icons:
 }
 
 .fa-ioxhost {
-    @include icon-content("\e85e");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e85e");
 }
 
 .fa-italic {
@@ -2371,13 +2254,11 @@ $ms-rtl-icons:
 }
 
 .fa-joomla {
-    @include icon-content("\e85f");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e85f");
 }
 
 .fa-jsfiddle {
-    @include icon-content("\e860");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e860");
 }
 
 .fa-key {
@@ -2402,13 +2283,11 @@ $ms-rtl-icons:
 }
 
 .fa-lastfm {
-    @include icon-content("\e862");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e862");
 }
 
 .fa-lastfm-square {
-    @include icon-content("\e861");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e861");
 }
 
 .fa-leaf {
@@ -2416,13 +2295,11 @@ $ms-rtl-icons:
 }
 
 .fa-leanpub {
-    @include icon-content("\e863");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e863");
 }
 
 .fa-lemon-o {
-    @include icon-content("\e864");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e864");
 }
 
 .fa-level-down {
@@ -2450,23 +2327,19 @@ $ms-rtl-icons:
 }
 
 .fa-linkedin {
-    @include icon-content("\e866");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e866");
 }
 
 .fa-linkedin-square {
-    @include icon-content("\e865");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e865");
 }
 
 .fa-linode {
-    @include icon-content("\e867");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e867");
 }
 
 .fa-linux {
-    @include icon-content("\e868");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e868");
 }
 
 .fa-list {
@@ -2518,8 +2391,7 @@ $ms-rtl-icons:
 }
 
 .fa-magnet {
-    @include icon-content("\e869");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e869");
 }
 
 .fa-mail-forward,
@@ -2566,38 +2438,31 @@ $ms-rtl-icons:
 }
 
 .fa-mars-double {
-    @include icon-content("\e86a");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e86a");
 }
 
 .fa-mars-stroke {
-    @include icon-content("\e86d");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e86d");
 }
 
 .fa-mars-stroke-h {
-    @include icon-content("\e86b");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e86b");
 }
 
 .fa-mars-stroke-v {
-    @include icon-content("\e86c");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e86c");
 }
 
 .fa-maxcdn {
-    @include icon-content("\e86e");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e86e");
 }
 
 .fa-meanpath {
-    @include icon-content("\e86f");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e86f");
 }
 
 .fa-medium {
-    @include icon-content("\e870");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e870");
 }
 
 .fa-medkit {
@@ -2605,8 +2470,7 @@ $ms-rtl-icons:
 }
 
 .fa-meetup {
-    @include icon-content("\e871");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e871");
 }
 
 .fa-meh-o {
@@ -2614,8 +2478,7 @@ $ms-rtl-icons:
 }
 
 .fa-mercury {
-    @include icon-content("\e872");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e872");
 }
 
 .fa-microchip {
@@ -2639,8 +2502,7 @@ $ms-rtl-icons:
 }
 
 .fa-minus-square {
-    @include icon-content("indeterminate_check_box");
-    --o-mi-fill: 1;
+    @include icon-content("indeterminate_check_box_f");
 }
 
 .fa-minus-square-o {
@@ -2648,8 +2510,7 @@ $ms-rtl-icons:
 }
 
 .fa-mixcloud {
-    @include icon-content("\e873");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e873");
 }
 
 .fa-mobile,
@@ -2658,8 +2519,7 @@ $ms-rtl-icons:
 }
 
 .fa-modx {
-    @include icon-content("\e874");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e874");
 }
 
 .fa-money {
@@ -2683,8 +2543,7 @@ $ms-rtl-icons:
 }
 
 .fa-neuter {
-    @include icon-content("\e875");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e875");
 }
 
 .fa-newspaper-o {
@@ -2700,38 +2559,31 @@ $ms-rtl-icons:
 }
 
 .fa-odnoklassniki {
-    @include icon-content("\e877");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e877");
 }
 
 .fa-odnoklassniki-square {
-    @include icon-content("\e876");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e876");
 }
 
 .fa-opencart {
-    @include icon-content("\e878");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e878");
 }
 
 .fa-openid {
-    @include icon-content("\e879");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e879");
 }
 
 .fa-opera {
-    @include icon-content("\e87a");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e87a");
 }
 
 .fa-optin-monster {
-    @include icon-content("\e87b");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e87b");
 }
 
 .fa-pagelines {
-    @include icon-content("\e87c");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e87c");
 }
 
 .fa-paint-brush {
@@ -2740,8 +2592,7 @@ $ms-rtl-icons:
 
 .fa-paper-plane,
 .fa-send {
-    @include icon-content("send");
-    --o-mi-fill: 1;
+    @include icon-content("send_f");
 }
 
 .fa-paper-plane-o,
@@ -2766,8 +2617,7 @@ $ms-rtl-icons:
 }
 
 .fa-pause-circle {
-    @include icon-content("pause_circle");
-    --o-mi-fill: 1;
+    @include icon-content("pause_circle_f");
 }
 
 .fa-pause-circle-o {
@@ -2779,18 +2629,15 @@ $ms-rtl-icons:
 }
 
 .fa-paypal {
-    @include icon-content("\e87d");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e87d");
 }
 
 .fa-pencil {
-    @include icon-content("edit");
-    --o-mi-fill: 1;
+    @include icon-content("edit_f");
 }
 
 .fa-pencil-square {
-    @include icon-content("edit_square");
-    --o-mi-fill: 1;
+    @include icon-content("edit_square_f");
 }
 
 .fa-pencil-square-o {
@@ -2803,13 +2650,11 @@ $ms-rtl-icons:
 }
 
 .fa-phone {
-    @include icon-content("phone");
-    --o-mi-fill: 1;
+    @include icon-content("phone_f");
 }
 
 .fa-phone-square {
-    @include icon-content("phone");
-    --o-mi-fill: 1;
+    @include icon-content("phone_f");
 }
 
 .fa-pie-chart {
@@ -2817,33 +2662,27 @@ $ms-rtl-icons:
 }
 
 .fa-pied-piper {
-    @include icon-content("\e880");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e880");
 }
 
 .fa-pied-piper-alt {
-    @include icon-content("\e87e");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e87e");
 }
 
 .fa-pied-piper-pp {
-    @include icon-content("\e87f");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e87f");
 }
 
 .fa-pinterest {
-    @include icon-content("\e883");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e883");
 }
 
 .fa-pinterest-p {
-    @include icon-content("\e881");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e881");
 }
 
 .fa-pinterest-square {
-    @include icon-content("\e882");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e882");
 }
 
 .fa-plane {
@@ -2855,8 +2694,7 @@ $ms-rtl-icons:
 }
 
 .fa-play-circle {
-    @include icon-content("play_circle");
-    --o-mi-fill: 1;
+    @include icon-content("play_circle_f");
 }
 
 .fa-play-circle-o {
@@ -2876,8 +2714,7 @@ $ms-rtl-icons:
 }
 
 .fa-plus-square {
-    @include icon-content("add_box");
-    --o-mi-fill: 1;
+    @include icon-content("add_box_f");
 }
 
 .fa-plus-square-o {
@@ -2897,8 +2734,7 @@ $ms-rtl-icons:
 }
 
 .fa-product-hunt {
-    @include icon-content("\e884");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e884");
 }
 
 .fa-puzzle-piece {
@@ -2906,8 +2742,7 @@ $ms-rtl-icons:
 }
 
 .fa-qq {
-    @include icon-content("\e885");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e885");
 }
 
 .fa-qrcode {
@@ -2927,8 +2762,7 @@ $ms-rtl-icons:
 }
 
 .fa-quora {
-    @include icon-content("\e886");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e886");
 }
 
 .fa-quote-left {
@@ -2942,8 +2776,7 @@ $ms-rtl-icons:
 .fa-ra,
 .fa-rebel,
 .fa-resistance {
-    @include icon-content("\e887");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e887");
 }
 
 .fa-random {
@@ -2951,8 +2784,7 @@ $ms-rtl-icons:
 }
 
 .fa-ravelry {
-    @include icon-content("\e888");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e888");
 }
 
 .fa-recycle {
@@ -2960,18 +2792,15 @@ $ms-rtl-icons:
 }
 
 .fa-reddit {
-    @include icon-content("\e88b");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e88b");
 }
 
 .fa-reddit-alien {
-    @include icon-content("\e889");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e889");
 }
 
 .fa-reddit-square {
-    @include icon-content("\e88a");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e88a");
 }
 
 .fa-refresh {
@@ -2983,8 +2812,7 @@ $ms-rtl-icons:
 }
 
 .fa-renren {
-    @include icon-content("\e88c");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e88c");
 }
 
 .fa-repeat,
@@ -3020,13 +2848,11 @@ $ms-rtl-icons:
 }
 
 .fa-safari {
-    @include icon-content("\e88d");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e88d");
 }
 
 .fa-scribd {
-    @include icon-content("\e88e");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e88e");
 }
 
 .fa-search {
@@ -3042,8 +2868,7 @@ $ms-rtl-icons:
 }
 
 .fa-sellsy {
-    @include icon-content("\e88f");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e88f");
 }
 
 .fa-server {
@@ -3076,8 +2901,7 @@ $ms-rtl-icons:
 }
 
 .fa-shirtsinbulk {
-    @include icon-content("\e890");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e890");
 }
 
 .fa-shopping-bag {
@@ -3114,8 +2938,7 @@ $ms-rtl-icons:
 }
 
 .fa-simplybuilt {
-    @include icon-content("\e891");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e891");
 }
 
 .fa-sitemap {
@@ -3123,18 +2946,15 @@ $ms-rtl-icons:
 }
 
 .fa-skyatlas {
-    @include icon-content("\e892");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e892");
 }
 
 .fa-skype {
-    @include icon-content("\e893");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e893");
 }
 
 .fa-slack {
-    @include icon-content("\e894");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e894");
 }
 
 .fa-sliders {
@@ -3142,8 +2962,7 @@ $ms-rtl-icons:
 }
 
 .fa-slideshare {
-    @include icon-content("\e895");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e895");
 }
 
 .fa-smile-o {
@@ -3151,18 +2970,15 @@ $ms-rtl-icons:
 }
 
 .fa-snapchat {
-    @include icon-content("\e898");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e898");
 }
 
 .fa-snapchat-ghost {
-    @include icon-content("\e896");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e896");
 }
 
 .fa-snapchat-square {
-    @include icon-content("\e897");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e897");
 }
 
 .fa-snowflake-o {
@@ -3209,8 +3025,7 @@ $ms-rtl-icons:
 }
 
 .fa-soundcloud {
-    @include icon-content("\e899");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e899");
 }
 
 .fa-space-shuttle {
@@ -3226,13 +3041,11 @@ $ms-rtl-icons:
 }
 
 .fa-spotify {
-    @include icon-content("\e89a");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e89a");
 }
 
 .fa-square {
-    @include icon-content("square");
-    --o-mi-fill: 1;
+    @include icon-content("square_f");
 }
 
 .fa-square-o {
@@ -3240,18 +3053,15 @@ $ms-rtl-icons:
 }
 
 .fa-stack-exchange {
-    @include icon-content("\e89b");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e89b");
 }
 
 .fa-stack-overflow {
-    @include icon-content("\e89c");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e89c");
 }
 
 .fa-star {
-    @include icon-content("star");
-    --o-mi-fill: 1;
+    @include icon-content("star_f");
 }
 
 .fa-star-half {
@@ -3269,13 +3079,11 @@ $ms-rtl-icons:
 }
 
 .fa-steam {
-    @include icon-content("\e89e");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e89e");
 }
 
 .fa-steam-square {
-    @include icon-content("\e89d");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e89d");
 }
 
 .fa-step-backward {
@@ -3291,8 +3099,7 @@ $ms-rtl-icons:
 }
 
 .fa-sticky-note {
-    @include icon-content("sticky_note_2");
-    --o-mi-fill: 1;
+    @include icon-content("sticky_note_2_f");
 }
 
 .fa-sticky-note-o {
@@ -3304,8 +3111,7 @@ $ms-rtl-icons:
 }
 
 .fa-stop-circle {
-    @include icon-content("stop_circle");
-    --o-mi-fill: 1;
+    @include icon-content("stop_circle_f");
 }
 
 .fa-stop-circle-o {
@@ -3321,13 +3127,11 @@ $ms-rtl-icons:
 }
 
 .fa-stumbleupon {
-    @include icon-content("\e8a0");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8a0");
 }
 
 .fa-stumbleupon-circle {
-    @include icon-content("\e89f");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e89f");
 }
 
 .fa-subscript {
@@ -3347,8 +3151,7 @@ $ms-rtl-icons:
 }
 
 .fa-superpowers {
-    @include icon-content("\e8a1");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8a1");
 }
 
 .fa-superscript {
@@ -3376,8 +3179,7 @@ $ms-rtl-icons:
 }
 
 .fa-telegram {
-    @include icon-content("\e8a2");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8a2");
 }
 
 .fa-television,
@@ -3386,8 +3188,7 @@ $ms-rtl-icons:
 }
 
 .fa-tencent-weibo {
-    @include icon-content("\e8a3");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8a3");
 }
 
 .fa-terminal {
@@ -3415,8 +3216,7 @@ $ms-rtl-icons:
 }
 
 .fa-themeisle {
-    @include icon-content("\e8a4");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8a4");
 }
 
 .fa-thermometer,
@@ -3450,8 +3250,7 @@ $ms-rtl-icons:
 }
 
 .fa-thumbs-down {
-    @include icon-content("thumb_down");
-    --o-mi-fill: 1;
+    @include icon-content("thumb_down_f");
 }
 
 .fa-thumbs-o-down {
@@ -3463,8 +3262,7 @@ $ms-rtl-icons:
 }
 
 .fa-thumbs-up {
-    @include icon-content("thumb_up");
-    --o-mi-fill: 1;
+    @include icon-content("thumb_up_f");
 }
 
 .fa-ticket {
@@ -3472,8 +3270,7 @@ $ms-rtl-icons:
 }
 
 .fa-times-circle {
-    @include icon-content("cancel");
-    --o-mi-fill: 1;
+    @include icon-content("cancel_f");
 }
 
 .fa-times-circle-o {
@@ -3482,8 +3279,7 @@ $ms-rtl-icons:
 
 .fa-times-rectangle,
 .fa-window-close {
-    @include icon-content("cancel");
-    --o-mi-fill: 1;
+    @include icon-content("cancel_f");
 }
 
 .fa-times-rectangle-o,
@@ -3504,8 +3300,7 @@ $ms-rtl-icons:
 }
 
 .fa-trademark {
-    @include icon-content("\e8a5");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8a5");
 }
 
 .fa-train {
@@ -3517,8 +3312,7 @@ $ms-rtl-icons:
 }
 
 .fa-trash {
-    @include icon-content("delete");
-    --o-mi-fill: 1;
+    @include icon-content("delete_f");
 }
 
 .fa-trash-o {
@@ -3530,18 +3324,15 @@ $ms-rtl-icons:
 }
 
 .fa-trello {
-    @include icon-content("\e8a6");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8a6");
 }
 
 .fa-tripadvisor {
-    @include icon-content("\e8a7");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8a7");
 }
 
 .fa-trophy {
-    @include icon-content("trophy");
-    --o-mi-fill: 1;
+    @include icon-content("trophy_f");
 }
 
 .fa-truck {
@@ -3558,28 +3349,23 @@ $ms-rtl-icons:
 }
 
 .fa-tumblr {
-    @include icon-content("\e8a9");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8a9");
 }
 
 .fa-tumblr-square {
-    @include icon-content("\e8a8");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8a8");
 }
 
 .fa-twitch {
-    @include icon-content("\e8aa");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8aa");
 }
 
 .fa-twitter {
-    @include icon-content("\e81a");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e81a");
 }
 
 .fa-twitter-square {
-    @include icon-content("\e848");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e848");
 }
 
 .fa-umbrella {
@@ -3611,13 +3397,11 @@ $ms-rtl-icons:
 }
 
 .fa-user {
-    @include icon-content("person");
-    --o-mi-fill: 1;
+    @include icon-content("person_f");
 }
 
 .fa-user-circle {
-    @include icon-content("account_circle");
-    --o-mi-fill: 1;
+    @include icon-content("account_circle_f");
 }
 
 .fa-user-circle-o {
@@ -3633,18 +3417,15 @@ $ms-rtl-icons:
 }
 
 .fa-user-plus {
-    @include icon-content("person_add");
-    --o-mi-fill: 1;
+    @include icon-content("person_add_f");
 }
 
 .fa-user-secret {
-    @include icon-content("\e8ab");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8ab");
 }
 
 .fa-user-times {
-    @include icon-content("person_remove");
-    --o-mi-fill: 1;
+    @include icon-content("person_remove_f");
 }
 
 .fa-venus {
@@ -3652,53 +3433,43 @@ $ms-rtl-icons:
 }
 
 .fa-venus-double {
-    @include icon-content("\e8ac");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8ac");
 }
 
 .fa-venus-mars {
-    @include icon-content("\e8ad");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8ad");
 }
 
 .fa-viacoin {
-    @include icon-content("\e8ae");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8ae");
 }
 
 .fa-viadeo {
-    @include icon-content("\e8b0");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8b0");
 }
 
 .fa-viadeo-square {
-    @include icon-content("\e8af");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8af");
 }
 
 .fa-video-camera {
-    @include icon-content("videocam");
-    --o-mi-fill: 1;
+    @include icon-content("videocam_f");
 }
 
 .fa-vimeo {
-    @include icon-content("\e8b2");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8b2");
 }
 
 .fa-vimeo-square {
-    @include icon-content("\e8b1");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8b1");
 }
 
 .fa-vine {
-    @include icon-content("\e8b3");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8b3");
 }
 
 .fa-vk {
-    @include icon-content("\e8b4");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8b4");
 }
 
 .fa-volume-control-phone {
@@ -3719,18 +3490,15 @@ $ms-rtl-icons:
 
 .fa-wechat,
 .fa-weixin {
-    @include icon-content("\e8b5");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8b5");
 }
 
 .fa-weibo {
-    @include icon-content("e820");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e820");
 }
 
 .fa-whatsapp {
-    @include icon-content("\e8b6");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8b6");
 }
 
 .fa-wheelchair {
@@ -3746,8 +3514,7 @@ $ms-rtl-icons:
 }
 
 .fa-wikipedia-w {
-    @include icon-content("\e8b7");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8b7");
 }
 
 .fa-window-maximize {
@@ -3763,28 +3530,23 @@ $ms-rtl-icons:
 }
 
 .fa-windows {
-    @include icon-content("\e8b8");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8b8");
 }
 
 .fa-wordpress {
-    @include icon-content("\e8b9");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8b9");
 }
 
 .fa-wpbeginner {
-    @include icon-content("\e8ba");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8ba");
 }
 
 .fa-wpexplorer {
-    @include icon-content("\e8bb");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8bb");
 }
 
 .fa-wpforms {
-    @include icon-content("\e8bc");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8bc");
 }
 
 .fa-wrench {
@@ -3792,79 +3554,64 @@ $ms-rtl-icons:
 }
 
 .fa-xing {
-    @include icon-content("\e8be");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8be");
 }
 
 .fa-xing-square {
-    @include icon-content("\e8bd");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8bd");
 }
 
 .fa-y-combinator,
 .fa-yc {
-    @include icon-content("\e8bf");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8bf");
 }
 
 .fa-yahoo {
-    @include icon-content("\e8c0");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8c0");
 }
 
 .fa-yelp {
-    @include icon-content("\e8c1");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8c1");
 }
 
 .fa-youtube {
-    @include icon-content("\e8c4");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8c4");
 }
 
 .fa-youtube-play {
-    @include icon-content("\e8c2");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8c2");
 }
 
 .fa-youtube-square {
-    @include icon-content("\e8c3");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e8c3");
 }
 
 .fa-tiktok {
-    @include icon-content("\e81b");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e81b");
 }
 
 .fa-discord {
-    @include icon-content("\e811");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e811");
 }
 
 .fa-google-play {
-    @include icon-content("\e81d");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e81d");
 }
 
 .fa-strava {
-    @include icon-content("\e80f");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e80f");
 }
 
 .fa-bluesky {
-    @include icon-content("\e81c");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e81c");
 }
 
 .fa-kickstarter {
-    @include icon-content("\e819");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e819");
 }
 
 .fa-threads {
-    @include icon-content("\e818");
-    --icon-font-family: #{$oi-font-family};
+    @include oi-icon-content("\e818");
 }
 
 // ================================
@@ -3968,15 +3715,6 @@ $ms-rtl-icons:
 // ================================
 // MATERIAL SYMBOLS ADVANCED FEATURES
 // ================================
-
-// Predefined Material Symbols variants
-.oi-filled {
-    --o-mi-fill: 1;
-}
-
-.oi-outlined {
-    --o-mi-fill: 0;
-}
 
 // Skip transform computation
 .oi-natural-scale {

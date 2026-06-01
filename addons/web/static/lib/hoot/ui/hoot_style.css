@@ -108,7 +108,6 @@ ul {
     font-family: var(--icon-font-family, "material_symbols_outlined");
     font-style: normal;
     font-size: var(--oi-font-size, 1em);
-    font-variation-settings: "FILL" var(--o-mi-fill, 0), "opsz" 24;
     font-weight: 400 !important;
     line-height: 1;
     letter-spacing: normal;
@@ -132,8 +131,8 @@ ul {
     font-size: var(--oi-font-size, 1em);
 }
 
-.oi-filled {
-    --o-mi-fill: 1;
+.oi-filled[data-icon]:not([data-icon=""]):before {
+    content: attr(data-icon) "_f";
 }
 
 .oi-flip-horizontal {

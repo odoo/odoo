@@ -364,7 +364,7 @@ export class HootSearch extends Component {
                             t-att-disabled="isRunning"
                             t-on-change="this.toggleExact"
                         />
-                        <i class="oi text-gray transition-colors" data-icon="format_quote" />
+                        <i class="oi oi-filled text-gray transition-colors" data-icon="format_quote" />
                     </label>
                     <label
                         class="hoot-search-icon cursor-pointer p-1"

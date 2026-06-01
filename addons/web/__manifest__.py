@@ -535,11 +535,11 @@ This module provides the core of the Odoo Web Client.
         # combination should probably be used. But it is split to allow MS
         # preload on the frontend.
         'web.material_symbols_outlined': [
-            '/web/static/src/libs/materialsymbols/MaterialSymbolsOutlined_wgth-400_opsz-24.woff2',
+            '/web/static/src/libs/materialsymbols/material_symbols_outlined_subset.woff2',
             '/web/static/src/libs/materialsymbols/material_symbols_outlined.css',
         ],
         'web.material_symbols_sharp': [
-            '/web/static/src/libs/materialsymbols/MaterialSymbolsSharp_wgth-400_opsz-24.woff2',
+            '/web/static/src/libs/materialsymbols/material_symbols_sharp_subset.woff2',
             '/web/static/src/libs/materialsymbols/material_symbols_sharp.css',
         ],
         'web.odoo_ui_icons': [
