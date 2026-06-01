@@ -82,6 +82,7 @@ class TestPayrollFieldsAccess(TransactionCase):
             'is_non_resident',
             'structure_id',
             'attendance_based',
+            'external_code'
         ]
         missing_group_field_names = [
             f_name
