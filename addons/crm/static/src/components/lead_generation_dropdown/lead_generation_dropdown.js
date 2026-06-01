@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -33,7 +32,7 @@ export class LeadGenerationDropdown extends Component {
             NOT_INSTALLED: _t('Do you want to install the "%(module_name)s" App?'),
         };
 
-        this.state = useState({
+        this.state = proxy({
             dropdownContentElements: [
                 {
                     description: _t("Search in our directory of 580M+ entities"),

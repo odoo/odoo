@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
@@ -9,7 +8,7 @@ import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_ma
 import { normalizeHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { user } from "@web/core/user";
-import { onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
 
 patch(PropertyValue.prototype, {
     setup() {
@@ -18,7 +17,7 @@ patch(PropertyValue.prototype, {
         onWillStart(async () => {
             this.htmlState.isPortalUser = await user.hasGroup("base.group_portal");
         });
-        this.htmlState = useState({ isPortalUser: false, key: 0 });
+        this.htmlState = proxy({ isPortalUser: false, key: 0 });
 
         onWillUpdateProps((newProps) => {
             const newValueStr = newProps.value?.toString();

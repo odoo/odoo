@@ -1,5 +1,5 @@
-import { onRendered, reactive, useComponent, useRef, useState } from "@web/owl2/utils";
-import { effect, onMounted, onPatched, onWillDestroy, toRaw } from "@odoo/owl";
+import { onRendered, reactive, useComponent, useRef } from "@web/owl2/utils";
+import { effect, onMounted, onPatched, onWillDestroy, toRaw, proxy } from "@odoo/owl";
 
 /**
  * @typedef {HTMLElement} HostElement host element for an embedded component
@@ -53,7 +53,14 @@ import { effect, onMounted, onPatched, onWillDestroy, toRaw } from "@odoo/owl";
  *   `fiber.complete`.
  * @returns {{ root: object, mountPromise: Promise }}
  */
-export function mountComponent(app, Component, host, props, env, { onBeforeComplete, onAfterComplete } = {}) {
+export function mountComponent(
+    app,
+    Component,
+    host,
+    props,
+    env,
+    { onBeforeComplete, onAfterComplete } = {}
+) {
     const root = app.createRoot(Component, { props, env });
     const mountPromise = root.mount(host);
     // Patch mount fiber to hook into the exact call stack where root is
@@ -641,6 +648,6 @@ export function useEmbeddedState(host) {
     }
     const stateChangeManager = component.env.getStateChangeManager(host);
     onWillDestroy(() => stateChangeManager.setupUnmounted());
-    const state = useState(stateChangeManager.getEmbeddedState());
+    const state = proxy(stateChangeManager.getEmbeddedState());
     return stateChangeManager.constructEmbeddedState(state);
 }

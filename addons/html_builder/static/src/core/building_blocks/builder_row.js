@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
@@ -33,7 +33,7 @@ export class BuilderRow extends Component {
         useBuilderComponent();
         useVisibilityObserver("content", useApplyVisibility("root"));
 
-        this.state = useState({
+        this.state = proxy({
             expanded: this.props.expand,
         });
         this.tooltipText = undefined;

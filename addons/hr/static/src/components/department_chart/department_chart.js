@@ -1,9 +1,8 @@
-import { useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { onWillStart, onWillUpdateProps, Component } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps, Component, proxy } from "@odoo/owl";
 
 export class DepartmentChart extends Component {
     static template = "hr.DepartmentChart";
@@ -16,7 +15,7 @@ export class DepartmentChart extends Component {
 
         this.action = useService("action");
         this.orm = useService("orm");
-        this.state = useState({
+        this.state = proxy({
             hierarchy: {},
         });
         onWillStart(async () => await this.fetchHierarchy(this.props.record.resId));

@@ -1,11 +1,11 @@
-import { useExternalListener, useLayoutEffect, useState } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import {
     getEditableDescendants,
     getEmbeddedProps,
     useEditableDescendants,
 } from "@html_editor/others/embedded_component_utils";
 import { browser } from "@web/core/browser/browser";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 const sessionStorage = browser.sessionStorage;
 export class EmbeddedToggleBlockComponent extends Component {
@@ -17,7 +17,7 @@ export class EmbeddedToggleBlockComponent extends Component {
 
     setup() {
         useEditableDescendants(this.props.host);
-        this.state = useState({
+        this.state = proxy({
             showContent: sessionStorage.getItem(this.toggleStorageKey) === "true",
         });
         this.neutralRestoreSelection = () => {};

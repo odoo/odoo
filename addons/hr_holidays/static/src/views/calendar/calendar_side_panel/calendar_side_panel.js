@@ -1,9 +1,8 @@
-import { useState } from "@web/owl2/utils";
 import { CalendarSidePanel } from "@web/views/calendar/calendar_side_panel/calendar_side_panel";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { Cache } from "@web/core/utils/cache";
 import { useService } from "@web/core/utils/hooks";
-import { onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
 
 export class TimeOffCalendarSidePanel extends CalendarSidePanel {
     static components = {
@@ -22,9 +21,13 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
             if (isSameDay) {
                 return start.toLocaleString({ month: s, day: n, year: n });
             }
-            return start.toLocaleString({ month: s, day: n, year: n }) + " - " + end.toLocaleString({ month: s, day: n, year: n });
-        };;
-        this.leaveState = useState({
+            return (
+                start.toLocaleString({ month: s, day: n, year: n }) +
+                " - " +
+                end.toLocaleString({ month: s, day: n, year: n })
+            );
+        };
+        this.leaveState = proxy({
             mandatoryDays: [],
             bankHolidays: [],
             holidays: [],
@@ -45,7 +48,6 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
             await this.updateSpecialDays();
             await this.loadHolidayData();
         });
-        
     }
 
     fetchSpecialDays(start, end) {
@@ -67,18 +69,19 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
             return;
         }
         const promises = [];
-        for (const section of this.props.model.filterSections){
-
+        for (const section of this.props.model.filterSections) {
             if (section.fieldName !== "work_entry_type_id") {
                 continue;
             }
             promises.push(
-                this.orm.call("hr.work.entry.type", "get_allocation_data_request", [], { context: { from_dashboard: true } })
+                this.orm.call("hr.work.entry.type", "get_allocation_data_request", [], {
+                    context: { from_dashboard: true },
+                })
             );
         }
         const filterData = {};
-        const [data,] = await Promise.all(promises);
-        if(!data){
+        const [data] = await Promise.all(promises);
+        if (!data) {
             return;
         }
         data.forEach((leave) => {

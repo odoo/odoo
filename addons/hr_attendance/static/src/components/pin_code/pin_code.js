@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart, onWillDestroy } from "@odoo/owl";
+import { Component, onWillStart, onWillDestroy, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { range } from "@web/core/utils/numbers";
 
@@ -25,7 +24,7 @@ export class KioskPinCode extends Component {
             [0],
             ["OK", "btn-primary"],
         ];
-        this.state = useState({
+        this.state = proxy({
             codePin: "",
             streamAvailable: null,
         });

@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
@@ -34,7 +34,7 @@ export class FontSizeSelector extends Component {
 
     setup() {
         this.items = this.props.getItems();
-        this.state = useState(this.props.getDisplay());
+        this.state = proxy(this.props.getDisplay());
         this.fontSizeSelector = useRef("fontSizeSelector");
         this.dropdown = useDropdownState();
         this.menuRef = useChildRef();

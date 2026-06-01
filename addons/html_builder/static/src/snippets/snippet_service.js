@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { memoize, uniqueId } from "@web/core/utils/functions";
@@ -6,7 +5,7 @@ import { Reactive } from "@web/core/utils/reactive";
 import { AddSnippetDialog } from "./add_snippet_dialog";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { markup } from "@odoo/owl";
+import { markup, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
@@ -497,5 +496,5 @@ registry.category("services").add("html_builder.snippets", snippetService);
 
 export function useSnippets(snippetsName) {
     const snippetsService = useService("html_builder.snippets");
-    return useState(snippetsService.getSnippetModel(snippetsName));
+    return proxy(snippetsService.getSnippetModel(snippetsName));
 }

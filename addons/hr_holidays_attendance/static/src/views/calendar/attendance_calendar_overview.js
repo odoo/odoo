@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useOwnedDialogs } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -9,7 +9,7 @@ patch(AttendanceCalendarOverview.prototype, {
     setup() {
         super.setup();
         this.displayDialog = useOwnedDialogs();
-        this.state = useState({
+        this.state = proxy({
             ...this.state,
             remainingExtraHours: 0,
         });

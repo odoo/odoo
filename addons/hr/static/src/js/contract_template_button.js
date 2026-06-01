@@ -1,10 +1,10 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { SelectionField } from "@web/views/fields/selection/selection_field";
 import { Many2One, computeM2OProps } from "@web/views/fields/many2one/many2one";
-import { user } from "@web/core/user"
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
 class TemplateSelectionPopover extends Component {
@@ -18,7 +18,7 @@ class TemplateSelectionPopover extends Component {
     };
 
     setup() {
-        this.state = useState({ 
+        this.state = proxy({
             selectedTemplate: false,
         });
         this.orm = useService("orm");
@@ -35,7 +35,10 @@ class TemplateSelectionPopover extends Component {
             canCreateEdit: false,
             canQuickCreate: false,
             canOpen: false,
-            domain: () => [["employee_id", "=", false], ["company_id", "=", companyId]],
+            domain: () => [
+                ["employee_id", "=", false],
+                ["company_id", "=", companyId],
+            ],
             context: {},
             readonly: false,
         });
@@ -46,11 +49,15 @@ class TemplateSelectionPopover extends Component {
             value: this.state.selectedTemplate,
             update: async (value) => {
                 if (value && !value.display_name) {
-                    const displayName = await this.orm.read("hr.version", [value.id], ["display_name"]);
+                    const displayName = await this.orm.read(
+                        "hr.version",
+                        [value.id],
+                        ["display_name"]
+                    );
                     value = { ...value, display_name: displayName[0].display_name };
                 }
                 this.state.selectedTemplate = value;
-            }
+            },
         };
     }
 

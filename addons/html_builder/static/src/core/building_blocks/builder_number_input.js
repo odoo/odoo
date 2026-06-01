@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, useEffect } from "@odoo/owl";
+import { Component, useEffect, proxy } from "@odoo/owl";
 import {
     basicContainerBuilderComponentProps,
     useInputBuilderComponent,
@@ -54,7 +53,7 @@ export class BuilderNumberInput extends Component {
         this.commit = commit;
         this.preview = preview;
         this.domState = state;
-        this.state = useState({});
+        this.state = proxy({});
         useEffect(() => {
             this.state.showUnit = state.value?.length > 0;
         });

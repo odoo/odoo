@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attendee_calendar_model";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
@@ -8,7 +8,7 @@ patch(AttendeeCalendarModel.prototype, {
         super.setup(...arguments);
         this.isAlive = params.isAlive;
         this.googlePendingSync = false;
-        this.state = useState({
+        this.state = proxy({
             googleIsSync: true,
             googleIsPaused: false,
         });

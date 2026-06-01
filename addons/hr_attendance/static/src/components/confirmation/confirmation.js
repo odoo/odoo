@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { AttendanceVideoStream } from "@hr_attendance/components/attendance_video_stream/attendance_video_stream";
 
@@ -18,7 +17,7 @@ export class KioskConfirmation extends Component {
 
     setup() {
         this.formatFloatTime = registry.category("formatters").get("float_time");
-        this.state = useState({
+        this.state = proxy({
             streamAvailable: null,
         });
 

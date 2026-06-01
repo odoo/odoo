@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export class ProgressBar extends Component {
     static template = "html_editor.ProgressBar";
@@ -45,6 +44,6 @@ export class UploadProgressToast extends Component {
 
     setup() {
         this.uploadService = useService("upload");
-        this.state = useState(this.uploadService.progressToast);
+        this.state = proxy(this.uploadService.progressToast);
     }
 }

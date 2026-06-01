@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
@@ -13,7 +12,7 @@ export class ImportDataOptions extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.state = useState({
+        this.state = proxy({
             options: [],
         });
         this.currentModel = this.props.fieldInfo.comodel_name || this.props.fieldInfo.model_name;

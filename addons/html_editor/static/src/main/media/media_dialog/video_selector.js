@@ -1,10 +1,10 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
-import { Component, onMounted, status } from "@odoo/owl";
+import { Component, onMounted, status, proxy } from "@odoo/owl";
 import { Switch } from "@html_editor/components/switch/switch";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
@@ -60,7 +60,7 @@ export class VideoSelector extends Component {
     setup() {
         this.http = useService("http");
 
-        this.state = useState({
+        this.state = proxy({
             options: [],
             src: "",
             urlInput: "",
@@ -88,10 +88,7 @@ export class VideoSelector extends Component {
             autoplay: {
                 label: _t("Autoplay"),
                 description: _t("Videos are muted when autoplay is enabled"),
-                platforms: [
-                    this.PLATFORMS.youtube,
-                    this.PLATFORMS.vimeo,
-                ],
+                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo],
                 urlParameter: () => "autoplay=1",
             },
             loop: {
@@ -101,10 +98,7 @@ export class VideoSelector extends Component {
             },
             hide_controls: {
                 label: _t("Hide player controls"),
-                platforms: [
-                    this.PLATFORMS.youtube,
-                    this.PLATFORMS.vimeo,
-                ],
+                platforms: [this.PLATFORMS.youtube, this.PLATFORMS.vimeo],
                 urlParameter: () => "controls=0",
             },
             hide_fullscreen: {

@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -14,7 +13,7 @@ export class LivechatCommandDialog extends Component {
     static props = ["thread", "close", "commandName", "placeholderText", "title", "icon"];
 
     setup() {
-        this.state = useState({ inputText: "" });
+        this.state = proxy({ inputText: "" });
         this.store = useService("mail.store");
         useAutofocus();
     }

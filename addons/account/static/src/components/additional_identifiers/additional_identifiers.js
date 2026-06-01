@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 /** @odoo-module */
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -29,7 +28,7 @@ export class AdditionalIdentifiersCommon extends Component {
     setup() {
         super.setup();
 
-        this.state = useState({
+        this.state = proxy({
             identifiers: parseJson(this.props.record.data[this.props.name]),
             metadata: parseJson(this.props.record.data[METADATA_FIELD]),
         });

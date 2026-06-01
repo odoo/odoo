@@ -1,4 +1,4 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import {
     Counter,
     embedding,
@@ -29,6 +29,7 @@ import {
     onWillStart,
     onWillUnmount,
     xml,
+    proxy,
 } from "@odoo/owl";
 import { EmbeddedComponentPlugin } from "../src/others/embedded_component_plugin";
 import { setupEditor } from "./_helpers/editor";
@@ -320,7 +321,7 @@ describe("Mount and Destroy embedded components", () => {
             };
             setup() {
                 this.innerEditableRef = useRef("innerEditable");
-                this.state = useState({
+                this.state = proxy({
                     value: this.props.index,
                 });
                 onMounted(() => {

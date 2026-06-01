@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -21,9 +21,9 @@ export class EventRegistrationSummaryDialog extends Component {
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.continueButtonRef = useRef("continueButton");
-        this.button = useState({enabled: true});
+        this.button = proxy({enabled: true});
 
-        this.registrationStatus = useState({value: this.registration.status});
+        this.registrationStatus = proxy({value: this.registration.status});
 
         onMounted(() => {
             if (['already_registered', 'need_manual_confirmation'].includes(this.props.registration.status) && this.props.playSound) {

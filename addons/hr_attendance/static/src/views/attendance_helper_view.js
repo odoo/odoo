@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 
 export class AttendanceActionHelper extends Component {
     static template = "hr_attendance.AttendanceActionHelper";
@@ -10,7 +9,7 @@ export class AttendanceActionHelper extends Component {
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
-        this.state = useState({
+        this.state = proxy({
             hasDemoData: false,
         });
         onWillStart(async () => {

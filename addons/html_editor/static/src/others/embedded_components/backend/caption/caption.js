@@ -1,10 +1,10 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import {
     applyObjectPropertyDifference,
     getEmbeddedProps,
     StateChangeManager,
 } from "@html_editor/others/embedded_component_utils";
-import { Component, onMounted, onWillDestroy } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, proxy } from "@odoo/owl";
 
 export class EmbeddedCaptionComponent extends Component {
     static template = "html_editor.EmbeddedCaption";
@@ -19,7 +19,7 @@ export class EmbeddedCaptionComponent extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({
+        this.state = proxy({
             caption: this.props.image.getAttribute("data-caption") || "",
             host: this.props.host,
         });

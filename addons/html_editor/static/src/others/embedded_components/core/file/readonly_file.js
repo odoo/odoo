@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { downloadFile } from "@web/core/network/download";
 import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
@@ -10,7 +9,7 @@ import {
 } from "@html_editor/others/embedded_components/core/embedded_component_toolbar/embedded_component_toolbar";
 import { StateFileModel } from "@html_editor/others/embedded_components/core/file/state_file_model";
 import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export class ReadonlyEmbeddedFileComponent extends Component {
     static components = {
@@ -25,7 +24,7 @@ export class ReadonlyEmbeddedFileComponent extends Component {
 
     setup() {
         this.dialogService = useService("dialog");
-        this.state = useState({
+        this.state = proxy({
             fileData: { ...this.props.fileData },
         });
         this.fileModel = new StateFileModel(this.state);

@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
 export class DocErrorDialog extends Component {
@@ -35,7 +34,7 @@ export class DocErrorDialog extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             showTraceback: false
         });
     }

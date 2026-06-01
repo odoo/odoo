@@ -1,4 +1,4 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { useExternalListener, useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
@@ -22,6 +22,7 @@ import {
     Component,
     onWillStart,
     onPatched,
+    proxy,
 } from "@odoo/owl";
 
 export class AnalyticDistribution extends Component {
@@ -49,7 +50,7 @@ export class AnalyticDistribution extends Component {
         this.orm = useService("orm");
         this.batchedOrm = useService("batchedOrm");
 
-        this.state = useState({
+        this.state = proxy({
             showDropdown: false,
             formattedData: [],
             update_plan: {},

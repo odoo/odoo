@@ -1,4 +1,4 @@
-import { reactive, useState } from "@web/owl2/utils";
+import { reactive } from "@web/owl2/utils";
 import {
     addBuilderAction,
     addBuilderOption,
@@ -7,7 +7,7 @@ import {
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { expect, test, describe } from "@odoo/hoot";
-import { xml } from "@odoo/owl";
+import { xml, proxy } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -60,7 +60,7 @@ test("update default prop", async () => {
             static template = xml`<BuilderTextInput action="'customAction'" default="this.state.default"/>`;
 
             setup() {
-                this.state = useState(state);
+                this.state = proxy(state);
             }
         },
     });

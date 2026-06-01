@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
 import { getSnippetName, isElementInViewport } from "@html_builder/utils/utils";
 
 /**
@@ -14,7 +13,7 @@ export class InvisibleElementsPanel extends Component {
     };
 
     setup() {
-        this.state = useState({ invisibleEntries: null });
+        this.state = proxy({ invisibleEntries: null });
 
         onWillStart(() => this.updateInvisibleElementsPanel(this.props.invisibleEls));
 

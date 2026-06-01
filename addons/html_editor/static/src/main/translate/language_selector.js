@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -19,7 +18,7 @@ export class LanguageSelector extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.state = useState({
+        this.state = proxy({
             languages: [],
         });
         this.menuRef = useChildRef();

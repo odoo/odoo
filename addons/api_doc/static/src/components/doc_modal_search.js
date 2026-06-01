@@ -1,5 +1,5 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useExternalListener, useRef } from "@web/owl2/utils";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
 import { search } from "@api_doc/utils/doc_model_search";
 
@@ -20,7 +20,7 @@ export class SearchModal extends Component {
         this.itemHeight = 45;
         this.itemMargin = 10;
 
-        this.state = useState({
+        this.state = proxy({
             resultCount: 0,
             results: [],
             activeFilters: {

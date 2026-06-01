@@ -1,5 +1,5 @@
-import { useRef, useState, validate } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef, validate } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { omit, pick } from "@web/core/utils/objects";
 import { trapFocus } from "@html_editor/utils/dom_traversal";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -57,7 +57,7 @@ export class Toolbar extends Component {
     };
 
     setup() {
-        this.state = useState(this.props.state);
+        this.state = proxy(this.props.state);
         this.toolbarEl = useRef("toolbarEl");
 
         useHotkey("alt+f", () => this.focusFirstToolbarButton(), {

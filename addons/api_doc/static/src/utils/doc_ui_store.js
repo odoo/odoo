@@ -1,4 +1,5 @@
-import { useEnv, useExternalListener, useState, useSubEnv } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
+import { useEnv, useExternalListener, useSubEnv } from "@web/owl2/utils";
 
 function isSmall() {
     return window.innerWidth < 960;
@@ -7,9 +8,9 @@ function isSmall() {
 export function useDocUI() {
     const env = useEnv();
     if (env.ui) {
-        return useState(env.ui);
+        return proxy(env.ui);
     }
-    const ui = useState({
+    const ui = proxy({
         isSmall: isSmall(),
         size: window.innerWidth,
     });

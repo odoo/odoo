@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 
 export class RecruitmentActionHelper extends Component {
     static template = "hr_recruitment.RecruitmentActionHelper";
@@ -9,7 +8,7 @@ export class RecruitmentActionHelper extends Component {
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
-        this.state = useState({
+        this.state = proxy({
             hasDemoData: false,
         });
         onWillStart(async () => {

@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -28,7 +27,7 @@ export class KioskManualSelection extends Component {
     setup() {
         this.orm = useService("orm");
         const limit = this.calculateLimit();
-        this.state = useState({
+        this.state = proxy({
             employeesData: {
                 count: 0,
                 records: [],

@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
-import { Component, useEffect } from "@odoo/owl";
+import { Component, useEffect, proxy } from "@odoo/owl";
 import { ConversionError, formatDate, formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { pick } from "@web/core/utils/objects";
@@ -43,7 +42,7 @@ export class BuilderDateTimePicker extends Component {
             parseDisplayValue: this.parseDisplayValue.bind(this),
         });
         this.domState = state;
-        this.state = useState({});
+        this.state = proxy({});
         useEffect(() => {
             // State to display in the input.
             this.state.value = state.value;

@@ -1,10 +1,11 @@
-import { useExternalListener, useLayoutEffect, useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 
 export function useDropdownAutoVisibility(overlayState, popoverRef) {
     if (!overlayState) {
         return;
     }
-    const state = useState(overlayState);
+    const state = proxy(overlayState);
     useLayoutEffect(
         () => {
             if (popoverRef.el) {

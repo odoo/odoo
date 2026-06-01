@@ -1,5 +1,5 @@
-import { onWillRender, useExternalListener, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { onWillRender, useExternalListener, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { localeCompare } from "@web/core/l10n/utils";
 
 export const TABLE_TYPES = {
@@ -19,7 +19,7 @@ export class DocTable extends Component {
     setup() {
         this.subTableRef = useRef("subTableRef");
         this.tooltipRef = useRef("tooltipRef");
-        this.state = useState({
+        this.state = proxy({
             sortBy: 0,
             sortOrder: "desc",
             subTable: undefined,

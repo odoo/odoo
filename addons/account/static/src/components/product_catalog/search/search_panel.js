@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { onWillStart } from '@odoo/owl';
+import { onWillStart, proxy } from '@odoo/owl';
 import { getActiveHotkey } from '@web/core/hotkeys/hotkey_service';
 import { rpc } from '@web/core/network/rpc';
 import { useBus } from '@web/core/utils/hooks';
@@ -12,7 +11,7 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
     setup() {
         super.setup();
 
-        this.state = useState({
+        this.state = proxy({
             ...this.state,
             sections: new Map(),
             isAddingSection: '',
