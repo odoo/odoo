@@ -11,6 +11,7 @@ import { closestElement, selectElements } from "@html_editor/utils/dom_traversal
 /**
  * @typedef { Object } RemoveShared
  * @property { RemovePlugin['removeElement'] } removeElement
+ * @property { RemovePlugin['isEmptyAndRemovable'] } isEmptyAndRemovable
  */
 
 /**
@@ -70,7 +71,7 @@ export class RemovePlugin extends Plugin {
             }
         },
     };
-    static shared = ["removeElement"];
+    static shared = ["removeElement", "isEmptyAndRemovable"];
 
     setup() {
         this.overlayTarget = null;
