@@ -2,9 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="website.ThemeShadowOption">
-    <div t-ref="this.rootRef" />
     <BuilderContext action="'customizeWebsiteVariable'">
-        <BuilderRow label.translate="Small" initialExpandAnim="this.shadowSizeToShow === 'shadow-sm'" tooltip.translate="Horizontal and Vertical Offset">
+        <BuilderRow label.translate="Small" initialExpandAnim="this.env.targetRowId === 'shadow-sm'" tooltip.translate="Horizontal and Vertical offset">
             <BuilderNumberInput actionParam="'box-shadow-sm-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
             <BuilderNumberInput actionParam="'box-shadow-sm-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
             <t t-set-slot="collapse">
@@ -19,7 +18,7 @@
                 </BuilderRow>
             </t>
         </BuilderRow>
-        <BuilderRow label.translate="Normal" initialExpandAnim="this.shadowSizeToShow === 'shadow'" tooltip.translate="Horizontal and Vertical Offset">
+        <BuilderRow label.translate="Normal" initialExpandAnim="this.env.targetRowId === 'shadow'" tooltip.translate="Horizontal and Vertical offset">
             <BuilderNumberInput actionParam="'box-shadow-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
             <BuilderNumberInput actionParam="'box-shadow-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
             <t t-set-slot="collapse">
@@ -34,7 +33,7 @@
                 </BuilderRow>
             </t>
         </BuilderRow>
-        <BuilderRow label.translate="Large" initialExpandAnim="this.shadowSizeToShow === 'shadow-lg'" tooltip.translate="Horizontal and Vertical Offset">
+        <BuilderRow label.translate="Large" initialExpandAnim="this.env.targetRowId === 'shadow-lg'" tooltip.translate="Horizontal and Vertical offset">
             <BuilderNumberInput actionParam="'box-shadow-lg-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
             <BuilderNumberInput actionParam="'box-shadow-lg-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
             <t t-set-slot="collapse">
