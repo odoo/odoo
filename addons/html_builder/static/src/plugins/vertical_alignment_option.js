@@ -5,11 +5,11 @@ export class VerticalAlignmentOption extends BaseOptionComponent {
     static id = "vertical_alignment_option";
     static template = "html_builder.VerticalAlignmentOption";
     static props = {
-        level: { type: Number, optional: true },
+        level: { type: Boolean, optional: true },
         justify: { type: Boolean, optional: true },
     };
     static defaultProps = {
-        level: 1,
+        level: true,
         justify: true,
     };
 }

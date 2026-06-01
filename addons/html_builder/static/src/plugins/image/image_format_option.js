@@ -9,11 +9,7 @@ export class ImageFormatOption extends BaseOptionComponent {
     static template = "html_builder.ImageFormat";
     static dependencies = ["imageFormatOption"];
     static props = {
-        level: { type: Number, optional: true },
         computeMaxDisplayWidth: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        level: 0,
     };
     MAX_SUGGESTED_WIDTH = 1920;
     setup() {

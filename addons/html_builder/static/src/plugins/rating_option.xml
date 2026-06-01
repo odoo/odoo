@@ -12,14 +12,16 @@
             <BuilderSelectItem action="'setIcons'" actionParam="'custom'">Custom</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Active" level="1">
-        <BuilderColorPicker applyTo="'.s_rating_active_icons'" styleAction="'color'" enabledTabs="['solid', 'custom']"/>
-        <BuilderButton action="'customIcon'" actionParam="'customActiveIcon'" type="'success'" preview="false"><i class="fa fa-fw fa-refresh me-1"/> Replace Icon</BuilderButton>
-    </BuilderRow>
-    <BuilderRow label.translate="Inactive" level="1">
-        <BuilderColorPicker applyTo="'.s_rating_inactive_icons'" styleAction="'color'" enabledTabs="['solid', 'custom']"/>
-        <BuilderButton action="'customIcon'" actionParam="'customInactiveIcon'" type="'success'" preview="false"><i class="fa fa-fw fa-refresh me-1"/> Replace Icon</BuilderButton>
-    </BuilderRow>
+    <BuilderContext level="true">
+        <BuilderRow label.translate="Active">
+            <BuilderColorPicker applyTo="'.s_rating_active_icons'" styleAction="'color'" enabledTabs="['solid', 'custom']"/>
+            <BuilderButton action="'customIcon'" actionParam="'customActiveIcon'" type="'success'" preview="false"><i class="fa fa-fw fa-refresh me-1"/> Replace Icon</BuilderButton>
+        </BuilderRow>
+        <BuilderRow label.translate="Inactive">
+            <BuilderColorPicker applyTo="'.s_rating_inactive_icons'" styleAction="'color'" enabledTabs="['solid', 'custom']"/>
+            <BuilderButton action="'customIcon'" actionParam="'customInactiveIcon'" type="'success'" preview="false"><i class="fa fa-fw fa-refresh me-1"/> Replace Icon</BuilderButton>
+        </BuilderRow>
+    </BuilderContext>
     <BuilderRow label.translate="Score">
         <BuilderNumberInput action="'activeIconsNumber'" min="0"/>
         <span class="mx-2">/</span>

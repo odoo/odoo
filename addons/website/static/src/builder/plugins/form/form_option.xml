@@ -18,7 +18,7 @@
             <BuilderSelectItem classAction="'o_mark_optional'" id="'form_optional_opt'">Optional</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Marker" level="1">
+    <BuilderRow label.translate="Marker" level="true">
         <BuilderTextInput action="'setMark'" default="''" t-if="this.isActiveItem('form_required_opt') || this.isActiveItem('form_optional_opt')"/>
     </BuilderRow>
     <BuilderRow t-if="this.canChangeFieldsLayout" label.translate="Labels Position">
@@ -31,7 +31,7 @@
             <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" actionValue="'right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
         </BuilderButtonGroup>
     </BuilderRow>
-    <BuilderRow label.translate="Labels Width" level="1" t-if="!this.isActiveItem('label_position_hide_opt') and !this.isActiveItem('label_position_top_opt')">
+    <BuilderRow label.translate="Labels Width" level="true" t-if="!this.isActiveItem('label_position_hide_opt') and !this.isActiveItem('label_position_top_opt')">
         <BuilderNumberInput
             styleAction="'width'"
             unit="'px'" applyTo="'[data-name=Field]:not(.s_website_form_dnone) .s_website_form_label'"/>
@@ -158,7 +158,7 @@
             <BuilderSelectItem actionValue="'selection'">Radio</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Display" level="1">
+    <BuilderRow label.translate="Display" level="true">
         <BuilderSelect t-if="this.isMultipleInputs"
             id="'multi_check_display_opt'" preview="false"
         >
@@ -166,7 +166,7 @@
             <BuilderSelectItem action="'multiCheckboxDisplay'" actionValue="'vertical'">Vertical</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Height" level="1" applyTo="'textarea'">
+    <BuilderRow label.translate="Height" level="true" applyTo="'textarea'">
         <BuilderNumberInput unit.translate="rows" saveUnit="''" step="1" attributeAction="'rows'" default="3"/>
     </BuilderRow>
     <BuilderRow label.translate="Label">
@@ -221,7 +221,7 @@
         <BuilderRow label.translate="Allow Empty">
             <BuilderCheckbox id="'allow_empty_opt'" action="'toggleAllowEmpty'"/>
         </BuilderRow>
-        <BuilderRow label.translate="Placeholder" level="1">
+        <BuilderRow label.translate="Placeholder" level="true">
             <BuilderTextInput t-if="this.isActiveItem('allow_empty_opt')" action="'setEmptyPlaceholder'" placeholder.translate="Please choose any one option"/>
         </BuilderRow>
     </t>
@@ -264,12 +264,14 @@
     <BuilderRow label.translate="Add Other" t-if="this.isOtherOptionSupported" tooltip.translate="Allow people to add their own option">
         <BuilderCheckbox id="'otherOption'" dataAttributeAction="'otherOptionAllowed'" dataAttributeActionValue="'true'" preview="false"/>
     </BuilderRow>
-    <BuilderRow label.translate="Label" t-if="this.isActiveItem('otherOption')" tooltip.translate="Label for other option" level="1">
-        <BuilderTextInput dataAttributeAction="'otherOptionLabel'" default.translate="Other"/>
-    </BuilderRow>
-    <BuilderRow label.translate="Placeholder" t-if="this.isActiveItem('otherOption')" level="1">
-        <BuilderTextInput dataAttributeAction="'otherOptionPlaceholder'"/>
-    </BuilderRow>
+    <BuilderContext t-if="this.isActiveItem('otherOption')" level="true">
+        <BuilderRow label.translate="Label" tooltip.translate="Label for other option">
+            <BuilderTextInput dataAttributeAction="'otherOptionLabel'" default.translate="Other"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Placeholder">
+            <BuilderTextInput dataAttributeAction="'otherOptionPlaceholder'"/>
+        </BuilderRow>
+    </BuilderContext>
     <t t-if="this.isTextField">
         <BuilderRow label.translate="Character Limit">
             <BuilderCheckbox
@@ -278,8 +280,8 @@
                 applyTo="`input, textarea`"
             />
         </BuilderRow>
-        <t t-if="this.isActiveItem('character_limit_opt')">
-            <BuilderRow label.translate="Min Characters" level="1">
+        <BuilderContext t-if="this.isActiveItem('character_limit_opt')" level="true">
+            <BuilderRow label.translate="Min Characters">
                 <BuilderNumberInput
                     title.translate="The minimum number of characters required."
                     attributeAction="'minlength'"
@@ -287,7 +289,7 @@
                     applyTo="`input, textarea`"
                 />
             </BuilderRow>   
-            <BuilderRow label.translate="Max Characters" level="1">
+            <BuilderRow label.translate="Max Characters">
                 <BuilderNumberInput
                     title.translate="The maximum number of characters allowed."
                     attributeAction="'maxlength'"
@@ -295,7 +297,7 @@
                     applyTo="`input, textarea`"
                 />
             </BuilderRow>
-        </t>
+        </BuilderContext>
     </t>
     <BuilderRow label.translate="Restrict File Types">
         <BuilderCheckbox
@@ -304,23 +306,23 @@
             applyTo="`input[type='file']`"
         />
     </BuilderRow>
-    <t t-if="this.isActiveItem('restrict_file_types_opt')">
-        <BuilderRow label.translate="Only PDF" level="1" tooltip.translate="'.pdf files only'">
+    <BuilderContext t-if="this.isActiveItem('restrict_file_types_opt')" level="true">
+        <BuilderRow label.translate="Only PDF" tooltip.translate="'.pdf files only'">
             <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'application/pdf'" applyTo="`input[type='file']`"/>
         </BuilderRow>
-        <BuilderRow label.translate="Documents" level="1" tooltip.translate="'.doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf, etc.'">
+        <BuilderRow label.translate="Documents" tooltip.translate="'.doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf, etc.'">
             <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'application/*'" applyTo="`input[type='file']`"/>
         </BuilderRow>
-        <BuilderRow label.translate="Images" level="1" tooltip.translate="'.jpg, .jpeg, .png, .gif, .svg, .webp, etc.'">
+        <BuilderRow label.translate="Images" tooltip.translate="'.jpg, .jpeg, .png, .gif, .svg, .webp, etc.'">
             <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'image/*'" applyTo="`input[type='file']`"/>
         </BuilderRow>
-        <BuilderRow label.translate="Videos" level="1" tooltip.translate="'.mov, .mpeg, .avi, .mkv, .mp4, etc.'">
+        <BuilderRow label.translate="Videos" tooltip.translate="'.mov, .mpeg, .avi, .mkv, .mp4, etc.'">
             <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'video/*'" applyTo="`input[type='file']`"/>
         </BuilderRow>
-        <BuilderRow label.translate="Audios" level="1" tooltip.translate="'.mp3, .m4a, .aac, .wav, etc.'">
+        <BuilderRow label.translate="Audios" tooltip.translate="'.mp3, .m4a, .aac, .wav, etc.'">
             <BuilderCheckbox action="'setAllowedFileTypes'" actionParam="'audio/*'" applyTo="`input[type='file']`"/>
         </BuilderRow>
-    </t>
+    </BuilderContext>
     <BuilderRow label.translate="Requirement"
             t-if="this.domStateCurrentFieldInput.hasDateTimePicker or this.domStateCurrentFieldInput.isTextArea or this.canHaveTextValidationCondition.includes(this.domStateCurrentFieldInput.type)">
         <BuilderSelect id="'require_condition_text_opt'"
@@ -364,35 +366,37 @@
             preview="false"
             action="'setCustomErrorMessage'"/>
     </BuilderRow>
-    <BuilderRow label.translate="Conditions" level="1" t-if="this.isTextConditionForRequirementOptionVisible">
-        <BuilderTextInput id="'require_condition_additional_text'"
-            placeholder.translate="Enter requirement conditions"
-            dataAttributeAction="'requirementCondition'"/>
-    </BuilderRow>
-    <BuilderRow label.translate="Conditions" level="1" t-elif="this.domStateCurrentFieldInput.isFormDateTime and this.domState.elDataset.requirementComparator">
-        <BuilderDateTimePicker id="'require_condition_additional_datetime_1'"
-            placeholder.translate="Enter requirement conditions"
-            dataAttributeAction="'requirementCondition'"
-            type="'datetime'"/>
-    </BuilderRow>
-    <BuilderRow label.translate="Conditions" level="1" t-elif="this.domStateCurrentFieldInput.isFormDate and this.domState.elDataset.requirementComparator">
-        <BuilderDateTimePicker id="'require_condition_additional_date'"
-            placeholder.translate="Enter requirement conditions"
-            dataAttributeAction="'requirementCondition'"
-            type="'date'"/>
-    </BuilderRow>
-    <BuilderRow label.translate="Conditions" level="1" t-if="this.domStateCurrentFieldInput.isFormDateTime and ['between', '!between'].includes(this.domState.elDataset.requirementComparator)">
-        <BuilderDateTimePicker id="'require_condition_additional_datetime_2'"
-            placeholder.translate="Enter requirement conditions"
-            dataAttributeAction="'requirementBetween'"
-            type="'datetime'"/>
-    </BuilderRow>
-    <BuilderRow label.translate="Conditions" level="1" t-elif="this.domStateCurrentFieldInput.isFormDate and ['between', '!between'].includes(this.domState.elDataset.requirementComparator)">
-        <BuilderDateTimePicker id="'require_condition_additional_date_end'"
-            placeholder.translate="Enter requirement conditions"
-            dataAttributeAction="'requirementBetween'"
-            type="'date'"/>
-    </BuilderRow>
+    <BuilderContext level="true">
+        <BuilderRow label.translate="Conditions" t-if="this.isTextConditionForRequirementOptionVisible">
+            <BuilderTextInput id="'require_condition_additional_text'"
+                placeholder.translate="Enter requirement conditions"
+                dataAttributeAction="'requirementCondition'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Conditions" t-elif="this.domStateCurrentFieldInput.isFormDateTime and this.domState.elDataset.requirementComparator">
+            <BuilderDateTimePicker id="'require_condition_additional_datetime_1'"
+                placeholder.translate="Enter requirement conditions"
+                dataAttributeAction="'requirementCondition'"
+                type="'datetime'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Conditions" t-elif="this.domStateCurrentFieldInput.isFormDate and this.domState.elDataset.requirementComparator">
+            <BuilderDateTimePicker id="'require_condition_additional_date'"
+                placeholder.translate="Enter requirement conditions"
+                dataAttributeAction="'requirementCondition'"
+                type="'date'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Conditions" t-if="this.domStateCurrentFieldInput.isFormDateTime and ['between', '!between'].includes(this.domState.elDataset.requirementComparator)">
+            <BuilderDateTimePicker id="'require_condition_additional_datetime_2'"
+                placeholder.translate="Enter requirement conditions"
+                dataAttributeAction="'requirementBetween'"
+                type="'datetime'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Conditions" t-elif="this.domStateCurrentFieldInput.isFormDate and ['between', '!between'].includes(this.domState.elDataset.requirementComparator)">
+            <BuilderDateTimePicker id="'require_condition_additional_date_end'"
+                placeholder.translate="Enter requirement conditions"
+                dataAttributeAction="'requirementBetween'"
+                type="'date'"/>
+        </BuilderRow>
+    </BuilderContext>
     <BuilderRow t-if="this.isMultipleTextConditionForRequirementOptionVisible">
         <div class="d-flex flex-column w-100">
             <p class="hb-row-label mb-0 flex-basis-auto">
@@ -407,7 +411,7 @@
             />
         </div>
     </BuilderRow>
-    <BuilderRow label.translate="Error Message" level="1" t-if="this.isActiveItem('error_message_opt')">
+    <BuilderRow label.translate="Error Message" level="true" t-if="this.isActiveItem('error_message_opt')">
         <BuilderTextInput placeholder.translate="Write custom error message" id="'error_message_input_opt'" dataAttributeAction="'errorMessage'"/>
     </BuilderRow>
     <BuilderRow label.translate="Visibility Rule">

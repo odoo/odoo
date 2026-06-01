@@ -76,20 +76,20 @@
                     </t>
                     <t t-else=""> </t>
                 </BuilderRow>
-                <t t-if="this.isActiveItem('text_shadow_opt') or (!this.domState.hasOutlinePart and !this.domState.hasTrailPart and !this.domState.hasGeometryPart)">
-                    <BuilderRow label.translate="Color" actionParam="'shadowColor'" level="1">
+                <BuilderContext t-if="this.isActiveItem('text_shadow_opt') or (!this.domState.hasOutlinePart and !this.domState.hasTrailPart and !this.domState.hasGeometryPart)" level="true">
+                    <BuilderRow label.translate="Color" actionParam="'shadowColor'">
                         <BuilderColorPicker
                             enabledTabs="['custom', 'solid']"
                             id="'text_shadow_color_opt'"/>
                     </BuilderRow>
-                    <BuilderRow label.translate="Offset" tooltip.translate="Horizontal and Vertical offset" level="1">
+                    <BuilderRow label.translate="Offset" tooltip.translate="Horizontal and Vertical offset">
                         <BuilderNumberInput actionParam="'shadowOffsetX'" unit="'px'" prefixIcon="'oi oi-arrows-h'"/>
                         <BuilderNumberInput actionParam="'shadowOffsetY'" unit="'px'" prefixIcon="'oi oi-arrows-v'"/>
                     </BuilderRow>
-                    <BuilderRow label.translate="Blur" level="1">
+                    <BuilderRow label.translate="Blur">
                         <BuilderNumberInput actionParam="'shadowBlur'" unit="'px'"/>
                     </BuilderRow>
-                </t>
+                </BuilderContext>
             </t>
             <t t-if="this.domState.hasOutlinePart">
                 <BuilderRow label.translate="Outline">
@@ -104,40 +104,42 @@
                 <BuilderRow label.translate="Trail">
                     <BuilderRange actionParam="'trailCount'" min="0" max="10" step="1" withNumberInput="true" id="'text_trail_count_opt'"/>
                 </BuilderRow>
-                <t t-if="this.domState.hasTrail">
-                    <BuilderRow label.translate="Offset" tooltip.translate="Horizontal and Vertical offset" level="1">
+                <BuilderContext t-if="this.domState.hasTrail" level="true">
+                    <BuilderRow label.translate="Offset" tooltip.translate="Horizontal and Vertical offset">
                         <BuilderNumberInput actionParam="'trailOffsetX'" unit="'px'" prefixIcon="'oi oi-arrows-h'"/>
                         <BuilderNumberInput actionParam="'trailOffsetY'" unit="'px'" prefixIcon="'oi oi-arrows-v'"/>
                     </BuilderRow>
-                    <BuilderRow label.translate="Colors" tooltip.translate="Start and end colors" level="1">
+                    <BuilderRow label.translate="Colors" tooltip.translate="Start and end colors">
                         <BuilderColorPicker actionParam="'trailStartColor'" enabledTabs="['custom', 'solid']"/>
                         <BuilderColorPicker actionParam="'trailEndColor'" enabledTabs="['custom', 'solid']"/>
                     </BuilderRow>
-                </t>
+                </BuilderContext>
             </t>
             <t t-if="this.domState.hasGeometryPart">
                 <BuilderRow label.translate="Geometry"> </BuilderRow>
-                <BuilderRow label.translate="Rotate" level="1">
-                    <BuilderNumberInput actionParam="'rotate'" min="-180" max="180" unit="'deg'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Tilt" level="1">
-                    <BuilderNumberInput actionParam="'tiltX'" min="-180" max="180" unit="'deg'" prefixIcon="'oi oi-arrows-v'"/>
-                    <BuilderNumberInput actionParam="'tiltY'" min="-180" max="180" unit="'deg'" prefixIcon="'oi oi-arrows-h'"/>
-                </BuilderRow>
-                <BuilderRow t-if="this.domState.hasTilt" label.translate="Perspective" level="2">
-                    <BuilderNumberInput actionParam="'tiltPerspective'" min="0.1" max="10" step="0.1" unit="'✕'" saveUnit="''" applyWithUnit="false" prefixIcon="'oi oi-chevron-up'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Skew" level="1">
-                    <BuilderNumberInput actionParam="'skewX'" min="-50" max="50" unit="'deg'" prefixIcon="'oi oi-arrows-h'"/>
-                    <BuilderNumberInput actionParam="'skewY'" min="-50" max="50" unit="'deg'" prefixIcon="'oi oi-arrows-v'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Move" level="1">
-                    <BuilderNumberInput actionParam="'moveX'" min="-1000" max="1000" unit="'%'" prefixIcon="'oi oi-arrows-h'"/>
-                    <BuilderNumberInput actionParam="'moveY'" min="-1000" max="1000" unit="'%'" prefixIcon="'oi oi-arrows-v'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Scale" level="1">
-                    <BuilderNumberInput actionParam="'scale'" min="1" max="1000" unit="'%'" prefixIcon="'oi oi-resize'"/>
-                </BuilderRow>
+                <BuilderContext level="true">
+                    <BuilderRow label.translate="Rotate">
+                        <BuilderNumberInput actionParam="'rotate'" min="-180" max="180" unit="'deg'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Tilt">
+                        <BuilderNumberInput actionParam="'tiltX'" min="-180" max="180" unit="'deg'" prefixIcon="'oi oi-arrows-v'"/>
+                        <BuilderNumberInput actionParam="'tiltY'" min="-180" max="180" unit="'deg'" prefixIcon="'oi oi-arrows-h'"/>
+                    </BuilderRow>
+                    <BuilderRow t-if="this.domState.hasTilt" label.translate="Perspective" level="true">
+                        <BuilderNumberInput actionParam="'tiltPerspective'" min="0.1" max="10" step="0.1" unit="'✕'" saveUnit="''" applyWithUnit="false" prefixIcon="'oi oi-chevron-up'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Skew">
+                        <BuilderNumberInput actionParam="'skewX'" min="-50" max="50" unit="'deg'" prefixIcon="'oi oi-arrows-h'"/>
+                        <BuilderNumberInput actionParam="'skewY'" min="-50" max="50" unit="'deg'" prefixIcon="'oi oi-arrows-v'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Move">
+                        <BuilderNumberInput actionParam="'moveX'" min="-1000" max="1000" unit="'%'" prefixIcon="'oi oi-arrows-h'"/>
+                        <BuilderNumberInput actionParam="'moveY'" min="-1000" max="1000" unit="'%'" prefixIcon="'oi oi-arrows-v'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Scale">
+                        <BuilderNumberInput actionParam="'scale'" min="1" max="1000" unit="'%'" prefixIcon="'oi oi-resize'"/>
+                    </BuilderRow>
+                </BuilderContext>
             </t>
             <div class="d-flex justify-content-end">
                 <button type="button" class="btn btn-link" t-on-click="this.onClickSavePreset">Save as preset</button>

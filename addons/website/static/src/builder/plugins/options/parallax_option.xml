@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.ParallaxOption">
-    <BuilderRow t-if="this.isActiveItem('toggle_bg_image_id') and !this.isActiveItem('toggle_bg_video_id')" label.translate="Scroll Effect" tooltip.translate="This option may limit the position feature on certain parts of the image." level="2" preview="false">
+    <BuilderRow t-if="this.isActiveItem('toggle_bg_image_id') and !this.isActiveItem('toggle_bg_video_id')" label.translate="Scroll Effect" tooltip.translate="This option may limit the position feature on certain parts of the image." preview="false">
         <BuilderSelect action="'setParallaxType'">
             <BuilderSelectItem actionValue="'none'">None</BuilderSelectItem>
             <BuilderSelectItem actionValue="'fixed'">Fixed</BuilderSelectItem>
@@ -12,8 +12,8 @@
             <BuilderSelectItem id="'parallax_zoom_out_opt'" actionValue="'zoomOut'">Zoom Out</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderContext preview="false">
-        <BuilderRow level="3" label.translate="Intensity" tooltip.translate="Adjust how strong the scroll effect appears" >
+    <BuilderContext preview="false" level="true">
+        <BuilderRow label.translate="Intensity" tooltip.translate="Adjust how strong the scroll effect appears" >
             <BuilderRange t-if="this.isActiveItem('parallax_top_opt')"
                 dataAttributeAction="'scrollBackgroundRatio'"
                 min="0.15"

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.BgBlurOption">
-    <BuilderRow label.translate="Blur" level="this.props.level" t-if="this.blurState.show">
+    <BuilderRow label.translate="Blur" t-if="this.blurState.show">
         <BuilderRange
             action="'bgBlur'"
             min="0"

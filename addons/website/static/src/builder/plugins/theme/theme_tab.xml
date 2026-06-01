@@ -57,32 +57,34 @@
                 className="'ms-auto fa fa-fw fa-camera px-2'"
             />
         </BuilderRow>
-        <BuilderRow label.translate="Background" level="1" t-if="!this.isActiveItem('layout_full_opt')">
-            <BuilderColorPicker enabledTabs="['solid', 'custom']"
-                action="'customizeWebsiteColor'"
-                actionParam="'body'"/>
-        </BuilderRow>
-        <BuilderRow label.translate="Image" level="1" t-if="this.isActiveItem('body_bg_image_opt')">
-            <BuilderButton action="'replaceBodyBgImage'" title.translate="Replace Image" preview="false" type="'global'">
-                Replace
-            </BuilderButton>
-            <BuilderButton action="'removeBodyBgImage'" preview="false" icon="'oi-close'" className="'btn-danger-color-hover'"/>
-            <ImageSize/>
-        </BuilderRow>
-        <BuilderRow label.translate="Position" level="1" t-if="this.isActiveItem('body_bg_image_opt')">
-            <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'body-image-type'" preview="false">
-                <BuilderSelectItem actionValue="'image'">Cover</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'pattern'" id="'body_bg_repeat_opt'">Repeat pattern</BuilderSelectItem>
-            </BuilderSelect>
-            <BuilderButton icon="'fa-crosshairs'" title.translate="Background Position" preview="false" action="'bodyBgPositionOverlay'"/>
-        </BuilderRow>
-        <BuilderContext t-if="this.isActiveItem('body_bg_repeat_opt')" action="'customizeWebsiteVariable'">
-            <BuilderRow label.translate="Width" level="2">
-                <BuilderNumberInput actionParam="'body-image-pattern-width'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
+        <BuilderContext level="true">
+            <BuilderRow label.translate="Background" t-if="!this.isActiveItem('layout_full_opt')">
+                <BuilderColorPicker enabledTabs="['solid', 'custom']"
+                    action="'customizeWebsiteColor'"
+                    actionParam="'body'"/>
             </BuilderRow>
-            <BuilderRow label.translate="Height" level="2">
-                <BuilderNumberInput actionParam="'body-image-pattern-height'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
+            <BuilderRow label.translate="Image" t-if="this.isActiveItem('body_bg_image_opt')">
+                <BuilderButton action="'replaceBodyBgImage'" title.translate="Replace Image" preview="false" type="'global'">
+                    Replace
+                </BuilderButton>
+                <BuilderButton action="'removeBodyBgImage'" preview="false" icon="'oi-close'" className="'btn-danger-color-hover'"/>
+                <ImageSize/>
             </BuilderRow>
+            <BuilderRow label.translate="Position" t-if="this.isActiveItem('body_bg_image_opt')">
+                <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'body-image-type'" preview="false">
+                    <BuilderSelectItem actionValue="'image'">Cover</BuilderSelectItem>
+                    <BuilderSelectItem actionValue="'pattern'" id="'body_bg_repeat_opt'">Repeat pattern</BuilderSelectItem>
+                </BuilderSelect>
+                <BuilderButton icon="'fa-crosshairs'" title.translate="Background Position" preview="false" action="'bodyBgPositionOverlay'"/>
+            </BuilderRow>
+            <BuilderContext t-if="this.isActiveItem('body_bg_repeat_opt')" action="'customizeWebsiteVariable'" level="true">
+                <BuilderRow label.translate="Width">
+                    <BuilderNumberInput actionParam="'body-image-pattern-width'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Height">
+                    <BuilderNumberInput actionParam="'body-image-pattern-height'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
+                </BuilderRow>
+            </BuilderContext>
         </BuilderContext>
     </BuilderContext>
 </t>
@@ -92,7 +94,7 @@
         <BuilderRow label.translate="Font Size">
             <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'font-size-base'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
             <t t-set-slot="collapse">
-                <BuilderRow label.translate="Small" level="1">
+                <BuilderRow label.translate="Small" level="true">
                     <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'small-font-size'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
                 </BuilderRow>
             </t>
@@ -137,54 +139,62 @@
             <BuilderNumberInput actionParam="'input-padding-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
             <BuilderNumberInput actionParam="'input-padding-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
             <t t-set-slot="collapse">
-                <BuilderRow label.translate="Small" tooltip.translate="Vertical and Horizontal padding" level="1">
-                    <BuilderNumberInput actionParam="'input-padding-y-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
-                    <BuilderNumberInput actionParam="'input-padding-x-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Large" tooltip.translate="Vertical and Horizontal padding" level="1">
-                    <BuilderNumberInput actionParam="'input-padding-y-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
-                    <BuilderNumberInput actionParam="'input-padding-x-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
-                </BuilderRow>
+                <BuilderContext level="true">
+                    <BuilderRow label.translate="Small" tooltip.translate="Vertical and Horizontal padding">
+                        <BuilderNumberInput actionParam="'input-padding-y-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
+                        <BuilderNumberInput actionParam="'input-padding-x-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Large" tooltip.translate="Vertical and Horizontal padding">
+                        <BuilderNumberInput actionParam="'input-padding-y-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
+                        <BuilderNumberInput actionParam="'input-padding-x-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
+                    </BuilderRow>
+                </BuilderContext>
             </t>
         </BuilderRow>
         <BuilderRow label.translate="Font Size" action="'customizeWebsiteVariable'">
             <BuilderNumberInput actionParam="'input-font-size'" unit="'px'" saveUnit="'rem'"/>
             <t t-set-slot="collapse">
-                <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput actionParam="'input-font-size-sm'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Large" level="1">
-                    <BuilderNumberInput actionParam="'input-font-size-lg'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
+                <BuilderContext level="true">
+                    <BuilderRow label.translate="Small">
+                        <BuilderNumberInput actionParam="'input-font-size-sm'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Large">
+                        <BuilderNumberInput actionParam="'input-font-size-lg'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                </BuilderContext>
             </t>
         </BuilderRow>
         <t t-set="subVariablesConfig" t-value="{'input-border-width': ['input-border-top-width', 'input-border-right-width', 'input-border-bottom-width', 'input-border-left-width']}"/>
         <BuilderRow label.translate="Border Width" action="'customizeWebsiteSubVariables'">
             <BuilderNumberInput actionParam="{mainParam: 'input-border-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'" default="null"/>
             <t t-set-slot="collapse">
-                <BuilderRow label.translate="Top" level="1">
-                    <BuilderNumberInput actionParam="{mainParam: 'input-border-top-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Right" level="1">
-                    <BuilderNumberInput actionParam="{mainParam: 'input-border-right-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Bottom" level="1">
-                    <BuilderNumberInput actionParam="{mainParam: 'input-border-bottom-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Left" level="1">
-                    <BuilderNumberInput actionParam="{mainParam: 'input-border-left-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
+                <BuilderContext level="true">
+                    <BuilderRow label.translate="Top">
+                        <BuilderNumberInput actionParam="{mainParam: 'input-border-top-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Right">
+                        <BuilderNumberInput actionParam="{mainParam: 'input-border-right-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Bottom">
+                        <BuilderNumberInput actionParam="{mainParam: 'input-border-bottom-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Left">
+                        <BuilderNumberInput actionParam="{mainParam: 'input-border-left-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                </BuilderContext>
             </t>
         </BuilderRow>
         <BuilderRow label.translate="Border Radius" action="'customizeWebsiteVariable'">
             <BuilderNumberInput actionParam="'input-border-radius'" unit="'px'" saveUnit="'rem'"/>
             <t t-set-slot="collapse">
-                <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput actionParam="'input-border-radius-sm'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Large" level="1">
-                    <BuilderNumberInput actionParam="'input-border-radius-lg'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
+                <BuilderContext level="true">
+                    <BuilderRow label.translate="Small">
+                        <BuilderNumberInput actionParam="'input-border-radius-sm'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Large">
+                        <BuilderNumberInput actionParam="'input-border-radius-lg'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                </BuilderContext>
             </t>
         </BuilderRow>
         <BuilderRow label.translate="Background">

@@ -86,7 +86,7 @@
         label.translate="Position"
         t-if="!this.isActiveItem('opt_product_page_image_width_full') and !this.isActiveItem('opt_product_page_image_width_hide')"
         tooltip.translate="Reverses the horizontal order of items on desktop and larger screens (mobile layout remains unchanged)"
-        level="1"
+        level="true"
     >
         <BuilderButtonGroup
             action="'productPageContainerOrder'"
@@ -146,7 +146,7 @@
     <t
         t-if="this.domState.hasCarousel and this.domState.hasImages and this.domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')"
     >
-	    <BuilderRow label.translate="Thumbnails" level="1">
+	    <BuilderRow label.translate="Thumbnails" level="true">
 	        <BuilderButtonGroup action="'websiteConfig'" id="'o_wsale_thumbnail_pos'">
                 <t t-set="isSameLangDir" t-value="this.env.langDir.content === this.env.langDir.builder"/>
                 <t t-set="left">Left</t>
@@ -166,9 +166,7 @@
 	    </BuilderRow>
     </t>
     <!-- Grid config -->
-    <t
-        t-if="this.domState.isGrid"
-    >
+    <BuilderContext t-if="this.domState.isGrid" level="true">
         <t
             t-if="
                 this.domState.hasGrid and
@@ -177,7 +175,7 @@
                 !this.isActiveItem('opt_product_page_image_width_full')
             "
         >
-            <BuilderRow label.translate="Columns" level="1">
+            <BuilderRow label.translate="Columns">
                 <BuilderSelect action="'productPageImageGridColumns'" id="'o_wsale_grid_columns'">
                     <BuilderSelectItem actionValue="1">1</BuilderSelectItem>
                     <BuilderSelectItem actionValue="2">2</BuilderSelectItem>
@@ -190,7 +188,6 @@
                 this.domState.multipleImages and !this.isActiveItem('opt_product_page_image_width_hide')
             "
             label.translate="Spacing"
-            level="1"
         >
             <BuilderSelect
                 action="'productPageImageGridSpacing'"
@@ -219,14 +216,14 @@
                 </t>
 	        </BuilderSelect>
 	    </BuilderRow>
-    </t>
+    </BuilderContext>
     <BuilderRow
         label.translate="Roundness"
         t-if="
                 (this.domState.hasImages and !this.isActiveItem('o_wsale_product_page_grid_gap_0')) and
                 !this.isActiveItem('opt_product_page_image_width_hide')
             "
-        level="this.domState.multipleImages ? 1 : 0"
+        level="this.domState.multipleImages ? true : false"
     >
         <BuilderSelect
             action="'productPageRoundness'"
@@ -292,7 +289,7 @@
             <BuilderRow
                 t-if="!this.isActiveItem('opt_product_page_image_width_hide')"
                 label.translate="Mobile"
-                level="1"
+                level="true"
             >
                 <BuilderSelect action="'productPageImageRatioMobile'" applyTo="'#product_detail'">
                     <t t-set="disabledLabel"><em>Inherit desktop</em></t>
@@ -329,7 +326,7 @@
     </BuilderRow>
 
     <t t-if="this.domState.hasImages and !this.isActiveItem('opt_product_page_image_width_hide')">
-	    <BuilderRow label.translate="Zoom on click" level="1">
+	    <BuilderRow label.translate="Zoom on click" level="true">
             <BuilderCheckbox
                 action="'websiteConfig'"
                 actionParam="{ views: ['website_sale.product_picture_magnify_click'] }"

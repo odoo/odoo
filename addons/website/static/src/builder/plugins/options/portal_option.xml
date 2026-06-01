@@ -14,16 +14,18 @@
         <BorderConfigurator label.translate="Border" withBSClass="false" action="'setStylePortalCard'"/>
     </t>
     <t t-name="website.PortalCardVisibilityOption">
-            <BuilderRow t-if="this.entries.length" label.translate="Cards Design">
-                    Global options for all inner cards.
-            </BuilderRow>
-        <t t-foreach="this.entries" t-as="entry" t-key="entry.id">
-            <BuilderRow label="entry.name" level="1">
-                <BuilderCheckbox action="'cardVisibilityOption'" actionValue="entry.id"/>
-            </BuilderRow>
-        </t>
+        <BuilderRow t-if="this.entries.length" label.translate="Cards Design">
+                Global options for all inner cards.
+        </BuilderRow>
+        <BuilderContext level="true">
+            <t t-foreach="this.entries" t-as="entry" t-key="entry.id">
+                <BuilderRow label="entry.name">
+                    <BuilderCheckbox action="'cardVisibilityOption'" actionValue="entry.id"/>
+                </BuilderRow>
+            </t>
+        </BuilderContext>
     </t>
-    
+
     <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
         <xpath expr="//t[@id='snippet_specific_options']" position="after">
             <portal_option

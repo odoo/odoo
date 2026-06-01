@@ -20,10 +20,6 @@ export class BgBlurOption extends BaseOptionComponent {
 
     static props = {
         ...BaseOptionComponent.props,
-        level: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        level: 2,
     };
 
     setup() {
