@@ -89,7 +89,8 @@
                                                 'o-rounded-bottom-bubble': this.message.bubbleColor and !this.props.squashed,
                                                 'o-rounded-start-bubble': this.message.bubbleColor and !this.props.squashed and this.isAlignedRight,
                                                 'o-rounded-end-bubble': this.message.bubbleColor and !this.props.squashed and !this.isAlignedRight,
-                                            }">
+                                            }"
+                                            t-att-style="this.message.hasTextContent and this.message.richBody and !this.message.linkPreviewSquash ? 'min-width: 450px;' : ''">
                                                 <div t-if="this.message.bubbleColor" class="o-mail-Message-bubble position-absolute top-0 start-0 w-100 h-100 border" t-att-class="{
                                                     'o-rounded-bubble': this.props.squashed,
                                                     'o-rounded-bottom-bubble': !this.props.squashed,
