@@ -30,10 +30,10 @@
                 <span class="fw-bolder px-2 text-break"><t t-out="this.displayName"/></span>
                 <span class="o-mail-Activity-user px-1" t-if="this.props.activity.user_id?.partner_id" >for <t t-out="this.props.activity.user_id.partner_id.displayName"/></span>
                 <button class="btn btn-link btn-primary p-0 lh-1 border-0">
-                    <i class="fa fa-info-circle" role="img" title="Info" aria-label="Info" t-on-click="this.toggleDetails"/>
+                    <i class="fa fa-info-circle" role="img" title="Info" aria-label="Info" t-on-click="this.toggleFn(this.showDetails)"/>
                 </button>
             </div>
-            <div t-if="this.state.showDetails">
+            <div t-if="this.showDetails()">
                 <table class="o-mail-Activity-details table table-sm mt-2">
                     <tbody>
                         <tr><td class="text-end fw-bolder">Activity type</td><td><t t-out="this.props.activity.activity_type_id?.name"/></td></tr>

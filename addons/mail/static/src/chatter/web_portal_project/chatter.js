@@ -1,9 +1,9 @@
-import { useChildSubEnv, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv, useRef, useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUpdateProps } from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, proxy } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { router } from "@web/core/browser/router";
@@ -22,12 +22,10 @@ export class Chatter extends Component {
 
     setup() {
         this.store = useService("mail.store");
-        this.state = useState({
+        this.state = proxy({
             jumpThreadPresent: 0,
             /** @type {import("models").Thread} */
             thread: undefined,
-            aside: false,
-            disabled: !this.props.threadId,
         });
         this.messageHighlight = useMessageScrolling({
             thread: () => this.state.thread,
@@ -41,7 +39,6 @@ export class Chatter extends Component {
 
         onMounted(this._onMounted);
         onWillUpdateProps((nextProps) => {
-            this.state.disabled = !nextProps.threadId;
             if (
                 this.props.threadId !== nextProps.threadId ||
                 this.props.threadModel !== nextProps.threadModel
@@ -101,6 +98,7 @@ export class Chatter extends Component {
             if (this.state.thread.messages.length === 0) {
                 this.state.thread.messages.push({
                     id: this.store.getNextTemporaryId(),
+                    is_transient: true,
                     author_id: this.state.thread.effectiveSelf,
                     body: _t("Creating a new record..."),
                     message_type: "notification",

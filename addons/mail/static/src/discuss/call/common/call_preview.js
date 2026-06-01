@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Action, ACTION_TAGS } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
 import {
@@ -12,7 +12,7 @@ import { CallSettingsDialog } from "@mail/discuss/call/common/call_settings";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 import { closeStream, onChange } from "@mail/utils/common/misc";
 
-import { Component, onWillDestroy, status } from "@odoo/owl";
+import { Component, onWillDestroy, proxy, status } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -40,7 +40,7 @@ export class CallPreview extends Component {
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        this.state = useState({ audioStream: null, blurManager: null, videoStream: null });
+        this.state = proxy({ audioStream: null, blurManager: null, videoStream: null });
         this.audioRef = useRef("audio");
         this.videoRef = useRef("video");
         useLayoutEffect(

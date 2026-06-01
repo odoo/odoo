@@ -1,7 +1,7 @@
-import { useLayoutEffect, useState, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
 
-import { Component, markup } from "@odoo/owl";
+import { Component, markup, proxy } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
@@ -20,7 +20,7 @@ export class WelcomePage extends Component {
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
         useSubEnv({ inWelcomePage: true });
-        this.state = useState({
+        this.state = proxy({
             userName: this.store.discuss.thread.getPersonaName(this.store.self) ?? "",
             activateCamera: 0,
             activateMicrophone: 0,

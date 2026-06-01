@@ -1,5 +1,8 @@
-import { useExternalListener, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { toggleFn } from "@mail/utils/common/signal";
+
+import { Component, signal } from "@odoo/owl";
+
+import { useExternalListener, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { useNavigation } from "@web/core/navigation/navigation";
 import { usePosition } from "@web/core/position/position_hook";
 import { getFirstElementOfNode } from "@web/core/dropdown/dropdown";
@@ -28,7 +31,7 @@ export class CallDropdown extends Component {
     setup() {
         super.setup();
         this.menuRef = useRef("menu");
-        this.state = useState({ isOpen: this.props.openByDefault });
+        this.isOpen = signal(this.props.openByDefault);
         usePosition("menu", () => this.triggerRef.el, {
             position: this.props.position,
             margin: 4,
@@ -38,9 +41,9 @@ export class CallDropdown extends Component {
         useExternalListener(this.window, "keydown", this.onKeydown);
         useSubEnv({ inCallDropdown: { close: () => this.close() } });
         this.navigation = useNavigation(this.menuRef, {
-            isNavigationAvailable: () => this.state.isOpen,
+            isNavigationAvailable: () => this.isOpen(),
             getItems: () => {
-                if (this.state.isOpen && this.menuRef.el) {
+                if (this.isOpen() && this.menuRef.el) {
                     return this.menuRef.el.querySelectorAll(
                         ":scope .o-navigable, :scope .o-dropdown"
                     );
@@ -48,15 +51,19 @@ export class CallDropdown extends Component {
                 return [];
             },
         });
-        this.handleClick = this.handleClick.bind(this);
         useLayoutEffect(
-            (triggerEl) => {
+            (triggerEl, toggleOpenFn) => {
                 if (triggerEl) {
-                    triggerEl.addEventListener("click", this.handleClick);
-                    return () => triggerEl.removeEventListener("click", this.handleClick);
+                    const fn = (ev) => {
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        toggleOpenFn();
+                    };
+                    triggerEl.addEventListener("click", fn);
+                    return () => triggerEl.removeEventListener("click", fn);
                 }
             },
-            () => [this.triggerRef.el]
+            () => [this.triggerRef.el, toggleFn(this.isOpen)]
         );
     }
 
@@ -68,30 +75,12 @@ export class CallDropdown extends Component {
         return this.env.pipWindow || window;
     }
 
-    get isOpen() {
-        return this.state.isOpen;
-    }
-
-    toggle() {
-        this.isOpen ? this.close() : this.open();
-    }
-
-    open() {
-        this.state.isOpen = true;
-    }
-
     close() {
-        this.state.isOpen = false;
-    }
-
-    handleClick(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        this.toggle();
+        this.isOpen.set(false);
     }
 
     onClickAway(ev) {
-        if (!this.isOpen) {
+        if (!this.isOpen()) {
             return;
         }
         const isOutsideClick =
@@ -106,7 +95,7 @@ export class CallDropdown extends Component {
     }
 
     onKeydown(ev) {
-        if (ev.key === "Escape" && this.isOpen) {
+        if (ev.key === "Escape" && this.isOpen()) {
             ev.preventDefault();
             this.close();
         }

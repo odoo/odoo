@@ -252,7 +252,7 @@ export const hasHardwareAcceleration = memoize(() => {
  * @template D type of dependencies
  * @param {(...dependencies: D) => Number|void} fn A callback that is
  * invoked initially, after dependencies change (if the dependencies are
- * wrapped in `useState` or otherwise triggers a re-render) or when the
+ * wrapped in `proxy` or otherwise triggers a re-render) or when the
  * delay has passed. Returning a falsy value cancels the interval.
  * @param {() => D} dependencies Returns an array of dependencies.
  */

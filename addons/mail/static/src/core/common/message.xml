@@ -14,7 +14,7 @@
                 t-on-contextmenu="this.onContextMenu"
                 t-on-mouseenter="this.onMouseenter"
                 t-on-mouseleave="this.onMouseleave"
-                t-custom-ref="root"
+                t-ref="this.rootRef"
                 t-if="this.message.exists()"
             >
                 <MessageContextMenu anchorRef="this.rightClickAnchor" dropdownState="this.rightClickDropdownState" message="this.message" thread="this.props.thread"/>
@@ -115,7 +115,7 @@
                                                     <Composer t-elif="this.isEditing" autofocus="true" composer="this.message.composer" onDiscardCallback.bind="this.exitEditMode" onPostCallback.bind="this.exitEditMode" mode="'compact'" sidebar="false"/>
                                                     <t t-else="">
                                                         <em t-if="this.showSubject" class="d-block text-muted smaller" t-att-class="{ 'mb-2': !this.message.bubbleColor }">Subject: <t t-out="this.props.messageSearch?.highlight(this.message.subject) ?? this.message.subject"/></em>
-                                                        <div class="o-mail-Message-shadowBody overflow-x-auto" t-if="this.message.message_type and this.message.message_type.includes('email')" t-custom-ref="shadowBody"/>
+                                                        <div class="o-mail-Message-shadowBody overflow-x-auto" t-if="this.message.message_type and this.message.message_type.includes('email')" t-ref="this.shadowBody"/>
                                                         <t t-elif="this.message.showTranslation" t-out="this.message.richTranslationValue"/>
                                                         <div class="o-mail-Message-richBody overflow-x-auto" t-elif="this.message.hasTextContent and this.message.richBody and !this.message.linkPreviewSquash" t-out="this.props.messageSearch?.highlight(this.message.richBody) ?? this.message.richBody"/>
                                                         <p class="fst-italic text-muted small" t-if="this.message.showTranslation">
@@ -159,7 +159,7 @@
 </t>
 
 <t t-name="mail.Message.actions">
-    <div t-if="this.props.hasActions and this.message.hasActions and !this.isEditing and !this.env.inChatter?.disabled" class="o-mail-Message-actions d-print-none d-flex align-items-start"
+    <div t-if="this.props.hasActions and this.message.hasActions and !this.isEditing" class="o-mail-Message-actions d-print-none d-flex align-items-start"
         t-att-class="{
             'start-0': this.isAlignedRight,
             'o-mt-0_5': this.message.bubbleColor and !this.props.asCard and !this.isMobileOS,

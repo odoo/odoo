@@ -1,14 +1,14 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { useState } from "@web/owl2/utils";
 
 export const SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD = 50; // arbitrary, ~ 1 line on large screen
 
@@ -25,9 +25,8 @@ export class ScheduledMessage extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({
-            readMore: false,
-        });
+        this.readMore = signal(false);
+        this.toggleFn = toggleFn;
         this.avatarCard = usePopover(AvatarCard);
         this.dialogService = useService("dialog");
     }

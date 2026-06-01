@@ -165,12 +165,6 @@ const chatterPatch = {
             },
             () => [this.state.thread?.status, this.attachments.length]
         );
-        useLayoutEffect(
-            () => {
-                this.state.aside = this.props.isChatterAside;
-            },
-            () => [this.props.isChatterAside]
-        );
     },
 
     async updateRecipients(record, mode = this.state.composerType) {

@@ -1,9 +1,10 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, signal, useEffect } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { CALL_ICON_DEAFEN, CALL_ICON_MUTED } from "@mail/discuss/call/common/call_actions";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { useHover } from "@mail/utils/common/hooks";
+import { toggleFn } from "@mail/utils/common/signal";
+
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
@@ -28,21 +29,19 @@ export class DiscussSidebarCallParticipants extends Component {
             onHover: () => (this.floating.isOpen = true),
             onAway: () => (this.floating.isOpen = false),
         });
-        this.state = useState({ expanded: false });
+        this.expanded = signal(false);
         this.floating = useDropdownState();
+        this.toggleFn = toggleFn;
         this.CALL_ICON_DEAFEN = CALL_ICON_DEAFEN;
         this.CALL_ICON_MUTED = CALL_ICON_MUTED;
-        useLayoutEffect(
-            (selfSession, compact) => {
-                if (selfSession?.in(this.sessions) && !compact) {
-                    this.state.expanded = true;
-                }
-                if (compact) {
-                    this.state.expanded = false;
-                }
-            },
-            () => [this.rtc.selfSession, this.compact]
-        );
+        useEffect(() => {
+            if (this.rtc.selfSession?.in(this.sessions) && !this.compact) {
+                this.expanded.set(true);
+            }
+            if (this.compact) {
+                this.expanded.set(false);
+            }
+        });
     }
 
     get compact() {
@@ -116,11 +115,11 @@ export class DiscussSidebarCallParticipants extends Component {
         if (this.compact) {
             return;
         }
-        this.state.expanded = true;
+        this.expanded.set(true);
     }
 
     get title() {
-        return this.state.expanded ? _t("Collapse participants") : _t("Expand participants");
+        return this.expanded() ? _t("Collapse participants") : _t("Expand participants");
     }
 
     onClickParticipant(ev, session) {}

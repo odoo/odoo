@@ -18,8 +18,8 @@
                         <a t-if="this.phone" class="o-mail-avatar-card-tel text-truncate" t-att-title="this.phone" t-att-href="'tel:'+this.phone">
                             <i class="fa fa-fw fa-phone me-1"/><t t-out="this.phone"/>
                         </a>
-                        <div t-if="this.state.partnerLocalDateTimeFormatted" class="o-mail-avatar-card-localtime text-muted">
-                            <i class="fa fa-fw fa-clock-o me-1"/><t t-out="this.state.partnerLocalDateTimeFormatted"/>
+                        <div t-if="this.partnerLocalDateTimeFormatted()" class="o-mail-avatar-card-localtime text-muted">
+                            <i class="fa fa-fw fa-clock-o me-1"/><t t-out="this.partnerLocalDateTimeFormatted()"/>
                         </div>
                         <div t-if="this.store.self_user?.share === false" class="o_avatar_card_buttons d-flex gap-2 mt-2">
                             <button t-if="this.user?.share === false" class="btn btn-secondary btn-sm" t-on-click.stop="this.onSendClick">Send message</button>

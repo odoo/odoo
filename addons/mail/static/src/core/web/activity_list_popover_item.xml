@@ -19,7 +19,7 @@
                             </button>
                         </t>
                     </FileUploader>
-                    <button t-if="this.hasMarkDoneButton" class="o-mail-ActivityListPopoverItem-markAsDone btn btn-sm btn-success btn-link" title="Mark as done" aria-label="Mark as done" t-on-click="this.onClickMarkAsDone">
+                    <button t-if="this.hasMarkDoneButton" class="o-mail-ActivityListPopoverItem-markAsDone btn btn-sm btn-success btn-link" title="Mark as done" aria-label="Mark as done" t-on-click="this.toggleFn(this.hasMarkDoneView)">
                         <i class="fa fa-check"/>
                     </button>
                 </t>
@@ -44,7 +44,7 @@
                     <br t-if="!attachment_last"/>
                 </t>
             </div>
-            <ActivityMarkAsDone t-if="this.state.hasMarkDoneView" activity="this.props.activity" close="this.closeMarkAsDone" onClickDoneAndScheduleNext="this.props.onClickDoneAndScheduleNext" onActivityChanged="this.props.onActivityChanged"/>
+            <ActivityMarkAsDone t-if="this.hasMarkDoneView()" activity="this.props.activity" close="() => this.hasMarkDoneView.set(false)" onClickDoneAndScheduleNext="this.props.onClickDoneAndScheduleNext" onActivityChanged="this.props.onActivityChanged"/>
             <div t-if="this.props.activity.mail_template_ids.length > 0" class="mx-3 mt-2">
                 <ActivityMailTemplate activity="this.props.activity" onClickButtons="this.props.onClickEditActivityButton" onActivityChanged="this.props.onActivityChanged"/>
             </div>

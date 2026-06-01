@@ -1,4 +1,4 @@
-import { useChildSubEnv, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv, useRef, useSubEnv } from "@web/owl2/utils";
 import { ActionList } from "@mail/core/common/action_list";
 import { Composer } from "@mail/core/common/composer";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
@@ -9,7 +9,7 @@ import { useThreadActions } from "@mail/core/common/thread_actions";
 import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
 
-import { Component, toRaw } from "@odoo/owl";
+import { Component, computed, proxy, toRaw } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { localization } from "@web/core/l10n/localization";
@@ -44,7 +44,7 @@ export class ChatWindow extends Component {
         useSubEnv({ inChatWindow: true });
         this.store = useService("mail.store");
         this.messageHighlight = useMessageScrolling({ thread: () => this.channel?.thread });
-        this.state = useState({
+        this.state = proxy({
             actionsMenuOpened: false,
             jumpThreadPresent: 0,
             editingGuestName: false,
@@ -56,7 +56,8 @@ export class ChatWindow extends Component {
         this.actionsMenuButtonHover = useHover("actionsMenuButton");
         this.parentChannelHover = useHover("parentChannel");
         this.isMobileOS = isMobileOS();
-
+        this.selfGuestName = computed(() => this.store.self_guest?.name);
+        this.channelDisplayName = computed(() => this.props.chatWindow.channel?.displayName);
         useChildSubEnv({ messageHighlight: this.messageHighlight });
         useBackButton(() => this.close());
     }

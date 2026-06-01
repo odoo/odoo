@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 import { CreatePollOptionDialog } from "@mail/core/common/create_poll_option_dialog";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
@@ -15,7 +14,7 @@ export class CreatePollDialog extends Component {
 
     setup() {
         useAutofocus({ refName: "question" });
-        this.state = useState({
+        this.state = proxy({
             allowMultipleOptions: false,
             duration: "10",
             options: [{ label: "" }, { label: "" }],

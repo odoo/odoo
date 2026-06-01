@@ -1,5 +1,4 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, signal, useEffect } from "@odoo/owl";
 import { useAutofocus, useForwardRefToParent } from "@web/core/utils/hooks";
 
 let nextId = 0;
@@ -46,21 +45,15 @@ export class SearchInput extends Component {
     setup() {
         super.setup();
         this.uniqueId = `mail.SearchInput.${nextId++}`;
-        this.spinner = useState({ visible: false });
-        useLayoutEffect(
-            () => {
-                if (!this.props.search.loading) {
-                    this.spinner.visible = false;
-                    return;
-                }
-                const timer = setTimeout(
-                    () => (this.spinner.visible = true),
-                    this.props.loadingDelay
-                );
-                return () => clearTimeout(timer);
-            },
-            () => [this.props.search.loading]
-        );
+        this.spinner = signal(false);
+        useEffect(() => {
+            if (!this.props.search.loading) {
+                this.spinner.set(false);
+                return;
+            }
+            const timer = setTimeout(() => this.spinner.set(true), this.props.loadingDelay);
+            return () => clearTimeout(timer);
+        });
         this.inputRef = useForwardRefToParent("inputRef");
         if (this.props.autofocus) {
             const opts = typeof this.props.autofocus === "object" ? this.props.autofocus : {};

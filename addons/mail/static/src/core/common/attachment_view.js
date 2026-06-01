@@ -1,14 +1,9 @@
-import { useComponent, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import {
-    Component,
-    onMounted,
-    onWillUnmount,
-    onWillUpdateProps,
-} from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, onWillUpdateProps, signal } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { deepEqual } from "@web/core/utils/objects";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
+import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 
 class AbstractAttachmentView extends Component {
     static template = "mail.AttachmentView";
@@ -20,10 +15,8 @@ class AbstractAttachmentView extends Component {
         this.store = useService("mail.store");
         this.uiService = useService("ui");
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
-        this.state = useState({
-            /** @type {import("models").Thread|undefined} */
-            thread: undefined,
-        });
+        /** @type {import("@odoo/owl").Signal<import("models").Thread>} */
+        this.thread = signal();
         useLayoutEffect(
             (el) => {
                 if (el) {
@@ -37,32 +30,34 @@ class AbstractAttachmentView extends Component {
     }
 
     onClickNext() {
-        const index = this.state.thread.attachmentsInWebClientView.findIndex((attachment) =>
-            attachment.eq(this.state.thread.message_main_attachment_id)
+        const index = this.thread().attachmentsInWebClientView.findIndex((attachment) =>
+            attachment.eq(this.thread().message_main_attachment_id)
         );
-        this.state.thread.setMainAttachmentFromIndex(
-            index >= this.state.thread.attachmentsInWebClientView.length - 1 ? 0 : index + 1
+        this.thread().setMainAttachmentFromIndex(
+            index >= this.thread().attachmentsInWebClientView.length - 1 ? 0 : index + 1
         );
     }
 
     onClickPrevious() {
-        const index = this.state.thread.attachmentsInWebClientView.findIndex((attachment) =>
-            attachment.eq(this.state.thread.message_main_attachment_id)
+        const index = this.thread().attachmentsInWebClientView.findIndex((attachment) =>
+            attachment.eq(this.thread().message_main_attachment_id)
         );
-        this.state.thread.setMainAttachmentFromIndex(
-            index <= 0 ? this.state.thread.attachmentsInWebClientView.length - 1 : index - 1
+        this.thread().setMainAttachmentFromIndex(
+            index <= 0 ? this.thread().attachmentsInWebClientView.length - 1 : index - 1
         );
     }
 
     updateFromProps(props) {
-        this.state.thread = this.store["mail.thread"].insert({
-            id: props.threadId,
-            model: props.threadModel,
-        });
+        this.thread.set(
+            this.store["mail.thread"].insert({
+                id: props.threadId,
+                model: props.threadModel,
+            })
+        );
     }
 
     get displayName() {
-        return this.state.thread.message_main_attachment_id.name;
+        return this.thread().message_main_attachment_id.name;
     }
 
     onClickPopout() {}

@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -13,7 +12,7 @@ export class CallPresentationBar extends Component {
 
     setup() {
         this.rtc = useService("discuss.rtc");
-        this.presentationAudio = useState({ enabled: this.rtc.screenAudioTrack?.enabled });
+        this.presentationAudio = proxy({ enabled: this.rtc.screenAudioTrack?.enabled });
     }
 
     get presenterPersonas() {

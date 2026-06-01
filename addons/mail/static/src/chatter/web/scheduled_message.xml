@@ -33,10 +33,10 @@
                                     <t t-if="this.props.scheduledMessage.subject and !this.props.scheduledMessage.isSubjectThreadName">
                                         <em class="mb-1 me-2">Subject: <t t-out="this.props.scheduledMessage.subject"/></em>
                                     </t>
-                                    <t t-if="this.isShort or this.state.readMore" t-out="this.props.scheduledMessage.body || ''"/>
+                                    <t t-if="this.isShort or this.readMore()" t-out="this.props.scheduledMessage.body || ''"/>
                                     <p t-else="" t-out="this.truncatedMessage"/>
-                                    <button t-if="!this.isShort" t-attf-class="btn btn-link #{this.state.readMore ? '' : 'ps-0'}" t-on-click="() => this.state.readMore = !this.state.readMore">
-                                        <t t-if="this.state.readMore">
+                                    <button t-if="!this.isShort" t-attf-class="btn btn-link #{this.readMore() ? '' : 'ps-0'}" t-on-click="this.toggleFn(this.readMore)">
+                                        <t t-if="this.readMore()">
                                             Read Less
                                         </t>
                                         <t t-else="">

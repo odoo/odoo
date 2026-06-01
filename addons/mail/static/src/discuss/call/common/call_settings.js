@@ -1,4 +1,4 @@
-import { useExternalListener, useState } from "@web/owl2/utils";
+import { useExternalListener } from "@web/owl2/utils";
 import { Component, onWillStart, xml } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -25,9 +25,6 @@ export class CallSettings extends Component {
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
         this.microphoneVolume = useMicrophoneVolume();
-        this.state = useState({
-            userDevices: [],
-        });
         this.pttExtService = useService("discuss.ptt_extension");
         useExternalListener(browser, "keydown", this._onKeyDown, { capture: true });
         useExternalListener(browser, "keyup", this._onKeyUp, { capture: true });
@@ -41,7 +38,6 @@ export class CallSettings extends Component {
                 console.warn("Media devices unobtainable. SSL might not be set up properly.");
                 return;
             }
-            this.state.userDevices = await browser.navigator.mediaDevices.enumerateDevices();
         });
     }
 

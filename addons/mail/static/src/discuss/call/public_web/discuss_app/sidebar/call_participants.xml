@@ -22,11 +22,11 @@
             'rounded-3': this.props.compact === undefined,
             'opacity-75': this.props.channel.notEq(this.rtc.channel) and this.compact,
         }">
-            <button class="o-mail-DiscussSidebarCallParticipants-expandBtn btn btn-link p-1 my-n1 ms-n1 me-0 align-self-start d-flex rounded-circle" t-if="!this.compact" t-on-click="() => this.state.expanded = !this.state.expanded">
-                <i class="oi o-xxsmaller text-muted text-dark" t-att-class="{'oi-chevron-right': !this.state.expanded, 'oi-chevron-down': this.state.expanded}" t-att-title="this.title"/>
+            <button class="o-mail-DiscussSidebarCallParticipants-expandBtn btn btn-link p-1 my-n1 ms-n1 me-0 align-self-start d-flex rounded-circle" t-if="!this.compact" t-on-click="this.toggleFn(this.expanded)">
+                <i class="oi o-xxsmaller text-muted text-dark" t-att-class="{'oi-chevron-right': !this.expanded(), 'oi-chevron-down': this.expanded()}" t-att-title="this.title"/>
             </button>
             <AvatarStack
-                t-if="!this.state.expanded"
+                t-if="!this.expanded()"
                 direction="this.compact ? 'v' : 'h'"
                 containerClass="this.compact ? '' : 'cursor-pointer o-mail-DiscussSidebarCallParticipants-avatarStack'"
                 avatarClass="(p) => this.avatarClass(p)"

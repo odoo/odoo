@@ -1,6 +1,6 @@
 import { Component, onMounted, onPatched, onWillUnmount, proxy, toRaw, xml } from "@odoo/owl";
 
-import { useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { Reactive } from "@web/core/utils/reactive";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
@@ -106,7 +106,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
         }
         targets.push({ ref: useRef(refName) });
     }
-    const state = useState({
+    const state = proxy({
         set isHover(newIsHover) {
             if (this._isHover !== newIsHover) {
                 this._isHover = newIsHover;
@@ -131,7 +131,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
                 target.ref.el.removeEventListener("mouseenter", handleMouseenter, true);
                 target.ref.el.removeEventListener("mouseleave", handleMouseleave, true);
                 const idx = state._targets.findIndex((t) => t === target);
-                if (idx) {
+                if (idx !== -1) {
                     state._targets.splice(idx, 1);
                 }
             };
@@ -250,8 +250,8 @@ export class UseHoverOverlay extends Component {
             });
         });
         onWillUnmount(() => {
-            const idx = this.props.hover._contains.find((c) => c === overlayContains);
-            if (idx) {
+            const idx = this.props.hover._contains.findIndex((c) => c === overlayContains);
+            if (idx !== -1) {
                 this.props.hover._contains.splice(idx, 1);
             }
             removeTarget?.();
@@ -262,22 +262,21 @@ export class UseHoverOverlay extends Component {
 /**
  * Hook returning reactive scroll state for a given scrollable element.
  *
- * @param {string} refName - The t-ref name of the scrollable element.
+ * @param {import("@odoo/owl").Signal<Element>} ref - The ref of the scrollable element.
  * @returns {{
  *   hasScrollbar: boolean,
  *   canScrollBefore: boolean,
  *   canScrollAfter: boolean
  * }}
  */
-export function useScrollState(refName) {
-    const ref = useRef(refName);
-    const state = useState({
+export function useScrollState(ref) {
+    const state = proxy({
         hasScrollbar: false,
         canScrollBefore: false,
         canScrollAfter: false,
     });
     function computeState() {
-        const el = ref.el;
+        const el = ref();
         if (!el) {
             return;
         }
@@ -311,7 +310,7 @@ export function useScrollState(refName) {
                 resizeObserver.disconnect();
             };
         },
-        () => [ref.el]
+        () => [ref()]
     );
     return state;
 }
@@ -345,7 +344,7 @@ export function useOnBottomScrolled(refName, callback, threshold = 1) {
  */
 export function useVisible(refName, cb, { ready = true } = {}) {
     const ref = useRef(refName);
-    const state = useState({
+    const state = proxy({
         isVisible: undefined,
         ready,
     });
@@ -391,7 +390,7 @@ export function useMessageScrolling({
     duration = 1500,
 }) {
     let timeout;
-    const state = useState({
+    const state = proxy({
         clear() {
             if (this.highlightedMessageId) {
                 browser.clearTimeout(timeout);
@@ -475,23 +474,25 @@ export function useMessageScrolling({
 
 export function useMessageSelection() {
     let selectedMessageId;
-    const state = useState({
-        _data: new Set(),
+    const data = proxy(new Set());
+    return {
         clearSelected() {
-            this._data.delete(selectedMessageId);
+            data.delete(selectedMessageId);
         },
         /** @param {import("models").Message} message */
         isSelected(message) {
-            return this._data.has(message.id);
+            return data.has(message.id);
         },
         /** @param {import("models").Message} message */
         setSelected(message) {
             this.clearSelected();
-            this._data.add(message.id);
+            data.add(message.id);
             selectedMessageId = message.id;
         },
-    });
-    return state;
+        get size() {
+            return data.size;
+        },
+    };
 }
 
 export function useMicrophoneVolume() {
@@ -500,7 +501,7 @@ export function useMicrophoneVolume() {
     let disconnectAudioMonitor;
     let audioMonitorPromise;
     const store = useService("mail.store");
-    const state = useState({
+    const state = proxy({
         isReady: true,
         isActive: false,
         value: 0,
@@ -745,7 +746,7 @@ export class SearchState extends Reactive {
  * @returns {SearchState}
  */
 export function useSearch(options = {}) {
-    return useState(new SearchState(options));
+    return proxy(new SearchState(options));
 }
 
 export function useSequential() {
@@ -833,14 +834,13 @@ export const LONG_PRESS_DELAY = 400;
  * Subscribes to long press events on the element matching the given ref name.
  * It internally prevents false positives caused by scroll gestures.
  *
- * @param {string} refName The ref name of the element to listen for long presses on.
+ * @param {import("@odoo/owl").Signal<Element>} ref The ref of the element to listen for long presses on.
  * @param {Object} options
  * @param {() => void} [options.action] Function called when a long press is detected.
  * @param {() => boolean} [options.predicate] Optional function to enable long press detection.
  */
-export function useLongPress(refName, { action, predicate = () => true } = {}) {
+export function useLongPress(ref, { action, predicate = () => true } = {}) {
     const MOVE_TRESHOLD = 10;
-    const ref = useRef(refName);
     let timer = null;
     let startX = 0;
     let startY = 0;
@@ -851,7 +851,7 @@ export function useLongPress(refName, { action, predicate = () => true } = {}) {
     }
     /** @param {TouchEvent} ev */
     function isTouchTargetInside(ev) {
-        return ref.el?.contains(ev.target);
+        return ref()?.contains(ev.target);
     }
     useLazyExternalListener(
         () => window,
@@ -927,10 +927,17 @@ export function useInDiscussCallView() {
  * @see useChildRef
  */
 export function useChildRefs() {
-    return proxy(new Map());
+    /** @type {Map<any, import("@odoo/owl").Signal<Element>>} */
+    const map = new Map();
+    return proxy(map);
 }
 
 export class UseForwardRefsToParent {
+    /**
+     * @param {string} propName
+     * @param {(any) => any} getRefIdFn
+     * @param {import("@odoo/owl").Signal<Element>} ref
+     */
     constructor(propName, getRefIdFn, ref) {
         const component = useComponent();
         this.ref = ref;

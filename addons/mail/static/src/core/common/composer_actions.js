@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useComponent, useRef } from "@web/owl2/utils";
 import { CreatePollDialog } from "@mail/core/common/create_poll_dialog";
 
 import { toRaw } from "@odoo/owl";
@@ -58,7 +58,7 @@ registerComposerAction("send-message", {
         (store.env.isSmall && composer.message) || (!owner.env.inChatter && !composer.message),
     disabledCondition: ({ owner }) => owner.isSendButtonDisabled,
     icon: "fa fa-paper-plane-o",
-    isActive: ({ owner }) => owner.sendMessageState.active,
+    isActive: ({ owner }) => !owner.isSendButtonDisabled,
     name: ({ composer, owner }) =>
         composer.message
             ? _t("Save editing")
@@ -68,15 +68,6 @@ registerComposerAction("send-message", {
             ? _t("Log")
             : _t("Send"),
     onSelected: ({ owner }) => owner.sendMessage(),
-    setup: ({ owner }) => {
-        owner.sendMessageState = useState({ active: false });
-        useLayoutEffect(
-            () => {
-                owner.sendMessageState.active = !owner.isSendButtonDisabled;
-            },
-            () => [owner.isSendButtonDisabled]
-        );
-    },
     sequenceQuick: 30,
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.PRIMARY : undefined),
 });
