@@ -10,6 +10,30 @@ from odoo import Command
 class TestORM(TransactionCase):
     """ test special behaviors of ORM CRUD functions """
 
+    def test_export_x2many_rows_keep_parent_values(self):
+        """Non import-compatible exports should be flat spreadsheet-friendly rows."""
+        country = self.env.ref('base.us')
+        self.assertGreaterEqual(len(country.state_ids), 2)
+
+        rows = country.with_context(import_compat=False).export_data([
+            '.id', 'name', 'code', 'state_ids/name', 'state_ids/code',
+        ])['datas']
+
+        self.assertGreaterEqual(len(rows), 2)
+        for row in rows:
+            self.assertEqual(row[:3], [str(country.id), country.name, country.code])
+
+    def test_export_x2many_rows_import_compat_keeps_sparse_rows(self):
+        """Import-compatible exports keep the historical sparse row format."""
+        country = self.env.ref('base.us')
+        self.assertGreaterEqual(len(country.state_ids), 2)
+
+        rows = country.with_context(import_compat=True).export_data(['.id', 'name', 'state_ids/name'])['datas']
+
+        self.assertGreaterEqual(len(rows), 2)
+        self.assertEqual(rows[0][:2], [str(country.id), country.name])
+        self.assertEqual(rows[1][:2], ['', ''])
+
     @mute_logger('odoo.models')
     def test_access_deleted_records(self):
         """ Verify that accessing deleted records works as expected """
