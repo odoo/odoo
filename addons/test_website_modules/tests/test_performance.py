@@ -31,7 +31,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             'public': True,
             'name': 's_default_image.jpg',
             'type': 'url',
-            'url': f'{cls.base_url()}/web/image/website.s_banner_default_image.jpg',
+            'url': f'{cls.base_url()}/web/image/website.landscape_md_1.jpg',
         })
 
         cats = cls.env['product.public.category'].create([{

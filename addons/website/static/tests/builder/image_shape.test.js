@@ -593,11 +593,11 @@ test("Should set default aspect ratio when changing image", async () => {
     onRpcImg("/html_builder/static/image_shapes/geometric_round/geo_round_pill.svg");
     onRpc("ir.attachment", "search_read", () => [
         {
-            name: "s_text_image_default_image.webp",
+            name: "landscape_md_9.webp",
             mimetype: "image/webp",
             public: true,
             access_token: false,
-            image_src: "/web/image/website.s_text_image_default_image",
+            image_src: "/web/image/website.landscape_md_9",
         },
     ]);
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
@@ -784,7 +784,7 @@ test("Be able to add and remove shape from custom groups", async () => {
 test("Should reset shape transformation with reset button and when switching shape", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
-            <img src='/web/image/website.s_text_image_default_image'
+            <img src='/web/image/website.landscape_md_9'
                 data-original-id="1"
                 data-original-src="/website/static/src/img/snippets_demo/s_text_image.webp"
                 data-mimetype-before-conversion="image/webp"
