@@ -1,4 +1,4 @@
-import { closestBlock } from "@html_editor/utils/blocks";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
     getDeepestEditablePosition,
     getDeepestPosition,
@@ -15,7 +15,9 @@ import {
 import {
     childNodes,
     closestElement,
+    closestPath,
     descendants,
+    findNode,
     firstLeaf,
     lastLeaf,
 } from "@html_editor/utils/dom_traversal";
@@ -465,7 +467,10 @@ export class SelectionPlugin extends Plugin {
                 return;
             }
             const { documentSelection } = selectionData;
-            const block = closestBlock(documentSelection.anchorNode);
+            const block = findNode(
+                closestPath(documentSelection.anchorNode),
+                (node) => isBlock(node) || node?.matches?.(`[contenteditable="true"]`)
+            );
             const [anchorNode, anchorOffset] = getDeepestPosition(block, 0);
             const [focusNode, focusOffset] = getDeepestPosition(block, nodeSize(block));
             this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
