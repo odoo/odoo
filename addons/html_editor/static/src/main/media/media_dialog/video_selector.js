@@ -1,9 +1,8 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, proxy, signal } from "@odoo/owl";
 import { Switch } from "@html_editor/components/switch/switch";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
@@ -80,6 +79,8 @@ export class VideoSelector extends Component {
         isForBgVideo: false,
     };
 
+    urlInputRef = signal(null);
+
     setup() {
         this.http = useService("http");
 
@@ -114,7 +115,6 @@ export class VideoSelector extends Component {
                 label: _t("Start at"),
             },
         };
-        this.urlInputRef = useRef("url-input");
 
         onMounted(async () => {
             const media = this.props.media;

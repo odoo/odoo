@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -12,9 +11,10 @@ export class BusLogsMenuItem extends Component {
     static template = "bus.BusLogsMenuItem";
     static props = {};
 
+    downloadButtonRef = signal(null);
+
     setup() {
         this.busLogsService = useService("bus.logs_service");
-        this.downloadButton = useRef("downloadButton");
         this.dialog = useService("dialog");
     }
 

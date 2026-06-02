@@ -1,6 +1,6 @@
 import { Gif } from "@mail/core/common/gif";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -12,7 +12,6 @@ import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
-import { useRef } from "@web/owl2/utils";
 
 import { attClassObjectToString } from "@mail/utils/common/format";
 
@@ -41,12 +40,12 @@ export class AttachmentList extends Component {
 
     // make this available for class evaluation in the template
     attClassObjectToString = attClassObjectToString;
+    rootRef = signal(null);
 
     setup() {
         super.setup();
         this.ui = useService("ui");
         this.dialog = useService("dialog");
-        this.root = useRef("root");
         this.fileViewer = useFileViewer();
         this.actionsMenuState = useDropdownState();
         this.isMobileOS = isMobileOS();

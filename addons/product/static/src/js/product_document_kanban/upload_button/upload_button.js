@@ -1,6 +1,5 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { useBus, useService } from "@web/core/utils/hooks";
 
 export class UploadButton extends Component {
@@ -16,8 +15,9 @@ export class UploadButton extends Component {
         formData: {},
     }
 
+    uploadFileInputRef = signal(null);
+
     setup() {
-        this.uploadFileInputRef = useRef("uploadFileInput");
         this.fileUploadService = useService("file_upload");
         this.notification = useService('notification');
         useBus(

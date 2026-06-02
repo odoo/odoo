@@ -1,4 +1,4 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useState } from "@web/owl2/utils";
 import { browser } from "../browser/browser";
 import { Dialog } from "../dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -8,7 +8,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { capitalize } from "../utils/strings";
 
-import { Component, markup } from "@odoo/owl";
+import { Component, markup, signal } from "@odoo/owl";
 
 const { DateTime } = luxon;
 
@@ -53,11 +53,12 @@ export class ErrorDialog extends Component {
     static hideTracebackButtonText = _t("Hide technical details");
     static props = { ...standardErrorDialogProps };
 
+    copyButtonRef = signal(null);
+
     setup() {
         this.state = useState({
             showTraceback: false,
         });
-        this.copyButtonRef = useRef("copyButton");
         this.popover = usePopover(Tooltip);
         let date = DateTime.now().setZone("UTC");
         if (this.props.data?.timestamp) {
@@ -76,7 +77,7 @@ export class ErrorDialog extends Component {
     }
 
     showTooltip() {
-        this.popover.open(this.copyButtonRef.el, { tooltip: _t("Copied") });
+        this.popover.open(this.copyButtonRef(), { tooltip: _t("Copied") });
         browser.setTimeout(this.popover.close, 800);
     }
 
