@@ -169,6 +169,7 @@ class ResPartner(models.Model):
                 return True
         return False
 
+    @handle_demo
     def _can_receive_self_billing(self, ubl_cii_format):
         """Look up whether the partner can receive the self-billing variant of the
         given EDI format on Peppol.
