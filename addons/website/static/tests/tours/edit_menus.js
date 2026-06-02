@@ -233,6 +233,28 @@ registerWebsitePreviewTour('edit_menus', {
         content: "Label should have changed",
         trigger: ':iframe .top_menu .nav-item a:contains("Modnar !!")',
     },
+    {
+        content: "Click on the extra menu dropdown toggle if it is there to close it",
+        trigger: ":iframe .top_menu",
+        async run(actions) {
+            // Note: the button might not exist (it only appear if there is many
+            // menu items).
+            const extraMenuButtonEl = this.anchor.querySelector(
+                ".o_extra_menu_items a.nav-link"
+            );
+            // Don't click on the extra menu button if it's already hidden
+            if (extraMenuButtonEl && extraMenuButtonEl.classList.contains("show")) {
+                const dropdownFullyClosed = Promise.withResolvers();
+                extraMenuButtonEl.addEventListener(
+                    "hidden.bs.dropdown",
+                    dropdownFullyClosed.resolve,
+                    { once: true }
+                );
+                await actions.click(extraMenuButtonEl);
+                await dropdownFullyClosed.promise;
+            }
+        },
+    },
     // Nest menu item from the menu.
     {
         content: "open site menu",
