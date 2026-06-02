@@ -1,17 +1,9 @@
-import {
-    Component,
-    onMounted,
-    onWillUnmount,
-    onWillUpdateProps,
-    props,
-    signal,
-    types,
-} from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, onWillUpdateProps, props, signal, types } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { deepEqual } from "@web/core/utils/objects";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
-import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 
 class AbstractAttachmentView extends Component {
     static template = "mail.AttachmentView";
@@ -82,7 +74,7 @@ export class PopoutAttachmentView extends AbstractAttachmentView {
 }
 
 export function usePopoutAttachment() {
-    const component = useComponent();
+    const cprops = props();
     const uiService = useService("ui");
     const mailPopoutService = useService("mail.popout");
 
@@ -129,10 +121,10 @@ export function usePopoutAttachment() {
                 uiService.bus.trigger("resize");
             }
         );
-        mailPopoutService.popout(PopoutAttachmentView, extractPopoutProps(component.props));
+        mailPopoutService.popout(PopoutAttachmentView, extractPopoutProps(cprops));
     }
 
-    function updatePopout(newProps = component.props) {
+    function updatePopout(newProps = cprops) {
         if (mailPopoutService.externalWindow) {
             hideAttachmentView();
             mailPopoutService.popout(PopoutAttachmentView, extractPopoutProps(newProps));
@@ -145,7 +137,7 @@ export function usePopoutAttachment() {
 
     onMounted(updatePopout);
     onWillUpdateProps((props) => {
-        const oldProps = extractPopoutProps(component.props);
+        const oldProps = extractPopoutProps(cprops);
         const newProps = extractPopoutProps(props);
         if (!deepEqual(oldProps, newProps)) {
             updatePopout(newProps);

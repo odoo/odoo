@@ -1,6 +1,5 @@
-import { Component, onWillUnmount, proxy, status } from "@odoo/owl";
+import { Component, onWillUnmount, props, proxy, useScope, types } from "@odoo/owl";
 
-import { useComponent } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -8,9 +7,12 @@ import { Mp3Encoder } from "./mp3_encoder";
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
+import { Composer } from "@mail/core/common/composer_model";
 
 export class VoiceRecorder extends Component {
-    static props = ["composer", "state"];
+    props = props({
+        composer: types.instanceOf(Composer),
+    });
     static template = "mail.VoiceRecorder";
     get title() {
         return _t("Stop Recording");
@@ -33,7 +35,6 @@ export const patchable = {
  */
 export function useVoiceRecorder(params = {}) {
     const maxDuration = params.maxDuration ?? 60;
-    const component = useComponent();
     const onRecordReady = params.onRecordReady;
     /** @type {MediaStream} */
     let microphone;
@@ -72,6 +73,7 @@ export function useVoiceRecorder(params = {}) {
             }
         },
     });
+    const scope = useScope();
     /** @type {ReturnType<typeof import("@web/core/notifications/notification_service").notificationService.start>} */
     const dialog = useService("dialog");
     const notification = useService("notification");
@@ -106,7 +108,8 @@ export function useVoiceRecorder(params = {}) {
                 microphone = await browser.navigator.mediaDevices.getUserMedia({
                     audio: store.settings.audioConstraints,
                 });
-                if (status(component) === "destroyed") {
+                // 3 = component destroyed
+                if (scope.status === 3) {
                     cleanUp();
                     return;
                 }
