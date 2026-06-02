@@ -12,6 +12,8 @@ import { pick } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
 import { makeEnv, startServices } from "@web/env";
 import { MockServer, makeMockServer, onRpc } from "./mock_server/mock_server";
+import { App } from "@odoo/owl";
+import { services } from "@web/core/services";
 
 /**
  * @typedef {Record<keyof Services, any>} Dependencies
@@ -55,6 +57,28 @@ afterEach(() => restoreRegistry(registry));
 // Exports
 //-----------------------------------------------------------------------------
 
+let currentPluginManager = null;
+beforeEach(() => (currentPluginManager = null));
+
+export function makeApp(config) {
+    if (!currentPluginManager) {
+        const app = new App(config);
+        currentPluginManager = app.pluginManager;
+        return app;
+    }
+    const _config = { ...config };
+    _config.plugins = undefined; // shadow plugins to remove them
+    const app = new App(_config);
+    // note that this is gefoireux... pluginmanager could have been
+    // instantiated with a specific config, which is different from the
+    // config in _config.
+    app.pluginManager = currentPluginManager;
+    // this is also gefoireux... it kind of works if we have 2 Apps, but
+    // not if we have more
+    currentPluginManager.app = app;
+    return app;
+}
+
 /**
  * Empties the given registry.
  *
@@ -87,7 +111,7 @@ export function getService(name) {
  *  makeNew?: boolean;
  * }} [options]
  */
-export async function makeMockEnv(partialEnv, options) {
+export async function makeMockEnv(partialEnv, options = {}) {
     if (currentEnv && !options?.makeNew) {
         throw new Error(
             `cannot create mock environment: a mock environment has already been declared`
@@ -130,8 +154,13 @@ export async function makeMockEnv(partialEnv, options) {
             }
         });
     }
+    const app =
+        options.app ||
+        makeApp({
+            plugins: services,
+        });
 
-    await startServices(env);
+    await startServices(env, app);
 
     return env;
 }

@@ -10,8 +10,11 @@ import {
     customDirectives as defaultCustomDirectives,
     globalValues as defaultGlobalValues,
 } from "@web/env";
-import { getMockEnv, makeMockEnv } from "./env_test_helpers";
+import { getMockEnv, makeApp, makeMockEnv } from "./env_test_helpers";
 import { patchWithCleanup } from "./patch_test_helpers";
+import { services } from "@web/core/services";
+
+import { makeMockServer, MockServer } from "./mock_server/mock_server";
 
 /**
  * @typedef {import("@odoo/hoot").Target} Target
@@ -146,9 +149,13 @@ export async function mountWithCleanup(ComponentClass, options) {
         };
     }
 
-    const commonEnv = env || getMockEnv() || (await makeMockEnv());
+    if (!MockServer.current) {
+        // need a mock server before starting app (which starts plugins which
+        // may need network)
+        await makeMockServer();
+    }
 
-    const app = new App({
+    const app = makeApp({
         customDirectives,
         getTemplate,
         globalValues,
@@ -159,8 +166,10 @@ export async function mountWithCleanup(ComponentClass, options) {
         // The following keys are forced to ensure validation of all tested components
         dev: false,
         test: true,
+        plugins: services,
         warnIfNoStaticProps: true,
     });
+    const commonEnv = env || getMockEnv() || (await makeMockEnv({}, { app }));
     after(() => destroy(app));
 
     const componentRoot = app.createRoot(ComponentClass, {
