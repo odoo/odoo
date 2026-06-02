@@ -44,6 +44,7 @@ const NOT_A_NUMBER = /[^\d]/g;
  * @property { FormatPlugin['canFormatContent'] } canFormatContent
  * @property { FormatPlugin['getOrCreateZws'] } getOrCreateZws
  * @property { FormatPlugin['mergeAdjacentInlines'] } mergeAdjacentInlines
+ * @property { FormatPlugin['removeSelectionFormats'] } removeSelectionFormats
  * @property { FormatPlugin['requestFormat'] } requestFormat
  */
 
@@ -92,8 +93,8 @@ export class FormatPlugin extends Plugin {
         "canFormatContent",
         "getOrCreateZws",
         "mergeAdjacentInlines",
+        "removeSelectionFormats",
         "requestFormat",
-        "removeFormats",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -254,7 +255,6 @@ export class FormatPlugin extends Plugin {
         /** Handlers */
         on_beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
         on_selectionchange_handlers: this.clearPendingFormats.bind(this),
-        on_will_set_tag_handlers: this.removeFontSizeFormat.bind(this),
         before_insert_handlers: this.beforeInsert.bind(this),
         on_deleted_handlers: this.convertEmptyFormatToPendingIntent.bind(this),
 
@@ -280,18 +280,16 @@ export class FormatPlugin extends Plugin {
     }
 
     /**
-     * @param {object[]} specs
-     * @param {Node[]} targetedNodes
+     * Remove formats from the current selection, toggling each off via
+     * requestFormat.
+     *
+     * @param {string[]} [formatNames] formats to remove (defaults to all)
      */
-    removeFormats(specs, targetedNodes) {
-        const editableTargetedNodes = targetedNodes.filter(
-            this.dependencies.selection.isNodeEditable
-        );
-        for (const spec of specs) {
-            if (!spec.removeStyle || !this.hasFormat(spec.id, editableTargetedNodes)) {
-                continue;
+    removeSelectionFormats(formatNames = this.formatSpecs.map((spec) => spec.id)) {
+        for (const formatName of formatNames) {
+            if (this.getFormatSpec(formatName).removeStyle && this.hasFormat(formatName)) {
+                this.requestFormat(formatName, { applyStyle: false, commit: false });
             }
-            this.formatSelection(spec.id, { applyStyle: false, commit: false });
         }
     }
 
@@ -363,15 +361,9 @@ export class FormatPlugin extends Plugin {
             this.trigger("on_collapsed_formats_removed_handlers");
             return;
         }
-        this.removeFormats(this.formatSpecs, targetedNodes);
+        this.removeSelectionFormats();
         this.trigger("on_all_formats_removed_handlers");
         this.dependencies.history.commit();
-    }
-
-    removeFontSizeFormat({ block }) {
-        for (const node of [block, ...descendants(block)]) {
-            removeFormat(node, this.getFormatSpec("fontSize"));
-        }
     }
 
     /**
@@ -962,7 +954,7 @@ function getOrCreateSpan(node, ancestor, cursor) {
     span.append(wrapTarget);
     return span;
 }
-function removeFormat(node, formatSpec, cursor) {
+export function removeFormat(node, formatSpec, cursor) {
     const document = node.ownerDocument;
     node = closestElement(node);
     if (formatSpec.hasStyle(node)) {

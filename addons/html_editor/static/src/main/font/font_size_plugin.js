@@ -5,6 +5,7 @@ import { isRedundantElement } from "@html_editor/utils/dom_info";
 import {
     closestElement,
     closestPath,
+    descendants,
     findNode,
     selectElements,
 } from "@html_editor/utils/dom_traversal";
@@ -22,6 +23,7 @@ import { _t } from "@web/core/l10n/translation";
 import { READ, withSequence } from "@html_editor/utils/resource";
 import { FontSizeSelector, MAX_FONT_SIZE } from "./font_size_selector";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
+import { removeFormat } from "@html_editor/core/format_plugin";
 
 /** @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString */
 
@@ -109,6 +111,7 @@ export class FontSizePlugin extends Plugin {
         ),
         on_history_commit_undone_handlers: this.updateFontSizeSelectorParams.bind(this),
         on_history_commit_redone_handlers: this.updateFontSizeSelectorParams.bind(this),
+        on_will_set_tag_handlers: this.removeFontSizeFormat.bind(this),
         normalize_processors: this.normalize.bind(this),
 
         is_format_class_predicates: (className) => {
@@ -284,5 +287,14 @@ export class FontSizePlugin extends Plugin {
             return;
         }
         this.fontSize.displayName = this.fontSizeName;
+    }
+
+    removeFontSizeFormat({ block }) {
+        const fontSizeSpec = this.getResource("format_specs").find(
+            (spec) => spec.id === "fontSize"
+        );
+        for (const node of [block, ...descendants(block)]) {
+            removeFormat(node, fontSizeSpec);
+        }
     }
 }
