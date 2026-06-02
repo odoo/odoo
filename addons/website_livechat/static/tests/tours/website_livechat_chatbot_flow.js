@@ -2,11 +2,17 @@ import { patch } from "@web/core/utils/patch";
 import { registry } from "@web/core/registry";
 import { Chatbot } from "@im_livechat/core/common/chatbot_model";
 
-const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
+const trigger = `.o-livechat-root:shadow .o-mail-Composer-input`;
+const messagesContain = (text) =>
+    `.o-livechat-root:shadow .o-mail-Message:last:contains("${text}")`;
+const postMessage = (text) => ({
+    trigger,
+    run: `edit ${text} && press Enter`,
+});
+
 let chatbotDelayProcessingDef;
 
 registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => {
         patch(Chatbot.prototype, {
             // Count the number of times this method is called to check whether the chatbot is regularly
@@ -47,28 +53,14 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 // check ask email step following selecting option A
                 trigger: messagesContain("Can you give us your email please?"),
             },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input ",
-                run: "edit No, you won't get my email!",
-            },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "press Enter",
-            },
+            postMessage("No, you won't get my email!"),
             {
                 // check invalid email detected and the bot asks for a retry
                 trigger: messagesContain(
                     "'No, you won't get my email!' does not look like a valid email. Can you please try again?"
                 ),
             },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "edit okfine@fakeemail.com",
-            },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "press Enter",
-            },
+            postMessage("okfine@fakeemail.com"),
             {
                 // check that this time the email goes through and we proceed to next step
                 trigger: messagesContain("Your email is validated, thank you!"),
@@ -76,27 +68,13 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             {
                 trigger: messagesContain("Can you give us your phone number please?"),
             },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "edit 123456",
-            },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "press Enter",
-            },
+            postMessage("123456"),
             {
                 trigger: messagesContain(
                     "'123456' does not look like a valid phone number. Can you please try again?"
                 ),
             },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "edit +919876543210",
-            },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "press Enter",
-            },
+            postMessage("+919876543210"),
             {
                 trigger: messagesContain("Your phone number is validated. thank you!"),
             },
@@ -104,52 +82,26 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 // should ask for website now
                 trigger: messagesContain("Would you mind providing your website address?"),
             },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "edit https://www.fakeaddress.com",
-            },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "press Enter",
-            },
+            postMessage("https://www.fakeaddress.com"),
             {
                 trigger: messagesContain(
                     "Great, do you want to leave any feedback for us to improve?"
                 ),
                 // should ask for feedback now
             },
+            postMessage("Yes, actually, I'm glad you asked!"),
+            postMessage("I think it's outrageous that you ask for all my personal information!"),
+            postMessage("I will be sure to take this to your manager!"),
             {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "edit Yes, actually, I'm glad you asked!",
-            },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "press Enter",
-            },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "edit I think it's outrageous that you ask for all my personal information!",
-            },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "press Enter",
-            },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "edit I will be sure to take this to your manager!",
-            },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "press Enter",
-            },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
+                // Only type — do not submit: this simulates the user still composing in the
+                // multi-line step so the chatbot keeps waiting instead of advancing.
+                trigger,
                 run: "edit I want to say...",
             },
             {
                 // Simulate that the user is typing, so the chatbot shouldn't go to the next step
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                async run(helpers) {
+                trigger,
+                async run({ edit }) {
                     chatbotDelayProcessingDef = Promise.withResolvers();
                     let failTimeout = setTimeout(() => {
                         chatbotDelayProcessingDef.reject(
@@ -157,7 +109,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                         );
                     }, 5000);
                     chatbotDelayProcessingDef.promise.then(() => clearTimeout(failTimeout));
-                    helpers.edit("Never mind!");
+                    await edit("Never mind!");
                     await chatbotDelayProcessingDef.promise;
                     chatbotDelayProcessingDef = Promise.withResolvers();
                     failTimeout = setTimeout(() => {
@@ -166,7 +118,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                         );
                     }, 5000);
                     chatbotDelayProcessingDef.promise.then(() => clearTimeout(failTimeout));
-                    helpers.edit("Never mind!!!");
+                    await edit("Never mind!!!");
                     await chatbotDelayProcessingDef.promise;
                 },
             },
@@ -213,28 +165,13 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 // should ask for website now
                 trigger: messagesContain("Would you mind providing your website address?"),
             },
+            postMessage("no"),
             {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "edit no",
-            },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "press Enter",
-            },
-            {
-                // should ask for feedback now
                 trigger: messagesContain(
                     "Great, do you want to leave any feedback for us to improve?"
                 ),
             },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "edit no, nothing so say",
-            },
-            {
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-                run: "press Enter",
-            },
+            postMessage("no, nothing so say"),
             {
                 trigger: messagesContain("Ok bye!"),
                 run: "click",
