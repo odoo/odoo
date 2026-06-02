@@ -168,10 +168,24 @@ class EmployeeAPI(http.Controller):
         district = emp.x_district_jail_id
         sub      = emp.x_sub_jail_id
 
+        # birthday has groups='hr.group_hr_user' in the Odoo core model.
+        # When this API runs under auth='none' + sudo(), the ORM silently
+        # returns False for group-restricted fields if no HR user is in context.
+        # Bypass by reading directly from the DB cursor.
+        birthday_raw = ''
+        try:
+            emp.env.cr.execute(
+                'SELECT birthday FROM hr_employee WHERE id = %s', (emp.id,)
+            )
+            row = emp.env.cr.fetchone()
+            birthday_raw = str(row[0]) if row and row[0] else ''
+        except Exception:
+            birthday_raw = _date(emp.birthday)  # fallback to ORM if SQL fails
+
         return {
             'name':                                        _str(emp.name),
             'gender':                                      _str(emp.sex),
-            'dob':                                         _date(emp.birthday),
+            'dob':                                         birthday_raw,
             'initial':                                     _str(emp.x_initial),
             'designation':                                 _str(emp.x_designation),
             'employee_id':                                 _str(emp.x_employee_code),
@@ -268,16 +282,28 @@ class EmployeeAPI(http.Controller):
             if api_key in data:
                 vals[odoo_key] = data[api_key] or False
 
-        # Date fields — accept 'YYYY-MM-DD' strings or empty/null
+        # Date fields — accept multiple formats, always store as YYYY-MM-DD
+        # Supported: YYYY-MM-DD (ISO), DD/MM/YYYY, DD-MM-YYYY, DD.MM.YYYY
+        _DATE_FORMATS = ['%Y-%m-%d', '%d/%m/%Y', '%d-%m-%Y', '%d.%m.%Y']
         for api_key, odoo_key in _DATE_FIELDS.items():
             if api_key in data:
                 raw = data[api_key]
                 if raw:
-                    try:
-                        datetime.strptime(str(raw), '%Y-%m-%d')
-                        vals[odoo_key] = str(raw)
-                    except ValueError:
-                        return None, f"Invalid date format for '{api_key}': expected YYYY-MM-DD"
+                    raw_str = str(raw).strip()
+                    parsed = None
+                    for fmt in _DATE_FORMATS:
+                        try:
+                            parsed = datetime.strptime(raw_str, fmt)
+                            break
+                        except ValueError:
+                            continue
+                    if parsed:
+                        vals[odoo_key] = parsed.strftime('%Y-%m-%d')
+                    else:
+                        return None, (
+                            f"Invalid date format for '{api_key}': '{raw_str}'. "
+                            f"Use YYYY-MM-DD or DD/MM/YYYY."
+                        )
                 else:
                     vals[odoo_key] = False
 
