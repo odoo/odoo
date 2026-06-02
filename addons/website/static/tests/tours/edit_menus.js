@@ -186,6 +186,28 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: 'iframe .top_menu .nav-item a:contains("Modnar !!")',
         run: () => {}, // It's a check.
     },
+    {
+        content: "Click on the extra menu dropdown toggle if it is there to close it",
+        trigger: "iframe .top_menu",
+        run: async function (actions) {
+            // Note: the button might not exist (it only appear if there is many
+            // menu items).
+            const extraMenuButtonEl = this.$anchor[0].querySelector(
+                ".o_extra_menu_items a.nav-link"
+            );
+            // Don't click on the extra menu button if it's already hidden
+            if (extraMenuButtonEl && extraMenuButtonEl.classList.contains("show")) {
+                const dropdownFullyClosed = Promise.withResolvers();
+                extraMenuButtonEl.addEventListener(
+                    "hidden.bs.dropdown",
+                    dropdownFullyClosed.resolve,
+                    { once: true }
+                );
+                await actions.click(extraMenuButtonEl);
+                await dropdownFullyClosed.promise;
+            }
+        },
+    },
     // Nest menu item from the menu.
     {
         content: "open site menu",
