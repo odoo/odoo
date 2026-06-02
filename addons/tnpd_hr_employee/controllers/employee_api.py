@@ -339,8 +339,19 @@ class EmployeeAPI(http.Controller):
         return ['|'] * (len(conditions) - 1) + conditions
 
     def _build_filter_domain(self, kwargs):
-        """Build filter domain from query params (shared by list + export)."""
-        domain = [('active', '=', True)]
+        """Build filter domain from query params (shared by list + export).
+
+        Always excludes:
+        - Inactive employees         (active = False)
+        - Records with no employee code (x_employee_code empty / null)
+          This naturally hides the Odoo 'Administrator' system user and any
+          other non-staff records that do not represent real employees.
+        """
+        domain = [
+            ('active', '=', True),
+            ('x_employee_code', '!=', False),
+            ('x_employee_code', '!=', ''),
+        ]
 
         if kwargs.get('designation'):
             domain.append(('x_designation', 'ilike', kwargs['designation']))
