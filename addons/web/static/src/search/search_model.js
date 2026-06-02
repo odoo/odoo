@@ -1724,7 +1724,8 @@ export class SearchModel extends EventBus {
                 type: "groupBy",
                 values: this.defaultGroupBy.map((gb) => {
                     const [fieldName, interval] = gb.split(":");
-                    const { string } = this.searchViewFields[fieldName];
+                    const field = this.searchViewFields[fieldName];
+                    const string = field ? field.string : fieldName;
                     if (interval) {
                         const { description } = INTERVAL_OPTIONS[interval];
                         return `${string}:${description}`;

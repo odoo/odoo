@@ -960,6 +960,15 @@ test("create a new dateGroupBy", async () => {
     expect(model.groupBy).toEqual(["date_field:month"]);
 });
 
+test("default groupBy on a field absent from the search view does not crash", async () => {
+    // A view's default_group_by may name a field that is not in the search view's
+    // fields (e.g. its <field> is stripped by a groups= the current user lacks).
+    // The facet built for that default group-by must fall back to the field name
+    // instead of throwing and bringing down the whole action.
+    const model = await createSearchModel({}, { defaultGroupBy: ["missing_field"] });
+    expect(model.facets.map((facet) => facet.values)).toEqual([["missing_field"]]);
+});
+
 test("dynamic domains evaluation", async () => {
     mockDate("2021-09-17T10:00:00");
     mockTimeZone(2);
