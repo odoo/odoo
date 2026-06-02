@@ -11,7 +11,7 @@ from odoo.tools import float_compare, float_is_zero, format_date, groupby
 
 class SaleOrderLine(models.Model):
     _name = "sale.order.line"
-    _inherit = ["analytic.mixin"]
+    _inherit = ["analytic.mixin", "res.currency.rate.consolidation.mixin"]
     _description = "Sales Order Line"
     _rec_names_search = ["name", "order_id.name"]
     _order = "order_id, sequence, id"

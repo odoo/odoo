@@ -4,8 +4,8 @@ import ast
 import re
 from collections import defaultdict
 
-from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError, UserError
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 
 FIGURE_TYPE_SELECTION_VALUES = [
@@ -1031,6 +1031,7 @@ class AccountReportColumn(models.Model):
 
 class AccountReportExternalValue(models.Model):
     _name = 'account.report.external.value'
+    _inherit = ['res.currency.rate.consolidation.mixin']
     _description = 'Accounting Report External Value'
     _check_company_auto = True
     _order = 'date, id'

@@ -7277,6 +7277,11 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     @api.model
+    def _first_date(self):
+        first_line = self.env.execute_query(self.sudo()._search([], order="date ASC", limit=1).select('date'))
+        return first_line[0][0] if first_line else fields.Date.context_today(self)
+
+    @api.model
     def _field_will_change(self, record, vals, field_name):
         if field_name not in vals:
             return False

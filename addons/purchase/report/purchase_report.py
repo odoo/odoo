@@ -5,6 +5,7 @@
 #
 
 from odoo import fields, models
+from odoo.models import TableSQL
 from odoo.tools.sql import SQL
 
 
@@ -51,103 +52,68 @@ class PurchaseReport(models.Model):
 
     @property
     def _table_query(self) -> SQL:
-        ''' Report needs to be dynamic to take into account multi-company selected + multi-currency rates '''
-        return SQL("%s %s %s %s", self._select(), self._from(), self._where(), self._group_by())
+        today = fields.Date.today()
+        query = self.env['purchase.order.line'].sudo().with_context(date_to=today)._search([('display_type', '=', False)])
+        query.groupby = SQL(", ").join(self._groupby_list(query.table))
+        return query.subselect(*self._select_list(query.table))
 
-    def _select(self) -> SQL:
-        return SQL(
-            """
-                SELECT
-                    po.id as order_id,
-                    min(l.id) as id,
-                    po.date_order as date_order,
-                    po.state,
-                    po.date_approve,
-                    po.dest_address_id,
-                    po.partner_id as partner_id,
-                    po.user_id as user_id,
-                    po.company_id as company_id,
-                    po.fiscal_position_id as fiscal_position_id,
-                    l.product_id,
-                    p.product_tmpl_id,
-                    t.categ_id as category_id,
-                    c.currency_id,
-                    t.uom_id as uom_id,
-                    extract(epoch from age(po.date_approve,po.date_order))/(24*60*60)::decimal(16,2) as delay,
-                    extract(epoch from age(l.date_planned,po.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
-                    count(*) as nbr_lines,
-                    sum(l.price_total / COALESCE(po.currency_rate, 1.0))::decimal(16,2) * account_currency_table.rate as price_total,
-                    (sum(l.product_qty * l.price_unit / COALESCE(po.currency_rate, 1.0))/NULLIF(sum(l.product_qty * line_uom.factor / product_uom.factor),0.0))::decimal(16,2) * account_currency_table.rate as price_average,
-                    partner.country_id as country_id,
-                    partner.commercial_partner_id as commercial_partner_id,
-                    sum(p.weight * l.product_qty * line_uom.factor / product_uom.factor) as weight,
-                    sum(p.volume * l.product_qty * line_uom.factor / product_uom.factor) as volume,
-                    sum(l.price_subtotal / COALESCE(po.currency_rate, 1.0))::decimal(16,2) * account_currency_table.rate as untaxed_total,
-                    sum(l.product_qty * line_uom.factor / product_uom.factor) as qty_ordered,
-                    sum(l.qty_received * line_uom.factor / product_uom.factor) as qty_received,
-                    sum(l.qty_invoiced * line_uom.factor / product_uom.factor) as qty_billed,
-                    case when t.purchase_method = 'purchase'
-                         then sum(l.product_qty * line_uom.factor / product_uom.factor) - sum(l.qty_invoiced * line_uom.factor / product_uom.factor)
-                         else sum(l.qty_received * line_uom.factor / product_uom.factor) - sum(l.qty_invoiced * line_uom.factor / product_uom.factor)
-                    end as qty_to_be_billed
-            """,
-        )
+    def _select_list(self, table: TableSQL):
+        uom_ratio = SQL("(COALESCE(%s, 1) / NULLIF(COALESCE(%s, 1), 0.0))", table.uom_id.factor, table.product_id.uom_id.factor)
+        return [
+            SQL("%s AS order_id", table.order_id.id),
+            SQL("MIN(%s) AS id", table.id),
+            table.order_id.date_order,
+            table.order_id.state,
+            table.order_id.date_approve,
+            table.order_id.dest_address_id,
+            table.order_id.partner_id,
+            table.order_id.user_id,
+            table.order_id.company_id,
+            table.order_id.fiscal_position_id,
+            SQL("%s AS product_id", table.product_id.id),
+            table.product_id.product_tmpl_id,
+            SQL("%s AS category_id", table.product_id.product_tmpl_id.categ_id),
+            table.order_id.company_id.currency_id,
+            table.product_id.product_tmpl_id.uom_id,
+            SQL("EXTRACT(epoch FROM AGE(%s, %s))/(24*60*60)::decimal(16,2) AS delay", table.order_id.date_approve, table.order_id.date_order),
+            SQL("EXTRACT(epoch FROM AGE(%s, %s))/(24*60*60)::decimal(16,2) AS delay_pass", table.date_planned, table.order_id.date_order),
+            SQL("COUNT(*) AS nbr_lines"),
+            SQL("SUM(%s / COALESCE(%s, 1.0))::decimal(16,2) * %s as price_total", table.price_total, table.order_id.currency_rate, table.consolidation_rate),
+            SQL(
+                "(SUM(%s * %s / COALESCE(%s, 1.0))/NULLIF(SUM(%s * %s),0.0))::decimal(16,2) * %s as price_average",
+                table.product_qty, table.price_unit, table.order_id.currency_rate, table.product_qty, uom_ratio, table.consolidation_rate,
+            ),
+            table.order_id.partner_id.country_id,
+            table.order_id.partner_id.commercial_partner_id,
+            SQL("SUM(%s * %s * %s) AS weight", table.product_id.weight, table.product_qty, uom_ratio),
+            SQL("SUM(%s * %s * %s) AS volume", table.product_id.volume, table.product_qty, uom_ratio),
+            SQL("SUM(%s / COALESCE(%s, 1.0))::decimal(16,2) * %s as untaxed_total", table.price_subtotal, table.order_id.currency_rate, table.consolidation_rate),
+            SQL("SUM(%s * %s) AS qty_ordered", table.product_qty, uom_ratio),
+            SQL("SUM(%s * %s) AS qty_received", table.qty_received, uom_ratio),
+            SQL("SUM(%s * %s) AS qty_billed", table.qty_invoiced, uom_ratio),
+            SQL(
+                """CASE WHEN %s = 'purchase'
+                    THEN SUM(%s * %s) - SUM(%s * %s)
+                    ELSE SUM(%s * %s) - SUM(%s * %s)
+                   END AS qty_to_be_billed""",
+                table.product_id.product_tmpl_id.purchase_method,
+                table.product_qty, uom_ratio, table.qty_invoiced, uom_ratio,
+                table.qty_received, uom_ratio, table.qty_invoiced, uom_ratio,
+            ),
+        ]
 
-    def _from(self) -> SQL:
-        return SQL(
-            """
-            FROM
-            purchase_order_line l
-                join purchase_order po on (l.order_id=po.id)
-                join res_partner partner on po.partner_id = partner.id
-                    left join product_product p on (l.product_id=p.id)
-                        left join product_template t on (p.product_tmpl_id=t.id)
-                left join res_company C ON C.id = po.company_id
-                left join uom_uom line_uom on (line_uom.id=l.uom_id)
-                left join uom_uom product_uom on (product_uom.id=t.uom_id)
-                left join %(currency_table)s ON account_currency_table.company_id = po.company_id
-            """,
-            currency_table=self.env['res.currency']._get_simple_currency_table(self.env.companies),
-        )
-
-    def _where(self) -> SQL:
-        return SQL(
-            """
-            WHERE
-                l.display_type IS NULL
-            """,
-        )
-
-    def _group_by(self) -> SQL:
-        return SQL(
-            """
-            GROUP BY
-                po.company_id,
-                po.user_id,
-                po.partner_id,
-                line_uom.factor,
-                c.currency_id,
-                l.price_unit,
-                po.date_approve,
-                l.date_planned,
-                l.uom_id,
-                po.dest_address_id,
-                po.fiscal_position_id,
-                l.product_id,
-                p.product_tmpl_id,
-                t.categ_id,
-                po.date_order,
-                po.state,
-                t.uom_id,
-                t.purchase_method,
-                line_uom.id,
-                product_uom.factor,
-                partner.country_id,
-                partner.commercial_partner_id,
-                po.id,
-                account_currency_table.rate
-            """,
-        )
+    def _groupby_list(self, table: TableSQL):
+        return [
+            table.price_unit,
+            table.date_planned,
+            table.order_id.id,
+            table.order_id.company_id.id,
+            table.order_id.partner_id.id,
+            table.product_id.id,
+            table.product_id.product_tmpl_id.id,
+            table.product_id.product_tmpl_id.uom_id.id,
+            table.uom_id.id,
+        ]
 
     def _read_group_select(self, table, aggregate_spec: str) -> SQL:
         """ This override allows us to correctly calculate the average price of products. """

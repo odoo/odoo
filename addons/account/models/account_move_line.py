@@ -1,19 +1,20 @@
-from collections import defaultdict
-from contextlib import contextmanager, ExitStack
-from datetime import date
-from lxml.builder import E
+import json
 import logging
 import re
+from collections import defaultdict
+from contextlib import ExitStack, contextmanager
+from datetime import date
 
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, UserError, RedirectWarning
+from lxml.builder import E
+
+from odoo import _, api, fields, models
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.models import Query
-from odoo.tools import frozendict, float_compare, groupby, SQL, OrderedSet
-from odoo.addons.web.controllers.utils import clean_action
+from odoo.tools import SQL, OrderedSet, float_compare, frozendict, groupby
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
-
+from odoo.addons.web.controllers.utils import clean_action
 
 _logger = logging.getLogger(__name__)
 
@@ -23,6 +24,7 @@ class AccountMoveLine(models.Model):
     _inherit = [
         "analytic.mixin",
         "mail.track.mixin",
+        "res.currency.rate.consolidation.mixin",
     ]
     _description = "Journal Item"
     _explanation = "An individual line item within an account.move. Used to detail specific debits, credits, taxes, and products on invoices and journal entries."
@@ -133,6 +135,27 @@ class AccountMoveLine(models.Model):
         compute='_compute_balance', store=True, readonly=False, precompute=True,
         currency_field='company_currency_id',
         tracking=True,
+    )
+    consolidation_debit = fields.Monetary(
+        string="Converted debit",
+        compute='_compute_consolidation_rate',
+        compute_sql='_compute_sql_debit_converted',
+        compute_sudo=True,
+        currency_field='consolidation_currency_id',
+    )
+    consolidation_credit = fields.Monetary(
+        string="Converted credit",
+        compute='_compute_consolidation_rate',
+        compute_sql='_compute_sql_credit_converted',
+        compute_sudo=True,
+        currency_field='consolidation_currency_id',
+    )
+    consolidation_balance = fields.Monetary(
+        string="Converted balance",
+        compute='_compute_consolidation_rate',
+        compute_sql='_compute_sql_balance_converted',
+        compute_sudo=True,
+        currency_field='consolidation_currency_id',
     )
     cumulated_balance = fields.Monetary(
         string='Cumulated Balance',
@@ -817,6 +840,81 @@ class AccountMoveLine(models.Model):
             if line.currency_id == line.company_id.currency_id and not line.move_id.is_invoice(True):
                 line.amount_currency = line.balance
 
+    def _compute_sql_consolidation_rate(self, table):
+        currency_translation = self.env.context.get('currency_translation', 'current')
+        if len(self.env.companies.currency_id) == 1:
+            return SQL("1")
+
+        date_from = self.env.context.get('date_from')
+        date_to = self.env.context['date_to']
+        historical, average, current = self.env['res.currency']._get_parsed_rates(self.env.companies - self.env.company, date_from, date_to)
+
+        raw_rates_alias = table._make_alias(f'raw_{currency_translation}')
+        raw_rates_table = SQL(
+            """(
+                SELECT %(historical)s::jsonb AS historical,
+                       %(average)s::jsonb AS average,
+                       %(current)s::jsonb AS current
+            )""",
+            historical=json.dumps(historical),
+            average=json.dumps(average),
+            current=json.dumps(current),
+        )
+        cta_alias = table._make_alias(currency_translation)
+        if currency_translation == 'cta':
+            conversion_table = SQL(
+                """(
+                    SELECT CASE WHEN %(base_line_account_type)s = 'equity' THEN (%(historical)s->>(%(base_line_company)s::text))::jsonb->>(%(base_line_date)s::text)
+                                WHEN %(base_line_account_type)s LIKE ANY (ARRAY['income%%', 'expense%%', 'equity_unaffected']) THEN %(average)s->>(%(base_line_company)s::text)
+                                ELSE %(current)s->>(%(base_line_company)s::text)
+                           END::numeric AS rate
+                )""",
+                base_line_date=table.date,
+                base_line_company=table.company_id,
+                base_line_account_type=table.account_id.account_type,
+                historical=raw_rates_alias.historical,
+                average=raw_rates_alias.average,
+                current=raw_rates_alias.current,
+            )
+        else:
+            conversion_table = SQL(
+                "(SELECT (%(current)s->>(%(base_line_company)s::text))::numeric AS rate)",
+                base_line_company=table.company_id,
+                current=raw_rates_alias.current,
+            )
+        table._query.add_join(kind='JOIN', alias=raw_rates_alias, table=raw_rates_table, condition=SQL("TRUE"))
+        table._query.add_join(kind='LEFT JOIN LATERAL', alias=cta_alias, table=conversion_table, condition=SQL("TRUE"))
+        return SQL("COALESCE(%s, 1)", cta_alias.rate)
+
+    def _compute_sql_debit_converted(self, table):
+        return SQL("(%s * %s)", table.consolidation_rate, table.debit)
+
+    def _compute_sql_credit_converted(self, table):
+        return SQL("(%s * %s)", table.consolidation_rate, table.credit)
+
+    def _compute_sql_balance_converted(self, table):
+        return SQL("(%s * %s)", table.consolidation_rate, table.balance)
+
+    @api.depends_context('allowed_company_ids', 'currency_translation')
+    def _compute_consolidation_rate(self):
+        line2rate = {}
+        if len(self.env.companies.currency_id) > 1:
+            query = self._search([('id', 'in', self.ids)])
+            line2rate = {aml_id: values for aml_id, *values in self.env.execute_query(query.select(
+                query.table.id,
+                query.table.consolidation_rate,
+                query.table.consolidation_debit,
+                query.table.consolidation_credit,
+                query.table.consolidation_balance,
+            ))}
+        for aml in self:
+            (
+                aml.consolidation_rate,
+                aml.consolidation_debit,
+                aml.consolidation_credit,
+                aml.consolidation_balance,
+            ) = line2rate.get(aml._origin.id, (1, aml.debit, aml.credit, aml.balance))
+
     @api.depends_context('order_cumulated_balance', 'domain_cumulated_balance')
     def _compute_cumulated_balance(self):
         """ Compute the cumulated balance for each line in a list view.
@@ -971,7 +1069,7 @@ class AccountMoveLine(models.Model):
             return table.amount_residual
         partial_summary_alias = self._join_partial_summary_query(table)
         return SQL(
-            "%(balance_field)s + COALESCE(%(partial_summary_amount_field)s, 0.0)",
+            "(%(balance_field)s + COALESCE(%(partial_summary_amount_field)s, 0.0))",
             balance_field=table.balance,
             partial_summary_amount_field=partial_summary_alias.amount_to_date,
         )
