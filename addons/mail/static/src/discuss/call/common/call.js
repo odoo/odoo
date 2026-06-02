@@ -5,7 +5,7 @@ import { CallPresentationBar } from "@mail/discuss/call/common/call_presentation
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
 
-import { Component, onMounted, onPatched, onWillUnmount, proxy, toRaw } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillUnmount, proxy } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -159,7 +159,7 @@ export class Call extends Component {
      */
     setInset(session, videoType) {
         const key = "session_" + session.id;
-        if (toRaw(this.state).insetCard?.key === key) {
+        if (this.state.insetCard?.key === key) {
             this.state.insetCard.type = videoType;
             this.state.insetCard.videoStream = session.getStream(videoType);
         } else {

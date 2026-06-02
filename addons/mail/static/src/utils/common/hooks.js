@@ -1,4 +1,4 @@
-import { Component, onMounted, onPatched, onWillUnmount, proxy, toRaw, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillUnmount, proxy, xml } from "@odoo/owl";
 
 import { useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { Reactive } from "@web/core/utils/reactive";
@@ -167,7 +167,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
         if (state.isHover) {
             return;
         }
-        for (const target of toRaw(state)._targets) {
+        for (const target of state._targets) {
             if (!target.ref.el) {
                 continue;
             }
@@ -188,7 +188,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
         if (!state.isHover) {
             return;
         }
-        for (const target of toRaw(state._targets)) {
+        for (const target of state._targets) {
             if (!target.ref.el) {
                 continue;
             }
@@ -241,7 +241,7 @@ export class UseHoverOverlay extends Component {
     setup() {
         super.setup();
         this.root = useRef("root");
-        const overlayContains = toRaw(this.env[OVERLAY_SYMBOL].contains);
+        const overlayContains = this.env[OVERLAY_SYMBOL].contains;
         let removeTarget;
         onMounted(() => {
             this.props.hover._contains.push(overlayContains);

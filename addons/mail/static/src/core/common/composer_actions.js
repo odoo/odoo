@@ -1,7 +1,6 @@
 import { useComponent, useRef } from "@web/owl2/utils";
 import { CreatePollDialog } from "@mail/core/common/create_poll_dialog";
 
-import { toRaw } from "@odoo/owl";
 import { EmojiPicker, useEmojiPickerStoreScroll } from "@web/core/emoji_picker/emoji_picker";
 
 import { _t } from "@web/core/l10n/translation";
@@ -107,9 +106,8 @@ registerComposerAction("upload-files", {
     condition: ({ owner }) => owner.allowUpload,
     icon: "fa fa-paperclip",
     name: _t("Attach Files"),
-    onSelected: ({ composer: comp, owner }, ev) => {
+    onSelected: ({ composer, owner }, ev) => {
         owner.fileUploaderRef.el?.click();
-        const composer = toRaw(comp);
         markEventHandled(ev, "composer.clickOnAddAttachment");
         composer.autofocus++;
     },

@@ -1,7 +1,5 @@
 import { registerMessageAction } from "@mail/core/common/message_actions";
 
-import { toRaw } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 
@@ -14,8 +12,7 @@ registerMessageAction("set-new-message-separator", {
         !message.isEmpty,
     icon: "fa fa-eye-slash",
     name: _t("Mark as Unread"),
-    onSelected: ({ message: msg }) => {
-        const message = toRaw(msg);
+    onSelected: ({ message }) => {
         const selfMember = message.channel_id?.self_member_id;
         if (selfMember) {
             selfMember.new_message_separator = message.id;

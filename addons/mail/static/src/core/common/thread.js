@@ -12,7 +12,6 @@ import {
     onWillUnmount,
     onWillUpdateProps,
     proxy,
-    toRaw,
     untrack,
     useEffect,
 } from "@odoo/owl";
@@ -119,7 +118,7 @@ export class Thread extends Component {
                     this.smoothScrollingPromise,
                 ]);
                 if (this.loadOlderState.isVisible) {
-                    toRaw(this.props.thread).fetchMoreMessages({
+                    this.props.thread.fetchMoreMessages({
                         routeParams: this.messageFetchRouteParams,
                     });
                 }
@@ -134,7 +133,7 @@ export class Thread extends Component {
                     this.smoothScrollingPromise,
                 ]);
                 if (this.loadNewerState.isVisible) {
-                    toRaw(this.props.thread).fetchMoreMessages({
+                    this.props.thread.fetchMoreMessages({
                         epoch: "newer",
                         routeParams: this.messageFetchRouteParams,
                     });
@@ -235,7 +234,7 @@ export class Thread extends Component {
         useBus(this.env.bus, "MAIL:RELOAD-THREAD", ({ detail }) => {
             const { model, id } = this.props.thread;
             if (detail.model === model && detail.id === id) {
-                toRaw(this.props.thread).fetchNewMessages();
+                this.props.thread.fetchNewMessages();
             }
         });
         onWillUpdateProps((nextProps) => {
@@ -246,7 +245,7 @@ export class Thread extends Component {
                 if (this.env.chatter) {
                     this.env.chatter.shouldFetchMessages = false;
                 }
-                toRaw(nextProps.thread).fetchNewMessages();
+                nextProps.thread.fetchNewMessages();
             }
         });
     }
@@ -398,13 +397,11 @@ export class Thread extends Component {
             this.reset();
             return;
         }
-        // Use toRaw() to prevent scroll check from triggering renders.
-        const thread = toRaw(this.props.thread);
-        this.applyScrollContextually(thread);
+        this.applyScrollContextually(this.props.thread);
         this.snapshot = undefined;
-        this.newestPersistentMessage = thread.newestPersistentMessage;
-        this.oldestPersistentMessage = thread.oldestPersistentMessage;
-        this.loadNewer = thread.loadNewer;
+        this.newestPersistentMessage = this.props.thread.newestPersistentMessage;
+        this.oldestPersistentMessage = this.props.thread.oldestPersistentMessage;
+        this.loadNewer = this.props.thread.loadNewer;
         if (!this.loadedAndPatched) {
             this.loadedAndPatched = true;
             this.loadOlderState.ready = true;
@@ -498,7 +495,7 @@ export class Thread extends Component {
     }
 
     fetchInitialMessages() {
-        toRaw(this.props.thread).fetchNewMessages({ routeParams: this.messageFetchRouteParams });
+        this.props.thread.fetchNewMessages({ routeParams: this.messageFetchRouteParams });
     }
 
     get viewportEl() {
@@ -541,9 +538,8 @@ export class Thread extends Component {
 
     onFocusin() {
         this.props.thread.isFocusedByThread = true;
-        const thread = toRaw(this.props.thread);
-        if (thread?.shouldMarkAsReadOnFocus) {
-            thread.markAsRead();
+        if (this.props.thread.shouldMarkAsReadOnFocus) {
+            this.props.thread.markAsRead();
         }
     }
 
@@ -647,20 +643,18 @@ export class Thread extends Component {
     }
 
     onScroll() {
-        const thread = toRaw(this.props.thread);
-        if (this.shouldMarkAsReadOnScroll(thread)) {
-            thread.markAsRead();
+        if (this.shouldMarkAsReadOnScroll(this.props.thread)) {
+            this.props.thread.markAsRead();
         }
         this.saveScroll();
     }
 
     saveScroll() {
-        const thread = toRaw(this.props.thread);
         const isBottom = this.isAtBottom;
         if (isBottom) {
-            thread.scrollTop = "bottom";
+            this.props.thread.scrollTop = "bottom";
         } else {
-            thread.scrollTop =
+            this.props.thread.scrollTop =
                 this.props.order === "asc"
                     ? this.scrollableRef.el.scrollTop
                     : this.scrollableRef.el.scrollHeight -

@@ -9,7 +9,7 @@ import { useThreadActions } from "@mail/core/common/thread_actions";
 import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
 
-import { Component, computed, proxy, toRaw } from "@odoo/owl";
+import { Component, computed, proxy } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { localization } from "@web/core/l10n/localization";
@@ -107,7 +107,6 @@ export class ChatWindow extends Component {
     }
 
     onKeydown(ev) {
-        const chatWindow = toRaw(this.props.chatWindow);
         if (ev.key === "Escape" && this.threadActions.activeAction) {
             this.threadActions.activeAction.actionPanelClose();
             ev.stopPropagation();
@@ -132,7 +131,9 @@ export class ChatWindow extends Component {
                 this.close({ escape: true });
                 break;
             case "tab": {
-                const index = this.store.chatHub.opened.findIndex((cw) => cw.eq(chatWindow));
+                const index = this.store.chatHub.opened.findIndex((cw) =>
+                    cw.eq(this.props.chatWindow)
+                );
                 if (index === this.store.chatHub.opened.length - 1) {
                     this.store.chatHub.opened[0].focus({ jumpToNewMessage: true });
                 } else {
@@ -160,11 +161,10 @@ export class ChatWindow extends Component {
     }
 
     toggleFold() {
-        const chatWindow = toRaw(this.props.chatWindow);
         if (this.state.actionsMenuOpened) {
             return;
         }
-        chatWindow.fold();
+        this.props.chatWindow.fold();
     }
 
     close(options) {
@@ -176,8 +176,7 @@ export class ChatWindow extends Component {
     }
 
     async renameChannel(name) {
-        const channel = toRaw(this.channel);
-        await channel.rename(name);
+        await this.channel.rename(name);
         this.state.editingName = false;
     }
 

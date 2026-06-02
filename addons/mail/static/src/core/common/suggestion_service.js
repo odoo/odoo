@@ -1,7 +1,6 @@
 import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 import { COMPOSER_TYPES } from "./composer";
 import { cleanTerm } from "@mail/utils/common/format";
-import { toRaw } from "@odoo/owl";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 
 import { localeCompare } from "@web/core/l10n/utils";
@@ -191,7 +190,6 @@ export class SuggestionService {
      * @returns {{ type: String, suggestions: Array }}
      */
     searchSuggestions({ delimiter, term }, { composerType, thread } = {}) {
-        thread = toRaw(thread);
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
             case "@": {
@@ -321,8 +319,6 @@ export class SuggestionService {
         const compareFunctions = partnerCompareRegistry.getAll();
         const context = this.sortPartnerSuggestionsContext(thread);
         return partners.sort((p1, p2) => {
-            p1 = toRaw(p1);
-            p2 = toRaw(p2);
             if (p1.isSpecial || p2.isSpecial) {
                 return 0;
             }

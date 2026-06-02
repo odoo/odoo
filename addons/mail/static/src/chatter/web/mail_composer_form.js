@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { formView } from "@web/views/form/form_view";
 import { registry } from "@web/core/registry";
-import { EventBus, toRaw } from "@odoo/owl";
+import { EventBus } from "@odoo/owl";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
@@ -15,7 +15,7 @@ export class MailComposerFormController extends formView.Controller {
     static defaultProps = { fullComposerBus: new EventBus() };
     setup() {
         super.setup();
-        toRaw(this.env.dialogData).model = "mail.compose.message";
+        this.env.dialogData.model = "mail.compose.message";
         useSubEnv({
             fullComposerBus: this.props.fullComposerBus,
         });

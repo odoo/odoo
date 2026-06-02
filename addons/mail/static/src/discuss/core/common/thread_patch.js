@@ -1,8 +1,6 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { Thread } from "@mail/core/common/thread";
 
-import { toRaw } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
@@ -59,7 +57,7 @@ const threadPatch = {
     /** @override */
     fetchInitialMessages() {
         if (this.channel?.self_member_id && this.props.thread.scrollUnread) {
-            toRaw(this.props.thread).loadAround({
+            this.props.thread.loadAround({
                 messageId: this.channel.self_member_id.new_message_separator,
             });
         } else {
