@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import colorsys
 import datetime
 import logging
 import math
@@ -29,6 +30,7 @@ from odoo.http.session import SessionExpiredException
 from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tools import OrderedSet, py_to_js_locale
 from odoo.tools import html_escape as escape
+from odoo.tools.image import hex_to_rgb
 from odoo.tools.json import scriptsafe as json
 from odoo.tools.sql import escape_like_value
 from odoo.tools.translate import LazyTranslate, TRANSLATED_ELEMENTS
@@ -50,6 +52,58 @@ SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
 MAX_FONT_FILE_SIZE = 10 * 1024 * 1024
 SUPPORTED_FONT_EXTENSIONS = ['ttf', 'woff', 'woff2', 'otf']
 FORCE_SHOW_FIELDS = ['name', 'search_item_metadata', 'tags']
+API_WEBSITE_IMAGES_URL = 'https://website-image.api.odoo.com/images/'
+CONFIGURATOR_PREVIEW_FALLBACK_IMAGES = {
+    f'website.{image_name}': f'website.{fallback_image_name}'
+    for image_name, fallback_image_name in [
+        ('s_intro_pill_default_image', 'library_image_10'),
+        ('s_intro_pill_default_image_2', 'library_image_14'),
+        ('s_banner_default_image_2', 's_image_text_default_image'),
+        ('s_banner_default_image_3', 's_product_list_default_image_1'),
+        ('s_striped_top_default_image', 's_picture_default_image'),
+        ('s_text_cover_default_image', 's_cover_default_image'),
+        ('s_showcase_default_image', 's_image_text_default_image'),
+        ('s_image_hexagonal_default_image', 's_cover_default_image'),
+        ('s_image_hexagonal_default_image_1', 's_company_team_image_1'),
+        ('s_accordion_image_default_image', 's_image_text_default_image'),
+        ('s_pricelist_boxed_default_background', 's_product_catalog_default_image'),
+        ('s_image_title_default_image', 's_cover_default_image'),
+        ('s_key_images_default_image_1', 's_media_list_default_image_1'),
+        ('s_key_images_default_image_2', 's_image_text_default_image'),
+        ('s_key_images_default_image_3', 's_media_list_default_image_2'),
+        ('s_key_images_default_image_4', 's_text_image_default_image'),
+        ('s_kickoff_default_image', 's_cover_default_image'),
+        ('s_quadrant_default_image_1', 'library_image_03'),
+        ('s_quadrant_default_image_2', 'library_image_10'),
+        ('s_quadrant_default_image_3', 'library_image_13'),
+        ('s_quadrant_default_image_4', 'library_image_05'),
+        ('s_sidegrid_default_image_1', 'library_image_03'),
+        ('s_sidegrid_default_image_2', 'library_image_10'),
+        ('s_sidegrid_default_image_3', 'library_image_13'),
+        ('s_sidegrid_default_image_4', 'library_image_05'),
+        ('s_cta_box_default_image', 'library_image_02'),
+        ('s_image_punchy_default_image', 's_cover_default_image'),
+        ('s_image_frame_default_image', 's_carousel_default_image_2'),
+        ('s_carousel_intro_default_image_1', 's_cover_default_image'),
+        ('s_carousel_intro_default_image_2', 's_image_text_default_image'),
+        ('s_carousel_intro_default_image_3', 's_text_image_default_image'),
+        ('s_website_form_overlay_default_image', 's_cover_default_image'),
+        ('s_website_form_cover_default_image', 's_cover_default_image'),
+        ('s_split_intro_default_image', 's_cover_default_image'),
+        ('s_framed_intro_default_image', 's_cover_default_image'),
+        ('s_splash_intro_default_image', 's_cover_default_image'),
+        ('s_wavy_grid_default_image_1', 's_cover_default_image'),
+        ('s_wavy_grid_default_image_2', 's_image_text_default_image'),
+        ('s_wavy_grid_default_image_3', 's_text_image_default_image'),
+        ('s_wavy_grid_default_image_4', 's_carousel_default_image_1'),
+        ('s_timeline_images_default_image_1', 's_media_list_default_image_1'),
+        ('s_timeline_images_default_image_2', 's_media_list_default_image_2'),
+        ('s_carousel_cards_default_image_1', 's_carousel_default_image_1'),
+        ('s_carousel_cards_default_image_2', 's_carousel_default_image_2'),
+        ('s_carousel_cards_default_image_3', 's_carousel_default_image_3'),
+        ('s_banner_connected_default_image', 's_cover_default_image'),
+    ]
+}
 
 
 class QueryURL:
@@ -404,6 +458,316 @@ class Website(Home):
     def cookie_policy_redirect(self, **kwargs):
         url = self.env.website.cookie_policy_id.sudo().url or '/cookie-policy'
         return request.redirect(url)
+
+    def _load_configurator_preview_html(self, preview_url):
+        """Load the static HTML used by the configurator theme preview.
+
+        :param str preview_url: local static file path
+        :return: preview HTML
+        :rtype: str
+        """
+        if not preview_url.startswith('/'):
+            raise NotFound()
+        try:
+            with tools.file_open(preview_url.lstrip('/'), 'rb') as file:
+                return file.read().decode('utf-8')
+        except FileNotFoundError as exc:
+            raise NotFound() from exc
+
+    def _get_configurator_preview_images_map(self, theme_name, industry_id):
+        """Fetch the industry image replacements for a theme preview.
+
+        :param str theme_name: name of the previewed theme
+        :param int industry_id: selected website industry id
+        :return: mapping from original image names to replacement URLs
+        :rtype: dict
+        """
+        if not theme_name or industry_id <= 0:
+            return {}
+        return request.env['website'].configurator_get_images(industry_id, theme_name)
+
+    def _get_theme_static_preview_image_url(self, theme_name, image_name):
+        """Find an image directly in the theme static preview files.
+
+        :param str theme_name: name of the previewed theme
+        :param str image_name: original image name or URL segment
+        :return: static URL to the theme image, if found
+        :rtype: str | None
+        """
+        if not theme_name:
+            return None
+        image_name = urllib.parse.unquote(image_name).split('?', 1)[0]
+        image_basename = image_name.split('.', 1)[1] if '.' in image_name else image_name
+        image_basename = image_basename.rsplit('/', 1)[-1]
+        image_extension_index = image_basename.rfind('.')
+        image_stem = image_basename[:image_extension_index] if image_extension_index > 0 else image_basename
+        image_ext = image_basename[image_extension_index:] if image_extension_index > 0 else ''
+        candidate_names = [image_basename] if image_ext else [
+            f'{image_basename}.{ext}'
+            for ext in ('png', 'jpg', 'jpeg', 'webp', 'svg', 'gif')
+        ]
+        image_folders = ('configurator', 'content', 'backgrounds', 'pictures', 'snippets')
+        for folder in image_folders:
+            for candidate_name in candidate_names:
+                candidate_path = f'{theme_name}/static/src/img/{folder}/{candidate_name}'
+                try:
+                    with tools.file_open(candidate_path, 'rb'):
+                        return f'/{candidate_path}'
+                except FileNotFoundError:
+                    continue
+        if image_stem and image_stem != image_basename:
+            for folder in image_folders:
+                for ext in ('png', 'jpg', 'jpeg', 'webp', 'svg', 'gif'):
+                    candidate_path = f'{theme_name}/static/src/img/{folder}/{image_stem}.{ext}'
+                    try:
+                        with tools.file_open(candidate_path, 'rb'):
+                            return f'/{candidate_path}'
+                    except FileNotFoundError:
+                        continue
+        return None
+
+    def _get_configurator_preview_image_url(self, theme_name, images_map, image_name):
+        """Return the replacement URL for a preview image.
+
+        :param str theme_name: name of the previewed theme
+        :param dict images_map: industry image replacement mapping
+        :param str image_name: original image name or URL segment
+        :return: replacement image URL, if any
+        :rtype: str | None
+        """
+        image_name = urllib.parse.unquote(image_name).split('?', 1)[0]
+        if image_name not in images_map:
+            image_name = CONFIGURATOR_PREVIEW_FALLBACK_IMAGES.get(image_name, image_name)
+        image_url = images_map.get(image_name)
+        if image_url:
+            return image_url.replace('/small/', '/')
+        return self._get_theme_static_preview_image_url(theme_name, image_name)
+
+    def _apply_configurator_preview_images(self, final_html, theme_name, images_map):
+        """Replace preview image URLs with industry-specific images.
+
+        :param str final_html: preview HTML
+        :param str theme_name: name of the previewed theme
+        :param dict images_map: industry image replacement mapping
+        :return: preview HTML with updated image URLs
+        :rtype: str
+        """
+        for image_url in set(re.findall(r'/web/image/[^"\'\s,)]+', final_html)):
+            mapped_image_url = self._get_configurator_preview_image_url(
+                theme_name,
+                images_map,
+                image_url.replace('/web/image/', '', 1),
+            )
+            if mapped_image_url:
+                final_html = final_html.replace(image_url, mapped_image_url)
+
+        shape_urls = set(re.findall(r'/html_editor/image_shape/([^/"\']+)/([^"\'\s)]+)', final_html))
+        for image_name, shape_path in shape_urls:
+            mapped_image_url = self._get_configurator_preview_image_url(theme_name, images_map, image_name)
+            if not mapped_image_url:
+                continue
+            if (
+                not mapped_image_url.startswith(API_WEBSITE_IMAGES_URL)
+                and not re.match(r'^/[^/]+/static/', mapped_image_url)
+            ):
+                continue
+            shape_src = f'/html_editor/image_shape/{image_name}/{shape_path}'
+            shape_file_path, _, shape_query = shape_path.partition('?')
+            module, _, shape_filename = shape_file_path.partition('/')
+            if not shape_filename:
+                continue
+            shaped_url = f'/html_editor/image_shape_url/{module}/{shape_filename}'
+            image_url = (
+                f"{request.httprequest.host_url.rstrip('/')}{mapped_image_url}"
+                if mapped_image_url.startswith('/')
+                else mapped_image_url
+            )
+            image_query = werkzeug.urls.url_encode({'image_url': image_url})
+            shaped_url = f'{shaped_url}?{shape_query}&{image_query}' if shape_query else f'{shaped_url}?{image_query}'
+            final_html = final_html.replace(shape_src, shaped_url)
+        return final_html
+
+    def _get_configurator_preview_shape_url(self, shape_url, palette_map):
+        """Replace palette references in a shape URL query string.
+
+        :param str shape_url: original shape URL
+        :param dict palette_map: mapping from ``o-color-X`` names to hex colors
+        :return: shape URL with resolved palette colors
+        :rtype: str
+        """
+        decoded_shape_url = shape_url.replace('&amp;', '&')
+        parsed_shape_url = urllib.parse.urlsplit(decoded_shape_url)
+        shape_query_items = urllib.parse.parse_qsl(
+            parsed_shape_url.query, keep_blank_values=True
+        )
+        has_palette_color = False
+        updated_shape_query_items = []
+        for key, value in shape_query_items:
+            palette_color = palette_map.get(value)
+            if palette_color:
+                value = palette_color
+                has_palette_color = True
+            updated_shape_query_items.append((key, value))
+        if not has_palette_color:
+            return shape_url
+        updated_shape_url = urllib.parse.urlunsplit(
+            (
+                parsed_shape_url.scheme,
+                parsed_shape_url.netloc,
+                parsed_shape_url.path,
+                urllib.parse.urlencode(updated_shape_query_items),
+                parsed_shape_url.fragment,
+            )
+        )
+        return updated_shape_url.replace('&', '&amp;') if '&amp;' in shape_url else updated_shape_url
+
+    def _apply_configurator_preview_shape_colors(self, final_html, palette_map):
+        """Apply selected palette colors to preview shape URLs.
+
+        :param str final_html: preview HTML
+        :param dict palette_map: mapping from ``o-color-X`` names to hex colors
+        :return: preview HTML with updated shape URLs
+        :rtype: str
+        """
+        for shape_url in set(re.findall(r'/(?:html_editor|web_editor)/shape/[^"\'\s)]+', final_html)):
+            updated_shape_url = self._get_configurator_preview_shape_url(shape_url, palette_map)
+            if updated_shape_url != shape_url:
+                final_html = final_html.replace(shape_url, updated_shape_url)
+        return final_html
+
+    def _get_configurator_preview_contrast_color(self, background_color):
+        """Pick a readable text color for a preview background color.
+
+        :param str background_color: background color as a ``#RRGGBB`` value
+        :return: dark or light text color, or an empty string for invalid input
+        :rtype: str
+        """
+        background_color = background_color.strip()
+        if not re.fullmatch(r'#[0-9a-fA-F]{6}', background_color):
+            return ''
+        background_rgb = hex_to_rgb(background_color)
+        _, _, value = colorsys.rgb_to_hsv(*(channel / 255 for channel in background_rgb))
+        # Preview-only fallback to avoid dark text on dark generated previews.
+        return '#212529' if value > 0.5 else '#FFFFFF'
+
+    def _get_configurator_preview_color_combination_text_variables(self, final_html, palette):
+        """Build text color variables for preview color combinations.
+
+        :param str final_html: preview HTML containing the color-combination
+            background variables
+        :param list[str] palette: selected palette colors ordered from
+            ``o-color-1`` to ``o-color-5``
+        :return: CSS variable declarations for color-combination text colors
+        :rtype: str
+        """
+        palette_map = {
+            f'o-color-{index}': color
+            for index, color in enumerate(palette, start=1)
+            if color
+        }
+        color_combination_backgrounds = {}
+        background_regex = (
+            r'--o-cc([1-5])-bg\s*:\s*'
+            r'(?:var\(--(o-color-[1-5])\)|(#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?))\s*;'
+        )
+        for color_combination, color_name, color_value in re.findall(background_regex, final_html):
+            background_color = palette_map.get(color_name) if color_name else color_value
+            if background_color:
+                color_combination_backgrounds[color_combination] = background_color
+
+        text_variables = []
+        for color_combination, background_color in sorted(color_combination_backgrounds.items()):
+            text_color = self._get_configurator_preview_contrast_color(background_color)
+            if text_color:
+                text_variables.append(f'--o-cc{color_combination}-text:{text_color};')
+        return ''.join(text_variables)
+
+    def _get_configurator_preview_overrides(self, palette, final_html):
+        """Return the CSS variables injected into static configurator previews.
+
+        The selected palette overrides the preview's base colors. Text color
+        variables are derived from the preview color-combination backgrounds to
+        keep text readable after the palette changes.
+
+        :param list[str] palette: selected palette colors ordered from
+            ``o-color-1`` to ``o-color-5``
+        :param str final_html: static preview HTML used to read the original
+            color-combination backgrounds
+        :return: style tag containing the configurator preview CSS variables
+        :rtype: str
+        """
+        root_variables = ''.join(
+            f'--o-color-{index}: {color};'
+            for index, color in enumerate(palette, start=1)
+            if color
+        )
+        root_variables += self._get_configurator_preview_color_combination_text_variables(final_html, palette)
+        return (
+            '<style id="o_configurator_theme_preview_overrides">'
+            f':root{{{root_variables}}}'
+            '</style>'
+        )
+
+    def _inject_configurator_preview_overrides(self, final_html, preview_url, preview_overrides):
+        """Inject the preview base URL and CSS overrides into the HTML head.
+
+        :param str final_html: preview HTML
+        :param str preview_url: original preview URL used as the document base
+        :param str preview_overrides: style tag with configurator CSS variables
+        :return: preview HTML with the base tag and CSS overrides
+        :rtype: str
+        """
+        base_tag = f'<base href="{markup_escape(preview_url)}">'
+        head_match = re.search(r'<head\b[^>]*>', final_html, flags=re.IGNORECASE)
+        if head_match:
+            final_html = final_html[:head_match.end()] + base_tag + final_html[head_match.end():]
+            head_end_match = re.search(r'</head>', final_html, flags=re.IGNORECASE)
+            if head_end_match:
+                return (
+                    final_html[:head_end_match.start()]
+                    + preview_overrides
+                    + final_html[head_end_match.start():]
+                )
+            return final_html + preview_overrides
+        return base_tag + preview_overrides + final_html
+
+    @http.route('/website/configurator/preview', type='http', auth="user", website=True, multilang=False)
+    def website_configurator_preview(
+        self,
+        preview_url,
+        theme_name=None,
+        industry_id=-1,
+        color1='',
+        color2='',
+        color3='',
+        color4='',
+        color5='',
+        **kwargs,
+    ):
+        if not preview_url:
+            raise NotFound()
+
+        industry_id = int(industry_id)
+        palette = [color1, color2, color3, color4, color5]
+        palette_map = {
+            f'o-color-{index}': color
+            for index, color in enumerate(palette, start=1)
+            if color
+        }
+        images_map = self._get_configurator_preview_images_map(theme_name, industry_id)
+
+        final_html = self._load_configurator_preview_html(preview_url)
+        final_html = self._apply_configurator_preview_images(final_html, theme_name, images_map)
+        final_html = self._apply_configurator_preview_shape_colors(final_html, palette_map)
+        # Add palette variables to make static previews reflect the current configurator selection.
+        preview_overrides = self._get_configurator_preview_overrides(palette, final_html)
+        final_html = self._inject_configurator_preview_overrides(
+            final_html,
+            preview_url,
+            preview_overrides,
+        )
+
+        return request.make_response(final_html, [('Content-Type', 'text/html; charset=utf-8')])
 
     @http.route('/website/get_suggested_links', type='jsonrpc', auth="user", website=True, readonly=True)
     def get_suggested_link(self, needle, limit=10):
