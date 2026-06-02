@@ -884,9 +884,9 @@ class ProductTemplate(models.Model):
         if attribute_value_dict:
             domains.extend(self._get_attribute_value_domain(attribute_value_dict))
         search_fields = ['name', 'default_code', 'variants_default_code']
-        fetch_fields = ['id', 'name', 'website_url']
+        fetch_fields = ['id', 'name', 'display_name', 'website_url']
         mapping = {
-            'name': {'name': 'name', 'type': 'text', 'match': True},
+            'name': {'name': 'display_name', 'type': 'text', 'match': True},
             'default_code': {'name': 'default_code', 'type': 'text', 'match': True},
             'product_variant_ids.default_code': {'name': 'product_variant_ids.default_code', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
