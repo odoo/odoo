@@ -1401,7 +1401,7 @@ class IrActionsTodo(models.Model):
     def action_launch(self):
         """ Launch Action of Wizard"""
         self.ensure_one()
-
+        self.lock_for_update()
         self.write({'state': 'done'})
 
         # Load action

@@ -112,7 +112,7 @@ def force_demo(env: Environment) -> None:
     if env['ir.module.module'].search_count([('state', 'in', ('to install', 'to upgrade', 'to remove'))], limit=1):
         env.cr.commit()
         Registry.new(env.cr.dbname, update_module=True)
-        env.transaction.reset()
+        env.cr.rollback()
 
 
 def load_module_graph(
