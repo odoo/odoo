@@ -300,6 +300,9 @@ class ZatcaUblMixin(models.AbstractModel):
         if not document_node['cac:Delivery']['cbc:ActualDeliveryDate']['_text']:
             document_node['cac:Delivery']['cbc:ActualDeliveryDate'] = {'_text': issue_date}
 
+        if record.l10n_sa_edi_supply_end_date:
+            document_node['cac:Delivery']['cbc:LatestDeliveryDate'] = {'_text': record.l10n_sa_edi_supply_end_date}
+
     # -------------------------------------------------------------------------
     # Tax Category and Exemption
     # -------------------------------------------------------------------------

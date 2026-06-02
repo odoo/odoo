@@ -56,6 +56,8 @@ class AccountMove(models.Model):
             'l10n_sa_edi_invalid_date_moves': self.env._("Please set the Invoice Date to be either less than or equal to today as per the Asia/Riyadh time zone, since ZATCA does not allow future-dated invoicing."),
             'l10n_sa_edi_empty_reason_moves': self.env._("Please make sure the 'ZATCA Reason' for the issuance of the Credit/Debit Note is specified."),
             'l10n_sa_edi_invalid_ref_moves': self.env._("Please make sure the 'Customer Reference' contains the sequential number of the original invoice(s) that the Credit/Debit Note is related to."),
+            'l10n_sa_edi_empty_supply_end_date': self.env._("To issue the selected Invoice and Transaction Type, please fill in the 'Supply End Date' by going to Other Info > Supply End Date."),
+            'l10n_sa_edi_invalid_supply_end_date': self.env._("Supply Date cannot be greater than the Supply End Date. Please adapt it."),
         }
         invalid_scheme_partners = self.env['res.partner']
         empty_vat_partners = self.env['res.partner']
@@ -76,6 +78,12 @@ class AccountMove(models.Model):
 
             if move.l10n_sa_show_reason and not move._l10n_sa_check_billing_reference():
                 invalid_moves_dict['l10n_sa_edi_invalid_ref_moves'] += move
+
+            if move.l10n_sa_invoice_type == 'simplified' and 'summary' in move.l10n_sa_edi_transaction_type_ids.mapped('code') and not move.l10n_sa_edi_supply_end_date:
+                invalid_moves_dict['l10n_sa_edi_empty_supply_end_date'] += move
+
+            if move.l10n_sa_edi_supply_end_date and move.l10n_sa_edi_supply_end_date < move.delivery_date:
+                invalid_moves_dict['l10n_sa_edi_invalid_supply_end_date'] += move
 
             if (
                 any(

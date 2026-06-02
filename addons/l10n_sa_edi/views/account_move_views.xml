@@ -24,6 +24,12 @@
                                readonly="state != 'draft'"/>
                     </div>
                 </div>
+                <field name="l10n_sa_confirmation_datetime" position="before">
+                    <field name="l10n_sa_edi_supply_end_date"
+                           string="Supply End Date"
+                           readonly="state != 'draft'"
+                           invisible="not show_delivery_date or country_code != 'SA'"/>
+                </field>
                 <notebook position="inside">
                     <page string="ZATCA" name="l10n_sa_edi_zatca_page" invisible="not l10n_sa_edi_log_ids">
                         <field name="l10n_sa_edi_log_ids">
