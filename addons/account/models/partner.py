@@ -220,7 +220,7 @@ class AccountFiscalPosition(models.Model):
         return super(AccountFiscalPosition, self).write(vals)
 
     def _get_first_matching_fpos(self, partner):
-        sorted_fpos = self.sorted(key=lambda f: (-len(f.company_id.parent_ids), f.sequence))  # company specific first, then sequence
+        sorted_fpos = self.sorted(key=lambda f: (-len(f.company_id.sudo().parent_ids), f.sequence))  # company specific first, then sequence
         for fpos in sorted_fpos:
             if all(fn(fpos) for fn in self._get_fpos_validation_functions(partner)):
                 return fpos
