@@ -1,0 +1,23 @@
+name: CI - Validar Docker Compose
+
+on:
+  push:
+    branches: ["19.0", "feature/**"]
+  pull_request:
+    branches: ["19.0"]
+
+jobs:
+  validate-compose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+
+      - name: Validar docker-compose.yml
+        run: |
+          docker compose -f docker-config/docker-compose.yml config
+        
+      - name: Verificar servicios definidos
+        run: |
+          echo "Servicios encontrados:"
+          docker compose -f docker-config/docker-compose.yml config --services
