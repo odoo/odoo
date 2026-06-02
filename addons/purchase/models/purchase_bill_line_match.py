@@ -69,7 +69,10 @@ class PurchaseBillLineMatch(models.Model):
 
     def _compute_product_uom_qty(self):
         for line in self:
-            line.product_uom_qty = line.line_uom_id._compute_quantity(line.line_qty, line.product_uom_id)
+            if line.product_id:
+                line.product_uom_qty = line.line_uom_id._compute_quantity(line.line_qty, line.product_uom_id)
+            else:
+                line.product_uom_qty = line.line_qty
 
     @api.depends('aml_id.price_unit', 'pol_id.price_unit')
     def _compute_product_uom_price(self):
@@ -143,9 +146,16 @@ class PurchaseBillLineMatch(models.Model):
     @api.model
     def _action_create_bill_from_po_lines(self, partner, po_lines):
         """ Create a new vendor bill with the selected PO lines and returns an action to open it """
+        if len(po_lines.currency_id) == 1:
+            currency = po_lines.currency_id
+        elif len(po_lines.company_id) == 1:
+            currency = po_lines.company_id.currency_id
+        else:
+            currency = self.env.company.currency_id
         bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
             'partner_id': partner.id,
+            'currency_id': currency.id,
         })
         bill._add_purchase_order_lines(po_lines)
         return bill._get_records_action()

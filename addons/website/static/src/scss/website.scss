@@ -251,13 +251,28 @@ body {
                 max-width: 100% !important;
             }
 
-            // Vertical alignment when top-menu has visually "no background"
+            // Remove the left/right padding of the header navbar when the
+            // header has no visible separation from the body:
+            // - The header has no background color (transparent)
+            // - The header background color matches the body
+            // - The header has no shadow defined
             $-menu-color: o-color('menu-custom') or o-color('menu');
-            @if (not $-menu-color or $-menu-color == o-color('body')) {
-                > header {
-                    .navbar, .container {
-                        padding-left: 0;
-                        padding-right: 0;
+            $-header-template: o-website-value('header-template');
+            @if (
+                (not $-menu-color or ($-menu-color == o-color('body') and o-website-value('body-image') == null))
+                and (o-website-value('menu-box-shadow') == none)
+                and (index(("default", "hamburger", "stretch", "vertical", "search"), $-header-template) != null)
+            ) {
+                > header #o_main_nav {
+                    padding-left: 0;
+                    padding-right: 0;
+
+                    @if ($-header-template == "search") {
+                        & > div,
+                        & > .o_header_hide_on_scroll > .container {
+                            padding-left: 0;
+                            padding-right: 0;
+                        }
                     }
                 }
             }
@@ -453,6 +468,22 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
             }
         }
     }
+
+    .top_menu {
+        &.text-end > .accordion .accordion-button {
+            flex-direction: row-reverse;
+
+            &::after {
+                margin-left: 0;
+                margin-right: auto;
+            }
+        }
+
+        &.text-center > .accordion .accordion-button > span {
+            text-align: center;
+            flex-grow: 1;
+        }
+    }
 }
 
 // Apply background color to the offcanvas menu
@@ -471,6 +502,9 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
 @if o-website-value('header-template') == 'sidebar' {
     @include media-breakpoint-up(lg) {
         @include accordion-style-vertical-menu;
+    }
+    .o_header_sidebar > nav:not(.o_header_mobile) {
+        overflow-y: auto;
     }
 }
 
@@ -1147,6 +1181,14 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         position: absolute;
     }
 
+    .carousel-control-prev, .carousel-control-next {
+        &:focus-visible {
+            .carousel-control-prev-icon, .carousel-control-next-icon {
+                box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+            }
+        }
+    }
+
     // Allow clicks to pass through the carousel control's wrapper, while
     // keeping the control indicators clickable.
     .carousel-indicators {
@@ -1371,7 +1413,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             button {
                 color: inherit;
             }
-            
+
             &.s_carousel_indicators_numbers {
                 // For large screen, use the same size as the margin-bottom of
                 // the prev/next buttons (like other indicators; instead of
@@ -1677,15 +1719,20 @@ header {
     }
 
     nav.navbar {
-        @if o-website-value('menu-border-width') {
+        $-menu-border-width: o-website-value('menu-border-width');
+        @if $-menu-border-width {
+            // When the header should only have a bottom border, only take the
+            // first value of the variable 'menu-border-width' to behave as if
+            // the input only accepted one number.
+            $-menu-border-bottom-width: nth($-menu-border-width, 1);
             border: o-website-value('menu-border-style') o-color('menu-border-color') !important;
-            border-width: 0 0 o-website-value('menu-border-width') 0 !important;
+            border-width: 0 0 $-menu-border-bottom-width 0 !important;
 
             &.o_border_right_only {
-                border-width: 0 o-website-value('menu-border-width') 0 0 !important;
+                border-width: 0 $-menu-border-bottom-width 0 0 !important;
             }
             &.o_full_border {
-                border-width: o-website-value('menu-border-width') !important;
+                border-width: $-menu-border-width !important;
             }
         }
         border-radius: o-website-value('menu-border-radius') !important;

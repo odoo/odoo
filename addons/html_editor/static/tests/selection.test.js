@@ -15,6 +15,7 @@ import { MAIN_PLUGINS } from "../src/plugin_sets";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { insertText, tripleClick } from "./_helpers/user_actions";
+import { unformat } from "./_helpers/format";
 import { withSequence } from "@html_editor/utils/resource";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { SelectionPlugin } from "@html_editor/core/selection_plugin";
@@ -283,6 +284,29 @@ test("press 'ctrl+a' in 'contenteditable' should only select his content", async
     await press(["ctrl", "a"]);
     expect(getContent(el)).toBe(
         `<p data-selection-placeholder=""><br></p><div contenteditable="false"><p contenteditable="true">[ab]</p><p contenteditable="true">cd</p></div><p data-selection-placeholder=""><br></p>`
+    );
+});
+
+test("press 'ctrl+a' with 'contenteditable=false' at start should anchors selection in editable", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+                <div contenteditable="false">
+                    <div>abc</div>
+                    <div contenteditable="true">def</div>
+                </div>
+                <div class="o-paragraph">ghi[]</div>
+            `)
+    );
+    await press(["ctrl", "a"]);
+    expect(getContent(el)).toBe(
+        unformat(`
+                <p data-selection-placeholder="">[<br></p>
+                <div contenteditable="false">
+                    <div>abc</div>
+                    <div contenteditable="true">def</div>
+                </div>
+                <div class="o-paragraph">ghi]</div>
+            `)
     );
 });
 
@@ -1401,5 +1425,16 @@ describe("Preserve selection", () => {
         span1.remove();
         c1.restore();
         expect(isSameCursor(c1, c2)).toBe(true);
+    });
+});
+
+describe("Focus changes", () => {
+    test("Should not lose selection on focus change from the command palette", async () => {
+        const { el } = await setupEditor("<p>ab[]cd</p>");
+        await press(["ctrl", "k"]);
+        await animationFrame();
+        await press(["Escape"]);
+        await animationFrame();
+        expect(getContent(el)).toBe("<p>ab[]cd</p>");
     });
 });

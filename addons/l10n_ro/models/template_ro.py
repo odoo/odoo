@@ -11,6 +11,7 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'ro_pcg_recv',
             'property_account_payable_id': 'pcg_4011',
+            'property_stock_valuation_account_id': 'pcg_301',
             'code_digits': '6',
             'use_storno_accounting': True,
         }

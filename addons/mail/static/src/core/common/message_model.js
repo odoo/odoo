@@ -382,7 +382,7 @@ export class Message extends Record {
         if (this.author) {
             return this.getPersonaName(this.author);
         }
-        return this.email_from;
+        return this.email_from || _t("Unnamed");
     }
 
     get notificationHidden() {
@@ -503,7 +503,8 @@ export class Message extends Record {
             !this.is_transient &&
                 !this.isPending &&
                 this.thread?.can_react &&
-                !this.thread.isTransient
+                !this.thread.isTransient &&
+                this.thread.has_mail_thread
         );
     }
 

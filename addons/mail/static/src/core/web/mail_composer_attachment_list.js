@@ -23,7 +23,7 @@ export class MailComposerAttachmentList extends Many2ManyBinaryField {
         if (attachment && attachment.res_model === "mail.compose.message") {
             await this.attachmentUploadService.unlink(attachment);
         }
-        this.env.fullComposerBus.trigger("ATTACHMENT_REMOVED", {
+        this.env.fullComposerBus?.trigger("ATTACHMENT_REMOVED", {
             id: attachment.id,
         });
     }

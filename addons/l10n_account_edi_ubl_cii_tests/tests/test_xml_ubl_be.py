@@ -58,6 +58,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'type_tax_use': 'sale',
             'country_id': cls.env.ref('base.be').id,
             'sequence': 10,
+            'ubl_cii_tax_category_code': 'S',
         })
 
         cls.tax_15 = cls.env['account.tax'].create({
@@ -82,6 +83,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'amount': 6,
             'type_tax_use': 'sale',
             'country_id': cls.env.ref('base.be').id,
+            'ubl_cii_tax_category_code': 'S',
         })
 
         cls.tax_0 = cls.env['account.tax'].create({
@@ -90,6 +92,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'amount': 0,
             'type_tax_use': 'sale',
             'country_id': cls.env.ref('base.be').id,
+            'ubl_cii_tax_category_code': 'E',
         })
 
         cls.env['res.partner.bank'].sudo().create({
@@ -371,7 +374,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             invoice_vals={
                 'amount_total': 7125,
                 'amount_tax': 1225,
-                'invoice_lines': [{'price_subtotal': x} for x in (200, -200, 3999, 1, 1000, 899, 1)],
+                'invoice_lines': [{'price_subtotal': x} for x in (200, -200, 4000, 1000, 900)],
             },
         )
         # source: base-creditnote-correction.xml
@@ -414,7 +417,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                 'currency_id': self.env.ref('base.GBP').id,
                 'amount_total': 1200,
                 'amount_tax': 0,
-                'invoice_lines': [{'price_subtotal': 1200}],
+                'invoice_lines': [{'price_subtotal': 1200.0}],
             },
         )
 
@@ -525,11 +528,11 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
                         'discount': 0,
                         'tax_ids': tax.ids,
                     } for (price_unit, tax) in [
-                        (-4, self.tax_6),
-                        (-48, tax_21),
-                        (52, self.tax_0),
-                        (200, self.tax_6),
-                        (2400, tax_21),
+                        (52.0, self.tax_0),
+                        (-4.0, self.tax_6),
+                        (-48.0, tax_21),
+                        (200.0, self.tax_6),
+                        (2400.0, tax_21),
                     ]
                 ]
             },
@@ -624,8 +627,8 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             filename='bis3_out_invoice_quantity_and_or_unit_price_zero.xml',
             move_type='out_invoice',
             invoice_vals={
-                'amount_total': 3630,
-                'amount_tax': 630,
+                'amount_total': 3630.0,
+                'amount_tax': 630.0,
                 'currency_id': self.other_currency.id,
                 'invoice_lines': [
                     {

@@ -395,7 +395,10 @@ def get_text_content(term):
 
 def is_text(term):
     """ Return whether the term has only text. """
-    return len(html.fromstring(f"<_>{term}</_>")) == 0
+    it = html.fromstring(f"<root>{term}</root>").iter()
+    next(it)  # consume <root>
+    return next(it, None) is None
+
 
 xml_translate.get_text_content = get_text_content
 html_translate.get_text_content = get_text_content
@@ -1062,8 +1065,9 @@ def trans_export_records(lang, model_name, ids, buffer, format, env):
 def _push(callback, term, source_line):
     """ Sanity check before pushing translation terms """
     term = (term or "").strip()
-    # Avoid non-char tokens like ':' '...' '.00' etc.
-    if len(term) > 8 or any(x.isalpha() for x in term):
+    # We only want to export strings that are likely to be translated.
+    # We avoid exporting strings that contain no letters, like `:`, `...`, `.00`, etc.
+    if any(x.isalpha() for x in term):
         callback(term, source_line)
 
 def _extract_translatable_qweb_terms(element, callback):
@@ -1207,14 +1211,11 @@ class TranslationReader:
         msgid "<source>"
         record_id is the database id of the record being translated
         """
-        # empty and one-letter terms are ignored, they probably are not meant to be
-        # translated, and would be very hard to translate anyway.
         sanitized_term = (source or '').strip()
-        # remove non-alphanumeric chars
-        sanitized_term = re.sub(r'\W+', '', sanitized_term)
-        if not sanitized_term or len(sanitized_term) <= 1:
-            return
-        self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
+        # We only want to export strings that are likely to be translated.
+        # We avoid exporting strings that contain no letters, like `:`, `...`, `.00`, etc.
+        if any(x.isalpha() for x in sanitized_term):
+            self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
 
     def _export_imdinfo(self, model: str, imd_per_id: dict[int, ImdInfo]):
         records = self._get_translatable_records(imd_per_id.values())

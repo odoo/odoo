@@ -1572,23 +1572,7 @@ class ResUsersApikeys(models.Model):
         raise AccessError(_("You can not remove API keys unless they're yours or you are a system user"))
 
     def _check_credentials(self, *, scope, key):
-        assert scope and key, "scope and key required"
-        index = key[:INDEX_SIZE]
-        self.env.cr.execute('''
-            SELECT user_id, key
-            FROM {} INNER JOIN res_users u ON (u.id = user_id)
-            WHERE
-                u.active and index = %s
-                AND (scope IS NULL OR scope = %s)
-                AND (
-                    expiration_date IS NULL OR
-                    expiration_date >= now() at time zone 'utc'
-                )
-        '''.format(self._table),
-        [index, scope])
-        for user_id, current_key in self.env.cr.fetchall():
-            if key and KEY_CRYPT_CONTEXT.verify(key, current_key):
-                return user_id
+        return _check_apikey_credentials(self.env.cr, scope=scope, key=key, table=self._table)
 
     def _check_expiration_date(self, date):
         # To be in a sudoed environment or to be an administrator
@@ -1604,10 +1588,11 @@ class ResUsersApikeys(models.Model):
 
     def _generate(self, scope, name, expiration_date):
         """Generates an api key.
-        :param str scope: the scope of the key. If None, the key will give access to any rpc.
+        :param str|None scope: the scope of the key. If None, the key will give access to any rpc.
         :param str name: the name of the key, mainly intended to be displayed in the UI.
-        :param date expiration_date: the expiration date of the key.
-        :return: str: the key.
+        :param datetime.datetime expiration_date: the expiration date of the key.
+        :returns: the key.
+        :rtype: str
 
         Note:
         This method must be called in sudo to use a duration
@@ -1655,6 +1640,15 @@ class ResUsersApikeys(models.Model):
         The `expiration_date` must be allowed for the user's group.
 
         To renew a key, generate the new one, store it, and then call `revoke` on the previous one.
+
+        :param str key: an active API key belonging to the current user
+        :param str|None scope: the scope of the key. If None, the key will give access to any rpc.
+        :param str name: the name of the key, mainly intended to be displayed in the UI.
+        :param str|datetime.datetime expiration_date: the expiration date of the key. String values
+            may be either ISO 8601 dates (``"2026-12-30"``) or space-separated datetimes
+            (``"2026-12-30 14:30:00"``).
+        :returns: the key.
+        :rtype: str
         """
         self._ensure_can_manage_keys_programmatically()
 
@@ -1693,6 +1687,8 @@ class ResUsersApikeys(models.Model):
         """
         Revoke an existing API key.
         If it exists, the `key` will be removed from the server.
+
+        :param str key: the API key that has to be revoked
         """
         self._ensure_can_manage_keys_programmatically()
         assert key, "key required"
@@ -1722,6 +1718,36 @@ class ResUsersApikeys(models.Model):
                 expiration_date < now() at time zone 'utc'
         """, SQL.identifier(self._table)))
         _logger.info("GC %r delete %d entries", self._name, self.env.cr.rowcount)
+
+
+def _check_apikey_credentials(cr, *, scope, key, table='res_users_apikeys'):
+    """
+    Check an API key.
+
+    :param odoo.sql_db.BaseCursor cr: database cursor
+    :param str scope:                 scope of the API key
+    :param str key:                   the API key to verify
+    :param str|None table:            optional table name
+    :returns:                         user_id if key is valid, None otherwise
+    :rtype: int|None
+    """
+    assert scope and key, "scope and key required"
+    index = key[:INDEX_SIZE]
+    cr.execute(SQL('''
+        SELECT user_id, key
+        FROM %(table)s INNER JOIN res_users u ON (u.id = user_id)
+        WHERE
+            u.active and index = %(index)s
+            AND (scope IS NULL OR scope = %(scope)s)
+            AND (
+                expiration_date IS NULL OR
+                expiration_date >= now() at time zone 'utc'
+            )
+    ''',
+    index=index, scope=scope, table=SQL.identifier(table)))
+    for user_id, current_key in cr.fetchall():
+        if key and KEY_CRYPT_CONTEXT.verify(key, current_key):
+            return user_id
 
 
 class ResUsersApikeysDescription(models.TransientModel):

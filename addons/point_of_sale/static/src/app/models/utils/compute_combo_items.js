@@ -21,15 +21,22 @@ export const computeComboItems = (
 
     let remainingTotal = parentLstPrice;
     const ProductPrice = currency_id || decimalPrecision.find((dp) => dp.name === "Product Price");
-    if (childLineConf[childLineConf.length - 1]?.qty > 1) {
+    if (
+        childLineConf[childLineConf.length - 1]?.qty > 1 &&
+        (childLineConf[childLineConf.length - 1]?.parentQty ?? 1) === 1
+    ) {
         childLineConf[childLineConf.length - 1].qty -= 1;
         childLineConf.push({ ...childLineConf[childLineConf.length - 1], qty: 1 });
     }
     for (const conf of childLineConf) {
         const comboItem = conf.combo_item_id;
         const combo = comboItem.combo_id;
-        let priceUnit = ProductPrice.round((combo.base_price * parentLstPrice) / originalTotal);
-        remainingTotal -= priceUnit * conf.qty;
+        const parentCoef = conf.parentQty || 1;
+        let priceUnit = ProductPrice.round(
+            (combo.base_price * parentLstPrice * parentCoef) / originalTotal
+        );
+        remainingTotal -= (priceUnit * conf.qty) / parentCoef;
+
         if (conf === childLineConf[childLineConf.length - 1]) {
             priceUnit += remainingTotal;
             remainingTotal = 0;
@@ -43,7 +50,8 @@ export const computeComboItems = (
         comboItems.push({
             combo_item_id: comboItem,
             price_unit: totalPriceExtra,
-            attribute_value_ids,
+            attribute_value_ids:
+                attribute_value_ids || comboItem.product_id?.product_template_attribute_value_ids,
             attribute_custom_values: conf.configuration?.attribute_custom_values || {},
             qty: conf.qty,
         });
@@ -81,11 +89,25 @@ export const computeComboItems = (
         comboItems.push({
             combo_item_id: comboItem,
             price_unit: totalPriceExtra,
-            attribute_value_ids,
+            attribute_value_ids:
+                attribute_value_ids || comboItem.product_id?.product_template_attribute_value_ids,
             attribute_custom_values: extra.configuration?.attribute_custom_values || {},
             qty: extra.qty,
         });
     }
 
+    let sequenceCounter = 0;
+    const mapSequence = parentProduct.combo_ids.reduce((acc, combo) => {
+        combo.combo_item_ids.forEach((item) => {
+            acc[item.id] = sequenceCounter++;
+        });
+        return acc;
+    }, {});
+
+    comboItems.sort(
+        (a, b) =>
+            (mapSequence[a.combo_item_id.id] ?? Infinity) -
+            (mapSequence[b.combo_item_id.id] ?? Infinity)
+    );
     return comboItems;
 };

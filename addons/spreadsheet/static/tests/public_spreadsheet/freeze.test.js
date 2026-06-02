@@ -1,5 +1,5 @@
 import { animationFrame, describe, expect, test } from "@odoo/hoot";
-import { registries } from "@odoo/o-spreadsheet";
+import { Model, registries } from "@odoo/o-spreadsheet";
 import { createSpreadsheetWithChart } from "@spreadsheet/../tests/helpers/chart";
 import {
     addGlobalFilter,
@@ -13,7 +13,10 @@ import {
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { getCell, getEvaluatedCell } from "@spreadsheet/../tests/helpers/getters";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
-import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
+import {
+    createModelWithDataSource,
+    makeSpreadsheetMockEnv,
+} from "@spreadsheet/../tests/helpers/model";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
 import { freezeOdooData, waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { OdooPivot, OdooPivotRuntimeDefinition } from "@spreadsheet/pivot/odoo_pivot";
@@ -301,9 +304,9 @@ test("odoo links are replaced with their label", async function () {
         serverData: getMenuServerData(),
     });
     const frozenData = await freezeOdooData(model);
-    expect(frozenData.sheets[0].cells.A1).toBe("menu_xml");
-    expect(frozenData.sheets[0].cells.A2).toBe("menu_id");
-    expect(frozenData.sheets[0].cells.A3).toBe("odoo_view");
+    expect(frozenData.sheets[0].cells.A1).toBe("[menu_xml](neutralized:link)");
+    expect(frozenData.sheets[0].cells.A2).toBe("[menu_id](neutralized:link)");
+    expect(frozenData.sheets[0].cells.A3).toBe("[odoo_view](neutralized:link)");
     expect(frozenData.sheets[0].cells.A4).toBe("[external_link](https://odoo.com)");
     expect(frozenData.sheets[0].cells.A5).toBe("[internal_link](o-spreadsheet://Sheet1)");
 });
@@ -336,7 +339,7 @@ test("spilled pivot table", async function () {
     );
 });
 
-test("empty string computed measure is exported as =\"\"", async function () {
+test('empty string computed measure is exported as =""', async function () {
     const { model } = await createSpreadsheetWithPivot();
     setCellContent(model, "A10", "=PIVOT(1)");
     expect(getEvaluatedCell(model, "B12").value).toBe(""); // empty value
@@ -349,4 +352,30 @@ test("Lists are purged from the frozen data", async function () {
     const { model } = await createSpreadsheetWithList();
     const data = await freezeOdooData(model);
     expect(data.lists).toEqual({});
+});
+
+test("Cannot copy in frozen spreadsheets", async function () {
+    const env = await makeSpreadsheetMockEnv();
+    env.isFrozenSpreadsheet = () => true;
+    const model = new Model(
+        {},
+        {
+            custom: {
+                env,
+                isFrozenSpreadsheet: true,
+            },
+        }
+    );
+    expect(model.canDispatch("COPY", {}).isSuccessful).toBe(false);
+
+    const { cellMenuRegistry, topbarMenuRegistry, colMenuRegistry, rowMenuRegistry } = registries;
+    expect(cellMenuRegistry.get("copy").isEnabled(env)).toBe(false);
+    expect(colMenuRegistry.get("copy").isEnabled(env)).toBe(false);
+    expect(rowMenuRegistry.get("copy").isEnabled(env)).toBe(false);
+    expect(
+        topbarMenuRegistry
+            .get("edit")
+            .children.filter((c) => c.id === "copy")[0]
+            .isEnabled(env)
+    ).toBe(false);
 });

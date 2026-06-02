@@ -30,13 +30,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # symbiotech <symbiotech3@gmail.com>, 2026.
 # Hanna Kharraziha <hakha@odoo.com>, 2026.
+# Mikael Akerberg <mikael.akerberg@mariaakerberg.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-03-06 17:48+0000\n"
-"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"PO-Revision-Date: 2026-05-30 09:43+0000\n"
+"Last-Translator: Mikael Akerberg <mikael.akerberg@mariaakerberg.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/base/sv/>"
 "\n"
 "Language: sv\n"
@@ -44,7 +45,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -388,73 +389,72 @@ msgstr ""
 "Lokaliseringsmodul för Dominikanska republiken\n"
 "===========================================\n"
 "\n"
-"Skatte- och redovisningskatalog för Dominikanska republiken, kompatibel för "
-"**Internationalisering** med **IFRS** och anpassad till **IFRS standarder "
-"och regler\n"
-"Internationalisering** med **IFRS** och anpassad till **DGII**:s regler och "
-"förordningar.\n"
-"av Dirección General de Impuestos Internos (**DGII**).\n"
+"Catálogo de Cuentas e Impuestos para República Dominicana, Compatible para\n"
+"**Internacionalización** con **NIIF** y alineado a las normas y "
+"regulaciones\n"
+"de la Dirección General de Impuestos Internos (**DGII**).\n"
 "\n"
-"**Denna modul består av\n"
+"**Este módulo consiste de:**\n"
 "\n"
-"- Standardkontoplan (anpassad till DGII och IFRS)\n"
-"- Skattekatalog med de flesta av skatterna förkonfigurerade\n"
-"        - ITBIS för inköp och försäljning\n"
-"        - ITBIS källskatter\n"
-"        - Innehållen inkomstskatt\n"
-"        - Grupper av skatter och källskatter:\n"
-"                - Telekommunikation\n"
-"                - Leverantörer av byggmaterial\n"
-"                - Enskilda personer som tillhandahåller tjänster\n"
-"        - Övriga skatter\n"
-"- Förkonfigurerade sekvenser för hantering av alla NCF:er\n"
-"        - Fakturor med skattemässigt värde (för försäljning)\n"
-"        - Fakturor för slutkonsumenter\n"
-"        - Debet- och kreditnotor\n"
-"        - Informell registrering av leverantörer\n"
-"        - Register för enstaka poster\n"
-"        - Registrering av mindre utgifter\n"
-"        - Statliga\n"
-"- Skattepositioner för automatisering av skatter och källskatt\n"
-"        - Ändringar från skatt till undantag (t.ex. försäljning till "
-"staten)\n"
-"        - Skatteändringar till källskatt (t.ex. köp av tjänster utomlands)\n"
-"        - Bland annat\n"
+"- Catálogo de Cuentas Estándar (alineado a DGII y NIIF)\n"
+"- Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados\n"
+"        - ITBIS para compras y ventas\n"
+"        - Retenciones de ITBIS\n"
+"        - Retenciones de ISR\n"
+"        - Grupos de Impuestos y Retenciones:\n"
+"                - Telecomunicaiones\n"
+"                - Proveedores de Materiales de Construcción\n"
+"                - Personas Físicas Proveedoras de Servicios\n"
+"        - Otros impuestos\n"
+"- Secuencias Preconfiguradas para manejo de todos los NCF\n"
+"        - Facturas con Valor Fiscal (para Ventas)\n"
+"        - Facturas para Consumidores Finales\n"
+"        - Notas de Débito y Crédito\n"
+"        - Registro de Proveedores Informales\n"
+"        - Registro de Ingreso Único\n"
+"        - Registro de Gastos Menores\n"
+"        - Gubernamentales\n"
+"- Posiciones Fiscales para automatización de impuestos y retenciones\n"
+"        - Cambios de Impuestos a Exenciones (Ej. Ventas al Estado)\n"
+"        - Cambios de Impuestos a Retenciones (Ej. Compra Servicios al "
+"Exterior)\n"
+"        - Entre otros\n"
 "\n"
-"**Notera:**\n"
-"Denna lokalisering har visserligen sekvenserna för NCF, men dessa kan inte "
-"användas\n"
-"utan installation av tredjepartsmoduler eller ytterligare utveckling.\n"
-"ytterligare utveckling.\n"
+"**Nota:**\n"
+"Esta localización, aunque posee las secuencias para NCF, las mismas no "
+"pueden\n"
+"ser utilizadas sin la instalación de módulos de terceros o desarrollo\n"
+"adicional.\n"
 "\n"
-"Kontoplanens kodningsstruktur:\n"
+"Estructura de Codificación del Catálogo de Cuentas:\n"
 "===================================================\n"
 "\n"
-"**En siffra** representerar bokslutets kontokategori/-typ.\n"
-"**1** - Tillgångar **4** - Konton för intäkter och vinster\n"
-"**2** - Skulder **5** - Kostnader, utgifter och förluster\n"
-"**3** - Kapital **6** - Resultaträkningens clearingkonton\n"
+"**Un dígito** representa la categoría/tipo de cuenta del del estado "
+"financiero.\n"
+"**1** - Activo        **4** - Cuentas de Ingresos y Ganancias\n"
+"**2** - Pasivo        **5** - Costos, Gastos y Pérdidas\n"
+"**3** - Capital       **6** - Cuentas Liquidadoras de Resultados\n"
 "\n"
-"**Två siffror** representerar grupperingsposterna:\n"
-"11- Omsättningstillgångar\n"
-"21- Kortfristiga skulder\n"
-"31- Eget kapital\n"
+"**Dos dígitos** representan los rubros de agrupación:\n"
+"11- Activo Corriente\n"
+"21- Pasivo Corriente\n"
+"31- Capital Contable\n"
 "\n"
-"**Fyra siffror** tilldelas kontona i huvudboken: konton i första ordningen\n"
-"1101- Likvida medel och motsvarigheter till likvida medel\n"
-"2101- Leverantörsskulder och kortfristiga skulder\n"
-"3101- Aktiekapital\n"
+"**Cuatro dígitos** se asignan a las cuentas de mayor: cuentas de primer "
+"orden\n"
+"1101- Efectivo y Equivalentes de Efectivo\n"
+"2101- Cuentas y Documentos por pagar\n"
+"3101- Capital Social\n"
 "\n"
-"**Sex siffror** tilldelas underkonton: underbokföringskonton\n"
-"110101 - Kassa\n"
-"210101 - Lokala leverantörer\n"
+"**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden\n"
+"110101 - Caja\n"
+"210101 - Proveedores locales\n"
 "\n"
-"Åtta siffror** är för konton för tredje ordern (de som visas i Odoo): **Åtta "
-"siffror** är för konton för tredje ordern\n"
-"i Odoo):\n"
-"110101- Likvida medel\n"
-"110101- Kassa\n"
-"11010101 Allmän kassa\n"
+"**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas\n"
+"en Odoo):\n"
+"1101- Efectivo y Equivalentes\n"
+"110101- Caja\n"
+"11010101 Caja General\n"
 
 #. module: base
 #. odoo-python
@@ -838,7 +838,7 @@ msgid ""
 "- Track timesheet for a task from a ticket\n"
 msgstr ""
 "\n"
-"- Tillåt att ange projekt för Helpdesk-team\n"
+"- Tillåt att ange projekt för Kundtjänst-team\n"
 "- Spåra tidrapporter för en uppgift från ett ärende\n"
 
 #. module: base
@@ -3547,7 +3547,7 @@ msgstr ""
 "En knapp läggs till på själva produkten, men också en åtgärd i listvyn över "
 "produkterna.\n"
 "Om den automatiska lagervärderingen är aktiv skapas de nödvändiga "
-"bokföringsposterna.\n"
+"verifikationerna.\n"
 "\n"
 
 #. module: base
@@ -4508,7 +4508,7 @@ msgid ""
 "Bill timesheets logged on helpdesk tickets.\n"
 msgstr ""
 "\n"
-"Fakturera tidrapporter som loggats på helpdeskärenden.\n"
+"Fakturera tidrapporter som loggats på kundtjänstärenden.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -4616,7 +4616,7 @@ msgid ""
 "Bridge between Helpdesk and Industry FSM Sale\n"
 msgstr ""
 "\n"
-"Brygga mellan Helpdesk och Industry FSM Sale\n"
+"Brygga mellan Kundtjänst och Industry FSM Sale\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_rating
@@ -5220,7 +5220,7 @@ msgid ""
 "or generate a ticket from a business inquiry\n"
 msgstr ""
 "\n"
-"Konvertera företagsförfrågningar som av misstag har hamnat i Helpdesk-"
+"Konvertera företagsförfrågningar som av misstag har hamnat i Kundtjänst-"
 "pipelinen,\n"
 "eller generera ett ärende från en affärsförfrågan\n"
 
@@ -5240,7 +5240,7 @@ msgid ""
 "Convert helpdesk tickets to field service tasks.\n"
 msgstr ""
 "\n"
-"Konvertera helpdeskärenden till uppgifter för fälttjänster.\n"
+"Konvertera kundtjänstärenden till uppgifter för fälttjänster.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_unspsc
@@ -5260,7 +5260,7 @@ msgid ""
 "Create Credit Notes from Helpdesk tickets\n"
 msgstr ""
 "\n"
-"Skapa kreditupplysningar från Helpdesk-ärenden\n"
+"Skapa kreditupplysningar från kundtjänstärenden\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides
@@ -7322,7 +7322,7 @@ msgid ""
 "Generate Coupons from Helpdesks tickets\n"
 msgstr ""
 "\n"
-"Generera kuponger från Helpdesks biljetter\n"
+"Generera kuponger från Kundtjänsts ärenden\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_iso20022
@@ -7587,7 +7587,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Helpdesk - App för ärendehantering\n"
+"Kundtjänst - App för ärendehantering\n"
 "================================\n"
 "\n"
 "Funktioner:\n"
@@ -7619,7 +7619,7 @@ msgid ""
 "Helpdesk integration with knowledge\n"
 msgstr ""
 "\n"
-"Integration av helpdesk med kunskap\n"
+"Integration av kundtjänst med kunskap\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_holidays
@@ -7628,7 +7628,7 @@ msgid ""
 "Helpdesk integration with time off\n"
 msgstr ""
 "\n"
-"Integration av helpdesk med ledighet\n"
+"Integration av kundtjänst med ledighet\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk_hr_payroll
@@ -8559,7 +8559,7 @@ msgid ""
 "Manage Product returns from helpdesk tickets\n"
 msgstr ""
 "\n"
-"Hantera produktreturer från helpdeskärenden\n"
+"Hantera produktreturer från Kundtjänstärenden\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_work_entry_holidays
@@ -8651,7 +8651,7 @@ msgstr ""
 "* Utkast till utgift\n"
 "* Inlämnat av den anställde till sin chef\n"
 "* Godkänd av sin chef\n"
-"* Validering av revisorn och skapande av bokföringsposter\n"
+"* Validering av revisorn och skapande av verifikationer\n"
 "\n"
 "Denna modul använder också objektbokföring och är kompatibel med modulen "
 "Faktura på tidrapport så att du automatiskt kan vidarefakturera dina kunders "
@@ -8759,7 +8759,7 @@ msgid ""
 "Manage the after sale of the products from helpdesk tickets.\n"
 msgstr ""
 "\n"
-"Hantera efterförsäljning av produkterna från helpdesk-ärenden.\n"
+"Hantera efterförsäljning av produkterna från kundtjänstärenden.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_mrp
@@ -10428,7 +10428,7 @@ msgid ""
 "Repair Products from helpdesk tickets\n"
 msgstr ""
 "\n"
-"Reparera produkter från helpdesk-ärenden\n"
+"Reparera produkter från kundtjänstärenden\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bg_ledger
@@ -13381,7 +13381,7 @@ msgid ""
 msgstr ""
 "\n"
 "Denna modul gör det möjligt att uppdatera skattetabeller på befintliga "
-"bokföringsposter.\n"
+"verifikationer.\n"
 "I felsökningsläge kommer en knapp för att uppdatera dina posters "
 "skattetabeller att vara tillgänglig\n"
 "i bokföringsinställningarna.\n"
@@ -14416,7 +14416,7 @@ msgid ""
 "This module installs when we want to share coupon from helpdesk.\n"
 msgstr ""
 "\n"
-"Denna modul installeras när vi vill dela kupong från helpdesk.\n"
+"Denna modul installeras när vi vill dela kupong från kundtjänst.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy_edi
@@ -15550,7 +15550,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Integration av webbplatsforum för helpdesk-modulen\n"
+"Integration av webbplatsforum för kundtjänstmodulen\n"
 "=================================================\n"
 "\n"
 "    Tillåt dina team att ha relaterade forum för att svara på kundfrågor.\n"
@@ -15572,7 +15572,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Webbplats IM Livechat-integration för helpdesk-modulen\n"
+"Webbplats IM Livechat-integration för kundtjänstmodulen\n"
 "=======================================================\n"
 "\n"
 "Funktioner:\n"
@@ -15593,7 +15593,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Integration av Slides på webbplatsen för helpdesk-modulen\n"
+"Integration av Slides på webbplatsen för kundtjänstmodulen\n"
 "==================================================\n"
 "\n"
 "    Lägg till bildpresentationer i ditt team så att kunder som söker hjälp "
@@ -17304,7 +17304,7 @@ msgstr "Behörighetskontroller"
 #. module: base
 #: model:ir.model,name:base.model_res_groups
 msgid "Access Groups"
-msgstr "Rättighetsgrupper"
+msgstr "Grupper med åtkomstbehörighet"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__menu_access
@@ -17424,7 +17424,7 @@ msgstr "Kontoinnehavare"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr "Kontoinnehavare"
+msgstr "Kontoinnehavares namn"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -21189,7 +21189,7 @@ msgstr "Närvaro Helgdagar"
 #: model:ir.module.category,name:base.module_category_human_resources_attendances
 #: model:ir.module.module,shortdesc:base.module_hr_attendance
 msgid "Attendances"
-msgstr "Närvarande"
+msgstr "Närvaro"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_planning_attendance
@@ -24199,7 +24199,7 @@ msgstr "Komorerna - Redovisningsrapporter"
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Companies"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: base
 #. odoo-python
@@ -24220,7 +24220,7 @@ msgstr "Bolag"
 #: model_terms:ir.ui.view,arch_db:base.view_users_search
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "Company"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: base
 #. odoo-python
@@ -24755,7 +24755,7 @@ msgstr "Kontrollera kvaliteten på dina produkter med IoT-enheter"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_helpdesk
 msgid "Convert Tickets from/to Leads"
-msgstr "Konvertera biljetter från/till leads"
+msgstr "Konvertera ärenden från/till leads"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -25796,7 +25796,7 @@ msgstr "Smalt tankstreck"
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_dashboard
 msgid "Dashboard"
-msgstr "Instrumentpanel"
+msgstr "Dashboard"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
@@ -26442,7 +26442,7 @@ msgstr "Dirham"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Disable"
-msgstr "Inaktivera"
+msgstr "Avaktivera"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__disable_shrinking
@@ -30045,7 +30045,7 @@ msgstr "Generell information"
 #: model:ir.ui.menu,name:base.menu_config
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "General Settings"
-msgstr "Generella inställningar"
+msgstr "Allmänna inställningar"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_landing
@@ -30827,7 +30827,7 @@ msgstr "Hjälp"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_forum
 msgid "Help Center for helpdesk based on Odoo Forum"
-msgstr "Hjälpcenter för helpdesk baserat på Odoo Forum"
+msgstr "Hjälpcenter för kundtjänst baserat på Odoo Forum"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_helpdesk
@@ -30896,7 +30896,7 @@ msgstr "Kundtjänst reparationer"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale_loyalty
 msgid "Helpdesk Sale Loyalty"
-msgstr "Helpdesk Lojalitet vid försäljning"
+msgstr "Kundtjänst Lojalitet vid försäljning"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_stock
@@ -30921,12 +30921,12 @@ msgstr "Kundtjänst tidrapport"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_holidays
 msgid "Helpdesk integration with holidays"
-msgstr "Integration av helpdesk med helgdagar"
+msgstr "Integration av kundtjänst med helgdagar"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_knowledge
 msgid "Helpdesk integration with knowledge"
-msgstr "Integration av helpdesk med kunskap"
+msgstr "Integration av kundtjänst med kunskap"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_stock_account
@@ -32177,7 +32177,7 @@ msgstr "Indonesiska försäljningsställen"
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
 msgid "Industries"
-msgstr "Industrier"
+msgstr "Branscher"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_industry
@@ -32836,7 +32836,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_account
 #: model:ir.module.module,shortdesc:base.module_account_accountant
 msgid "Invoicing"
-msgstr "Fakturering"
+msgstr "Faktura"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_administration_iot
@@ -41234,7 +41234,7 @@ msgstr "Telefon - CRM"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip_helpdesk
 msgid "Phone - Helpdesk"
-msgstr "Telefon - Helpdesk"
+msgstr "Telefon - Kundtjänst"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip_hr
@@ -41274,7 +41274,7 @@ msgstr "Telefonintegration med CRM-modul."
 #. module: base
 #: model:ir.module.module,summary:base.module_voip_helpdesk
 msgid "Phone integration with Helpdesk module."
-msgstr "Telefonintegration med Helpdesk-modulen."
+msgstr "Telefonintegration med Kundtjänstmodulen."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip_hr
@@ -43234,7 +43234,7 @@ msgstr "Rapport"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
 msgid "Report Action"
-msgstr "Rapportera åtgärder"
+msgstr "Rapporteringsåtgärd"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_file
@@ -43612,7 +43612,7 @@ msgstr "Avrundningsfaktor"
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "Rounding precision"
-msgstr "Precision vid avrundning"
+msgstr "Avrundningsprecision"
 
 #. module: base
 #. odoo-python
@@ -45853,7 +45853,7 @@ msgstr "Sportklubb"
 #: model:ir.module.module,summary:base.module_spreadsheet_dashboard_website_sale_slides
 #: model:ir.module.module,summary:base.module_spreadsheet_edition
 msgid "Spreadsheet"
-msgstr "Kalkylblad"
+msgstr "Kalkylark"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_account
@@ -47238,8 +47238,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"ISO-landskoden med två tecken\n"
-"Du kan använda det här fältet för snabb sökning."
+"ISO-kod med två tecken.\n"
+"Fältet används för snabbsökning."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_holidays
@@ -51151,7 +51151,7 @@ msgstr "URL för webhook"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Website"
-msgstr "Webbplats"
+msgstr "Hemsida"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_appointment_crm
@@ -51268,7 +51268,7 @@ msgstr "Webbplatsens anslagstavla för försäljning"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides_forum
 msgid "Website Slides Forum Helpdesk"
-msgstr "Webbplats Slides Forum Helpdesk"
+msgstr "Webbplats Slides Forum Kundtjänst"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides
@@ -52288,7 +52288,7 @@ msgstr "konto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_emv
 msgid "account_qr_code_emv"
-msgstr "konto_qr_kod_emv"
+msgstr "account_qr_code_emv"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__active
@@ -52782,7 +52782,6 @@ msgstr "andra"
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_company.py:0
-#, fuzzy
 msgid "parent_id"
 msgstr "parent_id"
 
@@ -52838,7 +52837,7 @@ msgstr "fastigheter"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__properties_definition
 msgid "properties_definition"
-msgstr "egenskap_definition"
+msgstr "properties_definition"
 
 #. module: base
 #. odoo-python
@@ -52876,7 +52875,7 @@ msgstr "urval_värde"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__sequence_id
 msgid "sequence_id"
-msgstr "sekvens_id"
+msgstr "sequence_id"
 
 #. module: base
 #. odoo-python
@@ -52994,7 +52993,7 @@ msgstr "ta bort länk"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__update_boolean_value
 msgid "update_boolean_value"
-msgstr "uppdatera_boolean_värde"
+msgstr "update_boolean_value"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__value
@@ -53009,12 +53008,12 @@ msgstr "webb_studio_ai_fält"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_sale_loyalty
 msgid "website helpdesk sale"
-msgstr "webbplats helpdesk försäljning"
+msgstr "webbplats kundtjänst försäljning"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_sale_loyalty
 msgid "website helpdesk sale loyalty"
-msgstr "webbplats helpdesk försäljning lojalitet"
+msgstr "webbplats kundtjänst försäljning lojalitet"
 
 #. module: base
 #. odoo-python

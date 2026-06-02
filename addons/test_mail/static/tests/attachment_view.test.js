@@ -162,7 +162,7 @@ test("Chatter main attachment: can change from non-viewable to viewable", async 
     patchUiSize({ size: SIZES.XXL });
     await start();
     await openFormView("mail.test.simple.main.attachment", recordId);
-
+    await contains("button[aria-label='Attach files']:enabled");
     // Add a PDF file
     const pdfFile = new File([new Uint8Array(1)], "text.pdf", { type: "application/pdf" });
     await dragenterFiles(".o-mail-Chatter", [pdfFile]);

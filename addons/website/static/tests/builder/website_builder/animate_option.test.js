@@ -8,6 +8,7 @@ import {
 } from "@website/../tests/builder/website_helpers";
 import { setSelection, thirdClick } from "@html_editor/../tests/_helpers/selection";
 import { advanceTime } from "@odoo/hoot-mock";
+import { onRpcImg } from "../image_test_helpers";
 
 defineWebsiteModels();
 
@@ -125,6 +126,10 @@ describe("onAppearance", () => {
         expect(".options-container [data-label='Scroll Zone']").not.toHaveCount();
         expect(".options-container [data-label='Start After'] input").toHaveValue("0");
         expect(".options-container [data-label='Duration'] input").toHaveValue("1");
+        await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+        await contains(".o-dropdown--menu [data-action-value='onScroll']").click();
+        await waitSidebarUpdated();
+        expect(".options-container [data-label='Intensity']").toHaveCount(1);
     });
     test("visibility of animation animation=onAppearance effect=flash", async () => {
         const { waitSidebarUpdated } = await setupWebsiteBuilder(
@@ -275,6 +280,7 @@ test("visibility of animation animation=onHover", async () => {
     expectOnHoverOptions({ Effect: "Mirror Blur", Intensity: 1 });
 });
 test("animation=onHover should not be visible when the image is a device shape", async () => {
+    onRpcImg("/html_builder/static/image_shapes/devices/iphone_front_portrait.svg");
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
             <img data-shape="html_builder/devices/iphone_front_portrait" src='${base64Img}'>

@@ -187,11 +187,11 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
     def test_l10n_it_edi_send_success_with_signed_data_update_attachment(self):
         invoice = self.init_invoice(self.italian_partner_a)
         self.generate_l10n_it_edi_send_attachments(invoice)
-        signed_data_result = base64.b64encode(b'some signed data').decode()
+        signed_data_result = 'some signed data'
         success = {'id_transaction': "SDI ID 1", 'signed': True, 'signed_data': signed_data_result}
         with patch('odoo.addons.l10n_it_edi.models.account_move.AccountMove._l10n_it_edi_upload_single', return_value=success, autospec=True):
             self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods=['email'])
-            self.assertEqual(invoice.l10n_it_edi_attachment_file, signed_data_result.encode())
+            self.assertEqual(base64.b64decode(invoice.l10n_it_edi_attachment_file).decode(), signed_data_result)
 
     def test_pa_state_keeps_updating_after_sdi_validation(self):
         """

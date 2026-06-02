@@ -37,8 +37,8 @@ class TestAccountSectionAndSubsection(AccountTestInvoicingCommon):
         ]
         section_lines = move.invoice_line_ids[0]._get_child_lines()
         expected_values = [
-            {'display_type': 'line_section', 'name': 'Section 1', 'price_subtotal': 400.0, 'taxes': ['15%']},
-            {'display_type': 'product', 'name': 'product_a', 'price_subtotal': 100.0, 'taxes': []},
+            {'display_type': 'line_section', 'name': 'Section 1', 'price_subtotal': 400.0, 'taxes': []},
+            {'display_type': 'product', 'name': 'product_a', 'price_subtotal': 100.0, 'taxes': ['15%']},
             {'display_type': 'product', 'name': 'Subsection 1.1', 'price_subtotal': 300.0, 'taxes': ['15%']},
         ]
         for expected_value, line_value in zip(expected_values, section_lines):
@@ -81,9 +81,9 @@ class TestAccountSectionAndSubsection(AccountTestInvoicingCommon):
         ]
         section_lines = move.invoice_line_ids[0]._get_child_lines()
         expected_values = [
-            {'display_type': 'line_section', 'name': 'Section 1', 'price_subtotal': 600.0, 'taxes': ['15%', '15% (copy)']},
-            {'display_type': 'product', 'name': 'product_a', 'price_subtotal': 100.0, 'taxes': []},
-            {'display_type': 'product', 'name': 'product_a', 'price_subtotal': 100.0, 'taxes': []},
+            {'display_type': 'line_section', 'name': 'Section 1', 'price_subtotal': 600.0, 'taxes': []},
+            {'display_type': 'product', 'name': 'product_a', 'price_subtotal': 100.0, 'taxes': ['15%']},
+            {'display_type': 'product', 'name': 'product_a', 'price_subtotal': 100.0, 'taxes': ['15% (copy)']},
             {'display_type': 'product', 'name': 'Subsection 1.1', 'price_subtotal': 200.0, 'taxes': ['15%']},
             {'display_type': 'product', 'name': 'Subsection 1.1', 'price_subtotal': 200.0, 'taxes': ['15% (copy)']},
         ]
@@ -123,11 +123,11 @@ class TestAccountSectionAndSubsection(AccountTestInvoicingCommon):
         )
         section_lines = move.invoice_line_ids[0]._get_child_lines()
         expected_values = [
-            {'display_type': 'line_section', 'name': 'Section 1', 'price_subtotal': 400.0, 'taxes': ['15%', '15% (copy)']},
-            {'display_type': 'line_subsection', 'name': 'Subsection 1.1', 'price_subtotal': 200.0, 'taxes': ['15%']},
-            {'display_type': 'product', 'name': 'product_a', 'price_subtotal': 200.0, 'taxes': []},
-            {'display_type': 'line_subsection', 'name': 'Subsection 1.2', 'price_subtotal': 200.0, 'taxes': ['15% (copy)']},
-            {'display_type': 'product', 'name': 'product_b', 'price_subtotal': 200.0, 'taxes': []},
+            {'display_type': 'line_section', 'name': 'Section 1', 'price_subtotal': 400.0, 'taxes': []},
+            {'display_type': 'line_subsection', 'name': 'Subsection 1.1', 'price_subtotal': 200.0, 'taxes': []},
+            {'display_type': 'product', 'name': 'product_a', 'price_subtotal': 200.0, 'taxes': ['15%']},
+            {'display_type': 'line_subsection', 'name': 'Subsection 1.2', 'price_subtotal': 200.0, 'taxes': []},
+            {'display_type': 'product', 'name': 'product_b', 'price_subtotal': 200.0, 'taxes': ['15% (copy)']},
         ]
         for expected_value, line_value in zip(expected_values, section_lines):
             for key, value in expected_value.items():

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pdp_registration_form" model="ir.ui.view">
+        <field name="name">pdp.registration.form</field>
+        <field name="model">pdp.registration</field>
+        <field name="group_ids" eval="[Command.link(ref('account.group_account_manager'))]"/>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="m-0" name="warnings" invisible="not warnings or not account_peppol_proxy_state">
+                        <field name="warnings" class="o_field_html" widget="actionable_errors"/>
+                    </div>
+
+                    <group name="pdp_registration">
+                        <div colspan="2" class="text-muted mb-3">
+                            Send invoices and receive bills automatically on the French e-Invoicing network.
+                        </div>
+
+                        <!-- business fields -->
+                        <field name="pdp_identifier"
+                               string="Identifier"
+                               invisible="pdp_kyc_status != 'success'"/>
+                        <field name="contact_email"
+                               string="Email"
+                               readonly="pdp_kyc_status in ('processing', 'success')"/>
+                        <field name="pdp_pilot_phase"
+                               string="Pilot Phase"
+                               invisible="pdp_kyc_status != 'success'"/>
+
+                    </group>
+
+                    <!-- edi mode info -->
+                    <div colspan="2" class="row" invisible="account_peppol_proxy_state">
+                        <div class="text-muted col" invisible="edi_mode != 'prod'">
+                            By clicking the button below I accept that Odoo may process my e-invoices.
+                        </div>
+                        <div class="text-muted col" invisible="edi_mode != 'test'">
+                            Test mode allows sending e-invoices through the test French e-Invoicing network.
+                            By clicking the button below I accept that Odoo may process my e-invoices.
+                        </div>
+                        <div class="text-muted col" invisible="edi_mode != 'demo'">
+                            In demo mode sending invoices is simulated.
+                            There will be no communication with the French e-Invoicing network.
+                        </div>
+                    </div>
+                </sheet>
+
+                <footer>
+                    <button name="button_trigger_authentication"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="q"
+                            string="Authenticate"
+                            invisible="pdp_kyc_status in ('processing', 'success')"/>
+                    <button name="button_refresh_authentication"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="r"
+                            string="Refresh"
+                            invisible="pdp_kyc_status != 'processing'"/>
+                    <button name="button_cancel_authentication"
+                            type="object"
+                            class="btn-secondary"
+                            data-hotkey="x"
+                            string="Cancel"
+                            invisible="pdp_kyc_status != 'processing'"/>
+                    <button name="button_open_authentication_link"
+                            type="object"
+                            class="btn-primary ms-auto"
+                            data-hotkey="q"
+                            string="Open link"
+                            invisible="pdp_kyc_status != 'processing'"/>
+                    <button name="button_register_pdp_participant"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="q"
+                            invisible="pdp_kyc_status != 'success'">
+                        <span invisible="edi_mode != 'prod'">
+                            Validate Registration (Production)
+                        </span>
+                        <span invisible="edi_mode != 'test'">
+                            Validate Registration (Test)
+                        </span>
+                        <span invisible="edi_mode != 'demo'">
+                            Validate Registration (Demo)
+                        </span>
+                    </button>
+                    <button name="button_deregister_pdp_participant"
+                            string="Cancel Registration"
+                            type="object"
+                            class="btn-secondary"
+                            data-hotkey="x"
+                            invisible="pdp_kyc_status != 'success'"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -31,6 +31,7 @@ declare module "plugins" {
     import { SwitchableViewsShared } from "@website/builder/plugins/switchable_views_plugin";
     import { theme_options, ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
     import { mark_translatable_nodes } from "@website/builder/plugins/translation_plugin";
+    import { force_background_translation_state_selectors } from "@website/builder/plugins/translation/repeat_translation_state_plugin";
     import { translate_options } from "@html_builder/core/builder_options_plugin_translate";
     import { WebsiteSessionShared } from "@website/builder/plugins/website_session_plugin";
 
@@ -92,6 +93,7 @@ declare module "plugins" {
         // Data
         searchbar_option_display_items: searchbar_option_display_items;
         searchbar_option_order_by_items: searchbar_option_order_by_items;
+        force_background_translation_state_selectors: force_background_translation_state_selectors;
         theme_options: theme_options;
         translate_options: translate_options;
         visibility_selector_parameters: visibility_selector_parameters;

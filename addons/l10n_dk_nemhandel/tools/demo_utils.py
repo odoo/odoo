@@ -3,8 +3,6 @@ import uuid
 from odoo.tools import _
 from odoo.exceptions import ValidationError
 
-DEMO_PRIVATE_KEY = 'l10n_dk_nemhandel/tools/private_key.pem'
-
 # -------------------------------------------------------------------------
 # HELPERS
 # -------------------------------------------------------------------------
@@ -26,8 +24,12 @@ def _mock_call_nemhandel_proxy(func, self, *args, **kwargs):
         return {'messages': []}
 
     def _mock_get_document(user, args, kwargs):
-        message_uuid = args[1]['message_uuids'][0]
-        return {message_uuid: {'state': 'done'}}
+        message_uuid = kwargs.get('params', {}).get('message_uuids', [''])[0]
+        return {message_uuid: {
+            'state': 'done',
+            'origin_message_uuid': message_uuid,
+            'document_type': 'Invoice'
+        }}
 
     def _mock_send_document(user, args, kwargs):
         # Trigger the reception of vendor bills
@@ -40,7 +42,7 @@ def _mock_call_nemhandel_proxy(func, self, *args, **kwargs):
         return {
             'messages': [{
                 'message_uuid': 'demo_%s' % uuid.uuid4(),
-            } for i in args[1]['documents']],
+            } for i in kwargs.get('params', {}).get('documents', [])],
         }
 
     endpoint = args[0].split('/')[-1]

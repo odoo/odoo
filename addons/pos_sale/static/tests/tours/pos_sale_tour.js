@@ -244,6 +244,17 @@ registry.category("web_tour.tours").add("PoSSaleOrderWithDownpayment", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_pos_settle_so_with_downpayment", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.checkOrderlinesNumber(3),
+            ProductScreen.totalAmountIs(755.0),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_settle_so_with_non_pos_groupable_uom", {
     steps: () =>
         [
@@ -661,6 +672,16 @@ registry.category("web_tour.tours").add("test_settle_groupable_lot_total_amount"
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_settle_so_custom_attribute_value", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            Order.hasLine({ productName: "Inscription: Custom: Value" }),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_settle_changed_price_with_lots", {
     steps: () =>
         [
@@ -673,5 +694,33 @@ registry.category("web_tour.tours").add("test_settle_changed_price_with_lots", {
                 quantity: "1.0",
                 price: "100",
             }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PoSApplyDownpaymentWithExtraLine", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.downPaymentFirstOrder("+10"),
+            ProductScreen.clickDisplayedProduct("product_a"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_settle_cancelled_sale_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            Order.hasLine({ productName: "Product A", price: "10.00" }),
+            Order.hasLine({ productName: "Product B", price: "20.00" }),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });

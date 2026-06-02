@@ -1276,7 +1276,7 @@ class TestEdiXmls(TestEsEdiCommon):
                             ]
                         }
                     },
-                    'CuotaDeducible': 0.0
+                    'CuotaDeducible': 24.0
                 },
                 'PeriodoLiquidacion': {'Periodo': '01', 'Ejercicio': '2019'}
             })

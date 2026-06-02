@@ -1047,6 +1047,7 @@ class TestExpenses(TestExpenseCommon):
             'payment_method_line_id': sepa_ct_line.id,
             'total_amount_currency': 100.00,
             'currency_id': self.env.ref('base.EUR').id,
+            'vendor_id': self.partner_a.id,
         })
 
         expense.action_submit()
@@ -1112,3 +1113,88 @@ class TestExpenses(TestExpenseCommon):
         self.assertEqual(form.is_editable, False)
         form.company_id = self.env.company
         self.assertEqual(form.is_editable, True)
+
+    def test_expense_branch_company(self):
+        """
+        Test that when an expense is created in a branch company, the associated move is also in the branch company.
+        """
+        branch_company = self.setup_other_company(name='Branch', parent_id=self.company_data['company'].id)['company']
+        employee = self.env['hr.employee'].sudo().create({
+            'name': 'Employee XYZ',
+            'company_id': branch_company.id,
+        })
+        allowed_companies = branch_company + self.company_data['company']
+        # Create an expense paid by company
+        expense_paid_by_company = self.env['hr.expense'].with_context(allowed_company_ids=allowed_companies.ids).create({
+            'employee_id': employee.id,
+            'name': 'Company expense',
+            'date': self.frozen_today,
+            'payment_mode': 'company_account',
+            'account_id': self.company_data['default_account_expense'].id,
+            'product_id': self.product_c.id,
+            'total_amount_currency': 1000.00,
+            'currency_id': self.company_data['currency'].id,
+            'company_id': branch_company.id,
+        })
+        expense_paid_by_company.action_submit()
+        expense_paid_by_company.action_approve()
+        expense_paid_by_company.action_post()
+
+        payment_move_company = expense_paid_by_company.account_move_id
+        self.assertEqual(payment_move_company.company_id, branch_company)
+        self.assertEqual(payment_move_company.origin_payment_id.company_id, branch_company)
+        # Create an expense paid by employee
+        expense_paid_by_employee = self.env['hr.expense'].with_context(allowed_company_ids=allowed_companies.ids).create({
+            'employee_id': employee.id,
+            'name': 'Employee expense',
+            'date': self.frozen_today,
+            'payment_mode': 'own_account',
+            'account_id': self.company_data['default_account_expense'].id,
+            'product_id': self.product_c.id,
+            'total_amount_currency': 2000.00,
+            'currency_id': self.company_data['currency'].id,
+            'company_id': branch_company.id,
+        })
+        expense_paid_by_employee.action_submit()
+        expense_paid_by_employee.action_approve()
+        self.post_expenses_with_wizard(expense_paid_by_employee)
+        self.assertEqual(expense_paid_by_employee.account_move_id.company_id, branch_company)
+
+    def test_attachments_on_multiple_posting_from_own_expense(self):
+        """ Checks that attachments are not leaked between moves when posting expenses from different employees. """
+        employee_2 = self.env['hr.employee'].sudo().create({
+            'name': 'expense_employee_2',
+            'user_id': self.expense_user_manager_2.id,
+            'expense_manager_id': self.expense_user_manager.id,
+            'work_contact_id': self.expense_user_manager_2.partner_id.id,
+        })
+        expenses = expense_1, expense_2 = self.create_expenses([
+            {'name': 'Employee 1 expense'},
+            {'name': 'Employee 2 expense', 'employee_id': employee_2.id},
+        ])
+        self.env['ir.attachment'].create([{
+            'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'name': f'file_{index}.png',
+            'res_model': 'hr.expense',
+            'res_id': expense.id,
+        } for index, expense in enumerate([expense_1] * 2 + [expense_2] * 3)])
+
+        expenses.action_submit()
+        expenses.action_approve()
+        self.post_expenses_with_wizard(expenses)
+
+        self.assertRecordValues(
+            expense_1.account_move_id.attachment_ids.sorted('name'),
+            [
+                {'name': 'file_0.png', 'res_model': 'account.move', 'res_id': expense_1.account_move_id.id},
+                {'name': 'file_1.png', 'res_model': 'account.move', 'res_id': expense_1.account_move_id.id},
+            ]
+        )
+        self.assertRecordValues(
+            expense_2.account_move_id.attachment_ids.sorted('name'),
+            [
+                {'name': 'file_2.png', 'res_model': 'account.move', 'res_id': expense_2.account_move_id.id},
+                {'name': 'file_3.png', 'res_model': 'account.move', 'res_id': expense_2.account_move_id.id},
+                {'name': 'file_4.png', 'res_model': 'account.move', 'res_id': expense_2.account_move_id.id},
+            ]
+        )

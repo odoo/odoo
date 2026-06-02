@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-03-06 17:46+0000\n"
+"PO-Revision-Date: 2026-05-30 09:38+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/base/es/>"
 "\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -627,11 +627,11 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Este módulo añade diversas funcionalidades al Punto de Venta que son "
-"específicas para la administración de un restaurante:\n"
-"- Impresión de cuenta: Permite imprimir la cuenta antes de pagar el pedido.\n"
-"- División de factura: Permite dividir la factura en diferentes pedidos.\n"
-"- Impresión de comanda en la cocina: Permite imprimir las comandas y "
+"Este módulo añade diversas funcionalidades al Punto de Venta para poder "
+"gestionar un restaurante:\n"
+"- Imprimir la cuenta: permite imprimir el ticket antes de pagar el pedido.\n"
+"- Dividir la cuenta: permite dividir la cuenta en diferentes pedidos.\n"
+"- Impresión de comanda en la cocina: permite imprimir las comandas y "
 "actualizaciones en las impresoras de la cocina o el bar.\n"
 "\n"
 
@@ -659,6 +659,13 @@ msgid ""
 "formats.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Este módulo ofrece herramientas para exportar pedidos del punto de venta en "
+"diferentes formatos UBL 2.1.\n"
+"\n"
+"\t\n"
+"\n"
 
 #. module: base
 #. odoo-python
@@ -2478,6 +2485,12 @@ msgid ""
 "This module includes accounting reports for Slovakia, including:\n"
 "-Balance Sheet + Profit and Loss (XML export)\n"
 msgstr ""
+"\n"
+"Informes contables para Eslovaquia\n"
+"=====================================\n"
+"\n"
+"Este módulo incluye informes contables para Eslovaquia, entre ellos:\n"
+"-Balance de situación + cuenta de pérdidas y ganancias (exportación XML)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za_reports
@@ -2730,6 +2743,9 @@ msgid ""
 "Accounting reports:\n"
 "- FTA VAT Audit\n"
 msgstr ""
+"\n"
+"Informes contables:\n"
+"- Auditoría del IVA de FTA\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_returns
@@ -2913,6 +2929,9 @@ msgid ""
 "Add accrued menus and specific filters on purchase order lines for an easier "
 "closing process.\n"
 msgstr ""
+"\n"
+"Añade menús acumulados y filtros específicos en las líneas de los pedidos de "
+"compra para facilitar el proceso de cierre.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_website_sale
@@ -3018,6 +3037,9 @@ msgid ""
 "Add support to fill three fields used when using Chorus Pro, especially when "
 "invoicing public services.\n"
 msgstr ""
+"\n"
+"Añadir compatibilidad para completar tres campos utilizados con Chorus Pro, "
+"especialmente al facturar a organismos públicos.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -3203,6 +3225,20 @@ msgid ""
 "Mobile Money (Airtel Money / M-Pesa) at the payment terminal.\n"
 "* Supported cards: Visa, MasterCard, American Express etc.\n"
 msgstr ""
+"\n"
+"Permite pagos DPO en el punto de venta\n"
+"==============================\n"
+"\n"
+"Admite todas las divisas compatibles con el terminal de pago, principalmente "
+"para su uso en la **región africana**.\n"
+"Permite a los clientes pagar sus pedidos con tarjetas de débito o crédito y "
+"Mobile Money a través de terminales DPO POS.\n"
+"Se necesita una cuenta de comerciante DPO para procesar las transacciones.\n"
+"\n"
+"Incluye las siguientes funcionalidades:\n"
+"* Pagos rápidos al deslizar, escanear o acercar la tarjeta de crédito o "
+"débito o Mobile Money (Airtel Money / M-Pesa) al terminal de pago.\n"
+"* Tarjetas compatibles: Visa, MasterCard, American Express, etc.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_pine_labs
@@ -4026,6 +4062,60 @@ msgid ""
 "- Configuration note: The .pfx certificate should be set on the payroll "
 "configuration.\n"
 msgstr ""
+"\n"
+"Declaraciones automáticas DIMONA\n"
+"=============================\n"
+"\n"
+"Requisitos previos:\n"
+"--------------\n"
+"\n"
+"- Necesitas un certificado digital conforme a los requisitos del gobierno de "
+"Bélgica,\n"
+"  emitido por Global Sign. Consulta: https://shop.globalsign.com/en/belgian-"
+"government-services\n"
+"\n"
+"- Genera los archivos de certificado a partir de tu certificado SSL (.pfx) "
+"necesarios para crear\n"
+"  un usuario técnico (.cer) y para autenticarte de forma remota ante la ONSS "
+"(.pfx). En un sistema UNIX,\n"
+"  puedes utilizar los siguientes comandos:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
+"clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
+"my_cert.cer\n"
+"\n"
+"- Antes de poder utilizar el servicio web REST de la seguridad social, debes "
+"crear una cuenta\n"
+"  para ti o para tu cliente y configurar la seguridad. (Toda la información\n"
+"  sobre el procedimiento está disponible en https://www.socialsecurity.be/"
+"site_fr/employer/applics/dimona/introduction/webservice.htm)\n"
+"\n"
+"  - Gestión de cuentas de usuario: sigue el procedimiento https://"
+"www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/"
+"procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"  - Creación de un usuario técnico: tu cliente debe crear un usuario técnico "
+"en el servicio online de gestión de accesos.\n"
+"    Sigue este procedimiento https://www.socialsecurity.be/site_fr/general/"
+"helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Activación de un canal de servicio web: una vez creado el usuario "
+"técnico, tu cliente debe\n"
+"    activar el canal del servicio web en la gestión de accesos. Este manual "
+"explica\n"
+"    los pasos a seguir para activar el canal: https://www.socialsecurity.be/"
+"site_fr/general/helpcentre/rest/documents/pdf/"
+"webservices_ajouter_le_canal_FR.pdf\n"
+"\n"
+"  - Al finalizar el procedimiento, deberías recibir un \"Número de expedidor "
+"ONSS\". Introduce\n"
+"    este número en la configuración de nómina junto con el archivo .pem y la "
+"contraseña correspondiente, si aplica.\n"
+"\n"
+"- Nota de configuración: el certificado .pfx debe definirse en la "
+"configuración de nómina.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_accountant
@@ -5228,6 +5318,17 @@ msgid ""
 "tasks\n"
 "and more.\n"
 msgstr ""
+"\n"
+"Conecta y gestiona todas las bases de datos de tus clientes\n"
+"============================================\n"
+"\n"
+"La aplicación Bases de datos te permite conectar y gestionar todas las bases "
+"de datos de tus clientes\n"
+"desde un único espacio de trabajo de Odoo. Tanto si eres una asesoría "
+"contable como un partner de Odoo,\n"
+"podrás hacer seguimiento de quién gestiona cada base de datos, así como "
+"registros de horas, tareas\n"
+"y más.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk_reports_cis
@@ -6661,6 +6762,9 @@ msgid ""
 "Extends the Point of Sale module to comply with Guatemalan electronic "
 "invoicing regulations (FEL).\n"
 msgstr ""
+"\n"
+"Amplía el módulo de Punto de venta para cumplir con la normativa de "
+"facturación electrónica de Guatemala (FEL).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports_client_nihil
@@ -6668,6 +6772,8 @@ msgid ""
 "\n"
 "Extension for accounting returns in Belgium\n"
 msgstr ""
+"\n"
+"Extensión para declaraciones contables en Bélgica\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_generator_sale
@@ -7014,6 +7120,38 @@ msgid ""
 "country. The document type has a country field\n"
 "\n"
 msgstr ""
+"\n"
+"Funcional\n"
+"----------\n"
+"\n"
+"En algunos países de América Latina, incluidos Argentina y Chile, ciertas "
+"transacciones contables, como facturas de cliente o de proveedor, se "
+"clasifican mediante tipos de documento definidos por las autoridades "
+"fiscales gubernamentales (en el caso de Argentina, ARCA; y en el caso de "
+"Chile, el SII).\n"
+"\n"
+"Este módulo está pensado para ser ampliado por las localizaciones "
+"correspondientes para gestionar estos tipos de documento. Se trata de "
+"información esencial que debe mostrarse en los informes impresos y que debe "
+"poder identificarse fácilmente tanto dentro del conjunto de facturas como de "
+"los asientos contables.\n"
+"\n"
+"Cada tipo de documento tiene sus propias reglas y secuencia numérica. Esta "
+"última se integra con el número de factura y la secuencia del diario para "
+"facilitar la localización del usuario. Para permitir o no el uso de estos "
+"tipos de documento, el diario incorpora una nueva opción que permite "
+"utilizar documentos o no.\n"
+"\n"
+"Técnico\n"
+"---------\n"
+"\n"
+"Si tu localización necesita esta lógica, tendrás que añadir este módulo como "
+"dependencia y, en el módulo de localización, ampliar lo siguiente:\n"
+"\n"
+"* el método localization_use_documents() de la empresa.\n"
+"* crear los datos de los tipos de documentos existentes para el país "
+"específico. El tipo de documento incluye un campo de país.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -16055,7 +16193,7 @@ msgstr "Comentarios de 360 grados"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_3pl_logistic_company
 msgid "3PL Logistic Company"
-msgstr ""
+msgstr "Empresa logística 3PL"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_external_tax
@@ -17548,7 +17686,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_accounting_firm
 msgid "Accounting firm"
-msgstr ""
+msgstr "Asesoría contable"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_reports
@@ -18078,7 +18216,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_tests
 msgid "Addons to test Odoo industries code."
-msgstr "Módulos adicionales para probar el código de industrias de Odoo."
+msgstr "Módulos adicionales para probar el código de los sectores de Odoo."
 
 #. module: base
 #. odoo-python
@@ -18767,7 +18905,7 @@ msgstr "Agorá"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_agriculture_shop
 msgid "Agricultural Store"
-msgstr "Tienda de agricultura"
+msgstr "Tienda agrícola"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_A
@@ -21930,7 +22068,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bar_industry
 msgid "Bar & Pub"
-msgstr "Bar y taberna"
+msgstr "Bar y pub"
 
 #. module: base
 #: model:res.country,name:base.bb
@@ -22366,7 +22504,7 @@ msgstr "Cárguelo a su número de cuenta de UPS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_billboard_rental
 msgid "Billboard Rental"
-msgstr "Alquiler de paneles publicitarios"
+msgstr "Alquiler de vallas publicitarias"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__binding_model_id
@@ -22420,7 +22558,7 @@ msgstr "Tema Bistro"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_bistro
 msgid "Bistro Theme - Restaurant, Food/Drink, Catering, Food trucks"
-msgstr "Tema Bistro - Restaurante, comida y bebida, catering, gastronetas"
+msgstr "Tema Bistro - Restaurante, comida y bebida, catering, food trucks"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bistro
@@ -23142,7 +23280,7 @@ msgstr "Camerún - Informes contables"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_campsite
 msgid "Campsite"
-msgstr ""
+msgstr "Camping"
 
 #. module: base
 #. odoo-python
@@ -24019,7 +24157,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_documents
 msgid "Collect, organize and share documents."
-msgstr "Recolecta, organiza y comparte documentos"
+msgstr "Gestiona, organiza y comparte documentos."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_28
@@ -24808,7 +24946,7 @@ msgstr "Empresas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_corporate_gifts
 msgid "Corporate Gifts"
-msgstr "Regalos de empresas"
+msgstr "Regalos corporativos"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_buzzy
@@ -25797,7 +25935,7 @@ msgstr "DIN 5008 - Stock"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_diy_workshops
 msgid "DIY Workshops"
-msgstr ""
+msgstr "Talleres DIY"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__dle
@@ -25884,7 +26022,7 @@ msgstr "Estructura de la base de datos"
 #: model:ir.module.category,name:base.module_category_services_databases
 #: model:ir.module.module,shortdesc:base.module_databases
 msgid "Databases"
-msgstr ""
+msgstr "Bases de datos"
 
 #. module: base
 #. odoo-python
@@ -29419,7 +29557,7 @@ msgstr "Encuentre imágenes gratuitas de alta resolución de Unsplash"
 #: model:ir.module.module,description:base.module_data_recycle
 #: model:ir.module.module,summary:base.module_data_recycle
 msgid "Find old records and archive/delete them"
-msgstr "Encuentre registros antiguos y archívelos o eliminarlos"
+msgstr "Busca registros antiguos y archívalos o elimínalos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_restaurant
@@ -29609,12 +29747,12 @@ msgstr "Alimentos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_food_distribution
 msgid "Food Distribution"
-msgstr "Industria alimentaria"
+msgstr "Distribución alimentaria"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_food_trucks
 msgid "Food Trucks"
-msgstr "Gastronetas"
+msgstr "Food trucks"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_I
@@ -29749,7 +29887,7 @@ msgstr "Foro en Cursos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_coal_petroleum
 msgid "Fossil Fuel Trading"
-msgstr "Comercio de combustible fósil"
+msgstr "Comercio de combustibles fósiles"
 
 #. module: base
 #. odoo-python
@@ -30822,7 +30960,7 @@ msgstr "Gestione los pedidos de comida de sus empleados"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_handyman
 msgid "Handyman Services"
-msgstr "Servicios de trabajadores manuales"
+msgstr "Servicios de mantenimiento"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
@@ -31902,7 +32040,7 @@ msgstr "Importe información desde Winbooks"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_lazada
 msgid "Import Lazada orders and sync deliveries"
-msgstr ""
+msgstr "Importa pedidos de Lazada y sincroniza entregas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_ofx
@@ -33977,7 +34115,7 @@ msgstr "Diseño en los informes"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_lazada
 msgid "Lazada Connector"
-msgstr ""
+msgstr "Conector de Lazada"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_enrich
@@ -34894,7 +35032,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_room
 msgid "Manage Meeting Rooms"
-msgstr "Gestione salas de reuniones"
+msgstr "Gestiona salas de reuniones"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment_integration_skills_monster
@@ -35022,13 +35160,13 @@ msgstr "Administre las ausencias en nóminas de la empresa"
 #. module: base
 #: model:ir.module.module,summary:base.module_databases
 msgid "Manage a fleet of Odoo databases"
-msgstr ""
+msgstr "Gestiona un conjunto de bases de datos de Odoo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum
 msgid "Manage a forum with FAQ and Q&A"
 msgstr ""
-"Gestione un foro con preguntas frecuentes (FAQ) y preguntas y respuestas "
+"Gestiona un foro con preguntas frecuentes (FAQ) y preguntas y respuestas "
 "(Q&A)"
 
 #. module: base
@@ -35529,7 +35667,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mental_therapy
 msgid "Mental Therapy"
-msgstr ""
+msgstr "Terapia psicológica"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_menu
@@ -36818,7 +36956,7 @@ msgstr "Nigeria - Informes contables"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_night_clubs
 msgid "Night Clubs"
-msgstr ""
+msgstr "Ocio nocturno"
 
 #. module: base
 #: model:res.country,name:base.nu
@@ -36961,7 +37099,7 @@ msgstr "Ninguno"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_non_profit_organization
 msgid "Nonprofit organization"
-msgstr ""
+msgstr "Organización sin ánimo de lucro"
 
 #. module: base
 #: model:res.country,name:base.nf
@@ -44981,6 +45119,9 @@ msgid ""
 "the UPS connector is compatiblewith the newest version of the UPS REST APIs "
 "available at https://developer.ups.com/"
 msgstr ""
+"Haz tus envíos a través de UPS y realiza su seguimiento en línea. Esta nueva "
+"versión del conector de UPS es compatible con la última versión de las API "
+"REST de UPS, disponibles en https://developer.ups.com/"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps_rest
@@ -49524,7 +49665,7 @@ msgstr "Transportación/Logística"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_aviato
 msgid "Travel, Excursion, Plane, Tour, Agency "
-msgstr "Viaje, excursión, avión, tour, recorridos, agencia "
+msgstr "Viaje, excursión, avión, tour, agencia "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_treehouse
@@ -51535,7 +51676,7 @@ msgstr "Semanas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wellness_practitioner
 msgid "Wellness Practitioner"
-msgstr "Terapeuta de bienestar"
+msgstr "Especialista en bienestar"
 
 #. module: base
 #: model:res.country,name:base.eh
@@ -52319,7 +52460,8 @@ msgstr "No tiene suficientes permisos de acceso para ejecutar esta acción."
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
 msgstr ""
-"No tienes permisos para exportar información. Habla con un administrador"
+"No tienes permisos para exportar datos. Ponte en contacto con un "
+"administrador."
 
 #. module: base
 #. odoo-python

@@ -76,7 +76,9 @@ class StockMove(models.Model):
                 so_line_vals['price_unit'] = 0
             # New lines should be added at the bottom of the SO (higher sequence number)
             if not so_line:
-                so_line_vals['sequence'] = max(sale_order.order_line.mapped('sequence')) + len(sale_order_lines_vals) + 1
+                so_line_vals['sequence'] = (
+                    max(sale_order.order_line.mapped('sequence'), default=0) + len(sale_order_lines_vals) + 1
+                )
             sale_order_lines_vals.append(so_line_vals)
 
         if sale_order_lines_vals:
@@ -136,6 +138,8 @@ class StockMove(models.Model):
         # to pass sale_line_id fom SO to MO in mto
         if self.sale_line_id:
             res['sale_line_id'] = self.sale_line_id.id
+            if self.sale_line_id.analytic_distribution:
+                res['analytic_distribution'] = self.sale_line_id.analytic_distribution
         return res
 
     def _reassign_sale_lines(self, sale_order):
@@ -267,7 +271,9 @@ class StockPicking(models.Model):
                 so_line_vals['price_unit'] = 0
             # New lines should be added at the bottom of the SO (higher sequence number)
             if not so_line:
-                so_line_vals['sequence'] = max(sale_order.order_line.mapped('sequence')) + len(sale_order_lines_vals) + 1
+                so_line_vals['sequence'] = (
+                    max(sale_order.order_line.mapped('sequence'), default=0) + len(sale_order_lines_vals) + 1
+                )
             sale_order_lines_vals.append(so_line_vals)
 
         if sale_order_lines_vals:

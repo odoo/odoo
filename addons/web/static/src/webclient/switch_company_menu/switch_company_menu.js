@@ -134,7 +134,7 @@ export class CompanySelector {
     _getBranches(companyId) {
         return getCompany(companyId).child_ids || [];
     }
-    
+
     _isCompanyAllowed(companyId) {
         return user.allowedCompanies.some((c) => c.id == companyId);
     }

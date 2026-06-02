@@ -145,6 +145,29 @@ class TestAccountPayment(AccountPaymentCommon):
 
         self.assertEqual(author_id, self.user.partner_id.id)
 
+    def test_pending_tx_does_not_cancel_payment(self):
+        """When a token charge results in a 'pending' transaction (e.g SEPA),
+        the payment must stay in draft, and be posted once the tx becomes 'done'"""
+        payment_token = self._create_token()
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'amount': 100.0,
+            'currency_id': self.currency.id,
+            'partner_id': self.partner.id,
+            'journal_id': self.provider.journal_id.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+            'payment_token_id': payment_token.id,
+            'write_off_line_vals': [],
+        })
+
+        with patch.object(self.env.registry['payment.transaction'], '_send_payment_request',
+                          lambda self: self._set_pending()):
+            payment.action_post()
+
+        self.assertEqual(payment.payment_transaction_id.state, 'pending')
+        self.assertEqual(payment.state, 'in_process')
+
     def test_action_post_calls_send_payment_request_only_once(self):
         payment_token = self._create_token()
         payment_without_token = self.env['account.payment'].create({
@@ -463,3 +486,46 @@ class TestAccountPayment(AccountPaymentCommon):
                 self.env['account.move.send']._generate_and_send_invoices(move),
             )
             self.assertTrue(payment_qr_mock.called)
+
+    def test_partial_reconcile_with_payments_coming_from_provider(self):
+        """ Test that we not allow partial reconcile on payments coming from
+            payment provider.
+        """
+        provider = self.env['payment.provider'].create({
+            'name': 'Test',
+            'journal_id': self.company_data['default_journal_bank'].id,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_line_ids': [
+                Command.create({
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100,
+                })
+            ]
+        })
+        payment_transaction = self.env['payment.transaction'].create({
+            'provider_id': provider.id,
+            'payment_method_id': self.env.ref('payment.payment_method_unknown').id,
+            'invoice_ids': [invoice.id],
+            'partner_id': self.partner_a.id,
+            'amount': 200,
+            'currency_id': invoice.currency_id.id,
+        })
+        payment_transaction._create_payment(payment_method_line_id=self.company_data['default_journal_bank'].inbound_payment_method_line_ids[0].id)
+        payment_transaction._post_process()
+        payment = payment_transaction.payment_id
+        invoice.action_post()
+        payment.action_post()
+        statement_line = self.env['account.bank.statement.line'].create({
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'date': '2026-01-01',
+            'partner_id': self.partner_a.id,
+            'amount': 100.0,
+        })
+        inv_line = payment.move_id.line_ids.filtered(lambda l: l.balance == 200)
+        self.assertFalse(statement_line._get_partial_amounts(-200, inv_line, -100, -100))

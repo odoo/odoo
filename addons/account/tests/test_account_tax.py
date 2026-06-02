@@ -309,6 +309,45 @@ class TestAccountTax(AccountTestInvoicingCommon):
             {'display_type': 'payment_term',    'tax_ids': [],          'balance': 100.0,   'account_id': self.company_data['default_account_receivable'].id},
         ])
 
+    def test_cannot_delete_group_tax_in_use(self):
+        """ Test that a group of taxes (parent tax) cannot be deleted when it's used. """
+
+        sales_10_perc = self.env['account.tax'].create({
+            'name': '10% Sales tax',
+            'amount': 10.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        sales_5_perc = self.env['account.tax'].create({
+            'name': '5% Sales tax',
+            'amount': 5.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        # Group of taxes
+        sales_15_perc = self.env['account.tax'].create({
+            'name': '15% Sales tax',
+            'amount': 15.0,
+            'amount_type': 'group',
+            'type_tax_use': 'sale',
+            'children_tax_ids': [Command.set([sales_10_perc.id, sales_5_perc.id])],
+        })
+        self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2025-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'invoice_line',
+                    'quantity': 1.0,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(sales_15_perc.ids)],
+                }),
+            ],
+        })
+        self.assertTrue(sales_15_perc.is_used)
+        with self.assertRaisesRegex(ValidationError, "delete taxes that are currently in use"):
+            sales_15_perc.unlink()
+
     def test_negative_factor_percent(self):
         account_1 = self.company_data['default_account_tax_sale'].copy()
         with self.assertRaisesRegex(ValidationError, r"Invoice and credit note distribution should have a total factor \(\+\) equals to 100\."):
@@ -337,3 +376,19 @@ class TestAccountTax(AccountTestInvoicingCommon):
                     }),
                 ],
             })
+
+    def test_name_search_self_replacing_taxes(self):
+        tax_1 = self.percent_tax(15.0, name='Name search tax 1')
+        tax_2 = self.percent_tax(15.0, name='Name search tax 2', original_tax_ids=tax_1)
+        result = self.env['account.tax'].with_context(
+            dynamic_fiscal_position_id=self.fiscal_pos_a.id,
+            hide_original_tax_ids=True,
+        ).name_search(name='Name search tax')
+        self.assertEqual(result, [(tax_2.id, tax_2.display_name)])
+
+        tax_1.original_tax_ids = [Command.set((tax_1 | tax_2).ids)]
+        result = self.env['account.tax'].with_context(
+            dynamic_fiscal_position_id=self.fiscal_pos_a.id,
+            hide_original_tax_ids=True,
+        ).name_search(name='Name search tax')
+        self.assertEqual(result, [(tax_1.id, tax_1.display_name)])

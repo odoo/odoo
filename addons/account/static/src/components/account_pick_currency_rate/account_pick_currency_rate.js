@@ -2,7 +2,6 @@ import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { useService } from "@web/core/utils/hooks";
-import { today } from "@web/core/l10n/dates";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 
@@ -30,7 +29,6 @@ export class AccountPickCurrencyDate extends Component {
             get pickerProps() {
                 return {
                     type: 'date',
-                    value: today(),
                 };
             },
         });

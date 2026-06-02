@@ -70,7 +70,7 @@ class LoyaltyReward(models.Model):
             field_name, operator, value = condition
             field = self.env['product.product']._fields.get(field_name)
 
-            if field and field.type == 'many2one' and operator in ('ilike', 'not ilike'):
+            if field and field.type in ['many2one', 'many2many'] and operator in ('ilike', 'not ilike'):
                 comodel = self.env[field.comodel_name]
                 matching_ids = list(comodel._search([('display_name', 'ilike', value)]))
 

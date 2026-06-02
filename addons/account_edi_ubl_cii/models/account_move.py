@@ -72,8 +72,13 @@ class AccountMove(models.Model):
                     'content': ubl_attachment.raw,
                 }
             elif allow_fallback:
-                if self.partner_id and (suggested_edi_format := self.commercial_partner_id._get_suggested_ubl_cii_edi_format()):
-                    builder = self.env['res.partner']._get_edi_builder(suggested_edi_format)
+                if (
+                    self.partner_id
+                    and (edi_format := self.commercial_partner_id.with_company(self.company_id)
+                        ._get_ubl_cii_edi_format())
+                    and self._need_ubl_cii_xml(edi_format)
+                ):
+                    builder = self.env['res.partner']._get_edi_builder(edi_format)
                     xml_content, errors = builder._export_invoice(self)
                     filename = builder._export_invoice_filename(self)
                     return {
@@ -87,12 +92,17 @@ class AccountMove(models.Model):
     def get_extra_print_items(self):
         print_items = super().get_extra_print_items()
         posted_moves = self.filtered(lambda move: move.state == 'posted')
-        suggested_edi_formats = {
-            suggested_format
-            for partner in posted_moves.commercial_partner_id
-            if (suggested_format := partner ._get_suggested_ubl_cii_edi_format())
-        }
-        if posted_moves.ubl_cii_xml_id or suggested_edi_formats:
+        can_export_xml = any(
+            (
+                move.ubl_cii_xml_id
+                or (
+                    (edi_format := move.commercial_partner_id.with_company(move.company_id)._get_ubl_cii_edi_format())
+                    and move._need_ubl_cii_xml(edi_format)
+                )
+            )
+            for move in posted_moves.filtered(lambda move: move.ubl_cii_xml_id or move.commercial_partner_id)
+        )
+        if can_export_xml:
             print_items.append({
                 'key': 'download_ubl',
                 'description': _('Export XML'),
@@ -124,8 +134,13 @@ class AccountMove(models.Model):
         files_data = self._to_files_data(self.ubl_cii_xml_id)
         files_data.extend(self._unwrap_attachments(files_data))
         file_data_group = self._group_files_data_into_groups_of_mixed_types(files_data)[0]
+
+        decoder = file_data_group[0].get('decoder_info', {}).get('decoder')
+        if decoder is None:
+            raise UserError(self.env._("Cannot decode origin file, try by importing it again"))
+
         self.invoice_line_ids = [Command.clear()]
-        if self.with_context(ungroup_lines=True)._extend_with_attachments(file_data_group):
+        if decoder(self, file_data_group[0]) is None:
             self._message_log(body=self.env._("Ungrouped lines from %s", file_data_group[0]['attachment'].name))
         else:
             raise UserError(error_message)
@@ -135,6 +150,9 @@ class AccountMove(models.Model):
         Group lines by tax, based on the invoice lines
         """
         self.ensure_one()
+        if not self.is_invoice(include_receipts=True):
+            raise UserError(self.env._("You can only group lines of an invoice"))
+
         line_vals = self._get_line_vals_group_by_tax(self.partner_id)
         self.invoice_line_ids = [Command.clear()]
         self.invoice_line_ids = line_vals
@@ -165,6 +183,7 @@ class AccountMove(models.Model):
             grouping_function=grouping_function,
             aggregate_function=aggregate_function,
         )
+        AccountTax._fix_base_lines_tax_details_on_manual_tax_amounts(base_lines, self.company_id)
 
         to_create = []
         for base_line in base_lines:
@@ -174,6 +193,7 @@ class AccountMove(models.Model):
                 'name': " - ".join([partner.name or self.env._("Unknown partner"), account.code, " / ".join(taxes.mapped('name')) or self.env._("Untaxed")]),
                 'quantity': base_line['quantity'],
                 'price_unit': base_line['price_unit'],
+                'extra_tax_data': AccountTax._export_base_line_extra_tax_data(base_line),
                 **base_line['_grouping_key'],
             }))
         return to_create
@@ -192,7 +212,7 @@ class AccountMove(models.Model):
         :return: True if lines look like they're grouped, False otherwise
         """
         self.ensure_one()
-        partner_name = re.escape(self.partner_id.name or _("Unknown partner")) + r' - \d+ - .*'
+        partner_name = re.escape(self.partner_id.name or self.env._("Unknown partner")) + r' - \d+ - .*'
         return any(
             re.match(partner_name, line.name)
             for line in self.line_ids.filtered(lambda line: line.name and line.display_type == 'product')
@@ -206,11 +226,7 @@ class AccountMove(models.Model):
         except UserError:
             return
 
-        if (
-            self.env.context.get('ungroup_lines')
-            or not invoice.partner_id
-            or not invoice.ubl_cii_xml_id
-        ):
+        if not invoice.partner_id or not invoice.ubl_cii_xml_id:
             return
 
         # Group lines
@@ -240,11 +256,6 @@ class AccountMove(models.Model):
                 return 'account.edi.xml.ubl.attached_document'
             if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
                 return 'account.edi.xml.cii'
-            if ubl_version := tree.findtext('{*}UBLVersionID'):
-                if ubl_version == '2.0':
-                    return 'account.edi.xml.ubl_20'
-                if ubl_version in ('2.1', '2.2', '2.3'):
-                    return 'account.edi.xml.ubl_21'
             if customization_id := tree.findtext('{*}CustomizationID'):
                 if 'xrechnung' in customization_id:
                     return 'account.edi.xml.ubl_de'
@@ -254,6 +265,14 @@ class AccountMove(models.Model):
                     return 'account.edi.xml.ubl_a_nz'
                 if customization_id == 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0':
                     return 'account.edi.xml.ubl_sg'
+                if customization_id == 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0':
+                    return 'account.edi.xml.ubl_bis3'
+            if ubl_version := tree.findtext('{*}UBLVersionID'):
+                if ubl_version == '2.0':
+                    return 'account.edi.xml.ubl_20'
+                if ubl_version in ('2.1', '2.2', '2.3'):
+                    return 'account.edi.xml.ubl_21'
+            if customization_id := tree.findtext('{*}CustomizationID'):
                 if 'urn:cen.eu:en16931:2017' in customization_id:
                     return 'account.edi.xml.ubl_bis3'
 

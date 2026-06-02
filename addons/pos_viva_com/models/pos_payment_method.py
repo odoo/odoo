@@ -76,7 +76,7 @@ class PosPaymentMethod(models.Model):
 
         access_token = resp.json().get('access_token')
         if access_token:
-            self.viva_com_bearer_token = access_token
+            self.sudo().write({'viva_com_bearer_token': access_token})
             return {'Authorization': f"Bearer {access_token}"}
         else:
             raise UserError(_(
@@ -132,9 +132,10 @@ class PosPaymentMethod(models.Model):
                 'config_id': pos_session_sudo.config_id.id,
                 'session_id': data.get('sessionId'),
                 'success': data.get('success', False),
-                'transaction_id': data.get('transactionId'),
-                'card_type': data.get('applicationLabel'),
-                'cardholder_name': data.get('FullName', ''),
+                'transactionId': data.get('transactionId'),
+                'cardType': data.get('cardType'),
+                'applicationLabel': data.get('applicationLabel'),
+                'primaryAccountNumberMasked': data.get('primaryAccountNumberMasked'),
             })
 
     def _load_pos_data_fields(self, config):

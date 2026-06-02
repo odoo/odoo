@@ -14,9 +14,9 @@ class ProductValue(models.Model):
     _name = 'product.value'
     _description = 'Product Value'
 
-    product_id = fields.Many2one('product.product', string='Product')
+    product_id = fields.Many2one('product.product', string='Product', index=True)
     lot_id = fields.Many2one('stock.lot', string='Lot')
-    move_id = fields.Many2one('stock.move', string='Move')
+    move_id = fields.Many2one('stock.move', string='Move', index='btree_not_null')
 
     value = fields.Monetary(string='Value', currency_field='currency_id', required=True)
     company_id = fields.Many2one(
@@ -71,26 +71,18 @@ class ProductValue(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        lot_ids = set()
         product_ids = set()
         move_ids = set()
 
         for vals in vals_list:
             if vals.get('move_id'):
                 move_ids.add(vals['move_id'])
-            elif vals.get('lot_id'):
-                lot_ids.add(vals['lot_id'])
-            else:
+            elif vals.get('lot_id') and vals.get('product_id'):
                 product_ids.add(vals['product_id'])
-        if lot_ids:
-            move_ids.update(self.env['stock.move.line'].search([('lot_id', 'in', lot_ids)]).move_id.ids)
-        products = self.env['product.product'].browse(product_ids)
-        if products:
-            moves_by_product = products._get_remaining_moves()
-            for qty_by_move in moves_by_product.values():
-                move_ids.update(self.env['stock.move'].concat(*qty_by_move.keys()).ids)
 
         res = super().create(vals_list)
         if move_ids:
             self.env['stock.move'].browse(move_ids)._set_value()
+        if product_ids:
+            self.env['product.product'].browse(product_ids)._update_standard_price()
         return res

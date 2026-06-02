@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+import platform
 import requests
 import schedule
 import subprocess
@@ -7,7 +8,7 @@ from threading import Thread
 import time
 
 from odoo.addons.iot_drivers.tools import certificate, helpers, upgrade, wifi
-from odoo.addons.iot_drivers.tools.system import IS_RPI
+from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_WINDOWS
 from odoo.addons.iot_drivers.websocket_client import WebsocketClient
 
 if IS_RPI:
@@ -60,11 +61,13 @@ class Manager(Thread):
         # IP address change
         new_domain = self._get_domain()
         if self.domain != new_domain:
+            _logger.warning("IoT Box %s: IP address has changed from %s to %s", self.identifier, self.domain, new_domain)
             self.domain = new_domain
             changed = True
         # Version change
         new_version = helpers.get_version(detailed_version=True)
         if self.version != new_version:
+            _logger.info("IoT Box %s: Version has changed from %s to %s", self.identifier, self.version, new_version)
             self.version = new_version
             changed = True
 
@@ -85,6 +88,7 @@ class Manager(Thread):
             'ip': self.domain,
             'token': helpers.get_token(),
             'version': self.version,
+            "l10n_eg_proxy_token": helpers.get_conf("proxy_access_token", "options"),
         }
         devices_list = {}
         for device in self.previous_iot_devices.values():
@@ -137,6 +141,8 @@ class Manager(Thread):
 
         helpers.start_nginx_server()
         _logger.info("IoT Box Image version: %s", helpers.get_version(detailed_version=True))
+        if IS_WINDOWS:
+            _logger.info("Windows version: %s", platform.platform())
         upgrade.check_git_branch()
 
         if IS_RPI and helpers.get_odoo_server_url():

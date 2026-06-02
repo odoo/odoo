@@ -273,6 +273,25 @@ class TestFrontend(TestFrontendCommon):
     def test_07_split_bill_screen(self):
         # disable kitchen printer to avoid printing errors
         self.pos_config.is_order_printer = False
+
+        attribute = self.env['product.attribute'].create({
+            'name': 'Attribute',
+            'create_variant': 'always',
+        })
+        attribute_normal = self.env['product.attribute.value'].create({
+            'name': 'Normal',
+            'attribute_id': attribute.id,
+        })
+        attribute_zero = self.env['product.attribute.value'].create({
+            'name': 'Zero',
+            'attribute_id': attribute.id,
+        })
+
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.coca_cola_test.product_tmpl_id.id,
+            'attribute_id': attribute.id,
+            'value_ids': [Command.set([attribute_normal.id, attribute_zero.id])],
+        })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour3')
         self.start_pos_tour('SplitBillScreenTourPay')
@@ -880,8 +899,11 @@ class TestFrontend(TestFrontendCommon):
     def test_delete_line_release_table(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_delete_line_release_table')
-        order = self.pos_config.current_session_id.order_ids[0]
+        order = self.pos_config.current_session_id.order_ids[1]
+        # opening a table at end of tour created a draft order
+        last_order = self.pos_config.current_session_id.order_ids[0]
         self.assertEqual(order.state, "cancel")
+        self.assertEqual(len(last_order.lines), 0)
 
     def test_combo_synchronisation(self):
         """This test checks that when a combo line is set as dirty, the parent combo line is also set as dirty.

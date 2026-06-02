@@ -110,7 +110,7 @@ describe("findAdjacentPosition method", () => {
                 const [node, offset] = findAdjacentPosition(editor, "backward");
                 setSelection({ anchorNode: node, anchorOffset: offset });
                 expect(getContent(el)).toBe(
-                    `<div class="o-paragraph">\ufeff[]<span contenteditable="false" class="o_file_box"></span>\ufeff<br></div>`
+                    `<div class="o-paragraph">\ufeff[]<span contenteditable="false" class="o_file_box"></span>\ufeff</div>`
                 );
             });
         });

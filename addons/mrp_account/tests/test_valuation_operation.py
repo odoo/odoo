@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
+from odoo import Command
 
 from odoo.addons.mrp_account.tests.common import TestBomPriceOperationCommon
 from odoo.tests import Form
@@ -75,3 +76,58 @@ class TestMrpValuationOperationStandard(TestBomPriceOperationCommon):
     #         {'product_id': self.scrap_wood.id, 'value': (PRICE + 10) * byproduct_cost_share},
     #         {'product_id': self.glass.id, 'value': 10},
     #     ])
+
+    def test_fifo_cost_scrap_kit_product(self):
+        """Verify that scrapping a Kit correctly propagates FIFO valuation to the exploded component moves.
+        """
+        kit_product_tmpl = self.env['product.template'].create({
+            'name': 'kit',
+            'is_storable': True,
+            'standard_price': 0,
+            'qty_available': 0,
+        })
+        kit_product = kit_product_tmpl.product_variant_id
+        self.screw.categ_id = self.category_fifo
+        self.bolt.categ_id = self.category_fifo
+        self.env['mrp.bom'].create({
+            'product_id': kit_product.id,
+            'product_tmpl_id': kit_product_tmpl.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'company_id': False,
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.screw.id,
+                    'product_qty': 1,
+                }),
+                Command.create({
+                    'product_id': self.bolt.id,
+                    'product_qty': 2,
+                }),
+                ],
+            })
+        # Screw: (100*10)/100 = 10.0
+        # Bolt: (100*10)/100 = 10.0
+        self.assertEqual(self.screw.standard_price, 10.0)
+        self.assertEqual(self.bolt.standard_price, 10.0)
+        self._make_in_move(self.screw, 100, 20)
+        self._make_in_move(self.bolt, 200, 40)
+        # Screw: (100*10 + 100*20)/200 = 15.0
+        # Bolt: (100*10 + 200*40)/300 = 30.0
+        self.assertEqual(self.screw.standard_price, 15.0)
+        self.assertEqual(self.bolt.standard_price, 30.0)
+        scrap = self.env['stock.scrap'].create({
+            'product_id': kit_product.id,
+            'product_uom_id': kit_product.uom_id.id,
+            'scrap_qty': 100.0,
+        })
+        scrap.do_scrap()
+        # Screw: 100*10 = 1000
+        # Bolt: (100*10 + 100*40) = 5000
+        self.assertRecordValues(scrap.move_ids,
+            [{'product_id': self.screw.id, 'value': 1000.0},
+            {'product_id': self.bolt.id, 'value': 5000.0}])
+        # Screw: (100*20)/100 = 20.0
+        # Bolt: (100*40)/100 = 40.0
+        self.assertEqual(self.screw.standard_price, 20.0)
+        self.assertEqual(self.bolt.standard_price, 40.0)

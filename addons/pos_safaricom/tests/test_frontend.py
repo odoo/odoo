@@ -36,7 +36,7 @@ class TestSafaricomHttpCommon(TestPointOfSaleHttpCommon):
                 'safaricom_test_mode': True,
                 'consumer_key': 'test-consumer-key',
                 'consumer_secret': 'test-consumer-secret',
-                'business_short_code': '174379',
+                'business_short_code': '174379-174379',
                 'passkey': 'test-passkey',
             })
 
@@ -49,7 +49,7 @@ class TestSafaricomHttpCommon(TestPointOfSaleHttpCommon):
                 'safaricom_test_mode': True,
                 'consumer_key': 'test-consumer-key',
                 'consumer_secret': 'test-consumer-secret',
-                'business_short_code': '174379',
+                'business_short_code': '174379-174379',
             })
 
         payment_methods = cls.main_pos_config.payment_method_ids | mpesa_express_method | lipa_na_mpesa_method

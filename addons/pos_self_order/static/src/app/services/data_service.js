@@ -39,6 +39,11 @@ export const unpatchSelf = patch(PosData.prototype, {
             ? super.synchronizeLocalDataInIndexedDB(...arguments)
             : true;
     },
+    synchronizeServerDataInIndexedDB() {
+        return session.data.self_ordering_mode === "mobile"
+            ? super.synchronizeServerDataInIndexedDB(...arguments)
+            : true;
+    },
     async getCachedServerDataFromIndexedDB() {
         return session.data.self_ordering_mode === "mobile"
             ? await super.getCachedServerDataFromIndexedDB(...arguments)

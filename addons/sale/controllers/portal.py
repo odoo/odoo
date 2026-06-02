@@ -115,6 +115,13 @@ class CustomerPortal(payment_portal.PaymentPortal):
         request.session['my_orders_history'] = values['orders'].ids[:100]
         return request.render("sale.portal_my_orders", values)
 
+    # ------------------------------------------------------------
+    # My Order
+    # ------------------------------------------------------------
+
+    def _sale_order_get_page_view_values(self, order_sudo, access_token, values, history_session_key, **kwargs):
+        return self._get_page_view_values(order_sudo, access_token, values, history_session_key, False, **kwargs)
+
     @http.route(['/my/orders/<int:order_id>'], type='http', auth="public", website=True)
     def portal_order_page(
         self,
@@ -195,8 +202,8 @@ class CustomerPortal(payment_portal.PaymentPortal):
         else:
             history_session_key = 'my_orders_history'
 
-        values = self._get_page_view_values(
-            order_sudo, access_token, values, history_session_key, False, **kw)
+        values = self._sale_order_get_page_view_values(
+            order_sudo, access_token, values, history_session_key, **kw)
 
         return request.render('sale.sale_order_portal_template', values)
 
@@ -331,7 +338,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         if not order_sudo._has_to_be_paid():
             order_sudo._validate_order()
 
-        pdf = request.env['ir.actions.report'].sudo()._render_qweb_pdf('sale.action_report_saleorder', [order_sudo.id])[0]
+        pdf = request.env['ir.actions.report'].sudo().with_context(sale_include_signature=True)._render_qweb_pdf('sale.action_report_saleorder', [order_sudo.id])[0]
 
         order_sudo.message_post(
             attachments=[('%s.pdf' % order_sudo.name, pdf)],

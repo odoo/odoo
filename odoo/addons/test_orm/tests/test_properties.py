@@ -4,7 +4,6 @@ import psycopg2
 import unittest
 from collections import abc
 from unittest.mock import patch
-
 import babel.dates
 
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
@@ -1162,6 +1161,28 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertTrue(isinstance(data['float_value'], int))
         self.assertTrue(isinstance(data['boolean_value'], bool))
         self.assertEqual(self._get_sql_properties(self.message_1), {'int_value': 0, 'float_value': 0, 'boolean_value': False})
+
+    def test_properties_field_search_domain_with_number_edge_case(self):
+        """Tests that a condition where we compare a number to 1 or 0 is not wrongly altered"""
+        for ftype in ['integer', 'float']:
+            def_name = ftype + '_value'
+            self.discussion_1.attributes_definition = [
+            {
+                'name': def_name,
+                'string': 'Number value',
+                'type': ftype,
+            }]
+            self.message_1.attributes = [{
+                'name': def_name,
+                'type': ftype,
+                'value': 1,
+            }]
+            self.message_2.attributes = [{
+                'name': def_name,
+                'type': ftype,
+                'value': 2,
+            }]
+            self.assertEqual(self.env['test_orm.message'].search_count([('attributes.' + def_name, '=', 1)]), 1)
 
     def test_properties_field_integer_float_falsy_value_edge_cases(self):
         self.discussion_1.attributes_definition = [
@@ -2594,7 +2615,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.message_3.attributes = {'mychar': 'boum'}
 
         Model = self.env['test_orm.message']
-        with self.assertQueryCount(6):  # 3 for formatted_read_group + 1 query by group opened
+        with self.assertQueryCount(9):  # 3 for formatted_read_group + 1 query by group opened + 1 query by get_property_definition
             result = Model.web_read_group(
                 domain=[],
                 aggregates=['__count'],
@@ -2602,6 +2623,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
                 auto_unfold=True,
                 unfold_read_specification={'id': {}},
             )
+
         groups = result['groups']
 
         self.assertEqual(len(groups), 3)

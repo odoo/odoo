@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"POT-Creation-Date: 2026-03-20 18:36+0000\n"
 "PO-Revision-Date: 2025-12-12 15:40+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -137,6 +137,7 @@ msgid "Discount & Loyalty"
 msgstr "Desconto e fidelidade"
 
 #. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_history__display_name
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__display_name
@@ -197,6 +198,7 @@ msgid "How much point this reward costs on the loyalty card."
 msgstr "Quantos pontos essa recompensa custa no cartão de fidelidade."
 
 #. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_history__id
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__id
@@ -236,6 +238,11 @@ msgstr "Emitido"
 #: code:addons/sale_loyalty/static/src/views/fields/loyalty_total/loyalty_data_field.xml:0
 msgid "Issued :"
 msgstr "Emitido:"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_account_move_line
+msgid "Journal Item"
+msgstr ""
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid

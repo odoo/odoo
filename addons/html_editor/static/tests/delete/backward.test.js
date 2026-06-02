@@ -10,7 +10,7 @@ import {
     test,
     tick,
 } from "@odoo/hoot";
-import { setupEditor, testEditor } from "../_helpers/editor";
+import { base64Img, setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent, setSelection } from "../_helpers/selection";
 import { deleteBackward, insertText, tripleClick, undo } from "../_helpers/user_actions";
@@ -141,7 +141,7 @@ describe("Selection collapsed", () => {
                     '<p data-selection-placeholder=""><br></p>' +
                     '<div><p>uv</p><br><span class="style" data-oe-zws-empty-inline="">[]\u200B</span></div>' +
                     '<p data-selection-placeholder=""><br></p>',
-                contentAfter: '<div><p>uv</p><br><span class="style">[]\u200B</span></div>',
+                contentAfter: '<div><p>uv</p><br><span class="style" data-oe-zws-empty-inline="">[]\u200B</span></div>',
             });
         });
 
@@ -231,7 +231,7 @@ describe("Selection collapsed", () => {
                 },
                 contentAfterEdit:
                     '<p>ab<span class="style" data-oe-zws-empty-inline="">[]\u200B</span>ef</p>',
-                contentAfter: '<p>ab<span class="style">[]\u200B</span>ef</p>',
+                contentAfter: '<p>ab<span class="style" data-oe-zws-empty-inline="">[]\u200B</span>ef</p>',
             });
         });
 
@@ -421,21 +421,30 @@ describe("Selection collapsed", () => {
 
         test("should unwrap a block next to an inline unbreakable element", async () => {
             await testEditor({
-                contentBefore: `<div><p>abc</p><div class="o_image"></div><p>[]def</p></div>`,
+                contentBefore: `<div><p>abc</p><span class="oe_unbreakable"></span><p>[]def</p></div>`,
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
                 },
-                contentAfter: `<div><p>abc</p><div class="o_image"></div>[]def</div>`,
+                // After the deleteBackward, the automatic normalization of
+                // setSelection puts the cursor at the deepest position, that is
+                // in the span, rather than after it. While it might look a bit
+                // weird in this case, it makes more sense if one imagine that
+                // it is a style tag like bold or italic.
+                contentAfter: `<div><p>abc</p><span class="oe_unbreakable">[]</span>def</div>`,
             });
         });
 
         test("should remove an inline unbreakable contenteditable='false' sibling element", async () => {
             await testEditor({
-                contentBefore: `<div><p>abc</p><div class="o_image"></div>[]def</div>`,
+                contentBefore: `<div><p>abc</p><span class="oe_unbreakable" contenteditable="false">d</span>[]efg</div>`,
+                contentBeforeEdit:
+                    '<p data-selection-placeholder=""><br></p>' +
+                    `<div><p>abc</p><span class="oe_unbreakable" contenteditable="false">d</span>[]efg</div>` +
+                    '<p data-selection-placeholder=""><br></p>',
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
                 },
-                contentAfter: `<div><p>abc</p>[]def</div>`,
+                contentAfter: `<div><p>abc</p>[]efg</div>`,
             });
         });
 
@@ -509,16 +518,16 @@ describe("Selection collapsed", () => {
 
         test("should merge paragraph with previous one containing a media element", async () => {
             await testEditor({
-                contentBefore: `<p>abc</p><p style="margin-bottom: 0px;"><o-image class="o_image" contenteditable="false"></o-image></p><p>[]def</p>`,
+                contentBefore: `<p>abc</p><p style="margin-bottom: 0px;"><span class="o_file_box" contenteditable="false"><a href="#" title="document" data-mimetype="application/pdf"></a></span></p><p>[]def</p>`,
                 stepFunction: deleteBackward,
-                contentAfterEdit: `<p>abc</p><p style="margin-bottom: 0px;"><o-image class="o_image" contenteditable="false"></o-image>[]def</p>`,
-                contentAfter: `<p>abc</p><p style="margin-bottom: 0px;"><o-image class="o_image"></o-image>[]def</p>`,
+                contentAfterEdit: `<p>abc</p><p style="margin-bottom: 0px;">\ufeff<span class="o_file_box" contenteditable="false"><a href="#" title="document" data-mimetype="application/pdf"></a></span>\ufeff[]def</p>`,
+                contentAfter: `<p>abc</p><p style="margin-bottom: 0px;"><span class="o_file_box"><a href="#" title="document" data-mimetype="application/pdf"></a></span>[]def</p>`,
             });
         });
 
         test("should remove a media element inside a p", async () => {
             await testEditor({
-                contentBefore: `<p>abc</p><p style="margin-bottom: 0px;"><o-image class="o_image" contenteditable="false"></o-image>[]def</p>`,
+                contentBefore: `<p>abc</p><p style="margin-bottom: 0px;"><span class="fa fa-icon" contenteditable="false"></span>[]def</p>`,
                 stepFunction: deleteBackward,
                 contentAfter: `<p>abc</p><p style="margin-bottom: 0px;">[]def</p>`,
             });
@@ -526,7 +535,7 @@ describe("Selection collapsed", () => {
 
         test("should remove a link to uploaded document", async () => {
             await testEditor({
-                contentBefore: `<p>abc<a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a>[]</p>`,
+                contentBefore: `<p>abc<span class="o_file_box" contenteditable="false"><a href="#" title="document" data-mimetype="application/pdf"></a></span>[]</p>`,
                 stepFunction: deleteBackward,
                 contentAfter: `<p>abc[]</p>`,
             });
@@ -534,7 +543,7 @@ describe("Selection collapsed", () => {
 
         test("should remove a link to uploaded document at the beginning of the editable", async () => {
             await testEditor({
-                contentBefore: `<p><a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a>[]</p>`,
+                contentBefore: `<p><span class="o_file_box" contenteditable="false"><a href="#" title="document" data-mimetype="application/pdf"></a></span>[]</p>`,
                 stepFunction: deleteBackward,
                 contentAfter: `<p>[]<br></p>`,
             });
@@ -587,6 +596,14 @@ describe("Selection collapsed", () => {
                 stepFunction: deleteBackward,
                 contentAfterEdit: `<p><strong>abc</strong></p><p><strong data-oe-zws-empty-inline="">\u200B</strong><br></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">\u200B[]</strong><br></p>`,
                 contentAfter: `<p><strong>abc</strong></p><p><br></p><p>[]<br></p>`,
+            });
+        });
+
+        test("should not teleport cursor after image", async () => {
+            await testEditor({
+                contentBefore: `<div>a[]<img style="display: block" src="${base64Img}">b</div>`,
+                stepFunction: deleteBackward,
+                contentAfter: `<div>[]<img style="display: block" src="${base64Img}">b</div>`,
             });
         });
     });
@@ -1704,7 +1721,7 @@ describe("Selection not collapsed", () => {
                 '<p data-selection-placeholder=""><br></p>' +
                 '<div><p>ab <span class="style" data-oe-zws-empty-inline="">[]\u200B</span> d</p></div>' +
                 '<p data-selection-placeholder=""><br></p>',
-            contentAfter: '<div><p>ab <span class="style">[]\u200B</span> d</p></div>',
+            contentAfter: '<div><p>ab <span class="style" data-oe-zws-empty-inline="">[]\u200B</span> d</p></div>',
         });
     });
 
@@ -2265,7 +2282,7 @@ describe("Selection not collapsed", () => {
         await testEditor({
             contentBefore: '<p>ab<b class="oe_unremovable">[cd]</b>ef</p>',
             stepFunction: deleteBackward,
-            contentAfter: '<p>ab<b class="oe_unremovable">[]\u200B</b>ef</p>',
+            contentAfter: '<p>ab<b class="oe_unremovable" data-oe-zws-empty-inline="">[]\u200B</b>ef</p>',
         });
     });
 
@@ -2284,6 +2301,14 @@ describe("Selection not collapsed", () => {
             stepFunction: deleteBackward,
             contentAfter: `<div><br></div><div>[]<br></div>`,
             config: { baseContainers: ["DIV"] },
+        });
+    });
+
+    test("should not remove blockquote when it contains content on Backspace", async () => {
+        await testEditor({
+            contentBefore: `<blockquote><img>[]</blockquote>`,
+            stepFunction: deleteBackward,
+            contentAfter: `<blockquote>[]<br></blockquote>`,
         });
     });
 
@@ -2332,7 +2357,7 @@ describe("Selection not collapsed", () => {
         await testEditor({
             contentBefore: '<p>a<span class="style-class">[bcde]</span>f</p>',
             stepFunction: deleteBackward,
-            contentAfter: '<p>a<span class="style-class">[]\u200B</span>f</p>',
+            contentAfter: '<p>a<span class="style-class" data-oe-zws-empty-inline="">[]\u200B</span>f</p>',
         });
     });
 

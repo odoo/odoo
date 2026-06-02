@@ -161,15 +161,14 @@ class WebsiteSnippetFilter(models.Model):
         else:  # Only top-level categories
             categories = CategorySudo.search(domain & Domain('parent_id', '=', False))
 
-        base_url = CategorySudo.get_base_url()
         default_img_path = request.env['product.template']._get_product_placeholder_filename()
-        default_img_url = f'{base_url}/{default_img_path}'
+        default_img_url = f'/{default_img_path}'
         return [{
             'id': cat.id,
             'name': cat.name,
             'unpublished': not cat.has_published_products,
             'cover_image': (
-                f'{base_url}{request.website.image_url(cat, "cover_image")}'
+                request.website.image_url(cat, "cover_image")
                 if cat.cover_image else default_img_url
             ),
         } for cat in categories]
@@ -177,7 +176,7 @@ class WebsiteSnippetFilter(models.Model):
     @api.model
     def _get_products(self, mode, **kwargs):
         dynamic_filter = self.env.context.get('dynamic_filter')
-        handler = getattr(self, '_get_products_%s' % mode, self._get_products_latest_sold)
+        handler = getattr(self.sudo(False), '_get_products_%s' % mode, self.sudo(False)._get_products_latest_sold)
         website = self.env['website'].get_current_website()
         search_domain = self.env.context.get('search_domain')
         limit = self.env.context.get('limit')

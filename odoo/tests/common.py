@@ -41,7 +41,6 @@ from functools import lru_cache, partial, wraps
 from itertools import islice, zip_longest
 from textwrap import shorten
 from typing import Optional, Iterable, cast
-from unittest import TestResult
 from unittest.mock import patch, _patch, Mock
 from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 from xmlrpc import client as xmlrpclib
@@ -67,12 +66,11 @@ from odoo.service import security
 from odoo.sql_db import Cursor, Savepoint
 from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
 from odoo.tools.mail import single_email_re
-from odoo.tools.misc import find_in_path, lower_logging
+from odoo.tools.misc import find_in_path
 from odoo.tools.xml_utils import _validate_xml
 from odoo.addons.base.models import ir_actions_report
 
 from . import case, test_cursor
-from .result import OdooTestResult
 
 try:
     import websocket
@@ -323,8 +321,6 @@ class BaseCase(case.TestCase):
     warm = True             # False during warm-up phase (see :func:`warmup`)
     _python_version = sys.version_info
 
-    _tests_run_count = int(os.environ.get('ODOO_TEST_FAILURE_RETRIES', 0)) + 1
-
     _registry_patched = False
     _registry_readonly_enabled = True
     test_cursor_lock_timeout: int = 20
@@ -354,32 +350,6 @@ class BaseCase(case.TestCase):
         _logger.getChild('requests').info(
             "Blocking un-mocked external HTTP request %s %s", r.method, r.url)
         raise BlockedRequest(f"External requests verboten (was {r.method} {r.url})")
-
-    def run(self, result: OdooTestResult) -> None:
-        testMethod = getattr(self, self._testMethodName)
-
-        if getattr(testMethod, '_retry', True) and getattr(self, '_retry', True):
-            tests_run_count = self._tests_run_count
-        else:
-            tests_run_count = 1
-            _logger.info('Auto retry disabled for %s', self)
-
-        for retry in range(tests_run_count):
-            result.had_failure = False  # reset in case of retry without soft_fail
-            if retry:
-                _logger.runbot(f'Retrying a failed test: {self}')
-            if retry < tests_run_count-1:
-                with warnings.catch_warnings(), \
-                        result.soft_fail(), \
-                        lower_logging(25, logging.INFO) as quiet_log:
-                    super().run(cast(TestResult, result))
-                if not (result.had_failure or quiet_log.had_error_log):
-                    break
-            else:  # last try
-                super().run(cast(TestResult, result))
-                if not result.wasSuccessful() and BaseCase._tests_run_count != 1:
-                    _logger.runbot('Disabling auto-retry after a failed test')
-                    BaseCase._tests_run_count = 1
 
     @classmethod
     def setUpClass(cls):
@@ -900,7 +870,7 @@ class BaseCase(case.TestCase):
 
     def assertCanOpenTestCursor(self):
         """ Asserts that we can currently open a test cursor. """
-        if odoo.modules.module.current_test != self:
+        if odoo.modules.module.current_test is not self:
             message = f"Trying to open a test cursor for {self.canonical_tag} while already in a test {odoo.modules.module.current_test.canonical_tag}"
             _logger.runbot(message)
             raise BadRequest(message)
@@ -1250,16 +1220,17 @@ def run(gen_func):
     except StopIteration:
         return
 
-def save_test_file(test_name, content, prefix, extension='png', logger=_logger, document_type='Screenshot', date_format="%Y%m%d_%H%M%S_%f"):
+
+def save_test_file(test_name, content, prefix, extension='png', logger=_logger, document_type='Screenshot', date_format="%Y%m%d_%H%M%S_%f", loglevel=logging.RUNBOT, directory=''):
     assert re.fullmatch(r'\w*_', prefix)
     assert re.fullmatch(r'[a-z]+', extension)
     assert re.fullmatch(r'\w+', test_name)
     now = datetime.now().strftime(date_format)
-    screenshots_dir = pathlib.Path(odoo.tools.config['screenshots']) / get_db_name() / 'screenshots'
-    screenshots_dir.mkdir(parents=True, exist_ok=True)
-    full_path = screenshots_dir / f'{prefix}{now}_{test_name}.{extension}'
+    dest = pathlib.Path(odoo.tools.config['screenshots']) / get_db_name() / directory
+    dest.mkdir(parents=True, exist_ok=True)
+    full_path = dest / f'{prefix}{now}_{test_name}.{extension}'
     full_path.write_bytes(content)
-    logger.runbot(f'{document_type} in: {full_path}')
+    logger.log(loglevel, "%s in: %s", document_type, full_path)
 
 
 if os.name == 'posix' and platform.system() != 'Darwin':
@@ -1296,6 +1267,19 @@ class ChromeBrowser:
             self._logger.info,
             'Removing chrome user profile "%s"',
             self.user_data_dir,
+        )
+        self.chrome_log_level = logging.RUNBOT
+        self.cleanup.callback(
+            lambda: save_test_file(
+                self.test_case._testMethodName,
+                self.read_log(),
+                prefix='chrome_log_',
+                extension='txt',
+                document_type="Chrome Log",
+                logger=self._logger,
+                loglevel=self.chrome_log_level,
+                directory='chrome_logs',
+            )
         )
 
         if os.name == 'posix':
@@ -1375,8 +1359,10 @@ class ChromeBrowser:
             self._websocket_request('Browser.close')
         except ChromeBrowserException as e:
             _logger.runbot("WS error during browser shutdown: %s", e)
+            self.chrome_log_level = logging.RUNBOT
         except Exception:  # noqa: BLE001
             _logger.warning("Error during browser shutdown", exc_info=True)
+            self.chrome_log_level = logging.RUNBOT
 
     def signal_handler(self, sig, frame):
         if sig == signal.SIGXCPU:
@@ -1404,15 +1390,13 @@ class ChromeBrowser:
             raise
 
     def _spawn_chrome(self, cmd):
-        log_path = pathlib.Path(self.user_data_dir, 'err.log')
-        with log_path.open('wb') as log_file:
-            # pylint: disable=subprocess-popen-preexec-fn
-            proc = subprocess.Popen(
-                cmd,
-                stderr=log_file,
-                preexec_fn=_preexec,
-                env={**os.environ, 'TMPDIR': self.user_data_dir},
-            )  # noqa: PLW1509
+        # pylint: disable=subprocess-popen-preexec-fn
+        proc = subprocess.Popen(
+            cmd,
+            stderr=subprocess.DEVNULL,
+            preexec_fn=_preexec,
+            env={**os.environ, 'TMPDIR': self.user_data_dir},
+        )  # noqa: PLW1509
 
         port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
         for _ in range(CHECK_BROWSER_ITERATIONS):
@@ -1428,7 +1412,10 @@ class ChromeBrowser:
             except subprocess.TimeoutExpired:
                 proc.kill()
                 proc.wait()
-        self._logger.warning('Chrome headless failed to start:\n%s', log_path.read_text(encoding="utf-8"))
+        self._logger.warning(
+            'Chrome headless failed to start:\n%s',
+            self.read_log().decode(),
+        )
         self.stop()
 
         raise unittest.SkipTest(f'Failed to detect chrome devtools port after {BROWSER_WAIT :.1f}s.')
@@ -1468,6 +1455,8 @@ class ChromeBrowser:
             '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.remote_debugging_port),
             '--user-data-dir': user_data_dir,
+            '--enable-logging': '',
+            '--v': str(int(os.environ.get("ODOO_BROWSER_LOG_VERBOSITY", "0"))),
             '--no-first-run': '',
             # FIXME: these next 2 flags are temporarily uncommented to allow client
             # code to manually run garbage collection. This is done as currently
@@ -1502,12 +1491,27 @@ class ChromeBrowser:
             yield proc, devtools_port
         finally:
             self._logger.info("Terminating chrome headless with pid %s", proc.pid)
+            main = psutil.Process(proc.pid)
+            procs = [main] + main.children(recursive=True)
             proc.terminate()
-            try:
-                proc.wait(5)
-            except subprocess.TimeoutExpired:
-                self._logger.warning("Killing chrome headless with pid %s: still alive", proc.pid)
-                proc.kill()
+            _, alive = psutil.wait_procs(procs, 5)
+            if alive:  # can't early exit, it suppresses the finally'd exception if any
+                self._logger.warning(
+                    "Killing chrome descendants-or-self of %s: %d remaining%s",
+                    proc.pid,
+                    len(alive),
+                    "".join(f"\n- {p.name()} ({p.status()})" for p in alive),
+                )
+                for p in alive:
+                    p.kill()
+                psutil.wait_procs(alive, 1)
+                self.chrome_log_level = logging.RUNBOT
+
+    def read_log(self) -> bytes:
+        try:
+            return pathlib.Path(self.user_data_dir, 'chrome_debug.log').read_bytes()
+        except FileNotFoundError:
+            return b''
 
     def _json_command(self, command, timeout=3):
         """Queries browser state using JSON
@@ -1611,8 +1615,13 @@ class ChromeBrowser:
                 if not self._result.done():
                     del self.ws
                     self._result.set_exception(e)
-                    for f in self._responses.values():
-                        f.cancel()
+                    while True:
+                        try:
+                            _, f = self._responses.popitem()
+                        except KeyError:
+                            break
+                        else:
+                            f.cancel()
                 return
             except Exception as e:
                 if isinstance(e, ConnectionResetError) and self._result.done():
@@ -1828,7 +1837,7 @@ which leads to stray network requests and inconsistencies."""
                 self._logger.runbot("Couldn't capture screenshot: expected image data, got %r", base_png)
                 return
             decoded = binascii.a2b_base64(base_png)
-            save_test_file(type(self.test_case).__name__, decoded, prefix, logger=self._logger)
+            save_test_file(self.test_case._testMethodName, decoded, prefix, logger=self._logger, directory='screenshots')
 
         self._logger.info('Asking for screenshot')
         f = self._websocket_send('Page.captureScreenshot', with_future=True)
@@ -1856,10 +1865,16 @@ which leads to stray network requests and inconsistencies."""
             if taken > timeout:
                 break
 
-            result = self._websocket_request('Runtime.evaluate', params={
-                'expression': "try { %s } catch {}" % ready_code,
-                'awaitPromise': True,
-            }, timeout=timeout-taken)['result']
+            try:
+                result = self._websocket_request('Runtime.evaluate', params={
+                    'expression': "try { %s } catch {}" % ready_code,
+                    'awaitPromise': True,
+                }, timeout=timeout-taken)['result']
+            except CancelledError:
+                exc = self._result.done() and self._result.exception()
+                if exc:
+                    raise exc from None
+                result = "cancelled"
 
             if result == {'type': 'boolean', 'value': True}:
                 time_to_ready = time.time() - start_time
@@ -1867,6 +1882,9 @@ which leads to stray network requests and inconsistencies."""
                     self._logger.info('The ready code tooks too much time : %s', time_to_ready)
                 return True
 
+        exc = self._result.done() and self._result.exception()
+        if exc:
+            raise exc from None
         self.take_screenshot(prefix='sc_failed_ready_')
         self._logger.info('Ready code last try result: %s', result)
         return False
@@ -1888,9 +1906,11 @@ which leads to stray network requests and inconsistencies."""
             # if the runcode was a promise which took some time to execute,
             # discount that from the timeout
             if self._result.result(time.time() - start + timeout) and not self.had_failure:
+                self.chrome_log_level = logging.INFO
                 return
         except CancelledError:
             # regular-ish shutdown
+            self.chrome_log_level = logging.INFO
             return
         except ChromeBrowserException:
             self.screencaster.save()

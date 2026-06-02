@@ -25,7 +25,6 @@ from lxml.html import (
     _looks_like_full_html_unicode,
     clean,
     defs,
-    document_fromstring,
     html_parser,
 )
 from werkzeug import urls
@@ -99,7 +98,7 @@ class _Cleaner(clean.Cleaner):
     _style_whitelist = [
         'font-size', 'font-family', 'font-weight', 'font-style', 'background-color', 'color', 'text-align',
         'line-height', 'letter-spacing', 'text-transform', 'text-decoration', 'text-decoration', 'opacity',
-        'float', 'vertical-align', 'display', 'object-fit',
+        'float', 'vertical-align', 'display', 'object-fit', 'direction',
         'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right',
         'white-space',
@@ -294,7 +293,7 @@ def fromstring(html_, base_url=None, parser=None, **kw):
         is_full_html = _looks_like_full_html_bytes(html_)
     else:
         is_full_html = _looks_like_full_html_unicode(html_)
-    doc = document_fromstring(html_, parser=parser, base_url=base_url, **kw)
+    doc = html.document_fromstring(html_, parser=parser, base_url=base_url, **kw)
     if is_full_html:
         return doc, False
     # otherwise, lets parse it out...

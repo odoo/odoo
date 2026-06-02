@@ -14,13 +14,14 @@
 # Martin Trigaux, 2022
 # Bole <bole@dajmi5.com>, 2023
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Boris Peko <boris.peko@ecodica.eu>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-13 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 17:50+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-04-13 09:43+0000\n"
+"Last-Translator: Boris Peko <boris.peko@ecodica.eu>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
 "sale_stock/hr/>\n"
 "Language: hr\n"
@@ -29,7 +30,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -44,7 +45,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
 msgid "1 Quotation"
-msgstr ""
+msgstr "1 Ponuda"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -130,7 +131,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
 msgid "Accrued Orders Wizard"
-msgstr ""
+msgstr "Čarobnjak za vremenski razgraničene narudžbe"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -173,6 +174,9 @@ msgid ""
 "            Orange: Partially Delivered\n"
 "            Green: Fully Delivered"
 msgstr ""
+"Plavo: Nije isporučeno/Započeto\n"
+"            Narančasto: Djelomično isporučeno\n"
+"            Zeleno: Potpuno isporučeno"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -187,7 +191,7 @@ msgstr "Tvrtke"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr ""
+msgstr "Datum dovršenja prvog dostavnog naloga."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
@@ -265,19 +269,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__display_name
 msgid "Display Name"
-msgstr "Naziv"
+msgstr "Naziv za prikaz"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
-msgstr ""
+msgstr "Widget za prikaz količine"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
-msgstr ""
+msgstr "Ne zaboravite promijeniti partnera na sljedećim dostavnim nalozima: %s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -287,12 +291,12 @@ msgstr "Efektivni datum"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "Exception(s) occurred on the picking:"
-msgstr ""
+msgstr "Došlo je do iznimke/iznimki na skladišnoj operaciji:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "Došlo je do iznimke/iznimki na prodajnom nalogu/nalozima:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -341,12 +345,12 @@ msgstr "Potpuno isporučeno"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
 msgid "Goods Delivered Not Invoiced"
-msgstr ""
+msgstr "Isporučena roba koja nije fakturirana"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
-msgstr ""
+msgstr "Ima zakašnjelu skladišnu operaciju"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__id
@@ -380,11 +384,14 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
+"Ako sve proizvode isporučujete odjednom, dostavni nalog će biti zakazan "
+"prema najdužem vremenu isporuke proizvoda. U suprotnom, bit će zakazan prema "
+"najkraćem."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
-msgstr ""
+msgstr "Prijenos(i) na koje utječe:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
@@ -423,12 +430,12 @@ msgstr "Rute zalihe"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
 msgid "Is Mto"
-msgstr ""
+msgstr "Je izrada po narudžbi"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
 msgid "JSON data for the popover widget"
-msgstr ""
+msgstr "JSON podaci za popover widget"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move
@@ -473,6 +480,9 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
+"Margina pogreške za datume obećane kupcima. Proizvodi će biti zakazani za "
+"isporuku toliko dana ranije od stvarno obećanog datuma, kako bi se nosili s "
+"neočekivanim kašnjenjima u opskrbnom lancu."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -483,6 +493,9 @@ msgid ""
 "for procurement and delivery that many days earlier than the actual promised "
 "date, to cope with unexpected delays in the supply chain."
 msgstr ""
+"Margina pogreške za datume obećane kupcima. Proizvodi će biti zakazani za "
+"nabavu i isporuku toliko dana ranije od stvarno obećanog datuma, kako bi se "
+"nosili s neočekivanim kašnjenjima u opskrbnom lancu."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
@@ -544,7 +557,7 @@ msgstr "Djelomično isporučeno"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
 msgid "Picking Policy"
-msgstr ""
+msgstr "Politika skladišne operacije"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_template
@@ -592,7 +605,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_reference
 msgid "Reference between stock documents"
-msgstr ""
+msgstr "Referenca između skladišnih dokumenata"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__stock_reference_ids
@@ -729,7 +742,7 @@ msgstr "Pravila otpreme"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Shipping Status"
-msgstr ""
+msgstr "Status otpreme"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
@@ -784,6 +797,11 @@ msgid ""
 "                        You should probably update the partner on this "
 "document."
 msgstr ""
+"Adresa isporuke promijenjena je na prodajnom nalogu<br/>\n"
+"                        S <strong>\"%(old_address)s\"</strong> na <strong>\"%"
+"(new_address)s\"</strong>,\n"
+"                        Vjerojatno biste trebali ažurirati partnera na ovom "
+"dokumentu."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -792,6 +810,8 @@ msgid ""
 "The ordered quantity cannot be decreased below the amount already delivered. "
 "Instead, create a return in your inventory."
 msgstr ""
+"Naručena količina ne može se smanjiti ispod već isporučene količine. Umjesto "
+"toga, kreirajte povrat u skladištu."
 
 #. module: sale_stock
 #. odoo-python
@@ -800,6 +820,8 @@ msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
+"Naručena količina stavke prodajnog naloga ne može se smanjiti ispod već "
+"isporučene količine. Umjesto toga, kreirajte povrat u skladištu."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -826,6 +848,7 @@ msgstr "Prijenosi"
 #: model:ir.model.fields,help:sale_stock.field_sale_order__late_availability
 msgid "True if any related picking has late availability"
 msgstr ""
+"Točno ako bilo koja povezana skladišna operacija ima zakašnjelu dostupnost"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_users
@@ -841,7 +864,7 @@ msgstr "Vidi predviđanje"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
 msgid "Virtual Available At Date"
-msgstr ""
+msgstr "Virtualno dostupno na datum"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
@@ -871,13 +894,13 @@ msgstr "Kada kreće isporuka"
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid ""
 "You must have a warehouse for line using a delivery in different company."
-msgstr ""
+msgstr "Morate imati skladište za stavku koja koristi dostavu u drugoj tvrtki."
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid "You must set a warehouse on your sale order to proceed."
-msgstr ""
+msgstr "Morate postaviti skladište na prodajnom nalogu za nastavak."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

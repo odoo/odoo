@@ -160,10 +160,10 @@ class IrAttachment(models.Model):
         fname, full_path = self._get_path(bin_value, checksum)
         if not os.path.exists(full_path):
             try:
-                with open(full_path, 'wb') as fp:
-                    fp.write(bin_value)
                 # add fname to checklist, in case the transaction aborts
                 self._mark_for_gc(fname)
+                with open(full_path, 'wb') as fp:
+                    fp.write(bin_value)
             except OSError:
                 _logger.info("_file_write writing %s", full_path)
                 raise
@@ -274,7 +274,7 @@ class IrAttachment(models.Model):
         self.ensure_one()
         if self.type != 'binary':
             return False
-        if self.mimetype != 'application/pdf':
+        if not self.mimetype.startswith('application/pdf'):
             return False
         return self.raw
 
@@ -490,6 +490,15 @@ class IrAttachment(models.Model):
                 has_group = self.env.user.has_group
                 if not any(has_group(g) for g in attachment.get_serving_groups()):
                     raise ValidationError(_("Sorry, you are not allowed to write on this document"))
+
+    @api.constrains('res_model', 'res_id')
+    def _check_circular_attachment(self):
+        for record in self.sudo():
+            if record.res_model == 'ir.attachment' and record.id == record.res_id:
+                raise ValidationError(_(
+                    "You cannot attach an attachment to itself.\n"
+                    "Attachment %(record)s cannot have res_id: %(res_id)s",
+                    record=record, res_id=record))
 
     @api.model
     def check(self, mode, values=None):

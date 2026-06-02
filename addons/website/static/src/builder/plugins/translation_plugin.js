@@ -49,11 +49,15 @@ function findOEditable(containerEl) {
 export class TranslationPlugin extends Plugin {
     static id = "translation";
     static dependencies = ["history"];
+    static shared = ["getElToTranslationInfoMap"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         get_dirty_els: this.getDirtyTranslations.bind(this),
+        after_replication_handlers: ({ sourceEl, targetEl }) => {
+            targetEl.classList.toggle("o_dirty", sourceEl.classList.contains("o_dirty"));
+        },
         after_setup_editor_handlers: () => {
             const translationSavableEls = getTranslationAttributeEls(
                 this.services.website.pageDocument
@@ -136,7 +140,14 @@ export class TranslationPlugin extends Plugin {
                 sticky: false,
             });
         };
-        for (const translateEl of this.editableEls) {
+        // The TOC navbar lives under `.o_not_editable`, so its translation
+        // spans are excluded from `findOEditable`. Iterate them explicitly
+        // so `handleToC` can align their source SHA with the matching
+        // heading and tag them with `o_translation_without_style`.
+        const tocNavTranslationEls = this.editable.querySelectorAll(
+            ".s_table_of_content_navbar_wrap [data-oe-translation-source-sha]"
+        );
+        for (const translateEl of new Set([...this.editableEls, ...tocNavTranslationEls])) {
             this.handleToC(translateEl);
         }
         const savableInsideNotEditableEls = this.editable.querySelectorAll(
@@ -176,9 +187,24 @@ export class TranslationPlugin extends Plugin {
         this.elToTranslationInfoMap = new Map();
         const translatedAttrs = ["placeholder", "title", "alt", "value"];
         const translationRegex =
-            /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>(.*)<\/span>/;
+            /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>/;
         const isEmpty = (el) => !el.hasChildNodes() || el.innerHTML.trim() === "";
         const matchTag = (el) => el.matches("input, select, textarea, img");
+
+        // Placeholder attributes on non-form elements (i.e. not input, select,
+        // textarea) are intended for content editors, not visible text
+        // for end-users. For example, blog post title is such a placeholder.
+        const placeholderEls = editableEls.filter(
+            (el) =>
+                el.getAttribute("placeholder")?.includes("data-oe-translation-source-sha=") &&
+                !matchTag(el)
+        );
+        for (const el of placeholderEls) {
+            const translation = el.getAttribute("placeholder");
+            const match = translation.match(translationRegex);
+            el.setAttribute("placeholder", match[2]);
+        }
+
         for (const translatedAttr of translatedAttrs) {
             const filteredEditableEls = editableEls.filter(
                 (editableEl) =>
@@ -263,7 +289,6 @@ export class TranslationPlugin extends Plugin {
                     translateEl.dataset.oeTranslationSourceSha =
                         headerEl.dataset.oeTranslationSourceSha;
                 }
-                // TODO: handle o_translation_without_style
                 translateEl.classList.add("o_translation_without_style");
             }
         }
@@ -304,6 +329,10 @@ export class TranslationPlugin extends Plugin {
             });
         }
         this.dispatchTo("mark_translatable_nodes", this.editableEls);
+    }
+
+    getElToTranslationInfoMap() {
+        return this.elToTranslationInfoMap;
     }
 
     updateTranslationMap(translateEl, translation, attrName) {

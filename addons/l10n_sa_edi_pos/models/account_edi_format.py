@@ -12,7 +12,7 @@ class AccountEdiFormat(models.Model):
         """
         if not hasattr(self.env['pos.order.line'], '_is_settle_or_deposit'):
             return False
-        return any(line._is_settle_or_deposit() for line in invoice.pos_order_ids.lines)
+        return any(line._is_settle_or_deposit() for line in invoice.sudo().pos_order_ids.lines)
 
     def _get_move_applicability(self, move):
         # EXTENDS account_edi

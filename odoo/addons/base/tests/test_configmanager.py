@@ -1,4 +1,5 @@
 import os
+import tempfile
 import unittest
 from unittest.mock import call, patch
 
@@ -765,3 +766,34 @@ class TestConfigManager(TransactionCase):
             _, options = self.parse_reset(['--db_replica_host', '', '--dev', 'replica'])
         self.assertIsNone(options['db_replica_host'])
         self.assertEqual(options['dev_mode'], ['replica'])
+
+    def test_14_addons_path_glob(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            def make_addons_dir(name):
+                path = os.path.join(temp_dir, name)
+                module = os.path.join(path, 'my_module')
+                os.makedirs(module)
+                open(os.path.join(module, '__init__.py'), 'wb').close()
+                open(os.path.join(module, '__manifest__.py'), 'wb').close()
+                return path
+
+            valid1 = make_addons_dir('valid1')
+            valid2 = make_addons_dir('valid2')
+            not_addons = os.path.join(temp_dir, 'not_addons')
+            os.makedirs(not_addons)  # directory without any valid module
+
+            # Glob expands to all matching subdirs but only keeps valid addons dirs
+            _, options = self.parse_reset(['--addons-path', os.path.join(temp_dir, '*')])
+            self.assertEqual(options['addons_path'], sorted([valid1, valid2]))
+
+            # A literal path to a non-addons directory is skipped with a warning
+            with self.assertLogs('odoo.tools.config') as capture:
+                _, options = self.parse_reset(['--addons-path', not_addons])
+            self.assertEqual(options['addons_path'], [])
+            self.assertEqual(capture.output, [
+                f"WARNING:odoo.tools.config:option --addons-path, invalid addons directory {not_addons!r}, skipped"
+            ])
+
+            # A glob with no matches silently resolves to an empty list
+            _, options = self.parse_reset(['--addons-path', os.path.join(temp_dir, 'no_match_*')])
+            self.assertEqual(options['addons_path'], [])

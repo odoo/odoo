@@ -194,7 +194,7 @@ export class SpreadsheetDashboardAction extends Component {
         if (!dashboard || dashboard.status !== Status.Loaded) {
             return;
         }
-        this.model.dispatch("LOG_DATASOURCE_EXPORT", { action: "print" });
+        dashboard.model.dispatch("LOG_DATASOURCE_EXPORT", { action: "print" });
     }
 }
 

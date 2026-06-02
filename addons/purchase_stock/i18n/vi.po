@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
-"PO-Revision-Date: 2026-01-13 15:33+0000\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2026-03-25 08:40+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "purchase_stock/vi/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -58,7 +58,7 @@ msgstr "+ %d ngày"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "+ %s day(s)"
-msgstr ""
+msgstr "+ %s ngày"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -297,6 +297,15 @@ msgid ""
 "is the same week or week day\n"
 "         Always: Replenishment needs will always be grouped."
 msgstr ""
+"Xác định xem RFQ có nên được nhóm lại với nhau dựa trên ngày nhận hàng dự "
+"kiến hay không, trừ các hoạt động giao hàng trực tiếp.\n"
+"         Trên đơn hàng: Nhu cầu bổ sung hàng sẽ được nhóm lại với nhau, trừ "
+"các đơn hàng đặt hàng theo yêu cầu (MTO).\n"
+"         Hàng ngày: Nhu cầu bổ sung hàng sẽ được nhóm lại nếu ngày nhận hàng "
+"dự kiến là cùng ngày.\n"
+"         Hàng tuần: Nhu cầu bổ sung hàng sẽ được nhóm lại nếu ngày nhận hàng "
+"dự kiến là cùng tuần hoặc cùng ngày trong tuần.\n"
+"         Luôn luôn: Nhu cầu bổ sung hàng sẽ luôn được nhóm lại."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
@@ -1296,6 +1305,12 @@ msgstr "đã đặt thay vì"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "this product should be manually replenished."
 msgstr "sản phẩm này phải được bổ sung thủ công."
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
+msgid "x"
+msgstr ""
 
 #~ msgid "Stock Valuation"
 #~ msgstr "Định giá tồn kho"

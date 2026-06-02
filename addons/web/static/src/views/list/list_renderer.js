@@ -1152,10 +1152,12 @@ export class ListRenderer extends Component {
 
     getGroupPagerProps(group) {
         const list = group.list;
+        // For a single leveled group with a countLimit, we already have the full count.
+        const total = list.isGrouped ? list.count : group.count;
         return {
             offset: list.offset,
             limit: list.limit,
-            total: list.count,
+            total,
             onUpdate: async ({ offset, limit }) => {
                 await list.load({ limit, offset });
                 this.render(true);
@@ -1418,6 +1420,9 @@ export class ListRenderer extends Component {
         }
 
         const closestCell = ev.target.closest("td, th");
+        if (closestCell.querySelector(".o_select_menu [aria-expanded=true]")) {
+            return;
+        }
 
         if (this.toggleFocusInsideCell(hotkey, closestCell)) {
             return;
@@ -1702,9 +1707,13 @@ export class ListRenderer extends Component {
      * @returns {boolean} true if some behavior has been taken
      */
     onCellKeydownEditMode(hotkey, cell, group, record) {
+        if (!record) {
+            return false;
+        }
+
         const { cycleOnTab, list } = this.props;
         const row = cell.parentElement;
-        const applyMultiEditBehavior = record && record.selected && list.model.multiEdit;
+        const applyMultiEditBehavior = record.selected && list.model.multiEdit;
         const isDirty = record.dirty || this.lastIsDirty;
         const topReCreate = this.props.editable === "top" && record.isNew;
 

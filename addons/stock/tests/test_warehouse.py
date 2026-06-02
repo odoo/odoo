@@ -2,7 +2,7 @@
 
 from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.tests import Form
+from odoo.tests import tagged, Form
 from odoo.tests.common import new_test_user
 
 
@@ -950,3 +950,38 @@ class TestWarehouse(TestStockCommon):
         ]:
             res = self.env['stock.warehouse.orderpoint'].search([('qty_to_order', op, 0)])
             self.assertEqual(res, expected, "Error with operator %s" % op)
+
+
+@tagged('-at_install', 'post_install')
+class TestWarehousePostInstall(TestStockCommon):
+    def test_manual_resupply_from_wh_partner_propagation(self):
+        """
+        Check that the warehouse destination is set as delivery address
+        when a product is manually resupplied from an other warehouse.
+        """
+        warehouse_2 = self.env['stock.warehouse'].create({
+            'name': 'Warehouse 2',
+            'company_id': self.env.company.id,
+            'code': 'WHC2',
+            'resupply_wh_ids': [Command.set(self.warehouse_1.ids)],
+            'partner_id': self.partner.id,
+        })
+        self.product.route_ids = warehouse_2.resupply_route_ids
+        product_replenish = Form(self.env['product.replenish'].with_context(default_product_id=self.product.id))
+        product_replenish.warehouse_id = warehouse_2
+        product_replenish.save().launch_replenishment()
+        replenishment_pickings = self.env['stock.picking'].search([('origin', '=', 'Manual Replenishment'), ('product_id', '=', self.product.ids)]).sorted('id')
+        self.assertRecordValues(replenishment_pickings, [
+            {
+                'picking_type_id': self.warehouse_1.out_type_id.id,
+                'location_id': self.warehouse_1.lot_stock_id.id,
+                'location_dest_id': self.env.company.internal_transit_location_id.id,
+                'partner_id': warehouse_2.partner_id.id,
+            },
+            {
+                'picking_type_id': warehouse_2.in_type_id.id,
+                'location_id': self.env.company.internal_transit_location_id.id,
+                'location_dest_id': warehouse_2.lot_stock_id.id,
+                'partner_id': self.warehouse_1.partner_id.id,
+            },
+        ])

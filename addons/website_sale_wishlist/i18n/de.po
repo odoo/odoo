@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-02-13 09:18+0000\n"
+"POT-Creation-Date: 2026-04-03 18:38+0000\n"
+"PO-Revision-Date: 2026-04-24 12:06+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "website_sale_wishlist/de/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.empty_wishlist_svg
@@ -170,19 +170,6 @@ msgid "6 Columns"
 msgstr "6 Spalten"
 
 #. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
-msgid ""
-"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/"
-">\n"
-"                                                    <span class=\"o_label "
-"small ms-1\">Add to Cart</span>"
-msgstr ""
-"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/"
-">\n"
-"                                                    <span class=\"o_label "
-"small ms-1\">In den Warenkorb</span>"
-
-#. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid ""
 "<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"Add to "
@@ -190,6 +177,49 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"Auf die "
 "Wunschliste\"/>"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid ""
+"<span class=\"d-inline-flex align-items-baseline\">\n"
+"                                                        <i class=\"fa fa-fw "
+"fa-envelope o_not-animable\" role=\"presentation\"/>\n"
+"                                                        <span "
+"class=\"o_label small ms-1\">\n"
+"                                                            Contact Us\n"
+"                                                        </span>\n"
+"                                                    </span>"
+msgstr ""
+"<span class=\"d-inline-flex align-items-baseline\">\n"
+"                                                    <i class=\"fa fa-fw fa-"
+"envelope o_not-animable\" role=\"presentation\"/>\n"
+"                                                    <span class=\"o_label "
+"small ms-1\">\n"
+"                                                        Kontakt\n"
+"                                                    </span>\n"
+"                                                </span>"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
+msgid ""
+"<span class=\"d-inline-flex align-items-baseline\">\n"
+"                                                        <i class=\"fa fa-fw "
+"fa-shopping-cart o_not-animable\" role=\"presentation\"/>\n"
+"                                                        <span "
+"class=\"o_label small ms-1\">\n"
+"                                                            Add to Cart\n"
+"                                                        </span>\n"
+"                                                    </span>"
+msgstr ""
+"<span class=\"d-inline-flex align-items-baseline\">\n"
+"                                                        <i class=\"fa fa-fw "
+"fa-shopping-cart o_not-animable\" role=\"presentation\"/>\n"
+"                                                       <span class=\"o_label "
+"small ms-1\"> \n"
+"                                                            In den "
+"Warenkorb\n"
+"                                                       </span>\n"
+"                                                    </span>"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_cart_lines
@@ -216,17 +246,12 @@ msgstr "Auf die Wunschliste"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_opt_products_design_classes
 msgid "CSS class for wishlist page design"
-msgstr "CSS-Design für Design der Wunschlistenseite"
+msgstr "CSS-Klasse für Design der Wunschlistenseite"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
 msgid "Contact"
 msgstr "Kontakt"
-
-#. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
-msgid "Contact Us"
-msgstr "Kontaktieren Sie uns"
 
 #. module: website_sale_wishlist
 #: model:ir.model,website_form_label:website_sale_wishlist.model_res_partner
@@ -267,7 +292,7 @@ msgstr "Anzeigename"
 #. module: website_sale_wishlist
 #: model:ir.model.constraint,message:website_sale_wishlist.constraint_product_wishlist_product_unique_partner_id
 msgid "Duplicated wishlisted product for this partner."
-msgstr "Duplizierte Wunschliste für diesen Partner."
+msgstr "Dupliziertes Produkt auf der Wunschliste für diesen Partner."
 
 #. module: website_sale_wishlist
 #. odoo-javascript
@@ -362,7 +387,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
 msgid "On Hover"
-msgstr "Bei Herüberfahren"
+msgstr "Beim Herüberstreifen"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -494,6 +519,20 @@ msgstr "Designklasse der Wunschlisten-Seite"
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Your wishlist is empty!"
 msgstr "Ihre Wunschliste ist leer!"
+
+#~ msgid ""
+#~ "<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" "
+#~ "role=\"presentation\"/>\n"
+#~ "                                                    <span class=\"o_label "
+#~ "small ms-1\">Add to Cart</span>"
+#~ msgstr ""
+#~ "<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" "
+#~ "role=\"presentation\"/>\n"
+#~ "                                                    <span class=\"o_label "
+#~ "small ms-1\">In den Warenkorb</span>"
+
+#~ msgid "Contact Us"
+#~ msgstr "Kontaktieren Sie uns"
 
 #~ msgid ""
 #~ "<i class=\"fa fa-fw fa-heart\"/>\n"

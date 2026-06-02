@@ -61,6 +61,7 @@ class ScaleDriver(SerialDriver):
         self.device_type = 'scale'
         self._set_actions()
         self._is_reading = True
+        self.tare_mode = False
 
         # The HW Proxy can only expose one scale,
         # only the last scale connected is kept
@@ -125,6 +126,10 @@ class ScaleDriver(SerialDriver):
         answer = self._get_raw_response(self._connection)
         match = re.search(self._protocol.measureRegexp, answer)
         if match:
+            if self.net_weight_char and self.net_weight_char in answer:
+                self.tare_mode = True
+            else:
+                self.tare_mode = False
             self.data.update({
                 'result': float(match.group(1)),
                 'status': self._status
@@ -156,6 +161,7 @@ class Toledo8217Driver(ScaleDriver):
     def __init__(self, identifier, device):
         super().__init__(identifier, device)
         self.device_manufacturer = 'Toledo'
+        self.net_weight_char = b'N'
 
     @classmethod
     def supported(cls, device):
@@ -214,6 +220,9 @@ class Toledo8217Driver(ScaleDriver):
             binary_status_char = format(ord(status_char), '08b')  # Example: '00001101'
             for index, bit in enumerate(binary_status_char[1:][::-1]):  # Read the bits in reverse order (LSB is at the last char) + ignore the first "parity" bit
                 if int(bit):
+                    # Ignore the 'Net weight' error as it's normal in tare mode
+                    if index == 5 and self.tare_mode:
+                        continue
                     _logger.debug("Scale error: %s. Status string: %s. Scale answer: %s.", status_char_error_bits[index], binary_status_char, answer)
                     self.data.update({
                         'result': 0,

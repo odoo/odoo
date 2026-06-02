@@ -555,7 +555,7 @@ export function classToStyle(element, cssRules) {
             }
         }
         style = correctBorderAttributes(style);
-        if (Object.keys(style || {}).length === 0) {
+        if (Object.keys(style || {}).length === 0 || node.nodeName === "T") {
             writes.push(() => {
                 node.removeAttribute("style");
             });
@@ -642,6 +642,10 @@ export function classToStyle(element, cssRules) {
                         computedStyle.getPropertyValue(prop) ||
                         computedStyle.getPropertyValue(styleName);
                     node.style.setProperty(styleName, value);
+                    if (value.includes("calc(")) {
+                        // If value included a calc(), assign the node's computed style property value for Outlook compatibility
+                        node.style.setProperty(styleName, computedStyle.getPropertyValue(styleName));
+                    }
                 }
             }
         });

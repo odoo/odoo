@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:37+0000\n"
-"PO-Revision-Date: 2026-02-25 14:52+0000\n"
-"Last-Translator: rar <rar@odoo.com>\n"
+"POT-Creation-Date: 2026-04-24 17:37+0000\n"
+"PO-Revision-Date: 2026-05-02 09:48+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "spreadsheet/fr/>\n"
 "Language: fr\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -276,6 +276,12 @@ msgstr "%s correspondances dans toutes les feuilles"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "'${str}'"
+msgstr "'${str}'"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "(Blanks)"
 msgstr "(Vides)"
@@ -368,6 +374,12 @@ msgstr "2 lignes"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "=PIVOT(${"
 msgstr "=PIVOT(${"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "A"
+msgstr "A"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -554,6 +566,12 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "A reference to a cell."
+msgstr "Une référence à une cellule."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "A segment of a string."
 msgstr "Un segment d'une chaîne de caractères."
 
@@ -649,7 +667,7 @@ msgstr "Valeur absolue d'un nombre."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
 msgid "Access Error"
-msgstr ""
+msgstr "Erreur d'accès"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1185,28 +1203,6 @@ msgstr "Une erreur inattendue s'est produite lors du transfert de l'image"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          Additional information can be found in the browser console."
-msgstr ""
-"Une erreur inattendue s’est produite lors du collage du contenu.\n"
-"          Des informations supplémentaires sont disponibles dans la console "
-"du navigateur."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"Une erreur inattendue s'est produite lors du collage du contenu.\n"
-"          Ceci est probablement dû à une incompatibilité liée à la version "
-"de la feuille de calcul."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An unexpected error occurred. Submit a support ticket at odoo.com/help."
 msgstr ""
 "Une erreur inattendue s'est produite. Soumettez un ticket d'assistance via "
@@ -1422,10 +1418,9 @@ msgstr "Tableau ou plage contenant l'ensemble de données à prendre en compte."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Array result was not expanded because it would overwrite data in %s."
+msgid "Array result was not expanded because it would overwrite data."
 msgstr ""
-"Le résultat du tableau n'a pas été développé parce qu'il aurait écrasé les "
-"données dans %s."
+"Le résultat du tableau n’a pas été étendu car il écraserait des données."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2110,6 +2105,16 @@ msgstr "Type de graphique"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Checkbox"
 msgstr "Case à cocher"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Checks whether there is a reference to a cell that contains a formula, and "
+"returns TRUE or FALSE."
+msgstr ""
+"Vérifie s’il existe une référence à une cellule contenant une formule et "
+"renvoie TRUE ou FALSE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4330,25 +4335,6 @@ msgstr "La fonction [[FUNCTION_NAME]] n'a trouvé aucun résultat."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"La fonction [[FUNCTION_NAME]] s'attend à ce que criteria_range et criterion "
-"soient des paires."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr ""
-"La fonction [[FUNCTION_NAME]] s'attend à ce que criteria_range ait la même "
-"dimension."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
 "La fonction [[FUNCTION_NAME]] attend des valeurs numériques pour %s, mais a "
@@ -4971,12 +4957,10 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"          number of rows of the second matrix (%s)."
+"equal to the           number of rows of the second matrix (%s)."
 msgstr ""
 "Dans [[FUNCTION_NAME]], le nombre de colonnes de la première matrice (%s) "
-"doit être égal au \n"
-"          nombre de lignes de la seconde matrice (%s)."
+"doit être égal au nombre de lignes de la seconde matrice (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6280,6 +6264,12 @@ msgstr "Prochaine date de bon de réduction après la date de règlement."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr "Non"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "No Color"
 msgstr "Aucune couleur"
@@ -6552,6 +6542,12 @@ msgstr "OFFSET est évalué sur une plage hors sélection."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/helpers/geo_json_service.js:0
+msgid "Oceania"
+msgstr "Océanie"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "October"
 msgstr "Octobre"
@@ -6566,19 +6562,19 @@ msgstr "Graphique à barres Odoo"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Combo Chart"
-msgstr ""
+msgstr "Graphique combiné Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Funnel Chart"
-msgstr ""
+msgstr "Graphique en entonnoir Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Geo Chart"
-msgstr ""
+msgstr "Graphique géographique Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6596,7 +6592,7 @@ msgstr "Graphique circulaire Odoo"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Pyramid Chart"
-msgstr ""
+msgstr "Graphique en pyramide Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6608,7 +6604,7 @@ msgstr "Odoo graphique radar"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Scatter Chart"
-msgstr ""
+msgstr "Graphique de dispersion Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6620,19 +6616,19 @@ msgstr "Odoo Feuille de calcul"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Sunburst Chart"
-msgstr ""
+msgstr "Graphique en rayons de soleil Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Treemap Chart"
-msgstr ""
+msgstr "Graphique treemap Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Waterfall Chart"
-msgstr ""
+msgstr "Graphique en cascade Odoo"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13541,14 +13537,13 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
-"Suppression ou non des messages textuels vides dans les résultats du "
-"fractionnement. Le comportement par défaut est de traiter\n"
-"les délimiteurs consécutifs comme un seul (si TRUE). Si FALSE, les valeurs "
-"des cellules vides sont ajoutées entre les délimiteurs consécutifs."
+"Indique s’il faut supprimer ou non les messages texte vides des résultats de "
+"fractionnement. Le comportement par défaut consiste à traiter les "
+"délimiteurs consécutifs comme un seul (si TRUE). Si FALSE, des cellules "
+"vides sont ajoutées entre les délimiteurs consécutifs."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13778,6 +13773,12 @@ msgstr "Ans"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr "Oui"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/helpers.js:0
 msgid "Yesterday"
 msgstr "Hier"
@@ -13797,10 +13798,22 @@ msgstr "Les tableaux ne peuvent pas se chevaucher."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"and image content will be pasted."
+msgstr ""
+"Vous avez copié du contenu depuis une version différente de l’application. "
+"Seuls le texte et les images seront collés."
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
 msgstr ""
+"Vous n'avez pas le droit d'exporter des données. Veuillez contacter un "
+"administrateur."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -14186,6 +14199,12 @@ msgstr "demain"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.xml:0
+msgid "x"
+msgstr "x"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "yesterday"
 msgstr "hier"
@@ -14195,6 +14214,57 @@ msgstr "hier"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "zéro"
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          Additional information can be found in the browser console."
+#~ msgstr ""
+#~ "Une erreur inattendue s’est produite lors du collage du contenu.\n"
+#~ "          Des informations supplémentaires sont disponibles dans la "
+#~ "console du navigateur."
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          This is probably due to a spreadsheet version mismatch."
+#~ msgstr ""
+#~ "Une erreur inattendue s'est produite lors du collage du contenu.\n"
+#~ "          Ceci est probablement dû à une incompatibilité liée à la "
+#~ "version de la feuille de calcul."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "La fonction [[FUNCTION_NAME]] s'attend à ce que criteria_range et "
+#~ "criterion soient des paires."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "La fonction [[FUNCTION_NAME]] s'attend à ce que criteria_range ait la "
+#~ "même dimension."
+
+#~ msgid ""
+#~ "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must "
+#~ "be equal to the \n"
+#~ "          number of rows of the second matrix (%s)."
+#~ msgstr ""
+#~ "Dans [[FUNCTION_NAME]], le nombre de colonnes de la première matrice (%s) "
+#~ "doit être égal au \n"
+#~ "          nombre de lignes de la seconde matrice (%s)."
+
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "Suppression ou non des messages textuels vides dans les résultats du "
+#~ "fractionnement. Le comportement par défaut est de traiter\n"
+#~ "les délimiteurs consécutifs comme un seul (si TRUE). Si FALSE, les "
+#~ "valeurs des cellules vides sont ajoutées entre les délimiteurs "
+#~ "consécutifs."
 
 #~ msgid ""
 #~ "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."

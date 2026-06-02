@@ -288,6 +288,7 @@
                 <xpath expr="//field[@name='vat']" position="after">
                     <field name="invoice_sending_method" optional="hide" groups="base.group_no_one"/>
                     <field name="invoice_edi_format" string="EDI Format" optional="hide" groups="base.group_no_one"/>
+                    <field name="currency_id" column_invisible="True"/>
                 </xpath>
             </field>
         </record>

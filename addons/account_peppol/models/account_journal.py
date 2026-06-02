@@ -1,4 +1,5 @@
-from odoo import _, fields, models, api
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class AccountJournal(models.Model):
@@ -6,6 +7,14 @@ class AccountJournal(models.Model):
 
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state')
     is_peppol_journal = fields.Boolean(string="Account used for Peppol", default=False)
+
+    @api.constrains('type')
+    def _check_type_for_peppol_journal(self):
+        for journal in self:
+            if journal.is_peppol_journal and journal.type != 'purchase':
+                raise ValidationError(_("You can't change the type of a journal used for Peppol invoice reception to"
+                                  "a type different than 'Purchase'.\nPlease change the journal used for Peppol"
+                                  " reception before changing the type of this journal."))
 
     @api.depends('account_peppol_proxy_state')
     def _compute_show_refresh_out_einvoices_status_button(self):
@@ -42,7 +51,7 @@ class AccountJournal(models.Model):
         edi_users = self.env['account_edi_proxy_client.user'].search([
             ('company_id.account_peppol_proxy_state', '=', 'receiver'),
             ('company_id', 'in', self.company_id.ids),
-            ('proxy_type', '=', 'peppol')
+            ('proxy_type', 'in', self.env['account_edi_proxy_client.user']._get_peppol_proxy_types()),
         ])
         edi_users._peppol_get_new_documents()
 
@@ -53,6 +62,6 @@ class AccountJournal(models.Model):
         edi_users = self.env['account_edi_proxy_client.user'].search([
             ('company_id.account_peppol_proxy_state', 'in', can_send),
             ('company_id', 'in', self.company_id.ids),
-            ('proxy_type', '=', 'peppol')
+            ('proxy_type', 'in', self.env['account_edi_proxy_client.user']._get_peppol_proxy_types()),
         ])
         edi_users._peppol_get_message_status()

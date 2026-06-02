@@ -40,12 +40,18 @@ class StockMove(models.Model):
 
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
+        if not any(rule.propagate_carrier for rule in self.rule_id):
+            return vals
         carrier_id = self.reference_ids.sale_ids.carrier_id.id
+        carrier_tracking_ref = self.move_orig_ids.picking_id.filtered('carrier_tracking_ref')[:1].carrier_tracking_ref
         # check if the previous picking have a carrier_id, then take carrier from that
         # earlier we were taking carrier from sale but since carrier can be changed or updated in next steps so now we take carrier from prev picking
         if len(self.move_orig_ids.picking_id.carrier_id) == 1:
             carrier_id = self.move_orig_ids.picking_id.carrier_id.id
-        vals['carrier_id'] = any(rule.propagate_carrier for rule in self.rule_id) and carrier_id
+        if carrier_id:
+            vals['carrier_id'] = carrier_id
+        if carrier_tracking_ref:
+            vals['carrier_tracking_ref'] = carrier_tracking_ref
         return vals
 
     def _key_assign_picking(self):
@@ -65,13 +71,19 @@ class StockMoveLine(models.Model):
         for move_line in self:
             sale_line_id = move_line.move_id.sale_line_id
             if sale_line_id and sale_line_id.product_id == move_line.product_id:
-                unit_price = sale_line_id.price_reduce_taxinc
+                # Compute the total price (tax included) for the actually delivered quantity
+                # using the same tax logic as the sale order line and purchase order line.
+                base_line = sale_line_id._prepare_base_line_for_taxes_computation()
                 qty = move_line.product_uom_id._compute_quantity(move_line.quantity, sale_line_id.product_uom_id)
+                base_line.update({'quantity': qty})
+                self.env['account.tax']._add_tax_details_in_base_line(base_line, sale_line_id.company_id)
+                tax_results = base_line['tax_details']
+                move_line.sale_price = sale_line_id.currency_id.round(tax_results['raw_total_included_currency'])
             else:
                 # For kits, use the regular unit price
                 unit_price = move_line.product_id.list_price
                 qty = move_line.product_uom_id._compute_quantity(move_line.quantity, move_line.product_id.uom_id)
-            move_line.sale_price = unit_price * qty
+                move_line.sale_price = unit_price * qty
         super(StockMoveLine, self)._compute_sale_price()
 
     def _get_aggregated_product_quantities(self, **kwargs):

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-27 18:38+0000\n"
-"PO-Revision-Date: 2026-03-06 17:49+0000\n"
+"POT-Creation-Date: 2026-04-24 17:36+0000\n"
+"PO-Revision-Date: 2026-05-16 09:36+0000\n"
 "Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/pos_self_order/es_419/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -55,7 +55,8 @@ msgid ""
 "''\"/>\n"
 "                    <t t-set=\"store_name\" t-"
 "value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
 "user.lang\"/>\n"
 "                    <div>\n"
@@ -96,21 +97,22 @@ msgstr ""
 "''\"/>\n"
 "                    <t t-set=\"store_name\" t-"
 "value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
 "user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hola <t t-"
+"                            <t t-if=\"client_name\">Hola <t t-"
 "out=\"client_name\">nombre del cliente</t>,</t>\n"
 "                        <t t-else=\"\">Hola,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Tu orden <t t-out=\"object.tracking_number\">...</"
 "t> con un total de <t t-"
-"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> has "
-"ha sido confirmada. <span t-if=\"object.preset_time or "
-"client.street\">Estará lista</span> <span t-if=\"object.preset_time\">a las "
-"<t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> ha "
+"sido confirmada. <span t-if=\"object.preset_time or client.street\">Estará "
+"lista</span> <span t-if=\"object.preset_time\">a las <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
 "lang_code=lg)\">12:00 p. m.</t></span> <span t-if=\"client.street\">en <t t-"
 "out=\"street\">calle</t>, <t t-out=\"state\">estado</t>, <t t-"
 "out=\"client.zip or ''\">código postal</t>, <t t-out=\"city\">ciudad</t>, <t "
@@ -119,7 +121,7 @@ msgstr ""
 "                    <div>Gracias,</div>\n"
 "                    <br/>\n"
 "                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>Encontrarás tu recibo adjunto a este correo.</"
+"                        <div>Enviamos tu recibo adjunto a este correo.</"
 "div>\n"
 "                        <br/>\n"
 "                    </div>\n"
@@ -133,7 +135,8 @@ msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
 "                    <t t-set=\"store_name\" t-"
 "value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
 "user.lang\"/>\n"
 "                    <div>\n"
@@ -162,7 +165,8 @@ msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
 "                    <t t-set=\"store_name\" t-"
 "value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
 "user.lang\"/>\n"
 "                    <div>\n"
@@ -181,8 +185,7 @@ msgstr ""
 "                    <div>Gracias,</div>\n"
 "                    <br/>\n"
 "                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>Encontrarás tu recibo adjunto a este correo.</"
-"div>\n"
+"                        <div>Enviamos tu recibo adjunto a este correo</div>\n"
 "                        <br/>\n"
 "                    </div>\n"
 "                    <t t-out=\"store_name\">Nombre de la tienda</t>\n"
@@ -352,12 +355,6 @@ msgstr "Seleccione el modo de autopedido"
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
 msgid "Choose when the customer will pay"
 msgstr "Elija cuándo pagará el cliente"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "Choose your"
-msgstr "Elija su"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -560,7 +557,7 @@ msgstr "Nombre en pantalla"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Do not refresh the page."
-msgstr "No vuelvas a cargar la página."
+msgstr "No actualices la página."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -571,7 +568,7 @@ msgstr "Descargar códigos QR"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Download your receipt here"
-msgstr "Descargue su recibo aquí"
+msgstr "Descarga tu recibo aquí"
 
 #. module: pos_self_order
 #. odoo-python
@@ -596,6 +593,12 @@ msgstr ""
 #: model:ir.model,name:pos_self_order.model_pos_preset
 msgid "Easily load a set of configuration options"
 msgstr "Cargue un conjunto de opciones de configuración de inmediato"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Email"
+msgstr "Correo electrónico"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__mail_template_id
@@ -635,6 +638,12 @@ msgstr "Introduzca su valor personalizado"
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Enter your tracker number"
 msgstr "Ingresa tu número de seguimiento"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "Extra:"
+msgstr "Extra:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -691,8 +700,8 @@ msgid ""
 "Hey, looks like you forgot to create products or add them to pos_config. "
 "Please add them before using the Self Order"
 msgstr ""
-"Disculpe, parece que olvidó crear productos o agregarlos a pos_config. "
-"Agréguelos antes de utilizar Autopedido."
+"Parece que olvidaste crear productos o agregarlos a pos_config. Agrégalos "
+"antes de utilizar Autopedido."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -703,7 +712,7 @@ msgstr "Botones de inicio"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "Hope you enjoyed your meal!"
-msgstr "Ojalá haya disfrutado su comida."
+msgstr "Esperamos que hayas disfrutado tus alimentos."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1108,6 +1117,12 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Phone"
+msgstr "Teléfono"
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
 msgid "Pickup At Counter"
 msgstr "Recoger en mostrador"
@@ -1353,12 +1368,6 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Select your address"
-msgstr "Selecciona tu dirección"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "Selection"
 msgstr "Selección"
@@ -1418,12 +1427,12 @@ msgstr "URL para hacer el autopedido"
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_order__source__kiosk
 msgid "Self-Order Kiosk"
-msgstr "Quiosco para autopedido"
+msgstr "Quiosco de autoservicio"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_order__source__mobile
 msgid "Self-Order Mobile"
-msgstr "Autopedido por teléfono"
+msgstr "Autoservicio por teléfono"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1492,6 +1501,12 @@ msgstr "Iniciar quiosco"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__status
 msgid "Status"
 msgstr "Estado"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Street and Number"
+msgstr "Calle y número"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__style
@@ -1751,6 +1766,17 @@ msgstr "Tu recibo de {{ object.config_id.name }}"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Zip"
+msgstr "Código postal"
+
+#. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "a"
+msgstr "a"
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "are"
 msgstr "son"
@@ -1786,8 +1812,8 @@ msgstr "https://odoo.com"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "included"
-msgstr "incluido"
+msgid "included &"
+msgstr "Incluido y"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1806,17 +1832,27 @@ msgstr "sin disponibilidad. Edita tu orden."
 msgid "odoo"
 msgstr "odoo"
 
-#~ msgid "Email"
-#~ msgstr "Correo electrónico"
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "per extra unit"
+msgstr "por unidad adicional"
 
-#~ msgid "Phone"
-#~ msgstr "Teléfono"
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "x"
+msgstr "x"
 
-#~ msgid "Street and Number"
-#~ msgstr "Calle y número"
+#~ msgid "Choose your"
+#~ msgstr "Elija su"
 
-#~ msgid "Zip"
-#~ msgstr "Código postal"
+#~ msgid "included"
+#~ msgstr "incluido"
+
+#~ msgid "Select your address"
+#~ msgstr "Selecciona tu dirección"
 
 #~ msgid ""
 #~ "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"

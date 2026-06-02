@@ -3,6 +3,7 @@
 
 from datetime import date, timedelta
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.exceptions import UserError
@@ -2055,23 +2056,64 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).qty_available, 85)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).total_value, 1275)
 
-        # Edit the quantity done of move1, increase it.
-        # Test a limitation, you can keep the old value but you can't keep the quantity in past
         with freeze_time(date6):
             self._set_quantity(move1, 20)
         self.assertEqual(product.qty_available, 95)
         self.assertEqual(product.total_value, 1425)
 
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date1)).qty_available, 20)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date1)).total_value, 100)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date1)).total_value, 200)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).qty_available, 30)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).total_value, 220)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).total_value, 320)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date3)).qty_available, 15)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date3)).total_value, 145)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date3)).total_value, 170)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date4)).qty_available, -5)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date4)).total_value, -60)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).qty_available, 95)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).total_value, 1425)
+
+    def test_at_date_fifo_stable_after_std_price_drift(self):
+        """ Historical FIFO valuation must remain stable when standard_price
+        drifts due to newer operations. For moves without a purchase link
+        (inventory adjustments, initial inventory), the stored move value
+        is used as the historical fallback rather than the current
+        standard_price.
+        """
+        now = Datetime.now()
+        date1 = now - timedelta(days=2)
+        date2 = now - timedelta(days=1)
+
+        product = self.product_fifo
+        with freeze_time(date1):
+            product.standard_price = 10
+
+        # First move is an inventory adjustment at std_price 10
+        with freeze_time(date1):
+            quant = self.env['stock.quant'].create({
+                'product_id': product.id,
+                'location_id': self.stock_location.id,
+                'inventory_quantity': 10,
+            })
+            quant.action_apply_inventory()
+
+        self.assertEqual(
+            product.with_context(to_date=Datetime.to_string(date1)).total_value,
+            100.0,
+        )
+
+        # Second move at a higher price shifts standard_price to 15
+        with freeze_time(date2):
+            self._make_in_move(product=product, quantity=10, unit_cost=20)
+
+        self.assertEqual(product.standard_price, 15.0)
+
+        # Historical value at date1 must still be 100 despite the drift
+        self.assertEqual(
+            product.with_context(to_date=Datetime.to_string(date1)).total_value,
+            100.0,
+            "Historical FIFO value at date1 must remain 100 regardless of "
+            "standard_price changes from later operations.",
+        )
 
     def test_inventory_fifo_1(self):
         """ Make an inventory from a location with a company set, and ensure the product has a stock
@@ -2167,6 +2209,42 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date1)).total_value, 100)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).qty_available, 5)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).total_value, 50)
+
+    def test_at_date_average_2(self):
+        """ Make some operations at different dates and make sure that the results of the valuation at
+        date wizard are consistent.
+        """
+
+        now = Datetime.now()
+        date1 = now - timedelta(days=3)
+        date2 = now - timedelta(days=2)
+        date3 = now - timedelta(days=1)
+
+        product = self.product_avco
+        with freeze_time(date1):
+            product.standard_price = 10
+        inventory_location = product.property_stock_inventory
+        inventory_location.company_id = self.env.company.id
+
+        # First move is an inventory adjustment
+        with freeze_time(date2):
+            quant = self.env['stock.quant'].create({
+                'product_id': product.id,
+                'location_id': self.stock_location.id,
+                'inventory_quantity': 10
+            })
+            quant.action_apply_inventory()
+
+        # Second move changes AVCO
+        with freeze_time(date3):
+            self._make_in_move(product=product, quantity=10, unit_cost=20)
+
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).total_value, 100)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).avg_cost, 10)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date3)).total_value, 300)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date3)).avg_cost, 15)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(now)).total_value, 300)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(now)).avg_cost, 15)
 
     def test_forecast_report_value(self):
         """ Create a SVL for two companies using different currency, and open
@@ -2676,6 +2754,35 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(move.state, "done")
         self.assertEqual(product.qty_available, 0)
 
+    def test_product_value_with_internal_location_without_warehouse(self):
+        """
+        Check the influence of internal locations without warehouse (e.g. subcontracting/rental)
+        on product valuation.
+        """
+        product = self.product_avco_auto
+        location = self.env['stock.location'].create({
+            'name': 'Internal no warehouse',
+            'usage': 'internal',
+        })
+        self.assertFalse(location.warehouse_id)
+        self.assertTrue(location._should_be_valued())
+        self.env['stock.quant']._update_available_quantity(product, self.warehouse.lot_stock_id, 2)
+        self.env['stock.quant']._update_available_quantity(product, location, 3)
+
+        quants = self.env['stock.quant'].search([('product_id', '=', product.id), ('location_id.usage', '=', 'internal')], order='id')
+        self.assertRecordValues(quants, [
+            {'location_id': self.warehouse.lot_stock_id.id, 'quantity': 2.0, 'value': 20.0},
+            {'location_id': location.id, 'quantity': 3.0, 'value': 30.0},
+        ])
+        # Check all warehouse stock report value
+        self.assertRecordValues(product.with_context(warehouse_id=False), [
+            {'avg_cost': 10.0, 'total_value': 50.0, 'qty_available': 2.0},
+        ])
+        # Check specific warehouse stock report value
+        self.assertRecordValues(product.with_context(warehouse_id=self.warehouse.id), [
+            {'avg_cost': 10.0, 'total_value': 20.0, 'qty_available': 2.0},
+        ])
+
     def test_action_done_with_state_already_done(self):
         """ This test ensure that calling _action_done on a move already done
         has no effect on the valuation.
@@ -2754,6 +2861,30 @@ class TestStockValuation(TestStockValuationCommon):
         credit_line = amls.filtered(lambda l: l.credit > 0)
         self.assertEqual(debit_line.account_id, accounts_data['stock_valuation'])
         self.assertEqual(credit_line.account_id, accounts_data['stock_valuation'])
+
+    def test_valuation_at_date_robustness(self):
+        """ Ensure that when we delete all the product.value for an item. The inventory at date for average cost
+        method replay the valuation from the beginning of time and not from the last product.value. This is to avoid
+        having an incorrect inventory at date when we delete some product.value in the past.
+        """
+        product_1 = self.product_avco
+        product_2 = self.product_avco.copy()
+        self.env['product.value'].search([('product_id', 'in', (product_1.id, product_2.id))]).unlink()
+
+        with freeze_time(Datetime.now() - timedelta(days=5)):
+            self._make_in_move(product_1, 10, unit_cost=10)
+            self._make_in_move(product_2, 10, unit_cost=10)
+
+        with freeze_time(Datetime.now() - timedelta(days=4)):
+            product_1.standard_price = 20
+
+        with freeze_time(Datetime.now() - timedelta(days=3)):
+            self._make_in_move(product_1, 10, unit_cost=20)
+            self._make_in_move(product_2, 10, unit_cost=20)
+
+        valuation_date = Datetime.now() - timedelta(days=2)
+        # Check both value in the same assert since it should be computed together.
+        self.assertEqual((product_1 | product_2).with_context(to_date=valuation_date).mapped('total_value'), [400, 300])
 
     def test_valuation_rounding_method(self):
         uom_g = self.env.ref('uom.product_uom_gram')
@@ -2861,11 +2992,9 @@ class TestStockValuation(TestStockValuationCommon):
             ]
         )
 
-    def test_stock_valuation_revaluation_avco_rounding_2_digits(self):
-        """
-        Check that the rounding of the new price (cost) is equivalent to the rounding of the standard price (cost)
-        The check is done indirectly via the layers valuations.
-        If correct => rounding method is correct too
+    def test_stock_valuation_revaluation_avco_2_digits(self):
+        """Check that a manual standard_price revaluation on an AVCO product
+        propagates to total_value when product price precision is 2 digits.
         """
         product = self.product_avco
         self.env['decimal.precision'].search([
@@ -2877,14 +3006,15 @@ class TestStockValuation(TestStockValuationCommon):
 
         self.assertEqual(product.standard_price, 0.022)
         self.assertEqual(product.qty_available, 10000)
+        self.assertEqual(product.total_value, 220)
 
         # Second Move
         with freeze_time(Datetime.now() + timedelta(seconds=1)):
             product.write({'standard_price': 0.053})
 
-        self.assertEqual(product.standard_price, 0.05)
+        self.assertEqual(product.standard_price, 0.053)
         self.assertEqual(product.qty_available, 10000)
-        self.assertEqual(product.total_value, 500)
+        self.assertEqual(product.total_value, 530)
 
     def test_stock_valuation_revaluation_avco_rounding_5_digits(self):
         """
@@ -2972,16 +3102,25 @@ class TestStockValuation(TestStockValuationCommon):
         product = self.product_standard_auto
         self._use_inventory_location_accounting()
         past_accounting_date = Date.today() - timedelta(days=7)
-        inventory_quant = self.env['stock.quant'].create({
-            'location_id': self.stock_location.id,
-            'product_id': product.id,
-            'inventory_quantity': 10,
-            'accounting_date': past_accounting_date,
-        })
-        inventory_quant.action_apply_inventory()
+        inventory_quants = self.env['stock.quant'].create([
+            {
+                'location_id': self.stock_location.id,
+                'product_id': product.id,
+                'inventory_quantity': 10,
+                'quantity': 0 if i == 0 else 10,
+                'accounting_date': past_accounting_date,
+            }
+            for i in range(2)
+        ])
+        inventory_quants[0].action_apply_inventory()
         self.assertEqual(
             self._get_stock_valuation_move_lines().move_id.date,
             past_accounting_date
+        )
+        inventory_quants[1].action_apply_inventory()
+        self.assertEqual(
+            len(self._get_stock_valuation_move_lines()), 1,
+            "No entry should be created for the second inventory apply",
         )
 
     def test_journal_entry_with_packaging_uom_cogs(self):
@@ -3122,3 +3261,260 @@ class TestStockValuation(TestStockValuationCommon):
         recs[-2:]._compute_cumulative_fields()
         self.assertEqual(recs[-1].total_quantity, 3)
         self.assertEqual(recs[-1].total_value, 30)
+
+    def test_avco_report_after_cost_method_change(self):
+        """Ensure that the AVCO justification report for a product is accurate at all steps, even if
+        the cost method changed after some moves.
+        """
+
+        product_avco = self.env['product.product'].create({
+            'uom_id': self.uom.id,
+            'is_storable': True,
+            'name': "AVCO product",
+            'standard_price': 10,
+        })
+
+        self._make_in_move(product_avco, quantity=10, unit_cost=10)
+        self._make_out_move(product_avco, quantity=5)
+        self._make_in_move(product_avco, quantity=10, unit_cost=25)
+        self._make_out_move(product_avco, quantity=5)
+
+        product_avco.write({'categ_id': self.category_avco.id})
+
+        report_lines = self.env['stock.avco.report'].search([('product_id', '=', product_avco.id)]).sorted('date, id')[1:]
+
+        self.assertEqual(report_lines[-1].avco_value, product_avco.standard_price)
+
+        self.assertRecordValues(
+            report_lines,
+            [
+                {'added_value': 100, 'total_quantity': 10, 'total_value': 100, 'avco_value': 10},
+                {'added_value': -50, 'total_quantity': 5, 'total_value': 50, 'avco_value': 10},
+                {'added_value': 250, 'total_quantity': 15, 'total_value': 300, 'avco_value': 20},
+                {'added_value': -100, 'total_quantity': 10, 'total_value': 200, 'avco_value': 20},
+            ]
+        )
+
+    def test_accounting_user_can_reopen_inventory_valuation_report_after_closing(self):
+        """Ensure users with accounting privileges but not stock can reopen the Inventory Valuation
+        report after closing, without triggering access errors on technical models.
+        """
+
+        accounting_user = self._create_new_internal_user(
+            name='Accounting User',
+            login='accounting_user',
+            groups='account.group_account_manager',
+        )
+        accounting_user.write({
+            'company_id': self.company.id,
+            'company_ids': [Command.set(self.company.ids)],
+        })
+
+        self._make_in_move(self.product_standard, 10, unit_cost=10)
+        self.company.with_user(accounting_user).action_close_stock_valuation(at_date=Date.today(), auto_post=True)
+        report = self.env['stock_account.stock.valuation.report'].with_user(accounting_user)._get_report_data(date=Date.today())
+        self.assertTrue(report)
+
+    def test_avg_cost_partially_consigned(self):
+        """Ensures the avg_cost is correctly computed when the product is partially
+        consigned (the consigned products are not taken into account in the computation).
+        """
+        self._make_in_move(self.product_avco, 1, 10)
+        self._make_in_move(self.product_avco, 1, 20, owner_id=self.vendor)
+        self.assertEqual(self.product_avco.avg_cost, 10)
+
+    def test_quants_values_partially_consigned(self):
+        """Ensures the value of the quants are correctly computed when the product is partially
+        consigned (the consigned products are not taken into account in the computation).
+        """
+        self._make_in_move(self.product_avco, 1, 10)
+        self._make_in_move(self.product_avco, 1, 20, owner_id=self.vendor)
+        quants = self.product_avco.stock_quant_ids
+        regular_quant = quants.filtered(lambda q: q.location_id == self.stock_location and not q.owner_id)
+        consigned_quant = quants.filtered(lambda q: q.location_id == self.stock_location and q.owner_id)
+        self.assertEqual(regular_quant.value, 10)
+        self.assertEqual(consigned_quant.value, 0)
+
+    def test_standard_price_with_lot_valuated_fifo(self):
+        lot_product = self.env['product.product'].create([
+            {
+                'name': 'Product LOT',
+                'is_storable': True,
+                'tracking': 'lot',
+                'categ_id': self.category_fifo.id,
+                'lot_valuated': True,
+                'standard_price': 10,
+            }
+        ])
+
+        lot = self.env['stock.lot'].create({
+            'name': 'lot',
+            'product_id': lot_product.id,
+            'product_qty': 0,
+            'total_value': 0,
+            'standard_price': 5,
+        })
+        self.assertEqual(lot.standard_price, 5)
+
+        # Move out to make product quantity negative
+        move_out = self.env['stock.move'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': lot_product.id,
+            'product_uom': self.uom.id,
+            'product_uom_qty': 30.0,
+            'lot_ids': [Command.set([lot.id])],
+        })
+        move_out._action_confirm()
+        move_out._action_assign()
+        move_out.move_line_ids.quantity = 30.0
+        move_out.picked = True
+        move_out._action_done()
+
+        # Purchase 1 unit
+        move_in = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': lot_product.id,
+            'product_uom': self.uom.id,
+            'product_uom_qty': 1.0,
+            'price_unit': 15.50,
+            'lot_ids': [Command.set([lot.id])],
+            'is_in': True,
+        })
+        move_in._action_confirm()
+        move_in._action_assign()
+        move_in.move_line_ids.quantity = 1.0
+        move_in.picked = True
+        move_in._action_done()
+
+        # Old code would have set the standard price to the product's standard price (10)
+        self.assertEqual(lot.standard_price, 5)
+
+    def test_archived_location_valuation(self):
+        # Ensure that an archive location is still considered as valued when computing the total_value and avg_cost
+        location = self.env['stock.location'].create({
+            'name': 'Sub Loc 1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        # Receipt
+        m1 = self._make_in_move(self.product_avco, 2, 10, location_dest_id=location.id)
+        # Internal
+        m2 = self._make_out_move(self.product_avco, 1, location_id=location.id, location_dest_id=self.stock_location.id)
+        # Delivery
+        m3 = self._make_out_move(self.product_avco, 1)
+
+        # Archive receipt dest location
+        location.active = False
+
+        self.assertTrue(m1.is_in)
+        self.assertFalse(m2.is_in or m2.is_out)
+        self.assertTrue(m3.is_out)
+
+        date_1 = Date.today() + timedelta(days=1)
+        date_2 = Date.today() + timedelta(days=2)
+        with freeze_time(date_2):
+            # Check current values 2 days later
+            self.assertEqual(self.product_avco.total_value, 10)
+            self.assertEqual(self.product_avco.avg_cost, 10)
+
+            # Check values 1 day after the moves
+            self.assertEqual(self.product_avco.with_context(to_date=date_1).avg_cost, 10)
+            self.assertEqual(self.product_avco.with_context(to_date=date_1).total_value, 10)
+
+    def test_generate_entry_multi_company(self):
+        """ Check that closing is correct (i.e. focuses only on main company) when multiple companies are selected
+        """
+        # 2 in @ 10 in main company
+        self._make_in_move(self.product_avco_auto, 2, unit_cost=10)
+
+        # 2 in @ 50 in other company
+        self.product_avco_auto.with_company(self.other_company).categ_id.property_cost_method = 'average'
+        self.product_avco_auto.with_company(self.other_company).categ_id.property_valuation = 'real_time'
+        self._make_in_move(self.product_avco_auto, 2, unit_cost=50, company=self.other_company)
+
+        # Bill 1 @ 10 in main company
+        self._create_bill(self.product_avco_auto, 1, 10, post=True)
+
+        # closing amount for self.company should be 20 (value in inventory in
+        # self.company) - 10 (amount in stock valuation account in self.company) = 10
+        closing = self.company.with_context(allowed_company_ids=[self.company.id, self.other_company.id]).action_close_stock_valuation()
+        closing_lines = self.env['account.move'].browse(closing['res_id']).line_ids
+        self.assertRecordValues(closing_lines.sorted('debit'), [
+            {'account_id': self.product_avco_auto.categ_id.account_stock_variation_id.id, 'debit': 0, 'credit': 10},
+            {'account_id': self.product_avco_auto.categ_id.property_stock_valuation_account_id.id, 'debit': 10, 'credit': 0}
+        ])
+
+    def test_cron_post_stock_valuation_domain(self):
+        """ Cron must process daily/periodic every day and add monthly/periodic
+        on the last day of the month. Real-time and manual companies must be skipped.
+        """
+        Company = self.env['res.company']
+        daily_periodic, monthly_periodic, daily_realtime, manual_periodic = Company.create([
+            {
+                'name': 'Daily Periodic',
+                'inventory_period': 'daily',
+                'inventory_valuation': 'periodic',
+            },
+            {
+                'name': 'Monthly Periodic',
+                'inventory_period': 'monthly',
+                'inventory_valuation': 'periodic',
+            },
+            {
+                'name': 'Daily Realtime',
+                'inventory_period': 'daily',
+                'inventory_valuation': 'real_time',
+            },
+            {
+                'name': 'Manual Periodic',
+                'inventory_period': 'manual',
+                'inventory_valuation': 'periodic',
+            },
+        ])
+
+        called_ids = []
+
+        def fake_close(records, auto_post=False):
+            called_ids.append(records.id)
+            return {'res_id': False}
+
+        with patch.object(self.env.registry['res.company'], 'action_close_stock_valuation', fake_close):
+            with freeze_time('2026-03-15'):
+                called_ids.clear()
+                Company._cron_post_stock_valuation()
+                self.assertIn(daily_periodic.id, called_ids)
+                self.assertNotIn(monthly_periodic.id, called_ids)
+                self.assertNotIn(daily_realtime.id, called_ids)
+                self.assertNotIn(manual_periodic.id, called_ids)
+
+            with freeze_time('2026-03-31'):
+                called_ids.clear()
+                Company._cron_post_stock_valuation()
+                self.assertIn(daily_periodic.id, called_ids)
+                self.assertIn(monthly_periodic.id, called_ids)
+                self.assertNotIn(daily_realtime.id, called_ids)
+                self.assertNotIn(manual_periodic.id, called_ids)
+
+            with freeze_time('2026-02-28'):
+                called_ids.clear()
+                Company._cron_post_stock_valuation()
+                self.assertIn(daily_periodic.id, called_ids)
+                self.assertIn(monthly_periodic.id, called_ids)
+                self.assertNotIn(daily_realtime.id, called_ids)
+                self.assertNotIn(manual_periodic.id, called_ids)
+
+    def test_generate_entry_branch_correct_account(self):
+        """ When generating entry on a branch and the main company is also selected, the account move is
+        linked to the branch
+        """
+        # Unbilled inventory move in branch
+        self.product_avco_auto.with_company(self.branch).categ_id.property_cost_method = 'average'
+        self.product_avco_auto.with_company(self.branch).categ_id.property_valuation = 'real_time'
+        self._make_in_move(self.product_avco_auto, 2, unit_cost=50, company=self.branch)
+
+        # generate entry on branch with main comp also selected
+        closing = self.branch.with_context(allowed_company_ids=[self.branch.id, self.company.id]).action_close_stock_valuation()
+        closing_lines = self.env['account.move'].browse(closing['res_id']).line_ids
+        self.assertEqual(closing_lines.move_id.company_id.id, self.branch.id)

@@ -165,9 +165,23 @@ export class Thread extends Record {
         },
     });
     isDisplayedOnUpdate() {}
+
+    get composerDisabled() {
+        return false;
+    }
+
     get isFocused() {
         return this.isFocusedCounter !== 0;
     }
+    isFocusedByThread = fields.Attr(false, {
+        onUpdate() {
+            if (this.isFocusedByThread) {
+                this.isFocusedCounter++;
+            } else {
+                this.isFocusedCounter--;
+            }
+        },
+    });
     isFocusedCounter = fields.Attr(0, {
         onUpdate() {
             if (this.isFocusedCounter < 0) {
@@ -189,6 +203,8 @@ export class Thread extends Record {
             }
         },
     });
+    /** @type {Boolean|undefined} */
+    has_mail_thread;
     message_main_attachment_id = fields.One("ir.attachment");
     message_needaction_counter = 0;
     message_needaction_counter_bus_id = 0;

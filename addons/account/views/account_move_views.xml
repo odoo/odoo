@@ -525,6 +525,7 @@
                     </header>
                     <field name="made_sequence_gap" column_invisible="True"/>
                     <field name="duplicated_ref_ids" column_invisible="True"/>  <!-- Needed for custome view account_tree-->
+                    <field name="is_exact_move_duplicate" column_invisible="True"/>  <!-- Needed for custome view account_tree-->
                     <field name="name" decoration-bf="1" decoration-danger="made_sequence_gap and state == 'posted'" widget="char_with_placeholder_field_to_check" placeholder="/"/>
                     <field name="checked" column_invisible="True" groups="account.group_account_user"/> <!-- To be used for Reviewed badge display, see char_with_placeholder_field_to_check -->
                     <field name="invoice_partner_display_name" column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund', 'in_receipt')" groups="base.group_user" string="Vendor" />
@@ -799,7 +800,19 @@
                         <field name="alerts" class="o_field_html" widget="actionable_errors"/>
                     </div>
                     <!--Duplicate check-->
-                    <div class="d-flex alert alert-warning w-100 d-flex align-items-center gap-1" invisible="not duplicated_ref_ids"  role="alert">
+                    <div class="d-flex alert alert-danger w-100 d-flex align-items-center gap-1" invisible="not is_exact_move_duplicate"  role="alert">
+                        <span>This document might be a duplicate of</span>
+                        <field name="duplicated_ref_ids" widget="x2many_buttons" nb_records_shown="1" string="Duplicated Documents" context="{'name_as_amount_total': True}"/>
+                        <button name="action_delete_duplicates"
+                                type="object"
+                                class="btn btn-link text-danger ms-auto d-flex align-items-center gap-1"
+                                invisible="not is_draft_duplicated_ref_ids">
+                            <i class="fa fa-trash text-danger"/>
+                            <span class="text-danger" invisible="duplicated_ref_ids.length == 1">Delete all duplicates</span>
+                            <span class="text-danger" invisible="duplicated_ref_ids.length &gt; 1">Delete duplicate</span>
+                        </button>
+                    </div>
+                    <div class="d-flex alert alert-warning w-100 d-flex align-items-center gap-1" invisible="not duplicated_ref_ids or is_exact_move_duplicate or state != 'draft'"  role="alert">
                         <span>This document might be a duplicate of</span>
                         <field name="duplicated_ref_ids" widget="x2many_buttons" nb_records_shown="1" string="Duplicated Documents" context="{'name_as_amount_total': True}"/>
                         <button name="action_delete_duplicates"
@@ -1179,11 +1192,13 @@
                                                     'move_type': parent.move_type,
                                                     'search_default_type_asset_fixed': 'in_' in parent.move_type,
                                                     'search_default_type_expense': 'in_' in parent.move_type,
+                                                    'search_default_type_expense_direct_cost': 'in_' in parent.move_type,
                                                     'search_default_account_type': 'out_' in parent.move_type and 'income',
                                                     'preferred_account_type': 'out_' in parent.move_type and 'income' or 'in_' in parent.move_type and 'expense',
                                                }"
+                                               widget="many2one_account_account"
                                                groups="account.group_account_readonly"
-                                               options="{'no_quick_create': True}"
+                                               options="{'no_quick_create': True, 'no_open': True}"
                                                domain="[('company_ids', 'parent_of', company_id), ('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]"
                                                required="display_type not in ('line_section', 'line_subsection', 'line_note')"/>
                                         <field name="analytic_distribution" widget="analytic_distribution"
@@ -1411,11 +1426,13 @@
                                         <field name="debit"
                                                sum="Total Debit"
                                                invisible="display_type in ('line_section', 'line_subsection', 'line_note')"
-                                               readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('line_section', 'line_note', 'product')"/>
+                                               readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('line_section', 'line_note', 'product')"
+                                               decoration-muted="debit == 0"/>
                                         <field name="credit"
                                                sum="Total Credit"
                                                invisible="display_type in ('line_section', 'line_subsection', 'line_note')"
-                                               readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('line_section', 'line_note', 'product')"/>
+                                               readonly="parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt') and display_type in ('line_section', 'line_note', 'product')"
+                                               decoration-muted="credit == 0"/>
                                         <field name="balance" column_invisible="True"/>
                                         <field name="discount_date"
                                                string="Discount Date"
@@ -1501,6 +1518,12 @@
                                         <field name="partner_bank_id"
                                                context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
                                                domain="[('partner_id.ref_company_ids', 'parent_of', company_id)]"
+                                               invisible="move_type != 'out_invoice'"
+                                               readonly="is_move_sent and state != 'draft'"/>
+                                        <field name="partner_bank_id"
+                                               context="{'default_partner_id': bank_partner_id, 'display_account_trust': True}"
+                                               domain="[('partner_id', '=', bank_partner_id)]"
+                                               invisible="move_type != 'out_refund'"
                                                readonly="is_move_sent and state != 'draft'"/>
                                         <field name="payment_reference"
                                             invisible="move_type not in ('out_invoice', 'out_refund')"
@@ -1520,12 +1543,12 @@
                                         <field name="secured" groups="account.group_account_secured,base.group_no_one"/>
                                         <field name="preferred_payment_method_line_id"
                                                string="Payment Method"
-                                               domain="[('payment_type', '=', 'inbound'), ('company_id', '=', company_id)]"
+                                               domain="[('payment_type', '=', 'inbound'), ('company_id', 'parent_of', company_id)]"
                                                invisible="move_type in ('in_invoice', 'in_refund', 'in_receipt')"
                                         />
                                         <field name="preferred_payment_method_line_id"
                                                string="Payment Method"
-                                               domain="[('payment_type', '=', 'outbound'), ('company_id', '=', company_id)]"
+                                               domain="[('payment_type', '=', 'outbound'), ('company_id', 'parent_of', company_id)]"
                                                invisible="move_type in ('out_invoice', 'out_refund', 'out_receipt')"
                                         />
                                         <field name="invoice_cash_rounding_id" groups="account.group_cash_rounding" readonly="state != 'draft'"/>

@@ -844,11 +844,12 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 wizard.payment_difference = 0.0
 
-    @api.depends('can_edit_wizard', 'writeoff_account_id')
+    @api.depends('can_edit_wizard', 'writeoff_account_id', 'payment_difference_handling', 'currency_id')
     def _compute_writeoff_is_exchange_account(self):
         for wizard in self:
             wizard.writeoff_is_exchange_account = all((
                 wizard.can_edit_wizard,
+                wizard.payment_difference_handling == 'reconcile',
                 wizard.currency_id != wizard.source_currency_id,
                 wizard.writeoff_account_id,
                 wizard.writeoff_account_id in (
@@ -1248,9 +1249,9 @@ class AccountPaymentRegister(models.TransientModel):
 
             to_process.append(to_process_values)
         else:
+            lines_to_pay = self._get_total_amounts_to_pay(batches)['lines'] if self.installments_mode in ('next', 'overdue', 'before_date') else self.line_ids
             if not self.group_payment:
                 # Don't group payments: Create one batch per move.
-                lines_to_pay = self._get_total_amounts_to_pay(batches)['lines'] if self.installments_mode in ('next', 'overdue', 'before_date') else self.line_ids
                 new_batches = []
                 for batch_result in batches:
                     sub_batches = {}
@@ -1272,6 +1273,7 @@ class AccountPaymentRegister(models.TransientModel):
                 batches = new_batches
 
             for batch_result in batches:
+                batch_result['lines'] = batch_result['lines'] & lines_to_pay
                 to_process.append({
                     'create_vals': self._create_payment_vals_from_batch(batch_result),
                     'to_reconcile': batch_result['lines'],

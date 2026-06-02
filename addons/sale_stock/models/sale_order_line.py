@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_is_zero
 from odoo.exceptions import UserError
 
 
@@ -235,6 +235,7 @@ class SaleOrderLine(models.Model):
                 and line.product_id.invoice_policy == 'delivery'
                 and line.move_ids
                 and check_moves_state(line.move_ids)
+                and not float_is_zero(line.qty_delivered, precision_rounding=line.product_uom_id.rounding)
             ):
                 line.invoice_status = 'invoiced'
 
@@ -335,7 +336,7 @@ class SaleOrderLine(models.Model):
             triggering_rule_ids = []
             seen_wh_ids = set()
             for move in sorted_moves:
-                if move.warehouse_id.id not in seen_wh_ids:
+                if move.warehouse_id.id not in seen_wh_ids and move.rule_id:
                     triggering_rule_ids.append(move.rule_id.id)
                     seen_wh_ids.add(move.warehouse_id.id)
         if self.env.context.get('accrual_entry_date'):

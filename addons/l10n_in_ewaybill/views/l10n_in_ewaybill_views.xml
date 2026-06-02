@@ -70,7 +70,7 @@
                         <group>
                             <field name="ewaybill_date" invisible="not ewaybill_date"/>
                             <field name="document_number"/>
-                            <field name="document_date" readonly="1"/>
+                            <field name="document_date" readonly="1" widget="datetime" options="{'show_time': false}"/>
                         </group>
                     </group>
                     <group name="partners" string="Address Details">

@@ -6,12 +6,16 @@ from odoo import models, api
 
 class PosSession(models.Model):
     _inherit = 'pos.session'
-    
+
     @api.model
     def _load_pos_data_models(self, config_id):
         data = super()._load_pos_data_models(config_id)
         data += ['mail.template']
         return data
+
+    @api.model
+    def _load_pos_self_data_fields(self, config):
+        return ['id', 'user_id', 'config_id', 'payment_method_ids', 'state']
 
     @api.model
     def _load_pos_self_data_domain(self, data, config):

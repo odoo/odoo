@@ -954,6 +954,10 @@ class DomainCondition(Domain):
 
             # handle searchable fields
             if field.search and field.name == self.field_expr:
+                if field.type == 'boolean' and isinstance(domain := _optimize_boolean_in_all(self, model), DomainBool):
+                    # apply the tautology before trying the search method
+                    # this is a basic optimization, but for active flag it is left for later
+                    return domain
                 domain = self._optimize_field_search_method(model)
                 # The domain is optimized so that value data types are comparable.
                 # Only simple optimization to avoid endless recursion.
@@ -1649,6 +1653,36 @@ def _optimize_type_datetime_relative(condition, model):
     ):
         return condition
     value, _ = _value_to_datetime(condition.value, model.env)
+    return DomainCondition(condition.field_expr, operator, value)
+
+
+@field_type_optimization(['properties'], level=OptimizationLevel.DYNAMIC_VALUES)
+def _optimize_properties_date_datetime(condition, model):
+    operator = condition.operator
+    if (
+        operator not in ('in', 'not in', '>', '<', '<=', '>=')
+        or condition.field_expr.count('.') != 1
+        or not isinstance(condition.value, (str, OrderedSet))
+    ):
+        return condition
+    definition = model.get_property_definition(condition.field_expr)
+    property_type = definition.get("type")
+
+    if property_type == 'date':
+        value = _value_to_date(condition.value, model.env)
+    elif property_type == 'datetime':
+        value, _ = _value_to_datetime(condition.value, model.env)
+    else:
+        return condition
+    # we need to serialize the value as a string to be able to use with properties
+    if isinstance(value, COLLECTION_TYPES):
+        value = OrderedSet(
+            str(item) if isinstance(item, (date, datetime)) else item
+            for item in value
+        )
+    elif isinstance(value, (date, datetime)):
+        value = str(value)
+
     return DomainCondition(condition.field_expr, operator, value)
 
 

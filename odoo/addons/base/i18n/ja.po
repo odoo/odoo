@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-03-06 17:47+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
+"PO-Revision-Date: 2026-05-30 09:40+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/base/"
 "ja/>\n"
 "Language: ja\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -1067,7 +1067,7 @@ msgstr ""
 "す\n"
 "*“銀行”*に設定します。\n"
 "\n"
-"**構成設定**で、ABAクレジット転送がチェックされていることを確認します。\n"
+"**詳細設定**で、ABAクレジット転送がチェックされていることを確認します。\n"
 "\n"
 "**銀行口座**タブで、**口座番号**を入力します。\n"
 "\n"
@@ -1088,8 +1088,8 @@ msgstr ""
 "** APCA識別番号**-ユーザー識別番号は銀行です\n"
 "割り当てられました。 6桁です。\n"
 "\n"
-"**セルフバランシングトランザクションを含める**-一部の機関では、\n"
-"最後は、検証として使用されるセルフバランシングトランザクションです。\n"
+"**セルフバランシング取引を含める**-一部の機関では、\n"
+"最後は、検証として使用されるセルフバランシング取引です。\n"
 "\n"
 "-*会計構成支払い銀行口座*\n"
 "\n"
@@ -1129,8 +1129,8 @@ msgstr ""
 "\n"
 "-通常の方法で仕入先支払いを作成します。\n"
 "\n"
-"**仕入先**が有効なABA支払いアカウントを持つものであることを確認してくださ"
-"い。\n"
+"**仕入先**が有効なABA支払いアカウントを持つものであることを確認してください"
+"。\n"
 "\n"
 "ABA支払い用に設定されている正しい**支払い仕訳帳**を選択します。\n"
 "\n"
@@ -6200,7 +6200,7 @@ msgstr ""
 "<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/"
 "#_implementation>`_).\n"
 "\n"
-"フォーマットは、請求書にリンクされている仕訳帳(仕訳帳> 構成設定)から選択でき"
+"フォーマットは、請求書にリンクされている仕訳帳(仕訳帳> 詳細設定)から選択でき"
 "ます。\n"
 "\n"
 "E-FFF、 NLCIUS、XRechnung (UBL) は、それぞれ、ベルギー、オランダ、ドイツ企業"
@@ -6796,20 +6796,19 @@ msgstr ""
 "----------\n"
 "\n"
 "アルゼンチンやチリを含む一部のラテンアメリカ諸国では、請求書やベンダー請求書"
-"などの一部の会計トランザクションは、政府の財政当局によって定義されたドキュメ"
-"ントタイプによって分類されます(アルゼンチンの場合はARCA、チリの場合は"
-"SII )。\n"
+"などの一部の会計取引は、政府の財政当局によって定義されたドキュメントタイプに"
+"よって分類されます(アルゼンチンの場合はARCA、チリの場合はSII )。\n"
 "\n"
-"このモジュールは、これらのドキュメントタイプを管理するためにローカリゼーショ"
-"ンによって拡張されることを目的としており、印刷されたレポートに表示する必要が"
-"あり、請求書のセット内およびアカウントの移動内で簡単に識別できる必要がある重"
-"要な情報です。\n"
+"このモジュールは、これらのドキュメントタイプを管理するために"
+"ローカリゼーションによって拡張されることを目的としており、印刷されたレポート"
+"に表示する必要があり、請求書のセット内およびアカウントの移動内で簡単に識別で"
+"きる必要がある重要な情報です。\n"
 "\n"
 "各ドキュメントタイプには独自のルールとシーケンス番号があり、この最後のルール"
 "は、ローカリゼーションユーザーが簡単に使用できるように、請求書番号と仕訳帳"
 "シーケンスと統合されています。このドキュメントタイプをサポートするかどうかを"
-"決定するために、仕訳帳にはドキュメントを使用するかどうかを指定する新しいオプ"
-"ションがあります。\n"
+"決定するために、仕訳帳にはドキュメントを使用するかどうかを指定する新しい"
+"オプションがあります。\n"
 "技術\n"
 "---------\n"
 "\n"
@@ -8196,12 +8195,12 @@ msgid ""
 "Necessary master data is also included.\n"
 msgstr ""
 "\n"
-"リトアニアSAF-Tは、XML形式を使用してさまざまなタイプの会計トランザクション"
-"データをエクスポートするための標準ファイル形式です。\n"
+"リトアニアSAF-Tは、XML形式を使用してさまざまなタイプの会計取引データを"
+"エクスポートするための標準ファイル形式です。\n"
 "使用されているXSDのバージョンはv2.01(2019年以降)です。リトアニア当局で使用さ"
 "れている最新のものです。\n"
-"SAF-T Financialの最初のバージョンは、顧客や仕入先との取引を含む総勘定元帳レベ"
-"ルに限定されています。\n"
+"SAF-T Financialの最初のバージョンは、顧客や仕入先との取引を含む総勘定元帳"
+"レベルに限定されています。\n"
 " 必要なマスタデータも含まれています。\n"
 
 #. module: base
@@ -9376,7 +9375,7 @@ msgstr ""
 "\n"
 "重要な注意事項\n"
 "--------------------------------------------- \n"
-"CSV形式の制限により、同じトランザクションが複数回インポートされたり、\n"
+"CSV形式の制限により、同じ取引が複数回インポートされたり、\n"
 "複数通貨を処理したりしないようにすることはできません。\n"
 "可能な限り、OFXなどのより適切なファイル形式を使用する必要があります。\n"
 
@@ -9404,7 +9403,7 @@ msgstr ""
 "で保存されます。\n"
 "\n"
 "OFX情報のサブセットを含む銀行取引明細書を生成できます\n"
-"(財務会計レコードの作成に必要なトランザクションラインのみ)\n"
+"(財務会計レコードの作成に必要な取引ラインのみ)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_qif
@@ -9427,8 +9426,8 @@ msgstr ""
 "QIF銀行取引明細書をインポートするモジュール。\n"
 "======================================\n"
 "\n"
-"このモジュールを使用すると、機械可読QIFファイルを次の場所にインポートできま"
-"す。 \n"
+"このモジュールを使用すると、機械可読QIFファイルを次の場所にインポートできます"
+"。 \n"
 "Odoo:それらは解析され、\n"
 "会計\\銀行および現金\\銀行取引明細書\n"
 "に人間が読める形式で保存されます。\n"
@@ -9436,7 +9435,7 @@ msgstr ""
 "\n"
 "重要な注意事項\n"
 "--------------------------------------------- \n"
-"QIF形式の制限により、同じトランザクションが複数回インポートされたり、\n"
+"QIF形式の制限により、同じ取引が複数回インポートされたり、\n"
 "複数通貨を処理したりしないようにすることはできません。\n"
 "可能な限り、OFXなどのより適切なファイル形式を使用する必要があります。\n"
 
@@ -9592,8 +9591,8 @@ msgid ""
 "Necessary master data is also included.\n"
 msgstr ""
 "\n"
-"ノルウェーのSAF-Tは、XML形式を使用してさまざまなタイプの会計トランザクション"
-"データをエクスポートするための標準ファイル形式です。\n"
+"ノルウェーのSAF-Tは、XML形式を使用してさまざまなタイプの会計取引データを"
+"エクスポートするための標準ファイル形式です。\n"
 "    SAF-T Financialの最初のバージョンは、顧客および仕入先の取引を含む総勘定元"
 "帳レベルに制限されています。\n"
 "    必要なマスタデータも含まれています。\n"
@@ -9959,7 +9958,7 @@ msgid ""
 "========================\n"
 msgstr ""
 "\n"
-"取引先のジオロケーション\n"
+"取引先の位置情報\n"
 "========================\n"
 
 #. module: base
@@ -21279,7 +21278,7 @@ msgstr "販売オーダ用Avatax"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_avatax_geolocalize
 msgid "Avatax for geo localization"
-msgstr "ジオロケーション用Avatax"
+msgstr "位置情報用Avatax"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_aviato
@@ -23454,12 +23453,12 @@ msgstr "クリーニングサービス"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
 msgid "Clearing Number"
-msgstr "消込番号"
+msgstr "クリアリング番号"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_m2m_operation__clear
 msgid "Clearing it"
-msgstr "削除する"
+msgstr "空にする"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_collect
@@ -23971,7 +23970,7 @@ msgstr "完全ID"
 #: model:ir.model.fields,field_description:base.field_res_partner__complete_name
 #: model:ir.model.fields,field_description:base.field_res_users__complete_name
 msgid "Complete Name"
-msgstr "完全な名前"
+msgstr "完全名"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
@@ -28510,7 +28509,7 @@ msgstr "FSM - SMS"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_users_deletion__state__fail
 msgid "Failed"
-msgstr "不合格"
+msgstr "失敗"
 
 #. module: base
 #: model:ir.actions.server,name:base.demo_failure_action
@@ -28704,7 +28703,7 @@ msgstr "フィールドサービスストック"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__ttype
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Field Type"
-msgstr "項目タイプ"
+msgstr "フィールドタイプ"
 
 #. module: base
 #. odoo-python
@@ -28844,7 +28843,7 @@ msgstr "ファイルコンテンツ(base64)"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__raw
 msgid "File Content (raw)"
-msgstr "フィールドの内容(生)"
+msgstr "ファイル内容 (raw)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__format
@@ -29465,7 +29464,7 @@ msgstr "関数"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_furniture_store
 msgid "Furniture Store"
-msgstr "家具専門店"
+msgstr "家具店"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_loftspace
@@ -29725,7 +29724,7 @@ msgstr "ジオ緯度"
 #. module: base
 #: model:res.country,name:base.ge
 msgid "Georgia"
-msgstr "グルジア"
+msgstr "ジョージア"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_intrastat
@@ -35002,7 +35001,7 @@ msgstr "メニュー"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_merge
 msgid "Merge"
-msgstr "マージ"
+msgstr "統合"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -35012,7 +35011,7 @@ msgstr "自動的にマージ"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Merge Automatically all process"
-msgstr "全ての処理を自動的にマージ"
+msgstr "全ての処理を自動的に統合"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -40135,7 +40134,7 @@ msgstr "取引先"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
 msgid "Partners Geolocation"
-msgstr "取引先ジオロケーション"
+msgstr "取引先位置情報"
 
 #. module: base
 #. odoo-python
@@ -41043,7 +41042,7 @@ msgstr "プレフィクス"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__prefix
 msgid "Prefix value of the record for the sequence"
-msgstr "順序のためのレコードのプレフィックス値"
+msgstr "シーケンス用にこのレコードに設定するプレフィックス値"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__prepend
@@ -42566,7 +42565,7 @@ msgstr "全ての x で繰り返す"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__replace
 msgid "Replace"
-msgstr "置き換える"
+msgstr "置換"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_url__binding_type__report
@@ -44469,7 +44468,7 @@ msgstr "共有ユーザ"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_form
 msgid "Shared with"
-msgstr "以下と共有:"
+msgstr "共有先"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.ILS
@@ -49167,7 +49166,7 @@ msgstr "モジュールをアンインストール"
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module_dependency__state__uninstallable
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module_exclusion__state__uninstallable
 msgid "Uninstallable"
-msgstr "インストール不能"
+msgstr "アンインストール可能"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__uninstalled_l10n_module_ids
@@ -49833,7 +49832,7 @@ msgstr "ユーザ定義のデフォルト値"
 #: model:ir.actions.act_window,name:base.actions_ir_filters_view
 #: model:ir.ui.menu,name:base.menu_ir_filters
 msgid "User-defined Filters"
-msgstr "ユーザ定義のフィルタ"
+msgstr "ユーザ定義フィルタ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_user
@@ -50942,7 +50941,7 @@ msgstr "品質管理用ワークシート"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm_report
 msgid "Worksheet template when planning an intervention"
-msgstr "介入を計画する際のワークシートテンプレート"
+msgstr "作業を計画する際のワークシートテンプレート"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_write

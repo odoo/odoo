@@ -3,6 +3,7 @@
 
 from datetime import date
 
+from odoo import Command
 from odoo.tests.common import SingleTransactionCase
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 
@@ -92,6 +93,9 @@ class TestIrSequenceDateRangeChangeImplementation(SingleTransactionCase):
     """ Create sequence objects and change their ``implementation`` field. """
 
     def test_ir_sequence_date_range_1_create(self):
+        year = date.today().year - 1
+        january = lambda d: date(year, 1, d)   # noqa: E731
+        february = lambda d: date(year, 2, d)  # noqa: E731
         """ Try to create a sequence object. """
         seq = self.env['ir.sequence'].create({
             'code': 'test_sequence_date_range_3',
@@ -108,10 +112,31 @@ class TestIrSequenceDateRangeChangeImplementation(SingleTransactionCase):
         })
         self.assertTrue(seq)
 
+        seq = self.env['ir.sequence'].create({
+            'code': 'test_sequence_date_range_5',
+            'name': 'Test sequence',
+            'use_date_range': True,
+            'prefix': '%(month)s/',
+            'date_range_ids': [
+                Command.create({
+                    'date_from': january(1),
+                    'date_to': january(31),
+                    'number_next_actual': 15,
+                }),
+                Command.create({
+                    'date_from': february(1),
+                    'date_to': february(28),
+                    'number_next_actual': 1
+                })
+            ]
+        })
+        self.assertTrue(seq)
+
     def test_ir_sequence_date_range_2_use(self):
         """ Make some use of the sequences to create some subsequences """
         year = date.today().year - 1
         january = lambda d: date(year, 1, d)
+        february = lambda d: date(year, 2, d)  # noqa: E731
 
         seq = self.env['ir.sequence']
         seq16 = self.env['ir.sequence'].with_context({'ir_sequence_date': january(16)})
@@ -128,6 +153,12 @@ class TestIrSequenceDateRangeChangeImplementation(SingleTransactionCase):
         for i in range(1, 5):
             n = seq16.next_by_code('test_sequence_date_range_4')
             self.assertEqual(n, str(i))
+        for i in range(5):
+            n = seq.next_by_code('test_sequence_date_range_5', sequence_date=january(16))
+            self.assertEqual(n, f'01/{i + 15}')
+        for i in range(1, 5):
+            n = seq.next_by_code('test_sequence_date_range_5', sequence_date=february(16))
+            self.assertEqual(n, f'02/{i}')
 
     def test_ir_sequence_date_range_3_write(self):
         """swap the implementation method on both"""

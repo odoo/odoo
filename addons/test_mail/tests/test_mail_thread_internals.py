@@ -8,7 +8,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tests import Form, users, warmup, tagged
+from odoo.tests import HttpCase, Form, users, warmup, tagged
 from odoo.tools import mute_logger
 
 
@@ -1157,8 +1157,8 @@ class TestChatterTweaks(ThreadRecipients):
         self.assertTrue(record.name)
 
 
-@tagged('mail_thread')
-class TestDiscuss(MailCommon, TestRecipients):
+@tagged('mail_thread', 'post_install', '-at_install')
+class TestDiscuss(HttpCase, MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -1262,6 +1262,21 @@ class TestDiscuss(MailCommon, TestRecipients):
         self.assertEqual(len(message), 1, "Test message should have been posted")
         self.test_record.unlink()
         self.assertFalse(message.exists(), "Test message should have been deleted")
+
+    @mute_logger("odoo.http")
+    def test_access_inbox_records(self):
+        for access, name in [("admin", "Inaccessible Record"), ("internal", "Accessible Record")]:
+            self.env["mail.test.access"].create(
+                {
+                    "access": access,
+                    "name": name,
+                }
+            ).message_post(
+                body=f"Message in {name.lower()}",
+                message_type="comment",
+                partner_ids=[self.user_employee.partner_id.id],
+            )
+        self.start_tour("/odoo", "access_inbox_records_tour", login=self.user_employee.login)
 
 
 @tagged('mail_thread')

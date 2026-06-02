@@ -1,11 +1,10 @@
-import { onWillUpdateProps, useComponent, useState } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { getFieldDomain, useRecordObserver } from "@web/model/relational_model/utils";
 import { statusBarField, StatusBarField } from "@web/views/fields/statusbar/statusbar_field";
 import { _t } from "@web/core/l10n/translation";
+import { useEffect } from "@odoo/owl";
 
 export class VersionsTimeline extends StatusBarField {
     static template = "hr.VersionsTimeline";
@@ -15,38 +14,6 @@ export class VersionsTimeline extends StatusBarField {
         super.setup();
         this.actionService = useService("action");
         this.orm = useService("orm");
-
-        if (this.field.type === "many2one") {
-            this.specialData = useSpecialDataNoCache((orm, props) => {
-                const { foldField, name: fieldName, record } = props;
-                const { relation } = record.fields[fieldName];
-                const fieldNames = [
-                    "display_name",
-                    "contract_type_id",
-                    "contract_date_start",
-                    "contract_date_end",
-                ];
-                if (foldField) {
-                    fieldNames.push(foldField);
-                }
-                const value = record.data[fieldName];
-                let domain = getFieldDomain(record, fieldName, props.domain);
-                domain = Domain.and([
-                    [["employee_id", "=", props.record.evalContext.id]],
-                    domain,
-                ]).toList();
-                if (domain.length && value) {
-                    domain = Domain.or([[["id", "=", value.id]], domain]).toList(
-                        record.evalContext
-                    );
-                }
-                return orm.searchRead(
-                    relation,
-                    domain,
-                    fieldNames.filter((fName) => fName in record.fields)
-                );
-            });
-        }
 
         this.dateTimePicker = useDateTimePicker({
             target: `datetime-picker-target-version`,
@@ -59,6 +26,49 @@ export class VersionsTimeline extends StatusBarField {
                 return { type: "date" };
             },
         });
+
+        const { specialDataCaches, hooks } = this.props.record.model;
+
+        const clearCache = () => {
+            Object.keys(specialDataCaches).forEach((key) => {
+                // Invalidate cache after creating or removing version.
+                if (JSON.parse(key)[0] == "hr.version") {
+                    delete specialDataCaches[key];
+                }
+            });
+        };
+
+        let first = true; // Skip first execution
+        useEffect(() => {
+            if (!first) {
+                clearCache();
+                this.props.record.model.load();
+            }
+            first = false;
+        }, () => [this.props.record.data["versions_count"]]);
+
+        const onRecordSaved = hooks.onRecordSaved;
+        hooks.onRecordSaved = async (record, changes) => {
+            if (["hr.employee", "hr.version"].includes(record.resModel)) {
+                clearCache();
+            }
+            await onRecordSaved(record, changes);
+        };
+    }
+
+    /** @override **/
+    getDomain(props) {
+        return Domain.and([
+            super.getDomain(props),
+            [["employee_id", "=", props.record.evalContext.id]],
+        ]).toList();
+    }
+
+    /** @override **/
+    getFieldNames(props) {
+        const fieldNames = super.getFieldNames(props);
+        fieldNames.push("contract_type_id", "contract_date_start", "contract_date_end");
+        return fieldNames.filter((fName) => fName in props.record.fields);
     }
 
     displayContractLines() {
@@ -130,24 +140,6 @@ export class VersionsTimeline extends StatusBarField {
             };
         });
     }
-}
-
-export function useSpecialDataNoCache(loadFn) {
-    const component = useComponent();
-    const orm = component.env.services.orm;
-
-    /** @type {{ data: Record<string, T> }} */
-    const result = useState({ data: {} });
-    useRecordObserver(async (record, props) => {
-        result.data = await loadFn(orm, { ...props, record });
-    });
-    onWillUpdateProps(async (props) => {
-        // useRecordObserver callback is not called when the record doesn't change
-        if (props.record.id === component.props.record.id) {
-            result.data = await loadFn(orm, props);
-        }
-    });
-    return result;
 }
 
 export const versionsTimeline = {

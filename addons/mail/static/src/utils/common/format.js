@@ -11,6 +11,7 @@ import {
     htmlReplace,
     htmlReplaceAll,
     htmlTrim,
+    isHtmlEmpty,
     setElementContent,
 } from "@web/core/utils/html";
 import { escapeRegExp } from "@web/core/utils/strings";
@@ -63,6 +64,9 @@ export async function generateEmojisOnHtml(htmlBody, { allowEmojiLoading = true 
  * @param {string|ReturnType<markup>} rawBody
  * @param {Object} validMentions
  * @param {import("models").Persona[]} validMentions.partners
+ * @param rawBody {string|ReturnType<markup>}
+ * @param validRecords {Object}
+ * @param validRecords.partners {Partner}
  */
 export async function prettifyMessageContent(
     rawBody,
@@ -122,18 +126,21 @@ function linkify(text) {
     let result = "";
     let match;
     while ((match = urlRegexp.exec(text)) !== null) {
+        const url = match[0];
+        const fixedUrl = !/^https?:\/\//i.test(url) ? `http://${url}` : url;
+        if (!URL.canParse(fixedUrl)) {
+            continue;
+        }
         result = htmlJoin([result, text.slice(curIndex, match.index)]);
-        // Decode the url first, in case it's already an encoded url
-        const inputUrl = decodeURI(match[0]);
-        const url = !/^https?:\/\//i.test(inputUrl) ? "http://" + inputUrl : inputUrl;
+        const { href } = URL.parse(fixedUrl);
         const link = document.createElement("a");
         setAttributes(link, {
             target: "_blank",
             rel: "noreferrer noopener",
-            href: encodeURI(url),
+            href,
         });
-        link.textContent = inputUrl;
-        const messageMatch = messageUrlRegExp.exec(url);
+        link.textContent = url;
+        const messageMatch = messageUrlRegExp.exec(fixedUrl);
         if (messageMatch !== null) {
             setAttributes(link, {
                 "data-oe-id": messageMatch[1],
@@ -358,6 +365,90 @@ export function htmlToTextContentInline(htmlString) {
 export function convertBrToLineBreak(str) {
     str = htmlReplace(str, /<br\s*\/?>/gi, () => "\n");
     return createDocumentFragmentFromContent(str).body.textContent;
+}
+
+/**
+ * @param {string|ReturnType<markup>} content
+ * @returns {ReturnType<markup>}
+ */
+export function trimEmptyBlocksAround(content) {
+    if (isHtmlEmpty(content)) {
+        return content;
+    }
+    const body = createDocumentFragmentFromContent(content).body;
+    let changed = false;
+
+    const removeNode = (node) => {
+        node.remove();
+        changed = true;
+    };
+
+    /** @typedef {"start" | "end"} BoundarySide */
+
+    /**
+     * @param {Element | null | undefined} element
+     * @param {BoundarySide} side
+     * @returns {ChildNode | null}
+     */
+    const getBoundaryChild = (element, side) => {
+        if (!element) {
+            return null;
+        }
+        return side === "start" ? element.firstChild : element.lastChild;
+    };
+
+    /**
+     * @param {Element | null | undefined} element
+     * @param {BoundarySide} side
+     * @returns {Element | null}
+     */
+    const getBoundaryElement = (element, side) => {
+        if (!element) {
+            return null;
+        }
+        return side === "start" ? element.firstElementChild : element.lastElementChild;
+    };
+
+    const trimTextNodes = (element, side) => {
+        let node = getBoundaryChild(element, side);
+        while (node?.nodeType === Node.TEXT_NODE && !node.textContent.trim()) {
+            removeNode(node);
+            node = getBoundaryChild(element, side);
+        }
+    };
+
+    const trimEmptyParagraphs = (side) => {
+        trimTextNodes(body, side);
+        let paragraph = getBoundaryElement(body, side);
+        while (["P", "DIV"].includes(paragraph?.tagName) && isHtmlEmpty(paragraph.innerHTML)) {
+            removeNode(paragraph);
+            trimTextNodes(body, side);
+            paragraph = getBoundaryElement(body, side);
+        }
+    };
+
+    const trimBoundaryParagraph = (side) => {
+        trimEmptyParagraphs(side);
+        const paragraph = getBoundaryElement(body, side);
+        if (!paragraph || !["P", "DIV"].includes(paragraph.tagName)) {
+            return;
+        }
+        trimTextNodes(paragraph, side);
+        let node = getBoundaryChild(paragraph, side);
+        while (node?.nodeName === "BR") {
+            removeNode(node);
+            trimTextNodes(paragraph, side);
+            node = getBoundaryChild(paragraph, side);
+        }
+        trimEmptyParagraphs(side);
+        if (getBoundaryElement(body, side) !== paragraph) {
+            trimBoundaryParagraph(side);
+        }
+    };
+    trimBoundaryParagraph("start");
+    trimBoundaryParagraph("end");
+    // markup: innerHTML of the body is safe as it is generated from a DocumentFragment created from a trusted source and operations on body, the trim and removeNode, preserve it "safe".
+    return changed ? markup(body.innerHTML) : content;
 }
 
 export function cleanTerm(term) {

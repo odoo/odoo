@@ -17,7 +17,7 @@ import { Interaction } from "@web/public/interaction";
 import { redirect } from "@web/core/utils/urls";
 import { scrollTo } from "@web/core/utils/scrolling";
 
-import SurveyPreloadImageMixin from "@survey/js/survey_preload_image_mixin";
+import { preloadBackground } from "@survey/js/survey_preload_image_mixin";
 import { fadeIn, fadeOut } from "@survey/utils";
 
 const { DateTime } = luxon;
@@ -569,28 +569,30 @@ export class SurveyForm extends Interaction {
             // prevent user from clicking on matrix options when form is submitted
             this.readonly = true;
         }
+        
+        try {
+            const submitPromise = rpc(
+                `${route}/${this.options.surveyToken}/${this.options.answerToken}`,
+                params
+            );
 
-        const submitPromise = rpc(
-            `${route}/${this.options.surveyToken}/${this.options.answerToken}`,
-            params
-        );
-
-        if (
-            !this.options.isStartScreen &&
-            this.options.scoringType === "scoring_with_answers_after_page"
-        ) {
-            const [correctAnswers] = await this.waitFor(submitPromise);
             if (
-                Object.keys(correctAnswers).length &&
-                this.el.querySelector(".js_question-wrapper")
+                !this.options.isStartScreen &&
+                this.options.scoringType === "scoring_with_answers_after_page"
             ) {
-                this.showCorrectAnswers(correctAnswers, submitPromise, options);
-                this.submitting = false;
-                return;
+                const [correctAnswers] = await this.waitFor(submitPromise);
+                if (
+                    Object.keys(correctAnswers).length &&
+                    this.el.querySelector(".js_question-wrapper")
+                ) {
+                    this.showCorrectAnswers(correctAnswers, submitPromise, options);
+                    return;
+                }
             }
+            await this.nextScreen(submitPromise, options);
+        } finally {
+            this.submitting = false;
         }
-        await this.nextScreen(submitPromise, options);
-        this.submitting = false;
     }
 
     /**
@@ -619,7 +621,7 @@ export class SurveyForm extends Interaction {
             const [, result] = await nextScreenPromise;
             this.nextScreenResult = result;
             if (this.options.refreshBackground && result.background_image_url) {
-                return SurveyPreloadImageMixin._preloadBackground(result.background_image_url);
+                return preloadBackground(result.background_image_url);
             } else {
                 return Promise.resolve();
             }

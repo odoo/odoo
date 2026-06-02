@@ -733,7 +733,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         results[model] = [];
                     }
                     const modelKey = database[model]?.key || "id";
-                    const valsArray = rawData[model];
+                    const valsArray = rawData[model] || [];
                     const recordStore = this[STORE_SYMBOL];
                     const modelInstance = this[model];
                     for (const vals of valsArray) {
@@ -793,7 +793,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                         }
                         resultsArray.push(record);
                     }
-                    modelEvents.triggerEvents("create", { ids: createdIds });
+                    if (createdIds.length) {
+                        modelEvents.triggerEvents("create", { ids: createdIds });
+                    }
                 }
                 return finalResults;
             } finally {

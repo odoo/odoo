@@ -10,7 +10,18 @@ from odoo.exceptions import ValidationError
 from odoo.tools import get_lang, babel_locale_parse
 
 import logging
+import operator as py_operator
 _logger = logging.getLogger(__name__)
+
+PY_OPERATORS = {
+    '>': py_operator.gt,
+    '<': py_operator.lt,
+    '>=': py_operator.ge,
+    '<=': py_operator.le,
+    '=': py_operator.eq,
+    '!=': py_operator.ne,
+    'in': lambda elem, container: elem in container,
+}
 
 
 def format_date_abbr(env, date):
@@ -217,11 +228,12 @@ class HrVersion(models.Model):
 
     @api.depends("private_country_id")
     def _compute_allowed_country_state_ids(self):
-        states = self.env["res.country.state"].search([])
-        for version in self:
-            if version.private_country_id:
-                version.allowed_country_state_ids = version.private_country_id.state_ids
-            else:
+        versions_with_countries = self.filtered("private_country_id")
+        for version in versions_with_countries:
+            version.allowed_country_state_ids = version.private_country_id.state_ids
+        if versions_without_countries := (self - versions_with_countries):
+            states = self.env["res.country.state"].search([])
+            for version in versions_without_countries:
                 version.allowed_country_state_ids = states
 
     @api.constrains('employee_id', 'contract_date_start', 'contract_date_end')
@@ -568,10 +580,77 @@ class HrVersion(models.Model):
                 version.date_end = version.contract_date_end
 
     def _search_start_date(self, operator, value):
-        return [('contract_date_start', operator, value)]
+        if operator in ('>', '>='):
+            return [
+                '|',
+                    ('date_version', operator, value),
+                    ('contract_date_start', operator, value),
+            ]
+
+        if operator in ('<', '<='):
+            return [
+                '&',
+                    ('date_version', operator, value),
+                    '|',
+                        ('contract_date_start', '=', False),
+                        ('contract_date_start', operator, value),
+            ]
+
+        if operator == '=':
+            return [
+                '|',
+                    '&',
+                        ('date_version', '=', value),
+                        '|',
+                            ('contract_date_start', '=', False),
+                            ('contract_date_start', '<=', value),
+                    '&',
+                        ('contract_date_start', '=', value),
+                        ('date_version', '<=', value),
+            ]
+
+        if operator == '!=':
+            return ['!', *self._search_start_date('=', value)]
+
+        return NotImplemented
 
     def _search_end_date(self, operator, value):
-        return [('contract_date_end', operator, value)]
+
+        def _compare_dates(date_end, operator, value):
+            op = PY_OPERATORS.get(operator)
+            if not op:
+                return False
+            if not date_end and operator in ('>', '>=', '<', '<='):
+                return False
+            return op(date_end, value)
+
+        all_versions = self.search([('company_id', 'in', self.env.companies.ids)])
+        matching_ids = []
+
+        next_version_map = {}
+        prev_version_per_employee = {}
+
+        for version in all_versions:
+            emp_id = version.employee_id.id
+            if emp_id in prev_version_per_employee:
+                next_version_map[prev_version_per_employee[emp_id].id] = version
+            prev_version_per_employee[emp_id] = version
+
+        for version in all_versions:
+            next_version = next_version_map.get(version.id)
+            date_version_end = next_version.date_version + relativedelta(days=-1) if next_version else False
+
+            if date_version_end and version.contract_date_end:
+                date_end = min(date_version_end, version.contract_date_end)
+            elif date_version_end:
+                date_end = date_version_end
+            else:
+                date_end = version.contract_date_end
+
+            if _compare_dates(date_end, operator, value):
+                matching_ids.append(version.id)
+
+        return [('id', 'in', matching_ids)]
 
     @api.model
     def _get_marital_status_selection(self):

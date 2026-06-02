@@ -1,3 +1,4 @@
+import { CW_LIVECHAT_STEP } from "@im_livechat/core/common/chat_window_model_patch";
 import { registerThreadAction, threadActionsRegistry } from "@mail/core/common/thread_actions";
 import "@mail/discuss/call/common/thread_actions";
 
@@ -10,6 +11,7 @@ registerThreadAction("restart", {
     icon: "fa fa-fw fa-refresh",
     name: _t("Restart Conversation"),
     open: ({ owner, thread }) => {
+        owner.props.chatWindow.livechatStep = CW_LIVECHAT_STEP.NONE;
         thread.chatbot.restart();
         owner.props.chatWindow.open({ focus: true });
     },

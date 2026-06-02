@@ -6,8 +6,20 @@ from odoo.tests import tagged
 @tagged('post_install_l10n', 'post_install', '-at_install', *TestUblBis3Common.extra_tags)
 class TestUblExportBis3FRChorusPro(TestUblBis3Common, TestUblCiiCommonChorusPro, TestUblCiiFRCommon):
 
-    def subfolder(self):
-        return super().subfolder().replace('export', 'export/bis3/invoice')
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        if cls.env['ir.module.module']._get('l10n_fr_pdp').state == 'installed':
+            # The PDP module sets a 0225 identifier (based on the siret)
+            cls.env.company.partner_id.write({
+                'peppol_eas': '0009',
+                'peppol_endpoint': '40678483500521'
+            })
+
+    @classmethod
+    def subfolders(cls):
+        subfolder_format, _subfolder_document, subfolder_country = super().subfolders()
+        return subfolder_format, 'invoice', subfolder_country
 
     def _assert_invoice_partner_party_identifiers(self, partner, test_file):
         tax_20 = self.percent_tax(20.0)
@@ -22,6 +34,7 @@ class TestUblExportBis3FRChorusPro(TestUblBis3Common, TestUblCiiCommonChorusPro,
 
     def test_invoice_customer_party_identifiers_partner_chorus_pro(self):
         # VAT and siret set.
+        # The siret must not have spaces in the exported document
         # Supplier:
         # EndpointID is filled using the siret.
         # PartyIdentification is filled using the siret.
@@ -32,6 +45,10 @@ class TestUblExportBis3FRChorusPro(TestUblBis3Common, TestUblCiiCommonChorusPro,
         # PartyIdentification is filled using the customer siret.
         # PartyTaxScheme is filled using the VAT.
         # PartyLegalEntity is filled using the customer siret.
+        self.partner_fr_chorus_pro.commercial_partner_id.write({
+            'company_registry': '214 401 0930 0015',
+            'peppol_endpoint': '11000201100044',
+        })
         self._assert_invoice_partner_party_identifiers(
             partner=self.partner_fr_chorus_pro,
             test_file='test_invoice_customer_party_identifiers_partner_chorus_pro',

@@ -11,17 +11,45 @@
 
     <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
         <xpath expr="//t[@t-call='web.external_layout']" position="attributes">
-            <attribute name="t-call">account_edi_ubl_cii.external_layout_with_context</attribute>
+            <attribute name="t-call">web.internal_layout</attribute>
+        </xpath>
+
+        <xpath expr="//div[hasclass('row')]" position="replace">
+            <t t-set="partner_issuer" t-value="o.partner_id"/>
+            <t t-set="partner_receiver" t-value="o.company_id.partner_id"/>
+            <!-- Partner Information (Issuer) -->
+            <div class="row">
+                <div class="col-6" name="issuer_address">
+                    <span class="text-muted">FROM</span>
+                    <address t-field="partner_issuer.self" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                    <div t-if="partner_issuer.vat" id="issuer_partner_vat_address">
+                        <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                        <t t-else="">Tax ID</t>: <span t-field="partner_issuer.vat"/>
+                    </div>
+                </div>
+            </div>
+            <!-- Company Information (Receiver) -->
+            <div class="row">
+                <div class="col-6"/>
+                <div class="offset-col-6 col-6" name="receiver_address">
+                    <span class="text-muted">TO</span>
+                    <address class="mb-0" t-field="partner_receiver.self" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                    <div t-if="partner_receiver.vat" id="company_vat_address">
+                        <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                        <t t-else="">Tax ID</t>: <span t-field="partner_receiver.vat"/>
+                    </div>
+                </div>
+            </div>
+            <h2>
+                <t t-if="o.ref" t-out="o.ref"/>
+                <t t-else="">Vendor Bill</t>
+            </h2>
+            <hr/>
         </xpath>
     </template>
 
-    <template id="external_layout_with_context" inherit_id="web.external_layout" primary="True">
-        <xpath expr="//t[@t-if='company.external_report_layout_id']" position="replace">
-            <t t-set="chosen_layout" t-value="env.context.get('force_report_layout')"/>
-            <t t-if="chosen_layout" t-call="{{ chosen_layout }}">
-                <t t-out="0"/>
-            </t>
-        </xpath>
+    <template id="external_layout_with_context" inherit_id="web.internal_layout" primary="True">
+    <!-- # TODO REMOVE IN MASTER -->
     </template>
 
     <record id="action_report_account_invoices_generated_by_odoo" model="ir.actions.report">

@@ -6,7 +6,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
 import { PublicReadonlySpreadsheet } from "@spreadsheet/public_readonly_app/public_readonly";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { getMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 class Parent extends Component {
     static template = xml`<Spreadsheet model="props.model"/>`;
@@ -43,6 +43,8 @@ export async function mountSpreadsheet(model) {
  * @returns {Promise<HTMLElement>}
  */
 export async function mountPublicSpreadsheet(dataUrl, mode, downloadExcelUrl = "") {
+    const env = getMockEnv();
+    env.isFrozenSpreadsheet = () => true;
     mountWithCleanup(PublicReadonlySpreadsheet, {
         props: {
             dataUrl,
@@ -50,6 +52,7 @@ export async function mountPublicSpreadsheet(dataUrl, mode, downloadExcelUrl = "
             mode,
         },
         noMainContainer: true,
+        env,
     });
     await animationFrame();
     return getFixture();

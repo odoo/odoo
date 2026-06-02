@@ -7,12 +7,12 @@ import { registry } from "@web/core/registry";
 
 export class AlertOption extends BaseOptionComponent {
     static template = "mass_mailing.AlertOption";
-    static selector = ".s_mail_alert .s_alert";
+    static selector = ".s_mail_alert";
 }
 
 export class BorderOption extends BaseOptionComponent {
     static template = "mass_mailing.BorderOption";
-    static selector = ".s_mail_alert .s_alert";
+    static selector = ".s_mail_alert";
     static components = { BorderConfigurator };
 }
 
@@ -28,7 +28,7 @@ class AlertOptionPlugin extends Plugin {
                 target_name: "alertTypeOption",
                 target_element: "exclude",
                 method: "replace",
-                value: ".s_mail_alert .s_alert",
+                value: ".s_mail_alert",
             },
         ],
     };

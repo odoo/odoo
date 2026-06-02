@@ -135,6 +135,12 @@ class ProductTemplate(models.Model):
     valid_product_template_attribute_line_ids = fields.Many2many('product.template.attribute.line',
         compute="_compute_valid_product_template_attribute_line_ids", string='Valid Product Attribute Lines')
 
+    import_attribute_values = fields.Char(
+        string='Product Values',
+        compute='_compute_import_attribute_values',
+        inverse='_inverse_import_attribute_values',
+        store=False, copy=False)
+
     product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', required=True)
     # performance: product_variant_id provides prefetching on the first product variant only
     product_variant_id = fields.Many2one('product.product', 'Product', compute='_compute_product_variant_id')
@@ -504,6 +510,60 @@ class ProductTemplate(models.Model):
         """ Return a list of fields present on template and variants models and that are related"""
         return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'product_properties']
 
+    def _compute_import_attribute_values(self):
+        self.import_attribute_values = ''
+
+    def _inverse_import_attribute_values(self):
+        raise ValueError('This field can only be used to import products.')
+
+    @api.model
+    def load(self, fields, data):
+        """
+        Data import for products depends on the presence of variants.
+        If 'import_attribute_values' is present, then the product.template files
+        will be created, followed by the product.product files. Everything is
+        done from the same file.
+
+        The required fields are always imported; however, other fields are
+        imported when the product.product files are created.
+        """
+        if 'import_attribute_values' not in fields:
+            return super().load(fields, data)
+
+        column_no = fields.index('import_attribute_values')
+
+        data_list_products = []
+        data_list_templates = []
+        for values in data:
+            if values[column_no].strip():
+                data_list_products.append(values)
+            else:
+                values = list(values)
+                values.pop(column_no)
+                data_list_templates.append(values)
+
+        if data_list_templates:
+            template_fields = list(fields)
+            template_fields.pop(column_no)
+            result = super().load(template_fields, data_list_templates)
+            if any(message['type'] == 'error' for message in result['messages']):
+                return result
+        else:
+            result = {'ids': [], 'messages': [], 'nextrow': 0}
+
+        if data_list_products:
+            ProductProduct = self.env['product.product'].with_context(from_template_import=True)
+            result_product = ProductProduct.load(fields, data_list_products)
+            if any(message['type'] == 'error' for message in result_product['messages']):
+                return result_product
+
+            product_templates = ProductProduct.browse(result_product['ids']).product_tmpl_id
+            result['ids'].extend(product_templates.ids)
+            result['messages'].extend(result_product['messages'])
+            result['nextrow'] = result.get('nextrow', 0) + result_product.get('nextrow', 0)
+
+        return result
+
     @api.model_create_multi
     def create(self, vals_list):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
@@ -639,7 +699,7 @@ class ProductTemplate(models.Model):
                     %s
                 </p>
                 <p>
-                    <a class="oe_link" href="https://www.odoo.com/documentation/latest/_downloads/c2c6ce32294dfddffcfefcf2775f7a09/pdfquotebuilderexamples.zip">
+                    <a class="oe_link" href="https://www.odoo.com/documentation/latest/_downloads/eaa2883bd361273b475c9765f64e3e0c/pdfquotebuilderexamples.zip">
                     %s
                     </a>
                 </p>
@@ -1468,7 +1528,7 @@ class ProductTemplate(models.Model):
     def get_import_templates(self):
         return [{
             'label': _('Import Template for Products'),
-            'template': '/product/static/xls/product_template.xls'
+            'template': '/product/static/xls/product_product.xls'
         }]
 
     def get_contextual_price(self, product=None):

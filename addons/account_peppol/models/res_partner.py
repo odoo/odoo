@@ -8,8 +8,9 @@ from hashlib import md5
 from urllib import parse
 
 from odoo import api, fields, models
-from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+
 
 TIMEOUT = 10
 _logger = logging.getLogger(__name__)
@@ -147,12 +148,15 @@ class ResPartner(models.Model):
     @api.model
     def _peppol_lookup_participant(self, edi_identification):
         """NAPTR DNS peppol participant lookup through Odoo's Peppol proxy"""
-        if (edi_mode := self.env.company._get_peppol_edi_mode()) == 'demo':
+        company = self.env.company
+        if (edi_mode := company._get_peppol_edi_mode()) == 'demo':
             return
 
-        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['peppol'][edi_mode]
+        proxy_type = company._get_peppol_proxy_type()
+        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()[proxy_type][edi_mode]
         query = parse.urlencode({'peppol_identifier': edi_identification.lower()})
-        endpoint = f'{origin}/api/peppol/1/lookup?{query}'
+        api_endpoint = self.env['account_edi_proxy_client.user']._get_peppol_proxy_endpoint('1/lookup', proxy_type=proxy_type)
+        endpoint = f'{origin}{api_endpoint}?{query}'
 
         try:
             response = requests.get(endpoint, timeout=TIMEOUT)
@@ -260,26 +264,11 @@ class ResPartner(models.Model):
         if not self_partner.peppol_eas or not self_partner.peppol_endpoint:
             return False
         old_value = self_partner.peppol_verification_state
-        new_value = self._get_peppol_verification_state(
+        new_value = self_partner._get_peppol_verification_state(
             self_partner.peppol_endpoint,
             self_partner.peppol_eas,
             self_partner._get_peppol_edi_format(),
         )
-
-        if (
-                new_value != 'valid'
-                and self_partner.peppol_eas in ('0208', '9925')
-        ):
-            # checks the inverse `eas:endpoint` if the belgian user was not found on Peppol in the first try
-            inverse_eas = '9925' if self_partner.peppol_eas == '0208' else '0208'
-            inverse_endpoint = f'BE{self_partner.peppol_endpoint}' if self_partner.peppol_eas == '0208' else self_partner.peppol_endpoint[2:]
-            if (peppol_state := self._get_peppol_verification_state(inverse_endpoint, inverse_eas, self_partner._get_peppol_edi_format())) == 'valid':
-                self_partner.write({
-                    'peppol_eas': inverse_eas,
-                    'peppol_endpoint': inverse_endpoint,
-                })
-                new_value = peppol_state
-
         if old_value != new_value:
             self_partner.peppol_verification_state = new_value
             self._log_verification_state_update(company, old_value, self_partner.peppol_verification_state)
@@ -316,3 +305,10 @@ class ResPartner(models.Model):
         return self.env['res.company'].search([
             ('account_peppol_proxy_state', 'in', self.env['account_edi_proxy_client.user']._get_can_send_domain()),
         ]).mapped('partner_id')
+
+    @api.model
+    def _get_peppol_proxy_identification_info(self, peppol_eas, peppol_endpoint):
+        # Return tuple `(proxy_type, peppol_identifier)` where `peppol_identifier` is in form "{scheme}:{identifier}"
+        if not peppol_eas or not peppol_endpoint:
+            return None, ""
+        return 'peppol', f"{peppol_eas}:{peppol_endpoint}"

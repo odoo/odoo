@@ -77,4 +77,8 @@ patch(ProductScreen.prototype, {
         const res = this.pos.findTable(buffer);
         this.state.isValidBuffer = Boolean(res);
     },
+    async clickNew() {
+        await this.pos.syncAllOrders({ orders: [this.pos.getOrder()] });
+        this.pos.showDefault();
+    },
 });

@@ -58,7 +58,8 @@ class SaleOrder(models.Model):
         if not orders_without_fiscal:
             return
 
-        foreign_state = self.env['res.country.state'].search([('country_id.code', '!=', 'IN')], limit=1)
+        foreign_country = self.env['res.country'].new({'name': 'Not India', 'code': '!!'})
+        foreign_state = self.env['res.country.state'].new({'country_id': foreign_country})
         sez_state = self.env.ref('l10n_in.state_in_oc', raise_if_not_found=False)
         for state, orders in orders_without_fiscal.grouped(_get_fiscal_state).items():
             virtual_partner = self.env['res.partner'].new({

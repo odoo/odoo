@@ -141,3 +141,12 @@ class AccountChartTemplate(models.AbstractModel):
             bank_journals = company.bank_journal_ids
             bank_journals._update_payment_method_lines("inbound")
             bank_journals._update_payment_method_lines("outbound")
+
+    def _load(self, template_code, company, install_demo, force_create=True):
+        res = super()._load(template_code, company, install_demo, force_create)
+        if template_code == 'in':
+            if company.l10n_in_tds_feature:
+                company._activate_l10n_in_taxes(['tds_it_act_25_group'], company)
+            if company.l10n_in_tcs_feature:
+                company._activate_l10n_in_taxes(['tcs_it_act_25_group'], company)
+        return res

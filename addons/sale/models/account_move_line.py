@@ -41,7 +41,7 @@ class AccountMoveLine(models.Model):
     def _related_analytic_distribution(self):
         # EXTENDS 'account'
         vals = super()._related_analytic_distribution()
-        if self.sale_line_ids and not self.analytic_distribution:
+        if self.sale_line_ids:
             vals |= self.sale_line_ids[0].analytic_distribution or {}
         return vals
 
@@ -231,3 +231,14 @@ class AccountMoveLine(models.Model):
     def _get_downpayment_lines(self):
         # OVERRIDE
         return self.sale_line_ids.filtered('is_downpayment').invoice_lines.filtered(lambda line: line.move_id._is_downpayment())
+
+    def _get_discount_lines(self):
+        lines = super()._get_discount_lines()
+        discount_line_ids = []
+        for company, company_lines in self.grouped('company_id').items():
+            discount_product = company.sudo().sale_discount_product_id
+            if discount_product:
+                discount_line_ids.extend(company_lines.filtered(lambda line: line.product_id == discount_product).ids)
+        if discount_line_ids:
+            lines |= self.browse(discount_line_ids)
+        return lines

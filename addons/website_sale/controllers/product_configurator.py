@@ -39,6 +39,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         return (
             has_optional_products
             or not (single_product_variant.get('product_id') or is_product_configured)
+            or (len(product_template._get_available_uoms()) > 1 and not is_product_configured)
         )
 
     def _get_product_template(self, product_template_id):

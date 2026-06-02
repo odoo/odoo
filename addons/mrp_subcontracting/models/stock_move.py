@@ -155,6 +155,7 @@ class StockMove(models.Model):
                 move.picking_id.partner_id.with_company(company).property_stock_subcontractor \
                 or company.subcontracting_location_id
             move.write({
+                'production_group_id': False,
                 'is_subcontract': True,
                 'location_id': subcontracting_location.id
             })
@@ -298,3 +299,8 @@ class StockMove(models.Model):
             if route and self.rule_id.route_id == route:
                 return self.raw_material_production_id.subcontractor_id.id
         return super()._get_partner_id()
+
+    def _get_production_assignation_domain(self):
+        if self.move_dest_ids.raw_material_production_id.subcontractor_id:
+            return []
+        return super()._get_production_assignation_domain()

@@ -161,7 +161,7 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
                         "please use @api.constrains on methods instead.")
     if hasattr(model_def, '_sql_constraints'):
         _logger.warning("Model attribute '_sql_constraints' is no longer supported, "
-                        "please define model.Constraint on the model.")
+                        "please define models.Constraint on the model.")
 
     # all models except 'base' implicitly inherit from 'base'
     name = model_def._name
@@ -406,7 +406,7 @@ def _setup(model_cls: type[BaseModel], env: Environment):
                 ))
                 if rows and rows[0][0] == 'jsonb':
                     # patch the field definition by adding an override
-                    _logger.warning("Patching %s.%s with company_dependent=True", model_cls._name, name)
+                    _logger.debug("Patching %s.%s with company_dependent=True", model_cls._name, name)
                     fields_.append(type(fields_[0])(company_dependent=True))
         if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == model_cls._name:
             model_cls._fields__[name] = fields_[0]
@@ -535,13 +535,18 @@ def _setup_fields(model_cls: type[BaseModel], env: Environment):
 def _add_manual_models(env: Environment):
     """ Add extra models to the registry. """
     # clean up registry first
+    removed_fields = OrderedSet()
     for name, model_cls in list(env.registry.items()):
         if model_cls._custom:
+            removed_fields.update(model_cls._fields.values())
             del env.registry.models[name]
             # remove the model's name from its parents' _inherit_children
             for parent_cls in model_cls.__bases__:
                 if hasattr(parent_cls, 'pool'):
                     parent_cls._inherit_children.discard(name)
+
+    if removed_fields:
+        env.registry._discard_fields(list(removed_fields))
 
     # we cannot use self._fields to determine translated fields, as it has not been set up yet
     env.cr.execute("SELECT *, name->>'en_US' AS name FROM ir_model WHERE state = 'manual'")

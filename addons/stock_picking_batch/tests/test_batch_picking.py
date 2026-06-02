@@ -286,6 +286,60 @@ class TestBatchPicking(TransactionCase):
         self.assertFalse(sum(quant_A.mapped('quantity')))
         self.assertFalse(sum(quant_B.mapped('quantity')))
 
+    def test_batch_with_backorder_wizard_partially_done(self):
+        """ Validate a batch when only one picking has done quantities.
+            Scenario:
+            - Two pickings are auto-batched together (same partner).
+            - Only one move line in the first picking has a done quantity; the other move lines are removed.
+            - The second picking has no move lines.
+            Expectation:
+            - The backorder wizard must include only the picking with done quantities.
+            - The backorder created for that picking must NOT be linked to the batch currently being validated.
+            - The other picking must remain assigned (not validated).
+        """
+        self.env['stock.picking.type'].browse(self.picking_type_in).write({
+            'auto_batch': True,
+            'batch_group_by_partner': True
+        })
+        partner = self.env['res.partner'].create({'name': 'Supplier'})
+        pickings = self.env['stock.picking'].create([{
+            'partner_id': partner_id,
+            'picking_type_id': type_id,
+            'location_id': from_loc.id,
+            'location_dest_id': to_loc.id,
+            'move_ids': [Command.create({
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 10,
+                'location_id': from_loc.id,
+                'location_dest_id': to_loc.id,
+            }) for product in [self.productA, self.productB]],
+        } for partner_id, type_id, from_loc, to_loc in [
+            # receipts
+            (partner.id, self.picking_type_in, self.supplier_location, self.stock_location),
+            (partner.id, self.picking_type_in, self.supplier_location, self.stock_location),
+        ]])
+        pickings.action_confirm()
+        batch = pickings.mapped('batch_id')
+        # Ask to assign, so pickings should be assigned now.
+        batch.action_assign()
+        self.assertEqual(pickings[0].state, 'assigned', 'Picking 1 should be ready')
+        self.assertEqual(pickings[1].state, 'assigned', 'Picking 2 should be ready')
+
+        pickings[0].move_line_ids[0].write({'quantity': 4})
+        pickings[0].move_line_ids[1].unlink()
+        pickings[1].move_ids.move_line_ids.unlink()
+        # There should be a wizard asking to process backorder
+        back_order_wizard_dict = batch.action_done()
+        self.assertTrue(back_order_wizard_dict, "A backorder wizard action should be returned")
+        back_order_wizard = Form.from_action(self.env, back_order_wizard_dict).save()
+        self.assertEqual(len(back_order_wizard.pick_ids), 1, "Only one picking should be in the wizard")
+        back_order_wizard.process()
+        self.assertEqual(pickings[1].state, 'assigned', 'Picking 2 should remain assigned')
+        self.assertEqual(pickings[0].state, 'done', 'Picking 1 should be done')
+        self.assertEqual(pickings[0].move_ids.product_uom_qty, 4, 'initial demand should be 4 after picking split')
+        self.assertTrue(self.env['stock.picking'].search([('backorder_id', '=', pickings[0].id)]), 'no back order created')
+
     def test_batch_with_immediate_transfer_and_backorder_wizard_with_manual_operations(self):
         """ Test a simple batch picking with only one quantity fully available.
         The user set the quantity done only for the partially available picking.
@@ -1193,6 +1247,20 @@ class TestBatchPicking02(TransactionCase):
         self.assertEqual(batch.state, 'done')
         self.assertFalse(pickings[1].batch_id)
 
+    def test_batch_name_with_complex_prefix(self):
+        """Check that batch name is correctly generated with a complex prefix."""
+        # Fetch an existing sequence and update its prefix
+        sequence = self.env['ir.sequence'].search([('code', '=', 'picking.batch')], limit=1)
+        self.assertTrue(sequence, "Sequence with code 'picking.batch' should exist.")
+        sequence.prefix = 'BATCH/test/2026/'
+        # Create an empty batch with a picking type
+        batch = self.env['stock.picking.batch'].create({
+            'picking_type_id': self.picking_type_internal.id,
+            'company_id': self.env.company.id,
+        })
+        # Assert the generated name starts with the complex prefix and contains the picking_type code
+        self.assertTrue(batch.name.startswith('BATCH/test/2026/'))
+        self.assertIn(self.picking_type_internal.sequence_code, batch.name)
 
 
 @tagged('post_install', '-at_install')

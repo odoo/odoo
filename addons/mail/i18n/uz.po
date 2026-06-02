@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"POT-Creation-Date: 2026-05-08 17:35+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -561,11 +561,6 @@ msgstr "1 ta yangi xabar"
 #, fuzzy
 msgid "1 other"
 msgstr "1 ta boshqa"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.account_security_alert
-msgid "111.222.333.444"
-msgstr ""
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.action_email_server_tree
@@ -5239,19 +5234,23 @@ msgstr "Xabarni joylashtirish amalga oshmadi. Qayta urinish uchun bosing"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-#, fuzzy
 msgid ""
-"Failed to render QWeb template: %(template_src)s\n"
+"Failed to render QWeb template for %(template_label)s\n"
+"Target Model: %(model_name)s\n"
+"Language context: %(lang_context)s\n"
+"Error: %(error_details)s\n"
 "\n"
-"%(template_traceback)s)"
+"Template Source Snippet:\n"
+"%(template_src)s"
 msgstr ""
-"QWeb andozasini ko‘rsatib bo‘lmadi: %(template_src)s %(template_traceback)s)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, fuzzy
-msgid "Failed to render inline_template template: %(template_txt)s"
+msgid ""
+"Failed to render inline_template template: %(template_txt)s\n"
+"Error details: %(error)s"
 msgstr "Inline_template andozasini ko‘rsatib bo‘lmadi: %(template_txt)s"
 
 #. module: mail
@@ -7819,6 +7818,13 @@ msgid "Mail Template Reset"
 msgstr "Xat shablonini tiklash"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
+msgstr "taxallus %(name)s: %(error)s"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 #, fuzzy
 msgid "Mail Thread"
@@ -8004,6 +8010,12 @@ msgstr "O‘qilmagan deb belgilash"
 #, fuzzy
 msgid "Mark as done"
 msgstr "Bajarilgan deb belgilash"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8238,7 +8250,7 @@ msgstr "Ajratgich ko‘rsatilishi kerak bo‘lgan xabar ID raqami"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/composer.js:0
+#: code:addons/mail/static/src/core/common/store_service.js:0
 #, fuzzy
 msgid "Message posted on \"%s\""
 msgstr "\"%s\"ga joylashtirilgan xabar"
@@ -8865,6 +8877,13 @@ msgstr "Tanlangan yozuvlar uchun hujjatlar topilmadi."
 #, fuzzy
 msgid "No history messages"
 msgstr "Tarix xabarlari yo‘q"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+msgid "No language detected in context"
+msgstr "Mazmuniga qarab tilni aniqlash natijasi."
 
 #. module: mail
 #. odoo-javascript
@@ -9542,8 +9561,11 @@ msgstr ""
 #: code:addons/mail/models/mail_template.py:0
 #, fuzzy
 msgid ""
-"Oops! We couldn't save your template due to an issue with this value: %"
-"(template_txt)s. Correct it and try again."
+"Oops! We couldn't save your template due to an issue.\n"
+"\n"
+"Error: %(error_details)s\n"
+"\n"
+"Correct it and try again."
 msgstr ""
 "Voy! Quyidagi qiymatdagi muammo tufayli andozangizni saqlay olmadik: %"
 "(template_txt)s. Uni tuzating va qayta urinib ko‘ring."
@@ -12782,6 +12804,13 @@ msgstr "Kompozitordan shablon yaratish uchun yaroqli model kerak."
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, fuzzy
+msgid "Template name not identified"
+msgstr "Xabarning noyob identifikatori"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
 msgid ""
 "Template rendering should only be called with a list of IDs. Received “%"
 "(res_ids)s” instead."
@@ -14114,6 +14143,20 @@ msgstr "Nomsiz"
 #: code:addons/mail/models/mail_tracking_value.py:0
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
 msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+msgid "Unnamed Mail Template"
+msgstr "Aloqador xat shabloni"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
+msgid "Unnamed Mailing"
+msgstr "Nomsiz"
 
 #. module: mail
 #. odoo-javascript
@@ -15582,6 +15625,13 @@ msgid "created this channel."
 msgstr "bu kanalni yaratdi."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
+#, fuzzy
+msgid "d"
+msgstr "id"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 #, fuzzy
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
@@ -16219,6 +16269,21 @@ msgstr "taxallusingiz"
 #, fuzzy
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "\"%(channel_name)s\" kanalidagi \"%(member_name)s\""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.js:0
+msgid "“%s”"
+msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "Failed to render QWeb template: %(template_src)s\n"
+#~ "\n"
+#~ "%(template_traceback)s)"
+#~ msgstr ""
+#~ "QWeb andozasini ko‘rsatib bo‘lmadi: %(template_src)s %"
+#~ "(template_traceback)s)"
 
 #, fuzzy
 #~ msgid "%(user)s connected. This is their first connection. Wish them luck."

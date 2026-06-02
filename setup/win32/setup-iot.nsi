@@ -65,6 +65,8 @@ Unicode True
 	!define TOOLSDIR 'c:\odoobuild'
 !endif
 
+!define /date BUILD_DATE "%Y.%m.%d"
+
 !define PRODUCT_NAME "Odoo IoT"
 !define DISPLAY_NAME "${PRODUCT_NAME} ${MAJOR_VERSION}.${MINOR_VERSION}"
 
@@ -89,6 +91,7 @@ RequestExecutionLevel admin
 !insertmacro GetOptions
 
 Var /GLOBAL cmdLineParams
+Var /GLOBAL ProxyTokenPwd
 
 !define STATIC_PATH "static"
 !define PIXMAPS_PATH "${STATIC_PATH}\pixmaps"
@@ -201,6 +204,10 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
     # Other configuration
     WriteIniStr "$INSTDIR\odoo.conf" "options" "list_db" "False"
     WriteIniStr "$INSTDIR\odoo.conf" "options" "max_cron_threads" "0"
+    # Write VERSION file
+    FileOpen $0 "$INSTDIR\VERSION" w
+    FileWrite $0 "${BUILD_DATE}"
+    FileClose $0
 
     DetailPrint "Installing Windows service"
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe"'
@@ -208,6 +215,11 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\odoo\odoo-bin\" -c "\"$INSTDIR\odoo.conf\"'
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} ObjectName "LOCALSERVICE"'
     AccessControl::GrantOnFile  "$INSTDIR" "LOCALSERVICE" "FullAccess"
+
+    nsExec::ExecToStack '"$INSTDIR\python\python.exe" "$INSTDIR\odoo\odoo-bin" genproxytoken'
+    pop $0
+    pop $ProxyTokenPwd
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "proxy_access_token" "$ProxyTokenPwd"
 
     Call RestartOdooService
 SectionEnd

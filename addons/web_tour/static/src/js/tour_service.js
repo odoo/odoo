@@ -171,7 +171,8 @@ export const tourService = {
             if (tourConfig.fromDB) {
                 tour = await getTourFromDB(tourName);
             }
-            if (!tour) {
+            // if (!tour) {
+            if (!tour || !tour.steps.length) {
                 return;
             }
 

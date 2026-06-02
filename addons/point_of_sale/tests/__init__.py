@@ -7,6 +7,7 @@ from . import test_performances
 from . import test_point_of_sale_ui
 from . import test_anglo_saxon
 from . import test_continental
+from . import test_digest
 from . import test_point_of_sale
 from . import test_pos_controller
 from . import test_pos_invoice_consolidation
@@ -26,3 +27,4 @@ from . import test_report_session
 from . import test_res_config_settings
 from . import test_pos_product_variants
 from . import test_generic_localization
+from . import test_pos_picking_backorder

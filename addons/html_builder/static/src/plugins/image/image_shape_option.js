@@ -3,6 +3,9 @@ import { toRatio } from "@html_builder/utils/utils";
 import { _t } from "@web/core/l10n/translation";
 import { ShapeSelector } from "@html_builder/plugins/shape/shape_selector";
 import { deepCopy } from "@web/core/utils/objects";
+import { loadImageInfo } from "@html_editor/utils/image_processing";
+import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
+import { getMimetypeBeforeShape } from "@html_builder/utils/image";
 
 export class ImageShapeOption extends BaseOptionComponent {
     static template = "html_builder.ImageShapeOption";
@@ -18,8 +21,16 @@ export class ImageShapeOption extends BaseOptionComponent {
         this.customizeTabPlugin = this.dependencies.customizeTab;
         this.imageShapeOption = this.dependencies.imageShapeOption;
         this.toRatio = toRatio;
-        this.state = useDomState((editingElement) => {
+        this.state = useDomState(async (editingElement) => {
+            const { originalSrc } = editingElement.dataset.originalSrc
+                ? editingElement.dataset
+                : await loadImageInfo(editingElement);
             const shape = editingElement.dataset.shape;
+            const mimetype = await getMimetypeBeforeShape(editingElement);
+            const isImgSupportedForProcessing = await isImageSupportedForProcessing(
+                editingElement,
+                mimetype
+            );
             return {
                 hasShape: !!shape && !this.imageShapeOption.isTechnicalShape(shape),
                 shapeLabel: this.imageShapeOption.getShapeLabel(shape),
@@ -30,10 +41,13 @@ export class ImageShapeOption extends BaseOptionComponent {
                 showImageShape4: this.isShapeVisible(editingElement, 4),
                 showImageShapeTransform: this.imageShapeOption.isTransformableShape(shape),
                 showImageShapeAnimation: this.imageShapeOption.isAnimableShape(shape),
-                togglableRatio: this.imageShapeOption.isTogglableRatioShape(shape),
+                togglableRatio:
+                    this.imageShapeOption.isTogglableRatioShape(shape) &&
+                    isImgSupportedForProcessing,
                 hasShapeTransformation:
                     !!editingElement.dataset.shapeFlip ||
                     !!parseInt(editingElement.dataset.shapeRotate),
+                isShapeSupported: !!originalSrc,
             };
         });
     }

@@ -65,6 +65,12 @@ patch(PosOrderline.prototype, {
             this.settled_order_id
         );
     },
+    isGlobalDiscountApplicable() {
+        if (this.isGiftCardOrEWalletReward()) {
+            return false;
+        }
+        return super.isGlobalDiscountApplicable?.() ?? true;
+    },
     isGiftCardOrEWalletReward() {
         const coupon = this.coupon_id;
         if (!coupon || !this.is_reward_line) {
@@ -81,5 +87,23 @@ patch(PosOrderline.prototype, {
             ...super.getDisplayClasses(),
             "fst-italic": this.is_reward_line,
         };
+    },
+    canBeMergedWith(orderline) {
+        return (
+            super.canBeMergedWith(...arguments) &&
+            this._e_wallet_program_id === orderline._e_wallet_program_id
+        );
+    },
+    get displayPrice() {
+        const res = super.displayPrice;
+        // Gift card displayPrice should always be positive (even when refunding order with a gift card)
+        if (
+            this.models["loyalty.program"]
+                .filter((p) => p.program_type === "gift_card")
+                .some((p) => p.trigger_product_ids.includes(this.product_id))
+        ) {
+            return Math.abs(res);
+        }
+        return res;
     },
 });

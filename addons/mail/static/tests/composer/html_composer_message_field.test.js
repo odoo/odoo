@@ -185,7 +185,7 @@ test("mention a partner", async () => {
     await press("enter");
     expect("[name='body'] .odoo-editor-editable").toHaveInnerHTML(`
     <p>
-        <a target="_blank" data-oe-protected="true" contenteditable="false" href="https://www.hoot.test/odoo/res.partner/17" class="o_mail_redirect" data-oe-id="17" data-oe-model="res.partner">
+        <a href="/odoo/res.partner/17" class="o_mail_redirect" data-oe-id="17" data-oe-model="res.partner" target="_blank" contenteditable="false">
             @Mitchell Admin
         </a>
     </p>`);

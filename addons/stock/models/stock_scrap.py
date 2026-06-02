@@ -95,7 +95,7 @@ class StockScrap(models.Model):
         }
         for scrap in self:
             if scrap.company_id:
-                scrap.scrap_location_id = locations_per_company[scrap.company_id.id]
+                scrap.scrap_location_id = locations_per_company.get(scrap.company_id.id, False)
 
     @api.depends('move_ids', 'move_ids.move_line_ids.quantity', 'product_id')
     def _compute_scrap_qty(self):
@@ -153,7 +153,7 @@ class StockScrap(models.Model):
         self._check_company()
         for scrap in self:
             scrap.name = self.env['ir.sequence'].next_by_code('stock.scrap') or _('New')
-            move = self.env['stock.move'].create(scrap._prepare_move_values())
+            move = scrap._create_scrap_move()
             # master: replace context by cancel_backorder
             move.with_context(is_scrap=True)._action_done()
             scrap.write({'state': 'done'})
@@ -161,6 +161,10 @@ class StockScrap(models.Model):
             if scrap.should_replenish:
                 scrap.do_replenish()
         return True
+
+    def _create_scrap_move(self):
+        self.ensure_one()
+        return self.env['stock.move'].create(self._prepare_move_values())
 
     def do_replenish(self, values=False):
         self.ensure_one()

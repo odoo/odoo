@@ -206,6 +206,10 @@ class ResPartner(models.Model):
                 return min(formats_by_country, key=lambda e: formats_info[e].get('sequence', 100))  # we use a sequence of 100 by default
         return False
 
+    def _get_ubl_cii_edi_format(self):
+        self.ensure_one()
+        return self.invoice_edi_format or self._get_suggested_ubl_cii_edi_format()
+
     def _get_suggested_peppol_edi_format(self):
         self.ensure_one()
         suggested_format = self.commercial_partner_id._get_suggested_ubl_cii_edi_format()
@@ -239,6 +243,10 @@ class ResPartner(models.Model):
 
     def _get_peppol_endpoint_value(self, country_code, field, eas):
         self.ensure_one()
+        # Field `peppol_endpoint` can be used as placeholer for custom logic (by extending this function)
+        if field == 'peppol_endpoint':
+            return None
+
         value = field in self._fields and self[field]
 
         if (
@@ -305,6 +313,8 @@ class ResPartner(models.Model):
                      "The expected format is: 1234567890")
         if PEPPOL_ENDPOINT_INVALIDCHARS_RE.search(endpoint) or not 1 <= len(endpoint) <= 50:
             return _("The Peppol endpoint (%s) is not valid. It should contain only letters and digit.", endpoint)
+        if eas == '0225':
+            return self.env._("The Peppol endpoint scheme is reserved. Please install the 'France - E-Invoicing (Approved Platform)' module (l10n_fr_pdp) first")
 
     @api.model
     def _get_edi_builder(self, invoice_edi_format):
@@ -321,3 +331,16 @@ class ResPartner(models.Model):
             return self.env['account.edi.xml.ubl_bis3']
         if invoice_edi_format == 'ubl_sg':
             return self.env['account.edi.xml.ubl_sg']
+
+    @api.model
+    def _import_retrieve_customer_from_eas_endpoint(self, customer_values):
+        peppol_eas = customer_values.get('peppol_eas')
+        peppol_endpoint = customer_values.get('peppol_endpoint')
+        if not peppol_eas or not peppol_endpoint:
+            return
+
+        return {
+            'criteria': [{
+                'domain': [('peppol_eas', '=', peppol_eas), ('peppol_endpoint', '=', peppol_endpoint)],
+            }],
+        }

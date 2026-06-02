@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove_plugin";
-import { isClonable } from "./clone_plugin";
 import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
@@ -45,6 +44,7 @@ import { OptionsContainer } from "@html_builder/sidebar/option_container";
  * @property { BuilderOptionsPlugin['getPageContainers'] } getPageContainers
  * @property { BuilderOptionsPlugin['getRemoveDisabledReason'] } getRemoveDisabledReason
  * @property { BuilderOptionsPlugin['getCloneDisabledReason'] } getCloneDisabledReason
+ * @property { BuilderOptionsPlugin['isClonable'] } isClonable
  * @property { BuilderOptionsPlugin['getReloadSelector'] } getReloadSelector
  * @property { BuilderOptionsPlugin['setNextTarget'] } setNextTarget
  * @property { BuilderOptionsPlugin['getBuilderOptionContext'] } getBuilderOptionContext
@@ -78,6 +78,7 @@ import { OptionsContainer } from "@html_builder/sidebar/option_container";
  *      editableOnly?: boolean;
  * }[]} has_overlay_options
  * @typedef {CSSSelector[]} no_parent_containers
+ * @typedef {CSSSelector[]} not_activable_element_selectors
  * @typedef {((el: HTMLElement) => boolean)[]} keep_overlay_options
  */
 /**
@@ -126,6 +127,7 @@ export class BuilderOptionsPlugin extends Plugin {
         "getReloadSelector",
         "setNextTarget",
         "getBuilderOptionContext",
+        "isClonable",
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -140,6 +142,19 @@ export class BuilderOptionsPlugin extends Plugin {
                 this.updateContainers(el);
             }
         },
+        // Selector of elements that should not update/have containers when they
+        // are clicked.
+        not_activable_element_selectors: [
+            "#web_editor-top-edit",
+            "#oe_manipulators",
+            ".oe_drop_zone",
+            ".o_notification_manager",
+            ".o_we_no_overlay",
+            ".ui-autocomplete",
+            ".modal .btn-close",
+            ".transfo-container",
+            ".o_datetime_picker",
+        ],
     };
 
     setup() {
@@ -175,19 +190,14 @@ export class BuilderOptionsPlugin extends Plugin {
 
         this.lastContainers = [];
 
-        // Selector of elements that should not update/have containers when they
-        // are clicked.
-        this.notActivableElementsSelector = [
-            "#web_editor-top-edit",
-            "#oe_manipulators",
-            ".oe_drop_zone",
-            ".o_notification_manager",
-            ".o_we_no_overlay",
-            ".ui-autocomplete",
-            ".modal .btn-close",
-            ".transfo-container",
-            ".o_datetime_picker",
+        this.notActivableElementsSelector = this.getResource(
+            "not_activable_element_selectors"
+        ).join(", ");
+        const unclonableButtonSelector = [
+            ".oe_unremovable",
+            ...this.getResource("submit_button_selectors"),
         ].join(", ");
+        this.clonableSelector = `a.btn:not(${unclonableButtonSelector})`;
     }
 
     destroy() {
@@ -346,7 +356,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 hasOverlayOptions: this.hasOverlayOptions(element),
                 isRemovable: isRemovable(element),
                 removeDisabledReason: this.getRemoveDisabledReason(element),
-                isClonable: isClonable(element),
+                isClonable: this.isClonable(element),
                 cloneDisabledReason: this.getCloneDisabledReason(element),
                 optionsContainerTopButtons: this.getOptionsContainerTopButtons(element),
             }));
@@ -489,6 +499,17 @@ export class BuilderOptionsPlugin extends Plugin {
         const reasons = [];
         this.dispatchTo("clone_disabled_reason_providers", { el, reasons });
         return reasons.length ? reasons.join(" ") : undefined;
+    }
+
+    /**
+     * Checks if the given element can be cloned.
+     *
+     * @param {HTMLElement} el
+     * @returns {boolean}
+     */
+    isClonable(el) {
+        // TODO and isDraggable
+        return el.matches(this.clonableSelector) || isRemovable(el);
     }
 
     patchBuilderOptions({ target_name, target_element, method, value }) {

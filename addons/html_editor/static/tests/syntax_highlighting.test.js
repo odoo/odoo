@@ -1,4 +1,4 @@
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { getContent, setSelection } from "./_helpers/selection";
 import { animationFrame, click, press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { insertText, splitBlock } from "./_helpers/user_actions";
@@ -15,6 +15,7 @@ import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_se
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 import { unformat } from "./_helpers/format";
 import { parseHTML } from "@html_editor/utils/html";
+import { oeTab } from "./_helpers/tabs";
 
 // Press a key combination, then wait for useEffect to kick in.
 const pressAndWait = async (...args) => {
@@ -162,7 +163,7 @@ test("inserting a code block in an empty paragraph with a style placeholder acti
         stepFunction: async (editor) => {
             await pressAndWait(["ctrl", "b"]);
             expect(getContent(editor.editable)).toBe(
-                `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`,
+                `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">\u200B[]</strong></p>`,
                 { message: "The style placeholder was inserted." }
             );
             splitBlock(editor);
@@ -182,6 +183,46 @@ test("inserting a code block in an empty paragraph with a style placeholder acti
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         ),
         contentAfter: `<p><br></p><pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
+    });
+});
+
+test("inserting a code block converts non-breaking spaces to regular spaces and activates syntax highlighting", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: "<p>a&nbsp;&nbsp;b&nbsp;&nbsp;c[]</p>",
+        stepFunction: insertPre,
+        contentAfterEdit:
+            '<p data-selection-placeholder=""><br></p>' +
+            highlightedPre({ value: "a  b  c", textareaRange: 7 }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">a  b  c</pre>[]`,
+    });
+});
+
+test("inserting a code block converts oe-tabs to spaces in syntax highlighting", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: `<p>a${oeTab()}b${oeTab()}c[]</p>`,
+        // @todo: add contentBeforeEdit in some test cases to test the addition
+        // of the contenteditable="false" attribute by setup.
+        stepFunction: insertPre,
+        contentAfterEdit:
+            '<p data-selection-placeholder=""><br></p>' +
+            highlightedPre({ value: "a    b    c", textareaRange: 11 }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">a    b    c</pre>[]`,
+    });
+});
+
+test("replaces leading non-breaking spaces with regular spaces when syntax highlighting is activated", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: `<p>&nbsp;&nbsp;a${oeTab()}b${oeTab()}c[]</p>`,
+        // @todo: add contentBeforeEdit in some test cases to test the addition
+        // of the contenteditable="false" attribute by setup.
+        stepFunction: insertPre,
+        contentAfterEdit:
+            '<p data-selection-placeholder=""><br></p>' +
+            highlightedPre({ value: "  a    b    c", textareaRange: 13 }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">  a    b    c</pre>[]`,
     });
 });
 
@@ -1254,4 +1295,147 @@ test("should keep textarea focused after copying code content", async () => {
 
     // Ensure focus remains on the textarea after copying
     expect(document.activeElement).toBe(textarea);
+});
+
+test("should focus textarea when creating new code block inside a new list", async () => {
+    const { editor } = await setupEditor(`<p>[]</p>`, {
+        config: configWithEmbeddings,
+    });
+    // Create list
+    await insertText(editor, "1. ");
+    expect(getContent(editor.editable)).toBe(
+        `<ol><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ol>`
+    );
+    // Insert code block
+    await insertPre(editor);
+    await compareHighlightedContent(
+        getContent(editor.editable),
+        "<ol><li>" + highlightedPre({ value: "", textareaRange: 0 }) + "</li></ol>",
+        "The syntax highlighting wrapper was inserted, and the selection is inside the textarea.",
+        editor
+    );
+
+    // Focus should move to textarea
+    const textarea = editor.document.querySelector("textarea");
+    expect(editor.document.activeElement).toBe(textarea);
+});
+
+test.tags("desktop");
+test("should not open the odoo global command bar when pressing ctrl+k inside a syntax-highlighted code block", async () => {
+    const { editor } = await setupEditor(`<p>a[]b</p><pre>xy</pre>`, {
+        config: configWithEmbeddings,
+    });
+    await compareHighlightedContent(
+        getContent(editor.editable),
+        unformat(
+            `<p>a[]b</p>
+            ${highlightedPre({ value: "xy" })}
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        ),
+        "Initial code block is highlighted",
+        editor
+    );
+
+    // Focus the textarea inside the code block
+    const textarea = editor.document.querySelector("textarea");
+    await click(textarea);
+    expect(editor.document.activeElement).toBe(textarea);
+
+    // Pressing ctrl+k to open odoo global command bar
+    await press(["ctrl", "k"]);
+    await animationFrame();
+    expect('.o_command span[title="Create link"]').toHaveCount(0);
+});
+
+describe("Arrow navigation (up/down) across syntax-highlighted code blocks", () => {
+    test("ArrowUp from start of paragraph moves caret to end of previous code block", async () => {
+        await testEditorWithHighlightedContent({
+            contentBefore: "<p>before</p><pre>a<br>b</pre><p>[]<br><br>after</p>",
+            contentBeforeEdit:
+                "<p>before</p>" + highlightedPre({ value: "a\nb" }) + "<p>[]<br><br>after</p>",
+            stepFunction: async () => {
+                await pressAndWait("ArrowUp");
+            },
+            contentAfterEdit:
+                "<p>before</p>" +
+                highlightedPre({
+                    value: "a\nb",
+                    // cursor at end of code block: ("a\nb[]")
+                    textareaRange: 3,
+                }) +
+                "<p><br><br>after</p>",
+            contentAfter:
+                "<p>before</p>" +
+                `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">a<br>b</pre>[]` +
+                "<p><br><br>after</p>",
+        });
+    });
+
+    test("ArrowDown from end of paragraph moves caret to start of next code block", async () => {
+        await testEditorWithHighlightedContent({
+            contentBefore:
+                "<p>before<br><strong>abcd<br>[]<br></strong></p><pre>a<br>b</pre><p>after</p>",
+            contentBeforeEdit:
+                "<p>before<br><strong>abcd<br>[]<br></strong></p>" +
+                highlightedPre({ value: "a\nb" }) +
+                "<p>after</p>",
+            stepFunction: async () => {
+                await pressAndWait("ArrowDown");
+            },
+            contentAfterEdit:
+                "<p>before<br><strong>abcd<br><br></strong></p>" +
+                highlightedPre({
+                    value: "a\nb",
+                    // cursor at start of code block: ("[]a\nb")
+                    textareaRange: 0,
+                }) +
+                "<p>after</p>",
+            contentAfter:
+                "<p>before<br><strong>abcd<br><br></strong></p>" +
+                `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">a<br>b</pre>[]` +
+                "<p>after</p>",
+        });
+    });
+
+    test("ArrowUp from start of code block moves caret to end of previous paragraph", async () => {
+        await testEditorWithHighlightedContent({
+            contentBefore: "<p>before</p><pre><br><br>abcd</pre><p>after</p>",
+            contentBeforeEdit:
+                "<p>before</p>" + highlightedPre({ value: "\n\nabcd" }) + "<p>after</p>",
+            stepFunction: async () => {
+                await click("textarea");
+                const textarea = queryOne("textarea");
+                // Cursor at start of code block: "[]\n\nabcd"
+                textarea.setSelectionRange(0, 0);
+                await pressAndWait("ArrowUp");
+            },
+            contentAfterEdit:
+                "<p>before[]</p>" + highlightedPre({ value: "\n\nabcd" }) + "<p>after</p>",
+            contentAfter:
+                "<p>before[]</p>" +
+                `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br><br>abcd</pre>` +
+                "<p>after</p>",
+        });
+    });
+
+    test("ArrowDown from end of code block moves caret to start of next paragraph", async () => {
+        await testEditorWithHighlightedContent({
+            contentBefore: "<p>before</p><pre>a<br>bc<br>d</pre><p>after</p>",
+            contentBeforeEdit:
+                "<p>before</p>" + highlightedPre({ value: "a\nbc\nd" }) + "<p>after</p>",
+            stepFunction: async () => {
+                await click("textarea");
+                const textarea = queryOne("textarea");
+                // Cursor at end of code block: "a\nbc\nd[]"
+                textarea.setSelectionRange(6, 6);
+                await pressAndWait("ArrowDown");
+            },
+            contentAfterEdit:
+                "<p>before</p>" + highlightedPre({ value: "a\nbc\nd" }) + "<p>[]after</p>",
+            contentAfter:
+                "<p>before</p>" +
+                `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">a<br>bc<br>d</pre>` +
+                "<p>[]after</p>",
+        });
+    });
 });

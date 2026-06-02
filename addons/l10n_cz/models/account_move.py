@@ -20,7 +20,7 @@ class AccountMove(models.Model):
     def _compute_date(self):
         super()._compute_date()
         for move in self:
-            if move.country_code == 'CZ' and move.taxable_supply_date and move.state == 'draft' and not move.statement_line_id:
+            if move.country_code == 'CZ' and move.taxable_supply_date and move.state == 'draft' and not move.statement_line_id and not move.posted_before:
                 move.date = move.taxable_supply_date
 
     def _get_invoice_currency_rate_date(self):

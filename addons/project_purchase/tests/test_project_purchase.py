@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
+from odoo.tests import Form
 
 from odoo.addons.project_purchase.tests.test_project_profitability import TestProjectPurchaseProfitability
 
@@ -30,36 +31,6 @@ class TestProjectPurchase(TestProjectPurchaseProfitability):
             'name': 'Analytic Account - Plan 2',
             'plan_id': cls.analytic_plan_2.id,
         })
-
-    def test_project_creation_on_po_with_manual_analytic(self):
-        """ Tests the interaction between manually added analytic account, distribution
-            model accounts and the project account created when the PO is confirmed.
-        """
-        self.env['account.analytic.distribution.model'].create({
-            'partner_id': self.partner.id,
-            'analytic_distribution': {self.analytic_account_1.id: 100},
-            'company_id': self.company.id,
-        })
-        analytic_distribution_manual = {str(self.analytic_account.id): 100}
-
-        purchase_order = self.env['purchase.order'].create({
-            'partner_id': self.partner.id,
-            'order_line': [
-                Command.create({
-                    'product_id': self.product_order.id,
-                }),
-            ],
-        })
-
-        # Add a manual analytic account and a project
-        purchase_order.order_line.analytic_distribution = {**purchase_order.order_line.analytic_distribution, **analytic_distribution_manual}
-        purchase_order.project_id = self.project1
-        # All accounts should still be in the line after confirmation
-        expected_analytic_distribution = {
-            f"{self.analytic_account.id},{purchase_order.project_id.account_id.id}": 100,
-            f"{self.analytic_account_1.id},{purchase_order.project_id.account_id.id}": 100,
-        }
-        self.assertEqual(purchase_order.order_line.analytic_distribution, expected_analytic_distribution)
 
     def test_project_on_pol_with_analytic_distribution_model(self):
         """ If a line has a distribution coming from an analytic distribution model, and the PO has a project,
@@ -97,6 +68,12 @@ class TestProjectPurchase(TestProjectPurchaseProfitability):
             f"{self.analytic_account.id},{self.project1.account_id.id}": 100,
         }
         self.assertEqual(purchase_order.order_line.analytic_distribution, expected_distribution_project)
+
+        # the analytic distribution shouldn't change on items added after setting a project on the PO
+        with Form(purchase_order) as po:
+            with po.order_line.new() as line:
+                line.product_id = self.product_order
+            self.assertEqual(purchase_order.order_line[-1].analytic_distribution, expected_distribution_project)
 
     def test_compute_purchase_orders_count(self):
         self.project1.account_id = self.analytic_account  # Project with analytics

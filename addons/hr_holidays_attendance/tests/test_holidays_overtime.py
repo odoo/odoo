@@ -120,10 +120,12 @@ class TestHolidaysOvertime(TransactionCase):
             self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
             self.assertEqual(self.employee.total_overtime, 8, 'Should have 8 hours of overtime')
 
-            overtime_leave_data = self.leave_type_no_alloc.get_allocation_data(self.employee)
-            self.assertEqual(overtime_leave_data[self.employee][0][1]['virtual_remaining_leaves'], 8.0)
+            overtime_leave_data = self.leave_type_no_alloc.with_company(self.company).with_context(employee_id=self.employee.id).get_allocation_data_request()
+            self.assertEqual(overtime_leave_data[0][0], "Extra Hours")
+            self.assertEqual(overtime_leave_data[0][1]['virtual_remaining_leaves'], 8.0)
+            self.assertEqual(overtime_leave_data[0][1]['max_leaves'], 8.0)
             # `employee_company` must be present to avoid traceback when opening the Time Off Type
-            self.assertTrue(overtime_leave_data[self.employee][0][1].get('employee_company'))
+            self.assertTrue(overtime_leave_data[0][1].get('employee_company'))
 
     def test_leave_adjust_overtime(self):
         self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
@@ -233,6 +235,30 @@ class TestHolidaysOvertime(TransactionCase):
 
         alloc.number_of_days = 2
         self._check_deductible(0)
+
+    def test_allocation_change_leave_type_to_overtime(self):
+        """Changing an allocation's leave type to an overtime-deductible type should validate overtime."""
+        non_overtime_type = self.env['hr.leave.type'].create({
+            'name': 'Regular Leave',
+            'company_id': self.company.id,
+            'requires_allocation': 'yes',
+            'employee_requests': 'yes',
+            'allocation_validation_type': 'hr',
+            'overtime_deductible': False,
+        })
+        # Create allocation with non-overtime type
+        alloc = self.env['hr.leave.allocation'].create({
+            'name': 'test allocation',
+            'holiday_status_id': non_overtime_type.id,
+            'employee_id': self.employee.id,
+            'number_of_days': 1,
+            'state': 'confirm',
+            'date_from': time.strftime('%Y-1-1'),
+            'date_to': time.strftime('%Y-12-31'),
+        })
+        # Change to overtime-deductible type without enough overtime → should raise
+        with self.assertRaises(ValidationError):
+            alloc.holiday_status_id = self.leave_type_employee_allocation.id
 
     @freeze_time('2022-01-01')
     def test_leave_check_cancel(self):

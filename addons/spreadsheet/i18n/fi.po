@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:37+0000\n"
-"PO-Revision-Date: 2026-02-18 09:01+0000\n"
+"POT-Creation-Date: 2026-04-24 17:37+0000\n"
+"PO-Revision-Date: 2026-05-16 09:44+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "spreadsheet/fi/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -260,6 +260,12 @@ msgstr "%s vastaavuuksia kaikissa arkeissa"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "'${str}'"
+msgstr "'${str}'"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "(Blanks)"
 msgstr "(Tyhjät)"
@@ -351,6 +357,12 @@ msgstr "2 riviä"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "=PIVOT(${"
 msgstr "=PIVOT(${"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+msgid "A"
+msgstr "A"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -530,6 +542,12 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "A reference to a cell."
+msgstr "Viittaus soluun."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "A segment of a string."
 msgstr "Merkkijonon segmentti."
 
@@ -622,7 +640,7 @@ msgstr "Luvun absoluuttinen arvo."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
 msgid "Access Error"
-msgstr ""
+msgstr "Käyttöoikeusvirhe"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1139,27 +1157,6 @@ msgstr "Kuvansiirron aikana tapahtui odottamaton virhe"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          Additional information can be found in the browser console."
-msgstr ""
-"Sisällön liittämisessä tapahtui odottamaton virhe.\n"
-"         Lisätietoja löytyy selaimen konsolista."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"Sisällön liittämisessä tapahtui odottamaton virhe.\n"
-"          Tämä johtuu luultavasti taulukkolaskentataulukon versiosta, joka "
-"ei vastaa toisiaan."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An unexpected error occurred. Submit a support ticket at odoo.com/help."
 msgstr ""
 "Tapahtui odottamaton virhe. Lähetä tukipyyntö osoitteessa odoo.com/help."
@@ -1376,10 +1373,8 @@ msgstr ""
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid "Array result was not expanded because it would overwrite data in %s."
-msgstr ""
-"Taulukon tulosta ei laajennettu, koska se olisi korvannut %s-osassa olevat "
-"tiedot."
+msgid "Array result was not expanded because it would overwrite data."
+msgstr "Taulukon tulosta ei laajennettu, koska se korvaisi tietoja."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2062,6 +2057,16 @@ msgstr "Valintaruutu"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"Checks whether there is a reference to a cell that contains a formula, and "
+"returns TRUE or FALSE."
+msgstr ""
+"Tarkistaa, onko viittausta kaavan sisältävään soluun, ja palauttaa TRUE tai "
+"FALSE."
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Chip"
 msgstr "Siru"
@@ -2682,7 +2687,7 @@ msgstr "Luo uuden sarjan olemassa olevan alueen valituista riveistä."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Criteria"
-msgstr "Kriteeri"
+msgstr "Kriteerit"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3951,7 +3956,7 @@ msgstr "Suotimet"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Financial"
-msgstr "Taloushallinto"
+msgstr "Taloudellinen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4241,24 +4246,6 @@ msgstr "Funktio [[FUNCTION_NAME]] aiheutti nollalla jakamisen virheen."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Function [[FUNCTION_NAME]] didn't find any result."
 msgstr "Funktio [[FUNCTION_NAME]] ei löytänyt tulosta."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"Funktio [[FUNCTION_NAME]] odottaa, että criteria_range ja criterion ovat "
-"pareittain."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr ""
-"Funktio [[FUNCTION_NAME]] odottaa, että kriteerialueella on sama ulottuvuus"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4881,12 +4868,10 @@ msgstr "Arvioinnissa [[FUNCTION_NAME]] ei löydy '%s':ta '%s':n sisältä."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"          number of rows of the second matrix (%s)."
+"equal to the           number of rows of the second matrix (%s)."
 msgstr ""
-"Funktiossa [[FUNCTION_NAME]] ensimmäisen matriisin sarakkeiden määrän (%s) "
-"on oltava sama kuin \n"
-"          toisen matriisin sarakkeiden määrä (%s)."
+"[[FUNCTION_NAME]] ensimmäisen matriisin (%s) sarakkeiden lukumäärän on "
+"oltava yhtä suuri kuin           toisen matriisin (%s) rivien lukumäärä."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5406,7 +5391,7 @@ msgstr "Avainarvo"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Labels"
-msgstr "Kenttien otsikot"
+msgstr "Etiketit"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6177,6 +6162,12 @@ msgstr "Seuraava kupongin päivämäärä tilityspäivän jälkeen."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr "Ei"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "No Color"
 msgstr "Ei väriä"
@@ -6447,6 +6438,12 @@ msgstr "OFFSET laskee rajojen ulkopuolisen alueen."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/helpers/geo_json_service.js:0
+msgid "Oceania"
+msgstr "Oseania"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "October"
 msgstr "Lokakuu"
@@ -6461,19 +6458,19 @@ msgstr "Odoo palkkikaavio"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Combo Chart"
-msgstr ""
+msgstr "Odoo-yhdistelmäkaavio"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Funnel Chart"
-msgstr ""
+msgstr "Odoo-suppilokaavio"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Geo Chart"
-msgstr ""
+msgstr "Odoo-karttakaavio"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6491,7 +6488,7 @@ msgstr "Odoo piirakkakaavio"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Pyramid Chart"
-msgstr ""
+msgstr "Odoo-pyramidikaavio"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6503,7 +6500,7 @@ msgstr "Odoo-tutkakaavio"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Scatter Chart"
-msgstr ""
+msgstr "Odoo-hajontakaavio"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6515,19 +6512,19 @@ msgstr "Odoo Datataulukot"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Sunburst Chart"
-msgstr ""
+msgstr "Odoo-aurinkokaavio"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Treemap Chart"
-msgstr ""
+msgstr "Odoo-puukaavio"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/plugins/odoo_chart_core_plugin.js:0
 msgid "Odoo Waterfall Chart"
-msgstr ""
+msgstr "Odoo-vesiputouskaavio"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13346,14 +13343,12 @@ msgstr "Jaetaanko teksti jokaisen rajausmerkin ympärille vai ei."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
-"Poistetaanko tyhjät tekstiviestit jakotuloksista vai ei. "
-"Oletuskäyttäytyminen on käsitellä\n"
-"        peräkkäisiä erottimia yhtenä (jos TRUE). Jos FALSE, tyhjien solujen "
-"arvot lisätään peräkkäisten erottimien väliin."
+"Poistetaanko tyhjät tekstiviestit jakotuloksista vai ei. Oletuksena        "
+"peräkkäisiä erottimia käsitellään yhtenä (jos TRUE). Jos FALSE, tyhjien "
+"solujen arvot lisätään peräkkäisten erottimien väliin."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13578,6 +13573,12 @@ msgstr "Vuotta"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr "Kyllä"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/helpers.js:0
 msgid "Yesterday"
 msgstr "Eilen"
@@ -13596,10 +13597,21 @@ msgstr "Et voi luoda päällekkäisiä taulukoita."
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"and image content will be pasted."
+msgstr ""
+"Kopioit sisältöä sovelluksen eri versiosta. Vain teksti- ja kuvasisältö "
+"liitetään."
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/actions/spreadsheet_download_action.js:0
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
 msgstr ""
+"Sinulla ei ole käyttöoikeuksia datan viemiseksi. Ota yhteyttä ylläpitäjään."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13989,6 +14001,12 @@ msgstr "huomenna"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/public_readonly_app/public_readonly.xml:0
+msgid "x"
+msgstr "x"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "yesterday"
 msgstr "eilen"
@@ -13998,6 +14016,55 @@ msgstr "eilen"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "nolla"
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          Additional information can be found in the browser console."
+#~ msgstr ""
+#~ "Sisällön liittämisessä tapahtui odottamaton virhe.\n"
+#~ "         Lisätietoja löytyy selaimen konsolista."
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          This is probably due to a spreadsheet version mismatch."
+#~ msgstr ""
+#~ "Sisällön liittämisessä tapahtui odottamaton virhe.\n"
+#~ "          Tämä johtuu luultavasti taulukkolaskentataulukon versiosta, "
+#~ "joka ei vastaa toisiaan."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "Funktio [[FUNCTION_NAME]] odottaa, että criteria_range ja criterion ovat "
+#~ "pareittain."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "Funktio [[FUNCTION_NAME]] odottaa, että kriteerialueella on sama "
+#~ "ulottuvuus"
+
+#~ msgid ""
+#~ "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must "
+#~ "be equal to the \n"
+#~ "          number of rows of the second matrix (%s)."
+#~ msgstr ""
+#~ "Funktiossa [[FUNCTION_NAME]] ensimmäisen matriisin sarakkeiden määrän "
+#~ "(%s) on oltava sama kuin \n"
+#~ "          toisen matriisin sarakkeiden määrä (%s)."
+
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "Poistetaanko tyhjät tekstiviestit jakotuloksista vai ei. "
+#~ "Oletuskäyttäytyminen on käsitellä\n"
+#~ "        peräkkäisiä erottimia yhtenä (jos TRUE). Jos FALSE, tyhjien "
+#~ "solujen arvot lisätään peräkkäisten erottimien väliin."
 
 #~ msgid ""
 #~ "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."

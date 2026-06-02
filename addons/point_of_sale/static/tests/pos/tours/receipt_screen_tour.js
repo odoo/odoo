@@ -11,7 +11,7 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
-import { run, negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
+import { run, negateStep, refresh } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("ReceiptScreenTour", {
     steps: () =>
@@ -20,6 +20,9 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
+            // ensure that even after refreshing the page while being offline all data is correctly reloaded
+            refresh(),
+            Dialog.confirm("Continue with limited functionality"),
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Partner Full"),
@@ -31,7 +34,6 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             PaymentScreen.clickValidate(),
             ReceiptScreen.receiptIsThere(),
             ReceiptScreen.cashierNameExists("A"), // A simple PoS man! (Take the first word)
-            Dialog.confirm("Continue with limited functionality"),
             //receipt had expected delivery printed
             ReceiptScreen.shippingDateExists(),
             ReceiptScreen.shippingDateIsToday(),
@@ -56,7 +58,6 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             ReceiptScreen.setEmail("test@receiptscreen.com"),
             ReceiptScreen.clickSend(),
             ReceiptScreen.emailIsSuccessful(),
-            OfflineUtil.setOfflineMode(),
             ReceiptScreen.clickNextOrder(),
 
             // order with tip

@@ -1,6 +1,5 @@
 """ Implementation of "INVENTORY VALUATION TESTS" spreadsheet. """
 
-from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 from odoo.exceptions import ValidationError
@@ -323,12 +322,17 @@ class TestStockValuationAVCO(TestStockValuationCommon):
     def test_return_receipt_1(self):
         move1 = self._make_in_move(self.product, 1, unit_cost=10, create_picking=True)
         self._make_in_move(self.product, 1, unit_cost=20)
-        self._make_out_move(self.product, 1)
+        move2 = self._make_out_move(self.product, 1)
         self._make_return(move1, 1)
 
         self.assertEqual(self.product.total_value, 0)
         self.assertEqual(self.product.qty_available, 0)
         self.assertEqual(self.product.standard_price, 15)
+
+        self._make_return(move2, 1)
+        move2.quantity = 0
+        self.assertEqual(self.product.qty_available, 2)
+        self.assertEqual(self.product.total_value, 30.0)
 
     def test_return_delivery_1(self):
         self._make_in_move(self.product, 1, unit_cost=10)

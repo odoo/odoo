@@ -19,8 +19,8 @@
             placeholder.translate="Title tag" />
     </BuilderRow>
     <BuilderRow label.translate="Transform" preview="false">
-        <BuilderButton title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
-        <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.isActiveItem('cropImage')">Reset</BuilderButton>
+        <BuilderButton t-if="state.showCropTool" title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
+        <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.state.showCropTool and this.isActiveItem('cropImage')">Reset</BuilderButton>
         <ImageTransformOption t-if="!state.isImageAnimated and !state.isImageBinaryField" />
     </BuilderRow>
     <ImageFilterOption />

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_pl_view_account_payment_register_form" model="ir.ui.view">
+            <field name="name">account.payment.register.form</field>
+            <field name="model">account.payment.register</field>
+            <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='missing_account_partners']" position="after">
+                    <div role="alert" class="alert alert-warning" invisible="not l10n_pl_bank_verification_invalid_bank_account_ids">
+                        <span>
+                            The following partner(s) bank account(s) are not linked with their vat in the government files:
+                            <field name="l10n_pl_bank_verification_invalid_bank_account_ids" widget="x2many_buttons"/>
+                        </span>
+                    </div>
+                    <div role="alert" class="alert alert-warning" invisible="not l10n_pl_not_found_partner_ids">
+                        <span>
+                            The following partner(s) cannot be found in the government files, please check vat number:
+                            <field name="l10n_pl_not_found_partner_ids" widget="x2many_buttons"/>
+                        </span>
+                    </div>
+                    <div role="alert" class="alert alert-warning" invisible="not l10n_pl_incomplete_data_partner_ids">
+                        <span>
+                            The following partners do not have a VAT number and/or bank account, so we cannot check their bank account with government authorities:
+                            <field name="l10n_pl_incomplete_data_partner_ids" widget="x2many_buttons"/>
+                        </span>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-02-25 14:52+0000\n"
+"PO-Revision-Date: 2026-05-04 18:31+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "payment_flutterwave/sv/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: payment_flutterwave
 #. odoo-python
@@ -28,8 +28,8 @@ msgid ""
 "An error occurred during the processing of your payment (status %s). Please "
 "try again."
 msgstr ""
-"Ett fel inträffade under behandlingen av din betalning (status %s). Vänligen "
-"försök igen."
+"Ett fel inträffade när betalningen behandlades (status %s). Vänligen försök "
+"igen."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__code
@@ -46,27 +46,27 @@ msgstr "Visningsnamn"
 #. module: payment_flutterwave
 #: model:ir.model.fields.selection,name:payment_flutterwave.selection__payment_provider__code__flutterwave
 msgid "Flutterwave"
-msgstr "Fladdervåg"
+msgstr "Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_token__flutterwave_customer_email
 msgid "Flutterwave Customer Email"
-msgstr "E-post från Flutterwaves kunder"
+msgstr "Kundens e-postadress hos Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "Flutterwave Public Key"
-msgstr "Flutterwaves offentliga nyckel"
+msgstr "Offentlig nyckel från Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_secret_key
 msgid "Flutterwave Secret Key"
-msgstr "Flutterwaves hemliga nyckel"
+msgstr "Hemlig nyckel från Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__flutterwave_webhook_secret
 msgid "Flutterwave Webhook Secret"
-msgstr "Flutterwave Webhook Hemlig"
+msgstr "Hemlig webhook hos Flutterwave"
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,field_description:payment_flutterwave.field_payment_provider__id
@@ -83,7 +83,7 @@ msgstr "Betalningsleverantör"
 #. module: payment_flutterwave
 #: model:ir.model,name:payment_flutterwave.model_payment_token
 msgid "Payment Token"
-msgstr "Betalnings-token"
+msgstr "Betalningstoken"
 
 #. module: payment_flutterwave
 #: model:ir.model,name:payment_flutterwave.model_payment_transaction
@@ -103,17 +103,17 @@ msgstr "Hemlig nyckel"
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_token__flutterwave_customer_email
 msgid "The email of the customer at the time the token was created."
-msgstr "E-postadressen till kunden när polletten skapades."
+msgstr "Kundens e-postadress när token skapades."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__flutterwave_public_key
 msgid "The key solely used to identify the account with Flutterwave."
-msgstr "Nyckeln används enbart för att identifiera kontot med Flutterwave."
+msgstr "Nyckeln används enbart för att identifiera kontot hos Flutterwave."
 
 #. module: payment_flutterwave
 #: model:ir.model.fields,help:payment_flutterwave.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr "Den tekniska koden för denna betalningsleverantör."
+msgstr "Betalningsleverantörens tekniska kod."
 
 #. module: payment_flutterwave
 #. odoo-python
@@ -124,7 +124,7 @@ msgstr "Okänd betalningsstatus: %s"
 #. module: payment_flutterwave
 #: model_terms:ir.ui.view,arch_db:payment_flutterwave.payment_provider_form
 msgid "Webhook Secret"
-msgstr "Webhook hemlighet"
+msgstr "Hemlig webhook"
 
 #~ msgid "Could not establish the connection to the API."
 #~ msgstr "Det gick inte att upprätta anslutningen till API:et."

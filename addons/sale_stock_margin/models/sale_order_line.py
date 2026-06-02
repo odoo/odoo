@@ -11,13 +11,14 @@ class SaleOrderLine(models.Model):
     def _compute_purchase_price(self):
         line_ids_to_pass = set()
         for line in self:
-            product = line.product_id.with_company(line.company_id)
+            line = line.with_company(line.company_id)
+            product = line.product_id
             if not line.has_valued_move_ids():
                 line_ids_to_pass.add(line.id)
             elif line.product_id and line.product_id.categ_id and line.product_id.categ_id.property_cost_method != 'standard':
                 # don't overwrite any existing value unless non-standard cost method
                 qty_from_delivery = line.qty_delivered
-                price_unit_from_delivery = line.move_ids.filtered(lambda m: m.state == 'done')._get_price_unit() if qty_from_delivery > 0 else 0
+                price_unit_from_delivery = line.move_ids.filtered(lambda m: m.state == 'done')._get_price_unit_delivery() if qty_from_delivery > 0 else 0
                 if qty_from_delivery <= 0:
                     purch_price = product.standard_price
                 else:

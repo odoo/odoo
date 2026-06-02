@@ -4,6 +4,7 @@ import { xml } from "@odoo/owl";
 import { Plugin } from "../plugin";
 import { closestElement } from "../utils/dom_traversal";
 import { _t } from "@web/core/l10n/translation";
+import { escape } from "@web/core/utils/strings";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { getDeepestPosition, isContentEditable } from "@html_editor/utils/dom_info";
 
@@ -161,16 +162,22 @@ export class MoveNodePlugin extends Plugin {
         }
 
         const visibleElements = [...this.visibleMovableElements];
-        // Prevent layout thrashing by computing all the rects in advance.
+        // Prevent layout thrashing by computing all the rects and styles in
+        // advance.
         const elementRects = visibleElements.map((element) => element.getBoundingClientRect());
+        const elementStyles = visibleElements.map((element) => {
+            const style = getComputedStyle(element);
+            return {
+                marginTop: parseInt(style.marginTop, 10) || 0,
+                marginBottom: parseInt(style.marginBottom, 10) || 0,
+            };
+        });
         for (const index in visibleElements) {
             const element = visibleElements[index];
             const elementRect = elementRects[index];
             const hookElement = this.elementHookMap.get(element);
 
-            const style = getComputedStyle(element);
-            const marginTop = parseInt(style.marginTop, 10) || 0;
-            const marginBottom = parseInt(style.marginBottom, 10) || 0;
+            const { marginTop, marginBottom } = elementStyles[index];
             let hookBox;
             if (element.tagName === "HR") {
                 hookBox = new DOMRect(
@@ -275,11 +282,13 @@ export class MoveNodePlugin extends Plugin {
         this.moveWidget.style.top = `${anchorY - containerRect.y - moveWidgetOffsetTop}px`;
         this.moveWidget.style.left = `${anchorX - containerRect.x - WIDGET_CONTAINER_WIDTH}px`;
 
+        const dragToMoveTooltip = _t("Drag to move");
+        const clickToSelectTooltip = _t("Click to select");
         this.services.tooltip.add(this.moveWidget, {
             template: xml`
                 <div class="o-tooltip tooltip-inner text-start px-3">
-                    ${_t("Drag to move")}<br/>
-                    ${_t("Click to select")}
+                    ${escape(dragToMoveTooltip)}<br/>
+                    ${escape(clickToSelectTooltip)}
                 </div>`,
             arrow: true,
         });

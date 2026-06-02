@@ -5,6 +5,8 @@ from itertools import chain
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 
+from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.addons.sale_management.controllers.portal import CustomerPortal
 from odoo.addons.sale_management.tests.common import SaleManagementCommon
 
 
@@ -522,3 +524,52 @@ class TestSaleOrder(SaleManagementCommon):
             self.assertTrue(sale_order_form.order_line)
             self.assertFalse(sale_order_form.show_update_pricelist)
             sale_order_form.partner_id = self.partner
+
+    def test_optional_section_discount_line_not_editable_on_portal(self):
+        so = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
+                Command.create({
+                    "name": "Optional Section",
+                    "display_type": "line_section",
+                    "is_optional": True,
+                }),
+                Command.create({"product_id": self.product.id, "price_unit": 200}),
+            ],
+        })
+        wizard = self.env["sale.order.discount"].create({
+            "sale_order_id": so.id,
+            "discount_type": "so_discount",
+            "discount_percentage": 0.1,
+        })
+        wizard.action_apply_discount()
+        self.assertTrue(
+            so.order_line[1]._can_be_edited_on_portal(),
+            "Optional section line should be editable on portal",
+        )
+        self.assertFalse(
+            so.order_line[2]._can_be_edited_on_portal(),
+            "Discount line on optional section should not be editable on portal",
+        )
+
+    def test_optional_lines_discount_is_not_recomputed_on_portal(self):
+        sale_order_with_option = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
+                Command.create({
+                    "display_type": "line_section",
+                    "name": "Optional products",
+                    "is_optional": True,
+                }),
+                Command.create({"product_id": self.optional_product.id}),
+            ],
+        })
+
+        optional_product_line = self._get_optional_product_lines(sale_order_with_option)
+        optional_product_line.discount = 20
+
+        with MockRequest(self.env):
+            CustomerPortal().portal_quote_option_update(
+                sale_order_with_option.id, optional_product_line.id, input_quantity=10
+            )
+            self.assertEqual(optional_product_line.discount, 20)
