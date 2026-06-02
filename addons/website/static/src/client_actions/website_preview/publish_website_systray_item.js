@@ -101,8 +101,8 @@ export class PublishSystrayItem extends Component {
             this.state.published = published;
             if (published && this.website.currentWebsite.metadata.canOptimizeSeo) {
                 const seo_data = await rpc("/website/get_seo_data", {
-                    res_id: mainObject.id,
-                    res_model: mainObject.model,
+                    seo_id: mainObject.id,
+                    seo_model: mainObject.model,
                 });
                 checkAndNotifySEO(seo_data, OptimizeSEODialog, {
                     notification: this.notificationService,
