@@ -17,7 +17,12 @@ class WebclientController(ThreadController):
     @mail_route("/mail/store", methods=["POST"], type="jsonrpc", auth="public", readonly=lambda self, *_: self._is_mail_fetch_readonly())
     def mail_store(self, fetch_params, context=None):
         """Returns store data for the given fetch_params."""
+        context_user_id = context.get("uid") if context else None
         store = Store()
+        if context_user_id and (not self.env.user or context_user_id != self.env.user.id):
+            # The user has been logged out in the meantime
+            return store
+
         if context:
             request.update_context(**context)
         self._process_request_loop(store, fetch_params)
