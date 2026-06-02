@@ -322,8 +322,9 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         for config in configs:
             config_names.append(config.name)
 
-        discount_number = len(orders.filtered(lambda o: o.lines.filtered(lambda l: l.discount > 0)))
-        discount_amount = sum(l._get_discount_amount() for l in orders.lines.filtered(lambda l: l.discount > 0))
+        lines_with_discount = orders.mapped('lines').filtered(lambda l: l._has_discount())
+        discount_number = len(lines_with_discount)
+        discount_amount = sum(l._get_discount_amount_for_report() for l in lines_with_discount)
 
         invoiceList = []
         invoiceTotal = 0
