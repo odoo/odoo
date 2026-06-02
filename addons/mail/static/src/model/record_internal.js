@@ -115,18 +115,15 @@ export class RecordInternal {
         if (Model._.fieldsCompute.get(fieldName)) {
             const fieldComputed = untrack(() =>
                 computed(() => {
-                    if (this.fieldsComputeComputing.get(fieldName)) {
-                        return;
-                    }
+                    const wasComputing = this.fieldsComputeComputing.get(fieldName);
                     this.fieldsComputeComputing.set(fieldName, true);
                     const store = record.store;
                     let newValue;
                     try {
                         newValue = Model._.fieldsCompute.get(fieldName).call(record._proxy);
-                        if (fieldName === "menuThreads") {
-                            console.log("AKU - ", newValue);
+                        if (!wasComputing) {
+                            untrack(() => store._.updateFields(record, { [fieldName]: newValue }));
                         }
-                        untrack(() => store._.updateFields(record, { [fieldName]: newValue }));
                     } catch (err) {
                         store.handleError(err);
                     } finally {

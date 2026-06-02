@@ -6,30 +6,6 @@ import { cleanTerm } from "@mail/utils/common/format";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 
 patch(Store.prototype, {
-    aku() {
-        console.log("aku - 1");
-        /** @type {import("models").Thread[]} */
-        const searchTerm = cleanTerm(this.discuss.searchTerm);
-        let threads = Object.values(this["mail.thread"].records).filter(
-            (thread) =>
-                (thread.channel?.self_member_id?.is_pinned ||
-                    (thread.needactionMessages.length > 0 && thread.model !== "mail.box")) &&
-                cleanTerm(thread.channel?.displayName).includes(searchTerm)
-        );
-        const tab = this.discuss.activeTab;
-        if (tab === "inbox") {
-            threads = threads.filter((thread) =>
-                this.tabToThreadType("mailbox").includes(thread.channel?.channel_type)
-            );
-        } else if (tab === "bookmark") {
-            threads = [this.bookmarkBox];
-        } else if (tab !== "notification") {
-            threads = threads.filter((thread) =>
-                this.tabToThreadType(tab).includes(thread.channel?.channel_type)
-            );
-        }
-        return threads;
-    },
     setup() {
         super.setup(...arguments);
         this.discuss = fields.One("DiscussApp");
@@ -38,9 +14,28 @@ patch(Store.prototype, {
         this.menuThreads = fields.Many("mail.thread", {
             /** @this {import("models").Store} */
             compute() {
-                debugger;
-                const res = this.aku();
-                return res;
+                /** @type {import("models").Thread[]} */
+                const searchTerm = cleanTerm(this.discuss.searchTerm);
+                let threads = Object.values(this["mail.thread"].records).filter(
+                    (thread) =>
+                        (thread.channel?.self_member_id?.is_pinned ||
+                            (thread.needactionMessages.length > 0 &&
+                                thread.model !== "mail.box")) &&
+                        cleanTerm(thread.channel?.displayName).includes(searchTerm)
+                );
+                const tab = this.discuss.activeTab;
+                if (tab === "inbox") {
+                    threads = threads.filter((thread) =>
+                        this.tabToThreadType("mailbox").includes(thread.channel?.channel_type)
+                    );
+                } else if (tab === "bookmark") {
+                    threads = [this.bookmarkBox];
+                } else if (tab !== "notification") {
+                    threads = threads.filter((thread) =>
+                        this.tabToThreadType(tab).includes(thread.channel?.channel_type)
+                    );
+                }
+                return threads;
             },
             /**
              * @this {import("models").Store}
@@ -48,7 +43,6 @@ patch(Store.prototype, {
              * @param {import("models").Thread} thread2
              */
             sort(thread1, thread2) {
-                debugger;
                 const compareFunctions = threadCompareRegistry.getAll();
                 for (const fn of compareFunctions) {
                     const result = fn(thread1, thread2);

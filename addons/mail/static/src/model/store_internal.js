@@ -228,6 +228,9 @@ export class StoreInternal extends RecordInternal {
      * @param {Object} vals
      */
     updateFields(record, vals) {
+        if ("menuThreads" in vals && vals.menuThreads.length) {
+            debugger;
+        }
         const fieldEntries = Object.entries(vals).concat(
             Object.getOwnPropertySymbols(vals).map((sym) => [sym, vals[sym]])
         );
