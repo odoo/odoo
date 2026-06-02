@@ -388,12 +388,7 @@ class ResConfigSettings(models.TransientModel):
                 },
             }
 
-        installation_status = self._install_modules(to_install)
-
-        if installation_status or to_uninstall:
-            # After the uninstall/install calls, the registry and environments
-            # are no longer valid. So we reset the environment.
-            self.env.transaction.reset()
+        self._install_modules(to_install)
 
         # pylint: disable=next-method-called
         config = self.env['res.config'].next() or {}

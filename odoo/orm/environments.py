@@ -579,7 +579,7 @@ class Transaction:
     Notes:
 
     - `transaction.will_change_registry()` before modifying registry
-    - `Registry.new` should be followed by `transaction.reset()`.
+    - `Registry.new` should be followed by `cr.rollback()`.
 
     """
     __slots__ = (

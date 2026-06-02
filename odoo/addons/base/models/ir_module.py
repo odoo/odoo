@@ -642,9 +642,8 @@ class IrModuleModule(models.Model):
         function(self)
 
         self.env.cr.commit()
-        registry = modules.registry.Registry.new(self.env.cr.dbname, update_module=True)
-        self.env.transaction.reset()
-        assert self.env.registry is registry
+        modules.registry.Registry.new(self.env.cr.dbname, update_module=True)
+        self.env.cr.rollback()
         if request:
             assert request.env.transaction is self.env.transaction, "request on another transaction than the model"
             request.registry = request.env.registry
