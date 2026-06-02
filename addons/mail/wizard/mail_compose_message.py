@@ -1071,6 +1071,8 @@ class MailComposeMessage(models.TransientModel):
             STA - 'notify_skip_followers',   # notify parameter
             DYN - 'record_alias_domain_id',
             DYN - 'record_company_id',
+            STA - 'source_template_id',      # - mail_tracking
+            STA - 'source_view_id',          # - mail_tracking
 
         BOTH
             DYN - 'attachment_ids',          # also check 'attachments' for message
