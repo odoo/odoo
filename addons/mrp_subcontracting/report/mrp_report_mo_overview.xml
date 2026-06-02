@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="mrp_subcontracting.mo_overview_content" inherit_id="mrp.mo_overview_content">
+        <xpath expr="//th[@name='th_mrp_mo_free_to_use']" position="after">
+            <th t-if="data['summary'].get('is_subcontract') and data['show_availabilities']" class="text-end">
+                Subcontractor Stock
+            </th>
+        </xpath>
+    </template>
+
+    <template id="mrp_subcontracting.mo_overview_line" inherit_id="mrp.mo_overview_line">
+        <xpath expr="//td[@name='td_mrp_mo_free_to_use']" position="after">
+            <td t-if="data['summary'].get('is_subcontract') and data['show_availabilities']" class="text-end">
+                <t t-if="line.get('subcontract_qty_on_hand', False) is not False">
+                    <t t-out="line.get('subcontract_free_qty')" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/> /
+                    <t t-out="line.get('subcontract_qty_on_hand')" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/>
+                </t>
+            </td>
+        </xpath>
+    </template>
+
+    <template id="mrp_subcontracting.mo_overview_operations" inherit_id="mrp.mo_overview_operations">
+        <xpath expr="//td[@name='free_to_use']" position="after">
+            <td t-if="data['summary'].get('is_subcontract') and data['show_availabilities']"/>
+        </xpath>
+    </template>
+
+    <template id="mrp_subcontracting.mo_overview_byproducts" inherit_id="mrp.mo_overview_byproducts">
+        <xpath expr="//td[@name='free_to_use']" position="after">
+            <td t-if="data['summary'].get('is_subcontract') and data['show_availabilities']"/>
+        </xpath>
+    </template>
+
+</odoo>

@@ -10,7 +10,6 @@ This bridge module adds some smart buttons between Purchase and Subcontracting
     'depends': ['mrp_subcontracting_account', 'purchase_mrp'],
     'data': [
         'views/purchase_order_views.xml',
-        'views/stock_picking_views.xml',
     ],
     'demo': [
         'data/mrp_subcontracting_purchase_demo.xml',

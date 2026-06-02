@@ -492,7 +492,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             total_real_cost += component.get('summary', {}).get('real_cost', 0.0)
         return total_mo_cost, total_bom_cost, total_real_cost
 
-    def _get_components_data(self, production, replenish_data=False, level=0, current_index=False):
+    def _get_replenish_data(self, production, replenish_data=False):
         if not replenish_data:
             replenish_data = {
                 'products': {},
@@ -500,11 +500,15 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'qty_already_reserved': defaultdict(float),
                 'qty_reserved': {},
             }
-        components = []
         if production.state == 'done':
             replenish_data = self._get_replenishment_from_moves(production, replenish_data)
         else:
             replenish_data = self._get_replenishments_from_forecast(production, replenish_data)
+        return replenish_data
+
+    def _get_components_data(self, production, replenish_data=False, level=0, current_index=False):
+        replenish_data = self._get_replenish_data(production, replenish_data)
+        components = []
         for count, move_raw in enumerate(production.move_raw_ids):
             if production.state == 'done' and move_raw.uom_id.is_zero(move_raw.quantity):
                 # If a product wasn't consumed in the MO by the time it is done, no need to display it on the final Overview.
@@ -514,7 +518,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             # If not enough replenishment -> To Order / Might get "non-available" in summary since all component won't be there in time
             components.append({
                 'summary': self._format_component_move(production, move_raw, replenishments, replenish_data, level, component_index),
-                'replenishments': replenishments
+                'replenishments': replenishments,
             })
 
         return components
@@ -560,8 +564,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             'uom_precision': self._get_uom_precision(),
             'quantity_free': product.uom_id._compute_quantity(max(product.free_qty, 0), move_raw.uom_id) if product.is_storable else False,
             'quantity_on_hand': product.uom_id._compute_quantity(product.qty_available, move_raw.uom_id) if product.is_storable else False,
-            'quantity_reserved': self._get_reserved_qty(move_raw, production.warehouse_id, replenish_data),
-            'receipt': self._check_planned_start(production.date_start, self._get_component_receipt(product, move_raw, production.warehouse_id, replenishments, replenish_data)),
+            'quantity_reserved': self._get_reserved_qty(move_raw, replenish_data),
+            'receipt': self._check_planned_start(production.date_start, self._get_component_receipt(product, move_raw, replenishments, replenish_data)),
             'unit_cost': self._get_unit_cost(move_raw),
             'mo_cost': mo_cost,
             'mo_cost_decorator': 'danger' if isinstance(bom_cost, bool) and not bom_cost and not self._is_production_started(production) else mo_cost_decorator,
@@ -590,7 +594,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             receipt['decorator'] = 'danger'
         return receipt
 
-    def _get_component_receipt(self, product, move, warehouse, replenishments, replenish_data):
+    def _get_component_receipt(self, product, move, replenishments, replenish_data):
         def get(replenishment, key, check_in_receipt=False):
             fetch = replenishment.get('summary', {})
             if check_in_receipt:
@@ -603,7 +607,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             return self._format_receipt_date('available')
 
         has_to_order_line = any(rep.get('summary', {}).get('model') == 'to_order' for rep in replenishments)
-        reserved_quantity = self._get_reserved_qty(move, warehouse, replenish_data)
+        reserved_quantity = self._get_reserved_qty(move, replenish_data)
         missing_quantity = move.product_uom_qty - reserved_quantity
         free_qty = product.uom_id._compute_quantity(product.free_qty, move.uom_id)
         if move.uom_id.compare(missing_quantity, 0.0) <= 0 \
@@ -621,11 +625,13 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
     def _get_replenishment_lines(self, production, move_raw, replenish_data, level, current_index):
         product = move_raw.product_id
         quantity = move_raw.product_uom_qty if move_raw.state != 'done' else move_raw.quantity
-        reserved_quantity = self._get_reserved_qty(move_raw, production.warehouse_id, replenish_data)
+        reserved_quantity = self._get_reserved_qty(move_raw, replenish_data)
         currency = (production.company_id or self.env.company).currency_id
         forecast = replenish_data['products'][product.id].get('forecast', [])
         current_lines = filter(lambda line: line.get('document_in', False) and line.get('document_out', False)
-                               and line['document_out'].get('id', False) == production.id and not line.get('already_used'), forecast)
+                               and (line['document_out'].get('id', False) == production.id
+                                    or line['document_out'].get('id', False) in production.picking_ids.ids)
+                               and not line.get('already_used'), forecast)
         total_ordered = 0
         replenishments = []
         for count, forecast_line in enumerate(current_lines):
@@ -828,9 +834,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         products = production.move_raw_ids.product_id
         unknown_products = products.filtered(lambda product: product.id not in replenish_data.get('products', {}))
         if unknown_products:
-            warehouse = production.warehouse_id
-            wh_location_ids = self._get_warehouse_locations(warehouse, replenish_data)
-            forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, unknown_products.ids, wh_location_ids, warehouse.lot_stock_id, read=False)
+            location_ids = self._get_location_ids(production, replenish_data)
+            forecast_lines = self.env['stock.forecasted_product_product']._get_report_lines(False, unknown_products.ids, location_ids, production.location_src_id, read=False)
             forecast_lines = self._add_origins_to_forecast(forecast_lines)
             for product in unknown_products:
                 extra_docs = self._get_extra_replenishments(product)
@@ -985,19 +990,19 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             }
         return False
 
-    def _get_warehouse_locations(self, warehouse, replenish_data):
+    def _get_location_ids(self, production, replenish_data):
+        warehouse = production.warehouse_id
         if not replenish_data['warehouses'].get(warehouse.id):
-            replenish_data['warehouses'][warehouse.id] = [loc['id'] for loc in self.env['stock.location'].search_read(
-                [('id', 'child_of', warehouse.view_location_id.id)],
-                ['id']
-            )]
+            replenish_data['warehouses'][warehouse.id] = self.env['stock.location'].search_fetch(
+                [('id', 'child_of', warehouse.view_location_id.id)], ['id'],
+            ).ids
         return replenish_data['warehouses'][warehouse.id]
 
-    def _get_reserved_qty(self, move_raw, warehouse, replenish_data):
+    def _get_reserved_qty(self, move_raw, replenish_data):
         if not replenish_data['qty_reserved'].get(move_raw):
             total_reserved = 0
-            wh_location_ids = self._get_warehouse_locations(warehouse, replenish_data)
-            linked_moves = self.env['stock.move'].browse(move_raw._rollup_move_origs()).filtered(lambda m: m.location_id.id in wh_location_ids)
+            location_ids = self._get_location_ids(move_raw.raw_material_production_id, replenish_data)
+            linked_moves = self.env['stock.move'].browse(move_raw._rollup_move_origs()).filtered(lambda m: m.location_id.id in location_ids)
             for move in linked_moves:
                 if move.state not in ('partially_available', 'assigned'):
                     continue

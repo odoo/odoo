@@ -140,9 +140,8 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
             self.assertEqual(component['subcontract_qty_on_hand'], 4)
             self.assertEqual(component['availability_state'], 'unavailable')
 
-    def test_count_smart_buttons(self):
-        """
-        Test the source PO smart button both when the Resupply subcontractor rule is MTO and MTSO
+    def test_subcontracting_resupply_picking_smart_button(self):
+        """Test the resupply picking smart button for MTO and MTSO.
         """
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         (self.comp1 + self.comp2).write({'route_ids': [Command.link(resupply_sub_on_order_route.id)]})
@@ -164,12 +163,6 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
             resupply_sub_on_order_route.rule_ids.procure_method = procure_method
             po.button_confirm()
             self.assertEqual(po.subcontracting_resupply_picking_count, 1)
-            action1 = po.action_view_subcontracting_resupply()
-            picking = self.env[action1['res_model']].browse(action1['res_id'])
-            self.assertEqual(picking.subcontracting_source_purchase_count, 1)
-            action2 = picking.action_view_subcontracting_source_purchase()
-            po_action2 = self.env[action2['res_model']].browse(action2['res_id'])
-            self.assertEqual(po_action2, po)
 
     def test_decrease_qty(self):
         """ Tests when a PO for a subcontracted product has its qty decreased after confirmation
