@@ -627,6 +627,7 @@ class IrModuleModule(models.Model):
             # raise error if another transaction is trying to schedule module operations concurrently
             self.env.cr.execute("LOCK ir_module_module IN EXCLUSIVE MODE")
         except psycopg2.OperationalError:
+            self.env.cr.rollback()
             raise UserError(_("Odoo is currently processing another module operation.\n"
                                "Please try again later or contact your system administrator."))
 
@@ -636,6 +637,7 @@ class IrModuleModule(models.Model):
             # during execution, the lock won't be released until timeout.
             self.env.cr.execute("SELECT FROM ir_cron FOR UPDATE")
         except psycopg2.OperationalError:
+            self.env.cr.rollback()
             raise UserError(_("Odoo is currently processing a scheduled action.\n"
                               "Module operations are not possible at this time, "
                               "please try again later or contact your system administrator."))
