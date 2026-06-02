@@ -368,8 +368,9 @@
                                             <div
                                                 class="o_wsale_products_header_search_form_container d-none d-sm-inline-block flex-grow-1 me-auto"
                                             >
-                                                <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
-                                                <t t-call="website_sale.search" placeholder="placeholder" search="original_search or search"/>
+                                                <t t-call="website_sale.search" search="original_search or search">
+                                                    <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
+                                                </t>
                                             </div>
                                             <!-- Mobile Search button -->
                                             <t t-call="website.website_search_box_input"
