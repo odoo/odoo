@@ -130,7 +130,7 @@ class IrRule(models.Model):
     @api.model
     @tools.ormcache(cache='stable')
     def _get_all_rules(self) -> dict[str, tuple[RuleInfo, ...]]:
-        """ Returns all the active record rules.
+        """ Returns all the active record rules for models in the registry.
 
         :return: Dict {model_name: [RuleInfo]}
         """
@@ -143,6 +143,8 @@ class IrRule(models.Model):
         domains = {}
         env = self.env(su=True)
         for rule in all_rules:
+            if rule.model_name not in env:
+                continue
             domain = (rule.domain_force or '').strip()
             try:
                 domain = ast.literal_eval(domain) if domain else Domain.TRUE
@@ -161,6 +163,7 @@ class IrRule(models.Model):
                 for group in rule.groups or (rule.groups,)
             )
             for model_name, model_rules in all_rules.grouped('model_name').items()
+            if model_name in env
         })
 
     @api.model
