@@ -1,5 +1,5 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import {
     CustomFieldCard
 } from "@sale_pdf_quote_builder/js/custom_content_kanban_like_widget/custom_field_card/custom_field_card";
@@ -17,7 +17,7 @@ export class CustomContentKanbanLikeWidget extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.state = useState({
+        this.state = proxy({
             headers: {},
             lines: {},
             footers: {},

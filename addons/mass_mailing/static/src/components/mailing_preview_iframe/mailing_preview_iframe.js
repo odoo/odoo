@@ -1,11 +1,11 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { Component, onMounted, status } from "@odoo/owl";
+import { Component, onMounted, status, proxy } from "@odoo/owl";
 import { loadIframe } from "@mail/convert_inline/iframe_utils";
 
 export class MailingPreviewIframe extends Component {
@@ -15,7 +15,7 @@ export class MailingPreviewIframe extends Component {
     };
 
     setup() {
-        this.state = useState(this.env.displayState);
+        this.state = proxy(this.env.displayState);
         this.ui = useService("ui");
         this.iframeRef = useRef("iframeRef");
         this.iframeLoaded = Promise.withResolvers();

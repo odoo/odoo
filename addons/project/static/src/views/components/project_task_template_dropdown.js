@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { useService, useOwnedDialogs } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -49,7 +48,7 @@ export class ProjectTaskTemplateDropdown extends Component {
         this.offlineService = useService("offline");
         this.addDialog = useOwnedDialogs();
         this.displayTasksLimit = 10;
-        this.state = useState({ taskTemplates: [] });
+        this.state = proxy({ taskTemplates: [] });
         onWillStart(this.onWillStart);
     }
 

@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
@@ -23,7 +23,7 @@ export class CartPage extends Component {
         this.selfOrder = useSelfOrder();
         this.dialog = useService("dialog");
         this.router = useService("router");
-        this.state = useState({
+        this.state = proxy({
             orderNoteValue: "",
         });
 

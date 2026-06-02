@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class SelectionPopup extends Component {
@@ -34,7 +33,7 @@ export class SelectionPopup extends Component {
      *      }
      */
     setup() {
-        this.state = useState({ selectedId: this.props.list.find((item) => item.isSelected) });
+        this.state = proxy({ selectedId: this.props.list.find((item) => item.isSelected) });
     }
     selectItem(itemId) {
         this.state.selectedId = itemId;

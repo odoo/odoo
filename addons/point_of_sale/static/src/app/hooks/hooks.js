@@ -1,8 +1,8 @@
-import { useComponent, useEnv, useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { useComponent, useEnv, useExternalListener, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
-import { onMounted, onPatched } from "@odoo/owl";
+import { onMounted, onPatched, proxy } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 /**
@@ -112,7 +112,7 @@ export function useTrackedAsync(asyncFn, options = {}) {
      * lastArgs: any[]
      * }}
      */
-    const state = useState({
+    const state = proxy({
         status: "idle",
         result: null,
         lastArgs: null,
@@ -157,7 +157,7 @@ export function useTrackedAsync(asyncFn, options = {}) {
 }
 
 export function useIsChildLarger(container) {
-    const state = useState({
+    const state = proxy({
         isLarger: false,
         maxItems: 0,
     });

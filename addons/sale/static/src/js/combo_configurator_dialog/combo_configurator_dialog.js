@@ -1,5 +1,5 @@
-import { useState, useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount } from '@odoo/owl';
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, onMounted, onWillUnmount, proxy } from '@odoo/owl';
 import { formatCurrency } from '@web/core/currency';
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';
@@ -44,7 +44,7 @@ export class ComboConfiguratorDialog extends Component {
     setup() {
         this.dialog = useService('dialog');
         this.env.dialogData.dismiss = !this.props.edit && this.props.discard.bind(this);
-        this.state = useState({
+        this.state = proxy({
             // Maps combo ids to selected combo items.
             // Note that selected combo items can be modified (i.e. their `no_variant` PTAVs can be
             // updated), so this map stores deep copies to avoid modifying the props.

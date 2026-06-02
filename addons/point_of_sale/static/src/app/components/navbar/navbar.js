@@ -1,4 +1,4 @@
-import { useExternalListener, useState } from "@web/owl2/utils";
+import { useExternalListener } from "@web/owl2/utils";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { isDisplayStandalone } from "@web/core/browser/feature_detection";
@@ -6,7 +6,7 @@ import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 import { CashierName } from "@point_of_sale/app/components/navbar/cashier_name/cashier_name";
 import { SyncPopup } from "@point_of_sale/app/components/popups/sync_popup/sync_popup";
 import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { barcodeService } from "@barcodes/barcode_service";
@@ -35,7 +35,7 @@ export class Navbar extends Component {
     setup() {
         this.pos = usePos();
         this.ui = useService("ui");
-        this.state = useState({ searchBarOpen: false });
+        this.state = proxy({ searchBarOpen: false });
         this.dialog = useService("dialog");
         this.notification = useService("notification");
         this.dialog = useService("dialog");

@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
 import { _t } from "@web/core/l10n/translation";
@@ -25,7 +24,7 @@ export class MoneyDetailsPopup extends Component {
         this.pos = usePos();
         this.ui = useService("ui");
         this.currency = this.pos.currency;
-        this.state = useState({
+        this.state = proxy({
             moneyDetails: this.props.moneyDetails
                 ? { ...this.props.moneyDetails }
                 : Object.fromEntries(this.pos.models["pos.bill"].map((bill) => [bill.value, 0])),

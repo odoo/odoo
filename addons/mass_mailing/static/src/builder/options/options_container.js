@@ -1,11 +1,11 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
 
 export class OptionsContainerWithSnippetVersionControl extends OptionsContainer {
     static template = "mass_mailing.OptionsContainer";
     setup() {
         super.setup();
-        this.versionState = useState({
+        this.versionState = proxy({
             isUpToDate: this.env.editor.shared.versionControl.hasAccessToOutdatedEl(
                 this.props.editingElement
             ),

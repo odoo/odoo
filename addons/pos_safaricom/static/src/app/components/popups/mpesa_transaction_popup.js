@@ -1,5 +1,5 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -16,7 +16,7 @@ export class MpesaTransactionPopup extends Component {
 
     setup() {
         this.pos = usePos();
-        this.state = useState({
+        this.state = proxy({
             transactions: [],
             showQrCode: false,
             searchQuery: "",

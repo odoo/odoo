@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 
 export class StockValuationReportLine extends Component {
@@ -20,7 +19,7 @@ export class StockValuationReportLine extends Component {
 
     setup() {
         this.hasSublines = Boolean(this.props.sublines?.length);
-        this.state = useState({ displaySublines: this.hasSublines });
+        this.state = proxy({ displaySublines: this.hasSublines });
     }
 
     // Getters -----------------------------------------------------------------

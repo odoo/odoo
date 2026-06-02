@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useAutoFocusToLast } from "@point_of_sale/app/hooks/hooks";
@@ -24,7 +23,7 @@ export class SelectLotPopup extends Component {
 
     setup() {
         this._id = 0;
-        this.state = useState({
+        this.state = proxy({
             value: this.props.isSingleItem ? this.props.array[0]?.text : "",
             values: this.props.array
                 .filter((item) => item.text.trim() !== "")

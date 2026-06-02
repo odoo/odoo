@@ -1,11 +1,11 @@
-import { useState, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { ListRenderer } from "@web/views/list/list_renderer";
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, proxy } from "@odoo/owl";
 
 export class PurchaseOrderLineCompareListRenderer extends ListRenderer {
     setup() {
         super.setup();
-        this.bestFields = useState({
+        this.bestFields = proxy({
                 best_price_ids: [],
                 best_date_ids: [],
                 best_price_unit_ids: [],

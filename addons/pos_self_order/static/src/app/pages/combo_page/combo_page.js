@@ -1,5 +1,5 @@
-import { useRef, useState, useSubEnv } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef, useSubEnv } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 import { AttributeSelection } from "@pos_self_order/app/components/attribute_selection/attribute_selection";
@@ -27,7 +27,7 @@ export class ComboPage extends Component {
         }
         useSubEnv({ selectedValues: {} });
         this.selfOrder = useSelfOrder();
-        this.state = useState({
+        this.state = proxy({
             selectedChoiceIndex: 0,
             choices: [],
             showResume: false,

@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { useFloorPlanStore } from "@pos_restaurant/app/hooks/floor_plan_hook";
 
 export const ELEM_ID_PREFIX = "fpe-";
@@ -10,7 +10,7 @@ export class FloorPlanBase extends Component {
         this.floorPlanStore = useFloorPlanStore();
         this.containerRef = useRef("container");
         this.canvasRef = useRef("canvas");
-        this.state = useState({ canvasWidth: 0, canvasHeight: 0 });
+        this.state = proxy({ canvasWidth: 0, canvasHeight: 0 });
     }
 
     getDOMFloorElement(uuid) {

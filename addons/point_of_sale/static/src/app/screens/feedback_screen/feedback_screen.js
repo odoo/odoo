@@ -1,6 +1,6 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
-import { Component, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, proxy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { _t } from "@web/core/l10n/translation";
@@ -29,7 +29,7 @@ export class FeedbackScreen extends Component {
         this.dialog = useService("dialog");
         this.containerRef = useRef("feedback-screen");
         this.amountRef = useRef("amount");
-        this.state = useState({
+        this.state = proxy({
             loading: true,
             timeout: false,
         });

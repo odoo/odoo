@@ -1,12 +1,11 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export class CriticalPOSError extends Component {
     static template = "point_of_sale.CriticalPOSError";
     static props = { error: Object };
 
     setup() {
-        this.state = useState({ expanded: false });
+        this.state = proxy({ expanded: false });
     }
     async fullReset() {
         const step = async (fn) => {

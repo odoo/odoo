@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, EventBus, onWillStart } from "@odoo/owl";
+import { Component, EventBus, onWillStart, proxy } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
@@ -104,7 +103,7 @@ export class PresetInfoPopup extends Component {
         const companyStateId = this.selfOrder.config.company_id.country_id.state_ids[0]?.id;
         const companyCountryId = this.selfOrder.config.company_id.country_id.id;
 
-        this.state = useState({
+        this.state = proxy({
             name: partner?.name || "",
             email: partner?.email || "",
             phoneCode:

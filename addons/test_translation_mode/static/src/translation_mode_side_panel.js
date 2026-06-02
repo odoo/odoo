@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onWillDestroy } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onWillDestroy, proxy } from "@odoo/owl";
 import { normalizedMatch } from "@web/core/l10n/utils";
 import { useService } from "@web/core/utils/hooks";
 import { isVisible } from "@web/core/utils/ui";
@@ -96,8 +96,8 @@ export class TranslationModeSidePanel extends Component {
         this.translationMode.useBodyClass("o-body-with-translate-side-panel");
 
         this.rootRef = useRef("root");
-        this.collapsedCategories = useState(new Set());
-        this.state = useState({
+        this.collapsedCategories = proxy(new Set());
+        this.state = proxy({
             filter: "",
             currentLangDisplayName: this.localization.code,
             currentLangFlagUrl: "",

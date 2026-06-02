@@ -1,5 +1,5 @@
-import { onRendered, useState } from "@web/owl2/utils";
-import { onMounted } from "@odoo/owl";
+import { onRendered } from "@web/owl2/utils";
+import { onMounted, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { StateSelectionField, stateSelectionField } from "@web/views/fields/state_selection/state_selection_field";
 
@@ -11,7 +11,7 @@ export class TodoDoneCheckmark extends StateSelectionField {
     };
     setup() {
         super.setup();
-        this.stateDone = useState({
+        this.stateDone = proxy({
             isDone: false, //This state determines the appearance of the done checkmark and should only be actualized when the mouse leaves it (and atfer the form is loaded)
             notReloadState: false, //used to avoid a change of the checkmark when re-rendering the form
         });

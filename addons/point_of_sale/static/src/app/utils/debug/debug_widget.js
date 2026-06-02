@@ -1,7 +1,7 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { Component, onMounted, onWillDestroy } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, proxy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -19,7 +19,7 @@ export class DebugWidget extends Component {
         this.numberBuffer = useService("number_buffer");
         this.dialog = useService("dialog");
         this.importOrderInput = useRef("import-order-input");
-        this.state = useState({
+        this.state = proxy({
             isOpen: false,
             barcodeInput: "",
             weightInput: "",

@@ -1,16 +1,16 @@
-import { useExternalListener, useState } from "@web/owl2/utils";
+import { useExternalListener } from "@web/owl2/utils";
 import { useCashierSelector } from "@pos_hr/app/utils/select_cashier_mixin";
 import { _t } from "@web/core/l10n/translation";
 import { LoginScreen } from "@point_of_sale/app/screens/login_screen/login_screen";
 import { patch } from "@web/core/utils/patch";
 import { useAutofocus } from "@web/core/utils/hooks";
-import { onWillUnmount } from "@odoo/owl";
+import { onWillUnmount, proxy } from "@odoo/owl";
 
 patch(LoginScreen.prototype, {
     setup() {
         super.setup(...arguments);
 
-        this.state = useState({
+        this.state = proxy({
             pin: "",
         });
 

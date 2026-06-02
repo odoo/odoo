@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class SnoozeDialog extends Component {
@@ -9,7 +8,7 @@ export class SnoozeDialog extends Component {
     static template = "point_of_sale.SnoozeDialog";
 
     setup() {
-        this.state = useState({ hours: 1 });
+        this.state = proxy({ hours: 1 });
     }
     select(hours) {
         this.state.hours = hours;

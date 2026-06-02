@@ -1,7 +1,7 @@
-import { onWillRender, reactive, useState } from "@web/owl2/utils";
+import { onWillRender, reactive } from "@web/owl2/utils";
 import { afterEach, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import {
     mountWithCleanup,
     allowTranslations,
@@ -91,7 +91,7 @@ class WithStore extends Component {
     property = "";
 
     setup() {
-        this.store = useState(this.env.store);
+        this.store = proxy(this.env.store);
         onWillRender(() => this.onWillRender());
     }
 

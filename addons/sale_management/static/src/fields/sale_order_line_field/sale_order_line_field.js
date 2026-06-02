@@ -1,5 +1,5 @@
 import { getSectionRecords } from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
-import { onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
 import {
     SaleOrderLineListRenderer,
     SaleOrderLineOne2Many,
@@ -12,13 +12,13 @@ import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { uuid } from "@web/core/utils/strings";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
-import { useState, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 
 patch(SaleOrderLineOne2Many.prototype, {
     setup() {
         super.setup();
         this.orm = useService("orm");
-        this.state = useState({ sectionTemplates: [] });
+        this.state = proxy({ sectionTemplates: [] });
 
         useSubEnv({
             onSaveSectionTemplate: this.saveSectionTemplate.bind(this),

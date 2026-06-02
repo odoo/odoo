@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
-import { onWillStart } from '@odoo/owl';
+import { onWillStart, proxy } from '@odoo/owl';
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 
 
@@ -10,7 +9,7 @@ export class StockOrderpointSearchPanel extends SearchPanel {
     setup() {
         this.orm = useService("orm");
         super.setup(...arguments);
-        this.globalHorizonDays = useState({value: 0});
+        this.globalHorizonDays = proxy({value: 0});
         onWillStart(this.getHorizonParameter);
     }
 

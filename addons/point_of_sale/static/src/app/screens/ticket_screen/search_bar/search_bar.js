@@ -1,5 +1,5 @@
-import { useExternalListener, useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 /**
@@ -42,7 +42,7 @@ export class SearchBar extends Component {
         const defaultSearchFieldId = this.searchFieldsList.indexOf(
             this.props.config.defaultSearchDetails.fieldName
         );
-        this.state = useState({
+        this.state = proxy({
             searchInput: this.props.config.defaultSearchDetails.searchTerm || "",
             selectedSearchFieldId: defaultSearchFieldId == -1 ? 0 : defaultSearchFieldId,
             showSearchFields: false,

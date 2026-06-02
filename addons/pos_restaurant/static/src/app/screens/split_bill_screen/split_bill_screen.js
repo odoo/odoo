@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onWillDestroy } from "@odoo/owl";
+import { Component, onWillDestroy, proxy } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
@@ -21,8 +20,8 @@ export class SplitBillScreen extends Component {
     setup() {
         this.pos = usePos();
         this.ui = useService("ui");
-        this.qtyTracker = useState({});
-        this.priceTracker = useState({});
+        this.qtyTracker = proxy({});
+        this.priceTracker = proxy({});
         this.isTransferred = false;
         useRouterParamsChecker();
 

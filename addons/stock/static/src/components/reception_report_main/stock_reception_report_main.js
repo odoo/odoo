@@ -1,9 +1,8 @@
-import { useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { ReceptionReportTable } from "../reception_report_table/stock_reception_report_table";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 export class ReceptionReportMain extends Component {
@@ -20,7 +19,7 @@ export class ReceptionReportMain extends Component {
         this.actionService = useService("action");
         this.reportName = "stock.report_reception";
         this.labelReportName = "stock.report_reception_report_label";
-        this.state = useState({
+        this.state = proxy({
             sourcesToLines: {},
         });
         useBus(this.env.bus, "update-assign-state", (ev) => this._changeAssignedState(ev.detail));

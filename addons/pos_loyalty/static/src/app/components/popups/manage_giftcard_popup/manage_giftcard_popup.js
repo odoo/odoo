@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
@@ -32,7 +32,7 @@ export class ManageGiftCardPopup extends Component {
         this.ui = useService("ui");
         this.dialog = useService("dialog");
         this.pos = usePos();
-        this.state = useState({
+        this.state = proxy({
             lockGiftCardFields: false,
             loading: false,
             inputValue: this.props.startingValue,
