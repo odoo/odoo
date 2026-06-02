@@ -4,12 +4,16 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { referenceField, ReferenceField } from "@web/views/fields/reference/reference_field";
 
-class MailPreviewRecordField extends ReferenceField {
+export class MailPreviewRecordField extends ReferenceField {
     static components = {
         ...super.components,
         Pager,
     };
     static template = "mail.MailPreviewRecordField";
+    static props = {
+        ...super.props,
+        hideRecordSelector: { type: Boolean, optional: true },
+    };
 
     setup() {
         super.setup();

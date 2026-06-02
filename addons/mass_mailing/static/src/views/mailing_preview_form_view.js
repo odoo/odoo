@@ -4,6 +4,8 @@ import { registry } from "@web/core/registry";
 import { formView } from "@web/views/form/form_view";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { FormController } from "@web/views/form/form_controller";
+import { FormRenderer } from "@web/views/form/form_renderer";
+import { StatusBarButtons } from "@web/views/form/status_bar_buttons/status_bar_buttons";
 
 class MailingPreviewFormController extends FormController {
     setup() {
@@ -25,7 +27,19 @@ class MailingPreviewFormController extends FormController {
     }
 }
 
+class MailingPreviewStatusBar extends StatusBarButtons {
+    static template = "mass_mailing.MailingPreviewStatusbar";
+}
+
+class MailingPreviewFormRenderer extends FormRenderer {
+    static components = {
+        ...FormRenderer.components,
+        StatusBarButtons: MailingPreviewStatusBar,
+    };
+}
+
 registry.category("views").add("mailing_preview_form_view", {
     ...formView,
     Controller: MailingPreviewFormController,
+    Renderer: MailingPreviewFormRenderer,
 });
