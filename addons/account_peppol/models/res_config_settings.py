@@ -167,3 +167,8 @@ class ResConfigSettings(models.TransientModel):
         if self.account_peppol_edi_user:
             self.account_peppol_edi_user._peppol_deregister_participant()
         return True
+
+    def button_peppol_reregister(self):
+        self.ensure_one()
+        self.account_peppol_edi_user._peppol_deregister_participant()
+        return self.action_open_peppol_form()
