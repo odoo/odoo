@@ -18,18 +18,12 @@ registry.category("web_tour.tours").add("configurator_flow", {
             run: "click",
             expectUnloadPage: true,
         },
-        // Configurator first screen
-        {
-            content: "click next",
-            trigger: "button.o_configurator_show",
-            run: "click",
-            timeout: 20000 /* previous step create a new website, this could take a long time */,
-        },
         // Description screen
         {
             content: "select a website type",
             trigger: "button.o_change_website_type",
             run: "click",
+            timeout: 20000 /* previous step create a new website, this could take a long time */,
         },
         {
             content: "insert a website industry",
@@ -42,7 +36,7 @@ registry.category("web_tour.tours").add("configurator_flow", {
             run: "click",
         },
         {
-            content: "choose from the objective list",
+            content: "choose from the positioning list",
             trigger: "button.o_change_website_purpose",
             run: "click",
         },
@@ -52,30 +46,9 @@ registry.category("web_tour.tours").add("configurator_flow", {
             trigger: ".palette_card",
             run: "click",
         },
-        // Features screen
         {
-            content: "select Pricing Plan",
-            trigger: '.card:contains("Pricing Plan")',
-            run: "click",
-        },
-        {
-            trigger: '.card.border-success:contains("Pricing Plan")',
-        },
-        {
-            content: "Events should be selected (module already installed)",
-            trigger: '.card.card_installed:contains("Events")',
-        },
-        {
-            content: "Slides should be selected (module already installed)",
-            trigger: '.card.card_installed:contains("eLearning")',
-        },
-        {
-            content: "News (Blog) should be selected (module already installed)",
-            trigger: '.card.card_installed:contains("News")',
-        },
-        {
-            content: "Click on build my website",
-            trigger: "button.btn-primary",
+            content: "Go to the next configurator step",
+            trigger: "button.o_configurator_next:not(:disabled)",
             run: "click",
         },
         // Online catalog screen
@@ -108,11 +81,11 @@ registry.category("web_tour.tours").add("configurator_flow", {
             content: `Check footer menu ${menu} is there`,
             trigger: `:iframe footer a:contains(${menu})`,
         })),
-        ...["Home", "Events", "Courses", "Pricing Plan", "News"].map((menu) => ({
+        ...["Home", "Events", "Courses", "Blog"].map((menu) => ({
             content: `Check menu ${menu} is there`,
             trigger: `:iframe .top_menu a:contains(${menu}):not(:visible)`,
         })),
-        ...["/", "/event", "/slides", "/pricing", "/blog/"].map((url) => ({
+        ...["/", "/event", "/slides", "/blog"].map((url) => ({
             content: `Check url ${url} is there`,
             trigger: `:iframe .top_menu a[href^='${url}']:not(:visible)`,
         })),

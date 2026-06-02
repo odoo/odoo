@@ -4,7 +4,7 @@ import uuid
 from base64 import b64decode
 from datetime import datetime
 from os.path import join as opj
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse, urlsplit, urljoin
 
 import requests
 import werkzeug.exceptions
@@ -32,6 +32,7 @@ from odoo.addons.mail.tools import link_preview
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
 DEFAULT_OTS_ENDPOINT = 'https://ots.api.odoo.com'
+API_WEBSITE_IMAGES_URL = 'https://website-image.api.odoo.com/images/'
 
 # Regex definitions to apply speed modification in SVG files
 # Note : These regex patterns are duplicated on the server side for
@@ -678,20 +679,8 @@ class HTML_Editor(Controller):
             ('Cache-control', 'max-age=%s' % STATIC_CACHE_LONG),
         ])
 
-    @route(['/web_editor/image_shape/<string:img_key>/<module>/<path:filename>', '/html_editor/image_shape/<string:img_key>/<module>/<path:filename>'], type='http', auth="public", website=True)
-    def image_shape(self, module, filename, img_key, **kwargs):
-        # Used for compatibility
-        if module == 'web_editor':
-            module = 'html_builder'
-        svg = self._get_shape_svg(module, 'image_shapes', filename)
-
-        record = request.env['ir.binary']._find_record(img_key)
-        stream = request.env['ir.binary']._get_image_stream_from(record)
-        if stream.type == 'url':
-            return stream.get_response()
-
-        image = stream.read()
-        if record.mimetype == "image/webp":
+    def _make_shaped_image(self, svg, image, mimetype, options):
+        if mimetype == "image/webp":
             width, height = (str(size) for size in get_webp_size(image))
         else:
             img = binary_to_image(image)
@@ -715,14 +704,14 @@ class HTML_Editor(Controller):
             # Adjusts the SVG height to ensure the image fits properly within
             # the SVG (e.g. for "devices" shapes and shapes that need to keep
             # their aspect ratio).
-            svgHeight = float(root.attrib.get("height"))
-            svgWidth = float(root.attrib.get("width"))
-            svgAspectRatio = svgWidth / svgHeight
-            height = str(float(width) / svgAspectRatio)
+            svg_height = float(root.attrib.get("height"))
+            svg_width = float(root.attrib.get("width"))
+            svg_aspect_ratio = svg_width / svg_height
+            height = str(float(width) / svg_aspect_ratio)
 
         root.attrib.update({'width': width, 'height': height})
         # Update default color palette on shape SVG.
-        svg, _ = self._update_svg_colors(kwargs, etree.tostring(root, pretty_print=True).decode('utf-8'))
+        svg, _ = self._update_svg_colors(options, etree.tostring(root, pretty_print=True).decode('utf-8'))
         # Add image in base64 inside the shape.
         uri = image_data_uri(image)
         svg = svg.replace('<image xlink:href="', '<image xlink:href="%s' % uri)
@@ -731,6 +720,57 @@ class HTML_Editor(Controller):
             ('Content-type', 'image/svg+xml'),
             ('Cache-control', 'max-age=%s' % STATIC_CACHE_LONG),
         ])
+
+    @route(['/web_editor/image_shape/<string:img_key>/<module>/<path:filename>', '/html_editor/image_shape/<string:img_key>/<module>/<path:filename>'], type='http', auth="public", website=True)
+    def image_shape(self, module, filename, img_key, **kwargs):
+        # Used for compatibility
+        if module == 'web_editor':
+            module = 'html_builder'
+        svg = self._get_shape_svg(module, 'image_shapes', filename)
+
+        record = request.env['ir.binary']._find_record(img_key)
+        stream = request.env['ir.binary']._get_image_stream_from(record)
+        if stream.type == 'url':
+            return stream.get_response()
+
+        image = stream.read()
+        return self._make_shaped_image(svg, image, record.mimetype, kwargs)
+
+    def _is_allowed_shape_image_url(self, image_url):
+        if image_url.startswith(API_WEBSITE_IMAGES_URL):
+            return True
+        splited_url = urlsplit(image_url)
+        splited_base_url = urlsplit(request.httprequest.host_url)
+        return (
+            splited_url.scheme in ('http', 'https')
+            and splited_url.netloc == splited_base_url.netloc
+            and re.match(r'^/[^/]+/static/', splited_url.path) is not None
+        )
+
+    @route('/html_editor/image_shape_url/<module>/<path:filename>', type='http', auth="user", website=True)
+    def image_shape_url(self, module, filename, image_url=None, **kwargs):
+        """Return a shape SVG filled with the image found at ``image_url``.
+
+        :param str module: module containing the shape SVG
+        :param str filename: shape SVG path inside the module image shapes
+        :param str image_url: absolute URL of the image to insert in the shape
+        :return: HTTP response containing the generated SVG
+        :rtype: :class:`werkzeug.wrappers.Response`
+        """
+        if not image_url or not self._is_allowed_shape_image_url(image_url):
+            raise werkzeug.exceptions.BadRequest()
+        svg = self._get_shape_svg(module, 'image_shapes', filename)
+
+        try:
+            response = requests.get(image_url, timeout=10)
+            response.raise_for_status()
+        except requests.RequestException as exc:
+            raise werkzeug.exceptions.NotFound() from exc
+        mimetype = response.headers.get('Content-Type', '')
+        if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
+            raise werkzeug.exceptions.BadRequest()
+        image = response.content
+        return self._make_shaped_image(svg, image, mimetype, kwargs)
 
     @route(["/web_editor/generate_text", "/html_editor/generate_text"], type="jsonrpc", auth="user")
     def generate_text(self, prompt, conversation_history):

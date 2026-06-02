@@ -20,9 +20,8 @@ registry.category("web_tour.tours").add("skip_website_configurator", {
         },
         {
             content: "skip configurator",
-            // This trigger targets the skip button, it doesn't have a more
-            // explicit class or ID.
-            trigger: ".o_configurator_container .container-fluid .btn.btn-link",
+            trigger:
+                ".o_configurator_container .btn.btn-link:contains('Skip and start from scratch')",
             run: "click",
         },
         {
