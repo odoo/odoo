@@ -3048,7 +3048,7 @@ class AccountEdiUBL(models.AbstractModel):
             discount_amount = total_allowances
 
             # Combine with the price level.
-            if not currency.is_zero(price_subtotal):
+            if not currency.is_zero(price_subtotal) and (invoiced_quantity or base_quantity):
                 price_unit = price_subtotal / price_quantity
                 quantity = price_quantity
                 discount_amount += price_discount_amount
