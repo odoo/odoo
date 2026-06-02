@@ -446,8 +446,17 @@ class IrAttachment(models.Model):
         """
         # compute index_content only for text type
         if file_type and file_type.startswith('text/'):
-            words = re.findall(rb"[\x20-\x7E]{4,}", bin_data)
-            return b"\n".join(words).decode('ascii')
+            word_re = re.compile(rb'[\x20-\x7E]{4,}')
+            with bin_data.open() as file:
+                # Use readline() with a size limit to avoid unbounded
+                # reads on files which may not contain newlines.
+                # Note that this could split the indexed content
+                # of such files due to the buffer max size.
+                return '\n'.join(
+                    match.group().decode('ascii')
+                    for line in iter(lambda: file.readline(io.DEFAULT_BUFFER_SIZE), b'')
+                    for match in word_re.finditer(line)
+                )
         return None
 
     @api.model
@@ -975,6 +984,7 @@ class IrAttachment(models.Model):
             #  know how to do that... :(
             os.chmod(dst_path, 0o444)  # r--r--r--
 
+        attach.index_content = attach._index(attach.raw, attach.mimetype, attach.checksum)
         return attach
 
     def _to_http_stream(self):
