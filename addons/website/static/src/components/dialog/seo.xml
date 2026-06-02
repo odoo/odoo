@@ -195,13 +195,16 @@
         <div role="form" class="input-group w-50">
             <t t-set="placeholderAvoidAdd">Avoid too many keywords</t>
             <t t-set="placeholderAdd">Add your keyword</t>
-            <input t-custom-model="this.state.keyword" type="text" class="form-control" t-att-placeholder="this.hasTooManyKeywords ? placeholderAvoidAdd : placeholderAdd" t-on-keyup="this.onKeyup"/>
+            <input t-custom-model="this.state.keyword" type="text" t-att-class="{ 'form-control': true, 'is-invalid' : this.seoContext.errorMessage }" t-att-placeholder="this.hasTooManyKeywords ? placeholderAvoidAdd : placeholderAdd" t-on-keyup="this.onKeyup"/>
             <button t-on-click="() => this.addKeyword(this.state.keyword)" class="btn btn-primary" type="button">Add</button>
             <button t-if="!this.seoContext.generated" t-on-click="this.provideKeywords" class="btn btn-secondary" type="button">
                 Generate keywords
             </button>
         </div>
-        <div t-if="this.state.errorMessage" class="alert alert-warning" t-out="this.state.errorMessage"></div>
+        <span t-if="this.seoContext.errorMessage" class="me-2 small text-danger">
+            <i class="fa fa-close me-1" aria-hidden="true"/>
+            <t t-out="this.seoContext.errorMessage"/>
+        </span>
     </section>
 </t>
 
@@ -248,6 +251,17 @@
 <t t-name="website.TitleDescription">
     <section>
         <div class="row">
+            <t t-if="this.props.visibility !== 'public' || !this.props.isPublished || !this.props.isIndexed">
+                <div class="col-12 px-0">
+                    <div class="alert alert-warning py-2 rounded-0 border-0 mb-0">
+                        <span class="text-info">This page is unpublished, restricted, or not indexed, preventing visitor and search engine access.</span>
+                        <button class="btn btn-link ps-1" t-on-click="this.openPagePropertiesDialog">
+                            <i class="oi oi-fw oi-arrow-right me-1"/>
+                            <span>Go to page properties</span>
+                        </button>
+                    </div>
+                </div>
+            </t>
             <div class="col-12 px-0">
                 <div class="alert alert-info py-2 rounded-0 border-0">
                     <span class="text-info">Need help to optimize?</span>
@@ -326,7 +340,10 @@
             isIndexed="this.isIndexed"
             defaultTitle="this.defaultTitle"
             previewDescription="this.previewDescription"
-            url="this.url"/>
+            url="this.url"
+            isPublished="this.isPublished"
+            visibility="this.visibility"
+            save="this.save.bind(this)"/>
         <ImageSelector t-if="this.canEditSeo" previewDescription="this.socialPreviewDescription"
             defaultTitle="this.defaultTitle"
             hasSocialDefaultImage="this.hasSocialDefaultImage"
