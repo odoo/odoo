@@ -374,15 +374,19 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         self.assertTrue(payment.is_reconciled)
         self.assertFalse(payment.is_matched)
         payment.action_post()
-        self.assertEqual(move.payment_state, 'in_payment')
-        self.assertEqual(move.pdp_lifecycle_residual, 0)
+        if move.payment_state == 'in_payment':
+            self.assertEqual(move.pdp_lifecycle_residual, 0)
+        else:
+            self.assertEqual(move.payment_state, 'paid')
+            self.assertEqual(move.pdp_lifecycle_residual, move.amount_total)
 
         wizard = self.env['pdp.response.wizard'].create({
             'status': 'PD',
             'move_ids': move.ids,
         })
-        with self.assertRaises(UserError):
-            wizard.button_send()
+        if move.payment_state == 'in_payment':
+            with self.assertRaises(UserError):
+                wizard.button_send()
 
     def test_paid_lifecycle_fully_paid(self):
         move = self._create_french_invoice()

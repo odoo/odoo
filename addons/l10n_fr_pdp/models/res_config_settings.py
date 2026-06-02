@@ -24,6 +24,13 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_fr_pdp_registered',
         string="Approved Platform Registered",
     )
+    l10n_fr_pdp_late_payment_penalty_rate = fields.Float(
+        string="Late Payment Penalty Rate",
+        related='company_id.l10n_fr_pdp_late_payment_penalty_rate',
+        readonly=False,
+        help="Annual rate (%%) for the #PMD# e-invoicing note. "
+             "Leave empty to use the legal default (ECB base rate plus 10 points).",
+    )
     l10n_fr_pdp_periodicity = fields.Selection(
         string="Flow 10 Report Periodicity",
         related='company_id.l10n_fr_pdp_periodicity', readonly=False,

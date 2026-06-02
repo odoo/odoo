@@ -39,6 +39,12 @@ class ResCompany(models.Model):
         inverse='_inverse_pdp_identifier',
         groups='base.group_user',
     )
+    l10n_fr_pdp_late_payment_penalty_rate = fields.Float(
+        string="Late Payment Penalty Rate",
+        help="Annual rate (%%) for the #PMD# e-invoicing note. "
+             "Leave empty to use the legal default (ECB base rate plus 10 points).",
+        groups='base.group_user',
+    )
     l10n_fr_pdp_periodicity = fields.Selection(  # TODO prevent changing if flows exist ?
         selection=[
             ('normal_monthly', "Real Monthly Normal Regime"),
@@ -108,6 +114,21 @@ class ResCompany(models.Model):
                 and company.l10n_fr_pdp_annuaire_start_date
                 and company.l10n_fr_pdp_annuaire_start_date <= fields.Date.context_today(self)
             )
+
+    def _l10n_fr_pdp_get_pmd_note(self):
+        """Return the #PMD# note for French e-invoicing export."""
+        self.ensure_one()
+        rate = self.l10n_fr_pdp_late_payment_penalty_rate
+        if rate:
+            rate_display = ('%g' % rate) if rate == int(rate) else ('%.2f' % rate).rstrip('0').rstrip('.')
+            return self.env._(
+                "Late payment penalties at an annual rate of %(rate)s%% are applied if the payment is made after the due date.",
+                rate=rate_display,
+            )
+        return self.env._(
+            "Penalties corresponding to the European Central Bank (ECB) base rate plus 10 percentage points "
+            "will apply in the absence of payment or in case of late payment.",
+        )
 
     @api.model
     def _check_pdp_identifier(self, pdp_identifier, warning=False):

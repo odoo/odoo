@@ -17,6 +17,16 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
         self._send_patched(invoice)
         self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice")
 
+    def test_export_invoice_pmd_custom_penalty_rate(self):
+        self.company.write({'l10n_fr_pdp_late_payment_penalty_rate': 12.5})
+        invoice = self._create_french_invoice()
+        invoice.action_post()
+        self._send_patched(invoice)
+        self.assertIn(
+            '#PMD#Late payment penalties at an annual rate of 12.5% are applied if the payment is made after the due date.',
+            invoice.ubl_cii_xml_id.raw.decode(),
+        )
+
     def test_export_credit_note_partner_fr(self):
         invoice = self._create_french_invoice()
 

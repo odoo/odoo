@@ -246,7 +246,7 @@ class AccountMove(models.Model):
         payment_term = self.invoice_payment_term_id
         return {
             'PMT': self.env._("In the event of late payment, a flat-rate fee of €40 for collection costs will be charged (Articles L.441-10 and D.441-5 of the Code de commerce)."),
-            'PMD': self.env._("Late payment penalties at an annual rate of 10% are applied if the payment is made after the due date."),
+            'PMD': self.company_id._l10n_fr_pdp_get_pmd_note(),
             'AAB': html2plaintext(payment_term.note) if payment_term.early_discount else self.env._("No discount for early payment."),
         }
 
