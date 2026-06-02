@@ -103,18 +103,42 @@ class TransferApprovalController(http.Controller):
         except Exception:
             pass
 
+        # ── Flatten current posting (Sub > District > Central) ──────────────
+        from_sub      = rec.current_sub_jail.name      if rec.current_sub_jail      else ''
+        from_district = rec.current_district_jail.name if rec.current_district_jail else ''
+        from_central  = rec.current_central_prison.name if rec.current_central_prison else ''
+        from_prison_name = from_sub or from_district or from_central or ''
+
+        # ── Flatten requested destination (Sub > District > Central) ────────
+        to_sub      = rec.requested_sub_jail.name      if rec.requested_sub_jail      else ''
+        to_district = rec.requested_district_jail.name if rec.requested_district_jail else ''
+        to_central  = rec.requested_central_prison.name if rec.requested_central_prison else ''
+        to_prison_name = to_sub or to_district or to_central or ''
+
         return {
             'request_id':               rec.id,
             'employee_id':              rec.employee_id.id,
             'employee_name':            rec.employee_id.name or '',
-            # Current posting snapshot
+            'employee_code':            rec.employee_id.x_employee_code or '',
+            'designation':              rec.employee_id.x_designation or '',
+            # Current posting snapshot — nested objects (for detail view)
             'current_central_prison':   self._format_jail(rec.current_central_prison),
             'current_district_jail':    self._format_jail(rec.current_district_jail),
             'current_sub_jail':         self._format_jail(rec.current_sub_jail),
-            # Requested destination
+            # Current posting — flat strings (for list/table display)
+            'from_prison_name':         from_prison_name,
+            'from_central_name':        from_central,
+            'from_district_name':       from_district,
+            'from_sub_name':            from_sub,
+            # Requested destination — nested objects (for detail view)
             'requested_central_prison': self._format_jail(rec.requested_central_prison),
             'requested_district_jail':  self._format_jail(rec.requested_district_jail),
             'requested_sub_jail':       self._format_jail(rec.requested_sub_jail),
+            # Requested destination — flat strings (for list/table display)
+            'to_prison_name':           to_prison_name,
+            'to_central_name':          to_central,
+            'to_district_name':         to_district,
+            'to_sub_name':              to_sub,
             # Workflow
             'state':          rec.state,
             'requested_by':   rec.requested_by.name or '',
@@ -123,6 +147,7 @@ class TransferApprovalController(http.Controller):
             'approved_date':  str(rec.approved_date) if rec.approved_date else '',
             'remarks':        rec.remarks or '',
             'create_date':    str(rec.create_date) if rec.create_date else '',
+            'request_date':   str(rec.create_date) if rec.create_date else '',
             # Extended fields
             'transfer_type':   getattr(rec, 'transfer_type', '') or '',
             'transfer_reason': getattr(rec, 'transfer_reason', '') or '',
@@ -1092,15 +1117,31 @@ class TransferApprovalController(http.Controller):
             except Exception:
                 pass
 
+            # Resolve prison names: Many2one takes priority, legacy Char as fallback
+            # (mirrors the fix in employee_api._format_employee)
+            central_name  = (emp.x_central_jail_id.name  if emp.x_central_jail_id  else '') or emp.x_central_prison  or ''
+            district_name = (emp.x_district_jail_id.name if emp.x_district_jail_id else '') or emp.x_district_jail   or ''
+            sub_name      = (emp.x_sub_jail_id.name      if emp.x_sub_jail_id      else '') or emp.x_sub_jail         or ''
+
             data.append({
                 'employee_id':      emp.id,
                 'employee_name':    emp.name or '',
                 'employee_code':    emp.x_employee_code or '',
                 'designation':      emp.x_designation or '',
                 'rank':             emp.job_id.name if emp.job_id else '',
-                'current_central_prison': self._format_jail(emp.x_central_jail_id),
-                'current_district_jail':  self._format_jail(emp.x_district_jail_id),
-                'current_sub_jail':       self._format_jail(emp.x_sub_jail_id),
+                # Prison fields with legacy fallback — same priority as Personnel module
+                'current_central_prison': {
+                    'id':   emp.x_central_jail_id.id if emp.x_central_jail_id else None,
+                    'name': central_name,
+                },
+                'current_district_jail': {
+                    'id':   emp.x_district_jail_id.id if emp.x_district_jail_id else None,
+                    'name': district_name,
+                },
+                'current_sub_jail': {
+                    'id':   emp.x_sub_jail_id.id if emp.x_sub_jail_id else None,
+                    'name': sub_name,
+                },
                 'date_present_station':   str(emp.x_date_present_station),
                 'tenure_years':           tenure_years,
                 'is_eligible':            True,
