@@ -9,9 +9,13 @@ export function useScrollShadow(scrollContainerRef, options = {}) {
     const { threshold = 5 } = options;
     const shadows = proxy({ top: 0, bottom: 0 });
 
+    // Transitional: support both Owl 3 signal refs (function) and legacy `.el` refs.
+    const getEl = () =>
+        typeof scrollContainerRef === "function" ? scrollContainerRef() : scrollContainerRef?.el;
+
     const updateShadows = () => {
         try {
-            const el = scrollContainerRef.el;
+            const el = getEl();
             if (!el) {
                 return;
             }
@@ -33,10 +37,16 @@ export function useHorizontalScrollShadow(scrollContainerRef, classContainerRef,
     }
     const { threshold = 5 } = options;
 
+    // Transitional: support both Owl 3 signal refs (function) and legacy `.el` refs.
+    const getScrollEl = () =>
+        typeof scrollContainerRef === "function" ? scrollContainerRef() : scrollContainerRef?.el;
+    const getClassEl = () =>
+        typeof classContainerRef === "function" ? classContainerRef() : classContainerRef?.el;
+
     const updateShadows = () => {
         try {
-            const scrollEl = scrollContainerRef.el;
-            const classEl = classContainerRef.el;
+            const scrollEl = getScrollEl();
+            const classEl = getClassEl();
 
             if (!scrollEl || !classEl) {
                 return;
@@ -60,6 +70,9 @@ function initScrollShadow(scrollContainerRef, updateFn, options = {}) {
         return;
     }
     const { resizeDebounce = 100 } = options;
+    // Transitional: support both Owl 3 signal refs (function) and legacy `.el` refs.
+    const getEl = () =>
+        typeof scrollContainerRef === "function" ? scrollContainerRef() : scrollContainerRef?.el;
     let scheduled = false;
 
     const handleScroll = () => {
@@ -76,7 +89,7 @@ function initScrollShadow(scrollContainerRef, updateFn, options = {}) {
 
     onMounted(() => {
         try {
-            const el = scrollContainerRef.el;
+            const el = getEl();
             if (!el) {
                 return;
             }
@@ -92,7 +105,7 @@ function initScrollShadow(scrollContainerRef, updateFn, options = {}) {
 
     onWillUnmount(() => {
         try {
-            scrollContainerRef.el?.removeEventListener("scroll", handleScroll);
+            getEl()?.removeEventListener("scroll", handleScroll);
             window.removeEventListener("resize", debouncedResize);
         } catch {
             // Ignore error

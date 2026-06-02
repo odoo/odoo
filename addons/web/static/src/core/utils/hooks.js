@@ -219,20 +219,21 @@ export function useSpellCheck({ refName } = {}) {
  *  child ref, but can otherwise be used as a normal ref object
  */
 export function useChildRef() {
-    let defined = false;
     let value;
-    return function ref(v) {
+    function ref(v) {
         value = v;
-        if (defined) {
-            return;
-        }
-        Object.defineProperty(ref, "el", {
-            get() {
-                return value.el;
-            },
-        });
-        defined = true;
-    };
+    }
+    // Define `el` eagerly (rather than on the first assignment) so that the ref
+    // is recognizable as a ref-like object (`"el" in ref` is always true) even
+    // before it has been forwarded a child ref. The optional chaining keeps it
+    // null-safe: reading `.el` before mount (or while detached) yields
+    // `undefined` instead of throwing "Cannot read properties of undefined".
+    Object.defineProperty(ref, "el", {
+        get() {
+            return value?.el;
+        },
+    });
+    return ref;
 }
 /**
  * Forwards the given refName to the parent by calling the corresponding
