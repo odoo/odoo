@@ -1,6 +1,6 @@
 import { useComponent } from "@web/owl2/utils";
 import { isRecord, STORE_SYM } from "@mail/model/misc";
-import { Component, proxy, toRaw } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
@@ -120,14 +120,9 @@ export class Action {
         this.definition = definition;
         this.id = id;
         this.owner = owner;
-        const rawOwner = toRaw(owner);
         this.store =
             store ??
-            (rawOwner[STORE_SYM]
-                ? owner
-                : isRecord(owner)
-                ? owner.store
-                : useService("mail.store"));
+            (owner[STORE_SYM] ? owner : isRecord(owner) ? owner.store : useService("mail.store"));
     }
 
     get params() {
@@ -640,7 +635,7 @@ export class UseActions extends Reactive {
      * @returns {Action_T}
      */
     more(actionsParams = {}, data = {}, id) {
-        let moreAction = toRaw(this).moreActions.get(id);
+        let moreAction = this.moreActions.get(id);
         if (moreAction) {
             moreAction = this.moreActions.get(id);
             moreAction.definition.actions = data.actions;
@@ -660,7 +655,7 @@ export class UseActions extends Reactive {
                 },
                 store: this.store,
             });
-            toRaw(this).moreActions.set(data.id, moreAction);
+            this.moreActions.set(data.id, moreAction);
         }
         return moreAction;
     }

@@ -17,7 +17,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 import { nbsp } from "@web/core/utils/strings";
 
-import { Component, proxy, signal, toRaw, useEffect } from "@odoo/owl";
+import { Component, proxy, signal, useEffect } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -451,8 +451,8 @@ export class Message extends Component {
         return true;
     }
 
-    async onClickAttachmentUnlink(attachment) {
-        await toRaw(attachment).remove();
+    onClickAttachmentUnlink(attachment) {
+        return attachment.remove();
     }
 
     /**
@@ -589,11 +589,10 @@ export class Message extends Component {
     }
 
     onClickNotification(ev) {
-        const message = toRaw(this.message);
-        if (message.failureNotifications.length > 0) {
+        if (this.message.failureNotifications.length > 0) {
             markEventHandled(ev, "Message.ClickFailure");
         }
-        this.popover.open(ev.target, { message });
+        this.popover.open(ev.target, { message: this.message });
     }
 
     /** @param {MouseEvent} [ev] */

@@ -36,7 +36,7 @@ export class CallActionList extends Component {
                 );
                 const sequenceGroup = filtered[0].sequenceGroup;
                 const hasPipActions = sequenceGroup === 200 && this.props.pipExtraActions;
-                const pipActions = hasPipActions ? toRaw(this.props.pipExtraActions) : [];
+                const pipActions = hasPipActions ? this.props.pipExtraActions : [];
                 const maxQuickActions = pipActions.length > 0 ? 1 : 4;
                 const quickActions = filtered.slice(0, maxQuickActions);
                 const moreActions = [...pipActions, ...filtered.slice(maxQuickActions)];

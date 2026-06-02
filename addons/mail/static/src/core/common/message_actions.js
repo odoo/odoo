@@ -1,5 +1,3 @@
-import { toRaw } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
@@ -65,22 +63,18 @@ registerMessageAction("reaction", {
     sequence: 10,
 });
 registerMessageAction("reply-to", {
-    condition: ({ message: msg, thread: thr }) => {
-        const message = toRaw(msg);
-        const thread = toRaw(thr);
-        return (
-            message.canReplyTo(thread) ||
-            (!["discuss.channel", "mail.box"].includes(thread?.model) &&
-                !message.isEmpty &&
-                message.isNote &&
-                !message.isSelfAuthored)
-        );
+    condition: ({ message, thread }) => {
+        if (message.canReplyTo(thread)) {
+            return true;
+        }
+        if (["discuss.channel", "mail.box"].includes(thread?.model)) {
+            return false;
+        }
+        return !message.isEmpty && message.isNote && !message.isSelfAuthored;
     },
     icon: "fa fa-reply",
     name: _t("Reply"),
-    onSelected: ({ message: msg, owner, thread: thr }) => {
-        const message = toRaw(msg);
-        const thread = toRaw(thr);
+    onSelected: ({ message, owner, thread }) => {
         const composer = thread.composer;
         if (message.eq(composer.replyToMessage)) {
             composer.replyToMessage = undefined;
@@ -163,7 +157,7 @@ registerMessageAction("delete", {
     condition: ({ message }) => message.deletable,
     icon: "fa fa-trash",
     name: _t("Delete"),
-    onSelected: ({ message, owner }) => toRaw(message).showDeleteConfirm(owner),
+    onSelected: ({ message, owner }) => message.showDeleteConfirm(owner),
     sequence: 120,
     tags: ACTION_TAGS.DANGER,
 });
