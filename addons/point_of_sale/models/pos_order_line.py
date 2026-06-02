@@ -280,3 +280,9 @@ class PosOrderLine(models.Model):
     def _get_product_cost(self, at_closing=False):
         self.ensure_one()
         return self.product_id.standard_price
+
+    def _get_discount_amount_for_report(self):
+        return self._get_discount_amount()
+
+    def _has_discount(self):
+        return self.discount > 0
