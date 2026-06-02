@@ -13,7 +13,6 @@
     'auto_install': True,
     'data': [
         'data/mail_templates.xml',
-        'views/iap_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
