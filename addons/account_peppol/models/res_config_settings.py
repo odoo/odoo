@@ -95,3 +95,8 @@ class ResConfigSettings(models.TransientModel):
                 'next': {'type': 'ir.actions.act_window_close'},
             }
         }
+
+    def button_peppol_reregister(self):
+        self.ensure_one()
+        self.account_peppol_edi_user._peppol_deregister_participant()
+        return self.action_open_peppol_form()
