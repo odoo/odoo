@@ -995,3 +995,47 @@ test("translating a char field inside one2many saves the parent record", async (
 
     expect.verifySteps(["partner.type"]);
 });
+
+test("translation dialog opens in editable list when the required field is set", async () =>{
+    Partner._fields.name.translate = true;
+    Partner._fields.name.required = true;
+
+    serverState.lang = "en_US";
+    serverState.multiLang = true;
+
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+    ]);
+
+    onRpc("res.partner", "get_field_translations", () => [
+        [
+            { lang: "en_US", source: "Hello", value: "Hello" },
+            { lang: "fr_BE", source: "Hello", value: "Hii" },
+        ],
+        {
+            translation_type: "char",
+            translation_show_source: false,
+        },
+    ]);
+
+    await mountView({
+        type: "list",
+        resModel: "res.partner",
+        arch: `
+            <list editable="bottom">
+                <field name="name"/>
+            </list>`,
+    });
+
+    await contains(".o_list_button_add").click();
+
+    await fieldInput("name").edit("", { confirm: false });
+    await contains(".btn.o_field_translate").click();
+    expect(".o_translation_dialog").toHaveCount(0);
+    expect(".o_notification").toHaveCount(1);
+
+    await fieldInput("name").edit("Hello", { confirm: false });
+    await contains(".btn.o_field_translate").click();
+    expect(".o_translation_dialog").toHaveCount(1);
+});
