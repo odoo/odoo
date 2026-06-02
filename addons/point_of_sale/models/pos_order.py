@@ -1945,6 +1945,12 @@ class PosOrderLine(models.Model):
         original_price = self.tax_ids_after_fiscal_position.compute_all(self.price_unit, self.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)['total_included']
         return original_price - self.price_subtotal_incl
 
+    def _get_discount_amount_for_report(self):
+        return self._get_discount_amount()
+
+    def _has_discount(self):
+        return self.discount > 0
+
 
 class PosPackOperationLot(models.Model):
     _name = 'pos.pack.operation.lot'
