@@ -118,7 +118,9 @@
                     <filter string="Need Action"
                             name="message_needaction" help="Unread messages"
                             domain="[('needaction', '=', True)]"/>
-                    <separator/>
+                    <group>
+                        <filter string="Message Type" name="group_by_message_type" domain="[]" context="{'group_by': 'message_type'}"/>
+                    </group>
                 </search>
             </field>
         </record>
