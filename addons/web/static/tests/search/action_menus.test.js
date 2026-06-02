@@ -293,6 +293,35 @@ test("static action items are properly ordered and styled", async () => {
     expect(`.o_menu_item:last`).toHaveClass("text-danger");
 });
 
+test("separator rendered only to separate group", async () => {
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        actionMenus: {
+            action: [
+                {
+                    name: "Custom Action",
+                    id: 42,
+                    groupNumber: 100,
+                },
+            ],
+            print: [],
+        },
+        loadActionMenus: true,
+        arch: /* xml */ `
+            <list>
+                <field name="value"/>
+            </list>
+        `,
+    });
+
+    await contains(`thead .o_list_record_selector input`).click();
+    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click();
+
+    // There should be exactly one separator between the two groups and none before the first item.
+    expect(`.o-dropdown--menu .dropdown-divider`).toHaveCount(1);
+});
+
 test("[Offline] render ActionMenus in form view", async () => {
     const setOffline = mockOffline();
     await mountView({
