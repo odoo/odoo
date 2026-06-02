@@ -137,7 +137,7 @@
                                         <t t-else="">
                                             <t t-set="lst_price" t-value="move.product_id.lst_price * move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)"/>
                                         </t>
-                                        <t t-set="lst_price" t-value="move.move_line_ids[0].sale_price"/>
+                                        <t t-set="lst_price" t-value="sum(line.sale_price for line in move.move_line_ids)"/>
                                         <span t-esc="lst_price"  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                         <t t-set="total_value" t-value="total_value + lst_price"/>
                                     </td>
