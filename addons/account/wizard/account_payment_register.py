@@ -1207,7 +1207,7 @@ class AccountPaymentRegister(models.TransientModel):
                         ('reconciled', '=', False),
                     ])\
                     .reconcile()
-            lines.move_id.matched_payment_ids += payment
+            lines.move_id.matched_payment_ids = [Command.link(payment.id)]
 
     def _create_payments(self):
         self.ensure_one()
