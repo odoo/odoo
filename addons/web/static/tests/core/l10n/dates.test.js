@@ -12,6 +12,7 @@ import {
     deserializeDateTime,
     formatDate,
     formatDateTime,
+    getLocalYearAndWeek,
     parseDate,
     parseDateTime,
     serializeDate,
@@ -31,6 +32,14 @@ const timeFormat = strftimeToLuxonFormat(formats.time);
 
 beforeEach(() => {
     patchTranslations();
+});
+
+test("getLocalYearAndWeek", async () => {
+    patchWithCleanup(localization, { weekStart: 1, });
+    expect(getLocalYearAndWeek(new Date("2026/12/25"))).toEqual({year: 2026, week: 52});
+    expect(getLocalYearAndWeek(new Date("2026/12/31"))).toEqual({year: 2026, week: 53});
+    expect(getLocalYearAndWeek(new Date("2027/01/01"))).toEqual({year: 2026, week: 53});
+    expect(getLocalYearAndWeek(new Date("2027/01/04"))).toEqual({year: 2027, week: 1});
 });
 
 test("formatDate/formatDateTime specs", async () => {
