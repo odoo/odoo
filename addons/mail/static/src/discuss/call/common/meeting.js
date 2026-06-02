@@ -3,13 +3,9 @@ import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { Call } from "@mail/discuss/call/common/call";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
-import {
-    inDiscussCallViewProps,
-    useInDiscussCallView,
-    useMessageScrolling,
-} from "@mail/utils/common/hooks";
+import { useInDiscussCallView, useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, types } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useService } from "@web/core/utils/hooks";
@@ -29,7 +25,7 @@ const PIP_EXTRA_ACTION_IDS = ["copy-invite-link", "meeting-chat"];
  */
 export class Meeting extends Component {
     static template = "mail.Meeting";
-    static props = ["autoOpenAction?", ...inDiscussCallViewProps];
+
     static components = {
         Call,
         CallActionList,
@@ -39,6 +35,7 @@ export class Meeting extends Component {
         Thread,
     };
 
+    props = props({ "autoOpenAction?": types.string() });
     setup() {
         this.store = useService("mail.store");
         this.ui = useService("ui");

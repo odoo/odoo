@@ -1,4 +1,4 @@
-import { Component, onWillUnmount, proxy, status } from "@odoo/owl";
+import { Component, onWillUnmount, props, proxy, types } from "@odoo/owl";
 
 import { useComponent } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
@@ -10,7 +10,10 @@ import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_ser
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 
 export class VoiceRecorder extends Component {
-    static props = ["composer", "state"];
+    props = props({
+        composer: types.object(),
+        state: types.object(),
+    });
     static template = "mail.VoiceRecorder";
     get title() {
         return _t("Stop Recording");
@@ -29,6 +32,8 @@ export const patchable = {
 /**
  * @param {Object} [params={}]
  * @param {number} [params.maxDuration=60] Maximum recording duration in seconds.
+ * @param {Function} [params.isComponentDestroyed] function that return true is
+ * the status of the component is "destroyed"
  * @param {Function} params.onRecordReady Callback when recording is finished.
  */
 export function useVoiceRecorder(params = {}) {
@@ -106,7 +111,7 @@ export function useVoiceRecorder(params = {}) {
                 microphone = await browser.navigator.mediaDevices.getUserMedia({
                     audio: store.settings.audioConstraints,
                 });
-                if (status(component) === "destroyed") {
+                if (params.isComponentDestroyed()) {
                     cleanUp();
                     return;
                 }

@@ -1,4 +1,14 @@
-import { Component, onMounted, onPatched, onWillUnmount, proxy, toRaw, xml } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    props,
+    proxy,
+    toRaw,
+    types,
+    xml,
+} from "@odoo/owl";
 
 import { useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { Reactive } from "@web/core/utils/reactive";
@@ -235,9 +245,11 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
 }
 
 export class UseHoverOverlay extends Component {
-    static props = ["slots", "hover"];
     static template = xml`<div t-custom-ref="root"><t t-call-slot="default"/></div>`;
 
+    props = props({
+        hover: types.object(),
+    });
     setup() {
         super.setup();
         this.root = useRef("root");
@@ -908,13 +920,12 @@ export function useLongPress(ref, { action, predicate = () => true } = {}) {
     );
 }
 
-export const inDiscussCallViewProps = ["isPip?"];
 export function useInDiscussCallView() {
-    const component = useComponent();
+    const props = props({ isPip: types.boolean() });
     useSubEnv({
         inDiscussCallView: {
             get isPip() {
-                return component.props.isPip;
+                return props.isPip;
             },
         },
     });
@@ -939,7 +950,7 @@ export class UseForwardRefsToParent {
      * @param {import("@odoo/owl").Signal<Element>} ref
      */
     constructor(propName, getRefIdFn, ref) {
-        const component = useComponent();
+        const props = props();
         this.ref = ref;
         // Note: The `useChildRefs()` Map is shared with all children, using useLayoutEffect/willUnmount to ensure proper on/off life cycle hook calls for given child.
         // If we use setup/willDestroy we can have 2 fiber nodes of same child component with one finalizing with willDestroy from cancelling duplicated fiber node.
@@ -948,7 +959,7 @@ export class UseForwardRefsToParent {
                 this.registerRef(map, key);
                 return () => this.removeRef(map, key);
             },
-            () => [component.props[propName], getRefIdFn(component.props)]
+            () => [props[propName], getRefIdFn(props)]
         );
     }
 

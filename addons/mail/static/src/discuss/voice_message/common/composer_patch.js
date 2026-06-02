@@ -1,6 +1,7 @@
 import { Composer } from "@mail/core/common/composer";
 import { patch } from "@web/core/utils/patch";
 import { useVoiceRecorder } from "./voice_recorder";
+import { status } from "@odoo/owl";
 
 patch(Composer, {
     components: { ...Composer.components },
@@ -11,6 +12,7 @@ patch(Composer.prototype, {
         super.setup();
         this.voiceRecorder = useVoiceRecorder({
             onRecordReady: (file) => this.attachmentUploader.uploadFile(file, { voice: true }),
+            isComponentDestroyed: () => status(this) === "destroyed",
         });
     },
     get isSendButtonDisabled() {

@@ -5,7 +5,16 @@ import { CallPresentationBar } from "@mail/discuss/call/common/call_presentation
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
 
-import { Component, onMounted, onPatched, onWillUnmount, proxy, toRaw } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    proxy,
+    toRaw,
+    types,
+    props,
+} from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -15,7 +24,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
 import { ActionList } from "@mail/core/common/action_list";
 import { ACTION_TAGS } from "@mail/core/common/action";
-import { inDiscussCallViewProps, useInDiscussCallView } from "@mail/utils/common/hooks";
+import { useInDiscussCallView } from "@mail/utils/common/hooks";
 
 /**
  * @typedef CardData
@@ -40,12 +49,21 @@ export class Call extends Component {
         CallParticipantCard,
         PttAdBanner,
     };
-    static props = ["channel?", "compact?", "hasOverlay?", ...inDiscussCallViewProps];
     static defaultProps = { hasOverlay: true };
     static template = "discuss.Call";
 
     overlayTimeout;
 
+    props = props(
+        {
+            "channel?": types.object(),
+            "compact?": types.boolean(),
+            "hasOverlay?": types.boolean(),
+        },
+        {
+            hasOverlay: true,
+        }
+    );
     setup() {
         super.setup();
         this.grid = useRef("grid");
