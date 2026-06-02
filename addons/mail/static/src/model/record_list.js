@@ -155,7 +155,9 @@ export class RecordListInternal {
                     oldRecord._.uses.delete(recordList);
                     store._.ADD_QUEUE("onDelete", self.owner, self.name, oldRecord);
                     if (inverse) {
-                        oldRecord[inverse].delete(self.owner);
+                        store._.updateFields(oldRecord, {
+                            [inverse]: [["DELETE", self.owner]],
+                        });
                     }
                 }
             }
@@ -341,7 +343,9 @@ export class RecordList extends Array {
                                 );
                                 const inverse = getInverse(recordList);
                                 if (inverse) {
-                                    oldRecord[inverse].delete(recordList._.owner);
+                                    store._.updateFields(oldRecord, {
+                                        [inverse]: [["DELETE", recordList._.owner]],
+                                    });
                                 }
                                 if (newRecord) {
                                     newRecord._.uses.add(recordList);
@@ -352,7 +356,9 @@ export class RecordList extends Array {
                                         newRecord
                                     );
                                     if (inverse) {
-                                        newRecord[inverse].add?.(recordList._.owner);
+                                        store._.updateFields(newRecord, {
+                                            [inverse]: [["ADD", recordList._.owner]],
+                                        });
                                     }
                                 }
                             }
@@ -400,7 +406,7 @@ export class RecordList extends Array {
                 store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, record);
                 const inverse = getInverse(recordList);
                 if (inverse) {
-                    record[inverse].add(recordList._.owner);
+                    store._.updateFields(record, { [inverse]: [["ADD", recordList._.owner]] });
                 }
             }
             return recordListFullProxy.data.length;
@@ -438,7 +444,7 @@ export class RecordList extends Array {
             store._.ADD_QUEUE("onDelete", recordList._.owner, recordList._.name, record);
             const inverse = getInverse(recordList);
             if (inverse) {
-                record[inverse].delete(recordList._.owner);
+                store._.updateFields(record, { [inverse]: [["DELETE", recordList._.owner]] });
             }
             return recordProxy;
         });
@@ -458,7 +464,7 @@ export class RecordList extends Array {
                 store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, record);
                 const inverse = getInverse(recordList);
                 if (inverse) {
-                    record[inverse].add(recordList._.owner);
+                    store._.updateFields(record, { [inverse]: [["ADD", recordList._.owner]] });
                 }
             }
             return recordListFullProxy.data.length;
@@ -505,7 +511,9 @@ export class RecordList extends Array {
                 store._.ADD_QUEUE("onDelete", recordList._.owner, recordList._.name, oldRecord);
                 const inverse = getInverse(recordList);
                 if (inverse) {
-                    oldRecord[inverse].delete(recordList._.owner);
+                    store._.updateFields(oldRecord, {
+                        [inverse]: [["DELETE", recordList._.owner]],
+                    });
                 }
             }
             for (const newRecordProxy of newRecordsProxy) {
@@ -514,7 +522,7 @@ export class RecordList extends Array {
                 store._.ADD_QUEUE("onAdd", recordList._.owner, recordList._.name, newRecord);
                 const inverse = getInverse(recordList);
                 if (inverse) {
-                    newRecord[inverse].add(recordList._.owner);
+                    store._.updateFields(newRecord, { [inverse]: [["ADD", recordList._.owner]] });
                 }
             }
         });
