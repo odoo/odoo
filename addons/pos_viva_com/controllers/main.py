@@ -76,7 +76,7 @@ class PosVivaComController(http.Controller):
             if pos_order.amount_difference == 0 and all(p.payment_status == 'done' for p in pos_order.payment_ids):
                 pos_order.write({'state': 'paid'})
 
-                dynamicLink = self._create_dynamic_link(f"/pos/ui/{config_id}/resume/{order_uuid}")
+                dynamicLink = self._create_dynamic_link(f"/pos/ui/{config_id}/resume/{order_uuid}?post_validate=1")
                 return request.redirect(dynamicLink, local=False)
         else:
             payment_line.write({'payment_status': 'error', 'transaction_id': transaction_id})
