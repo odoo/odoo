@@ -30,7 +30,7 @@ class WebsiteSaleSEO(HttpCase, WebsiteSaleCommon):
         self.authenticate(internal_user.login, internal_user.login)
         res = self.make_jsonrpc_request(
             "/website/get_seo_data",
-            {"res_id": public_categ.id, "res_model": "product.public.category"},
+            {"seo_id": public_categ.id, "seo_model": "product.public.category"},
         )
         self.assertTrue(res["can_edit_seo"])
 

@@ -1660,7 +1660,7 @@ class Website(Home):
                 record.write({link['field']: new_html_content})
 
     @http.route(['/website/get_seo_data'], type='jsonrpc', auth="user", website=True, readonly=True)
-    def get_seo_data(self, res_id, res_model):
+    def get_seo_data(self, seo_id, seo_model, main_object_id=None, main_object_model=None):
         """
         Fetch SEO metadata for a given record.
 
@@ -1671,15 +1671,18 @@ class Website(Home):
         sufficient access rights on the record itself.
 
         Args:
-            res_id (int): ID of the record to fetch metadata for.
-            res_model (str): Model name of the record (e.g. ``website.page``).
+            seo_id (int): ID of the record for which SEO data is requested.
+            seo_model (str): Model name of the record (e.g., 'website.page').
+            main_object_id (int, optional): ID of the main object related to
+            the SEO data.
+            main_object_model (str, optional): Model name of the main object.
 
         Returns:
             dict: A mapping of SEO data including:
                 - `lang` (object): Current language (object with at least `code` and `name`).
                 - `multi_lang` (bool): Whether the website supports multiple languages.
                 - `can_edit_seo` (bool): Whether the current user can edit SEO fields.
-                - `website_is_published` (bool, optional): Page publication status (for website pages).
+                - `website_is_published` (bool, optional): Main object publication status.
                 - `website_indexed` (bool, optional): Whether the page is indexed (for website pages).
                 - `website_id` (int, optional): ID of the related website (for website pages).
                 - `website_meta_title` (str): Title for SEO.
@@ -1689,6 +1692,7 @@ class Website(Home):
                 - `has_social_default_image` (bool): Whether the site has a default social sharing image.
                 - `seo_name` (str, optional): Slugified custom SEO name (if supported).
                 - `seo_name_default` (str, optional): Default slugified name (fallback).
+                - `website_page_visibility` (bool, optional): Visibility status for website pages.
 
         Raises:
             werkzeug.exceptions.Forbidden: If the user lacks the required access rights.
@@ -1702,24 +1706,27 @@ class Website(Home):
             translations = dict(record._get_stored_translations(field_name) or {})
             return translations.get(lang_code or request.lang.code, '')
 
+        record = self.env[seo_model].browse(seo_id)
         # Access checks
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             # Still ok if user can access the record anyway.
             try:
-                record = request.env[res_model].browse(res_id)
                 record.check_access('write')
             except AccessError:
                 raise werkzeug.exceptions.Forbidden()
 
-        record = request.env[res_model].browse(res_id)
         res = {
             'lang': request.lang,
             'multi_lang': self.env.website.language_count > 1,
             'default_lang_code': self.env.website.default_lang_id.code,
             'can_edit_seo': True,
         }
-        if res_model == 'website.page':
-            res["website_is_published"] = record.website_published
+        if seo_model == 'website.page':
+            res["website_page_visibility"] = record.visibility == "public"
+        if main_object_id and main_object_model:
+            main_record = request.env[main_object_model].browse(main_object_id)
+            if hasattr(main_record, 'website_published'):
+                res["website_is_published"] = main_record.website_published
 
         try:
             self.env.website._check_user_can_modify(record)
@@ -1730,13 +1737,13 @@ class Website(Home):
 
         # Basic field values
         base_fields = ['website_meta_og_img']
-        if res_model == "website.page":
+        if seo_model == "website.page":
             base_fields.extend(['website_indexed', 'website_id'])
         res.update(record.read(base_fields)[0])
 
         # Translatable fields
         # Use view_id for website.page translations
-        source_record = record.view_id if res_model == 'website.page' else record
+        source_record = record.view_id if seo_model == 'website.page' else record
         for field_name in ['website_meta_title', 'website_meta_description', 'website_meta_keywords']:
             res[field_name] = _get_translation(source_record, field_name)
             # The client needs to know whether the default language is empty
@@ -1749,7 +1756,7 @@ class Website(Home):
         res['has_social_default_image'] = self.env.website.has_social_default_image
 
         # SEO name handling (custom slugify)
-        if res_model not in ('website.page', 'ir.ui.view') and 'seo_name' in record:
+        if seo_model not in ('website.page', 'ir.ui.view') and 'seo_name' in record:
             res['seo_name_default'] = request.env['ir.http']._slugify(record.display_name or '')
             res['seo_name'] = (
                 request.env['ir.http']._slugify(record.seo_name)

@@ -260,6 +260,17 @@
 <t t-name="website.TitleDescription">
     <section>
         <div class="row">
+            <t t-if="this.visibilityWarning">
+                <div class="col-12 px-0">
+                    <div class="alert alert-warning py-2 rounded-0 border-0 mb-0">
+                        <span class="text-info"><t t-out="this.visibilityWarning"/></span>
+                        <button class="btn btn-link ps-1" t-on-click="this.openPagePropertiesDialog">
+                            <i class="oi oi-fw me-1" data-icon="east"/>
+                            <span>Go to page properties</span>
+                        </button>
+                    </div>
+                </div>
+            </t>
             <div class="col-12 px-0">
                 <div class="alert alert-info py-2 rounded-0 border-0">
                     <span class="text-info">Need help to optimize?</span>
@@ -338,14 +349,18 @@
             isIndexed="this.isIndexed"
             defaultTitle="this.defaultTitle"
             previewDescription="this.previewDescription"
-            url="this.url"/>
+            url="this.url"
+            isPublished="this.isPublished"
+            isVisibilityPublic="this.isVisibilityPublic"
+            isDirty="this.isDirty"
+            save="this.boundSave"/>
         <ImageSelector t-if="this.canEditSeo" previewDescription="this.socialPreviewDescription"
             defaultTitle="this.defaultTitle"
             hasSocialDefaultImage="this.hasSocialDefaultImage"
             pageImages="this.pageImages"
             url="this.url"/>
         <MetaKeywords t-if="this.canEditSeo"/>
-        <SeoChecks t-if="this.canEditSeo" isDefaultLang="this.isDefaultLang"/>
+        <SeoChecks t-if="this.canEditSeo" isDefaultLang="this.isDefaultLang" initialSeoState="this.initialSeoState"/>
     </WebsiteDialog>
 </t>
 </templates>
