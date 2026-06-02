@@ -200,12 +200,13 @@ export class Composer extends Component {
             window,
             "click",
             (ev) => {
+                const target = ev.composedPath()[0];
                 if (
                     this.ui.isSmall &&
                     this.composerActions.activeAction &&
                     this.pickerContainerRef.el &&
-                    ev.target !== this.pickerContainerRef.el &&
-                    !this.pickerContainerRef.el.contains(ev.target)
+                    target !== this.pickerContainerRef.el &&
+                    !this.pickerContainerRef.el.contains(target)
                 ) {
                     this.composerActions.activeAction.actionPanelClose();
                 }
