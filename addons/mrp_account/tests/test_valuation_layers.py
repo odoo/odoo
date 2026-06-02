@@ -3,6 +3,7 @@
 
 from odoo.addons.mrp_account.tests.common import TestBomPriceCommon
 from odoo.tests import Form
+from odoo.fields import Command
 
 PRICE = 718.75 - 100  # total price minus glass
 
@@ -358,3 +359,26 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self._produce(mo)
         mo.with_company(self.other_company).button_mark_done()
         self.assertEqual(self.dining_table.total_value, PRICE + 10)
+
+    def test_inventory_variation_kit(self):
+        """ Checks that in the inventory valuation view, for the ending stock, kit products are not taken into account
+        in addition to the value of their components
+        """
+        old_ending_stock = self.env['stock_account.stock.valuation.report'].get_report_values()['data']['ending_stock']['value']
+
+        new_kit = self._create_product('New Kit', 10, 1)
+        new_comp = self._create_product('New Comp', 10, 1)
+        self.env['mrp.bom'].create({
+            'product_id': new_kit.id,
+            'product_tmpl_id': new_kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': new_comp.id,
+                    'product_qty': 1,
+                }),
+            ]
+        })
+        new_ending_stock = self.env['stock_account.stock.valuation.report'].get_report_values()['data']['ending_stock']['value']
+        self.assertEqual(new_ending_stock - old_ending_stock, 10.0)

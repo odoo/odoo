@@ -39,10 +39,8 @@ class StockValuationReport(models.AbstractModel):
         valued_product_context = self.env['product.product'].sudo().with_company(company)._with_valuation_context()
         if date:
             valued_product_context = valued_product_context.with_context(at_date=date, to_date=date)
-        valued_products = valued_product_context.search([
-            ('is_storable', '=', True),
-            '|', ('qty_available', '!=', 0), ('lot_valuated', '=', True),
-        ])
+        valued_product_domain = self.env['res.company']._get_valuation_product_domain() + ['|', ('qty_available', '!=', 0), ('lot_valuated', '=', True)]
+        valued_products = valued_product_context.search(valued_product_domain)
         accounts_by_product = company._get_accounts_by_product(products=valued_products)
         if not date:
             inventory_data = company.stock_value(accounts_by_product)
