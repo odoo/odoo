@@ -268,6 +268,41 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             self.assertEqual(leave_form_pm.record.date_from, datetime(2019, 9, 2, 10, 0, 0))
             self.assertEqual(leave_form_pm.record.date_to, datetime(2019, 9, 2, 13, 0, 0))
 
+    def test_time_off_half_day_duration_based_calendar(self):
+        attendance_ids = []
+        for dayofweek in ['0', '1', '2', '3', '4']:
+            attendance_ids += [
+                Command.create({
+                    'dayofweek': dayofweek,
+                    'duration_hours': 3.36,
+                    'day_period': 'morning',
+                }),
+                Command.create({
+                    'dayofweek': dayofweek,
+                    'duration_hours': 3.36,
+                    'day_period': 'afternoon',
+                }),
+            ]
+
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Duration based calendar',
+            'attendance_ids': attendance_ids,
+        })
+        employee = self.employee_emp
+        employee.resource_calendar_id = calendar
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Full week half day leave',
+            'employee_id': employee.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': date(2026, 4, 20),
+            'request_date_to': date(2026, 4, 24),
+            'request_date_from_period': 'am',
+            'request_date_to_period': 'pm',
+        })
+
+        self.assertEqual(leave.number_of_days, 5)
+
     def test_attendance_next_day(self):
         self.env.user.tz = 'Europe/Brussels'
         calendar = self.env['resource.calendar'].create({

@@ -907,6 +907,8 @@ class HrLeave(models.Model):
                 days = hours / (today_hours or HOURS_PER_DAY)
             if leave.work_entry_type_request_unit == 'day' and check_work_entry_type:
                 days = ceil(days)
+            elif leave.work_entry_type_request_unit == 'half_day':
+                days = float_round(days, precision_rounding=0.5)
             result[leave.id] = (days, hours)
         return result
 
