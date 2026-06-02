@@ -7,13 +7,18 @@ export function useDraggableScroll(scrollContainerRef, options = {}) {
     }
     const threshold = options.threshold ?? 5;
 
+    // Transitional: Owl 3 native refs are signals (element via calling the ref),
+    // while legacy refs expose `.el`. Resolve the element in one place so both work.
+    const getScrollEl = () =>
+        typeof scrollContainerRef === "function" ? scrollContainerRef() : scrollContainerRef?.el;
+
     let isDragging = false;
     let dragMoved = false;
     let startX;
     let scrollLeft;
     let shouldSuppressClick = false;
     const onMouseDown = (e) => {
-        const scrollEl = scrollContainerRef.el;
+        const scrollEl = getScrollEl();
         if (!scrollEl) {
             return;
         }
@@ -24,7 +29,7 @@ export function useDraggableScroll(scrollContainerRef, options = {}) {
     };
 
     const onMouseMove = (e) => {
-        const scrollEl = scrollContainerRef.el;
+        const scrollEl = getScrollEl();
 
         if (!isDragging || !scrollEl) {
             return;
@@ -60,16 +65,18 @@ export function useDraggableScroll(scrollContainerRef, options = {}) {
     };
 
     onMounted(() => {
-        scrollContainerRef.el?.addEventListener("mousedown", onMouseDown);
-        scrollContainerRef.el?.addEventListener("click", onClick, true);
+        const scrollEl = getScrollEl();
+        scrollEl?.addEventListener("mousedown", onMouseDown);
+        scrollEl?.addEventListener("click", onClick, true);
         window.addEventListener("mousemove", onMouseMove);
         window.addEventListener("mouseup", onMouseUp);
     });
 
     onWillUnmount(() => {
+        const scrollEl = getScrollEl();
         window.removeEventListener("mousemove", onMouseMove);
         window.removeEventListener("mouseup", onMouseUp);
-        scrollContainerRef.el?.removeEventListener("mousedown", onMouseDown);
-        scrollContainerRef.el?.removeEventListener("click", onClick, true);
+        scrollEl?.removeEventListener("mousedown", onMouseDown);
+        scrollEl?.removeEventListener("click", onClick, true);
     });
 }

@@ -29,31 +29,48 @@ export const POSITION_BUS = Symbol("position-bus");
  * the original position is used.
  *
  * Note: The popper element should be indicated in your template
- *       with a t-ref reference matching the refName argument.
+ *       with a t-ref reference matching the refName argument, or bound
+ *       to the provided signal via t-ref.
  *
- * @param {string} refName
- *  name of the reference to the popper element in the template.
+ * @param {string | (() => HTMLElement)} popperRef
+ *  Either the name of the reference to the popper element in the template
+ *  (legacy Owl 2 ref-name string), or an Owl 3 signal returning the popper
+ *  element. Both are supported during the Owl 2 -> 3 migration.
  * @param {() => HTMLElement} getTarget
  * @param {UsePositionOptions} [options={}] the options to be used for positioning
  * @returns {PositioningControl}
  *  control object to lock/unlock the positioning.
  */
-export function usePosition(refName, getTarget, options = {}) {
-    const ref = useRef(refName);
+export function usePosition(popperRef, getTarget, options = {}) {
+    // Transitional shim (Owl 2 -> 3): `popperRef` may be either a legacy
+    // ref-name string (resolved through `useRef`) or an Owl 3 signal (a
+    // function returning the element). Resolve "the current popper element"
+    // once here so the rest of the hook is agnostic to which form was passed.
+    // To remove once all callers pass a signal.
+    let getPopperEl;
+    if (typeof popperRef === "function") {
+        // Owl 3 signal: calling it returns the current element.
+        getPopperEl = popperRef;
+    } else {
+        // Legacy Owl 2 ref name: keep the original useRef(name).el behavior.
+        const ref = useRef(popperRef);
+        getPopperEl = () => ref.el;
+    }
     let lock = false;
     const update = () => {
+        const popperEl = getPopperEl();
         const targetEl = getTarget();
-        if (!ref.el || !targetEl?.isConnected || lock) {
+        if (!popperEl || !targetEl?.isConnected || lock) {
             // No compute needed
             return;
         }
         const repositionOptions = omit(options, "onPositioned");
-        const solution = reposition(ref.el, targetEl, repositionOptions);
+        const solution = reposition(popperEl, targetEl, repositionOptions);
         // Don't memorize center position because it's a fallback that we don't want to keep if possible
         if (solution.direction !== "center") {
             options.position = `${solution.direction}-${solution.variant}`; // memorize last position
         }
-        options.onPositioned?.(ref.el, solution);
+        options.onPositioned?.(popperEl, solution);
     };
 
     const component = useComponent();
@@ -85,7 +102,7 @@ export function usePosition(refName, getTarget, options = {}) {
         if (isTopmost) {
             // Attach listeners to keep the positioning up to date
             const scrollListener = (e) => {
-                if (ref.el?.contains(e.target)) {
+                if (getPopperEl()?.contains(e.target)) {
                     // In case the scroll event occurs inside the popper, do not reposition
                     return;
                 }

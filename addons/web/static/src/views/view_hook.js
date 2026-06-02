@@ -101,6 +101,10 @@ export function useActionLinks({ resModel, reload }) {
 export function useBounceButton(containerRef, shouldBounce) {
     let timeout;
     const ui = useService("ui");
+    // Transitional: Owl 3 native refs are signals (call to get the element);
+    // legacy refs expose `.el`. Resolve the element in this single place so both keep working.
+    const getContainerEl = () =>
+        typeof containerRef === "function" ? containerRef() : containerRef?.el;
     useLayoutEffect(
         (containerEl) => {
             if (!containerEl) {
@@ -119,7 +123,7 @@ export function useBounceButton(containerRef, shouldBounce) {
             containerEl.addEventListener("click", handler);
             return () => containerEl.removeEventListener("click", handler);
         },
-        () => [containerRef.el]
+        () => [getContainerEl()]
     );
 }
 
