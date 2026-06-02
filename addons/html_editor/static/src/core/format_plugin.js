@@ -9,13 +9,17 @@ import {
     hasPseudoElementContent,
     hasSameClasses,
     hasSameStyleAttributes,
+    isBold,
     isContentEditable,
     isElement,
     isEmpty,
     isEmptyBlock,
+    isItalic,
     isPhrasingContent,
     isSelfClosingElement,
+    isStrikeThrough,
     isTextNode,
+    isUnderline,
     isVisibleTextNode,
     isZWS,
     paragraphRelatedElementsSelector,
@@ -28,7 +32,7 @@ import {
     findUpTo,
     selectElements,
 } from "../utils/dom_traversal";
-import { formatsSpecs, FORMATTABLE_TAGS } from "../utils/formatting";
+import { FORMATTABLE_TAGS, removeStyle } from "../utils/formatting";
 import { boundariesIn, leftPos, rightPos } from "../utils/position";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
@@ -44,6 +48,19 @@ const NOT_A_NUMBER = /[^\d]/g;
  */
 
 /**
+ * @typedef {Object} FormatSpec
+ * @property {string} id
+ * @property {string} [tagName]
+ * @property {(node: Node, formatProps?: object) => boolean} isFormatted
+ * @property {(node: Node) => boolean} [isTag]
+ * @property {(node: Node) => boolean} hasStyle
+ * @property {(node: Node, formatProps?: object) => void} addStyle
+ * @property {(node: Node) => void} [addNeutralStyle]
+ * @property {(node: Node) => void} removeStyle
+ */
+
+/**
+ * @typedef {FormatSpec[]} format_specs
  * @typedef {(() => void)[]} before_format_handlers
  * @typedef {(() => void)[]} on_all_formats_removed_handlers
  * @typedef {(() => void)[]} on_format_requested_handlers
@@ -172,6 +189,68 @@ export class FormatPlugin extends Plugin {
                 isDisabled: (sel, nodes) => !this.hasAnyFormat(nodes),
             }),
         ],
+        format_specs: [
+            {
+                id: "italic",
+                tagName: "em",
+                isFormatted: isItalic,
+                isTag: (node) => ["EM", "I"].includes(node.tagName),
+                hasStyle: (node) => Boolean(node.style && node.style["font-style"]),
+                addStyle: (node) => (node.style["font-style"] = "italic"),
+                addNeutralStyle: (node) => (node.style["font-style"] = "normal"),
+                removeStyle: (node) => removeStyle(node, "font-style"),
+            },
+            {
+                id: "bold",
+                tagName: "strong",
+                isFormatted: isBold,
+                isTag: (node) => ["STRONG", "B"].includes(node.tagName),
+                hasStyle: (node) => Boolean(node.style && node.style["font-weight"]),
+                addStyle: (node) => (node.style["font-weight"] = "bolder"),
+                addNeutralStyle: (node) => {
+                    node.style["font-weight"] = "normal";
+                },
+                removeStyle: (node) => removeStyle(node, "font-weight"),
+            },
+            {
+                id: "underline",
+                tagName: "u",
+                isFormatted: isUnderline,
+                isTag: (node) => node.tagName === "U",
+                hasStyle: (node) =>
+                    node.style &&
+                    (node.style["text-decoration"].includes("underline") ||
+                        node.style["text-decoration-line"].includes("underline")),
+                addStyle: (node) => (node.style["text-decoration-line"] += " underline"),
+                removeStyle: (node) =>
+                    removeStyle(
+                        node,
+                        node.style["text-decoration"].includes("underline")
+                            ? "text-decoration"
+                            : "text-decoration-line",
+                        "underline"
+                    ),
+            },
+            {
+                id: "strikeThrough",
+                tagName: "s",
+                isFormatted: isStrikeThrough,
+                isTag: (node) => node.tagName === "S",
+                hasStyle: (node) =>
+                    node.style &&
+                    (node.style["text-decoration"].includes("line-through") ||
+                        node.style["text-decoration-line"].includes("line-through")),
+                addStyle: (node) => (node.style["text-decoration-line"] += " line-through"),
+                removeStyle: (node) =>
+                    removeStyle(
+                        node,
+                        node.style["text-decoration"].includes("line-through")
+                            ? "text-decoration"
+                            : "text-decoration-line",
+                        "line-through"
+                    ),
+            },
+        ],
         /** Handlers */
         on_beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
         on_selectionchange_handlers: this.clearPendingFormats.bind(this),
@@ -193,24 +272,26 @@ export class FormatPlugin extends Plugin {
 
     setup() {
         this.activeFormats = {};
+        this.formatSpecs = this.getResource("format_specs");
+    }
+
+    getFormatSpec(formatName) {
+        return this.formatSpecs.find((spec) => spec.id === formatName);
     }
 
     /**
-     * @param {string[]} formats
+     * @param {object[]} specs
      * @param {Node[]} targetedNodes
      */
-    removeFormats(formats, targetedNodes) {
+    removeFormats(specs, targetedNodes) {
         const editableTargetedNodes = targetedNodes.filter(
             this.dependencies.selection.isNodeEditable
         );
-        for (const format of formats) {
-            if (
-                !formatsSpecs[format].removeStyle ||
-                !this.hasFormat(format, editableTargetedNodes)
-            ) {
+        for (const spec of specs) {
+            if (!spec.removeStyle || !this.hasFormat(spec.id, editableTargetedNodes)) {
                 continue;
             }
-            this.formatSelection(format, { applyStyle: false, commit: false });
+            this.formatSelection(spec.id, { applyStyle: false, commit: false });
         }
     }
 
@@ -232,17 +313,16 @@ export class FormatPlugin extends Plugin {
             isPhrasingContent(element) &&
             !this.dependencies.delete.isUnremovable(element)
         ) {
-            const format = Object.keys(formatsSpecs).find((format) => {
-                const spec = formatsSpecs[format];
-                return spec.isTag?.(element) || spec.hasStyle?.(element);
-            });
-            if (!format) {
+            const spec = this.formatSpecs.find(
+                (spec) => spec.isTag?.(element) || spec.hasStyle?.(element)
+            );
+            if (!spec) {
                 break;
             }
             const parent = element.parentElement;
             const restore = prepareUpdate(...leftPos(anchorNode), ...rightPos(anchorNode));
-            removeFormat(element, formatsSpecs[format], cursor);
-            this.activeFormats[format] = { applyStyle: true };
+            removeFormat(element, spec, cursor);
+            this.activeFormats[spec.id] = { applyStyle: true };
             if (
                 element.isConnected &&
                 element.getAttributeNames().length === 1 &&
@@ -275,23 +355,22 @@ export class FormatPlugin extends Plugin {
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
         if (sel.isCollapsed) {
             this.activeFormats = {}; // discard pending "apply" intents
-            for (const format of Object.keys(formatsSpecs)) {
-                if (formatsSpecs[format].removeStyle && this.hasFormat(format, targetedNodes)) {
-                    this.activeFormats[format] = { applyStyle: false };
+            for (const spec of this.formatSpecs) {
+                if (spec.removeStyle && this.hasFormat(spec.id, targetedNodes)) {
+                    this.activeFormats[spec.id] = { applyStyle: false };
                 }
             }
             this.trigger("on_collapsed_formats_removed_handlers");
             return;
         }
-        this.removeFormats(Object.keys(formatsSpecs), targetedNodes);
+        this.removeFormats(this.formatSpecs, targetedNodes);
         this.trigger("on_all_formats_removed_handlers");
         this.dependencies.history.commit();
     }
 
     removeFontSizeFormat({ block }) {
         for (const node of [block, ...descendants(block)]) {
-            removeFormat(node, formatsSpecs.fontSize);
-            removeFormat(node, formatsSpecs.setFontSizeClassName);
+            removeFormat(node, this.getFormatSpec("fontSize"));
         }
     }
 
@@ -335,7 +414,7 @@ export class FormatPlugin extends Plugin {
      */
     hasFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
         const nodes = this.getFormattableNodes(targetedNodes);
-        const isFormatted = formatsSpecs[format].isFormatted;
+        const isFormatted = this.getFormatSpec(format).isFormatted;
         return nodes.some((n) => isFormatted(n, { editable: this.editable }));
     }
     /**
@@ -348,7 +427,7 @@ export class FormatPlugin extends Plugin {
      * @returns {boolean}
      */
     isFormatActive(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
-        const isFormatted = formatsSpecs[format].isFormatted;
+        const isFormatted = this.getFormatSpec(format).isFormatted;
         let hasFormatted = false;
         for (const node of this.getFormattableNodes(targetedNodes)) {
             if (isFormatted(node, { editable: this.editable })) {
@@ -367,8 +446,8 @@ export class FormatPlugin extends Plugin {
         const editableTargetedNodes = targetedNodes.filter(
             this.dependencies.selection.isNodeEditable
         );
-        for (const format of Object.keys(formatsSpecs)) {
-            if (formatsSpecs[format].removeStyle && this.hasFormat(format, editableTargetedNodes)) {
+        for (const spec of this.formatSpecs) {
+            if (spec.removeStyle && this.hasFormat(spec.id, editableTargetedNodes)) {
                 return true;
             }
         }
@@ -428,7 +507,7 @@ export class FormatPlugin extends Plugin {
             ];
         }
 
-        const formatSpec = formatsSpecs[formatName];
+        const formatSpec = this.getFormatSpec(formatName);
         const unformattedNodes = [
             ...new Set(
                 this.getFormattableNodes(targetedNodes).flatMap((node) => {
@@ -553,7 +632,7 @@ export class FormatPlugin extends Plugin {
         /** @type { Node } */
         let currentNode = node;
         let parentNode = node.parentElement;
-        const formatSpec = formatsSpecs[formatName];
+        const formatSpec = this.getFormatSpec(formatName);
 
         // Remove the format on all inline ancestors until a block or an element
         // with a class that is not indicated as splittable.

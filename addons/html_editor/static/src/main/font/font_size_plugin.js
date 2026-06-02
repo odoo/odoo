@@ -1,19 +1,27 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
-import { unwrapContents } from "@html_editor/utils/dom";
+import { removeClass, unwrapContents } from "@html_editor/utils/dom";
 import { isRedundantElement } from "@html_editor/utils/dom_info";
-import { selectElements } from "@html_editor/utils/dom_traversal";
+import {
+    closestElement,
+    closestPath,
+    findNode,
+    selectElements,
+} from "@html_editor/utils/dom_traversal";
 import {
     convertNumericToUnit,
-    getCSSVariableValue,
-    getHtmlStyle,
-    getFontSizeDisplayValue,
+    DEFAULT_FONT_SIZE_CLASSES,
     FONT_SIZE_CLASSES,
+    getCSSVariableValue,
+    getFontSizeDisplayValue,
+    getHtmlStyle,
+    removeStyle,
+    TEXT_STYLE_CLASSES,
 } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
 import { READ, withSequence } from "@html_editor/utils/resource";
 import { FontSizeSelector, MAX_FONT_SIZE } from "./font_size_selector";
-import { closestBlock } from "@html_editor/utils/blocks";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 
 /** @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString */
 
@@ -41,8 +49,7 @@ export class FontSizePlugin extends Plugin {
             {
                 id: "formatFontSize",
                 run: (sizeOrClass) => {
-                    const formatName = sizeOrClass.className ? "setFontSizeClassName" : "fontSize";
-                    this.dependencies.format.requestFormat(formatName, {
+                    this.dependencies.format.requestFormat("fontSize", {
                         applyStyle: true,
                         formatProps: sizeOrClass,
                     });
@@ -78,7 +85,7 @@ export class FontSizePlugin extends Plugin {
                         this.updateFontSizeSelectorParams();
                     },
                     onSelected: (item) => {
-                        this.dependencies.format.requestFormat("setFontSizeClassName", {
+                        this.dependencies.format.requestFormat("fontSize", {
                             formatProps: { className: item.className },
                             applyStyle: true,
                         });
@@ -109,6 +116,74 @@ export class FontSizePlugin extends Plugin {
                 return true;
             }
         },
+
+        format_specs: [
+            {
+                id: "fontSize",
+                isFormatted: (node, props) => {
+                    const path = [...closestPath(node)];
+                    const li = closestElement(node, "li");
+                    const blockParent = closestBlock(node).parentElement;
+                    const stopAtBlockParent = (el) => el === blockParent;
+
+                    const hasClass = (cls) =>
+                        !!findNode(path, (el) => el.classList?.contains(cls), stopAtBlockParent) ||
+                        li?.classList?.contains(cls);
+
+                    if (props?.className) {
+                        return (
+                            FONT_SIZE_CLASSES.includes(props.className) && hasClass(props.className)
+                        );
+                    }
+
+                    const inlineSize = (
+                        findNode(path, (el) => el.style?.["font-size"], stopAtBlockParent) || li
+                    )?.style["font-size"];
+                    if (props?.size) {
+                        return inlineSize === props.size;
+                    }
+                    return inlineSize || FONT_SIZE_CLASSES.some(hasClass);
+                },
+                hasStyle: (node) =>
+                    node.style?.["font-size"] ||
+                    [
+                        ...FONT_SIZE_CLASSES,
+                        ...TEXT_STYLE_CLASSES,
+                        ...DEFAULT_FONT_SIZE_CLASSES,
+                    ].find((cls) => node.classList.contains(cls)),
+                addStyle: (node, props) => {
+                    node.style.removeProperty("font-size");
+                    removeClass(node, ...FONT_SIZE_CLASSES, "o_rfs");
+                    if (props.className) {
+                        node.classList.add(props.className);
+                    } else {
+                        node.style["font-size"] = props.size;
+                        node.classList.toggle(
+                            "o_rfs",
+                            !!props.size && props.size.startsWith("clamp(")
+                        );
+                    }
+                },
+                removeStyle: (node) => {
+                    removeStyle(node, "font-size");
+                    removeClass(node, ...FONT_SIZE_CLASSES, "o_rfs", "o_default_font_size");
+                    // Typography classes should be preserved on block elements since
+                    // they act as semantic equivalents of <h1>, <h2>, etc., not just
+                    // removable styles.
+                    if (!isBlock(node)) {
+                        removeClass(node, ...TEXT_STYLE_CLASSES, ...DEFAULT_FONT_SIZE_CLASSES);
+                    }
+                },
+                addNeutralStyle: function (node) {
+                    const block = closestBlock(node);
+                    if (["H1", "H2", "H3", "H4", "H5", "H6"].includes(block.nodeName)) {
+                        node.classList.add(block.nodeName.toLowerCase());
+                    } else {
+                        node.classList.add("o_default_font_size");
+                    }
+                },
+            },
+        ],
     };
 
     setup() {
