@@ -21,6 +21,7 @@
         'views/subcontracting_portal_views.xml',
         'views/subcontracting_portal_templates.xml',
         'report/mrp_report_bom_structure.xml',
+        'report/mrp_report_mo_overview.xml',
         'security/ir.access.csv',
     ],
     'demo': [
