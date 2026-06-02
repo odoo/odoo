@@ -1,0 +1,66 @@
+.modal-dialog:has(.o_mass_mailing_preview_transparent_form) {
+    --modal-width: 100vw;
+    padding-bottom: 0 !important;
+    --modal-padding: 0;
+
+    .modal-content {
+        border-width: 0px;
+        background-color: transparent;
+        box-shadow: initial;
+        .modal-header {
+            display: none !important;
+        }
+        .o_form_sheet {
+            background-color: transparent;
+            > :not(.o_field_mailing_preview_iframe) {
+                display: none;
+            }
+            > .o_field_mailing_preview_iframe {
+                .o_is_mobile {
+                    background-color: var(--modal-bg);
+                    box-shadow: var(--modal-box-shadow);
+                }
+            }
+        }
+    }
+    .o_form_sheet_bg {
+        max-width:100%;
+    }
+}
+
+.o_mass_mailing_iframe_wrapper.mailing_preview_iframe {
+    .o_mass_mailing_preview_container:not(.o_is_mobile) {
+        height: 60vh;
+    }
+    .o_mass_mailing_preview_avatar {
+        width: 10%;
+        > img {
+            clip-path: circle();
+        }
+    }
+    .o_mass_mailing_preview_from_to {
+        max-width: 60%;
+    }
+    .o_is_mobile {
+        width: 367px;
+        background-repeat: no-repeat;
+    }
+    .o_is_mobile_header {
+        background-color: var(--modal-bg);
+        .btn-close {
+            --btn-close-color: black;
+        }
+    }
+    .o_is_mobile_footer {
+        position: relative;
+        > .o_is_mobile_footer_padding {
+            position: absolute;
+            width: 100%;
+            margin-top: -10px;
+            padding-bottom: 40px;
+            background-image: url("/html_builder/static/img/phone.svg");
+            background-position: bottom;
+            background-repeat: no-repeat;
+        }
+    }
+}

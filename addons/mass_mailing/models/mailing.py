@@ -641,12 +641,35 @@ class MailingMailing(models.Model):
 
     def action_preview(self):
         self.ensure_one()
-        ctx = dict(self.env.context, default_mass_mailing_id=self.id, dialog_size='extra-large')
+        ctx = dict(
+            self.env.context,
+            default_mass_mailing_id=self.id,
+            dialog_size='extra-large',
+            header=False,
+        )
         return {
-            'name': _('Preview & Test'),
+            'name': _('Preview Mailing'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'views': [(self.env.ref('mass_mailing.view_mail_mass_mailing_test_form').id, 'form')],
+            'res_model': 'mailing.mailing.test',
+            'target': 'new',
+            'context': ctx,
+        }
+
+    def action_test(self):
+        self.ensure_one()
+        ctx = dict(
+            self.env.context,
+            default_mass_mailing_id=self.id,
+            dialog_size='medium',
+        )
+        return {
+            'name': _('Test Mailing'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mailing.mailing.test',
+            'views': [(self.env.ref('mass_mailing.view_mail_mass_mailing_test_send_test_form').id, 'form')],
             'target': 'new',
             'context': ctx,
         }

@@ -71,7 +71,8 @@
                         <button name="action_retry_failed" type="object" invisible="state != 'done' or failed == 0" string="Retry" data-hotkey="y"/>
                         <button name="action_duplicate" type="object" class="btn-secondary" string="Duplicate"
                             data-hotkey="d" invisible="state != 'done'"/>
-                        <button name="action_preview" type="object" class="btn-secondary" string="Preview &amp; Test" data-hotkey="k" invisible="is_body_empty"/>
+                        <button name="action_preview" type="object" class="btn-secondary" string="Preview" data-hotkey="k" invisible="not body_html or is_body_empty or state == 'done'"/>
+                        <button name="action_test" type="object" class="btn-secondary" string="Test" data-hotkey="t" invisible="not body_html or is_body_empty or state == 'done'"/>
                         <button name="action_cancel" type="object" invisible="state != 'in_queue'" class="btn-secondary" string="Cancel" data-hotkey="x"/>
                         <div class="alert alert-info o_mass_mailing_alert_message mb-0 ms-2 py-1" role="alert"
                             invisible="state != 'in_queue' and scheduled == 0 and not warning_message">
