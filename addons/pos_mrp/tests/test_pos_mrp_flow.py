@@ -193,10 +193,10 @@ class TestPosMrp(TestPointOfSaleCommon):
         self.pos_config.open_ui()
         order_data = {
             'to_invoice': True,
-            'amount_paid': 2.0,
+            'amount_paid': 4.0,
             'amount_return': 0,
             'amount_tax': 0,
-            'amount_total': 2.0,
+            'amount_total': 4.0,
             'date_order': fields.Datetime.to_string(fields.Datetime.now()),
             'fiscal_position_id': False,
             'pricelist_id': self.pos_config.pricelist_id.id,
@@ -223,7 +223,7 @@ class TestPosMrp(TestPointOfSaleCommon):
             'session_id': self.pos_config.current_session_id.id,
             'sequence_number': 2,
             'payment_ids': [[0, 0, {
-                'amount': 2.0,
+                'amount': 4.0,
                 'name': fields.Datetime.now(),
                 'payment_method_id': self.cash_payment_method.id}
             ]],
@@ -287,10 +287,10 @@ class TestPosMrp(TestPointOfSaleCommon):
 
         self.pos_config.open_ui()
         order_data = {'to_invoice': True,
-            'amount_paid': 2.0,
+            'amount_paid': 4.0,
             'amount_return': 0,
             'amount_tax': 0,
-            'amount_total': 2.0,
+            'amount_total': 4.0,
             'date_order': fields.Datetime.to_string(fields.Datetime.now()),
             'fiscal_position_id': False,
             'pricelist_id': self.pos_config.pricelist_id.id,
@@ -300,8 +300,8 @@ class TestPosMrp(TestPointOfSaleCommon):
                         'pack_lot_ids': [],
                         'price_unit': 2,
                         'product_id': self.kit.id,
-                        'price_subtotal': 2,
-                        'price_subtotal_incl': 2,
+                        'price_subtotal': 4,
+                        'price_subtotal_incl': 4,
                         'qty': 2,
                         'tax_ids': []}],
                         ],
@@ -311,7 +311,7 @@ class TestPosMrp(TestPointOfSaleCommon):
                 'sequence_number': 2,
                 'payment_ids': [[0,
                                     0,
-                                    {'amount': 2.0,
+                                    {'amount': 4.0,
                                     'name': fields.Datetime.now(),
                                     'payment_method_id': self.cash_payment_method.id}]],
                 'uuid': '00042-003-0014',
@@ -627,10 +627,10 @@ class TestPosMrp(TestPointOfSaleCommon):
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
         pos_order_data = {
-                'amount_paid': 100,
+                'amount_paid': 200,
                 'amount_return': 0,
                 'amount_tax': 0,
-                'amount_total': 100,
+                'amount_total': 200,
                 'date_order': fields.Datetime.to_string(fields.Datetime.now()),
                 'fiscal_position_id': False,
                 'lines': [
@@ -663,7 +663,7 @@ class TestPosMrp(TestPointOfSaleCommon):
                 'sequence_number': 2,
                 'payment_ids': [
                     Command.create({
-                        'amount': 100,
+                        'amount': 200,
                         'name': fields.Datetime.now(),
                         'payment_method_id': self.cash_payment_method.id
                     })

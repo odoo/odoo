@@ -1227,6 +1227,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'product_id': tracked_product.id,
                 'price_unit': 1.15,
                 'qty': 1.0,
+                'tax_ids': [(6, 0, tracked_product.taxes_id.filtered(lambda t: t.company_id == self.env.company).ids)],
                 'price_subtotal': untax,
                 'price_subtotal_incl': untax + tax,
                 'pack_lot_ids': [
@@ -1238,14 +1239,15 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                     'product_id': tracked_product_2.id,
                     'price_unit': 1.15,
                     'qty': 1.0,
+                    'tax_ids': [(6, 0, tracked_product_2.taxes_id.filtered(lambda t: t.company_id == self.env.company).ids)],
                     'price_subtotal': untax,
                     'price_subtotal_incl': untax + tax,
                     'pack_lot_ids': [
                         [0, 0, {'lot_name': '80085'}],
                     ]
             })],
-            'amount_tax': tax,
-            'amount_total': untax+tax,
+            'amount_tax': 2 * tax,
+            'amount_total': 2 * (untax + tax),
             'amount_paid': 0,
             'amount_return': 0,
             'shipping_date': fields.Date.today(),
@@ -1257,7 +1259,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             "active_id": pos_order.id,
         }
         pos_make_payment = self.PosMakePayment.with_context(context_make_payment).create({
-            'amount': untax+tax,
+            'amount': 2 * (untax + tax),
         })
         context_payment = {'active_id': pos_order.id}
         pos_make_payment.with_context(context_payment).check()
@@ -1289,7 +1291,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_subtotal': 450 * (1 - 5/100.0) * 2,
                 'price_subtotal_incl': 450 * (1 - 5/100.0) * 2,
             })],
-            'amount_total': 1710.0,
+            'amount_total': 855.0,
             'amount_tax': 0.0,
             'amount_paid': 0.0,
             'amount_return': 0.0,
@@ -2443,10 +2445,10 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'user_id': self.env.user.id,
             'session_id': current_session.id,
             'partner_id': self.partner1.id,
-            'amount_paid': -10,
+            'amount_paid': -40,
             'amount_tax': 0,
             'amount_return': 0,
-            'amount_total': -10,
+            'amount_total': -40,
             'fiscal_position_id': False,
             'lines': [[0, 0, {
                 'product_id': product.id,
@@ -2475,7 +2477,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'date_order': fields.Datetime.to_string(fields.Datetime.now()),
             'uuid': '12345-123-1234',
             'payment_ids': [[0, 0, {
-                'amount': -10,
+                'amount': -40,
                 'name': fields.Datetime.now(),
                 'payment_method_id': self.cash_payment_method.id
             }]],

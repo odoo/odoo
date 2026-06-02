@@ -10,10 +10,9 @@ from random import randrange
 from pprint import pformat
 from uuid import uuid4
 
-import psycopg2
 import pytz
 
-from odoo import api, fields, models, tools, _, Command
+from odoo import api, fields, models, _, Command
 from odoo.tools import float_is_zero, float_round, float_repr, float_compare, formatLang, SQL
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv.expression import AND
@@ -110,8 +109,17 @@ class PosOrder(models.Model):
             for field in ['lines', 'payment_ids']:
                 if order.get(field):
                     existing_record_ids = self.env[pos_order[field]._name].browse([r[1] for r in order[field] if r[1] != 0]).exists().ids
-                    existing_records_vals = [r for r in order[field] if r[0] not in [1, 2, 3, 4] or r[1] in existing_record_ids]
-                    pos_order.write({field: existing_records_vals})
+                    commands = []
+                    for r in order[field]:
+                        if not draft and r[0] == 1 and r[1] not in existing_record_ids:
+                            # During final validation the client sends every line with
+                            # full data (update command).  If a record was removed in
+                            # the meantime, re-create it so the order total stays
+                            # consistent with what the client is paying for.
+                            commands.append([0, 0, {k: v for k, v in r[2].items() if k != 'id'}])
+                        elif r[0] not in [1, 2, 3, 4] or r[1] in existing_record_ids:
+                            commands.append(r)
+                    pos_order.write({field: commands})
                     order[field] = []
 
             del order['uuid']
@@ -148,13 +156,7 @@ class PosOrder(models.Model):
     def _process_saved_order(self, draft):
         self.ensure_one()
         if not draft and self.state != 'cancel':
-            try:
-                self.action_pos_order_paid()
-            except psycopg2.DatabaseError:
-                # do not hide transactional errors, the order(s) won't be saved!
-                raise
-            except Exception as e:
-                _logger.error('Could not fully process the POS Order: %s', tools.exception_to_unicode(e))
+            self.action_pos_order_paid()
             self._create_order_picking()
             self._compute_total_cost_in_real_time()
 
@@ -474,6 +476,7 @@ class PosOrder(models.Model):
                 order.config_id.cash_rounding
                 and not order.config_id.only_round_cash_method
                 and order.config_id.rounding_method
+                and not self.env.context.get('pos_skip_cash_rounding')
             ):
                 cash_rounding = order.config_id.rounding_method
 
@@ -751,6 +754,13 @@ class PosOrder(models.Model):
 
     def action_pos_order_paid(self):
         self.ensure_one()
+
+        # Recompute from actual DB lines; skip cash rounding so amount_total
+        # stays at the raw line total (rounding is applied by float_round below).
+        # When change is returned, _process_payment_lines already called
+        # _compute_prices() with the correct cash-rounded total — don't override.
+        if float_is_zero(self.amount_return, precision_rounding=self.currency_id.rounding):
+            self.with_context(pos_skip_cash_rounding=True)._compute_prices()
 
         # TODO: add support for mix of cash and non-cash payments when both cash_rounding and only_round_cash_method are True
         if not self.config_id.cash_rounding \

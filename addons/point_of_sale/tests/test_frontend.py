@@ -2395,6 +2395,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'property_product_pricelist': not_available_pricelist.id,
         })
 
+        cash_pm = pos_session.payment_method_ids.filtered(lambda p: p.is_cash_count)[:1] \
+            or pos_session.payment_method_ids[:1]
         order = self.env['pos.order'].create({
             'company_id': self.env.company.id,
             'session_id': pos_session.id,
@@ -2409,6 +2411,10 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'tax_ids': False,
                 'price_subtotal': 10.00,
                 'price_subtotal_incl': 10.00,
+            })],
+            'payment_ids': [(0, 0, {
+                'amount': 10.00,
+                'payment_method_id': cash_pm.id,
             })],
             'pricelist_id': not_available_pricelist.id,
             'amount_paid': 10.00,

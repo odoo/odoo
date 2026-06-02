@@ -303,6 +303,11 @@ export class PaymentScreen extends Component {
         this.pos.addPendingOrder([this.currentOrder.id]);
         this.currentOrder.state = "paid";
 
+        // Ensure the final sync sends complete data for every line and payment
+        // so the server can verify the full order before marking it as paid.
+        this.currentOrder.lines.forEach((line) => line.setDirty());
+        this.currentOrder.payment_ids.forEach((payment) => payment.setDirty());
+
         this.env.services.ui.block();
         let syncOrderResult;
         try {
