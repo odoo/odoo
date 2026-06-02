@@ -7,6 +7,7 @@ import { useErrorHandlers } from "@point_of_sale/app/hooks/hooks";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 import { PrintPopup } from "@point_of_sale/app/components/popups/print_popup/print_popup";
 import { SendReceiptPopup } from "@point_of_sale/app/components/popups/send_receipt_popup/send_receipt_popup";
+import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 
 export class FeedbackScreen extends Component {
     static template = "point_of_sale.FeedbackScreen";
@@ -31,6 +32,21 @@ export class FeedbackScreen extends Component {
             loading: true,
             timeout: false,
         });
+        if (new URLSearchParams(window.location.search).get("post_validate") == 1) {
+            // This means we got here from a backend redirect, so waitFor is always undefined
+            this.waitFor = Promise.withResolvers();
+            onMounted(async () => {
+                try {
+                    const validation = new OrderPaymentValidation({
+                        pos: this.pos,
+                        orderUuid: this.props.orderUuid,
+                    });
+                    await validation.afterOrderValidation();
+                } finally {
+                    this.waitFor.resolve();
+                }
+            });
+        }
 
         onMounted(() => {
             this.scaleText();
