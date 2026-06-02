@@ -642,7 +642,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         Setting the lot_ids of a stock move should adapt the reservation following these rules:
 
         1. Removing a lot should remove its reference from sml but not the reserved quantity.
-        2. Additional lots should be handled sequentially assigning the macimum between the
+        2. Additional lots should be handled sequentially assigning the maximum between the
            remaining demand and the available quantity of the lot if none is available.
         """
         for move in self:
