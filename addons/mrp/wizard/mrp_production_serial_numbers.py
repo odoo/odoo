@@ -12,6 +12,7 @@ class MrpProductionSerials(models.TransientModel):
     production_id = fields.Many2one('mrp.production', 'Production')
 
     workorder_id = fields.Many2one('mrp.workorder', 'Workorder')
+    qty_produced = fields.Float('Quantity Produced')
 
     lot_name = fields.Char('First SN', compute="_compute_lot_name", store=True, readonly=False)
     lot_quantity = fields.Integer('Number of SN', compute="_compute_lot_quantity", store=True, readonly=False)
@@ -52,8 +53,9 @@ class MrpProductionSerials(models.TransientModel):
 
     def action_split_and_assign_serials(self):
         self.ensure_one()
+        if self.qty_produced != self.workorder_id.qty_produced:
+            self.workorder_id.qty_produced = self.qty_produced
         lots, new_lots = self._parse_serial_numbers()
-
         split_amounts = {self.production_id: [1] * len(lots)}
         mos = self.production_id._split_productions(amounts=split_amounts)
         for mo, serial in zip(mos, lots):
@@ -66,6 +68,8 @@ class MrpProductionSerials(models.TransientModel):
 
     def action_apply(self):
         self.ensure_one()
+        if self.qty_produced != self.workorder_id.qty_produced:
+            self.workorder_id.qty_produced = self.qty_produced
         lots, new_lots = self._parse_serial_numbers()
         self.production_id.lot_producing_ids = lots
         if self.production_id.qty_producing != len(self.production_id.lot_producing_ids):

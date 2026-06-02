@@ -194,6 +194,7 @@ class TestMrpCommon(TestStockCommon):
                 Command.create({'name': 'Weld Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
             ],
             'type': 'normal',
+            'continuous': True,
             'bom_line_ids': [
                 Command.create({'product_id': cls.product_5.id, 'product_qty': 2}),
                 Command.create({'product_id': cls.product_4.id, 'product_qty': 8}),

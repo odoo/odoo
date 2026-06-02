@@ -7,6 +7,11 @@
         <field name="arch" type="xml">
             <form string="Serial Numbers">
                 <field name="production_id" invisible="True"/>
+                <group invisible="not workorder_id">
+                    <group>
+                        <field name="qty_produced"/>
+                    </group>
+                </group>
                 <group>
                     <group>
                         <field name="lot_name"/>

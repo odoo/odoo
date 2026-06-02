@@ -73,8 +73,10 @@
                 <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
                 <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                 <field name="product_id" optional="show"/>
-                <field name="qty_remaining" optional="show" string="Quantity"/>
-                <field name="qty_ready" optional="hide" groups="base.group_no_one"/>
+                <field name="qty_production" optional="show" string="Quantity"/>
+                <field name="qty_produced" optional="hide" string="Produced"/>
+                <field name="qty_remaining" optional="hide" string="Remaining"/>
+                <field name="qty_ready" optional="hide" string="Ready" groups="base.group_no_one"/>
                 <field name="date_start" string="Start date" optional="hide" readonly="state in ['progress', 'done', 'cancel']" decoration-danger="decoration_dates == 'danger'" decoration-warning="decoration_dates == 'warning'"/>
                 <field name="date_finished" optional="hide" readonly="state in ['progress', 'done', 'cancel']"  decoration-danger="decoration_dates == 'danger'" decoration-warning="decoration_dates == 'warning'"/>
                 <field name="duration_expected" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" sum="expected duration" readonly="state in ['cancel', 'done']"/>
@@ -362,15 +364,33 @@
                         <field name="state" widget="mo_view_list_dropdown" invisible="production_state == 'draft'" options="{'display': 'badge'}"/>
                     </div>
                 </div>
+                <div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" name="action_view_backorders" type="object" icon="fa-wrench" invisible="backorder_count &lt; 2">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value"><field name="backorder_count"/></span>
+                            <span class="o_stat_text">Productions</span>
+                        </div>
+                    </button>
+                </div>
                 <group>
                     <group>
                         <field name="product_id" readonly="1"/>
-                        <field name="qty_remaining" string="Quantity" readonly="1" invisible="state == 'done'"/>
-                        <field name="qty_produced" string="Produced Quantity" groups="base.group_no_one" readonly="state == 'done' or product_tracking == 'serial'"/>
-                        <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                         <field name="production_id" force_save="1"/>
+                        <field name="production_lot_producing_id" widget="many2many_tags" readonly="production_state in ('draft', 'cancel')" invisible="product_tracking in ('none', False)"/>
+                        <label for="qty_produced"  class="d-touch-none"/>
+                        <div class="o_row g-0 d-flex" name="qty">
+                            <div class="o_row flex-grow-1">
+                                <field name="qty_produced" string="Produced Quantity" class="text-start text-truncate" readonly="production_state in ('draft', 'cancel') or state in ('cancel', 'done')" force_save="1"/>
+                                /
+                            </div>
+                            <div class="d-flex gap-1">
+                                <field name="qty_to_produce" class="oe_inline" readonly="1"/>
+                                <field name="uom_id" options="{'no_open': True, 'no_create': True, 'quantity_field': 'qty_produced'}" groups="uom.group_uom" widget="many2one_uom" readonly="1"/>
+                            </div>
+                        </div>
                     </group>
                     <group>
+                        <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                         <field
                             name="date_start"
                             widget="daterange"
@@ -378,9 +398,6 @@
                             readonly="state in ['cancel', 'done']"
                         />
                         <field name="duration_expected" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" readonly="state in ['cancel', 'done']"/>
-                        <field name="remaining_time" decoration-danger="remaining_time &lt; 0"
-                                string="Time Remaining" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" readonly="1"
-                                invisible="state in ['cancel', 'done']"/>
                     </group>
                 </group>
                     <field name="properties" columns="2"/>
@@ -458,6 +475,36 @@
             </sheet>
             <chatter/>
             </form>
+        </field>
+    </record>
+
+    <record id="mrp_production_workorder_tree_view_backorders" model="ir.ui.view">
+        <field name="name">mrp.production.work.order.list.backorders</field>
+        <field name="model">mrp.workorder</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="10"/>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="production_id" optional="show"/>
+            </field>
+            <xpath expr="//field[@name='qty_production']" position="attributes">
+                <attribute name="sum">Total Quantity</attribute>
+            </xpath>
+            <xpath expr="//field[@name='qty_production']" position="after">
+                <field name="production_lot_producing_id" optional="hide" groups="stock.group_production_lot"/>
+            </xpath>
+            <xpath expr="//field[@name='qty_produced']" position="attributes">
+                <attribute name="sum">Total To Produce</attribute>
+                <attribute name="optional">show</attribute>
+            </xpath>
+            <xpath expr="//field[@name='qty_remaining']" position="attributes">
+                <attribute name="sum">Total Remaining</attribute>
+                <attribute name="optional">show</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="column_invisible">0</attribute>
+            </xpath>
         </field>
     </record>
 

@@ -3339,6 +3339,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
                 }),
             ],
             'type': 'normal',
+            'continuous': True,
             'bom_line_ids': [
                 Command.create({'product_id': self.product_2.id, 'product_qty': 1}),
             ]})
@@ -4099,7 +4100,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         production.button_mark_done()
 
-        self.assertEqual(production.workorder_ids.duration_expected, init_duration_expected + 5)
+        self.assertEqual(production.workorder_ids.duration_expected, round(init_duration_expected + 5, 2))
 
     def test_multi_edit_start_date_wo(self):
         """
