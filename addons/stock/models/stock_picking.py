@@ -1301,6 +1301,8 @@ class StockPicking(models.Model):
 
     def action_detailed_operations(self):
         view_id = self.env.ref('stock.view_stock_move_line_detailed_operation_tree').id
+        lines = self.move_ids
+        hide_put_in_pack = bool(lines) and all(line.state in ('done', 'cancel') for line in lines)
         return {
             'name': _('Detailed Operations'),
             'view_mode': 'list',
@@ -1317,6 +1319,7 @@ class StockPicking(models.Model):
                 'show_lots_text': self.show_lots_text,
                 'picking_code': self.picking_type_code,
                 'create': self.state not in ('done', 'cancel'),
+                'hide_put_in_pack': hide_put_in_pack,
             }
         }
 

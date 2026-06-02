@@ -701,3 +701,9 @@ class StockMove(models.Model):
         else:
             res['raw_material_production_id'] = self.production_id.id
         return res
+
+    def _set_quantity_done(self, qty):
+        super()._set_quantity_done(qty)
+        if self.product_id.tracking == 'lot' and self.product_id == self.production_id.product_id \
+              and self.production_id.lot_producing_ids:
+            self.move_line_ids.lot_id = self.production_id.lot_producing_ids.ids[0]

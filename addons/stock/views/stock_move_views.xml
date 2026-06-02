@@ -230,7 +230,13 @@
             <field name="arch" type="xml">
                 <list editable="bottom" decoration-muted="(state == 'done' and is_locked == True)" multi_edit="1" default_order="result_package_id desc, location_id asc, location_dest_id asc, picking_id asc, id">
                     <header>
-                        <button class="btn-primary" name="action_put_in_pack" type="object" context="{'force_move_lines': 1}" string="Put in Pack" groups="stock.group_tracking_lot"/>
+                        <button
+                            class="btn-primary"
+                            name="action_put_in_pack"
+                            type="object" context="{'force_move_lines': 1}"
+                            string="Put in Pack"
+                            invisible="context.get('hide_put_in_pack')"
+                            groups="stock.group_tracking_lot"/>
                     </header>
                     <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="state == 'done' or move_id"/>
                     <field name="company_id" column_invisible="True"/>
