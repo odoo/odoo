@@ -164,6 +164,98 @@ test("Undo/Redo an action that deactivates the containers restores the old one o
     expect("button[data-name='blocks']").toHaveClass("active");
 });
 
+test("Undoing an action that deactivates target followed by another action does not deactivate target", async () => {
+    let editor;
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply({ editingElement }) {
+                editingElement.classList.add("test");
+                editor.shared.builderOptions.setNextTarget(false);
+            }
+        },
+        otherAction: class extends BuilderAction {
+            static id = "otherAction";
+            apply({ editingElement }) {
+                editingElement.classList.add("other-test");
+            }
+        },
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton action="'otherAction'">Test</BuilderButton>`,
+    });
+    const { getEditor } = await setupHTMLBuilder(`
+        <div data-name="Target 1" class="test-options-target target1">
+            Homepage
+        </div>
+    `);
+    editor = getEditor();
+
+    await contains(":iframe .target1").click();
+    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    await contains("[data-action-id='customAction']").click();
+    expect(".options-container").toHaveCount(0);
+    expect("button[data-name='blocks']").toHaveClass("active");
+
+    await contains(".o-snippets-top-actions .fa-undo").click();
+    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+
+    await contains("[data-action-id='otherAction']").click();
+    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+});
+
+test("Reverting a preview after an action that deactivates target does not deactivate target", async () => {
+    let editor;
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply({ editingElement }) {
+                editingElement.classList.add("test");
+                editor.shared.builderOptions.setNextTarget(false);
+            }
+        },
+        otherAction: class extends BuilderAction {
+            static id = "otherAction";
+            apply({ editingElement }) {
+                editingElement.classList.add("other-test");
+            }
+        },
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton action="'otherAction'">Test</BuilderButton>`,
+    });
+    const { getEditor } = await setupHTMLBuilder(`
+        <div data-name="Target 1" class="test-options-target target1">
+            Homepage
+        </div>
+    `);
+    editor = getEditor();
+
+    await contains(":iframe .target1").click();
+    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    await contains("[data-action-id='customAction']").click();
+    expect(".options-container").toHaveCount(0);
+    expect("button[data-name='blocks']").toHaveClass("active");
+
+    await contains(":iframe .target1").click();
+    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    await contains("[data-action-id='otherAction']").hover();
+    expect(":iframe .target1").toHaveClass("other-test");
+    await contains(":iframe .target1").hover();
+    expect(":iframe .target1").not.toHaveClass("other-test");
+    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+});
+
 test("Containers fallback to a valid ancestor if the target disappears and restore it on undo", async () => {
     addBuilderAction({
         targetAction: class extends BuilderAction {

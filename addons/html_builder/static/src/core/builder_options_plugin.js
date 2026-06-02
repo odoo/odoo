@@ -13,7 +13,6 @@ import { ShadowOption } from "@html_builder/plugins/shadow_option";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 import { omit } from "@web/core/utils/objects";
-import { HISTORY_COMMIT_TYPES } from "@html_editor/core/history_plugin";
 
 /** @typedef {import("@html_builder/core/base_option_component").BaseOptionComponent} BaseOptionComponent */
 /** @typedef {import("@odoo/owl").Component} Component */
@@ -154,10 +153,8 @@ export class BuilderOptionsPlugin extends Plugin {
             this.targetState = {};
         },
         on_committed_to_history_handlers: this.onHistoryCommitted.bind(this),
-        on_history_commit_undone_handlers: (lastCommitUndone) =>
-            this.restoreContainers(lastCommitUndone, HISTORY_COMMIT_TYPES.UNDO),
-        on_history_commit_redone_handlers: (lastCommitRedone) =>
-            this.restoreContainers(lastCommitRedone, HISTORY_COMMIT_TYPES.REDO),
+        on_history_commit_undone_handlers: this.restoreContainers.bind(this),
+        on_history_commit_redone_handlers: this.restoreContainers.bind(this),
         clean_for_save_processors: this.cleanForSave.bind(this),
         reload_context_processors: (context, el) => {
             if (el) {
@@ -186,7 +183,17 @@ export class BuilderOptionsPlugin extends Plugin {
             }
             return buttons;
         },
-        pending_history_commit_data_processors: this.processCommitData.bind(this),
+        on_revert_history_commit_handlers: (commit) => {
+            this.targetState = { current: commit.data.nextTarget, next: commit.data.currentTarget };
+        },
+        on_apply_history_commit_handlers: (commit) => {
+            this.targetState = { current: commit.data.currentTarget, next: commit.data.nextTarget };
+        },
+        pending_history_commit_data_processors: (data) => ({
+            ...data,
+            currentTarget: this.targetState.current,
+            nextTarget: this.targetState.next,
+        }),
         save_point_history_commit_data_processors: (data) => ({
             ...data,
             targetState: { ...this.targetState },
@@ -305,6 +312,7 @@ export class BuilderOptionsPlugin extends Plugin {
             const connectedContainers = this.lastContainers.filter((c) => c.element.isConnected);
             this.target = connectedContainers.at(-1)?.element;
         }
+        this.targetState.current = this.target;
 
         const newContainers = this.computeContainers(this.target);
         if (newContainers.length === 0 && this.lastContainers.length === 0) {
@@ -341,23 +349,9 @@ export class BuilderOptionsPlugin extends Plugin {
         return this.target;
     }
 
-    processCommitData(data) {
-        const relatedCommit = data.relatedCommit;
-        if (!relatedCommit) {
-            // Store the current target in the current commit.
-            this.targetState.current = this.target;
-        }
-        return {
-            ...data,
-            currentTarget: relatedCommit
-                ? relatedCommit.data.currentTarget
-                : this.targetState.current,
-            nextTarget: relatedCommit ? relatedCommit.data.nextTarget : this.targetState.next,
-        };
-    }
-
     deactivateContainers() {
         this.target = null;
+        this.targetState.current = false;
         this.lastContainers = [];
         this.trigger("on_current_options_containers_changed_handlers", this.lastContainers);
     }
@@ -553,14 +547,6 @@ export class BuilderOptionsPlugin extends Plugin {
 
     onHistoryCommitted(commit) {
         this.targetState = {};
-        if (commit.type === HISTORY_COMMIT_TYPES.UNDO) {
-            if ("currentTarget" in commit.data) {
-                this.targetState.current = commit.data.currentTarget;
-            }
-            if ("nextTarget" in commit.data) {
-                this.targetState.next = commit.data.nextTarget;
-            }
-        }
         // If a target is specified, activate its containers, otherwise simply
         // update them.
         const nextTargetEl = commit.data.nextTarget;
@@ -577,27 +563,17 @@ export class BuilderOptionsPlugin extends Plugin {
      * Restores the containers of the target stored in the reversed commit.
      *
      * @param {Object} lastCommitReversed the last commit to have been reversed
-     * @param { Extract<import("@html_editor/core/history_plugin").HistoryCommitType, "undo" | "redo"> } mode
      */
-    restoreContainers(lastCommitReversed, mode) {
-        if (lastCommitReversed.data.currentTarget) {
-            let targetEl = lastCommitReversed.data.currentTarget;
-            // If the commit was supposed to activate another target, activate
-            // this one instead.
-            const nextTarget = lastCommitReversed.data.nextTarget;
-            if (mode === HISTORY_COMMIT_TYPES.REDO && (nextTarget || nextTarget === false)) {
-                targetEl = nextTarget;
-            }
-            if (targetEl) {
-                this.trigger("on_will_restore_containers_handlers", targetEl);
-                this.updateContainers(targetEl, { forceUpdate: true });
-                // Scroll to the target if not visible.
-                if (!isElementInViewport(targetEl)) {
-                    // Firefox mis-scrolls with block "center" on tall snippets; keep "start".
-                    targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
-                }
-            } else {
-                this.deactivateContainers();
+    restoreContainers(lastCommitReversed) {
+        const targetEl =
+            lastCommitReversed.data.currentTarget ?? lastCommitReversed.data.nextTarget;
+        if (targetEl) {
+            this.trigger("on_will_restore_containers_handlers", targetEl);
+            this.updateContainers(targetEl, { forceUpdate: true });
+            // Scroll to the target if not visible.
+            if (!isElementInViewport(targetEl)) {
+                // Firefox mis-scrolls with block "center" on tall snippets; keep "start".
+                targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
             }
         }
     }
