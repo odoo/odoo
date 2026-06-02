@@ -1,7 +1,12 @@
 <odoo>
     <div t-name="spreadsheet.FigureComponent" t-inherit="o-spreadsheet-FigureComponent" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o-figure-menu-item')]" position="before">
-            <div t-if="this.hasOdooLink and !this.env.model.getters.isDashboard()" class="o-figure-menu-item o-chart-external-link" t-custom-click="(ev, isMiddleClick) => this.navigateToOdooLink(isMiddleClick)">
+            <div
+                t-if="this.hasOdooLink and !this.env.model.getters.isDashboard()"
+                class="o-figure-menu-item o-chart-external-link"
+                t-on-click="(ev, isMiddleClick) => this.navigateToOdooLink(isMiddleClick)"
+                t-on-auxclick="(ev, isMiddleClick) => this.navigateToOdooLink(isMiddleClick)"
+                >
                 <span class="fa fa-external-link" />
             </div>
         </xpath>

@@ -19,6 +19,11 @@
             "spreadsheet_dashboard/static/src/bundle/**/*.js",
             "spreadsheet_dashboard/static/src/bundle/**/*.xml",
         ],
+        'spreadsheet.public_spreadsheet': [
+            "spreadsheet_dashboard/static/src/public/**/*.js",
+            "spreadsheet_dashboard/static/src/public/**/*.xml",
+            "spreadsheet_dashboard/static/src/public/**/*.scss",
+        ],
         'web.assets_web_print': [
             'spreadsheet_dashboard/static/src/print_assets/**/*',
         ],
@@ -27,7 +32,12 @@
             "spreadsheet_dashboard/static/src/**/*.scss",
         ],
         'web.assets_unit_tests': [
+            "spreadsheet_dashboard/static/src/public/**/*.js",
+            "spreadsheet_dashboard/static/src/public/**/*.xml",
             "spreadsheet_dashboard/static/tests/**/*",
+        ],
+        'web.assets_tests': [
+            'spreadsheet_dashboard/static/tests/tours/*',
         ],
     },
 }

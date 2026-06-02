@@ -5,8 +5,7 @@ import { getFixture } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
-import { PublicReadonlySpreadsheet } from "@spreadsheet/public_readonly_app/public_readonly";
-import { getMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 class Parent extends Component {
     static template = xml`<Spreadsheet model="this.props.model"/>`;
@@ -36,29 +35,6 @@ export async function mountSpreadsheet(model) {
     });
     await animationFrame();
     return getFixture();
-}
-
-/**
- * Mount public spreadsheet component with the given data
- * @returns {Promise<HTMLElement>}
- */
-export async function mountPublicSpreadsheet(dataUrl, mode, downloadExcelUrl = "") {
-    const env = getMockEnv();
-    env.isFrozenSpreadsheet = () => true;
-    const component = await mountWithCleanup(PublicReadonlySpreadsheet, {
-        props: {
-            dataUrl,
-            downloadExcelUrl,
-            mode,
-        },
-        noMainContainer: true,
-        env,
-    });
-    await animationFrame();
-    return {
-        fixture: getFixture(),
-        model: component.model,
-    };
 }
 
 export async function doMenuAction(registry, path, env) {
