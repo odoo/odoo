@@ -1,5 +1,5 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, useListener } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
@@ -52,7 +52,7 @@ export class QuickReactionMenu extends Component {
             },
         });
         this.frequentEmojiService = useService("frequent_emoji");
-        useExternalListener(window, "keydown", async (ev) => {
+        useListener(window, "keydown", async (ev) => {
             if (
                 !this.dropdown.isOpen ||
                 this.picker.isOpen ||

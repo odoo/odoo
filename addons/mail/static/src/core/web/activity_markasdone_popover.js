@@ -1,5 +1,5 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
-import { Component, onMounted, signal } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, signal, useListener } from "@odoo/owl";
 
 export class ActivityMarkAsDone extends Component {
     static template = "mail.ActivityMarkAsDone";
@@ -22,7 +22,7 @@ export class ActivityMarkAsDone extends Component {
         onMounted(() => {
             this.textArea.el.focus();
         });
-        useExternalListener(window, "keydown", this.onKeydown);
+        useListener(window, "keydown", (ev) => this.onKeydown(ev));
     }
 
     onKeydown(ev) {

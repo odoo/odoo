@@ -1,9 +1,9 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, useListener } from "@odoo/owl";
 
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
@@ -38,7 +38,7 @@ export class NavigableList extends Component {
         });
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
-        useExternalListener(window, "keydown", this.onKeydown, true);
+        useListener(window, "keydown", (ev) => this.onKeydown(ev), true);
         onExternalClick("root", async (ev) => {
             // Let event be handled by bubbling handlers first.
             await new Promise(setTimeout);

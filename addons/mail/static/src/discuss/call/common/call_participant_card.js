@@ -1,4 +1,4 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
 import { CallDropdown } from "@mail/discuss/call/common/call_dropdown";
@@ -8,7 +8,7 @@ import { isEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 
@@ -57,7 +57,7 @@ export class CallParticipantCard extends Component {
                 viewCountIncrement: -1,
             });
         });
-        useExternalListener(browser, "fullscreenchange", this.onFullScreenChange);
+        useListener(browser, "fullscreenchange", () => this.onFullScreenChange());
     }
 
     get isContextMenuAvailable() {
