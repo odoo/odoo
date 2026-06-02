@@ -862,6 +862,7 @@ class StockPicking(models.Model):
                 'show_lots_text': self.show_lots_text,
                 'picking_code': self.picking_type_code,
                 'create': self.state not in ('done', 'cancel'),
+                'hide_put_in_pack': all(move.state in ('done', 'cancel') for move in self.move_ids),
             }
         }
 

@@ -19,13 +19,18 @@ export class StockPickFrom extends Component {
         };
     }
 
+    get lotDisplayName() {
+        const data = this.props.record.data;
+        return data.lot_id?.display_name || data.lot_name;
+    }
+
     _quant_display_name() {
         let name_parts = [];
         // if location group is activated
         const data = this.props.record.data;
         name_parts.push(data.location_id?.display_name)
-        if (data.lot_id) {
-            name_parts.push(data.lot_id?.display_name || data.lot_name)
+        if (this.lotDisplayName) {
+            name_parts.push(this.lotDisplayName);
         }
         if (data.package_id) {
             let packageName = data.package_id?.display_name;

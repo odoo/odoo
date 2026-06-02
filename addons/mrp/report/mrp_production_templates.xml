@@ -164,4 +164,10 @@
         </div>
     </xpath>
 </template>
+
+<template id="report_mrp_packages">
+    <t t-set="docs" t-value="docs._get_packages_for_print()"/>
+    <t t-call="stock.report_package_barcode"/>
+</template>
+
 </odoo>

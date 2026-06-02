@@ -7,6 +7,13 @@
             <field name="domain">['|', ('move_id.raw_material_production_id', '=', active_id), ('move_id.production_id', '=', active_id)]</field>
         </record>
 
+        <record id="action_detailed_operations" model="ir.actions.act_window">
+            <field name="name">Detailed Operations</field>
+            <field name="res_model">stock.move.line</field>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+            <field name="context">{'sml_specific_default': True, 'picking_code': 'mrp_operation', 'create': False,}</field>
+        </record>
         <record id="view_mrp_stock_move_operations" model="ir.ui.view">
             <field name="name">stock.move.mrp.operations.raw.form</field>
             <field name="model">stock.move</field>
@@ -73,6 +80,17 @@
                 <xpath expr="//field[@name='product_id']" position="attributes">
                     <attribute name="domain">[('id', 'in', context.get('product_ids')), ('type', '=', 'consu'), ('is_kits', '=', False)] if 'product_ids' in context else [('type', '=', 'consu'), ('is_kits', '=', False)]</attribute>
                 </xpath>
+            </field>
+        </record>
+
+        <record id="view_stock_move_line_detailed_operation_tree" model="ir.ui.view">
+            <field name="name">stock.move.line.operations.list.inherit</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+            <field name="arch" type="xml">
+                <field name="location_id" position="after">
+                    <field name="visual_lot_name" column_invisible="True"/>
+                </field>
             </field>
         </record>
 

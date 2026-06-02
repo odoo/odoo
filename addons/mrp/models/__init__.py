@@ -20,5 +20,7 @@ from . import stock_lot
 from . import stock_reference
 from . import stock_rule
 from . import stock_warehouse
+from . import stock_package
+from . import stock_package_history
 from . import stock_quant
 from . import stock_replenish_mixin

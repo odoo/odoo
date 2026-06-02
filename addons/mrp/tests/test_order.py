@@ -5672,6 +5672,19 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertTrue(mo.is_planned)
         self.assertEqual(mo.workorder_ids.sorted('sequence').mapped('date_start'), planned_starts)
 
+    def test_finished_move_line_production_id_link(self):
+        """
+        Verify that the computed finished_move_line_ids are explicitly
+        linked back to the manufacturing order via the production_id field.
+        """
+        mo, _bom, _final, _comp1, _comp2 = self.generate_mo(
+            qty_final=1,
+            qty_base_1=1,
+            qty_base_2=1
+        )
+        mo.qty_producing = 1.0
+        self.assertEqual(mo.finished_move_line_ids.production_id, mo)
+
 
 class TestMrpOrderPostInstall(TestMrpCommon):
     _test_user_groups = (
