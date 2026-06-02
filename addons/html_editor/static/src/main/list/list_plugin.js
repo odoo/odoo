@@ -1208,7 +1208,7 @@ export class ListPlugin extends Plugin {
     }
 
     postFormatAppliedOnList(node, formatName, applyStyle) {
-        if (!["setFontSizeClassName", "fontSize"].includes(formatName)) {
+        if (formatName !== "fontSize") {
             return;
         }
         const listsSet = new Set();
