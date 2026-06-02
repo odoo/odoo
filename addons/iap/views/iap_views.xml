@@ -2,64 +2,18 @@
 <odoo>
 
     <!-- iap Client Account Views -->
-    <record id="iap_account_view_form" model="ir.ui.view">
-        <field name="name">iap.account.form</field>
-        <field name="model">iap.account</field>
-        <field name="arch" type="xml">
-            <form string="In-App Purchase Account" duplicate="false">
-                <header>
-                    <button string="Buy Credits" name="action_buy_credits" type="object" class="btn btn-primary"/>
-                </header>
-                <sheet>
-                    <div class="oe_title">
-                        <h1>
-                            <field name="name" placeholder="Account Name" class="oe_inline"/>
-                            <span class="text-bg-danger" style="padding: 5px 10px; border-radius: 5px; font-size: 0.4em; margin-left: 10px; vertical-align: middle;" invisible="not balance or not is_balance_below_warning_threshold">
-                                <field name="balance" class="oe_inline"/>
-                            </span>
-                            <span class="text-bg-success" style="padding: 5px 10px; border-radius: 5px; font-size: 0.4em; margin-left: 10px; vertical-align: middle;" invisible="not balance or is_balance_below_warning_threshold">
-                                <field name="balance" class="oe_inline"/>
-                            </span>
-                        </h1>
-                    </div>
-                    <div>
-                        <field name="service_price_description" class="text-muted"/>
-                    </div>
-                    <group>
-                        <group name="account" string="Account Information">
-                            <field name="service_id" readonly="service_locked" options="{'no_open': True, 'no_create': True}"/>
-                            <field name="description"/>
-                            <field name="company_ids" widget="many2many_tags" domain="[('id', 'in', allowed_company_ids)]" />
-                            <field name="account_token" groups="base.group_no_one"/>
-                        </group>
-                        <group name="external" string="Email Alert">
-                            <field name="warning_threshold"/>
-                            <field name="warning_user_ids"
-                                   readonly="warning_threshold == 0"
-                                   required="warning_threshold > 0"
-                                   widget="many2many_avatar_user"
-                                   options="{'no_create': True, 'no_quick_create': True}"
-                                   domain="[('email', '!=', False)]"
-                                   context="{'list_view_ref': 'iap.view_iap_users_tree'}"
-                            />
-                        </group>
-                        <group/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
     <record id="iap_account_view_tree" model="ir.ui.view">
         <field name="name">iap.account.list</field>
         <field name="model">iap.account</field>
         <field name="arch" type="xml">
-            <list string="In-App Purchase Accounts" duplicate="false">
+            <list string="In-App Purchase Accounts" duplicate="false" multi_edit="1" editable="bottom">
                 <field name="name"/>
+                <field name="service_id"/>
                 <field name="description"/>
                 <field name="company_ids" widget="many2many_tags"/>
                 <field name="balance"/>
                 <field name="account_token" optional="hidden"/>
-                <button name="action_buy_credits" type="object" string="Buy Credits" icon="fa-shopping-cart"/>
+                <button name="action_manage" type="object" string="Manage" class="btn btn-secondary"/>
             </list>
         </field>
     </record>
@@ -80,7 +34,7 @@
         <field name="name">In-App Purchase Accounts</field>
         <field name="res_model">iap.account</field>
         <field name="path">iap-accounts</field>
-        <field name='view_mode'>list,form</field>
+        <field name='view_mode'>list</field>
     </record>
 
     <!-- Menus -->

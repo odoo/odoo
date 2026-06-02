@@ -20,9 +20,6 @@ The service is provided by the In App Purchase Odoo platform.
     'data': [
         'data/iap_service_data.xml',
         'data/ir_cron_data.xml',
-        'wizard/sms_account_code_views.xml',
-        'wizard/sms_account_phone_views.xml',
-        'wizard/sms_account_sender_views.xml',
         'wizard/sms_composer_views.xml',
         'wizard/sms_template_preview_views.xml',
         'wizard/sms_template_reset_views.xml',
@@ -30,7 +27,6 @@ The service is provided by the In App Purchase Odoo platform.
         'views/mail_notification_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
-        'views/iap_account_views.xml',
         'views/sms_sms_views.xml',
         'views/sms_template_views.xml',
         'security/ir.model.access.csv',

@@ -133,18 +133,3 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
             'registration_needed': ' '.join([_("Country-specific registration required."), register_now]),
         })
         return error_dict
-
-    def _send_verification_sms(self, phone_number):
-        return self._contact_iap('/api/sms/1/account/create', {
-            'phone_number': phone_number,
-        })
-
-    def _verify_account(self, verification_code):
-        return self._contact_iap('/api/sms/2/account/verify', {
-            'code': verification_code,
-        })
-
-    def _set_sender_name(self, sender_name):
-        return self._contact_iap('/api/sms/1/account/update_sender', {
-            'sender_name': sender_name,
-        })
