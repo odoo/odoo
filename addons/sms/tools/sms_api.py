@@ -128,18 +128,3 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
             'incompatible_content': _("The content of the message violates rules applied by our providers."),
         })
         return error_dict
-
-    def _send_verification_sms(self, phone_number):
-        return self._contact_iap('/api/sms/1/account/create', {
-            'phone_number': phone_number,
-        })
-
-    def _verify_account(self, verification_code):
-        return self._contact_iap('/api/sms/2/account/verify', {
-            'code': verification_code,
-        })
-
-    def _set_sender_name(self, sender_name):
-        return self._contact_iap('/api/sms/1/account/update_sender', {
-            'sender_name': sender_name,
-        })
