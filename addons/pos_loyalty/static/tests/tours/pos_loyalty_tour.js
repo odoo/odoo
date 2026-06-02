@@ -834,3 +834,16 @@ registry.category("web_tour.tours").add("test_race_conditions_update_program", {
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_discount_count_sale_report", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Test Product 1", "1"),
+            ProductScreen.totalAmountIs("57.50"),
+            ProductScreen.clickNumpad("%", "5"),
+            ProductScreen.totalAmountIs("54.62"),
+            PosLoyalty.finalizeOrder("Cash", "54.62"),
+        ].flat(),
+});
