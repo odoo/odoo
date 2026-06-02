@@ -5,7 +5,7 @@ from pytz import UTC
 
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, get_lang
-from odoo.tools.float_utils import float_compare, float_round
+from odoo.tools.float_utils import float_compare
 from odoo.exceptions import UserError
 
 
@@ -366,20 +366,17 @@ class PurchaseOrderLine(models.Model):
                     line.tax_ids,
                     line.company_id,
                 )
-                price_unit = line.product_id.cost_currency_id._convert(
+                line.price_unit = line.product_id.cost_currency_id._convert(
                     price_unit,
                     line.currency_id,
                     line.company_id,
                     line.date_order or fields.Date.context_today(line),
                     False
                 )
-                line.price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
-
             elif seller:
                 price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id) if seller else 0.0
                 price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
-                price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
-                line.price_unit = (seller.product_uom_id or seller.product_tmpl_id.uom_id)._compute_price(price_unit, line.product_uom_id)
+                line.price_unit = seller.product_uom_id._compute_price(price_unit, line.product_uom_id)
                 line.discount = seller.discount or 0.0
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')
