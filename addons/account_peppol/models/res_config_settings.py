@@ -149,6 +149,14 @@ class ResConfigSettings(models.TransientModel):
             self.account_peppol_edi_user._peppol_deregister_participant_to_sender()
         return True
 
+    def button_peppol_reregister(self):
+        self.ensure_one()
+        if self.country_code == 'FR' and self.env['ir.module.module']._get('l10n_fr_pdp').state != 'installed':
+            raise UserError(self.env._("Please install the 'France - E-Invoicing (Approved Platform)' module (l10n_fr_pdp) first"))
+        self.button_deregister_peppol_participant()
+        self.company_id._reset_peppol_configuration()
+        return self.action_open_peppol_form()
+
     # Note: Deprecated; the button is permanently invisible.
     # Disabling services can lead to complicance issues and is not necessary
     # since all existing services should just work.

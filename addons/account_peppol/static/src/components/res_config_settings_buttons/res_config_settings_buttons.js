@@ -37,8 +37,16 @@ class PeppolSettingsButtons extends Component {
         return this.props.record.data.account_peppol_edi_identification || "";
     }
 
+    get countryCode() {
+        return this.props.record.data.country_code || "";
+    }
+
     get isPdpEdiIdentification() {
         return this.ediIdentification.startsWith('0225:')
+    }
+
+    get showReregisterButton() {
+        return ['smp_registration', 'receiver'].includes(this.proxyState) && this.countryCode == 'FR' && !this.isPdpEdiIdentification;
     }
 
     get migrationPrepared() {
@@ -145,6 +153,10 @@ class PeppolSettingsButtons extends Component {
 
     async createReceiver() {
         await this._callConfigMethod("button_peppol_smp_registration");
+    }
+
+    async reregister() {
+        await this._callConfigMethod("button_peppol_reregister");
     }
 }
 
