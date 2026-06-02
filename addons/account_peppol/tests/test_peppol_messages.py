@@ -4,6 +4,7 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.tests.common import freeze_time, tagged
 
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.addons.account_peppol.tests.common import (
     mock_ack,
@@ -15,23 +16,23 @@ from odoo.addons.account_peppol.tests.common import (
 from odoo.addons.mail.tests.common import MailCommon
 
 
+
 @freeze_time('2023-01-01')
 @tagged('-at_install', 'post_install')
 class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
     MESSAGE_UUID = '87b3d068-4da3-49c8-845c-ff2540e6b7d9'
 
     @classmethod
+    @AccountTestInvoicingCommon.setup_country('be')
     def setUpClass(cls):
         super().setUpClass()
         cls.env['ir.config_parameter'].sudo().set_str('account_peppol.edi.mode', 'test')
 
         cls.env.company.write({
-            'country_id': cls.env.ref('base.be').id,
             'peppol_eas': '0208',
             'peppol_endpoint': '0477472701',
             'account_peppol_proxy_state': 'receiver',
         })
-
         edi_identification = cls.env['account_edi_proxy_client.user']._get_proxy_identification(cls.env.company, 'peppol')
         cls.private_key = cls.env['certificate.key'].create({
             'name': 'Test key PEPPOL',
@@ -486,7 +487,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         ])
 
     def test_available_peppol_sending_methods(self):
-        company_us = self.setup_other_company()['company']  # not a valid Peppol country
+        company_us = self.setup_other_company(country_id=self.env.ref('base.us').id)['company']  # not a valid Peppol country
         self.assertTrue('peppol' in self.valid_partner.with_company(self.env.company).available_peppol_sending_methods)
         self.assertFalse('peppol' in self.valid_partner.with_company(company_us).available_peppol_sending_methods)
 
