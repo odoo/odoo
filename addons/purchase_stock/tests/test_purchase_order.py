@@ -940,3 +940,23 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                 'debit': 18.18,
             },
         ])
+
+    def test_pol_update_qty_stock_move_merge_negative_moves(self):
+        """Test decreasing a qty of a confirmed PO line should update the receipt qty properly."""
+        self.env['decimal.precision'].search([('name', '=', 'Product Price')]).digits = 4
+        self.product_a.standard_price = 9.8545
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_qty': 7,
+            })],
+        })
+        purchase_order.button_confirm()
+        self.assertEqual(len(purchase_order.picking_ids), 1)
+        self.assertEqual(purchase_order.picking_ids.move_line_ids.quantity_product_uom, 7)
+
+        purchase_order.order_line.product_qty = 6
+        self.assertEqual(len(purchase_order.picking_ids), 1)
+        self.assertEqual(purchase_order.picking_ids.move_line_ids.quantity_product_uom, 6)
