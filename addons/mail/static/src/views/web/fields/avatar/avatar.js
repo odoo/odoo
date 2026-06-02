@@ -11,7 +11,6 @@ export const avatarProps = {
     cssClass: t.or([t.string(), t.object()]).optional(),
     displayName: t.string().optional(),
     noSpacing: t.boolean().optional(),
-    btnClasses: t.boolean().optional(),
 };
 
 export class Avatar extends Component {
