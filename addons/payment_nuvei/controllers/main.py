@@ -33,7 +33,7 @@ class NuveiController(http.Controller):
             payment_data = {}
         else:
             payment_data = data
-        tx_data = payment_data or {"invoice_id": tx_ref}
+        tx_data = payment_data or {"productId": tx_ref}
         tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("nuvei", tx_data)
         if tx_sudo:
             self._verify_signature(tx_sudo, payment_data, error_access_token=error_access_token)
