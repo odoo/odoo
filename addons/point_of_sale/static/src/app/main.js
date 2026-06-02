@@ -40,6 +40,13 @@ whenReady(() => {
                 event.returnValue = confirmationMessage;
                 return confirmationMessage;
             }
+            if (app.env.services.pos_data.localUnsyncedPaidOrderUuids.size > 0) {
+                const confirmationMessage = _t(
+                    "Some paid orders have not been synced to the server yet. Closing or reloading now may cause data loss."
+                );
+                event.returnValue = confirmationMessage;
+                return confirmationMessage;
+            }
             const pos = app.env.services.pos;
             if (pos?.session?.state === "opening_control") {
                 const data = JSON.stringify({

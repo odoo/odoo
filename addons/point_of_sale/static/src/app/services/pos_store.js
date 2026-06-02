@@ -1560,7 +1560,7 @@ export class PosStore extends WithLazyGetterTrap {
             if (!preSyncOrder) {
                 continue;
             }
-            this.syncingOrders.add(order.id);
+            this.syncingOrders.add(order.uuid);
 
             try {
                 const serialized = order.serializeForORM({ keepCommands: true });

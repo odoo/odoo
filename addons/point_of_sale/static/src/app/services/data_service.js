@@ -41,6 +41,10 @@ export class PosData {
             unsyncData: [],
         });
 
+        // UUIDs of paid orders written to IndexedDB but not yet confirmed synced to the server.
+        // Used by the beforeunload guard to prevent data loss on accidental page close/reload.
+        this.localUnsyncedPaidOrderUuids = new Set();
+
         await this.checkConnectivity();
 
         this.initializeWebsocket();
@@ -216,6 +220,40 @@ export class PosData {
                     }
                     if (!dataToKeep[model] || !dataToKeep[model].includes(record[key])) {
                         keysToDelete.push(record[key]);
+                    }
+                }
+
+                if (model === "pos.order") {
+                    const idbOrdersByUuid = new Map(records.map((r) => [r[key], r]));
+                    for (const trackedUuid of [...this.localUnsyncedPaidOrderUuids]) {
+                        const idbRecord = idbOrdersByUuid.get(trackedUuid);
+                        if (!idbRecord) {
+                            logPosMessage(
+                                "IndexedDB",
+                                "localUnsyncedPaidOrderUuids",
+                                `Paid order ${trackedUuid} is flagged but not found in IndexedDB — potential data loss`,
+                                CONSOLE_COLOR,
+                                [],
+                                true
+                            );
+                            continue;
+                        }
+                        const localRecord = this.models[model].get(idbRecord.id);
+                        if (idbRecord.state === "paid" || !localRecord?.isUnsyncedPaid) {
+                            // Remove guard when either:
+                            // - the order is confirmed in IndexedDB in paid state (safe on reload), or
+                            // - the order is no longer unsynced in memory (synced to server).
+                            this.localUnsyncedPaidOrderUuids.delete(trackedUuid);
+                        } else {
+                            logPosMessage(
+                                "IndexedDB",
+                                "localUnsyncedPaidOrderUuids",
+                                `Paid order ${trackedUuid} is in IndexedDB but has state "${idbRecord.state}" instead of "paid"`,
+                                CONSOLE_COLOR,
+                                [],
+                                true
+                            );
+                        }
                     }
                 }
 
