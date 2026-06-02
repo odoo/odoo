@@ -2,7 +2,6 @@
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.base.models.ir_qweb import keep_query
 
 
 class WebsiteSlidesLegacy(http.Controller):
@@ -17,5 +16,5 @@ class WebsiteSlidesLegacy(http.Controller):
         some backward compatibility for saved links, even if the display is going to
         change a bit. """
         if slug_tags:
-            return request.redirect(f"/slides/tag/{slug_tags}?{keep_query('*')}")
-        return request.redirect(f"/slides?{keep_query('*')}")
+            post['tags'] = slug_tags
+        return request.redirect_query('/slides', query=post)

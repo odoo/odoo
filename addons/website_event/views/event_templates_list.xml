@@ -57,13 +57,13 @@
                             class="badge bg-primary ms-1"/>
                     </button>
                     <div class="dropdown-menu">
-                        <span t-att-data-post="keep_event_url(tags=slugify_tags((search_tags - searched_category_tags).ids), prevent_redirect=True)"
+                        <span t-att-data-post="keep_event_url(tags=slugify_tags((search_tags - searched_category_tags).ids))"
                             t-attf-class="post_link cursor-pointer dropdown-item d-flex align-items-center justify-content-between #{'active' if not searched_category_tags else ''}">
                             All
                         </span>
                         <t t-foreach="category.tag_ids" t-as="tag">
                             <span t-if="tag.color"
-                                t-att-data-post="keep_event_url(tags=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), prevent_redirect=True)"
+                                t-att-data-post="keep_event_url(tags=slugify_tags(search_tags.ids, toggle_tag_id=tag.id))"
                                 t-attf-class="post_link cursor-pointer dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
                                 <t t-out="tag.name"/>
                             </span>
@@ -87,12 +87,17 @@
                     data-bs-toggle="offcanvas"
                     data-bs-target="#o_wevent_index_offcanvas">
                     <i class="fa fa-sliders"/>
+                    <span t-if="search_tags or search_my"
+                        class="position-absolute top-0 start-100 translate-middle border border-light rounded-circle bg-danger p-1"
+                    />
                 </button>
             </div>
             <t t-if="search_tags" t-call="website_event.searched_tags"/>
         </section>
         <!-- Off canvas filters on mobile-->
-        <div id="o_wevent_index_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
+        <div id="o_wevent_index_offcanvas"
+            class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible"
+            data-filter-url="/event">
             <div class="offcanvas-header">
                 <h5 class="offcanvas-title">Filters</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
@@ -100,6 +105,8 @@
             <div class="offcanvas-body p-0">
                 <div class="accordion accordion-flush">
                     <div class="accordion-item" t-foreach="categories" t-as="category">
+                        <t t-set="active_tags"
+                            t-value="search_tags.filtered(lambda tag: tag.category_id == category)" />
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed"
                                 type="button"
@@ -110,18 +117,24 @@
                                 <t t-out="category.name"/>
                             </button>
                         </h2>
-                        <div t-attf-id="o_wevent_offcanvas_cat_#{category.id}" t-attf-class="o_wevent_offcanvas_cat_#{category.id} accordion-collapse collapse">
+                        <div t-attf-id="o_wevent_offcanvas_cat_#{category.id}"
+                            t-attf-class="o_wevent_offcanvas_cat_#{category.id} accordion-collapse collapse">
                             <div class="accordion-body pt-0">
                                 <ul class="list-group list-group-flush">
                                     <t t-if="category.is_published and category.tag_ids and any(tag.color for tag in category.tag_ids)" t-foreach="category.tag_ids" t-as="tag">
                                         <li t-if="tag.color" class="list-group-item border-0 px-0">
-                                            <span t-att-data-post="keep_event_url(tags=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), prevent_redirect=True)"
-                                                class="post_link text-reset cursor-pointer" t-att-title="tag.name">
-                                                <div class="form-check">
-                                                    <input class="form-check-input pe-none" type="checkbox" t-attf-name="#{tag.color}" t-att-checked="tag in search_tags"/>
-                                                    <label class="form-check-label" t-attf-for="#{tag.color}" t-out="tag.name"/>
-                                                </div>
-                                            </span>
+                                            <div class="form-check">
+                                                <input class="form-check-input"
+                                                    type="checkbox"
+                                                    t-attf-id="o_wevent_offcanvas_tag_#{tag.id}"
+                                                    name="tags"
+                                                    t-att-value="tag.id"
+                                                    t-att-data-slug="request.env['ir.http']._slug(tag)"
+                                                    t-att-checked="tag.id in search_tags.ids" />
+                                                <label class="form-check-label"
+                                                    t-attf-for="o_wevent_offcanvas_tag_#{tag.id}"
+                                                    t-out="tag.name" />
+                                            </div>
                                         </li>
                                     </t>
                                 </ul>
@@ -129,6 +142,14 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="offcanvas-footer border-top p-3 d-flex gap-2">
+                <button type="button" class="btn btn-primary o_mobile_filter_apply">
+                    Apply Filters
+                </button>
+                <button type="button" class="btn btn-light o_mobile_filter_clear">
+                    Clear Filters
+                </button>
             </div>
         </div>
     </div>
@@ -139,7 +160,7 @@
         <t t-foreach="search_tags" t-as="tag">
             <span t-attf-class="o_filter_tag d-inline-flex align-items-baseline rounded ps-2 #{'o_color_%s' % tag.color if tag.color else ''}">
                 <t t-out="tag.display_name"/>
-                <span t-att-data-post="keep_event_url(tags=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), prevent_redirect=True)"
+                <span t-att-data-post="keep_event_url(tags=slugify_tags(search_tags.ids, toggle_tag_id=tag.id))"
                     class="post_link cursor-pointer btn border-0 py-1 px-2 text-reset opacity-75-hover">
                     <i class="oi oi-close" role="img"/>
                 </span>
@@ -175,6 +196,7 @@
                 <button class="accordion-button collapsed"
                     type="button"
                     data-bs-toggle="collapse"
+                    t-att-data-status="'active' if searches.get('date') and searches.get('date') != 'all' else 'inactive'"
                     data-bs-target=".o_wevent_offcanvas_date"
                     aria-expanded="false"
                     aria-controls="o_wevent_offcanvas_date">
@@ -187,13 +209,18 @@
                         <t t-foreach="dates" t-as="date">
                             <li t-if="date[3] or (date[0] in ('old','upcoming','all'))" class="list-group-item px-0 border-0">
                                 <t t-set="is_active" t-value="searches.get('date') == date[0]"/>
-                                <a t-att-href="keep_event_url(date=date[0])" class="d-flex align-items-center justify-content-between text-reset text-decoration-none" t-att-title="date[1]">
+                                <div class="d-flex align-items-center justify-content-between">
                                     <div class="form-check flex-basis-100">
-                                        <input class="form-check-input pe-none" type="radio" t-attf-name="#{date[1]}" t-att-checked="is_active"/>
-                                        <label class="form-check-label" t-attf-for="#{date[1]}" t-out="date[1]"/>
+                                        <input class="form-check-input" type="radio" name="date"
+                                            t-attf-id="o_wevent_offcanvas_date_#{date[0]}"
+                                            t-att-value="date[0]"
+                                            t-att-checked="is_active" />
+                                        <label class="form-check-label"
+                                            t-attf-for="o_wevent_offcanvas_date_#{date[0]}"
+                                            t-out="date[1]" />
                                     </div>
                                     <span t-if="date[3]" t-out="date[3]" class="badge pagination text-bg-primary"/>
-                                </a>
+                                </div>
                             </li>
                         </t>
                     </ul>
@@ -247,6 +274,7 @@
                 <button class="accordion-button collapsed"
                     type="button"
                     data-bs-toggle="collapse"
+                    t-att-data-status="'active' if searches.get('country') and searches.get('country') != 'all' else 'inactive'"
                     data-bs-target=".o_wevent_offcanvas_country"
                     aria-expanded="false"
                     aria-controls="o_wevent_offcanvas_country">
@@ -258,24 +286,40 @@
                     <ul class="list-group list-group-flush">
                         <li t-foreach="countries" t-as="country" class="list-group-item px-0 border-0">
                             <t t-if="country['country_id']">
-                                <t t-set="is_active" t-value="searches.get('country') == str(country['country_id'] and country['country_id'][0])"/>
-                                <a t-att-href="keep_event_url(country=country['country_id'][0])" class="d-flex align-items-center justify-content-between text-reset text-decoration-none" t-att-title="country['country_id'][1]">
+                                <t t-set="country_id" t-value="country['country_id'][0]" />
+                                <t t-set="country_name" t-value="country['country_id'][1]" />
+                                <t t-set="is_active" t-value="searches.get('country') == str(country_id)" />
+                                <div class="d-flex align-items-center justify-content-between text-reset">
                                     <div class="form-check flex-basis-100">
-                                        <input class="form-check-input pe-none" type="radio" t-attf-name="#{country['country_id'][1]}" t-att-checked="is_active"/>
-                                        <label class="form-check-label" t-attf-for="#{country['country_id'][1]}" t-out="country['country_id'][1]"/>
+                                        <input class="form-check-input" type="radio"
+                                            name="country"
+                                            t-attf-id="o_wevent_offcanvas_country_#{country_id}"
+                                            t-att-value="country_id"
+                                            t-att-checked="is_active" />
+                                        <label class="form-check-label"
+                                            t-attf-for="o_wevent_offcanvas_country_#{country_id}"
+                                            t-out="country_name" />
                                     </div>
-                                    <span t-out="country['country_id_count']" class="badge pagination text-bg-primary ms-auto"/>
-                                </a>
+                                    <span class="badge pagination text-bg-primary ms-auto">
+                                        <t t-if="include_online_events"
+                                            t-out="country['country_id_count'] + online_count" />
+                                        <t t-else="" t-out="country['country_id_count']" />
+                                    </span>
+                                </div>
                             </t>
                             <t t-else="">
                                 <t t-set="is_active" t-value="searches.get('country') == 'online'"/>
-                                <a t-att-href="keep_event_url(country='online')" class="d-flex align-items-center justify-content-between text-reset text-decoration-none">
+                                <div class="d-flex align-items-center justify-content-between text-reset">
                                     <div class="form-check flex-basis-100">
-                                        <input class="form-check-input pe-none" type="radio" name="Online Events" t-att-checked="is_active"/>
-                                        <label class="form-check-label" for="Online Events">Online Events</label>
+                                        <input class="form-check-input" type="radio"
+                                            name="country"
+                                            id="o_wevent_offcanvas_country_online"
+                                            value="online"
+                                            t-att-checked="is_active" />
+                                        <label class="form-check-label" for="o_wevent_offcanvas_country_online">Online Events</label>
                                     </div>
                                     <span t-out="country['country_id_count']" class="badge pagination text-bg-primary ms-auto"/>
-                                </a>
+                                </div>
                             </t>
                         </li>
                     </ul>

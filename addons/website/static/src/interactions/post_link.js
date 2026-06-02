@@ -1,5 +1,6 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
+import { redirect } from "@web/core/utils/urls";
 
 export function sendRequest(route, params) {
     function _addInput(form, name, value) {
@@ -71,4 +72,97 @@ export class PostLink extends Interaction {
     }
 }
 
+function _appendParam(params, name, value) {
+    if (!name || value === undefined || value === null || value === "") {
+        return;
+    }
+    params.append(name, value);
+}
+
+function _getParamEntries(value) {
+    if (!value || !String(value).includes("=")) {
+        return [];
+    }
+    return [...new URLSearchParams(value).entries()];
+}
+
+function _collectMobileFilterParams(container) {
+    const params = new URLSearchParams();
+    const filterNames = new Set();
+    const tagValues = [];
+    const elements = Array.from(container.querySelectorAll("input, select, textarea"));
+    for (const element of elements) {
+        if (!element.name || element.disabled) {
+            continue;
+        }
+        filterNames.add(element.name);
+        const type = element.type;
+        if ((type === "checkbox" || type === "radio") && !element.checked) {
+            continue;
+        }
+        if (type === "radio") {
+            const entries = _getParamEntries(element.value);
+            if (entries.length) {
+                for (const [name, value] of entries) {
+                    filterNames.add(name);
+                    _appendParam(params, name, value);
+                }
+                continue;
+            }
+        }
+        if (element.name === "tags") {
+            tagValues.push(element.dataset.slug || element.value);
+            continue;
+        }
+        _appendParam(params, element.name, element.value);
+    }
+    if (tagValues.length) {
+        params.set("tags", [...new Set(tagValues)].join(","));
+    }
+    return { params, filterNames };
+}
+
+function _applyParams(searchParams, params) {
+    for (const [name, value] of params.entries()) {
+        searchParams.append(name, value);
+    }
+}
+
+function _buildFilterUrl(offcanvasEl, params, filterNames) {
+    const currentUrl = new URL(window.location.href);
+    const url = new URL(offcanvasEl.dataset.filterUrl, window.location.origin);
+    const searchParams = new URLSearchParams(currentUrl.search);
+    for (const name of ["page", "tags", ...filterNames]) {
+        searchParams.delete(name);
+    }
+    _applyParams(searchParams, params);
+    url.search = searchParams.toString();
+    return `${url.pathname}${url.search}`;
+}
+
+export class MobileFilterButtons extends Interaction {
+    static selector = ".offcanvas-footer";
+
+    dynamicContent = {
+        ".o_mobile_filter_apply": {
+            "t-on-click.prevent": this.onApplyFilters,
+        },
+        ".o_mobile_filter_clear": {
+            "t-on-click.prevent": this.onClearFilters,
+        },
+    };
+
+    onApplyFilters() {
+        const offcanvasEl = this.el.closest(".o_website_offcanvas, .offcanvas");
+        const { params, filterNames } = _collectMobileFilterParams(offcanvasEl);
+        redirect(_buildFilterUrl(offcanvasEl, params, filterNames));
+    }
+
+    onClearFilters() {
+        const offcanvasEl = this.el.closest(".o_website_offcanvas, .offcanvas");
+        redirect(offcanvasEl.dataset.filterUrl);
+    }
+}
+
 registry.category("public.interactions").add("website.post_link", PostLink);
+registry.category("public.interactions").add("website.mobile_filter_buttons", MobileFilterButtons);
