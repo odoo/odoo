@@ -1,7 +1,6 @@
-import { useRef } from "@web/owl2/utils";
 import { useHotkey } from "../hotkeys/hotkey_hook";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 /**
  * Custom checkbox
@@ -58,9 +57,10 @@ export class CheckBox extends Component {
         },
     };
 
+    rootRef = signal(null);
+
     setup() {
         this.id = `checkbox-comp-${CheckBox.nextId++}`;
-        this.rootRef = useRef("root");
 
         // Make it toggleable through the Enter hotkey
         // when the focus is inside the root element
@@ -70,7 +70,7 @@ export class CheckBox extends Component {
                 const oldValue = area.querySelector("input").checked;
                 this.props.onChange(!oldValue);
             },
-            { area: () => this.rootRef.el, bypassEditableProtection: true }
+            { area: () => this.rootRef(), bypassEditableProtection: true }
         );
     }
 
@@ -82,7 +82,7 @@ export class CheckBox extends Component {
         }
 
         // Reproduce the click event behavior as if it comes from the input element.
-        const input = this.rootRef.el.querySelector("input");
+        const input = this.rootRef().querySelector("input");
         input.focus();
         if (!this.props.disabled) {
             ev.stopPropagation();

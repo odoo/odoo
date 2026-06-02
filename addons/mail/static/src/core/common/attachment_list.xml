@@ -7,7 +7,7 @@
                 'o-inComposer': this.env.inComposer,
                 'o-inChatWindow': this.env.inChatWindow,
             }"
-            t-custom-ref="root"
+            t-ref="this.rootRef"
         >
             <div class="d-flex flex-wrap gap-2" t-att-class="{'justify-content-end': this.isInChatWindowAndIsAlignedRight and !this.env.inComposer}" role="menu" >
                 <div t-foreach="this.props.attachments" t-as="attachment" t-key="attachment.id"
