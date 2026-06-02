@@ -158,6 +158,7 @@ class AccountEdiProxyClientUser(models.Model):
                     'company_id': company.id,
                     'peppol_identifier': peppol_identifier,
                     'public_key': private_key_sudo._get_public_key_bytes(encoding='pem').decode(),
+                    'auth_url_hash': company.pdp_authentication_uuid,
                 })
             except AccountEdiProxyError as e:
                 raise UserError(e.message)
