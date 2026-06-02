@@ -36,7 +36,7 @@ class AccountEdiXmlUbl_21(models.AbstractModel):
             'cbc:UBLVersionID': {'_text': '2.1'},
             'cbc:DueDate': {'_text': invoice.invoice_date_due} if vals['document_type'] == 'invoice' else None,
             'cbc:CreditNoteTypeCode': {'_text': 261 if vals['process_type'] == 'selfbilling' else 381} if vals['document_type'] == 'credit_note' else None,
-            'cbc:BuyerReference': {'_text': invoice.commercial_partner_id.ref},
+            'cbc:BuyerReference': {'_text': invoice.commercial_partner_id.ref if vals["document_type"] != "debit_note" else None},
         })
 
     def _add_document_allowance_charge_nodes(self, document_node, vals):

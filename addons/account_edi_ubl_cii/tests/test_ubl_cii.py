@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from io import BytesIO
 from zipfile import ZipFile
+from unittest.mock import patch
 
 from lxml import etree
 from odoo import fields, Command
@@ -974,3 +975,29 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         self.assertEqual(due_date.text, '20251231')
         self.assertEqual(days.text, '15')
         self.assertEqual(percent.text, '3.0')
+
+    def test_debit_note_buyer_reference_omission(self):
+        """ Test that generating a UBL document for a debit note does not crash
+        due to the lack of a BuyerReference node in the debit note XML template. """
+
+        partner = self.partner_a
+        partner.ref = '123456'
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        invoice.action_post()
+
+        ubl_model = self.env.registry['account.edi.xml.ubl_21']
+        add_config_vals_original = ubl_model._add_invoice_config_vals
+
+        def add_config_vals_mock(self_model, vals):
+            add_config_vals_original(self_model, vals)
+            vals.update({'document_type': 'debit_note'})
+
+        with patch.object(ubl_model, '_add_invoice_config_vals', autospec=True, side_effect=add_config_vals_mock):
+            _, errors = self.env['account.edi.xml.ubl_21']._export_invoice(invoice)
+
+        self.assertFalse(errors, "Debit note UBL generation should not return errors.")
