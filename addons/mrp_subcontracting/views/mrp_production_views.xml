@@ -13,7 +13,20 @@
             <xpath expr="//header" position="replace">
                 <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
             </xpath>
-            <xpath expr="//div[@name='button_box']" position="replace"/>
+            <xpath expr="//div[@name='button_box']" position="replace">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_mo_delivery" type="object" class="oe_stat_button"
+                        icon="fa-truck" groups="base.group_user" invisible="delivery_count == 0">
+                        <field name="delivery_count" widget="statinfo" string="Transfers"/>
+                    </button>
+                    <button name="%(mrp.action_report_mo_overview)d" type="action" class="oe_stat_button"
+                        icon="fa-bars" groups="base.group_user">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Overview</span>
+                        </div>
+                    </button>
+                </div>
+            </xpath>
             <xpath expr="//div[hasclass('oe_title')]" position="replace"/>
             <xpath expr="//div[@name='qty']" position="replace">
                 <div class="o_row g-0 d-flex" name="qty">
@@ -23,11 +36,7 @@
             <xpath expr="//button[@name='action_generate_bom']" position="replace"/>
             <xpath expr="//field[@name='is_outdated_bom']" position="replace"/>
             <xpath expr="//button[@name='action_update_bom']" position="replace"/>
-            <xpath expr="//div[@name='date_start']" position="replace"/>
-            <xpath expr="//label[@name='start_date']" position="replace"/>
-            <xpath expr="//label[@name='scheduled_date']" position="replace"/>
             <xpath expr="//field[@name='date_deadline']" position="replace"/>
-            <xpath expr="//field[@name='components_availability']" position="replace"/>
             <xpath expr="//field[@name='user_id']" position="replace"/>
             <xpath expr="//page[@name='operations']" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -61,6 +70,9 @@
             <xpath expr="//field[@name='lot_producing_ids']" position="attributes">
                 <attribute name="domain">[('id', '=', False)]</attribute>
                 <attribute name="options">{'no_create_edit': True, 'no_open': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_start']" position="attributes">
+                <attribute name="readonly">1</attribute>
             </xpath>
             <xpath expr="//field[@name='move_raw_ids']" position="replace">
                 <field name="bom_product_ids" invisible="1"/>
