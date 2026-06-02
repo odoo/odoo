@@ -109,6 +109,18 @@ class TransferApprovalController(http.Controller):
         from_central  = rec.current_central_prison.name if rec.current_central_prison else ''
         from_prison_name = from_sub or from_district or from_central or ''
 
+        # Fallback: snapshot fields empty → read from employee's current legacy
+        # text fields (covers employees imported before the jail hierarchy was added)
+        if not from_prison_name:
+            emp = rec.employee_id
+            from_prison_name = (
+                (emp.x_sub_jail_id.name if emp.x_sub_jail_id else '')
+                or (emp.x_district_jail_id.name if emp.x_district_jail_id else '')
+                or (emp.x_central_jail_id.name if emp.x_central_jail_id else '')
+                or emp.x_sub_jail or emp.x_district_jail or emp.x_central_prison
+                or ''
+            ).strip()
+
         # ── Flatten requested destination (Sub > District > Central) ────────
         to_sub      = rec.requested_sub_jail.name      if rec.requested_sub_jail      else ''
         to_district = rec.requested_district_jail.name if rec.requested_district_jail else ''
@@ -317,7 +329,7 @@ class TransferApprovalController(http.Controller):
             env = request.env(user=uid)
 
             # --- Validate employee -----------------------------------------
-            employee = env['hr.employee'].sudo().browse(int(data['employee_id']))
+            employee = self._resolve_employee(env, data['employee_id'])
             if not employee.exists():
                 return self._err('Employee not found', status=404)
 
@@ -471,6 +483,70 @@ class TransferApprovalController(http.Controller):
             return self._err('Internal server error', status=500)
 
     # ==================================================================
+    # VACANCY HELPER
+    # ==================================================================
+
+    def _resolve_employee(self, env, employee_id_raw):
+        """
+        Resolve an employee from either:
+          • an x_employee_code string  (e.g. "24010985327")  ← sent by the frontend
+          • an Odoo internal record ID (e.g. 2085)           ← legacy callers
+
+        Returns the hr.employee recordset (may be empty — caller must check .exists()).
+        """
+        Employee = env['hr.employee'].sudo()
+        raw = str(employee_id_raw).strip()
+
+        # Try x_employee_code lookup first (handles string codes from the Personnel API)
+        if raw:
+            emp = Employee.search([('x_employee_code', '=', raw)], limit=1)
+            if emp:
+                return emp
+
+        # Fall back: try integer browse (handles callers that pass the DB id)
+        try:
+            emp = Employee.browse(int(raw))
+            return emp  # caller checks .exists()
+        except (ValueError, TypeError):
+            pass
+
+        return Employee  # empty recordset
+
+    def _get_vacancy_record(self, env, prison_id):
+        """
+        Return the active prison.vacancy record for the given prison.jail id.
+
+        Walks up the jail hierarchy (sub → district → central) so that a
+        transfer to a sub-jail still finds the parent prison's vacancy record
+        when no dedicated sub-jail record exists.
+
+        Returns None if the prison.vacancy model is not installed or no record
+        exists anywhere in the hierarchy.
+        """
+        try:
+            Vacancy  = env['prison.vacancy'].sudo()
+            PrisonJail = env['prison.jail'].sudo()
+
+            jail_id = prison_id
+            visited = set()                    # guard against circular refs
+            while jail_id and jail_id not in visited:
+                visited.add(jail_id)
+                rec = Vacancy.search(
+                    [('prison_id', '=', jail_id), ('active', '=', True)],
+                    limit=1,
+                )
+                if rec:
+                    return rec
+                jail = PrisonJail.browse(jail_id)
+                if jail.exists() and jail.parent_id:
+                    jail_id = jail.parent_id.id
+                else:
+                    break
+            return None
+        except Exception:
+            return None
+
+    # ==================================================================
     # API 3 – Accept (Approve) Transfer Request
     # POST /api/transfer/accept-approval-request
     # ==================================================================
@@ -486,6 +562,11 @@ class TransferApprovalController(http.Controller):
         """
         Approve a pending transfer request and update the employee's jail posting.
 
+        Pre-condition (vacancy check):
+        • The requested sub jail must have at least one vacant position in the
+          prison.vacancy master.  If not, a 400 response is returned with
+          ``vacancy_error: true`` so the front-end can display a specific message.
+
         On approval:
         • Employee's x_central_jail_id / x_district_jail_id / x_sub_jail_id
           (Many2one) fields are updated to the requested jail records.
@@ -493,6 +574,7 @@ class TransferApprovalController(http.Controller):
           are also synced for backward compatibility.
         • x_date_present_station is set to today.
         • A dated entry is prepended to x_service_history.
+        • The vacancy_count of the target prison is decremented by 1.
 
         Body (JSON)
         -----------
@@ -518,23 +600,44 @@ class TransferApprovalController(http.Controller):
             if not tar.exists():
                 return self._err('Transfer request not found', status=404)
 
-            if tar.approval_user_id.id != uid:
-                return self._err(
-                    'You are not authorised to approve this request',
-                    status=403,
-                )
+            # Allow approval by: the designated approver OR any HR admin.
+            approval_uid = tar.approval_user_id.id if tar.approval_user_id else None
+            if approval_uid and approval_uid != uid:
+                try:
+                    is_hr = env['res.users'].sudo().browse(uid).has_group('hr.group_hr_user')
+                except Exception:
+                    is_hr = False
+                if not is_hr:
+                    return self._err(
+                        'You are not authorised to approve this request',
+                        status=403,
+                    )
 
             if tar.state != 'pending':
                 return self._err(
                     f'Request is already {tar.state} and cannot be approved'
                 )
 
+            # --- Vacancy check: target sub jail must have vacancies --------
+            target_prison_id = tar.requested_sub_jail.id if tar.requested_sub_jail else None
+            vacancy_rec = self._get_vacancy_record(env, target_prison_id) if target_prison_id else None
+            if vacancy_rec is not None and vacancy_rec.exists():
+                if not vacancy_rec.is_vacancy_available():
+                    return self._json_response({
+                        'success': False,
+                        'message': 'No vacancy is currently available in the requested prison.',
+                        'vacancy_error': True,
+                        'prison_name': vacancy_rec.prison_name or tar.requested_sub_jail.name or '',
+                        'vacancy_count': vacancy_rec.vacancy_count,
+                    }, status=400)
+
             emp = tar.employee_id.sudo()
             approved_date_now = fields.Datetime.now()
+            approved_by_user  = env['res.users'].sudo().browse(uid)
 
             self._apply_transfer_to_employee(
                 emp, tar,
-                approved_by_user=env['res.users'].sudo().browse(uid),
+                approved_by_user=approved_by_user,
                 approved_date_now=approved_date_now,
                 note_prefix='Transfer Approved',
             )
@@ -545,12 +648,46 @@ class TransferApprovalController(http.Controller):
                 'approved_date': approved_date_now,
             })
 
+            # --- Decrement vacancy count at target prison ------------------
+            if vacancy_rec is not None and vacancy_rec.exists():
+                new_count = max(0, vacancy_rec.vacancy_count - 1)
+                new_occupied = vacancy_rec.occupied_count + 1
+                vacancy_rec.sudo().write({
+                    'vacancy_count':  new_count,
+                    'occupied_count': new_occupied,
+                })
+                _logger.info(
+                    'Vacancy decremented for prison_id=%d: vacancy_count=%d → %d',
+                    target_prison_id, vacancy_rec.vacancy_count + 1, new_count,
+                )
+
             _logger.info(
                 'Transfer request %d approved by user=%d; employee=%d',
                 tar.id, uid, emp.id,
             )
 
-            return self._ok('Transfer approved successfully')
+            # --- Build updated employee info for response ------------------
+            emp_info = {
+                'employee_id':   emp.id,
+                'employee_name': emp.name or '',
+                'employee_code': emp.x_employee_code or '',
+                'designation':   emp.x_designation or '',
+                'current_central_prison': {
+                    'id':   emp.x_central_jail_id.id if emp.x_central_jail_id else None,
+                    'name': emp.x_central_jail_id.name if emp.x_central_jail_id else emp.x_central_prison or '',
+                },
+                'current_district_jail': {
+                    'id':   emp.x_district_jail_id.id if emp.x_district_jail_id else None,
+                    'name': emp.x_district_jail_id.name if emp.x_district_jail_id else emp.x_district_jail or '',
+                },
+                'current_sub_jail': {
+                    'id':   emp.x_sub_jail_id.id if emp.x_sub_jail_id else None,
+                    'name': emp.x_sub_jail_id.name if emp.x_sub_jail_id else emp.x_sub_jail or '',
+                },
+                'date_present_station': str(emp.x_date_present_station) if emp.x_date_present_station else '',
+            }
+
+            return self._ok('Transfer approved successfully', employee=emp_info)
 
         except Exception as exc:
             _logger.exception(
@@ -577,7 +714,11 @@ class TransferApprovalController(http.Controller):
         Body (JSON)
         -----------
         request_id  int  required
-        remarks     str  optional  (rejection reason)
+        remarks     str  optional  (rejection reason — stored in the remarks field)
+
+        The rejection actor and timestamp are stored in the shared
+        ``approved_by`` / ``approved_date`` fields (same pattern as the
+        approve flow; the ``state`` field disambiguates the action).
         """
         try:
             uid, err = self._require_auth()
@@ -599,32 +740,69 @@ class TransferApprovalController(http.Controller):
             if not tar.exists():
                 return self._err('Transfer request not found', status=404)
 
-            if tar.approval_user_id.id != uid:
-                return self._err(
-                    'You are not authorised to reject this request',
-                    status=403,
-                )
+            # Allow rejection by: the designated approver OR any HR admin.
+            # The UI already restricts this action to admin users.
+            approval_uid = tar.approval_user_id.id if tar.approval_user_id else None
+            if approval_uid and approval_uid != uid:
+                try:
+                    is_hr = env['res.users'].sudo().browse(uid).has_group('hr.group_hr_user')
+                except Exception:
+                    is_hr = False
+                if not is_hr:
+                    return self._err(
+                        'You are not authorised to reject this request',
+                        status=403,
+                    )
 
             if tar.state != 'pending':
                 return self._err(
                     f'Request is already {tar.state} and cannot be rejected'
                 )
 
+            rejected_date = fields.Datetime.now()
+            rejecting_user = env['res.users'].sudo().browse(uid)
+
+            # Build rejection remarks: prefix with rejector name and timestamp
+            # so the audit trail is self-contained even without a separate field.
+            raw_remarks = (data.get('remarks') or '').strip()
+            rejection_note = (
+                f"[Rejected on {rejected_date.strftime('%d-%b-%Y %H:%M')} "
+                f"by {rejecting_user.name}]"
+            )
+            if raw_remarks:
+                rejection_note = f"{rejection_note}\n{raw_remarks}"
+
+            # Merge with any existing remarks so prior notes are preserved.
+            existing_remarks = (tar.remarks or '').strip()
+            merged_remarks = (
+                rejection_note + '\n' + existing_remarks
+                if existing_remarks
+                else rejection_note
+            )
+
             update_vals = {
                 'state':         'rejected',
+                # approved_by / approved_date are the shared "actioned_by" fields;
+                # state='rejected' disambiguates this from an approval.
                 'approved_by':   uid,
-                'approved_date': fields.Datetime.now(),
+                'approved_date': rejected_date,
+                'remarks':       merged_remarks,
             }
-            if data.get('remarks'):
-                update_vals['remarks'] = data['remarks']
 
             tar.sudo().write(update_vals)
 
             _logger.info(
-                'Transfer request %d rejected by user=%d', tar.id, uid
+                'Transfer request %d rejected by user=%d (%s)',
+                tar.id, uid, rejecting_user.name,
             )
 
-            return self._ok('Transfer request rejected successfully')
+            return self._ok(
+                'Transfer request rejected successfully',
+                request_id=tar.id,
+                rejected_by=rejecting_user.name,
+                rejected_date=str(rejected_date),
+                remarks=merged_remarks,
+            )
 
         except Exception as exc:
             _logger.exception(
@@ -751,7 +929,7 @@ class TransferApprovalController(http.Controller):
             env = request.env(user=uid)
 
             # --- Validate employee ---
-            employee = env['hr.employee'].sudo().browse(int(data['employee_id']))
+            employee = self._resolve_employee(env, data['employee_id'])
             if not employee.exists():
                 return self._err('Employee not found', status=404)
 
@@ -1105,8 +1283,9 @@ class TransferApprovalController(http.Controller):
         for emp, days in page_slice:
             tenure_years = round(days / 365.25, 1)
 
-            # Check vacancy at OTHER prisons (not current sub jail)
+            # Check vacancy at OTHER prisons (not current sub jail) and collect details
             emp_vacancy = has_any_vacancy  # simplified: any vacancy anywhere
+            vacancy_detail = None  # full vacancy info for the current posting
             try:
                 if emp.x_sub_jail_id:
                     vacancy_elsewhere = env['prison.vacancy'].sudo().search([
@@ -1114,6 +1293,20 @@ class TransferApprovalController(http.Controller):
                         ('prison_id', '!=', emp.x_sub_jail_id.id),
                     ], limit=1)
                     emp_vacancy = bool(vacancy_elsewhere)
+                    # Current prison vacancy detail
+                    current_vac = env['prison.vacancy'].sudo().search([
+                        ('prison_id', '=', emp.x_sub_jail_id.id),
+                        ('active', '=', True),
+                    ], limit=1)
+                    if current_vac:
+                        vacancy_detail = {
+                            'prison_id':          current_vac.prison_id.id if current_vac.prison_id else None,
+                            'prison_name':        current_vac.prison_name or '',
+                            'sanctioned_strength': current_vac.sanctioned_strength or 0,
+                            'filled_positions':   current_vac.occupied_count or 0,
+                            'vacant_positions':   current_vac.vacancy_count or 0,
+                            'vacancy_available':  (current_vac.vacancy_count or 0) > 0,
+                        }
             except Exception:
                 pass
 
@@ -1146,6 +1339,8 @@ class TransferApprovalController(http.Controller):
                 'tenure_years':           tenure_years,
                 'is_eligible':            True,
                 'has_vacancy_elsewhere':  emp_vacancy,
+                # Vacancy details for current posting (None if prison.vacancy not installed)
+                'current_prison_vacancy': vacancy_detail,
             })
 
         return {
@@ -1201,7 +1396,7 @@ class TransferApprovalController(http.Controller):
 
             env = request.env(user=uid)
 
-            employee = env['hr.employee'].sudo().browse(int(data['employee_id']))
+            employee = self._resolve_employee(env, data['employee_id'])
             if not employee.exists():
                 return self._err('Employee not found', status=404)
 
@@ -1271,6 +1466,30 @@ class TransferApprovalController(http.Controller):
             return self._err('Internal server error', status=500)
 
     # ==================================================================
+    # INTERNAL: Serialize a prison.vacancy record
+    # ==================================================================
+
+    def _format_vacancy(self, v):
+        """Serialize one prison.vacancy record to the standard API shape."""
+        prison = v.prison_id
+        sanctioned  = v.sanctioned_strength or 0
+        occupied    = v.occupied_count      or 0
+        vacant      = v.vacancy_count       or 0
+        return {
+            'prison_id':          prison.id   if prison else None,
+            'prison_name':        v.prison_name or (prison.name if prison else ''),
+            'prison_type':        v.prison_type or (prison.jail_type if prison else ''),
+            'prison_code':        v.prison_code or '',
+            'sanctioned_strength': sanctioned,
+            'filled_positions':   occupied,
+            'vacant_positions':   vacant,
+            # Legacy / alternative key names kept for backwards compatibility
+            'occupied_count':     occupied,
+            'vacancy_count':      vacant,
+            'vacancy_available':  vacant > 0,
+        }
+
+    # ==================================================================
     # API 12 – Vacancy Summary
     # GET /api/transfer/vacancy-summary
     # ==================================================================
@@ -1293,11 +1512,13 @@ class TransferApprovalController(http.Controller):
             "data": [
                 {
                     "prison_id": 1,
-                    "prison_name": "...",
-                    "prison_type": "...",
-                    "sanctioned_strength": 50,
-                    "occupied_count": 40,
-                    "vacancy_count": 10
+                    "prison_name": "Central Prison Chennai",
+                    "prison_type": "central_prison",
+                    "prison_code": "CPC",
+                    "sanctioned_strength": 120,
+                    "filled_positions": 117,
+                    "vacant_positions": 3,
+                    "vacancy_available": true
                 },
                 ...
             ]
@@ -1311,29 +1532,227 @@ class TransferApprovalController(http.Controller):
             env = request.env(user=uid)
 
             try:
-                vacancies = env['prison.vacancy'].sudo().search([])
+                vacancies = env['prison.vacancy'].sudo().search(
+                    [('active', '=', True)],
+                    order='prison_type, prison_name',
+                )
             except Exception as exc:
                 _logger.warning('prison.vacancy model not found: %s', exc)
                 return self._json_response({
                     'success': True,
                     'data': [],
+                    'vacancies': [],
+                    'prisons': [],
                     'note': 'prison.vacancy model is not installed',
                 })
 
-            data = []
-            for v in vacancies:
-                prison = getattr(v, 'prison_id', None)
-                data.append({
-                    'prison_id':           prison.id   if prison else None,
-                    'prison_name':         prison.name if prison else '',
-                    'prison_type':         getattr(prison, 'jail_type', '') or '',
-                    'sanctioned_strength': getattr(v, 'sanctioned_strength', 0) or 0,
-                    'occupied_count':      getattr(v, 'occupied_count', 0)      or 0,
-                    'vacancy_count':       getattr(v, 'vacancy_count', 0)       or 0,
-                })
+            data = [self._format_vacancy(v) for v in vacancies]
 
-            return self._json_response({'success': True, 'vacancies': data, 'prisons': data, 'data': data})
+            # Summary counts
+            total_sanctioned = sum(d['sanctioned_strength'] for d in data)
+            total_filled     = sum(d['filled_positions']    for d in data)
+            total_vacant     = sum(d['vacant_positions']    for d in data)
+
+            return self._json_response({
+                'success':  True,
+                'data':     data,
+                'vacancies': data,
+                'prisons':  data,
+                'summary': {
+                    'total_prisons':          len(data),
+                    'prisons_with_vacancy':   sum(1 for d in data if d['vacancy_available']),
+                    'total_sanctioned':       total_sanctioned,
+                    'total_filled':           total_filled,
+                    'total_vacant':           total_vacant,
+                },
+            })
 
         except Exception as exc:
             _logger.exception('GET /api/transfer/vacancy-summary failed: %s', exc)
+            return self._err('Internal server error', status=500)
+
+    # ==================================================================
+    # API 13 – Single-Prison Vacancy Check
+    # GET /api/transfer/vacancy-check?prison_id=<id>
+    # ==================================================================
+
+    @http.route(
+        '/api/transfer/vacancy-check',
+        auth='none',
+        type='http',
+        methods=['GET'],
+        csrf=False,
+    )
+    def vacancy_check(self, **kwargs):
+        """
+        Return vacancy information for a single prison (real-time check).
+
+        Query params
+        ------------
+        prison_id  int  required  (prison.jail id)
+
+        Response
+        --------
+        {
+            "success": true,
+            "prison_id": 1,
+            "prison_name": "...",
+            "sanctioned_strength": 50,
+            "filled_positions": 47,
+            "vacant_positions": 3,
+            "vacancy_available": true
+        }
+        """
+        try:
+            uid, err = self._require_auth()
+            if err:
+                return err
+
+            prison_id_raw = kwargs.get('prison_id')
+            if not prison_id_raw:
+                return self._err('Missing required query parameter: prison_id')
+
+            try:
+                prison_id = int(prison_id_raw)
+            except (TypeError, ValueError):
+                return self._err('prison_id must be an integer')
+
+            env = request.env(user=uid)
+
+            # Validate the prison.jail record exists
+            jail = env['prison.jail'].sudo().browse(prison_id)
+            if not jail.exists():
+                return self._err(f'Prison not found: prison_id={prison_id}', status=404)
+
+            vacancy_rec = self._get_vacancy_record(env, prison_id)
+            if vacancy_rec is None or not vacancy_rec.exists():
+                # No vacancy record — return unknown status, not an error
+                return self._json_response({
+                    'success':           True,
+                    'prison_id':         prison_id,
+                    'prison_name':       jail.name or '',
+                    'prison_type':       jail.jail_type or '',
+                    'sanctioned_strength': 0,
+                    'filled_positions':  0,
+                    'vacant_positions':  0,
+                    'occupied_count':    0,
+                    'vacancy_count':     0,
+                    'vacancy_available': False,
+                    'note':              'No vacancy record found for this prison.',
+                })
+
+            formatted = self._format_vacancy(vacancy_rec)
+            return self._json_response({'success': True, **formatted})
+
+        except Exception as exc:
+            _logger.exception('GET /api/transfer/vacancy-check failed: %s', exc)
+            return self._err('Internal server error', status=500)
+
+    # ==================================================================
+    # API 14 – Send / Store Notification
+    # POST /api/notifications/send
+    # ==================================================================
+
+    @http.route(
+        '/api/notifications/send',
+        auth='none',
+        type='http',
+        methods=['POST'],
+        csrf=False,
+    )
+    def send_notification(self, **_kwargs):
+        """
+        Create and store a notification record against an employee.
+
+        Body (JSON)
+        -----------
+        employee_id          str  required  employee x_employee_code
+        message              str  required  notification text
+        notification_type    str  optional  one of: no_vacancy | transfer_approved |
+                                            transfer_rejected | transfer_pending | general
+        action_type          str  optional  machine-readable key, e.g. transfer_approval_no_vacancy
+        transfer_request_id  int  optional  related transfer.approval.request id
+
+        Response
+        --------
+        {
+          "success": true,
+          "notification_id": <int>,
+          "employee_name": "<str>",
+          "employee_code": "<str>",
+          "notification_type": "<str>",
+          "action_type": "<str>",
+          "message": "<str>",
+          "sent_date": "<datetime str>"
+        }
+        """
+        try:
+            uid, err = self._require_auth()
+            if err:
+                return err
+
+            data, err = self._parse_json_body()
+            if err:
+                return err
+
+            # ── Validate required fields ──────────────────────────────────
+            if not data.get('employee_id'):
+                return self._err('Missing required field: employee_id')
+            if not data.get('message', '').strip():
+                return self._err('Missing required field: message')
+
+            env = request.env(user=uid)
+
+            # ── Resolve employee ──────────────────────────────────────────
+            employee = self._resolve_employee(env, data['employee_id'])
+            if not employee.exists():
+                return self._err('Employee not found', status=404)
+
+            # ── Build notification vals ───────────────────────────────────
+            notification_type = data.get('notification_type', 'general')
+            valid_types = {'no_vacancy', 'transfer_approved', 'transfer_rejected',
+                           'transfer_pending', 'general'}
+            if notification_type not in valid_types:
+                notification_type = 'general'
+
+            vals = {
+                'employee_id':       employee.id,
+                'message':           data['message'].strip(),
+                'notification_type': notification_type,
+                'action_type':       (data.get('action_type') or '').strip() or False,
+                'sent_by':           uid,
+            }
+
+            # Optionally link to a transfer request
+            req_id = data.get('transfer_request_id')
+            if req_id:
+                try:
+                    tar = env['transfer.approval.request'].sudo().browse(int(req_id))
+                    if tar.exists():
+                        vals['transfer_request_id'] = tar.id
+                except (TypeError, ValueError):
+                    pass
+
+            # ── Create ────────────────────────────────────────────────────
+            notif = env['tnpd.notification'].sudo().create(vals)
+
+            _logger.info(
+                'Notification %d created: type=%s action=%s employee=%s by user=%d',
+                notif.id, notification_type, vals.get('action_type', '-'),
+                employee.x_employee_code, uid,
+            )
+
+            return self._json_response({
+                'success':           True,
+                'notification_id':   notif.id,
+                'employee_name':     employee.name or '',
+                'employee_code':     employee.x_employee_code or '',
+                'notification_type': notif.notification_type,
+                'action_type':       notif.action_type or '',
+                'message':           notif.message,
+                'sent_date':         str(notif.sent_date),
+            }, status=201)
+
+        except Exception as exc:
+            _logger.exception('POST /api/notifications/send failed: %s', exc)
             return self._err('Internal server error', status=500)
