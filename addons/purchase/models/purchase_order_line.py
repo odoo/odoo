@@ -11,7 +11,7 @@ from odoo.tools.float_utils import float_compare, float_round
 
 class PurchaseOrderLine(models.Model):
     _name = 'purchase.order.line'
-    _inherit = ['analytic.mixin']
+    _inherit = ['analytic.mixin', 'res.currency.rate.consolidation.mixin']
     _description = 'Purchase Order Line'
     _order = 'order_id, sequence, id'
 

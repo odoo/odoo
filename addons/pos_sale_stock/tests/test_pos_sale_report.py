@@ -76,10 +76,3 @@ class TestPoSSaleStockReport(TestPoSSaleReport, TestPosStockCommon, TestPosStock
 
         self.assertEqual(sum(report.mapped('qty_to_deliver')), 0)
         self.assertEqual(sum(report.mapped('qty_delivered')), 8)
-
-    def test_sale_stock_report_select(self):
-        select_statement = self.env['sale.report']._select_pos()
-        pos_currency_rate = self.env['sale.report']._case_value_or_one('pos.currency_rate')
-        account_currency_table = self.env['sale.report']._case_value_or_one('account_currency_table.rate')
-        untaxed_delivered_amount = f"(CASE WHEN pos.account_move IS NOT NULL THEN SUM(l.price_unit * l.qty_delivered) ELSE 0 END) / MIN({pos_currency_rate}) * {account_currency_table}"
-        self.assertTrue(untaxed_delivered_amount in select_statement)

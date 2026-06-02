@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.tools import SQL
 
 
 class SaleReport(models.Model):
@@ -12,30 +13,21 @@ class SaleReport(models.Model):
         string="eCommerce Categories", related="product_tmpl_id.public_categ_ids"
     )
 
-    def _select_additional_fields(self):
-        res = super()._select_additional_fields()
-        res["website_id"] = "s.website_id"
-        res["is_abandoned_cart"] = (
-            """
-            s.date_order <= (timezone('utc', now()) - (
-                (COALESCE(w.cart_abandoned_delay, '1.0') || ' hour')::INTERVAL)
-            )
-            AND s.website_id IS NOT NULL
-            AND s.state = 'draft'
-            AND s.partner_id != %s"""
-            % self.env.ref("base.public_partner").id
-        )
-        return res
+    def _select_dict(self, table):
+        return super()._select_dict(table) | {
+            'website_id': table.order_id.website_id.id,
+            'is_abandoned_cart': SQL(
+                """
+                %s <= (timezone('utc', now()) - ((COALESCE(%s, '1.0') || ' hour')::INTERVAL))
+                AND %s IS NOT NULL
+                AND %s = 'draft'
+                AND %s != %s""",
+                table.order_id.date_order, table.order_id.website_id.cart_abandoned_delay,
+                table.order_id.website_id.id,
+                table.order_id.state,
+                table.order_id.partner_id, self.env.ref("base.public_partner").id,
+            ),
+        }
 
-    def _from_sale(self):
-        res = super()._from_sale()
-        res += """
-            LEFT JOIN website w ON w.id = s.website_id"""
-        return res
-
-    def _group_by_sale(self):
-        res = super()._group_by_sale()
-        res += """,
-            s.website_id,
-            w.cart_abandoned_delay"""
-        return res
+    def _groupby_list(self, table):
+        return super()._groupby_list(table) + [table.order_id.website_id.id]
