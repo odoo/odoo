@@ -4,7 +4,7 @@
 
     <record id="estate_property_action" model="ir.actions.act_window">
         <field name="name">Properties</field>
-        <field name="res_model">estate_property_model</field>
+        <field name="res_model">estate.property</field>
         <field name="view_mode">list,form</field>
         <!-- default list and form views will be used if theres no custom view -->
     </record>
@@ -12,12 +12,13 @@
     <!--
     https://www.odoo.com/documentation/19.0/developer/reference/user_interface/view_records.html -->
     <record id="estate_property_list_view" model="ir.ui.view">
-        <field name="name">estate_property_model.list_view</field>
-        <field name="model">estate_property_model</field> <!-- model name must match -->
+        <field name="name">estate.property.list_view</field>
+        <field name="model">estate.property</field> <!-- model name must match -->
         <field name="arch" type="xml">
             <list string="Estate Property Custom List View"> <!-- string: The view title -->
                 <!-- field names must match -->
                 <field name="name" />
+                <field name="property_type" />
                 <field name="postcode" />
                 <field name="bedrooms" />
                 <field name="living_area" string="Living Area (sqm)" />
@@ -25,25 +26,30 @@
                 <field name="selling_price" />
                 <field name="date_availability" string="Available From" />
                 <field name="state" />
+                <field name="tag_ids" widget="many2many_tags" />
+                <field name="offer_ids" />
+                <field name="user_id" />
+                <field name="partner_id" />
                 <field name="active" />
             </list>
         </field>
     </record>
 
-    <!-- editable="bottom": inline edit directly on the row, quite annoying -->
+    <!-- <list editable="bottom">: inline edit directly on the row, quite annoying -->
     <!-- cannot have 2 views in a single record: The <field name="arch" type="xml"> tag expects
     exactly one root XML element inside it -->
 
     <record id="estate_property_form_view" model="ir.ui.view">
-        <field name="name">estate_property_model.form_view</field>
-        <field name="model">estate_property_model</field>
+        <field name="name">estate.property.form_view</field>
+        <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <form string="Estate Property Custom Form View">
                 <sheet>
-                    <div class="oe_title">
-                        <h1 class="mb32">
+                    <div class="oe_title mb32">
+                        <h1>
                             <field name="name" placeholder="Property name" />
                         </h1>
+                        <field name="tag_ids" widget="many2many_tags" />
                     </div>
 
                     <!-- The <group> tag is a structural element used in form views to cleanly
@@ -52,6 +58,7 @@
                     <group>
                         <!-- col 1 -->
                         <group>
+                            <field name="property_type" />
                             <field name="postcode" />
                             <field name="date_availability" string="Available From" />
                         </group>
@@ -83,6 +90,23 @@
                                 <field name="state" />
                             </group>
                         </page>
+
+                        <page string="Offers">
+                            <field name="offer_ids">
+                                <list>
+                                    <field name="price" />
+                                    <field name="partner_id" />
+                                    <field name="status" />
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Contacts">
+                            <group>
+                                <field name="user_id" />
+                                <field name="partner_id" />
+                            </group>
+                        </page>
                     </notebook>
 
                 </sheet>
@@ -93,8 +117,8 @@
 
     <!-- Search view -->
     <record id="estate_property_search_view" model="ir.ui.view">
-        <field name="name">estate_property_model.search_view</field>
-        <field name="model">estate_property_model</field>
+        <field name="name">estate.property.search_view</field>
+        <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <search string="Estate property search view">
                 <field name="name" />
@@ -111,7 +135,8 @@
                     <filter string="Show all" name="show_all"
                         domain="['&amp;', ('show_all', '=', True), ('active', 'in', (True, False))]" />
                     <!-- the global active = True filter is still strictly applied -->
-                    <!-- To force Odoo to disable its automatic global filter, the framework must see the word 'active' explicitly written inside the XML domain attribute. -->
+                    <!-- To force Odoo to disable its automatic global filter, the framework must
+                    see the word 'active' explicitly written inside the XML domain attribute. -->
 
                     <separator />
                     <filter string="Available (New or Offer received)" name="available"

@@ -1,13 +1,31 @@
 <?xml version="1.0"?>
 <odoo>
+    <!-- can just put action here, no need a separate xml file -->
+    <!-- action must be defined first -->
+    <record id="estate_property_tag_action" model="ir.actions.act_window">
+        <field name="name">Property Tags</field>
+        <field name="res_model">estate.property.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
     <!-- Root menu -->
-    <menuitem id="estate_menu_root" name="Estate Property">
+    <menuitem
+        id="estate_menu_root"
+        name="Estate Property"
+        web_icon="estate,static/description/icon.png"
+    >
         <!-- First level menu -->
-        <menuitem id="estate_menu_first_level" name="Advertisements">
+        <menuitem id="estate_menu_advertisements" name="Advertisements">
             <!-- Action menu -->
             <menuitem id="estate_menu_action" action="estate_property_action" />
         </menuitem>
+
+        <menuitem id="estate_menu_settings" name="Settings">
+            <menuitem id="estate_menu_settings_type_action" action="estate_property_type_action" />
+            <menuitem id="estate_menu_settings_tag_action" action="estate_property_tag_action" />
+        </menuitem>
     </menuitem>
+
 </odoo>
 
 

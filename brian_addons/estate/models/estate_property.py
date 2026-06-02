@@ -6,7 +6,7 @@ class EstatePropertyModel(models.Model):
     # Underscore: Model's internal identifier in Odoo
     # Defines the table name in the database
     # Required—every model needs one
-    _name = 'estate_property_model'  # The model name itself
+    _name = 'estate.property'  # The model name itself
     _description = 'Model for Estate Property'
 
     # Char: represented as a Python unicode str and a SQL VARCHAR
@@ -63,3 +63,28 @@ class EstatePropertyModel(models.Model):
     def _compute_show_all(self):
         for record in self:
             record.show_all = True
+
+    # Many2one fields: other records connect to 1 estate
+    property_type = fields.Many2one('estate.property.type')
+
+    # res.partner and res.users are built-in Odoo models
+    # self.env: gives access to request parameters
+    user_id = fields.Many2one(
+        'res.users',
+        string='Salesperson',
+        index=True,  # database index on the column, making searches/filters on that field faster
+        default=lambda self: self.env.user,  # defers execution until a new record is actually being created
+    )
+
+    partner_id = fields.Many2one(
+        'res.partner',
+        string='Buyer',
+        index=True,
+    )
+
+    tag_ids = fields.Many2many('estate.property.tag', string='Tags')
+
+    # comodel is the offer model, inverse field is property_id
+    # - estate.property.offer: comodel (the "many" side)
+    # - property_id: the Many2one field on that comodel, must match the field name on offer model
+    offer_ids = fields.One2many('estate.property.offer', 'property_id', string="Offers")
