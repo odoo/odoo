@@ -227,8 +227,9 @@ class PosConfig(models.Model):
         static_records = {}
 
         for model, ids in records.items():
-            records = self.env[model].browse(ids).exists()
-            static_records[model] = self.env[model]._load_pos_data_read(records, self)
+            record_set = self.env[model].browse(ids).exists()
+            if record_set:
+                static_records[model] = self.env[model]._load_pos_data_read(record_set, self)
 
         self._notify('SYNCHRONISATION', {
             'static_records': static_records,

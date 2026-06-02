@@ -22,6 +22,11 @@ class PosOrder(models.Model):
         pos_data['pos.pack.operation.lot'] = self.env['pos.pack.operation.lot']._load_pos_data_read(self.lines.pack_lot_ids, config) if config else []
         return pos_data
 
+    def _get_sync_records(self):
+        records = super()._get_sync_records()
+        records['pos.pack.operation.lot'] = self.lines.pack_lot_ids.ids
+        return records
+
     def _create_order_picking(self):
         self.ensure_one()
         if self.picking_ids:
