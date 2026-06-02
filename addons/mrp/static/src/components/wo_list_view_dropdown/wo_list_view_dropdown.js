@@ -1,3 +1,4 @@
+import { props, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -13,10 +14,10 @@ export class MOListViewDropdown extends BadgeField {
         DropdownItem,
     };
 
-    static props = {
+    props = props({
         ...standardFieldProps,
-        display: { type: String, validate: (val) => ["bubble", "badge"].includes(val)} ,
-    };
+        display: t.string(),
+    });
 
     setup() {
         this.orm = useService("orm");
@@ -60,10 +61,18 @@ export class MOListViewDropdown extends BadgeField {
         if (!ids || ids.length == 0) {
             ids = [this.props.record.resId];
         }
+        let result;
         if (args !== undefined) {
-            await this.orm.call("mrp.workorder", functionName, [ids, ...args]);
+            result = await this.orm.call("mrp.workorder", functionName, [ids, ...args]);
         } else {
-            await this.orm.call("mrp.workorder", functionName, [ids]);
+            result = await this.orm.call("mrp.workorder", functionName, [ids]);
+        }
+        if (result && typeof result === "object") {
+            return this.action.doAction(result, {
+                onClose: async () => {
+                    await this.reload();
+                },
+            });
         }
         await this.reload();
     }

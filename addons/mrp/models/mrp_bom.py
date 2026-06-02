@@ -84,8 +84,10 @@ class MrpBom(models.Model):
     batch_size = fields.Float('Batch Size Value', default=1.0, digits='Product Unit', help="All automatically generated manufacturing orders for this product will be of this size.")
     enable_batch_size = fields.Boolean('Batch Size', default=False)
     json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
-
     note = fields.Html(string="Additional Notes", help="Additional notes for the manufacturing order. Notes added here will also be displayed in the Shop Floor.")
+    continuous = fields.Boolean('Continuous Production', default=False,
+        help="Select to enable continuous production. When checked, operations will start as soon as some quantities are ready."
+    )
 
     _qty_positive = models.Constraint(
         'check (product_qty > 0)',

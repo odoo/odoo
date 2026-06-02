@@ -1030,6 +1030,7 @@ class TestMrpWorkorderBackorder(TransactionCase):
             'uom_id': cls.uom_unit.id,
             'product_qty': 1,
             'type': 'normal',
+            'continuous': True,
             'bom_line_ids': [
                 Command.create({'product_id': cls.compfinished1.id, 'product_qty': 1}),
                 Command.create({'product_id': cls.compfinished2.id, 'product_qty': 1}),
