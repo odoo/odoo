@@ -1,0 +1,10 @@
+.din_page {
+    // Show stock picking #informations bloc hidden by the generic DIN 5008 layout.
+    &.invoice_note {
+        &[data-oe-model="stock.picking"] {
+            .page #informations > * {
+                display: block;
+            }
+        }
+    }
+}
