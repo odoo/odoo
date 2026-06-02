@@ -192,10 +192,16 @@ export function setupCombo(products, addToCart = true) {
     return steps;
 }
 
-export function isProductDisplayed(productName) {
+export function isProductDisplayed(productName, isOutOfStock = false) {
+    let trigger = `.o_self_product_box:has(span:contains('${productName}'))`;
+
+    if (isOutOfStock) {
+        trigger += `:has(div:contains('Out of stock'))`;
+    }
+
     return {
         content: `Check if product '${productName}' is displayed`,
-        trigger: `.o_self_product_box span:contains("${productName}")`,
+        trigger,
     };
 }
 
