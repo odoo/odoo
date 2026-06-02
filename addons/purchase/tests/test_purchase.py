@@ -410,9 +410,6 @@ class TestPurchase(AccountTestInvoicingCommon):
         correctly handled when creating a purchase order i-e product having a price of 100 usd
         and when purchasing in EUR company the correct conversion should be applied
         """
-        self.env['decimal.precision'].search([
-            ('name', '=', 'Product Price'),
-        ]).digits = 5
         product = self.env['product.product'].create({
             'name': 'product_test',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
