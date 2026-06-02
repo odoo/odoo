@@ -17,7 +17,7 @@
  * the JS counterpart of the "res.lang" model.
  * It is useful to directly access those data anywhere, even outside Components.
  *
- * Important Note: its data are actually loaded by the localization_service,
+ * Important Note: its data are actually loaded by the localization plugin,
  * so a code like the following would not work:
  *   import { localization } from "@web/core/l10n/localization";
  *   const dateFormat = localization.dateFormat; // dateFormat isn't set yet
@@ -33,7 +33,7 @@ export const localization = new Proxy(
                 return Reflect.get(target, p);
             }
             throw new Error(
-                `could not access localization parameter "${p}": parameters are not ready yet. Maybe add 'localization' to your dependencies?`
+                `could not access localization parameter "${p}": parameters are not ready yet. Maybe await 'translationIsReady' (from "@web/core/l10n/translation") first?`
             );
         },
     }

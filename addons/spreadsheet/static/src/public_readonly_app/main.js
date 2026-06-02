@@ -4,6 +4,7 @@ import { getTemplate } from "@web/core/templates";
 import { makeEnv, startServices } from "@web/env";
 import { session } from "@web/session";
 import { appTranslateFn } from "@web/core/l10n/translation";
+import { services } from "@web/core/services";
 
 (async function boot() {
     odoo.info = {
@@ -15,7 +16,6 @@ import { appTranslateFn } from "@web/core/l10n/translation";
     odoo.isReady = false;
     const env = makeEnv();
     env.isFrozenSpreadsheet = () => true;
-    await startServices(env);
     await whenReady();
     const app = new App({
         getTemplate,
@@ -23,7 +23,9 @@ import { appTranslateFn } from "@web/core/l10n/translation";
         dev: env.debug,
         warnIfNoStaticProps: env.debug,
         translatableAttributes: ["data-tooltip"],
+        plugins: services,
     });
+    await startServices(env, app);
     const root = app.createRoot(PublicReadonlySpreadsheet, {
         env,
         props: session.spreadsheet_public_props,

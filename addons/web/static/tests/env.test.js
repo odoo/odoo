@@ -1,17 +1,28 @@
 import { after, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
-import { clearRegistry, makeMockEnv, allowTranslations } from "@web/../tests/web_test_helpers";
+import { App, Component, signal, xml } from "@odoo/owl";
+import { allowTranslations, clearRegistry, makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { makeEnv, mountComponent, startServices } from "@web/env";
 
 describe.current.tags("headless");
 
 const servicesRegistry = registry.category("services");
 
+function _startServices(env) {
+    const app = new App({ plugins: services });
+    return startServices(env, app);
+}
+
 beforeEach(() => {
     clearRegistry(servicesRegistry);
+    // ideally, should not be done like this, we should simply start odoo with
+    // the services that we want. but for now, it will do
+    patchWithCleanup(services, {
+        _items: signal.Array([])
+    })
 });
 
 /**
@@ -155,14 +166,14 @@ test(`startServices: throws if all dependencies are not met in the same microtic
     const env = makeEnv();
     registerService("b", ["a"], () => "b");
 
-    const serviceStartingPromise = startServices(env);
+    const serviceStartingPromise = _startServices(env);
     await expect(serviceStartingPromise).rejects.toThrow(
         "Some services could not be started: b. Missing dependencies: a"
     );
     expect(env.services).toEqual({});
 
     registerService("a", [], () => "a");
-    await startServices(env);
+    await _startServices(env);
     expect(env.services).toEqual({ a: "a", b: "b" });
 });
 
@@ -170,7 +181,7 @@ test(`startServices: waits for all synchronous code before attempting to start s
     const env = makeEnv();
     registerService("b", ["a"], () => "b");
 
-    const serviceStartingPromise = startServices(env);
+    const serviceStartingPromise = _startServices(env);
     // Dependency added in the same microtick doesn't cause startServices to throw even if it was added after the call
     // (eg, a module is defined after main.js)
     registerService("a", [], () => "a");
@@ -207,7 +218,7 @@ test(`mountComponent uses the env when provided and doesn't start the services`,
 
     const env = makeEnv();
     expect.verifySteps([]);
-    await startServices(env);
+    await _startServices(env);
     expect.verifySteps(["starting myService"]);
 
     class Root extends Component {
