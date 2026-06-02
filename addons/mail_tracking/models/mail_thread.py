@@ -1,9 +1,46 @@
+import logging
+
 from odoo.exceptions import UserError
-from odoo import models
+from odoo import api, models, _
+
+_logger = logging.getLogger(__name__)
 
 
 class MailThread(models.AbstractModel):
     _inherit = 'mail.thread'
+
+    def message_post(self, *, message_type='notification', **kwargs):
+        if self and self._is_model_mailing_customers() and (
+            message_type == 'notification' and (
+                not kwargs.get('source_template_id') or not kwargs.get('source_view_id')
+            )
+        ):
+            _logger.warning(
+                _("Calling 'message_post' without view nor template")
+            )
+        return super().message_post(message_type=message_type, **kwargs)
+
+    def message_notify(self, **kwargs):
+        if self and self._is_model_mailing_customers() and (
+            not kwargs.get('source_template_id') or not kwargs.get('source_view_id')
+        ):
+            _logger.warning(
+                _("Calling 'message_notify' without view nor template")
+            )
+        return super().message_notify(**kwargs)
+
+    @api.model
+    def _is_model_mailing_customers(self):
+        """Knows whether current model may contact external customers, which
+        should enable outgoing message capabilities and restrictions. By
+        default based on '_mailing_enabled' (i.e. being a model open for
+        mass mailing means contacting external people) + potential custom
+        list."""
+        return getattr(self, '_mailing_enabled', False) or self._name in {
+            'calendar.event',
+            'forum.forum', 'forum.post',
+            'slide.channel', 'slide.slide',
+        }
 
     def _get_message_create_valid_field_names(self):
         return super()._get_message_create_valid_field_names() | {
