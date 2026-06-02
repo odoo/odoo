@@ -3332,6 +3332,7 @@ class MailThread(models.AbstractModel):
         :param set restricting_names: set of parameters restricting given
           parameter_names, parameters not belonging to this list are rejected;
         """
+        conflicting_names = []
         if forbidden_names:
             conflicting_names = parameter_names & forbidden_names
         elif restricting_names:
