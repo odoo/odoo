@@ -14,9 +14,6 @@ class DashboardShareRoute(http.Controller):
     def share_portal(self, share_id=None, token=None):
         share = self._get_active_dashboard_share_or_not_found(share_id)
         share._check_dashboard_access(token)
-        download_url = ""
-        if request.env.user.has_group('base.group_allow_export'):
-            download_url = f"/dashboard/download/{share.id}/{token}"
         return request.render(
             "spreadsheet.public_spreadsheet_layout",
             {
@@ -24,9 +21,10 @@ class DashboardShareRoute(http.Controller):
                 "share": share,
                 "is_frozen": True,
                 "session_info": request.env["ir.http"].session_info(),
+                "spreadsheet_public_component": "spreadsheet_dashboard.PublicDashboard",
+                "spreadsheet_icon_src": "/spreadsheet_dashboard/static/description/icon.svg",
                 "props": {
                     "dataUrl": f"/dashboard/data/{share.id}/{token}",
-                    "downloadExcelUrl": download_url,
                     "mode": "dashboard",
                 },
             },
@@ -38,7 +36,8 @@ class DashboardShareRoute(http.Controller):
         share = self._get_active_dashboard_share_or_not_found(share_id)
         share._check_dashboard_access(token)
         if not request.env.user.has_group('base.group_allow_export'):
-            raise UserError(_("You don't have the rights to export data. Please contact an Administrator."))
+            raise UserError(
+                _("You don't have the rights to export data. Please contact an Administrator."))
         stream = request.env["ir.binary"]._get_stream_from(
             share, "excel_export", filename=share.name
         )
