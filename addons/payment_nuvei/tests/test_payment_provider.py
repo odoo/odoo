@@ -25,7 +25,7 @@ class TestPaymentProvider(NuveiCommon):
                 'item_amount_1': self.amount,
                 'item_name_1': self.reference,
                 'item_quantity_1': 1,
-                'invoice_id': self.reference,
+                'productId': self.reference,
                 'merchant_id': self.provider.nuvei_merchant_identifier,
                 'merchant_site_id': self.provider.nuvei_site_identifier,
                 'payment_method_mode': 'filter',

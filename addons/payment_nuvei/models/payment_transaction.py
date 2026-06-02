@@ -74,7 +74,7 @@ class PaymentTransaction(models.Model):
             'item_amount_1': rounded_amount,
             'item_name_1': self.reference,
             'item_quantity_1': 1,
-            'invoice_id': self.reference,
+            'productId': self.reference,
             'last_name': last_name,
             'merchantLocale': self.partner_lang,
             'merchant_id': self.provider_id.nuvei_merchant_identifier,
@@ -119,7 +119,7 @@ class PaymentTransaction(models.Model):
         if provider_code != 'nuvei' or len(tx) == 1:
             return tx
 
-        reference = notification_data.get('invoice_id')
+        reference = notification_data.get('productId')
         if not reference:
             raise ValidationError(
                 "Nuvei: " + _("Received data with missing reference.")
