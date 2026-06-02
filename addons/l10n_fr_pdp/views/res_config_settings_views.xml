@@ -56,6 +56,11 @@
 
                             <div class="d-flex gap-1 action_buttons mt-2"
                                  invisible="account_peppol_proxy_state not in ('sender', 'smp_registration', 'receiver')">
+                                <button string="Complete Registration"
+                                    name="button_peppol_reregister"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="account_peppol_eas == '0225' or account_peppol_proxy_state not in ('smp_registration', 'receiver')"/>
                                 <button string="Advanced Configuration"
                                     icon="oi-arrow-right"
                                     name="button_open_peppol_config_wizard"
