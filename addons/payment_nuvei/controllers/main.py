@@ -32,7 +32,7 @@ class NuveiController(http.Controller):
             payment_data = {}
         else:
             payment_data = data
-        tx_data = payment_data or {"invoice_id": tx_ref}
+        tx_data = payment_data or {"productId": tx_ref}
         tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("nuvei", tx_data)
         if tx_sudo:
             if error_access_token:  # The access token is not included when the payment goes through

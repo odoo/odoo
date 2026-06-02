@@ -19,14 +19,14 @@ class NuveiCommon(PaymentHttpCommon):
         cls.provider = cls.nuvei
 
         cls.payment_data_signature = (
-            "660a42e9796754d93c9e4b87c3ac4e34ce8880e32813609c15b273a1d5cee563"
+            "5361e831a6ed08ddd47d52fc511a605518e2696f302b301d709f950e91398f63"
         )
         cls.payment_data = {
             "ppp_status": "OK",
             "currency": "USD",
             "PPP_TransactionID": "489616878",
             "payment_method": "cc_card",
-            "invoice_id": cls.reference,
+            "productId": cls.reference,
             "responseTimeStamp": "2024-09-06.22:27:37",
             "message": "Success",
             "Error": "Success",

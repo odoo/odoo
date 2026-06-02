@@ -72,7 +72,7 @@ class PaymentTransaction(models.Model):
             "item_amount_1": rounded_amount,
             "item_name_1": self.reference,
             "item_quantity_1": 1,
-            "invoice_id": self.reference,
+            "productId": self.reference,
             "last_name": last_name[:40],
             "merchantLocale": self.partner_lang,
             "merchant_id": self.provider_id.nuvei_merchant_identifier,
@@ -103,7 +103,7 @@ class PaymentTransaction(models.Model):
         """Override of `payment` to extract the reference from the payment data."""
         if provider_code != "nuvei":
             return super()._extract_reference(provider_code, payment_data)
-        return payment_data.get("invoice_id")
+        return payment_data.get("productId")
 
     def _apply_updates(self, payment_data):
         """Override of `payment` to update the transaction based on the payment data."""
