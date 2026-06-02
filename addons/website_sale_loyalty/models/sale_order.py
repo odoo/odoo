@@ -207,6 +207,24 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return self.order_line.filtered(lambda line: line.reward_id.reward_type == "shipping")
 
+    def _get_order_tracking_lines(self):
+        """Override to exclude loyalty reward lines from GA4 tracking."""
+        return super()._get_order_tracking_lines().filtered(lambda line: not line.is_reward_line)
+
+    def _get_order_tracking_info(self):
+        result = super()._get_order_tracking_info()
+        if coupon := self._get_applied_coupon_codes():
+            result["coupon"] = coupon
+        return result
+
+    def _get_applied_coupon_codes(self):
+        """Return applied coupon/promotion codes as a comma-separated string for GA4 tracking.
+
+        :rtype: str
+        """
+        self.ensure_one()
+        return ",".join(self.order_line.coupon_id.mapped("code"))
+
     def _allow_nominative_programs(self):
         if not request or not hasattr(request, "website"):
             return super()._allow_nominative_programs()

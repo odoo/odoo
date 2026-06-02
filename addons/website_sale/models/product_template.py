@@ -788,6 +788,7 @@ class ProductTemplate(models.Model):
             combination_info["product_tracking_info"] = self._get_google_analytics_data(
                 product, combination_info
             )
+            combination_info["currency_name"] = combination_info["currency"].name
 
         if (
             self.type == "combo"
@@ -1320,10 +1321,9 @@ class ProductTemplate(models.Model):
     def _get_google_analytics_data(self, product, combination_info):
         self.ensure_one()
         tracking_data = {
-            "item_id": product.barcode or product.id,
-            "item_name": combination_info["display_name"],
+            "item_id": str(product.barcode or product.id),
+            "item_name": self.with_context(display_default_code=False).display_name,
             "item_category": self.categ_id.name,
-            "currency": combination_info["currency"].name,
             "price": combination_info["price"],
         }
 
@@ -1341,6 +1341,36 @@ class ProductTemplate(models.Model):
             key = f"item_{ext_id}" if ext_id == "brand" else ext_id
             tracking_data[key] = value
         return tracking_data
+
+    def _get_google_analytics_list_data_batch(self, products_prices, website, item_list_name):
+        """Compute GA tracking data for all products in batch for list contexts (shop, snippets).
+        Uses already-computed prices to avoid extra queries per product.
+
+        :param dict products_prices: mapping of product.template.id -> price vals
+        :param website: current website record
+        :param str item_list_name: name of the list the products are displayed in (e.g. category
+            name, "Search Results", "Wishlist", snippet name); used to distinguish ``select_item``
+            from ``view_item`` in GA4.
+        :rtype: dict
+        :return: mapping of product.template.id -> GA tracking dict
+        """
+        result = {}
+        currency = website.currency_id
+        for template in self:
+            price_vals = products_prices.get(template.id, {})
+            price = price_vals.get("price_reduce", template.list_price)
+            list_price = price_vals.get("base_price", price)
+            tracking_data = {
+                "item_id": str(template.id),
+                "item_name": template.with_context(display_default_code=False).display_name,
+                "item_category": template.categ_id.name,
+                "item_list_name": item_list_name,
+                "price": price,
+            }
+            if discount := currency.round(list_price - price):
+                tracking_data["discount"] = discount
+            result[template.id] = tracking_data
+        return result
 
     def _get_contextual_pricelist(self):
         """Override to fallback on website current pricelist."""

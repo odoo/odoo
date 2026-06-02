@@ -72,7 +72,7 @@ class Delivery(WebsiteSale):
         rendered_tax_lines = self.env["ir.ui.view"]._render_template(
             "website_sale.order_tax_lines", {"website_sale_order": order}
         )
-        return {
+        result = {
             "success": True,
             "is_free_delivery": not bool(order.amount_delivery),
             "compute_price_after_delivery": order.carrier_id.invoice_policy == "real",
@@ -87,6 +87,12 @@ class Delivery(WebsiteSale):
                 order.amount_total, {"display_currency": currency}
             ),
         }
+        if request.website.google_analytics_key and order.carrier_id:
+            result["shipping_tracking_info"] = {
+                **order._get_order_tracking_info(),
+                "shipping_tier": order.carrier_id.name,
+            }
+        return result
 
     @route("/shop/get_delivery_rate", type="jsonrpc", auth="public", methods=["POST"], website=True)
     def shop_get_delivery_rate(self, dm_id):

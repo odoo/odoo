@@ -50,6 +50,16 @@ export class AddToWishlist extends Interaction {
             saveForLaterButton.classList.add('d-none');
             addedToWishListAlert.classList.remove('d-none');
         }
+
+        const trackingEl = this.el.closest("[data-product-tracking-info]")
+            || document.querySelector("#product_detail[data-product-tracking-info]");
+        if (trackingEl) {
+            const trackingInfo = JSON.parse(trackingEl.dataset.productTrackingInfo);
+            const currency = trackingEl.dataset.productGaCurrency;
+            document.querySelector(".oe_website_sale")?.dispatchEvent(
+                new CustomEvent("add_to_wishlist_event", { detail: { trackingInfo, currency } })
+            );
+        }
     }
 
     /**

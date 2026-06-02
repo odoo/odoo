@@ -640,6 +640,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 ],
                 indent=2,
             )
+
+        if website.google_analytics_key:
+            if category:
+                item_list_name = category.name
+            elif fuzzy_search_term or search:
+                item_list_name = "Search Results"
+            else:
+                item_list_name = "Shop"
+            values["product_tracking_infos"] = products._get_google_analytics_list_data_batch(
+                products_prices, website, item_list_name
+            )
+
         values.update(self._get_additional_shop_values(values, **post))
 
         values["default_expand_filter_sections"] = nb_filter_sections < MAX_EXPANDED_FILTER_SECTIONS
@@ -1683,6 +1695,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "errors": self._get_shop_payment_errors(order),
             "partner": order.partner_invoice_id,
             "order": order,
+            "payment_tracking_info": (
+                order._get_order_tracking_info() if request.website.google_analytics_key else {}
+            ),
         }
         payment_form_values = {
             **sale_portal.CustomerPortal._get_payment_values(
@@ -1834,7 +1849,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         rendering_values = {
             "order": order,
             "website_sale_order": order,
-            "order_tracking_info": self.order_2_return_dict(order),
+            "order_tracking_info": order._get_purchase_tracking_info(),
         }
         if (
             self.env["res.users"]._get_signup_invitation_scope() == "b2c"
@@ -2080,36 +2095,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         }
         if modified_options:
             category.write(modified_options)
-
-    def order_lines_2_google_api(self, order_lines):
-        """Transform a list of order lines into a dict for google analytics."""
-        ret = []
-        for line in order_lines.filtered(lambda line: not line.is_delivery):
-            product = line.product_id
-            ret.append({
-                "item_id": product.barcode or product.id,
-                "item_name": product.name or "-",
-                "item_category": product.categ_id.name or "-",
-                "price": line.price_unit,
-                "quantity": line.product_uom_qty,
-            })
-        return ret
-
-    def order_2_return_dict(self, order):
-        """Return the tracking_cart dict of the order for Google analytics basically defined to
-        be inherited."""
-        tracking_cart_dict = {
-            "transaction_id": order.id,
-            "affiliation": order.company_id.name,
-            "value": order.amount_total,
-            "tax": order.amount_tax,
-            "currency": order.currency_id.name,
-            "items": self.order_lines_2_google_api(order.order_line),
-        }
-        delivery_line = order.order_line.filtered("is_delivery")
-        if delivery_line:
-            tracking_cart_dict["shipping"] = delivery_line.price_unit
-        return tracking_cart_dict
 
     # --------------------------------------------------------------------------
     # Products Recently Viewed

@@ -329,6 +329,12 @@
                     </t>
                 </div>
                 <t t-call="website_sale.cart_lines"/>
+                <div
+                    t-if="cart_tracking_info"
+                    id="cart_tracking_info"
+                    class="d-none"
+                    t-att-data-cart-tracking-info="json.dumps(cart_tracking_info)"
+                />
                 <div class="clearfix" />
                 <div class="oe_structure" id="oe_structure_website_sale_cart_1"/>
             </div>

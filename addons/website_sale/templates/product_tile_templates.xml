@@ -43,6 +43,8 @@
         t-attf-class="oe_product_cart h-100 d-flex {{ptavs_classes}}"
         t-att-data-publish="product.website_published and 'on' or 'off'"
         t-att-aria-label="product.name"
+        t-att-data-product-tracking-info="json.dumps((product_tracking_infos or {}).get(product.id, {}))"
+        t-att-data-product-ga-currency="website.currency_id.name"
     >
         <t t-if="not product.website_published" t-call="website.unpublished_badge" badge_position="'left'"/>
         <t t-call="website_sale.product_image_and_ribbon" product_image_title="product.name"/>
