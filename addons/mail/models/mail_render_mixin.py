@@ -543,7 +543,10 @@ class MailRenderMixin(models.AbstractModel):
 
         view_ref = view_ref.id if isinstance(view_ref, models.BaseModel) else view_ref
         for record in render_res_ids(self.env[model], res_ids, results):
-            variables['object'] = record
+            if 'object' not in variables:
+                variables['object'] = record
+            if 'record' not in variables:  # ease compabitiliy with various views templates
+                variables['record'] = record
             try:
                 render_result = self.env['ir.qweb']._render(
                     view_ref,
