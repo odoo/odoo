@@ -74,7 +74,18 @@
                                 <button string="Disconnect"
                                         name="button_peppol_deregister"
                                         type="object"
-                                        class="btn-primary me-1"/>
+                                        class="btn-primary me-1"
+                                        invisible="account_peppol_eas != '0225' and account_peppol_proxy_state in ('smp_registration', 'receiver')"/>
+                                <button string="Disconnect"
+                                        name="button_peppol_deregister"
+                                        type="object"
+                                        class="btn-secondary me-1"
+                                        invisible="account_peppol_eas == '0225' or account_peppol_proxy_state not in ('smp_registration', 'receiver')"/>
+                                <button string="Complete Registration"
+                                    name="button_peppol_reregister"
+                                    type="object"
+                                    class="btn-primary"
+                                    invisible="account_peppol_eas == '0225' or account_peppol_proxy_state not in ('smp_registration', 'receiver')"/>
                             </div>
 
                             <div class="d-flex gap-1 action_buttons" colspan="3">
