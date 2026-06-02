@@ -73,3 +73,52 @@ class TestResourceCalendar(TestHolidayContract):
         self.assertEqual(leave_morning.number_of_days, 0.5)
         self.assertEqual(leave_afternoon.number_of_days, 0.5)
         self.assertEqual(leave_one_and_half.number_of_days, 1.5)
+
+    def test_time_off_half_day_duration_based_calendar(self):
+        attendance_ids = []
+        for dayofweek, day_name in [
+            ('0', 'Monday'),
+            ('1', 'Tuesday'),
+            ('2', 'Wednesday'),
+            ('3', 'Thursday'),
+            ('4', 'Friday'),
+        ]:
+            attendance_ids += [
+                Command.create({
+                    'name': f'{day_name} Morning',
+                    'dayofweek': dayofweek,
+                    'duration_hours': 3.36,
+                    'day_period': 'morning',
+                }),
+                Command.create({
+                    'name': f'{day_name} Afternoon',
+                    'dayofweek': dayofweek,
+                    'duration_hours': 3.36,
+                    'day_period': 'afternoon',
+                }),
+            ]
+
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Duration based calendar',
+            'duration_based': True,
+            'attendance_ids': attendance_ids,
+        })
+        self.jules_emp.version_id.resource_calendar_id = calendar
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test duration based half day type',
+            'requires_allocation': False,
+            'leave_validation_type': 'no_validation',
+            'request_unit': 'half_day',
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Full week half day leave',
+            'employee_id': self.jules_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2026, 4, 20),
+            'request_date_to': date(2026, 4, 24),
+            'request_date_from_period': 'am',
+            'request_date_to_period': 'pm',
+        })
+
+        self.assertEqual(leave.number_of_days, 5)
