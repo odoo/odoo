@@ -355,5 +355,7 @@ class PdpRegistration(models.TransientModel):
         """
         self.ensure_one()
 
+        # Reset the kyc status
+        self.pdp_kyc_status = False
         if self.edi_user_id:
             self.edi_user_id._peppol_deregister_participant()
