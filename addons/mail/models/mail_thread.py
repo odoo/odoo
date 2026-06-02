@@ -3228,7 +3228,7 @@ class MailThread(models.AbstractModel):
             if res_model == 'mail.template':
                 template = self.env['mail.template'].browse(res_id)
             elif res_model == 'ir.ui.view':
-                view = self.env['ir.ui.view'].browse(res_id)
+                view = self.env['ir.ui.view'].sudo().browse(res_id)  # sudo: read access on 'model_ir_ui_view' restricted to admins by default
             else:
                 raise ValueError(
                     _('Invalid template or view source reference %(svalue)s, is %(model)s instead',
