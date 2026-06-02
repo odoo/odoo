@@ -105,6 +105,8 @@ function mockSpreadsheetDataController(_request, { res_model, res_id }) {
 
 onRpc("/spreadsheet/data/<string:res_model>/<int:res_id>", mockSpreadsheetDataController);
 
+onRpc("/spreadsheet/<string:res_model>/<int:res_id>/dispatch", function () {});
+
 export function defineSpreadsheetModels() {
     defineModels(SpreadsheetModels);
 }

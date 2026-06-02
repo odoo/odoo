@@ -9,7 +9,7 @@
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'assets': {
-        'spreadsheet.o_spreadsheet': [
+        'spreadsheet.o_spreadsheet_core': [
             (
                 'after',
                 'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
