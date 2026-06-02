@@ -4,6 +4,7 @@ import contextlib
 import hashlib
 import io
 import os
+import re
 import tracemalloc
 from unittest.mock import patch
 
@@ -19,6 +20,17 @@ from odoo.addons.base.models.ir_attachment import IrAttachment
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 HASH_SPLIT = 2      # FIXME: testing implementations detail is not a good idea
+
+
+def measure_peak_memory(func):
+    tracemalloc.start()
+    try:
+        tracemalloc.reset_peak()
+        res = func()
+        _, peak = tracemalloc.get_traced_memory()
+        return res, peak
+    finally:
+        tracemalloc.stop()
 
 
 @tagged('at_install', '-post_install')
@@ -249,26 +261,30 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         # only 1.3MiB. We use tracemalloc to make sure _upload_file uses
         # little memory when compared to create({'raw': file.read()}).
 
-        # warmup outside of tracemalloc
-        self.env['ir.attachment'].create({'name': 'empty', 'raw': b''})
-
-        tracemalloc.start()
-        try:
+        def file_read():
             with file_open('base/i18n/base.pot', 'rb') as file:
-                attach1 = self.env['ir.attachment'].create({
+                return self.env['ir.attachment'].create({
                     'name': 'base.pot',
                     'raw': file.read(),
                 })
-            _, file_read_peak_memory_usage = tracemalloc.get_traced_memory()
-            tracemalloc.reset_peak()
 
-            with file_open('base/i18n/base.pot', 'rb') as file:
-                attach2 = self.env['ir.attachment']._upload_file(file, {
-                    'name': 'base.pot',
-                })
-            _, from_file_peak_memory_usage = tracemalloc.get_traced_memory()
-        finally:
-            tracemalloc.stop()
+        def file_stream():
+            with file_open('base/i18n/base.pot', 'rb') as f:
+                return self.env['ir.attachment']._upload_file(
+                    f,
+                    {'name': 'base.pot'},
+                )
+
+        # Only try the attachment creation without the indexation
+        with patch(
+            "odoo.addons.base.models.ir_attachment.IrAttachment._index",
+            new=lambda *args, **kwargs: None,
+        ):
+            # warmup outside of tracemalloc
+            self.env['ir.attachment'].create({'name': 'empty', 'raw': b''})
+
+            attach1, file_read_peak_memory_usage = measure_peak_memory(file_read)
+            attach2, from_file_peak_memory_usage = measure_peak_memory(file_stream)
 
         base_pot = self.file_read('base/i18n/base.pot').content
         actual_size = os.stat(file_path('base/i18n/base.pot')).st_size
@@ -276,8 +292,31 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
                        (attach1.file_size, attach2.file_size, actual_size))
         self.assertEqual(attach1.checksum, attach2.checksum)
         self.assertTrue(attach1.raw.content == attach2.raw.content == base_pot)
+        self.assertEqual(attach1.index_content, attach2.index_content)
         self.assertLess(from_file_peak_memory_usage, file_read_peak_memory_usage // 2,
             "_from_path(file.name) must be much more memory efficient than create({'raw': file.read()})")
+
+    def test_17_text_file_index_memory_optimization(self):
+        with file_open('base/i18n/base.pot', 'rb') as f:
+            attach = self.env['ir.attachment']._upload_file(
+                f,
+                {'name': 'base.pot'},
+            )
+        self.assertTrue(attach.mimetype.startswith('text/'))
+
+        def old_index(bin_data):
+            words = re.findall(rb"[\x20-\x7E]{4,}", bin_data)
+            return b"\n".join(words).decode("ascii")
+
+        old_index_content, old_index_peak_memory_usage = measure_peak_memory(
+            lambda: old_index(attach.raw)
+        )
+        new_index_content, new_index_peak_memory_usage = measure_peak_memory(
+            lambda: attach._index(attach.raw, attach.mimetype, attach.checksum)
+        )
+        self.assertEqual(old_index_content, new_index_content)
+        self.assertLess(new_index_peak_memory_usage, old_index_peak_memory_usage // 1.5,
+            "new text index must be more memory efficient")
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
