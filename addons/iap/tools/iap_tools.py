@@ -12,6 +12,7 @@ from odoo.tools import email_normalize, exception_to_unicode
 _logger = logging.getLogger(__name__)
 
 DEFAULT_ENDPOINT = 'https://iap.odoo.com'
+TEST_ENDPOINT = "https://iap.test.odoo.com"
 
 
 #----------------------------------------------------------
@@ -89,6 +90,9 @@ def mail_prepare_for_domain_search(email, min_email_length=0):
 
 def iap_get_endpoint(env):
     url = env['ir.config_parameter'].sudo().get_str('iap.endpoint') or DEFAULT_ENDPOINT
+    if url not in (DEFAULT_ENDPOINT, TEST_ENDPOINT):
+        _logger.warning("Invalid IAP endpoint: %s. Using instead: %s", url, TEST_ENDPOINT)
+        return TEST_ENDPOINT
     return url
 
 
