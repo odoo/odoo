@@ -1,6 +1,6 @@
 // @ts-check
 
-import { EventBus, markRaw, toRaw } from "@odoo/owl";
+import { EventBus, markRaw, signal, toRaw } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
@@ -139,8 +139,18 @@ export class RelationalModel extends Model {
         this.keepLast = markRaw(new KeepLast());
         this.mutex = markRaw(new Mutex());
 
+        this._root = signal(null);
         /** @type {DataPoint | null} */
         this.root = null;
+
+        Object.defineProperty(this, "root", {
+            get() {
+                return this._root();
+            },
+            set(newValue) {
+                this._root.set(newValue);
+            },
+        });
 
         /** @type {RelationalModelConfig} */
         this.config = {
