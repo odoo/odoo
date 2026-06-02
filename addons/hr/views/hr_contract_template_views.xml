@@ -34,7 +34,9 @@
                                     <field name="structure_type_id" string="Pay Category" placeholder="Employee will be excluded from Pay Runs"
                                             domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
 
-                                    <separator name="schedule" string="Schedule"/>
+                                    
+                                </group>
+                                <group name="schedule" string="Schedule">
                                     <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
                                 </group>
                             </group>
