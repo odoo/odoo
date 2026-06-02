@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import contextlib
 import datetime
 import logging
 from ast import literal_eval
@@ -92,12 +93,10 @@ class Publisher_WarrantyContract(AbstractModel):
                 raise UserError(_("Error during communication with the publisher warranty server."))
             # old behavior based on res.log; now on mail.message, that is not necessarily installed
             user = self.env['res.users'].sudo().browse(SUPERUSER_ID)
-            poster = self.sudo().env.ref('mail.channel_all_employees')
-            for message in result["messages"]:
-                try:
-                    poster.message_post(body=message, subtype_xmlid='mail.mt_comment', partner_ids=[user.partner_id.id])
-                except Exception:
-                    pass
+            if poster := self.sudo().env.ref('mail.channel_all_employees', raise_if_not_found=False):
+                for message in result["messages"]:
+                    with contextlib.suppress(Exception):
+                        poster.message_post(body=message, subtype_xmlid='mail.mt_comment', partner_ids=[user.partner_id.id])
             if result.get('enterprise_info'):
                 # Update expiration date
                 set_str = self.env['ir.config_parameter'].sudo().set_str
