@@ -12,6 +12,7 @@ import {
     deserializeDateTime,
     formatDate,
     formatDateTime,
+    getLocalYearAndWeek,
     parseDate,
     parseDateTime,
     serializeDate,
@@ -31,6 +32,21 @@ const timeFormat = strftimeToLuxonFormat(formats.time);
 
 beforeEach(() => {
     patchTranslations();
+});
+
+test("getLocalYearAndWeek", async () => {
+    patchWithCleanup(localization, { weekStart: 1, });
+    const dates_expected = {
+        "2026-12-25": {year: 2026, week: 52, startDate: "2026-12-21"},
+        "2026-12-31": {year: 2026, week: 53, startDate: "2026-12-28"},
+        "2027-01-01": {year: 2026, week: 53, startDate: "2026-12-28"},
+        "2027-01-04": {year: 2027, week: 1, startDate: "2027-01-04"},
+    }
+    for (let key in dates_expected) {
+        const date_actual = getLocalYearAndWeek(new Date(key))
+        date_actual.startDate = date_actual.startDate.toISODate()
+        expect(date_actual).toEqual(dates_expected[key]);
+    }
 });
 
 test("formatDate/formatDateTime specs", async () => {
