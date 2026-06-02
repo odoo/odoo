@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { onPatched } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { onPatched, proxy } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 import { TModelInput } from "@point_of_sale/app/components/inputs/t_model_input";
@@ -46,7 +46,7 @@ export class Input extends TModelInput {
         readonly: false,
     };
     setup() {
-        this.state = useState({ isOpen: false });
+        this.state = proxy({ isOpen: false });
         // Bind setValue to ensure that 'this' remains the component instance.
         this.setValue = debounce(this.setValue.bind(this), this.props.debounceMillis);
         const ref =

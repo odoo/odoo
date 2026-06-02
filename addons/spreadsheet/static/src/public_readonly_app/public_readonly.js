@@ -1,5 +1,5 @@
-import { useChildSubEnv, useState } from "@web/owl2/utils";
-import { Component, markRaw, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
+import { useChildSubEnv } from "@web/owl2/utils";
+import { Component, markRaw, onMounted, onWillStart, onWillUnmount, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 
@@ -46,7 +46,7 @@ export class PublicReadonlySpreadsheet extends Component {
     setup() {
         useSpreadsheetNotificationStore();
         this.http = useService("http");
-        this.state = useState({
+        this.state = proxy({
             isFilterShown: false,
         });
         useChildSubEnv({

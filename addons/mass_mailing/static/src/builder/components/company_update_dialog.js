@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -63,7 +62,7 @@ export class ResCompanyUpdateDialog extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.state = useState({});
+        this.state = proxy({});
         onWillStart(async () => {
             const [record] = await this.orm.read(
                 "res.company",

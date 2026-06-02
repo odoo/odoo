@@ -1,7 +1,7 @@
-import { reactive, useRef, useState } from "@web/owl2/utils";
+import { reactive, useRef } from "@web/owl2/utils";
 import { ThemeSelector } from "./theme_selector";
 import { assets, AssetsLoadingError, getBundle } from "@web/core/assets";
-import { Component, markup, onMounted, onWillUnmount, onWillUpdateProps, status } from "@odoo/owl";
+import { Component, markup, onMounted, onWillUnmount, onWillUpdateProps, status, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
 import { localization } from "@web/core/l10n/localization";
@@ -19,7 +19,7 @@ export class ThemeSelectorIframe extends Component {
     setup() {
         this.themeService = useService("mass_mailing.themes");
         this.orm = useService("orm");
-        this.state = useState({
+        this.state = proxy({
             show: false,
         });
         this.themeSelectorProps = {

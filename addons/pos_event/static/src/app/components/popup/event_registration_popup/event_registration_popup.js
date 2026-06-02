@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 // Part of Odoo. See LICENSE file for full copyright and licensing details.
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
 import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
@@ -20,7 +19,7 @@ export class EventRegistrationPopup extends Component {
     setup() {
         this.pos = usePos();
         this.dialog = useService("dialog");
-        this.state = useState({
+        this.state = proxy({
             byRegistration: [],
             byOrder: {},
             touchedFields: new Set(),

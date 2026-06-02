@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductCard } from "@point_of_sale/app/components/product_card/product_card";
@@ -68,7 +67,7 @@ export class ComboConfiguratorPopup extends Component {
             configuration = this.configurationFromValues;
         }
 
-        this.state = useState({
+        this.state = proxy({
             combo,
             configuration,
             qty: Object.fromEntries(

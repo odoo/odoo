@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { addLoadingEffect } from '@web/core/utils/ui';
 import { rpc } from "@web/core/network/rpc";
@@ -21,11 +21,11 @@ export class SignatureForm extends Component {
         this.rootRef = useRef("root");
 
         this.csrfToken = odoo.csrf_token;
-        this.state = useState({
+        this.state = proxy({
             error: false,
             success: false,
         });
-        this.signature = useState({
+        this.signature = proxy({
             name: this.props.defaultName,
             getSignatureImage: () => "",
             resetSignature: () => {},

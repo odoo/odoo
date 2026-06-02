@@ -1,7 +1,7 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
@@ -15,7 +15,7 @@ export class TodoChatterPanel extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             displayChatter: this.env.isSmall,
         });
         this.rootRef = useRef("root");

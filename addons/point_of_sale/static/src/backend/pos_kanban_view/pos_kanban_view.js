@@ -1,9 +1,9 @@
-import { onWillRender, useState } from "@web/owl2/utils";
+import { onWillRender } from "@web/owl2/utils";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
 import { kanbanView } from "@web/views/kanban/kanban_view";
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, proxy } from "@odoo/owl";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
@@ -41,7 +41,7 @@ export class PosKanbanRenderer extends KanbanRenderer {
         super.setup();
         this.orm = useService("orm");
         this.action = useService("action");
-        this.posState = useState(this.props.initialPosState);
+        this.posState = proxy(this.props.initialPosState);
         this.loadScenario = useTrackedAsync(
             async ({ functionName, isRestaurant }) =>
                 await this.callWithViewUpdate(async () => {

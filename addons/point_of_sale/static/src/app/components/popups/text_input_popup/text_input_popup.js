@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class TextInputPopup extends Component {
@@ -24,7 +24,7 @@ export class TextInputPopup extends Component {
     };
 
     setup() {
-        this.state = useState({ inputValue: this.props.startingValue });
+        this.state = proxy({ inputValue: this.props.startingValue });
         this.inputRef = useRef("input");
         onMounted(this.onMounted);
     }

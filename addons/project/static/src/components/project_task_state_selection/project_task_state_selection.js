@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import {
     StateSelectionField,
@@ -19,7 +19,7 @@ export class ProjectTaskStateSelection extends StateSelectionField {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             isStateButtonHighlighted: false,
         });
         this.icons = {

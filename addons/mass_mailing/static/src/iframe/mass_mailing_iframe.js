@@ -1,7 +1,7 @@
 import { Editor } from "@html_editor/editor";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
-import { Component, onMounted, onWillDestroy, onWillUnmount, status } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, onWillUnmount, status, proxy } from "@odoo/owl";
 import { LazyComponent } from "@web/core/lazy_component";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { localization } from "@web/core/l10n/localization";
@@ -11,7 +11,7 @@ import { useChildRef, useForwardRefToParent } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { loadGoogleFonts } from "./mass_mailing_iframe_utils";
 
 const IFRAME_VALUE_SELECTOR = ".o_mass_mailing_value";
@@ -49,7 +49,7 @@ export class MassMailingIframe extends Component {
         useSubEnv({
             localOverlayContainerKey: uniqueId("mass_mailing_iframe"),
         });
-        this.state = useState({
+        this.state = proxy({
             showFullscreen: false,
             isMobile: false,
             ready: false,

@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, proxy } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
@@ -13,7 +12,7 @@ export class PaymentPage extends Component {
         this.selfOrder = useSelfOrder();
         this.selfOrder.isOrder();
         this.router = useService("router");
-        this.state = useState({
+        this.state = proxy({
             selection: true,
             paymentMethodId: null,
             qrCode: null,

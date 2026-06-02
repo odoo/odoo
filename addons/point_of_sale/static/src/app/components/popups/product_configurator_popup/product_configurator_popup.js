@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_banner/product_info_banner";
 
@@ -58,7 +57,7 @@ export class MultiProductAttribute extends BaseProductAttribute {
 
     setup() {
         super.setup(...arguments);
-        this.state = useState({
+        this.state = proxy({
             is_value_selected: this.props.attribute.values().reduce((acc, value) => {
                 acc[value.id] = this.props.selected?.includes(value) || false;
                 return acc;
@@ -97,7 +96,7 @@ export class ProductConfiguratorPopup extends Component {
 
     setup() {
         this.pos = usePos();
-        this.state = useState({
+        this.state = proxy({
             attributes:
                 this.props.line?.selectedAttributes ||
                 this.props.productTemplate.attribute_line_ids.reduce((acc, attribute) => {

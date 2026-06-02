@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { onMounted, onWillUnmount, onPatched } from "@odoo/owl";
+import { onMounted, onWillUnmount, onPatched, proxy } from "@odoo/owl";
 import { debounce } from "@web/core/utils/timing";
 
 export function useScrollShadow(scrollContainerRef, options = {}) {
@@ -8,7 +7,7 @@ export function useScrollShadow(scrollContainerRef, options = {}) {
     }
 
     const { threshold = 5 } = options;
-    const shadows = useState({ top: 0, bottom: 0 });
+    const shadows = proxy({ top: 0, bottom: 0 });
 
     const updateShadows = () => {
         try {

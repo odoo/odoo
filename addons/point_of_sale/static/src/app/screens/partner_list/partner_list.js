@@ -1,11 +1,11 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { localeCompare, normalize } from "@web/core/l10n/utils";
 import { debounce } from "@web/core/utils/timing";
@@ -29,7 +29,7 @@ export class PartnerList extends Component {
         this.dialog = useService("dialog");
         this.modalRef = useChildRef();
         this.modalContent = null;
-        this.state = useState({
+        this.state = proxy({
             initialPartners: this.pos.models["res.partner"].filter((p) => {
                 const par = p.property_account_receivable_id;
                 return !par || par.non_trade !== true;

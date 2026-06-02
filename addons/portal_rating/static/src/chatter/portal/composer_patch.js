@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { Composer } from "@mail/core/common/composer";
 
 import { patch } from "@web/core/utils/patch";
@@ -12,7 +12,7 @@ patch(Composer.prototype, {
     setup() {
         super.setup(...arguments);
         this.MAX_STAR_RATING = MAX_STAR_RATING;
-        this.portalState = useState({
+        this.portalState = proxy({
             hoveredRatingValue: undefined,
             ratingValue: DEFAULT_STAR_RATING,
             /** @deprecated: use 'hoveredRatingValue' instead */

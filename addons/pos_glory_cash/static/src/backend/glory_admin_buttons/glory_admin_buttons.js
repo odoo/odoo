@@ -1,5 +1,5 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { _t } from "@web/core/l10n/translation";
@@ -22,7 +22,7 @@ export class GloryAdminButtons extends Component {
         this.notification = useService("notification");
         this.logger = new Logger("pos_glory_cash");
         this.gloryService = new GloryService((newStatus) => (this.state.status = newStatus));
-        this.state = useState({ status: "DISCONNECTED", resetInProgress: false });
+        this.state = proxy({ status: "DISCONNECTED", resetInProgress: false });
 
         useLayoutEffect(
             () => {

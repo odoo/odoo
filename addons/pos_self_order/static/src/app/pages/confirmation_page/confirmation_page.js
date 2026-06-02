@@ -1,5 +1,5 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onMounted, onWillUnmount, proxy } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
@@ -15,7 +15,7 @@ export class ConfirmationPage extends Component {
         this.router = useService("router");
         this.dialog = useService("dialog");
         this.changeToDisplay = [];
-        this.state = useState({
+        this.state = proxy({
             onReload: true,
             payment: this.props.screenMode === "pay",
         });

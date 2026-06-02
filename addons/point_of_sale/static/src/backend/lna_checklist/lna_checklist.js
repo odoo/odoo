@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 /** @odoo-module **/
 
-import { Component, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export class LnaChecklistWidget extends Component {
@@ -10,7 +9,7 @@ export class LnaChecklistWidget extends Component {
     setup() {
         this.storage_key = "pos_lna_checklist";
         this.originalSave = this.props.record.save.bind(this.props.record);
-        this.state = useState({ checks: {} });
+        this.state = proxy({ checks: {} });
 
         onWillStart(() => {
             try {

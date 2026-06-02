@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, onWillStart, status } from "@odoo/owl";
+import { Component, onWillUpdateProps, onWillStart, status, proxy } from "@odoo/owl";
 import { DashboardFacet } from "../dashboard_facet/dashboard_facet";
 import { DashboardDateFilter } from "../dashboard_date_filter/dashboard_date_filter";
 import { DashboardSearchBarMenu } from "../dashboard_search_bar_menu/dashboard_search_bar_menu";
@@ -36,15 +35,15 @@ export class DashboardSearchBar extends Component {
 
         this.inputRef = useAutofocus("autofocus");
 
-        this.state = useState({
+        this.state = proxy({
             showDropdown: false,
             expanded: [],
             query: "",
             subItemsLimits: {},
         });
-        this.visibilityState = useState(this.props.toggler.state);
+        this.visibilityState = proxy(this.props.toggler.state);
 
-        this.items = useState([]);
+        this.items = proxy([]);
         this.subItems = {};
 
         this.filtersValuesDropdown = useDropdownState();

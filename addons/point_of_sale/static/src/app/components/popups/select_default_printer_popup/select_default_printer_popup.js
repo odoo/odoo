@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class SelectDefaultPrinterPopup extends Component {
@@ -13,7 +12,7 @@ export class SelectDefaultPrinterPopup extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             selectedId: this.props.selectedId,
         });
     }

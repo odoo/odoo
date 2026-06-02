@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 import { formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
@@ -38,7 +37,7 @@ export class MoOverviewOperationsBlock extends Component {
 
     setup() {
         this.formatFloatTime = formatFloatTime;
-        this.state = useState({
+        this.state = proxy({
             // Unfold the main MO's operations by default
             isFolded: this.level > 0 && !this.props.unfoldAll,
         });

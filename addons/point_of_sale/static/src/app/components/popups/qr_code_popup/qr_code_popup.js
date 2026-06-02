@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export class QRPopup extends Component {
     static template = "point_of_sale.QRPopup";
@@ -20,7 +19,7 @@ export class QRPopup extends Component {
     static defaultProps = { footer: true, cancelLabel: "Discard", confirmLabel: "Confirm" };
 
     setup() {
-        this.state = useState({ qrLoaded: false });
+        this.state = proxy({ qrLoaded: false });
     }
 
     onQrLoaded() {

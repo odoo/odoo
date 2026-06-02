@@ -1,5 +1,5 @@
-import { useState, useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, onMounted, onWillStart, onWillUnmount, proxy } from "@odoo/owl";
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -62,7 +62,7 @@ export class ProductConfiguratorDialog extends Component {
     setup() {
         this.title = _t("Configure your product");
         this.env.dialogData.dismiss = !this.props.edit && this.props.discard.bind(this);
-        this.state = useState({
+        this.state = proxy({
             products: [],
             optionalProducts: [],
         });

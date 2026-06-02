@@ -1,9 +1,9 @@
-import { useState, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { BomOverviewControlPanel } from "../bom_overview_control_panel/mrp_bom_overview_control_panel";
 import { BomOverviewTable } from "../bom_overview_table/mrp_bom_overview_table";
-import { Component, EventBus, onWillStart } from "@odoo/owl";
+import { Component, EventBus, onWillStart, proxy } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 export class BomOverviewComponent extends Component {
@@ -24,7 +24,7 @@ export class BomOverviewComponent extends Component {
         this.uomName = "";
         this.unfoldedIds = new Set();
 
-        this.state = useState({
+        this.state = proxy({
             showOptions: {
                 mode: this.props.action.context.mode || 'overview',
                 uom: false,

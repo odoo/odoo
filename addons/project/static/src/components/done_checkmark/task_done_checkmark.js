@@ -1,4 +1,5 @@
-import { onRendered, useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
+import { onRendered } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { BooleanToggleField, booleanToggleField } from "@web/views/fields/boolean_toggle/boolean_toggle_field";
 
@@ -7,7 +8,7 @@ export class TaskCheckMark extends BooleanToggleField {
 
     setup() {
         super.setup();
-        this.reached = useState({
+        this.reached = proxy({
             isReached: false,
         });
         onRendered(() => {

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { parseDate, parseDateTime, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
@@ -13,7 +13,7 @@ import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, proxy } from "@odoo/owl";
 import {
     BACKSPACE,
     Numpad,
@@ -75,7 +75,7 @@ export class TicketScreen extends Component {
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
         });
 
-        this.state = useState({
+        this.state = proxy({
             nbrByPage: NBR_BY_PAGE,
             page: 1,
             nbrPage: 1,
@@ -87,7 +87,7 @@ export class TicketScreen extends Component {
         });
         Object.assign(this.state, this.props.stateOverride || {});
 
-        this.orderTimers = useState({});
+        this.orderTimers = proxy({});
 
         useLayoutEffect(
             () => this.updateOrderTimers(),

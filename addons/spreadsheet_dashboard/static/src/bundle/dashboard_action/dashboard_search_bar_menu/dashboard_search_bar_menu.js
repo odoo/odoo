@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
 import { _t } from "@web/core/l10n/translation";
 import { getOperatorLabel } from "@web/core/tree_editor/tree_editor_operator_editor";
@@ -27,7 +26,7 @@ export class DashboardSearchBarMenu extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.state = useState({
+        this.state = proxy({
             filtersAndValues: this.globalFilters.map((globalFilter) => {
                 const value = this.props.model.getters.getGlobalFilterValue(globalFilter.id);
                 return {
