@@ -4,7 +4,7 @@
 from collections import defaultdict
 from datetime import timedelta
 
-from odoo import api, fields, tools, models, _
+from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -216,7 +216,7 @@ class UoM(models.Model):
                 - if true, raise an exception if the conversion is not possible (different UoM category),
                 - otherwise, return the initial quantity
         """
-        if not (self and qty and to_unit):
+        if not (self and qty and to_unit) or self == to_unit:
             return qty
         self.ensure_one()
 
@@ -228,12 +228,9 @@ class UoM(models.Model):
             else:
                 return qty
 
-        if self == to_unit:
-            amount = qty
-        else:
-            amount = qty / self.factor
-            if to_unit:
-                amount = amount * to_unit.factor
+        amount = qty / self.factor
+        if to_unit:
+            amount = amount * to_unit.factor
 
         if to_unit and round:
             amount = tools.float_round(amount, precision_rounding=to_unit.rounding, rounding_method=rounding_method)
