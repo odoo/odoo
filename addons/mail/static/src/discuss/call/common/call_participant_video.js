@@ -1,5 +1,5 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
-import { Component, onMounted, onPatched, status } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, onPatched, status, useListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -18,7 +18,7 @@ export class CallParticipantVideo extends Component {
         this.root = useRef("root");
         onMounted(() => this._update());
         onPatched(() => this._update());
-        useExternalListener(this.env.bus, "RTC-SERVICE:PLAY_MEDIA", async () => {
+        useListener(this.env.bus, "RTC-SERVICE:PLAY_MEDIA", async () => {
             await this.play();
         });
     }

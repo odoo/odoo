@@ -1,5 +1,5 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, useListener } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useBackButton, useService } from "@web/core/utils/hooks";
@@ -13,7 +13,7 @@ class MessageSeenIndicatorDialog extends Component {
     setup() {
         super.setup();
         this.contentRef = useRef("content");
-        useExternalListener(
+        useListener(
             browser,
             "click",
             (ev) => {

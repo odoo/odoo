@@ -1,10 +1,10 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { parseEmail } from "@mail/utils/common/format";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useService } from "@web/core/utils/hooks";
 import { isEmail } from "@web/core/utils/strings";
 
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, useListener } from "@odoo/owl";
 /**
  * This class represents the popover opened when we detect that one of our recipients is missing an email
  * address in the RecipientsInput. It allows the user to correct this error and update the partner
@@ -23,7 +23,7 @@ export class RecipientsInputTagsListPopover extends Component {
         this.inputValue = signal("");
         this.inError = signal(false);
         this.popoverRef = useRef("tagsListPopoverRef");
-        useExternalListener(window, "click", (ev) => {
+        useListener(window, "click", (ev) => {
             if (!this.popoverRef.el?.contains(ev.target)) {
                 this.discardTag();
             }

@@ -1,7 +1,7 @@
-import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { onExternalClick } from "@mail/utils/common/hooks";
 
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, useListener } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
@@ -24,7 +24,7 @@ export class MessageReactionMenu extends Component {
             },
             () => [this.props.message.reactions.length === 0 ? this.props.close : null]
         );
-        useExternalListener(document, "keydown", this.onKeydown);
+        useListener(document, "keydown", (ev) => this.onKeydown(ev));
         onExternalClick(this.tabsRef, () => this.props.close());
         onMounted(useLoadEmoji());
     }

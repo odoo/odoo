@@ -1,4 +1,4 @@
-import { useChildSubEnv, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -27,6 +27,7 @@ import {
     onWillDestroy,
     proxy,
     signal,
+    useListener,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -194,8 +195,8 @@ export class Composer extends Component {
             execBeforeUnmount: true,
         });
         this.updateFromEditor = false;
-        useExternalListener(window, "beforeunload", this.saveContent.bind(this));
-        useExternalListener(
+        useListener(window, "beforeunload", this.saveContent.bind(this));
+        useListener(
             window,
             "click",
             (ev) => {

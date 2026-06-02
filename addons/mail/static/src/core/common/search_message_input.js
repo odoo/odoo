@@ -1,5 +1,4 @@
-import { useExternalListener } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, useListener } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { SearchInput } from "@mail/core/common/search_input";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -27,7 +26,7 @@ export class SearchMessageInput extends Component {
 
     setup() {
         super.setup();
-        useExternalListener(
+        useListener(
             browser,
             "keydown",
             (ev) => {
