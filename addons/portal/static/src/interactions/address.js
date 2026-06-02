@@ -150,7 +150,7 @@ export class CustomerAddress extends Interaction {
                 }
             })
             result.invalid_fields.forEach(
-                fieldName => this.addressForm[fieldName].classList.add('is-invalid')
+                fieldName => this.addressForm[fieldName]?.classList.add('is-invalid')
             );
 
             // Display the error messages

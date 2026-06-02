@@ -12,6 +12,7 @@
     'data': [
         'views/res_config_settings_views.xml',
         'views/templates.xml',
+        'views/portal_address_templates.xml',
     ],
     'assets': {
         'web.assets_frontend': [
