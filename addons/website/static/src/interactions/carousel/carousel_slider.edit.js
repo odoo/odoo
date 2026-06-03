@@ -9,6 +9,8 @@ const CarouselSliderEdit = (I) =>
             _root: {
                 ...this.dynamicContent._root,
                 "t-on-content_changed": this.onContentChanged,
+                "t-on-focusin": () => {},
+                "t-on-focusout": () => {},
             },
         };
         // Pause carousel in edit mode.
