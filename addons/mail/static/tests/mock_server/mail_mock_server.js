@@ -992,13 +992,25 @@ function _process_request_for_all(store, name, params, context = {}) {
         );
     }
     if (name === "discuss.channel") {
-        const channels = DiscussChannel.search([["id", "=", params]]);
+        const { ids, with_last_message } = params;
+        const channels = DiscussChannel.search([["id", "=", ids]]);
         store.add(DiscussChannel.browse(channels));
-        for (const channelId of params.filter((id) => !channels.includes(id))) {
-            const channel = DiscussChannel.browse();
-            // limitation of mock server: cannot browse non-existing record
-            channel.push({ id: channelId });
-            store.add(channel, makeKwArgs({ delete: true }));
+        if (with_last_message) {
+            store.add(
+                MailMessage.browse(
+                    channels
+                        .map(
+                            (channelId) =>
+                                MailMessage._filter([
+                                    ["model", "=", "discuss.channel"],
+                                    ["res_id", "=", channelId],
+                                ]).sort((a, b) => b.id - a.id)[0]
+                        )
+                        .filter(Boolean)
+                        .map((message) => message.id)
+                ),
+                makeKwArgs({ for_current_user: true })
+            );
         }
     }
     if (name === "res.partner") {

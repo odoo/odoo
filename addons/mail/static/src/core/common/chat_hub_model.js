@@ -98,7 +98,8 @@ export class ChatHub extends Record {
     async _load(str) {
         /** @type {{ opened: Object[], folded: Object[] }} */
         const { opened = [], folded = [] } = JSON.parse(str);
-        const getChannel = (data) => this.store["discuss.channel"].getOrFetch(data.id);
+        const getChannel = (data) =>
+            this.store["discuss.channel"].getOrFetch(data.id, { with_last_message: true });
         const openPromises = opened.map(getChannel);
         const foldPromises = folded.map(getChannel);
         const foldChannels = await Promise.all(foldPromises);

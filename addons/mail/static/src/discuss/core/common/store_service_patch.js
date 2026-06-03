@@ -46,15 +46,24 @@ const storeServicePatch = {
         channel.open({ focus: true });
         return channel;
     },
-    /** @param {number} channelId */
-    async fetchChannel(channelId) {
+    /**
+     * @param {number} channelId
+     * @param {{ with_last_message?: boolean }} [options]
+     */
+    async fetchChannel(channelId, { with_last_message = false } = {}) {
         const fetchParam = this.fetchParams.find(([name]) => name === "discuss.channel");
         if (fetchParam) {
-            const [, channelIds, dataRequest] = fetchParam;
-            channelIds.push(channelId);
+            const [, params, dataRequest] = fetchParam;
+            params.ids.push(channelId);
+            if (with_last_message) {
+                params.with_last_message = true;
+            }
             await dataRequest._resultResolvers.promise;
         } else {
-            await this.fetchStoreData("discuss.channel", [channelId]);
+            await this.fetchStoreData("discuss.channel", {
+                ids: [channelId],
+                with_last_message: with_last_message,
+            });
         }
     },
     /**

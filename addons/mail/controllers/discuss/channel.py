@@ -69,9 +69,11 @@ class DiscussChannelWebclientController(WebclientController):
         self._add_has_unpinned_channels_to_store(store)
 
     @store_handler("discuss.channel", audience="everyone")
-    def store_add_discuss_channel_to_context(self, store: Store, *channel_id):
-        channels = request.env["discuss.channel"].search([("id", "in", channel_id)])
+    def store_add_discuss_channel_to_context(self, store: Store, ids=(), with_last_message=False):
+        channels = request.env["discuss.channel"].search([("id", "in", ids)])
         request.update_context(channels=request.env.context["channels"] | channels)
+        if with_last_message:
+            request.update_context(add_channels_last_message=True)
 
     @store_handler("/discuss/channel/members", audience="everyone")
     def store_get_discuss_channel_members(

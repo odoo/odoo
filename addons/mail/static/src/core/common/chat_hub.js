@@ -1,19 +1,19 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { ChatWindow } from "@mail/core/common/chat_window";
 import { ActionList } from "@mail/core/common/action_list";
+import { ChatWindow } from "@mail/core/common/chat_window";
 import { useHover, useMovable } from "@mail/utils/common/hooks";
+import { useExternalListener, useRef } from "@web/owl2/utils";
 
 import { Component, proxy } from "@odoo/owl";
 
+import { Action } from "@mail/core/common/action";
 import { browser } from "@web/core/browser/browser";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { ChatBubble } from "./chat_bubble";
-import { isMobileOS } from "@web/core/browser/feature_detection";
-import { _t } from "@web/core/l10n/translation";
-import { Action } from "@mail/core/common/action";
 
 export class ChatHub extends Component {
     static components = { ActionList, ChatBubble, ChatWindow, Dropdown };
@@ -48,11 +48,6 @@ export class ChatHub extends Component {
         });
         this.onResize();
         useExternalListener(browser, "resize", this.onResize);
-        useLayoutEffect(() => {
-            if (this.chatHub.folded.length && this.store.channels?.status === "not_fetched") {
-                this.store.channels.fetch();
-            }
-        });
         useMovable({
             enable: () => this.chatHub.compact || !this.chatHub.opened.length,
             cursor: "grabbing",
