@@ -1933,10 +1933,6 @@ class MrpProduction(models.Model):
         orders in exception """
         if any(mo.state == 'done' for mo in self):
             raise UserError(_("You cannot cancel a manufacturing order that is already done."))
-        self._action_cancel()
-        return True
-
-    def _action_cancel(self):
         documents_by_production = {}
         for production in self:
             documents = defaultdict(list)
@@ -2672,7 +2668,7 @@ class MrpProduction(models.Model):
             (production.move_raw_ids | production.move_finished_ids).write({'state': 'confirmed'})
             production.action_confirm()
 
-        self.with_context(skip_activity=True)._action_cancel()
+        self.with_context(skip_activity=True).action_cancel()
         self_sudo = self.sudo()
         groups = {production.production_group_id for production in self_sudo if production.production_group_id}
         self_sudo.production_group_id = False

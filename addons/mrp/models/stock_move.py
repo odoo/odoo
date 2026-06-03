@@ -439,7 +439,7 @@ class StockMove(models.Model):
         if not 'skip_mo_check' in self.env.context:
             mo_to_cancel = self.mapped('raw_material_production_id').filtered(lambda p: all(m.state == 'cancel' for m in p.move_raw_ids))
             if mo_to_cancel:
-                mo_to_cancel._action_cancel()
+                mo_to_cancel.action_cancel()
         return res
 
     def _log_cancel_activity(self):
