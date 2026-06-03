@@ -2032,18 +2032,14 @@ class BaseModel(metaclass=MetaModel):
                 raise ValueError(f'Aggregator "sum_currency" only works on currency field for {fname!r}')
 
             currency_field_name = field.get_currency_field(self)
-            rate_subquery_table = SQL(
-                "(%s)",
-                self.env['res.currency']._get_rates_query(self.env.company, Date.context_today(self)),
-            )
-            alias_rate = table._make_alias(f'{currency_field_name}__rates')
-            condition = SQL("%s = %s", table[currency_field_name], alias_rate.id)
-            table._query.add_join('LEFT JOIN', alias_rate, rate_subquery_table, condition)
+            currencies = self.env['res.currency'].search([])
+            rates_json = json.dumps({str(c.id): c.rate for c in currencies})
 
             return SQL(
-                "SUM(%s / COALESCE(%s, 1.0))",
+                "SUM(%s / COALESCE((%s::jsonb ->> %s::text)::numeric, 1.0))",
                 table[fname],
-                alias_rate.rate,
+                rates_json,
+                table[currency_field_name],
             )
 
         if func not in READ_GROUP_AGGREGATE:

@@ -2035,7 +2035,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
         cls.eur = cls.env.ref('base.EUR')
         cls.eur.active = True
         cls.stn = cls.env.ref("base.STN")
-        cls.stn.active = False
+        cls.stn.active = True
 
         cls.MonetaryAggRelated = cls.env['test_read_group.aggregate.monetary.related']
         cls.MonetaryAgg = cls.env['test_read_group.aggregate.monetary']
@@ -2094,10 +2094,10 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
             {
                 "name": "key2",
                 "currency_id": cls.stn.id,
-                "total_in_currency_id": 1.00,  # 1 Db (no active currency)
+                "total_in_currency_id": 1.00,  # 1 Db
 
                 "related_model_id": stn_parent.id,
-                "total_in_related_stored_currency_id": 1.00,  # 1 Db (no active currency)
+                "total_in_related_stored_currency_id": 1.00,  # 1 Db
             },
         ])
         cls.env['res.currency.rate'].search([]).unlink()  # Avoid demo mess up tests
@@ -2134,44 +2134,20 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
         self.MonetaryAgg.formatted_read_group([], [], aggregates)
 
         with self.assertQueries(["""
+            SELECT "res_currency"."id"
+            FROM "res_currency"
+            WHERE ...
+            ORDER BY ...
+        """, """
             SELECT
                 SUM("test_read_group_aggregate_monetary"."total_in_currency_id"),
                 ARRAY_AGG(
                     DISTINCT "test_read_group_aggregate_monetary"."currency_id"
                     ORDER BY "test_read_group_aggregate_monetary"."currency_id"
                 ),
-                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rates"."rate", 1.0))
+                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE((%s::jsonb ->> "test_read_group_aggregate_monetary"."currency_id"::text)::numeric, 1.0))
             FROM
                 "test_read_group_aggregate_monetary"
-                LEFT JOIN (
-                    SELECT
-                        "res_currency"."id",
-                        COALESCE("before_rate"."rate", "after_rate"."rate", 1.0) AS "rate",
-                        COALESCE("before_rate"."name", "after_rate"."name") AS "name"
-                    FROM
-                        "res_currency"
-                        LEFT JOIN LATERAL (
-                            SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
-                            FROM "res_currency_rate"
-                            WHERE (
-                                ("res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL)
-                                AND "res_currency_rate"."name" < %s
-                            ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
-                            ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" DESC
-                            LIMIT 1
-                        ) AS "before_rate" ON (TRUE)
-                        LEFT JOIN LATERAL (
-                            SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
-                            FROM "res_currency_rate"
-                            WHERE (
-                                "res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL
-                            ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
-                            ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" ASC
-                            LIMIT 1
-                        ) AS "after_rate" ON (TRUE)
-                ) AS "test_read_group_aggregate_monetary__currency_id__rates" ON (
-                    "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."id"
-                )
         """]):
             self.assertEqual(
                 self.MonetaryAgg.formatted_read_group([], [], aggregates),
@@ -2243,44 +2219,20 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
         ]
         self.MonetaryAgg.formatted_read_group([], [], aggregates)
         with self.assertQueries(["""
+            SELECT "res_currency"."id"
+            FROM "res_currency"
+            WHERE ...
+            ORDER BY ...
+        """, """
             SELECT
                 SUM("test_read_group_aggregate_monetary"."total_in_currency_id"),
                 ARRAY_AGG(
                     DISTINCT "test_read_group_aggregate_monetary"."currency_id"
                     ORDER BY "test_read_group_aggregate_monetary"."currency_id"
                 ),
-                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rates"."rate", 1.0))
+                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE((%s::jsonb ->> "test_read_group_aggregate_monetary"."currency_id"::text)::numeric, 1.0))
             FROM
                 "test_read_group_aggregate_monetary"
-                LEFT JOIN (
-                    SELECT
-                        "res_currency"."id",
-                        COALESCE("before_rate"."rate", "after_rate"."rate", 1.0) AS "rate",
-                        COALESCE("before_rate"."name", "after_rate"."name") AS "name"
-                    FROM
-                        "res_currency"
-                        LEFT JOIN LATERAL (
-                            SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
-                            FROM "res_currency_rate"
-                            WHERE (
-                                ("res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL)
-                                AND "res_currency_rate"."name" < %s
-                            ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
-                            ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" DESC
-                            LIMIT 1
-                        ) AS "before_rate" ON (TRUE)
-                        LEFT JOIN LATERAL (
-                            SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
-                            FROM "res_currency_rate"
-                            WHERE (
-                                "res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL
-                            ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
-                            ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" ASC
-                            LIMIT 1
-                        ) AS "after_rate" ON (TRUE)
-                ) AS "test_read_group_aggregate_monetary__currency_id__rates" ON (
-                    "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."id"
-                )
         """]):
             self.assertEqual(
                 self.MonetaryAgg.formatted_read_group([], [], aggregates),
