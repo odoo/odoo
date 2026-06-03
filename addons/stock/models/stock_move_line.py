@@ -58,9 +58,7 @@ class StockMoveLine(models.Model):
     package_history_id = fields.Many2one('stock.package.history', string="Package History", index='btree_not_null')
     is_entire_pack = fields.Boolean('Is added through entire package')
     date = fields.Datetime(
-        'Date', default=fields.Datetime.now, required=True,
-        help="Creation date of this move line until updated due to: quantity being increased, 'picked' status has updated, or move line is done.")
-    scheduled_date = fields.Datetime('Scheduled Date', related='move_id.date')
+        'Date', related="move_id.date", store=True)
     owner_id = fields.Many2one(
         'res.partner', 'From Owner',
         check_company=True, index='btree_not_null',
@@ -516,22 +514,6 @@ class StockMoveLine(models.Model):
             if move_done:
                 move_done._check_quantity()
 
-        # update the date when it seems like (additional) quantities are "done" and the date hasn't been manually updated
-        if 'date' not in vals and ('uom_id' in vals or 'quantity' in vals or vals.get('picked', False)):
-            updated_ml_ids = set()
-            for ml in self:
-                if ml.state in ['draft', 'cancel', 'done']:
-                    continue
-                if vals.get('picked', False) and not ml.picked:
-                    updated_ml_ids.add(ml.id)
-                    continue
-                if ('quantity' in vals or 'uom_id' in vals) and ml.picked:
-                    new_qty = updates.get('uom_id', ml.uom_id)._compute_quantity(vals.get('quantity', ml.quantity), ml.product_id.uom_id, rounding_method='HALF-UP')
-                    old_qty = ml.uom_id._compute_quantity(ml.quantity, ml.product_id.uom_id, rounding_method='HALF-UP')
-                    if ml.uom_id.compare(old_qty, new_qty) < 0:
-                        updated_ml_ids.add(ml.id)
-            self.env['stock.move.line'].browse(updated_ml_ids).date = fields.Datetime.now()
-
         res = super(StockMoveLine, self).write(vals)
 
         for ml in mls:
@@ -720,9 +702,6 @@ class StockMoveLine(models.Model):
         affected_pickings = mls_todo.picking_id | other_pickings
         if affected_pickings:
             affected_pickings._check_entire_pack()
-        mls_todo.write({
-            'date': fields.Datetime.now(),
-        })
 
     def _synchronize_quant(self, quantity, location, action="available", in_date=False, **quants_value):
         """ quantity should be express in product's UoM"""
