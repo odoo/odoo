@@ -123,7 +123,9 @@ class PdpFlow(models.Model):
         """Compute the current status of the reporting period."""
         today = fields.Date.context_today(self)
         for flow in self:
-            if today < flow.due_period_start:
+            if not flow.due_period_start or not flow.due_period_end:
+                flow.period_status = False
+            elif today < flow.due_period_start:
                 flow.period_status = 'open'
             elif today <= flow.due_period_end:
                 flow.period_status = 'grace'
