@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.Poll">
-        <div class="o-mail-Poll card border-secondary rounded w-100" t-att-class="{'o-ongoing': !this.props.poll.end_message_id, 'o-isShowingResults': this.isShowingResults}">
+        <div class="o-mail-Poll card border-secondary rounded w-100" t-att-class="{'o-ongoing': !this.props.poll.end_message_id, 'o-isShowingResults': this.isShowingResults}" t-ref="this.rootRef">
             <div class="card-body d-flex flex-column gap-1 o-px-2_5 o-py-1_5">
                 <p class="card-title text-start fw-bold mb-0" t-att-class="{ 'me-1': this.props.poll.end_message_id }" t-out="this.props.poll.poll_question"/>
                 <p t-if="!this.props.poll.end_message_id" class="card-subtitle mb-1 text-muted smaller">

@@ -3,11 +3,7 @@ import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { Call } from "@mail/discuss/call/common/call";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
-import {
-    inDiscussCallViewPropsSchema,
-    useInDiscussCallView,
-    useMessageScrolling,
-} from "@mail/utils/common/hooks";
+import { useMessageScrolling } from "@mail/utils/common/hooks";
 
 import { Component, onMounted, onWillUnmount, props, signal, types } from "@odoo/owl";
 
@@ -41,7 +37,7 @@ export class Meeting extends Component {
     setup() {
         this.props = props({
             autoOpenAction: types.string().optional(),
-            ...inDiscussCallViewPropsSchema,
+            isPip: types.boolean().optional(),
         });
         this.store = useService("mail.store");
         this.ui = useService("ui");
@@ -51,7 +47,7 @@ export class Meeting extends Component {
             this.datetimeNow.set(DateTime.now());
             return 60_000 - (Date.now() % 60_000);
         });
-        useInDiscussCallView();
+        useSubEnv({ inDiscussCallView: true });
         useSubEnv({
             inMeetingView: {
                 openChat: () =>

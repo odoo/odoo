@@ -7,7 +7,7 @@
                 <t t-call="discuss.CallPermissionDialogImg"/>
             </t>
             <t t-set-slot="instructions">
-                <h2 t-out="this.permissionPrompt"/>
+                <h2 t-out="this.permissionPrompt" t-ref="this.rootRef"/>
                 <p class="text-muted" t-out="this.permissionNote"/>
             </t>
             <t t-set-slot="footer">

@@ -1,7 +1,7 @@
 import { PollVotesPanel } from "@mail/core/common/poll_votes_panel";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 
-import { Component, props, proxy, types } from "@odoo/owl";
+import { Component, props, proxy, signal, types } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -17,6 +17,8 @@ export class Poll extends Component {
         this.props = props({
             poll: types.instanceOf(this.store["mail.poll"].Class),
         });
+        /** @type {import("@odoo/owl").Signal<Element>} */
+        this.rootRef = signal();
         this.state = proxy({
             isShowingResults: false,
             selectedOptionIds: new Set(),
@@ -88,7 +90,11 @@ export class Poll extends Component {
     }
 
     onClickNumberOfVotes() {
-        this.env.services.dialog.add(PollVotesPanel, { poll: this.props.poll });
+        this.env.services.dialog.add(
+            PollVotesPanel,
+            { poll: this.props.poll },
+            { rootRef: this.rootRef }
+        );
     }
 
     onOptionCheckboxToggle(optionId, checked) {

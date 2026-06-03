@@ -1,4 +1,4 @@
-import { Component, onWillDestroy, onWillStart, props, proxy, types } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, props, proxy, signal, types } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -24,6 +24,8 @@ export class DeviceSelect extends Component {
         });
         this.store = useService("mail.store");
         this.notification = useService("notification");
+        /** @type {import("@odoo/owl").Signal<Element>} */
+        this.rootRef = signal();
         this.state = proxy({
             userDevices: [],
             selectedDevice: undefined,
@@ -76,10 +78,14 @@ export class DeviceSelect extends Component {
     }
 
     showPermissionDialog(kind) {
-        this.store.rtc.showMediaPermissionDialog(
-            kind === "videoinput" ? "camera" : "microphone",
-            this.props.permissionDialogConfiguration
-        );
+        const config = this.props.permissionDialogConfiguration;
+        this.store.rtc.showMediaPermissionDialog(kind === "videoinput" ? "camera" : "microphone", {
+            ...config,
+            options: {
+                ...config?.options,
+                rootRef: this.rootRef,
+            },
+        });
     }
 
     isSelected(id) {

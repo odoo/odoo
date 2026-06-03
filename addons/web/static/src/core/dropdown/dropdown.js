@@ -272,6 +272,9 @@ export class Dropdown extends Component {
         if (!this.activeEl?.isConnected) {
             return true;
         }
+        if (target.ownerDocument !== this.activeEl?.ownerDocument) {
+            return true;
+        }
         const targetActiveEl = this.uiService.getActiveElementOf(target);
         return targetActiveEl === this.activeEl || targetActiveEl?.contains(this.activeEl);
     }

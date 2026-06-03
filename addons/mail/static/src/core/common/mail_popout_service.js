@@ -1,11 +1,31 @@
-import { App } from "@odoo/owl";
+import { App, Component, props, types, xml } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
+import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { appTranslateFn } from "@web/core/l10n/translation";
+import { OverlayContainer } from "@web/core/overlay/overlay_container";
 import { registry } from "@web/core/registry";
 import { getTemplate } from "@web/core/templates";
+import { useService } from "@web/core/utils/hooks";
+import { customDirectives, globalValues } from "@web/env";
 
 const DEFAULT_ID = Symbol("default");
+
+class OverlayWrapper extends Component {
+    static template = xml`
+        <t t-component="this.props.component" t-props="this.props.componentProps"/>
+        <OverlayContainer overlays="this.overlayService.overlays"/>
+    `;
+    static components = { OverlayContainer };
+    props = props({
+        component: types.any(),
+        componentProps: types.object(),
+    });
+    setup() {
+        this.overlayService = useService("overlay");
+        useOwnDebugContext();
+    }
+}
 
 export const mailPopoutService = {
     /**
@@ -112,22 +132,30 @@ export const mailPopoutService = {
                 pollClosedWindow(id);
             }
             await reset(id, { useAlternativeAssets });
+            externalWindow.document.host = { ...externalWindow.document.host, id };
             const rootEnv = Object.assign({}, env, {
                 /**
                  * Some sub components may need a reference to the external window to
                  * access window information such as its dimensions, or to attach event listeners.
                  */
                 pipWindow: externalWindow,
+                rootId: id,
             });
             popout.app = new App({
                 name: "Popout",
+                customDirectives,
                 getTemplate,
+                globalValues,
                 translatableAttributes: ["data-tooltip"],
                 translateFn: appTranslateFn,
             });
             popout.app
-                .createRoot(component, { env: rootEnv, props })
+                .createRoot(OverlayWrapper, {
+                    env: rootEnv,
+                    props: { component, componentProps: props },
+                })
                 .mount(externalWindow.document.body);
+            env.services.hotkey.registerWindow(externalWindow);
             return externalWindow;
         }
 

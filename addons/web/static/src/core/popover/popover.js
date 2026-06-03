@@ -26,26 +26,27 @@ function useEarlyExternalListener(target, eventName, handler, eventParams) {
  * This also handles the case where an iframe is clicked.
  *
  * @param {(node?: Node) => any} callback
+ * @param {Window} targetWindow
  */
-function useClickAway(callback) {
+function useClickAway(callback, targetWindow = window) {
     function blurHandler(ev) {
-        const target = ev.relatedTarget || document.activeElement;
+        const target = ev.relatedTarget || targetWindow.document.activeElement;
         if (target?.tagName === "IFRAME") {
             callback(target);
         }
     }
 
     function navigationHandler() {
-        callback(document.documentElement);
+        callback(targetWindow.document.documentElement);
     }
 
     function pointerDownHandler(ev) {
         callback(ev.composedPath()[0]);
     }
 
-    useEarlyExternalListener(window, "pointerdown", pointerDownHandler, { capture: true });
-    useEarlyExternalListener(window, "blur", blurHandler, { capture: true });
-    useEarlyExternalListener(window, "popstate", navigationHandler, { capture: true });
+    useEarlyExternalListener(targetWindow, "pointerdown", pointerDownHandler, { capture: true });
+    useEarlyExternalListener(targetWindow, "blur", blurHandler, { capture: true });
+    useEarlyExternalListener(targetWindow, "popstate", navigationHandler, { capture: true });
 }
 
 const POPOVERS = new WeakMap();
@@ -131,7 +132,8 @@ export class Popover extends Component {
         onWillDestroy(() => POPOVERS.delete(this.props.target));
 
         if (this.props.target.isConnected) {
-            useClickAway(this.onClickAway.bind(this));
+            const targetWindow = this.props.target.ownerDocument.defaultView || window;
+            useClickAway(this.onClickAway.bind(this), targetWindow);
 
             if (this.props.closeOnEscape) {
                 useHotkey("escape", () => this.props.close());
