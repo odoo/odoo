@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useEffect } from "@odoo/owl";
 import { before, describe, expect, test } from "@odoo/hoot";
 import {
     animationFrame,
@@ -1027,16 +1027,13 @@ describe("Import view", () => {
         patchWithCleanup(ImportDataProgress.prototype, {
             setup() {
                 super.setup();
-                useLayoutEffect(
-                    () => {
-                        if (this.props.importProgress.step === 1) {
-                            // Trigger a pause at this step to resume later from the view
-                            expect.step("pause triggered during step 2");
-                            this.interrupt();
-                        }
-                    },
-                    () => [this.props.importProgress.step]
-                );
+                useEffect(() => {
+                    if (this.props.importProgress.step === 1) {
+                        // Trigger a pause at this step to resume later from the view
+                        expect.step("pause triggered during step 2");
+                        this.interrupt();
+                    }
+                });
 
                 expect(this.props.totalSteps).toBe(3, {
                     message: "progress bar receives the number of steps",
@@ -1107,16 +1104,13 @@ describe("Import view", () => {
         patchWithCleanup(ImportDataProgress.prototype, {
             setup() {
                 super.setup();
-                useLayoutEffect(
-                    () => {
-                        if (this.props.importProgress.step === 1) {
-                            // Trigger a pause at this step to resume later from the view
-                            expect.step("pause triggered during step 2");
-                            this.interrupt();
-                        }
-                    },
-                    () => [this.props.importProgress.step]
-                );
+                useEffect(() => {
+                    if (this.props.importProgress.step === 1) {
+                        // Trigger a pause at this step to resume later from the view
+                        expect.step("pause triggered during step 2");
+                        this.interrupt();
+                    }
+                });
 
                 expect(this.props.totalSteps).toBe(3, {
                     message: "progress bar receives the number of steps",
