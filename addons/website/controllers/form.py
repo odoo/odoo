@@ -183,7 +183,7 @@ class WebsiteForm(http.Controller):
                 if field_name in authorized_fields and authorized_fields[field_name]['type'] == 'binary':
                     data['record'][field_name] = BinaryBytes(field_value.read())
                     field_value.stream.seek(0)  # do not consume value forever
-                    if authorized_fields[field_name]['manual'] and field_name + "_filename" in dest_model:
+                    if field_name + "_filename" in dest_model:
                         data['record'][field_name + "_filename"] = field_value.filename
                 else:
                     field_value.field_name = field_name
