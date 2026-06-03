@@ -14,12 +14,14 @@
                     </div>
                 </div>
             </t>
-            <hr class="mx-2 my-1 o-discuss-separator"/>
-            <button class="btn border-transparent d-flex align-items-center px-2 py-1" t-on-click="this.onClickVideoSettings">
-                <span>Advanced Settings</span>
-                <div class="flex-grow-1"/>
-                <i class="fa fa-fw fa-gear o-fs-small opacity-75"/>
-            </button>
+            <t t-if="!this.env.pipWindow">
+                <hr class="mx-2 my-1 o-discuss-separator"/>
+                <button class="btn border-transparent d-flex align-items-center px-2 py-1" t-on-click="this.onClickVideoSettings">
+                    <span>Advanced Settings</span>
+                    <div class="flex-grow-1"/>
+                    <i class="fa fa-fw fa-gear o-fs-small opacity-75"/>
+                </button>
+            </t>
         </div>
     </t>
 

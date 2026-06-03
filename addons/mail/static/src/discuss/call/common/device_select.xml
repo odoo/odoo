@@ -33,6 +33,7 @@
                 t-att-data-kind="this.props.kind"
                 t-on-pointerdown.prevent="() => this.showPermissionDialog(this.props.kind)"
                 t-on-keydown.prevent="() => this.showPermissionDialog(this.props.kind)"
+                t-ref="this.rootRef"
             >
                 <t t-if="this.props.label">
                     <span class="d-flex flex-column align-items-start min-w-0">

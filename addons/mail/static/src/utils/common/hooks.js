@@ -11,7 +11,7 @@ import {
     xml,
 } from "@odoo/owl";
 
-import { useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Reactive } from "@web/core/utils/reactive";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
@@ -60,6 +60,7 @@ export function useLazyExternalListener(target, eventName, handler, eventParams)
 export function onExternalClick(refOrName, cb) {
     let downTarget, upTarget;
     const ref = typeof refOrName === "string" ? useRef(refOrName) : refOrName;
+    let targetDocument = document;
     function onClick(ev) {
         if (ref.el && !ref.el.contains(ev.composedPath()[0])) {
             cb(ev, { downTarget, upTarget });
@@ -73,14 +74,15 @@ export function onExternalClick(refOrName, cb) {
         upTarget = ev.target;
     }
     onMounted(() => {
-        document.body.addEventListener("mousedown", onMousedown, true);
-        document.body.addEventListener("mouseup", onMouseup, true);
-        document.body.addEventListener("click", onClick, true);
+        targetDocument = ref.el?.ownerDocument || document;
+        targetDocument.body.addEventListener("mousedown", onMousedown, true);
+        targetDocument.body.addEventListener("mouseup", onMouseup, true);
+        targetDocument.body.addEventListener("click", onClick, true);
     });
     onWillUnmount(() => {
-        document.body.removeEventListener("mousedown", onMousedown, true);
-        document.body.removeEventListener("mouseup", onMouseup, true);
-        document.body.removeEventListener("click", onClick, true);
+        targetDocument.body.removeEventListener("mousedown", onMousedown, true);
+        targetDocument.body.removeEventListener("mouseup", onMouseup, true);
+        targetDocument.body.removeEventListener("click", onClick, true);
     });
 }
 
@@ -934,19 +936,6 @@ export function useLongPress(ref, { action, predicate = () => true } = {}) {
         },
         true
     );
-}
-
-export const inDiscussCallViewProps = ["isPip?"];
-export const inDiscussCallViewPropsSchema = { isPip: types.boolean().optional() };
-export function useInDiscussCallView() {
-    const component = useComponent();
-    useSubEnv({
-        inDiscussCallView: {
-            get isPip() {
-                return component.props.isPip;
-            },
-        },
-    });
 }
 
 /** @typedef {import("@web/core/utils/hooks").useChildRef} useChildRef */

@@ -475,6 +475,12 @@ export const hotkeyService = {
             registerIframe(iframe) {
                 addListeners(iframe.contentWindow);
             },
+            /**
+             * @param {Window} window
+             */
+            registerWindow(window) {
+                addListeners(window);
+            },
         };
     },
 };

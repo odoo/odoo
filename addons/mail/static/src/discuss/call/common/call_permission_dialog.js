@@ -1,4 +1,4 @@
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { PermissionPromptDialog } from "@web/core/permission_prompt_dialog/permission_prompt_dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -16,26 +16,33 @@ export class CallPermissionDialog extends Component {
             useCamera: t.function([]),
             useMicrophone: t.function([]),
         });
+        /** @type {import("@odoo/owl").Signal<Element>} */
+        this.rootRef = signal();
         this.rtc = useService("discuss.rtc");
         this.ui = useService("ui");
     }
 
     async onClickUseMicrophone() {
-        if (await this.rtc.askForBrowserPermission({ audio: true })) {
+        if (await this.rtc.askForBrowserPermission({ audio: true }, { rootRef: this.rootRef })) {
             await this.props.useMicrophone();
         }
         this.props.close();
     }
 
     async onClickUseCamera() {
-        if (await this.rtc.askForBrowserPermission({ video: true })) {
+        if (await this.rtc.askForBrowserPermission({ video: true }, { rootRef: this.rootRef })) {
             await this.props.useCamera();
         }
         this.props.close();
     }
 
     async onClickUseMicAndCamera() {
-        if (await this.rtc.askForBrowserPermission({ audio: true, video: true })) {
+        if (
+            await this.rtc.askForBrowserPermission(
+                { audio: true, video: true },
+                { rootRef: this.rootRef }
+            )
+        ) {
             await Promise.all([this.props.useMicrophone(), this.props.useCamera()]);
         }
         this.props.close();

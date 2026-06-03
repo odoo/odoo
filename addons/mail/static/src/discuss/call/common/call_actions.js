@@ -48,7 +48,7 @@ export const muteAction = {
                 : CALL_ICON_MUTED
             : "fa fa-microphone",
     hotkey: "shift+m",
-    onSelected: ({ store }) => store.rtc.toggleMicrophone(),
+    onSelected: ({ action, store }) => store.rtc.toggleMicrophone({ rootRef: action.actionRef }),
     sequence: 10,
     sequenceGroup: 100,
     setup({ action, owner, store }) {
@@ -84,8 +84,7 @@ export const muteAction = {
 registerCallAction("mute", muteAction);
 /** @type {CallActionDefinition} */
 export const quickActionSettings = {
-    condition: ({ owner, channel }) =>
-        !owner.env.inCallMenu && channel?.isSelfInCall && !owner.env.pipWindow,
+    condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
     dropdown: true,
     dropdownComponent: QuickVoiceSettings,
     dropdownMenuClass: "p-1 overflow-x-hidden",
@@ -128,7 +127,8 @@ export const cameraOnAction = {
             : _t("Turn camera on"),
     isActive: ({ store }) => store.rtc.selfSession?.is_camera_on,
     icon: "fa fa-video-camera",
-    onSelected: ({ owner, store }) => store.rtc.toggleVideo("camera", { env: owner.env }),
+    onSelected: ({ action, owner, store }) =>
+        store.rtc.toggleVideo("camera", { env: owner.env, rootRef: action.actionRef }),
     sequence: 10,
     sequenceGroup: 120,
     tags: ({ action, store, channel }) => {
@@ -148,8 +148,7 @@ export const cameraOnAction = {
 registerCallAction("camera-on", cameraOnAction);
 /** @type {CallActionDefinition} */
 export const quickVideoSettings = {
-    condition: ({ owner, channel }) =>
-        !owner.env.inCallMenu && channel?.isSelfInCall && !owner.env.pipWindow,
+    condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
     dropdown: true,
     dropdownComponent: QuickVideoSettings,
     dropdownMenuClass: "p-1 overflow-x-hidden",

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { BlurPerformanceWarning } from "@mail/discuss/call/common/blur_performance_warning";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
@@ -14,7 +14,6 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useService } from "@web/core/utils/hooks";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
-import { inDiscussCallViewPropsSchema, useInDiscussCallView } from "@mail/utils/common/hooks";
 
 /** @typedef {import("@mail/discuss/call/common/call_layout").CallLayout} CallLayout */
 
@@ -68,7 +67,7 @@ export class Call extends Component {
             channel: t.instanceOf(this.store["discuss.channel"].Class).optional(),
             compact: t.boolean().optional(),
             hasOverlay: t.boolean().optional(true),
-            ...inDiscussCallViewPropsSchema,
+            isPip: t.boolean().optional(),
         });
         this.callActions = useCallActions({ channel: () => this.channel });
         onMounted(() => {
@@ -92,9 +91,9 @@ export class Call extends Component {
             ]
         );
         useHotkey("shift+d", () => this.rtc.toggleDeafen());
-        useHotkey("shift+m", () => this.rtc.toggleMicrophone());
+        useHotkey("shift+m", ({ target }) => this.rtc.toggleMicrophone({ rootRef: () => target }));
         useHotkey("shift+h", () => this.rtc.raiseHand(!this.rtc.selfSession.raisingHand));
-        useInDiscussCallView();
+        useSubEnv({ inDiscussCallView: true });
     }
 
     get isAnyonePresenting() {

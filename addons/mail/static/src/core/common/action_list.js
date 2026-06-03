@@ -1,4 +1,3 @@
-import { CallDropdown } from "@mail/discuss/call/common/call_dropdown";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { Component, onWillUnmount, props, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -31,9 +30,6 @@ class Action extends Component {
     }
 
     get Dropdown() {
-        if (this.env.inDiscussCallView?.isPip) {
-            return CallDropdown;
-        }
         return Dropdown;
     }
 

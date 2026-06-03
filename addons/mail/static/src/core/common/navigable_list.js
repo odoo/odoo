@@ -33,7 +33,7 @@ export class NavigableList extends Component {
         });
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
-        useListener(window, "keydown", (ev) => this.onKeydown(ev), true);
+        useListener(this.env.pipWindow || window, "keydown", (ev) => this.onKeydown(ev), true);
         onExternalClick("root", async (ev) => {
             // Let event be handled by bubbling handlers first.
             await new Promise(setTimeout);

@@ -9,6 +9,8 @@ import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permi
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 
+/** @typedef {import("@mail/discuss/call/common/rtc_service").ContextOptions} ContextOptions */
+
 export class VoiceRecorder extends Component {
     static template = "mail.VoiceRecorder";
 
@@ -45,8 +47,9 @@ export const patchable = {
  * @param {Object} [params={}]
  * @param {number} [params.maxDuration=60] Maximum recording duration in seconds.
  * @param {Function} params.onRecordReady Callback when recording is finished.
+ * @param {ContextOptions} [options]
  */
-export function useVoiceRecorder(params = {}) {
+export function useVoiceRecorder(params = {}, options = {}) {
     const maxDuration = params.maxDuration ?? 60;
     const component = useComponent();
     const onRecordReady = params.onRecordReady;
@@ -118,7 +121,8 @@ export function useVoiceRecorder(params = {}) {
         state.isActionPending = true;
         if (!microphone) {
             try {
-                microphone = await browser.navigator.mediaDevices.getUserMedia({
+                const sourceWindow = options.rootRef?.()?.ownerDocument?.defaultView || browser;
+                microphone = await sourceWindow.navigator.mediaDevices.getUserMedia({
                     audio: store.settings.audioConstraints,
                 });
                 if (status(component) === "destroyed") {
@@ -126,7 +130,11 @@ export function useVoiceRecorder(params = {}) {
                     return;
                 }
             } catch {
-                dialog.add(CallPermissionDeniedDialog, { permissionType: "microphone" });
+                dialog.add(
+                    CallPermissionDeniedDialog,
+                    { permissionType: "microphone" },
+                    { rootRef: options.rootRef }
+                );
                 state.isActionPending = false;
                 return;
             }

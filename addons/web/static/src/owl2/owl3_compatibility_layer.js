@@ -276,7 +276,7 @@ class Portal extends owl.Component {
         owl.onMounted(() => {
             const portal = node.bdom;
             if (!portal.target) {
-                const target = document.querySelector(node.props.selector);
+                const target = portal.el.ownerDocument.querySelector(node.props.selector);
                 if (target) {
                     portal.content.moveBeforeDOMNode(target.firstChild, target);
                 } else {

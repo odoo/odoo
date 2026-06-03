@@ -1,6 +1,8 @@
 import { MessagePinDialog } from "@mail/core/common/message_pin_dialog";
 import { fields, Record } from "@mail/model/export";
 
+/** @typedef {import("@mail/discuss/call/common/rtc_service").ContextOptions} ContextOptions */
+
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { rpc } from "@web/core/network/rpc";
@@ -691,12 +693,28 @@ export class DiscussChannel extends Record {
         ]);
     }
 
-    messagePin(message) {
-        this.store.env.services.dialog.add(MessagePinDialog, { message });
+    /**
+     * @param {import("models").Message} message
+     * @param {ContextOptions} [options]
+     */
+    messagePin(message, options) {
+        this.store.env.services.dialog.add(
+            MessagePinDialog,
+            { message },
+            { rootRef: options?.rootRef }
+        );
     }
 
-    messageUnpin(message) {
-        this.store.env.services.dialog.add(MessagePinDialog, { message, isUnpin: true });
+    /**
+     * @param {import("models").Message} message
+     * @param {ContextOptions} [options]
+     */
+    messageUnpin(message, options) {
+        this.store.env.services.dialog.add(
+            MessagePinDialog,
+            { message, isUnpin: true },
+            { rootRef: options?.rootRef }
+        );
     }
 
     /** @param {string} data base64 representation of the binary */

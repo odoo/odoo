@@ -125,7 +125,7 @@
         templateParams="this.action.icon.params"/>
     <i t-elif="this.action.icon" t-attf-class="{{ this.action.icon }}" t-att-class="{ 'o-fs-small': this.props.dropdown, 'fa-fw': this.props.fw, 'fa-lg': inMeetingViewCallButtonsFullscreen }"/>
     <i t-elif="this.props.dropdown" class="fa-question fa-fw opacity-0" t-att-class="this.props.fw ? 'fa-fw' : ''"/>
-    <span t-if="this.action.name and (this.props.dropdown or (this.props.inline and (!this.action.icon or this.action.inlineName)))" class="o-mail-ActionList-actionLabel" t-attf-class="{{ this.action.nameClass }}" t-att-class="{ 'mx-1': this.props.dropdown }" t-out="(this.props.inline and this.action.inlineName) or this.action.name"/>
+    <span t-if="this.action.name and (this.props.dropdown or (this.props.inline and (!this.action.icon or this.action.inlineName)))" t-ref="this.props.action.actionRef" class="o-mail-ActionList-actionLabel" t-attf-class="{{ this.action.nameClass }}" t-att-class="{ 'mx-1': this.props.dropdown }" t-out="(this.props.inline and this.action.inlineName) or this.action.name"/>
     <t t-if="this.props.dropdown and this.action.badge" t-call="mail.Action.badge"/>
 </t>
 

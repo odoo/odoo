@@ -10,7 +10,8 @@ registerMessageAction("pin", {
         (!message.channel_id || message.channel_id.canSelfInteractWithChannel),
     icon: "fa fa-thumb-tack",
     name: _t("Pin"),
-    onSelected: ({ message }) => (message.channel_id || message.thread).messagePin(message),
+    onSelected: ({ action, message }) =>
+        (message.channel_id || message.thread).messagePin(message, { rootRef: action.actionRef }),
     sequence: 70,
 });
 
@@ -23,6 +24,7 @@ registerMessageAction("unpin", {
         (!message.channel_id || message.channel_id.canSelfInteractWithChannel),
     icon: "fa fa-thumb-tack",
     name: _t("Unpin"),
-    onSelected: ({ message }) => (message.channel_id || message.thread).messageUnpin(message),
+    onSelected: ({ action, message }) =>
+        (message.channel_id || message.thread).messageUnpin(message, { rootRef: action.actionRef }),
     sequence: 70,
 });
