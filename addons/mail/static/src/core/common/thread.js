@@ -1,4 +1,4 @@
-import { onRendered, useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
@@ -9,6 +9,7 @@ import {
     Component,
     onMounted,
     onWillDestroy,
+    onWillPatch,
     onWillUnmount,
     onWillUpdateProps,
     proxy,
@@ -357,7 +358,7 @@ export class Thread extends Component {
             }
         });
         onWillDestroy(() => stopOnChange());
-        onRendered(() => {
+        onWillPatch(() => {
             if (!this.loadedAndPatched) {
                 return;
             }
