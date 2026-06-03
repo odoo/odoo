@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_line_form_balance_deduction" model="ir.ui.view">
+            <field name="name">account.move.line.form.l10n_cn.balance.deduction</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <form string="Balance Deduction">
+                    <sheet>
+                        <group>
+                            <field name="l10n_cn_output_vat_offset_account_id" readonly="(l10n_cn_differential_taxation_method == '02' and parent_state != 'draft') or l10n_cn_output_vat_offset_move_id" required="True"/>
+                        </group>
+                        <notebook>
+                            <page string="Balance Deductions Information">
+                                <field name="l10n_cn_balance_deduction_ids" readonly="(l10n_cn_differential_taxation_method == '02' and parent_state != 'draft') or l10n_cn_output_vat_offset_move_id">
+                                    <list editable="bottom" delete="true">
+                                        <field name="voucher_type" required="True"/>
+                                        <field name="voucher_total" required="True"/>
+                                        <field name="deduct_amount" required="True"/>
+                                        <field name="e_fapiao_number" required="voucher_type in ('10', '11', '13', '14')"/>
+                                        <field name="receipt_code" required="voucher_type in ('16')"/>
+                                        <field name="receipt_number" optional="hide"/>
+                                        <field name="voucher_number" required="voucher_type in ('12', '15', '16', '05', '06')"/>
+                                        <field name="issue_date" required="voucher_type in ('09', '10', '11', '13', '14')"/>
+                                        <field name="remarks" optional="hide"/>
+                                        <field name="expense_account_id" required="True"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer>
+                        <button string="Save" class="btn btn-primary" name="action_save_l10n_cn_balance_deduction" type="object" invisible="(l10n_cn_differential_taxation_method =='02' and parent_state != 'draft') or l10n_cn_output_vat_offset_move_id"/>
+                        <button string="Discard" class="btn btn-secondary" special="cancel" invisible="(l10n_cn_differential_taxation_method =='02' and parent_state != 'draft') or l10n_cn_output_vat_offset_move_id"/>
+                        <button string="Reset to Draft" name="action_reset_balance_deduction_to_draft" type="object" invisible="l10n_cn_differential_taxation_method == '02' or not l10n_cn_output_vat_offset_move_id"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -42,6 +42,10 @@ correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
         'views/account_move_view.xml',
         'views/account_report.xml',
         'views/report_voucher.xml',
+        'views/account_move_line_view.xml',
+        'views/res_config_settings_views.xml',
+        'views/balance_deduction_view.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',
