@@ -374,6 +374,23 @@ class AccountEdiCommon(models.AbstractModel):
             'res_id': invoice.id,
         })
 
+        # === Import the embedded documents in the xml if some are found ===
+        if invoice.message_main_attachment_id:
+            # Invoice look like it was already imported, don't import attachments again
+            return True
+        additional_docs = file_data['attachment']._extract_additional_documents(tree)
+        attachments = self.env['ir.attachment'].create(additional_docs)
+        for attachment in attachments:
+            # Upon receiving an email (containing an xml) with a configured alias to create invoice, the xml is
+            # set as the main_attachment. To be rendered in the form view, the pdf should be the main_attachment.
+            if invoice.message_main_attachment_id and \
+                    invoice.message_main_attachment_id.name.endswith('.xml') and \
+                    'pdf' not in invoice.message_main_attachment_id.mimetype and \
+                    attachment.mimetype == 'application/pdf':
+                invoice.message_main_attachment_id = attachment
+        if attachments:
+            invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachments.ids)
+
         return True
 
     def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat, country_code=False, peppol_eas=False, peppol_endpoint=False, street=False, street2=False, city=False, zip_code=False):
