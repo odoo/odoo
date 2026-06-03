@@ -157,3 +157,18 @@ class test_inherits(common.TransactionCase):
         boxes.unit_id = unit_bar
 
         self.assertEqual(boxes.mapped('unit_id.name'), ['bar'])
+
+    def test_default_on_inaccessible_inherited_field(self):
+        model = self.env['test.another_box'].with_user(self.ref('base.user_admin'))
+        parent_model = model.another_unit_id
+
+        # the field is inaccessible in both models
+        self.assertFalse(parent_model._has_field_access(parent_model._fields['ro_with_default'], 'write'))
+        self.assertFalse(model._has_field_access(model._fields['ro_with_default'], 'write'))
+
+        # its default value is only accessible in the parent model
+        self.assertIn('ro_with_default', parent_model.default_get(['ro_with_default']))
+        self.assertNotIn('ro_with_default', model.default_get(['ro_with_default']))
+
+        record = model.create({f'val{i}': 2 for i in (1, 2)})
+        self.assertEqual(record.sudo().ro_with_default, 'roro')
