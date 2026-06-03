@@ -77,7 +77,7 @@ export class Chatter extends Component {
     }
 
     get onCloseFullComposerRequestList() {
-        return ["messages"];
+        return this.state.thread.fullComposerCloseRequestList;
     }
 
     get requestList() {
