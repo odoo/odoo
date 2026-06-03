@@ -29,7 +29,7 @@
                                     (<field class="oe_inline o_form_label text-uppercase" name="account_peppol_edi_mode" />)
                                 </span>
                                 <p invisible="account_peppol_proxy_state not in ('smp_registration', 'receiver') or not l10n_fr_pdp_annuaire_start_date">
-                                    You are registered on the annuaire starting on <field class="oe_inline o_form_label text-uppercase" name="l10n_fr_pdp_annuaire_start_date"/>
+                                    You are registered on the annuaire starting on <field class="oe_inline o_form_label text-uppercase" name="l10n_fr_pdp_annuaire_start_date" options="{'numeric': True}"/>
                                 </p>
                                 <p invisible="l10n_fr_pdp_annuaire_start_date or account_peppol_eas != '0225' or account_peppol_proxy_state != 'smp_registration'">
                                     For information: French administration annuaire can be updated once a day so your validation should be done tomorrow.
@@ -71,7 +71,7 @@
                                     type="object"
                                     class="btn-link"
                                     invisible="True"/>
-                                <button string="Disconnect"
+                                <button string="Disconnect French electronic invoicing"
                                         name="button_peppol_deregister"
                                         type="object"
                                         class="btn-primary me-1"/>
