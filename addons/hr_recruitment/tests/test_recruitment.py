@@ -553,3 +553,30 @@ class TestRecruitment(MailCase, TransactionCase):
         })
 
         self.assertFalse(wizard.template_id)
+
+    def test_default_employee_email_after_direct_contract_sign(self):
+        """
+        When an applicant moved to hired stage and when an employee is created,
+        the employee work_email should not be set, additionally the partner's email should be kept as the employee's private email.
+        """
+        self.env.company.email = 'mycompany@info.com'
+        job = self.env['hr.job'].create({
+            'department_id': self.env['hr.department'].create({'name': 'Test Department'}).id,
+            'name': 'Test Job',
+            'no_of_recruitment': 5,
+        })
+        applicant = self.env['hr.applicant'].create({
+            'email_from': 'applicant@example.com',
+            'job_id': job.id,
+            'partner_name': 'Test Applicant',
+            'stage_id': self.env['hr.recruitment.stage'].create({
+                'hired_stage': True,
+                'name': 'Hired',
+                'sequence': 1,
+            }).id,
+        })
+
+        action = applicant.create_employee_from_applicant()
+        employee = self.env['hr.employee'].browse(action['res_id'])
+        self.assertFalse(employee.work_email)
+        self.assertEqual(employee.work_contact_id.email, employee.private_email)
