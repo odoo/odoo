@@ -178,7 +178,7 @@ export class Navbar extends Component {
             localStorage.setItem("device_uuid", uuidv4());
         }
         const deviceUuid = localStorage.getItem("device_uuid");
-        return `/pos_customer_display/${this.pos.config.id}/${deviceUuid}`;
+        return `/pos_customer_display/${this.pos.config.id}/${deviceUuid}?access_token=${this.pos.config.access_token}`;
     }
 
     async reloadProducts() {
@@ -189,18 +189,8 @@ export class Navbar extends Component {
     }
 
     openCustomerDisplay() {
-        const getDeviceUuid = () => {
-            if (!localStorage.getItem("device_uuid")) {
-                localStorage.setItem("device_uuid", uuidv4());
-            }
-            return localStorage.getItem("device_uuid");
-        };
-        const customer_display_url = `/pos_customer_display/${
-            this.pos.config.id
-        }/${getDeviceUuid()}?access_token=${this.pos.config.access_token}`;
-
         this.dialog.add(QrCodeCustomerDisplay, {
-            customerDisplayURL: `${this.pos.config._base_url}${customer_display_url}`,
+            customerDisplayURL: `${this.pos.config._base_url}${this.customerDisplayPath}`,
         });
     }
 
