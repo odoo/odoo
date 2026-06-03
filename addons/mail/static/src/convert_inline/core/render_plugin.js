@@ -42,6 +42,10 @@ export class RenderPlugin extends Plugin {
         this.enforceConstraints(this.renderTree);
     }
 
+    /**
+     * TODO EGGMAIL: if a parent node has an irrelevant node, it may itself
+     * be irrelevant, but this function does not handle that currently.
+     */
     discardIrrelevantNodes() {
         const rejectedChildren = new WeakSet();
         const treeWalker = this.createReferenceTreeWalker((node) => {
