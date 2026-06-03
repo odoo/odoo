@@ -4,7 +4,11 @@ import { registry } from "@web/core/registry";
 const CarouselSliderEdit = I => class extends I {
     dynamicContent = {
         ...this.dynamicContent,
-        _root: { "t-on-content_changed": this.onContentChanged },
+        _root: {
+            "t-on-content_changed": this.onContentChanged,
+            "t-on-focusin": () => {},
+            "t-on-focusout": () => {},
+        },
     };
     // Pause carousel in edit mode.
     carouselOptions = { ride: false, pause: true };
