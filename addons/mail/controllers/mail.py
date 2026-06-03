@@ -320,10 +320,10 @@ class MailController(http.Controller):
         # Make sure we have at least size=1
         width = max(1, min(width, 512))
         height = max(1, min(height, 512))
+        font_size = font_size or height
         # Initialize font
         if font.startswith('/'):
             font = font[1:]
-        font_obj = ImageFont.truetype(file_open(font, 'rb'), font_size or height)
 
         # if received character is not a number, keep old behaviour (icon is character)
         icon = chr(int(icon)) if icon.isdigit() else icon
@@ -344,12 +344,22 @@ class MailController(http.Controller):
         image = Image.new("RGBA", (width, height), color)
         draw = ImageDraw.Draw(image)
 
+        font_obj = ImageFont.truetype(file_open(font, 'rb'), font_size)
+
         if hasattr(draw, 'textbbox'):
             box = draw.textbbox((0, 0), icon, font=font_obj)
-            left = box[0]
-            top = box[1]
             boxw = box[2] - box[0]
             boxh = box[3] - box[1]
+            max_ratio = max(boxw / width, boxh / height)
+            if max_ratio > 1:
+                # adjust the font_size to fit in requested dimensions
+                font_size /= max_ratio
+                font_obj = ImageFont.truetype(file_open(font, 'rb'), font_size)
+                box = draw.textbbox((0, 0), icon, font=font_obj)
+                boxw = box[2] - box[0]
+                boxh = box[3] - box[1]
+            left = box[0]
+            top = box[1]
         else:  # pillow < 8.00 (Focal)
             left, top, _right, _bottom = image.getbbox()
             boxw, boxh = draw.textsize(icon, font=font_obj)

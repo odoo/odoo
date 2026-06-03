@@ -86,8 +86,9 @@ export class ImageStrategyPlugin extends Plugin {
     }
 
     getDefaultImageStyle(shouldBeBlock) {
-        // TODO EGGMAIL: same sa buildImageLink => remove important, but add rules
-        // to remove the css properties from the original styleInfo
+        // TODO EGGMAIL: remove important, but add rule to remove the css properties
+        // from the original styleInfo, (in case its values are important)
+        // TODO EGGMAIL: no support for borders (width, radius, ...)
         return Object.assign(
             { "border-width": { value: "0", priority: "important" } },
             shouldBeBlock ? { display: { value: "block", priority: "important" } } : {}
@@ -140,7 +141,7 @@ export class ImageStrategyPlugin extends Plugin {
                 width: `${Math.round(width.number)}`,
                 height: `${Math.round(height.number)}`,
             }),
-            style: this.getStyleInfo(fontIcon).merge(StyleInfo.from(style)),
+            style,
         };
     }
 
