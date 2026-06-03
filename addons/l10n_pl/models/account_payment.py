@@ -53,7 +53,7 @@ class L10nPlAccountPayment(models.Model):
 
         partner_bank_data = list(partner_to_partner_banks.items())
         date = fields.Date.context_today(self.with_context(tz='Europe/Warsaw'))
-        verifications = self.env['l10n_pl.bank.account.verification']._l10n_pl_get_verification(partner_bank_data, date)
+        verifications = self.env['l10n_pl.bank.account.verification'].sudo()._l10n_pl_get_verification(partner_bank_data, date)
         bank2verification = verifications.grouped('partner_bank_account_number')
         partner2verification = verifications.grouped('partner_vat')
 
