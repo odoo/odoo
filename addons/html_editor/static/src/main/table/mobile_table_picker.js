@@ -1,5 +1,5 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { useExternalListener } from "@web/owl2/utils";
+import { Component, signal, useEffect } from "@odoo/owl";
 
 export class MobileTablePicker extends Component {
     static template = "html_editor.MobileTablePicker";
@@ -11,21 +11,18 @@ export class MobileTablePicker extends Component {
         },
     };
 
+    rowCountRef = signal(null);
+    columnCountRef = signal(null);
+    rowCount = signal(3);
+    columnCount = signal(3);
+
     setup() {
-        this.state = proxy({
-            rowCount: 3,
-            columnCount: 3,
+        useEffect(() => {
+            const el = this.rowCountRef();
+            if (el) {
+                el.focus();
+            }
         });
-        this.rowCountRef = useRef("rowCount");
-        this.columnCountRef = useRef("columnCount");
-        useLayoutEffect(
-            (el) => {
-                if (el) {
-                    el.focus();
-                }
-            },
-            () => [this.rowCountRef.el]
-        );
         useExternalListener(
             this.props.editable.ownerDocument,
             "keydown",
@@ -50,13 +47,13 @@ export class MobileTablePicker extends Component {
     }
 
     updateSize() {
-        this.state.rowCount = parseInt(this.rowCountRef.el.value);
-        this.state.columnCount = parseInt(this.columnCountRef.el.value);
+        this.rowCount.set(parseInt(this.rowCountRef().value));
+        this.columnCount.set(parseInt(this.columnCountRef().value));
     }
 
     insertTable() {
-        if (this.state.columnCount > 0 && this.state.rowCount > 0) {
-            this.props.insertTable({ cols: this.state.columnCount, rows: this.state.rowCount });
+        if (this.columnCount() > 0 && this.rowCount() > 0) {
+            this.props.insertTable({ cols: this.columnCount(), rows: this.rowCount() });
             this.props.close();
         }
     }

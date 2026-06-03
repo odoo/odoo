@@ -6,18 +6,18 @@
                     <div class="col p-2">
                         <div class="input-group mb-2">
                             <label for="rowCount">Row Count</label>
-                            <input id="rowCount" t-custom-ref="rowCount"
+                            <input id="rowCount" t-ref="this.rowCountRef"
                                 type="number" min="1" max="100"
                                 class="border-dark-subtle form-control form-control-sm"
-                                t-custom-model="this.state.rowCount"
+                                t-model="this.rowCount"
                                 title="Row count"
                                 placeholder="Number of rows"
                                 t-on-input="this.updateSize"/>
                             <label for="rowCount">Column Count</label>
-                            <input id="columnCount" t-custom-ref="columnCount"
+                            <input id="columnCount" t-ref="this.columnCountRef"
                                 type="number" min="1" max="12"
                                 class="border-dark-subtle form-control form-control-sm"
-                                t-custom-model="this.state.columnCount"
+                                t-model="this.columnCount"
                                 title="Column count"
                                 placeholder="Number of columns"
                                 t-on-input="this.updateSize"/>
