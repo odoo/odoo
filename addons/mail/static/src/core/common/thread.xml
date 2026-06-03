@@ -105,11 +105,14 @@
 
 <t t-name="mail.Thread.startMessage">
     <div class="pt-4" t-att-class="{ 'px-3': this.env.inChatWindow, 'px-2': this.env.inDiscussApp or this.env.inMeetingChat }">
-        <div class="d-flex align-items-center gap-2" t-att-class="{
+        <div class="d-flex gap-2 lh-sm" t-att-class="{
             'mt-2 mb-1': !this.channel?.parent_channel_id,
             'mt-1': this.channel?.parent_channel_id,
         }">
-            <div class="o-mail-Thread-avatar d-inline" t-att-class="{'o-mail-Thread-avatarChatWindow': this.env.inChatWindow }">
+            <div class="o-mail-Thread-avatar" t-att-class="{
+                'o-mail-Thread-avatarChatWindow mt-1': this.env.inChatWindow,
+                'mt-2': !this.env.inChatWindow,
+            }">
                 <img t-if="!this.channel?.parent_channel_id" class="rounded-3 object-fit-cover" t-att-src="this.channel.avatarUrl" alt="Thread Image"/>
                 <i t-else="" class="fa fa-comments-o text-muted" role="presentation"/>
             </div>
