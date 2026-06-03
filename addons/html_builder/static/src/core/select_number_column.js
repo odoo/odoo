@@ -18,6 +18,9 @@ export class SelectNumberColumn extends BaseOptionComponent {
                         this.env.editor.config.mobileBreakpoint
                     ),
                 canHaveZeroColumns: editingElement.matches(".s_allow_columns"),
+                hasFixedColumnCount: !!editingElement.querySelector(
+                    ":scope > .row.s_nb_column_fixed"
+                ),
             };
         });
     }
