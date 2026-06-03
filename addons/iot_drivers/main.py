@@ -52,9 +52,10 @@ class Manager(Thread):
         """
         changed = False
 
-        current_devices = set(iot_devices.keys()) | set(unsupported_devices.keys())
-        previous_devices = set(self.previous_iot_devices.keys()) | set(self.previous_unsupported_devices.keys())
-        if current_devices != previous_devices:
+        if (
+            iot_devices.keys() != self.previous_iot_devices.keys()
+            or unsupported_devices.keys() != self.previous_unsupported_devices.keys()
+        ):
             self.previous_iot_devices = iot_devices.copy()
             self.previous_unsupported_devices = unsupported_devices.copy()
             changed = True
