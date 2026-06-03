@@ -180,7 +180,18 @@ class SaleOrderLine(models.Model):
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
 
         for line in lines_by_timesheet:
+            invoice_lines_to_calculate = line._get_invoice_lines().filtered(lambda inv: inv.move_id in refund_account_moves or inv.move_id.reversed_entry_id in refund_account_moves)
             qty_to_invoice = mapping.get(line.id, 0.0)
+            if refund_account_moves:
+                invoiced_qty = 0.0
+                for invoice_line in invoice_lines_to_calculate:
+                    qty = invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+                    if invoice_line.move_id.move_type == 'out_invoice':
+                        invoiced_qty += qty
+                    elif invoice_line.move_id.move_type == 'out_refund':
+                        invoiced_qty -= qty
+                qty_to_invoice -= invoiced_qty
+
             if qty_to_invoice:
                 line.qty_to_invoice = qty_to_invoice
             else:
