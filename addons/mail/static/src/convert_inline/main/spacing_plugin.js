@@ -18,6 +18,9 @@ const PADDINGS = ["padding-top", "padding-right", "padding-bottom", "padding-lef
  * another.
  * TODO EGGMAIL: handle display-flex alignments as well? They don't use margin
  * but need centering => to investigate.
+ * TODO EGGMAIL: re-check the style rule modifying padding computation with dimensions
+ * ensure that we (can?) use the one typically used in web in mail clients, and if not
+ * make the necessary adjustments
  */
 export class SpacingPlugin extends Plugin {
     static id = "spacing";
