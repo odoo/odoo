@@ -1,7 +1,9 @@
+import { insertText as htmlInsertText } from "@html_editor/../tests/_helpers/user_actions";
 import {
     click,
     contains,
     defineMailModels,
+    focus,
     insertText,
     isDiscussSidebarCategoryFolded,
     listenStoreFetch,
@@ -150,6 +152,47 @@ test("sub threads are sorted with last_interest_dt", async () => {
     await contains(".o-mail-DiscussSidebarChannel-subChannel:text('Sub Channel_1')", {
         before: [".o-mail-DiscussSidebarChannel-subChannel:text('Sub Channel_2')"],
     });
+});
+
+test.tags("html composer");
+test("sidebar shows draft indicator and drafts are sorted first", async () => {
+    const pyEnv = await startServer();
+    const [zuluId] = pyEnv["discuss.channel"].create([
+        { name: "Zulu", channel_type: "channel" },
+        { name: "Alpha", channel_type: "channel" },
+    ]);
+    await start();
+    await openDiscuss(zuluId);
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "Hello");
+    await contains(
+        ".o-mail-DiscussSidebarChannel-itemName:has(:text('Zulu')) .text-danger:text('[Draft]')",
+        {
+            count: 0,
+        }
+    );
+    await click(".o-mail-DiscussSidebarChannel-itemName:has(:text('Alpha'))");
+    await contains(
+        ".o-mail-DiscussSidebarChannel-itemName:has(:text('Zulu')) .text-danger:text('[Draft]')"
+    );
+    await contains(".o-mail-DiscussSidebarChannel-itemName:has(:text('Zulu'))", {
+        before: [".o-mail-DiscussSidebarChannel-itemName:has(:text('Alpha'))"],
+    });
+    await click(".o-mail-DiscussSidebarChannel-itemName:has(:text('Zulu'))");
+    await contains(".o-mail-Composer-html.odoo-editor-editable:text('Hello')");
+    await press("Enter");
+    await contains(
+        ".o-mail-DiscussSidebarChannel-itemName:has(:text('Zulu')) .text-danger:text('[Draft]')",
+        {
+            count: 0,
+        }
+    );
 });
 
 test("channel - command: should have view command when category is unfolded", async () => {

@@ -3,6 +3,7 @@ import { fields } from "@mail/model/misc";
 
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
+import { _t } from "@web/core/l10n/translation";
 
 /** @type {import("models").DiscussChannel} */
 const discussChannelPatch = {
@@ -45,6 +46,7 @@ const discussChannelPatch = {
                 this.onPinStateUpdated();
             },
         });
+        this.hasDraft = fields.Attr(false, { localStorage: true });
         this.lastSubChannelLoaded = fields.One("discuss.channel");
         this.loadSubChannelsDone = false;
         this.subChannelsInSidebar = fields.Many("discuss.channel", {
@@ -81,6 +83,9 @@ const discussChannelPatch = {
     },
     get autoOpenChatWindowOnNewMessage() {
         return false;
+    },
+    get draftLabel() {
+        return _t("[Draft]");
     },
     /** @param {string} description */
     async notifyDescriptionToServer(description) {
