@@ -188,7 +188,7 @@ export class PaymentStripe extends PaymentInterface {
                     line.card_type = captured_card_type;
                     line.transaction_id = captured_transaction_id;
                 } else {
-                    if (!(await this.captureAfterPayment(processPayment, line))) {
+                    if ((await this.captureAfterPayment(processPayment, line)) === false) {
                         line.setPaymentStatus("retry");
                         return false;
                     }
