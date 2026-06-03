@@ -585,7 +585,7 @@ export class Record extends DataPoint {
         for (const fieldName in data) {
             const value = data[fieldName];
             const field = this.fields[fieldName];
-            if (field.relatedPropertyField) {
+            if (!field || field.relatedPropertyField) {
                 continue;
             }
             if (["char", "text", "html"].includes(field.type)) {
@@ -1259,7 +1259,11 @@ export class Record extends DataPoint {
 
         if (!this._parentRecord || this._parentRecord._isEvalContextReady) {
             for (const [fieldName, value] of Object.entries(toRaw(this.data))) {
-                if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
+                const field = this.fields[fieldName];
+                if(!field) {
+                    continue;
+                }
+                if (["one2many", "many2many"].includes(field.type)) {
                     value._updateContext(getFieldContext(this, fieldName));
                 }
             }
