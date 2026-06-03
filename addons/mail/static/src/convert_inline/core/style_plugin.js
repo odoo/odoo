@@ -9,6 +9,7 @@ export class StylePlugin extends Plugin {
     static dependencies = ["measurementSnapshot", "responsive"];
     static shared = ["getRawStyleInfo"];
     resources = {
+        on_load_reference_content_handlers: this.loadAllFonts.bind(this),
         on_layout_dimensions_updated_handlers: this.onLayoutDimensionsUpdated.bind(this),
         on_parse_layout_with_dimensions_handlers: this.registerCSSRules.bind(this),
     };
@@ -38,6 +39,10 @@ export class StylePlugin extends Plugin {
             this.layoutToStyleInfo.set(layoutDimensions, new WeakMap());
         }
         return this.layoutToStyleInfo.get(layoutDimensions);
+    }
+
+    loadAllFonts() {
+        return this.config.referenceDocument.fonts.ready;
     }
 
     computeRuleInfo(complexSelector, rawRule) {

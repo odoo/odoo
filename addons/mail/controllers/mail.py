@@ -304,9 +304,11 @@ class MailController(http.Controller):
                 "59409": "59409",  # E811: fa-discord
                 "59416": "59416",  # E818: fa-threads
                 "59417": "59417",  # E819: fa-kickstarter
+                "59418": "59418",  # E81A: fa-twitter
                 "59419": "59419",  # E81B: fa-tiktok
                 "59420": "59420",  # E81C: fa-bluesky
                 "59421": "59421",  # E81D: fa-google-play
+                "59464": "59464",  # E848: fa-twitter-square
             }
             if icon in oi_font_char_codes:
                 icon = oi_font_char_codes[icon]
@@ -368,10 +370,12 @@ class MailController(http.Controller):
 
         out_w = max(width, boxw)
         out_h = max(height, boxh)
+        x = round((out_w - boxw) / 2)
+        y = round((out_h - boxh) / 2)
 
         # Create output image
         outimage = Image.new("RGBA", (out_w, out_h), bg or (0, 0, 0, 0))
-        outimage.paste(iconimage, (max(0, left), max(0, top)), iconimage)
+        outimage.paste(iconimage, (x, y), iconimage)
 
         # output image
         output = io.BytesIO()

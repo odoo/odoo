@@ -163,11 +163,13 @@ export class ImageStrategyPlugin extends Plugin {
             img = this.buildFontIconImageRef({ imageNode, shouldBeBlock });
         }
         return new ImageLinkLayout({
-            root: {
-                style: this.getStyleInfo(linkNode).merge(StyleInfo.from(style)),
-                attributes: this.getAttributes(linkNode),
+            refs: {
+                root: {
+                    style: this.getStyleInfo(linkNode).merge(StyleInfo.from(style)),
+                    attributes: this.getAttributes(linkNode),
+                },
+                img,
             },
-            img,
         });
     }
 
