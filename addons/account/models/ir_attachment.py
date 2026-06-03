@@ -59,20 +59,12 @@ class IrAttachment(models.Model):
                 'sort_weight': 10,
                 'type': 'xml',
             })
-            for idx, attachment in enumerate(self._extract_additional_documents(xml_tree), 1):
-                to_process.append({
-                    'attachment': attachment,
-                    'filename': attachment.name,
-                    'content': attachment.raw,
-                    'sort_weight': 10 + idx,
-                    'type': 'binary',
-                })
         return to_process
 
     def _extract_additional_documents(self, xml_tree):
         """Helper to extract all additional documents defined in the xml tree
         """
-        to_create = []
+        file_data = []
         additional_docs = xml_tree.findall('./{*}AdditionalDocumentReference')
         for document in additional_docs:
             attachment_name = document.find('{*}ID')
@@ -88,7 +80,7 @@ class IrAttachment(models.Model):
                 # (Windows or Linux style) and/or the name of the xml instead of the pdf.
                 # Get only the filename with the right extension.
                 name = (attachment_name.text or 'invoice').split('\\')[-1].split('/')[-1].split('.')[0] + extension
-                to_create.append({
+                file_data.append({
                     'name': name,
                     'res_id': self.res_id,
                     'res_model': self.res_model,
@@ -96,8 +88,7 @@ class IrAttachment(models.Model):
                     'type': 'binary',
                     'mimetype': mimetype,
                 })
-        attachments = self.env['ir.attachment'].create(to_create)
-        return attachments
+        return file_data
 
     def _decode_edi_pdf(self, filename, content):
         """Decodes a pdf and unwrap sub-attachment into a list of dictionary each representing an attachment.
