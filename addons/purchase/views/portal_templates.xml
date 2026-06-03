@@ -274,7 +274,8 @@
                     </thead>
                     <tbody class="purchase_tbody">
 
-                        <t t-foreach="order.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)" t-as="line">
+                        <t t-set="filtered_lines" t-value="order.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)"/>
+                        <t t-foreach="filtered_lines" t-as="line">
 
                             <tr t-att-class="{
                                     'line_section': 'fw-bold o_line_section bg-200',

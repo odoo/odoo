@@ -63,7 +63,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-foreach="o.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)" t-as="line">
+                    <t t-set="filtered_lines" t-value="o.order_line.filtered(lambda l: l.display_type or l.product_qty != 0)"/>
+                    <t t-foreach="filtered_lines" t-as="line">
                         <tr t-att-class="'fw-bolder o_line_section' if line.display_type == 'line_section' else 'fw-bold o_line_subsection' if line.display_type == 'line_subsection' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type">
                                 <td id="product" class="text-start">
