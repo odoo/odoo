@@ -4,7 +4,7 @@ import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_di
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 import { SearchInput } from "@mail/core/common/search_input";
 
-import { Component, computed, onWillUpdateProps, onWillStart } from "@odoo/owl";
+import { Component, computed, onWillStart, onWillUpdateProps, signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 import { useService } from "@web/core/utils/hooks";
@@ -50,6 +50,7 @@ export class ChannelMemberList extends Component {
                 return this.hasFilteredMembers(this.computeCategories(term));
             },
         });
+        this.channel = signal(this.props.channel);
         this.categories = computed(() => this.computeCategories(this.search.searchTerm));
         onWillStart(() => {
             if (this.props.channel.fetchMembersState === "not_fetched") {
@@ -61,6 +62,7 @@ export class ChannelMemberList extends Component {
                 nextProps.channel.fetchChannelMembers();
             }
             if (nextProps.channel.notEq(this.props.channel)) {
+                this.channel.set(nextProps.channel);
                 this.search.reset();
             }
         });
@@ -93,7 +95,7 @@ export class ChannelMemberList extends Component {
         return [...MEMBER_CATEGORIES]
             .sort((a, b) => a.sequence - b.sequence)
             .map(({ getMembers, label, showCount = true }) => {
-                const all = getMembers(this.props.channel);
+                const all = getMembers(this.channel());
                 const matching = term
                     ? all.filter((m) => m.name?.toLowerCase().includes(term))
                     : all;
