@@ -905,9 +905,6 @@ Please change the quantity done or the rounding precision in your settings.""",
         if 'product_id' in vals or 'location_id' in vals or 'location_dest_id' in vals:
             self._update_orderpoints()
         res = super().write(vals)
-        moves_done = self.filtered(lambda m: m.state == 'done')
-        if 'date' in vals and moves_done:
-            moves_done.move_line_ids.date = vals['date']
         if move_to_recompute_state:
             move_to_recompute_state._recompute_state()
         if move_to_check_location:
