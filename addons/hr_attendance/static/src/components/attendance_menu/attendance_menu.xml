@@ -32,22 +32,19 @@
                             <tbody>
                                 <tr t-foreach="this.attendancesToday" t-as="attendance" t-key="attendance.id">
                                     <td>
-                                        <t t-set="start" t-value="this.splitTime(attendance.start)"/>
-                                        <t t-esc="start.h"/>:<span class="text-muted"><t t-esc="start.m"/></span>
+                                        <t t-esc="attendance.start.unmuted"/><span class="text-muted" t-esc="attendance.start.muted"/>
                                     </td>
                                     <td class="px-0">–</td>
                                     <td>
                                         <t t-if="attendance.end">
-                                            <t t-set="end" t-value="this.splitTime(attendance.end)"/>
-                                            <t t-esc="end.h"/>:<span class="text-muted"><t t-esc="end.m"/></span>
+                                            <t t-esc="attendance.end.unmuted"/><span class="text-muted" t-esc="attendance.end.muted"/>
                                         </t>
                                         <t t-else="">
                                             Now
                                         </t>
                                     </td>
                                     <td class="ps-4 text-end">
-                                        <t t-set="duration" t-value="this.splitTime(attendance.duration)"/>
-                                        <t t-esc="duration.h"/>h<span class="text-muted"><t t-esc="duration.m"/></span>
+                                        <t t-esc="attendance.duration.unmuted"/><span class="text-muted" t-esc="attendance.duration.muted"/>
                                     </td>
                                 </tr>
                                 <tr class="border-top">
@@ -55,8 +52,7 @@
                                         Today
                                     </td>
                                     <td class="ps-4 text-end">
-                                        <t t-set="total" t-value="this.splitTime(this.hoursToday)"/>
-                                        <t t-esc="total.h"/>h<span class="text-muted"><t t-esc="total.m"/></span>
+                                        <t t-esc="this.hoursToday.unmuted"/><span class="text-muted" t-esc="this.hoursToday.muted"/>
                                     </td>
                                 </tr>
                             </tbody>
