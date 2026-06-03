@@ -3,7 +3,7 @@
 from uuid import uuid4
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class HrWorkEntryType(models.Model):
@@ -96,6 +96,16 @@ Time type "%(name)s" of code "%(code)s", with no country assigned, already exist
                 name=duplicate.name,
                 code=duplicate.code,
             ))
+
+    @api.constrains('country_id')
+    def _check_country_id(self):
+        resource_calendar_attendance_per_work_entry_type = self.env['resource.calendar.attendance'].search([
+            ('work_entry_type_id', 'in', self.ids),
+        ]).grouped('work_entry_type_id')
+
+        for work_entry_type in self:
+            if any(attendance.calendar_id.country_id != work_entry_type.country_id for attendance in resource_calendar_attendance_per_work_entry_type.get(work_entry_type, [])):
+                raise ValidationError(self.env._("The country of the work entry type does not match the country of the associated resource calendar attendance."))
 
     def copy_data(self, default=None):
         default = default or {}

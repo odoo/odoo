@@ -143,6 +143,7 @@ class TestWorkEntryType(TransactionCase):
         work_entry_type = self.env['hr.work.entry.type'].create({
             'code': 'TESTATT',
             'name': 'Test Attendance',
+            'country_id': False,
         })
         company.resource_calendar_id.attendance_ids.write({'work_entry_type_id': work_entry_type.id})
 

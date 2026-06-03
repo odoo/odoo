@@ -50,8 +50,7 @@
                         </group>
                         <group>
                             <field name="company_id" options="{'no_create': 1, 'no_quick_create': 1}"
-                                   placeholder="Select a company for this working scheduled" domain="[('id', 'in', allowed_company_ids)]"
-                                   invisible="context.get('allowed_company_ids', []).length &lt; 2"/>
+                                   placeholder="Visible to all" domain="[('id', 'in', allowed_company_ids)]"/>
                         </group>
                     </group>
                     <group name="resource_details">
