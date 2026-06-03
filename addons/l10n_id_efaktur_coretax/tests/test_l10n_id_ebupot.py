@@ -136,19 +136,20 @@ class TestEBupot(AccountTestInvoicingCommon):
             payment.download_ebupot()
         self.assertIn("has more than one PPh tax", str(e.exception))
 
-    def test_prepare_ebupot_grouping_different_partner_or_month(self):
+    def test_prepare_ebupot_grouping_same_month_merges(self):
+        """Payments in the same month should merge into one group regardless of partner."""
         payment1 = self._create_valid_payment()
         payment2 = self._create_valid_payment()
 
-        # Different partner
         partner_b = self.env['res.partner'].create({
             'name': 'Partner B',
             'vat': '9999999999999999',
             'country_id': self.env.ref('base.id').id,
         })
 
+        # Both payments in the same month but different partners
         payment2.partner_id = partner_b
-        payment2.date = '2026-05-01'  # different month
+        payment2.date = payment1.date  # same month
 
         bill1 = self.env['account.move'].create({
             'move_type': 'in_invoice',
@@ -184,7 +185,54 @@ class TestEBupot(AccountTestInvoicingCommon):
         payment2.reconciled_bill_ids = bill2
 
         result = (payment1 | payment2).prepare_ebupot_vals()
-        self.assertEqual(len(result), 2, "Should split into 2 groups (different partner/month)")
+        self.assertEqual(len(result), 1, "Different partners in the same month should merge into 1 group")
+        result_months = {r['payment_month'] for r in result}
+        self.assertEqual(result_months, {payment1.date.strftime('%Y-%m')})
+
+    def test_prepare_ebupot_grouping_different_month_splits(self):
+        """Payments in different months should produce separate groups."""
+        payment1 = self._create_valid_payment()
+        payment2 = self._create_valid_payment()
+
+        payment2.date = '2026-05-01'  # different month from payment1 (2026-04)
+
+        bill1 = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': payment1.date,
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'line',
+                'quantity': 1,
+                'price_unit': 1000,
+                'tax_ids': [self.tax_pph_22.id],
+            })],
+        })
+
+        bill2 = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': payment2.date,
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'line',
+                'quantity': 1,
+                'price_unit': 1000,
+                'tax_ids': [self.tax_pph_22.id],
+            })],
+        })
+
+        bill1.action_post()
+        bill2.action_post()
+
+        bill1.reconciled_payment_ids = payment1
+        payment1.reconciled_bill_ids = bill1
+
+        bill2.reconciled_payment_ids = payment2
+        payment2.reconciled_bill_ids = bill2
+
+        result = (payment1 | payment2).prepare_ebupot_vals()
+        self.assertEqual(len(result), 2, "Payments in different months should produce 2 groups")
+        result_months = {r['payment_month'] for r in result}
+        self.assertEqual(result_months, {'2026-04', '2026-05'})
 
     def test_prepare_ebupot_multiple_payments_ratio_split(self):
         bill = self.env['account.move'].create({
@@ -223,7 +271,12 @@ class TestEBupot(AccountTestInvoicingCommon):
 
         result = payments.prepare_ebupot_vals()
 
-        bases = [vals['TaxBase'] for vals in result]
+        bases = [
+            vals['TaxBase']
+            for group in result
+            for item in group['data']
+            for vals in item['vals']
+        ]
 
         self.assertEqual(len(bases), 3)
         self.assertIn(20000, bases)

@@ -43,3 +43,8 @@ class EfakturDownloadController(http.Controller):
             content = attachments.raw.content
             headers = _get_headers(attachments.name, attachments.mimetype, content)
             return request.make_response(content, headers)
+        else:
+            filename = _('ebupot.zip')
+            content = attachments._build_zip_from_attachments()
+            headers = _get_headers(filename, 'application/zip', content)
+            return request.make_response(content, headers)

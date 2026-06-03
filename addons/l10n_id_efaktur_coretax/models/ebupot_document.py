@@ -81,15 +81,27 @@ class EBupotDocument(models.Model):
         )
 
     def _generate_ebupot_invoice(self):
-        """ Generate E-Bupot XML """
+        """ Generate E-Bupot XML grouped by payment month """
+        payment_groups = self.payment_ids.prepare_ebupot_vals()
+        xml_results = []
+        for idx, group in enumerate(payment_groups, start=1):
+            payment_month = group['payment_month']
 
-        all_vals = self.payment_ids.prepare_ebupot_vals()
-        xml_content = self.env['ir.qweb']._render('l10n_id_efaktur_coretax.ebupot_template', {'data': all_vals, 'TIN': self.company_id.vat})
-        xml_bytes = etree.tostring(cleanup_xml_node(xml_content, remove_blank_text=False, remove_blank_nodes=False), xml_declaration=True, encoding='UTF-8')
-        return [{
-            'tax': f'ebupot_{fields.Date.context_today(self).strftime("%Y%m%d")}',
-            'xml': xml_bytes,
-        }]
+            all_vals = []
+            for item in group['data']:
+                all_vals.extend(item['vals'])
+
+            xml_content = self.env['ir.qweb']._render('l10n_id_efaktur_coretax.ebupot_template', {'data': all_vals, 'TIN': self.company_id.vat})
+            xml_bytes = etree.tostring(
+                cleanup_xml_node(xml_content, remove_blank_text=False, remove_blank_nodes=False),
+                xml_declaration=True,
+                encoding='UTF-8'
+            )
+            xml_results.append({
+                'tax': f"{payment_month}_ebupot_{idx}",
+                'xml': xml_bytes
+            })
+        return xml_results
 
     def action_regenerate(self):
         self._generate_xml(regenerate=True)

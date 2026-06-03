@@ -110,35 +110,55 @@ class AccountPayment(models.Model):
             ChartTemplate.ref('l10n_id_tax_group_pph23', raise_if_not_found=False),
             ChartTemplate.ref('l10n_id_tax_group_pph42', raise_if_not_found=False),
         }
-        ebupot_vals = []
+
+        # {
+        #   'YYYY-MM': {
+        #       tax_id: {'tax': tax, 'vals': []}
+        #   }
+        # }
+        grouped_data = {}
         for bill in bills:
             payments = bill.reconciled_payment_ids.filtered(lambda p: p in self)
             bill_total = abs(bill.amount_total)
             if not bill_total:
                 continue
+
             for payment in payments:
                 payment_amount = abs(payment.amount)
                 ratio = payment_amount / bill_total
+                payment_month = fields.Date.to_date(payment.date).strftime('%Y-%m')
+                if payment_month not in grouped_data:
+                    grouped_data[payment_month] = {}
+
                 for line in bill.invoice_line_ids:
                     pph_taxes = line.tax_ids.filtered(lambda t: t.tax_group_id in pph_tax_groups)
+
                     if len(pph_taxes) > 1:
-                        raise UserError(_(
-                            "Invoice %(bill)s line '%(line)s' has more than one PPh tax.",
-                            bill=bill.name,
-                            line=line.name,
-                        ))
+                        raise UserError(_("Invoice %(bill)s line '%(line)s' has more than one PPh tax.", bill=bill.name, line=line.name))
                     if not pph_taxes:
                         continue
 
+                    tax = pph_taxes[0]
+                    if tax.id not in grouped_data[payment_month]:
+                        grouped_data[payment_month][tax.id] = {
+                            'tax': tax,
+                            'vals': []
+                        }
                     allocated_base = self.currency_id.round(line.price_total * ratio)
                     vals = {}
                     payment._l10n_id_ebupot_build_payment_vals(vals)
                     bill._l10n_id_ebupot_build_invoice_vals(vals)
-                    line._l10n_id_ebupot_build_invoice_line_vals(
-                        vals,
-                        allocated_base=allocated_base,
-                    )
-                    ebupot_vals.append(vals)
-        if not ebupot_vals:
+                    line._l10n_id_ebupot_build_invoice_line_vals(vals, allocated_base=allocated_base)
+                    grouped_data[payment_month][tax.id]['vals'].append(vals)
+
+        if not grouped_data:
             raise UserError(_("No PPh data found to generate E-Bupot."))
-        return ebupot_vals
+
+        result = []
+        for payment_month, group in grouped_data.items():
+            result.append({
+                'payment_month': payment_month,
+                'data': list(group.values()),
+            })
+
+        return result
