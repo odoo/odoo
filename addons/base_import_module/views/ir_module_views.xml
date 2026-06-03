@@ -26,6 +26,9 @@
                     <attribute name="type">object</attribute>
                     <attribute name="name">more_info</attribute>
                 </xpath>
+                <xpath expr="//a[@name='button_immediate_upgrade']" position="attributes">
+                    <attribute name="invisible">imported or module_type == 'industries'</attribute>
+                </xpath>
             </field>
         </record>
         <record model="ir.ui.view" id="module_tree_apps_inherit">
