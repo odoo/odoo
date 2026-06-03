@@ -13,6 +13,9 @@ export class SelectNumberColumn extends BaseOptionComponent {
                 isCustomColumn:
                     columnEls && areColsCustomized(columnEls, isMobileView(editingElement)),
                 canHaveZeroColumns: editingElement.matches(".s_allow_columns"),
+                hasFixedColumnCount: !!editingElement.querySelector(
+                    ":scope > .row.s_nb_column_fixed"
+                ),
             };
         });
     }
