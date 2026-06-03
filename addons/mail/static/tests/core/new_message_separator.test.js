@@ -323,9 +323,10 @@ test("show new message separator when message is received while chat window is c
     ]);
     pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: messageId + 1 });
     setupChatHub({ opened: [channelId] });
-    listenStoreFetch("init_messaging");
+    listenStoreFetch(["init_messaging", "/discuss/channel/messages"]);
     await start();
-    await waitStoreFetch("init_messaging");
+    await waitStoreFetch(["init_messaging", "/discuss/channel/messages"]);
+
     await click(".o-mail-ChatWindow-header [title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     // send after init_messaging because bus subscription is done after init_messaging

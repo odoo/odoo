@@ -49,7 +49,7 @@ export class DiscussChannel extends Record {
      * @param {number} channel_id
      * @return {Promise<DiscussChannel>}
      */
-    static getOrFetch(channel_id) {
+    static getOrFetch(channel_id, { with_last_message = false } = {}) {
         const channel = this.store["discuss.channel"].get(channel_id);
         if (channel?.fetchChannelInfoState === "fetched" || channel_id < 0) {
             return Promise.resolve(channel);
@@ -60,7 +60,7 @@ export class DiscussChannel extends Record {
         }
         const { promise, reject: rejectFetch, resolve: resolveFetch } = Promise.withResolvers();
         this.store.fetchChannelPromiseByChannelId.set(channel_id, promise);
-        this.store.fetchChannel(channel_id).then(
+        this.store.fetchChannel(channel_id, { with_last_message }).then(
             () => {
                 this.store.fetchChannelPromiseByChannelId.delete(channel_id);
                 const channel = this.store["discuss.channel"].get(channel_id);
