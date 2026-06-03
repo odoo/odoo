@@ -49,12 +49,12 @@
             <t t-set="timesheet_ids" t-value="task.sudo().timesheet_ids"/>
             <t t-set="is_uom_day" t-value="timesheet_ids._is_timesheet_encode_uom_day()"/>
         </xpath>
-        <xpath expr="//thead/tr/th[@name='project_portal_milestones']" position="after">
+        <xpath expr="//thead/tr/th[@name='stage_id_col']" position="before">
             <t t-if="(not project or project.allow_timesheets) and show_portal_timesheets">
                 <th class="text-end">Time Spent</th>
             </t>
         </xpath>
-        <xpath expr="//th[@name='state_col']" position="before">
+        <xpath expr="//tr[@name='grouped_tasks_groupby_columns']//th[@name='stage_id_col']" position="before">
             <th t-if="not project or project.allow_timesheets" class="text-end text-muted fw-normal">
                 <t t-set="total_hours_dict" t-value="tasks._get_portal_total_hours_dict()"/>
                 <t t-if="total_hours_dict">
@@ -78,7 +78,7 @@
                 </t>
             </th>
         </xpath>
-        <xpath expr="//tbody/t/tr/td[@name='project_portal_milestones']" position="after">
+        <xpath expr="//tbody/t/tr/td[@name='project_portal_project']" position="after">
             <td t-if="(not project or project.allow_timesheets) and show_portal_timesheets" class="text-end">
                 <t t-if="task.allow_timesheets">
                     <t t-if="is_uom_day">
