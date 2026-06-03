@@ -1,3 +1,4 @@
+import { registry } from "@web/core/registry";
 import {
     selectHeader,
     clickOnEditAndWaitEditMode,
@@ -5,9 +6,9 @@ import {
     clickOnExtraMenuItem,
     clickOnSave,
     openLinkPopup,
-    registerWebsitePreviewTour,
     clickToolbarButton,
     unfoldOptionsGroup,
+    waitForEditMode,
 } from "@website/js/tours/tour_utils";
 
 const toggleMegaMenu = (stepOptions) =>
@@ -27,12 +28,9 @@ const toggleMegaMenu = (stepOptions) =>
         stepOptions
     );
 
-registerWebsitePreviewTour(
-    "edit_megamenu",
-    {
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("edit_megamenu", {
+    steps: () => [
+        waitForEditMode,
         // Add a megamenu item to the top menu.
         {
             content: "Click on a menu item",
@@ -131,15 +129,12 @@ registerWebsitePreviewTour(
             content: "The menu item should have been renamed.",
             trigger: ':iframe .o_mega_menu h4:contains("New Menu Item")',
         },
-    ]
-);
-registerWebsitePreviewTour(
-    "megamenu_active_nav_link",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        edition: true,
-    },
-    () => [
+    ],
+});
+registry.category("web_tour.tours").add("megamenu_active_nav_link", {
+    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
+    steps: () => [
+        waitForEditMode,
         // Add a megamenu item to the top menu.
         ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Home')", "Home", 1),
         {
@@ -205,14 +200,11 @@ registerWebsitePreviewTour(
             content: "Check if the new mega menu is active",
             trigger: `:iframe .top_menu:has(.nav-item a.o_mega_menu_toggle.active:contains("MegaTron"))`,
         },
-    ]
-);
-registerWebsitePreviewTour(
-    "edit_megamenu_big_icons_subtitles",
-    {
-        edition: true,
-    },
-    () => [
+    ],
+});
+registry.category("web_tour.tours").add("edit_megamenu_big_icons_subtitles", {
+    steps: () => [
+        waitForEditMode,
         // Add a megamenu item to the top menu.
         ...openLinkPopup(":iframe .top_menu .nav-item a", "Home", 1),
         {
@@ -264,7 +256,7 @@ registerWebsitePreviewTour(
         },
         // Change MegaMenu template
         ...unfoldOptionsGroup("Mega Menu"),
-        ...changeOptionInPopover("Mega Menu", "Template", "[title='Big Icons Subtitles']"),
+        ...changeOptionInPopover("Mega Menu", "Template", "Big Icons Subtitles"),
         ...clickToolbarButton(
             "h4 of first menu link of the first column",
             ".s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child h4",
@@ -278,8 +270,8 @@ registerWebsitePreviewTour(
             trigger:
                 ":iframe .s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child span:not(:has(strong))",
         },
-    ]
-);
+    ],
+});
 
 const createMegaMenu = function (name) {
     return [
@@ -381,12 +373,9 @@ const openMenu = () => ({
     run: "click",
 });
 
-registerWebsitePreviewTour(
-    "edit_megamenu_visibility",
-    {
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("edit_megamenu_visibility", {
+    steps: () => [
+        waitForEditMode,
         {
             content: "Click on a menu item",
             trigger: ":iframe .top_menu .nav-item a span",
@@ -411,11 +400,7 @@ registerWebsitePreviewTour(
         },
         selectHeader(),
 
-        ...changeOptionInPopover(
-            "Header",
-            "Template",
-            ".dropdown-item[data-action-param*=hamburger]"
-        ),
+        ...changeOptionInPopover("Header", "Template", "Hamburger Menu"),
         {
             trigger: ":iframe span.navbar-toggler-icon",
             timeout: 30000,
@@ -530,5 +515,5 @@ registerWebsitePreviewTour(
             "Drop 2": true,
             "MM cond": true,
         }),
-    ]
-);
+    ],
+});

@@ -1,9 +1,5 @@
 import { registry } from "@web/core/registry";
-import {
-    clickOnSave,
-    registerWebsitePreviewTour,
-    changeOptionInPopover,
-} from "@website/js/tours/tour_utils";
+import { clickOnSave, changeOptionInPopover, waitForEditMode } from "@website/js/tours/tour_utils";
 
 function addNewField() {
     return [
@@ -34,21 +30,18 @@ function fillInputField(selector, value) {
     ];
 }
 
-registerWebsitePreviewTour(
-    "donation_form_custom_field_create",
-    {
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("donation_form_custom_field_create", {
+    steps: () => [
+        waitForEditMode,
         {
             content: "Select the 'Email' field to proceed",
             trigger: ":iframe #div_email",
             run: "click",
         },
         ...addNewField(),
-        ...changeOptionInPopover("Field", "Type", "[data-action-value='city']"),
+        ...changeOptionInPopover("Field", "Type", "city"),
         ...addNewField(),
-        ...changeOptionInPopover("Field", "Type", "[data-action-value='zip']"),
+        ...changeOptionInPopover("Field", "Type", "zip"),
         ...addNewField(),
         {
             content: "Set the label of the new field to 'field_1'",
@@ -56,8 +49,8 @@ registerWebsitePreviewTour(
             run: "edit field_1",
         },
         ...clickOnSave(),
-    ]
-);
+    ],
+});
 
 registry.category("web_tour.tours").add("donation_form_custom_field_submit", {
     steps: () => [

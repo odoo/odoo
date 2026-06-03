@@ -145,11 +145,8 @@ export function changeOption(
  */
 export function changeOptionInPopover(blockName, optionName, elementName) {
     const itemSelector = [
-        `.o_popover div.o-dropdown-item:contains("${elementName}")`,
-        `.o_popover span.o-dropdown-item:contains("${elementName}")`,
-        `.o_popover div.o-dropdown-item[title="${elementName}"]`,
-        `.o_popover span.o-dropdown-item[title="${elementName}"]`,
-        `.o_popover ${elementName}`,
+        `.o_popover .o-dropdown-item[title="${elementName}"]`,
+        `.o_popover .o-dropdown-item:contains(${elementName})`,
     ].join(", ");
     return [
         changeOption(blockName, `[data-label='${optionName}'] .dropdown-toggle`),
@@ -542,11 +539,7 @@ export function registerWebsitePreviewTour(name, options, steps) {
             // automatic tests. We'll try and decrease the need for this high timeout
             // of course.
             if (options.edition) {
-                tourSteps.unshift({
-                    content: "Wait for the edit mode to be started",
-                    trigger: ".o_builder_sidebar_open",
-                    timeout: 30000,
-                });
+                tourSteps.unshift(waitForEditMode);
             } else {
                 tourSteps[0].timeout = 20000;
             }

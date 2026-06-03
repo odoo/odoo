@@ -1,10 +1,11 @@
+import { registry } from "@web/core/registry";
 import {
     clickOnSave,
     changeOptionInPopover,
     checkIfVisibleOnScreen,
     insertSnippet,
-    registerWebsitePreviewTour,
     selectHeader,
+    waitForEditMode,
 } from "@website/js/tours/tour_utils";
 
 const checkIfUserMenuNotMasked = function () {
@@ -36,15 +37,12 @@ const scrollDownToMediaList = function () {
     };
 };
 
-registerWebsitePreviewTour(
-    "dropdowns_and_header_hide_on_scroll",
-    {
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("dropdowns_and_header_hide_on_scroll", {
+    steps: () => [
+        waitForEditMode,
         ...insertSnippet({ id: "s_media_list", name: "Media List", groupName: "Content" }),
         selectHeader(),
-        ...changeOptionInPopover("Header", "Scroll Effect", ".dropdown-item:contains('Fixed')"),
+        ...changeOptionInPopover("Header", "Scroll Effect", "Fixed"),
         {
             content: "Wait for the option to be applied",
             trigger: "[data-label='Scroll Effect'] .dropdown-toggle:contains('Fixed')",
@@ -54,11 +52,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe #wrapwrap header.o_header_fixed",
         },
         selectHeader(),
-        ...changeOptionInPopover(
-            "Header",
-            "Template",
-            ".dropdown-item[data-action-param*=sales_two]"
-        ),
+        ...changeOptionInPopover("Header", "Template", "Menu - Sales 2"),
         {
             trigger: ":iframe .o_header_sales_two_top",
             timeout: 30000,
@@ -87,5 +81,5 @@ registerWebsitePreviewTour(
         checkIfVisibleOnScreen(
             ":iframe #wrapwrap header .s_searchbar_input.show .o_dropdown_menu.show"
         ),
-    ]
-);
+    ],
+});
