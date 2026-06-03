@@ -736,7 +736,6 @@ test("show thread priority in Inbox", async () => {
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message-header .fa-star", { count: 2 });
-    await contains(".o-mail-Message-header .fa-star-o");
 });
 
 test("show thread priority with only 1 or 0 star", async () => {
@@ -789,5 +788,4 @@ test("show thread priority with only 1 or 0 star", async () => {
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message-header .fa-star");
-    await contains(".o-mail-Message-header .fa-star-o");
 });

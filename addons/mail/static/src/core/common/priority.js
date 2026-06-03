@@ -17,10 +17,6 @@ export class Priority extends Component {
         return Object.fromEntries(this.props.thread.priority_definition);
     }
 
-    get maxStar() {
-        return Math.max(...Object.keys(this.priorityDefinition).map(Number));
-    }
-
     get priority() {
         return Number(this.props.thread.priority);
     }
