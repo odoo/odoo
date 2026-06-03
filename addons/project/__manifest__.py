@@ -220,6 +220,8 @@
             'html_editor/static/src/others/dynamic_placeholder_plugin.js',
             'html_editor/static/src/backend/**/*',
             'html_editor/static/src/fields/**/*',
+            'html_editor/static/src/scss/html_editor.common.scss',
+            'html_editor/static/src/scss/base_style.scss',
 
             'mail/static/src/scss/variables/*.scss',
             'mail/static/src/chatter/web/form_renderer.scss',
