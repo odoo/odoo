@@ -1313,7 +1313,7 @@ class BaseModel(metaclass=MetaModel):
                 continue
 
             # 5. delegate to parent model
-            if field.inherited:
+            if field.inherited and self._has_field_access(field, 'write'):
                 field = field.related_field
                 parent_fields[field.model_name].append(field.name)
 
