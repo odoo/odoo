@@ -9,6 +9,9 @@ export class DiscussAppCategory extends Record {
      * @param {import("models").DiscussChannel} c2
      */
     sortChannels(c1, c2) {
+        if (Boolean(c1.hasDraft) !== Boolean(c2.hasDraft)) {
+            return c1.hasDraft ? -1 : 1;
+        }
         if (["channels", "favorites"].includes(this.id) || this.discussCategoryAsAppCategory) {
             return localeCompare(c1.displayName, c2.displayName) || c2.id - c1.id;
         }

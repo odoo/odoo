@@ -17,8 +17,9 @@
             <div class="text-truncate base-fs o-fw-600 mb-0 mx-2 px-1" t-out="this.props.chatWindow.channel.displayName"/>
             <t t-set="message" t-value="this.channel.newestPersistentOfAllMessage" />
             <div class="text-truncate small mx-2 px-1 text-muted">
+                <span t-if="this.channel.hasDraft" class="text-danger" t-out="this.draftLabel"/>
                 <MessageSeenIndicator t-if="message?.showSeenIndicator(this.channel.thread)" message="message"/>
-                <t t-out="this.previewText" />
+                <span class="text-truncate" t-out="this.previewText" />
             </div>
         </div>
     </t>

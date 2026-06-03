@@ -822,6 +822,9 @@ export class Composer extends Component {
     async sendMessage() {
         const composer = toRaw(this.props.composer);
         this.composerActions.activeAction?.actionPanelClose?.();
+        if (composer.thread?.channel) {
+            composer.thread.channel.hasDraft = false;
+        }
         if (composer.message) {
             this.editMessage();
             return;
@@ -1041,6 +1044,9 @@ export class Composer extends Component {
                     composerHtml: isMarkup(composerHtml) ? ["markup", composerHtml] : composerHtml,
                     fromFullComposer,
                 });
+                if (composer.thread?.channel) {
+                    composer.thread.channel.hasDraft = true;
+                }
             }
         };
         if (this.state.isFullComposerOpen) {
