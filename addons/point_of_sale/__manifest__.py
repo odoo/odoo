@@ -221,12 +221,12 @@
             # account
             'account/static/src/helpers/*.js',
             'account/static/src/services/account_move_service.js',
-
             'mail/static/src/core/common/sound_effects_service.js',
             "web/static/src/core/browser/router.js",
             "web/static/src/core/debug/**/*",
             'web/static/src/model/**/*',
             'web/static/src/views/**/*',
+            'web/static/src/views/fields/additional_identifiers/*',
             'web/static/src/search/**/*',
             'web/static/src/webclient/actions/**/*',
             ('remove', 'web/static/src/webclient/actions/reports/report_layouts.scss'),
