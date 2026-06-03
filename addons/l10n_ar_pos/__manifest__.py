@@ -11,6 +11,7 @@ Install this if you are using the Point of Sale app in Argentina.
         'point_of_sale',
     ],
     'data': [
+        'views/res_partner_views.xml',
         'views/templates.xml',
     ],
     'assets': {
