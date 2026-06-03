@@ -65,9 +65,7 @@
                                     </div>
                                     <div class="d-flex flex-column w-100 mt-lg-2 mt-kiosk-p-3 gap-lg-1 text-lg-center align-items-lg-center">
                                         <ProductNameWidget product="product"/>
-                                        <div t-if="snoozed" class="badge my-1 rounded-pill text-bg-danger w-auto me-auto mx-lg-auto">
-                                            <span>Unavailable</span>
-                                        </div>
+                                        <div t-if="snoozed" class="badge my-1 rounded-pill text-bg-danger w-auto me-auto mx-lg-auto">Out of stock</div>
                                         <span t-out="this.selfOrder.formatMonetary(this.selfOrder.getProductDisplayPrice(product))" class="o-so-tabular-nums fs-4 fw-bold text-primary"/>
                                         <div class="product_descr d-lg-none mt-1 text-ellipsis text-muted small" t-if="product.public_description" t-out="product.productDescriptionMarkup"/>
                                     </div>

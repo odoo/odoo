@@ -3006,6 +3006,29 @@ export class PosStore extends WithLazyGetterTrap {
     isProductSnoozed(product) {
         return this.snoozedProductTracker.isProductSnoozed(product);
     }
+
+    async canAddProductToCurrentOrder(product) {
+        if (!this.isProductSnoozed(product)) {
+            return true;
+        }
+        const alreadyAdded = this.selectedOrder.lines.some(
+            (line) => line.product_id.product_tmpl_id.id === product.id
+        );
+
+        if (alreadyAdded) {
+            return true;
+        }
+
+        return new Promise((resolve) => {
+            this.dialog.add(AlertDialog, {
+                title: _t("Warning"),
+                body: _t("You are trying to add a snoozed product. Would you like to continue?"),
+                confirmLabel: _t("Continue"),
+                confirm: () => resolve(true),
+                cancel: () => resolve(false),
+            });
+        });
+    }
 }
 
 export const posService = {
