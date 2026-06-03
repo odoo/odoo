@@ -788,6 +788,8 @@ class ProductTemplate(models.Model):
             fetch_fields.append('description')
             search_fields.append('description_sale')
             fetch_fields.append('description_sale')
+            search_fields.append('description_ecommerce')
+            fetch_fields.append('description_ecommerce')
             mapping['description'] = {'name': 'description_sale', 'type': 'text', 'match': True}
         if with_price:
             mapping['detail'] = {'name': 'price', 'type': 'html', 'display_currency': options['display_currency']}

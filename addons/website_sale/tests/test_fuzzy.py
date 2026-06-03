@@ -59,3 +59,23 @@ class TestFuzzy(ProductVariantsCommon):
         self.product_template_sofa.company_id = False
         _, results, _ = website._search_with_fuzzy('products_only', 'Sofa', 5, 'name asc', options)
         self.assertIn(self.product_template_sofa, results[0]['results'])
+
+    def test_search_description_ecommerce(self):
+        """Test that products can be found by searching their eCommerce description."""
+        website = self.env.ref("website.default_website")
+        self.product_template_sofa.description_ecommerce = (
+            "<p>unique ecommerce search term xyz123</p>"
+        )
+        self.product_template_sofa.is_published = True
+        options = {
+            "displayImage": False,
+            "displayDescription": True,
+            "displayExtraLink": False,
+            "displayDetail": False,
+            "allowFuzzy": True,
+        }
+        _, details, _ = website._search_with_fuzzy(
+            "products_only", "xyz123", None, "name asc", options
+        )
+        found_products = details[0].get("results", self.env["product.template"])
+        self.assertIn(self.product_template_sofa, found_products)
