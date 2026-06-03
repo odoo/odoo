@@ -216,7 +216,7 @@ test("toolbar buttons react to selection change", async () => {
     expect(getContent(el)).toBe("<p><strong>[test]</strong> some text</p>");
     expect(".btn[name='bold']").toHaveClass("active");
     expect(".btn[name='remove_format']").not.toHaveAttribute("disabled");
-    expect(".btn[name='remove_format']").toHaveAttribute("title", "Remove Format");
+    expect(".btn[name='remove_format']").toHaveAttribute("title", "Remove Format (Ctrl + Space)");
 
     // set selection where text is not bold
     setContent(el, "<p><strong>test</strong> some [text]</p>");
