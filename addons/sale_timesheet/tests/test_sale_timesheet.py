@@ -1408,6 +1408,68 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         invoice_days = self.env['account.move'].browse(invoice_dict['res_id'])
         self.assertEqual(invoice_days.invoice_line_ids.quantity, 1)
 
+    def test_partial_refund_timesheet_qty_to_invoice(self):
+        """When a delivered-timesheet invoice line is partially refunded, the next invoice must
+        only include the remaining non-invoiced hours."""
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_delivery_timesheet3.id,
+                    'product_uom_qty': 1,
+                }),
+            ]
+        })
+        so_line = sale_order.order_line[0]
+        sale_order.action_confirm()
+        self.env['account.analytic.line'].create({
+            'name': 'Timesheet 20h',
+            'project_id': so_line.task_id.project_id.id,
+            'task_id': so_line.task_id.id,
+            'unit_amount': 20.0,
+            'employee_id': self.employee_user.id,
+        })
+        invoice = sale_order._create_invoices()[0]
+        invoice.action_post()
+        self.assertEqual(so_line.qty_invoiced, 20.0)
+
+        refund_wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move',
+            active_ids=invoice.ids,
+        ).create({
+            'reason': 'partial refund',
+            'journal_id': invoice.journal_id.id,
+        })
+        refund_action = refund_wizard.refund_moves()
+        credit_note = self.env['account.move'].browse(refund_action['res_id'])
+        credit_note.invoice_line_ids.write({'quantity': 11.0})
+        credit_note.action_post()
+        self.assertEqual(so_line.qty_invoiced, 9.0)
+
+        self.env['account.analytic.line'].create({
+            'name': 'Timesheet 5h',
+            'project_id': so_line.task_id.project_id.id,
+            'task_id': so_line.task_id.id,
+            'unit_amount': 5.0,
+            'employee_id': self.employee_user.id,
+        })
+
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': sale_order.ids,
+            'default_journal_id': self.company_data['default_journal_sale'].id
+        }
+        wizard = self.env['sale.advance.payment.inv'].with_context(context).create({})
+        invoice_dict = wizard.create_invoices()
+        new_invoice = self.env['account.move'].browse(invoice_dict.get('res_id', []))
+        self.assertEqual(len(new_invoice.invoice_line_ids), 1)
+        self.assertEqual(new_invoice.invoice_line_ids.quantity, 16.0)
+        self.assertEqual(so_line.timesheet_ids.timesheet_invoice_id, new_invoice, "All timesheets should be linked to the newly created invoice")
+
     def test_portal_sale_order_timesheet_visibility(self):
         """
         Ensure a portal user only sees timesheets of subscribed SO lines.
