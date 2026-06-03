@@ -163,16 +163,9 @@ class TestOrmCacheSignaling(BaseCase):
 
     @property
     def cache_invalidated(self):
-        # cache is invalidated if the layer is detached from the registry
-        # cache that the transaction started with
-        def root(data):
-            while hasattr(data, 'parent'):
-                data = data.parent
-            return data
-
         return {
             name for name, data in self.transaction.ormcaches__.items()
-            if root(data) is not self.transaction._registry_caches__[name][1]
+            if data.parent is None
             and '.' not in name
         }
 

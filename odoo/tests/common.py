@@ -73,6 +73,7 @@ from odoo.modules.registry import Registry
 from odoo.sql_db import Cursor
 from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logger, profiler
 from odoo.tools.binary import BinaryBytes
+from odoo.tools.lru import LRU
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import diff_zip, find_in_path, real_time, str2bool
 from odoo.tools.safe_eval import safe_whitelist
@@ -198,7 +199,14 @@ def flushing_cursor(cr: Cursor):
         # affected by updating parent layers.
         registry_caches = cr.transaction.registry.registry_caches__
         for name in registry_caches:
-            registry_caches[name] = (registry_caches[name][0], cr.transaction.ormcaches__[name].parent)
+            layer = cr.transaction.ormcaches__[name]
+            parent = layer.parent
+            if parent is None:
+                # simulate signaling already here
+                layer.parent = parent = LRU(999999)
+                layer.update_parent()
+            registry_caches[name] = (registry_caches[name][0], parent)
+
         cr._closing = True  # do a quick clean
         cr.transaction._state_stack__ = []  # replace the stack
         with cr.transaction.committing():
