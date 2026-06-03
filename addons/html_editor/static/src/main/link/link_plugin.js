@@ -1490,6 +1490,7 @@ export class LinkPlugin extends Plugin {
                     {
                         sequence: 50,
                         useBottomSheet: this.services.ui.isSmall && hasTouch(),
+                        fitOnResize: true,
                     }
                 ),
                 isAvailable: link_popover.isAvailable,
