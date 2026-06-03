@@ -19,3 +19,8 @@ class ResPartner(models.Model):
         if self.env.company.country_id.code == 'AR':
             params += ['l10n_ar_afip_responsibility_type_id', 'l10n_latam_identification_type_id']
         return params
+
+    def _get_pos_partner_view_id(self):
+        if self.env.company.country_id.code == 'AR':
+            return self.env.ref('base.view_partner_form').id
+        return super()._get_pos_partner_view_id()
