@@ -383,6 +383,7 @@ def serve_db(request: Request) -> Response:
             # a controller endpoint matched -> dispatch it the request
             _set_request_dispatcher(request, rule)
             serve_func = functools.partial(serve_ir_http, request, rule, args)
+            threading.current_thread().url_rule = rule.rule
             endpoint: Endpoint = rule.endpoint  # type: ignore
             readonly = endpoint.routing['readonly']
             if callable(readonly):
