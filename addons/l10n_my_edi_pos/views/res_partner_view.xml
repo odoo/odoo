@@ -8,7 +8,7 @@
             <field name="category_id" position="after">
                 <field name="l10n_my_edi_industrial_classification" invisible="not is_company or 'MY' not in fiscal_country_codes"/>
             </field>
-            <field name="vat" position="after">
+            <div name="identifiers" position="after">
                 <label for="l10n_my_identification_type" string="Identification" invisible="'MY' not in fiscal_country_codes"/>
                 <div class="d-flex gap-2" invisible="'MY' not in fiscal_country_codes">
                     <field name="l10n_my_identification_type" readonly="parent_id"/>
@@ -20,7 +20,7 @@
                         <span class="text-danger oi" data-icon="close" title="Validation Failed" invisible="not l10n_my_edi_display_tin_warning or l10n_my_tin_validation_state != 'invalid'"/>
                     </span>
                 </div>
-            </field>
+            </div>
         </field>
     </record>
 </odoo>

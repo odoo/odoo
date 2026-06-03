@@ -7,6 +7,7 @@ from odoo.tests import tagged
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestGenericIN(TestGenericLocalization, CommonPosTest):
 
+    _pos_partner_pos_form_fields = ['l10n_in_gst_treatment']
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
