@@ -186,6 +186,9 @@ export class WebsiteBuilderClientAction extends Component {
                     // To avoid an abrupt disappearance, we delay adding the
                     // 'd-none' class
                     this.navBarTimeout = setTimeout(() => {
+                        if (!this.state.isEditing) {
+                            return;
+                        }
                         websiteSystrayRegistry.remove("website.WebsiteSystrayItem");
                         websiteSystrayRegistry.trigger("EDIT-WEBSITE");
                         document

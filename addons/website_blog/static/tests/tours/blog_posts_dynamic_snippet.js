@@ -20,7 +20,6 @@ const blogPostsSnippet = {
 registerWebsitePreviewTour(
     "blog_posts_dynamic_snippet_options",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [
@@ -38,6 +37,10 @@ registerWebsitePreviewTour(
         ...insertSnippet(dynamicSnippet),
         ...clickOnSnippet(dynamicSnippet),
         ...changeOptionInPopover("Dynamic Snippet", "Filter", "Latest Blog Posts"),
+        {
+            trigger:
+                ":iframe section.s_dynamic_snippet:has(.s_dynamic_snippet_title):has(.s_dynamic_snippet_content:has(.o_colored_level:count(2)))",
+        },
         ...changeOptionInPopover(
             "Dynamic Snippet",
             "Fetched Elements",
