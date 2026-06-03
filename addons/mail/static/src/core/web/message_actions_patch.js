@@ -23,7 +23,7 @@ export function messageActionOpenFullComposer(title, context, component) {
         },
     };
     component.env.services.action.doAction(action, {
-        onClose: () => thread.fetchNewMessages(),
+        onClose: () => thread.fetchThreadData(thread.fullComposerCloseRequestList),
     });
 }
 
