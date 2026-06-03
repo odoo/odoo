@@ -73,11 +73,12 @@ export class LocationSelectorDialog extends Component {
      * @return {Object} The result values.
      */
     _getLocationsParams() {
-        return {
-            zip_code: this.state.zipCode,
-            delivery_method_id: this.props.deliveryMethodId,
-            country_id: this.props.countryId,
-         };
+        const params = { zip_code: this.state.zipCode };
+        if (!this.props.isFrontend) { // The delivery method is fetched from the order for frontend
+            params.delivery_method_id = this.props.deliveryMethodId;
+            params.country_id = this.props.countryId;
+        }
+        return params;
     }
 
     //--------------------------------------------------------------------------
