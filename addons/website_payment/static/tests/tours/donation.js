@@ -1,26 +1,23 @@
 import { registry } from "@web/core/registry";
 import {
     clickOnSave,
-    registerWebsitePreviewTour,
     insertSnippet,
     changeOptionInPopover,
     unfoldOptionsGroup,
+    waitForEditMode,
 } from "@website/js/tours/tour_utils";
 
-registerWebsitePreviewTour(
-    "donation_snippet_edition",
-    {
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("donation_snippet_edition", {
+    steps: () => [
+        waitForEditMode,
         ...insertSnippet({
             id: "s_donation",
             name: "Donation",
             groupName: "Contact & Forms",
         }),
         ...clickOnSave(),
-    ]
-);
+    ],
+});
 
 registry.category("web_tour.tours").add("donation_snippet_use", {
     steps: () => [
@@ -115,22 +112,19 @@ registry.category("web_tour.tours").add("donation_snippet_use", {
     ],
 });
 
-registerWebsitePreviewTour(
-    "donation_snippet_edition_2",
-    {
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("donation_snippet_edition_2", {
+    steps: () => [
+        waitForEditMode,
         {
             content: "Click on 'Custom Amount' button",
             trigger: ":iframe .s_donation_donate_btn",
             run: "click",
         },
         ...unfoldOptionsGroup("Donation Button"),
-        ...changeOptionInPopover("Donation Button", "Custom Amount", "[data-action-param='slider']"),
+        ...changeOptionInPopover("Donation Button", "Custom Amount", "Slider"),
         ...clickOnSave(),
-    ]
-);
+    ],
+});
 
 registry.category("web_tour.tours").add("donation_snippet_use_2", {
     steps: () => [

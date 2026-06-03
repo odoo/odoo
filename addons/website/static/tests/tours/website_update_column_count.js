@@ -2,7 +2,6 @@ import { registry } from "@web/core/registry";
 import {
     clickOnSnippet,
     insertSnippet,
-    registerWebsitePreviewTour,
     toggleMobilePreview,
     changeOptionInPopover,
     unfoldOptionsGroup,
@@ -47,12 +46,9 @@ const checkIfNoMobileOrder = (snippetRowSelector) => ({
     trigger: `${snippetRowSelector}:not(:has(.order-lg-0[style*='order: ']))`,
 });
 
-registerWebsitePreviewTour(
-    "website_update_column_count",
-    {
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("website_update_column_count", {
+    steps: () => [
+        waitForEditMode,
         ...insertSnippet({
             id: "s_three_columns",
             name: "Columns",
@@ -62,7 +58,7 @@ registerWebsitePreviewTour(
             id: "s_three_columns",
             name: "Columns",
         }),
-        ...changeOptionInPopover("Columns", "Layout", "[data-action-value='5']"),
+        ...changeOptionInPopover("Columns", "Layout", "5"),
         {
             content:
                 "Check that there are now 5 items on 5 columns, and that it didn't change the mobile layout",
@@ -73,7 +69,7 @@ registerWebsitePreviewTour(
                 "Check that there is an offset on the 1st item to center the row on desktop, but not on mobile",
             trigger: `${columnsSnippetRow} > .offset-lg-1:not(.offset-1):first-child`,
         },
-        ...changeOptionInPopover("Columns", "Layout", "[data-action-value='2']"),
+        ...changeOptionInPopover("Columns", "Layout", "2"),
         {
             content: "Check that there are still 5 items in the row and click on the last one",
             trigger: `${columnsSnippetRow} > :nth-child(5)`,
@@ -176,7 +172,7 @@ registerWebsitePreviewTour(
             trigger: ".o-snippets-top-actions button[data-action='mobile']",
             run: "click",
         },
-        ...changeOptionInPopover("Columns", "Layout", "[data-action-value='6']"),
+        ...changeOptionInPopover("Columns", "Layout", "6"),
         {
             content: "Check that each item has a different mobile order from 0 to 5",
             trigger: `${columnsSnippetRow}${[0, 1, 2, 3, 4, 5]
@@ -197,8 +193,8 @@ registerWebsitePreviewTour(
             content: "Check that there are no orders anymore",
             trigger: `${columnsSnippetRow}:not(:has([style*='order: 0;'])):not(:has(.order-lg-0))`,
         },
-    ]
-);
+    ],
+});
 
 registry.category("web_tour.tours").add("website_mobile_order_with_drag_and_drop", {
     steps: () => [
