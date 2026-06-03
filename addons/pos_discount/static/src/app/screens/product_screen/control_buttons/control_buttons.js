@@ -15,12 +15,9 @@ patch(ControlButtons.prototype, {
                 { name: "percent", symbol: "%" },
             ],
             getPayload: (num, type) => {
-                let value = num;
+                let value = this.env.utils.parseValidFloat(num.toString());
                 if (type === "percent") {
-                    value = Math.max(
-                        0,
-                        Math.min(100, this.env.utils.parseValidFloat(num.toString()))
-                    );
+                    value = Math.max(0, Math.min(100, value));
                 }
                 this.applyDiscount(value, type);
             },
