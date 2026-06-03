@@ -1,4 +1,4 @@
-import { onRendered } from "@web/owl2/utils";
+import { onMounted, onPatched } from "@odoo/owl";
 import {
     click,
     contains,
@@ -49,7 +49,8 @@ test("posting new message should only render relevant part", async () => {
                     }
                 }
             };
-            onRendered(cb);
+            onMounted(cb);
+            onPatched(cb);
             return super.setup();
         },
     });
@@ -60,14 +61,14 @@ test("posting new message should only render relevant part", async () => {
     await insertText(".o-mail-Composer-input", "Test");
     const result1 = stopObserve1();
     // LessThan because renders could be batched
-    expect(result1.get(Message)).toBeLessThan(21); // 10: all messages initially
+    expect(result1.get(Message)).toBeLessThan(11); // 10: all messages initially
     const stopObserve2 = observeRenders();
     posting = true;
     triggerHotkey("Enter");
     await contains(".o-mail-Message", { count: 11 });
     posting = false;
     const result2 = stopObserve2();
-    expect(result2.get(Composer)).toBeLessThan(4); // 2: temp disabling + clear content
+    expect(result2.get(Composer)).toBeLessThan(3); // 2: temp disabling + clear content
     expect(result2.get(Message)).toBeLessThan(4); // 3: new temp msg + new genuine msg + prev msg
 });
 
@@ -92,7 +93,8 @@ test("replying to message should only render relevant part", async () => {
                     }
                 }
             };
-            onRendered(cb);
+            onMounted(cb);
+            onPatched(cb);
             return super.setup();
         },
     });
@@ -106,7 +108,7 @@ test("replying to message should only render relevant part", async () => {
     await contains(".o-mail-Composer:has(:text('Replying to Mitchell Admin'))");
     replying = false;
     const result = stopObserve();
-    expect(result.get(Composer)).toBeLessThan(3);
+    expect(result.get(Composer)).toBeLessThan(2);
     expect(result.get(ActionSwiper)).toBeLessThan(3); // Note: ActionSwiper from Message's template
 });
 
@@ -131,7 +133,8 @@ test("right-click message selection should only render relevant part", async () 
                     }
                 }
             };
-            onRendered(cb);
+            onMounted(cb);
+            onPatched(cb);
             return super.setup();
         },
     });
@@ -145,5 +148,5 @@ test("right-click message selection should only render relevant part", async () 
     await contains(".dropdown-menu .o-mail-ActionList");
     rightClicking = false;
     const result = stopObserve();
-    expect(result.get(ActionSwiper)).toBeLessThan(3); // Note: ActionSwiper from Message's template
+    expect(result.get(ActionSwiper)).toBeLessThan(2); // Note: ActionSwiper from Message's template
 });

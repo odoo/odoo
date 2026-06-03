@@ -1,4 +1,3 @@
-import { onRendered } from "@web/owl2/utils";
 import { addBusMessageHandler, busModels } from "@bus/../tests/bus_test_helpers";
 import {
     after,
@@ -33,7 +32,7 @@ import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
 import { click, contains } from "./mail_test_helpers_contains";
 
 import { closeStream, mailGlobal } from "@mail/utils/common/misc";
-import { Component, onWillDestroy, status } from "@odoo/owl";
+import { Component, onMounted, onPatched } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 import { registry } from "@web/core/registry";
@@ -678,32 +677,26 @@ export function prepareRegistriesWithCleanup() {
 const observeRenderResults = new Map();
 let nextObserveRenderResults = 0;
 /**
- * Patch component `onRendered` to track amount of renders.
+ * Patch component `onMounted`/`onPatched` to track amount of renders.
  * This only prepares with the patching. To effectively observe the amount of renders,
  * should call @see observeRenders
- * Having both function allow to track renders as side-effect on specific actions, rather
+ * Having both functions allow to track renders as side-effect on specific actions, rather
  * than aggregate all renders including setup: as this value requires some thinking on
  * which render comes from what, usually the less with brief explanations the better.
  */
 export function prepareObserveRenders() {
     patchWithCleanup(Component.prototype, {
         setup(...args) {
-            onRendered(() => {
+            const countRender = () => {
                 for (const result of observeRenderResults.values()) {
                     if (!result.has(this.constructor)) {
                         result.set(this.constructor, 0);
                     }
                     result.set(this.constructor, result.get(this.constructor) + 1);
                 }
-            });
-            onWillDestroy(() => {
-                for (const result of observeRenderResults.values()) {
-                    // owl could invoke onrendered and cancel immediately to re-render, so should compensate
-                    if (result.has(this.constructor) && status(this) === "cancelled") {
-                        result.set(this.constructor, result.get(this.constructor) - 1);
-                    }
-                }
-            });
+            };
+            onMounted(countRender);
+            onPatched(countRender);
             return super.setup(...args);
         },
     });
