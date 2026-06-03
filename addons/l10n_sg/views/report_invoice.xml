@@ -32,6 +32,25 @@
                 <div t-field="o.reversed_entry_id.invoice_date"/>
             </div>
         </xpath>
+
+        <xpath expr="//div[@id='payment_term']" position="after">
+            <div t-if="o.l10n_sg_customer_accounting_gst_amount" name="l10n_sg_customer_accounting" class="mt-3 mb-3">
+                <p>
+                    <t t-if="o.move_type == 'out_invoice'">
+                        Customer Accounting: Customer to pay GST of
+                        <span t-out="o.l10n_sg_customer_accounting_gst_amount"
+                              t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
+                        to IRAS
+                    </t>
+                    <t t-elif="o.move_type == 'out_refund'">
+                        Customer Accounting: Customer to account for output tax adjustment of
+                        <span t-out="-o.l10n_sg_customer_accounting_gst_amount"
+                              t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
+                        to IRAS
+                    </t>
+                </p>
+            </div>
+        </xpath>
     </template>
 
     <template id="report_invoice" inherit_id="account.report_invoice">
