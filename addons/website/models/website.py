@@ -94,24 +94,6 @@ DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
     'google.com.vn', 'google.vu', 'google.ws', 'google.rs', 'google.co.za', 'google.co.zm',
     'google.co.zw', 'google.cat',
 ])
-# Used to fetch all dynamic snippet occurrences. A filter on `class` containing
-# "s_dynamic" would also match the dynamic snippets base template
-# (`website.s_dynamic_snippet_template`), which should not be counted as an
-# asset snippet occurrence. To avoid this, we restrict the filter to elements
-# that do not have `t-att-data-vcss`.
-ALL_DYNAMIC_SNIPPET_REGEX = '<section((?![^>]*t-att-data-vcss)[^>]*class="[^"]*(^|\\s)s_dynamic(\\s|$)[^"]*"[^>]*)>'
-# TODO: Replace `data-carousel-interval` with a better carousel snippet filter.
-ALL_DYNAMIC_SNIPPET_CAROUSEL_REGEX = '<section(?=[^>]*class="[^"]*(^|\\s)s_dynamic(\\s|$)[^"]*")(?=[^>]*data-carousel-interval)[^>]*>'
-DYNAMIC_SNIPPET_SHARED_ASSETS_CONFIG = [
-    {
-        'id': 's_dynamic_snippet',
-        'snippet_filter': ALL_DYNAMIC_SNIPPET_REGEX,
-    },
-    {
-        'id': 's_dynamic_snippet_carousel',
-        'snippet_filter': ALL_DYNAMIC_SNIPPET_CAROUSEL_REGEX,
-    },
-]
 
 
 class Website(models.CachedModel):
@@ -1957,58 +1939,39 @@ class Website(models.CachedModel):
 
     def _is_snippet_used(self, snippet_module, snippet_id, asset_version, asset_type, html_fields):
         snippet_occurences = []
-        # Retrieve the asset configuration used to identify all snippet
-        # occurrences, including assets shared across multiple snippets
-        # (e.g., dynamic snippets).
-        snippet_asset_config = next(
-            (config for config in DYNAMIC_SNIPPET_SHARED_ASSETS_CONFIG
-                if config['id'] == snippet_id),
-            {
-                'id': snippet_id,
-                'snippet_filter': f'<([^>]*data-snippet="{snippet_id}"[^>]*)>'
-            }
-        )
-        # 1. Check snippet template definition to avoid disabling its related
-        # assets. This special case is needed because snippet template
-        # definitions do not have a `data-snippet` attribute (which is added
-        # during drag&drop).
+        # Check snippet template definition to avoid disabling its related assets.
+        # This special case is needed because snippet template definitions do not
+        # have a `data-snippet` attribute (which is added during drag&drop).
         snippet_template_html = self.env['ir.qweb']._render(f'{snippet_module}.{snippet_id}', raise_if_not_found=False)
         if snippet_template_html:
             match = re.search('<([^>]*class="[^>]*)>', snippet_template_html)
             snippet_occurences.append(match.group())
 
-        if self._check_snippet_used(snippet_occurences, asset_type, asset_version, snippet_asset_config["id"]):
+        if self._check_snippet_used(snippet_occurences, asset_type, asset_version):
             return True
 
         html_fields = [(self.env[model_name], field_name) for model_name, field_name in html_fields]
-        # 2. As well as every snippet dropped in html fields
+        # As well as every snippet dropped in html fields
         self.env.cr.execute(SQL(" UNION ").join(
-            SQL(
-                "SELECT regexp_matches(%s, %s, 'g') FROM %s",
+            SQL("SELECT regexp_matches(%s, %s, 'g') FROM %s",
                 model._field_to_sql(model._table, field_name),
-                snippet_asset_config.get('snippet_filter'),
+                f'<([^>]*data-snippet="{snippet_id}"[^>]*)>',
                 SQL.identifier(model._table)
             )
             for model, field_name in html_fields
         ))
-        snippet_occurences = [r[0][0] for r in self.env.cr.fetchall()]
-        return self._check_snippet_used(snippet_occurences, asset_type, asset_version, snippet_asset_config["id"])
 
-    def _check_snippet_used(self, snippet_occurences, asset_type, asset_version, snippet_id):
-        def _check_snippet_version(snippet, version_attribute, asset_version):
+        snippet_occurences = [r[0][0] for r in self.env.cr.fetchall()]
+        return self._check_snippet_used(snippet_occurences, asset_type, asset_version)
+
+    def _check_snippet_used(self, snippet_occurences, asset_type, asset_version):
+        for snippet in snippet_occurences:
             if asset_version == '000':
-                if version_attribute not in snippet:
+                if f'data-v{asset_type}' not in snippet:
                     return True
             else:
-                if f'{version_attribute}="{asset_version}"' in snippet:
+                if f'data-v{asset_type}="{asset_version}"' in snippet:
                     return True
-        for snippet in snippet_occurences:
-            # Check whether the asset belongs to the current snippet or shared
-            # from another one.
-            check_shared_snippet_asset = 'data-snippet=' in snippet and snippet.split('data-snippet=')[1].split('"')[1] != snippet_id
-            version_attribute_prefix = f'data-{snippet_id + "-v" if check_shared_snippet_asset else "v"}'
-            if _check_snippet_version(snippet, f'{version_attribute_prefix}{asset_type}', asset_version):
-                return True
         return False
 
     def _check_user_can_modify(self, record):
