@@ -127,17 +127,15 @@
         cursor: pointer;
     }
 
-    .o_dropdown_kanban {
-        visibility: hidden;
+    @media (pointer: fine) {
+        .o_dropdown_kanban {
+            visibility: hidden;
+        }
 
-        @include media-breakpoint-down(md) {
+        &:hover .o_dropdown_kanban,
+        .o_dropdown_kanban:has(.show) {
             visibility: visible;
         }
-    }
-
-    &:hover .o_dropdown_kanban,
-    .o_dropdown_kanban:has(.show) {
-        visibility: visible;
     }
 
     .o_attachment_image > img {
