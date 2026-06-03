@@ -469,10 +469,13 @@ class AccountEdiCommon(models.AbstractModel):
                 'res_id': invoice.id,
             })
 
+        attachments = self._import_attachments(invoice, tree)
+        if attachments:
+            invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachments.ids)
+
         return True
 
     def _import_attachments(self, invoice, tree):
-        # Unused method, kept to avoid breaking stable
         # Import the embedded documents in the xml if some are found
         attachments = self.env['ir.attachment']
         if invoice.message_main_attachment_id:
@@ -480,6 +483,11 @@ class AccountEdiCommon(models.AbstractModel):
             return attachments
 
         attachments_data = attachments._extract_additional_documents(tree)
+        for data in attachments_data:
+            data.update({
+                'res_id': invoice.id,
+                'res_model': invoice._name,
+            })
         attachments = self.env['ir.attachment'].create(attachments_data)
         # Upon receiving an email (containing an xml) with a configured alias to create invoice, the xml is
         # set as the main_attachment. To be rendered in the form view, the pdf should be the main_attachment.
