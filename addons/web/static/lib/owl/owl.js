@@ -57,7 +57,6 @@ var owl = (() => {
     onWillUnmount: () => onWillUnmount,
     onWillUpdateProps: () => onWillUpdateProps,
     plugin: () => plugin,
-    prop: () => prop,
     props: () => props,
     providePlugins: () => providePlugins,
     proxy: () => proxy,
@@ -1240,6 +1239,13 @@ ${issueStrings}`);
     static set id(shadowId) {
       this._shadowId = shadowId;
     }
+    // Plugins passed to `startPlugins` are started in batches of equal sequence,
+    // ascending (lower first), like Resource/Registry. Each batch's onWillStart
+    // callbacks fully settle before the next batch is instantiated, so
+    // foundational plugins (low sequence) are ready before later plugins even
+    // run their setup. Explicit `plugin(X)` dependencies bypass batching and
+    // start immediately.
+    static sequence = 50;
     __owl__;
     constructor(manager) {
       this.__owl__ = manager;
@@ -1250,11 +1256,13 @@ ${issueStrings}`);
   var PluginManager = class extends Scope {
     config;
     plugins;
-    // Resolves once all pending plugin willStart callbacks have settled. The
-    // scope transitions to MOUNTED as the last step of this chain. Consumers
-    // (the root's mount(), providePlugins) await this before treating the
-    // manager as ready. `willStart` itself is inherited from Scope.
+    // Resolves once all batches of plugins have started and their willStart
+    // callbacks have settled. The scope transitions to MOUNTED as the last step
+    // of this chain. Consumers (the root's mount(), providePlugins) await this
+    // before treating the manager as ready. `willStart` itself is inherited
+    // from Scope.
     ready = Promise.resolve();
+    hasPendingReady = false;
     constructor(app, options = {}) {
       super(app);
       this.config = options.config ?? {};
@@ -1295,24 +1303,61 @@ ${issueStrings}`);
       return plugin2;
     }
     startPlugins(pluginConstructors) {
-      scopeStack.push(this);
-      try {
-        for (const pluginConstructor of pluginConstructors) {
-          this.startPlugin(pluginConstructor);
+      const fresh = pluginConstructors.filter((ctor) => {
+        if (!ctor.id || this.plugins.hasOwnProperty(ctor.id)) {
+          this.startPlugin(ctor);
+          return false;
         }
-      } finally {
-        scopeStack.pop();
+        return true;
+      });
+      if (!fresh.length) {
+        return;
       }
-      const pending = this.willStart.splice(0);
-      if (pending.length) {
-        this.ready = Promise.all(pending.map((fn) => fn())).then(() => {
-          if (this.status < STATUS.MOUNTED) {
-            this.status = STATUS.MOUNTED;
+      fresh.sort((p1, p2) => p1.sequence - p2.sequence);
+      const batches = [];
+      for (const ctor of fresh) {
+        const batch = batches[batches.length - 1];
+        if (batch && batch[0].sequence === ctor.sequence) {
+          batch.push(ctor);
+        } else {
+          batches.push([ctor]);
+        }
+      }
+      const startBatch = (batch) => {
+        scopeStack.push(this);
+        try {
+          for (const ctor of batch) {
+            this.startPlugin(ctor);
           }
-        });
-      } else if (this.status < STATUS.MOUNTED) {
-        this.status = STATUS.MOUNTED;
+        } finally {
+          scopeStack.pop();
+        }
+        const pending = this.willStart.splice(0);
+        return pending.length ? Promise.all(pending.map((fn) => fn())) : null;
+      };
+      let chain = this.hasPendingReady ? this.ready : null;
+      for (const batch of batches) {
+        if (chain) {
+          chain = chain.then(() => startBatch(batch));
+        } else {
+          chain = startBatch(batch);
+        }
       }
+      if (!chain) {
+        if (this.status < STATUS.MOUNTED) {
+          this.status = STATUS.MOUNTED;
+        }
+        return;
+      }
+      this.hasPendingReady = true;
+      const ready = this.ready = chain.then(() => {
+        if (this.status < STATUS.MOUNTED) {
+          this.status = STATUS.MOUNTED;
+        }
+        if (this.ready === ready) {
+          this.hasPendingReady = false;
+        }
+      });
     }
   };
   function startPlugins(manager, plugins) {
@@ -1423,7 +1468,7 @@ ${issueStrings}`);
   }
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.33";
+  var version = "3.0.0-alpha.34";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -1703,20 +1748,20 @@ ${issueStrings}`);
     }
   }
   var CSS_PROP_CACHE = {};
-  function toKebabCase(prop2) {
-    if (prop2 in CSS_PROP_CACHE) {
-      return CSS_PROP_CACHE[prop2];
+  function toKebabCase(prop) {
+    if (prop in CSS_PROP_CACHE) {
+      return CSS_PROP_CACHE[prop];
     }
-    const result = prop2.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
-    CSS_PROP_CACHE[prop2] = result;
+    const result = prop.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase());
+    CSS_PROP_CACHE[prop] = result;
     return result;
   }
   var IMPORTANT_RE = /\s*!\s*important\s*$/i;
-  function setStyleProp(style, prop2, value) {
+  function setStyleProp(style, prop, value) {
     if (IMPORTANT_RE.test(value)) {
-      style.setProperty(prop2, value.replace(IMPORTANT_RE, ""), "important");
+      style.setProperty(prop, value.replace(IMPORTANT_RE, ""), "important");
     } else {
-      style.setProperty(prop2, value);
+      style.setProperty(prop, value);
     }
   }
   function toStyleObj(expr) {
@@ -1760,19 +1805,19 @@ ${issueStrings}`);
           if (colonIdx === -1) {
             continue;
           }
-          const prop2 = trim.call(part.slice(0, colonIdx));
+          const prop = trim.call(part.slice(0, colonIdx));
           const value = trim.call(part.slice(colonIdx + 1));
-          if (prop2 && value && value !== "undefined") {
-            result[prop2] = value;
+          if (prop && value && value !== "undefined") {
+            result[prop] = value;
           }
         }
         return result;
       }
       case "object":
-        for (let prop2 in expr) {
-          const value = expr[prop2];
+        for (let prop in expr) {
+          const value = expr[prop];
           if (value || value === 0) {
-            result[toKebabCase(prop2)] = String(value);
+            result[toKebabCase(prop)] = String(value);
           }
         }
         return result;
@@ -1803,22 +1848,22 @@ ${issueStrings}`);
   function setStyle(val) {
     val = val === "" ? {} : toStyleObj(val);
     const style = this.style;
-    for (let prop2 in val) {
-      setStyleProp(style, prop2, val[prop2]);
+    for (let prop in val) {
+      setStyleProp(style, prop, val[prop]);
     }
   }
   function updateStyle(val, oldVal) {
     oldVal = oldVal === "" ? {} : toStyleObj(oldVal);
     val = val === "" ? {} : toStyleObj(val);
     const style = this.style;
-    for (let prop2 in oldVal) {
-      if (!(prop2 in val)) {
-        style.removeProperty(prop2);
+    for (let prop in oldVal) {
+      if (!(prop in val)) {
+        style.removeProperty(prop);
       }
     }
-    for (let prop2 in val) {
-      if (val[prop2] !== oldVal[prop2]) {
-        setStyleProp(style, prop2, val[prop2]);
+    for (let prop in val) {
+      if (val[prop] !== oldVal[prop]) {
+        setStyleProp(style, prop, val[prop]);
       }
     }
     if (!style.cssText) {
@@ -3310,6 +3355,10 @@ ${issueStrings}`);
     parent;
     children = /* @__PURE__ */ Object.create(null);
     willUpdateProps = [];
+    // Fired right after `props` is applied to `node.props` on a parent re-render,
+    // so reactive prop notifications happen once the new values are observable
+    // (after user `onWillUpdateProps` hooks, including async ones, have run).
+    propsUpdated = [];
     willUnmount = [];
     mounted = [];
     willPatch = [];
@@ -3843,6 +3892,7 @@ ${issueStrings}`);
               () => {
                 if (fiber !== node.fiber) return;
                 node.props = props2;
+                for (const f of node.propsUpdated) f();
                 fiber.render();
               },
               (error) => {
@@ -3851,6 +3901,7 @@ ${issueStrings}`);
             );
           } else {
             node.props = props2;
+            for (const f of node.propsUpdated) f();
             fiber.render();
           }
         }
@@ -4223,6 +4274,24 @@ ${issueStrings}`);
     }
     handlers.push(callback.bind(scope.component));
   }
+  function staticProp(key, type, ...args) {
+    const node = getComponentScope();
+    const hasDefault = args.length > 0;
+    const propValue = node.props[key];
+    if (node.app.dev) {
+      if (type !== void 0 && (!hasDefault || propValue !== void 0)) {
+        assertType(propValue, type, `Invalid prop '${key}' in '${node.componentName}'`);
+      }
+      node.willUpdateProps.push((nextProps) => {
+        if (nextProps[key] !== node.props[key]) {
+          throw new OwlError(
+            `Prop '${key}' changed in component '${node.componentName}'. Props declared with \`props.static()\` are static and should not change. If the prop is a signal, pass the same signal reference (its inner value may change).`
+          );
+        }
+      });
+    }
+    return propValue === void 0 && hasDefault ? args[0] : propValue;
+  }
   function componentType() {
     return constructorType(Component);
   }
@@ -4244,35 +4313,51 @@ ${issueStrings}`);
     }
     return types2.strictObject(validation);
   }
-  function props(type, defaults) {
+  function makeProps(type, defaults) {
     const node = getComponentScope();
     const { app, componentName } = node;
     if (defaults) {
       node.defaultProps = Object.assign(node.defaultProps || {}, defaults);
     }
-    function getProp(key) {
-      if (node.props[key] === void 0 && defaults) {
+    function resolveValue(props2, key) {
+      if (props2[key] === void 0 && defaults) {
         return defaults[key];
       }
-      return node.props[key];
+      return props2[key];
     }
+    const signals = /* @__PURE__ */ Object.create(null);
     const result = /* @__PURE__ */ Object.create(null);
-    function applyPropGetters(keys) {
+    function defineProp(key) {
+      signals[key] = signal(resolveValue(node.props, key));
+      Reflect.defineProperty(result, key, {
+        enumerable: true,
+        configurable: true,
+        get: signals[key]
+      });
+    }
+    function defineProps(keys) {
       for (const key of keys) {
-        Reflect.defineProperty(result, key, {
-          enumerable: true,
-          get: getProp.bind(null, key)
-        });
+        defineProp(key);
+      }
+    }
+    function updateSignals(keys) {
+      for (const key of keys) {
+        signals[key].set(resolveValue(node.props, key));
       }
     }
     if (type) {
       const keys = (Array.isArray(type) ? type : Object.keys(type)).map(
         (key) => key.endsWith("?") ? key.slice(0, -1) : key
       );
-      applyPropGetters(keys);
+      defineProps(keys);
+      node.propsUpdated.push(() => updateSignals(keys));
       if (app.dev) {
         if (defaults) {
-          assertType(defaults, validateDefaults(type), `Invalid component default props (${componentName})`);
+          assertType(
+            defaults,
+            validateDefaults(type),
+            `Invalid component default props (${componentName})`
+          );
         }
         const validation = types2.object(type);
         assertType(node.props, validation, `Invalid component props (${componentName})`);
@@ -4298,17 +4383,28 @@ ${issueStrings}`);
         return keys2;
       };
       let keys = getKeys(node.props);
-      applyPropGetters(keys);
-      node.willUpdateProps.push((np) => {
+      defineProps(keys);
+      node.propsUpdated.push(() => {
+        const nextKeys = getKeys(node.props);
+        const nextKeySet = new Set(nextKeys);
         for (const key of keys) {
-          Reflect.deleteProperty(result, key);
+          if (!nextKeySet.has(key)) {
+            Reflect.deleteProperty(result, key);
+            delete signals[key];
+          }
         }
-        keys = getKeys(np);
-        applyPropGetters(keys);
+        for (const key of nextKeys) {
+          if (!(key in signals)) {
+            defineProp(key);
+          }
+        }
+        updateSignals(nextKeys);
+        keys = nextKeys;
       });
     }
     return result;
   }
+  var props = Object.assign(makeProps, { static: staticProp });
   var ErrorBoundary = class extends Component {
     static template = xml`
     <t t-if="this.props.error()">
@@ -4407,24 +4503,6 @@ ${issueStrings}`);
       onWillDestroy(() => root.destroy());
     }
   };
-  function prop(key, type, ...args) {
-    const node = getComponentScope();
-    const hasDefault = args.length > 0;
-    const propValue = node.props[key];
-    if (node.app.dev) {
-      if (type !== void 0 && (!hasDefault || propValue !== void 0)) {
-        assertType(propValue, type, `Invalid prop '${key}' in '${node.componentName}'`);
-      }
-      node.willUpdateProps.push((nextProps) => {
-        if (nextProps[key] !== node.props[key]) {
-          throw new OwlError(
-            `Prop '${key}' changed in component '${node.componentName}'. Props declared with \`prop()\` are static and should not change. If the prop is a signal, pass the same signal reference (its inner value may change).`
-          );
-        }
-      });
-    }
-    return propValue === void 0 && hasDefault ? args[0] : propValue;
-  }
   function providePlugins(pluginConstructors, config3) {
     const node = getComponentScope();
     const manager = new PluginManager(node.app, { parent: node.pluginManager, config: config3 });
@@ -4453,8 +4531,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-05-29T08:13:56.334Z",
-    hash: "867bd5c8",
+    date: "2026-06-05T08:48:39.601Z",
+    hash: "06699124",
     url: "https://github.com/odoo/owl"
   };
 
