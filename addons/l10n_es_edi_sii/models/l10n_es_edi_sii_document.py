@@ -128,6 +128,8 @@ class L10nEsEdiSiiDocument(models.Model):
         compute='_compute_xml_attachment'
     )
 
+    _latest_doc_idx = models.Index("(move_id, create_date DESC, id DESC)")
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -138,7 +140,7 @@ class L10nEsEdiSiiDocument(models.Model):
             if doc.attachment_id:
                 doc.sii_json_file = base64.b64encode(doc.attachment_id.raw).decode('utf-8')
             else:
-                communication_type = 'A1' if doc.move_id.l10n_es_edi_csv and doc.state != 'to_cancel' else 'A0'
+                communication_type = 'A1' if doc.move_id._l10n_es_sii_has_registration_csv() and doc.state != 'to_cancel' else 'A0'
                 header = self._get_web_service_header(doc.company_id, communication_type)
                 info_list = doc.move_id._l10n_es_edi_get_invoices_info()
                 full_payload = {'Cabecera': header, 'Cuerpo': info_list}
@@ -272,7 +274,7 @@ class L10nEsEdiSiiDocument(models.Model):
                 doc.sudo().write({
                     'state': state,
                     'csv': response_data.get('csv'),
-                    'response_message': response_msg,
+                    'response_message': response_msg if state == 'accepted_with_errors' else False,
                 })
 
                 messages = {
