@@ -9,6 +9,8 @@ const CarouselSliderEdit = (I) =>
             _root: {
                 ...this.dynamicContent._root,
                 "t-on-content_changed": this.onContentChanged,
+                "t-on-focusin": () => {},
+                "t-on-focusout": () => {},
             },
         };
         // Pause carousel in edit mode.
@@ -25,9 +27,7 @@ const CarouselSliderEdit = (I) =>
         }
     };
 
-registry
-    .category("public.interactions.edit")
-    .add("website.carousel_slider", {
-        Interaction: CarouselSlider,
-        mixin: CarouselSliderEdit,
-    });
+registry.category("public.interactions.edit").add("website.carousel_slider", {
+    Interaction: CarouselSlider,
+    mixin: CarouselSliderEdit,
+});
