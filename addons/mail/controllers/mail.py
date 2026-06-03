@@ -271,9 +271,11 @@ class MailController(http.Controller):
         '/mail/font_to_img/<icon>/<color>/<bg>',
         '/mail/font_to_img/<icon>/<color>/<bg>/<int:size>',
         '/mail/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>',
+        '/mail/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>x<int:font_size>',
         '/mail/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>/<int:alpha>',
+        '/mail/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>x<int:font_size>/<int:alpha>',
         ], type='http', auth="none")
-    def export_icon_to_png(self, icon, color='#000', bg=None, size=100, alpha=255, font='/web/static/src/libs/fontawesome/fonts/fontawesome-webfont.ttf', width=None, height=None):
+    def export_icon_to_png(self, icon, color='#000', bg=None, size=100, alpha=255, font='/web/static/src/libs/fontawesome/fonts/fontawesome-webfont.ttf', width=None, height=None, font_size=None):
         """ This method converts an unicode character to an image (using Font
             Awesome font by default) and is used only for mass mailing because
             custom fonts are not supported in mail.
@@ -319,7 +321,7 @@ class MailController(http.Controller):
         # Initialize font
         if font.startswith('/'):
             font = font[1:]
-        font_obj = ImageFont.truetype(file_open(font, 'rb'), height)
+        font_obj = ImageFont.truetype(file_open(font, 'rb'), font_size or height)
 
         # if received character is not a number, keep old behaviour (icon is character)
         icon = chr(int(icon)) if icon.isdigit() else icon
@@ -355,6 +357,7 @@ class MailController(http.Controller):
         # Create an alpha mask
         imagemask = Image.new("L", (boxw, boxh), 0)
         drawmask = ImageDraw.Draw(imagemask)
+        # todo eggmail: why -left -top
         drawmask.text((-left, -top), icon, font=font_obj, fill=255)
 
         # Create a solid color image and apply the mask
@@ -364,9 +367,14 @@ class MailController(http.Controller):
         iconimage = Image.new("RGBA", (boxw, boxh), color)
         iconimage.putalpha(imagemask)
 
+        out_w = max(width, boxw)
+        out_h = max(height, boxh)
+
         # Create output image
-        outimage = Image.new("RGBA", (boxw, height), bg or (0, 0, 0, 0))
-        outimage.paste(iconimage, (left, top), iconimage)
+        outimage = Image.new("RGBA", (out_w, out_h), bg or (0, 0, 0, 0))
+        # TODO EGGMAIL: shouldn't we offset in positive dimensions in case left and/or top
+        # were negative in the previous image (the case for discord)
+        outimage.paste(iconimage, (max(0, left), max(0, top)), iconimage)
 
         # output image
         output = io.BytesIO()
