@@ -12,10 +12,12 @@ class TestKpiProvider(TransactionCase):
         cls.partner_id = cls.env['res.partner'].create({'name': 'Someone'})
 
         # Clean things for the test
-        cls.env['account.move'].search([
-            '|', ('state', '=', 'draft'),
-            ('statement_line_id.is_reconciled', '=', False),
-        ])._unlink_or_reverse()
+        cls.env['account.payment'].search([]).action_cancel()
+        moves_to_unlink = cls.env['account.move'].search([])
+        moves_to_unlink.deferred_move_ids._unlink_or_reverse()
+        moves_to_unlink = moves_to_unlink.exists()
+        moves_to_unlink.filtered(lambda m: m.state != 'draft').button_draft()
+        moves_to_unlink._unlink_or_reverse()
 
     def test_empty_kpi_summary(self):
         # Ensure that nothing gets reported when there is nothing to report
