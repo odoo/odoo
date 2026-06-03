@@ -701,31 +701,45 @@ class AccountEdiProxyClientUser(models.Model):
     def _pdp_send_lifecycles(self, batch_size=None):
         job_count = batch_size or BATCH_SIZE
         need_retrigger = False
+        Move = self.env['account.move']
+        sale_types = Move.get_sale_types(include_receipts=True)
+        purchase_types = Move.get_purchase_types(include_receipts=True)
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
             company = edi_user.company_id
-            collected_moves = self.env['account.move'].search(
+            sale_moves = Move.search(
                 [
                     ('company_id', '=', company.id),
+                    ('move_type', 'in', sale_types),
                     ('pdp_ppf_move_state', 'in', ['sent', 'done']),
                     ('pdp_lifecycle_residual', '!=', 0.0),
                 ],
                 limit=job_count + 1,
             )
-            move_count = len(collected_moves)
-            _logger.info("At least %s moves need payment lifecycles in company '%s'.", move_count, company.name)
-            if not collected_moves:
-                continue
-            need_retrigger = need_retrigger or move_count > job_count
-            try:
-                wizard = self.env['pdp.response.wizard'].create({
-                    'status': 'PD',
-                    'move_ids': collected_moves[:job_count].ids,
-                })
-                wizard.button_send()
-            except Exception:  # noqa: BLE001
-                _logger.exception('Error while sending payment lifecycles: %s')
-                continue
+            purchase_moves = Move.search(
+                [
+                    ('company_id', '=', company.id),
+                    ('move_type', 'in', purchase_types),
+                    ('peppol_move_state', 'not in', [False, 'ready', 'to_send', 'processing', 'error']),
+                    ('pdp_lifecycle_residual', '!=', 0.0),
+                ],
+                limit=job_count + 1,
+            )
+            for status, collected_moves in (('PD', sale_moves), ('payment_sent', purchase_moves)):
+                move_count = len(collected_moves)
+                _logger.info("At least %s moves need payment lifecycles in company '%s'.", move_count, company.name)
+                if not collected_moves:
+                    continue
+                need_retrigger = need_retrigger or move_count > job_count
+                try:
+                    wizard = self.env['pdp.response.wizard'].create({
+                        'status': status,
+                        'move_ids': collected_moves[:job_count].ids,
+                    })
+                    wizard.button_send()
+                except Exception:  # noqa: BLE001
+                    _logger.exception("Error while sending '%s' lifecycles", status)
+                    continue
         if need_retrigger:
             self.env.ref('l10n_fr_pdp.ir_cron_pdp_send_lifecycles')._trigger()
 

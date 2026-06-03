@@ -10,10 +10,10 @@
                         <field name="available_statuses" invisible="1"/>  <!-- needed for the dynamic_selection widget on `status`-->
                         <field name="status" required="True" widget="dynamic_selection"
                                options="{'available_field': 'available_statuses'}"/>
-                        <field name="reason_code" invisible="not show_reason_code"/>
+                        <field name="reason_code" invisible="not show_reason_code"/>  <!-- refusal reason -->
                         <field name="currency_id" invisible="1"/>  <!-- currency field-->
-                        <field name="fully_paid" invisible="move_count != 1 or status != 'PD'"/>
-                        <field name="paid_amount" invisible="fully_paid or move_count != 1 or status != 'PD'"/>
+                        <field name="fully_paid" invisible="move_count != 1 or status not in ('PD', 'payment_sent')"/>  <!-- payment confirmation -->
+                        <field name="paid_amount" invisible="fully_paid or move_count != 1 or status not in ('PD', 'payment_sent')"/>  <!-- partial payment amount -->
                         <field name="note" nolabel="1" placeholder="Enter an optional note here..."/>
                     </group>
                 </sheet>

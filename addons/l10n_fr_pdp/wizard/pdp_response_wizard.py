@@ -2,6 +2,8 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_repr, float_round, format_list
 
+PAYMENT_LIFECYCLE_STATUSES = frozenset({'PD', 'payment_sent'})
+
 
 class PdpResponseWizard(models.TransientModel):
     _name = 'pdp.response.wizard'
@@ -17,6 +19,7 @@ class PdpResponseWizard(models.TransientModel):
             ("PD", "Paid"),
             ("cancelled", "Cancelled"),
             # For incoming messages
+            ("payment_sent", "Payment Sent"),
             ("refused", "Refused"),
             ("AP", "Approved"),
             ("in_hand", "In Hand"),
@@ -111,7 +114,7 @@ class PdpResponseWizard(models.TransientModel):
             if category == 'sale':
                 statuses = ['PD', 'cancelled']
             else:
-                statuses = ['refused', 'AP']
+                statuses = ['refused', 'AP', 'payment_sent']
             wizard.available_statuses = ','.join(statuses)
 
     @api.model
@@ -236,6 +239,21 @@ class PdpResponseWizard(models.TransientModel):
         ]
 
     @api.model
+    def _get_payment_sent_data(self, move, forced_amount=None):
+        move.ensure_one()
+        amount = forced_amount or abs(move.pdp_lifecycle_residual)
+        payment_date = move._pdp_get_last_payment_date()
+        payment_data = {
+            "amount_changed": False,
+            "type_code": "MPA",
+            "amount": self._round_format_number_2(amount),
+            "currency": "EUR",
+        }
+        if payment_date:
+            payment_data['date'] = fields.Date.to_string(payment_date)
+        return [payment_data]
+
+    @api.model
     def _round_format_number_2(self, number):
         # Round and format as number with 2 precision digits
         if number is None:
@@ -271,19 +289,19 @@ class PdpResponseWizard(models.TransientModel):
             raise UserError(self.env._("Some of the journal entries are not posted: %s", format_list(self.env, not_approved_moves.mapped('display_name'))))
         forced_amount = None
         if (
-            self.status == 'PD'
+            self.status in PAYMENT_LIFECYCLE_STATUSES
             and self.move_count == 1
             and not self.fully_paid
             and self.currency_id.compare_amounts(self.paid_amount, self.move_ids[:1].amount_total) < 0.0
         ):
             forced_amount = self.paid_amount
 
-        if self.status == 'PD' and any(move.currency_id.name != 'EUR' for move in self.move_ids):
+        if self.status in PAYMENT_LIFECYCLE_STATUSES and any(move.currency_id.name != 'EUR' for move in self.move_ids):
             raise UserError(self.env._("Only journal entries in currency EUR are supported."))
 
         if self.status == 'PD' and (untaxed_moves := self.move_ids.filtered(lambda m: not m.amount_tax)):
             raise UserError(self.env._("Some of the journal entries are without tax: %s", format_list(self.env, untaxed_moves.mapped('display_name'))))
-        if self.status == 'PD' and not forced_amount and (up_to_date_moves := self.move_ids.filtered(lambda m: not m.pdp_lifecycle_residual)):
+        if self.status in PAYMENT_LIFECYCLE_STATUSES and not forced_amount and (up_to_date_moves := self.move_ids.filtered(lambda m: not m.pdp_lifecycle_residual)):
             raise UserError(self.env._("Some of the journal entries have no payments to send: %s", format_list(self.env, up_to_date_moves.mapped('display_name'))))
 
         base_info = {
@@ -297,6 +315,14 @@ class PdpResponseWizard(models.TransientModel):
                     move.peppol_message_uuid: {
                         **base_info,
                         'payments': self._get_payments_data(move, forced_amount=forced_amount),
+                    }
+                    for move in moves
+                }
+            elif self.status == 'payment_sent':
+                additional_info = {
+                    move.peppol_message_uuid: {
+                        **base_info,
+                        'payments': self._get_payment_sent_data(move, forced_amount=forced_amount),
                     }
                     for move in moves
                 }

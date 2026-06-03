@@ -129,14 +129,24 @@ class AccountMove(models.Model):
     )
     def _compute_pdp_lifecycle_residual(self):
         for move in self:
-            already_sent = move._pdp_get_paid_lifecycle_total_amount()
-            is_relevant = already_sent or (
-                (move.pdp_ppf_move_state in ['sent', 'done'] or move.pdp_is_sent)
-                and move.is_sale_document(include_receipts=True)
-                and move.payment_state in ['paid', 'partial']
-                and move.currency_id.name == 'EUR'
-            )
             amount = 0
+            if move.is_sale_document(include_receipts=True):
+                already_sent = move._pdp_get_lifecycle_reported_amount('PD')
+                is_relevant = already_sent or (
+                    (move.pdp_ppf_move_state in ['sent', 'done'] or move.pdp_is_sent)
+                    and move.payment_state in ['paid', 'partial']
+                    and move.currency_id.name == 'EUR'
+                )
+            elif move.is_purchase_document(include_receipts=True):
+                already_sent = move._pdp_get_lifecycle_reported_amount('payment_sent')
+                is_relevant = already_sent or (
+                    move.pdp_is_sent
+                    and move.payment_state in ['paid', 'partial']
+                    and move.currency_id.name == 'EUR'
+                )
+            else:
+                move.pdp_lifecycle_residual = amount
+                continue
             if is_relevant:
                 amount = move._pdp_get_paid_amount() - already_sent
             move.pdp_lifecycle_residual = amount
@@ -182,16 +192,29 @@ class AccountMove(models.Model):
         reconciled_amls = self._get_reconciled_amls().filtered(lambda l: l.move_id.move_type != counterpart_move_type)
         return self.direction_sign * sum(reconciled_amls.mapped('balance'))
 
-    def _pdp_get_paid_lifecycle_total_amount(self):
+    def _pdp_get_last_payment_date(self):
         self.ensure_one()
-        paid_responses = self.peppol_response_ids.filtered(
-            lambda r: r.response_code == 'PD' and r.pdp_flow_number == '2' and r.pdp_ppf_state != 'error'
+        counterpart_move_type = 'out_invoice' if self.move_type == 'out_refund' else 'out_refund'
+        reconciled_amls = self._get_reconciled_amls().filtered(lambda l: l.move_id.move_type != counterpart_move_type)
+        payment_moves = reconciled_amls.move_id.filtered(lambda move: move.origin_payment_id or move.statement_line_id)
+        if not payment_moves:
+            return False
+        return max(payment_moves.mapped('date'))
+
+    def _pdp_get_lifecycle_reported_amount(self, response_code):
+        self.ensure_one()
+        lifecycle_responses = self.peppol_response_ids.filtered(
+            lambda r: r.response_code == response_code and r.pdp_flow_number == '2' and r.pdp_ppf_state != 'error'
         )
         payment_infos = [
-            payment_info for response in paid_responses for payment_info in (response.pdp_payment_info or [])
+            payment_info for response in lifecycle_responses for payment_info in (response.pdp_payment_info or [])
             if payment_info.get('type_code') in PAID_CODES and payment_info.get('currency', '').upper() == 'EUR'
         ]
         return sum(float(info.get('amount', '0')) for info in payment_infos)
+
+    def _pdp_get_paid_lifecycle_total_amount(self):
+        self.ensure_one()
+        return self._pdp_get_lifecycle_reported_amount('PD')
 
     def _pdp_get_response_status(self):
         """Return the PDP response status of the message"""

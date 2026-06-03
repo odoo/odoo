@@ -294,9 +294,18 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
             'payment_date': '2020-01-02',
             **({'amount': amount} if amount else {}),
         })._create_payments()
+        if not payment.is_reconciled:
+            if payment.state == 'draft':
+                payment.action_post()
+            reconciled_accounts = move.line_ids.account_id.filtered('reconcile')
+            lines = (payment.move_id.line_ids + move.line_ids).filtered(
+                lambda line: line.account_id in reconciled_accounts,
+            )
+            lines.reconcile()
         self.assertTrue(payment.is_reconciled)
         self.assertFalse(payment.is_matched)
-        payment.action_post()
+        if payment.state == 'draft':
+            payment.action_post()
         liquidity_lines, _counterpart_lines, _writeoff_lines = payment._seek_for_lines()
 
         statement_line = self.env['account.bank.statement.line'].create({
@@ -588,3 +597,40 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
             ],
             'move_id': move.id,
         }])
+
+    def test_purchase_payment_sent_lifecycle(self):
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
+        move = self.env['account.move'].search([('peppol_message_uuid', '=', FAKE_UUID[1])])
+        self.assertRecordValues(move, [{'peppol_move_state': 'done', 'move_type': 'in_invoice'}])
+        self.assertFalse(move.pdp_lifecycle_residual)
+
+        self._pay(move)
+        self.assertEqual(move.payment_state, 'paid')
+        self.assertEqual(move.pdp_lifecycle_residual, move.amount_total)
+
+        wizard = self.env['pdp.response.wizard'].create({
+            'status': 'payment_sent',
+            'move_ids': move.ids,
+        })
+        self.assertEqual(wizard.available_statuses, 'refused,AP,payment_sent')
+        with self._set_context({'send_response_params': None}) as self_with_context:
+            wizard.button_send()
+            send_params = self_with_context.env.context['send_response_params']
+            self.assertTrue(send_params['lifecycle'])
+            self.assertEqual(send_params['status'], 'payment_sent')
+            self.assertEqual(send_params['reference_uuids'], [FAKE_UUID[1]])
+            payment_info = send_params['additional_info'][move.peppol_message_uuid]['payments'][0]
+            self.assertEqual(payment_info['type_code'], 'MPA')
+            self.assertEqual(payment_info['currency'], 'EUR')
+            self.assertEqual(payment_info['date'], '2020-01-02')
+            self.assertEqual(float(payment_info['amount']), move.amount_total)
+
+        paid_response = move.peppol_response_ids.filtered(lambda r: r.response_code == 'payment_sent')
+        self.assertRecordValues(paid_response, [{
+            'peppol_state': 'processing',
+            'pdp_flow_number': '2',
+            'response_code': 'payment_sent',
+            'move_id': move.id,
+        }])
+        self.assertFalse(move.pdp_lifecycle_residual)
+        self.assertEqual(move._pdp_get_lifecycle_reported_amount('payment_sent'), move.amount_total)

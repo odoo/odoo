@@ -11,6 +11,7 @@ NEW_STATUSES = MappingProxyType({
     'made_available': _lt('Made Available'),  # required by Peppol
     'refused': _lt('Refused'),  # required by Peppol and PPF; used for PPF messages
     'cancelled': _lt('Cancelled'),
+    'payment_sent': _lt('Payment Sent'),  # CDV 211 — buyer notifies seller
 })
 
 PDP_STATUSES = MappingProxyType({
