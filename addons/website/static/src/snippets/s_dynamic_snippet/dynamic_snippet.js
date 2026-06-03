@@ -15,9 +15,6 @@ const DEFAULT_NUMBER_OF_ELEMENTS_SM = 1;
 export class DynamicSnippet extends Interaction {
     static selector = ".s_dynamic_snippet";
     dynamicContent = {
-        "[data-url]": {
-            "t-on-click": this.callToAction,
-        },
         _root: {
             "t-att-class": () => ({
                 o_dynamic_snippet_loading: this.loadingData,
@@ -196,15 +193,6 @@ export class DynamicSnippet extends Interaction {
                 }
             });
         }, 0);
-    }
-
-    /**
-     * Navigates to the call to action url.
-     *
-     * @param {Event} ev
-     */
-    callToAction(ev) {
-        window.location = verifyHttpsUrl(ev.currentTarget.dataset.url);
     }
 }
 
