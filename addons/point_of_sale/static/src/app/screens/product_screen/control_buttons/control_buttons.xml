@@ -53,7 +53,7 @@
                         onClick="this.clickPrintBill"/>
                 </t>
                 <!-- Pricelist Button -->
-                <t t-set="subText">
+                <t t-set="pricelistSubText">
                     <t t-if="this.currentOrder?.pricelist_id">
                         <small t-out="this.currentOrder.pricelist_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>  
                     </t>
@@ -64,10 +64,10 @@
                     btnText.translate="Pricelist"
                     btnClasses="'o_pricelist_button btn-secondary '"
                     onClick="() => this.clickPricelist()"
-                    subText="subText">
+                    subText="pricelistSubText">
                 </t>
                 <!-- Tax Button -->
-                <t t-set="subText">
+                <t t-set="fiscalSubText">
                     <t t-if="this.currentOrder?.fiscal_position_id">
                         <small t-out="this.currentOrder.fiscal_position_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>
                     </t>
@@ -77,7 +77,7 @@
                     btnText.translate="Tax"
                     btnClasses="'o_fiscal_position_button btn-secondary '"
                     onClick="() => this.clickFiscalPosition()"
-                    subText="subText">
+                    subText="fiscalSubText">
                 </t>
                 <!-- Product Info Button -->
                 <t t-if="this.displayProductInfoBtn()" t-call="point_of_sale.controlButton"
