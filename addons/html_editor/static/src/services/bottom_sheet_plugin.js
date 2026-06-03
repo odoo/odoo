@@ -7,4 +7,5 @@ const old = {
 extra.getBottomSheetOptions = (props, options) => ({
     ...old.getBottomSheetOptions(props, options),
     withUnfocus: options.withUnfocus,
+    fitOnResize: options.fitOnResize,
 });

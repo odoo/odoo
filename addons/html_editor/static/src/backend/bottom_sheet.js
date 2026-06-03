@@ -1,6 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { BottomSheet } from "@web/core/bottom_sheet/bottom_sheet";
 import { onMounted, onWillUnmount, t, useProps } from "@odoo/owl";
+import { useViewportChange } from "@web/core/utils/dvu";
 
 /**
  * @param {Element|null} el the active element of a document
@@ -23,6 +24,7 @@ patch(BottomSheet.prototype, {
         super.setup();
         this.htmlEditorProps = useProps({
             withUnfocus: t.boolean().optional(false),
+            fitOnResize: t.boolean().optional(false),
         });
         onMounted(() => {
             const activeElement = this.sheetRef().ownerDocument.activeElement;
@@ -64,6 +66,18 @@ patch(BottomSheet.prototype, {
                 }
             });
         });
+        if (this.htmlEditorProps.fitOnResize) {
+            // Runs after the default viewport change handler, which updates
+            // the dimensions but disables snapping without restoring it: the
+            // sheet would stay wherever the keyboard toggle left it.
+            useViewportChange(() => {
+                if (this.state.isPositionedReady && !this.state.isDismissing) {
+                    this.positionSheet();
+                    this.updateProgressValue(this.scrollRailRef().scrollTop);
+                    this.state.isSnappingEnabled = true;
+                }
+            });
+        }
     },
 
     onIframeLoad(ev) {
