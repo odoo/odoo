@@ -8,16 +8,16 @@ export class CustomMediaDialog extends MediaDialog {
         extraTabs: [{ id: "VIDEOS", title: _t("Videos"), Component: VideoSelector }],
     };
     async save() {
-        if (this.errorMessages[this.state?.activeTab]) {
-            this.notificationService.add(this.errorMessages[this.state.activeTab], {
+        if (this.errorMessages[this.activeTab()]) {
+            this.notificationService.add(this.errorMessages[this.activeTab()], {
                 type: "danger",
             });
             return;
         }
-        if (this.state.activeTab == "IMAGES") {
-            await this.imageSave(this.selectedMedia[this.state.activeTab]);
+        if (this.activeTab() == "IMAGES") {
+            await this.imageSave(this.selectedMedia[this.activeTab()]);
         } else {
-            this.props.videoSave(this.selectedMedia[this.state.activeTab]);
+            this.props.videoSave(this.selectedMedia[this.activeTab()]);
         }
         this.props.close();
     }

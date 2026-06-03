@@ -23,7 +23,7 @@ import {
     advanceTime,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
-import { onWillDestroy, xml } from "@odoo/owl";
+import { onWillDestroy, proxy, signal, xml } from "@odoo/owl";
 import {
     clickSave,
     contains,
@@ -909,7 +909,10 @@ test("A new MediaDialog after switching record in a Form view should have the co
             this.contentClass = "o_select_media_dialog";
             this.title = "TEST";
             this.tabs = [];
-            this.state = {};
+            this.notebookPages = [];
+            this.activeTab = signal(null);
+            this.isSaving = signal(false);
+            this.selectedMedia = proxy({});
             // no call to super to avoid services dependencies
             // this test only cares about the props given to the dialog
         },
@@ -2875,7 +2878,7 @@ test("should not render xml template as html in specific invalid cases", async (
         [`<table><t><tr><td></td></tr></t></table>`, false],
         [`<table><tr><t><td></td></t></tr></table>`, false],
         [`<table><tr><t><td></td></t></tr></table>`, false],
-        [`<table><tr><td><table><t/></table></td></tr></table>`, false]
+        [`<table><tr><td><table><t/></table></td></tr></table>`, false],
     ];
     for (const [xmlString, expected] of values) {
         var isValid = canRenderAsHTML(xmlString);

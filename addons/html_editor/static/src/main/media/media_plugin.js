@@ -242,7 +242,7 @@ export class MediaPlugin extends Plugin {
         const oldSave =
             params.save ||
             ((...args) => {
-                // The media dialog calls the save function with 4 params: this.props.save(elements, selectedMedia, this.state.activeTab, this.props.media)
+                // The media dialog calls the save function with 4 params: this.props.save(elements, selectedMedia, this.activeTab(), this.props.media)
                 const [elements, , , oldMediaNode] = args;
                 const node = oldMediaNode || params.node;
                 this.onSaveMediaDialog(elements, { node });
