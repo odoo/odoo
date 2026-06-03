@@ -452,9 +452,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
             # clear cache to ensure consistency, but do not signal it
             transaction.invalidate_ormcache('stable')
             for name, layer in transaction.ormcaches__.items():
-                while hasattr(layer, 'parent'):
-                    layer = layer.parent
-                transaction._registry_caches__[name] = (transaction._registry_caches__[name][0], layer)
+                if layer.parent is None:
+                    layer.parent = LRU(999999)
+                    layer.update_parent()
+                    transaction._registry_caches__[name] = (transaction._registry_caches__[name][0], layer.parent)
             _logger.debug("skip signaling for previous invalidations")
 
         reset_cached_properties(self)
