@@ -14,8 +14,12 @@ export class ImageStrategyPlugin extends Plugin {
         "referenceNode",
     ];
     resources = {
-        element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
+        element_layout_analysis_processors: [
+            this.analyzeFaIconImageLayout.bind(this),
+            this.analyzeImageLayout.bind(this),
+        ],
         email_node_merge_overrides: this.discardImageEmailNodeInLink.bind(this),
+        should_discard_reference_node_predicates: this.isIllegalFontIcon.bind(this),
         attribute_rules_processors: [
             [this.provideAttributeRules.bind(this), ImageStrategyPlugin.id],
         ],
@@ -43,11 +47,27 @@ export class ImageStrategyPlugin extends Plugin {
         rules.block("width", { when: this.isImg.bind(this) });
     }
 
+    isIllegalFontIcon(referenceNode) {
+        return this.isFontIcon({ referenceNode }) && !this.getFontIconContent(referenceNode);
+    }
+
     isImg({ referenceNode }) {
         return referenceNode.nodeName === "IMG";
     }
 
-    analyzeElementLayout({ layout, analysis }, { referenceNode, parentEmailNode }) {
+    isFontIcon({ referenceNode }) {
+        return referenceNode.nodeType === Node.ELEMENT_NODE && referenceNode.matches(".fa");
+    }
+
+    getFontIconContent(referenceNode) {
+        return this.getComputedStyle(referenceNode, "::before").getPropertyValue("content");
+    }
+
+    analyzeFaIconImageLayout({ layout, analysis }, { referenceNode, parentEmailNode }) {
+        // TODO EGGMAIL: working here
+    }
+
+    analyzeImageLayout({ layout, analysis }, { referenceNode, parentEmailNode }) {
         let detectionResult = this.detectImageLink(referenceNode);
         if (detectionResult) {
             analysis.facts.isImageLink = true;
@@ -118,7 +138,7 @@ export class ImageStrategyPlugin extends Plugin {
                 referenceNode,
                 (node) => !this.isInvisible(node)
             );
-            if (visibleChildNodes.length === 1 && visibleChildNodes[0].nodeName === "IMG") {
+            if (visibleChildNodes.length === 1 && this.isImg(visibleChildNodes[0])) {
                 const imageNode = visibleChildNodes[0];
                 return {
                     imageNode: imageNode,

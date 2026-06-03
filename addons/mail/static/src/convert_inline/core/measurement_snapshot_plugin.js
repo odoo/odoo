@@ -116,7 +116,7 @@ export class MeasurementSnapshotPlugin extends Plugin {
         return this.layoutToComputedStyle.get(layoutDimensions);
     }
 
-    cachedComputedStyleProxyHandler(element) {
+    cachedComputedStyleProxyHandler(element, pseudoElt = null) {
         const layoutDimensions = this.layoutDimensions;
         return {
             set: () => false,
@@ -125,10 +125,14 @@ export class MeasurementSnapshotPlugin extends Plugin {
                 if (typeof key === "string" && !(key in target)) {
                     if (this.layoutDimensions !== layoutDimensions) {
                         // Force a re-compute (+ cache miss) for the missing key.
-                        return this.getStylePropertyValue(element, key, layoutDimensions);
+                        return this.getComputedStyle(
+                            element,
+                            pseudoElt,
+                            layoutDimensions
+                        ).getPropertyValue(key);
                     }
                     this.registerStyleProperty(key);
-                    this.getStyleSnapshot(element, target);
+                    this.getStyleSnapshot(element, pseudoElt, target);
                 }
                 return Reflect.get(target, key, receiver);
             },
@@ -161,9 +165,9 @@ export class MeasurementSnapshotPlugin extends Plugin {
         return relatedDocument;
     }
 
-    getStyleSnapshot(element, styleSnapshot = {}) {
+    getStyleSnapshot(element, pseudoElt = null, styleSnapshot = {}) {
         const relatedDocument = this.getRelatedDocument(element);
-        const computedStyle = relatedDocument.defaultView.getComputedStyle(element);
+        const computedStyle = relatedDocument.defaultView.getComputedStyle(element, pseudoElt);
         for (const propertyName of this.styleProperties) {
             if (!(propertyName in styleSnapshot)) {
                 styleSnapshot[propertyName] = computedStyle.getPropertyValue(propertyName);
@@ -212,16 +216,31 @@ export class MeasurementSnapshotPlugin extends Plugin {
         return range;
     }
 
-    getComputedStyleProxy(element) {
-        return new Proxy({}, this.cachedComputedStyleProxyHandler(element));
+    hasNodeComputedStyle(nodeToComputedStyle, element, pseudoElt = null) {
+        if (!nodeToComputedStyle.has(element)) {
+            return false;
+        }
+        const computedStyleMap = nodeToComputedStyle.get(element);
+        return computedStyleMap.has(pseudoElt);
     }
 
-    computeStyleProxy(element) {
-        const nodeToComputedStyle = this.getNodeToComputedStyle();
+    getNodeComputedStyle(nodeToComputedStyle, element, pseudoElt = null) {
         if (!nodeToComputedStyle.has(element)) {
-            nodeToComputedStyle.set(element, this.getComputedStyleProxy(element));
+            nodeToComputedStyle.set(element, new Map());
         }
-        return nodeToComputedStyle.get(element);
+        const computedStyleMap = nodeToComputedStyle.get(element);
+        if (!computedStyleMap.has(pseudoElt)) {
+            computedStyleMap.set(pseudoElt, this.getComputedStyleProxy(element, pseudoElt));
+        }
+        return computedStyleMap.get(pseudoElt);
+    }
+
+    getComputedStyleProxy(element, pseudoElt = null) {
+        return new Proxy({}, this.cachedComputedStyleProxyHandler(element, pseudoElt));
+    }
+
+    computeStyleProxy(element, pseudoElt = null) {
+        return this.getNodeComputedStyle(this.getNodeToComputedStyle(), element, pseudoElt);
     }
 
     /**
@@ -235,27 +254,28 @@ export class MeasurementSnapshotPlugin extends Plugin {
      * @param {HTMLElement} element
      * @returns {ComputedStyle} cached style
      */
-    getComputedStyle(element, layoutDimensions = this.layoutDimensions) {
+    getComputedStyle(element, pseudoElt = null, layoutDimensions = this.layoutDimensions) {
         if (!this.config.referenceDocument.contains(element)) {
             // Only the style of an element inside the referenceDocument can be cached, as
             // the HTML and CSS content inside that document are fixed during conversion.
-            return new ComputedStyle(this.getComputedStyleProxy(element));
+            return new ComputedStyle(this.getComputedStyleProxy(element, pseudoElt));
         }
         const nodeToComputedStyle = this.getNodeToComputedStyle(layoutDimensions);
         let computedStyleProxy;
-        if (nodeToComputedStyle.has(element)) {
+        if (this.hasNodeComputedStyle(nodeToComputedStyle, element, pseudoElt)) {
             computedStyleProxy = nodeToComputedStyle.get(element);
         } else if (layoutDimensions !== this.layoutDimensions) {
             console.warn(
-                `Cache miss: called "getComputedStyle" with mismatched layoutDimensions on element.
+                `Cache miss: called "getComputedStyle" with mismatched layoutDimensions on element and pseudoElt.
                 To avoid additional expensive layout computations, pre-fetch the value during "on_parse_layout_with_dimensions_handlers"`,
-                element
+                element,
+                pseudoElt
             );
             this.callWithDimensions(() => {
-                computedStyleProxy = this.computeStyleProxy(element);
+                computedStyleProxy = this.computeStyleProxy(element, pseudoElt);
             }, layoutDimensions);
         } else {
-            computedStyleProxy = this.computeStyleProxy(element);
+            computedStyleProxy = this.computeStyleProxy(element, pseudoElt);
         }
         return new ComputedStyle(computedStyleProxy);
     }

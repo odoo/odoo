@@ -185,7 +185,7 @@ export class FilterContentPlugin extends Plugin {
     }
 
     hasVisibleBorder(element, layoutDimensions) {
-        const computedStyle = this.getComputedStyle(element, layoutDimensions);
+        const computedStyle = this.getComputedStyle(element, null, layoutDimensions);
         return DIRECTION_VARIANTS.some((side) => {
             const width = parseFloat(computedStyle.getPropertyValue(`border-${side}-width`));
             const borderStyle = computedStyle.getPropertyValue(`border-${side}-style`);
