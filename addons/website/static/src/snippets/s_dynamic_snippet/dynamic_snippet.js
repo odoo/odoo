@@ -5,7 +5,6 @@ import { rpc } from "@web/core/network/rpc";
 import { utils as uiUtils } from "@web/core/ui/ui_utils";
 import { uniqueId } from "@web/core/utils/functions";
 import { renderToFragment } from "@web/core/utils/render";
-import { verifyHttpsUrl } from "@website/utils/misc";
 
 import { markup, usePlugin } from "@odoo/owl";
 import {
@@ -17,9 +16,6 @@ import { UIPlugin } from "@web/core/ui/ui_plugin";
 export class DynamicSnippet extends Interaction {
     static selector = ".s_dynamic_snippet";
     dynamicContent = {
-        "[data-url]": {
-            "t-on-click": this.callToAction,
-        },
         _root: {
             "t-att-class": () => ({
                 o_dynamic_snippet_loading: this.loadingData,
@@ -203,15 +199,6 @@ export class DynamicSnippet extends Interaction {
                 }
             });
         }, 0);
-    }
-
-    /**
-     * Navigates to the call to action url.
-     *
-     * @param {Event} ev
-     */
-    callToAction(ev) {
-        window.location = verifyHttpsUrl(ev.currentTarget.dataset.url);
     }
 }
 
