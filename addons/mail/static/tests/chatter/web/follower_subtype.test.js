@@ -130,7 +130,7 @@ test("follower subtype apply", async () => {
     await contains(
         `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId2}'] input[type='checkbox']:checked`
     );
-    await click(".modal-footer button:text('Update Notifications')");
+    await click(".modal-footer button:text('Update')");
     await contains(".o_notification:text('Notification preferences updated.')");
 });
 
