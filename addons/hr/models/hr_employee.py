@@ -1029,7 +1029,7 @@ class HrEmployee(models.Model):
             else:
                 if len(employee.work_contact_id.employee_ids) <= 1:
                     employee.work_contact_id.sudo().write({
-                        'email': employee.work_email,
+                        'email': employee.work_email or employee.private_email,
                         'phone': employee.work_phone,
                     })
         if employees_without_work_contact:
