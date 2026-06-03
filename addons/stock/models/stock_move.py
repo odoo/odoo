@@ -2370,17 +2370,22 @@ Please change the quantity done or the rounding precision in your settings.""",
             if self.product_uom.compare(_move_qty(qty), 0) <= 0:
                 continue
 
-            # find a quant similar to the move line on which we can reserve
-            ml_quants = self.env['stock.quant']._get_reserve_quantity(self.product_id,
-                                                                      ml.location_id,
-                                                                      qty,
-                                                                      lot_id=ml.lot_id,
-                                                                      package_id=ml.package_id,
-                                                                      owner_id=ml.owner_id,
-                                                                      strict=True)
-            avail_qty = sum(q[1] for q in ml_quants)
-            # the quant did not add the quantity reserved on this specific move line
-            consumed_quant |= {q[0].id for q in ml_quants}
+            avail_qty = 0
+            if self._should_bypass_reservation(ml.location_id):
+                avail_qty = qty
+            else:
+                # find a quant similar to the move line on which we can reserve
+                ml_quants = self.env['stock.quant']._get_reserve_quantity(self.product_id,
+                                                                          ml.location_id,
+                                                                          qty,
+                                                                          lot_id=ml.lot_id,
+                                                                          package_id=ml.package_id,
+                                                                          owner_id=ml.owner_id,
+                                                                          strict=True)
+                avail_qty = sum(q[1] for q in ml_quants)
+                # the quant did not add the quantity reserved on this specific move line
+                consumed_quant |= {q[0].id for q in ml_quants}
+
             if self.product_uom.compare(avail_qty, qty) <= 0:
                 qty -= avail_qty  # decrease the target quantity for the next move lines
                 avail_qty += ml_qty  # add the actual move line quantity as we will update it and not `+=` it
