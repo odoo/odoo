@@ -59,16 +59,6 @@ class IrAttachment(models.Model):
                 'sort_weight': 10,
                 'type': 'xml',
             })
-            attachments_data = self._extract_additional_documents(xml_tree)
-            attachments = self.env['ir.attachment'].create(attachments_data)
-            for attachment in attachments:
-                to_process.append({
-                    'attachment': attachment,
-                    'filename': attachment.name,
-                    'content': attachment.raw,
-                    'sort_weight': 11,
-                    'type': 'binary',
-                })
         return to_process
 
     def _extract_additional_documents(self, xml_tree):
