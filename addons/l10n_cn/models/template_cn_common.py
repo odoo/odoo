@@ -28,6 +28,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'l10n_cn_common_account_112201',
                 'account_stock_valuation_id': 'l10n_cn_common_account_1405',
                 'stock_account_production_cost_id': 'l10n_cn_common_account_1411',
+                'l10n_cn_output_vat_offset_journal_id': f'account.{self.env.company.id}_general',
+                'l10n_cn_output_vat_offset_account_id': 'l10n_cn_common_account_22210103',
             },
         }
 
