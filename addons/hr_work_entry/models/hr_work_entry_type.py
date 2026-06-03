@@ -3,7 +3,7 @@
 from uuid import uuid4
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class HrWorkEntryType(models.Model):
@@ -50,6 +50,7 @@ class HrWorkEntryType(models.Model):
         tracking=True,
         help="Check this setting if you want the hours to be considered as extra time and added as a bonus to the basic salary.")
     description = fields.Text(translate=True, tracking=True)
+    resource_calendar_attendance_ids = fields.One2many('resource.calendar.attendance', 'work_entry_type_id', readonly=True, copy=False)
 
     @api.constrains('code', 'country_id')
     def _check_code_unicity(self):
@@ -96,6 +97,12 @@ Time type "%(name)s" of code "%(code)s", with no country assigned, already exist
                 name=duplicate.name,
                 code=duplicate.code,
             ))
+
+    @api.constrains('country_id')
+    def _check_country_id(self):
+        for country_id, work_entry_types in self.grouped('country_id').items():
+            if work_entry_types.resource_calendar_attendance_ids.calendar_id.country_id - country_id:
+                raise ValidationError(self.env._("The country of the work entry type does not match the country of the associated resource calendar."))
 
     def copy_data(self, default=None):
         default = default or {}

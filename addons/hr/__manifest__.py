@@ -45,6 +45,7 @@
         'views/res_users.xml',
         'views/hr_templates.xml',
         'views/resource_resource_views.xml',
+        'views/resource_calendar_views.xml',
         'data/hr_data.xml',
         'data/ir_cron_data.xml',
         'data/hr_employee_type_data.xml',

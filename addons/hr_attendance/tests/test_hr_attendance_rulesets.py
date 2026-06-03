@@ -51,7 +51,7 @@ class TestHrAttendanceOvertime(TransactionCase):
         })
         cls.company.resource_calendar_id = cls.env.company.resource_calendar_id = cls.env['resource.calendar'].create({
             'name': 'Standard 40 hours/week (No Lunch)',
-            'company_id': cls.env.company.id,
+            'company_id': False,
             'hours_per_day': 7.6,
             'full_time_required_hours': 38,
             'attendance_ids': [
