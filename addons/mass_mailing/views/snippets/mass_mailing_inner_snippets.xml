@@ -131,6 +131,19 @@
     </t>
 </template>
 
+<template id="s_mail_company_logo">
+    <img t-if="company_id.logo or user_id.company_id.logo"
+        t-att-class="class"
+        t-att-style="style"
+        t-attf-src="/web/image/res.company/{{ company_id.id if company_id.logo else user_id.company_id.id }}/logo"
+        t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.logo else user_id.company_id.id }}/logo" />
+    <img t-else=""
+        t-att-class="class"
+        t-attf-style="width: 33% !important; {{style}}"
+        t-attf-src="/web/image/res.company/{{ company_id.id }}/logo"
+        t-attf-data-original-src="/web/image/res.company/{{ company_id.id }}/logo" />
+</template>
+
 <!-- Assets -->
 <record id="mass_mailing.s_alert_001_scss" model="ir.asset">
     <field name="name">Alert 001 SCSS</field>
