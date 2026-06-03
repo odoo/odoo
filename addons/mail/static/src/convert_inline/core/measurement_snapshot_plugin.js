@@ -106,6 +106,15 @@ export class MeasurementSnapshotPlugin extends Plugin {
         return this.layoutToBoundingClientRect.get(layoutDimensions);
     }
 
+    hasNodeComputedStyle(layoutDimensions, element, pseudoElt = null) {
+        const nodeToComputedStyle = this.getNodeToComputedStyle(layoutDimensions);
+        if (!nodeToComputedStyle.has(element)) {
+            return false;
+        }
+        const computedStyleMap = nodeToComputedStyle.get(element);
+        return computedStyleMap.has(pseudoElt);
+    }
+
     getNodeToComputedStyle(layoutDimensions) {
         if (!layoutDimensions) {
             layoutDimensions = this.layoutDimensions;
@@ -216,15 +225,12 @@ export class MeasurementSnapshotPlugin extends Plugin {
         return range;
     }
 
-    hasNodeComputedStyle(nodeToComputedStyle, element, pseudoElt = null) {
-        if (!nodeToComputedStyle.has(element)) {
-            return false;
-        }
-        const computedStyleMap = nodeToComputedStyle.get(element);
-        return computedStyleMap.has(pseudoElt);
+    getComputedStyleProxy(element, pseudoElt = null) {
+        return new Proxy({}, this.cachedComputedStyleProxyHandler(element, pseudoElt));
     }
 
-    getNodeComputedStyle(nodeToComputedStyle, element, pseudoElt = null) {
+    computeStyleProxy(element, pseudoElt = null) {
+        const nodeToComputedStyle = this.getNodeToComputedStyle();
         if (!nodeToComputedStyle.has(element)) {
             nodeToComputedStyle.set(element, new Map());
         }
@@ -233,14 +239,6 @@ export class MeasurementSnapshotPlugin extends Plugin {
             computedStyleMap.set(pseudoElt, this.getComputedStyleProxy(element, pseudoElt));
         }
         return computedStyleMap.get(pseudoElt);
-    }
-
-    getComputedStyleProxy(element, pseudoElt = null) {
-        return new Proxy({}, this.cachedComputedStyleProxyHandler(element, pseudoElt));
-    }
-
-    computeStyleProxy(element, pseudoElt = null) {
-        return this.getNodeComputedStyle(this.getNodeToComputedStyle(), element, pseudoElt);
     }
 
     /**
@@ -260,11 +258,11 @@ export class MeasurementSnapshotPlugin extends Plugin {
             // the HTML and CSS content inside that document are fixed during conversion.
             return new ComputedStyle(this.getComputedStyleProxy(element, pseudoElt));
         }
-        const nodeToComputedStyle = this.getNodeToComputedStyle(layoutDimensions);
         let computedStyleProxy;
-        if (this.hasNodeComputedStyle(nodeToComputedStyle, element, pseudoElt)) {
-            computedStyleProxy = nodeToComputedStyle.get(element);
-        } else if (layoutDimensions !== this.layoutDimensions) {
+        if (
+            layoutDimensions !== this.layoutDimensions &&
+            !this.hasNodeComputedStyle(layoutDimensions, element, pseudoElt)
+        ) {
             console.warn(
                 `Cache miss: called "getComputedStyle" with mismatched layoutDimensions on element and pseudoElt.
                 To avoid additional expensive layout computations, pre-fetch the value during "on_parse_layout_with_dimensions_handlers"`,
@@ -336,7 +334,9 @@ export class MeasurementSnapshotPlugin extends Plugin {
      * `reference` if multiple measures have to be made on the same element.
      */
     getStylePropertyValue(element, propertyName, layoutDimensions = this.layoutDimensions) {
-        return this.getComputedStyle(element, layoutDimensions).getPropertyValue(propertyName);
+        return this.getComputedStyle(element, null, layoutDimensions).getPropertyValue(
+            propertyName
+        );
     }
 
     /**
