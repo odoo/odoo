@@ -30,14 +30,14 @@
             </div>
         </xpath>
         <xpath expr="//*[@name='standaloneInboxMessages']" position="before">
-            <div t-if="this.store.channels.status !== 'fetching' and !this.hasPreviews and !this.store.discuss.searchTerm" class="d-flex justify-content-center py-4 px-2 text-muted">
+            <div t-if="this.store.channels.status !== 'fetching' and !this.hasPreviews and !this.searchTerms()" class="d-flex justify-content-center py-4 px-2 text-muted">
                 No conversation yet...
             </div>
-            <div t-if="this.store.discuss.searchTerm and !this.threads.length and !this.visibleStandaloneMessages.length" class="d-flex justify-content-center py-4 px-2 text-muted">
+            <div t-if="this.searchTerms() and !this.threads.length and !this.visibleStandaloneMessages.length" class="d-flex justify-content-center py-4 px-2 text-muted">
                 No thread found.
             </div>
             <t t-set="itemIndex" t-value="0"/>
-            <t t-if="this.installationRequest.isShown and !this.store.discuss.searchTerm">
+            <t t-if="this.installationRequest.isShown and !this.searchTerms()">
                 <NotificationItem
                     important="1"
                     isActive="this.state.activeIndex === itemIndex"
@@ -59,7 +59,7 @@
                 </NotificationItem>
                 <t t-set="itemIndex" t-value="itemIndex + 1"/>
             </t>
-            <t t-if="this.notificationRequest.isShown and !this.store.discuss.searchTerm">
+            <t t-if="this.notificationRequest.isShown and !this.searchTerms()">
                 <NotificationItem
                     important="1"
                     isActive="this.state.activeIndex === itemIndex"
@@ -80,7 +80,7 @@
                 </NotificationItem>
                 <t t-set="itemIndex" t-value="itemIndex + 1"/>
             </t>
-            <t t-if="this.store.discuss.activeTab === 'notification' and !this.store.discuss.searchTerm">
+            <t t-if="this.store.discuss.activeTab === 'notification' and !this.searchTerms()">
                 <t t-foreach="this.store.failures" t-as="failure" t-key="failure.id">
                     <NotificationItem
                         important="1"

@@ -48,7 +48,7 @@ patch(MessagingMenu.prototype, {
     },
     beforeOpen() {
         this.state.searchOpen = false;
-        this.store.discuss.searchTerm = "";
+        this.searchTerms.set("");
         this.store.isReadyPromise.then(() => {
             if (
                 !this.store.inbox.isLoaded &&
@@ -162,7 +162,7 @@ patch(MessagingMenu.prototype, {
         });
     },
     toggleSearch() {
-        this.store.discuss.searchTerm = "";
+        this.searchTerms.set("");
         this.state.searchOpen = !this.state.searchOpen;
     },
     get counter() {

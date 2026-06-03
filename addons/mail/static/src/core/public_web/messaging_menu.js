@@ -5,7 +5,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { useDiscussSystray } from "@mail/utils/common/hooks";
 
-import { Component, proxy, useListener } from "@odoo/owl";
+import { Component, computed, proxy, useListener } from "@odoo/owl";
 
 import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -29,6 +29,9 @@ export class MessagingMenu extends Component {
 
     setup() {
         super.setup();
+        this.searchTerms = computed(() => this.store.discuss.searchTerm, {
+            set: (value) => (this.store.discuss.searchTerm = value),
+        });
         this.isIosPwa = isIOS() && isDisplayStandalone();
         this.store = useService("mail.store");
         this.hasTouch = hasTouch;
@@ -155,7 +158,7 @@ export class MessagingMenu extends Component {
         if (tab !== "notification") {
             return [];
         }
-        if (this.store.discuss.searchTerm) {
+        if (this.searchTerms()) {
             return [];
         }
         return this.store.standaloneInboxMessages;
