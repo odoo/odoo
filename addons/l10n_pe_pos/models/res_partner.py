@@ -23,3 +23,8 @@ class ResPartner(models.Model):
         if self.env.company.country_id.code == "PE":
             fields += ["city_id", "l10n_latam_identification_type_id", "l10n_pe_district"]
         return fields
+
+    def _get_pos_partner_view_id(self):
+        if self.env.company.country_id.code == "PE":
+            return self.env.ref("base.view_partner_form").id
+        return super()._get_pos_partner_view_id()
