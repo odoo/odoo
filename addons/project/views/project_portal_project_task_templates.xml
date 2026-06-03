@@ -24,20 +24,11 @@
             <t t-call="portal.portal_table">
                 <thead>
                     <tr>
-                        <!-- Allows overrides in modules -->
-                        <t t-set="group_by_in_header_list" t-value="['priority', 'milestone_id']"/>
-                        <t t-if="multiple_projects" t-set="group_by_in_header_list" t-value="group_by_in_header_list + ['project_id']"/>
-                        <!-- Computes the right colspan once and use it everywhere -->
-                        <t t-set="grouped_tasks_colspan" t-value="5 if groupby in group_by_in_header_list else 6"/>
-                        <t t-set="grouped_tasks_colspan" t-if="not allow_milestone" t-value="grouped_tasks_colspan - 1"/>
-                        <t t-set="grouped_tasks_colspan" t-if="not multiple_projects" t-value="grouped_tasks_colspan - 1"/>
-                        <th t-attf-colspan="{{2 if groupby != 'priority' else 1}}"/>
+                        <t t-set="grouped_tasks_colspan" t-value="3 if multiple_projects and groupby != 'project_id' else 2"/>
                         <th>Name</th>
-                        <th>Assignees</th>
+                        <th class="ps-5">Assignees</th>
                         <th t-if="groupby != 'project_id' and multiple_projects">Project</th>
-                        <th t-if="groupby != 'milestone_id' and allow_milestone" name="project_portal_milestones">Milestone</th>
-                        <th t-if="groupby != 'state'"/>
-                        <th t-if="groupby != 'stage_id'" class="text-end">Stage</th>
+                        <th t-if="groupby != 'stage_id'" class="text-end" name="stage_id_col">Stage</th>
                     </tr>
                 </thead>
                 <t t-foreach="grouped_tasks" t-as="tasks">
@@ -82,41 +73,26 @@
                                     <span t-else="">No Parent Task</span>
                                 </t>
                             </th>
-                            <th name="state_col" t-if="groupby != 'state'"/>
                             <th name="stage_id_col" t-if="groupby != 'stage_id'"/>
                         </tr>
                     </tbody>
                     <tbody t-if="tasks">
                         <t t-foreach="tasks" t-as="task">
                             <tr>
-                                <td class="text-start">
-                                    #<span t-out="task.id"/>
-                                </td>
-                                <td t-if="groupby != 'priority'" class="text-end">
-                                    <t t-call="project.portal_my_tasks_priority_widget_template"/>
-                                </td>
-                                <td>
+                                <td class="text-wrap">
                                     <a t-attf-href="/my/#{task_url}/#{task.id}?{{ keep_query() }}"><span t-att-title="task.name" t-field="task.name"/></a>
                                 </td>
-                                <td>
+                                <td class="ps-5">
                                     <t t-set="assignees" t-value="task.sudo().user_ids"/>
-                                    <div t-if="assignees" class="flex-nowrap ps-3">
+                                    <div t-if="assignees" class="flex-nowrap">
                                         <img class="o_avatar rounded" t-attf-src="#{image_data_uri(assignees[:1].avatar_128)}" alt="User"/>
                                         <span class="align-middle" t-att-title="'\n'.join(assignees.mapped('name'))">
                                             <span t-field="assignees[:1].name"/><span t-if="len(assignees) &gt; 1" class="badge ms-1 rounded-pill bg-light"> +<span t-out="len(assignees) - 1"/></span>
                                         </span>
                                     </div>
                                 </td>
-                                <td t-if="groupby != 'project_id' and multiple_projects">
+                                <td t-if="groupby != 'project_id' and multiple_projects" name="project_portal_project">
                                     <span title="Current project of the task" t-out="task.project_id.name" />
-                                </td>
-                                <td t-if="groupby != 'milestone_id' and allow_milestone" name="project_portal_milestones">
-                                    <t t-if="task.milestone_id and task.allow_milestones">
-                                        <span t-out="task.milestone_id.name" />
-                                    </t>
-                                </td>
-                                <td t-if="groupby != 'state'" align="right" class="align-middle">
-                                    <t t-call="project.portal_my_tasks_state_widget_template" path.f="tasks"/>
                                 </td>
                                 <td t-if="groupby != 'stage_id'" class="text-end lh-1">
                                     <t t-call="project.portal_my_tasks_badge_widget_template"/>
@@ -161,14 +137,13 @@
             <attribute name="t-call">project.task_link_preview_portal_layout</attribute>
         </xpath>
         <xpath expr="//t[@t-call='project.task_link_preview_portal_layout']" position="before">
+            <t t-set="title" t-value="task.name"/>
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
                 <t t-call="portal.portal_back_in_edit_mode"
                     backend_url="'/odoo/action-project.action_view_my_task/%s' % (task.id)"/>
             </t>
         </xpath>
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
-            <t t-set="title" t-value="task.name"/>
-
             <div class="row o_project_portal_sidebar">
                 <t t-set="entries">
                     <div class="d-flex flex-wrap flex-column gap-4">
