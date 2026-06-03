@@ -157,6 +157,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 }
             }
         },
+<<<<<<< bd176b6478b3352545f7b87064bc80f0a2b0e93c
         get_options_container_top_buttons: (el) => {
             const buttons = [];
             if (el.matches("section")) {
@@ -168,6 +169,22 @@ export class BuilderOptionsPlugin extends Plugin {
             }
             return buttons;
         },
+||||||| 02597374acd9e8fce98e362b2976be9919d54a80
+        // Selector of elements that should not update/have containers when they
+        // are clicked.
+        not_activable_element_selectors: [
+            "#web_editor-top-edit",
+            "#oe_manipulators",
+            ".oe_drop_zone",
+            ".o_notification_manager",
+            ".o_we_no_overlay",
+            ".ui-autocomplete",
+            ".modal .btn-close",
+            ".transfo-container",
+            ".o_datetime_picker",
+        ],
+=======
+>>>>>>> 06a614052608f3c795b470ac95e1bb67142d266c
     };
 
     setup() {
