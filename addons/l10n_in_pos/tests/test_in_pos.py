@@ -6,6 +6,7 @@ from odoo.tests import tagged
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestGenericIN(TestGenericLocalization, CommonPosTest):
+    pos_partner_pos_form_fields = ['l10n_in_gst_treatment']
 
     @classmethod
     @AccountTestInvoicingCommon.setup_country('in')

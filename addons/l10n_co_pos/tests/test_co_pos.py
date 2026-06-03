@@ -7,6 +7,8 @@ from odoo.tests import tagged
 
 @tagged('post_install', 'post_install_l10n')
 class TestGenericCO(TestGenericLocalization):
+    pos_partner_pos_form_fields = ['l10n_latam_identification_type_id']
+
     @classmethod
     @AccountTestInvoicingCommon.setup_country('co')
     def setUpClass(cls):
