@@ -140,12 +140,12 @@ export function parseAccountingDate(dateRange, locale) {
     }
 }
 
-const YEAR_OFFSET_ARG = arg("offset (number, default=0)", _t("Offset applied to the years."))
-const COMPANY_ARG = arg("company_id (number, optional)", _t("The company to target (Advanced)."))
+const YEAR_OFFSET_ARG = arg("offset (number, default=0)", _t("Offset applied to the years."));
+const COMPANY_ARG = arg("company_id (number, optional)", _t("The company to target (Advanced)."));
 const POSTED_ARG = arg(
     "include_unposted (boolean, default=FALSE)",
     _t("Set to TRUE to include unposted entries.")
-)
+);
 
 const ODOO_FIN_ARGS = () => [
     arg("account_codes (string)", _t("The prefix of the accounts.")),
@@ -161,7 +161,9 @@ const ODOO_FIN_ARGS = () => [
 const ODOO_RESIDUAL_ARGS = () => [
     arg(
         "account_codes (string, optional)",
-        _t("The prefix of the accounts. If none provided, all receivable and payable accounts will be used.")
+        _t(
+            "The prefix of the accounts. If none provided, all receivable and payable accounts will be used."
+        )
     ),
     arg(
         "date_range (string, date, optional)",
@@ -175,7 +177,7 @@ const ODOO_RESIDUAL_ARGS = () => [
 const ODOO_PARTNER_BALANCE_ARGS = () => {
     const partner_arg = arg("partner_ids (string)", _t("The partner ids (separated by a comma)."));
     return [partner_arg, ...ODOO_RESIDUAL_ARGS()];
-}
+};
 
 functionRegistry.add("ODOO.CREDIT", {
     description: _t("Get the total credit for the specified account(s) and period."),
@@ -195,7 +197,7 @@ functionRegistry.add("ODOO.CREDIT", {
             .sort();
         const _offset = toNumber(offset, this.locale);
         const _dateRange = parseAccountingDate(dateRange, this.locale);
-        const _companyId = companyId?.value;
+        const _companyId = companyId.value === null ? null : toNumber(companyId.value, this.locale);
         const _includeUnposted = toBoolean(includeUnposted);
         return {
             value: this.getters.getAccountPrefixCredit(
@@ -228,7 +230,7 @@ functionRegistry.add("ODOO.DEBIT", {
             .sort();
         const _offset = toNumber(offset, this.locale);
         const _dateRange = parseAccountingDate(dateRange, this.locale);
-        const _companyId = companyId?.value;
+        const _companyId = companyId.value === null ? null : toNumber(companyId.value, this.locale);
         const _includeUnposted = toBoolean(includeUnposted);
         return {
             value: this.getters.getAccountPrefixDebit(
@@ -261,7 +263,7 @@ functionRegistry.add("ODOO.BALANCE", {
             .sort();
         const _offset = toNumber(offset, this.locale);
         const _dateRange = parseAccountingDate(dateRange, this.locale);
-        const _companyId = companyId?.value;
+        const _companyId = companyId.value === null ? null : toNumber(companyId.value, this.locale);
         const _includeUnposted = toBoolean(includeUnposted);
         const value =
             this.getters.getAccountPrefixDebit(
@@ -376,8 +378,8 @@ functionRegistry.add("ODOO.RESIDUAL", {
             .map((code) => code.trim())
             .sort();
         const _offset = toNumber(offset, this.locale);
-        if ( !dateRange?.value ) {
-            dateRange = { value: new Date().getFullYear() }
+        if (!dateRange?.value) {
+            dateRange = { value: new Date().getFullYear() };
         }
         const _dateRange = parseAccountingDate(dateRange, this.locale);
         const _companyId = toNumber(companyId, this.locale);
@@ -393,7 +395,7 @@ functionRegistry.add("ODOO.RESIDUAL", {
             format: this.getters.getCompanyCurrencyFormat(_companyId) || "#,##0.00",
         };
     },
-})
+});
 
 functionRegistry.add("ODOO.PARTNER.BALANCE", {
     description: _t("Return the partner balance for the specified account(s) and period"),
@@ -418,8 +420,8 @@ functionRegistry.add("ODOO.PARTNER.BALANCE", {
             .sort();
         const _offset = toNumber(offset, this.locale);
 
-        if ( !dateRange?.value ) {
-            dateRange = { value: new Date().getFullYear() }
+        if (!dateRange?.value) {
+            dateRange = { value: new Date().getFullYear() };
         }
         const _dateRange = parseAccountingDate(dateRange, this.locale);
         const _companyId = toNumber(companyId, this.locale);
@@ -436,4 +438,4 @@ functionRegistry.add("ODOO.PARTNER.BALANCE", {
             format: this.getters.getCompanyCurrencyFormat(_companyId) || "#,##0.00",
         };
     },
-})
+});
