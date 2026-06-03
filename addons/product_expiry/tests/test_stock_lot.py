@@ -770,3 +770,33 @@ class TestStockLot(TestStockCommon):
 
         self.assertAlmostEqual(receipt.move_line_ids.expiration_date, today + timedelta(days=15), delta=delta)
         self.assertAlmostEqual(receipt.move_line_ids.removal_date, today + timedelta(days=10), delta=delta)
+
+    def test_no_expiration_wizard_when_tracking_removed(self):
+        product = self.ProductObj.create({
+            'name': 'Expirable Product',
+            'is_storable': True,
+            'tracking': 'lot',
+            'use_expiration_date': True,
+            'expiration_time': 0,
+            'removal_time': 2,
+        })
+
+        product.write({'tracking': 'none'})
+
+        self.assertFalse(product.use_expiration_date)
+
+        picking = self.PickingObj.create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'move_ids': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 1,
+                'product_uom': product.uom_id.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+            })],
+        })
+        picking.action_confirm()
+        res = picking.button_validate()
+        self.assertEqual(res, True)
