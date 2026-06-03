@@ -9,6 +9,7 @@ patch(PickupLocationMany2OneField.prototype, {
         return {
             ...super._getLocationSelectorDialogProps(),
             deliveryMethodType: this.props.record.data.delivery_type,
+            isFrontend: true,
         }
     }
 });
