@@ -12,7 +12,7 @@ export class SignaturePlugin extends Plugin {
             {
                 id: "insertSignature",
                 title: _t("Signature"),
-                description: _t("Insert your signature from Sign"),
+                description: _t("Insert your handwritten signature"),
                 icon: "o_signature_icon",
                 run: this.insertSignature.bind(this),
                 isAvailable: (selection) =>
