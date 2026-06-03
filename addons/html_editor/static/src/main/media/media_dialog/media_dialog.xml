@@ -4,9 +4,9 @@
         size="this.size"
         title="this.title"
         modalRef="this.modalRef">
-        <Notebook pages="this.notebookPages" onPageUpdate.bind="this.onTabChange" defaultPage="this.state.activeTab"/>
+        <Notebook pages="this.notebookPages" onPageUpdate.bind="this.onTabChange" defaultPage="this.activeTab()"/>
         <t t-set-slot="footer">
-            <button class="btn btn-primary" t-on-click="() => this.save()" t-custom-ref="add-button" data-hotkey="q">Add</button>
+            <button class="btn btn-primary" t-on-click="() => this.save()" t-att-disabled="this.isAddButtonDisabled" data-hotkey="q">Add</button>
             <button class="btn btn-secondary" t-on-click="() => this.close()" data-hotkey="x">Discard</button>
         </t>
     </Dialog>

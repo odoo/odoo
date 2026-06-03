@@ -7,7 +7,7 @@ patch(MediaDialog.prototype, {
         const classes = super.extraClassesToAdd();
         const closestSnippetEl = this.props.closestSnippetEl;
         if (
-            this.state.activeTab == TABS.IMAGES.id &&
+            this.activeTab() == TABS.IMAGES.id &&
             closestSnippetEl?.matches(".s_social_media, .s_share")
         ) {
             classes.push("social_media_img");

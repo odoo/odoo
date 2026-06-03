@@ -1,10 +1,9 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useService, useChildRef } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 import { iconClasses } from "@html_editor/utils/dom_info";
 import { TABS, renderMedia } from "./media_dialog_utils";
 
@@ -39,8 +38,6 @@ export class MediaDialog extends Component {
 
         this.selectedMedia = proxy({});
 
-        this.addButtonRef = useRef("add-button");
-
         this.initialIconClasses = [];
 
         this.notebookPages = [];
@@ -49,24 +46,17 @@ export class MediaDialog extends Component {
         this.tabs = Object.fromEntries(this.notebookPages.map((tab) => [tab.id, tab]));
 
         this.errorMessages = {};
+        this.activeTab = signal(this.initialActiveTab);
+        this.isSaving = signal(false);
 
-        this.state = proxy({
-            activeTab: this.initialActiveTab,
-            isSaving: false,
-        });
-
-        useLayoutEffect(
-            (nbSelectedAttachments) => {
-                // Disable/enable the add button depending on whether some media
-                // are selected or not.
-                this.addButtonRef.el.toggleAttribute(
-                    "disabled",
-                    !nbSelectedAttachments || this.state.isSaving
-                );
-            },
-            () => [this.selectedMedia[this.state.activeTab].length, this.state.isSaving]
-        );
         this.abortUploads = null;
+    }
+
+    get isAddButtonDisabled() {
+        const tab = this.activeTab();
+        const mediaForTab = this.selectedMedia[tab];
+        const saving = this.isSaving();
+        return !mediaForTab?.length || saving;
     }
 
     get initialActiveTab() {
@@ -193,26 +183,27 @@ export class MediaDialog extends Component {
     }
 
     async save() {
-        if (this.errorMessages[this.state.activeTab]) {
-            this.notificationService.add(this.errorMessages[this.state.activeTab], {
+        const tab = this.activeTab();
+        const selectedMedia = this.selectedMedia[tab];
+        if (this.errorMessages[tab]) {
+            this.notificationService.add(this.errorMessages[tab], {
                 type: "danger",
             });
             return;
         }
-        const selectedMedia = this.selectedMedia[this.state.activeTab];
         // TODO In master: clean the save method so it performs the specific
         // adaptation before saving from the active media selector and find a
         // way to simply close the dialog if the media element remains the same.
         const saveSelectedMedia =
             selectedMedia.length &&
-            (this.state.activeTab !== TABS.ICONS.id ||
+            (this.activeTab() !== TABS.ICONS.id ||
                 selectedMedia[0].initialIconChanged ||
                 !this.props.media);
-        this.state.isSaving = true;
+        this.isSaving.set(true);
         if (saveSelectedMedia) {
             let elements = await renderMedia({
                 orm: this.orm,
-                activeTab: this.state.activeTab,
+                activeTab: this.activeTab(),
                 availableTabs: this.tabs,
                 oldMediaNode: this.props.media,
                 selectedMedia: selectedMedia,
@@ -220,21 +211,21 @@ export class MediaDialog extends Component {
                 extraClassesToRemove: this.initialIconClasses,
             });
             elements = this.props.multiImages ? elements : elements[0];
-            await this.props.save(elements, selectedMedia, this.state.activeTab, this.props.media);
+            await this.props.save(elements, selectedMedia, this.activeTab(), this.props.media);
         }
         this.props.close();
-        this.state.isSaving = false;
+        this.isSaving.set(false);
     }
 
     onTabChange(tab) {
-        this.state.activeTab = tab;
+        this.activeTab.set(tab);
     }
     async close() {
         if (this.abortUploads) {
             this.abortUploads();
             delete this.abortUploads;
         }
-        this.state.isSaving = false;
+        this.isSaving.set(false);
         await this.props.close();
     }
 }
