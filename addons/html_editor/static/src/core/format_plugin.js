@@ -124,7 +124,7 @@ export class FormatPlugin extends Plugin {
                 id: "removeFormat",
                 description: (sel, nodes) =>
                     nodes && this.hasAnyFormat(nodes)
-                        ? _t("Remove Format")
+                        ? _t("Remove Format (Ctrl + Space)")
                         : _t("Selection has no format"),
                 icon: "fa-eraser",
                 run: this.removeAllFormats.bind(this),
