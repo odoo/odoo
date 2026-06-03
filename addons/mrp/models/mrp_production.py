@@ -2579,19 +2579,19 @@ class MrpProduction(models.Model):
     def button_unbuild(self):
         self.ensure_one()
         return {
-            'name': _('Unbuild: %s', self.product_id.display_name),
             'view_mode': 'form',
             'res_model': 'mrp.unbuild',
-            'view_id': self.env.ref('mrp.mrp_unbuild_form_view_simplified').id,
             'type': 'ir.actions.act_window',
-            'context': {'default_product_id': self.product_id.id,
-                        'default_lot_id': self.lot_producing_ids[:1].id,
-                        'default_mo_id': self.id,
-                        'default_company_id': self.company_id.id,
-                        'default_location_id': self.location_dest_id.id,
-                        'default_location_dest_id': self.location_src_id.id,
-                        'create': False, 'edit': False},
-            'target': 'new',
+            'context': {
+                'default_product_id': self.product_id.id,
+                'default_product_qty': self.qty_producing,
+                'default_lot_ids': self.lot_producing_ids.ids,
+                'default_mo_id': self.id,
+                'default_company_id': self.company_id.id,
+                'default_location_id': self.location_dest_id.id,
+                'default_location_dest_id': self.location_src_id.id,
+                'create': False,
+            },
         }
 
     def action_split(self):

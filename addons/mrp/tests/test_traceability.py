@@ -334,7 +334,7 @@ class TestTraceability(TestMrpCommon):
 
         unbuild_form = Form(self.env['mrp.unbuild'])
         unbuild_form.mo_id = mo
-        unbuild_form.lot_id = lot
+        unbuild_form.lot_ids = lot
         unbuild_form.save().action_unbuild()
 
         mo_form = Form(self.env['mrp.production'])
@@ -929,7 +929,7 @@ class TestTraceability(TestMrpCommon):
 
         unbuild_form = Form(self.env['mrp.unbuild'])
         unbuild_form.mo_id = mo_produce_sn
-        unbuild_form.lot_id = sn
+        unbuild_form.lot_ids = sn
         unbuild_form.save().action_unbuild()
 
         self.env['stock.quant']._update_available_quantity(component, self.stock_location, 1, lot_id=sn)
