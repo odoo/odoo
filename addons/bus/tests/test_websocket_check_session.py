@@ -82,7 +82,7 @@ class TestWebsocketCheckSession(WebsocketCase, HttpCase):
         new_test_user(self.env, login='test_user', password='Password!1')
         user_session = self.authenticate('test_user', 'Password!1')
         websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
-        self.subscribe(websocket, ['channel1'], self.env['bus.bus']._bus_last_id())
+        self.subscribe(websocket, ['channel1'])
         self.url_open(
             '/web/session/logout',
             method='POST',
@@ -90,11 +90,10 @@ class TestWebsocketCheckSession(WebsocketCase, HttpCase):
                 "csrf_token": self.csrf_token(),
             },
         )
-        # Simulate postgres notify. The session with whom the websocket
-        # connected has been deleted. WebSocket should be closed without
-        # receiving the message.
-        self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
-        self.trigger_notification_dispatching()
+        # The session with whom the websocket connected has been deleted. WebSocket should
+        # be closed without receiving the message.
+        with self.bus_db_mock.tx():
+            self.env['bus.bus']._sendone('channel1', 'notif_type', 'message')
         self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
     @patch.dict(os.environ, {"ODOO_BUS_PUBLIC_SAMESITE_WS": "True"})

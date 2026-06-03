@@ -7,6 +7,7 @@ export class BusBus extends models.Model {
     /** @type {Record<number, string[]>} */
     channelsByUser = {};
     lastBusNotificationId = 0;
+    lastXID = 0;
 
     /**
      * @param {models.Model | string} channel
@@ -60,10 +61,14 @@ export class BusBus extends models.Model {
                 message: { payload: JSON.parse(JSON.stringify(payload)), type },
             });
         }
+        const next = this.lastXID++;
+        const last_fetch_snapshot = `${next}:${next}:`;
         getWebSocketWorker()._onWebsocketMessage(
-            new MessageEvent("message", { data: JSON.stringify(values) })
+            new MessageEvent("message", {
+                data: JSON.stringify({ last_fetch_snapshot, notifications: values }),
+            })
         );
-        return this.lastBusNotificationId;
+        return last_fetch_snapshot;
     }
 
     /**

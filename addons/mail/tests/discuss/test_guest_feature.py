@@ -31,13 +31,12 @@ class TestGuestFeature(WebsocketCase, MailCommon):
         self.assertEqual(guest_member.seen_message_id, channel.message_ids[0])
 
     def test_subscribe_to_guest_channel(self):
-        self._reset_bus()
         guest = self.env["mail.guest"].create({"name": "Guest"})
         guest_websocket = self.websocket_connect()
-        self.subscribe(guest_websocket, [f"mail.guest_{guest._format_auth_cookie()}"], guest.id)
-        guest._bus_send("lambda", {"foo": "bar"})
-        self.trigger_notification_dispatching()
-        notifications = json.loads(guest_websocket.recv())
+        self.subscribe(guest_websocket, [f"mail.guest_{guest._format_auth_cookie()}"])
+        with self.bus_db_mock.tx():
+            guest._bus_send("lambda", {"foo": "bar"})
+        notifications = json.loads(guest_websocket.recv())["notifications"]
         self.assertEqual(1, len(notifications))
         self.assertEqual(notifications[0]["message"]["type"], "lambda")
         self.assertEqual(notifications[0]["message"]["payload"], {"foo": "bar"})
@@ -50,10 +49,10 @@ class TestGuestFeature(WebsocketCase, MailCommon):
         channel._add_members(guests=guest)
         self._reset_bus()
         guest_websocket = self.websocket_connect()
-        self.subscribe(guest_websocket, [f"mail.guest_{guest._format_auth_cookie()}"], guest.id)
-        channel._bus_send("lambda", {"foo": "bar"})
-        self.trigger_notification_dispatching()
-        notifications = json.loads(guest_websocket.recv())
+        self.subscribe(guest_websocket, [f"mail.guest_{guest._format_auth_cookie()}"])
+        with self.bus_db_mock.tx():
+            channel._bus_send("lambda", {"foo": "bar"})
+        notifications = json.loads(guest_websocket.recv())["notifications"]
         self.assertEqual(1, len(notifications))
         self.assertEqual(notifications[0]["message"]["type"], "lambda")
         self.assertEqual(notifications[0]["message"]["payload"], {"foo": "bar"})

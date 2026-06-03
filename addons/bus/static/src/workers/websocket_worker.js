@@ -55,12 +55,21 @@ export class WebsocketWorker {
     CONNECTION_CHECK_DELAY = 60_000;
 
     /**
+     * Snapshot of the last fetch, used to resume notification delivery safely. Initialized
+     * when the tab connects and updated with each received notification batch. This ensures
+     * notifications are not missed across reconnects or channel subscription changes.
+     *
+     * See `Websocket._last_fetch_snapshot` for implementation details.
+     *
+     * @type {?string}
+     */
+    last_fetch_snapshot = null;
+
+    /**
      * @type {Set<number>} Notifications ids that were already received. Used to
      * guaarantee at-most-once delivery.
      */
     seenNotificationIds = new BoundedSet(10_000);
-    /** Number of times the worker has opened a websocket connection */
-    connectCount = 0;
 
     constructor(name) {
         this.active = true;
@@ -73,8 +82,7 @@ export class WebsocketWorker {
         this.isReconnecting = false;
         this.isWaitingForNewUID = true;
         this.lastChannelSubscription = null;
-        this.lastNotificationId = 0;
-        /** @type {{force: boolean, minId: number}|null} */
+        /** @type {?{force: boolean, from_snapshot: string}} */
         this.nextSubscribeData = null;
         this.loggingEnabled = null;
         this.messageWaitQueue = [];
@@ -275,16 +283,17 @@ export class WebsocketWorker {
      *
      * @param {Object} param0
      * @param {string} [param0.db] Database name.
-     * @param {Number} [param0.lastNotificationId] Last notification id
-     * known by the client.
-     * @param {String} [param0.websocketURL] URL of the websocket endpoint.
+     * @param {string} [param0.initial_snapshot] The ``initial_snapshot`` sent by the tab.
+     * Used to ensure no notifications are missed between the data fetch and the first
+     * subscription.
+     * @param {string} [param0.websocketURL] URL of the websocket endpoint.
      * @param {Number|false|undefined} [param0.uid] Current user id
      *     - Number: user is logged whether on the frontend/backend.
      *     - false: user is not logged.
      *     - undefined: not available (e.g. livechat support page)
      * @param {Number} param0.startTs Timestamp of start of bus service sender.
      */
-    _initializeConnection(client, { db, lastNotificationId, uid, websocketURL, startTs }) {
+    _initializeConnection(client, { db, initial_snapshot, uid, websocketURL, startTs }) {
         if (this.newestStartTs && this.newestStartTs > startTs) {
             this.sendToClient(client, "BUS:WORKER_STATE_UPDATED", this.state);
             this.sendToClient(client, "BUS:INITIALIZED");
@@ -292,7 +301,7 @@ export class WebsocketWorker {
         }
         this.newestStartTs = startTs;
         this.websocketURL = websocketURL;
-        this.lastNotificationId = Math.max(this.lastNotificationId, lastNotificationId);
+        this.last_fetch_snapshot ??= initial_snapshot;
         const isCurrentUserKnown = uid !== undefined;
         if (this.isWaitingForNewUID && isCurrentUserKnown) {
             this.isWaitingForNewUID = false;
@@ -382,8 +391,10 @@ export class WebsocketWorker {
      */
     _onWebsocketMessage(messageEv) {
         this._restartConnectionCheckInterval();
-        const messages = JSON.parse(messageEv.data);
-        this._logDebug("_onWebsocketMessage", messages);
+        const payload = JSON.parse(messageEv.data);
+        const messages = payload.notifications;
+        this.last_fetch_snapshot = payload.last_fetch_snapshot ?? this.last_fetch_snapshot;
+        this._logDebug("_onWebsocketMessage", this.last_fetch_snapshot, messages);
         const newNotifications = [];
         for (const message of messages) {
             if (message.internal) {
@@ -395,7 +406,6 @@ export class WebsocketWorker {
             }
             this.seenNotificationIds.add(message.id);
             newNotifications.push(message);
-            this.lastNotificationId = Math.max(this.lastNotificationId, message.id);
         }
         if (newNotifications.length) {
             this.broadcast("BUS:NOTIFICATION", newNotifications);
@@ -422,7 +432,6 @@ export class WebsocketWorker {
      * the connection to open.
      */
     _onWebsocketOpen() {
-        this.connectCount++;
         this._logDebug("_onWebsocketOpen");
         this._updateState(WORKER_STATE.CONNECTED);
         this.broadcast(this.isReconnecting ? "BUS:RECONNECT" : "BUS:CONNECT");
@@ -561,30 +570,24 @@ export class WebsocketWorker {
      * `_scheduleUpdateChannels` only.
      */
     _debouncedUpdateChannels = debounce(() => {
-        const { force, minId } = this.nextSubscribeData;
+        const { force, from_snapshot } = this.nextSubscribeData;
         this.nextSubscribeData = null;
         const allTabsChannels = [
             ...new Set([].concat.apply([], [...this.channelsByClient.values()])),
         ].sort();
         const allTabsChannelsString = JSON.stringify(allTabsChannels);
-        const shouldUpdateChannelSubscription =
-            allTabsChannelsString !== this.lastChannelSubscription;
-        if (force || shouldUpdateChannelSubscription) {
-            // Do not check for outdated state on the first connection: `last_id` comes from
-            // storage, so GC may have already occurred, but this is safe since the page
-            // was actively loaded. Only check on the first subscribe, as notifications
-            // are streamed in real time and cannot be missed during an active connection
-            // (no `lastChannelSubscription`).
-            const check_outdated = this.connectCount > 1 && !this.lastChannelSubscription;
-            this.lastChannelSubscription = allTabsChannelsString;
+        if (force || allTabsChannelsString !== this.lastChannelSubscription) {
             this._sendToServer({
                 event_name: "subscribe",
                 data: {
                     channels: allTabsChannels,
-                    check_outdated,
-                    last: minId,
+                    // Only check on the first subscribe as notifications can only be
+                    // missed during disconnects.
+                    check_outdated: !this.lastChannelSubscription,
+                    from_snapshot,
                 },
             });
+            this.lastChannelSubscription = allTabsChannelsString;
             this.firstSubscribeResolver.resolve();
         }
     }, WebsocketWorker.OUTGOING_BATCH_DELAY);
@@ -598,7 +601,7 @@ export class WebsocketWorker {
      * channel list has not changed.
      */
     _scheduleUpdateChannels({ force = false } = {}) {
-        this.nextSubscribeData ??= { minId: this.lastNotificationId };
+        this.nextSubscribeData ??= { from_snapshot: this.last_fetch_snapshot };
         this.nextSubscribeData.force ||= force;
         this._debouncedUpdateChannels();
     }

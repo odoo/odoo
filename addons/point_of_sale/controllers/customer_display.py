@@ -14,11 +14,12 @@ class PosCustomerDisplay(http.Controller):
             {
                 "session_info": {
                     "user_context": {
-                      "lang":  request.env.user.lang or pos_config_sudo.company_id.partner_id.lang
+                        "lang": request.env.user.lang or pos_config_sudo.company_id.partner_id.lang,
                     },
                     **request.env["ir.http"].get_frontend_session_info(),
                     **pos_config_sudo._get_customer_display_data(),
-                    'device_uuid': device_uuid,
+                    "bus_info": request.env["ir.http"]._get_bus_session_info(),
+                    "device_uuid": device_uuid,
                 },
             },
         )

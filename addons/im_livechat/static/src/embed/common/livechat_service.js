@@ -118,7 +118,7 @@ export class LivechatService {
      * @returns {Promise<import("models").Thread>}
      */
     async _createChannel({ originThread, persist = false, options = {} }) {
-        const { store_data, channel_id } = await rpc(
+        const { bus_info, channel_id, store_data } = await rpc(
             "/im_livechat/get_session",
             {
                 channel_id: options.channel_id ?? this.options.channel_id,
@@ -131,6 +131,7 @@ export class LivechatService {
             },
             { silent: true }
         );
+        session.bus_info = Object.assign(session.bus_info ?? {}, bus_info);
         if (!channel_id) {
             this.notificationService.add(_t("No available collaborator, please try again later."));
             return;

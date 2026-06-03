@@ -21,8 +21,14 @@ export class WorkerService {
     }
 
     startWorker() {
+        if (!session.bus_info) {
+            console.warn("Worker service cannot start: missing 'session.bus_info'.");
+            this._state = WORKER_STATE.FAILED;
+            this._resolveWorkerInit(false);
+            return;
+        }
         this._state = WORKER_STATE.INITIALIZING;
-        let workerURL = `${this.params.serverURL}/bus/websocket_worker_bundle?v=${session.websocket_worker_version}`;
+        let workerURL = `${this.params.serverURL}/bus/websocket_worker_bundle?v=${session.bus_info.worker_version}`;
         if (this.params.serverURL !== window.origin) {
             // Worker service can be loaded from a different origin than the
             // bundle URL. The Worker expects an URL from this origin, give
@@ -39,7 +45,7 @@ export class WorkerService {
         this._registerHandler((ev) => {
             if (ev.data.type === "BASE:INITIALIZED") {
                 this._state = WORKER_STATE.INITIALIZED;
-                this._resolveWorkerInit();
+                this._resolveWorkerInit(true);
             }
         });
         if (this.isUsingSharedWorker) {
@@ -48,7 +54,7 @@ export class WorkerService {
         this._send("BASE:INIT");
     }
 
-    /** @returns {Promise<void>} */
+    /** @returns {Promise<boolean>} */
     ensureWorkerStarted() {
         if (this._state === WORKER_STATE.UNINITIALIZED) {
             this.startWorker();
@@ -65,7 +71,7 @@ export class WorkerService {
             this.startWorker();
         } else if (this._state === WORKER_STATE.INITIALIZING) {
             this._state = WORKER_STATE.FAILED;
-            this._resolveWorkerInit();
+            this._resolveWorkerInit(false);
             console.warn("Worker service failed to initialize: ", e);
         }
     }
@@ -103,6 +109,7 @@ export class WorkerService {
         await this.workerInitPromise;
         if (this._state === WORKER_STATE.FAILED) {
             console.warn("Worker service failed to initialize, cannot send message.");
+            return;
         }
         this._send(action, data);
     }
@@ -119,6 +126,7 @@ export class WorkerService {
         await this.workerInitPromise;
         if (this._state === WORKER_STATE.FAILED) {
             console.warn("Worker service failed to initialize, cannot register handler.");
+            return;
         }
         this._registerHandler(handler);
     }
@@ -131,6 +139,14 @@ export class WorkerService {
 export const workerService = {
     dependencies: ["bus.parameters"],
     start(env, services) {
+        if (!session.bus_info && session.websocket_worker_version) {
+            console.warn(
+                '"session.websocket_worker_version" is deprecated. Bus consumers should',
+                'provide "bus_info" instead, which includes the initial_snapshot to start from,',
+                "thus ensuring that no notifications are missed from the time of page load."
+            );
+            session.bus_info = { worker_version: session.websocket_worker_version };
+        }
         return new WorkerService(env, services);
     },
 };

@@ -2791,21 +2791,34 @@ class HttpCase(TransactionCase):
             atexit.enter_context(browser.cleanup)
             if "bus.bus" in self.env.registry:
                 from odoo.addons.base.models.ir_http import IrHttp  # noqa: PLC0415
+                from odoo.addons.bus.tests.common import mock_bus_transactions  # noqa: PLC0415, OLS02001
                 from odoo.addons.bus.websocket import CloseCode, WebsocketConnectionHandler, _kick_all  # noqa: PLC0415
 
                 atexit.callback(_kick_all, CloseCode.KILL_NOW)
+                bus_db_mock = atexit.enter_context(mock_bus_transactions(self.env.cr))
                 original_post_dispatch = IrHttp._post_dispatch
 
                 def post_dispatch_wrapper(_, response):
-                    original_post_dispatch(response)
-                    # Trigger the creation of bus.bus records and notification dispatching
-                    request.env.cr.precommit.run()
-                    request.env.cr.postcommit.run()
+                    # Trigger the creation of bus.bus records and notification dispatching.
+                    with bus_db_mock.tx(request.env.cr):
+                        original_post_dispatch(response)
 
                 atexit.enter_context(patch.object(IrHttp, "_post_dispatch", classmethod(post_dispatch_wrapper)))
                 atexit.enter_context(patch.object(
                     WebsocketConnectionHandler, "websocket_allowed", return_value=True
                 ))
+            if "ai.session" in self.env.registry:
+                # Mock `AiSession._post_ai_response` to ensure bus notifications are
+                # correctly dispatched. Done in `_post_dispatch` during tours, but the AI
+                # agent loop runs outside of the request boundary.
+                from odoo.addons.ai.models.ai_session import AiSession  # noqa: PLC0415, OLS02001
+                original_post_ai_response = AiSession._post_ai_response
+
+                def post_ai_response_wrapper(self, *args, **kwargs):
+                    with bus_db_mock.tx(self.env.cr):
+                        original_post_ai_response(self, *args, **kwargs)
+
+                atexit.enter_context(patch.object(AiSession, "_post_ai_response", post_ai_response_wrapper))
 
             self.authenticate(login, login, browser=browser)
             url = urljoin(self.base_url(), url_path)

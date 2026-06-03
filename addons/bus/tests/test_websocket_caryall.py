@@ -18,6 +18,7 @@ from odoo.addons.bus import websocket as websocket_module
 from odoo.addons.bus.models.bus import dispatch
 from odoo.addons.bus.models.ir_websocket import IrWebsocket
 from odoo.addons.bus.tests.common import WebsocketCase
+from odoo.addons.bus.tools.snapshot import encode_snapshot
 from odoo.addons.bus.websocket import (
     CloseCode,
     Websocket,
@@ -26,6 +27,40 @@ from odoo.addons.bus.websocket import (
 
 
 class TestWebsocketCaryall(WebsocketCase):
+    def test_pg_tx_mock(self):
+        initial_xid = self.bus_db_mock._next_xid
+        self.assertEqual(
+            self.bus_db_mock.snapshot(),
+            encode_snapshot(f"{initial_xid}:{initial_xid}:"),
+        )
+        tx1 = self.bus_db_mock.tx()
+        self.assertEqual(
+            self.bus_db_mock.snapshot(),
+            encode_snapshot(f"{initial_xid}:{initial_xid + 1}:{initial_xid}"),
+        )
+        tx2 = self.bus_db_mock.tx()
+        self.assertEqual(
+            self.bus_db_mock.snapshot(),
+            encode_snapshot(f"{initial_xid}:{initial_xid + 2}:{initial_xid},{initial_xid + 1}"),
+        )
+        tx1.send("channel_1", "type", "from_tx1")
+        tx2.send("channel_1", "type", "from_tx2")
+        self.assertFalse(self.env["bus.bus"].search([]))
+        tx2.commit()
+        self.assertEqual(
+            self.bus_db_mock.snapshot(),
+            encode_snapshot(f"{initial_xid}:{initial_xid + 2}:{initial_xid}"),
+        )
+        row = self.env["bus.bus"].search([])
+        self.assertEqual(row.create_xid, initial_xid + 1)
+        self.assertEqual(json.loads(row.message)["payload"], "from_tx2")
+        tx1.commit()
+        self.assertEqual(
+            self.bus_db_mock.snapshot(), encode_snapshot(f"{initial_xid + 2}:{initial_xid + 2}:")
+        )
+        row = self.env["bus.bus"].search([("create_xid", "=", initial_xid)])
+        self.assertEqual(json.loads(row.message)["payload"], "from_tx1")
+
     def test_lifecycle_hooks(self):
         events = []
         with patch.object(Websocket, '_Websocket__event_callbacks', defaultdict(set)):
@@ -62,7 +97,7 @@ class TestWebsocketCaryall(WebsocketCase):
 
     def test_channel_subscription_disconnect(self):
         websocket = self.websocket_connect()
-        self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
+        self.subscribe(websocket, ['my_channel'])
         # channel is added as expected to the channel to websocket map.
         self.assertIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
         websocket.close(CloseCode.CLEAN)
@@ -73,30 +108,12 @@ class TestWebsocketCaryall(WebsocketCase):
 
     def test_channel_subscription_update(self):
         websocket = self.websocket_connect()
-        self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
+        self.subscribe(websocket, ['my_channel'])
         # channel is added as expected to the channel to websocket map.
         self.assertIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
-        self.subscribe(websocket, ['my_channel_2'], self.env['bus.bus']._bus_last_id())
+        self.subscribe(websocket, ['my_channel_2'])
         # channel is removed as expected when updating the subscription.
         self.assertNotIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
-
-    def test_trigger_notification(self):
-        websocket = self.websocket_connect()
-        self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
-        self.env['bus.bus']._sendone('my_channel', 'notif_type', 'message')
-        self.trigger_notification_dispatching()
-        notifications = json.loads(websocket.recv())
-        self.assertEqual(1, len(notifications))
-        self.assertEqual(notifications[0]['message']['type'], 'notif_type')
-        self.assertEqual(notifications[0]['message']['payload'], 'message')
-        self.env['bus.bus']._sendone('my_channel', 'notif_type', 'another_message')
-        self.trigger_notification_dispatching()
-        notifications = json.loads(websocket.recv())
-        # First notification has been received, we should only receive
-        # the second one.
-        self.assertEqual(1, len(notifications))
-        self.assertEqual(notifications[0]['message']['type'], 'notif_type')
-        self.assertEqual(notifications[0]['message']['payload'], 'another_message')
 
     def test_trigger_notification_unsupported_language(self):
         websocket = self.websocket_connect()
@@ -105,51 +122,35 @@ class TestWebsocketCaryall(WebsocketCase):
         # specific) or a known language that is uninstalled; in all cases this
         # should not crash the notif. dispatching.
         self.update_session_context(lang='fr_LU')
-        self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
-        self.env['bus.bus']._sendone('my_channel', 'notif_type', 'message')
-        self.trigger_notification_dispatching()
-        notifications = json.loads(websocket.recv())
+        self.subscribe(websocket, ['my_channel'])
+        with self.bus_db_mock.tx():
+            self.env['bus.bus']._sendone('my_channel', 'notif_type', 'message')
+        notifications = json.loads(websocket.recv())["notifications"]
         self.assertEqual(1, len(notifications))
         self.assertEqual(notifications[0]['message']['type'], 'notif_type')
         self.assertEqual(notifications[0]['message']['payload'], 'message')
-
-    def test_subscribe_higher_last_notification_id(self):
-        server_last_notification_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
-        client_last_notification_id = server_last_notification_id + 1
-
-        with patch.object(Websocket, 'subscribe', side_effect=Websocket.subscribe, autospec=True) as mock:
-            websocket = self.websocket_connect()
-            self.subscribe(websocket, ['my_channel'], client_last_notification_id)
-            self.assertEqual(mock.call_args[0][2], 0)
-
-    def test_subscribe_lower_last_notification_id(self):
-        server_last_notification_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
-        client_last_notification_id = server_last_notification_id - 1
-
-        with patch.object(Websocket, 'subscribe', side_effect=Websocket.subscribe, autospec=True) as mock:
-            websocket = self.websocket_connect()
-            self.subscribe(websocket, ['my_channel'], client_last_notification_id)
-            self.assertEqual(mock.call_args[0][2], client_last_notification_id)
 
     def test_subscribe_to_custom_channel(self):
         channel = new_test_user(self.env, "John")
         websocket = self.websocket_connect()
         with patch.object(IrWebsocket, "_build_bus_channel_list", return_value=[channel]):
-            self.subscribe(websocket, [], self.env['bus.bus']._bus_last_id())
-            channel._bus_send("notif_on_global_channel", "message")
-            channel._bus_send("notif_on_private_channel", "message", subchannel="PRIVATE")
-            self.trigger_notification_dispatching()
-            notifications = json.loads(websocket.recv())
+            self.subscribe(websocket, [])
+            with self.bus_db_mock.tx():
+                self.env["bus.bus"]._sendone(channel, "notif_on_global_channel", "message")
+                self.env["bus.bus"]._sendone(
+                    (channel, "PRIVATE"), "notif_on_private_channel", "message"
+                )
+            notifications = json.loads(websocket.recv())["notifications"]
             self.assertEqual(len(notifications), 1)
-            self.assertEqual(notifications[0]['message']['type'], 'notif_on_global_channel')
-            self.assertEqual(notifications[0]['message']['payload'], 'message')
+            self.assertEqual(notifications[0]["message"]["type"], "notif_on_global_channel")
+            self.assertEqual(notifications[0]["message"]["payload"], "message")
 
         with patch.object(IrWebsocket, "_build_bus_channel_list", return_value=[(channel, "PRIVATE")]):
-            self.subscribe(websocket, [], self.env['bus.bus']._bus_last_id())
-            channel._bus_send("notif_on_global_channel", "message")
-            channel._bus_send("notif_on_private_channel", "message", subchannel="PRIVATE")
-            self.trigger_notification_dispatching()
-            notifications = json.loads(websocket.recv())
+            self.subscribe(websocket, [])
+            with self.bus_db_mock.tx():
+                self.env["bus.bus"]._sendone(channel, "notif_on_global_channel", "message")
+                self.env["bus.bus"]._sendone((channel, "PRIVATE"), "notif_on_private_channel", "message")
+            notifications = json.loads(websocket.recv())["notifications"]
             self.assertEqual(len(notifications), 1)
             self.assertEqual(notifications[0]['message']['type'], 'notif_on_private_channel')
             self.assertEqual(notifications[0]['message']['payload'], 'message')
@@ -195,18 +196,16 @@ class TestWebsocketCaryall(WebsocketCase):
             websocket.recv_data_frame(control_frame=True)  # pong
 
     def test_websocket_check_outdated_subscription(self):
-        self.env['bus.bus']._sendone('channel_A', 'some_notification', None)
-        self.env['bus.bus']._sendone('channel_A', 'some_notification', None)
-        self.trigger_notification_dispatching()
-        last_id = self.env['bus.bus']._bus_last_id()
+        with self.bus_db_mock.tx():
+            self.env['bus.bus']._sendone('channel_A', 'some_notification')
         self._reset_bus()
         websocket = self.websocket_connect()
-        self.subscribe(websocket, ['channel_A'], last_id, check_outdated=True)
-        message = json.loads(websocket.recv())[0]
+        self.subscribe(websocket, ['channel_A'], check_outdated=True)
+        message = json.loads(websocket.recv())['notifications'][0]
         self.assertEqual(
             message,
             {'type': 'bus/subscription_outdated', 'internal': True, 'payload': None},
         )
-        self.subscribe(websocket, ['channel_A'], last_id, check_outdated=False)
+        self.subscribe(websocket, ['channel_A'], check_outdated=False)
         with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
             websocket.recv()
