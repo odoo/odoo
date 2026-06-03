@@ -1,18 +1,28 @@
 import { patch } from "@web/core/utils/patch";
 import { BottomSheet } from "@web/core/bottom_sheet/bottom_sheet";
 import { onMounted, t, useProps } from "@odoo/owl";
+import { useViewportChange } from "@web/core/utils/dvu";
 
 patch(BottomSheet.prototype, {
     setup() {
         super.setup();
         this.htmlEditorProps = useProps({
             withUnfocus: t.boolean().optional(false),
+            fitOnResize: t.boolean().optional(false),
         });
         onMounted(() => {
             if (this.htmlEditorProps.withUnfocus) {
                 this.sheetRef().ownerDocument.activeElement?.blur();
             }
         });
+        // Adapt dimensions when mobile virtual-keyboards or browsers bars toggle
+        if (this.htmlEditorProps.fitOnResize) {
+            useViewportChange(() => {
+                if (this.state.isPositionedReady && !this.state.isDismissing) {
+                    this.updateProgressValue(0);
+                }
+            });
+        }
     },
 
     onIframeLoad(ev) {
