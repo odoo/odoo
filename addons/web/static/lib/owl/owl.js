@@ -3310,6 +3310,10 @@ ${issueStrings}`);
     parent;
     children = /* @__PURE__ */ Object.create(null);
     willUpdateProps = [];
+    // Fired right after `props` is applied to `node.props` on a parent re-render,
+    // so reactive prop notifications happen once the new values are observable
+    // (after user `onWillUpdateProps` hooks, including async ones, have run).
+    propsUpdated = [];
     willUnmount = [];
     mounted = [];
     willPatch = [];
@@ -3843,6 +3847,7 @@ ${issueStrings}`);
               () => {
                 if (fiber !== node.fiber) return;
                 node.props = props2;
+                for (const f of node.propsUpdated) f();
                 fiber.render();
               },
               (error) => {
@@ -3851,6 +3856,7 @@ ${issueStrings}`);
             );
           } else {
             node.props = props2;
+            for (const f of node.propsUpdated) f();
             fiber.render();
           }
         }
@@ -4250,26 +4256,38 @@ ${issueStrings}`);
     if (defaults) {
       node.defaultProps = Object.assign(node.defaultProps || {}, defaults);
     }
-    function getProp(key) {
-      if (node.props[key] === void 0 && defaults) {
+    function resolveValue(props2, key) {
+      if (props2[key] === void 0 && defaults) {
         return defaults[key];
       }
-      return node.props[key];
+      return props2[key];
     }
+    const signals = /* @__PURE__ */ Object.create(null);
     const result = /* @__PURE__ */ Object.create(null);
-    function applyPropGetters(keys) {
+    function defineProp(key) {
+      signals[key] = signal(resolveValue(node.props, key));
+      Reflect.defineProperty(result, key, {
+        enumerable: true,
+        configurable: true,
+        get: signals[key]
+      });
+    }
+    function defineProps(keys) {
       for (const key of keys) {
-        Reflect.defineProperty(result, key, {
-          enumerable: true,
-          get: getProp.bind(null, key)
-        });
+        defineProp(key);
+      }
+    }
+    function updateSignals(keys) {
+      for (const key of keys) {
+        signals[key].set(resolveValue(node.props, key));
       }
     }
     if (type) {
       const keys = (Array.isArray(type) ? type : Object.keys(type)).map(
         (key) => key.endsWith("?") ? key.slice(0, -1) : key
       );
-      applyPropGetters(keys);
+      defineProps(keys);
+      node.propsUpdated.push(() => updateSignals(keys));
       if (app.dev) {
         if (defaults) {
           assertType(defaults, validateDefaults(type), `Invalid component default props (${componentName})`);
@@ -4298,13 +4316,23 @@ ${issueStrings}`);
         return keys2;
       };
       let keys = getKeys(node.props);
-      applyPropGetters(keys);
-      node.willUpdateProps.push((np) => {
+      defineProps(keys);
+      node.propsUpdated.push(() => {
+        const nextKeys = getKeys(node.props);
+        const nextKeySet = new Set(nextKeys);
         for (const key of keys) {
-          Reflect.deleteProperty(result, key);
+          if (!nextKeySet.has(key)) {
+            Reflect.deleteProperty(result, key);
+            delete signals[key];
+          }
         }
-        keys = getKeys(np);
-        applyPropGetters(keys);
+        for (const key of nextKeys) {
+          if (!(key in signals)) {
+            defineProp(key);
+          }
+        }
+        updateSignals(nextKeys);
+        keys = nextKeys;
       });
     }
     return result;
@@ -4453,8 +4481,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-05-29T08:13:56.334Z",
-    hash: "867bd5c8",
+    date: "2026-06-03T13:03:01.472Z",
+    hash: "d77c5f66",
     url: "https://github.com/odoo/owl"
   };
 
