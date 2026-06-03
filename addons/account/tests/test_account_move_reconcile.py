@@ -4,7 +4,7 @@ from contextlib import closing
 from unittest.mock import patch
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged, users
+from odoo.tests import Form, tagged, users, warmup
 from odoo.exceptions import UserError
 from odoo import fields, Command
 
@@ -6128,3 +6128,29 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'balance': 10.0},
             {'balance': -10.0},
         ])
+
+    def test_perf_reconciled_lines_ids(self):
+        line_1 = self.create_line_for_reconciliation(1000.0, 1000.0, self.env.company.currency_id, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(-1000.0, -1000.0, self.env.company.currency_id, '2016-01-01')
+        line_3 = self.create_line_for_reconciliation(1000.0, 1000.0, self.env.company.currency_id, '2016-01-01')
+        line_4 = self.create_line_for_reconciliation(-1000.0, -1000.0, self.env.company.currency_id, '2016-01-01')
+        line_5 = self.create_line_for_reconciliation(1000.0, 1000.0, self.env.company.currency_id, '2016-01-01')
+        line_6 = self.create_line_for_reconciliation(-1000.0, -1000.0, self.env.company.currency_id, '2016-01-01')
+        (line_1 + line_2).reconcile()
+        (line_3 + line_4).reconcile()
+        (line_5 + line_6).reconcile()
+        self.env['ir.rule'].sudo().create({
+            'model_id': self.env['ir.model']._get('account.move.line').id,
+            'domain_force': [('id', '!=', line_6.id)],
+        })
+
+        def test(self):
+            with self.assertQueriesContain([
+                """FROM "account_move_line" WHERE "account_move_line"."id" IN %s""",  # read debit lines
+                """FROM "account_partial_reconcile" WHERE "account_partial_reconcile"."credit_move_id""",  # search partials for credit lines (none)
+                """FROM "account_partial_reconcile" WHERE "account_partial_reconcile"."debit_move_id""",  # search partials for debit lines
+                """FROM "account_partial_reconcile" WHERE "account_partial_reconcile"."id" IN %s""",  # read partials (from debit lines)
+                """FROM "account_move_line" WHERE "account_move_line"."id" IN %s""",  # read credit lines
+            ]):
+                self.assertEqual((line_1 + line_3 + line_5).reconciled_lines_ids, line_2 + line_4)
+        warmup(test)(self)
