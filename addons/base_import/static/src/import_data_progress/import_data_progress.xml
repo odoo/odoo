@@ -4,9 +4,9 @@
         <div t-if="this.props.importProgress.step > 1" class="o_import_data_progress d-flex align-items-center flex-column">
             <div class="o_import_progress_dialog_batch text-center">
                 Batch <span class="o_import_progress_dialog_batch_count"><t t-out="this.props.importProgress.step"/></span> out of <span t-out="this.props.totalSteps"/>...
-                <div t-if="this.props.importProgress.value and this.state.timeLeft and !this.state.isInterrupted" class="o_import_progress_dialog_time_left">
+                <div t-if="this.props.importProgress.value and this.timeLeft() and !this.isInterrupted()" class="o_import_progress_dialog_time_left">
                     <span>Estimated time left:</span>
-                    <t t-if="this.state.timeLeft >= 1">
+                    <t t-if="this.timeLeft() >= 1">
                         <span class="o_import_progress_dialog_time_left_text mx-1" t-out="this.minutesLeft"/><span>minutes</span>
                     </t>
                     <t t-else="">
@@ -14,7 +14,7 @@
                     </t>
                 </div>
             </div>
-            <span t-if="this.state.isInterrupted" class="o_import_progress_dialog_stop">
+            <span t-if="this.isInterrupted()" class="o_import_progress_dialog_stop">
                 Finalizing current batch before interrupting...
             </span>
             <div t-else="" class="d-flex align-items-center mt-2">
