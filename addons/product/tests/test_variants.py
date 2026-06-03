@@ -301,10 +301,12 @@ class TestVariants(ProductVariantsCommon):
         )
 
     def test_variant_extra_price_when_lst_price_set_manually(self):
-        variant = self.product
+        variant = self.product_sofa_red
+        template_price = variant.list_price
         self.assertEqual(variant._get_attributes_extra_price(), 0)
         variant.lst_price = 500
-        self.assertEqual(variant._get_attributes_extra_price(), 480)
+        self.assertEqual(variant.product_tmpl_id.list_price, template_price)
+        self.assertEqual(variant._get_attributes_extra_price(), 500 - template_price)
 
     @mute_logger('odoo.models.unlink')
     def test_archive_variant(self):
