@@ -856,7 +856,7 @@ class HrEmployee(models.Model):
     def _is_in_contract(self, date):
         return self._get_contract_dates(date) != (False, False)
 
-    def _get_contracts(self, date_start=None, date_end=None, use_latest_version=True, domain=None):
+    def _get_contracts(self, date_start=None, date_end=None, use_latest_version=True, domain=None, all_versions=False):
         """
         Retrieve the contracts for employees within a specified date range and based
         on specified criteria, such as domain filtering and version selection.
@@ -890,12 +890,15 @@ class HrEmployee(models.Model):
         contracts_by_employee = defaultdict(lambda: self.env["hr.version"])
         for employee_id in contract_versions_by_employee:
             for contract_versions in contract_versions_by_employee[employee_id].values():
-                effective_date = date_end if use_latest_version else date_start
-                if effective_date:
-                    correct_versions = contract_versions.filtered(lambda v: v.date_version <= effective_date)
-                    contracts_by_employee[employee_id] |= correct_versions[-1] if correct_versions else contract_versions[0]
+                if all_versions:
+                    contracts_by_employee[employee_id] |= contract_versions
                 else:
-                    contracts_by_employee[employee_id] |= contract_versions[-1] if use_latest_version else contract_versions[0]
+                    effective_date = date_end if use_latest_version else date_start
+                    if effective_date:
+                        correct_versions = contract_versions.filtered(lambda v: v.date_version <= effective_date)
+                        contracts_by_employee[employee_id] |= correct_versions[-1] if correct_versions else contract_versions[0]
+                    else:
+                        contracts_by_employee[employee_id] |= contract_versions[-1] if use_latest_version else contract_versions[0]
         return contracts_by_employee
 
     def _get_contract_versions(self, date_start=None, date_end=None, domain=None):
