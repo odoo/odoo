@@ -14,5 +14,13 @@ const threadPatch = {
             this.setMainAttachmentFromIndex(0);
         }
     },
+
+    get fullComposerCloseRequestList() {
+        return super.fullComposerCloseRequestList.concat([
+            "defaultSubject",
+            "scheduledMessages",
+            "suggestedSubject",
+        ]);
+    },
 };
 patch(Thread.prototype, threadPatch);
