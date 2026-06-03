@@ -3,6 +3,7 @@ import logging
 
 from odoo import api, fields, models
 
+from odoo.addons.iap.tools import iap_tools
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 
 PDP_identifier_re = re.compile(r'^([0-9]{9})(_[0-9]{14})?(_.+)?$')
@@ -195,3 +196,21 @@ class ResCompany(models.Model):
                 and company.account_fiscal_country_id.code == 'FR'
                 and company.currency_id == self.env.ref('base.EUR')
             )
+
+    def _refresh_pdp_authentication_status(self):
+        self.ensure_one()
+        base_url = self.env['pdp.registration']._get_iap_url()
+        response = iap_tools.iap_jsonrpc(f'{base_url}/api/signaturit_id_authentication/1/kyc_status', params={
+            'object_uuid': self.pdp_authentication_uuid,
+        })
+        kyc_status = response.get('kyc_status')
+        if kyc_status in {'success', 'fail'}:
+            self.pdp_kyc_status = kyc_status
+            # We are getting the last registration wizard creator to send him the notification.
+            # If we don't have any wizard, the user will get the new screen when he will continue the flow.
+            pdp_registration = self.env['pdp.registration'].search([('pdp_authentication_uuid', '=', self.pdp_authentication_uuid)], order='id DESC', limit=1)
+            if user := pdp_registration.create_uid:
+                user._bus_send(
+                    'auth_done',
+                    {'pdp_registration_id': pdp_registration.id},
+                )
