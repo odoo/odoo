@@ -9,17 +9,17 @@
         <xpath expr="//t[@t-if='this.props.showRemainingButtons']/div/t[@name='o_pricelist_button']" position="before">
             <!-- All these buttons will only be displayed in a dialog -->
             <t t-if="this.pos.config.module_pos_restaurant">
-                <t t-set="badge">
+                <t t-set="guestBadge">
                     <span t-out="this.currentOrder?.getCustomerCount() || 0" class="o_guests_number order-last order-md-first rounded-5 text-bg-500 d-md-block ms-auto me-md-auto px-2"/>
                 </t>
-                <t t-set="btnText">
+                <t t-set="guestBtnText">
                     <t t-if="this.currentOrder?.getCustomerCount() === 1">Guest</t>
                     <t t-else="">Guests</t>
                 </t>
                 <t t-call="point_of_sale.controlButton"
                     iconClasses="'fa fa-user d-md-none'"
-                    badge="badge"
-                    btnText="btnText"
+                    badge="guestBadge"
+                    btnText="guestBtnText"
                     btnClasses="'o_guests_button btn-secondary '"
                     onClick="this.clickTableGuests"/>
                 <!-- Split Button -->
