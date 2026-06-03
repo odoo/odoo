@@ -7,11 +7,11 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _l10n_es_is_edi_sii_applicable(self, move):
-        return move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state != 'sent'
+        return move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state in ('to_send', 'cancelled')
 
     @api.model
     def _l10n_es_is_edi_sii_resend_applicable(self, move):
-        return move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state == 'sent'
+        return move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state in ('sent', 'accepted_with_errors')
 
     def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'

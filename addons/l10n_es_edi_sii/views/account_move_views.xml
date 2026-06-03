@@ -33,7 +33,7 @@
                         invisible="move_type not in ('in_invoice', 'in_refund')
                                    or not l10n_es_edi_is_required
                                    or state != 'posted'
-                                   or l10n_es_edi_sii_state == 'sent'"/>
+                                   or l10n_es_edi_sii_state not in ('to_send', 'cancelled')"/>
 
                     <button
                         name="action_l10n_es_send_sii"
@@ -43,7 +43,7 @@
                         invisible="move_type not in ('in_invoice', 'in_refund')
                                    or not l10n_es_edi_is_required
                                    or state != 'posted'
-                                   or l10n_es_edi_sii_state != 'sent'"/>
+                                   or l10n_es_edi_sii_state not in ('sent', 'accepted_with_errors')"/>
                 </xpath>
 
                 <xpath expr="//group[@id='other_tab_group']//group[@name='accounting_info_group']" position="inside">
@@ -93,17 +93,32 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='amount_residual_signed']" position="after">
                     <field name="l10n_es_edi_sii_state"
-                           string="Electronic invoicing"
+                           string="SII Send State"
                            optional="show"
                            widget="badge"
                            decoration-success="l10n_es_edi_sii_state == 'sent'"
-                           decoration-info="l10n_es_edi_sii_state == 'to_send'"
+                           decoration-warning="l10n_es_edi_sii_state == 'accepted_with_errors'"
+                           decoration-info="l10n_es_edi_sii_state in ('to_send', 'to_cancel')"
                            decoration-danger="l10n_es_edi_sii_state == 'cancelled'"/>
 
                     <field name="l10n_es_edi_sii_error"
-                           string="Edi Blocking Level"
+                           string="SII Error"
                            optional="show"/>
                 </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_filter_inherit_l10n_es_edi_sii" model="ir.ui.view">
+            <field name="name">account.move.search.inherit.l10n_es_edi_sii</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <filter name="not_sent" position="after">
+                    <separator/>
+                    <filter name="l10n_es_edi_sii_to_send"
+                            string="To Send to SII"
+                            domain="[('l10n_es_edi_sii_state', 'in', ('to_send', 'to_cancel'))]"/>
+                </filter>
             </field>
         </record>
 
