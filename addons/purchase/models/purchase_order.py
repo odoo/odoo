@@ -1376,7 +1376,7 @@ class PurchaseOrder(models.Model):
                 price = seller.price
                 if seller.currency_id != self.currency_id:
                     price = seller.currency_id._convert(price, self.currency_id)
-                pol.price_unit = pol.technical_price_unit = price
+                pol._reset_price_unit(price)
                 pol.discount = seller.discount
         return pol.price_unit_discounted
 
