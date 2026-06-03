@@ -39,34 +39,6 @@ test("Suggestions are shown after delimiter was used in text (::)", async () => 
     await contains(".o-mail-Composer-suggestion strong", { text: "hello" });
 });
 
-test("Cannot mention other channels in a livechat", async () => {
-    const pyEnv = await startServer();
-    const [channelId] = pyEnv["discuss.channel"].create([
-        {
-            channel_type: "livechat",
-            channel_member_ids: [
-                Command.create({
-                    partner_id: serverState.partnerId,
-                    livechat_member_type: "agent",
-                }),
-                Command.create({
-                    partner_id: serverState.publicPartnerId,
-                    livechat_member_type: "visitor",
-                }),
-            ],
-        },
-        {
-            channel_type: "channel",
-            group_public_id: false,
-            name: "Link and Zelda",
-        },
-    ]);
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "#");
-    await contains(".o-mail-Composer-suggestion", { count: 0 });
-});
-
 test("Internal user mention shows their live chat username", async () => {
     const pyEnv = await startServer();
     pyEnv["res.partner"].write([serverState.partnerId], { user_livechat_username: "Batman" });

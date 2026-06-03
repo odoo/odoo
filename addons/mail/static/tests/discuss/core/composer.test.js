@@ -1,5 +1,3 @@
-import { insertText as htmlInsertText } from "@html_editor/../tests/_helpers/user_actions";
-
 import {
     click,
     contains,
@@ -13,6 +11,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread_model";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
@@ -176,7 +175,7 @@ test("html composer: trim boundary empty formatting on send", async () => {
     await click(".o-mail-Composer button[title='Send']:enabled");
     await expect.waitForSteps(["/mail/message/post"]);
     // Expected editor shape before trimming: '<div><br></div><div">Hello World<br/></div>'
-    expect(body).toBe('<div>Hello World</div>');
+    expect(body).toBe("<div>Hello World</div>");
     await contains(".o-mail-Message[data-persistent]:contains(Hello)");
 });
 

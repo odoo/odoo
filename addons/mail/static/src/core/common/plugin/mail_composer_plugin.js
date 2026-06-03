@@ -21,11 +21,7 @@ const ALLOWED_TAGS = [
     "UL",
 ];
 
-const PRESERVED_CLASSNAMES = new Set([
-    "o_mail_redirect",
-    "o_channel_redirect",
-    "o-discuss-mention",
-]);
+const PRESERVED_CLASSNAMES = new Set(["o_mail_redirect", "o-discuss-mention"]);
 
 /**
  * This plugin works with the composer used in Discuss, ChatWindow and Chatter.

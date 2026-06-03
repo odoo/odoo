@@ -17,7 +17,7 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { press, queryFirst, queryValue } from "@odoo/hoot-dom";
+import { press, queryFirst } from "@odoo/hoot-dom";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import {
     Command,
@@ -245,30 +245,6 @@ test("thread is still scrolling after scrolling up then to bottom", async () => 
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
-test("mention a channel with space in the name", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General good boy" });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#General good boy " });
-    await press("Enter");
-    await contains(".o-mail-Message-body .o_channel_redirect:text('General good boy')");
-});
-
-test('mention a channel with "&" in the name', async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General & good" });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#General & good " });
-    await press("Enter");
-    await contains(".o-mail-Message-body .o_channel_redirect:text('General & good')");
-});
-
 test("should scroll to bottom on receiving new message if the list is initially scrolled to bottom (asc order)", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
@@ -422,63 +398,6 @@ test("mention 2 different partners that have the same name", async () => {
     );
     await contains(
         `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_2}"][data-oe-model="res.partner"]:text("@TestPartner")`
-    );
-});
-
-test("mention a channel on a second line when the first line contains #", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General good" });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "#blabla\n#");
-    await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#blabla\n#General good " });
-    await press("Enter");
-    await contains(".o-mail-Message-body .o_channel_redirect:text('General good')");
-});
-
-test("mention a channel when replacing the space after the mention by another char", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General good" });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#General good " });
-    const text = queryValue(".o-mail-Composer-input:first");
-    queryFirst(".o-mail-Composer-input").value = text.slice(0, -1);
-    await insertText(".o-mail-Composer-input", ", test");
-    await press("Enter");
-    await contains(".o-mail-Message-body .o_channel_redirect:text('General good')");
-});
-
-test("mention 2 different channels that have the same name", async () => {
-    const pyEnv = await startServer();
-    const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
-        {
-            channel_type: "channel",
-            group_public_id: false,
-            name: "my channel",
-        },
-        {
-            channel_type: "channel",
-            name: "my channel",
-        },
-    ]);
-    await start();
-    await openDiscuss(channelId_1);
-    await insertText(".o-mail-Composer-input", "#m");
-    await click(":nth-child(1 of .o-mail-Composer-suggestion)");
-    await contains(".o-mail-Composer-input", { value: "#my channel " });
-    await insertText(".o-mail-Composer-input", "#m");
-    await click(":nth-child(2 of .o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#my channel #my channel " });
-    await press("Enter");
-    await contains(
-        `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_1}"][data-oe-model="discuss.channel"]:text("my channel")`
-    );
-    await contains(
-        `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_2}"][data-oe-model="discuss.channel"]:text("my channel")`
     );
 });
 

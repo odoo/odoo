@@ -1,11 +1,14 @@
 import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 import { COMPOSER_TYPES } from "./composer";
+import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
 import { cleanTerm } from "@mail/utils/common/format";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 
 import { localeCompare } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { fuzzyLookup } from "@web/core/utils/search";
+
+/** @typedef {import("@mail/core/common/suggestion_hook").SuggestionDelimiter} SuggestionDelimiter */
 
 export class SuggestionService {
     /**
@@ -27,20 +30,23 @@ export class SuggestionService {
      * - c: (optional) if set, this is the minimum amount of extra char after delimiter to allow using this delimiter
      *
      * @param {import('models').Thread} thread
-     * @returns {Array<[string, number, number]>}
+     * @returns {Array<[SuggestionDelimiter, number, number]>}
      */
     getSupportedDelimiters(thread, env) {
-        const delimiters = [["@"], ["#"], ["::"]];
+        const delimiters = [
+            [SUGGESTION_DELIMITERS.PARTNER],
+            [SUGGESTION_DELIMITERS.CANNED_RESPONSE],
+        ];
         // the emoji plugin handles the emoji suggestions already
         if (!this.composer.htmlEnabled) {
-            delimiters.push([":", undefined, 2]);
+            delimiters.push([SUGGESTION_DELIMITERS.EMOJI, undefined, 2]);
         }
         return delimiters;
     }
 
     /**
      * @param {Object} [param0={}]
-     * @param {string} [param0.delimiter]
+     * @param {SuggestionDelimiter} [param0.delimiter]
      * @param {string} [param0.term]
      * @param {Object} [options={}]
      * @param {import("models").Thread} [options.thread]
@@ -50,20 +56,17 @@ export class SuggestionService {
     async fetchSuggestions({ delimiter, term }, { thread, abortSignal, composerType } = {}) {
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
-            case "@":
+            case SUGGESTION_DELIMITERS.PARTNER:
                 await this.fetchPartnersRoles(cleanedSearchTerm, {
                     abortSignal,
                     internalUsersOnly: composerType === COMPOSER_TYPES.NOTE,
                     thread,
                 });
                 break;
-            case "#":
-                await this.fetchThreads(cleanedSearchTerm, { abortSignal });
-                break;
-            case "::":
+            case SUGGESTION_DELIMITERS.CANNED_RESPONSE:
                 await this.store.cannedReponses.fetch();
                 break;
-            case ":": {
+            case SUGGESTION_DELIMITERS.EMOJI: {
                 await emojiLoader.load();
                 break;
             }
@@ -121,20 +124,6 @@ export class SuggestionService {
         this.store.insert(data);
     }
 
-    /**
-     * @param {string} term
-     */
-    async fetchThreads(term, { abortSignal } = {}) {
-        const data = await this.makeOrmCall(
-            "discuss.channel",
-            "get_mention_suggestions",
-            [],
-            { search: term },
-            { abortSignal }
-        );
-        this.store.insert(data);
-    }
-
     searchCannedResponseSuggestions(cleanedSearchTerm) {
         const cannedResponses = Object.values(this.store["mail.canned.response"].records).filter(
             (cannedResponse) => cleanTerm(cannedResponse.source).includes(cleanedSearchTerm)
@@ -181,7 +170,7 @@ export class SuggestionService {
      * Returns suggestions that match the given search term from specified type.
      *
      * @param {Object} [param0={}]
-     * @param {String} [param0.delimiter] can be one one of the following: ["@", "#"]
+     * @param {SuggestionDelimiter} [param0.delimiter]
      * @param {String} [param0.term]
      * @param {Object} [options={}]
      * @param {COMPOSER_TYPES} [options.composerType]
@@ -192,7 +181,7 @@ export class SuggestionService {
     searchSuggestions({ delimiter, term }, { composerType, thread } = {}) {
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
-            case "@": {
+            case SUGGESTION_DELIMITERS.PARTNER: {
                 const partners = this.searchPartnerSuggestions(cleanedSearchTerm, {
                     composerType,
                     thread,
@@ -203,11 +192,9 @@ export class SuggestionService {
                     suggestions: [...partners.suggestions, ...roles.suggestions],
                 };
             }
-            case "#":
-                return this.searchChannelSuggestions(cleanedSearchTerm);
-            case "::":
+            case SUGGESTION_DELIMITERS.CANNED_RESPONSE:
                 return this.searchCannedResponseSuggestions(cleanedSearchTerm);
-            case ":":
+            case SUGGESTION_DELIMITERS.EMOJI:
                 return this.searchEmojisSuggestions(cleanedSearchTerm);
         }
         return {
@@ -345,50 +332,6 @@ export class SuggestionService {
             }
         }
         return { latestMessageIdByAuthorId };
-    }
-
-    searchChannelSuggestions(cleanedSearchTerm) {
-        const suggestionList = Object.values(this.store["discuss.channel"].records).filter(
-            (channel) =>
-                channel.channel_type === "channel" &&
-                channel.displayName &&
-                cleanTerm(channel.displayName).includes(cleanedSearchTerm)
-        );
-        const sortFunc = (c1, c2) => {
-            const isPublicChannel1 = c1.channel_type === "channel" && !c2.group_public_id;
-            const isPublicChannel2 = c2.channel_type === "channel" && !c2.group_public_id;
-            if (isPublicChannel1 && !isPublicChannel2) {
-                return -1;
-            }
-            if (!isPublicChannel1 && isPublicChannel2) {
-                return 1;
-            }
-            if (c1.self_member_id && !c2.self_member_id) {
-                return -1;
-            }
-            if (!c1.self_member_id && c2.self_member_id) {
-                return 1;
-            }
-            const cleanedDisplayName1 = cleanTerm(c1.displayName);
-            const cleanedDisplayName2 = cleanTerm(c2.displayName);
-            if (
-                cleanedDisplayName1.startsWith(cleanedSearchTerm) &&
-                !cleanedDisplayName2.startsWith(cleanedSearchTerm)
-            ) {
-                return -1;
-            }
-            if (
-                !cleanedDisplayName1.startsWith(cleanedSearchTerm) &&
-                cleanedDisplayName2.startsWith(cleanedSearchTerm)
-            ) {
-                return 1;
-            }
-            return localeCompare(c1.displayName, c2.displayName) || c1.id - c2.id;
-        };
-        return {
-            type: "discuss.channel",
-            suggestions: suggestionList.sort(sortFunc),
-        };
     }
 }
 

@@ -208,17 +208,6 @@
         </em>
     </t>
 
-    <t t-name="mail.Composer.suggestionChannel">
-        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <i t-attf-class="fa #{option.channel?.parent_channel_id ? 'fa-comments-o' : 'fa-hashtag'} me-2"/>
-            <t t-if="option.channel.parent_channel_id">
-                <t t-out="option.channel.parent_channel_id.displayName"/>
-                <i class="oi oi-chevron-right o-xsmaller mx-1"/>
-            </t>
-            <t t-out="option.channel.displayName"/>
-        </strong>
-    </t>
-
     <t t-name="mail.Composer.suggestionChannelCommand">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-out="option.label"/>

@@ -276,47 +276,22 @@ export function generateSpecialMentionElement(label) {
     return link;
 }
 
-/** @param {import("models").DiscussChannel} channel */
-export function generateChannelMentionElement(channel) {
-    return generateMentionElement({
-        className: `o_channel_redirect${
-            channel.parent_channel_id ? " o_channel_redirect_asThread" : ""
-        }`,
-        id: channel.id,
-        model: "discuss.channel",
-        text: `#${channel.fullNameWithParent}`,
-    });
-}
-
 /**
  * @param {string|ReturnType<markup>} body
  * @param {Object} param1
  * @param {import("models").ResPartner[]} param1.partners
  * @param {import("models").ResRole[]} param1.roles
- * @param {import("models").Thread[]} param1.threads
  * @param {string[]} param1.specialMentions
  * @param {import("models").Thread} param1.thread
  * @return {ReturnType<markup>}
  */
-function generateMentionsLinks(
-    body,
-    { channels = [], partners = [], roles = [], specialMentions = [], thread }
-) {
+function generateMentionsLinks(body, { partners = [], roles = [], specialMentions = [], thread }) {
     const mentions = [];
     for (const partner of partners) {
         const placeholder = `@-mention-partner-${partner.id}`;
         const text = `@${thread?.getPersonaName(partner) ?? partner.name}`;
         mentions.push({
             link: generatePartnerMentionElement(partner, { thread }),
-            placeholder,
-        });
-        body = htmlReplace(body, text, placeholder);
-    }
-    for (const channel of channels) {
-        const placeholder = `#-mention-channel-${channel.id}`;
-        const text = `#${channel.fullNameWithParent}`;
-        mentions.push({
-            link: generateChannelMentionElement(channel),
             placeholder,
         });
         body = htmlReplace(body, text, placeholder);
@@ -375,10 +350,6 @@ export function prepareBodyForEditing(body) {
     }
     // for mentioned partner
     for (const mention of doc.body.querySelectorAll(".o_mail_redirect")) {
-        mention.setAttribute("contenteditable", false);
-    }
-    // for mentioned channel
-    for (const mention of doc.body.querySelectorAll(".o_channel_redirect")) {
         mention.setAttribute("contenteditable", false);
     }
     // for special mentions

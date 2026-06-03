@@ -1,8 +1,5 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
-import {
-    insertText as htmlInsertText,
-    tripleClick,
-} from "@html_editor/../tests/_helpers/user_actions";
+import { tripleClick } from "@html_editor/../tests/_helpers/user_actions";
 
 import { mailChatterMessageActionsInvisibleWhenNotHovered } from "@mail/../tests/mail_shared_tests";
 import {
@@ -23,6 +20,7 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { MailMessage } from "@mail/../tests/mock_server/mock_models/mail_message";
 import { Message } from "@mail/core/common/message";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
@@ -240,42 +238,6 @@ test("Can add reaction to a message on an ipad", async () => {
     await click("button:contains('Add a Reaction')");
     await click(".o-EmojiPicker-content .o-Emoji:contains('😀')");
     await contains(".o-mail-MessageReaction:contains('😀 1')");
-});
-
-test("Editing message keeps the mentioned channels", async () => {
-    const pyEnv = await startServer();
-    const channelId1 = pyEnv["discuss.channel"].create({
-        name: "general",
-        channel_type: "channel",
-    });
-    pyEnv["discuss.channel"].create({
-        name: "other",
-        channel_type: "channel",
-    });
-    await start();
-    await openDiscuss(channelId1);
-    await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion strong:text('other')");
-    await press("Enter");
-    await contains(".o_channel_redirect:text('other')");
-    await click(".o-mail-Message [title='Expand']");
-    await click(".o-dropdown-item:text('Edit')");
-    await contains(".o-mail-Message .o-mail-Composer-input", { value: "#other" });
-    await insertText(".o-mail-Message .o-mail-Composer-input", "#other bye", { replace: true });
-    await click(".o-mail-Message button:text('save')");
-    await contains(".o-mail-Message-content:text('other bye (edited)')");
-    await click(".o_channel_redirect:text('other')");
-    await contains(".o-mail-DiscussContent-threadName", { value: "other" });
-    // Test editing via arrow up shortcut
-    await click(".o-mail-DiscussSidebarChannel-itemName:text('general')");
-    await contains(".o-mail-Message");
-    await press("ArrowUp");
-    await contains(".o-mail-Message .o-mail-Composer-input", { value: "#other bye" });
-    await insertText(".o-mail-Message .o-mail-Composer-input", "#other hello", { replace: true });
-    await click(".o-mail-Message button:text('save')");
-    await contains(".o-mail-Message-content:text('other hello (edited)')");
-    await click(".o_channel_redirect:text('other')");
-    await contains(".o-mail-DiscussContent-threadName", { value: "other" });
 });
 
 test("Editing message keeps the mentioned roles", async () => {
@@ -1947,21 +1909,6 @@ test("Partner's avatar card should be opened after clicking on their mention", a
     await click(".o_avatar_card_buttons button:text('View Profile')");
     await contains(".o_last_breadcrumb_item:text('Test Partner')");
     await contains(".o_avatar_card", { count: 0 });
-});
-
-test("Channel should be opened after clicking on its mention", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
-    pyEnv["discuss.channel"].create({ name: "my-channel" });
-    await start();
-    await openFormView("res.partner", partnerId);
-    await click("button:text('Send message')");
-    await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion strong:text('my-channel')");
-    await click(".o-mail-Composer-send:enabled");
-    await click(".o_channel_redirect");
-    await contains(".o-mail-ChatWindow .o-mail-Thread");
-    await contains(".o-mail-ChatWindow:text('my-channel')");
 });
 
 test("delete all attachments of message without content should mark message as deleted", async () => {

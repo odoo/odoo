@@ -1,7 +1,4 @@
-import {
-    insertText as htmlInsertText,
-    pasteHtml,
-} from "@html_editor/../tests/_helpers/user_actions";
+import { pasteHtml } from "@html_editor/../tests/_helpers/user_actions";
 import {
     click,
     contains,
@@ -11,6 +8,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst } from "@odoo/hoot-dom";
 import { disableAnimations } from "@odoo/hoot-mock";

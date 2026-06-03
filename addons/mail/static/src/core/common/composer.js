@@ -887,7 +887,6 @@ export class Composer extends Component {
             attachments: [...(this.props.composer.attachments || [])],
             emailAddSignature: this.props.composer.emailAddSignature,
             isNote: this.props.type === "note",
-            mentionedChannels: [...(this.props.composer.mentionedChannels || [])],
             mentionedPartners: [...(this.props.composer.mentionedPartners || [])],
             mentionedRoles: [...(this.props.composer.mentionedRoles || [])],
             cannedResponseIds: this.props.composer.cannedResponses.map((c) => c.id),
@@ -900,7 +899,6 @@ export class Composer extends Component {
      * @property {import("models").Attachment[]} attachments
      * @property {boolean} isNote
      * @property {number} parentId
-     * @property {integer[]} mentionedChannelIds
      * @property {integer[]} mentionedPartnerIds
      */
 
@@ -934,7 +932,6 @@ export class Composer extends Component {
         if (!this.askDeleteFromEdit) {
             await this.processMessage(async (value) =>
                 this.props.composer.message.edit(value, this.props.composer.attachments, {
-                    mentionedChannels: this.props.composer.mentionedChannels,
                     mentionedPartners: this.props.composer.mentionedPartners,
                     mentionedRoles: this.props.composer.mentionedRoles,
                 })

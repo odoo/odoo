@@ -4,7 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { SearchInput } from "@mail/core/common/search_input";
-import { mapSuggestionsToOptions } from "@mail/core/common/suggestion_hook";
+import { mapSuggestionsToOptions, SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
 import { useSearch } from "@mail/utils/common/hooks";
 
 export class MentionList extends Component {
@@ -40,13 +40,11 @@ export class MentionList extends Component {
     }
 
     get delimiter() {
-        return this.props.type === "Partner" ? "@" : "#";
+        return SUGGESTION_DELIMITERS.PARTNER;
     }
 
     get placeholder() {
         switch (this.props.type) {
-            case "discuss.channel":
-                return _t("Search for a channel...");
             case "Partner":
                 return _t("Search for a user...");
             default:

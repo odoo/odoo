@@ -53,7 +53,6 @@ export class Composer extends Record {
     message = fields.One("mail.message");
     mentionedPartners = fields.Many("res.partner");
     mentionedRoles = fields.Many("res.role");
-    mentionedChannels = fields.Many("discuss.channel");
     cannedResponses = fields.Many("mail.canned.response");
     isDirty = false;
     composerText = fields.Attr("", {
@@ -63,7 +62,6 @@ export class Composer extends Record {
                 return;
             }
             const validMentions = this.store.getMentionsFromText(this.composerText, {
-                mentionedChannels: this.mentionedChannels,
                 mentionedPartners: this.mentionedPartners,
                 mentionedRoles: this.mentionedRoles,
                 thread: this.targetThread,

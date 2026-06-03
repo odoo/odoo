@@ -1,3 +1,4 @@
+import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
 import { SuggestionService } from "@mail/core/common/suggestion_service";
 import { cleanTerm } from "@mail/utils/common/format";
 import { localeCompare } from "@web/core/l10n/utils";
@@ -25,7 +26,7 @@ const suggestionServicePatch = {
     },
     getSupportedDelimiters(thread, env) {
         const res = super.getSupportedDelimiters(...arguments);
-        return thread?.channel ? [...res, ["/", 0]] : res;
+        return thread?.channel ? [...res, [SUGGESTION_DELIMITERS.CHANNEL_COMMAND, 0]] : res;
     },
     /**
      * @override
@@ -73,7 +74,7 @@ const suggestionServicePatch = {
      * @override
      */
     searchSuggestions({ delimiter, term }, { composerType, thread } = {}) {
-        if (delimiter === "/") {
+        if (delimiter === SUGGESTION_DELIMITERS.CHANNEL_COMMAND) {
             return this.searchChannelCommand(cleanTerm(term), thread.channel);
         }
         return super.searchSuggestions(...arguments);

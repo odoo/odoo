@@ -599,7 +599,6 @@ export class DiscussChannel extends models.ServerModel {
 
             <b>@username</b> to mention someone<br>
             <b>@role</b> to notify multiple people<br>
-            <b>#channel</b> to link a channel<br>
             <b>/command</b> to run a command<br>
             <b>::shortcut</b> to insert a canned response<br>
             <b>:emoji:</b> to insert an emoji</span>
@@ -669,56 +668,6 @@ export class DiscussChannel extends models.ServerModel {
             ["channel_member_ids", "in", pinnedMembers.map((member) => member.id)],
         ]);
         return [...channels, ...pinnedChannels];
-    }
-
-    /**
-     * @param {string} search
-     * @param {limit} number
-     */
-    get_mention_suggestions(search, limit) {
-        const kwargs = getKwArgs(arguments, "search", "limit");
-        search = kwargs.search || "";
-        limit = kwargs.limit || 8;
-
-        /**
-         * Returns the given list of channels after filtering it according to
-         * the logic of the Python method `get_mention_suggestions` for the
-         * given search term. The result is truncated to the given limit and
-         * formatted as expected by the original method.
-         *
-         * @param {this[]} channels
-         * @param {string} search
-         * @param {number} limit
-         * @returns {Object[]}
-         */
-        const mentionSuggestionsFilter = (channels, search, limit) => {
-            const matchingChannels = channels.filter((channel) => {
-                // no search term is considered as return all
-                if (!search) {
-                    return true;
-                }
-                // otherwise name or email must match search term
-                if (channel.name && channel.name.includes(search)) {
-                    return true;
-                }
-                return false;
-            });
-            matchingChannels.length = Math.min(matchingChannels.length, limit);
-            return matchingChannels;
-        };
-        const mentionSuggestions = mentionSuggestionsFilter(this, search, limit);
-        const store = new mailDataHelpers.Store(
-            mentionSuggestions,
-            makeKwArgs({
-                fields: [
-                    "name",
-                    "channel_type",
-                    "group_public_id",
-                    mailDataHelpers.Store.one("parent_channel_id"),
-                ],
-            })
-        );
-        return store.get_result();
     }
 
     /** @param {number} id */

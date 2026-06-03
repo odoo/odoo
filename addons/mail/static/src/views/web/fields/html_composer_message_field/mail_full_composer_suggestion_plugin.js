@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { MentionList } from "@mail/core/web/mention_list";
-import { makeMentionFromOption } from "@mail/core/common/suggestion_hook";
+import { makeMentionFromOption, SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
 
 export class MailFullComposerSuggestionPlugin extends Plugin {
     static id = "mail_full_composer_suggestion";
@@ -29,14 +29,14 @@ export class MailFullComposerSuggestionPlugin extends Plugin {
     }
 
     onBeforeInput(ev) {
-        if (ev.data === "@" || ev.data === "#") {
+        if (ev.data === SUGGESTION_DELIMITERS.PARTNER) {
             this.historySavePointRestore = this.dependencies.history.makeSavePoint();
             this.mentionList.open({
                 props: {
                     composerType: this.config.composerType,
                     onSelect: this.onSelect.bind(this),
                     thread: this.config.thread,
-                    type: ev.data === "@" ? "Partner" : "discuss.channel",
+                    type: "Partner",
                     close: () => {
                         this.mentionList.close();
                     },
