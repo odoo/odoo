@@ -78,7 +78,6 @@ import { OptionsContainer } from "@html_builder/sidebar/option_container";
  *      editableOnly?: boolean;
  * }[]} has_overlay_options
  * @typedef {CSSSelector[]} no_parent_containers
- * @typedef {CSSSelector[]} not_activable_element_selectors
  * @typedef {((el: HTMLElement) => boolean)[]} keep_overlay_options
  */
 /**
@@ -142,19 +141,6 @@ export class BuilderOptionsPlugin extends Plugin {
                 this.updateContainers(el);
             }
         },
-        // Selector of elements that should not update/have containers when they
-        // are clicked.
-        not_activable_element_selectors: [
-            "#web_editor-top-edit",
-            "#oe_manipulators",
-            ".oe_drop_zone",
-            ".o_notification_manager",
-            ".o_we_no_overlay",
-            ".ui-autocomplete",
-            ".modal .btn-close",
-            ".transfo-container",
-            ".o_datetime_picker",
-        ],
     };
 
     setup() {
@@ -190,9 +176,19 @@ export class BuilderOptionsPlugin extends Plugin {
 
         this.lastContainers = [];
 
-        this.notActivableElementsSelector = this.getResource(
-            "not_activable_element_selectors"
-        ).join(", ");
+        // Selector of elements that should not update/have containers when they
+        // are clicked.
+        this.notActivableElementsSelector = [
+            "#web_editor-top-edit",
+            "#oe_manipulators",
+            ".oe_drop_zone",
+            ".o_notification_manager",
+            ".o_we_no_overlay",
+            ".ui-autocomplete",
+            ".modal .btn-close",
+            ".transfo-container",
+            ".o_datetime_picker",
+        ].join(", ");
         const unclonableButtonSelector = [
             ".oe_unremovable",
             ...this.getResource("submit_button_selectors"),
