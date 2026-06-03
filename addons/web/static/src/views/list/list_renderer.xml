@@ -386,7 +386,7 @@
                                     record="record"
                                     string="button.string"
                                     title="button.title"
-                                    tabindex="this.editedRecord ? '-1' : '0'"
+                                    tabindex="this.editedRecord() ? '-1' : '0'"
                                     onClick="this.isX2Many and record.isNew ? this.displaySaveNotification.bind(this) : ''"
                                 />
                             </t>

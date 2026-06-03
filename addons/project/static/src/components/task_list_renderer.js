@@ -1,16 +1,14 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { onPatched } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { ListRenderer } from "@web/views/list/list_renderer";
-
 
 export class TaskListRenderer extends ListRenderer {
     setup() {
         super.setup();
         this.dialog = useService("dialog");
-        useLayoutEffect(
-            (editedRecord) => this.focusName(editedRecord),
-            () => [this.editedRecord]
-        );
+        onPatched(() => {
+            this.focusName(this.editedRecord());
+        });
     }
 
     focusName(editedRecord) {
