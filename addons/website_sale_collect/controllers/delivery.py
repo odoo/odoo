@@ -8,15 +8,19 @@ from odoo.addons.website_sale_stock.controllers.location_selector import Locatio
 class InStoreDelivery(LocationSelector):
     @route()
     def website_sale_get_pickup_locations(self, **kwargs):
-        """Override of `website_sale` to set the pickup in store delivery method on the order in
-        order to retrieve pickup locations when called from the product page. If there is no order
-        create a temporary one to display pickup locations.
+        """Override of `website_sale_stock` to set the in-store delivery method on the order to
+        retrieve pickup locations when called from the product page. If there is no order, use the
+        website's in-store delivery method directly.
         """
         if kwargs.get("product_id"):  # Called from the product page.
-            order_sudo = request.cart
             in_store_dm = self.env.website.sudo().in_store_dm_id
+            if not in_store_dm:
+                return {}
+            order_sudo = request.cart
             if order_sudo and order_sudo.carrier_id.delivery_type != "in_store":
                 order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
+            else:  # No cart yet: get the locations of in-store delivery method directly
+                return in_store_dm._get_pickup_locations(**kwargs)
         return super().website_sale_get_pickup_locations(**kwargs)
 
     @route("/shop/set_click_and_collect_location", type="jsonrpc", auth="public", website=True)

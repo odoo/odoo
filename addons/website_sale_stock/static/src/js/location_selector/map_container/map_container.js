@@ -14,28 +14,22 @@ export class MapContainer extends Component {
             type: Array,
             element: {
                 type: Object,
-                values: {
-                    type: Object,
-                    shape: {
-                        id: String,
-                        name: String,
-                        openingHours: {
-                            type: Object,
-                            values: {
-                                type: Array,
-                                element: String,
-                                optional: true,
-                            },
-                        },
-                        street: String,
-                        city: String,
-                        zip_code: String,
-                        state: { type: String, optional: true },
-                        country_code: String,
-                        additional_data: { type: Object, optional: true },
-                        latitude: String,
-                        longitude: String,
+                shape: {
+                    id: [String, Number],
+                    name: String,
+                    opening_hours: {
+                        type: Object,
+                        values: { type: Array, element: String },
                     },
+                    street: String,
+                    city: String,
+                    zip_code: String,
+                    state: { type: String, optional: true },
+                    country_code: String,
+                    additional_data: { type: Object, optional: true },
+                    distance: { type: Number, optional: true },
+                    latitude: [String, Number],
+                    longitude: [String, Number],
                 },
             },
         },
