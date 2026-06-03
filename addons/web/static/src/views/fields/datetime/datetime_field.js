@@ -27,6 +27,7 @@ const { DateTime } = luxon;
  *  startDateField?: string;
  *  warnFuture?: boolean;
  *  showSeconds?: boolean;
+ *  showWeekNumbers?: boolean;
  *  showTime?: boolean;
  *  numeric?: boolean;
  *  minPrecision?: string;
@@ -52,6 +53,7 @@ export class DateTimeField extends Component {
         warnFuture: { type: Boolean, optional: true },
         showSeconds: { type: Boolean, optional: true },
         showTime: { type: Boolean, optional: true },
+        showWeekNumbers: { type: Boolean, optional: true },
         minPrecision: {
             type: String,
             optional: true,
@@ -66,6 +68,7 @@ export class DateTimeField extends Component {
     static defaultProps = {
         showSeconds: false,
         showTime: true,
+        showWeekNumbers: true,
         numeric: false,
     };
 
@@ -124,9 +127,6 @@ export class DateTimeField extends Component {
                     return true;
                 }
                 return false;
-            },
-            onClose: () => {
-                this.picker.activeInput = "";
             },
             onApply: async () => {
                 const toUpdate = {};
@@ -199,6 +199,7 @@ export class DateTimeField extends Component {
             showRangeToggler:
                 this.relatedField && !this.isRequired(this.relatedField) && !this.props.alwaysRange,
             onToggleRange: this.onToggleRange.bind(this),
+            showWeekNumbers: this.props.showWeekNumbers,
         };
         if (this.props.maxDate) {
             pickerProps.maxDate = this.parseLimitDate(this.props.maxDate);
@@ -475,6 +476,15 @@ export const dateField = {
             type: "field",
             availableTypes: ["date", "char"],
         },
+        {
+            label: _t("Show week numbers"),
+            name: "show_week_numbers",
+            type: "boolean",
+            default: true,
+            help: _t(
+                `Displays or hides the week numbers in the datetime picker`
+            ),
+        },
     ],
     supportedTypes: ["date"],
     extractProps: ({ options, placeholder }, dynamicInfo) => ({
@@ -490,6 +500,7 @@ export const dateField = {
         warnFuture: Boolean(options.warn_future),
         minPrecision: options.min_precision,
         maxPrecision: options.max_precision,
+        showWeekNumbers: options.show_week_numbers,
     }),
     listViewWidth: ({ options }) =>
         options.numeric ? FIELD_WIDTHS.numeric_date : FIELD_WIDTHS.date,

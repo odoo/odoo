@@ -195,7 +195,7 @@ test("building a domain with a datetime", async () => {
     // Change the date in the datepicker
     await contains(".o_datetime_input").click();
     await contains(getPickerCell("26", true)).click();
-    await press("enter");
+    await press("control+enter");
     await animationFrame();
 
     // The input field should display the date and time in the user's timezone
@@ -2602,7 +2602,7 @@ test(`datetime: "in range" operator`, async () => {
 
     await contains(".o_datetime_input:last").click();
     await contains(getPickerCell("26", true)).click();
-    await press("enter");
+    await press("control+enter");
     await animationFrame();
     expect.verifySteps([
         `["&", ("datetime", ">=", "2023-04-20 00:00:00"), ("datetime", "<=", "2023-04-26 23:59:59")]`,
@@ -2705,7 +2705,7 @@ test(`date: "in range" operator`, async () => {
 
     await contains(".o_datetime_input:last").click();
     await contains(getPickerCell("26", true)).click();
-    await press("enter");
+    await press("control+enter");
     await animationFrame();
     expect.verifySteps([`["&", ("date", ">=", "2023-04-20"), ("date", "<=", "2023-04-26")]`]);
 

@@ -19,6 +19,10 @@
 .o_datetime_picker .o_time_picker {
     @include media-breakpoint-up(sm) {
         width: 4rem;
+
+        &.o_time_picker_seconds {
+            width: 5rem;
+        }
     }
     input {
         text-align: center;

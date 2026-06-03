@@ -1,4 +1,4 @@
-import { immediateEffect, markRaw, onMounted, onPatched, onWillDestroy, proxy } from "@odoo/owl";
+import { immediateEffect, markRaw, onMounted, onWillDestroy, proxy, useEffect, signal } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { areDatesEqual, formatDate, formatDateTime, parseDate, parseDateTime } from "../l10n/dates";
@@ -8,6 +8,7 @@ import { ensureArray, zip, zipWith } from "../utils/arrays";
 import { shallowEqual } from "../utils/objects";
 import { DateTimePicker } from "./datetime_picker";
 import { DateTimePickerPopover } from "./datetime_picker_popover";
+import { getNextTabableElement } from "@web/core/utils/ui";
 
 /**
  * @typedef {luxon["DateTime"]["prototype"]} DateTime
@@ -105,7 +106,7 @@ export const datetimePickerService = {
                 function focusActiveInput() {
                     const inputEl = getInput(pickerProps.focusedDateIndex);
                     if (!inputEl) {
-                        shouldFocus = true;
+                        shouldFocus.set(true);
                         return;
                     }
 
@@ -238,6 +239,11 @@ export const datetimePickerService = {
                             return saveAndClose();
                         }
                         case "Tab": {
+                            if (isOpen()) {
+                                ev.stopPropagation();
+                                return popover.close();
+                            }
+
                             if (
                                 !getInput(0) ||
                                 !getInput(1) ||
@@ -245,6 +251,21 @@ export const datetimePickerService = {
                             ) {
                                 return saveAndClose();
                             }
+                            break;
+                        }
+                        case "ArrowDown": {
+                            ev.preventDefault();
+                            ev.stopPropagation();
+                            if (isOpen()) {
+                                const pickers = document.querySelectorAll(".o_datetime_picker");
+                                if (pickers.length) {
+                                    // We need to focus on the last picker in case there's an inline one present
+                                    getNextTabableElement(pickers[pickers.length - 1])?.focus();
+                                }
+                            } else {
+                                return open(ev.target === getInput(1) ? 1 : 0);
+                            }
+                            break;
                         }
                     }
                 }
@@ -296,6 +317,7 @@ export const datetimePickerService = {
                  */
                 function saveAndClose() {
                     if (isOpen()) {
+                        shouldFocus.set(true);
                         // apply will be done in the "onClose" callback
                         popover.close();
                     } else {
@@ -327,7 +349,7 @@ export const datetimePickerService = {
 
                     setFocusClass(inputEl);
 
-                    shouldFocus = false;
+                    shouldFocus.set(false);
                 }
 
                 function setup() {
@@ -372,7 +394,9 @@ export const datetimePickerService = {
                         }
                     }
 
-                    shouldFocus = true;
+                    if (isOpen()) {
+                        shouldFocus.set(true);
+                    }
                 }
 
                 /**
@@ -436,6 +460,7 @@ export const datetimePickerService = {
                                 updateInput(el, currentValue);
                                 return currentValue;
                             } else {
+                                updateInput(el, parsedValue);
                                 return parsedValue;
                             }
                         }
@@ -463,10 +488,12 @@ export const datetimePickerService = {
                         );
                         saveAndClose();
                     },
-                    onSelect: (value, unit) => {
+                    onSelect: (value, unit, shouldApply) => {
                         value &&= markRaw(value);
                         updateValue(value, unit, "picker");
-                        if (!pickerProps.range && pickerProps.type === "date") {
+                        if (shouldApply) {
+                            // TODO-JUCOP: Temporary patch while waiting for popover rework in owl3
+                            shouldFocus.set(false);
                             saveAndClose();
                         }
                     },
@@ -476,6 +503,8 @@ export const datetimePickerService = {
 
                 const popover = createPopover(DateTimePickerPopover, {
                     useBottomSheet: useBottomSheet(),
+                    closeOnEscape: false,
+                    setActiveElement: false,
                     async onClose() {
                         const abort = updateValueFromInputs();
                         if (abort) {
@@ -506,7 +535,7 @@ export const datetimePickerService = {
                 let strPickerProps = JSON.stringify(pickerProps);
                 /** @type {(() => void) | null} */
                 let restoreTargetMargin = null;
-                let shouldFocus = false;
+                let shouldFocus = signal(false);
                 /** @type {Partial<DateTimePickerProps>} */
                 let stringProps = {};
                 /** @type {OwlRef | null} */
@@ -541,10 +570,8 @@ export const datetimePickerService = {
                     onWillDestroy(destroy);
                     useLayoutEffect(initInputs, getInputs);
 
-                    // Note: this `onPatched` callback must be called after the `useLayoutEffect` since
-                    // the effect may change input values that will be selected by the patch callback.
-                    onPatched(function focusIfNeeded() {
-                        if (shouldFocus && isOpen()) {
+                    useEffect(() => {
+                        if (shouldFocus() && !isOpen()) {
                             focusActiveInput();
                         }
                     });

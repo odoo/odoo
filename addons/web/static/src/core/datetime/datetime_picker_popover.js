@@ -1,5 +1,4 @@
 import { Component } from "@odoo/owl";
-import { useHotkey } from "../hotkeys/hotkey_hook";
 import { DateTimePicker } from "./datetime_picker";
 
 /**
@@ -21,11 +20,10 @@ export class DateTimePickerPopover extends Component {
 
     static template = "web.DateTimePickerPopover";
 
-    //-------------------------------------------------------------------------
-    // Lifecycle
-    //-------------------------------------------------------------------------
-
-    setup() {
-        useHotkey("enter", () => this.props.close());
+    get pickerProps() {
+        return {
+            ...this.props.pickerProps,
+            focusTrap: true,
+        };
     }
 }
