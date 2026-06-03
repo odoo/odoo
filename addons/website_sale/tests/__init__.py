@@ -14,7 +14,6 @@ from . import (
     test_customize,
     test_delivery_controller,
     test_delivery_ui,
-    test_disable_unused_shared_assets,
     test_dynamic_snippet_category,
     test_ecommerce_access,
     test_express_checkout_flows,
