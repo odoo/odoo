@@ -3,6 +3,7 @@ import { animationFrame, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
+    setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 
@@ -66,4 +67,36 @@ test("Adding columns does not introduce extra offset (offset class removed on cl
     await contains("[data-label='Layout'] .dropdown").click();
     await contains("[data-action-id='changeColumnCount'][data-action-value='5']").click();
     expect(":iframe .s_text_block .container > .row > .offset-lg-1").toHaveCount(1);
+});
+
+test("Column count selector is hidden when the row has s_nb_column_fixed", async () => {
+    await setupWebsiteBuilder(`
+        <section class="fixed_columns">
+            <div class="container">
+                <div class="row s_nb_column_fixed">
+                    <div class="col-lg-6"> First </div>
+                    <div class="col-lg-6"> Second </div>
+                </div>
+            </div>
+        </section>
+        <section class="flexible_columns">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6"> First </div>
+                    <div class="col-lg-6"> Second </div>
+                </div>
+            </div>
+        </section>
+    `);
+    // With s_nb_column_fixed, the column count selector is hidden.
+    await contains(":iframe .fixed_columns").click();
+    await waitFor("[data-action-id='setColumnLayout']");
+    expect("[data-action-id='setColumnLayout']").toHaveClass("active");
+    expect("[data-action-id='changeColumnCount']").toHaveCount(0);
+
+    // Without it, the column count selector is shown.
+    await contains(":iframe .flexible_columns").click();
+    await waitFor("[data-action-id='changeColumnCount']");
+    expect("[data-action-id='setColumnLayout']").toHaveClass("active");
+    expect("[data-action-id='changeColumnCount']").not.toHaveCount(0);
 });
