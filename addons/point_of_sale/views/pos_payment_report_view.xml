@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Pivot View -->
+    <record id="view_report_pos_payment_pivot" model="ir.ui.view">
+        <field name="name">report.pos.payment.pivot</field>
+        <field name="model">report.pos.payment</field>
+        <field name="arch" type="xml">
+            <pivot string="Payments Analysis" sample="1">
+                <field name="session_id" type="row"/>
+                <field name="payment_method_id" type="col"/>
+                <field name="amount" type="measure"/>
+                <field name="counted" type="measure"/>
+                <field name="difference" type="measure"/>
+                <field name="opening_amount" type="measure"/>
+                <field name="closing_amount" type="measure"/>
+                <field name="cash_in" type="measure"/>
+                <field name="cash_out" type="measure"/>
+                <field name="net_revenue" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Graph View -->
+    <record id="view_report_pos_payment_graph" model="ir.ui.view">
+        <field name="name">report.pos.payment.graph</field>
+        <field name="model">report.pos.payment</field>
+        <field name="arch" type="xml">
+            <graph string="Payments Analysis" type="bar" stacked="0" sample="1">
+                <field name="session_id"/>
+                <field name="payment_method_id"/>
+                <field name="amount" type="measure"/>
+                <field name="counted" type="measure"/>
+                <field name="difference" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="view_report_pos_payment_list" model="ir.ui.view">
+        <field name="name">report.pos.payment.list</field>
+        <field name="model">report.pos.payment</field>
+        <field name="arch" type="xml">
+            <list string="Payments Analysis" create="0" delete="0" edit="0">
+                <field name="payment_date"/>
+                <field name="session_id"/>
+                <field name="config_id"/>
+                <field name="payment_method_id"/>
+                <field name="user_id"/>
+                <field name="amount" sum="Total Expected"/>
+                <field name="counted" sum="Total Counted"/>
+                <field name="difference" sum="Total Difference"/>
+                <field name="opening_amount" sum="Total Opening"/>
+                <field name="closing_amount" sum="Total Closing"/>
+                <field name="cash_in" sum="Total Cash In"/>
+                <field name="cash_out" sum="Total Cash Out"/>
+                <field name="net_revenue" sum="Total Net Revenue"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_report_pos_payment_search" model="ir.ui.view">
+        <field name="name">report.pos.payment.search</field>
+        <field name="model">report.pos.payment</field>
+        <field name="arch" type="xml">
+            <search string="Payments Analysis">
+                <field name="payment_date"/>
+                <field name="session_id"/>
+                <field name="config_id"/>
+                <field name="payment_method_id"/>
+                <field name="user_id"/>
+                <filter string="Today" name="today" domain="[('payment_date', '&gt;=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00'))]"/>
+                <separator/>
+                <group>
+                    <filter string="Session" name="group_by_session" context="{'group_by':'session_id'}"/>
+                    <filter string="Point of Sale" name="group_by_config" context="{'group_by':'config_id'}"/>
+                    <filter string="Payment Method" name="group_by_payment_method" context="{'group_by':'payment_method_id'}"/>
+                    <filter string="Employee" name="group_by_user" context="{'group_by':'user_id'}"/>
+                    <separator/>
+                    <filter string="Payment Month" name="group_by_month" context="{'group_by':'payment_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="action_report_pos_payment_all" model="ir.actions.act_window">
+        <field name="name">Payments Analysis</field>
+        <field name="res_model">report.pos.payment</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="search_view_id" ref="view_report_pos_payment_search"/>
+        <field name="context">{'search_default_today': 1, 'search_default_group_by_session': 1, 'search_default_group_by_payment_method': 1, 'graph_measure': 'amount', 'pivot_measures': ['amount', 'counted', 'difference', 'opening_amount', 'closing_amount', 'cash_in', 'cash_out', 'net_revenue']}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p><p>
+                Payments from PoS orders will be analyzed here.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_report_pos_payment_all" name="Payments" action="action_report_pos_payment_all" parent="menu_point_rep" sequence="5"/>
+</odoo>
