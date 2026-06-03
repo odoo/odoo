@@ -9,7 +9,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
-import { pointerDown, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { pointerDown, waitFor } from "@odoo/hoot-dom";
 import { advanceTime, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 import { serverState } from "@web/../tests/web_test_helpers";
 
@@ -116,12 +116,11 @@ test("Do not show translate action if message body is empty", async () => {
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message", { count: 3 });
     await click(".o-mail-Message:eq(0) button[title='Expand']");
-    await waitFor("[title='Pin']");
+    await waitFor(".o-dropdown-item:has(:text('Pin'))");
     await waitFor(".o-dropdown-item:contains('Translate'):count(1)");
     await click(".o-mail-Message:eq(0) button[title='Expand']");
-    await waitForNone(".o-mail-Message:eq(1) button[title='Expand']");
     await click(".o-mail-Message:eq(2) button[title='Expand']");
-    await waitFor("[title='Pin']");
+    await waitFor(".o-dropdown-item:has(:text('Pin'))");
     await waitFor(".o-dropdown-item:contains('Translate'):count(1)"); // only 1, from first message
 });
 

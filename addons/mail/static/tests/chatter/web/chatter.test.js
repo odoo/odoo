@@ -6,6 +6,7 @@ import {
     defineMailModels,
     dragenterFiles,
     dropFiles,
+    hover,
     insertText,
     listenStoreFetch,
     onRpcBefore,
@@ -602,6 +603,28 @@ test("chatter message actions appear only after saving the form", async () => {
     await contains(".o-mail-Message-actions");
 });
 
+test("Message actions in chatter", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "Message Body",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await hover(".o-mail-Message");
+    await contains(".o-mail-Message-actions button", { count: 2 }); // 1. Add a reaction 2. Expand
+    await contains(".o-mail-Message button[title='Add a Reaction']");
+    await click(".o-mail-Message button[title='Expand']");
+    await contains(".o-dropdown-item", { count: 4 });
+    await contains(".o-dropdown-item:has(:text('Copy Text'))");
+    await contains(".o-dropdown-item:has(:text('Pin'))");
+    await contains(".o-dropdown-item:has(:text('Bookmark'))");
+    await contains(".o-dropdown-item:has(:text('Translate'))");
+});
+
 test("post message on draft record", async () => {
     await start();
     await openFormView("res.partner", undefined, {
@@ -784,7 +807,8 @@ test("can mark message as unread from chatter", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message-body:text(lorem ipsum)");
-    await click("button[title='Mark as Unread']");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:has(:text('Mark as Unread'))");
     await contains(".o_notification:text(Marked as unread)");
     await click(".o-mail-MessagingMenu-counter:text(1)");
     await contains(".o-mail-NotificationItem-text:text(John Doe: lorem ipsum)");

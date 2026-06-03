@@ -132,7 +132,11 @@ registry.category("web_tour.tours").add("course_review_modification", {
         {
             trigger:
                 "#chatterRoot:shadow .o-mail-Message:contains(Second review is edited in rating composer) .o_website_rating_static[title='2 stars on 5']",
-            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
+            run: "click #chatterRoot:shadow button[name='edit']",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
@@ -217,7 +221,11 @@ registry.category("web_tour.tours").add("course_review_modification", {
         {
             trigger:
                 "#chatterRoot:shadow .o-mail-Message:not(:has(.o-mail-Message-body)) .o_website_rating_static[title='4 stars on 5']",
-            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
+            run: "click #chatterRoot:shadow button[name='edit']",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
@@ -234,7 +242,11 @@ registry.category("web_tour.tours").add("course_review_modification", {
         {
             trigger:
                 "#chatterRoot:shadow .o-mail-Message .o-mail-Message-body:contains(Fill the message body)",
-            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Edit']",
+            run: "hover && click #chatterRoot:shadow .o-mail-Message [title='Expand']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
+            run: "click #chatterRoot:shadow button[name='edit']",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",

@@ -304,12 +304,14 @@ async function canEditMessageCommentInChatter({ isMacOS = false } = {}) {
     }
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Message [title='Edit']");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:has(:text('Edit'))");
     await contains(".o-mail-Message .o-mail-Composer.o-focused");
     await webContains(".o-mail-Message .o-mail-Composer-input").edit("edited message");
     await click(".o-mail-Message button:text('save')");
     await contains(".o-mail-Message-content:text('edited message (edited)')");
-    await click(".o-mail-Message [title='Edit']");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:has(:text('Edit'))");
     await contains(
         `.o-mail-Message:contains('Press ESC to cancel, ${isMacOS ? "CMD" : "CTRL"}-Enter to save')`
     );
@@ -325,7 +327,8 @@ async function canEditMessageCommentInChatter({ isMacOS = false } = {}) {
     ]);
     await contains(".o-mail-Message-content:text('edited again (edited)')");
     // save without change should keep (edited)
-    await click(".o-mail-Message [title='Edit']");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:has(:text('Edit'))");
     await contains(".o-mail-Message .o-mail-Composer.o-focused");
     await contains(".o-mail-Message .o-mail-Composer-input:value('edited again')");
     await contains(
@@ -403,7 +406,8 @@ test("Basic list of edit message actions in chatter", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Message [title='Edit']");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:has(:text('Edit'))");
     await contains(".o-mail-Message .o-mail-Composer.o-focused");
     await click(".o-mail-Message .o-mail-Composer button[title='More Actions']");
     await contains(".dropdown-menu .dropdown-item", { count: 1 });
@@ -2137,13 +2141,12 @@ test("Message actions for 'email_outgoing' messages", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message-actions button", { count: 4 });
+    await contains(".o-mail-Message-actions button", { count: 2 });
     await contains(".o-mail-Message-actions button[title='Add a Reaction']");
-    await contains(".o-mail-Message-actions button[title='Forward']");
-    await contains(".o-mail-Message-actions button[title='Copy Text']");
-    await contains(".o-mail-Message-actions button[title='Expand']");
     await click(".o-mail-Message [title='Expand']");
-    await contains(".o-dropdown-item", { count: 5 });
+    await contains(".o-dropdown-item", { count: 7 });
+    await contains(".o-dropdown-item:has(:text('Forward'))");
+    await contains(".o-dropdown-item:has(:text('Copy Text'))");
     await contains(".o-dropdown-item:has(:text('Reply All'))");
     await contains(".o-dropdown-item:has(:text('Pin'))");
     await contains(".o-dropdown-item:has(:text('Bookmark'))");
@@ -2372,9 +2375,10 @@ test("deleted message should not have translate feature", async () => {
     await click(".modal button:contains('Delete')");
     await contains(".o-mail-Message:contains('This message has been removed')");
     await contains(".o-mail-Message [title='Add a Reaction']");
-    await contains(".o-mail-Message [title*='Pin']");
-    await contains(".o-mail-Message [title*='Copy Link']");
-    await contains(".o-mail-Message [title*='Translate']", { count: 0 });
+    await click(".o-mail-Message [title='Expand']");
+    await contains(".o-dropdown-item", { count: 2 });
+    await contains(".o-dropdown-item:has(:text('Pin'))");
+    await contains(".o-dropdown-item:has(:text('Copy Link'))");
     await animationFrame(); // in case some extra rendering for expand
     if (queryFirst(".o-mail-Message [title='Expand']")) {
         // Translate could hide itself in 'Expand' menu

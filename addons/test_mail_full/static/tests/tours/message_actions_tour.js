@@ -47,7 +47,11 @@ registry.category("web_tour.tours").add("message_actions_tour", {
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message:contains(New message)",
-            run: "hover && click #chatterRoot:shadow button[title='Edit']",
+            run: "hover && click #chatterRoot:shadow button[title='Expand']",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-moreMenu",
+            run: "click #chatterRoot:shadow button[name='edit']",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",

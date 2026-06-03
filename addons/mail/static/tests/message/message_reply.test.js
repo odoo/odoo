@@ -153,16 +153,22 @@ test("can reply to logged note in chatter", async () => {
     await click(".o-mail-Message [title='Expand']");
     await contains(".o-dropdown-item:contains('Reply')");
     await openFormView("res.partner", serverState.partnerId);
-    await click(".o-mail-Message:contains('Test message from B') [title='Reply']");
+    await click(".o-mail-Message:contains('Test message from B') [title='Expand']");
+    await click(".o-dropdown-item:has(:text('Reply'))");
     await contains("button.active:text('Log note')");
     await contains(".o-mail-Composer.o-focused .o-mail-Composer-input", { value: "@Partner B " });
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message a.o_mail_redirect:text('@Partner B')");
-    await contains(".o-mail-Message:contains('@Partner B') [title='Edit']");
-    await contains(".o-mail-Message:contains('@Partner B') [title='Reply']", { count: 0 });
     await click(".o-mail-Message:contains('@Partner B') [title='Expand']");
+    await contains(".o-dropdown-item", { count: 8 });
+    await contains(".o-dropdown-item:contains('Edit')");
+    await contains(".o-dropdown-item:contains('Forward')");
+    await contains(".o-dropdown-item:contains('Copy Text')");
+    await contains(".o-dropdown-item:contains('Pin')");
+    await contains(".o-dropdown-item:contains('Bookmark')");
+    await contains(".o-dropdown-item:contains('Copy Link')");
+    await contains(".o-dropdown-item:contains('Translate')");
     await contains(".o-dropdown-item:contains('Delete')");
-    await contains(".o-dropdown-item:contains('Reply')", { count: 0 });
 });
 
 test.tags("html composer");
@@ -181,7 +187,8 @@ test("reply to logged note in chatter keeps prefilled mention in html composer",
     await start();
     getService("mail.composer").setHtmlComposer();
     await openFormView("res.partner", serverState.partnerId);
-    await click(".o-mail-Message:contains('Test message from B') [title='Reply']");
+    await click(".o-mail-Message:contains('Test message from B') [title='Expand']");
+    await click(".o-dropdown-item:has(:text('Reply'))");
     await contains("button.active:text('Log note')");
     await contains(".o-mail-Composer.o-focused .o-mail-Composer-html.odoo-editor-editable");
     await contains(
@@ -292,7 +299,8 @@ test("replying to a note restores focus on an already open composer", async () =
     await contains(".o-mail-Composer.o-focused");
     queryFirst(".o-mail-Composer-input").blur();
     await contains(".o-mail-Composer.o-focused", { count: 0 });
-    await click(".o-mail-Message-actions [title='Reply']");
+    await click(".o-mail-Message-actions [title='Expand']");
+    await click(".o-dropdown-item:has(:text('Reply'))");
     await contains(".o-mail-Composer.o-focused");
 });
 
@@ -341,7 +349,8 @@ test("Click reply to note again preserves composer content", async () => {
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();
     await openFormView("res.partner", serverState.partnerId);
-    await click(".o-mail-Message:contains(I am Justice) [title='Reply']");
+    await click(".o-mail-Message:contains(I am Justice) [title='Expand']");
+    await click(".o-dropdown-item:has(:text('Reply'))");
     await contains(".o-mail-Composer.o-focused");
     const editor = {
         document,
@@ -355,7 +364,8 @@ test("Click reply to note again preserves composer content", async () => {
     expect(editor.editable.textContent).toBe("\uFEFF@Batman\uFEFF\u00A0Strong Text");
     await click("button.active:text('Log note')");
     await contains(".o-mail-Composer", { count: 0 });
-    await click(".o-mail-Message:contains(I am Justice) [title='Reply']");
+    await click(".o-mail-Message:contains(I am Justice) [title='Expand']");
+    await click(".o-dropdown-item:has(:text('Reply'))");
     await contains(".o-mail-Composer.o-focused");
     await contains(
         ".o-mail-Composer-html.odoo-editor-editable:text('@Batman Strong Text'):has(a.o_mail_redirect:text('@Batman')):has(strong:text('Strong Text'))"
