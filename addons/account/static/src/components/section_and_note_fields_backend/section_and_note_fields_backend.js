@@ -1,5 +1,5 @@
-import { useLayoutEffect, onWillRender } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { onWillRender } from "@web/owl2/utils";
+import { Component, onPatched } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
@@ -92,10 +92,9 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         // invisible fields to force copy when duplicating a section
         this.copyFields = ["display_type", "collapse_composition", "collapse_prices"];
         this.parentSectionMap = new Map();
-        useLayoutEffect(
-            (editedRecord) => this.focusToName(editedRecord),
-            () => [this.editedRecord]
-        );
+        onPatched(() => {
+            this.focusToName(this.editedRecord());
+        });
         onWillRender(() => {
             this.buildParentSectionMap();
         });
@@ -227,7 +226,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 
     async deleteSection(record) {
-        if (this.editedRecord && this.editedRecord !== record) {
+        if (this.editedRecord() && this.editedRecord() !== record) {
             const left = await this.props.list.leaveEditMode({ canAbandon: false });
             if (!left) {
                 return;
