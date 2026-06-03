@@ -1586,21 +1586,6 @@ class DiscussChannel(models.Model):
         )
         return sub_channel
 
-    @api.readonly
-    @api.model
-    def get_mention_suggestions(self, search, limit=8):
-        """ Return 'limit'-first channels' name, channel_type and group_public_id fields such that the
-            name matches a 'search' string. Exclude channels of type chat (DM) and group.
-        """
-        return Store().add(
-            self.search([("name", "ilike", search), ("channel_type", "=", "channel")], limit=limit),
-            lambda res: (
-                res.extend(["name", "channel_type"]),
-                res.one("group_public_id", ["full_name"]),
-                res.attr("parent_channel_id"),
-            ),
-        )
-
     def _get_last_messages(self):
         """ Return the last message for each of the given channels."""
         messages = self.env["mail.message"]
@@ -1671,7 +1656,6 @@ class DiscussChannel(models.Model):
             "%(new_line)s"
             "%(new_line)s%(bold_start)s@username%(bold_end)s to mention someone"
             "%(new_line)s%(bold_start)s@role%(bold_end)s to notify multiple people"
-            "%(new_line)s%(bold_start)s#channel%(bold_end)s to link a channel"
             "%(new_line)s%(bold_start)s/command%(bold_end)s to run a command"
             "%(new_line)s%(bold_start)s::shortcut%(bold_end)s to insert a canned response"
             "%(new_line)s%(bold_start)s:emoji:%(bold_end)s to insert an emoji",

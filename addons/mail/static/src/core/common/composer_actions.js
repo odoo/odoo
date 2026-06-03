@@ -9,6 +9,7 @@ import { markEventHandled } from "@web/core/utils/misc";
 import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
@@ -141,7 +142,7 @@ registerComposerAction("add-canned-response", {
         composer.targetThread &&
         store.env.services["mail.suggestion"]
             .getSupportedDelimiters(composer.targetThread)
-            .find(([delimiter]) => delimiter === "::"),
+            .find(([delimiter]) => delimiter === SUGGESTION_DELIMITERS.CANNED_RESPONSE),
     icon: "fa fa-file-text-o",
     name: _t("Insert a Canned response"),
     onSelected: ({ owner }, ev) => owner.onClickInsertCannedResponse(ev),

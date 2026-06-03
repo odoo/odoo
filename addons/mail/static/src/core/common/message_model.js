@@ -642,11 +642,7 @@ export class Message extends Record {
         this.store.env.services.notification.add(_t("Text copied"), { type: "success" });
     }
 
-    async edit(
-        body,
-        attachments = [],
-        { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
-    ) {
+    async edit(body, attachments = [], { mentionedPartners = [], mentionedRoles = [] } = {}) {
         const messageBodyEl = createElementWithContent("div", this.body);
         const updatedBodyEl = createElementWithContent("div", body);
         messageBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
@@ -655,7 +651,6 @@ export class Message extends Record {
             return;
         }
         const validMentions = this.store.getMentionsFromText(body, {
-            mentionedChannels,
             mentionedPartners,
             mentionedRoles,
             thread: this.thread,
@@ -686,17 +681,11 @@ export class Message extends Record {
     }
 
     /** @param {import("models").Thread} thread the thread where the message is being viewed when starting edition */
-    async enterEditMode(thread) {
-        const doc = createDocumentFragmentFromContent(this.body);
-        const validChannels = (
-            await Promise.all(
-                Array.from(
-                    doc.querySelectorAll(".o_channel_redirect[data-oe-model='discuss.channel']")
-                ).map(async (el) => this.store["discuss.channel"].getOrFetch(el.dataset.oeId))
-            )
-        ).filter((channel) => channel?.exists());
+    enterEditMode(thread) {
         const validRoles = Array.from(
-            doc.querySelectorAll(".o-discuss-mention[data-oe-model='res.role']")
+            createDocumentFragmentFromContent(this.body).querySelectorAll(
+                ".o-discuss-mention[data-oe-model='res.role']"
+            )
         ).map((el) => this.store["res.role"].get(el.dataset.oeId));
         const text = convertBrToLineBreak(this.body);
         if (thread?.messageInEdition) {
@@ -704,7 +693,6 @@ export class Message extends Record {
         }
         this.composer = {
             composerHtml: prepareBodyForEditing(this.body),
-            mentionedChannels: validChannels,
             mentionedPartners: this.partner_ids,
             mentionedRoles: validRoles,
             selection: {

@@ -45,7 +45,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             trigger: ".o-mail-Composer-input",
             content: markup(
                 _t(
-                    "<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>"
+                    "<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>"
                 )
             ),
             tooltipPosition: "top",

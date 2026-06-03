@@ -23,6 +23,6 @@ test("Visitor cannot use @ mentions in livechat", async () => {
         },
     });
     await insertText(".o-mail-Composer-input", "@");
-    await expect.waitForSteps(["#,::,:,/"]);
+    await expect.waitForSteps(["::,:,/"]);
     await contains(".o-mail-Composer-suggestion", { count: 0 });
 });

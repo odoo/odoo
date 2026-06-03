@@ -5,12 +5,23 @@ import {
     generatePartnerMentionElement,
     generateRoleMentionElement,
     generateSpecialMentionElement,
-    generateChannelMentionElement,
 } from "@mail/utils/common/format";
 import { proxy, status } from "@odoo/owl";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { useSearch } from "@mail/utils/common/hooks";
+
+/**
+ * Delimiters that trigger suggestion lists in the composer.
+ *
+ * @typedef {typeof SUGGESTION_DELIMITERS[keyof typeof SUGGESTION_DELIMITERS]} SuggestionDelimiter
+ */
+export const SUGGESTION_DELIMITERS = Object.freeze({
+    PARTNER: "@",
+    CANNED_RESPONSE: "::",
+    EMOJI: ":",
+    CHANNEL_COMMAND: "/",
+});
 
 /**
  * @typedef {Object} Option
@@ -34,7 +45,6 @@ import { useSearch } from "@mail/utils/common/hooks";
 /**
  * @typedef {import("models").ResPartner
  *   | import("models").ResRole
- *   | import("models").Thread
  *   | import("models").CannedResponse
  *   | import("@web/core/emoji_picker/emoji_picker").Emoji
  *   | import("@mail/core/common/store_service").SpecialMention} Suggestion
@@ -45,7 +55,7 @@ export class UseSuggestion {
         this.comp = comp;
         this.suggestionService = useService("mail.suggestion");
         this.detection = proxy({
-            /** @type {string|undefined} */
+            /** @type {SuggestionDelimiter|undefined} */
             delimiter: undefined,
             /** @type {number|undefined} */
             position: undefined,
@@ -75,7 +85,6 @@ export class UseSuggestion {
         return this.comp.props.composer;
     }
     clearRawMentions() {
-        this.composer.mentionedChannels.length = 0;
         this.composer.mentionedPartners.length = 0;
         this.composer.mentionedRoles.length = 0;
     }
@@ -186,8 +195,11 @@ export class UseSuggestion {
     insert(option) {
         let position = this.detection.position + 1;
         if (
-            [":", "::"].includes(this.detection.delimiter) ||
-            (this.comp.composerService.htmlEnabled && this.detection.delimiter !== "/")
+            [SUGGESTION_DELIMITERS.EMOJI, SUGGESTION_DELIMITERS.CANNED_RESPONSE].includes(
+                this.detection.delimiter
+            ) ||
+            (this.comp.composerService.htmlEnabled &&
+                this.detection.delimiter !== SUGGESTION_DELIMITERS.CHANNEL_COMMAND)
         ) {
             position = this.detection.position;
         }
@@ -205,8 +217,6 @@ export class UseSuggestion {
             this.composer.mentionedPartners.add({ id: option.partner.id });
         } else if (option.role) {
             this.composer.mentionedRoles.add(option.role);
-        } else if (option.channel) {
-            this.composer.mentionedChannels.add(option.channel.id);
         } else if (option.cannedResponse) {
             this.composer.cannedResponses.push(option.cannedResponse);
         }
@@ -324,15 +334,6 @@ export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
                     };
                 }),
             };
-        case "discuss.channel":
-            return {
-                optionTemplate: "mail.Composer.suggestionChannel",
-                options: suggestions.map((suggestion) => ({
-                    label: suggestion.fullNameWithParent,
-                    channel: suggestion,
-                    classList,
-                })),
-            };
         case "ChannelCommand":
             return {
                 optionTemplate: "mail.Composer.suggestionChannelCommand",
@@ -380,8 +381,6 @@ export function makeMentionFromOption(option, { thread } = {}) {
         inlineElement = generateSpecialMentionElement(option.label);
     } else if (option.role) {
         inlineElement = generateRoleMentionElement(option.role);
-    } else if (option.channel) {
-        inlineElement = generateChannelMentionElement(option.channel);
     } else {
         inlineElement = document.createTextNode(option.label);
     }

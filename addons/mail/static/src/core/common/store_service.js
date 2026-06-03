@@ -522,10 +522,7 @@ export class Store extends BaseStore {
         }
     }
 
-    getMentionsFromText(
-        body,
-        { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [], thread } = {}
-    ) {
+    getMentionsFromText(body, { mentionedPartners = [], mentionedRoles = [], thread } = {}) {
         const validMentions = {};
         const segments = isMarkup(body)
             ? Array.from(
@@ -533,10 +530,6 @@ export class Store extends BaseStore {
                   (a) => a.textContent
               )
             : [body];
-        validMentions.channels = mentionedChannels.filter((channel) => {
-            const mention = `#${channel.fullNameWithParent}`;
-            return segments.some((segment) => segment.includes(mention));
-        });
         validMentions.partners = mentionedPartners.filter((partner) =>
             segments.some((segment) =>
                 segment.includes(`@${thread?.getPersonaName(partner) ?? partner.name}`)
@@ -561,14 +554,12 @@ export class Store extends BaseStore {
             emailAddSignature,
             isCcEnabled,
             isNote,
-            mentionedChannels,
             mentionedPartners,
             mentionedRoles,
             subject,
         } = postData;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.getMentionsFromText(body, {
-            mentionedChannels,
             mentionedPartners,
             mentionedRoles,
             thread,

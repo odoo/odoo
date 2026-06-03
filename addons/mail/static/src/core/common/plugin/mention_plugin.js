@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { generateChannelMentionElement } from "@mail/utils/common/format";
 
 export class MentionPlugin extends Plugin {
     static id = "mention";
@@ -10,22 +9,8 @@ export class MentionPlugin extends Plugin {
             this.MENTION_SELECTORS.map(({ selector }) => selector).join(", "),
     };
 
-    setup() {
-        super.setup();
-        /** @type {import("models").Store} */
-        this.store = this.services["mail.store"];
-    }
-
     get MENTION_SELECTORS() {
         return [
-            {
-                selector: "a.o_channel_redirect",
-                checker: (el) => this.isValidChannelMentionElement(el),
-                validMentionsHandler: (channelLinks) => {
-                    this.store.handleValidChannelMention(channelLinks);
-                    this.dependencies.history.commit();
-                },
-            },
             {
                 selector: "a.o_mail_redirect",
                 checker: (el) => true,
@@ -69,20 +54,5 @@ export class MentionPlugin extends Plugin {
                 this.dependencies.history.commit();
             }
         }
-    }
-
-    async isValidChannelMentionElement(el) {
-        if (el.dataset.oeModel !== "discuss.channel") {
-            return false;
-        }
-        const channel = await this.store["discuss.channel"].getOrFetch(Number(el.dataset.oeId));
-        if (!channel) {
-            return false;
-        }
-        const validChannelMention = generateChannelMentionElement(channel);
-        return (
-            validChannelMention.getAttribute("href") === el.getAttribute("href") &&
-            [...validChannelMention.classList].every((cls) => el.classList.contains(cls))
-        );
     }
 }

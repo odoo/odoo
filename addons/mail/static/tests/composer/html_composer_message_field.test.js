@@ -19,7 +19,6 @@ import {
     makeMockServer,
     mockService,
     mountView,
-    mountViewInDialog,
     onRpc,
     patchWithCleanup,
     serverState,
@@ -35,6 +34,7 @@ import {
     start,
     startServer,
 } from "../mail_test_helpers";
+import { htmlInsertText } from "../mail_test_helpers_html";
 
 // Need this hack to use the arch in mountView(...)
 mailModels.MailComposeMessage._views = {};
@@ -170,8 +170,7 @@ test("mention a partner", async () => {
     });
     const anchorNode = queryOne(`.odoo-editor-editable p`);
     setSelection({ anchorNode, anchorOffset: 0 });
-    await insertText(htmlEditor, "@");
-    await animationFrame();
+    await htmlInsertText(htmlEditor, "@");
     expect(".overlay .o-mail-MentionList input[placeholder='Search for a user...']").toBeFocused();
     expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
 
@@ -189,30 +188,6 @@ test("mention a partner", async () => {
             @Mitchell Admin
         </a>
     </p>`);
-});
-
-test("mention a channel", async () => {
-    onRpc("discuss.channel", "get_mention_suggestions", ({ kwargs }) => {
-        expect.step(`get_mention_suggestions: ${kwargs.search}`);
-    });
-    await mountViewInDialog({
-        type: "form",
-        resModel: "mail.compose.message",
-        arch: `
-        <form>
-            <field name="body" type="html" widget="html_composer_message"/>
-        </form>`,
-    });
-    const anchorNode = queryOne(`[name='body'] .odoo-editor-editable div.o-paragraph`);
-    setSelection({ anchorNode, anchorOffset: 0 });
-    await insertText(htmlEditor, "#");
-    await animationFrame();
-    expect(".overlay .o-mail-MentionList input[placeholder='Search for a channel...']").toBeFocused();
-    expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
-
-    await press("a");
-    await animationFrame();
-    expect.verifySteps(["get_mention_suggestions: a"]);
 });
 
 describe("Remove attachments", () => {

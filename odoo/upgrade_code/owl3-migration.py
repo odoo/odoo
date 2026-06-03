@@ -1002,7 +1002,6 @@ MAIL_WHITELIST = {
     "mail.Composer.suggestionSpecial": {'option'},  # dynamic t-call
     "mail.Composer.suggestionPartner": {'option'},  # dynamic t-call
     "mail.Composer.suggestionRole": {'option'},  # dynamic t-call
-    "mail.Composer.suggestionChannel": {'option'},  # dynamic t-call
     "mail.Composer.suggestionChannelCommand": {'option'},  # dynamic t-call
     "mail.Composer.suggestionCannedResponse": {'option'},  # dynamic t-call
     "mail.Composer.suggestionEmoji": {'option'},  # dynamic t-call

@@ -1,3 +1,4 @@
+import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
 import { SuggestionService } from "@mail/core/common/suggestion_service";
 
 import { patch } from "@web/core/utils/patch";
@@ -6,7 +7,10 @@ import { patch } from "@web/core/utils/patch";
 const suggestionServicePatch = {
     getSupportedDelimiters(thread, env) {
         if (env?.inFrontendPortalChatter) {
-            return [["::"], [":", undefined, 2]];
+            return [
+                [SUGGESTION_DELIMITERS.CANNED_RESPONSE],
+                [SUGGESTION_DELIMITERS.EMOJI, undefined, 2],
+            ];
         }
         return super.getSupportedDelimiters(...arguments);
     },
