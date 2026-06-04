@@ -59,7 +59,10 @@ const ODOO_LIST_HEADER = {
         }
         assertListsExists(id, this.getters);
         const displayName = toString(fieldDisplayName);
-        return displayName || this.getters.getListHeaderValue(id, _fieldName);
+        if (displayName) {
+            return { value: displayName };
+        }
+        return this.getters.getListHeaderValue(id, _fieldName);
     },
 };
 
@@ -70,7 +73,7 @@ const ODOO_LIST = {
         arg("row_count (number, optional)", _t("number of rows to display")),
     ],
     category: "Odoo",
-    compute: function (listId, rowCount) {
+    computeArray: function (listId, rowCount) {
         const id = toString(listId);
         assertListsExists(id, this.getters);
         const columns = this.getters.getListDefinition(id).columns;
