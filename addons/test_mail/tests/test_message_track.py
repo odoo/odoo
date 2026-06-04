@@ -48,18 +48,24 @@ class TestTrackingAPI(TestTrackingCommon):
 
     @users('employee')
     def test_mail_track_mixin(self):
-        mixin_records = self.env['mail.test.track.mixin'].create([
-            {
-                'char_field': 'init 1',
-                'selection_field': 'first',
-            }, {
-                'char_field': 'init 2',
-                'selection_field': False,
-            }
-        ])
-        self.flush_tracking()
-
         original_track_finalize = MailTrackMixin._track_finalize
+
+        with patch.object(MailTrackMixin, '_track_finalize',
+                          autospec=True, side_effect=original_track_finalize) as mock_track_finalize, \
+             self.mock_mail_gateway(), self.mock_mail_app():
+            mixin_records = self.env['mail.test.track.mixin'].create([
+                {
+                    'char_field': 'init 1',
+                    'selection_field': 'first',
+                }, {
+                    'char_field': 'init 2',
+                    'selection_field': False,
+                }
+            ])
+            self.flush_tracking()
+        self.assertEqual(mock_track_finalize.call_count, 0)
+        self.assertFalse(self._new_msgs)
+
         with patch.object(MailTrackMixin, '_track_finalize',
                           autospec=True, side_effect=original_track_finalize) as mock_track_finalize, \
              self.mock_mail_gateway(), self.mock_mail_app():
@@ -1509,3 +1515,28 @@ class TestTrackingInternals(TestTrackingCommon):
         ])
         fields_toremove.with_context(force_delete=True).unlink()
         self.assertEqual(len(trackings_all.exists()), 5)
+        # should have updated field_info in DB
+        self.assertMessageFields(record_other.message_ids[0], {
+            'tracking_values': [
+                ('customer_id', 'many2one', False, self.test_partner),  # not removed
+                (False, 'char', 'email.from.1@example.com', 'email.from.2@example.com', {
+                    'field_info': {
+                        'desc': 'Email From', 'name': 'email_from', 'type': 'char', 'sequence': 100,
+                    },
+                }),
+                (False, 'many2one', False, self.env.user, {
+                    'field_info': {
+                        'desc': 'Responsible', 'name': 'user_id', 'type': 'many2one', 'sequence': 1,
+                    },
+                })
+            ],
+        })
+        self.assertMessageFields(record_other.message_ids[1], {
+            'tracking_values': [
+                (False, 'char', False, 'email.from.1@example.com', {
+                    'field_info': {
+                        'desc': 'Email From', 'name': 'email_from', 'type': 'char', 'sequence': 100,
+                    },
+                }),
+            ],
+        })
