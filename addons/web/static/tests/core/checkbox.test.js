@@ -1,6 +1,6 @@
 import { useState } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
-import { check, uncheck } from "@odoo/hoot-dom";
+import { check, queryFirst, uncheck } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { contains, defineParams, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -146,4 +146,22 @@ test("checkbox with props indeterminate", async () => {
 
     expect(`.o-checkbox input`).toHaveCount(1);
     expect(`.o-checkbox input`).toBeChecked({ indeterminate: true });
+});
+
+test("indeterminate checkbox renders a visible dash", async () => {
+    class Parent extends Component {
+        static components = { CheckBox };
+        static props = {};
+        static template = xml`<CheckBox indeterminate="true" />`;
+    }
+
+    await mountWithCleanup(Parent);
+
+    const input = queryFirst(`.o-checkbox input`);
+    expect(input).toBeChecked({ indeterminate: true });
+    // The CSS --form-check-bg-image must use a valid stroke color.
+    // 'stroke=\'unset\'' (Odoo's broken compiled Bootstrap value) makes the dash invisible.
+    const bgImage = getComputedStyle(input).getPropertyValue("--form-check-bg-image");
+    expect(bgImage).not.toMatch(/stroke='unset'/);
+    expect(bgImage).toMatch(/stroke='%23/);
 });
