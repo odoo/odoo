@@ -1749,7 +1749,13 @@ class SaleOrder(models.Model):
         # future -> if no coupon
         # nominative -> non blocking if card exists with points
         if coupon:
-            self.applied_coupon_ids += coupon
+            if coupon not in self.applied_coupon_ids:
+                self.applied_coupon_ids += coupon
+            else:
+                if program in self._get_reward_programs():
+                    claimable_rewards = self._get_claimable_rewards(forced_coupons=coupon)
+                    if claimable_rewards:
+                        return claimable_rewards
         if program_is_applied:
             # Update the points for our programs, this will take the new trigger in account
             self._update_programs_and_rewards()
