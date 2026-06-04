@@ -404,17 +404,11 @@ class MailThread(models.AbstractModel):
         return threads
 
     def write(self, vals):
-        if self.env.context.get('tracking_disable'):
-            return super().write(vals)
-
-        if not self._track_disabled():
-            self._track_prepare(self._fields)
-
-        # Perform write
         result = super().write(vals)
 
-        # update followers
-        self._message_auto_subscribe(vals)
+        # update followers unless explicitly skipped
+        if not self.env.context.get('tracking_disable'):
+            self._message_auto_subscribe(vals)
 
         return result
 
@@ -424,6 +418,7 @@ class MailThread(models.AbstractModel):
         if not self:
             return True
         # discard pending tracking
+        # TDE to check: fire tracking depending on those records (e.g. _track_record) ?
         self._track_discard()
         self.env['mail.message'].sudo().search([('model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
         res = super(MailThread, self).unlink()
