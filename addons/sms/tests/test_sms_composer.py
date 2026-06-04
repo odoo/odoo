@@ -181,7 +181,7 @@ class TestSMSComposerComment(SMSCommon, SMSCase):
 
         self.assertTrue(sms_final, "The final SMS should have been generated from the scheduled message.")
         self.assertEqual(
-            sms_final.body, 
-            sms_plaintext_body, 
+            sms_final.body,
+            sms_plaintext_body,
             "The final SMS body does not match the original plaintext or contains duplicated URLs."
         )

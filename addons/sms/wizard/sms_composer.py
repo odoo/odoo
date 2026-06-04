@@ -22,7 +22,7 @@ class SmsComposer(models.TransientModel):
 
         scheduled_message_id = self.env.context.get('default_mail_scheduled_message_id')
         if scheduled_message_id:
-            
+
             scheduled_message = self.env['mail.scheduled.message'].browse(scheduled_message_id)
             if scheduled_message.exists():
                 result.update({
@@ -276,7 +276,7 @@ class SmsComposer(models.TransientModel):
             close_action = {'type': 'ir.actions.act_window_close'}
 
             store = Store()
-            store.add (
+            store.add(
                 thread,
                 '_store_thread_fields',
                 as_thread=True,

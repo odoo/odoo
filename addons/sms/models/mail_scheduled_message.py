@@ -38,12 +38,12 @@ class MailScheduledMessage(models.Model):
                     if auto_commit and not raise_exception:
                         self.env.cr.commit()
 
-            except Exception as e:
+            except Exception:
                 if auto_commit and not raise_exception:
                     self.env.cr.rollback()
 
                 if raise_exception:
-                    raise e
+                    raise
                 continue
 
         if mail_scheduled:
