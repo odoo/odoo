@@ -704,6 +704,28 @@ test("toolbar works: show the right font name after undo", async () => {
     expect(".o-we-toolbar .btn[name='font_type']").toHaveText("Header 2");
 });
 
+test.tags("mobile");
+test("toolbar dropdown in a bottom sheet gives the focus back to the editable", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    el.focus();
+    expect(document.activeElement).toBe(el);
+
+    // Native click: like a tap on iOS, it does not move the focus to the
+    // button, so the editable still has it when the bottom sheet opens.
+    queryOne(".o-we-toolbar [name='font_type'].dropdown-toggle").click();
+    await waitFor(".o_bottom_sheet .o_font_type_selector_menu .dropdown-item");
+    await animationFrame();
+    expect(document.activeElement).not.toBe(el);
+
+    await contains(".o_font_type_selector_menu .dropdown-item:contains('Header 2')").click();
+    await waitForNone(".o_bottom_sheet");
+    await animationFrame();
+    expect(getContent(el)).toBe("<h2>[test]</h2>");
+    expect(document.activeElement).toBe(el);
+    expect(document.hasFocus()).toBe(true);
+});
+
 test("toolbar works: can select font size", async () => {
     const { el } = await setupEditor("<p>test</p>");
     expect(getContent(el)).toBe("<p>test</p>");
