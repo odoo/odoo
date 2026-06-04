@@ -20,7 +20,7 @@ class PaymentLinkWizard(models.TransientModel):
             sale_order = wizard.env["sale.order"].browse(wizard.res_id)
             if sale_order.state in ("draft", "sent") and sale_order.prepayment_percent > 0:
                 wizard.confirmation_message = wizard.env._(
-                    "This payment will confirm the quotation."
+                    "Any successful payment will confirm the quotation."
                 )
 
     @api.depends("res_model", "res_id")
@@ -28,11 +28,6 @@ class PaymentLinkWizard(models.TransientModel):
         sale_wizards = self.env["payment.link.wizard"]
         for wizard in self.filtered(lambda w: w.res_model == "sale.order"):
             sale_order = wizard.env["sale.order"].browse(wizard.res_id)
-            if sale_order.state in ("draft", "sent") and wizard.amount < wizard.prepayment_amount:
-                wizard.warning_message = wizard.env._(
-                    "The amount must be greater than the prepayment amount."
-                )
-                sale_wizards |= wizard  # Prevent the super call from clearing the warning message.
             if sale_order.is_expired:
                 wizard.warning_message = wizard.env._("The sale order has expired.")
                 sale_wizards |= wizard
