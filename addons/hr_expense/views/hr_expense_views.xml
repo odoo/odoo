@@ -12,6 +12,7 @@
                     <field name="is_multiple_currency" column_invisible="True"/>
                     <field name="product_has_cost" column_invisible="True"/>
                     <field name="selectable_payment_method_line_ids" column_invisible="True"/>
+                    <field name="can_edit_account" column_invisible="True"/>
 
                     <!--  Always Shown start -->
                     <field name="employee_id" widget="many2one_avatar_employee" readonly="not is_editable"/>
@@ -26,10 +27,10 @@
                     <field name="analytic_distribution" widget="analytic_distribution"
                            optional="show"
                            groups="analytic.group_analytic_accounting"
-                           readonly="not is_editable"
+                           readonly="not (is_editable or can_edit_account)"
                            options="{'product_field': 'product_id', 'business_domain': 'expense'}"/>
                     <field name="account_id" optional="hide" groups="account.group_account_readonly"
-                           readonly="not is_editable"/>
+                           readonly="not (is_editable or can_edit_account)"/>
                     <field name="journal_id" optional="hide" groups="account.group_account_readonly"
                            readonly="True"/>
                     <field name="payment_method_line_id" optional="hide" groups="account.group_account_readonly"
@@ -186,6 +187,7 @@
                             <field name="duplicate_expense_ids" invisible="1"/>
                             <field name="currency_rate" invisible="1"/>
                             <field name="selectable_payment_method_line_ids" invisible="1"/>
+                            <field name="can_edit_account" invisible="1"/>
 
                             <label for="product_id"/>
                             <div>
@@ -298,7 +300,8 @@
                                             ('company_ids', 'parent_of', company_id)
                                         ]
                                    "
-                                   groups="account.group_account_readonly" readonly="not is_editable"
+                                   groups="account.group_account_readonly"
+                                   readonly="not (is_editable or can_edit_account)"
                                    context="{'default_company_id': company_id}"/>
                             <field name="payment_method_line_id"
                                    options="{'no_open': True, 'no_create': True}"
@@ -310,7 +313,7 @@
                                 widget="analytic_distribution"
                                 groups="analytic.group_analytic_accounting"
                                 options="{'product_field': 'product_id', 'account_field': 'account_id', 'business_domain': 'expense'}"
-                                readonly="not is_editable"/>
+                                readonly="not (is_editable or can_edit_account)"/>
                         </group>
                     </group>
                     <div>

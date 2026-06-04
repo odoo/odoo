@@ -299,6 +299,7 @@ class HrExpense(models.Model):
 
     # Security fields
     is_editable = fields.Boolean(string="Is Editable By Current User", compute='_compute_is_editable', readonly=True)
+    can_edit_account = fields.Boolean(compute='_compute_can_edit_account')
     can_reset = fields.Boolean(string='Can Reset', compute='_compute_can_reset', readonly=True)
     can_approve = fields.Boolean(string='Can Approve', compute='_compute_can_approve', readonly=True)
 
@@ -864,6 +865,15 @@ class HrExpense(models.Model):
             )
 
     @api.depends_context('uid')
+    @api.depends('state')
+    def _compute_can_edit_account(self):
+        if not self.env.user.has_group('account.group_account_invoice'):
+            self.can_edit_account = False
+        else:
+            for expense in self:
+                expense.can_edit_account = expense.state == 'approved'
+
+    @api.depends_context('uid')
     @api.depends('employee_id')
     def _compute_can_approve(self):
         cannot_reason_per_record_id = self._get_cannot_approve_reason()
@@ -881,14 +891,20 @@ class HrExpense(models.Model):
                 raise UserError(_('You cannot delete a posted or approved expense.'))
 
     def write(self, vals):
-        if any(field in vals for field in {'is_editable', 'can_approve', 'can_refuse'}):
-            raise UserError(_("You cannot edit the security fields of an expense manually"))
 
-        if any(field in vals for field in {'tax_ids', 'analytic_distribution', 'account_id', 'manager_id'}):
-            if any((not expense.is_editable and not self.env.su) for expense in self):
-                raise UserError(_(
+        changed_fields_set = set(vals)
+        if {'is_editable', 'can_approve', 'can_refuse'} & changed_fields_set:
+            raise UserError(self.env._("You cannot edit the security fields of an expense manually"))
+
+        if not self.env.su and (readonly_expenses := self.filtered(lambda e: not e.is_editable)):
+            is_unauthorised_edit = {'tax_ids', 'manager_id'} & changed_fields_set or (
+                    {'analytic_distribution', 'account_id'} & changed_fields_set and
+                    any(not e.can_edit_account for e in readonly_expenses)
+            )
+            if is_unauthorised_edit:
+                raise UserError(self.env._(
                     "Uh-oh! You can’t edit this expense.\n\n"
-                    "Reach out to the administrators, flash your best smile, and see if they'll grant you the magical access you seek."
+                    "Reach out to the administrators, flash your best smile, and see if they'll grant you the magical access you seek.",
                 ))
 
         res = super().write(vals)
@@ -1271,14 +1287,6 @@ class HrExpense(models.Model):
     def action_approve(self):
         """ Approve an expense, pops a wizard if a duplicated expense is found to confirm they are all valid expenses """
         self._check_can_approve()
-        for expense in self:
-            expense._validate_distribution(
-                account=expense.account_id.id,
-                product=expense.product_id.id,
-                business_domain='expense',
-                company_id=expense.company_id.id,
-            )
-
         duplicates = self.duplicate_expense_ids.filtered(lambda exp: exp.state in {'submitted', 'approved', 'posted', 'paid', 'in_payment'})
         if duplicates:
             action = self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_approve_duplicate_action')
@@ -1306,6 +1314,14 @@ class HrExpense(models.Model):
         employee_expenses = self - company_expenses
         if len(employee_expenses.company_id) > 1:
             raise UserError(_("You can't post simultaneously employee-paid expenses belonging to different companies"))
+
+        for expense in self.with_context(validate_analytic=True):
+            expense._validate_distribution(
+                account=expense.account_id.id,
+                product=expense.product_id.id,
+                business_domain='expense',
+                company_id=expense.company_id.id,
+            )
 
         # For company-paid expenses using SEPA Credit Transfer, the vendor must be set
         # because SEPA XML generation requires a creditor name (partner).

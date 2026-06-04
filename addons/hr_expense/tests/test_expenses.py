@@ -890,10 +890,11 @@ class TestExpenses(TestExpenseCommon):
         })
 
         expense.action_submit()
+        expense.action_approve()
         with self.assertRaises(ValidationError, msg="One or more lines require a 100% analytic distribution."):
-            expense.with_context(validate_analytic=True).action_approve()
+            expense.action_post()
         expense.analytic_distribution = {self.analytic_account_1.id: 100.00}
-        expense.with_context(validate_analytic=True).action_approve()
+        expense.action_post()
 
     def test_expense_no_stealing_from_employees(self):
         """
