@@ -14,7 +14,7 @@ export class MailComposerFormController extends formView.Controller {
     static defaultProps = { fullComposerBus: new EventBus() };
     setup() {
         super.setup();
-        toRaw(this.env.dialogData).model = "mail.compose.message";
+        toRaw(this.env.dialogData).model = this.props.resModel;
         useSubEnv({
             fullComposerBus: this.props.fullComposerBus,
         });
@@ -45,10 +45,15 @@ export class MailComposerFormRenderer extends formView.Renderer {
         );
 
         const getActiveMailThreads = () => {
-            // composer does not store res_ids past a certain limit, assume active_ids is used
-            const resIds = this.props.record.data.res_ids
-                ? JSON.parse(this.props.record.data.res_ids)
-                : this.props.record.context.active_ids;
+            let resIds;
+            if (this.props.record.resModel === "mail.scheduled.message") {
+                resIds = [this.props.record.data.res_id.resId];
+            } else {
+                // composer does not store res_ids past a certain limit, assume active_ids is used
+                resIds = this.props.record.data.res_ids
+                    ? JSON.parse(this.props.record.data.res_ids)
+                    : this.props.record.context.active_ids;
+            }
             return resIds.map((resId) => {
                 const thread = this.mailStore.Thread.insert({
                     model: this.props.record.data.model,
@@ -66,10 +71,17 @@ export class MailComposerFormRenderer extends formView.Renderer {
             /** @param {Event} event */
             onDrop: async (event) => {
                 for (const thread of getActiveMailThreads()) {
+                    // Use an isolated composer object instead of thread.composer to
+                    // avoid pushing into the main thread's composer.attachments list,
+                    // which is observed by the chatter.
+                    const composer =
+                        this.props.record.resModel === "mail.scheduled.message"
+                            ? { attachments: [] }
+                            : thread.composer;
                     for (const file of event.dataTransfer.files) {
                         const attachment = await this.attachmentUploadService.upload(
                             thread,
-                            thread.composer,
+                            composer,
                             file
                         );
                         await this.operations.saveRecord([attachment.id]);
@@ -84,6 +96,10 @@ export class MailComposerFormRenderer extends formView.Renderer {
         };
 
         onCloseWizardModal(async () => {
+            if (this.props.record.resModel === "mail.scheduled.message") {
+                return;
+            }
+
             const selectedPartnerIds = this.props.record.data.partner_ids.currentIds;
             const selectedPartners = await this.orm.searchRead(
                 "res.partner",

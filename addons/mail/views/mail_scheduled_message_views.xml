@@ -5,12 +5,15 @@
             <field name="name">mail.scheduled.message.view.form</field>
             <field name="model">mail.scheduled.message</field>
             <field name="arch" type="xml">
-                <form string="Scheduled Message">
+                <form string="Scheduled Message" js_class="mail_composer_form">
                     <sheet>
                         <group>
                             <field name="composition_comment_option" invisible="1"/>
                             <label for="partner_ids" string="To" invisible="is_note"/>
                             <div invisible="is_note" class="d-flex gap-3">
+                                <!-- used in MailComposerAttachmentSelector when uploading files -->
+                                <field name="res_id" invisible="1"/>
+                                <field name="model" invisible="1"/>
                                 <field name="partner_ids" widget="many2many_tags_email" class="w-auto flex-grow-1"
                                     placeholder="Add contacts to notify..."
                                     options="{'edit_tags': True}"
@@ -18,12 +21,12 @@
                             </div>
                             <field name="subject" required="True"/>
                         </group>
-                        <group col="1">
+                        <div>
                             <field name="body" widget="html_composer_message"
                                 force_save="1" nolabel="1"
                                 placeholder="Write your message here..."/>
                             <field name="attachment_ids" widget="mail_composer_attachment_list" nolabel="1"/>
-                        </group>
+                        </div>
                     </sheet>
                     <footer>
                         <button string="Save" class="btn-primary" special="save" invisible="not scheduled_date" data-hotkey="S"/>
