@@ -48,18 +48,24 @@ class TestTrackingAPI(TestTrackingCommon):
 
     @users('employee')
     def test_mail_track_mixin(self):
-        mixin_records = self.env['mail.test.track.mixin'].create([
-            {
-                'char_field': 'init 1',
-                'selection_field': 'first',
-            }, {
-                'char_field': 'init 2',
-                'selection_field': False,
-            }
-        ])
-        self.flush_tracking()
-
         original_track_finalize = MailTrackMixin._track_finalize
+
+        with patch.object(MailTrackMixin, '_track_finalize',
+                          autospec=True, side_effect=original_track_finalize) as mock_track_finalize, \
+             self.mock_mail_gateway(), self.mock_mail_app():
+            mixin_records = self.env['mail.test.track.mixin'].create([
+                {
+                    'char_field': 'init 1',
+                    'selection_field': 'first',
+                }, {
+                    'char_field': 'init 2',
+                    'selection_field': False,
+                }
+            ])
+            self.flush_tracking()
+        self.assertEqual(mock_track_finalize.call_count, 0)
+        self.assertFalse(self._new_msgs)
+
         with patch.object(MailTrackMixin, '_track_finalize',
                           autospec=True, side_effect=original_track_finalize) as mock_track_finalize, \
              self.mock_mail_gateway(), self.mock_mail_app():
