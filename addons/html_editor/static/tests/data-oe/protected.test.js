@@ -99,23 +99,23 @@ test("should not normalize protected elements children (true)", async () => {
     await testEditor({
         contentBefore: unformat(`
                 <div>
-                    <p><i class="fa"></i></p>
+                    <p><i class="oi"></i></p>
                     <ul><li>abc<p><br></p></li></ul>
                 </div>
                 <div data-oe-protected="true">
-                    <p><i class="fa"></i></p>
+                    <p><i class="oi"></i></p>
                     <ul><li>abc<p><br></p></li></ul>
                 </div>
                 `),
         contentAfterEdit: unformat(`
                 <p data-selection-placeholder=""><br></p>
                 <div>
-                    <p>\ufeff<i class="fa" contenteditable="false">\u200B</i>\ufeff</p>
+                    <p>\ufeff<i class="oi" contenteditable="false">\u200B</i>\ufeff</p>
                     <ul><li><p>abc</p><p><br></p></li></ul>
                 </div>
                 <p data-selection-placeholder=""><br></p>
                 <div data-oe-protected="true" contenteditable="false">
-                    <p><i class="fa"></i></p>
+                    <p><i class="oi"></i></p>
                     <ul><li>abc<p><br></p></li></ul>
                 </div>
                 <p data-selection-placeholder=""><br></p>
@@ -141,10 +141,10 @@ test("should normalize unprotected elements children (false)", async () => {
     await testEditor({
         contentBefore: unformat(`
                 <div data-oe-protected="true">
-                    <p><i class="fa"></i></p>
+                    <p><i class="oi"></i></p>
                     <ul><li>abc<p><br></p></li></ul>
                     <div data-oe-protected="false">
-                        <p><i class="fa"></i></p>
+                        <p><i class="oi"></i></p>
                         <ul><li>abc<p><br></p></li></ul>
                     </div>
                 </div>
@@ -152,10 +152,10 @@ test("should normalize unprotected elements children (false)", async () => {
         contentAfterEdit: unformat(
             `<p data-selection-placeholder=""><br></p>
             <div data-oe-protected="true" contenteditable="false">
-                    <p><i class="fa"></i></p>
+                    <p><i class="oi"></i></p>
                     <ul><li>abc<p><br></p></li></ul>
                     <div data-oe-protected="false" contenteditable="true">
-                        <p>\ufeff<i class="fa" contenteditable="false">\u200B</i>\ufeff</p>
+                        <p>\ufeff<i class="oi" contenteditable="false">\u200B</i>\ufeff</p>
                         <ul><li><p>abc</p><p><br></p></li></ul>
                     </div>
                 </div>

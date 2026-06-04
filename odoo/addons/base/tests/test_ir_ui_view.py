@@ -1102,7 +1102,7 @@ class TestTemplating(ViewCase):
                 <div role="search">
                     <input type="search" name="search"/>
                     <button type="submit">
-                        <i class="oi-search"/>
+                        <i class="oi" data-icon="search"/>
                     </button>
                 </div>
             </root>
@@ -3451,14 +3451,14 @@ class TestViews(ViewCase):
             'A <span> with fa class (fa fa-warning) must have title in its tag, parents, descendants or have text'
         )
         self.assertWarning(
-            '<form><button icon="fa-warning"/></form>',
-            'A button with icon attribute (fa-warning) must have title in its tag, parents, descendants or have text'
+            '<form><button icon="warning"/></form>',
+            'A button with icon attribute (warning) must have title in its tag, parents, descendants or have text'
         )
         self.assertWarning(
             '<form><span class="fa fa-warning"/><label for="key"/><field name="key"/></form>',
             'A <span> with fa class (fa fa-warning) must have title in its tag, parents, descendants or have text'
         )
-        self.assertValid('<form><button icon="fa-warning"/>text</form>')
+        self.assertValid('<form><button icon="warning"/>text</form>')
         self.assertValid('<form><span class="fa fa-warning"/>text</form>')
         self.assertValid('<form><span class="fa fa-warning"/><label for="key" string="Some Text"/><field name="key"/></form>')
         self.assertValid('<form><span class="fa fa-warning"/><field name="key" string="Some Text"/></form>')

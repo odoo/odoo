@@ -3,8 +3,8 @@ import { registry } from '@web/core/registry';
 import { standardWidgetProps } from '@web/views/widgets/standard_widget_props';
 
 export const COLLAPSE_ICONS = {
-    collapse_composition: 'fa fa-compress',
-    collapse_prices: 'fa fa-eye-slash',
+    collapse_composition: 'close_fullscreen',
+    collapse_prices: 'visibility_off',
 }
 
 export class SectionStateIcon extends Component {
@@ -14,7 +14,7 @@ export class SectionStateIcon extends Component {
         iconMapping: Object,
     };
 
-    get iconClass() {
+    get icon() {
         for (const [field, icon] of Object.entries(this.props.iconMapping)) {
             if (this.props.record.data[field]) {
                 return icon;

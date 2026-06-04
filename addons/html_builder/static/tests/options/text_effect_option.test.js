@@ -18,7 +18,7 @@ test("apply text effect", async () => {
         focusNode: p,
         focusOffset: 1,
     });
-    await contains(".oi-ellipsis-v").click();
+    await contains("[data-icon='more_vert']").click();
     await contains(".o-select-text-effect").click();
     await contains(`[data-action-id="setTextEffect"][data-action-value*="sharp"]`).click();
     expect(`:iframe [data-text-effect*="sharp"]`).toHaveStyle("text-shadow");
@@ -35,7 +35,7 @@ test("change text effect", async () => {
         focusNode: p,
         focusOffset: 1,
     });
-    await contains(".oi-ellipsis-v").click();
+    await contains("[data-icon='more_vert']").click();
     await contains(".o-select-text-effect").click();
     await contains(`[data-action-id="setTextEffect"][data-action-value*="sharp"]`).click();
     expect(`:iframe [data-text-effect*="sharp"]`).toHaveStyle("text-shadow");
@@ -59,7 +59,7 @@ test("remove text effect", async () => {
         focusNode: p,
         focusOffset: 1,
     });
-    await contains(".oi-ellipsis-v").click();
+    await contains("[data-icon='more_vert']").click();
     await contains(".o-select-text-effect").click();
     await contains(`[data-action-id="setTextEffect"][data-action-value*="sharp"]`).click();
     expect(`:iframe [data-text-effect*="sharp"]`).toHaveStyle("text-shadow");
@@ -80,7 +80,7 @@ test("remove effect if empty", async () => {
         focusNode: p,
         focusOffset: 1,
     });
-    await contains(".oi-ellipsis-v").click();
+    await contains("[data-icon='more_vert']").click();
     await contains(".o-select-text-effect").click();
     await press("escape");
     expect(getContent(contentEl)).toBe("<p>[Text]</p>");
@@ -98,7 +98,7 @@ describe("nesting", () => {
             focusNode: p,
             focusOffset: 1,
         });
-        await contains(".oi-ellipsis-v").click();
+        await contains("[data-icon='more_vert']").click();
         await contains(".o-select-text-effect").click();
         await contains(`[data-action-id="setTextEffect"][data-action-value*="sharp"]`).click();
         expect(`:iframe [data-text-effect*="sharp"]`).toHaveStyle("text-shadow");
@@ -134,7 +134,7 @@ describe("nesting", () => {
             focusNode: p,
             focusOffset: 1,
         });
-        await contains(".oi-ellipsis-v").click();
+        await contains("[data-icon='more_vert']").click();
 
         // Apply font size
         await contains(":iframe input").click();
@@ -170,7 +170,7 @@ describe("nesting", () => {
             focusNode: p,
             focusOffset: 1,
         });
-        await contains(".oi-ellipsis-v").click();
+        await contains("[data-icon='more_vert']").click();
         await contains(".o-select-text-effect").click();
         await contains(`[data-action-id="setTextEffect"][data-action-value*="sharp"]`).click();
         expect(`:iframe [data-text-effect*="sharp"]`).toHaveStyle("text-shadow");
@@ -179,11 +179,11 @@ describe("nesting", () => {
         await waitForNone(".o_text_effect_popover");
 
         // Apply bold
-        await contains(".fa-bold").click();
+        await contains("[data-icon='format_bold']").click();
         await waitFor(":iframe strong");
 
         // Remove bold
-        await contains(".fa-bold").click();
+        await contains("[data-icon='format_bold']").click();
         await waitForNone(":iframe strong");
         expect(`:iframe [data-text-effect*="sharp"]`).toHaveStyle("text-shadow");
     });
@@ -201,18 +201,18 @@ describe("nesting", () => {
         });
 
         // Apply bold
-        await contains(".fa-bold").click();
+        await contains("[data-icon='format_bold']").click();
         await waitFor(":iframe strong");
 
         // Apply text effect
-        await contains(".oi-ellipsis-v").click();
+        await contains("[data-icon='more_vert']").click();
         await contains(".o-select-text-effect").click();
         await contains(`[data-action-id="setTextEffect"][data-action-value*="sharp"]`).click();
         expect(`:iframe [data-text-effect*="sharp"]`).toHaveStyle("text-shadow");
         await waitFor(":iframe strong span[data-text-effect]");
 
         // Remove bold
-        await contains(".fa-bold").click();
+        await contains("[data-icon='format_bold']").click();
         await waitForNone(":iframe strong");
         expect(`:iframe [data-text-effect*="sharp"]`).toHaveStyle("text-shadow");
     });

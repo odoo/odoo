@@ -317,7 +317,7 @@ class BlogPost(models.Model):
             'search_fields': search_fields,
             'fetch_fields': fetch_fields,
             'mapping': mapping,
-            'icon': 'fa-rss',
+            'icon': 'rss_feed',
             'group_name': self.env._("Blog Articles"),
             'sequence': 60,
         }

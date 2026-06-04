@@ -6,10 +6,10 @@
         <!-- TODO add title tooltip row Vertical Alignment-->
         <BuilderRow label.translate="Vert. Alignment" tooltip.translate="Vertical Alignment" level="this.props.level">
             <BuilderButtonGroup action="'setVerticalAlignment'">
-                <BuilderButton actionParam="'align-items-start'" title.translate="Align Top" iconImg="'/html_builder/static/img/snippets_options/align_top.svg'"/>
-                <BuilderButton actionParam="'align-items-center'" title.translate="Align Middle" iconImg="'/html_builder/static/img/snippets_options/align_middle.svg'"/>
-                <BuilderButton actionParam="'align-items-end'" title.translate="Align Bottom" iconImg="'/html_builder/static/img/snippets_options/align_bottom.svg'"/>
-                <BuilderButton t-if="this.props.justify" actionParam="'align-items-stretch'" title.translate="Stretch to Equal Height" iconImg="'/html_builder/static/img/snippets_options/align_stretch.svg'"/>
+                <BuilderButton actionParam="'align-items-start'" title.translate="Align Top" icon="'vertical_align_top'"/>
+                <BuilderButton actionParam="'align-items-center'" title.translate="Align Middle" icon="'vertical_align_center'"/>
+                <BuilderButton actionParam="'align-items-end'" title.translate="Align Bottom" icon="'vertical_align_bottom'"/>
+                <BuilderButton t-if="this.props.justify" actionParam="'align-items-stretch'" title.translate="Stretch to Equal Height" icon="'expand'"/>
             </BuilderButtonGroup>
         </BuilderRow>
     </t>

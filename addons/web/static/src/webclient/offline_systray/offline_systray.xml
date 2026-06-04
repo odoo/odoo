@@ -10,7 +10,8 @@
                 t-if="this.env.isSmall"
                 t-on-click="() => this.offlineService.checkConnection()"
                 class="o_nav_entry o_offline_systray">
-                    <i t-attf-class="{{ this.labelIcon }} {{ this.labelColor }}"
+                    <i t-attf-class="oi {{ this.labelIconClass }} {{ this.labelColor }}"
+                    t-att-data-icon="this.labelIcon"
                     role="img"
                     t-att-aria-label="this.labelText"
                     t-att-data-tooltip="this.labelText"/>
@@ -20,7 +21,7 @@
                 data-available-offline=""
                 t-on-click="() => this.offlineService.checkConnection()"
                 data-tooltip="Click to check connection and Sync">
-                <i t-attf-class="{{ this.labelIcon }} me-1"/><t t-out="this.labelText"></t><i t-if="this.offlineService.hasScheduledCalls" class="fa fa-caret-down ms-2"/>
+                <i t-attf-class="oi {{ this.labelIconClass }} me-1" t-att-data-icon="this.labelIcon"/><t t-out="this.labelText"></t><i t-if="this.offlineService.hasScheduledCalls" class="oi ms-2" data-icon="arrow_drop_down"/>
             </button>
             <t t-set-slot="content">
                 <div class="o_offline_systray_content px-2">
@@ -41,7 +42,7 @@
                                     'mb-2': element_last,
                                  }">
                                 <div t-attf-class="text-truncate {{element.error ? 'text-danger': ''}} {{ element.clickable ? '' : 'text-muted'}}" t-att-data-tooltip="element.error ?? element.displayName">
-                                    <i t-if="element.error" class="o_button_icon fa fa-fw fa-exclamation-circle text-danger me-1"/>
+                                    <i t-if="element.error" class="o_button_icon oi oi-fw text-danger me-1" data-icon="error"/>
                                     <span t-out="element.displayName"/>
                                 </div>
                                 <div
@@ -54,7 +55,8 @@
                                 </div>
                                 <div>
                                     <button
-                                        class="btn btn-link text-danger fa fa-trash py-0"
+                                        class="btn btn-link text-danger oi oi-filled py-0"
+                                        data-icon="delete"
                                         title="Discard offline changes"
                                         data-available-offline=""
                                         t-on-click.stop="() => this.discard(element.id)"/>

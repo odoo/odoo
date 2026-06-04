@@ -23,12 +23,18 @@ export class ProjectTaskStateSelection extends StateSelectionField {
             isStateButtonHighlighted: false,
         });
         this.icons = {
+            "02_changes_requested": "error",
+            "1_done": "check_circle",
+            "1_canceled": "cancel",
+            "04_waiting_normal": "hourglass_empty",
+        };
+        this.classIcons = {
+            "02_changes_requested": "oi oi-lg",
+            "1_done": "oi oi-lg oi-filled",
+            "1_canceled": "oi oi-lg oi-filled",
+            "04_waiting_normal": "oi oi-lg",
             "01_in_progress": "o_status",
             "03_approved": "o_status o_status_green",
-            "02_changes_requested": "fa fa-lg fa-exclamation-circle",
-            "1_done": "fa fa-lg fa-check-circle",
-            "1_canceled": "fa fa-lg fa-times-circle",
-            "04_waiting_normal": "fa fa-lg fa-hourglass-o",
         };
         this.colorIcons = {
             "01_in_progress": "",
@@ -102,6 +108,10 @@ export class ProjectTaskStateSelection extends StateSelectionField {
 
     stateIcon(value) {
         return this.icons[value] || "";
+    }
+
+    stateClassIcon(value) {
+        return this.classIcons[value] || "";
     }
 
     /**

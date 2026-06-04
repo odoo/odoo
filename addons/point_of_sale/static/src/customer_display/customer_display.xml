@@ -69,7 +69,7 @@
                                         <t t-out="line.price_without_discount"/> With a <em><t t-out="line.discount" />% </em> discount
                                     </li>
                                     <li t-if="line.customerNote" class="customer-note w-100 p-2 mt-2 rounded text-break text-bg-warning bg-opacity-25">
-                                        <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
+                                        <i class="oi oi-filled me-1" data-icon="sticky_note_2" role="img" aria-label="Customer Note" title="Customer Note"/>
                                         <t t-out="line.customerNote" />
                                     </li>
                                     <div class="internal-note-container d-flex gap-2 p-2">
@@ -85,7 +85,7 @@
                             t-attf-class="{{ this.props.screenName == 'FeedbackScreen' ? 'mt-1 bg-opacity-75 p-0' : 'customer-note w-100 p-2 mt-2 rounded text-break text-bg-warning bg-opacity-25 mt-0'}}">
                             <div class="row flex-wrap w-100 m-0"> <!-- Add w-100 and remove margins -->
                                 <div class="col-auto px-1">
-                                    <i class="fa fa-sticky-note me-1 fa-lg" role="img"
+                                    <i class="oi oi-filled oi-lg me-1" data-icon="sticky_note_2" role="img"
                                         aria-label="Customer Note" title="Customer Note"/>
                                 </div>
                                 <div class="col ps-0">

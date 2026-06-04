@@ -637,8 +637,8 @@ test("DateField contains a calendar icon on touch devices", async () => {
     // The icon is only visible on touch devices, using css rules
     document.body.classList.add("o_touch_device");
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
-    expect(".fa-calendar").toHaveCount(1);
-    expect(".fa-calendar").toBeVisible();
+    expect("[data-icon='calendar_today']").toHaveCount(1);
+    expect("[data-icon='calendar_today']").toBeVisible();
 });
 
 test(`DateField in x2many list: open/close picker`, async () => {

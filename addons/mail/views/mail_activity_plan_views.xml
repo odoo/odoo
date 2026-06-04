@@ -95,7 +95,8 @@
                                             <t t-name="card">
                                                 <div class="fw-bold fs-5">
                                                     <i t-if="record.icon.value"
-                                                        t-attf-class="fa #{record.icon.value} fa-fw "
+                                                        class="oi oi-fw"
+                                                        t-att-data-icon="record.icon.value"
                                                         role="img" aria-label="Activity Type" title="Activity Type"/>
                                                     <field name="activity_type_id"/>
                                                 </div>
@@ -130,7 +131,7 @@
                             <field name="name" class="fw-bolder"/>
                             <field name="res_model_id"/>
                             <div>
-                                <i class="fa fa-cogs fa-fw me-2" role="img" aria-label="Steps count" title="Steps count"/>
+                                <i class="oi oi-fw me-2" data-icon="settings_applications" role="img" aria-label="Steps count" title="Steps count"/>
                                 <field name="steps_count"/>
                             </div>
                         </t>

@@ -25,10 +25,10 @@
                             <span class="page me-2" role="button" t-on-click="this.onClickPageNbr"><t t-out="this.getPageNumber()" /></span>
                             <div class="page-controls d-flex align-items-center gap-1">
                                 <button class="previous btn btn-secondary" t-on-click="() => this.onPrevPage()">
-                                    <i class="fa fa-fw fa-caret-left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
+                                    <i class="oi oi-fw" data-icon="arrow_left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
                                 </button>
                                 <button class="next btn btn-secondary" t-on-click="() => this.onNextPage()">
-                                    <i class="fa fa-fw fa-caret-right" role="img" aria-label="Next Order List" title="Next Order List"></i>
+                                    <i class="oi oi-fw" data-icon="arrow_right" role="img" aria-label="Next Order List" title="Next Order List"></i>
                                 </button>
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                                             </td>
                                             <td class="align-middle text-end delete-column" name="delete-column">
                                                 <button t-if="!this.shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" t-on-click.stop="() => this.onDeleteOrder(order)" class="btn btn-link btn-lg text-danger">
-                                                    <i class="fa fa-trash" aria-hidden="true"/>
+                                                    <i class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
                                                 </button>
                                                 <div t-if="this.state.filter == 'TIPPING'" class="col end narrow p-2" name="tip">
                                                     <div t-if="this.ui.isSmall">Tip</div>
@@ -135,7 +135,7 @@
                                     <div class="mx-2" name="delete-column">
                                         <div t-if="!this.shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" class="d-flex align-items-center justify-content-center h-100" role="button" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
                                             <div class="btn btn-danger btn-lg">
-                                                <i class="fa fa-trash" aria-hidden="true"/>
+                                                <i class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
                                             </div>
                                         </div>
                                         <div t-if="this.state.filter == 'TIPPING'" class="col end narrow p-2" name="tip">
@@ -148,7 +148,8 @@
                         </t>
                         <div t-else="" class="d-flex h-100 flex-column align-items-center justify-content-center">
                             <CenteredIcon
-                                icon="this.pos.data.network.loading ? 'fa-circle-o-notch fa-spin' : 'fa-shopping-cart fa-4x'"
+                                icon="this.pos.data.network.loading ? 'autorenew' : 'shopping_cart'"
+                                icon_class="this.pos.data.network.loading ? 'oi-spin' : 'oi-4x'"
                                 text="this.pos.data.network.loading ? 'Loading...' : 'No orders found'"
                                 class="'w-100'"/>
                             <button class="btn btn-secondary" t-on-click="this.onClickNewOrder">New Order</button>
@@ -191,13 +192,13 @@
                             <t t-if="this.isOrderSynced">
                                 <div class="control-buttons d-flex gap-2 pb-2">
                                     <button class="edit-order-payment control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.pos.showOrderDetails(_selectedSyncedOrder)">
-                                        <i class="fa fa-pencil-square-o me-1" /> Details
+                                        <i class="oi me-1" data-icon="edit_square" /> Details
                                     </button>
                                     <InvoiceButton
                                         onInvoiceOrder.bind="this.onInvoiceOrder"
                                         order="_selectedSyncedOrder" />
                                     <button class="control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.doPrint.call(_selectedSyncedOrder)">
-                                        <i t-attf-class="fa {{this.doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Receipt
+                                        <i class="oi me-1" t-att-class="{'oi-fw oi-spin': this.doPrint.status === 'loading'}" t-attf-data-icon="{{this.doPrint.status === 'loading' ? 'autorenew' : 'print'}}" />Print Receipt
                                     </button>
                                 </div>
                                 <div class="subpads d-flex flex-column">
@@ -215,7 +216,7 @@
                                 <button class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                                     t-on-click="() => this.onClickReprintAll(_selectedSyncedOrder)"
                                     t-if="this.pos.ticketPrinter.hasPreparationPrinters and _selectedSyncedOrder.lastPrints.length">
-                                    <i class="fa fa-cutlery" aria-hidden="true"/>
+                                    <i class="oi" data-icon="restaurant" aria-hidden="true"/>
                                 </button>
                                 <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3"
                                     t-att-disabled="!_selectedSyncedOrder"
@@ -227,7 +228,7 @@
                     </t>
                     <t t-else="">
                         <BarcodeVideoScanner t-if="this.pos.scanning" onError.bind="()=>{}" onResult.bind="this.onClickScanOrder" facingMode="'environment'"/>
-                        <CenteredIcon t-if="!this.pos.scanning" icon="'fa-shopping-cart fa-4x'" text.translate="Select an order or scan QR code" class="'bg-100 h-100 rounded'"/>
+                        <CenteredIcon t-if="!this.pos.scanning" icon="'shopping_cart'" icon_class="'oi-4x'" text.translate="Select an order or scan QR code" class="'bg-100 h-100 rounded'"/>
                         <BackButton t-if="this.ui.isSmall" onClick="() => this.pos.onClickBackButton()"/>
                     </t>
                 </div>

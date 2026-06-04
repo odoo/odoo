@@ -57,7 +57,7 @@ test("nothing to save", async () => {
     const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleContent);
     await modifyText(getEditor(), getEditableContent());
     await animationFrame();
-    await contains(".o-snippets-menu button.fa-undo").click();
+    await contains(".o-snippets-menu button[data-icon='undo']").click();
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect(resultSave.length).toBe(0);
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
@@ -248,13 +248,13 @@ test("reload should reopen the builder with the reloadable target, and the same 
         delayReload: async () => await deferred.promise,
     });
     await contains(":iframe .test-option").click();
-    expect(".options-container-header:has(i.fa-caret-right)").toHaveCount(1);
-    expect(".options-container-header:has(i.fa-caret-down)").toHaveCount(1);
+    expect(".options-container-header:has(i[data-icon='arrow_right'])").toHaveCount(1);
+    expect(".options-container-header:has(i[data-icon='arrow_drop_down'])").toHaveCount(1);
     await unfoldAllOptionsGroups();
     await contains("[data-action-id=testAction]").click();
     expect(":iframe .test-option").toHaveAttribute("data-applied");
-    expect(".options-container-header:has(i.fa-caret-right)").toHaveCount(0);
-    expect(".options-container-header:has(i.fa-caret-down)").toHaveCount(2);
+    expect(".options-container-header:has(i[data-icon='arrow_right'])").toHaveCount(0);
+    expect(".options-container-header:has(i[data-icon='arrow_drop_down'])").toHaveCount(2);
     deferred.resolve();
     expect.verifySteps(["save"]);
     await animationFrame();
@@ -264,8 +264,8 @@ test("reload should reopen the builder with the reloadable target, and the same 
     // resets to initial content
     expect(":iframe .test-option").not.toHaveAttribute("data-applied");
 
-    expect(".options-container-header:has(i.fa-caret-right)").toHaveCount(0);
-    expect(".options-container-header:has(i.fa-caret-down)").toHaveCount(2);
+    expect(".options-container-header:has(i[data-icon='arrow_right'])").toHaveCount(0);
+    expect(".options-container-header:has(i[data-icon='arrow_drop_down'])").toHaveCount(2);
 });
 
 test("preview shouldn't let o_dirty", async () => {
@@ -334,7 +334,7 @@ test("Drag and drop from sidebar should only mark the concerned elements as dirt
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
     expect(":iframe .o_dirty").toHaveCount(1);
     // Undo
-    await contains(".o-website-builder_sidebar .fa-undo").click();
+    await contains(".o-website-builder_sidebar [data-icon='undo']").click();
     expect(":iframe .o_dirty").toHaveCount(0);
 
     // Dragging in inner view then in outer view should only apply dirty on the
@@ -350,7 +350,7 @@ test("Drag and drop from sidebar should only mark the concerned elements as dirt
     expect(":iframe #wrap").toHaveClass("o_dirty");
     expect(":iframe .o_dirty").toHaveCount(1);
     // Undo
-    await contains(".o-website-builder_sidebar .fa-undo").click();
+    await contains(".o-website-builder_sidebar [data-icon='undo']").click();
     expect(":iframe .o_dirty").toHaveCount(0);
 
     // Dragging over the views then dropping in the sidebar to cancel should not
@@ -398,7 +398,7 @@ test("Drag and drop from the page should only mark the concerned elements as dir
     await dragUtils.moveTo(":iframe .s_dummy_snippet_1 .oe_drop_zone:nth-child(3)");
     await dragUtils.drop(getDragMoveHelper());
     await waitForEndOfOperation();
-    expect(".o-website-builder_sidebar .fa-undo").toHaveAttribute("disabled");
+    expect(".o-website-builder_sidebar [data-icon='undo']").toHaveAttribute("disabled");
     expect(":iframe .o_dirty").toHaveCount(0);
 
     // Dragging across views and dropping in the original one should only apply
@@ -416,7 +416,7 @@ test("Drag and drop from the page should only mark the concerned elements as dir
     expect(":iframe .view_2.o_savable").not.toHaveClass("o_dirty");
     expect(":iframe .o_dirty").toHaveCount(1);
     // Undo
-    await contains(".o-website-builder_sidebar .fa-undo").click();
+    await contains(".o-website-builder_sidebar [data-icon='undo']").click();
     expect(":iframe .o_dirty").toHaveCount(0);
 
     // Dragging across views and dropping in another one should only apply dirty
@@ -433,7 +433,7 @@ test("Drag and drop from the page should only mark the concerned elements as dir
     expect(":iframe .view_2.o_savable").toHaveClass("o_dirty");
     expect(":iframe .o_dirty").toHaveCount(2);
     // Undo
-    await contains(".o-website-builder_sidebar .fa-undo").click();
+    await contains(".o-website-builder_sidebar [data-icon='undo']").click();
     expect(":iframe .o_dirty").toHaveCount(0);
 });
 

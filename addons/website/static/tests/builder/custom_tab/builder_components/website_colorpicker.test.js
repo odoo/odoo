@@ -33,7 +33,7 @@ test("should remove o_cc color on reset", async () => {
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
     await contains(".we-bg-options-container .o_we_color_preview").click();
-    await click(".o-overlay-item .fa-trash");
+    await click(".o-overlay-item [data-icon='delete'].oi-filled");
     await animationFrame();
     expect(":iframe .test-options-target").toHaveClass("test-options-target");
     expect(":iframe .test-options-target").not.toHaveClass("o_cc o_cc3");

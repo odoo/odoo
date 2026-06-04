@@ -123,7 +123,7 @@ export class HootTechnicalValue extends Component {
                 >
                     <t t-if="labelSize[1] > 0">
                         <i
-                            class="fa fa-caret-right"
+                            class="oi" data-icon="arrow_right"
                             t-att-class="{ 'rotate-90': this.isOpen() }"
                         />
                     </t>

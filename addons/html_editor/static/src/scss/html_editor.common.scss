@@ -223,7 +223,7 @@ ol > li.o_indent, ul > li.o_indent {
 }
 
 // Stars widget
-.o_stars .fa.fa-star {
+.o_stars [data-icon="star"].oi-filled {
     color: gold;
 }
 
@@ -237,42 +237,27 @@ img.o_we_custom_image {
 img.shadow {
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
 }
-img.padding-small, .img.padding-small, span.fa.padding-small, iframe.padding-small {
+img.padding-small, .img.padding-small, iframe.padding-small {
     padding: 4px;
 }
-img.padding-medium, .img.padding-medium, span.fa.padding-medium, iframe.padding-medium {
+img.padding-medium, .img.padding-medium, iframe.padding-medium {
     padding: 8px;
 }
-img.padding-large, .img.padding-large, span.fa.padding-large, iframe.padding-large {
+img.padding-large, .img.padding-large, iframe.padding-large {
     padding: 16px;
 }
-img.padding-xl, .img.padding-xl, span.fa.padding-xl, iframe.padding-xl {
+img.padding-xl, .img.padding-xl, iframe.padding-xl {
     padding: 32px;
 }
 img.ms-auto, img.mx-auto {
     display: block;
 }
 
-.fa-6x {
-    font-size: 6em;
-}
-.fa-7x {
-    font-size: 7em;
-}
-.fa-8x {
-    font-size: 8em;
-}
-.fa-9x {
-    font-size: 9em;
-}
-.fa-10x {
-    font-size: 10em;
-}
-.fa.mx-auto {
+.oi.mx-auto {
     display: block;
     text-align: center;
 }
-.fa.card-img, .fa.card-img-top, .fa.card-img-bottom {
+.oi.card-img, .oi.card-img-top, .oi.card-img-bottom {
     width: auto;
 }
 
@@ -377,10 +362,10 @@ div.media_iframe_video {
 
 // Fields
 address {
-    .fa.fa-mobile-phone {
+    [data-icon="smartphone"] {
         margin: 0 3px 0 2px;
     }
-    .fa.fa-file-text-o {
+    [data-icon="article"] {
         margin-right: 1px;
     }
 }
@@ -790,9 +775,9 @@ pre {
         -webkit-text-fill-color: inherit;
     }
 
-    // On Iphone (Safari & Chrome) and Mac (only Safari), the font awesome icons
+    // On Iphone (Safari & Chrome) and Mac (only Safari), the font icons
     // are not rendered (invisible) when inside a gradient.
-    .fa {
+    .oi {
         display: inherit;
     }
 

@@ -35,8 +35,8 @@
             <calendar string="Sales Orders" create="0" mode="month" date_start="activity_date_deadline" color="state" event_limit="5" quick_create="0">
                 <field name="currency_id" invisible="1"/>
                 <field name="state" filters="1" invisible="1"/>
-                <field name="activity_ids" options="{'icon': 'fa fa-clock-o'}" invisible="not activity_ids"/>
-                <field name="partner_id" avatar_field="avatar_128" options="{'icon': 'fa fa-users'}"/>
+                <field name="activity_ids" options="{'icon': 'schedule'}" invisible="not activity_ids"/>
+                <field name="partner_id" avatar_field="avatar_128" options="{'icon': 'group', 'icon_class': 'oi-filled'}"/>
                 <field name="amount_total" widget="monetary"/>
                 <field name="payment_term_id"/>
             </calendar>
@@ -434,7 +434,7 @@
                     <button name="action_view_invoice"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-pencil-square-o"
+                        icon="edit_square"
                         invisible="invoice_count == 0">
                         <field name="invoice_count" widget="statinfo" string="Invoices"/>
                     </button>
@@ -442,14 +442,14 @@
                         name="action_view_payment_transaction"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-money"
+                        icon="payments"
                         groups="account.group_account_invoice,base.group_no_one">
                         <field name="transaction_count" widget="statinfo" string="Payments"/>
                     </button>
                 </div>
                 <div class="badge rounded-pill text-bg-secondary float-end fs-6 border-0"
                     invisible="not locked">
-                    <i class="fa fa-lock"/>
+                    <i class="oi" data-icon="lock"/>
                     Locked
                 </div>
                 <div class="oe_title">
@@ -507,7 +507,7 @@
                             <button name="action_update_prices" type="object"
                                 string="Update Prices"
                                 help="Recompute all prices based on this pricelist"
-                                class="btn-link mb-1 px-0" icon="fa-refresh"
+                                class="btn-link mb-1 px-0" icon="refresh"
                                 confirm="This will update the unit price of all products based on the new pricelist."
                                 invisible="not show_update_pricelist or state in ['sale', 'cancel']"/>
                         </div>
@@ -560,7 +560,8 @@
                                     <group invisible="display_type">
                                         <label for="product_id"/>
                                         <div class="d-flex align-items-baseline">
-                                            <span class="fa fa-exclamation-triangle text-warning me-1"
+                                            <span class="oi text-warning me-1"
+                                                data-icon="warning"
                                                 title="This product is archived"
                                                 invisible="state not in ['draft', 'sent'] or not is_product_archived"
                                             />
@@ -838,7 +839,8 @@
                                             <main class="col">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <span class="fa fa-exclamation-triangle text-warning me-1"
+                                                        <span class="oi text-warning me-1"
+                                                            data-icon="warning"
                                                             title="This product is archived"
                                                             invisible="state not in ['draft', 'sent'] or not is_product_archived"
                                                         />

@@ -3,7 +3,7 @@
 
     <t t-name="web.BooleanFavoriteField">
         <button class="o_favorite btn btn-link btn-link-inline" t-att-class="{'pe-none o_disabled' : this.props.readonly}" t-on-click.prevent.stop="this.update" data-available-offline="">
-            <i t-att-class="this.iconClass" role="img" t-att-title="this.label" t-att-aria-label="this.label"/>
+            <i class="oi" t-att-class="this.iconClass" data-icon="star" role="img" t-att-title="this.label" t-att-aria-label="this.label"/>
             <t t-if="!this.props.readonly and !this.props.noLabel" t-out="this.label"/>
         </button>
     </t>

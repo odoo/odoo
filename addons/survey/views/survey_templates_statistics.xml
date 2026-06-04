@@ -24,7 +24,7 @@
                 <h1 class="h3" t-field="survey.title"/>
                 <div class="btn-group">
                     <button class="o_survey_results_print btn btn-light d-print-none" aria-label="Print" title="Print">
-                        <i class="fa fa-print" aria-hidden="true"/>
+                        <i class="oi" data-icon="print" aria-hidden="true"/>
                     </button>
                 </div>
             </div>
@@ -40,7 +40,8 @@
                     <div class="border rounded p-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <h4 class="mb-0" t-out="survey.question_count"/>
-                            <i class="fa fa-question-circle rounded-2 p-2 text-primary-emphasis bg-primary-subtle"
+                            <i class="oi rounded-2 p-2 text-primary-emphasis bg-primary-subtle"
+                                data-icon="help"
                                 aria-hidden="true"/>
                         </div>
                         <span class="text-muted">Questions</span>
@@ -50,7 +51,8 @@
                     <div class="border rounded p-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <h4 class="mb-0" t-out="survey.answer_count"/>
-                            <i class="fa fa-address-card rounded-2 p-2 text-primary-emphasis bg-primary-subtle"
+                            <i class="oi oi-filled rounded-2 p-2 text-primary-emphasis bg-primary-subtle"
+                                data-icon="contact_mail"
                                 aria-hidden="true"/>
                         </div>
                         <span class="text-muted">Registered</span>
@@ -60,7 +62,8 @@
                     <div class="border rounded p-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <h4 class="mb-0" t-out="survey.answer_done_count"/>
-                            <i class="fa fa-check-circle rounded-2 p-2 text-primary-emphasis bg-primary-subtle"
+                            <i class="oi oi-filled rounded-2 p-2 text-primary-emphasis bg-primary-subtle"
+                                data-icon="check_circle"
                                 aria-hidden="true"/>
                         </div>
                         <span class="text-muted">Completed</span>
@@ -71,7 +74,8 @@
                         <div class="d-flex align-items-center justify-content-between">
                             <h4 class="mb-0"><t t-call="survey.survey_remove_unnecessary_decimals"
                         value_to_format="survey_data['global_success_rate']"/>%</h4>
-                            <i class="fa fa-trophy rounded-2 p-2 text-primary-emphasis bg-primary-subtle"
+                            <i class="oi oi-filled rounded-2 p-2 text-primary-emphasis bg-primary-subtle"
+                                data-icon="trophy"
                                 aria-hidden="true"/>
                         </div>
                         <span class="text-muted">Success rate</span>
@@ -81,7 +85,8 @@
                     <div class="border rounded p-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <h4 class="mb-0" t-out="survey.answer_duration_avg" t-options="{'widget': 'float_time'}"/>
-                            <i class="fa fa-clock-o rounded-2 p-2 text-primary-emphasis bg-primary-subtle"
+                            <i class="oi rounded-2 p-2 text-primary-emphasis bg-primary-subtle"
+                                data-icon="schedule"
                                 aria-hidden="true"/>
                         </div>
                         <span class="text-muted">Avg. Duration</span>
@@ -91,7 +96,8 @@
                     <div class="border rounded p-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <h4 class="mb-0"><t t-out="round(survey.answer_score_avg, 2)"/>%</h4>
-                            <i class="fa fa-star rounded-2 p-2 text-primary-emphasis bg-primary-subtle"
+                            <i class="oi oi-filled rounded-2 p-2 text-primary-emphasis bg-primary-subtle"
+                                data-icon="star"
                                 aria-hidden="true"/>
                         </div>
                         <span class="text-muted">Avg. Score</span>
@@ -140,8 +146,8 @@
                             <span t-out="len(question_data['answer_input_ids'])"/>
                             <span class="text-muted">Responded</span>
                         </small>
-                        <i class="oi oi-chevron-up d-print-none" role="img"/>
-                        <i class="oi oi-chevron-down d-print-none" role="img"/>
+                        <i class="oi d-print-none" data-icon="keyboard_arrow_up" role="img"/>
+                        <i class="oi d-print-none" data-icon="keyboard_arrow_down" role="img"/>
                     </div>
                 </div>
             </div>
@@ -153,17 +159,17 @@
                         <a t-if="question.question_type in ['simple_choice', 'multiple_choice', 'matrix', 'scale']"
                             t-att-href="'#survey_graph_question_%d' % question.id" t-att-aria-controls="'survey_graph_question_%d' % question.id"
                             data-bs-toggle="tab" role="tab" class="o_survey_results_data_tab btn btn-light py-1 px-2 active" aria-label="Charts">
-                            <i t-if="question.question_type == 'simple_choice'" class="fa fa-pie-chart me-2"/>
-                            <i t-else="" class="fa fa-fw fa-bar-chart-o" aria-hidden="true"/><span class="d-none d-lg-inline ms-2">Charts</span>
+                            <i t-if="question.question_type == 'simple_choice'" class="oi me-2" data-icon="pie_chart"/>
+                            <i t-else="" class="oi oi-fw" data-icon="bar_chart" aria-hidden="true"/><span class="d-none d-lg-inline ms-2">Charts</span>
                         </a>
                         <a t-elif="question.question_type in ['numerical_box', 'date', 'datetime']"
                             t-att-href="'#survey_stats_question_%d' % question.id" t-att-aria-controls="'survey_stats_question_%d' % question.id"
                             data-bs-toggle="tab" role="tab" class="o_survey_results_data_tab btn btn-light py-1 px-2 active" aria-label="Stats">
-                            <i class="fa fa-fw fa-trophy" aria-hidden="true"/><span class="d-none d-lg-inline ms-2">Stats</span>
+                            <i class="oi oi-fw oi-filled" data-icon="trophy" aria-hidden="true"/><span class="d-none d-lg-inline ms-2">Stats</span>
                         </a>
                         <a t-att-href="'#survey_data_question_%d' % question.id" t-att-aria-controls="'survey_data_question_%d' % question.id"
                             data-bs-toggle="tab" role="tab" class="o_survey_results_data_tab btn btn-light py-1 px-2" aria-label="Answers">
-                            <i class="fa fa-fw fa-bars" aria-hidden="true"/><span class="d-none d-lg-inline ms-2">Answers</span>
+                            <i class="oi oi-fw" data-icon="menu" aria-hidden="true"/><span class="d-none d-lg-inline ms-2">Answers</span>
                         </a>
                     </div>
                     <!-- Question info -->
@@ -272,7 +278,7 @@
                         </li>
                         <li class="ms-auto" t-if="search_filters or search_finished or search_passed_or_failed">
                             <button class="o_survey_results_topbar_clear_filters btn btn-link px-0">
-                                <i class="fa fa-trash me-2"/>Remove filters
+                                <i class="oi oi-filled me-2" data-icon="delete"/>Remove filters
                             </button>
                         </li>
                     </ul>
@@ -284,7 +290,8 @@
                                         <span t-out="filter_data['question']" t-att-title="filter_data['question']"/> -
                                         <span t-out="filter_data['answer']"/>
                                     </span>
-                                    <i class="oi oi-close filter-remove-answer ms-auto text-primary cursor-pointer"
+                                    <i class="oi filter-remove-answer ms-auto text-primary cursor-pointer"
+                                        data-icon="close"
                                         t-att-data-model-short-key="filter_data['model_short_key']"
                                         t-att-data-row-id="filter_data['row_id']"
                                         t-att-data-record-id="filter_data['record_id']"></i>
@@ -335,17 +342,17 @@
                                 <t t-if="question.question_type == 'numerical_box'">
                                     <t t-set="right_answer" t-value="common_line[0] == question.answer_numerical_box"/>
                                     <span><t t-call="survey.survey_remove_unnecessary_decimals" value_to_format="common_line[0]"/></span>
-                                    <i t-if="right_answer" class="fa fa-check"/>
+                                    <i t-if="right_answer" class="oi" data-icon="check"/>
                                 </t>
                                 <t t-elif="question.question_type == 'date'">
                                     <t t-set="right_answer" t-value="common_line[0] == question.answer_date"/>
                                     <span t-out="common_line[0]" t-options='{"widget": "date"}'/>
-                                    <i t-if="right_answer" class="fa fa-check"/>
+                                    <i t-if="right_answer" class="oi" data-icon="check"/>
                                 </t>
                                 <t t-elif="question.question_type == 'datetime'">
                                     <t t-set="right_answer" t-value="common_line[0] == question.answer_datetime"/>
                                     <span t-out="common_line[0]" t-options='{"widget": "datetime"}'/>
-                                    <i t-if="right_answer" class="fa fa-check"/>
+                                    <i t-if="right_answer" class="oi" data-icon="check"/>
                                 </t>
                             </td>
                             <td><span t-out="common_line[1]"></span></td>
@@ -412,7 +419,7 @@
                                         <t t-call="survey.survey_remove_unnecessary_decimals" value_to_format="choice_data['value']"/>
                                     </span>
                                     <span t-else="" t-out="choice_data['value']"/>
-                                    <i t-if="question.is_scored_question and choice_data['suggested_answer'].is_correct" class="fa fa-check"/>
+                                    <i t-if="question.is_scored_question and choice_data['suggested_answer'].is_correct" class="oi" data-icon="check"/>
                                 </p>
                             </td>
                             <td t-if="question_has_image_answers">
@@ -424,7 +431,8 @@
                                 <span t-out="round(choice_data['count'] * 100.0/ (len(question_data['answer_line_done_ids']) or 1), 2)"></span> %
                                 <span t-out="choice_data['count_text']" class="badge text-bg-primary"/>
                                 <i t-if="choice_data['suggested_answer'].id and choice_data['count']"
-                                    class="fa fa-filter filter-add-answer d-print-none cursor-pointer text-primary"
+                                    class="oi oi-filled filter-add-answer d-print-none cursor-pointer text-primary"
+                                    data-icon="filter_alt"
                                     data-model-short-key="A" t-att-data-record-id="choice_data['suggested_answer'].id"
                                     role="img" aria-label="Filter surveys" title="Only show survey results having selected this answer"/>
                             </td>
@@ -470,7 +478,8 @@
                                 <div class="d-flex align-items-center gap-1 justify-content-end">
                                     <span t-out="round(column_data['count'] * 100.0/ (len(question_data['answer_input_done_ids']) or 1), 2)"></span> %
                                     <span class="badge text-bg-primary" t-out="column_data['count']"></span>
-                                    <i t-if="column_data['count']" class="fa fa-filter text-primary filter-add-answer d-print-none"
+                                    <i t-if="column_data['count']" class="oi oi-filled text-primary filter-add-answer d-print-none"
+                                        data-icon="filter_alt"
                                         data-model-short-key="A"
                                         t-att-data-row-id="choice_data['row'].id"
                                         t-att-data-record-id="column_data['suggested_answer'].id" role="img" aria-label="Filter surveys"

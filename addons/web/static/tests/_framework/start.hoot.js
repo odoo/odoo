@@ -13,14 +13,14 @@ function beforeFocusRequired(test) {
 }
 
 definePreset("desktop", {
-    icon: "fa-desktop",
+    icon: "desktop_windows",
     label: "Desktop",
     size: [1366, 768],
     tags: ["-mobile"],
     touch: false,
 });
 definePreset("mobile", {
-    icon: "fa-mobile font-bold",
+    icon: "smartphone",
     label: "Mobile",
     size: [375, 667],
     tags: ["-desktop"],

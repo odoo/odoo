@@ -8,7 +8,7 @@
                         <t t-if="request.session.get('form_builder_model_model', '') == 'project.task'">
                             <t t-set="task" t-value="request.website._website_form_last_record()"/>
                         </t>
-                        <i class="fa fa-paper-plane fa-2x mb-3 rounded-circle text-bg-success" role="presentation"/>
+                        <i class="oi oi-filled oi-2x mb-3 rounded-circle text-bg-success" data-icon="send" role="presentation"/>
                         <h1 class="fw-bolder">Thank you!</h1>
                         <t t-if="task">
                             <p class="lead mb-0">Your task has been sent.</p>

@@ -6,7 +6,7 @@
                 <Dropdown menuClass="'o_language_selector'" focusToggleOnClosed="false">
                     <button class="btn" t-att-title="this.languages[this.props.currentLanguage]" name="language">
                         <span class="px-1" t-out="this.languages[this.props.currentLanguage]"/>
-                        <i class="fa fa-caret-down"></i>
+                        <i class="oi" data-icon="arrow_drop_down"></i>
                     </button>
                     <t t-set-slot="content">
                         <t t-foreach="Object.entries(this.languages)" t-as="language" t-key="language[0]">
@@ -20,13 +20,13 @@
                 </Dropdown>
                 <CopyButton content="this.props.getContent" copyText.translate="Copy" successText.translate="Code copied to the clipboard." t-on-pointerdown.prevent="() => {}"/>
                 <button class="text-nowrap btn" name="wrap" t-on-click="this.props.toggleCodeWrap" title="Wrap the code">
-                    <span class="mx-1 fa fa-level-down fa-rotate-90"></span>
+                    <span class="mx-1 oi oi-rotate-90" data-icon="subdirectory_arrow_right"></span>
                     <span>Wrap</span>
                 </button>
                 <button class="text-nowrap btn"
                     t-on-click="this.props.convertToParagraph"
                 >
-                    <span class="mx-1 fa fa-paragraph" title="Convert to paragraph"></span>
+                    <span class="oi mx-1" data-icon="format_paragraph" title="Convert to paragraph"></span>
                 </button>
             </div>
         </div>

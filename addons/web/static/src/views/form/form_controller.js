@@ -575,7 +575,7 @@ export class FormController extends Component {
             addPropertyFieldValue: {
                 isAvailable: () => activeActions.addPropertyFieldValue,
                 sequence: 10,
-                icon: "fa fa-cogs",
+                icon: "settings_applications",
                 description: this.propertiesState.editable
                     ? _t("Save Properties")
                     : _t("Edit Properties"),
@@ -589,7 +589,7 @@ export class FormController extends Component {
             duplicate: {
                 isAvailable: () => activeActions.create && activeActions.duplicate,
                 sequence: 30,
-                icon: "fa fa-clone",
+                icon: "content_copy",
                 description: _t("Duplicate"),
                 callback: () => this.duplicateRecord(),
             },
@@ -598,7 +598,7 @@ export class FormController extends Component {
                 availableOffline: true,
                 sequence: 40,
                 description: _t("Archive"),
-                icon: "oi oi-archive",
+                icon: "archive",
                 callback: () => {
                     this.dialogService.add(ConfirmationDialog, this.archiveDialogProps);
                 },
@@ -607,7 +607,7 @@ export class FormController extends Component {
                 isAvailable: () => this.archiveEnabled && !this.model.root.isActive,
                 availableOffline: true,
                 sequence: 45,
-                icon: "oi oi-unarchive",
+                icon: "unarchive",
                 description: _t("Unarchive"),
                 callback: () => this.model.root.unarchive(),
             },
@@ -615,7 +615,8 @@ export class FormController extends Component {
                 isAvailable: () => activeActions.delete && !this.model.root.isNew,
                 availableOffline: true,
                 sequence: 50,
-                icon: "fa fa-trash-o",
+                icon: "delete",
+                icon_class: "oi-filled",
                 description: _t("Delete"),
                 class: "text-danger",
                 callback: () => this.deleteRecord(),

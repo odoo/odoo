@@ -26,7 +26,8 @@ export function registerChannelMemberAction(id, definition) {
 
 registerChannelMemberAction("set-admin", {
     condition: ({ member }) => member.canSetAdmin,
-    icon: "fa fa-star text-primary",
+    icon: "star",
+    icon_class: "oi-filled text-primary",
     name: _t("Set Admin"),
     onSelected: ({ member }) => member.setChannelRole("admin"),
     sequence: 10,
@@ -34,8 +35,9 @@ registerChannelMemberAction("set-admin", {
 
 registerChannelMemberAction("remove-admin", {
     condition: ({ member }) => member.canRemoveAdmin || member.canRemoveOwner,
-    icon: ({ member }) =>
-        member.canRemoveOwner ? "fa fa-star-o text-primary" : "fa fa-star-o text-warning",
+    icon: "star",
+    icon_class: ({ member }) =>
+        member.canRemoveOwner ? "text-primary" : "text-warning",
     name: ({ member }) => (member.canRemoveOwner ? _t("Remove Owner") : _t("Remove Admin")),
     onSelected: ({ member }) => member.setChannelRole(false),
     sequence: 20,
@@ -43,7 +45,8 @@ registerChannelMemberAction("remove-admin", {
 
 registerChannelMemberAction("set-owner", {
     condition: ({ member }) => member.canSetOwner,
-    icon: "fa fa-star text-warning",
+    icon: "star",
+    icon_class: "oi-filled text-warning",
     name: _t("Set Owner"),
     onSelected: ({ member }) => member.setChannelRole("owner"),
     sequence: 30,
@@ -51,7 +54,7 @@ registerChannelMemberAction("set-owner", {
 
 registerChannelMemberAction("remove-member", {
     condition: ({ member }) => member.canRemoveMember,
-    icon: "fa fa-sign-out",
+    icon: "logout",
     name: _t("Remove Member"),
     onSelected: ({ member, store }) => {
         const dialogTitle = _t(

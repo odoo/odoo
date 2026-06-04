@@ -53,7 +53,7 @@ export class AnchorPlugin extends Plugin {
 
         return [
             {
-                class: "fa fa-fw fa-link oe_snippet_anchor btn o-hb-btn btn-accent-color-hover",
+                class: "oi oi-fw fa-link oe_snippet_anchor btn o-hb-btn btn-accent-color-hover",
                 title: _t("Create and copy a link targeting this block or edit it"),
                 handler: this.createOrEditAnchorLink.bind(this),
             },

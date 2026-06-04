@@ -42,9 +42,9 @@ test("Undo/Redo correctly restores the stored container target", async () => {
     await contains(":iframe .target2").click();
     expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
 
-    await contains(".o-snippets-top-actions .fa-undo").click();
+    await contains(".o-snippets-top-actions [data-icon='undo']").click();
     expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
-    await contains(".o-snippets-top-actions .fa-repeat").click();
+    await contains(".o-snippets-top-actions [data-icon='redo']").click();
     expect(".options-container").toHaveCount(0);
 });
 
@@ -79,15 +79,15 @@ test("Undo/Redo multiple actions always restores the action container target", a
     await contains("[data-action-id='customAction']").click();
     expect(":iframe .test-options-target.test").toHaveCount(2);
     // Undo everything.
-    await contains(".o-snippets-top-actions .fa-undo").click();
+    await contains(".o-snippets-top-actions [data-icon='undo']").click();
     expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
-    await contains(".o-snippets-top-actions .fa-undo").click();
+    await contains(".o-snippets-top-actions [data-icon='undo']").click();
     expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
     expect(":iframe .test-options-target.test").toHaveCount(0);
     // Redo everything.
-    await contains(".o-snippets-top-actions .fa-repeat").click();
+    await contains(".o-snippets-top-actions [data-icon='redo']").click();
     expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
-    await contains(".o-snippets-top-actions .fa-repeat").click();
+    await contains(".o-snippets-top-actions [data-icon='redo']").click();
     expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
     expect(":iframe .test-options-target.test").toHaveCount(2);
 });
@@ -123,9 +123,9 @@ test("Undo/Redo an action that activates another target restores the old one on 
     await contains("[data-action-id='customAction']").click();
     expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
     // Undo everything.
-    await contains(".o-snippets-top-actions .fa-undo").click();
+    await contains(".o-snippets-top-actions [data-icon='undo']").click();
     expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
-    await contains(".o-snippets-top-actions .fa-repeat").click();
+    await contains(".o-snippets-top-actions [data-icon='redo']").click();
     expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
 });
 
@@ -157,9 +157,9 @@ test("Undo/Redo an action that deactivates the containers restores the old one o
     expect(".options-container").toHaveCount(0);
     expect("button[data-name='blocks']").toHaveClass("active");
     // Undo everything.
-    await contains(".o-snippets-top-actions .fa-undo").click();
+    await contains(".o-snippets-top-actions [data-icon='undo']").click();
     expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
-    await contains(".o-snippets-top-actions .fa-repeat").click();
+    await contains(".o-snippets-top-actions [data-icon='redo']").click();
     expect(".options-container").toHaveCount(0);
     expect("button[data-name='blocks']").toHaveClass("active");
 });
@@ -205,7 +205,7 @@ test("Containers fallback to a valid ancestor if the target disappears and resto
     expect(".options-container[data-container-title='Target 1']").toHaveCount(0);
     expect("[data-action-id='ancestorAction']").toHaveCount(1);
 
-    await contains(".o-snippets-top-actions .fa-undo").click();
+    await contains(".o-snippets-top-actions [data-icon='undo']").click();
     expect(".options-container[data-container-title='Ancestor']").toHaveCount(1);
     expect(".options-container[data-container-title='Target 1']").toHaveCount(1);
 });

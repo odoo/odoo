@@ -1256,7 +1256,7 @@ export class Record extends DataPoint {
                 this.model._closeUrgentSaveNotification = this.model.notification.add(
                     _t(
                         `Heads up! Your recent changes are too large to save automatically. Please click the %(uploadIcon)s button now to ensure your work is saved before you exit this tab.`,
-                        { uploadIcon: markup`<i class="fa fa-cloud-upload fa-fw"></i>` }
+                        { uploadIcon: markup`<i class="oi oi-fw" data-icon="cloud_upload"></i>` }
                     ),
                     { sticky: true }
                 );

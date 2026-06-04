@@ -18,9 +18,9 @@
                 </t>
                 <t t-elif="this.isFixedPeriod(option.type)">
                     <div class="d-flex justify-content-between">
-                        <button class="btn-previous fa fa-caret-left" t-on-click="() => this.selectPrevious(option.type)" />
+                        <button class="btn-previous oi" data-icon="arrow_left" t-on-click="() => this.selectPrevious(option.type)" />
                         <input class="o_input" type="text" t-att-value="this.getDescription(option.type)" readonly="true"/>
-                        <button class="btn-next fa fa-caret-right" t-on-click="() => this.selectNext(option.type)" />
+                        <button class="btn-next oi" data-icon="arrow_right" t-on-click="() => this.selectNext(option.type)" />
                     </div>
                 </t>
             </DropdownItem>

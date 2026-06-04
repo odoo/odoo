@@ -108,7 +108,7 @@
                     <button name="action_open_employee"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-id-card-o"
+                            icon="badge"
                             groups="hr.group_hr_user"
                             invisible="not (employee_id or emp_is_active)">
                         <div class="o_field_widget o_stat_info">
@@ -118,13 +118,14 @@
                     </button>
                     <button name="action_open_applications"
                             class="oe_stat_button"
-                            icon="fa-pencil"
+                            icon="edit"
+                            icon_class="oi-filled"
                             type="object"
                             context="{'active_test': False}"
                             invisible="not application_count or (application_count &lt;= 1 and not is_pool_applicant)">
                         <field name="application_count" widget="statinfo" string="Applications"/>
                     </button>
-                    <button name="action_create_meeting" class="oe_stat_button" icon="fa-calendar" type="object" invisible="not id">
+                    <button name="action_create_meeting" class="oe_stat_button" icon="calendar_today" type="object" invisible="not id">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_text"><field name="meeting_display_text" /></span>
                             <span class="o_stat_value"><field name="meeting_display_date" readonly="1"/></span>
@@ -133,7 +134,8 @@
                     <button
                         name="action_talent_pool_stat_button"
                         class="oe_stat_button"
-                        icon="fa-users"
+                        icon="group"
+                        icon_class="oi-filled"
                         type="object"
                         invisible="not id or is_pool_applicant or not is_applicant_in_pool"
                         groups="hr_recruitment.group_hr_recruitment_user">
@@ -413,7 +415,7 @@
                             <field name="rotting_days" class="d-flex" widget="rotting"/>
                             <div class="d-flex ms-auto align-items-center">
                                 <a name="action_open_attachments" type="object">
-                                    <i class='fa fa-paperclip' role="img" aria-label="Documents"/>
+                                    <i class="oi" data-icon="attach_file" role="img" aria-label="Documents"/>
                                     <field name="attachment_number"/>
                                 </a>
                                 <field name="kanban_state" class="mx-1" widget="hr_applicant_state_selection"/>

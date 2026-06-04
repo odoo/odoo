@@ -14,31 +14,31 @@ test.tags("desktop");
 test("offline systray item: basic rendering (desktop)", async () => {
     const setOffline = mockOffline();
     await mountWithCleanup(WebClient);
-    expect(`.o_menu_systray .o_nav_entry .fa-chain-broken`).toHaveCount(0);
+    expect(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).toHaveCount(0);
     await setOffline(true);
 
-    expect(`.o_menu_systray .o_nav_entry .fa-chain-broken`).toHaveCount(1);
+    expect(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).toHaveCount(1);
     expect(`.o_menu_systray .o_nav_entry:first`).toHaveText("Working offline");
 
     await setOffline(false);
-    expect(`.o_menu_systray .o_nav_entry .fa-chain-broken`).toHaveCount(0);
+    expect(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).toHaveCount(0);
 });
 
 test.tags("mobile");
 test("offline systray item: basic rendering (mobile)", async () => {
     const setOffline = mockOffline();
     await mountWithCleanup(WebClient);
-    expect(`.o_menu_systray .o_nav_entry .fa-chain-broken`).toHaveCount(0);
+    expect(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).toHaveCount(0);
     await setOffline(true);
 
-    expect(`.o_menu_systray .o_nav_entry .fa-chain-broken`).toHaveCount(1);
-    expect(`.o_menu_systray .o_nav_entry .fa-chain-broken:first`).toHaveAttribute(
+    expect(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).toHaveCount(1);
+    expect(`.o_menu_systray .o_nav_entry [data-icon='link_off']:first`).toHaveAttribute(
         "data-tooltip",
         "Working offline"
     );
 
     await setOffline(false);
-    expect(`.o_menu_systray .o_nav_entry.fa-chain-broken`).toHaveCount(0);
+    expect(`.o_menu_systray .o_nav_entry[data-icon='link_off']`).toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -51,10 +51,10 @@ test("offline systray item: click to check connection (desktop)", async () => {
     await mountWithCleanup(WebClient);
     await setOffline(true);
 
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
     expect.verifySteps(["version_info"]);
     expect(getService("offline").offline).toBe(false);
-    expect(`.o_menu_systray .o_nav_entry .fa-chain-broken`).toHaveCount(0);
+    expect(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).toHaveCount(0);
 });
 
 test.tags("mobile");
@@ -67,10 +67,10 @@ test("offline systray item: click to check connection (mobile)", async () => {
     await mountWithCleanup(WebClient);
     await setOffline(true);
 
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
     expect.verifySteps(["version_info"]);
     expect(getService("offline").offline).toBe(false);
-    expect(`.o_menu_systray .o_nav_entry .fa-chain-broken`).toHaveCount(0);
+    expect(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -138,9 +138,9 @@ test("scheduledORM", async () => {
     );
 
     await animationFrame();
-    expect(`.o_menu_systray .o_nav_entry .fa-chain-broken`).toHaveCount(1);
+    expect(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).toHaveCount(1);
     expect(queryAllTexts`.o_menu_systray .o_nav_entry`).toEqual(["Working offline", ""]);
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
     expect(".o-dropdown--menu:visible").toHaveCount(1, { message: "dropdown should be visible" });
     expect(`.o-dropdown--menu .o-dropdown-item`).toHaveCount(3);
     expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual(
@@ -243,9 +243,9 @@ test("scheduledORM: inError", async () => {
     );
 
     await animationFrame();
-    expect(`.o_menu_systray .o_nav_entry .fa-exclamation-circle`).toHaveCount(1);
+    expect(`.o_menu_systray .o_nav_entry [data-icon='error']`).toHaveCount(1);
     expect(queryAllTexts`.o_menu_systray .o_nav_entry`).toEqual(["Working offline", ""]);
-    await contains(`.o_menu_systray .o_nav_entry .fa-exclamation-circle`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='error']`).click();
     expect(".o-dropdown--menu:visible").toHaveCount(1, { message: "dropdown should be visible" });
     expect(`.o-dropdown--menu .o-dropdown-item`).toHaveCount(2);
     expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
@@ -258,7 +258,7 @@ test("scheduledORM: inError", async () => {
         "Created",
         "",
     ]);
-    expect(`.o-dropdown--menu .o-dropdown-item .fa-exclamation-circle`).toHaveCount(1);
+    expect(`.o-dropdown--menu .o-dropdown-item [data-icon='error']`).toHaveCount(1);
     expect(`.o-dropdown--menu .o-dropdown-item div.text-danger`).toHaveCount(1);
     expect(queryAllTexts`.o-dropdown--menu .o-dropdown-item div.text-danger`).toEqual([
         "Cedric Lards Ennais",
@@ -331,11 +331,11 @@ test("scheduledORM: mobile", async () => {
     );
 
     await animationFrame();
-    expect(`.o_menu_systray .o_nav_entry .fa-chain-broken`).toHaveCount(1);
+    expect(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).toHaveCount(1);
     expect(queryAllTexts`.o_menu_systray .o_nav_entry`).toEqual(["", ""], {
         message: "no text on mobile",
     });
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='link_off']`).click();
     await animationFrame();
     expect(".o-dropdown--menu:visible").toHaveCount(1, { message: "dropdown should be visible" });
     expect(`.o-dropdown--menu .o-dropdown-item`).toHaveCount(3);
@@ -438,11 +438,11 @@ test("scheduledORM: inError mobile", async () => {
     );
 
     await animationFrame();
-    expect(`.o_menu_systray .o_nav_entry .fa-exclamation-circle`).toHaveCount(1);
+    expect(`.o_menu_systray .o_nav_entry [data-icon='error']`).toHaveCount(1);
     expect(queryAllTexts`.o_menu_systray .o_nav_entry`).toEqual(["", ""], {
         message: "no text in mobile",
     });
-    await contains(`.o_menu_systray .o_nav_entry .fa-exclamation-circle`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon='error']`).click();
     await animationFrame();
     expect(".o-dropdown--menu:visible").toHaveCount(1, { message: "dropdown should be visible" });
     expect(`.o-dropdown--menu .o-dropdown-item`).toHaveCount(2);
@@ -456,7 +456,7 @@ test("scheduledORM: inError mobile", async () => {
         "Created",
         "",
     ]);
-    expect(`.o-dropdown--menu .o-dropdown-item .fa-exclamation-circle`).toHaveCount(1);
+    expect(`.o-dropdown--menu .o-dropdown-item [data-icon='error']`).toHaveCount(1);
     expect(`.o-dropdown--menu .o-dropdown-item div.text-danger`).toHaveCount(1);
     expect(queryAllTexts`.o-dropdown--menu .o-dropdown-item div.text-danger`).toEqual([
         "Cedric Lards Ennais",

@@ -466,7 +466,7 @@ export function unfoldOptionsGroup(name) {
     return [
         {
             content: `Unfold the "${name}" group`,
-            trigger: `.options-container[data-container-title="${name}"] .options-container-label i.fa-caret-right`,
+            trigger: `.options-container[data-container-title="${name}"] .options-container-label i[data-icon='arrow_right']`,
             run: "click",
         },
     ];

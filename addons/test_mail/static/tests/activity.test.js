@@ -61,7 +61,7 @@ testMailModels.MailActivity._views = {
     form: `
         <form>
             <footer>
-                <button string="Delete" type="object" name="unlink" icon="fa-trash" class="btn-danger ms-auto"/>
+                <button string="Delete" type="object" name="unlink" icon="delete" icon_class="oi-filled" class="btn-danger ms-auto"/>
             </footer>
         </form>`,
 };

@@ -71,11 +71,11 @@
                                                 <span t-field="job.address_id" class="fw-light" t-options='{"widget": "contact", "fields": ["city"], "no_tag_br": True, "null_text": "Remote"}'/>
                                                 <div t-if="job.department_id"
                                                         class="d-inline-flex align-items-center">
-                                                    <i class="fa fa-sitemap fa-fw"/><span t-field="job.department_id" class="fw-light" t-options='{"fields": ["name"], "no_tag_br": True}'/>
+                                                    <i class="oi oi-fw" data-icon="account_tree"/><span t-field="job.department_id" class="fw-light" t-options='{"fields": ["name"], "no_tag_br": True}'/>
                                                 </div>
                                                 <div t-if="job.employee_type_id"
                                                         class="d-inline-flex align-items-center">
-                                                    <i class="fa fa-suitcase fa-fw" title="Employment type" role="img" aria-label="Employment type"/><span t-field="job.employee_type_id" class="fw-light"/>
+                                                    <i class="oi oi-fw" data-icon="work" title="Employment type" role="img" aria-label="Employment type"/><span t-field="job.employee_type_id" class="fw-light"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -107,7 +107,7 @@
                     <!-- Title -->
                     <span class="navbar-brand h4 my-0 me-auto">
                         <a t-attf-href="/jobs">
-                            <i class="fa fa-long-arrow-left text-primary me-2"/>All Jobs
+                            <i class="oi text-primary me-2" data-icon="west"/>All Jobs
                         </a>
                     </span>
                 </div>
@@ -265,7 +265,7 @@
                                                 <span class="s_website_form_label_content">LinkedIn Profile</span>
                                             </label>
                                             <div class="col-sm" >
-                                                <i class="fa fa-linkedin fa-2x o_linkedin_icon"></i>
+                                                <i class="oi oi-2x o_linkedin_icon" data-icon="linkedin"></i>
                                                 <input id="recruitment4" type="text"
                                                     class="form-control s_website_form_input pl64"
                                                     placeholder="e.g. https://www.linkedin.com/in/fpodoo"
@@ -342,7 +342,7 @@
                     </section>
                     <section class="col-12 col-md-3 ps-5">
                         <a role="button" t-attf-href="/jobs/#{slug(job)}" class="btn btn-outline-primary btn-lg mb16 o_apply_description_link">
-                            <i class="oi oi-arrow-left"></i> Job Description
+                            <i class="oi" data-icon="west"></i> Job Description
                         </a>
                         <div t-if="job.name" class="d-flex flex-column align-items-baseline">
                             <span class="text-muted small">Job</span>
@@ -379,71 +379,71 @@
 <template id="default_website_rating">
     <!-- ratings -->
     <div>
-        <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
+        <div class="s_rating pb8" data-vcss="001" data-rating-icon="star" data-snippet="s_rating">
             <strong class="s_rating_title">Customer Relationship</strong>
             <div class="s_rating_icons o_not_editable">
                 <span class="s_rating_active_icons text-primary">
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
                 </span>
                 <span class="s_rating_inactive_icons text-primary">
                 </span>
             </div>
         </div>
-        <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
+        <div class="s_rating pb8" data-vcss="001" data-rating-icon="star" data-snippet="s_rating">
             <strong class="s_rating_title">Personal Evolution</strong>
             <div class="s_rating_icons o_not_editable">
                 <span class="s_rating_active_icons text-primary">
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
                 </span>
                 <span class="s_rating_inactive_icons text-primary">
                 </span>
             </div>
         </div>
-        <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
+        <div class="s_rating pb8" data-vcss="001" data-rating-icon="star" data-snippet="s_rating">
             <strong class="s_rating_title">Autonomy</strong>
             <div class="s_rating_icons o_not_editable">
                 <span class="s_rating_active_icons text-primary">
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
                 </span>
                 <span class="s_rating_inactive_icons text-primary">
-                    <i class="fa fa-star-o"/>
+                    <i class="oi" data-icon="star"/>
                 </span>
             </div>
         </div>
-        <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
+        <div class="s_rating pb8" data-vcss="001" data-rating-icon="star" data-snippet="s_rating">
             <strong class="s_rating_title">Administrative Work</strong>
             <div class="s_rating_icons o_not_editable">
                 <span class="s_rating_active_icons text-primary">
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
                 </span>
                 <span class="s_rating_inactive_icons text-primary">
-                    <i class="fa fa-star-o"/>
-                    <i class="fa fa-star-o"/>
-                    <i class="fa fa-star-o"/>
+                    <i class="oi" data-icon="star"/>
+                    <i class="oi" data-icon="star"/>
+                    <i class="oi" data-icon="star"/>
                 </span>
             </div>
         </div>
-        <div class="s_rating pb8" data-vcss="001" data-icon="fa-star" data-snippet="s_rating">
+        <div class="s_rating pb8" data-vcss="001" data-rating-icon="star" data-snippet="s_rating">
             <strong class="s_rating_title">Technical Expertise</strong>
             <div class="s_rating_icons o_not_editable">
                 <span class="s_rating_active_icons text-primary">
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
-                    <i class="fa fa-star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
+                    <i class="oi oi-filled" data-icon="star"/>
                 </span>
                 <span class="s_rating_inactive_icons text-primary">
                 </span>
@@ -542,7 +542,7 @@
                     <div class="s_hr pt-4 pb32">
                         <hr class="w-100 mx-auto"/>
                     </div>
-                    <i class="fa fa-gift mb-3 rounded fs-5 bg-o-color-3" role="img"/>
+                    <i class="oi mb-3 rounded fs-5 bg-o-color-3" data-icon="card_giftcard" role="img"/>
                     <h3 class="h5-fs">Perks</h3>
                     <p>A full-time position <br/>Attractive salary package.</p>
                 </div>
@@ -550,7 +550,7 @@
                     <div class="s_hr pt-4 pb32">
                         <hr class="w-100 mx-auto"/>
                     </div>
-                    <i class="fa fa-bar-chart mb-3 rounded fs-5 bg-o-color-3" role="img"/>
+                    <i class="oi mb-3 rounded fs-5 bg-o-color-3" data-icon="bar_chart" role="img"/>
                     <h3 class="h5-fs">Trainings</h3>
                     <p>12 days / year, including <br/>6 of your choice.</p>
                 </div>
@@ -558,7 +558,7 @@
                     <div class="s_hr pt-4 pb32">
                         <hr class="w-100 mx-auto"/>
                     </div>
-                    <i class="fa fa-futbol-o mb-3 rounded fs-5 bg-o-color-3" role="img"/>
+                    <i class="oi mb-3 rounded fs-5 bg-o-color-3" data-icon="sports_soccer" role="img"/>
                     <h3 class="h5-fs">Sport Activity</h3>
                     <p>Play any sport with colleagues, <br/>the bill is covered.</p>
                 </div>
@@ -566,7 +566,7 @@
                     <div class="s_hr pt-4 pb32">
                         <hr class="w-100 mx-auto"/>
                     </div>
-                    <i class="fa fa-coffee mb-3 rounded fs-5 bg-o-color-3" role="img"/>
+                    <i class="oi mb-3 rounded fs-5 bg-o-color-3" data-icon="coffee" role="img"/>
                     <h3 class="h5-fs">Eat &amp; Drink</h3>
                     <p>Fruit, coffee and <br/>snacks provided.</p>
                 </div>
@@ -657,8 +657,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <ul class="list-unstyled mb-0">
-                                                            <li t-if="job_sudo.recruiter_id.work_phone"><i class="fa fa-phone fa-fw me-2"></i><span class="o_force_ltr" t-field="job_sudo.recruiter_id.work_phone"/></li>
-                                                            <li class="d-inline-flex align-items-baseline"><i class="fa fa-envelope fa-fw me-2"></i><span><a class="text-break" t-attf-href="mailto:#{job_sudo.recruiter_id.work_email}" t-field="job_sudo.recruiter_id.work_email"/></span></li>
+                                                            <li t-if="job_sudo.recruiter_id.work_phone"><i class="oi oi-filled oi-fw me-2" data-icon="phone"></i><span class="o_force_ltr" t-field="job_sudo.recruiter_id.work_phone"/></li>
+                                                            <li class="d-inline-flex align-items-baseline"><i class="oi oi-filled oi-fw me-2" data-icon="mail"></i><span><a class="text-break" t-attf-href="mailto:#{job_sudo.recruiter_id.work_email}" t-field="job_sudo.recruiter_id.work_email"/></span></li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -715,7 +715,7 @@
             data-bs-toggle="offcanvas"
             data-bs-target="#o_jobs_offcanvas"
         >
-            <i class="fa fa-sliders"/>
+            <i class="oi" data-icon="tune"/>
         </button>
     </div>
     <!-- Off canvas filters on mobile-->
@@ -1067,9 +1067,9 @@
                             </div>
                             <div>
                                 <ul class="list-unstyled text-nowrap">
-                                    <li><i class="fa fa-comment fa-fw me-2"></i><span><a href="/contactus">Contact us</a></span></li>
-                                    <li><i class="fa fa-envelope fa-fw me-2"></i><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
-                                    <li><i class="fa fa-phone fa-fw me-2"></i><span class="o_force_ltr"><a href="tel:+1 (650) 555-0187">+1 (650) 555-0187</a></span></li>
+                                    <li><i class="oi oi-filled oi-fw me-2" data-icon="chat_bubble"></i><span><a href="/contactus">Contact us</a></span></li>
+                                    <li><i class="oi oi-filled oi-fw me-2" data-icon="mail"></i><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
+                                    <li><i class="oi oi-filled oi-fw me-2" data-icon="phone"></i><span class="o_force_ltr"><a href="tel:+1 (650) 555-0187">+1 (650) 555-0187</a></span></li>
                                 </ul>
                                 <!-- Social media -->
                                 <t t-snippet-call="website.s_social_media"/>

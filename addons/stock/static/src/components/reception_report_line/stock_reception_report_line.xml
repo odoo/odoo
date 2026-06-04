@@ -5,7 +5,7 @@
         <td t-out="this.data.product.display_name"/>
         <td>
             <t t-out="this.formatFloat(this.data.quantity)"/> <t t-if="this.props.showUom" t-out="this.data.uom"/>
-            <button class="btn btn-link fa fa-area-chart" t-on-click="this.onClickForecast" name="forecasted_report_link"/>
+            <button class="btn btn-link oi" data-icon="area_chart" t-on-click="this.onClickForecast" name="forecasted_report_link"/>
         </td>
         <td t-if="this.data.is_qty_assignable">
             <button t-if="!this.data.is_assigned"

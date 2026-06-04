@@ -5,7 +5,9 @@
         <xpath expr="//CheckBox" position="replace">
             <a title="Mark as done"
                t-on-click.stop="this.onChange"
-               t-attf-class="o_todo_done_button ps-0 fa fa-lg fa-check-circle{{!this.reached.isReached ? '-o' : ' done_button_enabled'}}"/>
+               class="o_todo_done_button oi oi-lg ps-0"
+               t-att-class="{'oi-filled done_button_enabled': reached.isReached}"
+               data-icon="check_circle"/>
         </xpath>
     </t>
 

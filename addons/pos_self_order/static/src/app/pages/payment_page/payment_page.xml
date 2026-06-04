@@ -13,7 +13,7 @@
                             role="button"
                             class="g-col-12 g-col-md-6 btn btn-light btn-lg d-flex flex-column align-items-center gap-2  px-0 py-5  border border-light shadow-sm overflow-hidden"
                             t-on-click="() => this.selectMethod(payment_method.id)">
-                            <i class="fa fa-credit-card" aria-hidden="true"></i>
+                            <i class="oi" data-icon="credit_card" aria-hidden="true"></i>
                             <span t-out="payment_method.name" />
                         </button>
                     </div>
@@ -22,7 +22,7 @@
                         <t name="terminal" t-if="this.state.paymentMethodType === 'terminal'">
                             <h1 class="text-center">Follow instructions on the terminal</h1>
                             <div class="btn btn-light btn-lg w-100 py-5 border border-light shadow-sm">
-                                <i class="fa fa-credit-card-alt fa-3x" aria-hidden="true"></i>
+                                <i class="oi oi-3x" data-icon="credit_card" aria-hidden="true"></i>
                             </div>
                         </t>
                         <t name="external_qr" t-elif="this.showQrCode">

@@ -14,8 +14,9 @@
             <button
                 t-if="!this.props.readonly and this.hasConfigurationButton"
                 type="button"
-                class="btn fa fa-pencil px-2"
+                class="btn oi oi-filled px-2"
                 style="--btn-active-border-color: transparent;"
+                data-icon="edit"
                 tabindex="-1"
                 draggable="false"
                 t-att-aria-label="this.configurationButtonHelp"

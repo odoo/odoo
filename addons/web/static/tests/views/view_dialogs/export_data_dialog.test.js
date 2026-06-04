@@ -267,7 +267,7 @@ test("Export dialog: interacting with export templates", async () => {
     await contains(".o_export_tree_item:nth-child(2) .o_add_field").click();
     expect(`.o_exported_lists_select`).toHaveCount(1);
     expect(`.o_save_list_btn`).toHaveCount(0);
-    expect(`.o_cancel_list_btn .fa-undo`).toHaveCount(1);
+    expect(`.o_cancel_list_btn [data-icon="undo"]`).toHaveCount(1);
     expect(`.o_fields_list .o_export_field`).toHaveCount(2);
     await contains(".o_cancel_list_btn").click();
     expect(`.o_fields_list .o_export_field`).toHaveCount(1, {

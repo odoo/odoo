@@ -39,7 +39,7 @@ export class CallMenu extends Component {
 
     get icon() {
         const res = this.lastSelfAction?.icon;
-        return (typeof res === "function" ? res() : res) ?? "fa fa-microphone";
+        return (typeof res === "function" ? res() : res) ?? "mic";
     }
 }
 

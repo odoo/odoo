@@ -255,7 +255,7 @@ test("share dashboard from dashboard view", async function () {
         },
     });
     expect(".spreadsheet_share_dropdown").toHaveCount(0);
-    await contains("i.fa-share-alt").click();
+    await contains("i[data-icon='share']").click();
     await animationFrame();
     expect(".spreadsheet_share_dropdown .o_loading_state").toHaveText("Generating sharing link");
     def.resolve();
@@ -263,7 +263,7 @@ test("share dashboard from dashboard view", async function () {
     expect(".spreadsheet_share_dropdown .o_loading_state").toHaveCount(0);
     expect.verifySteps(["dashboard_shared", "share url copied"]);
     expect("div:has(> .o_clipboard_button)").toHaveText("localhost:8069/share/url/132465");
-    await contains(".fa-clipboard").click();
+    await contains("[data-icon='assignment']").click();
     expect.verifySteps(["share url copied"]);
 });
 
@@ -293,17 +293,17 @@ test("Changing filter values will create a new share", async function () {
             }
         },
     });
-    await contains("i.fa-share-alt").click();
+    await contains("i[data-icon='share']").click();
     await animationFrame();
     expect("div:has(> .o_clipboard_button)").toHaveText(`localhost:8069/share/url/1`);
 
-    await contains("i.fa-share-alt").click(); // close share dropdown
+    await contains("i[data-icon='share']").click(); // close share dropdown
 
-    await contains("i.fa-share-alt").click();
+    await contains("i[data-icon='share']").click();
     await animationFrame();
     expect("div:has(> .o_clipboard_button)").toHaveText(`localhost:8069/share/url/1`);
 
-    await contains("i.fa-share-alt").click();
+    await contains("i[data-icon='share']").click();
     const year = luxon.DateTime.local().year;
     expect(".o_control_panel_actions .o_facet_value").toHaveText(String(year));
     await contains(".o_searchview_facet_label").click();
@@ -311,7 +311,7 @@ test("Changing filter values will create a new share", async function () {
     await contains(".o-dropdown-item[data-id='year'] .btn-previous").click();
     await contains(".o-filter-values-footer .btn-primary").click();
 
-    await contains("i.fa-share-alt").click();
+    await contains("i[data-icon='share']").click();
     await animationFrame();
     expect("div:has(> .o_clipboard_button)").toHaveText(`localhost:8069/share/url/2`);
 });
@@ -324,7 +324,7 @@ test("Should toggle favorite status of a dashboard when the 'Favorite' icon is c
     await createSpreadsheetDashboard();
     expect(".o_search_panel_section").toHaveCount(2);
     await contains(".o_dashboard_star").click();
-    expect(".o_dashboard_star").toHaveClass("fa-star", {
+    expect(".o_dashboard_star.oi-filled").toHaveAttribute("data-icon", "star", {
         message: "The star should be filled",
     });
     expect(".o_search_panel_section").toHaveCount(3);
@@ -333,7 +333,7 @@ test("Should toggle favorite status of a dashboard when the 'Favorite' icon is c
         "FAVORITES"
     );
     await contains(".o_dashboard_star").click();
-    expect(".o_dashboard_star").not.toHaveClass("fa-star", {
+    expect(".o_dashboard_star").not.toHaveClass("oi-filled", {
         message: "The star should not be filled",
     });
     expect.verifySteps(["action_toggle_favorite"]);

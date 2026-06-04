@@ -45,7 +45,7 @@
                     class="control-button btn btn-lg btn-secondary d-inline-flex flex-md-column justify-content-md-center gap-1 overflow-hidden"
                     t-on-click.stop="() => this.clickTransferCourse()"
                     t-att-disabled="!this.showTransferCourse()">
-                    <i t-attf-class="oi oi-arrow-down {{!this.ui.isSmall ? ' fa-2x fa-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true"/>
+                    <i t-attf-class="oi {{!this.ui.isSmall ? ' fa-2x fa-fw' : ''}} align-self-center opacity-50" data-icon="south" role="img" aria-hidden="true"/>
                     <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-items-md-stretch min-w-0 {{this.ui.isSmall ? ' lh-sm' : ''}} text-start text-md-center">
                         <span class="px-1">Transfer Course</span>
                     </span>

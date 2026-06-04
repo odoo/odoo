@@ -55,7 +55,7 @@ test("show the password, type something, and then hide the password back, caps l
                 <input type="password" name="password" id="password"
                 class="form-control"/>
                 <button type="button" class="btn btn-sm border o_show_password">
-                    <i class="fa fa-eye"></i>
+                    <i class="oi" data-icon="visibility"></i>
                 </button>
             </div>
         </div>`;

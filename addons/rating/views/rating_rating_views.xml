@@ -122,26 +122,26 @@
                             <aside class="col-3 me-2">
                                 <div class="display-3 fw-bold text-center text-primary mb-2" t-out="val_stars"/>
                                 <i t-foreach="[...Array(val_integer).keys()]" t-as="num"  t-key="num"
-                                    class="fa fa-star"
+                                    class="oi oi-filled" data-icon="star"
                                     aria-label="A star"
                                     role="img"/>
                                 <i t-if="val_decimal"
-                                    class="fa fa-star-half-o"
+                                    class="oi" data-icon="star_half"
                                     aria-label="Half a star"
                                     role="img"/>
                                 <i t-foreach="[...Array(empty_star).keys()]" t-as="num" t-key="num"
-                                    class="fa fa-star text-black-25"
+                                    class="oi oi-filled text-black-25" data-icon="star"
                                     aria-label="A star"
                                     role="img"/>
                             </aside>
                             <main class="col">
                                 <field name="partner_id" class="fw-bold fs-5"/>
                                 <div class="mt0">
-                                    <i class="fa fa-folder me-2" aria-label="Open folder"></i>
+                                    <i class="oi oi-filled me-2" data-icon="folder" aria-label="Open folder"></i>
                                     <a type="object" name="action_open_rated_object" t-att-title="record.res_name.raw_value">
                                         <field name="res_name" />
                                     </a>
-                                    <div><i class="fa fa-clock-o me-2" aria-label="Create date"/> <field name="rated_on" /></div>
+                                    <div><i class="oi me-2" data-icon="schedule" aria-label="Create date"/> <field name="rated_on" /></div>
                                     <field name="feedback" class="mt-2"/>
                                 </div>
                             </main>

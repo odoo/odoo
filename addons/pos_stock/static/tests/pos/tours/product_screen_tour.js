@@ -92,7 +92,7 @@ registry.category("web_tour.tours").add("AddMultipleSerialsAtOnce", {
             ProductScreen.clickDisplayedProduct("Product A"),
             [
                 {
-                    trigger: ".fa-trash-o",
+                    trigger: "[data-icon='delete']",
                     run: "click",
                 },
             ],

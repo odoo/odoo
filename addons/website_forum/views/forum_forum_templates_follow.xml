@@ -9,14 +9,16 @@
             t-att-data-unsubscribe="'unsubscribe' if 'unsubscribe' in request.params else None">
             <div t-if="not env.user._is_public()" class="js_follow_icons_container">
                 <button t-attf-class="btn js_unfollow_btn #{btn_classes}">
-                    <i t-attf-class="fa fa-fw fa-minus-circle #{icons_classes}"
+                    <i t-attf-class="oi oi-fw #{icons_classes}"
+                        data-icon="remove_circle"
                         data-bs-toggle="tooltip"
                         data-bs-placement="top"
                         title="Unfollow"/>
                     <t t-if="show_label">Unfollow</t>
                 </button>
                 <button t-attf-class="btn js_follow_btn #{btn_classes} #{follow_btn_classes}">
-                    <i t-attf-class="fa fa-fw fa-plus-circle #{icons_classes}"
+                    <i t-attf-class="oi oi-fw #{icons_classes}"
+                        data-icon="add_circle"
                         data-bs-toggle="tooltip"
                         data-bs-placement="top"
                         title="Follow"/>
@@ -25,7 +27,8 @@
             </div>
             <span t-else="" class="js_follow_icons_container">
                 <button t-attf-class="btn js_unfollow_btn #{btn_classes}">
-                    <i t-attf-class="fa fa-fw fa-minus-circle #{icons_classes}"
+                    <i t-attf-class="oi oi-fw #{icons_classes}"
+                        data-icon="remove_circle"
                         data-bs-toggle="tooltip"
                         data-bs-placement="top"
                         title="Unfollow"/>
@@ -34,7 +37,8 @@
                 <button t-attf-class="btn follow_btn #{btn_classes}"
                     data-bs-toggle="modal"
                     t-attf-data-bs-target="#o_wmail_follow_modal_#{object.id}">
-                    <i t-attf-class="fa fa-fw fa-plus-circle #{icons_classes}"
+                    <i t-attf-class="oi oif-w #{icons_classes}"
+                        data-icon="add_circle"
                         data-bs-toggle="tooltip"
                         data-bs-placement="top"
                         title="Follow"/>
@@ -59,7 +63,7 @@
                                 Subscribe
                             </button>
                             <button href="#" t-attf-class="btn btn-secondary js_unfollow_btn">
-                                <i class="fa fa-fw fa-check me-1"/>Following
+                                <i class="oi oi-fw me-1" data-icon="check"/>Following
                             </button>
                         </form>
                     </div>

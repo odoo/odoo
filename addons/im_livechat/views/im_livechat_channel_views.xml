@@ -59,7 +59,7 @@
                                 <footer class="pt-0">
                                     <field name="available_operator_ids" widget="many2many_avatar_user" readonly="True"/>
                                     <a t-if="record.rating_count.raw_value > 0" name="action_view_rating" class="ms-auto fs-6" type="object" tabindex="10" title="Percentage of positive ratings in the last 30 days">
-                                        <i class="fa fa-smile-o text-success" role="img" aria-label="Happy face"/> <field name="rating_percentage_satisfaction"/>%
+                                        <i class="oi text-success" data-icon="sentiment_satisfied" role="img" aria-label="Happy face"/> <field name="rating_percentage_satisfaction"/>%
                                     </a>
                                 </footer>
                             </main>
@@ -82,11 +82,11 @@
                     <sheet>
                         <field name="rating_count" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" type="object" name="action_view_chatbot_scripts" icon="fa-android"
+                            <button class="oe_stat_button" type="object" name="action_view_chatbot_scripts" icon="oi_android"
                                 invisible="chatbot_script_count == 0" groups="im_livechat.im_livechat_group_manager">
                                 <field string="Chatbots" name="chatbot_script_count" widget="statinfo"/>
                             </button>
-                            <button class="oe_stat_button" type="action" invisible="nbr_channel == 0" title="Number of conversations and percentage of positive ratings in the last 30 days" name="%(discuss_channel_action_from_livechat_channel)d" icon="fa-comments">
+                            <button class="oe_stat_button" type="action" invisible="nbr_channel == 0" title="Number of conversations and percentage of positive ratings in the last 30 days" name="%(discuss_channel_action_from_livechat_channel)d" icon="forum" icon_class="oi-filled">
                                 <div>
                                     <div class="o_stat_info flex-row-reverse align-items-baseline gap-1 me-1">
                                         <span class="o_stat_value"><field name="nbr_channel"/></span>
@@ -131,7 +131,7 @@
                                                         <div class="d-flex justify-content-between align-items-baseline">
                                                             <field name="name" class="fw-bold fs-5"/>
                                                             <a class="btn p-0 opacity-75 opacity-100-hover" role="button" groups="im_livechat.im_livechat_group_manager" type="delete">
-                                                                <i title="Remove operator" class="fa fa-fw fa-lg fa-close"/>
+                                                                <i title="Remove operator" class="oi oi-fw oi-lg" data-icon="close"/>
                                                             </a>
                                                         </div>
                                                         <field t-if="record.livechat_lang_ids.raw_value.length > 0" name="livechat_lang_ids" widget="many2many_tags"/>
@@ -207,7 +207,7 @@
                                 <div class="text-muted" colspan="2">
                                     To apply the rule only to certain pages of your website, enter a URL regex like /shop. This will match any page that starts with /shop, such as /shop/product. Leave the field empty to apply the rule to all pages.<br/>
                                     For on-premise databases, GeoIP must be installed on your server to geolocate visitors. Without it, rules that include country restrictions will be ignored.
-                                    <widget name="documentation_link" path="/administration/on_premise/geo_ip.html" icon="fa-fw fa-info-circle"/>
+                                    <widget name="documentation_link" path="/administration/on_premise/geo_ip.html" icon="info" icon_class="oi-fw"/>
                                 </div>
                             </page>
                             <page string="Widget" name="configuration_widget" groups="im_livechat.im_livechat_group_manager">

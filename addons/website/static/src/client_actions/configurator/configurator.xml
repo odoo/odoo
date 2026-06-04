@@ -43,7 +43,7 @@
                                 <i class="text-primary" t-if="this.state.selectedType">
                                     <t t-out="this.state.getSelectedType(this.state.selectedType).label"/>
                                 </i>
-                                <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
+                                <i class="oi ms-auto ps-2" data-icon="keyboard_arrow_down" role="img"/>
                             </span>
                         </button>
                         <div id="selectTypeMenu"
@@ -96,7 +96,7 @@
                                 <t t-if="this.state.selectedPurpose">
                                     <t t-out="this.state.getSelectedPurpose(this.state.selectedPurpose).label"/>
                                 </t>
-                                <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
+                                <i class="oi ms-auto ps-2" data-icon="keyboard_arrow_down" role="img"/>
                             </span>
                         </button>
                         <div id="selectPurposeMenu" class="dropdown-menu border-0 shadow-lg show" role="menu" aria-labelledby="selectPurposeToggle">
@@ -128,14 +128,14 @@
                         <button t-on-click="this.uploadLogo" t-attf-class="o_configurator_logo_upload position-relative btn btn-link rounded bg-100 overflow-hidden d-flex flex-grow-1 justify-content-center align-items-center text-decoration-none {{this.state.logo? 'h-50' : ''}}">
                             <input type="file" class="logo_selection_input" t-on-change="this.changeLogo" style="display:none" name="logo_selection" t-custom-ref="logoSelectionInput" accept="image/*"/>
                             <div class="h3 o_configurator_logo_button text-center">
-                                <i t-attf-class="fa fa-cloud-upload {{this.state.logo? 'fa-4x' : 'fa-6x'}}"></i>
+                                <i t-attf-class="oi {{this.state.logo? 'oi-4x' : 'oi-6x'}}" data-icon="cloud_upload"></i>
                                 <div class="text-center">Upload <span t-if="this.state.logo">a new image</span>
                                 </div>
                             </div>
                             <div t-if="this.state.logo" class="o_configurator_logo_wrapper position-absolute d-flex justify-content-center align-items-center bg-white w-100 h-100">
                                 <img style="height: 120px" t-attf-src="{{this.state.logo}}" alt="Logo"/>
                             </div>
-                            <i t-if="this.state.logo" class="fa fa-2x fa-times-circle text-danger position-absolute top-0 end-0 pe-2 pt-2" t-on-click="this.removeLogo"/>
+                            <i t-if="this.state.logo" class="oi oi-2x oi-filled text-danger position-absolute top-0 end-0 pe-2 pt-2" data-icon="cancel" t-on-click="this.removeLogo"/>
                         </button>
                         <div t-if="this.state.recommendedPalette" class="w-75 mx-auto px-2 pt-3" style="max-width: 184px;">
                             <button t-attf-class="palette_card o_btn_reset w-100 rounded-pill overflow-hidden d-flex {{this.state.getSelectedPaletteName() == 'recommendedPalette' ? 'selected' : ''}}"
@@ -145,7 +145,7 @@
                                 <div class="color_sample w-100" t-attf-style="background-color: {{this.state.recommendedPalette.color2}}"/>
                             </button>
                             <button class="btn btn-primary btn-lg text-nowrap mt-3 d-block mx-auto" t-on-click="() => this.selectPalette('recommendedPalette')">
-                                Let's go!<i class="fa fa-angle-right text-white-50 ps-2" role="img"/>
+                                Let's go!<i class="oi text-white-50 ps-2" data-icon="keyboard_arrow_right" role="img"/>
                             </button>
                         </div>
                     </div>
@@ -195,13 +195,13 @@
                                      role="button">
                                     <div class="h3 card-body py-3 px-4 mb-0">
                                         <t t-if="isInstalled">
-                                            <i t-attf-class="o_configurator_feature_status fa fa-check-circle text-success" title="Already installed"/>
+                                            <i t-attf-class="o_configurator_feature_status oi oi-filled text-success" data-icon="check_circle" title="Already installed"/>
                                         </t>
                                         <t t-else="">
-                                            <i t-attf-class="o_configurator_feature_status fa {{feature.selected ? 'fa-check-circle text-success' : 'fa-circle-o text-300'}}" />
+                                            <i t-attf-class="o_configurator_feature_status oi {{feature.selected ? 'oi-filled text-success' : 'text-300'}}" t-attf-data-icon="{{feature.selected ? 'check_circle' : 'circle'}}" />
                                         </t>
                                         <div t-attf-class="h2 mb-0 card-title d-flex align-items-center {{isInstalled ? 'text-muted' : ''}}">
-                                            <i t-attf-class="me-2 fa {{feature.icon}} {{isInstalled ? 'text-muted' : (feature.type == 'page' ? 'text-info' : 'text-warning')}}"/>
+                                            <i t-attf-class="me-2 oi {{isInstalled ? 'text-muted' : (feature.type == 'page' ? 'text-info' : 'text-warning')}} {{feature.icon_class}}" t-attf-data-icon="{{feature.icon}}"/>
                                             <h3 class="m-1">
                                                 <t t-out="feature.name"/>
                                             </h3>

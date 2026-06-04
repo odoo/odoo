@@ -35,14 +35,14 @@
                                 <div t-if="this.store.self.is_user_publisher" class="d-flex rounded-0">
                                     <Dropdown>
                                         <button class="bg-transparent border-0">
-                                            <i class="btn px-1 py-0 oi oi-ellipsis-v"/>
+                                            <i class="btn px-1 py-0 oi" data-icon="more_vert"/>
                                         </button>
                                         <t t-set-slot="content">
                                             <DropdownItem class="'o_wrating_js_publisher_comment_edit'" onSelected="() => this.onClikEditComment()">
                                                 <i class="fa fa-fw fa-pencil me-1"/>Edit
                                             </DropdownItem>
                                             <DropdownItem class="'o_wrating_js_publisher_comment_delete'" onSelected="() => this.deleteComment()">
-                                                <i class="fa fa-fw fa-trash-o me-1"/>Delete
+                                                <i class="oi oi-fw me-1" data-icon="delete"/>Delete
                                             </DropdownItem>
                                         </t>
                                     </Dropdown>

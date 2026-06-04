@@ -57,7 +57,7 @@
                     class="oe_stat_button"
                     type="object"
                     name="action_view_sos"
-                    icon="fa-id-card-o"
+                    icon="badge"
                     invisible="not display_sales_stat_buttons or sale_order_count != 0 or is_template"
                     groups="sales_team.group_sale_salesman_all_leads"
                     context="{
@@ -74,11 +74,11 @@
                         </span>
                     </div>
                 </button>
-                <button class="oe_stat_button" type="object" name="action_open_project_invoices" icon="fa-pencil-square-o"
+                <button class="oe_stat_button" type="object" name="action_open_project_invoices" icon="edit_square"
                     groups="account.group_account_readonly" invisible="not account_id or invoice_count == 0">
                     <field string="Invoices" name="invoice_count" widget="statinfo"/>
                 </button>
-                <button class="oe_stat_button" type="object" name="action_open_project_vendor_bills" icon="fa-pencil-square-o"
+                <button class="oe_stat_button" type="object" name="action_open_project_vendor_bills" icon="edit_square"
                     groups="account.group_account_readonly" invisible="vendor_bill_count == 0">
                     <field string="Vendor Bills" name="vendor_bill_count" widget="statinfo"/>
                 </button>
@@ -88,7 +88,7 @@
                     class="oe_stat_button"
                     type="object"
                     name="action_view_sos"
-                    icon="fa-money"
+                    icon="payments"
                     invisible="not display_sales_stat_buttons or sale_order_count == 0 or is_template"
                     groups="sales_team.group_sale_salesman_all_leads"
                     context="{
@@ -116,13 +116,13 @@
                 </button>
             </xpath>
             <xpath expr="//button[@name='action_project_task_burndown_chart_report']" position="after">
-                <button class="oe_stat_button" type="object" name="action_view_sols" icon="fa-dollar"
+                <button class="oe_stat_button" type="object" name="action_view_sols" icon="attach_money"
                     groups="sales_team.group_sale_salesman_all_leads" invisible="not display_sales_stat_buttons">
                     <field string="Sales Items" name="sale_order_line_count" widget="statinfo"/>
                 </button>
             </xpath>
             <xpath expr="//button[@name='action_view_all_rating']" position="after">
-                <button class="oe_stat_button" type="object" name="action_customer_preview" icon="fa-globe icon" invisible="not partner_id or not allow_billable or privacy_visibility not in ['invited_users', 'portal'] or is_template">
+                <button class="oe_stat_button" type="object" name="action_customer_preview" icon="public" invisible="not partner_id or not allow_billable or privacy_visibility not in ['invited_users', 'portal'] or is_template">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_text">Customer View</span>
                     </div>
@@ -160,7 +160,7 @@
                         options="{'no_create': True}"
                     />
                     <span
-                        class="fa fa-exclamation-triangle text-warning"
+                        class="oi text-warning" data-icon="warning"
                         title="The sales order associated with this project has been cancelled. We recommend either updating the sales order item or cancelling this project in alignment with the cancellation of the sales order."
                         invisible="sale_order_state != 'cancel'"/>
                 </div>
@@ -198,7 +198,7 @@
         <field name="arch" type="xml">
             <xpath expr="//span[@id='start_rating_buttons']" position="before">
                 <button class="oe_stat_button"
-                        type="object" name="action_view_so" icon="fa-dollar"
+                        type="object" name="action_view_so" icon="attach_money"
                         invisible="not sale_order_id or has_template_ancestor or has_project_template"
                         groups="sales_team.group_sale_salesman">
                         <div class="o_stat_info">
@@ -243,7 +243,8 @@
                         widget="so_line_create_button"
                         placeholder="Non-billable"/>
                     <span
-                        class="fa fa-exclamation-triangle text-warning"
+                        class="oi text-warning"
+                        data-icon="warning"
                         title="The sales order associated with this task has been cancelled. We recommend either updating the sales order item or cancelling this task in alignment with the cancellation of the sales order."
                         invisible="sale_order_state != 'cancel'"/>
                 </div>
@@ -352,7 +353,7 @@
                 </group>
             </xpath>
             <xpath expr="//button[@name='%(project.action_view_task_from_milestone)d']" position="before">
-                <button name="action_view_sale_order" type="object" class="oe_stat_button" icon="fa-dollar" invisible="not sale_line_id">
+                <button name="action_view_sale_order" type="object" class="oe_stat_button" icon="attach_money" invisible="not sale_line_id">
                     <div class="o_stat_info">
                         <span class="o_stat_text">Sales Order</span>
                     </div>

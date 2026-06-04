@@ -25,14 +25,14 @@ test("click on invisible elements in the invisible elements tab (check eye icon)
     expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry")).toHaveText(
         "Invisible Element"
     );
-    expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry i")).toHaveClass(
-        "fa-eye-slash"
+    expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry i")).toHaveAttribute("data-icon",
+        "visibility_off"
     );
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
-    expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry i")).toHaveClass("fa-eye");
+    expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry i")).toHaveAttribute("data-icon", "visibility");
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
-    expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry i")).toHaveClass(
-        "fa-eye-slash"
+    expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry i")).toHaveAttribute("data-icon",
+        "visibility_off"
     );
 });
 
@@ -87,11 +87,11 @@ test("Add an element on the invisible elements tab", async () => {
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap"
     ).click();
     await waitForEndOfOperation();
-    expect(".o_we_invisible_el_panel .o_we_invisible_entry:contains('Test') .fa-eye").toHaveCount(
+    expect(".o_we_invisible_el_panel .o_we_invisible_entry:contains('Test') [data-icon='visibility']").toHaveCount(
         1
     );
     expect(
-        ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Invisible Element') .fa-eye-slash"
+        ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Invisible Element') [data-icon='visibility_off']"
     ).toHaveCount(1);
 });
 
@@ -133,7 +133,7 @@ test("desktop option undo after override", async () => {
         "[data-action-id='toggleDeviceVisibility'][data-action-param='no_desktop']"
     ).click();
     expect(":iframe section").not.toHaveClass("o_snippet_override_invisible");
-    await contains(".o_we_invisible_entry .fa-eye-slash").click();
+    await contains(".o_we_invisible_entry [data-icon='visibility_off']").click();
     expect(":iframe section").toHaveClass("o_snippet_override_invisible");
     builder.getEditor().shared.history.undo();
     expect(":iframe section").not.toHaveClass("o_snippet_override_invisible");

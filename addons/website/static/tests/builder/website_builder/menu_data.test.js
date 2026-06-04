@@ -42,7 +42,7 @@ describe("NavbarLinkPopover", () => {
         setSelection({ anchorNode: el.querySelector(".nav-link > span"), anchorOffset: 0 });
         await waitFor(".o-we-linkpopover");
         // remove link button replaced with sitemap button
-        expect(".o-we-linkpopover:has(i.fa-chain-broken)").toHaveCount(0);
+        expect(".o-we-linkpopover:has(i[data-icon='link_off'])").toHaveCount(0);
         expect(".o-we-linkpopover:has(button.js_edit_menu)").toHaveCount(1);
         // selection outside a top menu link
         setSelection({ anchorNode: el.querySelector("p"), anchorOffset: 0 });

@@ -102,7 +102,8 @@ test("getPaymentActionState", async () => {
     const stateWaitingCardRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCardRefund)).toEqual({
         id: "waiting_refund",
-        icon: "fa fa-circle-o-notch fa-spin",
+        icon: "autorenew",
+        icon_class: "oi-spin",
         title: "Refund in process",
         actions: [
             {
@@ -127,7 +128,8 @@ test("getPaymentActionState", async () => {
     const stateWaitingCardNoRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCardNoRefund)).toEqual({
         id: "waiting_card",
-        icon: "fa fa-circle-o-notch fa-spin",
+        icon: "autorenew",
+        icon_class: "oi-spin",
         title: "Waiting for card",
         actions: [
             {
@@ -152,7 +154,8 @@ test("getPaymentActionState", async () => {
     const stateWaitingScan = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingScan)).toEqual({
         id: "waiting_scan",
-        icon: "fa fa-circle-o-notch fa-spin",
+        icon: "autorenew",
+        icon_class: "oi-spin",
         title: "Waiting for the customer to scan the QR Code",
         actions: [
             {
@@ -177,7 +180,8 @@ test("getPaymentActionState", async () => {
     const stateWaiting = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaiting)).toEqual({
         id: "waiting",
-        icon: "fa fa-circle-o-notch fa-spin",
+        icon: "autorenew",
+        icon_class: "oi-spin",
         title: "Request sent",
         actions: [
             {
@@ -202,7 +206,8 @@ test("getPaymentActionState", async () => {
     const stateWaitingCancel = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCancel)).toEqual({
         id: "waiting_cancel",
-        icon: "fa fa-circle-o-notch fa-spin",
+        icon: "autorenew",
+        icon_class: "oi-spin",
         title: "Request sent",
         actions: [
             {
@@ -227,7 +232,8 @@ test("getPaymentActionState", async () => {
     const stateWaitingCapture = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCapture)).toEqual({
         id: "waiting_capture",
-        icon: "fa fa-circle-o-notch fa-spin",
+        icon: "autorenew",
+        icon_class: "oi-spin",
         title: "Request sent",
         actions: [
             {
@@ -410,7 +416,7 @@ describe("spinner or delete button", () => {
                 isRefundOrder: false,
             },
         });
-        expect(".paymentline i.fa-circle-o-notch.fa-spin").toHaveCount(0);
+        expect(".paymentline i.oi-spin[data-icon='autorenew']").toHaveCount(0);
         expect(".paymentline button.delete-button").toHaveCount(1);
     });
 
@@ -435,7 +441,7 @@ describe("spinner or delete button", () => {
                 isRefundOrder: false,
             },
         });
-        expect(".paymentline i.fa-circle-o-notch.fa-spin").toHaveCount(0);
+        expect(".paymentline i.oi-spin[data-icon='autorenew']").toHaveCount(0);
         expect(".paymentline button.delete-button").toHaveCount(1);
     });
 
@@ -460,7 +466,7 @@ describe("spinner or delete button", () => {
                 isRefundOrder: false,
             },
         });
-        expect(".paymentline i.fa-circle-o-notch.fa-spin").toHaveCount(1);
+        expect(".paymentline i.oi-spin[data-icon='autorenew']").toHaveCount(1);
         expect(".paymentline button.delete-button").toHaveCount(0);
     });
 
@@ -485,7 +491,7 @@ describe("spinner or delete button", () => {
                 isRefundOrder: false,
             },
         });
-        expect(".paymentline i.fa-circle-o-notch.fa-spin").toHaveCount(0);
+        expect(".paymentline i.oi-spin[data-icon='autorenew']").toHaveCount(0);
         expect(".paymentline button.delete-button").toHaveCount(1);
     });
 
@@ -511,7 +517,7 @@ describe("spinner or delete button", () => {
                 isRefundOrder: false,
             },
         });
-        expect(".paymentline i.fa-circle-o-notch.fa-spin").toHaveCount(0);
+        expect(".paymentline i.oi-spin[data-icon='autorenew']").toHaveCount(0);
         expect(".paymentline button.delete-button").toHaveCount(1);
     });
 
@@ -537,7 +543,7 @@ describe("spinner or delete button", () => {
                 isRefundOrder: false,
             },
         });
-        expect(".paymentline i.fa-circle-o-notch.fa-spin").toHaveCount(0);
+        expect(".paymentline i.oi-spin[data-icon='autorenew']").toHaveCount(0);
         expect(".paymentline button.delete-button").toHaveCount(0);
     });
 });

@@ -23,7 +23,7 @@
                         <span t-if="this.allowSave" class="btn btn-link" t-on-click="this.onSaveNew" title="Save as new analytic distribution model">New Model</span>
                     </div>
                     <div class="popupButtons">
-                        <span class="btn o_button" t-on-click.stop="() => this.closeAnalyticEditor()" title="Close"><span class="fa fa-close"/></span>
+                        <span class="btn o_button" t-on-click.stop="() => this.closeAnalyticEditor()" title="Close"><span class="oi" data-icon="close"/></span>
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@
                                     <Field id="this.props.amount_field" name="this.props.amount_field" record="data.record"/>
                                 </td>
                                 <td class="w-20px">
-                                    <span class="fa fa-trash-o cursor-pointer" t-on-click.stop="() => this.deleteLine(line_index)"/>
+                                    <span class="oi cursor-pointer" data-icon="delete" t-on-click.stop="() => this.deleteLine(line_index)"/>
                                 </td>
                             </Record>
                         </tr>

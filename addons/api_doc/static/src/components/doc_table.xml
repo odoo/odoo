@@ -15,7 +15,8 @@
                 >
                     <span class="me-2" t-out="header"></span>
                     <i
-                        t-att-class="this.getSortIcon(header_index)"
+                        class="oi"
+                        t-att-data-icon="this.getSortIcon(header_index)"
                         aria-hidden="true"
                     ></i>
                 </th>
@@ -37,14 +38,16 @@
                 >
                     <i
                         t-if="row.subData"
-                        class="fa fa-bars o-doc-sub-table-btn d-inline me-1 cursor-pointer"
+                        class="oi o-doc-sub-table-btn d-inline me-1 cursor-pointer"
+                        data-icon="menu"
                         aria-hidden="true"
                         t-on-click="(ev) => this.showSubTable(ev, row.subData)"
                     />
 
                     <t t-if="row and row.type == 'tooltip' and row.value">
                         <i
-                            class="fa fa-question-circle p-1 "
+                            class="oi p-1"
+                            data-icon="help"
                             aria-hidden="true"
                             t-if="row.value"
                             t-on-mouseenter="(ev) => this.showDynamicTooltip(ev, row.value)"
@@ -61,7 +64,8 @@
                     >
                         <t t-out="row.relation"/>
                         <i
-                            class="fa fa-external-link ps-1 d-inline"
+                            class="oi ps-1 d-inline"
+                            data-icon="open_in_new"
                             aria-hidden="true"
                         ></i>
                     </a>

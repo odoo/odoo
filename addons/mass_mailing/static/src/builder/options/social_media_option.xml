@@ -11,19 +11,19 @@
     </BuilderRow>
 
     <BuilderRow label.translate="Layout">
-        <BuilderSelect applyTo="'.fa'">
+        <BuilderSelect applyTo="'.oi'">
             <BuilderSelectItem classAction="'rounded shadow-sm'">Square</BuilderSelectItem>
             <BuilderSelectItem classAction="'rounded-empty-circle shadow-sm'">Circle</BuilderSelectItem>
             <BuilderSelectItem classAction="'rounded-circle shadow-sm'">Disk</BuilderSelectItem>
-            <BuilderSelectItem classAction="'fa-stack'">None</BuilderSelectItem>
+            <BuilderSelectItem classAction="'oi-stack'">None</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
 
     <BuilderRow label.translate="Size">
-        <BuilderSelect applyTo="'.fa'">
+        <BuilderSelect applyTo="'.oi'">
             <BuilderSelectItem classAction="'small_social_icon'">Small</BuilderSelectItem>
             <BuilderSelectItem classAction="''">Medium</BuilderSelectItem>
-            <BuilderSelectItem classAction="'fa-2x'">Big</BuilderSelectItem>
+            <BuilderSelectItem classAction="'oi-2x'">Big</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
 
@@ -32,10 +32,10 @@
     </BuilderRow>
 
     <BuilderRow label.translate="Custom Color" t-if="!this.isActiveItem('no_icon_color_opt')">
-        <BuilderColorPicker styleAction="'color'" noTransparency="true" enabledTabs="['solid', 'custom']" applyTo="'.fa'"/>
+        <BuilderColorPicker styleAction="'color'" noTransparency="true" enabledTabs="['solid', 'custom']" applyTo="'.oi'"/>
     </BuilderRow>
     <BuilderRow label.translate="Background Color">
-        <BuilderColorPicker styleAction="'background-color'" noTransparency="true" enabledTabs="['solid', 'custom']" applyTo="'.fa'"/>
+        <BuilderColorPicker styleAction="'background-color'" noTransparency="true" enabledTabs="['solid', 'custom']" applyTo="'.oi'"/>
     </BuilderRow>
 </t>
 

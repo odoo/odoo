@@ -472,7 +472,8 @@ export class Checkout extends Interaction {
      */
     _createLoadingElement() {
         const loadingElement = document.createElement('i');
-        loadingElement.classList.add('fa', 'fa-circle-o-notch', 'fa-spin', 'center');
+        loadingElement.classList.add('oi', 'oi-spin', 'center');
+        loadingElement.dataset.icon = "autorenew";
         return loadingElement;
     }
 

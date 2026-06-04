@@ -10,7 +10,7 @@
         <div class="o-mail-ChatHub-bubbles position-fixed d-flex flex-column align-content-start justify-content-end align-items-center" t-attf-style="top: {{this.position.top}}; left: {{this.position.left}}; right: {{this.position.right}}; --mail-ChatHub-bubbles-bottom: {{this.position.bottom}}" t-att-class="{ 'o-liftUp': this.busMonitoring.hasConnectionIssues, 'o-mobile': this.isMobileOS }" t-custom-ref="bubbles">
             <div class="d-flex flex-column align-content-start justify-content-end align-items-center o-gap-1_5">
                 <Dropdown t-if="this.optionActions.length" state="this.options" position="'top-end'" menuClass="'m-0 mb-1 ' + this.store.discussDropdownMenuClass(this)">
-                    <button class="o-mail-ChatHub-bubbleBtn btn o-mail-ChatHub-optionsBtn bg-100 mt-1" t-att-class="{ 'opacity-0': !this.bubblesHover.isHover and !this.position.dragged and !this.options.isOpen and !this.isMobileOS, 'o-bubblesHover': (this.bubblesHover.isHover or this.position.dragged) and !this.isMobileOS, 'o-active': this.bubblesHover.isHover or this.options.isOpen }" title="Chat Options"><i class="oi oi-ellipsis-h"/></button>
+                    <button class="o-mail-ChatHub-bubbleBtn btn o-mail-ChatHub-optionsBtn bg-100 mt-1" t-att-class="{ 'opacity-0': !this.bubblesHover.isHover and !this.position.dragged and !this.options.isOpen and !this.isMobileOS, 'o-bubblesHover': (this.bubblesHover.isHover or this.position.dragged) and !this.isMobileOS, 'o-active': this.bubblesHover.isHover or this.options.isOpen }" title="Chat Options"><i class="oi" data-icon="more_horiz"/></button>
                     <t t-set-slot="content">
                         <ActionList actions="this.optionActions" dropdown="true"/>
                     </t>
@@ -36,7 +36,7 @@
                 <t t-out="this.compactCounter"/>
             </div>
             <button class="o-mail-ChatHub-bubbleBtn btn fs-2 shadow" t-on-click="this.expand">
-                <i class="o-mail-ChatHub-hiddenBtnIcon d-flex justify-content-center align-items-center btn rounded-circle shadow-sm fa fa-comments"/>
+                <i class="o-mail-ChatHub-hiddenBtnIcon d-flex justify-content-center align-items-center btn rounded-circle shadow-sm oi oi-filled" data-icon="forum"/>
             </button>
         </div>
     </Dropdown>
@@ -62,7 +62,7 @@
                             <t t-out="chatWindow.channel.importantCounter"/>
                         </div>
                         <button class="o-mail-ChatHub-hiddenClose o-mail-ChatBubble-close d-flex align-items-center rounded" t-on-click.stop="() => chatWindow.close()">
-                            <i class="oi oi-close"/>
+                            <i class="oi" data-icon="close_small"/>
                         </button>
                     </li>
                 </t>

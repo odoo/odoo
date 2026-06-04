@@ -26,7 +26,7 @@ test("disable link tracking option should be shown and diable/enable link tracki
         ".o_seo_option_row:has(span[title='Send the original url instead of wrapping it into a tracking url.']) input[type='checkbox']"
     ).click();
     // Go back to main popover view
-    await click("button.fa-angle-left");
+    await click("button[data-icon='keyboard_arrow_left']");
     // Apply
     await contains("button.o_we_apply_link").click();
 
@@ -42,7 +42,7 @@ test("disable link tracking option should be shown and diable/enable link tracki
         ".o_seo_option_row:has(span[title='Send the original url instead of wrapping it into a tracking url.']) input[type='checkbox']"
     ).click();
     // Go back to main popover view
-    await click("button.fa-angle-left");
+    await click("button[data-icon='keyboard_arrow_left']");
     // Apply
     await contains("button.o_we_apply_link").click();
 

@@ -12,21 +12,21 @@
                 <div class="oe_button_box" name="button_box"
                      invisible="not display_complete">
                         <button class="oe_stat_button" name="action_lot_open_transfers"
-                                type="object" icon="fa-truck" help="Transfers"
+                                type="object" icon="local_shipping" help="Transfers"
                                 invisible="delivery_count == 0">
                             <field name="delivery_count" widget="statinfo" string="Transfers"/>
                         </button>
-                        <button name="action_lot_open_quants" groups="stock.group_stock_multi_locations" icon="fa-arrows" class="oe_stat_button" type="object">
+                        <button name="action_lot_open_quants" groups="stock.group_stock_multi_locations" icon="open_with" class="oe_stat_button" type="object">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Location</span>
                             </div>
                         </button>
-                        <button name="%(action_stock_report)d" icon="oi-arrow-up" class="oe_stat_button" type="action">
+                        <button name="%(action_stock_report)d" icon="north_west" class="oe_stat_button" type="action">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Traceability</span>
                             </div>
                         </button>
-                        <button name="action_open_scrap_moves" class="oe_stat_button" type="object" invisible="not is_scrap" icon="fa-trash">
+                        <button name="action_open_scrap_moves" class="oe_stat_button" type="object" invisible="not is_scrap" icon="delete" icon_class="oi-filled">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Scraps</span>
                             </div>

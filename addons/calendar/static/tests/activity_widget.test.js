@@ -19,7 +19,7 @@ test("list activity widget: reschedule button in dropdown", async () => {
     const pyEnv = await startServer();
     const resPartnerId = pyEnv["res.partner"].create({});
     const activityTypeId = pyEnv["mail.activity.type"].create({
-        icon: "fa-calendar",
+        icon: "calendar_today",
         name: "Meeting",
     });
     const tomorrow = serializeDateTime(DateTime.now().plus({ days: 1 }));
@@ -58,6 +58,6 @@ test("list activity widget: reschedule button in dropdown", async () => {
     });
     await contains(".o-mail-ListActivity-summary", { text: "OXP" });
     await click(".o-mail-ActivityButton"); // open the popover
-    await contains(".o-mail-ActivityListPopoverItem-editbtn .fa-pencil", { count: 0 });
-    await contains(".o-mail-ActivityListPopoverItem-editbtn .fa-calendar");
+    await contains(".o-mail-ActivityListPopoverItem-editbtn [data-icon='edit']", { count: 0 });
+    await contains(".o-mail-ActivityListPopoverItem-editbtn [data-icon='calendar_today']");
 });

@@ -10,7 +10,7 @@
         <xpath expr="//t[@t-set='auth_btns']" position="after">
             <!-- passkey_body set in plain HTML for translations -->
             <t t-set="passkey_body">Use a Passkey</t>
-            <t t-set="passkey_btn" t-value="[{'css_class': 'fa fa-qrcode', 'body': passkey_body, 'list_item_class': 'passkey_login_link'}]"/>
+            <t t-set="passkey_btn" t-value="[{'css_class': 'oi oi-fw', 'icon': 'qr_code', 'body': passkey_body, 'list_item_class': 'passkey_login_link'}]"/>
             <t t-set="auth_btns" t-value="auth_btns + passkey_btn"/>
         </xpath>
     </template>

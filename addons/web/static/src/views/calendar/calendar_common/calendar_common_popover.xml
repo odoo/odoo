@@ -18,7 +18,7 @@
     <t t-name="web.CalendarCommonPopover.popover">
         <div class="card-header d-flex justify-content-between py-2 pe-2">
             <span class="popover-header border-0 text-truncate">
-                <i t-if="this.props.record.titleIcon" t-attf-class="me-2 {{this.props.record.titleIcon}}"/>
+                <i t-if="this.props.record.titleIcon" class="oi me-2" t-att-data-icon="this.props.record.titleIcon"/>
                 <span t-out="this.props.record.title" t-att-data-tooltip="this.props.record.title"/>
             </span>
             <span class="o_cw_popover_close ms-4 mt-2 me-2" t-on-click.stop="() => this.props.close()">
@@ -36,11 +36,11 @@
     <t t-name="web.CalendarCommonPopover.body">
         <ul class="list-group list-group-flush">
             <li t-if="this.date" class="list-group-item">
-                <i class="fa fa-fw fa-calendar text-400" />
+                <i class="oi oi-fw oi-filled text-400" data-icon="calendar_today"/>
                 <span class="fw-bold ms-2" t-out="this.date" /> <small t-if="this.dateDuration != 'All day'"><b t-out="this.dateDuration" /></small>
             </li>
             <li t-if="this.time" class="list-group-item">
-                <i class="fa fa-fw fa-clock-o text-400" />
+                <i class="oi oi-fw text-400" data-icon="schedule" />
                 <span class="fw-bold ms-2" t-out="this.time" /> <small t-if="this.timeDuration"><b t-out="`(${this.timeDuration})`" /></small>
             </li>
         </ul>
@@ -53,7 +53,7 @@
                         <li class="list-group-item d-flex text-nowrap" t-att-class="fieldInfo.attrs.class"  t-att-data-tooltip="['html', 'boolean'].includes(fieldType) ? '' : this.getFormattedValue(fieldId, slot.record)">
                             <span class="fw-bold me-2" t-if="!fieldInfo.options.noLabel and fieldInfo.type !== 'properties'">
                                 <t t-if="fieldInfo.options.icon">
-                                    <i t-attf-class="fa-fw {{fieldInfo.options.icon}} text-400" />
+                                    <i class="oi oi-fw text-400" t-attf-class="{{fieldInfo.options.icon_class}}" t-attf-data-icon="{{fieldInfo.options.icon}}" />
                                 </t>
                                 <t t-else="">
                                     <t t-out="fieldInfo.string" />

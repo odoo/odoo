@@ -24,7 +24,7 @@
                 }" t-attf-class="{{ this.props.className }}">
             <FileUploader t-if="this.allowUpload" multiUpload="this.isMultiUpload" onUploaded.bind="(data) => { this.attachmentUploader.uploadData(data) }">
                 <t t-set-slot="toggler">
-                    <button t-att-disabled="!this.state.active or this.areAllActionsDisabled" class="d-none" title="Attach files" aria-label="Attach files" t-custom-ref="file-uploader"><i class="fa fa-fw fa-paperclip"/></button>
+                    <button t-att-disabled="!this.state.active or this.areAllActionsDisabled" class="d-none" title="Attach files" aria-label="Attach files" t-custom-ref="file-uploader"><i class="oi oi-fw" data-icon="attach_file"/></button>
                 </t>
             </FileUploader>
             <div t-if="this.showComposerAvatar" class="o-mail-Composer-sidebarMain flex-shrink-0 d-flex">
@@ -38,11 +38,11 @@
                     <span t-if="this.props.composer.replyToMessage.thread?.notEq(this.props.composer.thread)">
                         on: <b><t t-out="this.props.composer.replyToMessage.thread.displayName"/></b>
                     </span>
-                    <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Discard" t-on-click="() => (this.props.composer.replyToMessage = undefined)"/>
+                    <i class="oi oi-lg oi-filled rounded-circle p-0 ms-1 cursor-pointer" data-icon="cancel" title="Discard" t-on-click="() => (this.props.composer.replyToMessage = undefined)"/>
                 </div>
                 <span t-if="this.props.composer.message and this.ui.isSmall" class="px-1" t-on-click="this.onClickCancelOrSaveEditText">
                     <button class="btn btn-sm btn-secondary rounded-pill border border-secondary ps-1 pe-2 py-0 mb-1" t-att-data-type="this.EDIT_CLICK_TYPE.CANCEL">
-                        <i class="oi oi-close pe-2" t-att-data-type="this.EDIT_CLICK_TYPE.CANCEL"></i>
+                        <i class="oi pe-2" data-icon="close_small" t-att-data-type="this.EDIT_CLICK_TYPE.CANCEL"></i>
                         Discard editing
                     </button>
                 </span>
@@ -146,7 +146,7 @@
         t-att-aria-label="this.SEND_TEXT"
     >
         <t t-if="this.thread and !this.thread.channel" t-out="this.SEND_TEXT"/>
-        <t t-else=""><i class="fa fa-fw fa-lg fa-paper-plane-o"/></t>
+        <t t-else=""><i class="oi oi-fw oi-lg" data-icon="send"/></t>
     </button>
 </t>
 
@@ -210,10 +210,10 @@
 
     <t t-name="mail.Composer.suggestionChannel">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
-            <i t-attf-class="fa #{option.channel?.parent_channel_id ? 'fa-comments-o' : 'fa-hashtag'} me-2"/>
+            <i class="oi me-2" t-att-data-icon="option.channel?.parent_channel_id ? 'forum' : 'tag'"/>
             <t t-if="option.channel.parent_channel_id">
                 <t t-out="option.channel.parent_channel_id.displayName"/>
-                <i class="oi oi-chevron-right o-xsmaller mx-1"/>
+                <i class="oi o-xsmaller mx-1" data-icon="chevron_forward"/>
             </t>
             <t t-out="option.channel.displayName"/>
         </strong>
@@ -253,8 +253,8 @@
                 <p class="mb-0 small text-muted">Formatting can only be restored in Full Composer.</p>
             </div>
             <div class="d-flex align-items-center justify-content-center gap-1 mt-2">
-                <button class="btn btn-primary" t-on-click="this.onClickFullRecover"><i class="fa fa-check me-2 opacity-75"/>Yes <span class="small opacity-50">(Keep formatting)</span></button>
-                <button class="btn btn-secondary" t-on-click="this.onClickTextRecover"><i class="oi oi-close me-2 opacity-75"/>No <span class="small opacity-50">(Remove formatting)</span></button>
+                <button class="btn btn-primary" t-on-click="this.onClickFullRecover"><i class="oi me-2 opacity-75" data-icon="check"/>Yes <span class="small opacity-50">(Keep formatting)</span></button>
+                <button class="btn btn-secondary" t-on-click="this.onClickTextRecover"><i class="oi me-2 opacity-75" data-icon="close"/>No <span class="small opacity-50">(Remove formatting)</span></button>
             </div>
         </div>
     </t>

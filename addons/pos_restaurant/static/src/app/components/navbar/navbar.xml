@@ -4,14 +4,14 @@
        <xpath expr="//div[hasclass('pos-topheader')]" position="after">
            <FloorPlanEditorNavBar  t-if="this.floorPlanStore?.isEditToolbarVisible()"/>
        </xpath>
-        <xpath expr="//DropdownItem/i[hasclass('fa-chevron-left')]/.." position="before">
+        <xpath expr="//DropdownItem/i[@data-icon='chevron_left']/.." position="before">
             <t t-if="this.pos.router.state.current == 'FloorScreen' and this.ui.isSmall">
                 <DropdownItem t-if="this.showEditPlanButton and this.pos.config.floor_ids.length" onSelected="() => this.floorPlanStore.startEditMode()">
-                    <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true" /> Edit Plan
+                    <i class="oi oi-fw" data-icon="edit_square" aria-hidden="true" /> Edit Plan
                 </DropdownItem>
             </t>
             <DropdownItem t-if="this.pos.router.state.current == 'FloorScreen'" onSelected="() => this.onSwitchButtonClick()">
-                <i class="fa fa-fw fa-eye" aria-hidden="true" /> Switch Floor View
+                <i class="oi oi-fw" data-icon="visibility" aria-hidden="true" /> Switch Floor View
             </DropdownItem>
         </xpath>
         <xpath expr="//div[hasclass('pos-leftheader')]//OrderTabs" position="attributes">

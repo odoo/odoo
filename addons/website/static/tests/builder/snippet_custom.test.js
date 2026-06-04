@@ -82,7 +82,7 @@ test("Renaming custom snippets don't make an orm call", async () => {
     });
 
     await contains(
-        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_custom_snippet_edit button > .fa-pencil"
+        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_custom_snippet_edit button > [data-icon='edit']"
     ).click();
     expect(".o-overlay-item .modal-dialog:contains('Rename the block')").toHaveCount(1);
     await contains(".o-overlay-item .modal-dialog input#inputConfirmation").fill("new custom name");

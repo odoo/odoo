@@ -12,7 +12,8 @@
                     >
                         <t name="download" t-if="this.props.record.resId and !this.props.record.dirty">
                             <button
-                                class="btn btn-link fa fa-download o_download_file_button"
+                                class="btn btn-link oi o_download_file_button"
+                                data-icon="download"
                                 data-tooltip="Download"
                                 aria-label="Download"
                                 t-on-click="this.onFileDownload"
@@ -27,7 +28,8 @@
                             </t>
                         </t>
                         <button
-                            class="btn btn-link fa fa-trash o_clear_file_button"
+                            class="btn btn-link oi oi-filled o_clear_file_button"
+                            data-icon="delete"
                             data-tooltip="Clear"
                             aria-label="Clear"
                             t-on-click="() => this.update({})"
@@ -45,7 +47,7 @@
                         <t t-set-slot="toggler">
                             <div class="d-flex">
                                 Upload your file
-                                <button class="btn btn-link fa fa-upload ms-auto" />
+                                <button class="btn btn-link oi ms-auto" data-icon="upload"/>
                             </div>
                         </t>
                     </FileUploader>
@@ -54,7 +56,7 @@
         </t>
         <t t-elif="this.props.record.resId and this.props.record.data[this.props.name]">
             <a class="o_form_uri" href="#" t-on-click.prevent="this.onFileDownload">
-                <span class="fa fa-download me-2" />
+                <span class="oi me-2" data-icon="download" />
                 <t t-if="this.fileName" t-out="this.fileName" />
             </a>
         </t>
@@ -69,7 +71,7 @@
                     onUploaded.bind="this.update"
                 >
                     <t t-set-slot="toggler">
-                        <i class="fa fa-upload fa-fw"/> Upload your file
+                        <i class="oi oi-fw" data-icon="upload"/> Upload your file
                     </t>
                 </FileUploader>
             </label>

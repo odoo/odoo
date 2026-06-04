@@ -162,11 +162,11 @@ export class DocTable extends Component {
 
     getSortIcon(rowIndex) {
         if (this.state.sortBy !== rowIndex) {
-            return "fa fa-sort";
+            return "swap_vert";
         } else if (this.state.sortOrder === "asc") {
-            return "fa fa-sort-asc";
+            return "arrow_upward";
         } else {
-            return "fa fa-sort-desc";
+            return "arrow_downward";
         }
     }
 

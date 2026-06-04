@@ -115,7 +115,7 @@ test("Invitation form should display channel group restriction", async () => {
     await contains(
         ".o-discuss-ChannelInvitation div:text('Access restricted to group \"testGroup\"')",
         {
-            after: ["button .fa.fa-copy"],
+            after: ["button [data-icon='content_copy']"],
         }
     );
 });

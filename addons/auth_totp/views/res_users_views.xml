@@ -30,14 +30,14 @@
                     <button invisible="totp_enabled or id != uid" name="action_totp_enable_wizard"
                         type="object" class="btn btn-secondary h-100 my-auto" string="Enable 2FA"/>
                     <div invisible="totp_enabled or id == uid" name="div_action_totp_enable_wizard" class="h-100 d-flex flex-wrap align-items-center my-auto">
-                        <i class="fa fa-remove text-danger"/>
+                        <i class="oi text-danger" data-icon="close"/>
                         <span class="fw-bold ms-1">
                             Disabled
                         </span>
                     </div>
                     <!-- Admin must be able to deactivate the 2FA, if the user is no longer able to use it. -->
                     <div invisible="not totp_enabled" class="h-100 d-flex flex-wrap align-items-center my-auto">
-                        <i class="fa fa-check text-success"/>
+                        <i class="oi text-success" data-icon="check"/>
                         <span class="fw-bold ms-1 me-2">
                             Enabled
                         </span>
@@ -67,7 +67,7 @@
                     <button invisible="totp_enabled" name="action_totp_enable_wizard"
                         type="object" class="btn btn-secondary h-100 my-auto" string="Enable 2FA"/>
                     <div invisible="not totp_enabled" class="h-100 d-flex flex-wrap align-items-center my-auto">
-                        <i class="fa fa-check text-success"/>
+                        <i class="oi text-success" data-icon="check"/>
                         <span class="fw-bold ms-1 me-2">
                             Enabled
                         </span>

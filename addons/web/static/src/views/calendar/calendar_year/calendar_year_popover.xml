@@ -41,7 +41,7 @@
     <t t-name="web.CalendarYearPopover.footer">
         <t t-if="this.props.model.canCreate">
             <a href="#" class="btn-link o_cw_popover_create" t-on-click.prevent="this.onCreateButtonClick">
-                <i class="fa fa-plus" />
+                <i class="oi" data-icon="add" />
                 Create
             </a>
         </t>
@@ -63,7 +63,7 @@
         >
             <span t-if="record.startHour"><t t-out="record.startHour" /></span>
             <span>
-                <i area-hidden="true" t-if="record.titleIcon" t-attf-class="me-2 {{record.titleIcon}}"/>
+                <i area-hidden="true" t-if="record.titleIcon" class="oi me-2" t-att-data-icon="record.titleIcon"/>
                 <t t-out="record.title"/>
             </span>
         </a>

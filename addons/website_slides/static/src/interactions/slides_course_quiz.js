@@ -148,23 +148,23 @@ export class WebsiteSlidesQuiz extends Interaction {
             const questionId = Number(questionEl.dataset.questionId);
             const isCorrect = this.quiz.answers[questionId].is_correct;
             for (const answerEl of questionEl.querySelectorAll("a.o_wslides_quiz_answer")) {
-                for (const iconEl of answerEl.querySelectorAll("i.fa")) {
+                for (const iconEl of answerEl.querySelectorAll("i.oi")) {
                     iconEl.classList.add("d-none");
                 }
                 if (answerEl.querySelector("input[type=radio]").checked) {
                     if (isCorrect) {
                         answerEl.classList.remove("list-group-item-danger");
                         answerEl.classList.add("list-group-item-success");
-                        answerEl.querySelector("i.fa-check-circle").classList.remove("d-none");
+                        answerEl.querySelector("i[data-icon='check_circle']").classList.remove("d-none");
                     } else {
                         answerEl.classList.remove("list-group-item-success");
                         answerEl.classList.add("list-group-item-danger");
-                        answerEl.querySelector("i.fa-times-circle").classList.remove("d-none");
+                        answerEl.querySelector("i[data-icon='cancel']").classList.remove("d-none");
                         answerEl.querySelector("label input").checked = false;
                     }
                 } else {
                     answerEl.classList.remove("list-group-item-danger", "list-group-item-success");
-                    answerEl.querySelector("i.fa-circle").classList.remove("d-none");
+                    answerEl.querySelector("i[data-icon='circle'].oi-filled").classList.remove("d-none");
                 }
             }
             const comment = this.quiz.answers[questionId].comment;

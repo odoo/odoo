@@ -9,7 +9,7 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="action_open_related_taxes"
-                                    type="object" icon="fa-bars"
+                                    type="object" icon="menu"
                                     invisible="related_taxes_amount == 0">
                                 <div class="o_stat_info">
                                     <span class="o_stat_value">
@@ -21,7 +21,7 @@
                                 </div>
                             </button>
                             <button class="oe_stat_button" name="account.action_move_line_select"
-                                    type="action" icon="fa-bars">
+                                    type="action" icon="menu">
                                 <div class="o_stat_info">
                                     <span class="o_stat_value">
                                         <field name="current_balance"/>
@@ -186,7 +186,7 @@
                         <filter string="Account Type" name="accounttype" domain="" context="{'group_by':'account_type'}"/>
                     </group>
                     <searchpanel class="account_root w-auto">
-                        <field name="root_id" icon="fa-filter" limit="false"/>
+                        <field name="root_id" icon="filter_alt" icon_class="oi-filled" limit="false"/>
                     </searchpanel>
                 </search>
             </field>

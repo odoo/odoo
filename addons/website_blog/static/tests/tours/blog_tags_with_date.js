@@ -41,7 +41,7 @@ registerWebsitePreviewTour("blog_tags_with_date", {}, () => [
     },
     {
         content: "Check date filter has been added",
-        trigger: ":iframe #o_wblog_posts_loop span>i.fa-calendar-o",
+        trigger: ":iframe #o_wblog_posts_loop span>i[data-icon='calendar_today']",
     },
     {
         content: "Check 'adventure' and 'discovery' tag is present after addition of date filter",
@@ -50,12 +50,12 @@ registerWebsitePreviewTour("blog_tags_with_date", {}, () => [
     },
     {
         content: "Remove the date filter",
-        trigger: ":iframe #o_wblog_posts_loop span:has(i.fa-calendar-o) a",
+        trigger: ":iframe #o_wblog_posts_loop span:has(i[data-icon='calendar_today']) a",
         run: "click",
     },
     {
         content: "Date filter should not be present",
-        trigger: ":iframe #o_wblog_posts_loop span:not(:has(i.fa-calendar-o))",
+        trigger: ":iframe #o_wblog_posts_loop span:not(:has(i[data-icon='calendar_today']))",
     },
     {
         content: "Check 'adventure' and 'discovery' tag is present after removal of date filter",

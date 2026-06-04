@@ -19,7 +19,7 @@ export class FaResizeAction extends ClassAction {
     static id = "faResize";
     apply(context) {
         const { editingElement } = context;
-        editingElement.classList.remove("fa-1x", "fa-lg");
+        editingElement.classList.remove("oi-1x", "oi-lg");
         super.apply(context);
     }
 }

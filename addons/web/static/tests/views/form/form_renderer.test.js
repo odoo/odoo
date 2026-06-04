@@ -144,7 +144,7 @@ test("compile a button with id on mobile", async () => {
         type: "form",
         resId: 1,
     });
-    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+    await contains(`.o_cp_action_menus button:has([data-icon="settings"])`).click();
     expect(`button[id=action_button]`).toHaveCount(1);
 });
 

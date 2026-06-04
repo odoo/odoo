@@ -3,7 +3,7 @@
         <Dropdown state="this.dropdown" menuClass="'o-we-toolbar-dropdown'" menuRef="this.menuRef" focusToggleOnClosed="false">
             <button t-custom-ref="alignSelector" class="btn btn-light" t-att-title="this.props.title" name="text_align">
                 <span class="px-1 d-flex align-items-center">
-                    <i t-att-class="`fa fa-align-${this.state.displayName}`"/>
+                    <i class="oi" t-att-data-icon="`format_align_${this.state.displayName}`"/>
                 </span>
             </button>
             <t t-set-slot="content">
@@ -11,8 +11,8 @@
                     <t t-foreach="this.items" t-as="item" t-key="item_index">
                         <DropdownItem
                             tag="'button'"
-                            attrs="{ title: item.description }"
-                            class="{['dropdown-item_active_noarrow btn btn-light fa fa-align-'+item.icon]: true, active: item.icon === this.state.displayName }"
+                            attrs="{ title: item.description, 'data-icon': `format_align_${item.icon}` }"
+                            class="{['dropdown-item_active_noarrow btn btn-light oi']: true, active: item.icon === this.state.displayName }"
                             t-on-pointerdown.prevent="() => {}"
                             onSelected="() => this.onSelected(item)"
                         />

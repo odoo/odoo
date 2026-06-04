@@ -49,17 +49,17 @@
                                                     t-if="this.canDeleteLine(line) &amp;&amp; this.getLineChangeQty(line) > 1"
                                                     type="button"
                                                     t-on-click="() => this.changeQuantity(line, false)"
-                                                    class="btn btn-secondary py-1 px-2"><i class="oi oi-minus fa-fw"/></button>
+                                                    class="btn btn-secondary py-1 px-2"><i class="oi oi-fw" data-icon="remove"/></button>
                                             <button
                                                     t-else=""
                                                     type="button"
                                                     t-on-click="(e) => this.removeLine(line,e)"
-                                                    class="btn btn-secondary py-1 px-2"><i class="fa fa-trash-o fa-fw"/></button>
+                                                    class="btn btn-secondary py-1 px-2"><i class="oi oi-fw" data-icon="delete"/></button>
                                             <div class="o-so-tabular-nums fs-4 d-flex align-items-center m-0 px-4 py-2 text-bg-secondary fw-bolder" t-out="this.getLineChangeQty(line)"/>
                                             <button type="button"
                                                     t-on-click="() => this.changeQuantity(line, true)"
                                                     class="btn btn-secondary py-1 px-2"
-                                                    ><i class="oi oi-plus fa-fw"/></button>
+                                                    ><i class="oi oi-fw" data-icon="add"/></button>
                                         </div>
                                         <div t-else=""/>
                                         <div class="fs-4 fw-bold line-price mb-0 o-so-tabular-nums fw-bold text-primary" t-out="this.selfOrder.formatMonetary(this.getPrice(line))"/>

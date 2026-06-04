@@ -9,8 +9,8 @@
                     <field name="name" string="Employee"
                         filter_domain="['|', ('work_email', 'ilike', self), ('name', 'ilike', self)]"/>
                     <searchpanel view_types="kanban,list,graph,pivot,hierarchy">
-                        <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
-                        <field name="department_id" icon="fa-users" enable_counters="1"/>
+                        <field name="company_id" groups="base.group_multi_company" icon="business" icon_class="oi-filled" enable_counters="1"/>
+                        <field name="department_id" icon="group" icon_class="oi-filled" enable_counters="1"/>
                     </searchpanel>
                     <field name="parent_id" string="Manager" domain="[('company_id', 'in', allowed_company_ids)]"/>
                     <field name="contract_date_start" groups="hr.group_hr_manager"/>
@@ -123,7 +123,7 @@
                         <div name="button_box" class="oe_button_box">
                             <button name="action_open_versions"
                                 class="oe_stat_button"
-                                icon="fa-address-book"
+                                icon="work_history"
                                 type="object"
                                 groups="hr.group_hr_user">
                                 <div class="o_stat_info">
@@ -147,22 +147,22 @@
                                 </h1>
                                 <label for="work_email" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
-                                    <i class="d-none d-md-inline-flex fa fa-envelope" title="Work Email"/>
+                                    <i class="d-none d-md-inline-flex oi oi-filled" data-icon="mail" title="Work Email"/>
                                     <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email"/>
                                 </div>
                                 <label for="work_phone" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
-                                    <i class="d-none d-md-inline-flex fa fa-phone" title="Work Phone"/>
+                                    <i class="d-none d-md-inline-flex oi oi-filled" data-icon="phone" title="Work Phone"/>
                                     <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
                                 </div>
                                 <label for="mobile_phone" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
-                                    <i class="d-none d-md-inline-flex fa fa-mobile" title="Work Mobile"/>
+                                    <i class="d-none d-md-inline-flex oi" data-icon="smartphone" title="Work Mobile"/>
                                     <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
                                 </div>
                                 <label for="category_ids" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
-                                    <i class="d-none d-md-inline-flex fa fa-tags" title="Tags"/>
+                                    <i class="d-none d-md-inline-flex oi" data-icon="sell" title="Tags"/>
                                     <field name="category_ids" widget="many2many_tags"
                                         options="{'color_field': 'color', 'no_create_edit': True}"
                                         placeholder="e.g. Founder, Motorized, Building B, ..." groups="hr.group_hr_user"/>
@@ -211,7 +211,7 @@
                                                 role="button"
                                                 class="float-end me-2 cursor-pointer"
                                                 context="{'hierarchy_res_id': id}">
-                                                <i class="fa fa-share-alt fa-rotate-90 ms-1 mt-1" role="img" aria-label="Full Chart"/>
+                                                <i class="oi oi-rotate-90 ms-1 mt-1" data-icon="family_history" role="img" aria-label="Full Chart"/>
                                                 Full Chart
                                             </a>
                                         </div>
@@ -267,14 +267,16 @@
                                                 <button
                                                     title="Trust Bank Account"
                                                     class="pt-0" 
-                                                    icon="fa-toggle-off fa-lg"  
+                                                    icon="toggle_off"
+                                                    icon_class="oi-lg"
                                                     type="object" 
                                                     name="action_toggle_primary_bank_account_trust" 
                                                     invisible="is_trusted_bank_account"/>
                                                 <button 
                                                     title="Untrust Bank Account"
                                                     class="button-on pt-0" 
-                                                    icon="fa-toggle-on fa-lg"   
+                                                    icon="toggle_on"
+                                                    icon_class="oi-lg"
                                                     type="object" 
                                                     name="action_toggle_primary_bank_account_trust" 
                                                     invisible="not is_trusted_bank_account"/>
@@ -661,25 +663,25 @@
                                     <field class="fw-bold fs-5" name="name" placeholder="Employee's Name"/>
                                 </div>
                                 <div t-if="record.job_title.raw_value" class="text-truncate">
-                                    <i class="fa fa-fw me-2 fa-suitcase text-primary" title="Job Position"/>
+                                    <i class="oi oi-fw me-2 text-primary" data-icon="work" title="Job Position"/>
                                     <field name="job_title"/>
                                 </div>
                                 <div t-if="record.work_email.raw_value" class="text-truncate">
-                                    <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>
+                                    <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="mail" title="Email"/>
                                     <field name="work_email" />
                                 </div>
                                 <div t-if="record.work_phone.raw_value">
-                                    <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
+                                    <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="phone" title="Phone"/>
                                     <field name="work_phone" />
                                 </div>
                                 <div t-if="record.first_contract_date.raw_value" groups="hr.group_hr_manager" t-att-class="{'text-danger': record.contract_date_end.raw_value &lt; luxon.DateTime.now().toISO()}">
-                                    <i class="fa fa-fw me-2 fa-briefcase text-primary" title="Contract"/>
+                                    <i class="oi oi-fw me-2 text-primary" data-icon="contract" title="Contract"/>
                                     <field name="first_contract_date"/>
                                     <span t-if="record.contract_date_end.raw_value"> - </span>
                                     <field t-if="record.contract_date_end.raw_value" name="contract_date_end"/>
                                 </div>
                                 <div invisible="not birthday" groups="hr.group_hr_user">
-                                    <i class="fa fa-fw me-2 fa-birthday-cake text-primary" title="Birthday"/>
+                                    <i class="oi oi-fw me-2 text-primary" data-icon="cake" title="Birthday"/>
                                     <field name="birthday"/>
                                 </div>
                                 <field name="employee_properties" widget="properties"/>
@@ -738,7 +740,7 @@
                 <button name="action_open_versions" position="before">
                     <button name="action_related_contacts"
                         class="oe_stat_button"
-                        icon="fa-address-card-o"
+                        icon="contract"
                         type="object"
                         help="Related Contacts"
                         groups="base.group_no_one">

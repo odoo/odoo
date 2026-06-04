@@ -245,7 +245,7 @@ describe("Remove attachments", () => {
         await expect.waitForSteps(["File Uploaded"]);
         await waitFor("[name='attachment_ids'] a:contains('file.txt')");
         await waitFor(".odoo-editor-editable .o_file_box:has(a:contains('file.txt'))");
-        await click("[name='attachment_ids'] button:has(i.fa-times)");
+        await click("[name='attachment_ids'] button:has(i[data-icon='close'])");
         await waitForNone("[name='attachment_ids'] a:contains('file.txt')");
         await waitForNone(".odoo-editor-editable .o_file_box:has(a:contains('file.txt'))");
     });
@@ -296,7 +296,7 @@ describe("Remove attachments", () => {
         await expect.waitForSteps(["Image Uploaded"]);
         await waitFor("[name='attachment_ids'] a:contains('test.jpg')");
         await waitFor(".odoo-editor-editable img[data-attachment-id='1']");
-        await click("[name='attachment_ids'] button:has(i.fa-times)");
+        await click("[name='attachment_ids'] button:has(i[data-icon='close'])");
         await waitForNone("[name='attachment_ids'] a:contains('test.jpg')");
         await waitForNone(".odoo-editor-editable img[data-attachment-id='1']");
     });

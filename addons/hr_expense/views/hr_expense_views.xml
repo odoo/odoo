@@ -149,14 +149,14 @@
                         <button name="action_open_split_expense"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-file-text-o"
+                            icon="article"
                             invisible="not split_expense_origin_id"
                         >
                         <field string="Related" name="split_expense_count" widget="statinfo"/>
                         </button>
                         <button name="action_open_account_move"
                             class="oe_stat_button"
-                            icon="fa-bars"
+                            icon="menu"
                             type="object"
                             invisible="not account_move_id"
                             groups="account.group_account_invoice">
@@ -560,9 +560,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//group" position='after'>
                     <searchpanel>
-                        <field name="state" expand="1" select="multi" icon="fa-check-square-o" enable_counters="1"/>
-                        <field name="employee_id"  limit="20" hierarchize="0" select="one" icon="fa-users"/>
-                        <field name="company_id" expand="1" icon="fa-building" groups="base.group_multi_company"/>
+                        <field name="state" expand="1" select="multi" icon="check_box" enable_counters="1"/>
+                        <field name="employee_id"  limit="20" hierarchize="0" select="one" icon="group" icon_class="oi-filled"/>
+                        <field name="company_id" expand="1" icon="business" icon_class="oi-filled" groups="base.group_multi_company"/>
                     </searchpanel>
                 </xpath>
             </field>

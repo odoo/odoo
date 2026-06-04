@@ -16,7 +16,7 @@
                                 invisible="not is_published"
                                 class="oe_stat_button"
                                 type="object"
-                                icon="fa-globe">
+                                icon="public">
                             <div class="o_stat_info o_field_widget">
                                 <span class="o_stat_text text-success">Published</span>
                             </div>
@@ -25,7 +25,7 @@
                                 invisible="is_published"
                                 class="oe_stat_button"
                                 type="object"
-                                icon="fa-eye-slash">
+                                icon="visibility_off">
                             <div class="o_stat_info o_field_widget">
                                 <span class="o_stat_text text-danger">Unpublished</span>
                             </div>
@@ -74,7 +74,7 @@
                                            role="button"
                                            invisible="state == 'disabled'"
                                         >
-                                            <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                                            <i class="oi oi-fw o_button_icon" data-icon="east"/>
                                             Enable Payment Methods
                                         </a>
                                     </div>

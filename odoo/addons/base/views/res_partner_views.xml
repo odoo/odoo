@@ -136,7 +136,7 @@
                             </h1>
                             <label for="parent_id" class="d-md-none"/>
                             <div class="d-flex align-items-baseline w-md-50 gap-2">
-                                <i class="d-none d-md-inline-flex fa fa-building" title="Company"/>
+                                <i class="d-none d-md-inline-flex oi oi-filled" data-icon="business" title="Company"/>
                                 <field name="parent_id"
                                     widget="res_partner_many2one"
                                     placeholder="Company Employer"
@@ -146,13 +146,13 @@
 
                             <label for="email" class="d-md-none"/>
                             <div class="d-flex align-items-baseline w-md-50 gap-2">
-                                <i class="d-none d-md-inline-flex fa fa-envelope" title="Email"/>
+                                <i class="d-none d-md-inline-flex oi oi-filled" data-icon="mail" title="Email"/>
                                 <field name="email" widget="email" required="user_ids" placeholder="Email"/>
                             </div>
 
                             <label for="phone" class="d-md-none"/>
                             <div class="d-flex align-items-baseline w-md-50 gap-2">
-                                <i class="d-none d-md-inline-flex fa fa-phone" title="Phone"/>
+                                <i class="d-none d-md-inline-flex oi oi-filled" data-icon="phone" title="Phone"/>
                                 <field name="phone" widget="phone" placeholder="Phone"/>
                             </div>
                         </group>
@@ -208,25 +208,25 @@
                                                     <field name="name" invisible="not name" class="flex-grow-1 fw-bold"/>
                                                     <field name="type" invisible="name" class="flex-grow-1 fw-bold"/>
                                                     <span t-if="record.type.raw_value != 'contact'" class="text-muted">
-                                                        <i class="fa fa-fw me-1" t-att-class="{'invoice': 'fa-file','delivery': 'fa-truck', 'other': 'fa-cube'}[record.type.raw_value]" role="img" t-att-title="{'invoice': 'Invoice','delivery': 'Delivery', 'other': 'Other'}[record.type.raw_value]"/>
+                                                        <i class="oi oi-fw me-1" t-att-class="{'invoice': 'oi-filled'}[record.type.raw_value]" t-att-data-icon="{'invoice': 'description','delivery': 'local_shipping', 'other': 'deployed_code'}[record.type.raw_value]" role="img" t-att-title="{'invoice': 'Invoice','delivery': 'Delivery', 'other': 'Other'}[record.type.raw_value]"/>
                                                         <field name="type"/> address
                                                     </span>
                                                 </div>
                                                 <div>
                                                     <div t-if="record.email.raw_value" class="text-truncate">
-                                                        <i class="fa fa-fw me-1 fa-envelope" title="Email"/>
+                                                        <i class="oi oi-fw oi-filled me-1" data-icon="mail" title="Email"/>
                                                         <field name="email"/>
                                                     </div>
                                                     <div t-if="record.phone.raw_value">
-                                                        <i class="fa fa-fw me-1 fa-phone" title="Phone"/>
+                                                        <i class="oi oi-fw oi-filled me-1" data-icon="phone" title="Phone"/>
                                                         <field name="phone"/>
                                                     </div>
                                                     <div invisible="not function">
-                                                        <i class="fa fa-fw me-1 fa-suitcase" title="Position"/>
+                                                        <i class="oi oi-fw me-1" data-icon="luggage" title="Position"/>
                                                         <field name="function"/>
                                                     </div>
                                                     <div t-if="record.type.raw_value != 'contact' and (record.city.raw_value or record.country_id.raw_value)">
-                                                        <i class="fa fa-fw me-1 fa-map-marker" title="Location"/>
+                                                        <i class="oi oi-fw me-1" data-icon="location_on" title="Location"/>
                                                         <field name="city"/>
                                                         <span t-if="record.city.raw_value and record.country_id.raw_value">, </span>
                                                         <field name="country_id"/>
@@ -257,7 +257,7 @@
                                                 </h3>
                                                 <label for="email" class="d-md-none"/>
                                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
-                                                    <i class="d-none d-md-block fa fa-envelope" title="Email"/>
+                                                    <i class="d-none d-md-block oi oi-filled" data-icon="mail" title="Email"/>
                                                     <field name="email" widget="email" context="{'gravatar_image': True}" required="user_ids" placeholder="Email"/>
                                                 </div>
                                                 <label for="phone" class="d-md-none"/>
@@ -372,21 +372,21 @@
                                     <p class="mb-0">
                                         <field name="name" invisible="not name" class="fw-bold"/>
                                         <field name="type" invisible="name" class="fw-bold"/>
-                                        <i t-if="record.type.raw_value != 'contact'" t-att-data-tooltip="record.type.value" class="fa ms-2 text-muted" t-att-class="{'invoice': 'fa-file','delivery': 'fa-truck', 'other': 'fa-cube'}[record.type.raw_value]" role="img"/>
+                                        <i t-if="record.type.raw_value != 'contact'" t-att-title="record.type.value" t-att-data-tooltip="record.type.value" class="oi ms-2 text-muted" t-att-class="{'invoice': 'oi-filled'}[record.type.raw_value]" t-att-data-icon="{'invoice': 'description','delivery': 'local_shipping', 'other': 'deployed_code'}[record.type.raw_value]" role="img"/>
                                     </p>
                                     <field invisible="not parent_id" name="parent_id" class="text-muted"/>
                                 </div>
                                 <div>
                                     <div t-if="record.email.raw_value" class="text-truncate">
-                                        <i class="fa fa-fw me-1 fa-envelope text-muted" title="Email"/>
+                                        <i class="oi oi-fw oi-filled me-1 text-muted" data-icon="mail" title="Email"/>
                                         <field name="email"/>
                                     </div>
                                     <div t-if="record.phone.raw_value">
-                                        <i class="fa fa-fw me-1 fa-phone text-muted" title="Phone"/>
+                                        <i class="oi oi-fw oi-filled me-1 text-muted" data-icon="phone" title="Phone"/>
                                         <field name="phone"/>
                                     </div>
                                     <div t-if="record.city.raw_value or record.country_id.raw_value">
-                                        <i class="fa fa-fw me-1 fa-map-marker" title="Location"/>
+                                        <i class="oi oi-fw me-1" data-icon="location_on" title="Location"/>
                                         <field name="city"/>
                                         <span t-if="record.city.raw_value and record.country_id.raw_value">, </span>
                                         <field name="country_id"/>

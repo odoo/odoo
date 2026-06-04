@@ -3,7 +3,8 @@
     <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
         <xpath expr="//*[@name='threadAvatar']" position="before">
             <i t-if="this.store.discuss.isSidebarCompact and this.props.channel.discussAppCategory.eq(this.store.discuss.livechatLookingForHelpCategory) and this.props.channel.matchesSelfExpertise"
-               class="fa fa-star o-mail-favorite position-absolute top-0 start-0 z-1"
+               class="oi oi-filled o-mail-favorite position-absolute top-0 start-0 z-1"
+               data-icon="star"
                role="image"
                title="Relevant to your expertise"
             />
@@ -15,14 +16,15 @@
     <t t-name="im_livechat.LivechatStatusLabel">
         <t t-set="btn" t-value="templateParams.btn"/>
         <t t-set="inThreadActions" t-value="templateParams.inThreadActions"/>
-        <span class="o-livechat-LivechatStatusLabel fa" t-att-title="btn.label" t-att-class="{
+        <span class="o-livechat-LivechatStatusLabel" t-att-title="btn.label" t-att-class="{
             'text-success': btn.status === 'in_progress',
             'o-help': btn.status === 'need_help',
         }">
             <i
                  t-if="btn.icon"
-                 class="o-livechat-LivechatStatusLabel-icon"
-                 t-attf-class="{{ btn.icon }}"
+                 class="o-livechat-LivechatStatusLabel-icon oi"
+                 t-attf-class="{{ btn.iconClass }}"
+                 t-attf-data-icon="{{ btn.icon }}"
             />
         </span>
     </t>
@@ -41,11 +43,15 @@
             'bg-info': this.env.inDiscussSidebar and livechatThread.channel.livechat_status === 'need_help' and !livechatThread.channel.self_member_id,
         }">
             <t t-set="livechatStatusButton" t-value="this.store.livechatStatusButtons.find(btn => btn.status === livechatThread.channel.livechat_status)"/>
-            <i class="o-livechat-LivechatStatusLabel-icon" t-attf-class="{{ livechatThread.channel.livechat_end_dt ? ('fa fa-flag-checkered' + (small ? ' o-xsmaller' : '')) : small ? livechatStatusButton?.iconSmall : livechatStatusButton?.icon }}" t-att-class="{
-                'o-white': livechatThread.channel.livechat_end_dt,
+            <i
+                class="o-livechat-LivechatStatusLabel-icon oi"
+                t-att-class="{
+                'o-white': livechatThread.livechat_end_dt,
                 'position-absolute start-0 top-0 z-1 o-inDiscussSidebar rounded-circle o-px-0_5': this.env.inDiscussSidebar,
-                'fa-fw': !this.env.inDiscussSidebar,
-            }"/>
+                'oi-fw': !this.env.inDiscussSidebar,
+                'o-xsmaller': small}"
+                t-attf-data-icon="{{ livechatThread.livechat_end_dt ? 'sports_score' : livechatStatusButton?.icon }}"
+            />
         </span>
     </t>
 

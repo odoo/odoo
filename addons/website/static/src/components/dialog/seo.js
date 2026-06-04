@@ -869,7 +869,7 @@ export class SeoChecks extends Component {
                     if (imgLinkEl?.src) {
                         label = imgLinkEl.src.split("/").pop();
                         isImageLink = true;
-                    } else if (el.querySelector(".fa")) {
+                    } else if (el.querySelector(".oi")) {
                         label =
                             el.ariaLabel || el.title || el.href.split("/").filter(Boolean).pop();
                         isImageLink = true;

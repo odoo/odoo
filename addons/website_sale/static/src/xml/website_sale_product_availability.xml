@@ -13,7 +13,7 @@
                 <div id="out_of_stock_message" class="d-flex flex-column gap-1 align-items-start">
                     <t t-if="!this.allow_out_of_stock_order">
                         <div class="badge text-bg-danger">
-                            <i class="fa fa-circle me-2 text-danger"/>Out of Stock
+                            <i class="oi oi-filled me-2 text-danger" data-icon="circle"/>Out of Stock
                         </div>
                     </t>
                     <t t-if="this.has_out_of_stock_message" t-out="this.out_of_stock_message"/>
@@ -21,7 +21,7 @@
                 <div id="stock_notification_div" t-if="!this.allow_out_of_stock_order">
                     <div class="btn btn-link px-0" t-if="!this.has_stock_notification"
                          id="product_stock_notification_message">
-                        <i class="fa fa-envelope-o me-2"/>Get notified when back in stock
+                        <i class="oi me-2" data-icon="mail"/>Get notified when back in stock
                     </div>
                     <div id="stock_notification_form" class="d-none">
                         <div class="input-group">
@@ -33,7 +33,7 @@
                                 class="btn btn-primary"
                                 t-att-data-product-id="this.product_id"
                             >
-                                <i class="fa fa-paper-plane"/>
+                                <i class="oi oi-filled" data-icon="send"/>
                             </button>
                         </div>
                         <div id="stock_notification_input_incorrect" class="d-none form-text text-danger">
@@ -44,7 +44,7 @@
                     <div id="stock_notification_success_message"
                          t-att-class="this.has_stock_notification ? '' : 'd-none'">
                         <div class="py-2 small text-muted">
-                            <i class="fa fa-bell me-2"/>We'll notify you once the product is back in stock
+                            <i class="oi oi-filled me-2" data-icon="notifications"/>We'll notify you once the product is back in stock
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                 t-elif="this.show_availability and this.free_qty lte this.available_threshold"
                 t-attf-class="availability_message_#{this.product_template} my-3 badge text-bg-warning"
             >
-                <i class="fa fa-circle text-warning me-2" role="presentation"/>
+                <i class="oi oi-filled text-warning me-2" data-icon="circle" role="presentation"/>
                 <t t-out="this.formatQuantity(this.free_qty)"/> <t t-out="this.uom_name" /> in stock
                 <span
                     id="already_in_cart_message"
@@ -84,11 +84,11 @@
                 t-att-data-product-id="this.product_id"
                 t-att-data-product-template-id="this.product_id"
             >
-                <i class="fa fa-heart-o me-2"/>Add to wishlist
+                <i class="oi me-2" data-icon="favorite"/>Add to wishlist
             </button>
             <div id="wsale_added_to_your_wishlist_alert" t-att-class="this.is_in_wishlist ? '' : 'd-none'">
                 <div class="btn btn-outline-primary disabled">
-                    <i class="fa fa-heart me-2"/>Added to your wishlist
+                    <i class="oi oi-filled me-2" data-icon="favorite"/>Added to your wishlist
                 </div>
             </div>
 

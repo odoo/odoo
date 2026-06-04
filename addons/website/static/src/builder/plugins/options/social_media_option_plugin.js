@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { ICON_SELECTOR } from "@html_editor/utils/dom_info";
-import { fonts } from "@html_editor/utils/fonts";
+
+import { FA_TO_DATA_ICON_MAP } from "@html_editor/main/legacy_icon_migration_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { selectElements } from "@html_editor/utils/dom_traversal";
@@ -20,7 +21,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  * @typedef { Object } SocialMediaInfo
  * @property { boolean } [recorded] whether the social media is one from the orm
  * @property { string|Markup|LazyTranslatedString } label
- * @property { string } iconClass the icon class to use for the social media
+ * @property { string } iconDataIcon the data-icon value to use for the social media icon
  * @property { RegExp } [extraHostnameRegex] a regex for host names that belongs to this social media, but are not catch by the default mechanism
  */
 
@@ -30,82 +31,82 @@ const socialMediaInfo = new Map(
         facebook: {
             recorded: true,
             label: _t("Facebook"),
-            iconClass: "fa-facebook",
+            iconDataIcon: "oi_facebook",
             extraHostnameRegex: /(^|\.)fb\.(com|me)$/,
         },
         twitter: {
             recorded: true,
             label: _t("X"),
-            iconClass: "fa-twitter",
+            iconDataIcon: "oi_twitter",
             extraHostnameRegex: /(^|\.)x\.com$/,
         },
         linkedin: {
             recorded: true,
             label: _t("LinkedIn"),
-            iconClass: "fa-linkedin",
+            iconDataIcon: "oi_linkedin",
         },
         youtube: {
             recorded: true,
             label: _t("YouTube"),
-            iconClass: "fa-youtube-play",
+            iconDataIcon: "oi_youtube-play",
             extraHostnameRegex: /(^|\.)youtu\.be$/,
         },
         instagram: {
             recorded: true,
             label: _t("Instagram"),
-            iconClass: "fa-instagram",
+            iconDataIcon: "oi_instagram",
             extraHostnameRegex: /(^|\.)instagr\.(am|com)$/,
         },
         github: {
             recorded: true,
             label: _t("GitHub"),
-            iconClass: "fa-github",
+            iconDataIcon: "oi_github",
         },
         tiktok: {
             recorded: true,
             label: _t("TikTok"),
-            iconClass: "fa-tiktok",
+            iconDataIcon: "oi_tiktok",
         },
         discord: {
             recorded: true,
             label: _t("Discord"),
-            iconClass: "fa-discord",
+            iconDataIcon: "oi_discord",
         },
         "google-play": {
             label: _t("Google Play"),
-            iconClass: "fa-google-play",
+            iconDataIcon: "oi_google-play",
             // Without this, the default finds 'google' instead
             extraHostnameRegex: /(^|\.)play\.google\.com$/,
         },
         google: {
             label: _t("Google"),
-            iconClass: "fa-google",
+            iconDataIcon: "oi_google",
         },
         whatsapp: {
             label: _t("Whatsapp"),
-            iconClass: "fa-whatsapp",
+            iconDataIcon: "oi_whatsapp",
             extraHostnameRegex: /(^|\.)wa\.me$/,
         },
         pinterest: {
             label: _t("Pinterest"),
-            iconClass: "fa-pinterest-p",
+            iconDataIcon: "oi_pinterest-p",
         },
         kickstarter: {
             label: _t("Kickstarter"),
-            iconClass: "fa-kickstarter",
+            iconDataIcon: "oi_kickstarter",
         },
         strava: {
             label: _t("Strava"),
-            iconClass: "fa-strava",
+            iconDataIcon: "oi_strava",
         },
         bluesky: {
             label: _t("Bluesky"),
-            iconClass: "fa-bluesky",
+            iconDataIcon: "oi_bluesky",
             extraHostnameRegex: /(^|\.)bsky\.(app|social)$/,
         },
         threads: {
             label: _t("Threads"),
-            iconClass: "fa-threads",
+            iconDataIcon: "oi_threads",
         },
     })
 );
@@ -272,9 +273,12 @@ export class SocialMediaOptionPlugin extends Plugin {
      */
     newLinkElement(other) {
         const el = other.cloneNode(true);
+        const iconEl = el.querySelector(ICON_SELECTOR);
         this.removeSocialMediaClasses(el);
         this.removeIconClasses(el);
-        el.querySelector(ICON_SELECTOR)?.classList.add("fa-pencil");
+        if (iconEl) {
+            iconEl.dataset.icon = "edit";
+        }
         el.href = "https://www.example.com";
         el.setAttribute("aria-label", "example");
         return el;
@@ -292,20 +296,14 @@ export class SocialMediaOptionPlugin extends Plugin {
         }
     }
     /**
-     * Strip an element from the classes associated to an icon (keeps the size)
+     * Strip an element from the data-icon attribute associated to an icon (keeps the size)
      * @param { HTMLElement } el
      */
     removeIconClasses(el) {
         const iconEl = el.querySelector(ICON_SELECTOR);
-        if (!iconEl) {
-            return;
+        if (iconEl) {
+            delete iconEl.dataset.icon;
         }
-        // Remove every fa classes except fa-x sizes.
-        Array.from(iconEl.classList).forEach((c) => {
-            if (/^fa-[^0-9]/.test(c)) {
-                iconEl.classList.remove(c);
-            }
-        });
     }
 
     /**
@@ -359,7 +357,7 @@ export class ResetSocialMediaIconSizeAction extends BuilderAction {
     static id = "resetSocialMediaIconSize";
     apply({ editingElement }) {
         [...editingElement.classList]
-            .filter((className) => /^fa-[2-5]x$/.test(className))
+            .filter((className) => /^(oi|fa)-[2-5]x$/.test(className))
             .forEach((className) => editingElement.classList.remove(className));
     }
 }
@@ -382,22 +380,23 @@ export class EditSocialMediaLinkAction extends BuilderAction {
         editingElement.setAttribute("aria-label", ariaLabel);
 
         this.dependencies.socialMediaOptionPlugin.removeSocialMediaClasses(editingElement);
-        let iconClass;
+        let iconDataIcon;
         if (info.media) {
             editingElement.classList.add(`s_social_media_${info.name}`);
-            iconClass = info.media.iconClass;
+            iconDataIcon = info.media.iconDataIcon;
         } else if (info.name) {
-            fonts.computeFonts();
-            iconClass = fonts.fontIcons[0].alias
-                .filter((el) => el.replace(/^fa-/, "").includes(info.name))
-                .reduce((a, b) => (a.length && a.length <= b.length ? a : b), "");
+            iconDataIcon = FA_TO_DATA_ICON_MAP[info.name];
         }
 
-        if (!iconClass) {
-            iconClass = "fa-pencil";
+        if (!iconDataIcon) {
+            iconDataIcon = "edit";
         }
         this.dependencies.socialMediaOptionPlugin.removeIconClasses(editingElement);
-        editingElement.querySelector(ICON_SELECTOR)?.classList.add(iconClass);
+
+        const iconEl = editingElement.querySelector(ICON_SELECTOR);
+        if (iconEl) {
+            iconEl.dataset.icon = iconDataIcon;
+        }
     }
 }
 export class AddSocialMediaLinkAction extends BuilderAction {

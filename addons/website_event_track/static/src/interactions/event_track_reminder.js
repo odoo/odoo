@@ -14,12 +14,12 @@ export class WebsiteEventTrackReminder extends Interaction {
             "t-on-click.prevent.stop": this.debounced(this.onReminderToggleClick, 500, true),
             "t-on-mouseover.withTarget": (ev, targetEl) => {
                 if (!this.reminderOn){
-                    targetEl.classList.replace("fa-bell-o", "fa-bell");
+                    targetEl.classList.add('oi-filled');
                 }
             },
             "t-on-mouseout.withTarget": (ev, targetEl) => {
                 if (!this.reminderOn){
-                    targetEl.classList.replace("fa-bell", "fa-bell-o");
+                    targetEl.classList.remove('oi-filled');
                 }
             },
         },
@@ -63,14 +63,14 @@ export class WebsiteEventTrackReminder extends Interaction {
                         title: _t("Allow push notifications?"),
                         body: _t("You have to enable push notifications to get reminders for your favorite tracks."),
                     });
-                    this.bellSelectorEl.classList.replace("fa-bell-o", "fa-bell");
+                    this.bellSelectorEl.classList.add("oi-filled");
                     this.bellSelectorEl.setAttribute("title", _t("Favorite On"));
                 } else {
                     this.notification.add(_t("Talk removed from your Favorites"), {
                         type: "info",
                     });
                     this.favoriteAddedConfirmation = "";
-                    this.bellSelectorEl.classList.replace("fa-bell", "fa-bell-o");
+                    this.bellSelectorEl.classList.remove("oi-filled");
                     this.bellSelectorEl.setAttribute("title", _t("Set Favorite"));
                 }
             }

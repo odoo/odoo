@@ -2,14 +2,14 @@
     <span t-name="mail.MailActivityListRescheduleDropdown">
         <Dropdown>
             <button class="btn btn-link p-0 text-dark" type="button">
-                <i class="fa fa-calendar o_button_icon"/> <span class="o_dropdown_title">Reschedule</span>
+                <i class="oi oi-filled o_button_icon" data-icon="calendar_today"/> <span class="o_dropdown_title">Reschedule</span>
             </button>
 
             <t t-set-slot="content">
                 <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, this.targetDays.today.actionName)">
                     <div class="d-flex justify-content-between">
                         <span>
-                            <i class="oi oi-schedule-today me-1"/> Today
+                            <i class="oi me-1" data-icon="early_on"/> Today
                         </span>
                         <span t-out="this.targetDays.today.displayDay" class="ms-2 text-muted"/>
                     </div>
@@ -17,7 +17,7 @@
                 <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, this.targetDays.tomorrow.actionName)">
                     <div class="d-flex justify-content-between">
                         <span>
-                            <i class="oi oi-schedule-tomorrow me-1"/> Tomorrow
+                            <i class="oi me-1" data-icon="event_upcoming"/> Tomorrow
                         </span>
                         <span t-out="this.targetDays.tomorrow.displayDay" class="ms-2 text-muted"/>
                     </div>
@@ -25,7 +25,7 @@
                 <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, this.targetDays.nextWeek.actionName)">
                     <div class="d-flex justify-content-between">
                         <span>
-                            <i class="oi oi-schedule-later me-1"/> Next Week
+                            <i class="oi me-1" data-icon="calendar_clock"/> Next Week
                         </span>
                         <span t-out="this.targetDays.nextWeek.displayDay" class="ms-2 text-muted"/>
                     </div>

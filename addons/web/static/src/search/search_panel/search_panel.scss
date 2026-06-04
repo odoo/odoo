@@ -103,9 +103,17 @@
 }
 
 .o_search_panel_sidebar {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
     width: 3rem;
+
+    .o_search_panel_category {
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+    }
+    .o_search_panel_section_icon {
+        writing-mode: initial;
+        text-orientation: initial;
+    }
+
     @include media-breakpoint-up(md) {
         border-right: $border-width solid $border-color;
     }

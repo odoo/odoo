@@ -55,7 +55,8 @@ export class ClonePlugin extends Plugin {
         this.overlayTarget = target;
         const disabledReason = this.dependencies.builderOptions.getCloneDisabledReason(target);
         buttons.push({
-            class: "o_snippet_clone fa fa-clone",
+            class: "o_snippet_clone oi",
+            icon: "content_copy",
             title: _t("Duplicate"),
             disabledReason,
             handler: async () => {

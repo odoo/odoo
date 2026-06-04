@@ -3,7 +3,7 @@
     <t t-name="mail.NotificationMessage">
         <div class="o-mail-NotificationMessage text-break mx-auto px-3 text-center smaller position-relative" t-on-click="this.onClickNotificationMessage" t-ref="this.rootRef">
             <div class="o-mail-Message-jumpTarget position-absolute top-0 pe-none"/>
-            <i t-if="this.message.notificationIcon" t-attf-class="{{ this.message.notificationIcon }} me-1 text-muted"/>
+            <i t-if="this.message.notificationIcon" t-attf-class="oi {{ this.message.notificationIconClass }} me-1 text-muted" t-att-data-icon="this.message.notificationIcon"/>
             <t t-if="this.message.notificationType === 'call'">
                 <span class="text-muted" t-out="this.callInformation"/>
             </t>

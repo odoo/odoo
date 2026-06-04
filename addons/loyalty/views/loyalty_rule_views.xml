@@ -74,19 +74,19 @@
                                 <div class="fw-bold text-decoration-underline mt-3">Among:</div>
 
                                 <div t-if="record.product_ids.raw_value.length > 0" class="d-flex">
-                                    <i class="fa fa-cube fa-fw" title="Products"/> <field name="product_ids" widget="many2many_tags"/>
+                                    <i class="oi oi-fw" data-icon="deployed_code" title="Products"/> <field name="product_ids" widget="many2many_tags"/>
                                 </div>
                                 <div t-if="record.product_category_id.raw_value" class="d-flex">
-                                    <i class="fa fa-cubes fa-fw" title="Product Categories"/> <field name="product_category_id"/>
+                                    <i class="oi oi-fw" data-icon="inventory_2" title="Product Categories"/> <field name="product_category_id"/>
                                 </div>
                                 <div t-if="record.product_tag_id.raw_value" class="d-flex">
-                                    <i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="product_tag_id"/>
+                                    <i class="oi oi-fw" data-icon="sell" title="Product Tags"/> <field name="product_tag_id"/>
                                 </div>
                                 <div t-if="record.product_ids.raw_value.length === 0 and !record.product_category_id.raw_value &amp;&amp; !record.product_tag_id.raw_value" class="d-flex">
-                                    <i class="fa fa-cube fa-fw" title="Products"/><span>All Products</span>
+                                    <i class="oi oi-fw" data-icon="deployed_code" title="Products"/><span>All Products</span>
                                 </div>
                                 <div t-if="record.product_domain.raw_value and record.product_domain.raw_value !== '[]'" groups="base.group_no_one" class="d-flex">
-                                    <i class="fa fa-search fa-fw" title="Product Domain"/> <field name="product_domain"/>
+                                    <i class="oi oi-fw" data-icon="search" title="Product Domain"/> <field name="product_domain"/>
                                 </div>
                             </t>
                         </div>

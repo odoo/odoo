@@ -114,19 +114,20 @@ export class AddToCartActionAction extends BuilderAction {
     static id = "addToCartAction";
     static dependencies = ["builderActions"];
     apply({ editingElement, params: { action, icon, label } }) {
-        const classAction = this.dependencies.builderActions.getAction("classAction");
+        const classAction = this.dependencies.builderActions.getAction("dataAttributeAction");
         editingElement.dataset.action = action;
         const buttonEl = editingElement.querySelector(".s_add_to_cart_btn");
         buttonEl.dataset.action = action;
         const iconEl = buttonEl.querySelector("i");
         classAction.apply({
             editingElement: iconEl,
-            params: { mainParam: icon },
+            params: { mainParam: "icon" },
+            value: icon
         });
         buttonEl.lastChild.textContent = label;
     }
     clean({ editingElement, params: { icon } }) {
-        const classAction = this.dependencies.builderActions.getAction("classAction");
+        const classAction = this.dependencies.builderActions.getAction("dataAttributeAction");
 
         delete editingElement.dataset.action;
         const buttonEl = editingElement.querySelector(".s_add_to_cart_btn");
@@ -134,7 +135,7 @@ export class AddToCartActionAction extends BuilderAction {
         const iconEl = buttonEl.querySelector("i");
         classAction.clean({
             editingElement: iconEl,
-            params: { mainParam: icon },
+            params: { mainParam: "icon" },
         });
     }
     isApplied({ editingElement, params: { action } }) {

@@ -475,7 +475,7 @@ describe("field HTML", () => {
         section.dataset.filterDomain = JSON.stringify([["id", "=", 1]]);
         htmlField.editor.config.onChange({ isPreviewing: false });
         await waitFor(".o-snippets-menu [data-label='Domain']", { timeout: 3000 });
-        expect(".o-snippets-menu [data-label='Domain'] span.fa-filter + span").toHaveText("Id = 1");
+        expect(".o-snippets-menu [data-label='Domain'] span[data-icon='filter_alt'] + span").toHaveText("Id = 1");
         await clickSave();
         const table = await waitFor(".o_mail_body_inline table[t-if]", { timeout: 3000 });
         expect(table).toHaveAttribute("t-if", 'object.filtered_domain([("id", "=", 1)])');

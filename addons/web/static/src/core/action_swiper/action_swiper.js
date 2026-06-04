@@ -30,6 +30,7 @@ export class ActionSwiper extends Component {
             shape: {
                 action: { type: Function, optional: true },
                 icon: { type: String, optional: true },
+                icon_class: { type: String, optional: true },
                 bgColor: { type: String, optional: true },
                 slot: { type: Object, optional: true },
             },
@@ -40,6 +41,7 @@ export class ActionSwiper extends Component {
             shape: {
                 action: { type: Function, optional: true },
                 icon: { type: String, optional: true },
+                icon_class: { type: String, optional: true },
                 bgColor: { type: String, optional: true },
                 slot: { type: Object, optional: true },
             },

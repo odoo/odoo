@@ -24,17 +24,17 @@
                     <th class="o_wforum_table_posters"></th>
                     <th class="o_wforum_table_replies small fw-normal text-center">
                         <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', 'my', 'create_uid', sorting='child_count asc' if sorting == 'child_count desc' else 'child_count desc') }">
-                            Replies <i t-attf-class="fa fa-caret-#{ 'down' if sorting == 'child_count desc' else 'up' } #{ not sorting.startswith('child_count') and 'd-none ' }"></i>
+                            Replies <i t-attf-class="oi #{ not sorting.startswith('child_count') and 'd-none ' }" t-attf-data-icon="#{ 'arrow_drop_down' if sorting == 'child_count desc' else 'arrow_drop_up' } "></i>
                         </a>
                     </th>
                     <th class="o_wforum_table_views small fw-normal text-center">
                         <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', 'my', 'create_uid', sorting='views asc' if sorting == 'views desc' else 'views desc') }">
-                            Views <i t-attf-class="fa fa-caret-#{'down' if sorting == 'views desc' else 'up'}  #{ not sorting.startswith('views') and 'd-none ' }"></i>
+                            Views <i t-attf-class="oi #{ not sorting.startswith('views') and 'd-none ' }" t-attf-data-icon="#{'arrow_drop_down' if sorting == 'views desc' else 'arrow_drop_up'}"></i>
                         </a>
                     </th>
                     <th class="o_wforum_table_activity small fw-normal text-center">
                         <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', 'my', 'create_uid', sorting='last_activity_date asc' if sorting == 'last_activity_date desc' else 'last_activity_date desc') }">
-                            Activity <i t-attf-class="fa fa-caret-#{ 'down' if sorting == 'last_activity_date desc' else 'up'}  #{ 'd-none ' if not sorting.startswith('last_activity') else '' }"></i>
+                            Activity <i t-attf-class="oi #{ 'd-none ' if not sorting.startswith('last_activity') else '' }" t-attf-data-icon="#{ 'arrow_drop_down' if sorting == 'last_activity_date desc' else 'arrow_drop_up'}"></i>
                         </a>
                     </th>
                 </tr>
@@ -59,7 +59,7 @@
         <div t-if="forum and forum.has_pending_post" class="alert border" role="alert">
             <b>You already have a pending post.</b><br/>
             <p>Please wait for a moderator to validate your previous post before continuing.</p>
-            <a t-attf-href="/forum/#{ slug(forum) }" title="All Topics"><i class="fa fa-angle-left me-2"/>Back to All Posts</a>
+            <a t-attf-href="/forum/#{ slug(forum) }" title="All Topics"><i class="oi me-2" data-icon="keyboard_arrow_left"/>Back to All Posts</a>
         </div>
 
         <form t-else="" t-attf-action="/forum/#{slug(forum)}/new" method="post" role="form" class="tag_text js_website_submit_form js_wforum_submit_form o_wforum_readable mt-lg-3">
@@ -73,14 +73,14 @@
                     <div class="form-text small text-muted">
                         <a data-bs-toggle="collapse" href="#newQuestionExample" role="button" aria-expanded="false" aria-controls="newQuestionExample">
                             Example
-                            <i class="fa fa-question-circle"/>
+                            <i class="oi" data-icon="help"/>
                         </a>
                         <div class="collapse" id="newQuestionExample">
                             <div class="mt-2 text-success">
-                                <i class="fa fa-check"/> How to configure TPS and TVQ's canadian taxes?
+                                <i class="oi" data-icon="check"/> How to configure TPS and TVQ's canadian taxes?
                             </div>
                             <div class="text-danger">
-                                <i class="fa fa-times"/> Good morning to all! Please, can someone help solve my tax computation problem in Canada? Thanks!
+                                <i class="oi" data-icon="close"/> Good morning to all! Please, can someone help solve my tax computation problem in Canada? Thanks!
                             </div>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                         <t t-out="question_content"/>
                     </textarea>
                     <div class="d-flex">
-                        <span class="form-text small text-muted me-1"><i class="fa fa-lightbulb-o"></i> Tip:</span>
+                        <span class="form-text small text-muted me-1"><i class="oi" data-icon="lightbulb"></i> Tip:</span>
                         <div class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
@@ -163,15 +163,15 @@
                     <div class="form-text small text-muted">
                         <a data-bs-toggle="collapse" href="#newQuestionExample" role="button" aria-expanded="false" aria-controls="newQuestionExample">
                             Example
-                            <i class="fa fa-question-circle"/>
+                            <i class="oi" data-icon="help"/>
                         </a>
                         <div class="collapse" id="newQuestionExample">
                             <div class="my-2">Use a clear, explicit and concise title</div>
                             <div class="text-success">
-                                <i class="fa fa-check"/> How to configure TPS and TVQ's canadian taxes?
+                                <i class="oi" data-icon="check"/> How to configure TPS and TVQ's canadian taxes?
                             </div>
                             <div class="text-danger">
-                                <i class="fa fa-times"/> Good morning to all! Please, can someone help solve my tax computation problem in Canada? Thanks!
+                                <i class="oi" data-icon="close"/> Good morning to all! Please, can someone help solve my tax computation problem in Canada? Thanks!
                             </div>
                         </div>
                     </div>
@@ -183,7 +183,7 @@
                 <div class="col">
                     <textarea name="content" id="content" required="required" class="form-control o_wysiwyg_loader" t-att-data-karma="forum.karma_editor" t-out="post.content" t-att-content="post.content"/>
                     <div t-if="not is_answer" class="d-flex mb-2">
-                        <span class="form-text small text-muted me-1"><i class="fa fa-lightbulb-o"></i> Tip:</span>
+                        <span class="form-text small text-muted me-1"><i class="oi" data-icon="lightbulb"></i> Tip:</span>
                         <div class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">

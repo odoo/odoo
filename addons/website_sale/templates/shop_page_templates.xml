@@ -256,7 +256,7 @@
                                         title="Clear Filters"
                                     >
                                         <small class="mx-auto"><b>Clear Filters</b></small>
-                                        <i class="oi oi-close" role="presentation"/>
+                                        <i class="oi" data-icon="close_small" role="presentation"/>
                                     </a>
                                 </div>
                                 <div
@@ -305,7 +305,7 @@
                                                 t-att-href="keep(search=0)"
                                                 class="link-info"
                                             >
-                                                <i class="oi oi-close" role="img"/>
+                                                <i class="oi" data-icon="close_small" role="img"/>
                                             </a>
                                         </span>
                                         <span class="text-muted">in</span>
@@ -315,7 +315,7 @@
                                                 title="Search globally"
                                                 t-att-href="keep(shop_path, search=search)"
                                             >
-                                                <i class="oi oi-close" role="img"/>
+                                                <i class="oi" data-icon="close_small" role="img"/>
                                             </a>
                                         </span>
                                     </t>
@@ -400,7 +400,7 @@
                                                 data-bs-toggle="offcanvas"
                                                 data-bs-target="#o_wsale_offcanvas"
                                             >
-                                                <i class="oi oi-settings-adjust" role="img"/>
+                                                <i class="oi" data-icon="tune" role="img"/>
                                                 <small t-attf-class="ms-1 {{(hasPricelistDropdown and is_view_active('website_sale.search') and is_view_active('website_sale.sort')) and 'd-none d-md-inline-block'}}">Filters</small>
                                                 <span
                                                     t-if="isFilteringByPrice or attrib_set or tags"
@@ -601,7 +601,7 @@
                     <!-- Prevent editing the content in website builder -->
                     <span t-else="" t-out="dict(website_sale_sortable)[website.shop_default_sort]"/>
                 </span>
-                <i t-if="_icon_classes" t-attf-class="fa fa-sort {{_icon_classes}}" role="img"/>
+                <i t-if="_icon_classes" t-attf-class="oi {{_icon_classes}}" data-icon="swap_vert" role="img"/>
             </a>
             <div class="dropdown-menu dropdown-menu-end" role="menu">
                 <t t-foreach="website_sale_sortable" t-as="sortby">
@@ -1225,7 +1225,7 @@
                         data-bs-toggle="offcanvas"
                         data-bs-target="#o_wsale_offcanvas"
                     >
-                        <i class="oi oi-settings-adjust" role="img"/>
+                        <i class="oi" data-icon="tune" role="img"/>
                         <span
                             t-if="isFilteringByPrice or attrib_set or tags"
                             t-attf-class="position-absolute top-0 start-100 translate-middle rounded-circle bg-danger p-1"

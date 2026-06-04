@@ -6,7 +6,7 @@
             <div class="o_model_field_selector_value flex-grow-1 h-100" tabindex="0" t-att-data-tooltip="this.state.displayNames.join(' > ')" data-tooltip-position="top">
                 <t t-foreach="this.state.displayNames" t-as="displayName" t-key="displayName_index">
                     <t t-if="!displayName_first">
-                        <i class="oi oi-chevron-right m-1" role="img" aria-label="Followed by" data-tooltip="Followed by" />
+                        <i class="oi m-1" data-icon="chevron_forward" role="img" aria-label="Followed by" data-tooltip="Followed by" />
                     </t>
                     <span t-attf-class="o_model_field_selector_chain_part text-truncate d-inline-block align-middle mb-1 #{this.props.readonly ? 'border-0 fw-bolder' : 'px-1'}">
                         <t t-out="displayName" />
@@ -14,10 +14,10 @@
                 </t>
             </div>
             <div t-if="!this.props.readonly and this.state.isInvalid" class="o_model_field_selector_controls ms-2" tabindex="0">
-                <i class="fa fa-exclamation-triangle text-warning o_model_field_selector_warning" role="alert"  aria-label="Invalid field chain" data-tooltip="Invalid field chain"/>
+                <i class="oi text-warning o_model_field_selector_warning" data-icon="warning" role="alert"  aria-label="Invalid field chain" data-tooltip="Invalid field chain"/>
             </div>
             <div t-if="!this.props.readonly and this.props.allowEmpty and this.state.displayNames.length" class="o_model_field_selector_controls ms-2" tabindex="0">
-                <i class="fa fa-times" t-on-click.stop="this.clear" aria-label="Clear" data-tooltip="Clear"/>
+                <i class="oi" data-icon="close" t-on-click.stop="this.clear" aria-label="Clear" data-tooltip="Clear"/>
             </div>
         </div>
     </t>

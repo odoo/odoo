@@ -22,20 +22,20 @@
                         string="Invoice"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-pencil-square-o"
+                        icon="edit_square"
                         invisible="not account_move">
                     </button>
                     <button name="action_view_refund_orders"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-undo"
+                        icon="undo"
                         invisible="refund_orders_count == 0">
                         <field name="refund_orders_count" widget="statinfo" string="Refunds" />
                     </button>
                     <button name="action_view_refunded_order"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-shopping-cart "
+                        icon="shopping_cart"
                         invisible="not refunded_order_id">
                         <field name="refunded_order_id" widget="statinfo" string="Refunded Orders" />
                     </button>
@@ -188,7 +188,7 @@
                                     <label for="email"/>
                                     <div class="o_row">
                                         <field name="email"/>
-                                        <button name="action_send_mail" icon="fa-envelope fa-lg" type="object" class="btn-link" title="email" invisible="not email"/>
+                                        <button name="action_send_mail" icon="mail" icon_class="oi-lg oi-filled" type="object" class="btn-link" title="email" invisible="not email"/>
                                     </div>
                                     <label for="mobile"/>
                                     <div class="o_row">

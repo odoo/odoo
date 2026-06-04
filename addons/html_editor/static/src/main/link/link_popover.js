@@ -92,9 +92,9 @@ export class LinkPopover extends Component {
             url: linkElement.getAttribute("href") || this.deduceUrl(textContent),
             label: labelEqualsUrl ? "" : textContent,
             previewIcon: {
-                /** @type {'fa'|'imgSrc'|'mimetype'} */
-                type: "fa",
-                value: "fa-globe",
+                /** @type {'oi'|'imgSrc'|'mimetype'} */
+                type: "oi",
+                value: "public",
             },
             urlTitle: "",
             urlDescription: "",
@@ -336,7 +336,7 @@ export class LinkPopover extends Component {
      * link preview in the popover
      */
     resetPreview() {
-        this.state.previewIcon = { type: "fa", value: "fa-globe" };
+        this.state.previewIcon = { type: "oi", value: "public" };
         this.state.urlTitle = this.state.url || _t("No URL specified");
         this.state.urlDescription = "";
         this.state.linkPreviewName = "";
@@ -345,14 +345,14 @@ export class LinkPopover extends Component {
         let url;
         if (this.state.url === "") {
             this.resetPreview();
-            this.state.previewIcon.value = "fa-question-circle-o";
+            this.state.previewIcon.value = "help_outline";
             return;
         }
         if (this.isLogoutUrl()) {
             // The session ends if we fetch this url, so the preview is hardcoded
             this.resetPreview();
             this.state.urlTitle = _t("Logout");
-            this.state.previewIcon.value = "fa-sign-out";
+            this.state.previewIcon.value = "logout";
             return;
         }
         if (this.isAttachmentUrl()) {
@@ -375,10 +375,11 @@ export class LinkPopover extends Component {
         this.resetPreview();
         const protocol = url.protocol;
         if (!protocol.startsWith("http")) {
-            const faMap = { "mailto:": "fa-envelope-o", "tel:": "fa-phone" };
+            const faMap = { "mailto:": "mail", "tel:": "phone" };
             const icon = faMap[protocol];
             if (icon) {
                 this.state.previewIcon.value = icon;
+                this.state.previewIcon.class = icon ==="phone" ? "oi-filled" : undefined;
             }
         } else if (
             window.location.hostname !== url.hostname &&
@@ -460,8 +461,8 @@ export class LinkPopover extends Component {
             if (internalMetadata.imgSrc) {
                 this.state.imgSrc = internalMetadata.imgSrc;
                 this.state.previewIcon = {
-                    type: "fa",
-                    value: "fa-picture-o",
+                    type: "oi",
+                    value: "image",
                 };
             }
         }

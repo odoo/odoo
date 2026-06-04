@@ -56,9 +56,9 @@ registerWebsitePreviewTour(
         // the tour fails when the new menu is in the extra menu.
         {
             content: "Drag the new menu item at the top",
-            trigger: '.oe_menu_editor li:contains("Zoé’s Diner") .oi-draggable',
+            trigger: '.oe_menu_editor li:contains("Zoé’s Diner") [data-icon="drag_indicator"]',
             run(helpers) {
-                return helpers.drag_and_drop('.oe_menu_editor li:contains("Home") .oi-draggable', {
+                return helpers.drag_and_drop('.oe_menu_editor li:contains("Home") [data-icon="drag_indicator"]', {
                     position: {
                         top: 20,
                     },
@@ -152,10 +152,10 @@ registerWebsitePreviewTour(
         // the tour fails when the new menu is in the extra menu.
         {
             content: "Drag the new menu item at the top",
-            trigger: '.oe_menu_editor li:contains("The Sea Hotel") .oi-draggable',
+            trigger: '.oe_menu_editor li:contains("The Sea Hotel") [data-icon="drag_indicator"]',
             run(helpers) {
                 return helpers.drag_and_drop(
-                    '.oe_menu_editor li:contains("Zoé’s Diner") .oi-draggable',
+                    '.oe_menu_editor li:contains("Zoé’s Diner") [data-icon="drag_indicator"]',
                     {
                         position: {
                             top: 20,

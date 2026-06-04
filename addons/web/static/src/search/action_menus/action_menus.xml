@@ -6,7 +6,7 @@
             <div t-if="this.props.items.print?.length" class="d-inline-block">
                 <Dropdown beforeOpen.bind="this.loadPrintItems">
                     <button class="btn btn-secondary" data-hotkey="shift+u">
-                        <i class="fa fa-print me-1"/>
+                        <i class="oi me-1" data-icon="print"/>
                         <span class="o_dropdown_title" t-out="this.props.printDropdownTitle"/>
                     </button>
                     <t t-set-slot="content">
@@ -24,7 +24,7 @@
             <div t-if="this.actionItems.length" class="d-inline-block">
                 <Dropdown>
                     <button class="btn btn-secondary" data-hotkey="u" data-available-offline="">
-                        <i class="fa fa-cog me-1"/>
+                        <i class="oi oi-filled me-1" data-icon="settings"/>
                         <span class="o_dropdown_title">Actions</span>
                     </button>
                     <t t-set-slot="content">
@@ -38,7 +38,7 @@
                              t-else=""
                              class="{ [item.class]: !!item.class, 'o_menu_item': true, 'pe-none text-muted opacity-50': this.offline.offline and !item.availableOffline }"
                              onSelected="() => this.onItemSelected(item)">
-                                <i t-if="item.icon" t-att-class="item.icon + ' me-1 fa-fw oi-fw'"/>
+                                <i t-if="item.icon" class="oi oi-fw me-1" t-att-class="item.icon_class" t-att-data-icon="item.icon"/>
                                 <t t-out="item.description"/>
                             </DropdownItem>
                             <t t-set="currentGroup" t-value="item.groupNumber"/>

@@ -6,7 +6,7 @@
             <div class="o_searchview_facet_label position-relative rounded-start-2 px-1 rounded-end-0 p-0 btn btn-primary" t-on-click.stop="this.props.onClick">
                 <small class="px-1" t-out="this.props.facet.title"/>
                 <span class="position-absolute start-0 top-0 bottom-0 end-0 bg-inherit opacity-0 opacity-100-hover">
-                    <i class="fa fa-fw fa-cog"></i>
+                    <i class="oi oi-fw oi-filled" data-icon="settings"></i>
                 </span>
             </div>
             <div class="o_facet_values position-relative d-flex flex-wrap align-items-center rounded-end-2 text-wrap overflow-hidden">
@@ -16,7 +16,7 @@
                     <small class="o_facet_value text-truncate" t-out="value" t-att-title="value"/>
                 </span>
             </div>
-            <button class="o_facet_remove oi oi-close btn btn-link py-0 px-2 text-danger d-print-none" title="Remove" t-on-click.stop="this.props.clearFilter" />
+            <button class="o_facet_remove oi btn btn-link py-0 px-2 text-danger d-print-none" data-icon="close_small" title="Remove" t-on-click.stop="this.props.clearFilter" />
         </div>
     </t>
 </templates>

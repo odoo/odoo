@@ -931,7 +931,7 @@ describe("Toolbar", () => {
         expect(getContent(el)).toBe(
             `<p>this <span style="color:red">is</span>[ a ]<span style="color:red">UX</span> test.</p>`
         );
-        await click(".btn .fa-eraser");
+        await click(".btn [data-icon='ink_eraser']");
         expect(getContent(el)).toBe(
             `<p>this <span style="color:red">is</span>[ a ]<span style="color:red">UX</span> test.</p>`
         );

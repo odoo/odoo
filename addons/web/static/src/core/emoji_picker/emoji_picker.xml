@@ -16,7 +16,7 @@
             <div class="o-EmojiPicker-search d-flex align-items-center mx-2 mt-2 rounded">
                 <span class="o-EmojiPicker-searchContour d-flex mx-1 w-100 rounded o-active align-items-center justify-content-center border border-secondary bg-view">
                     <t t-call="web.EmojiPicker.searchInput" localState="this.props.state ? this.props.state : this.state"/>
-                    <i class="oi oi-search px-2 py-1 fs-7 rounded-start-0 rounded-3 o-active opacity-50" title="Search..." role="img" aria-label="Search..."/>
+                    <i class="oi px-2 py-1 fs-7 rounded-start-0 rounded-3 o-active opacity-50" data-icon="search" title="Search..." role="img" aria-label="Search..."/>
                 </span>
             </div>
             <t t-set="itemIndex" t-value="0"/>
@@ -93,9 +93,9 @@
         t-on-click="this.onClickToNextCategories"
     >
         <span class="position-relative">
-            <i class="oi oi-chevron-right fa-fw smaller opacity-0"/>
-            <i class="oi oi-chevron-right fa-fw smaller position-absolute opacity-75" style="left: 3px; transform: translateY(75%);"/>
-            <i class="oi oi-chevron-right fa-fw smaller position-absolute opacity-75" style="left: -3px; transform: translateY(75%);"/>
+            <i class="oi oi-fw smaller opacity-0" data-icon="chevron_forward"/>
+            <i class="oi oi-fw smaller position-absolute opacity-75" data-icon="chevron_forward" style="left: 3px; transform: translateY(75%);"/>
+            <i class="oi oi-fw smaller position-absolute opacity-75" data-icon="chevron_forward" style="left: -3px; transform: translateY(75%);"/>
         </span>
     </span>
 </t>
@@ -107,9 +107,9 @@
         t-on-click="this.onClickToPreviousCategories"
     >
         <span class="position-relative">
-            <i class="oi oi-chevron-left fa-fw smaller opacity-0"/>
-            <i class="oi oi-chevron-left fa-fw smaller position-absolute opacity-75" style="left: 3px; transform: translateY(75%);"/>
-            <i class="oi oi-chevron-left fa-fw smaller position-absolute opacity-75" style="left: -3px; transform: translateY(75%);"/>
+            <i class="oi oi-fw smaller opacity-0" data-icon="chevron_backward"/>
+            <i class="oi oi-fw smaller position-absolute opacity-75" data-icon="chevron_backward" style="left: 3px; transform: translateY(75%);"/>
+            <i class="oi oi-fw smaller position-absolute opacity-75" data-icon="chevron_backward" style="left: -3px; transform: translateY(75%);"/>
         </span>
     </span>
 </t>

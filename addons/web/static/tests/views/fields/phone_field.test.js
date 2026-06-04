@@ -74,8 +74,8 @@ test("PhoneField in form view on normal screens (edit)", async () => {
     });
     expect(`input[type="tel"]`).toHaveCount(1);
     expect(`input[type="tel"]`).toHaveValue("yop");
-    expect(".o_field_phone button i.fa-phone").toHaveCount(1);
-    await assertUrl(`.o_field_widget button i.fa-phone`, "tel:yop");
+    expect(".o_field_phone button i[data-icon='phone']").toHaveCount(1);
+    await assertUrl(`.o_field_widget button i[data-icon='phone']`, "tel:yop");
 
     // change value in edit mode
     await click(`input[type="tel"]`);

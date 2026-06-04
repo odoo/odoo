@@ -107,10 +107,12 @@
             border: none;
 
             &:before {
+                --o-mi-fill: 1;
+
                 z-index: 2;
                 display: inline-block;
-                font-family: Fontawesome;
-                content: '\f111'; // fa-circle
+                font-family: "material_symbols_outlined";
+                content: 'circle';
             }
 
             &:hover {
@@ -120,7 +122,7 @@
             &.o_event_hatched:before {
                 --o-event-bg: var(--fc-event-text-color);
 
-                content: "\f1db"; // fa-circle-thin
+                content: "radio_button_unchecked";
             }
         }
     }

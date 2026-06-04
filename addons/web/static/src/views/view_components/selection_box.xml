@@ -11,12 +11,12 @@
                         class="o_select_domain btn btn-sm btn-info p-1 ms-2 me-n2 border-0 fw-normal"
                         title="Select all records matching the search"
                         t-on-click="this.onSelectDomain">
-                        <i class="oi oi-fw oi-arrow-right"/>
+                        <i class="oi oi-fw" data-icon="east"/>
                         Select all <span t-if="this.isRecordCountTrustable"><t t-out="this.nbTotal"/><t t-if="this.hasLimitedCount">+</t></span>
                     </button>
                 </t>
                 <button title="Unselect All" class="o_unselect_all btn btn-link ms-auto border-0" data-available-offline="" t-on-click="this.onUnselectAll">
-                    <i class="oi oi-close"/>
+                    <i class="oi" data-icon="close_small"/>
                 </button>
             </span>
             <button t-if="this.env.isSmall and !this.isDomainSelected and (!this.isRecordCountTrustable or this.nbTotal > this.nbSelected)"

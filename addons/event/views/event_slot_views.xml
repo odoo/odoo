@@ -12,7 +12,7 @@
                         <label for="start_hour" string="Hour range"/>
                         <div>
                             <field name="start_hour" class="oe_inline o_input_5ch" widget="float_time"/>
-                            <i class="fa fa-arrow-right mx-2" title="to"/>
+                            <i class="oi mx-2" data-icon="arrow_forward" title="to"/>
                             <field name="end_hour" class="oe_inline o_input_5ch" widget="float_time"/>
                         </div>
                         <field name="date"/>
@@ -49,7 +49,7 @@
                 <field name="date"/>
                 <field name="start_hour" string="From" widget="float_time"/>
                 <button name="durationArrow" width="20px" title="Until"
-                    class="fa fa-long-arrow-right text-center text-secondary pe-none"/>
+                    class="oi text-center text-secondary pe-none" icon="east"/>
                 <field name="end_hour" string="To" widget="float_time"/>
                 <field name="color" widget="color_picker"/>
             </list>

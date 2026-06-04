@@ -25,21 +25,23 @@
         }
     }
 
-    .fa:before {
-        content: "\f0a2";
+    .oi:before {
+        content: "notifications";
     }
 
-    .js_follow_btn:hover .fa:before {
+    .js_follow_btn:hover .oi:before {
         color: $body-color;
     }
 
-    .js_unfollow_btn .fa:before {
+    .js_unfollow_btn .oi:before {
+        --o-mi-fill: 1
+
         color: $success;
-        content: "\f0f3";
+        content: "notifications";
     }
 
-    .js_unfollow_btn:hover .fa:before {
-        content: "\f1f7";
+    .js_unfollow_btn:hover .oi:before {
+        content: "notifications_off";
         color: $danger;
     }
 }

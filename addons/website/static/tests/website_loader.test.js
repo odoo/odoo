@@ -14,8 +14,8 @@ describe("website loader", () => {
     let loaderInstance;
     let websiteService;
     const loaderTitleSelector = ".o_website_loader_container_content > .h4-fs";
-    const completedStepsSelector = ".o_website_loader_tip:has(.fa-check)";
-    const currentStepSelector = ".o_website_loader_tip:has(.fa-spin)";
+    const completedStepsSelector = ".o_website_loader_tip:has([data-icon='check'])";
+    const currentStepSelector = ".o_website_loader_tip:has(.oi-spin)";
     const bottomMessageContainerSelector = ".o_website_loader_container_content > p";
 
     const waitForLoaderCompletion = async ({
@@ -63,7 +63,7 @@ describe("website loader", () => {
         expect(currentStepSelector).toHaveCount(0);
         expect(queryOne(bottomMessageContainerSelector).children.length).toEqual(0);
         expect(".o_website_loader_progress").toHaveCount(1);
-        expect("a .oi-close").toHaveCount(0);
+        expect("a [data-icon='close_small']").toHaveCount(0);
     });
 
     test("should display loader correctly with custom props", async () => {
@@ -83,7 +83,7 @@ describe("website loader", () => {
         expect(currentStepSelector).toHaveCount(0);
         expect(`${bottomMessageContainerSelector} .test-message`).toHaveCount(1);
         expect(".o_website_loader_progress").toHaveCount(0);
-        expect("a .oi-close").toHaveCount(1);
+        expect("a [data-icon='close_small']").toHaveCount(1);
     });
 
     test("should show custom loading steps with correct prop precedence", async () => {

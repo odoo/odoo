@@ -81,7 +81,7 @@
                <sheet string="Repairs order">
                     <div class="oe_button_box" name="button_box">
                         <!-- No groups attribute on the next button as "stock.group_stock_user" is needed for Repair, and as this group is granted 'sale.order' read/write accesses in sale_stock module (forcefully loaded as transitive dependency) -->
-                        <button name="action_view_sale_order" type="object" string="Sale Order" icon="fa-dollar" class="oe_stat_button" invisible="not sale_order_id">
+                        <button name="action_view_sale_order" type="object" string="Sale Order" icon="attach_money" class="oe_stat_button" invisible="not sale_order_id">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="sale_order_id" widget="statinfo" nolabel="1" class="mr4"/>
@@ -89,10 +89,10 @@
                                 <span class="o_stat_text">Sale Order</span>
                             </div>
                         </button>
-                        <button name="%(action_repair_move_lines)d" type="action" string="Product Moves" class="oe_stat_button" icon="fa-exchange" invisible="state not in ['done', 'cancel']"/>
+                        <button name="%(action_repair_move_lines)d" type="action" string="Product Moves" class="oe_stat_button" icon="swap_horiz" invisible="state not in ['done', 'cancel']"/>
                         <button name="action_view_invoice"
                             type="object"
-                            icon="fa-pencil-square-o"
+                            icon="edit_square"
                             class="oe_stat_button"
                             invisible="not invoice_count">
                             <field name="invoice_count" widget="statinfo" string="Invoices"/>
@@ -114,7 +114,7 @@
                             <label for="lot_id" invisible="tracking not in ['serial', 'lot']"/>
                             <div class="o_row" invisible="tracking not in ['serial', 'lot']">
                                 <field name="lot_id" context="{'default_product_id': product_id}" groups="stock.group_production_lot" invisible="tracking not in ['serial', 'lot']" readonly="state == 'done'" required="state=='done' and tracking in ['serial', 'lot']"/>
-                                <button name="action_generate_serial" type="object" class="btn btn-primary fa fa-plus-square-o" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" invisible="lot_id"/>
+                                <button name="action_generate_serial" type="object" class="btn btn-primary oi" data-icon="add_box" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" invisible="lot_id"/>
                             </div>
                             <label for="product_qty" invisible="not product_id" groups="base.group_no_one"/>
                             <div class="o_row" invisible="not product_id" groups="base.group_no_one">

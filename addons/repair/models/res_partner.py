@@ -37,7 +37,7 @@ class ResPartner(models.Model):
             if not partner.repair_order_count:
                 continue
             data_list[partner.id].append({
-                'iconClass': 'fa-wrench',
+                'icon': 'build',
                 'value': partner.repair_order_count,
                 'label': self.env._("Repair Orders"),
             })

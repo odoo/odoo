@@ -92,7 +92,7 @@ describe("should open a popover", () => {
                     \ufeff
                     <a href="https://test" class="btn btn-primary">
                         \ufeffHello\ufeff[
-                            <span class="fa fa-glass" contenteditable="false">\u200b</span>
+                            <span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>
                         ]\ufeffWorld\ufeff
                     </a>
                     \ufeff
@@ -132,7 +132,7 @@ describe("popover should not reposition when editing", () => {
     test("when editing the link url, the popover should not reposition", async () => {
         const { el } = await setupEditor("<p>H[ell]o</p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await animationFrame();
         await waitFor(".o-we-linkpopover");
         const popoverEl = queryOne(".o-we-linkpopover").parentElement;
@@ -155,7 +155,7 @@ describe("popover should not reposition when editing", () => {
     test("In iframe, when editing the link url, the popover should not reposition", async () => {
         const { el } = await setupEditor("<p>H[ell]o</p>", { props: { iframe: true } });
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await animationFrame();
         await waitFor(".o-we-linkpopover");
         const popoverEl = queryOne(".o-we-linkpopover").parentElement;
@@ -306,7 +306,7 @@ describe("popover should edit,copy,remove the link", () => {
         // Tab through all focusable elements
         await press("Tab");
         await animationFrame();
-        expect("button:has(i.fa-upload)").toBeFocused();
+        expect("button:has(i[data-icon='upload'])").toBeFocused();
         await press("Tab");
         await animationFrame();
         expect("button[name='link_type']").toBeFocused();
@@ -434,7 +434,7 @@ describe("popover should show link preview", () => {
         await contains(".o-we-linkpopover input.o_we_href_input_link").fill(url);
         await animationFrame();
 
-        expect(".o_we_preview_favicon .fa-picture-o").toHaveCount(1);
+        expect(".o_we_preview_favicon [data-icon='image']").toHaveCount(1);
         expect(`a.o_we_url_link[href='${url}']`).toHaveText(url);
         expect(".o_we_replace_title_btn").toHaveCount(1);
         expect(`.o_extra_info_card a[href='${url}'] img[src^='data:']`).toHaveCount(1);
@@ -670,9 +670,9 @@ describe("popover in contenteditable=false or readonly mode", () => {
         );
         await waitFor(".o-we-toolbar");
         // Link button should be available and active
-        expect(".o-we-toolbar button.active .fa-link").toHaveCount(1);
+        expect(".o-we-toolbar button.active [data-icon='link']").toHaveCount(1);
         // Unlink button should not be available
-        expect(".o-we-toolbar .fa-unlink").toHaveCount(0);
+        expect(".o-we-toolbar [data-icon='link_off']").toHaveCount(0);
     });
 });
 
@@ -682,12 +682,12 @@ describe("popover for file uploads", () => {
         execCommand(editor, "openLinkTools");
         await waitFor(".o-we-linkpopover");
         // Upload button should be visible
-        expect("button i[class='fa fa-upload']").toHaveCount(1);
+        expect("button i[data-icon='upload']").toHaveCount(1);
         await click(".o_we_href_input_link");
         await press("a");
         await animationFrame();
         // Still upload button should be visible
-        expect("button i[class='fa fa-upload']").toHaveCount(1);
+        expect("button i[data-icon='upload']").toHaveCount(1);
     });
     const patchUpload = (editor) => {
         const mockedUploadPromise = new Promise((resolve) => {
@@ -705,7 +705,7 @@ describe("popover for file uploads", () => {
         const mockedUpload = patchUpload(editor);
         execCommand(editor, "openLinkTools");
         await waitFor(".o-we-linkpopover");
-        await click("button i[class='fa fa-upload']");
+        await click("button i[data-icon='upload']");
         await mockedUpload;
         await animationFrame();
         // URL input gets filled with the attachments's URL
@@ -752,7 +752,7 @@ describe("popover for file uploads", () => {
         // Fill label input
         await contains(".o-we-linkpopover input.o_we_label_link").fill("label");
         // Upload a file
-        await click("button i[class='fa fa-upload']");
+        await click("button i[data-icon='upload']");
         await mockedUpload;
         await animationFrame();
         // Label remains unchanged
@@ -813,7 +813,7 @@ describe("popover with empty URL", () => {
     test("should close the popover and fallback href to '#' on empty URL when clicking outside", async () => {
         const { el } = await setupEditor("<p>[abc]</p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await waitFor(".o-we-linkpopover");
         expect(".o-we-linkpopover input.o_we_href_input_link").toBeFocused();
         await fill("http://test.com/");
@@ -895,7 +895,7 @@ describe("popover with a valid URL as label", () => {
     test("URL input should be prefilled by corresponding URL if the label matches the URL format", async () => {
         const { el } = await setupEditor("<p>[google.com]</p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await waitFor(".o-we-linkpopover");
         expect("input.o_we_label_link").toHaveValue("google.com");
         expect("input.o_we_href_input_link").toHaveValue("https://google.com");
@@ -907,7 +907,7 @@ describe("popover with a valid URL as label", () => {
     test("URL input should be prefilled by corresponding URL if the label matches the URL format (2)", async () => {
         const { el } = await setupEditor("<p>[https://google.com]</p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await waitFor(".o-we-linkpopover");
         expect("input.o_we_label_link").toHaveValue("https://google.com");
         expect("input.o_we_href_input_link").toHaveValue("https://google.com");
@@ -919,7 +919,7 @@ describe("popover with a valid URL as label", () => {
     test("URL input should be prefilled by corresponding URL if the label matches the email format", async () => {
         const { el } = await setupEditor("<p>[test@test.com]</p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await waitFor(".o-we-linkpopover");
         expect("input.o_we_label_link").toHaveValue("test@test.com");
         expect("input.o_we_href_input_link").toHaveValue("mailto:test@test.com");
@@ -931,7 +931,7 @@ describe("popover with a valid URL as label", () => {
     test("URL input should be prefilled by corresponding URL if the label matches the email format (2)", async () => {
         const { el } = await setupEditor("<p>[mailto:test@test.com]</p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await waitFor(".o-we-linkpopover");
         expect("input.o_we_label_link").toHaveValue("mailto:test@test.com");
         expect("input.o_we_href_input_link").toHaveValue("mailto:test@test.com");
@@ -943,7 +943,7 @@ describe("popover with a valid URL as label", () => {
     test("URL input should be prefilled by corresponding URL if the label matches the telephone format", async () => {
         const { el } = await setupEditor("<p>[12345678]</p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await waitFor(".o-we-linkpopover");
         expect("input.o_we_label_link").toHaveValue("12345678");
         expect("input.o_we_href_input_link").toHaveValue("tel:12345678");
@@ -955,7 +955,7 @@ describe("popover with a valid URL as label", () => {
     test("URL input should be prefilled by corresponding URL if the label matches the telephone format (2)", async () => {
         const { el } = await setupEditor("<p>[tel:123]</p>");
         await waitFor(".o-we-toolbar");
-        await click(".o-we-toolbar .fa-link");
+        await click(".o-we-toolbar [data-icon='link']");
         await waitFor(".o-we-linkpopover");
         expect("input.o_we_label_link").toHaveValue("tel:123");
         expect("input.o_we_href_input_link").toHaveValue("tel:123");
@@ -1011,10 +1011,10 @@ test("Should should show link popover without edit", async () => {
         },
     });
     const { el } = await setupEditor(
-        '<p contenteditable="false"><a href="#"><i class="fa"></i></a></p>'
+        '<p contenteditable="false"><a href="#"><i class="oi"></i></a></p>'
     );
     await animationFrame();
-    await click(el.querySelector(".fa"));
+    await click(el.querySelector(".oi"));
     // Should open the link popover without edit button
     expectElementCount(".o-we-linkpopover", 1);
     expectElementCount(".o_we_edit_link", 0);

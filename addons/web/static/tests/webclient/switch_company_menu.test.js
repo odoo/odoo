@@ -59,10 +59,10 @@ test("basic rendering", async () => {
 
     expect("[data-company-id] [role=menuitemcheckbox]").toHaveCount(5);
     expect(".log_into").toHaveCount(5);
-    expect(".fa-check-square").toHaveCount(1);
-    expect(".fa-square-o").toHaveCount(4);
-    expect(".dropdown-item:has(.fa-check-square)").toHaveText("Hermit");
-    expect(".dropdown-item:has(.fa-square-o):eq(0)").toHaveText("Herman's");
+    expect("[data-icon='check_box'].oi-filled").toHaveCount(1);
+    expect("[data-icon='square']").toHaveCount(4);
+    expect(".dropdown-item:has([data-icon='check_box'].oi-filled)").toHaveText("Hermit");
+    expect(".dropdown-item:has([data-icon='square']):eq(0)").toHaveText("Herman's");
     expect(".dropdown-menu").toHaveText("Hermit\nHerman's\nHeroes TM\nHercules\nHulk");
 });
 
@@ -80,8 +80,8 @@ test("companies can be toggled: toggle a second company", async () => {
     expect(user.activeCompany.id).toBe(3);
     await openCompanyMenu();
     expect("[data-company-id]").toHaveCount(5);
-    expect("[data-company-id] .fa-check-square").toHaveCount(1);
-    expect("[data-company-id] .fa-square-o").toHaveCount(4);
+    expect("[data-company-id] [data-icon='check_box'].oi-filled").toHaveCount(1);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(4);
     expect(queryAllAttributes("[data-company-id] [role=menuitemcheckbox]", "aria-checked")).toEqual(
         ["true", "false", "false", "false", "false"]
     );
@@ -102,8 +102,8 @@ test("companies can be toggled: toggle a second company", async () => {
      */
     await toggleCompany(1);
     expect(".dropdown-menu").toHaveCount(1, { message: "dropdown is still opened" });
-    expect("[data-company-id] .fa-check-square").toHaveCount(2);
-    expect("[data-company-id] .fa-square-o").toHaveCount(3);
+    expect("[data-company-id] [data-icon='check_box'].oi-filled").toHaveCount(2);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(3);
     expect(queryAllAttributes("[data-company-id] [role=menuitemcheckbox]", "aria-checked")).toEqual(
         ["true", "true", "false", "false", "false"]
     );
@@ -132,8 +132,8 @@ test("can toggle multiple companies at once", async () => {
     expect(user.activeCompany.id).toBe(3);
     await openCompanyMenu();
     expect("[data-company-id]").toHaveCount(5);
-    expect("[data-company-id] .fa-check-square").toHaveCount(1);
-    expect("[data-company-id] .fa-square-o").toHaveCount(4);
+    expect("[data-company-id] [data-icon='check_box'].oi-filled").toHaveCount(1);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(4);
 
     /**
      *   [ ] Hermit          -> toggle all
@@ -146,8 +146,8 @@ test("can toggle multiple companies at once", async () => {
     await toggleCompany(1);
     await toggleCompany(2);
     expect(".dropdown-menu").toHaveCount(1, { message: "dropdown is still opened" });
-    expect("[data-company-id] .fa-check-square").toHaveCount(4);
-    expect("[data-company-id] .fa-square-o").toHaveCount(1);
+    expect("[data-company-id] [data-icon='check_box'].oi-filled").toHaveCount(4);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(1);
 
     expect.verifySteps([]);
     await clickConfirm();
@@ -170,8 +170,8 @@ test("single company selected: toggling it off will keep it", async () => {
     expect(user.activeCompany.id).toBe(3);
     await openCompanyMenu();
     expect("[data-company-id]").toHaveCount(5);
-    expect("[data-company-id] .fa-check-square").toHaveCount(1);
-    expect("[data-company-id] .fa-square-o").toHaveCount(4);
+    expect("[data-company-id] [data-icon='check_box'].oi-filled").toHaveCount(1);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(4);
 
     /**
      *   [x] **Hermit**  -> toggle off
@@ -188,8 +188,8 @@ test("single company selected: toggling it off will keep it", async () => {
     expect(user.activeCompany.id).toBe(3);
 
     await openCompanyMenu();
-    expect("[data-company-id] .fa-check-square").toHaveCount(1);
-    expect("[data-company-id] .fa-square-o").toHaveCount(4);
+    expect("[data-company-id] [data-icon='check_box'].oi-filled").toHaveCount(1);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(4);
 });
 
 test("single company mode: companies can be logged in", async () => {
@@ -206,8 +206,8 @@ test("single company mode: companies can be logged in", async () => {
     expect(user.activeCompany.id).toBe(3);
     await openCompanyMenu();
     expect("[data-company-id]").toHaveCount(5);
-    expect("[data-company-id] .fa-check-square").toHaveCount(1);
-    expect("[data-company-id] .fa-square-o").toHaveCount(4);
+    expect("[data-company-id] [data-icon='check_box'].oi-filled").toHaveCount(1);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(4);
 
     /**
      *   [ ] Hermit
@@ -236,8 +236,8 @@ test("multi company mode: log into a non selected company", async () => {
     expect(user.activeCompany.id).toBe(3);
     await openCompanyMenu();
     expect("[data-company-id]").toHaveCount(5);
-    expect("[data-company-id] .fa-check-square").toHaveCount(2);
-    expect("[data-company-id] .fa-square-o").toHaveCount(3);
+    expect("[data-company-id] [data-icon='check_box'].oi-filled").toHaveCount(2);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(3);
 
     /**
      *   [x] Hermit
@@ -266,8 +266,8 @@ test("multi company mode: log into an already selected company", async () => {
     expect(user.activeCompany.id).toBe(2);
     await openCompanyMenu();
     expect("[data-company-id]").toHaveCount(5);
-    expect("[data-company-id] .fa-check-square").toHaveCount(2);
-    expect("[data-company-id] .fa-square-o").toHaveCount(3);
+    expect("[data-company-id] [data-icon='check_box'].oi-filled").toHaveCount(2);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(3);
 
     /**
      *   [ ] Hermit
@@ -295,8 +295,8 @@ test("companies can be logged in even if some toggled within delay", async () =>
     expect(user.activeCompany.id).toBe(3);
     await openCompanyMenu();
     expect("[data-company-id]").toHaveCount(5);
-    expect("[data-company-id] .fa-check-square").toHaveCount(1);
-    expect("[data-company-id] .fa-square-o").toHaveCount(4);
+    expect("[data-company-id] [data-icon='check_box'].oi-filled").toHaveCount(1);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(4);
 
     /**
      *   [ ] Hermit         -> toggled
@@ -341,8 +341,8 @@ test("single company mode: from company loginto branch", async () => {
     expect(user.activeCompany.id).toBe(3);
     await contains(".dropdown-toggle").click();
     expect("[data-company-id]").toHaveCount(5);
-    expect("[data-company-id] .fa-check-square").toHaveCount(1);
-    expect("[data-company-id] .fa-square-o").toHaveCount(4);
+    expect("[data-company-id] [data-icon='check_box'].oi-filled").toHaveCount(1);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(4);
 
     /**
      *   [ ] Hermit
@@ -370,8 +370,8 @@ test("single company mode: from branch loginto company", async () => {
     expect(user.activeCompany.id).toBe(1);
     await contains(".dropdown-toggle").click();
     expect("[data-company-id]").toHaveCount(5);
-    expect("[data-company-id] .fa-check-square").toHaveCount(3);
-    expect("[data-company-id] .fa-square-o").toHaveCount(2);
+    expect("[data-company-id] [data-icon='check_box'].oi-filled").toHaveCount(3);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(2);
 
     /**
      *   [x] Hermit    -> log into
@@ -399,8 +399,8 @@ test("single company mode: from leaf (only one company in branch selected) login
     expect(user.activeCompany.id).toBe(1);
     await contains(".dropdown-toggle").click();
     expect("[data-company-id]").toHaveCount(5);
-    expect("[data-company-id] .fa-check-square").toHaveCount(1);
-    expect("[data-company-id] .fa-square-o").toHaveCount(4);
+    expect("[data-company-id] [data-icon='check_box'].oi-filled").toHaveCount(1);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(4);
 
     /**
      *   [ ] Hermit
@@ -428,8 +428,8 @@ test("multi company mode: switching company doesn't deselect already selected on
     expect(user.activeCompany.id).toBe(1);
     await contains(".dropdown-toggle").click();
     expect("[data-company-id]").toHaveCount(5);
-    expect("[data-company-id] .fa-check-square").toHaveCount(4);
-    expect("[data-company-id] .fa-square-o").toHaveCount(1);
+    expect("[data-company-id] [data-icon='check_box'].oi-filled").toHaveCount(4);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(1);
 
     /**
      *   [ ] Hermit
@@ -590,21 +590,21 @@ test("select and de-select all", async () => {
     await animationFrame();
 
     // One company is selected, there should be a check box with minus inside
-    expect("[role=menuitemcheckbox][title='Deselect all'] i").toHaveClass("fa-minus-square-o");
+    expect("[role=menuitemcheckbox][title='Deselect all'] i").toHaveAttribute("data-icon", "indeterminate_check_box");
 
     await contains("[role=menuitemcheckbox][title='Deselect all']").click();
     // No company is selected, there should be a empty check box
-    expect("[role=menuitemcheckbox][title='Select all'] i").toHaveClass("fa-square-o");
+    expect("[role=menuitemcheckbox][title='Select all'] i").toHaveAttribute("data-icon", "square");
     expect(".o_switch_company_item:has([role=menuitemcheckbox][aria-checked=true])").toHaveCount(0);
 
     await contains("[role=menuitemcheckbox][title='Select all']").click();
     // All companies are selected, there should be a checked check box
-    expect("[role=menuitemcheckbox][title='Deselect all'] i").toHaveClass("fa-check-square");
+    expect("[role=menuitemcheckbox][title='Deselect all'] i").toHaveAttribute("data-icon", "check_box");
     expect(".o_switch_company_item:has([role=menuitemcheckbox][aria-checked=true])").toHaveCount(5);
 
     await contains("[role=menuitemcheckbox][title='Deselect all']").click();
     // No company is selected, there should be a empty check box
-    expect("[role=menuitemcheckbox][title='Select all'] i").toHaveClass("fa-square-o");
+    expect("[role=menuitemcheckbox][title='Select all'] i").toHaveAttribute("data-icon", "square");
     expect(".o_switch_company_item:has([role=menuitemcheckbox][aria-checked=true])").toHaveCount(0);
 });
 
@@ -666,8 +666,8 @@ test("disallowed companies in between allowed companies are not enabled", async 
     expect(user.activeCompany.id).toBe(3);
     await openCompanyMenu();
     expect("[data-company-id]").toHaveCount(3);
-    expect("[data-company-id] .fa-check-square").toHaveCount(1);
-    expect("[data-company-id] .fa-square-o").toHaveCount(2);
+    expect("[data-company-id] [data-icon='check_box']").toHaveCount(1);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(2);
 
     /**
      *   [x] Parent -> toggle
@@ -679,6 +679,6 @@ test("disallowed companies in between allowed companies are not enabled", async 
 
     await openCompanyMenu();
     await toggleCompany(0);
-    expect("[data-company-id] .fa-check-square").toHaveCount(0);
-    expect("[data-company-id] .fa-square-o").toHaveCount(3);
+    expect("[data-company-id] [data-icon='check_box']").toHaveCount(0);
+    expect("[data-company-id] [data-icon='square']").toHaveCount(3);
 });

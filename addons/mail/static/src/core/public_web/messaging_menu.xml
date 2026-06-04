@@ -20,7 +20,7 @@
                     hasMarkAsReadButton="1"
                     muted="0"
                     onClick="(isMarkAsRead) => this.onClickInboxMsg(isMarkAsRead, message)"
-                    onSwipeRight="this.hasTouch() ? { action: () => message.setDone(), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
+                    onSwipeRight="this.hasTouch() ? { action: () => message.setDone(), icon: 'check_circle', 'icon_class': 'oi-filled', bgColor: 'bg-success' } : undefined"
                     nameMaxLine="1"
                     textMaxLine="2"
                 >
@@ -44,7 +44,7 @@
                     hasMarkAsReadButton="thread.isUnread"
                     muted="thread.channel?.self_member_id?.mute_until_dt ? 2 : !thread.isUnread ? 1 : 0"
                     onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread, message)"
-                    onSwipeRight="this.hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
+                    onSwipeRight="this.hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'check_circle', icon_class: 'oi-filled', bgColor: 'bg-success' } : undefined"
                     onSwipeLeft="this.onSwipeLeftThreadNotification(thread)"
                     nameMaxLine="1"
                     textMaxLine="2"
@@ -53,7 +53,7 @@
                     <t t-set-slot="name">
                         <div t-if="thread.parent_channel_id" class="d-flex align-items-center">
                             <span class="text-truncate flex-shrink-0 opacity-75 mw-50" t-out="thread.parent_channel_id.displayName"/>
-                            <i class="oi oi-chevron-right o-xsmaller mx-1"/>
+                            <i class="oi o-xsmaller mx-1" data-icon="chevron_forward"/>
                             <span class="text-truncate min-w-0" t-out="thread.channel.displayName"/>
                         </div>
                         <t t-else=""><Priority t-if="thread.priority" thread="thread"/> <t t-out="thread.displayName"/></t>
@@ -72,7 +72,7 @@
                 <t t-set="itemIndex" t-value="itemIndex + 1"/>
             </t>
             <t t-if="this.store.channels.status === 'fetching'">
-                <div class="d-flex align-items-center justify-content-center gap-2 py-4 px-2"><span class="o-visible-short-delay"><i class="fa fa-circle-o-notch fa-spin me-1"/> Loading…</span></div>
+                <div class="d-flex align-items-center justify-content-center gap-2 py-4 px-2"><span class="o-visible-short-delay"><i class="oi oi-spin me-1" data-icon="autorenew"/> Loading…</span></div>
             </t>
         </div>
     </div>
@@ -82,10 +82,10 @@
             'pb-4': this.isIosPwa,
             'pb-2': !this.isIosPwa,
         }" t-on-click="() => this.onClickNavTab(tab.id)" t-att-aria-label="tab.label">
-            <i t-attf-class="o-mail-MessagingMenu-tabIcon {{ this.store.discuss.activeTab === tab.id and tab.activeIcon ? tab.activeIcon : tab.icon }} rounded-pill mx-auto p-2 fs-5" />
+            <i class="o-mail-MessagingMenu-tabIcon oi rounded-pill mx-auto p-2 fs-5" t-att-class="{ 'oi-filled': this.store.discuss.activeTab === tab.id }"  t-att-data-icon="tab.icon"/>
             <span class="o-xsmaller" t-out="tab.label" />
             <span t-if="tab.counter" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block" t-att-class="{ 'o-bookmark': tab.id === 'bookmark' }" t-out="tab.counter"/>
-            <span t-elif="tab.channelHasUnread" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabUnread overflow-visible d-inline-block ms-2"><i class="fa fa-circle"/></span>
+            <span t-elif="tab.channelHasUnread" class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabUnread overflow-visible d-inline-block ms-2"><i class="oi oi-filled" data-icon="circle"/></span>
         </button>
     </nav>
 </t>

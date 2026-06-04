@@ -5,9 +5,9 @@
         <input type="number" class="form-control form-control-lg" t-att-value="this.table.tableNumber" inputmode="numeric" pattern="[0-9]+" t-on-input="this.updateTableNumber"/>
         <div class="fs-4 fw-bold mb-2 mt-3">Number of Seats</div>
         <div class="d-flex align-items-center">
-            <button class="button btn btn-secondary py-2" t-att-class="{'disabled': this.table.seats === 0}" t-on-click="()=>this.incrNumberOfSeats(-1)"><i class="fa fa-minus fa-fw"/></button>
+            <button class="button btn btn-secondary py-2" t-att-class="{'disabled': this.table.seats === 0}" t-on-click="()=>this.incrNumberOfSeats(-1)"><i class="oi oi-fw" data-icon="remove"/></button>
             <span class="fs-4 mx-3 text-center" style="font-variant-numeric:tabular-nums;min-width: 2ch;" t-out="this.table.seats"/>
-            <button class="button btn btn-secondary py-2" t-on-click="()=>this.incrNumberOfSeats(1)" ><i class="fa fa-plus fa-fw"/></button>
+            <button class="button btn btn-secondary py-2" t-on-click="()=>this.incrNumberOfSeats(1)" ><i class="oi oi-fw" data-icon="add"/></button>
         </div>
 
         <div class="fs-4 fw-bold mb-2 mt-3">Color</div>

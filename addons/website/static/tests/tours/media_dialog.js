@@ -130,21 +130,21 @@ registerWebsitePreviewTour(
         }),
         {
             content: "Open MediaDialog from a snippet icon",
-            trigger: ":iframe .s_social_media .fa-instagram",
+            trigger: ":iframe .s_social_media [data-icon='oi_instagram']",
             run: "dblclick",
         },
         {
             content: "Pick the same icon",
-            trigger: ".o_select_media_dialog .o_we_attachment_selected.fa-instagram",
+            trigger: ".o_select_media_dialog .o_we_attachment_selected[data-icon='oi_instagram']",
             run: "click",
         },
         {
             content: "Check if the icon remains the same",
-            trigger: ":iframe .s_social_media .fa-instagram",
+            trigger: ":iframe .s_social_media [data-icon='oi_instagram']",
         },
         {
             content: "Open MediaDialog again",
-            trigger: ":iframe .s_social_media .fa-instagram",
+            trigger: ":iframe .s_social_media [data-icon='oi_instagram']",
             run: "dblclick",
         },
         {
@@ -154,7 +154,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check if the icon remains the same",
-            trigger: ":iframe .s_social_media .fa-instagram",
+            trigger: ":iframe .s_social_media [data-icon='oi_instagram']",
         },
         ...clickOnSave(),
     ]
@@ -191,12 +191,12 @@ registerWebsitePreviewTour(
         {
             content: "Select an icon",
             trigger:
-                ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span.fa-heart",
+                ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span[data-icon='favorite']",
             run: "click",
         },
         {
             content: "Checks that the icon doesn't have a shape",
-            trigger: ":iframe .s_text_image .fa-heart:not([data-shape])",
+            trigger: ":iframe .s_text_image [data-icon='favorite']:not([data-shape])",
         },
     ]
 );
@@ -248,7 +248,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Verify that the icon was inserted",
-            trigger: ":iframe .s_text_block p > span.fa",
+            trigger: ":iframe .s_text_block p > span.oi",
         },
     ]
 );

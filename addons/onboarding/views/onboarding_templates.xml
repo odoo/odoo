@@ -46,14 +46,14 @@
         </div>
         <div class="o_onboarding_main d-print-none position-relative border-bottom overflow-hidden">
             <div class="o_onboarding_wrap py-3 py-lg-4">
-                <a href="#" data-bs-toggle="modal" data-bs-target=".o_onboarding_modal" class="o_onboarding_btn_close position-absolute top-0 end-0 py-2 px-3 h2" title="Close the onboarding panel"><i class="oi oi-close"/></a>
+                <a href="#" data-bs-toggle="modal" data-bs-target=".o_onboarding_modal" class="o_onboarding_btn_close position-absolute top-0 end-0 py-2 px-3 h2" title="Close the onboarding panel"><i class="oi" data-icon="close_small"/></a>
                 <div class="o_onboarding_steps d-flex" t-out="0"/>
 
                 <div t-if="state.get('onboarding_state') == 'just_done'"
                         t-att-state="state.get('onboarding_state')"
                         class="o_onboarding_completed_message position-absolute end-0 start-0 border-bottom py-4 bg-white d-flex align-items-center justify-content-center">
                     <span class="h3 m-0">
-                        <i class="fa fa-check text-success me-3" />
+                        <i class="oi text-success me-3" data-icon="check"/>
                         <t t-if="text_completed" t-out="text_completed" />
                     </span>
                     <a type="action" class="btn btn-primary ms-4" t-att-data-model="close_model" t-att-data-method="close_method">
@@ -88,7 +88,11 @@
                 </a>
                 <a t-else="" class="o_onboarding_step_action__done btn" type="action" data-reload-on-close="true" role="button" t-att-data-method="method" t-att-data-model="model">
                     <span>
-                        <i t-attf-class="p-1 me-1 fa #{done_icon if done_icon else 'fa-check'} rounded-circle" />
+                        <i
+                            class="oi me-1 rounded-circle p-1"
+                            t-att-class="{'oi-filled': done_icon}"
+                            t-attf-class="#{done_icon if done_icon else 'check'}"
+                        />
                         <t t-if="done_text" t-out="done_text" />
                         <t t-else="">All done!</t>
                     </span>

@@ -18,7 +18,7 @@
                     resId="this.props.record.resId or 0"
                 >
                     <button class="btn btn-secondary o_attach" data-tooltip="Attach">
-                        <span class="fa fa-paperclip" aria-label="Attach"/> <t t-out="this.uploadText"/>
+                        <span class="oi" data-icon="attach_file" aria-label="Attach"/> <t t-out="this.uploadText"/>
                     </button>
                 </FileInput>
             </div>
@@ -49,7 +49,7 @@
                 </div>
             </div>
 
-            <div class="o_attachment_uploaded"><i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Uploaded"/></div>
+            <div class="o_attachment_uploaded"><i class="oi text-success" data-icon="check" role="img" aria-label="Uploaded" title="Uploaded"/></div>
             <div t-if="editable" class="o_attachment_delete" t-on-click.stop="() => this.onFileRemove(file.id)"><span role="img" aria-label="Delete" title="Delete">×</span></div>
         </div>
     </div>

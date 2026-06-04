@@ -927,7 +927,7 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: ".o_control_panel_navigation .btn .fa-search",
+    trigger: ".o_control_panel_navigation .btn [data-icon='search']",
     run: "click",
 },
 {
@@ -983,7 +983,7 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: ".dropdown-item:has(.oi-view-list)",
+    trigger: ".dropdown-item:has([data-icon='reorder'])",
     run: "click",
 },
 {

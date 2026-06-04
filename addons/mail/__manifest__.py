@@ -210,7 +210,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/lib/lame/lame.js',
         ],
         "mail.assets_message_email": [
-            "web/static/lib/odoo_ui_icons/style.css",
+            "web/static/lib/odoo_ui_icons/odoo_ui_icons.css",
         ],
         'mail.assets_public': [
             'web/static/lib/jquery/jquery.js',

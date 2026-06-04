@@ -15,9 +15,9 @@
               </div>
 
              <div t-custom-ref="actionMenu" class="o_fp_action_menu">
-                <button class="btn btn-secondary o_edit" title="Properties" t-if="this.selectedElement?.isEditable()" t-att-class="{'active':this.floorPlanStore.elementEditMode}" t-on-click="this.editSelected"><i class="fa fa-fw fa-pencil"/></button>
-                <button class="btn btn-secondary o_duplicate" title="Duplicate" t-on-click="this.duplicateSelected"><i class="fa fa-fw fa-copy"/></button>
-                <button class="btn btn-secondary o_delete" title="Delete" t-on-click="this.deleteSelected"><i class="fa fa-fw fa-trash "/></button>
+                <button class="btn btn-secondary o_edit" title="Properties" t-if="this.selectedElement?.isEditable()" t-att-class="{'active':this.floorPlanStore.elementEditMode}" t-on-click="this.editSelected"><i class="oi oi-fw oi-filled" data-icon="edit"/></button>
+                <button class="btn btn-secondary o_duplicate" title="Duplicate" t-on-click="this.duplicateSelected"><i class="oi oi-fw" data-icon="content_copy"/></button>
+                <button class="btn btn-secondary o_delete" title="Delete" t-on-click="this.deleteSelected"><i class="oi oi-fw oi-filled" data-icon="delete"/></button>
             </div>
         </div>
         <div class="o_fp_edit_menu position-absolute top-0 end-0 bottom-0 bg-view" t-att-class="{'visible': this.floorPlanStore.elementEditMode or this.floorPlanStore.floorEditMode}">

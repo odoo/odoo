@@ -23,7 +23,8 @@
         </xpath>
         <xpath expr="//button[@name='change_priority_link']" position="after">
             <button t-if="line.move_out and line.move_out.raw_material_production_id"
-                t-attf-class="o_priority o_priority_star fa fa-star#{line.move_out.raw_material_production_id.priority=='1' ? ' one' : '-o zero'}"
+                t-attf-class="o_priority o_priority_star oi #{line.move_out.raw_material_production_id.priority=='1' ? 'oi-filled one' : 'zero'}"
+                data-icon="star"
                 t-on-click="() => this._onClickChangePriority('mrp.production', line.move_out.raw_material_production_id)"/>
         </xpath>
     </t>

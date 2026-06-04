@@ -81,6 +81,7 @@ import { ResizePlugin } from "./main/resize_plugin";
 import { UserSignaturePlugin } from "./main/user_signature_plugin";
 import { DomReferenceMapPlugin } from "./core/dom_reference_map_plugin";
 import { DomObserverPlugin } from "./core/dom_observer_plugin";
+import { LegacyIconMigrationPlugin } from "./main/legacy_icon_migration_plugin";
 
 export const CORE_PLUGINS = [
     LegacyCompatibilityPlugin,
@@ -157,6 +158,7 @@ export const MAIN_PLUGINS = [
     PlaceholderPlugin,
     SelectionPlaceholderPlugin,
     ResizePlugin,
+    LegacyIconMigrationPlugin,
 ];
 
 export const COLLABORATION_PLUGINS = [

@@ -48,12 +48,12 @@
                             <span t-attf-style="margin-left: {{line.level}}px"/>
                             <t t-if="hasUpDown and line.is_used ">
                                 <span role="img" title="Traceability Report" aria-label="Traceability Report" t-on-click.prevent="() => this.onClickUpDownStream(line)">
-                                    <i class="fa fa-fw fa-level-up fa-rotate-270"/>
+                                    <i class="oi oi-fw oi-rotate-270" data-icon="subdirectory_arrow_left"/>
                                 </span>
                             </t>
                             <t t-elif="line.unfoldable">
                                 <span class="o_stock_reports_unfoldable o_stock_reports_caret_icon" t-on-click="() => this.toggleLine(line)">
-                                    <i class="fa fa-fw" t-att-class="line.isFolded ? 'fa-caret-right' : 'fa-caret-down'" role="img" aria-label="Unfold" title="Unfold"/>
+                                    <i class="oi oi-fw" t-att-data-icon="line.isFolded ? 'arrow_right' : 'arrow_drop_down'" role="img" aria-label="Unfold" title="Unfold"/>
                                 </span>
                             </t>
                         </t>

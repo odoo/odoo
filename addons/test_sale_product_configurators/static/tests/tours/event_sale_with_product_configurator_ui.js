@@ -11,7 +11,7 @@ registry.category("web_tour.tours").add("event_sale_with_product_configurator_to
         ...tourUtils.addProduct("Registration Event (TEST variants)"),
         {
             trigger:
-                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Memorabilia")) button:has(i.oi-plus)',
+                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Memorabilia")) button:has(i[data-icon="add"])',
             run: "click",
         },
         {

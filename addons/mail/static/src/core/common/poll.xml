@@ -14,7 +14,7 @@
                         <span class="flex-shrink-0">
                             <span class="me-2 smaller" t-out="this.props.poll.voteCountText(option.number_of_votes)"/>
                             <span class="o-fw-600"><t t-out="option.vote_percentage"/>%</span>
-                            <i t-if="option.selected_by_self" class="o-mx-1_5 fa fa-lg fa-check-circle"/>
+                            <i t-if="option.selected_by_self" class="o-mx-1_5 oi oi-lg oi-filled" data-icon="check_circle"/>
                         </span>
                     </div>
                     <label t-else="" class="d-flex justify-content-between p-2 cursor-pointer">

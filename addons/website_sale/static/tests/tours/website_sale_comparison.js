@@ -33,7 +33,7 @@ registry.category("web_tour.tours").add('website_sale.product_comparison', {
         },
         {
             content: "remove product",
-            trigger: '[name="product_comparison_bottom_bar_row"]:contains("Color T-Shirt") button:has(i.oi-close)',
+            trigger: '[name="product_comparison_bottom_bar_row"]:contains("Color T-Shirt") button:has([data-icon="close"])',
             run: "click",
         },
         {

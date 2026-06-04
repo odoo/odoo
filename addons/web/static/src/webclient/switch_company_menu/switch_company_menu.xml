@@ -13,7 +13,7 @@
             disabled="this.isSingleCompany"
         >
             <button data-hotkey="shift+u" t-att-disabled="this.isSingleCompany" t-att-title="this.user.activeCompany.name" class="o_switch_company_menu d-none d-md-flex">
-                <i class="fa fa-building d-lg-none"/>
+                <i class="oi oi-filled d-lg-none" data-icon="business"/>
                 <span class="oe_topbar_name d-none d-lg-block text-truncate" t-out="this.user.activeCompany.name"/>
             </button>
 
@@ -34,14 +34,14 @@
             t-on-click="() => this.selectAll()"
         >
             <span class="btn border-0 pt-2 px-2" t-att-class="this.selectAllClass">
-                <i class="fa fa-fw" t-att-class="this.selectAllIcon"/>
+                <i class="oi oi-fw" t-att-class="this.selectAllIconClass" t-att-data-icon="this.selectAllIcon"/>
             </span>
         </div>
         <div
             class="form-control d-flex align-items-center py-1"
             role="search"
         >
-            <i class="oi oi-search me-2" role="img" aria-label="Search..." title="Search..."/>
+            <i class="oi me-2" data-icon="search" role="img" aria-label="Search..." title="Search..."/>
             <div class="d-flex flex-grow-1 flex-wrap gap-1">
                 <input
                     t-on-input="this.onSearch"

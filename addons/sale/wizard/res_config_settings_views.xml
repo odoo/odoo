@@ -14,7 +14,7 @@
                             <field name="group_product_variant"/>
                             <div class="content-group" invisible="not group_product_variant">
                                 <div class="mt8">
-                                    <button name="%(product.attribute_action)d" icon="oi-arrow-right" type="action" string="Attributes" class="btn-link"/>
+                                    <button name="%(product.attribute_action)d" icon="east" type="action" string="Attributes" class="btn-link"/>
                                 </div>
                             </div>
                         </setting>
@@ -25,7 +25,7 @@
                             <field name="group_uom"/>
                             <div class="content-group" invisible="not group_uom">
                                 <div class="mt8">
-                                    <button name="%(uom.product_uom_form_action)d" icon="oi-arrow-right" type="action" string="Units &amp; Packagings" class="btn-link"/>
+                                    <button name="%(uom.product_uom_form_action)d" icon="east" type="action" string="Units &amp; Packagings" class="btn-link"/>
                                 </div>
                             </div>
                         </setting>
@@ -41,7 +41,7 @@
                             <field name="group_product_pricelist"/>
                             <div class="content-group" invisible="not group_product_pricelist">
                                 <div class="mt16">
-                                    <button name="%(product.product_pricelist_action2)d" icon="oi-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
+                                    <button name="%(product.product_pricelist_action2)d" icon="east" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
                                 </div>
                             </div>
                         </setting>
@@ -97,7 +97,7 @@
                                     string="View Alternatives"
                                     type="action"
                                     name='%(payment.action_payment_provider)d'
-                                    icon="oi-arrow-right"
+                                    icon="east"
                                     class="btn btn-link oe_inline"
                                 />
                             </div>
@@ -122,7 +122,7 @@
                                     string="View Other Providers"
                                     type="action"
                                     name="%(payment.action_payment_provider)d"
-                                    icon="oi-arrow-right"
+                                    icon="east"
                                     class="btn btn-link col-auto"
                                 />
                             </div>
@@ -132,7 +132,8 @@
                                 <label for="quotation_validity_days"/>
                                 <field name="quotation_validity_days" class="text-center" style="width: 3rem;"/>
                                 <div class="d-inline-block">days</div>
-                                <span class="fa fa-lg fa-building-o p-2"
+                                <span class="oi oi-lg p-2"
+                                      data-icon="business"
                                       title="Values set here are company-specific."
                                       groups="base.group_multi_company"/>
                             </div>

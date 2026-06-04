@@ -29,7 +29,7 @@
         </div>
         <div t-if="(this.state.showCodeView and !this.state.forceCodeView) || (this.sandboxedPreview and !this.props.readonly)" t-custom-ref="codeViewButton" id="codeview-btn-group" class="btn-group" t-on-click="this.toggleCodeView">
             <button class="o_codeview_btn btn btn-primary">
-                <i class="fa fa-code" />
+                <i class="oi" data-icon="code" />
             </button>
         </div>
     </t>

@@ -8,7 +8,7 @@ registerMessageAction("pin", {
         message.thread &&
         thread?.model !== "mail.box" &&
         (!message.channel_id || message.channel_id.canSelfInteractWithChannel),
-    icon: "fa fa-thumb-tack",
+    icon: "push_pin",
     name: _t("Pin"),
     onSelected: ({ message }) => (message.channel_id || message.thread).messagePin(message),
     sequence: 70,
@@ -21,7 +21,7 @@ registerMessageAction("unpin", {
         message.thread &&
         thread?.model !== "mail.box" &&
         (!message.channel_id || message.channel_id.canSelfInteractWithChannel),
-    icon: "fa fa-thumb-tack",
+    icon: "push_pin",
     name: _t("Unpin"),
     onSelected: ({ message }) => (message.channel_id || message.thread).messageUnpin(message),
     sequence: 70,

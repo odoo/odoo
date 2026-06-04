@@ -5,7 +5,7 @@
             <span t-if="!this.env.inChatter and this.channel?.showUnreadBanner" class="o-mail-Thread-banner d-flex cursor-pointer shadow-sm smaller o-fw-600 border border-warning">
                 <t t-set="alertClass" t-value="'alert alert-warning m-0 border-start-0 o-mail-Thread-bannerHover py-1 rounded-0'"/>
                 <span t-attf-class="{{ alertClass }} flex-grow-1" t-on-click="this.onClickUnreadMessagesBanner" t-out="this.newMessageBannerText"/>
-                <span t-attf-class="{{ alertClass }}" t-on-click="() => this.props.thread.markAsRead()">Mark as Read<i class="ms-2 fa fa-check-square"/></span>
+                <span t-attf-class="{{ alertClass }}" t-on-click="() => this.props.thread.markAsRead()">Mark as Read<i class="ms-2 oi oi-filled" data-icon="check_box"/></span>
             </span>
         </xpath>
     </t>

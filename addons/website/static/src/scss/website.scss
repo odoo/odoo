@@ -585,8 +585,8 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
             &:after {
                 height: 100%;
                 background: none;
-                font-family: 'odoo_ui_icons';
-                content: '\e839';
+                font-family: var(--icon-font-family, "material_symbols_outlined");
+                content: 'keyboard_arrow_down';
             }
         }
     }
@@ -790,10 +790,7 @@ font[class*='bg-'] {
     object-fit: cover;
 }
 // Icons
-.fa {
-    font-family: "FontAwesome" !important;
-}
-.fa, .social_media_img {
+.fa, .oi, .social_media_img {
     $-size: map-get($spacers, 5);
 
     &.rounded-circle,
@@ -805,12 +802,12 @@ font[class*='bg-'] {
         display: inline-block;
         vertical-align: middle;
         text-align: center;
-        // fa-1x is not ouput
+        // oi-1x is not ouput
         width: $-size;
         height: $-size;
         line-height: $-size;
         @for $i from 2 through 5 {
-            &.fa-#{$i}x {
+            &.fa-#{$i}x, &.oi-#{$i}x {
                 width: $-size + $i;
                 height: $-size + $i;
                 line-height: $-size + $i;
@@ -1141,7 +1138,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         background-image: none;
         color: $body-color;
         &:before {
-            font-family: "FontAwesome";
+            font-family: var(--icon-font-family, "material_symbols_outlined");
             display: inline-block;
             background-color: #fff;
         }
@@ -1169,8 +1166,8 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
     // Default
     &.s_carousel_default {
         // Controls - chevron
-        .carousel-control-prev-icon:before { content: "\f053" #{"/*rtl:'\f054'*/"}; margin-left: 1.5rem; }
-        .carousel-control-next-icon:before { content: "\f054" #{"/*rtl:'\f053'*/"}; margin-right: 1.5rem; }
+        .carousel-control-prev-icon:before { content: "chevron_left" #{"/*rtl:'chevron_right'*/"}; margin-left: 1.5rem; }
+        .carousel-control-next-icon:before { content: "chevron_right" #{"/*rtl:'chevron_left'*/"}; margin-right: 1.5rem; }
         .carousel-control-prev-icon:before,
         .carousel-control-next-icon:before {
             background-color: rgba(0,0,0,0);
@@ -1195,8 +1192,8 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             border: 0.5rem solid rgba(0,0,0,0);
         }
         // Controls - caret
-        .carousel-control-prev-icon:before { content: "\f0d9"; }
-        .carousel-control-next-icon:before { content: "\f0da"; }
+        .carousel-control-prev-icon:before { content: "arrow_left"; }
+        .carousel-control-next-icon:before { content: "arrow_right"; }
         .carousel-control-prev-icon:before,
         .carousel-control-next-icon:before {
             width: 2rem;
@@ -1221,8 +1218,8 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         // Controls - arrow
         .carousel-control-prev { margin-left: 1.5rem; }
         .carousel-control-next { margin-right: 1.5rem; }
-        .carousel-control-prev-icon:before { content: "\f060"; }
-        .carousel-control-next-icon:before { content: "\f061"; }
+        .carousel-control-prev-icon:before { content: "arrow_back"; }
+        .carousel-control-next-icon:before { content: "arrow_forward"; }
         .carousel-control-prev-icon:before,
         .carousel-control-next-icon:before {
             width: 4rem;
@@ -1254,8 +1251,8 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         }
         .carousel-control-prev { margin-left: 3rem; }
         .carousel-control-next { margin-right: 3rem; }
-        .carousel-control-prev-icon:before { content: "\f104"; }
-        .carousel-control-next-icon:before { content: "\f105"; }
+        .carousel-control-prev-icon:before { content: "keyboard_arrow_left"; }
+        .carousel-control-next-icon:before { content: "keyboard_arrow_right"; }
         .carousel-control-prev-icon:before,
         .carousel-control-next-icon:before {
             width: 2rem;
@@ -2129,9 +2126,9 @@ header {
     }
 
     .o_mega_menu_toggle::after {
-        content: '\e83b';
+        content: 'chevron_forward';
         border: none;
-        font-family: 'odoo_ui_icons';
+        font-family: var(--icon-font-family, "material_symbols_outlined");
     }
 
     .o_mega_menu_left .o_mega_menu {
@@ -2439,7 +2436,7 @@ span.list-inline-item.o_add_language:last-child {
     display: flex;
     // Need to update button size based on icon size.
     @for $i from 1 through 5 {
-        &:has(i.fa-#{$i}x) {
+        &:has(i.fa-#{$i}x, i.oi-#{$i}x) {
             width: #{$i}em;
             height: #{$i}em;
         }
@@ -3564,7 +3561,7 @@ input[value*="data-oe-translation-source-sha"] {
         font-size: 0.875em;
     }
     a {
-        .fa-stack{
+        .fa-stack, .oi-stack {
             /*
             Ensures consistent size and padding around icons when the
             layout is set to "none" and the size is "huge" or "large".
@@ -3573,7 +3570,7 @@ input[value*="data-oe-translation-source-sha"] {
             s_social_media/000.scss and s_share/000.scss).
             */
             @for $i from 2 through 3 {
-                &.fa-#{$i}x {
+                &.fa-#{$i}x, &.oi-#{$i}x {
                     width: $-size + $i;
                     height: $-size + $i;
                     line-height: $-size + $i;

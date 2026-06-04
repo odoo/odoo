@@ -131,7 +131,7 @@ class StockPackage(models.Model):
                 'title': self.env._("Multiple destinations"),
                 'msg': self.env._("This package is currently set to be sent in %(location_names_list)s.", location_names_list=location_names),
                 'color': 'text-warning',
-                'icon': 'fa-exclamation-triangle',
+                'icon': 'warning',
             })
 
     @api.depends('move_line_ids')

@@ -338,7 +338,7 @@ const createDropdown = function (name) {
         },
         {
             content: "Move the dropdown item into the dropdown",
-            trigger: `.oe_menu_editor li:last:contains(${name} item) .oi-draggable`,
+            trigger: `.oe_menu_editor li:last:contains(${name} item) [data-icon="drag_indicator"]`,
             run(helpers) {
                 return helpers.drag_and_drop('.oe_menu_editor li:contains("' + name + '")', {
                     position: {
@@ -503,7 +503,7 @@ registry.category("web_tour.tours").add("edit_megamenu_visibility", {
         }),
         {
             content: "Switch to desktop view",
-            trigger: "button:has(> span.fa-mobile)",
+            trigger: "button:has(> span[data-icon='smartphone'])",
             run: "click",
         },
         // Check desktop visibility while editing

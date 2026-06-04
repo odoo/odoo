@@ -31,7 +31,7 @@
             <div class="flex-grow-1">
                 <div class="o_wforum_breadcrumb_root_single d-flex align-items-center mb-2">
                     <a t-if="breadcrumb_kind == 'base'" t-attf-href="/forum/#{ _forum_slug }">
-                        <i class="d-inline-block fa fa-angle-left me-2 small"/><t t-out="_forum_name"/>
+                        <i class="oi d-inline-block me-2 small" data-icon="keyboard_arrow_left"/><t t-out="_forum_name"/>
                     </a>
                     <button class="btn d-lg-none position-relative ms-auto p-2" data-bs-toggle="offcanvas" data-bs-target="#o_wforum_offcanvas">
                         <span class="navbar-toggler-icon"/>
@@ -40,7 +40,7 @@
                 <div class="d-flex gap-2 align-items-baseline">
                     <h1 t-attf-class="col-lg-10 my-0 h3" t-out="question.name"/>
                     <div class="col d-flex justify-content-end align-items-center">
-                        <i t-if="question.state == 'close'" class="fa fa-lock ms-2 fs-4" title="Closed" data-bs-toggle="tooltip" data-bs-placement="top"/>
+                        <i t-if="question.state == 'close'" class="oi ms-2 fs-4" data-icon="lock" title="Closed" data-bs-toggle="tooltip" data-bs-placement="top"/>
                         <span t-elif="not question.active" class="badge text-bg-danger">
                             <t t-if="question.state!='offensive'">Deleted</t>
                             <t t-if="question.state=='offensive'">Offensive</t>
@@ -51,7 +51,8 @@
                         <a t-elif="uid" type="button" aria-label="Favorite"
                             t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
                             t-attf-class="o_wforum_favourite_toggle btn btn-lg #{ 'opacity-50' if not question.user_favourite else '' } opacity-hover-100 p-0">
-                            <i t-attf-class="position-relative fa #{'o_wforum_gold fa-star ' if question.user_favourite else 'fa-star-o '}"
+                            <i t-attf-class="position-relative oi #{'o_wforum_gold oi-filled' if question.user_favourite else ''}"
+                                data-icon="star"
                                 data-bs-toggle="tooltip"
                                 data-bs-placement="top"
                                 title="Favorite"/>
@@ -93,14 +94,14 @@
             </div>
             <div t-if="tag or tags or search or question_count or page_name or website_forum_action" t-attf-class="d-flex justify-content-lg-end gap-2 flex-grow-1 flex-wrap flex-md-nowrap w-100 w-lg-auto #{'mw-xl-75' if search else 'mw-xl-50'}">
                 <span t-if="tag and not tags" class="btn btn-light rounded ps-2">
-                    <span t-if="tag"><i class="fa fa-tag me-1 opacity-50"/><t t-out="tag.name"/></span>
+                    <span t-if="tag"><i class="oi me-1 opacity-50" data-icon="label"/><t t-out="tag.name"/></span>
                     <a t-attf-href="#{ url_for('/forum') }/#{ _forum_slug }?#{ keep_query('search', 'sorting', 'my', 'create_uid') }"
-                       class="p-1 text-decoration-none text-reset opacity-50"><i class="oi oi-close d-inline-block"/></a>
+                       class="p-1 text-decoration-none text-reset opacity-50"><i class="oi d-inline-block" data-icon="close_small"/></a>
                 </span>
                 <span t-if="search" class="btn btn-light rounded ps-2">
                     <em t-if="search" class="text-muted">"<t t-out="search"/>"</em>
                     <a t-attf-href="?#{ keep_query('sorting', 'my') }" class="p-1 text-decoration-none text-reset opacity-50">
-                        <i class="oi oi-close d-inline-block"/>
+                        <i class="oi d-inline-block" data-icon="close_small"/>
                     </a>
                 </span>
                 <div t-if="question_count or tags" class="dropdown ms-lg-auto">
@@ -177,7 +178,7 @@
                 </t>
                 <button t-if="website_forum_action and not queue_type == 'close' and posts_ids" type="button" class="o_wforum_btn_filter_tool btn btn-secondary"
                     data-bs-toggle="modal" data-bs-target="#markAllAsSpam">
-                    <i class="fa fa-bug me-1"/>Filter Tool
+                    <i class="oi me-1" data-icon="bug_report"/>Filter Tool
                 </button>
             </div>
         </t>
@@ -225,7 +226,7 @@
         </div>
         <div t-if="forum" class="o_wforum_sidebar_footer mt-3 px-3 pb-2 text-center">
             <a class="btn btn-sm btn-link" t-attf-href="/forum/#{slug(forum)}/faq">
-                <i class="fa fa-info-circle fa-fw"/> About this forum
+                <i class="oi oi-fw" data-icon="info"/> About this forum
             </a>
         </div>
     </aside>
@@ -240,7 +241,7 @@
             <t t-call="website_forum.user_sidebar_body"/>
             <div t-if="forum" class="mb-2 d-flex justify-content-center align-items-end flex-grow-1">
                 <a class="btn btn-sm btn-link" t-att-href="_forum_path + '/faq'">
-                    <i class="fa fa-info-circle fa-fw"/> About this forum
+                    <i class="oi oi-fw" data-icon="info"/> About this forum
                 </a>
             </div>
         </div>
@@ -274,42 +275,42 @@
         <t t-set="location" t-valuef="#{ _forum_path }#{ ('/tag/' + slug(tag) + '/questions') if (tag and not tags) else '' }?"/>
         <!-- All Posts -->
         <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if request.httprequest.path ==  _forum_path and no_filters and not any([my, queue_type, tags]) else 'text-reset' }" t-att-href="location">
-            <i t-attf-class="fa fa-list fa-fw #{ 'opacity-50' if request.httprequest.path != _forum_path or my or queue_type else '' }"/> All Posts
+            <i t-attf-class="oi oi-fw #{ 'opacity-50' if request.httprequest.path != _forum_path or my or queue_type else '' }" data-icon="format_list_bulleted"/> All Posts
         </a>
         <t t-if="uid">
             <!-- My Posts -->
             <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if my == 'mine' else 'text-reset' }" t-att-href="location + keep_query('search', 'filters', 'sorting', my='mine')">
-                <i t-attf-class="fa fa-user-circle fa-fw #{ 'opacity-50' if my != 'mine' else ''}"/> My Posts
+                <i t-attf-class="oi oi-filled oi-fw #{ 'opacity-50' if my != 'mine' else ''}" data-icon="account_circle"/> My Posts
             </a>
 
             <!-- My Favourites -->
             <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if my == 'favourites' else 'text-reset' }" t-att-href="location + keep_query( 'search', 'filters', 'sorting', my='favourites')">
-                <i t-attf-class="fa fa-star fa-fw #{ 'opacity-50' if my != 'favourites' else ''}"/> Favourites
+                <i t-attf-class="oi oi-filled oi-fw #{ 'opacity-50' if my != 'favourites' else ''}" data-icon="star"/> Favourites
             </a>
         </t>
         <!-- People -->
         <a t-attf-class="nav-link my-1 py-1 text-reset" t-attf-href="/profile/users">
-            <i class="fa fa-users fa-fw opacity-50"/> People
+            <i class="oi oi-filled oi-fw opacity-50" data-icon="group"/> People
         </a>
 
         <!-- Badges -->
         <a t-attf-class="nav-link my-1 py-1 text-reset" t-attf-href="/profile/ranks_badges">
-            <i class="fa fa-shield fa-fw opacity-50"/> Badges
+            <i class="oi oi-fw opacity-50" data-icon="security"/> Badges
         </a>
     </div>
     <div t-if="forum and user.karma>=forum.karma_moderate" class="o_wforum_sidebar_section pt-3">
         <!-- Moderation Tools -->
         <div class="px-3 pb-1 fw-bold">Moderation tools</div>
         <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if queue_type == 'validation' else 'text-reset'}" t-attf-href="/forum/#{_forum_slug}/validation_queue">
-            <i t-attf-class="fa fa-check-square-o fa-fw #{ 'opacity-50' if queue_type != 'validation' else ''}"/> To Validate
+            <i t-attf-class="oi oi-fw #{ 'opacity-50' if queue_type != 'validation' else ''}" data-icon="check_box"/> To Validate
             <span id="count_posts_queue_validation" t-attf-class="badge #{ 'text-bg-warning' if forum.count_posts_waiting_validation > 0 else 'd-none'}" t-out="forum.count_posts_waiting_validation"/>
         </a>
         <a t-attf-class="nav-link my-1 py-1 #{'rounded text-bg-light disabled' if queue_type == 'offensive' or queue_type == 'flagged' else 'text-reset'}" t-attf-href="/forum/#{_forum_slug}/flagged_queue">
-            <i t-attf-class="fa fa-flag fa-fw #{ 'opacity-50' if queue_type != 'flagged' else ''}"/> Flagged
+            <i t-attf-class="oi oi-filled oi-fw #{ 'opacity-50' if queue_type != 'flagged' else ''}" data-icon="flag"/> Flagged
             <span id="count_posts_queue_flagged" t-attf-class="badge #{ 'text-bg-danger' if forum.count_flagged_posts > 0 else 'd-none'}" t-out="forum.count_flagged_posts"/>
         </a>
         <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if queue_type == 'close' else 'text-reset'}" t-attf-href="/forum/#{_forum_slug}/closed_posts">
-            <i t-attf-class="fa fa-window-close fa-fw #{ 'opacity-50' if queue_type != 'close' else '' }"/> Closed
+            <i t-attf-class="oi oi-filled oi-fw #{ 'opacity-50' if queue_type != 'close' else '' }" data-icon="cancel"/> Closed
         </a>
     </div>
     <div t-if="forum and forum.tag_most_used_ids" class="o_wforum_sidebar_section pt-3">
@@ -321,7 +322,7 @@
         <a t-foreach="forum.tag_most_used_ids" t-as="tag"
             t-attf-href="#{ _forum_path }/tag/#{ slug(tag) }/questions?#{ keep_query( 'search', 'sorting', 'my', 'filters') }"
             t-attf-class="nav-link my-1 py-1 text-reset">
-            <i class="fa fa-tag fa-fw small opacity-50"/>
+            <i class="oi oi-fw small opacity-50" data-icon="label"/>
             <t t-out="tag.name"/>
         </a>
     </div>
@@ -329,7 +330,7 @@
         <div class="px-3 pb-1 fw-bold">My forums</div>
         <t t-foreach="my_other_forums.sorted(lambda f: f.name.casefold())" t-as="my_forum">
             <a class="nav-link my-1 py-1 text-reset" t-attf-href="/forum/#{slug(my_forum)}">
-                <i class="fa fa-file-o fa-fw opacity-50"/>
+                <i class="oi oi-fw opacity-50" data-icon="description"/>
                 <t t-out="my_forum.name"/>
             </a>
         </t>
@@ -395,9 +396,9 @@
             </span>
             <span t-if="original_search">Showing results for <em class="fw-bold" t-out="search"/> instead.</span>
             <div t-if="question_count == 0 and (not forum or forum.total_posts != 0)" class="mt-3 text-start">
-                <p><i class="fa fa-check fa-fw me-1"/>Check your spelling and try again.</p>
-                <p><i class="fa fa-check fa-fw me-1"/>Try searching for one or two words.</p>
-                <p><i class="fa fa-check fa-fw me-1"/>Be less specific in your wording for a wider search result.</p>
+                <p><i class="oi oi-fw me-1" data-icon="check"/>Check your spelling and try again.</p>
+                <p><i class="oi oi-fw me-1" data-icon="check"/>Try searching for one or two words.</p>
+                <p><i class="oi oi-fw me-1" data-icon="check"/>Be less specific in your wording for a wider search result.</p>
             </div>
             <span t-elif="forum and forum.total_posts == 0">Because there are no posts in this forum yet.</span>
             <div class="mt-3">
@@ -417,7 +418,7 @@
         <h1 class="mt-4">Question not found!</h1>
         <p>Sorry, this question is not available anymore.</p>
         <p>
-            <a class="btn-link o_translate_inline" t-attf-href="/forum"><i class="oi oi-arrow-right display-inline-block"/> Return to questions list</a>
+            <a class="btn-link o_translate_inline" t-attf-href="/forum"><i class="oi display-inline-block" data-icon="east"/> Return to questions list</a>
         </p>
     </t>
 </template>

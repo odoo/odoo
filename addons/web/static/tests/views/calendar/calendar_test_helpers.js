@@ -473,7 +473,7 @@ export async function selectAllDayRange(startDate, endDate) {
 }
 export async function closeCwPopOver() {
     if (getMockEnv().isSmall) {
-        await contains(`.oi-arrow-left`).click();
+        await contains(`[data-icon="west"]`).click();
     } else {
         await contains(`.o_cw_popover_close`).click();
     }

@@ -67,7 +67,7 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
-            trigger: ".oi-arrow-right", // Wait for product creation
+            trigger: "[data-icon='east']", // Wait for product creation
         },
         {
             trigger: ".o_field_widget[name='price_unit'] input",

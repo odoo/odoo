@@ -13,7 +13,7 @@
                 <div t-if="this.siblingViews.length > 0" class="alert alert-info m-1 p-1">
                     Multiple tree exists for this view
                     <a t-foreach="this.siblingViews" t-as="siblingView" t-key="siblingView.id" href="#" class="o_load_hierarchy" t-on-click.stop.prevent="() => this.onShowHierarchy(siblingView.id)">
-                        <i class="oi oi-arrow-right me-1"/>
+                        <i class="oi me-1" data-icon="east"/>
                         <t t-out="siblingView.display_name"/>
                         &lt;<t t-out="siblingView.key"/>&gt;
                         <t t-if="siblingView.website_id">
@@ -30,18 +30,18 @@
 <t t-name="website.report_viewhierarchy_children">
     <p t-on-click="() => this.onCollapseClick(viewTree)"
     t-attf-class="o_tree_entry mb-0 d-flex align-items-center {{viewTree.active ? '': 'text-muted fw-normal'}} {{viewTree.inherit_children.length ? 'o_has_child' : ''}} {{this.state.searchedView.id === viewTree.id ? 'o_search_found border border-info rounded px-2': ''}}">
-        <i t-if="this.hasChildToUnfold(viewTree)" t-attf-class="js_fold o_fold_icon fa {{ viewTree.collapsed ? 'fa-plus-square-o' : 'fa-minus-square-o' }} me-1"/>
-        <i t-if="viewTree.arch_updated" class="fa fa-pencil-square me-1 o_text_pink" title="This view arch has been modified"/>
+        <i t-if="this.hasChildToUnfold(viewTree)" t-attf-class="js_fold o_fold_icon oi me-1" t-attf-data-icon="{{ viewTree.collapsed ? 'add_box' : 'indeterminate_check_box' }}"/>
+        <i t-if="viewTree.arch_updated" class="oi oi-filled me-1 o_text_pink" data-icon="edit_square" title="This view arch has been modified"/>
         <!-- Yellow bg to highlight requested view as google does -->
         <span class="js_fold" t-att-style="this.viewId === viewTree.id ? 'background-color: yellow': ''">
             <t t-out="viewTree.name"/> (<span class="fw-bold" t-out="viewTree.key"/>)
             <span class="o_text_orange" t-if="viewTree.website_name" t-out="`[${viewTree.website_name}]`"/>
         </span>
         <a href="#" t-on-click.stop.prevent="() => this.openFormView(viewTree.id)">
-            <i class="fa fa-eye ms-2 text-muted" title="Go to View"/>
+            <i class="oi ms-2 text-muted" data-icon="visibility" title="Go to View"/>
         </a>
         <a class="o_show_diff" href="#" t-on-click.stop.prevent="() => this.onShowDiffClick(viewTree.id)">
-            <i class="fa fa-files-o ms-2 text-muted" title="Show Arch Diff"/>
+            <i class="oi ms-2 text-muted" data-icon="content_copy" title="Show Arch Diff"/>
         </a>
         <t t-if="this.state.searchedView.id === viewTree.id">
             <span class="o_tab_hint text-info ms-auto small fst-italic pe-2">Press &lt;Tab&gt; for next [<t t-out="this.state.searchedView.index+1"/>/<t t-out="this.state.searchedView.total"/>]</span>

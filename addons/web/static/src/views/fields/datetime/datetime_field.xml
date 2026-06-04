@@ -3,7 +3,7 @@
     <t t-name="web.DateTimeField">
         <t t-set="showSeparator" t-value="this.shouldShowSeparator()" />
         <div class="d-flex gap-2 align-items-center" t-custom-ref="root">
-            <i t-if="!this.props.readonly" class="fa fa-calendar d-none d-touch-inline-flex" />
+            <i t-if="!this.props.readonly" class="oi oi-filled d-none d-touch-inline-flex" data-icon="calendar_today" />
             <!-- Start date -->
             <t t-if="this.props.readonly">
                 <span t-if="!this.isEmpty(this.startDateField)" class="text-truncate" t-out="window.String(this.getFormattedValue(0))" t-att-data-tooltip="this.getFormattedValue(0, true)"/>
@@ -42,7 +42,7 @@
 
             <!-- Separator -->
             <t t-if="showSeparator">
-                <i class="fa fa-long-arrow-right" aria-label="Arrow icon" title="Arrow" />
+                <i class="oi" data-icon="east" aria-label="Arrow icon" title="Arrow" />
             </t>
 
             <!-- End date -->

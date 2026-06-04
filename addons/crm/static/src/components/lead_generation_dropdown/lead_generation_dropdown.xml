@@ -19,7 +19,7 @@
                                 t-on-mouseenter="() => this.swapDescription(element)"
                                 t-on-mouseleave="() => this.resetDescription(element)">
                             <div class="o_lead_mining_element_icon d-flex align-items-center justify-content-center border rounded">
-                                <i t-if="element.status === 'INSTALLING'" class="fa fa-spin fa-circle-o-notch"/>
+                                <i t-if="element.status === 'INSTALLING'" class="oi oi-spin" data-icon="autorenew"/>
                                 <img t-else="" t-att-src="element.icon"
                                     t-att-class="(element.status === 'NOT_INSTALLED') ? 'o_uninstalled_module' : ''"
                                     alt=""/>

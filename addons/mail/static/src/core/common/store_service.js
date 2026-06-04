@@ -481,12 +481,12 @@ export class Store extends BaseStore {
 
     handleValidChannelMention(channelLinks) {
         for (const linkEl of channelLinks.filter(
-            (el) => !el.querySelector(".fa-comments-o, .fa-hashtag")
+            (el) => !el.querySelector("[data-icon='forum'], [data-icon='tag']")
         )) {
             const text = linkEl.textContent.substring(1); // remove '#' prefix
             const icon = linkEl.classList.contains("o_channel_redirect_asThread")
-                ? "fa fa-comments-o"
-                : "fa fa-hashtag";
+                ? "forum"
+                : "tag";
             const iconEl = renderToElement("mail.Message.mentionedChannelIcon", { icon });
             linkEl.replaceChildren(iconEl);
             linkEl.insertAdjacentText("beforeend", ` ${text}`);

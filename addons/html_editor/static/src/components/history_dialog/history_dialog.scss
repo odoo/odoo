@@ -32,8 +32,8 @@
 }
 
 .modal-fullscreen {
-    .o_expand_button.fa-expand:before {
-        content: "\f066";
+    .o_expand_button[data-icon="expand_content"]:before {
+        content: "close_fullscreen";
     }
 }
 
@@ -44,8 +44,8 @@
         border: $border-width * 2 dashed $border-color;
 
         &:before {
-            content: '\f1b2';
-            font-family: FontAwesome;
+            content: 'deployed_code';
+            font-family: 'material_symbols_outlined';
             font-size: 1.25rem;
             opacity: 0.5;
         }
@@ -168,8 +168,8 @@
             }
 
             &:before {
-                content: '\f04b';
-                font-family: 'FontAwesome';
+                content: 'play_arrow';
+                font-family: 'material_symbols_outlined';
                 left: calc(-#{$line-left} - #{$dot-size / 2});
                 width: $dot-size;
                 height: $dot-size;

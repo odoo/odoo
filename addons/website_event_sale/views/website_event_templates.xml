@@ -91,7 +91,7 @@
             <t t-set="has_paying_ticket" t-value="any(ticket.get('price', 0) > 0 for ticket in tickets)"/>
             <button t-if="website.account_on_checkout == 'mandatory' and website.is_public_user() and has_paying_ticket" class="btn btn-primary" type="submit">
                 <span>Sign In</span>
-                <span class="fa fa-sign-in"/>
+                <span class="oi" data-icon="login"/>
             </button>
             <button t-else="" type="submit" class="btn btn-primary">
                 <span t-if="has_paying_ticket">Go to Payment</span>

@@ -8,7 +8,7 @@
                     <!-- Show QR Code -->
                     <t t-if="line.useQr">
                         <button class="paymentline_show_qr_code btn btn-link ms-2 ps-3" t-on-click="() => this.showQrCode(line)" t-att-disabled="!line.qr_code || !line.isProcessing()" aria-label="Show QR Code" title="Show QR Code">
-                            <i class="fa fa-qrcode" role="img" />
+                            <i class="oi" data-icon="qr_code" role="img" />
                         </button>
                     </t>
 
@@ -23,14 +23,14 @@
                     <!-- Delete or Spinner -->
                     <div t-if="(!line.isSelected() and line.isProcessing())"
                         class="payment-spinner mx-2 px-3">
-                        <i class="fa fa-circle-o-notch fa-spin" role="img" />
+                        <i class="oi oi-spin" data-icon="autorenew" role="img" />
                     </div>
                     <button t-elif="(!line.isDone() or !line.payment_status)"
                             class="delete-button btn btn-link mx-2 px-3"
                             t-on-click="() => this.props.deleteLine(line.uuid)"
                             aria-label="Delete"
                             title="Delete">
-                        <i class="oi oi-close text-danger" />
+                        <i class="oi text-danger" data-icon="close_small"/>
                     </button>
                 </div>
 
@@ -41,7 +41,7 @@
                         <div class="paymentline_status_title d-flex justify-content-between align-items-center gap-2 py-3 px-4 fs-4" t-attf-class="paymentline_status_title_{{state.id}}">
                             <span class="text-truncate" t-out="state.title" />
                             <t t-if="state.icon">
-                                <i t-att-class="state.icon" role="img" />
+                                <i class="oi" t-att-class="state.icon_class" t-att-data-icon="state.icon" role="img" />
                             </t>
                         </div>
                         <div t-if="state.id == 'waiting' and line.payment_method_id.payment_interface?.amountInserted != null"

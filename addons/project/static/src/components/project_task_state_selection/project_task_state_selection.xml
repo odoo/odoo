@@ -5,7 +5,8 @@
             <attribute name="tabindex">-1</attribute>
         </xpath>
         <xpath expr="//t[@t-if='this.props.readonly']/button/span[1]" position="attributes">
-            <attribute name="t-attf-class">{{ this.stateIcon(this.currentValue) }} {{ this.statusColor(this.currentValue) }}</attribute>
+            <attribute name="t-attf-class">{{ this.stateClassIcon(this.currentValue) }} {{ this.statusColor(this.currentValue) }}</attribute>
+            <attribute name="t-attf-data-icon">{{ this.stateIcon(this.currentValue) }}</attribute>
         </xpath>
         <xpath expr="//t[@t-if='this.props.readonly']/button" position="attributes">
             <attribute name="t-att-title">this.label</attribute>
@@ -14,7 +15,7 @@
         <xpath expr="//t[@t-if='this.props.readonly']" position="after">
             <t t-elif="this.currentValue == '04_waiting_normal' and this.isView(['activity', 'kanban', 'list', 'calendar'])">
                 <button class="d-flex align-items-center btn fw-normal p-0 justify-content-center " title="This task is blocked by another unfinished task" t-att-class="{'o_task_state_list_view': this.isView(['list'])}">
-                    <i class="fa fa-lg fa-hourglass-o text-info"></i>
+                    <i class="oi oi-lg text-info" data-icon="hourglass_empty"></i>
                 </button>
             </t>
         </xpath>
@@ -27,7 +28,7 @@
                         t-att-class="{'o_task_state_list_view': this.isView(['list'])}"
                         t-on-click.stop="this.toggleState"
                 >
-                    <i t-attf-class="{{ this.stateIcon(this.currentValue) }} {{ this.statusColor(this.currentValue) }} {{ ['1_done', '1_canceled'].includes(this.currentValue) and this.isView(['activity', 'kanban']) ? 'opacity-50' : '' }}"></i>
+                    <i t-attf-class="{{ this.stateClassIcon(this.currentValue) }} {{ this.statusColor(this.currentValue) }} {{ ['1_done', '1_canceled'].includes(this.currentValue) and this.isView(['activity', 'kanban']) ? 'opacity-50' : '' }}" t-attf-data-icon="{{ this.stateIcon(this.currentValue) }}"></i>
                 </button>
                 <button t-else="" class="o_state_button btn oe_highlight rounded-pill" style="white-space: nowrap;" tabindex="-1"
                     t-attf-class="#{this.currentValue == '1_done' ? 'btn-success' : 'btn-outline-secondary'}"
@@ -38,7 +39,7 @@
                         <span class="o_status_label">
                             <t t-if="this.state.isStateButtonHighlighted">
                                 <span class="text-success oe_highlight">
-                                    <i class="fa fa-fw fa-check"/>
+                                    <i class="oi oi-fw" data-icon="check"/>
                                     Mark as done
                                 </span>
                             </t>
@@ -54,12 +55,12 @@
         <!-- Normal dropdown mode toggle button (displayed on the card/record by default) -->
         <xpath expr="//Dropdown/button/div" position="replace">
             <div t-if="this.isView(['activity', 'kanban', 'list', 'calendar']) or this.env.isSmall" class="d-flex align-items-center" t-att-class="{'o_task_state_list_view': this.isView(['list'])}" t-att-title="this.label">
-                <i t-if="this.currentValue == '04_waiting_normal'" t-attf-class="{{ this.stateIcon(this.currentValue) }} {{ this.statusColor(this.currentValue) }}" style="color: #4A4F59;"/>
-                <i t-else="" t-attf-class="{{ this.stateIcon(this.currentValue) }} {{ this.statusColor(this.currentValue) }} {{ ['1_done', '1_canceled'].includes(this.currentValue) and this.isView(['activity', 'kanban']) ? 'opacity-50' : '' }}"/>
+                <i t-if="this.currentValue == '04_waiting_normal'" t-attf-class="{{ this.stateClassIcon(this.currentValue) }} {{ this.statusColor(this.currentValue) }}" t-attf-data-icon="{{ this.stateIcon(this.currentValue) }}" style="color: #4A4F59;"/>
+                <i t-else="" t-attf-class="{{ this.stateClassIcon(this.currentValue) }} {{ this.statusColor(this.currentValue) }} {{ ['1_done', '1_canceled'].includes(this.currentValue) and this.isView(['activity', 'kanban']) ? 'opacity-50' : '' }}" t-attf-data-icon="{{ this.stateIcon(this.currentValue) }}"/>
             </div>
             <div t-else="" class="d-flex align-items-center">
                 <t t-if="this.currentValue == '04_waiting_normal'">
-                    <i class="fa fa-fw fa-hourglass-o"/>
+                    <i class="oi oi-fw" data-icon="hourglass_empty"/>
                     <span class="o_status_label" title="This task is blocked by another unfinished task">
                         Waiting
                     </span>
@@ -89,7 +90,8 @@
         </xpath>
         <!-- Approval mode dropdown button (class)-->
         <xpath expr="//CheckboxItem/span[1]" position="attributes">
-            <attribute name="t-attf-class" separator=" " add="{{ this.stateIcon(option[0]) }}" remove="o_status"></attribute>
+            <attribute name="t-attf-class" separator=" " add="{{ this.stateClassIcon(option[0]) }}" remove="o_status"></attribute>
+            <attribute name="t-attf-data-icon">{{ this.stateIcon(option[0]) }}</attribute>
         </xpath>
         <xpath expr="//CheckboxItem/span[2]" position="attributes">
             <attribute name="t-attf-class">{{ this.statusColor(option[0]) }}</attribute>

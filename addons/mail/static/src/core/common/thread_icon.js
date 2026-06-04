@@ -45,7 +45,8 @@ export class ThreadIcon extends Component {
 
     get defaultChatIcon() {
         return {
-            class: "fa fa-question-circle opacity-75",
+            class: "opacity-75",
+            icon: "help",
             title: _t("No IM status available"),
         };
     }

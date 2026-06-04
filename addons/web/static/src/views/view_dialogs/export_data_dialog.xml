@@ -14,10 +14,10 @@
     <t t-name="web.ExportDataItem">
         <div t-att-data-field_id="this.props.field.id" t-attf-class="o_export_tree_item cursor-pointer position-relative ps-4 {{ this.state.subfields.length ? 'o_expanded mb-2' : '' }} {{ this.props.field.parent ? '' : 'pe-3'}}" role="treeitem" t-on-click.stop="() => this.toggleItem(this.props.field.id, true)" t-on-dblclick="() => this.onDoubleClick(this.props.field.id)">
             <div t-attf-class="o_tree_column d-flex align-items-center {{ this.props.field.required ? 'fw-bolder' : ''}}">
-                <span t-if="this.props.isFieldExpandable(this.props.field.id)" t-attf-class="ms-n3 float-start o_expand_parent small oi {{ this.state.subfields.length ? 'oi-chevron-down' : 'oi-chevron-right' }}" role="img" aria-label="Show sub-fields" title="Show sub-fields" />
+                <span t-if="this.props.isFieldExpandable(this.props.field.id)" class="ms-n3 float-start o_expand_parent small oi" t-attf-data-icon="{{ this.state.subfields.length ? 'keyboard_arrow_down' : 'chevron_forward' }}" role="img" aria-label="Show sub-fields" title="Show sub-fields" />
                 <span t-if="this.props.isDebug and this.props.field.id" class="overflow-hidden w-100" t-out="`${this.props.field.string} (${this.props.field.id})`" />
                 <span t-else="" class="overflow-hidden w-100" t-out="this.props.field.string" />
-                <span title="Select field" t-attf-class="fa fa-plus float-end m-1 o_add_field {{ this.isFieldSelected(this.props.field.id) ? 'o_inactive opacity-25' : '' }}" t-on-click.stop="(ev) => !this.isFieldSelected(this.props.field.id) and this.props.onAdd(this.props.field.id)" />
+                <span title="Select field" t-attf-class="oi float-end m-1 o_add_field {{ this.isFieldSelected(this.props.field.id) ? 'o_inactive opacity-25' : '' }}" data-icon="add" t-on-click.stop="(ev) => !this.isFieldSelected(this.props.field.id) and this.props.onAdd(this.props.field.id)" />
             </div>
                 <t t-foreach="this.state.subfields" t-as="field" t-key="field.id">
                     <ExportDataItem
@@ -90,15 +90,15 @@
                             </t>
                             <t t-if="this.state.isEditingTemplate">
                                 <button t-if="this.state.templateId === 'new_template'" type="button" class="btn btn-secondary ms-1 o_save_list_btn" t-on-click.stop="this.onSaveExportTemplate">
-                                    <i class="fa fa-floppy-o" />
+                                    <i class="oi" data-icon="save"/>
                                 </button>
                                 <button type="button" class="btn btn-secondary ms-1 o_cancel_list_btn" t-on-click.stop="this.onCancelExportTemplate">
-                                    <i t-attf-class="fa {{ this.state.templateId === 'new_template' ? 'fa-times' : 'fa-undo' }}" />
+                                    <i class="oi" t-attf-data-icon="{{ this.state.templateId === 'new_template' ? 'close' : 'undo' }}" />
                                 </button>
                             </t>
                             <t t-else="">
                                 <button t-if="this.state.templateId" type="button" class="btn btn-secondary ms-1 o_delete_exported_list" t-on-click.stop="this.onDeleteExportTemplate">
-                                    <i class="fa fa-trash" />
+                                    <i class="oi oi-filled" data-icon="delete" />
                                 </button>
                             </t>
                         </div>
@@ -107,9 +107,9 @@
                         <ul class="o_fields_list list-unstyled" t-custom-ref="draggable">
                             <t t-foreach="this.state.exportList" t-as="field" t-key="field.id">
                                 <li t-attf-class="o_export_field d-inline-block w-100 {{ this.state.isSmall ? '' : 'o_export_field_sortable' }}" t-att-data-field_id="field.id">
-                                    <span t-if="!this.state.isSmall" class="fa fa-sort o_sort_field mx-1" t-attf-style="opacity:{{ this.state.exportList.length === 1 ? 0 : 1 }}" />
+                                    <span t-if="!this.state.isSmall" class="oi o_sort_field mx-1" data-icon="swap_vert" t-attf-style="opacity:{{ this.state.exportList.length === 1 ? 0 : 1 }}" />
                                     <span t-out="this.isDebug and field.id ? `${field.string} (${field.id})` : field.string" />
-                                    <span class="fa fa-trash m-1 pe-2 float-end o_remove_field cursor-pointer" t-att-title="this.removeFieldText" t-on-click.stop="() => this.onRemoveItemExportList(field.id)" />
+                                    <span class="oi oi-filled m-1 pe-2 float-end o_remove_field cursor-pointer" data-icon="delete" t-att-title="this.removeFieldText" t-on-click.stop="() => this.onRemoveItemExportList(field.id)" />
                                 </li>
                             </t>
                         </ul>

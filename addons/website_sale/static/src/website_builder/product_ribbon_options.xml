@@ -15,7 +15,7 @@
                     <BuilderSelectItem actionValue="ribbon.id" label="ribbon.name">
                         <div>
                             <t t-out="ribbon.name" />
-                            <span t-attf-class="fa fa-arrow-#{ribbon.position} ms-1"/>
+                            <span class="oi ms-1" t-attf-data-icon="#{ribbon.position === 'left' ? 'arrow_back' : 'arrow_forward'}"/>
                             <span
                                 t-attf-class="o_wsale_color_preview ms-1"
                                 t-attf-style="background-color: #{ribbon.bg_color}; border: {{(ribbon.bg_color == '#FFFFFF' || ribbon.bg_color == '') ? '2px solid #CCCCCC' : ''}};"
@@ -32,13 +32,15 @@
                 t-if="!this.isActiveItem('no_ribbon_opt')"
                 t-on-click="() => this.state.ribbonEditMode = !this.state.ribbonEditMode"
                 title.translate="Edit"
-                className="'fa fa-edit'"
+                icon="'edit'"
+                iconClass="'oi-filled'"
             />
             <BuilderButton
                 t-if="!this.state.ribbonEditMode"
                 title.translate="Create"
                 action="'createRibbon'"
-                className="'fa fa-plus text-success border-0'"
+                icon="'add'"
+                className="'text-success border-0'"
                 style="'background-color: transparent !important;'"
                 preview="false"
                 t-on-click="() => this.state.ribbonEditMode = true"

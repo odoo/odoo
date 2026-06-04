@@ -198,7 +198,7 @@ test("project.task (kanban): check closed subtask count update", async () => {
 
     await click(inProgressStatesSelector);
     await animationFrame();
-    await click(".project_task_state_selection_menu .fa-check-circle");
+    await click(".project_task_state_selection_menu [data-icon='check_circle']");
     await animationFrame();
     expect(inProgressStatesSelector).toHaveCount(0, {
         message: "The state of the subtask should no longer be in progress",

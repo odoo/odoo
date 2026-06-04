@@ -54,7 +54,7 @@
                     <field t-if="record.date_deadline.raw_value" name="date_deadline" invisible="state in ['1_done', '1_canceled']" widget="relative_date"/>
                     <field t-if="record.displayed_image_id.value" groups="base.group_user" name="displayed_image_id" widget="attachment_image"/>
                     <footer t-if="!selection_mode">
-                        <field name="priority" class="pt-1" widget="priority"/>
+                        <field name="priority" widget="priority"/>
                         <div class="d-flex ms-auto text-truncate">
                             <span t-if="record.portal_user_names.raw_value.length > 0" class="pe-2 text-truncate" t-att-title="record.portal_user_names.raw_value">
                                 <t t-set="user_count" t-value="record.portal_user_names.raw_value.split(',').length"/>
@@ -115,23 +115,23 @@
                 </header>
                 <div groups="base.group_user" role="status" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
                     <div class="text-center">This is a preview of how the project will look when it's shared with customers and they have editing access.
-                        <a name="action_redirect_to_project_task_form" type="object"><i class="oi oi-arrow-right me-1"/>Back to edit mode</a>
+                        <a name="action_redirect_to_project_task_form" type="object"><i class="oi me-1" data-icon="east"/>Back to edit mode</a>
                     </div>
                 </div>
                 <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
                         <field name="display_parent_task_button" invisible="1"/>
                         <field name="recurrence_id" invisible="1" />
-                        <button name="action_project_sharing_view_parent_task" type="object" class="oe_stat_button" icon="fa-check" invisible="not display_parent_task_button">
+                        <button name="action_project_sharing_view_parent_task" type="object" class="oe_stat_button" icon="check" invisible="not display_parent_task_button">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Parent Task</span>
                             </div>
                         </button>
                         <button name="action_project_sharing_recurring_tasks" type="object" invisible="not active or not recurrence_id or not allow_recurring_tasks"
-                            class="oe_stat_button" icon="fa-repeat" context="{'default_user_ids': [(6, 0, [uid])]}">
+                            class="oe_stat_button" icon="redo" context="{'default_user_ids': [(6, 0, [uid])]}">
                             <field name="recurring_count" widget="statinfo" string="Recurring Tasks"/>
                         </button>
-                        <button name="action_project_sharing_open_subtasks" type="object" class="oe_stat_button" icon="fa-check"
+                        <button name="action_project_sharing_open_subtasks" type="object" class="oe_stat_button" icon="check"
                             invisible="not id or subtask_count == 0" context="{
                                 'default_user_ids': [(6, 0, [uid])],
                                 'default_project_id': project_id,
@@ -140,7 +140,7 @@
                             <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
                             <field name="display_in_project" invisible="True"/>
                         </button>
-                        <button name="action_project_sharing_open_blocking" type="object" invisible="not dependent_tasks_count or not allow_task_dependencies" class="oe_stat_button" icon="fa-check">
+                        <button name="action_project_sharing_open_blocking" type="object" invisible="not dependent_tasks_count or not allow_task_dependencies" class="oe_stat_button" icon="check">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">Blocked Tasks</span>
                                 <span class="o_stat_value ">

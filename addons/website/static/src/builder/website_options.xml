@@ -2,9 +2,9 @@
 
 <templates xml:space="preserve">
 <t t-name="website.BuilderOptions">
-    <t t-set="socialMediaElementsSelector" t-value="'.s_social_media i.fa, .s_share i.fa, .social_media_img'"/>
-    <t t-set="replaceMediaOptionSelector" t-value="'img, .media_iframe_video, span.fa, i.fa'"/>
-    <t t-set="replaceMediaOptionExclude" t-value="'[data-oe-xpath], .s_share i.fa, .s_share .social_media_img'"/>
+    <t t-set="socialMediaElementsSelector" t-value="'.s_social_media i.oi, .s_share i.oi, .social_media_img'"/>
+    <t t-set="replaceMediaOptionSelector" t-value="'img, .media_iframe_video, span.oi, i.oi'"/>
+    <t t-set="replaceMediaOptionExclude" t-value="'[data-oe-xpath], .s_share i.oi, .s_share .social_media_img'"/>
     <!-- Hook to extend the builder context (extra t-set values, selectors, ...). -->
     <t id="context_hook"/>
 
@@ -83,13 +83,13 @@
             <replace_media_option
                 t-att-selector="replaceMediaOptionSelector"
                 t-attf-exclude="{{replaceMediaOptionExclude}}"/>
-            <font_awesome_option selector="span.fa, i.fa, .social_media_img" exclude="[data-oe-xpath]"/>
+            <font_awesome_option selector="span.oi, i.oi, .social_media_img" exclude="[data-oe-xpath]"/>
             <video_size_option selector=".media_iframe_video"/>
             <image_tool_option selector="img" exclude="[data-oe-type='image'] > img:not([data-attachment-id])"/>
             <image_pop_up_option template="website.ImagePopUpOption" selector="img" exclude="a img, header img, footer img, .s_image_gallery img, .o_product_detail_img_wrapper img"/>
             <image_and_fa_option
                 template="html_builder.ImageAndFaOption"
-                selector="span.fa, i.fa, img"
+                selector="span.oi, i.oi, img"
                 t-attf-exclude="[data-oe-type='image'] > img, [data-oe-xpath], {{socialMediaElementsSelector}}"/>
             <dynamic_svg_option t-att-selector="this.dynamicSVGSelector"/>
             <grid_image_option selector="img"/>
@@ -116,8 +116,8 @@
             exclude=".o_grid_item_image"/>
 
         <animate_option
-            selector=".o_animable, section .row > div, img, .fa, .btn"
-            t-attf-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.fa, .s_share i.fa, .s_website_form_submit, {{socialMediaElementsSelector}}, {{this.specialBlockquoteSelector}}"/>
+            selector=".o_animable, section .row > div, img, .oi, .btn"
+            t-attf-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.oi, .s_share i.oi, .s_website_form_submit, {{socialMediaElementsSelector}}, {{this.specialBlockquoteSelector}}"/>
         <animate_option selector=".s_social_media, .s_share" t-att-applyTo="socialMediaElementsSelector"/>
         <visibility_option selector="section, .s_hr"/>
         <device_visibility_option

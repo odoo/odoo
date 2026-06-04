@@ -113,7 +113,7 @@ test("Adding products from purchase catalog with suggestion feature ON.", async 
     });
 
     // ---- 1: Test adding product without suggested qty
-    await click(".o_product_catalog_kanban_record:nth-of-type(1) button:has(i.fa-shopping-cart)");
+    await click(".o_product_catalog_kanban_record:nth-of-type(1) button:has(i[data-icon='shopping_cart'])");
     await runAllTimers(); // for skipping the debounce delay
     expect(
         ".o_product_catalog_kanban_record:nth-of-type(1) input[name='product_catalog_quantity_input']"
@@ -123,7 +123,7 @@ test("Adding products from purchase catalog with suggestion feature ON.", async 
     expect(
         ".o_product_catalog_kanban_record:nth-of-type(2) div[name='kanban_purchase_suggest'] span:visible:contains('10')"
     ).toHaveCount(1, { message: "Suggested qty div should be visible on card #2" });
-    await click(".o_product_catalog_kanban_record:nth-of-type(2) button:has(i.fa-shopping-cart)");
+    await click(".o_product_catalog_kanban_record:nth-of-type(2) button:has(i[data-icon='shopping_cart'])");
     await runAllTimers(); // for skipping the debounce delay
     expect(
         ".o_product_catalog_kanban_record:nth-of-type(2) input[name='product_catalog_quantity_input']"

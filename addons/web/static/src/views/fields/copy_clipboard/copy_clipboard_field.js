@@ -63,7 +63,7 @@ export class CopyClipboardCharField extends CopyClipboardField {
     static components = { Field: CharField, CopyButton };
 
     get copyButtonIcon() {
-        return "fa-clipboard";
+        return "assignment";
     }
 }
 
@@ -71,7 +71,7 @@ export class CopyClipboardURLField extends CopyClipboardField {
     static components = { Field: UrlField, CopyButton };
 
     get copyButtonIcon() {
-        return "fa-link";
+        return "link";
     }
 }
 

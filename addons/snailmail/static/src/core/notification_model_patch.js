@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 const notificationPatch = {
     get icon() {
         if (this.notification_type === "snail") {
-            return "fa fa-paper-plane";
+            return "send";
         }
         return super.icon;
     },
@@ -15,16 +15,21 @@ const notificationPatch = {
         if (this.notification_type === "snail") {
             switch (this.notification_status) {
                 case "sent":
-                    return "fa fa-check";
+                    return "check";
                 case "ready":
-                    return "fa fa-clock-o";
+                    return "schedule";
                 case "canceled":
-                    return "fa fa-trash-o";
+                    return "delete";
                 default:
-                    return "fa fa-exclamation text-danger";
+                    return "priority_high";
             }
         }
         return super.statusIcon;
+    },
+    get statusIconClass() {
+        if (["sent", "ready", "canceled"].includes(this.notification_status)) {
+            return "text-danger";
+        }
     },
     get failureMessage() {
         switch (this.failure_type) {

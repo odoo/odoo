@@ -44,7 +44,7 @@ test("should have messaging menu button in systray", async () => {
     await start();
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu", { count: 0 });
-    await contains(".o_menu_systray i[aria-label='Messages'].fa-comments");
+    await contains(".o_menu_systray i[aria-label='Messages'][data-icon='forum']");
 });
 
 test("messaging menu should have topbar buttons", async () => {
@@ -243,7 +243,7 @@ test("installation of the PWA request can be dismissed", async () => {
     browser.dispatchEvent(new CustomEvent("beforeinstallprompt"));
     await expect.waitForSteps(["getItem pwaService.installationState"]);
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem .oi-close");
+    await click(".o-mail-NotificationItem [data-icon='close_small']");
     await expect.waitForSteps([
         "getItem pwaService.installationState",
         'installationState value:  {"/odoo":"dismissed"}',
@@ -638,7 +638,7 @@ test("basic rendering", async () => {
         "show"
     );
     await contains(".o_menu_systray i[aria-label='Messages']");
-    await contains('.o_menu_systray i[aria-label="Messages"].fa-comments');
+    await contains('.o_menu_systray i[aria-label="Messages"][data-icon="forum"]');
     await contains(".o-mail-MessagingMenu", { count: 0 });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await contains('.o_menu_systray .dropdown:has(i[aria-label="Messages"]).show');
@@ -896,14 +896,14 @@ test("Attachment-only message preview shows file type icon", async () => {
         {
             mimetype: "audio/mpeg",
             name: "voicemessage",
-            icon: "fa-microphone",
+            icon: "mic",
             text: "Voice Message",
             voice_ids: [Command.create({ display_name: "voicemessage" })],
         },
-        { mimetype: "video/mp4", name: "Video.mp4", icon: "fa-video-camera", text: "Video.mp4" },
-        { mimetype: "application/pdf", name: "File.pdf", icon: "fa-file", text: "File.pdf" },
-        { mimetype: "image/jpeg", name: "Image.jpeg", icon: "fa-picture-o", text: "Image.jpeg" },
-        { mimetype: "audio/mpeg", name: "Audio.mp3", icon: "fa-headphones", text: "Audio.mp3" },
+        { mimetype: "video/mp4", name: "Video.mp4", icon: "videocam", text: "Video.mp4" },
+        { mimetype: "application/pdf", name: "File.pdf", icon: "description", text: "File.pdf" },
+        { mimetype: "image/jpeg", name: "Image.jpeg", icon: "image", text: "Image.jpeg" },
+        { mimetype: "audio/mpeg", name: "Audio.mp3", icon: "headphones", text: "Audio.mp3" },
     ];
 
     pyEnv["mail.message"].create(
@@ -925,15 +925,15 @@ test("Attachment-only message preview shows file type icon", async () => {
     );
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-NotificationItem:eq(0) i.fa-microphone");
+    await contains(".o-mail-NotificationItem:eq(0) i[data-icon='mic']");
     await contains(".o-mail-NotificationItem:eq(0):has(:text('Partner1: Voice Message'))");
-    await contains(".o-mail-NotificationItem:eq(1) i.fa-video-camera");
+    await contains(".o-mail-NotificationItem:eq(1) i[data-icon='videocam']");
     await contains(".o-mail-NotificationItem:eq(1):has(:text('Partner2: Video.mp4'))");
-    await contains(".o-mail-NotificationItem:eq(2) i.fa-file");
+    await contains(".o-mail-NotificationItem:eq(2) i[data-icon='description']");
     await contains(".o-mail-NotificationItem:eq(2):has(:text('Partner3: File.pdf'))");
-    await contains(".o-mail-NotificationItem:eq(3) i.fa-picture-o");
+    await contains(".o-mail-NotificationItem:eq(3) i[data-icon='image']");
     await contains(".o-mail-NotificationItem:eq(3):has(:text('Partner4: Image.jpeg'))");
-    await contains(".o-mail-NotificationItem:eq(4) i.fa-headphones");
+    await contains(".o-mail-NotificationItem:eq(4) i[data-icon='headphones']");
     await contains(".o-mail-NotificationItem:eq(4):has(:text('Partner5: Audio.mp3'))");
 });
 

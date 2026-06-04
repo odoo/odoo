@@ -185,7 +185,7 @@ test("[Offline] SelectionField on many2one field", async () => {
     await clickSave();
 
     // The created record will be save the next time we are online
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon="link_off"]`).click();
     expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
         "PARTNER",
         "first record",

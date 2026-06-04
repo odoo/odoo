@@ -71,8 +71,8 @@ $o-we-ace-color: #2F3129 !default;
                 &::after {
                     @include o-position-absolute(-100%, 0, -100%, 0);
                     @include ace-line-error-mixin;
-                    font-family: FontAwesome;
-                    content: "\f071";
+                    font-family: var(--icon-font-family, "material_symbols_outlined");
+                    content: "warning";
                 }
             }
         }

@@ -596,7 +596,7 @@ export async function editBuilderRangeValue(selector, newValue) {
 }
 
 export async function unfoldAllOptionsGroups() {
-    for (const i of queryAll(".options-container-header i.fa-caret-right")) {
+    for (const i of queryAll(".options-container-header i[data-icon='arrow_right']")) {
         await click(i);
     }
     await animationFrame();

@@ -14,6 +14,7 @@ export class DocumentationLink extends Component {
         path: { type: String },
         label: { type: String, optional: true },
         icon: { type: String, optional: true },
+        icon_class: { type: String, optional: true },
     };
     static defaultProps = {
         class: "me-2",
@@ -43,11 +44,12 @@ export class DocumentationLink extends Component {
 export const documentationLink = {
     component: DocumentationLink,
     extractProps: ({ attrs }) => {
-        const { path, label, icon, class: classes } = attrs;
+        const { path, label, icon, icon_class, class: classes } = attrs;
         return {
             path,
             label,
             icon,
+            icon_class,
             class: classes,
         };
     },

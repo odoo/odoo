@@ -16,7 +16,7 @@ class ListActivityButton extends ActivityButton {
     setup() {
         super.setup();
         this.defaultActivityStateClass = "";
-        this.defaultActivityDecorationClass = "fa-clock-o";
+        this.defaultActivityDecorationClass = "schedule";
     }
 }
 

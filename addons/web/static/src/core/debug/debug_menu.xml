@@ -8,7 +8,7 @@
                 position="'bottom-end'"
             >
                 <button t-att-class="`o-dropdown--narrow ${this.env.inDialog?'btn btn-link':''}`">
-                    <i class="fa fa-bug" role="img" aria-label="Open developer tools"/>
+                    <i class="oi" data-icon="bug_report" role="img" aria-label="Open developer tools"/>
                 </button>
                 <t t-set-slot="content">
                     <t t-foreach="this.sectionEntries" t-as="entry" t-key="entry[0]">

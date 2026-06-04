@@ -6,10 +6,10 @@
             <div class="o-FileViewer flex-column align-items-center d-flex w-100 h-100" tabindex="0" t-custom-ref="autofocus" t-on-keydown.stop="(ev) => this.onKeydown(ev)">
                 <div class="o-FileViewer-header position-absolute top-0 d-flex w-100" t-on-click.stop="">
                     <div t-if="this.isViewable" class="d-flex align-items-center ms-4 me-2">
-                        <i t-if="this.state.file.isImage" class="fa fa-picture-o" role="img" title="Image"/>
-                        <i t-if="this.state.file.isPdf" class="fa fa-file-text" role="img" title="PDF file"/>
-                        <i t-if="this.state.file.isText" class="fa fa-file-text" role="img" title="Text file"/>
-                        <i t-if="this.state.file.isVideo" class="fa fa-video-camera" role="img" title="Video"/>
+                        <i t-if="this.state.file.isImage" class="oi" data-icon="image" role="img" title="Image"/>
+                        <i t-if="this.state.file.isPdf" class="oi oi-filled" data-icon="article" role="img" title="PDF file"/>
+                        <i t-if="this.state.file.isText" class="oi oi-filled" data-icon="article" role="img" title="Text file"/>
+                        <i t-if="this.state.file.isVideo" class="oi oi-filled" data-icon="videocam" role="img" title="Video"/>
                     </div>
                     <div class="d-flex align-items-center ms-4 overflow-auto">
                         <span class="text-truncate" t-out="this.state.file.name"/>
@@ -17,19 +17,19 @@
                     <div class="flex-grow-1"/>
                     <div class="o-FileViewer-download o-FileViewer-headerButton d-flex align-items-center px-3 cursor-pointer" role="button" title="Download" t-on-click.stop="">
                         <a t-att-href="this.state.file.downloadUrl" class="text-reset d-flex align-items-baseline" download="">
-                            <i class="fa fa-download fa-fw me-1" role="img"/>
+                            <i class="oi oi-fw me-1" data-icon="download" role="img"/>
                             <span>Download</span>
                         </a>
                     </div>
 
                     <div t-on-click.stop="this.close" class="o-FileViewer-headerButton d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer" role="button" title="Close (Esc)" aria-label="Close">
-                        <i class="fa fa-fw fa-times" role="img"/>
+                        <i class="oi oi-fw" data-icon="close" role="img"/>
                     </div>
                 </div>
                 <div t-on-click.stop="this.close" t-on-mousemove="this.onMouseMoveImage" t-on-touchmove.prevent="this.onTouchMoveImage" class="o-FileViewer-main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-att-class="{ 'o_with_img overflow-hidden': this.state.file.isImage }">
                     <div t-if="this.state.file.isImage" class="o-FileViewer-zoomer position-absolute align-items-center justify-content-center d-flex w-100 h-100" t-custom-ref="zoomer">
                         <div t-if="!this.state.imageLoaded" class="position-absolute">
-                            <i class="fa fa-3x fa-circle-o-notch fa-fw fa-spin text-white" role="img" title="Loading"/>
+                            <i class="oi oi-3x oi-fw oi-spin text-white" data-icon="autorenew" role="img" title="Loading"/>
                         </div>
                         <img t-on-click.stop="" t-on-load="this.onImageLoaded" t-on-wheel="this.onWheelImage" t-on-mousedown.stop="this.onMouseDownImage" t-on-mouseup.stop="this.onMouseUpImage" t-on-touchstart="this.onTouchStartImage" t-on-touchend="this.onTouchEndImage" class="o-FileViewer-view o-FileViewer-viewImage mw-100 mh-100" t-att-class="{'transition-base': !this.hasTouch}" t-att-src="this.state.file.defaultSource" t-att-style="this.imageStyle" draggable="false" alt="Viewer" t-custom-ref="image"/>
                     </div>
@@ -50,32 +50,32 @@
                 </div>
                 <div t-if="this.state.file.isImage" class="position-absolute bottom-0 d-flex" t-custom-ref="imageToolbar" role="toolbar">
                     <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="this.zoomIn" title="Zoom In (+)" role="button">
-                        <i class="fa fa-fw fa-plus" role="img"/>
+                        <i class="oi oi-fw" data-icon="add" role="img"/>
                     </div>
                     <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-att-class="{ 'o_disabled opacity-50': this.state.scale === 1 }" t-on-click.stop="this.resetZoom" role="button" title="Reset Zoom (0)">
-                        <i class="fa fa-fw fa-search" role="img"/>
+                        <i class="oi oi-fw" data-icon="search" role="img"/>
                     </div>
                     <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-att-class="{ 'o_disabled opacity-50': this.state.scale === this.minScale }" t-on-click.stop="this.zoomOut" title="Zoom Out (-)" role="button">
-                        <i class="fa fa-fw fa-minus" role="img"/>
+                        <i class="oi oi-fw" data-icon="remove" role="img"/>
                     </div>
                     <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="this.rotate" title="Rotate (r)" role="button">
-                        <i class="fa fa-fw fa-repeat" role="img"/>
+                        <i class="oi oi-fw" data-icon="redo" role="img"/>
                     </div>
                     <div class="o-FileViewer-toolbarButton p-3 rounded-0" t-on-click.stop="this.onClickPrint" title="Print" role="button">
-                        <i class="fa fa-fw fa-print" role="img"/>
+                        <i class="oi oi-fw" data-icon="print" role="img"/>
                     </div>
                     <div class="o-FileViewer-download o-FileViewer-toolbarButton p-3 rounded-0 cursor-pointer" title="Download" role="button" t-on-click.stop="">
                         <a t-att-href="this.state.file.downloadUrl" class="text-reset" download="">
-                            <i class="fa fa-download fa-fw" role="img"/>
+                            <i class="oi oi-fw" data-icon="download" role="img"/>
                         </a>
                     </div>
                 </div>
                 <t t-if="this.props.files.length > 1">
                     <div class="o-FileViewer-navigation position-absolute top-0 bottom-0 start-0 align-items-center justify-content-center d-flex my-auto ms-3 rounded-circle bg-dark text-white" t-on-click.stop="this.previous" title="Previous (Left-Arrow)" aria-label="Previous" role="button">
-                        <span class="oi oi-chevron-left" role="img"/>
+                        <span class="oi" data-icon="chevron_backward" role="img"/>
                     </div>
                     <div class="o-FileViewer-navigation position-absolute top-0 bottom-0 end-0 align-items-center justify-content-center d-flex my-auto me-3 rounded-circle bg-dark text-white" t-on-click.stop="this.next" title="Next (Right-Arrow)" aria-label="Next" role="button">
-                        <span class="oi oi-chevron-right" role="img"/>
+                        <span class="oi" data-icon="chevron_forward" role="img"/>
                     </div>
                 </t>
             </div>

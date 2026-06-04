@@ -39,7 +39,7 @@ export class ColumnPlugin extends Plugin {
                 id: "columnize",
                 title: _t("Columnize"),
                 description: _t("Convert into columns"),
-                icon: "fa-columns",
+                icon: "view_column",
                 run: this.columnize.bind(this),
                 isAvailable: isHtmlContentSupported,
             },

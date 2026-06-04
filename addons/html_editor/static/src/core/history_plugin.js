@@ -93,13 +93,13 @@ export class HistoryPlugin extends Plugin {
             {
                 id: "historyUndo",
                 description: _t("Undo"),
-                icon: "fa-undo",
+                icon: "undo",
                 run: this.undo.bind(this),
             },
             {
                 id: "historyRedo",
                 description: _t("Redo"),
-                icon: "fa-repeat",
+                icon: "redo",
                 run: this.redo.bind(this),
             },
         ],

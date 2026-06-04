@@ -18,7 +18,7 @@ beforeEach(async () => {
     /* 1. Create data
         3 type of records tested:
         - Task linked to a material resource (resourceComputer)
-            - fa-wrench should be used instead of avatar
+            - "build" icon should be used instead of avatar
             - clicking the icon should not open any popover
         - Task linked to a human resource not linked to a user (resourceMarie)
             (- avatar of the resource should not be displayed)
@@ -104,8 +104,8 @@ test("many2one_avatar_resource widget in list view", async () => {
             </list>`,
     });
     await contains(".o_m2o_avatar", { count: 3 });
-    // fa-wrench should be displayed for the first task
-    await contains(".o_m2o_avatar > span.o_material_resource > i.fa-wrench");
+    // "build" icon should be displayed for the first task
+    await contains(".o_m2o_avatar > span.o_material_resource > i[data-icon='build']");
     // Second and third slots should display employee avatar
     await contains(".o_field_many2one_avatar_resource img", { count: 2 });
     await contains(".o_field_many2one_avatar_resource a", { count: 0 });
@@ -124,8 +124,8 @@ test("many2one_avatar_resource widget in kanban view", async () => {
             </kanban>`,
     });
     await contains(".o_m2o_avatar", { count: 3 });
-    // fa-wrench should be displayed for the first task
-    await contains(".o_m2o_avatar > span.o_material_resource > i.fa-wrench");
+    // "build" icon should be displayed for the first task
+    await contains(".o_m2o_avatar > span.o_material_resource > i[data-icon='build']");
     // Second and third slots should display employee avatar
     await contains(".o_field_many2one_avatar_resource img", { count: 2 });
     expect(queryFirst(".o_field_many2one_avatar_resource img").getAttribute("data-src")).toBe(

@@ -112,7 +112,7 @@ class SlideSlide(models.Model):
     image_google_url = fields.Char('Image Link', related='url', readonly=False,
         help="Link of the image (we currently only support Google Drive as source)")
     # content - documents
-    slide_icon_class = fields.Char('Slide Icon fa-class', compute='_compute_slide_icon_class')
+    slide_icon_class = fields.Char('Slide Icon oi-class', compute='_compute_slide_icon_class')
     slide_type = fields.Selection([
         ('image', 'Image'),
         ('article', 'Article'),
@@ -327,19 +327,19 @@ class SlideSlide(models.Model):
     @api.depends('slide_type')
     def _compute_slide_icon_class(self):
         icon_per_slide_type = {
-            'image': 'fa-file-picture-o',
-            'article': 'fa-file-text-o',
-            'quiz': 'fa-question-circle-o',
-            'pdf': 'fa-file-pdf-o',
-            'sheet': 'fa-file-excel-o',
-            'doc': 'fa-file-word-o',
-            'slides': 'fa-file-powerpoint-o',
-            'youtube_video': 'fa-youtube-play',
-            'google_drive_video': 'fa-play-circle-o',
-            'vimeo_video': 'fa-vimeo',
+            'image': 'image',
+            'article': 'article',
+            'quiz': 'help_outline',
+            'pdf': 'picture_as_pdf',
+            'sheet': 'table_chart',
+            'doc': 'description',
+            'slides': 'slideshow',
+            'youtube_video': 'oi_youtube-play',
+            'google_drive_video': 'play_circle',
+            'vimeo_video': 'oi_vimeo',
         }
         for slide in self:
-            slide.slide_icon_class = icon_per_slide_type.get(slide.slide_type, 'fa-file-o')
+            slide.slide_icon_class = icon_per_slide_type.get(slide.slide_type, 'description')
 
     @api.depends('slide_category', 'source_type', 'video_source_type')
     def _compute_slide_type(self):
@@ -1292,7 +1292,7 @@ class SlideSlide(models.Model):
             'search_fields': search_fields,
             'fetch_fields': fetch_fields,
             'mapping': mapping,
-            'icon': 'fa-shopping-cart',
+            'icon': 'shopping_cart',
             'order': 'name desc, id desc' if 'name desc' in order else 'name asc, id desc',
             'group_name': self.env._("Course Slides"),
             'sequence': 70,
@@ -1300,17 +1300,17 @@ class SlideSlide(models.Model):
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         icon_per_category = {
-            'infographic': 'fa-file-picture-o',
-            'article': 'fa-file-text',
-            'presentation': 'fa-file-pdf-o',
-            'document': 'fa-file-pdf-o',
-            'video': 'fa-play-circle',
-            'quiz': 'fa-question-circle',
-            'link': 'fa-file-code-o', # appears in template "slide_icon"
+            'infographic': 'image',
+            'article': 'article',
+            'presentation': 'picture_as_pdf',
+            'document': 'picture_as_pdf',
+            'video': 'play_circle',
+            'quiz': 'help',
+            'link': 'code',  # appears in template "slide_icon"
         }
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for slide, data in zip(self, results_data):
-            data['_fa'] = icon_per_category.get(slide.slide_category, 'fa-file-pdf-o')
+            data['_icon'] = icon_per_category.get(slide.slide_category, 'description')
             data['url'] = slide.website_absolute_url
             data['course'] = _('Course: %s', slide.channel_id.name)
             data['course_url'] = slide.channel_id.website_absolute_url

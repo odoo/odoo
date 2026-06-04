@@ -10,7 +10,7 @@
                     data-tooltip="Edit"
                     aria-label="Edit"
                     t-on-click.prevent.stop="this.onFileEdit">
-                    <i class="fa fa-pencil fa-fw"/>
+                    <i class="oi oi-fw oi-filled" data-icon="edit"/>
                 </button>
                 <button
                     t-if="this.props.record.data[this.props.name] and this.state.isValid"
@@ -18,7 +18,7 @@
                     data-tooltip="Clear"
                     aria-label="Clear"
                     t-on-click.prevent.stop="this.onFileRemove">
-                    <i class="fa fa-trash-o fa-fw"/>
+                    <i class="oi oi-fw" data-icon="delete"/>
                 </button>
             </div>
         </xpath>

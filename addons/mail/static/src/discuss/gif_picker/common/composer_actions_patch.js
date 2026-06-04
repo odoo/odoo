@@ -32,7 +32,7 @@ registerComposerAction("add-gif", {
         (store.hasGifPickerFeature || store.self_user?.is_admin) &&
         !owner.env.inChatter &&
         !composer.message,
-    icon: "oi oi-gif-picker",
+    icon: "gif_box",
     name: _t("Send GIF"),
     onSelected(params, ev) {
         markEventHandled(ev, "Composer.onClickAddGif");

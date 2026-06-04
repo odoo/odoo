@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add("mail_poll_tour.js", {
         },
         {
             trigger:
-                ".o-mail-MessageInReply:contains('What is your favorite color?') .oi-view-cohort",
+                ".o-mail-MessageInReply:contains('What is your favorite color?') [data-icon='oi_view-cohort']",
         },
         { trigger: ".o-mail-PollOption:contains('Blue') input", run: "click" },
         { trigger: ".o-mail-Poll button:contains('Vote'):enabled", run: "click" },

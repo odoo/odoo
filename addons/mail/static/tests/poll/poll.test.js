@@ -19,7 +19,7 @@ test("can add emojis to a poll option", async () => {
     await click(".o-mail-Composer button[title='More Actions']");
     await click(".o-dropdown-item:text('Start a Poll')");
     await contains(".modal-header:text('Create a poll')");
-    await click(".o-mail-CreatePollOptionDialog:first .fa-smile-o");
+    await click(".o-mail-CreatePollOptionDialog:first [data-icon='sentiment_satisfied']");
     await click(".o-Emoji:contains('😀')");
     await contains(".o-mail-CreatePollOptionDialog input:eq(0)", { value: "😀" });
 });

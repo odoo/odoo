@@ -16,7 +16,7 @@
                 <button type="object"
                     name="action_view_picking"
                     class="oe_stat_button"
-                    icon="fa-truck" invisible="incoming_picking_count == 0" groups="stock.group_stock_user">
+                    icon="local_shipping" invisible="incoming_picking_count == 0" groups="stock.group_stock_user">
                     <field name="incoming_picking_count" widget="statinfo" string="Receipt" help="Incoming Shipments"/>
                 </button>
             </xpath>
@@ -28,8 +28,8 @@
             </xpath>
             <xpath expr="//page/field[@name='order_line']/list/field[@name='product_qty']" position="after">
                 <field name="forecasted_issue" column_invisible="True"/>
-                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not id or not forecasted_issue or not is_storable" class="text-danger"/>
-                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not id or forecasted_issue or not is_storable"/>
+                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="area_chart" invisible="not id or not forecasted_issue or not is_storable" class="text-danger"/>
+                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="area_chart" invisible="not id or forecasted_issue or not is_storable"/>
             </xpath>
             <xpath expr="//div[@name='date_planned_div']" position="inside">
                 <button name="%(action_purchase_vendor_delay_report)d" class="oe_link ps-0 pb-0 pt-sm-0" type="action" context="{'search_default_partner_id': partner_id}" invisible="not partner_id or on_time_rate &lt; 0">

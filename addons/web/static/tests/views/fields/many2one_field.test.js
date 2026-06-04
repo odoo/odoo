@@ -400,7 +400,7 @@ test("[Offline] many2one", async () => {
     await clickSave();
 
     // The created record will be save the next time we are online
-    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    await contains(`.o_menu_systray .o_nav_entry [data-icon="link_off"]`).click();
     expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
         "PARTNER",
         "first record",
@@ -3921,7 +3921,7 @@ test("external_button performs a doAction by default", async () => {
     });
 
     await selectFieldDropdownItem("trululu", "first record");
-    expect(".o_field_widget .o_external_button .oi-arrow-right").toHaveCount(1);
+    expect(".o_field_widget .o_external_button [data-icon='east']").toHaveCount(1);
     await contains(".o_field_widget .o_external_button", { visible: false }).click();
 
     expect.verifySteps(["get_record_default_action"]);
@@ -3941,7 +3941,7 @@ test("external_button opens a FormViewDialog in dialogs", async () => {
     expect(".modal").toHaveCount(1);
 
     await selectFieldDropdownItem("trululu", "first record");
-    expect(".o_field_widget .o_external_button .oi-launch").toHaveCount(1);
+    expect(".o_field_widget .o_external_button [data-icon='open_in_browser']").toHaveCount(1);
     await contains(".o_field_widget .o_external_button", { visible: false }).click();
 
     expect.verifySteps(["get_formview_id"]);
@@ -4006,7 +4006,7 @@ test("keep changes when editing related record in a dialog", async () => {
     await contains(".o_field_widget[name=foo] input").edit("some value", { confirm: false });
     await runAllTimers();
     await selectFieldDropdownItem("trululu", "first record");
-    expect(".o_field_widget .o_external_button .oi-launch").toHaveCount(1);
+    expect(".o_field_widget .o_external_button [data-icon='open_in_browser']").toHaveCount(1);
     await contains(".o_field_widget .o_external_button", { visible: false }).click();
     expect(".modal").toHaveCount(2);
 

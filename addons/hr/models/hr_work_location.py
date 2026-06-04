@@ -37,8 +37,8 @@ class HrWorkLocation(models.Model):
     def _compute_icon(self):
         for record in self:
             if record.location_type == 'office':
-                record.icon = 'fa-building-o'
+                record.icon = 'business'
             elif record.location_type == 'home':
-                record.icon = 'fa-home'
+                record.icon = 'home'
             else:
                 record.icon = None

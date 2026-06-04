@@ -140,14 +140,14 @@
                     outline: unset;
                 }
 
-                &.o_step_todo .fa-angle-down {
+                &.o_step_todo [data-icon="keyboard_arrow_down"] {
                     transform: translateY(-0.26em);
                 }
 
                 &.o_step_completed {
                     transition: all 300ms ease;
 
-                    .fa-angle-down {
+                    [data-icon="keyboard_arrow_down"] {
                         @include o-position-absolute($right: 0);
                         opacity:0;
                     }
@@ -155,7 +155,7 @@
                     &:hover, &.show, &:has([data-bs-toggle]:focus-visible) {
                         padding-right: 1.3rem !important;
 
-                        .fa-angle-down {
+                        [data-icon="keyboard_arrow_down"] {
                             transition: all 300ms ease 100ms;
                             opacity:1;
                         }
@@ -172,7 +172,7 @@
                 }
             }
 
-            .dropdown-item, .fa-angle-down, .ui-menu-item a, .ui-menu-item a.ui-state-active {
+            .dropdown-item, [data-icon="keyboard_arrow_down"], .ui-menu-item a, .ui-menu-item a.ui-state-active {
                 font-size: .5em;
                 font-weight: inherit;
             }

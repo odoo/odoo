@@ -12,6 +12,7 @@ export class CopyButton extends Component {
         disabled: { type: Boolean, optional: true },
         successText: { type: String, optional: true },
         icon: { type: String, optional: true },
+        icon_class: { type: String, optional: true },
         content: { type: [String, Object, Function], optional: true },
     };
 

@@ -18,7 +18,7 @@
                         <field name="res_id" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_open_document"
-                                    type="object" class="oe_link" icon="fa-file-text-o"
+                                    type="object" class="oe_link" icon="article"
                                     invisible="not model or res_id == 0">
                                     <div class="o_field_widget o_stat_info">
                                         <span class="o_stat_text">Open Document</span>
@@ -32,7 +32,7 @@
                         </div>
                         <div style="vertical-align: top;">
                             by <field name="author_id" class="oe_inline" string="User"/> on <field name="date" readonly="1" class="oe_inline"/>
-                            <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="fa-reply text-warning"
+                            <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="reply" icon_class="text-warning"
                                 context="{'default_composition_mode':'comment', 'default_parent_id': mail_message_id_int}" invisible="state not in ('received', 'sent', 'exception', 'cancel')"/>
                         </div>
                         <group>
@@ -104,9 +104,9 @@
                     <field name="message_type" column_invisible="True"/>
                     <field name="state" widget="badge" decoration-muted="state in ('sent', 'cancel')"
                         decoration-info="state=='outgoing'" decoration-danger="state=='exception'"/>
-                    <button name="send" string="Send Now" type="object" icon="fa-paper-plane" invisible="state != 'outgoing' or message_type == 'user_notification'"/>
-                    <button name="mark_outgoing" string="Retry" type="object" icon="fa-repeat" invisible="state not in ('exception', 'cancel')"/>
-                    <button name="cancel" string="Cancel Email" type="object" icon="fa-times-circle" invisible="state != 'outgoing'"/>
+                    <button name="send" string="Send Now" type="object" icon="send" icon_class="oi-filled" invisible="state != 'outgoing' or message_type == 'user_notification'"/>
+                    <button name="mark_outgoing" string="Retry" type="object" icon="redo" invisible="state not in ('exception', 'cancel')"/>
+                    <button name="cancel" string="Cancel Email" type="object" icon="cancel" icon_class="oi-filled" invisible="state != 'outgoing'"/>
                 </list>
             </field>
         </record>

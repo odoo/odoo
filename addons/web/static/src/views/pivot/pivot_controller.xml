@@ -12,9 +12,9 @@
             </div>
             <div class="btn-group" role="toolbar" aria-label="Pivot settings">
                 <t t-set="noDataDisplayed" t-value="!this.model.hasData() || !this.model.metaData.activeMeasures.length"/>
-                <button class="btn btn-secondary fa fa-exchange o_pivot_flip_button" t-on-click="this.onFlipButtonClicked" data-tooltip="Flip axis" aria-label="Flip axis" t-attf-disabled="{{noDataDisplayed ? 'disabled' : false}}"/>
-                <button class="btn btn-secondary fa fa-arrows o_pivot_expand_button" t-on-click="this.onExpandButtonClicked" data-tooltip="Expand all" aria-label="Expand all" t-attf-disabled="{{noDataDisplayed ? 'disabled' : false}}"/>
-                <button class="btn btn-secondary fa fa-download o_pivot_download" t-on-click="this.onDownloadButtonClicked" data-tooltip="Download xlsx" aria-label="Download xlsx" t-attf-disabled="{{noDataDisplayed ? 'disabled' : false}}"/>
+                <button class="btn btn-secondary oi o_pivot_flip_button" data-icon="swap_horiz" t-on-click="this.onFlipButtonClicked" data-tooltip="Flip axis" aria-label="Flip axis" t-attf-disabled="{{noDataDisplayed ? 'disabled' : false}}"/>
+                <button class="btn btn-secondary oi o_pivot_expand_button" data-icon="open_with" t-on-click="this.onExpandButtonClicked" data-tooltip="Expand all" aria-label="Expand all" t-attf-disabled="{{noDataDisplayed ? 'disabled' : false}}"/>
+                <button class="btn btn-secondary oi o_pivot_download" data-icon="download" t-on-click="this.onDownloadButtonClicked" data-tooltip="Download xlsx" aria-label="Download xlsx" t-attf-disabled="{{noDataDisplayed ? 'disabled' : false}}"/>
             </div>
         </div>
     </t>

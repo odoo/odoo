@@ -4,12 +4,12 @@
     <t t-name="survey.CharField" t-inherit="web.CharField">
         <xpath expr="//div[@class='o_field_input_buttons']" position="inside">
             <button type="button" title="Open section" class="btn btn-sm btn-link p-0" t-on-click.stop="this.onExternalBtnClick">
-                <i class="fa fa-external-link"/>
+                <i class="oi" data-icon="open_in_new"/>
             </button>
         </xpath>
         <xpath expr="//span[@t-out='this.formattedValue']" position="after">
             <button class="btn btn-sm btn-link p-0" t-if="this.props.record.data.is_page">
-                <i class="fa fa-pencil"/>
+                <i class="oi oi-filled" data-icon="edit"/>
             </button>
         </xpath>
     </t>

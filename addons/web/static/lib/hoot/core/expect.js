@@ -454,7 +454,7 @@ function valueMatches(value, matcher) {
 }
 
 const AMPERSAND = makeLabel("&", null);
-const ARROW_RIGHT = makeLabelIcon("fa fa-arrow-right text-sm");
+const ARROW_RIGHT = makeLabelIcon("arrow_forward");
 
 const R_LINE_RETURN = /\n+/g;
 const R_NOT = /\[([\w\s]*)!([\w\s]*)\]/g;

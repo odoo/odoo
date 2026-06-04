@@ -17,18 +17,18 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            &:not(.small_social_icon, .fa-2x, .fa-3x, .fa-4x, .fa-5x) {
+            &:not(.small_social_icon, .oi-2x, .oi-3x, .oi-4x, .oi-5x) {
                 &.rounded-circle,
                 &.rounded-empty-circle,
                 &.rounded,
-                &.fa-stack {
+                &.oi-stack {
                     font-size: 1rem;
                     width: $-size - .5rem;
                     height: $-size - .5rem;
                 }
             }
             @for $i from 2 through 5 {
-                &.fa-#{$i}x {
+                &.oi-#{$i}x {
                     width: $-size + $i;
                     height: $-size + $i;
                     line-height: $-size + $i;
@@ -60,7 +60,7 @@
     }
     &:not(.no_icon_color) {
         @each $media, $color in $o-social-colors { // @see builder.variables.scss for the media colors
-            .fa-#{$media}, .s_social_media_#{$media} {
+            .oi-#{$media}, .s_social_media_#{$media} {
                 color: $color !important;
             }
         }

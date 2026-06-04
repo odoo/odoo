@@ -39,7 +39,7 @@
             t-if="submenu.is_mega_menu and is_vertical_nav"
             t-attf-class="o_mega_nav o_cc1 position-fixed top-0 #{offcanvas_is_leftside and 'start-0' or 'end-0'} invisible d-flex align-items-center w-100"
         >
-            <button class="btn nav-link oi oi-chevron-left ms-n2 px-2"/>
+            <button class="btn nav-link oi ms-n2 px-2" data-icon="chevron_backward"/>
         </div>
         <!-- Is a dropdown in desktop -> becomes accordion in Mobile / Sidebar / Hamburger -->
         <div t-elif="is_accordion_nav" class="accordion-item">
@@ -392,7 +392,9 @@
                 <path fill="#FFF" d="M8 8V1a1 1 0 1 1 2 0v8a1 1 0 0 1-1 1H1a1 1 0 1 1 0-2h7z"/>
             </svg>
             <div class="o_frontend_to_backend_buttons d-flex">
-                <a href="#" title="Go to your Odoo Apps" class="o_frontend_to_backend_apps_btn fa fa-th d-flex align-items-center justify-content-center text-decoration-none" data-bs-toggle="dropdown"/>
+                <a href="#" title="Go to your Odoo Apps" class="o_frontend_to_backend_apps_btn d-flex align-items-center justify-content-center text-decoration-none" data-bs-toggle="dropdown">
+                    <i class="oi oi-lg" data-icon="apps" aria-hidden="true"/>
+                </a>
                 <div class="dropdown-menu o_frontend_to_backend_apps_menu" role="menu">
                     <a role="menuitem" class="dropdown-item" t-out="menu['name']"
                        t-as="menu" t-foreach="env['ir.ui.menu'].with_context(force_action=True).load_menus_root()['children']"
@@ -718,7 +720,7 @@
                     <t t-call="portal.user_dropdown"
                         _icon="true"
                         _item_class.f="dropdown"
-                        _icon_class.f="fa-stack"
+                        _icon_class.f="oi-stack"
                         _link_class.f="o_navlink_background btn d-flex align-items-center rounded-circle p-1 pe-2 text-reset"
                         _dropdown_menu_class.f="dropdown-menu-end"/>
                 </ul>
@@ -1108,7 +1110,7 @@
                         <t t-call="portal.user_dropdown"
                             _icon="true"
                             _item_class.f="dropdown"
-                            _icon_class.f="fa-stack"
+                            _icon_class.f="oi-stack"
                             _link_class.f="btn d-flex align-items-center rounded-circle p-1 pe-3 text-reset o_navlink_background"
                             _dropdown_menu_class.f="dropdown-menu-end"/>
                         <!-- Language Selector -->
@@ -1197,7 +1199,7 @@
                             <t t-call="portal.user_dropdown"
                                 _user_name="true"
                                 _icon="true"
-                                _icon_class.f="fa-stack"
+                                _icon_class.f="oi-stack"
                                 _item_class.f="dropdown"
                                 _link_class.f="btn d-flex align-items-center border-0 fw-bold text-reset o_navlink_trigger_hover"
                                 _icon_wrap_class.f="position-relative me-2 p-2 rounded-circle o_navlink_background transition-base"
@@ -1790,9 +1792,9 @@
                         <div class="col-lg-4 offset-lg-1 pt24 pb24">
                             <h5>Connect with us</h5>
                             <ul class="list-unstyled">
-                                <li><i class="fa fa-comment fa-fw me-2"/><a href="/contactus">Contact us</a></li>
-                                <li><i class="fa fa-envelope fa-fw me-2"/><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></li>
-                                <li><i class="fa fa-phone fa-fw me-2"/><a href="tel:+1 555-555-5556"><span class="o_force_ltr">+1 555-555-5556</span></a></li>
+                                <li><i class="oi oi-filled oi-fw me-2" data-icon="chat_bubble"/><a href="/contactus">Contact us</a></li>
+                                <li><i class="oi oi-filled oi-fw me-2" data-icon="mail"/><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></li>
+                                <li><i class="oi oi-filled oi-fw me-2" data-icon="phone"/><a href="tel:+1 555-555-5556"><span class="o_force_ltr">+1 555-555-5556</span></a></li>
                             </ul>
                             <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
@@ -1834,8 +1836,8 @@
                         <div class="col-lg-4 offset-lg-3 pb48">
                             <p><b>My Company</b><br/>8000 Marina Blvd, Suite 300 <br/> Brisbane CA 94005 <br/>United States</p>
                             <ul class="list-unstyled mb-2">
-                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></li>
-                                <li><i class="fa fa-envelope fa-fw me-2"/><span><a href="mailto:hello@mycompany.com">hello@mycompany.com</a></span></li>
+                                <li><i class="oi oi-filled oi-fw me-2" data-icon="phone"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></li>
+                                <li><i class="oi oi-filled oi-fw me-2" data-icon="mail"/><span><a href="mailto:hello@mycompany.com">hello@mycompany.com</a></span></li>
                             </ul>
                             <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
@@ -1945,8 +1947,8 @@
                         <div class="col-lg-3 col-10 offset-1 offset-lg-0 pb16">
                             <h5>Get in touch</h5>
                             <ul class="list-unstyled">
-                                <li><i class="fa fa-fw fa-envelope me-2"/><a href="mailto:info@yourcompany.com">info@yourcompany.com</a></li>
-                                <li><i class="fa fa-fw fa-phone me-2"/><a href="tel:+1 555-555-5556"><span class="o_force_ltr">+1 555-555-5556"</span></a></li>
+                                <li><i class="oi oi-fw oi-filled me-2" data-icon="mail"/><a href="mailto:info@yourcompany.com">info@yourcompany.com</a></li>
+                                <li><i class="oi oi-fw oi-filled me-2" data-icon="phone"/><a href="tel:+1 555-555-5556"><span class="o_force_ltr">+1 555-555-5556"</span></a></li>
                             </ul>
                         </div>
                         <div class="col-lg-3 col-10 offset-1 offset-lg-0 pb16">
@@ -2117,10 +2119,10 @@
                             <a href="#" class="o_translate_inline btn btn-primary">Get in touch</a>
                         </div>
                         <div class="col-lg-4">
-                            <i class="fa fa-envelope fa-fw me-2"/><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a>
+                            <i class="oi oi-filled oi-fw me-2" data-icon="mail"/><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a>
                         </div>
                         <div class="col-lg-4 pb24">
-                            <i class="fa fa-phone fa-fw me-2"/><a href="tel:+1 555-555-5556"><span class="o_force_ltr">+1 555-555-5556</span></a>
+                            <i class="oi oi-filled oi-fw me-2" data-icon="phone"/><a href="tel:+1 555-555-5556"><span class="o_force_ltr">+1 555-555-5556</span></a>
                         </div>
                         <div class="col-lg-2 offset-lg-2 pb24">
                             <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
@@ -2610,7 +2612,7 @@
                href="#top"
                title="Scroll To Top"
                class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center">
-                <span class="oi fa-1x oi-chevron-up"/>
+                <span class="oi" data-icon="keyboard_arrow_up"/>
             </a>
         </div>
     </xpath>
@@ -2993,13 +2995,13 @@
                 <form class="offset-md-3 col-md-6" method="POST">
                     <div class="alert alert-info mt32" t-if="not request.params.get('visibility_password')">
                         <div class="h5 text-center">
-                            <i class="fa fa-lock fa-2x"/><br/>
+                            <i class="oi oi-2x" data-icon="lock"/><br/>
                             <span class="mt-1">A password is required to access this page.</span>
                         </div>
                     </div>
                     <div class="alert alert-warning mt32" t-else="">
                         <div class="h5 text-center">
-                            <i class="fa fa-lock fa-2x"/><br/>
+                            <i class="oi oi-2x" data-icon="lock"/><br/>
                             <span class="mt-1">Wrong password</span>
                         </div>
                     </div>
@@ -3009,7 +3011,7 @@
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                             <input type="password" id="password" class="form-control" required="required" name="visibility_password" />
                           <button class="btn border border-start-0 o_show_password" type="button">
-                            <i class="fa fa-eye"></i>
+                            <i class="oi" data-icon="visibility"></i>
                           </button>
                         </div>
                     </div>
@@ -3202,7 +3204,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
             <small t-attf-class="o_search_found_results {{'d-none' if not search else ''}}">
                 <span class="o_search_count" t-out="search_count"/> result(s)
             </small>
-            <i t-attf-class="{{'d-none' if search else ''}} oi oi-search"/>
+            <i t-attf-class="{{'d-none' if search else ''}} oi" data-icon="search"/>
         </button>
     </div>
 </template>
@@ -3264,7 +3266,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
 
 <template id="website.search_image_item_view">
     <img t-if="result.get('image_url')" t-att-src="result['image_url']" class="o_search_result_image flex-shrink-0 rounded-2"/>
-    <i t-else="" t-attf-class="o_search_result_image flex-shrink-0 align-content-center rounded-2 fs-6 text-center text-muted fa #{result['_fa']}"/>
+    <i t-else="" t-attf-class="o_search_result_image flex-shrink-0 align-content-center rounded-2 fs-6 text-center text-muted oi" t-att-data-icon="result['_icon']"/>
 </template>
 
 <template id="website.search_result_items">
@@ -3365,7 +3367,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
         <t t-set="placeholder" t-value="placeholder or 'Search...'" />
         <form t-attf-class="o_searchbar_form s_searchbar_input #{_form_classes}" t-att-action="action" method="get" t-attf-data-snippet="s_searchbar_input">
             <a t-if="_simple_button_layout" t-attf-class="o_search_btn {{_simple_button_classes or 'p-1 bg-o-color-3 lh-1'}} btn o_not_editable" role="button" title="Search" href="#">
-                <i class="fa-stack lh-lg oi oi-search" role="img"/>
+                <i class="oi-stack lh-lg oi" data-icon="search" role="img"/>
             </a>
             <t>$0</t>
             <input name="order" type="hidden" class="o_search_order_by oe_unremovable" t-att-value="order_by if order_by else 'name asc'"/>
@@ -3396,7 +3398,8 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                     </p>
                     <span
                         t-if="not step_last"
-                        class="fa fa-angle-right d-inline-block align-middle mx-3 text-muted fs-5"
+                        class="oi d-inline-block align-middle mx-3 text-muted fs-5"
+                        data-icon="keyboard_arrow_right"
                     />
                 </div>
             </span>
@@ -3412,7 +3415,8 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                     </p>
                     <span
                         t-if="not step_last"
-                        class="fa fa-angle-right d-inline-block align-middle mx-3 text-muted fs-5"
+                        class="oi d-inline-block align-middle mx-3 text-muted fs-5"
+                        data-icon="keyboard_arrow_right"
                     />
                 </div>
             </a>
@@ -3480,15 +3484,15 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
             <t t-elif="_txt_elt_content == 'list'">
                 <div t-attf-class="s_text_block d-flex flex-column flex-lg-row gap-1 gap-lg-4 align-items-lg-center #{_div_class}" data-name="Text">
                     <small class="d-flex align-items-center">
-                        <i class="fa fa-1x fa-fw fa-usd fa-stack me-1"/>
+                        <i class="oi oi-1x oi-fw oi-stack me-1" data-icon="attach_money"/>
                         Low Price Guarantee
                     </small>
                     <small class="d-flex align-items-center">
-                        <i class="fa fa-1x fa-fw fa-shopping-basket fa-stack me-1"/>
+                        <i class="oi oi-1x oi-fw oi-stack me-1" data-icon="shopping_basket"/>
                         30 Days Online Returns
                     </small>
                     <small class="d-flex align-items-center">
-                        <i class="fa fa-1x fa-fw fa-truck fa-stack me-1"/>
+                        <i class="oi oi-1x oi-fw oi-stack me-1" data-icon="local_shipping"/>
                         Standard Shipping
                     </small>
                 </div>
@@ -3497,13 +3501,13 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                 <div t-attf-class="s_text_block #{_div_class}" data-name="Text">
                     <a href="tel:+1 555-555-5556" class="nav-link o_nav-link_secondary">
                         <small>
-                            <i class="fa fa-1x fa-fw fa-phone me-1"/>͏ <!-- Empty character needed to be able to delete the icon. -->
+                            <i class="oi oi-1x oi-fw oi-filled me-1" data-icon="phone"/>͏ <!-- Empty character needed to be able to delete the icon. -->
                             <span class="o_force_ltr">+1 555-555-5556</span>
                         </small>
                     </a>
                     <a href="mailto:info@yourcompany.example.com" class="nav-link o_nav-link_secondary">
                         <small>
-                            <i class="fa fa-1x fa-fw fa-envelope me-1"/>
+                            <i class="oi oi-1x oi-fw oi-filled me-1" data-icon="mail"/>
                             info@yourcompany.example.com
                         </small>
                     </a>
@@ -3512,14 +3516,14 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
             <t t-elif="_txt_elt_content == 'mail'">
                 <div t-attf-class="s_text_block #{_div_class}" data-name="Text">
                     <a href="mailto:info@yourcompany.example.com" class="nav-link o_nav-link_secondary">
-                        <small><i class="fa fa-1x fa-fw fa-envelope me-1"/> info@yourcompany.example.com</small>
+                        <small><i class="oi oi-1x oi-fw oi-filled me-1" data-icon="mail"/> info@yourcompany.example.com</small>
                     </a>
                 </div>
             </t>
             <t t-elif="_txt_elt_content == 'mail_stretched'">
                 <div t-attf-class="s_text_block #{_div_class}" data-name="Text">
                     <a href="tel:+1 555-555-5556" class="nav-link o_nav-link_secondary p-2 o_navlink_background_hover d-flex align-items-center h-100 text-reset">
-                        <i class="fa fa-1x fa-fw fa-phone me-1"/>
+                        <i class="oi oi-1x oi-fw i-filled me-1" data-icon="phone"/>
                         <span class="o_force_ltr"><small>+1 555-555-5556</small></span>
                     </a>
                 </div>
@@ -3527,7 +3531,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
             <t t-else="">
                 <div t-attf-class="s_text_block #{_div_class}" data-name="Text">
                     <a href="tel:+1 555-555-5556" class="nav-link o_nav-link_secondary p-2">
-                        <i class="fa fa-1x fa-fw fa-phone me-1"/>
+                        <i class="oi oi-1x oi-fw oi-filled me-1" data-icon="phone"/>
                         <span class="o_force_ltr"><small>+1 555-555-5556</small></span>
                     </a>
                 </div>

@@ -37,7 +37,7 @@
 </t>
 
 <t t-name="html_editor.ImagesListTemplate">
-    <div class="o_we_existing_attachments o_we_images d-flex flex-wrap my-0" t-custom-ref="existing-attachments">
+    <div class="o_we_existing_attachments o_we_images d-flex flex-wrap my-0 px-3" t-custom-ref="existing-attachments">
         <t t-if="!this.hasContent and !this.isFetching">
             <div t-if="this.state.needle" class="o_nocontent_help">
                 <p class="o_empty_folder_image">No images found.</p>

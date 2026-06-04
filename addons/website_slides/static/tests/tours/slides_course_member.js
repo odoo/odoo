@@ -163,7 +163,7 @@ registry.category("web_tour.tours").add("course_member", {
             run: "click",
         },
         {
-            trigger: ".modal.modal_shown .modal-body i.fa.fa-star:eq(2)",
+            trigger: ".modal.modal_shown .modal-body i[data-icon='star'].oi-filled:eq(2)",
             run: "click",
         },
         {
@@ -184,7 +184,7 @@ registry.category("web_tour.tours").add("course_member", {
             run: "click",
         },
         {
-            trigger: ".modal.modal_shown .modal-body i.fa.fa-star-o:eq(1)",
+            trigger: ".modal.modal_shown .modal-body i[data-icon='star']:eq(1)",
             run: "click",
         },
         {

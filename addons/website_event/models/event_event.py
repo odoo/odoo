@@ -649,7 +649,7 @@ class EventEvent(models.Model):
             'search_extra': search_in_address,
             'fetch_fields': fetch_fields,
             'mapping': mapping,
-            'icon': 'fa-ticket',
+            'icon': 'confirmation_number',
             # for website_event main controller:
             'dates': dates,
             'current_date': current_date,

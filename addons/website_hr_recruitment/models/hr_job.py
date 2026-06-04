@@ -146,7 +146,7 @@ spirit. To be successful, you will have solid solving problem skills.''')
             'search_fields': search_fields,
             'fetch_fields': fetch_fields,
             'mapping': mapping,
-            'icon': 'fa-briefcase',
+            'icon': 'work',
             'group_name': self.env._("Jobs"),
             'sequence': 90,
         }

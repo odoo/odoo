@@ -16,7 +16,7 @@
                         }"
                     t-attf-style="{{!this.props.activity.user_id ? 'height:80%; width:80%;' : ''}}"
                 >
-                    <i class="fa small" t-attf-class="{{ this.props.activity.icon }} {{this.props.activity.user_id ? 'small' : 'fs-2'}}"/>
+                    <i class="oi small" t-attf-class="{{this.props.activity.user_id ? 'small' : 'fs-2'}}" t-att-data-icon="this.props.activity.icon"/>
                 </div>
             </div>
         </div>
@@ -30,7 +30,7 @@
                 <span class="fw-bolder px-2 text-break"><t t-out="this.displayName"/></span>
                 <span class="o-mail-Activity-user px-1" t-if="this.props.activity.user_id?.partner_id" >for <t t-out="this.props.activity.user_id.partner_id.displayName"/></span>
                 <button class="btn btn-link btn-primary p-0 lh-1 border-0">
-                    <i class="fa fa-info-circle" role="img" title="Info" aria-label="Info" t-on-click="this.toggleFn(this.showDetails)"/>
+                    <i class="oi" data-icon="info" role="img" title="Info" aria-label="Info" t-on-click="this.toggleFn(this.showDetails)"/>
                 </button>
             </div>
             <div t-if="this.showDetails()">
@@ -50,17 +50,17 @@
             <div t-if="this.props.activity.can_write" class="lh-lg">
                 <t name="tools">
                     <button class="o-mail-Activity-markDone btn btn-link btn-success p-0 me-3" t-on-click="this.onClickMarkAsDone">
-                        <i class="fa fa-check"/> Mark Done
+                        <i class="oi" data-icon="check"/> Mark Done
                     </button>
                     <FileUploader t-if="this.props.activity.activity_category === 'upload_file'" onUploaded.bind="this.onFileUploaded">
                         <t t-set-slot="toggler">
                             <button class="btn btn-link text-action p-0 me-3">
-                                <i t-attf-class="fa {{ this.props.activity.icon }}"/> <t t-out="this.props.activity.display_name"/>
+                                <i class="oi" t-att-data-icon="this.props.activity.icon"/> <t t-out="this.props.activity.display_name"/>
                             </button>
                         </t>
                     </FileUploader>
                     <button class="o-mail-Activity-edit btn btn-link text-action p-0 me-3" t-on-click="this.edit">
-                        <i class="fa fa-pencil"/> Edit
+                        <i class="oi oi-filled" data-icon="edit"/> Edit
                     </button>
                 </t>
             </div>

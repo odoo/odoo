@@ -1210,7 +1210,7 @@ test("restore paragraph from code block", async () => {
     await testEditor({
         contentBefore: "<pre>[]abc</pre>",
         stepFunction: async () => {
-            await click(".o_code_toolbar span.fa-paragraph");
+            await click(".o_code_toolbar span[data-icon='format_paragraph']");
         },
         contentAfterEdit: "<p>[]abc</p>",
         contentAfter: `<p>[]abc</p>`,

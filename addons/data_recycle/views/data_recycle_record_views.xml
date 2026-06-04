@@ -16,9 +16,9 @@
                     <field name="res_id" />
                     <field name="recycle_model_id" string="Recycle Rule" optional="hide" />
                     <field name="name" />
-                    <button icon="fa-check" string="Validate" type="object" name="action_validate" invisible="not active" />
-                    <button icon="fa-times" string="Archive Suggestion" type="object" name="action_discard" invisible="not active" />
-                    <button icon="fa-undo" string="Unarchive Suggestion" type="object" name="action_undiscard" invisible="active" />
+                    <button icon="check" string="Validate" type="object" name="action_validate" invisible="not active" />
+                    <button icon="close" string="Archive Suggestion" type="object" name="action_discard" invisible="not active" />
+                    <button icon="undo" string="Unarchive Suggestion" type="object" name="action_undiscard" invisible="active" />
                 </list>
             </field>
         </record>
@@ -30,7 +30,7 @@
                 <search string="Records">
                     <filter name="active" string="Archived" domain="[('active', '=', False)]" />
                     <searchpanel>
-                        <field name="recycle_model_id" icon="fa-bars" string="Recycle Rules" />
+                        <field name="recycle_model_id" icon="menu" string="Recycle Rules" />
                     </searchpanel>
                 </search>
             </field>

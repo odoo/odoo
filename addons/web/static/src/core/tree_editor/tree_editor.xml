@@ -45,7 +45,7 @@
                     t-on-mouseenter="(ev) => this.highlightNode(ev.target, true)"
                     t-on-mouseleave="(ev) => this.highlightNode(ev.target, false)"
                 >
-                    <i class="fa fa-sitemap" />
+                    <i class="oi" data-icon="account_tree" />
                 </button>
                 <button
                     t-else=""
@@ -56,7 +56,7 @@
                     t-on-mouseenter="(ev) => this.highlightNode(ev.target, true)"
                     t-on-mouseleave="(ev) => this.highlightNode(ev.target, false)"
                 >
-                    <i class="fa fa-plus" />
+                    <i class="oi" data-icon="add" />
                 </button>
             </t>
             <button
@@ -67,7 +67,7 @@
                 t-on-mouseenter="(ev) => this.highlightNode(ev.target, true)"
                 t-on-mouseleave="(ev) => this.highlightNode(ev.target, false)"
             >
-                <i class="fa fa-trash" />
+                <i class="oi oi-filled" data-icon="delete" />
             </button>
         </div>
     </t>
@@ -167,8 +167,8 @@
             <div t-attf-class="o_tree_editor_editor #{_classes}">
                 <div class="o_input d-flex align-items-center">
                     <span class="flex-grow-1 text-truncate" t-out="info.stringify(value)" />
-                    <i role="alert" class="fa fa-exclamation-triangle text-warning mx-2" t-att-data-tooltip="(typeof info.message === 'function') ? info.message(value) : info.message" />
-                    <i class="fa fa-times" data-tooltip="Clear" t-on-click="() => update(info.defaultValue())" />
+                    <i role="alert" class="oi text-warning mx-2" data-icon="warning" t-att-data-tooltip="(typeof info.message === 'function') ? info.message(value) : info.message" />
+                    <i class="oi" data-icon="close" data-tooltip="Clear" t-on-click="() => update(info.defaultValue())" />
                 </div>
             </div>
         </t>

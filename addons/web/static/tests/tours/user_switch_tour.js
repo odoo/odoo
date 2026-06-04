@@ -66,7 +66,7 @@ registry.category("web_tour.tours").add("test_user_switch", {
         },
         {
             content: "Display the login form",
-            trigger: ".o_user_switch .fa-user-circle-o",
+            trigger: ".o_user_switch [data-icon='account_circle']",
             run: "click",
         },
         {
@@ -138,7 +138,7 @@ registry.category("web_tour.tours").add("test_user_switch", {
         },
         {
             content: "Display the login form",
-            trigger: ".o_user_switch .fa-user-circle-o",
+            trigger: ".o_user_switch [data-icon='account_circle']",
             run: "click",
         },
         {
@@ -160,7 +160,7 @@ registry.category("web_tour.tours").add("test_user_switch", {
         },
         {
             content: "Remove the admin user from page",
-            trigger: ".o_user_switch .d-flex:first-child .fa-times",
+            trigger: ".o_user_switch .d-flex:first-child [data-icon='close']",
             run: "click",
         },
         {

@@ -55,4 +55,4 @@ class IrUiView(models.Model):
             self._raise_view_error(msg, node)
 
     def _get_view_info(self):
-        return {'hierarchy': {'icon': 'fa fa-share-alt fa-rotate-90'}} | super()._get_view_info()
+        return {'hierarchy': {'icon': 'family_history'}} | super()._get_view_info()

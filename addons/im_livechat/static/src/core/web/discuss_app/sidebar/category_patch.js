@@ -18,7 +18,8 @@ const DiscussSidebarCategoryPatch = {
                 onSelect: () =>
                     this.actionService.doAction("im_livechat.im_livechat_channel_action"),
                 label: _t("View or join live chat channels"),
-                icon: "fa fa-cog",
+                icon: "settings",
+                icon_class: "oi-filled",
             });
         }
         return actions;

@@ -66,7 +66,7 @@ export class WebsiteSlidesProgressBar extends Interaction {
             "website.slides.sidebar.done.button",
             {
                 slideId: slide.id,
-                uncompletedIcon: buttonEl.dataset.uncompletedIcon ?? "fa-circle-thin",
+                uncompletedIcon: buttonEl.dataset.uncompletedIcon ?? "radio_button_unchecked",
                 slideCompleted: slide.completed ? 1 : undefined,
                 canSelfMarkUncompleted: slide.canSelfMarkUncompleted ? "True" : "",
                 canSelfMarkCompleted: slide.canSelfMarkCompleted ? "True" : "",

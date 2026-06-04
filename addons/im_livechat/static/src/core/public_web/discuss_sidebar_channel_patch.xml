@@ -7,7 +7,7 @@
         <xpath expr="//*[@t-custom-ref='displayNameAdditionalContent']" position="inside">
             <span t-if="this.channel.livechat_lang_id" class="fw-normal small text-uppercase text-muted" t-out="this.channel.livechat_lang_id.baseCode" t-att-title="this.channel.livechat_lang_id.name"/>
             <t t-if="this.channel.livechat_status === 'need_help'">
-                <i t-if="this.channel.matchesSelfExpertise" class="fa fa-star o-mail-favorite" role="image" title="Relevant to your expertise"/>
+                <i t-if="this.channel.matchesSelfExpertise" class="oi oi-filled o-mail-favorite" data-icon="star" role="image" title="Relevant to your expertise"/>
                 <span t-if="this.helpState.text" class="o-livechat-LookingForHelp-timer text-muted fw-normal smaller" t-out="this.helpState.text"/>
             </t>
         </xpath>

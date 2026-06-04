@@ -13,7 +13,7 @@
         <div 
             t-if="this.props.readOnly and this.props.warning"
             class="text-danger text-truncate my-2 pt-3 border-top">
-            <i class="fa fa-warning" t-att-title="this.props.warning"/>
+            <i class="oi" data-icon="warning" t-att-title="this.props.warning"/>
             <span 
                 class="px-1" 
                 t-att-title="this.props.warning"
@@ -32,7 +32,7 @@
                     t-att-data-tooltip="this.disabledButtonTooltip"
                     aria-label="Decrease quantity"
                 >
-                    <i class="oi oi-minus" aria-hidden="true"/>
+                    <i class="oi" data-icon="remove" aria-hidden="true"/>
                 </button>
                 <input
                     class="form-control text-bg-view flex-grow-0 flex-shrink-0 text-center"
@@ -63,11 +63,11 @@
                     t-on-click.stop="(ev) => this.env.increaseQuantity()"
                     aria-label="Increase quantity"
                 >
-                    <i class="oi oi-plus" aria-hidden="true"/>
+                    <i class="oi" data-icon="add" aria-hidden="true"/>
                 </button>
             </div>
             <t t-elif="this.props.warning">
-                <i class="fa fa-warning text-warning" t-att-title="this.props.warning"/>
+                <i class="oi text-warning" data-icon="warning" t-att-title="this.props.warning"/>
                 <span 
                     class="text-truncate text-warning px-1" 
                     t-att-title="this.props.warning"
@@ -79,14 +79,14 @@
                 <button t-if="!this.isInOrder()"
                         t-on-click.stop="() => this.env.addProduct()"
                         class="btn btn-secondary">
-                    <i class="fa fa-shopping-cart"/>
+                    <i class="oi" data-icon="shopping_cart"/>
                     Add
                 </button>
                 <div t-else="" class="o_tooltip_div_remove" t-att-data-tooltip="this.disabledButtonTooltip">
                     <button t-on-click.stop="this.env.removeProduct"
                             t-att-disabled="this.disableRemove"
                             class="btn btn-light border">
-                        <i class="fa fa-trash"/>
+                        <i class="oi oi-filled" data-icon="delete"/>
                         Remove
                     </button>
                 </div>

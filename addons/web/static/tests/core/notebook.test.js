@@ -341,18 +341,18 @@ test("icons can be given for each page tab", async () => {
         static props = ["*"];
         get icons() {
             return {
-                1: "fa-trash",
-                3: "fa-pencil",
+                1: "delete",
+                3: "edit",
             };
         }
     }
 
     await mountWithCleanup(Parent);
-    expect(".nav-item:nth-child(1) i").toHaveClass("fa-trash");
+    expect(".nav-item:nth-child(1) i").toHaveAttribute("data-icon", "delete");
     expect(".nav-item:nth-child(1)").toHaveText("page1");
     expect(".nav-item:nth-child(2) i").toHaveCount(0);
     expect(".nav-item:nth-child(2)").toHaveText("page2");
-    expect(".nav-item:nth-child(3) i").toHaveClass("fa-pencil");
+    expect(".nav-item:nth-child(3) i").toHaveAttribute("data-icon", "edit");
     expect(".nav-item:nth-child(3)").toHaveText("page3");
 });
 

@@ -11,11 +11,16 @@ class ActivityException extends Component {
     get textClass() {
         if (this.props.record.data[this.props.name]) {
             return (
-                "text-" +
-                this.props.record.data[this.props.name] +
-                " fa " +
-                this.props.record.data.activity_exception_icon
+                "oi text-" +
+                this.props.record.data[this.props.name]
             );
+        }
+        return undefined;
+    }
+
+    get icon() {
+        if (this.props.record.data[this.props.name]) {
+            return this.props.record.data.activity_exception_icon;
         }
         return undefined;
     }

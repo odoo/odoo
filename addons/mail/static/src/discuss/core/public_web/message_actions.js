@@ -6,7 +6,7 @@ registerMessageAction("create-or-view-thread", {
         !message.isEmpty &&
         message.channel_id?.eq(channel) &&
         message.channel_id?.canCreateSubChannels,
-    icon: "fa fa-comments-o",
+    icon: "forum",
     onSelected: ({ message }) => {
         if (message.linkedSubChannel) {
             message.linkedSubChannel.open({ focus: true });

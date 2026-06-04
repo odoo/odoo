@@ -18,7 +18,7 @@ export class ActivityButton extends Component {
         this.buttonRef = useRef("button");
         this.env = useEnv();
         this.defaultActivityStateClass = "text-muted";
-        this.defaultActivityDecorationClass = "fa-clock-o btn-link text-dark";
+        this.defaultActivityDecorationClass = "btn-link text-dark";
     }
 
     get buttonClass() {
@@ -42,23 +42,28 @@ export class ActivityButton extends Component {
         switch (this.props.record.data.activity_exception_decoration) {
             case "warning":
                 classes.push("text-warning");
-                classes.push(this.props.record.data.activity_exception_icon);
                 break;
             case "danger":
                 classes.push("text-danger");
-                classes.push(this.props.record.data.activity_exception_icon);
                 break;
             default: {
-                const { activity_ids, activity_type_icon } = this.props.record.data;
-                if (activity_ids.records.length) {
-                    classes.push(activity_type_icon || "fa-tasks");
-                    break;
+                const { activity_ids } = this.props.record.data;
+                if (!activity_ids.records.length) {
+                    classes.push(this.defaultActivityDecorationClass);
                 }
-                classes.push(this.defaultActivityDecorationClass);
                 break;
             }
         }
         return classes.join(" ");
+    }
+
+    get buttonIcon() {
+        const { activity_ids, activity_type_icon } = this.props.record.data;
+        if (activity_ids.records.length) {
+            return activity_type_icon || "checklist";
+        } else {
+            return "schedule";
+        }
     }
 
     get title() {

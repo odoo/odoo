@@ -62,7 +62,7 @@ export function addSectionFromProductCatalog() {
         },
         {
             content: "Wait for product to be added",
-            trigger: '.o_kanban_record:contains("Test Product"):not(:has(.fa-shopping-cart))',
+            trigger: '.o_kanban_record:contains("Test Product"):not(:has([data-icon="shopping_cart"]))',
         },
         {
             content: "Close the catalog",

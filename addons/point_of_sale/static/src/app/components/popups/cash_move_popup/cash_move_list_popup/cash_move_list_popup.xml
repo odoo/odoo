@@ -29,8 +29,8 @@
                                     
                                     <td class="text-end delete-row" t-if="this.hasCashDeletePerm">
                                         <button t-on-click.stop="this.callbacks[cm.id].call" class="btn btn-link btn-lg text-danger">
-                                            <i t-if="this.callbacks[cm.id].status != 'loading'" class="fa fa-trash" aria-hidden="true"/>
-                                            <i t-else="" class="fa fa-spin fa-circle-o-notch" aria-hidden="true" />
+                                            <i t-if="this.callbacks[cm.id].status != 'loading'" class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
+                                            <i t-else="" class="oi oi-spin" data-icon="autorenew" aria-hidden="true" />
                                         </button>
                                     </td>
                                 </tr>
@@ -56,8 +56,8 @@
                                 <div class="col-2 align-self-center delete-row">
                                     <div class="d-flex align-items-center justify-content-center h-100" name="delete" t-on-click.stop="this.callbacks[cm.id].call">
                                         <div class="btn btn-danger btn-lg">
-                                            <i t-if="this.callbacks[cm.id].status != 'loading'" class="fa fa-trash" aria-hidden="true"/>
-                                            <i t-else="" class="fa fa-spin fa-circle-o-notch" aria-hidden="true" />
+                                            <i t-if="this.callbacks[cm.id].status != 'loading'" class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
+                                            <i t-else="" class="oi oi-spin" data-icon="autorenew" aria-hidden="true" />
                                         </div>
                                     </div>
                                 </div>

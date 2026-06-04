@@ -38,19 +38,19 @@
 
 <template id="event_track_content_partner_info">
     <div class="mb-1 align-items-baseline text-break" t-if="track.partner_function">
-        <i class="fa fa-briefcase me-2"/><span t-out="track.partner_function"/>
+        <i class="oi me-2" data-icon="work"/><span t-out="track.partner_function"/>
         <t t-if="track.partner_company_name">
             <span> at </span><span t-out="track.partner_company_name"/>
         </t>
     </div>
     <div class="mb-1 align-items-baseline text-break" t-if="track.partner_id.website">
-        <i class="fa fa-globe me-2"/><a t-att-href="track.partner_id.website"><span t-field="track.partner_id.website"/></a>
+        <i class="oi me-2" data-icon="public"/><a t-att-href="track.partner_id.website"><span t-field="track.partner_id.website"/></a>
     </div>
     <div class="mb-1 align-items-baseline text-break" t-if="track.partner_email">
-        <i class="fa fa-envelope me-2"/><a t-att-mailto="track.partner_email"><span t-field="track.partner_email"/></a>
+        <i class="oi oi-filled me-2" data-icon="mail"/><a t-att-mailto="track.partner_email"><span t-field="track.partner_email"/></a>
     </div>
     <div class="mb-1 align-items-baseline text-break" t-if="track.partner_phone">
-        <i class="fa fa-phone me-2"/><span t-field="track.partner_phone"/>
+        <i class="oi oi-filled me-2" data-icon="phone"/><span t-field="track.partner_phone"/>
     </div>
 </template>
 
@@ -199,7 +199,7 @@
                     </li>
                 </ul>
                 <a href="#collapse_track_aside" data-bs-toggle="collapse" class="o_wevent_collapse_link stretched-link d-md-none px-3 text-decoration-none o_wevent_online_page_aside_collapse collapsed">
-                    <i class="oi oi-chevron-down d-md-none"/>
+                    <i class="oi d-md-none" data-icon="keyboard_arrow_down"/>
                 </a>
             </div>
             <div id="collapse_track_aside"

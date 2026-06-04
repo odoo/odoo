@@ -16,13 +16,13 @@
                 t-custom-ref="collapse"
                 t-if="this.props.slots.collapse"
                 class="o_hb_collapse_toggler btn border-0 bg-transparent"
-                t-att-class="{ 'active fa-rotate-90': this.state.expanded }"
+                t-att-class="{ 'active oi-rotate-90': this.state.expanded }"
                 title="Toggle more options"
                 t-on-click="this.toggleCollapseContent"
                 t-att-aria-expanded="this.state.expanded ? 'true' : 'false'"
                 t-att-aria-controls="this.collapseContentId">
                 <i
-                    class="fa fa-caret-right"
+                    class="oi" data-icon="arrow_right"
                     role="img"
                 />
             </button>
@@ -38,7 +38,7 @@
                     >
 
                     <span class="text-nowrap text-truncate" t-out="this.props.label" t-custom-ref="label"/>
-                    <i t-if="this.props.tooltip" class="fa fa-question icon-sup" t-att-class="this.env.langDir.builder === 'rtl' ? 'fa-flip-horizontal' : ''"/>
+                    <i t-if="this.props.tooltip" class="oi icon-sup" data-icon="question_mark" t-att-class="this.env.langDir.builder === 'rtl' ? 'oi-flip-horizontal' : ''"/>
                 </div>
                 <div
                     class="hb-row-content d-flex"

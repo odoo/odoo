@@ -14,10 +14,10 @@
                         class="form-control form-control-lg rounded flex-grow-1"
                         placeholder="Enter your PIN" />
                     <button class="select-cashier btn btn-secondary px-4" t-on-click="() => this.selectCashier(false, true)">
-                        <i class="fa fa-users" aria-hidden="true"></i>
+                        <i class="oi oi-filled" data-icon="group" aria-hidden="true"></i>
                     </button>
                     <button class="btn btn-secondary mobile-scanner px-4" t-if="this.pos.config.module_pos_hr">
-                        <i class="fa fa-barcode" aria-hidden="true"></i>
+                        <i class="oi" data-icon="barcode" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>

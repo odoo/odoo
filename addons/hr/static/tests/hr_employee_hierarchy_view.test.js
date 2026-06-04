@@ -78,7 +78,7 @@ test("load hierarchy view", async () => {
     expect(".o_hierarchy_node_button.btn-primary .o_hierarchy_icon").toHaveCount(0, {
         message: "the icon has been replaced in that js_class",
     });
-    expect(".o_hierarchy_node_button.btn-primary .fa-caret-right").toHaveCount(1, {
+    expect(".o_hierarchy_node_button.btn-primary [data-icon='arrow_right']").toHaveCount(1, {
         message: "the icon has been replaced in that js_class",
     });
     expect(".o_hierarchy_node_button.btn-primary").toHaveText("1 people");
@@ -86,7 +86,7 @@ test("load hierarchy view", async () => {
     expect(".o_hierarchy_row:eq(0) .o_hierarchy_node").toHaveCount(1);
     expect(".o_hierarchy_row:eq(0) .o_hierarchy_node_content").toHaveText("Albert");
     expect(".o_hierarchy_node_button.btn-secondary").toHaveCount(1);
-    expect(".o_hierarchy_node_button.btn-secondary .fa-caret-down").toHaveCount(1);
+    expect(".o_hierarchy_node_button.btn-secondary [data-icon='arrow_drop_down']").toHaveCount(1);
     expect(".o_hierarchy_node_button.btn-secondary").toHaveText("2 people");
 });
 

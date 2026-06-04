@@ -31,7 +31,7 @@
                         <field name="is_automated_probability" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_schedule_meeting" type="object"
-                                class="oe_stat_button" icon="fa-calendar"
+                                class="oe_stat_button" icon="calendar_today"
                                 context="{'partner_id': partner_id}"
                                 invisible="not id or type == 'lead'">
                                 <div class="o_stat_info">
@@ -40,7 +40,7 @@
                                 </div>
                             </button>
                             <button name="action_show_potential_duplicates" type="object"
-                                class="oe_stat_button" icon="fa-star"
+                                class="oe_stat_button" icon="star" icon_class="oi-filled"
                                 invisible="duplicate_lead_count &lt; 1">
                                 <div class="o_stat_info">
                                     <field name="duplicate_lead_count" class="o_stat_value"/>
@@ -208,23 +208,23 @@
                                 />
                                 <label for="email_from" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
-                                    <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
+                                    <button name="mail_action_blacklist_remove" class="oi text-danger" data-icon="block"
                                         title="This email is blacklisted for mass mailings. Click to unblacklist."
                                         type="object" context="{'default_email': email_from}" groups="base.group_user"
                                         invisible="not is_blacklisted"/>
                                     <field name="email_from" string="Email" widget="email" placeholder="e.g. john.doe@email.com"/>
-                                    <span class="fa fa-exclamation-triangle text-warning oe_edit_only"
+                                    <span class="oi text-warning oe_edit_only" data-icon="warning"
                                         title="By saving this change, the customer email will also be updated."
                                         invisible="not partner_email_update"/>
                                 </div>
                                 <label for="phone" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
-                                    <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
+                                    <button name="phone_action_blacklist_remove" class="oi text-danger" data-icon="block"
                                         title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
                                         type="object" context="{'default_phone': phone}" groups="base.group_user"
                                         invisible="not phone_blacklisted"/>
                                     <field name="phone" widget="phone" placeholder="e.g. (555) 555-0199"/>
-                                    <span class="fa fa-exclamation-triangle text-warning oe_edit_only"
+                                    <span class="oi text-warning oe_edit_only" data-icon="warning"
                                         title="By saving this change, the customer phone number will also be updated."
                                         invisible="not partner_phone_update"/>
                                 </div>
@@ -399,7 +399,7 @@
                 <form>
                     <group class="crm_quick_create_opportunity_form_group">
                         <div class="d-flex align-items-center" colspan="2">
-                            <i class="fa fa-user" title="Contact"/>
+                            <i class="oi oi-filled" data-icon="person" title="Contact"/>
                             <field name="partner_id"
                                 nolabel="1"
                                 class="o_field_highlight"
@@ -416,24 +416,24 @@
                             />
                         </div>
                         <div class="d-flex align-items-center" colspan="2">
-                            <i class="fa fa-briefcase" title="Opportunity Name"/>
+                            <i class="oi" data-icon="work" title="Opportunity Name"/>
                             <field name="name" nolabel="1" placeholder="Opportunity's Name" class="o_field_highlight"/>
                         </div>
                         <div class="d-flex align-items-center" colspan="2">
-                            <i class="fa fa-envelope" title="Contact Email"/>
+                            <i class="oi oi-filled" data-icon="mail" title="Contact Email"/>
                             <field name="email_from" string="Contact Email" placeholder='Contact Email' nolabel="1" class="o_field_highlight"/>
                         </div>
                         <div class="d-flex align-items-center" colspan="2">
-                            <i class="fa fa-mobile fa-lg" title="Contact Phone"/>
+                            <i class="oi" data-icon="smartphone" title="Contact Phone"/>
                             <field name="phone" string="Contact Phone" placeholder='Contact Phone' nolabel="1" class="o_field_highlight"/>
                         </div>
                         <div class="d-flex align-items-center" colspan="2">
-                            <i class="fa fa-money" title="Expected Revenue"/>
+                            <i class="oi" data-icon="payments" title="Expected Revenue"/>
                             <field name="expected_revenue" class="o_field_highlight" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                             <field name="priority" class="w-auto" nolabel="1" widget="priority"/>
                         </div>
                         <div class="d-flex align-items-center" colspan="2" groups="crm.group_use_recurring_revenues">
-                            <i class="fa fa-refresh" title="Recurring Revenue"/>
+                            <i class="oi" data-icon="refresh" title="Recurring Revenue"/>
                             <field name="recurring_revenue" class="o_field_highlight" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                             <field name="recurring_plan" placeholder='e.g. "Monthly"' required="recurring_revenue != 0" options="{'no_create': True, 'no_open': True}"/>
                         </div>
@@ -744,7 +744,7 @@
                     <field name="is_rotting" column_invisible="True"/>
                     <field name="rotting_days" column_invisible="True"/>
                     <widget name="mail_activity_mixin_list_reschedule_dropdown"/>
-                    <button name="%(crm.action_lead_mail_compose)d" type="action" string="Email" icon="fa-envelope" invisible="won_status == 'lost'"/>
+                    <button name="%(crm.action_lead_mail_compose)d" type="action" string="Email" icon="mail" icon_class="oi-filled" invisible="won_status == 'lost'"/>
                 </list>
             </field>
         </record>

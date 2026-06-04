@@ -24,7 +24,7 @@
     <BuilderRow t-if="this.canChangeFieldsLayout" label.translate="Labels Position">
         <BuilderButtonGroup action="'selectLabelsPosition'">
             <BuilderButton title.translate="Hide" actionValue="'none'" id="'label_position_hide_opt'">
-                <i class="fa fa-eye-slash"/>
+                <i class="oi" data-icon="visibility_off"/>
             </BuilderButton>
             <BuilderButton title.translate="Top" actionValue="'top'" iconImg="'/website/static/src/img/snippets_options/pos_top.svg'" id="'label_position_top_opt'"/>
             <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" actionValue="'left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
@@ -44,7 +44,7 @@
         </BuilderSelect>
         <BuilderButton t-if="this.isActiveItem('show_message_opt')"
                        title.translate="Edit Message"
-                       icon="'fa-eye'"
+                       icon="'visibility'"
                        preview="false"
                        action="'toggleEndMessage'"/>
     </BuilderRow>
@@ -70,7 +70,7 @@
                         <t t-out="record.display_name"/>
                     </BuilderSelectItem>
                 </BuilderSelect>
-                <BuilderButton t-if="field.createAction" className="'fa fa-fw fa-plus'"
+                <BuilderButton t-if="field.createAction" iconClass="'oi-fw'" icon="'add'"
                     title.translate="Create New"
                     action="'promptSaveRedirect'" actionParam="field.createAction"
                 />
@@ -171,7 +171,7 @@
     </BuilderRow>
     <BuilderRow label.translate="Label">
         <BuilderTextInput action="'setLabelText'" default="this.domState.fieldTranslatedName"/>
-        <BuilderButton title.translate="Hide" action="'toggleCheckboxLabel'" t-if="this.isActiveItem('custom_field_boolean_opt')" icon="'fa-eye-slash'" preview="false"/>
+        <BuilderButton title.translate="Hide" action="'toggleCheckboxLabel'" t-if="this.isActiveItem('custom_field_boolean_opt')" icon="'visibility_off'" preview="false"/>
     </BuilderRow>
     <BuilderRow label.translate="Required">
         <BuilderCheckbox t-if="!this.domState.elClassList.includes('s_website_form_model_required')"
@@ -360,7 +360,7 @@
         <BuilderButton id="'error_message_opt'"
             t-if="!this.isActiveItem('no_requirement_opt')"
             title.translate="Add custom error message"
-            className="'fa ' + (this.isActiveItem('error_message_opt') ? 'fa-eye' : 'fa-eye-slash')"
+            icon="this.isActiveItem('error_message_opt') ? 'visibility' : 'visibility_off'"
             preview="false"
             action="'setCustomErrorMessage'"/>
     </BuilderRow>

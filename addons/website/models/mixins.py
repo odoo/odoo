@@ -792,7 +792,7 @@ class WebsiteSearchableMixin(models.AbstractModel):
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = self[:limit].read(fetch_fields)
         for result in results_data:
-            result['_fa'] = icon
+            result['_icon'] = icon
             result['_mapping'] = mapping
         html_fields = [config['name'] for config in mapping.values() if config.get('html')]
         if html_fields:

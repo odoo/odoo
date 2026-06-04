@@ -8,7 +8,7 @@
                     <Dropdown>
                         <button class="btn btn-light d-flex justify-content-between w-100 ms-2 border border-dark rounded-0">
                             <span class="px-1" t-out="this.state.type"/>
-                            <i class="fa fa-caret-down ms-2"/>
+                            <i class="oi ms-2" data-icon="arrow_drop_down"/>
                         </button>
                         <t t-set-slot="content">
                             <DropdownItem onSelected="() => this.selectType('linear')">
@@ -150,7 +150,7 @@
                         <a t-on-click="() => this.removeColor(this.state.currentColorIndex)"
                            t-attf-style="left: #{this.colors[this.state.currentColorIndex].percentage}%"
                            type="button" class="btn btn-sm btn-light position-absolute">
-                           <i class="fa fa-fw fa-trash" role="img"/>
+                           <i class="oi oi-fw oi-filled" data-icon="delete" role="img"/>
                         </a>
                     </t>
                 </div>

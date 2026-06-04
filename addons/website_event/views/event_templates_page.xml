@@ -25,11 +25,11 @@
         <!-- Mobile -->
         <div id="o_wevent_submenu_mobile" class="container d-flex d-lg-none align-items-center py-3 pb-lg-2">
             <a t-if="navbar_back_url" t-att-href="navbar_back_url" t-att-title="navbar_back_title or 'Go back'">
-                <i class="oi oi-chevron-left"/>
+                <i class="oi" data-icon="chevron_backward"/>
                 <span t-out="navbar_back_text or 'Go back'"/>
             </a>
             <a t-else="" href="/event" title="All Events">
-                <i class="oi oi-chevron-left"/>
+                <i class="oi" data-icon="chevron_backward"/>
                 <span>All Events</span>
             </a>
             <!-- Add Register additional CTA button, in addition to menus -->
@@ -88,7 +88,7 @@
 <template id="navbar_dropdown" name="Event Navbar Dropdown">
    <div t-if="len(event.menu_id.child_id) &gt; 1" t-attf-class="dropdown o-dropdown--no-caret {{not is_rendering_cta and 'ms-auto' or 'ms-2'}}">
         <button class="dropdown-toggle o-no-caret btn btn-light" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa fa-bars" role="img"/>
+            <i class="oi" data-icon="menu" role="img"/>
         </button>
         <ul class="dropdown-menu" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id" role="menu">
             <li><span class="h6-fs dropdown-header" t-field="event.name"/></li>

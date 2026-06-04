@@ -66,7 +66,7 @@
                                                 domain="[('id', 'in', pos_available_preset_ids)]"/>
                                         </div>
                                         <div>
-                                            <button name="%(action_pos_preset_form)d" icon="oi-arrow-right" type="action" string="Configure Presets" class="btn-link"/>
+                                            <button name="%(action_pos_preset_form)d" icon="east" type="action" string="Configure Presets" class="btn-link"/>
                                         </div>
                                     </div>
                                 </setting>
@@ -81,7 +81,7 @@
                                         options="{'no_quick_create': True}"
                                         context="{'default_config_ids': [pos_config_id], 'form_view_ref': 'point_of_sale.action_pos_payment_method_form' }" />
                                     <div>
-                                        <button name="%(action_payment_methods_tree)d" icon="oi-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
+                                        <button name="%(action_payment_methods_tree)d" icon="east" type="action" string="Payment Methods" class="btn-link"/>
                                     </div>
                                 </setting>
                                 <setting string="Automatically validate order" help="Automatically validates orders paid with a payment terminal.">
@@ -102,7 +102,7 @@
                                         </div>
                                     </div>
                                     <div class="mt8">
-                                        <button name="%(account.rounding_list_action)d" icon="oi-arrow-right"
+                                        <button name="%(account.rounding_list_action)d" icon="east"
                                                 type="action" string="Roundings" class="btn-link"
                                                 invisible="not group_cash_rounding"/>
                                     </div>
@@ -176,7 +176,7 @@
                                             <field name="pos_trusted_config_ids" widget="many2many_tags" options="{'no_create':'true'}" placeholder="Select PoS to start sharing orders"/>
                                         </div>
                                         <div>
-                                            <button name="%(point_of_sale.action_pos_config_tree)d" icon="oi-arrow-right" type="action" string="Point of Sales" class="btn-link"/>
+                                            <button name="%(point_of_sale.action_pos_config_tree)d" icon="east" type="action" string="Point of Sales" class="btn-link"/>
                                         </div>
                                     </div>
                                 </setting>
@@ -211,7 +211,7 @@
                                         <field name="pos_iface_available_categ_ids" widget="many2many_tags"/>
                                     </div>
                                     <div class="content-group mt16" invisible="not pos_limit_categories">
-                                        <button name="%(product_pos_category_action)d" icon="oi-arrow-right" type="action" string="PoS Product Categories" class="btn-link"/>
+                                        <button name="%(product_pos_category_action)d" icon="east" type="action" string="PoS Product Categories" class="btn-link"/>
                                     </div>
                                 </setting>
                                 <setting id="margin_and_cost" string="Show margins &amp; costs" help="Show margins &amp; costs on product information">
@@ -236,7 +236,7 @@
                             <block title="Accounting" id="pos_accounting_section">
                                 <setting id="default_sales_tax_setting" title="This tax is applied to any new product created in the catalog." documentation="/applications/finance/accounting/taxation/taxes/default_taxes.html">
                                     <label string="Default Sales Tax" for="sale_tax_id"/>
-                                    <i class="fa fa-info-circle me-1" title="This setting is common to all PoS." pos-data-toggle="tooltip"/>
+                                    <i class="oi me-1" data-icon="info" title="This setting is common to all PoS." pos-data-toggle="tooltip"/>
                                     <div class="text-muted">
                                         Default sales tax for products
                                     </div>
@@ -244,12 +244,12 @@
                                         <field name="sale_tax_id" colspan="4" nolabel="1" domain="[('type_tax_use', 'in', ('sale', 'all'))]"/>
                                     </div>
                                     <div class="mt8">
-                                        <button name="%(account.action_tax_form)d" icon="oi-arrow-right" type="action" string="Taxes" class="btn-link"/>
+                                        <button name="%(account.action_tax_form)d" icon="east" type="action" string="Taxes" class="btn-link"/>
                                     </div>
                                 </setting>
                                 <setting groups="account.group_account_readonly">
                                     <label string="Default POS Receivable Account" for="account_default_pos_receivable_account_id"/>
-                                    <i class="fa fa-info-circle me-1" title="This setting is common to all PoS." pos-data-toggle="tooltip"/>
+                                    <i class="oi me-1" data-icon="info" title="This setting is common to all PoS." pos-data-toggle="tooltip"/>
                                     <div class="text-muted">
                                         Intermediary account used for unidentified customers.
                                     </div>
@@ -270,7 +270,7 @@
                                             <field name="pos_fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                         </div>
                                         <div>
-                                            <button name="%(account.action_account_fiscal_position_form)d" icon="oi-arrow-right" type="action" string="Fiscal Positions" class="btn-link"/>
+                                            <button name="%(account.action_account_fiscal_position_form)d" icon="east" type="action" string="Fiscal Positions" class="btn-link"/>
                                         </div>
                                     </div>
                                 </setting>
@@ -312,7 +312,7 @@
                                             <field name="pos_pricelist_id" domain="[('id', 'in', pos_allowed_pricelist_ids)]" options="{'no_create': True}"/>
                                         </div>
                                         <div class="mt8">
-                                            <button name="%(product.product_pricelist_action2)d" icon="oi-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
+                                            <button name="%(product.product_pricelist_action2)d" icon="east" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
                                         </div>
                                     </div>
                                 </setting>
@@ -322,7 +322,7 @@
                                 <setting id="product_prices" string="Product Prices" help="Product prices on receipts">
                                     <field name="pos_iface_tax_included" class="o_light_label" widget="radio"/>
                                     <div class="content-group">
-                                        <widget class="oe-link" name="documentation_link" path="/applications/finance/accounting/taxation/taxes/B2B_B2C.html" label="How to manage tax-included prices" icon="oi oi-fw oi-arrow-right"/>
+                                        <widget class="oe-link" name="documentation_link" path="/applications/finance/accounting/taxation/taxes/B2B_B2C.html" label="How to manage tax-included prices" icon_class="oi-fw" icon="east"/>
                                     </div>
                                 </setting>
                                 <setting id="manual_discount" help="Allow cashiers to set a discount per line" documentation="/applications/sales/point_of_sale/pricing/discounts.html">
@@ -437,42 +437,42 @@
                                 <setting id="adyen_payment_terminal_setting" title="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method." string="Adyen" help="Accept payments with an Adyen payment terminal"
                                         documentation="/applications/sales/point_of_sale/payment_methods/terminals/adyen.html">
                                     <field name="module_pos_adyen"/>
-                                    <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                    <button name="open_payment_method_form" icon="east" type="object" string="Payment method" class="btn-link"
                                         context="{'selection': 'adyen', 'config_ids': [pos_config_id], 'provider_name': 'Adyen'}" invisible="not module_pos_adyen" />
                                 </setting>
                                 <setting id="stripe_payment_terminal_setting" title="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method." string="Stripe" help="Accept payments with a Stripe payment terminal" documentation="/applications/sales/point_of_sale/payment_methods/terminals/stripe.html">
                                     <field name="module_pos_stripe"/>
-                                    <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                    <button name="open_payment_method_form" icon="east" type="object" string="Payment method" class="btn-link"
                                         context="{'selection': 'stripe', 'config_ids': [pos_config_id], 'provider_name': 'Stripe'}" invisible="not module_pos_stripe" />
                                 </setting>
                                 <setting title="The transactions are processed by Viva.com on terminal or tap on phone." string="Viva.com" help="Accept payments with Viva.com on a terminal or tap on phone" documentation="/applications/sales/point_of_sale/payment_methods/terminals/viva_com.html">
                                     <field name="module_pos_viva_com"/>
-                                    <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                    <button name="open_payment_method_form" icon="east" type="object" string="Payment method" class="btn-link"
                                         context="{'selection': 'viva_com', 'config_ids': [pos_config_id], 'provider_name': 'Viva.com'}" invisible="not module_pos_viva_com" />
                                 </setting>
                                 <setting id="pos_razorpay_setting" title="The transactions are processed by Razorpay. Set your Razorpay credentials on the related payment method." string="Razorpay" help="Accept payments with a Razorpay payment terminal" documentation="/applications/sales/point_of_sale/payment_methods/terminals/razorpay.html">
                                     <field name="module_pos_razorpay"/>
-                                    <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                    <button name="open_payment_method_form" icon="east" type="object" string="Payment method" class="btn-link"
                                         context="{'selection': 'razorpay', 'config_ids': [pos_config_id], 'provider_name': 'Razorpay'}" invisible="not module_pos_razorpay" />
                                 </setting>
                                 <setting title="The transactions are processed by Mercado Pago on terminal" string="Mercado Pago" help="Accept payments with Mercado Pago on a terminal" documentation="/applications/sales/point_of_sale/payment_methods/terminals/mercado_pago.html">
                                     <field name="module_pos_mercado_pago"/>
-                                    <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                    <button name="open_payment_method_form" icon="east" type="object" string="Payment method" class="btn-link"
                                         context="{'selection': 'mercado_pago', 'config_ids': [pos_config_id], 'provider_name': 'Mercado Pago'}" invisible="not module_pos_mercado_pago" />
                                 </setting>
                                 <setting title="The transactions are processed by Pine Labs on the terminal." string="Pine Labs" help="Accept payments with a Pine Labs payment terminal" documentation="/applications/sales/point_of_sale/payment_methods/terminals/pine_labs.html">
                                     <field name="module_pos_pine_labs"/>
-                                    <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                    <button name="open_payment_method_form" icon="east" type="object" string="Payment method" class="btn-link"
                                         context="{'selection': 'pine_labs', 'config_ids': [pos_config_id], 'provider_name': 'Pine Labs'}" invisible="not module_pos_pine_labs" />
                                 </setting>
                                 <setting title="The transactions are processed by QFPay on the terminal." string="QFPay" help="Accept payments with a QFPay payment terminal" documentation="/applications/sales/point_of_sale/payment_methods/terminals/qfpay.html">
                                     <field name="module_pos_qfpay"/>
-                                    <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                    <button name="open_payment_method_form" icon="east" type="object" string="Payment method" class="btn-link"
                                         context="{'selection': 'qfpay', 'config_ids': [pos_config_id], 'provider_name': 'QFPay'}" invisible="not module_pos_qfpay" />
                                 </setting>
                                 <setting title="The transactions are processed by DPO Pay on the terminal." string="DPO Pay" help="Accept payments with a DPO Pay payment terminal" documentation="/applications/sales/point_of_sale/payment_methods/terminals/dpo.html">
                                     <field name="module_pos_dpopay"/>
-                                    <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                    <button name="open_payment_method_form" icon="east" type="object" string="Payment method" class="btn-link"
                                         context="{'selection': 'dpopay', 'config_ids': [pos_config_id], 'provider_name': 'DPO Pay'}" invisible="not module_pos_dpopay" />
                                 </setting>
                             </block>
@@ -503,7 +503,7 @@
                                             <field name="pos_note_ids" widget="many2many_tags" readonly="pos_has_active_session" placeholder="All notes"/>
                                         </div>
                                         <div>
-                                            <button name="%(point_of_sale.action_pos_note_model)d" icon="oi-arrow-right" type="action" string="Notes" class="btn-link"/>
+                                            <button name="%(point_of_sale.action_pos_note_model)d" icon="east" type="action" string="Notes" class="btn-link"/>
                                         </div>
                                     </div>
                                 </setting>
@@ -524,13 +524,13 @@
                                             <div>
                                                 <button name="action_pos_printer_dialog"
                                                     context="{'default_pos_config_ids': [pos_config_id]}"
-                                                    icon="oi-arrow-right"
+                                                    icon="east"
                                                     type="object"
                                                     string="Add Printer"
                                                     class="btn-link"/>
                                             </div>
                                             <div>
-                                                <button name="%(point_of_sale.action_pos_printer_form)d" icon="oi-arrow-right" type="action" string="Manage Printers" class="btn-link"/>
+                                                <button name="%(point_of_sale.action_pos_printer_form)d" icon="east" type="action" string="Manage Printers" class="btn-link"/>
                                             </div>
                                         </div>
                                     </div>

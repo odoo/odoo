@@ -37,9 +37,9 @@
                                 t-att-value="answer['id']"
                                 class="d-none"
                                 t-att-disabled="quiz_completed"/>
-                            <i t-att-class="'fa fa-circle text-400 %s' % ('d-none' if quiz_completed and answer['is_correct'] else '')"/>
-                            <i class="fa fa-times-circle text-danger d-none"></i>
-                            <i t-att-class="'fa fa-check-circle text-success %s' % ('d-none' if not (quiz_completed and answer['is_correct']) else '')"></i>
+                            <i t-att-class="'oi oi-filled text-400 %s' % ('d-none' if quiz_completed and answer['is_correct'] else '')" data-icon="circle"/>
+                            <i class="oi oi-filled text-danger d-none" data-icon="cancel"></i>
+                            <i t-att-class="'oi oi-filled text-success %s' % ('d-none' if not (quiz_completed and answer['is_correct']) else '')" data-icon="check_circle"></i>
                         </label>
                         <span t-out="answer['text_value']"/>
                     </a>

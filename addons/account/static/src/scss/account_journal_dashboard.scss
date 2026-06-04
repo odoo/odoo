@@ -17,14 +17,15 @@
         .o_dashboard_star {
             font-size: 12px;
 
-            &.fa-star-o {
+            &[data-icon="star"] {
                 color: $o-main-color-muted;
                 &:hover {
                     color: gold;
                 }
-            }
-            &.fa-star {
-                color: gold;
+
+                &.oi-filled {
+                    color: gold;
+                }
             }
         }
 

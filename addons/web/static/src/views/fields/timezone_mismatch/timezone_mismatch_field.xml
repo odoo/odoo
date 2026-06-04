@@ -4,7 +4,8 @@
     <t t-name="web.TimezoneMismatchField" t-inherit="web.SelectionField" t-inherit-mode="primary">
         <xpath expr="." position="inside">
             <span t-if="this.mismatch"
-                class="o_tz_warning fa fa-exclamation-triangle position-static align-self-center m-0 ms-2"
+                class="o_tz_warning oi position-static align-self-center m-0 ms-2"
+                data-icon="warning"
                 t-att-title="this.mismatchTitle" />
         </xpath>
     </t>

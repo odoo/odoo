@@ -5,7 +5,6 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
 
 import { Component, proxy } from "@odoo/owl";
-import { iconClasses } from "@html_editor/utils/dom_info";
 import { TABS, renderMedia } from "./media_dialog_utils";
 
 const DEFAULT_SEQUENCE = 50;
@@ -137,30 +136,25 @@ export class MediaDialog extends Component {
         }
         const addIcons = !this.props.visibleTabs || this.props.visibleTabs.includes(TABS.ICONS.id);
         if (addIcons) {
-            const fonts = TABS.ICONS.Component.initFonts();
+            const icons = TABS.ICONS.Component.initFonts();
             this.addTab(TABS.ICONS, {
-                fonts,
+                icons,
             });
 
             if (
                 this.props.media &&
                 TABS.ICONS.Component.tagNames.includes(this.props.media.tagName)
             ) {
-                const classes = this.props.media.className.split(/\s+/);
-                const predefinedMediaFont = fonts.find((font) => classes.includes(font.base));
-                if (predefinedMediaFont) {
-                    const selectedIcon = predefinedMediaFont.icons.find((icon) =>
-                        icon.names.some((name) => classes.includes(name))
-                    );
-                    if (selectedIcon) {
-                        this.initialIconClasses.push(...selectedIcon.names);
-                        this.selectMedia(selectedIcon, TABS.ICONS.id);
-                    }
-                } else {
-                    const iconRegex = new RegExp(`\\b(?:${iconClasses.join("|")})(?:-\\S+)?\\b`);
-                    const fallbackIconClasses = classes.filter((cls) => iconRegex.test(cls));
-                    this.initialIconClasses.push(...fallbackIconClasses);
+                // Material Symbols or Odoo UI icon: identified by the data-icon attribute
+                const selectedIcon = icons.find(
+                    (icon) => icon.dataIcon === this.props.media.dataset.icon
+                );
+                if (selectedIcon) {
+                    selectedIcon.filled = this.props.media.classList.contains("oi-filled");
+                    this.selectMedia(selectedIcon, TABS.ICONS.id);
                 }
+                // No initialIconClasses needed: data-icon is overwritten by createElements,
+                // and "oi" is the shared base class preserved across icon changes.
             }
         }
         this.props.extraTabs.forEach((tab) => this.addTab(tab));

@@ -43,7 +43,7 @@
     <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
     <div class="o_template_default o_count_inline_text o_colored_item alert mb-0">
         <p>
-            <i class="fa fa-clock-o"/> Sale ends in
+            <i class="oi" data-icon="schedule"/> Sale ends in
             <span class="o_not_editable oe_unremovable" contenteditable="false">
                 <t t-foreach="metrics" t-as="metric">
                     <span class="o_count_item">
@@ -99,7 +99,7 @@
     <t t-set="metrics" t-value="[days, hours, minutes, seconds]"/>
     <div class="o_template_text o_count_inline_text">
         <p>
-            <i class="fa fa-clock-o"/> Sale ends in
+            <i class="oi" data-icon="schedule"/> Sale ends in
             <span class="o_not_editable oe_unremovable" contenteditable="false">
                 <t t-foreach="metrics" t-as="metric">
                     <span class="o_count_item o_colored_text">

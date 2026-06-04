@@ -69,7 +69,8 @@
                                 onBlur="() => this.handleCashCountBlur()"
                             />
                             <button
-                                class="icon fa fa-money btn btn-secondary"
+                                class="icon oi btn btn-secondary"
+                                data-icon="payments"
                                 t-on-click="this.openDetailsPopup"
                             />
                         </div>
@@ -88,7 +89,8 @@
                                 />
                                 <t t-if="pm.type == 'cash'">
                                     <button
-                                        class="icon fa fa-money btn btn-secondary"
+                                        class="icon oi btn btn-secondary"
+                                        data-icon="payments"
                                         t-on-click="this.openDetailsPopup"
                                     />
                                 </t>
@@ -130,7 +132,7 @@
                             t-att-class="this.ui.isSmall ? 'w-100' : 'btn-lg ms-auto'"
                             title="Download a report with all the sales of the current PoS Session">
                                 Daily Sale
-                                <i t-if="!this.ui.isSmall" class="fa fa-download" role="img"/>
+                                <i t-if="!this.ui.isSmall" class="oi" data-icon="download" role="img"/>
                         </button>
                         <button t-if="this.pos.ticketPrinter.hasReceiptPrinters" class="button icon btn btn-secondary" t-att-class="{'btn-lg': !this.ui.isSmall}">
                             <SaleDetailsButton/>

@@ -141,8 +141,8 @@ test("hide on mobile and toggle mobile view", async () => {
     await contains("button[data-action-id='toggleDeviceVisibility']:last").click();
     await toggleMobilePreview();
     expect(":iframe .col-lg-3").not.toHaveClass("o_snippet_override_invisible");
-    expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry i")).toHaveClass(
-        "fa-eye-slash"
+    expect(queryOne(".o_we_invisible_el_panel .o_we_invisible_entry i")).toHaveAttribute("data-icon",
+        "visibility_off"
     );
 
     await toggleMobilePreview();
@@ -157,12 +157,12 @@ test("Hide element conditionally", async () => {
     await contains("div[data-action-id='forceVisible']:contains(Conditionally)").click();
     expect(":iframe section").toHaveClass("o_snippet_invisible");
     expect(".o_we_invisible_el_panel .o_we_invisible_entry").toHaveCount(1);
-    expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveClass("fa-eye");
+    expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveAttribute("data-icon", "visibility");
 
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
     expect(":iframe section.o_snippet_invisible").toHaveClass("o_conditional_hidden");
     expect(":iframe section").toHaveAttribute("data-invisible", "1");
-    expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveClass("fa-eye-slash");
+    expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveAttribute("data-icon", "visibility_off");
 
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
     expect(":iframe section.o_snippet_invisible").not.toHaveClass("o_conditional_hidden");
@@ -181,17 +181,17 @@ test("Show conditionally hidden elements should not be tracked in history", asyn
     await contains("div[data-action-id='forceVisible']:contains(Conditionally)").click();
     expect(":iframe section").toHaveClass("o_snippet_invisible");
     expect(".o_we_invisible_el_panel .o_we_invisible_entry").toHaveCount(1);
-    expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveClass("fa-eye");
+    expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveAttribute("data-icon", "visibility");
 
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
     expect(":iframe section.o_snippet_invisible").toHaveClass("o_conditional_hidden");
     expect(":iframe section").toHaveAttribute("data-invisible", "1");
-    expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveClass("fa-eye-slash");
+    expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveAttribute("data-icon", "visibility_off");
 
     setSelection({ anchorNode: queryOne(":iframe p:not([data-selection-placeholder])"), anchorOffset: 1 });
     await insertText(getEditor(), "x"); // something to undo
     undo(getEditor());
     expect(":iframe section.o_snippet_invisible").toHaveClass("o_conditional_hidden");
     expect(":iframe section").toHaveAttribute("data-invisible", "1");
-    expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveClass("fa-eye-slash");
+    expect(".o_we_invisible_el_panel .o_we_invisible_entry i").toHaveAttribute("data-icon", "visibility_off");
 });

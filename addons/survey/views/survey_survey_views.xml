@@ -30,20 +30,20 @@
                             type="object"
                             class="oe_stat_button"
                             invisible="access_mode == 'public'"
-                            icon="fa-envelope-o">
+                            icon="mail">
                             <field string="Registered" name="answer_count" widget="statinfo"/>
                         </button>
                         <button name="action_survey_user_input_certified"
                             type="object"
                             class="oe_stat_button"
                             invisible="not certification"
-                            icon="fa-trophy">
+                            icon="trophy" icon_class="oi-filled">
                             <field string="Certified" name="success_count" widget="statinfo"/>
                         </button>
                         <button name="action_survey_user_input_completed"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-check-square-o">
+                            icon="check_box">
                             <field string="Participants" name="answer_done_count" widget="statinfo"/>
                         </button>
                     </div>
@@ -54,12 +54,15 @@
                         options="{
                             'allowed_selection_field': 'allowed_survey_types',
                             'icon_mapping': {
-                                'survey': 'fa-edit',
-                                'live_session': 'fa-bar-chart-o',
-                                'assessment': 'fa-mortar-board',
-                                'custom': 'fa-paint-brush',
-                                'recruitment': 'fa-suitcase',
-                                'appraisal': 'fa-star-half-empty'
+                                'survey': 'edit',
+                                'live_session': 'bar_chart',
+                                'assessment': 'school',
+                                'custom': 'design_services',
+                                'recruitment': 'luggage',
+                                'appraisal': 'star_half'
+                            },
+                            'icon_class_mapping': {
+                                'survey': 'oi-filled'
                             }
                         }"/>
                     <div class="oe_title w-100">
@@ -105,7 +108,7 @@
                                     <field name="triggering_question_ids" column_invisible="True"/>
                                     <field name="triggering_answer_ids" column_invisible="True" widget="many2many_tags"/> <!-- widget to fetch display_name -->
                                     <widget name="survey_question_trigger" width="30px"/>
-                                    <button name="copy" type="object" icon="fa-clone" title="Duplicate Question"/>
+                                    <button name="copy" type="object" icon="content_copy" title="Duplicate Question"/>
                                     <control>
                                         <create name="add_question_control" string="Add a question"/>
                                         <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
@@ -163,7 +166,7 @@
                                             <field name="certification_report_layout" placeholder="Pick a Style..." class="w-50"/>
                                             <button name="action_survey_preview_certification_template"
                                                 string="Preview" type="object"
-                                                icon="fa-external-link"  target="_blank" class="btn-link pt-0"/>
+                                                icon="open_in_new"  target="_blank" class="btn-link pt-0"/>
                                         </div>
                                     </div>
                                     <field name="certification_mail_template_id"
@@ -235,7 +238,7 @@
                 <field name="certification" column_invisible="True"/>
                 <field name="title"/>
                 <button name="certification" type="button" disabled="disabled"
-                    icon="fa-trophy" title="Certification" aria-label="Certification"
+                    icon="trophy" icon_class="oi-filled" title="Certification" aria-label="Certification"
                     invisible="not certification"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="answer_duration_avg" widget="float_time"/>

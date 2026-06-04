@@ -10,13 +10,13 @@
                 <div>
                     <span t-out="type.name"/>
                     <span t-if="type.template_ids.length > 0" class="dropdown float-end">
-                        <i class="oi oi-ellipsis-v oi-fw" data-bs-toggle="dropdown"/>
+                        <i class="oi oi-fw" data-icon="more_vert" data-bs-toggle="dropdown"/>
                         <div class="dropdown-menu">
                             <t t-foreach="type.template_ids" t-as="template" t-key="template.id">
                                 <div data-tooltip="This action will send an email."
                                      class="o_template_element o_send_mail_template cursor-pointer"
                                      t-on-click="() => this.props.onSendMailTemplate(template.id, type.id)">
-                                    <i class="fa fa-envelope fa-fw"/> <t t-out="template.name"/>
+                                    <i class="oi oi-fw oi-filled" data-icon="mail"/> <t t-out="template.name"/>
                                 </div>
                             </t>
                         </div>
@@ -31,7 +31,7 @@
                 <div class="o_optional_columns_dropdown text-center border-top-0">
                     <Dropdown position="'bottom-end'">
                         <button class="btn p-0" tabindex="-1">
-                            <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
+                            <i class="o_optional_columns_dropdown_toggle oi oi-fw" data-icon="tune"/>
                         </button>
 
                         <t t-set-slot="content">
@@ -94,7 +94,7 @@
         class="o_activity_summary_cell o_activity_empty_cell cursor-pointer"
         t-attf-class="{{ this.activeFilter.resIds.has(resId) ? 'o_activity_filter_' + this.activeFilter.progressValue.active : '' }}"
         t-on-click.prevent.stop="() => this.props.onEmptyCell(resId, type.id)">
-        <i data-tooltip="Create" class="text-center fa fa-plus mt-2 align-items-center justify-content-center h-100"/>
+        <i data-tooltip="Create" class="oi text-center mt-2 align-items-center justify-content-center h-100" data-icon="add"/>
     </td>
 </t>
 
@@ -104,7 +104,7 @@
             <td class="p-3" colspan="100">
                 <span class="btn btn-link o_record_selector cursor-pointer"
                       t-on-click.prevent.stop="this.props.scheduleActivity">
-                    <i class="fa fa-plus pe-2"/> Schedule activity
+                    <i class="oi pe-2" data-icon="add"/> Schedule activity
                 </span>
             </td>
         </tr>

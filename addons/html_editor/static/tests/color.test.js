@@ -896,35 +896,35 @@ test("should not split unsplittable element when applying color (3)", async () =
 test("should be able to apply color on icon along with text", async () => {
     await testEditor({
         contentBefore:
-            '<p>a[bc\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeffde]f</p>',
+            '<p>a[bc\ufeff<span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>\ufeffde]f</p>',
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfterEdit:
-            '<p>a<font style="color: rgb(255, 0, 0);">[bc\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeffde]</font>f</p>',
+            '<p>a<font style="color: rgb(255, 0, 0);">[bc\ufeff<span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>\ufeffde]</font>f</p>',
         contentAfter:
-            '<p>a<font style="color: rgb(255, 0, 0);">[bc<span class="fa fa-glass"></span>de]</font>f</p>',
+            '<p>a<font style="color: rgb(255, 0, 0);">[bc<span class="oi" data-icon="local_bar"></span>de]</font>f</p>',
     });
 });
 
 test("should be able to change color of an icon", async () => {
     await testEditor({
         contentBefore:
-            '<p><font style="color: rgb(255, 0, 0);">\ufeff<span class="fa fa-glass" contenteditable="false">[]\u200b</span>\ufeff</font></p>',
+            '<p><font style="color: rgb(255, 0, 0);">\ufeff<span class="oi" data-icon="local_bar" contenteditable="false">[]\u200b</span>\ufeff</font></p>',
         stepFunction: setColor("rgb(255, 255, 0)", "color"),
         contentAfterEdit:
-            '<p>[<font style="color: rgb(255, 255, 0);">\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</font>]</p>',
+            '<p>[<font style="color: rgb(255, 255, 0);">\ufeff<span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>\ufeff</font>]</p>',
         contentAfter:
-            '<p>[<font style="color: rgb(255, 255, 0);"><span class="fa fa-glass"></span></font>]</p>',
+            '<p>[<font style="color: rgb(255, 255, 0);"><span class="oi" data-icon="local_bar"></span></font>]</p>',
     });
 });
 
 test("should be able to remove color of an icon", async () => {
     await testEditor({
         contentBefore:
-            '<p><font style="color: rgb(255, 0, 0);">\ufeff<span class="fa fa-glass" contenteditable="false">[]\u200b</span>\ufeff</font></p>',
+            '<p><font style="color: rgb(255, 0, 0);">\ufeff<span class="oi" data-icon="local_bar" contenteditable="false">[]\u200b</span>\ufeff</font></p>',
         stepFunction: setColor("", "color"),
         contentAfterEdit:
-            '<p>\ufeff[<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff]</p>',
-        contentAfter: '<p>[<span class="fa fa-glass"></span>]</p>',
+            '<p>\ufeff[<span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>\ufeff]</p>',
+        contentAfter: '<p>[<span class="oi" data-icon="local_bar"></span>]</p>',
     });
 });
 
@@ -933,18 +933,18 @@ test("doesn't change the color of the whole section when there's an icon next to
         contentBefore: `
         <section style="color: rgb(255, 0, 0);">
             <p>a[bc]d</p>
-            <span class="fa fa-glass" contenteditable="false">\u200b</span>
+            <span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>
         </section>`,
         stepFunction: setColor("rgb(0, 0, 255)", "color"),
         contentAfterEdit: `
         <p data-selection-placeholder=""><br></p><section style="color: rgb(255, 0, 0);">
             <p>a<font style="color: rgb(0, 0, 255);">[bc]</font>d</p>
-            <span class="fa fa-glass" contenteditable="false">\u200b</span>
+            <span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>
         </section><p data-selection-placeholder=""><br></p>`,
         contentAfter: `
         <section style="color: rgb(255, 0, 0);">
             <p>a<font style="color: rgb(0, 0, 255);">[bc]</font>d</p>
-            <span class="fa fa-glass"></span>
+            <span class="oi" data-icon="local_bar"></span>
         </section>`,
     });
 });

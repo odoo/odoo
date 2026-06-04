@@ -31,7 +31,7 @@
                         compact="this.props.compact"
                         channel="this.channel"
                     />
-                    <span t-if="this.env.inChatWindow and this.visibleMainCards.length > 6" class="oi oi-ellipsis-h ps-1 pe-1"/>
+                    <span t-if="this.env.inChatWindow and this.visibleMainCards.length > 6" class="oi ps-1 pe-1" data-icon="more_horiz"/>
                     <CallParticipantCard t-if="!this.env.inChatWindow" t-foreach="this.visibleMainCards.slice(6)" t-as="cardData" t-key="cardData.key"
                         cardData="cardData"
                         className="'o-discuss-Call-mainCardStyle p-1'"
@@ -43,8 +43,8 @@
 
                 <!-- Buttons -->
                 <t t-if="this.hasSidebarButton">
-                    <i t-if="this.state.sidebar" class="o-discuss-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi oi-arrow-right" title="Hide sidebar" t-on-click="() => this.state.sidebar = false"/>
-                    <i t-else="" class="o-discuss-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi oi-arrow-left" title="Show sidebar" t-on-click="() => this.state.sidebar = true"/>
+                    <i t-if="this.state.sidebar" class="o-discuss-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi" data-icon="east" title="Hide sidebar" t-on-click="() => this.state.sidebar = false"/>
+                    <i t-else="" class="o-discuss-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi" data-icon="west" title="Show sidebar" t-on-click="() => this.state.sidebar = true"/>
                 </t>
                 <div t-if="this.props.hasOverlay and (this.state.overlay or !this.isControllerFloating)" class="o-discuss-Call-overlay d-flex justify-content-center w-100 pb-1" t-att-class="{ 'o-isFloating position-absolute z-2 bottom-0 pb-2': this.isControllerFloating }">
                     <div t-on-mousemove="this.onMousemoveOverlay">

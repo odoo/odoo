@@ -175,7 +175,7 @@ test("Remove format on highlight does not create an empty node", async () => {
             .filter(Boolean);
     expect("p>.o_text_highlight_freehand_2").toHaveCount(1);
     expect(selectedHighlights(editor)).toHaveLength(1);
-    await contains(".o-we-toolbar .fa-eraser").click();
+    await contains(".o-we-toolbar [data-icon='ink_eraser']").click();
     expect("p>.o_text_highlight_freehand_2").toHaveCount(1);
     expect(selectedHighlights(editor)).toHaveLength(0);
 });

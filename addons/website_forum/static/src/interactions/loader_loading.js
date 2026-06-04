@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
         loadingElement.classList.add('o_wysiwyg_loading');
         var loadingIcon = document.createElement('i');
         loadingIcon.classList.add('text-600', 'text-center',
-            'fa', 'fa-circle-o-notch', 'fa-spin', 'fa-2x');
+            'oi', 'oi-spin', 'oi-2x');
+        loadingIcon.dataset.icon = "autorenew";
         loadingElement.appendChild(loadingIcon);
         wrapper.appendChild(loadingElement);
 

@@ -73,7 +73,7 @@ test("should be able to cancel a file upload", async () => {
     xhr.upload.dispatchEvent(progressEv);
     await animationFrame();
     expect(queryOne(".o_we_progressbar .progress-bar").style.width).toBe("40%");
-    await click(".o_notification_indicator .fa-trash");
+    await click(".o_notification_indicator [data-icon='delete'].oi-filled");
     await animationFrame();
     expect(".o_we_progressbar").toHaveCount(0);
     await fileUploadProm;
@@ -116,7 +116,7 @@ test("should be able to cancel a file when uploading multiple files", async () =
     );
     await animationFrame();
     expect(".o_we_progressbar").toHaveCount(3);
-    await click(".o_we_progressbar:nth-child(2) .fa-trash"); // Delete 2nd file
+    await click(".o_we_progressbar:nth-child(2) [data-icon='delete'].oi-filled"); // Delete 2nd file
     await animationFrame();
     expect(".o_we_progressbar").toHaveCount(2);
     await fileUploadProm;

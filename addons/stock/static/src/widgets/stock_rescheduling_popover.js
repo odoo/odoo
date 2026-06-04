@@ -29,7 +29,7 @@ export class StockRescheculingPopover extends PopoverWidgetField {
     setup(){
         super.setup();
         this.color = this.jsonValue.color || 'text-danger';
-        this.icon = this.jsonValue.icon || 'fa-exclamation-triangle';
+        this.icon = this.jsonValue.icon || 'warning';
     }
 
     showPopup(ev){

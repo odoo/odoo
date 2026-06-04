@@ -36,7 +36,7 @@ registry.category("web_tour.tours").add("im_livechat_session_history_open", {
             },
         },
         {
-            trigger: ".oi-chevron-right",
+            trigger: "[data-icon='arrow_forward_ios']",
             run: "click",
         },
         {

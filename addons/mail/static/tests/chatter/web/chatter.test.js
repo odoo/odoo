@@ -148,7 +148,7 @@ test("No attachment loading spinner when creating records", async () => {
     await start();
     await openFormView("res.partner");
     await contains("button[aria-label='Attach files']");
-    await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });
+    await contains("button[aria-label='Attach files'] .oi-spin", { count: 0 });
 });
 
 test("No attachment loading spinner when switching from loading record to creation of record", async () => {
@@ -165,9 +165,9 @@ test("No attachment loading spinner when switching from loading record to creati
     await openFormView("res.partner", partnerId);
     await contains("button[aria-label='Attach files']");
     await advanceTime(DELAY_FOR_SPINNER);
-    await contains("button[aria-label='Attach files'] .fa-spin");
+    await contains("button[aria-label='Attach files'] .oi-spin");
     await click(".o_control_panel_main_buttons .o_form_button_create");
-    await contains("button[aria-label='Attach files'] .fa-spin", { count: 0 });
+    await contains("button[aria-label='Attach files'] .oi-spin", { count: 0 });
     await expect.waitForSteps(["before mail.thread"]);
     resolve();
     await waitStoreFetch("mail.thread");

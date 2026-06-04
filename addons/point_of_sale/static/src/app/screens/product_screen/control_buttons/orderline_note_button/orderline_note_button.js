@@ -9,6 +9,7 @@ export class NoteButton extends Component {
     static template = "point_of_sale.NoteButton";
     static props = {
         icon: { type: String, optional: true },
+        icon_class: { type: String, optional: true },
         label: { type: String, optional: false },
         class: { type: String, optional: true },
     };

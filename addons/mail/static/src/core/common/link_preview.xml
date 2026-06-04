@@ -42,13 +42,13 @@
                     </div>
                 </div>
                 <t t-call="mail.LinkPreview.aside"
-                    className="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
+                    className="'oi oi-stack p-0 opacity-75 opacity-100-hover'"/>
             </t>
             <t t-else="">
                 <div class="border-start border-4 px-2 py-1">
                     <t t-call="mail.LinkPreviewCard.content"/>
                     <t t-call="mail.LinkPreview.aside"
-                        className="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
+                        className="'oi oi-stack p-0 opacity-75 opacity-100-hover'"/>
                 </div>
             </t>
         </div>
@@ -88,14 +88,14 @@
                 <iframe t-if="this.state.startVideo" t-att-src="this.linkPreview.videoURL" class="h-100 w-100 rounded" t-att-class="{'d-none': !this.state.videoLoaded}" allow="autoplay" frameborder="0" allowFullScreen="true" t-custom-ref="video"/>
             </div>
             <t t-call="mail.LinkPreview.aside"
-                className="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
+                className="'oi oi-stack p-0 opacity-75 opacity-100-hover'"/>
         </div>
     </t>
 
     <t t-name="mail.LinkPreview.aside">
         <div t-if="this.props.messageLinkPreview.message_id?.allowsEdition and !this.env.inLinkPreviewConfirmDelete" class="position-absolute top-0 end-0 small">
             <button t-attf-class="{{ className }}" class="o-mail-LinkPreview-aside btn" aria-label="Remove" t-on-click="this.onClick">
-                <i class="fa fa-times"/>
+                <i class="oi" data-icon="close"/>
             </button>
         </div>
     </t>
@@ -103,13 +103,13 @@
     <t t-name="mail.LinkPreviewVideo.preview">
         <div class="o-mail-LinkPreviewVideo-overlay position-relative h-100 rounded-bottom" t-att-class="{'bg-dark': !this.linkPreview.og_image}">
             <img t-if="this.linkPreview.og_image" class="img-fluid h-100 w-100 object-fit-cover rounded" t-att-src="this.linkPreview.og_image" t-att-alt="this.linkPreview.og_title" t-on-load="this.onImageLoaded"/>
-            <i t-elif="this.linkPreview.videoURL" class="fa fa-television fa-8x position-absolute top-50 start-50 translate-middle"/>
+            <i t-elif="this.linkPreview.videoURL" class="oi oi-8x position-absolute top-50 start-50 translate-middle" data-icon="tv"/>
             <span t-else="" class="d-flex align-items-center justify-content-center w-100 h-100 bg-100 text-300">
-                <i class="fa fa-camera fa-2x"/>
+                <i class="oi oi-2x" data-icon="photo_camera"/>
             </span>
             <div class="position-absolute top-50 start-50 translate-middle">
                 <div t-if="!this.state.startVideo" class="o-mail-LinkPreviewVideo-play btn btn-lg rounded transition-base">
-                    <i class="fa fa-play"/>
+                    <i class="oi" data-icon="play_arrow"/>
                 </div>
                 <div t-elif="!this.linkPreview.og_image" class="spinner-border text-muted"/>
             </div>

@@ -23,7 +23,7 @@
                                     data-bs-toggle="collapse"
                                     t-attf-data-bs-target=".collapseGroup_#{line.product.id}"
                                     aria-expanded="true" t-attf-aria-controls=".collapseGroup_#{line.product.id}">
-                                    <i class="icon fa"/>
+                                    <i class="icon oi"/>
                                 </button>
                             </td>
                             <td colspan="5" class="fw-bold text-uppercase border-0">
@@ -67,7 +67,9 @@
                         <td name="quantity_cell" class="text-end"><t t-attf-class="#{(!line.replenishment_filled and 'text-danger')" t-out="this._formatFloat(line.quantity)"/> <t t-out="line.uom_id.display_name"/></td>
                         <td class="border-end-0 o_forecasted_details_line_button" t-attf-class="#{(!line.replenishment_filled and 'table-danger') or (line.is_matched and 'table-info')}" name="usedby_cell">
                             <button t-if="line.move_out and line.move_out.picking_id"
-                                t-attf-class="o_priority o_priority_star me-1 fa fa-star#{line.move_out.picking_id.priority=='1' ? '' : '-o'}"
+                                class="o_priority o_priority_star oi me-1"
+                                t-att-class="{'oi-filled': line.move_out.picking_id.priority=='1'}"
+                                data-icon="star"
                                 t-on-click="() => this._onClickChangePriority('stock.picking', line.move_out.picking_id)"
                                 name="change_priority_link"/>
                             <a t-if="line.document_out"

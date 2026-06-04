@@ -33,13 +33,13 @@ const snippets = [
     },
 ];
 function checkEyeIcon(snippetName, visible) {
-    const eyeIcon = visible ? "fa-eye" : "fa-eye-slash";
+    const eyeIcon = visible ? "visibility" : "visibility_off";
     const openOrClose = visible ? "open" : "close";
     const endExplanation = `should be ${openOrClose} in the "Invisible Elements" panel`;
     const invisibleElPanel = "o_we_invisible_el_panel";
     return {
         content: `The eye icon of ${snippetName} ${endExplanation}`,
-        trigger: `.${invisibleElPanel} .o_we_invisible_entry:contains("${snippetName}") i.${eyeIcon}`,
+        trigger: `.${invisibleElPanel} .o_we_invisible_entry:contains("${snippetName}") i[data-icon="${eyeIcon}"]`,
     };
 }
 function checkEyesIconAfterSave(footerIsHidden = true) {
@@ -173,7 +173,7 @@ registry.category("web_tour.tours").add("conditional_visibility_4", {
         ...clickOnSnippet(snippets[0]),
         {
             content: "Click on the 'move down' option",
-            trigger: ".o_overlay_options button.fa-angle-down",
+            trigger: ".o_overlay_options button[data-icon='keyboard_arrow_down']",
             run: "click",
         },
         ...checkEyesIconAfterSave(),

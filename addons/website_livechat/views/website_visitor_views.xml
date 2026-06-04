@@ -74,7 +74,7 @@
                 </group>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
-                <button name="%(website_visitor_livechat_session_action)d" type="action" class="oe_stat_button" icon="fa-comment"
+                <button name="%(website_visitor_livechat_session_action)d" type="action" class="oe_stat_button" icon="chat_bubble" icon_class="oi-filled"
                         invisible="session_count == 0">
                     <field name="session_count" widget="statinfo" string="Chats"/>
                 </button>
@@ -90,7 +90,7 @@
             <xpath expr="//field[@name='last_visited_page_id']" position="after">
                 <field name="current_livechat_agent_ids" optional="hide"
                        options="{'no_open': True}" widget="many2many_avatar_user"/>
-                <button name="action_send_chat_request" string="Chat" type="object" icon="fa-comments"
+                <button name="action_send_chat_request" string="Chat" type="object" icon="forum" icon_class="oi-filled"
                         invisible="current_livechat_agent_ids or not is_connected"/>
             </xpath>
         </field>

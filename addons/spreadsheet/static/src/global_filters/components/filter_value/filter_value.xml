@@ -30,7 +30,7 @@
                         value="this.filterValue?.minimumValue"
                         onValueChanged="(value) => this.onMinimumValueNumericInput(this.filter.id, value)"
                     />
-                    <i class="fa fa-long-arrow-right mx-2"/>
+                    <i class="oi mx-2" data-icon="east"/>
                     <NumericFilterValue
                         value="this.filterValue?.maximumValue"
                         onValueChanged="(value) => this.onMaximumValueNumericInput(this.filter.id, value)"
@@ -55,7 +55,8 @@
                                     msgType="'error'"/>
             </span>
             <i t-if="this.isValid and this.props.showClear and this.getters.isGlobalFilterActive(this.filter.id)"
-                class="fa fa-times btn btn-link text-muted ms-1 mt-1"
+                class="oi btn btn-link text-muted ms-1 mt-1"
+                data-icon="close"
                 title="Clear"
                 t-on-click="() => this.clear(this.filter.id)"/>
         </div>

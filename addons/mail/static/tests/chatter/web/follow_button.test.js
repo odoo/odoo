@@ -17,11 +17,11 @@ test("base rendering follow, edit subscription and unfollow button", async () =>
     await start();
     await openFormView("res.partner", threadId);
     await contains(".o-mail-Followers-counter:text('0')");
-    await contains("[title='Show Followers'] .fa-user-o");
+    await contains("[title='Show Followers'] [data-icon='person']");
     await click("[title='Show Followers']");
     await click(".o-dropdown-item:text('Follow')");
     await contains(".o-mail-Followers-counter:text('1')");
-    await contains("[title='Show Followers'] .fa-user");
+    await contains("[title='Show Followers'] .oi-filled[data-icon='person']");
     await click("[title='Show Followers']");
     await contains(".o-mail-Followers-dropdown");
     await click("[title='Edit Notification Preferences']");
@@ -29,5 +29,5 @@ test("base rendering follow, edit subscription and unfollow button", async () =>
     await click("[title='Show Followers']");
     await click(".o-dropdown-item:text('Unfollow')");
     await contains(".o-mail-Followers-counter:text('0')");
-    await contains("[title='Show Followers'] .fa-user-o");
+    await contains("[title='Show Followers'] [data-icon='person']");
 });

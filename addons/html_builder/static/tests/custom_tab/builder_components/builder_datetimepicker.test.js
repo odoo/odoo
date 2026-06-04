@@ -120,7 +120,7 @@ test("defaults to now when clicking on clear button", async () => {
 
     for (let i = 0; i < 3; i++) {
         await contains(".we-bg-options-container input").click();
-        await contains(".o_datetime_buttons button .fa-eraser").click();
+        await contains(".o_datetime_buttons button [data-icon='ink_eraser']").click();
         await contains(".options-container").click();
         const dateString = queryOne(".we-bg-options-container input").value;
         expect(isExpectedDateTime({ dateString })).toBe(true);

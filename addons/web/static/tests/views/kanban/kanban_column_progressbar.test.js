@@ -2357,7 +2357,7 @@ test("[Offline] search in kanban with progressbar", async () => {
     expect(queryAllTexts(".o_kanban_record")).toEqual(["blip", "blip"]);
     expect(".o_kanban_record.o_disabled_offline").toHaveCount(2);
 
-    await contains(".o_searchview_facet .oi-close").click();
+    await contains(".o_searchview_facet [data-icon='close']").click();
     expect(".o_kanban_group").toHaveCount(2);
     expect(queryAllTexts(".o_kanban_counter")).toEqual(["", ""]);
     expect(".o_column_progress").toHaveClass("opacity-50 pe-none");

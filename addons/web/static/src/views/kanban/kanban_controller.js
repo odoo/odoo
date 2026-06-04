@@ -368,21 +368,21 @@ export class KanbanController extends Component {
             export: {
                 isAvailable: () => this.isExportEnable,
                 sequence: 10,
-                icon: "fa fa-upload",
+                icon: "upload",
                 description: _t("Export"),
                 callback: () => this.exportRecords(),
             },
             duplicate: {
                 isAvailable: () => this.props.archInfo.activeActions.duplicate,
                 sequence: 30,
-                icon: "fa fa-clone",
+                icon: "content_copy",
                 description: _t("Duplicate"),
                 callback: () => this.model.root.duplicateRecords(),
             },
             archive: {
                 isAvailable: () => this.archiveEnabled,
                 sequence: 40,
-                icon: "oi oi-archive",
+                icon: "archive",
                 description: _t("Archive"),
                 callback: () =>
                     this.model.root.toggleArchiveWithConfirmation(true, this.archiveDialogProps),
@@ -390,14 +390,15 @@ export class KanbanController extends Component {
             unarchive: {
                 isAvailable: () => this.archiveEnabled,
                 sequence: 45,
-                icon: "oi oi-unarchive",
+                icon: "unarchive",
                 description: _t("Unarchive"),
                 callback: () => this.model.root.toggleArchiveWithConfirmation(false),
             },
             delete: {
                 isAvailable: () => this.props.archInfo.activeActions.delete,
                 sequence: 50,
-                icon: "fa fa-trash-o",
+                icon: "delete",
+                icon_class: "oi-filled",
                 description: _t("Delete"),
                 class: "text-danger",
                 callback: () =>

@@ -21,7 +21,7 @@ test("on leave & online", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='User is on leave and online']"
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave and online']"
     );
 });
 
@@ -40,7 +40,7 @@ test("on leave & away", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='User is on leave and idle']"
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave and idle']"
     );
 });
 
@@ -59,6 +59,6 @@ test("on leave & offline", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(
-        ".o-mail-DiscussContent-header .o-mail-ImStatus.fa-plane[title='User is on leave']"
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[data-icon='travel'][title='User is on leave']"
     );
 });

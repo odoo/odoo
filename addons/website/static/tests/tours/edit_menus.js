@@ -298,7 +298,7 @@ registerWebsitePreviewTour(
         },
         {
             content: `Drag "Modnar !!" menu below "Home" menu`,
-            trigger: '.oe_menu_editor li:contains("Modnar !!") .oi-draggable',
+            trigger: '.oe_menu_editor li:contains("Modnar !!") [data-icon="drag_indicator"]',
             run(helpers) {
                 return helpers.drag_and_drop('.oe_menu_editor li:contains("Home")', {
                     position: {
@@ -311,7 +311,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Drag 'Modnar !!' item as a child of the 'Home' item",
-            trigger: '.oe_menu_editor li:contains("Modnar !!") .oi-draggable',
+            trigger: '.oe_menu_editor li:contains("Modnar !!") [data-icon="drag_indicator"]',
             run: 'drag_and_drop .oe_menu_editor li:contains("Modnar !!") .form-control',
         },
         {
@@ -321,9 +321,9 @@ registerWebsitePreviewTour(
         // Drag the Mega menu to the first position.
         {
             content: "Drag Mega at the top",
-            trigger: '.oe_menu_editor li:contains("Megaaaaa!") .oi-draggable',
+            trigger: '.oe_menu_editor li:contains("Megaaaaa!") [data-icon="drag_indicator"]',
             run(helpers) {
-                return helpers.drag_and_drop('.oe_menu_editor li:contains("Home") .oi-draggable', {
+                return helpers.drag_and_drop('.oe_menu_editor li:contains("Home") [data-icon="drag_indicator"]', {
                     position: {
                         top: 20,
                     },
@@ -502,7 +502,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Nest 'new_nested_menu' under 'new_menu'",
-            trigger: '.oe_menu_editor li:contains("new_nested_menu") .oi-draggable',
+            trigger: '.oe_menu_editor li:contains("new_nested_menu") [data-icon="drag_indicator"]',
             run(helpers) {
                 return helpers.drag_and_drop(
                     ".oe_menu_editor li:contains('new_menu') .form-control",
@@ -515,10 +515,10 @@ registerWebsitePreviewTour(
         {
             content: "Drag 'Modnar !!' below 'new_menu'",
             trigger:
-                '.oe_menu_editor li:contains("Home") > ul > li:contains("Modnar !!") .oi-draggable',
+                '.oe_menu_editor li:contains("Home") > ul > li:contains("Modnar !!") [data-icon="drag_indicator"]',
             run(helpers) {
                 return helpers.drag_and_drop(
-                    '.oe_menu_editor li:contains("new_menu") .oi-draggable',
+                    '.oe_menu_editor li:contains("new_menu") [data-icon="drag_indicator"]',
                     {
                         position: "bottom",
                     }
@@ -527,7 +527,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Nest 'Modnar !!' under 'new_menu'",
-            trigger: '.oe_menu_editor li:contains("Modnar !!") .oi-draggable',
+            trigger: '.oe_menu_editor li:contains("Modnar !!") [data-icon="drag_indicator"]',
             run(helpers) {
                 return helpers.drag_and_drop(
                     ".oe_menu_editor li:contains('new_menu') .form-control",
@@ -545,10 +545,10 @@ registerWebsitePreviewTour(
         {
             content: "Move 'Modnar !!' below 'new_nested_menu' inside the 'new_menu'",
             trigger:
-                '.oe_menu_editor  li:contains("new_menu") > ul > li:contains("Modnar !!") .oi-draggable',
+                '.oe_menu_editor  li:contains("new_menu") > ul > li:contains("Modnar !!") [data-icon="drag_indicator"]',
             run(helpers) {
                 return helpers.drag_and_drop(
-                    ".oe_menu_editor  li:contains('new_menu') > ul > li:contains('new_nested_menu') .oi-draggable",
+                    ".oe_menu_editor  li:contains('new_menu') > ul > li:contains('new_nested_menu') [data-icon='drag_indicator']",
                     {
                         position: "bottom",
                     }

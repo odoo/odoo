@@ -119,7 +119,7 @@ export class ResUsers extends webModels.ResUsers {
             userActivitiesByModelName[modelName]["total_count"] += 1;
             userActivitiesByModelName[modelName].actions = [
                 {
-                    icon: "fa-clock-o",
+                    icon: "schedule",
                     name: "Summary",
                 },
             ];
@@ -208,7 +208,7 @@ export class ResUsers extends webModels.ResUsers {
             userActivitiesByModelName[modelName]["total_count"] += 1;
             userActivitiesByModelName[modelName].actions = [
                 {
-                    icon: "fa-clock-o",
+                    icon: "schedule",
                     name: "Summary",
                 },
             ];

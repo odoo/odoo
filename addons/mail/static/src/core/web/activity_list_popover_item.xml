@@ -15,16 +15,16 @@
                     <FileUploader t-if="this.hasFileUploader" onUploaded.bind="this.onFileUploaded">
                         <t t-set-slot="toggler">
                             <button class="btn btn-sm btn-success btn-link" title="Upload file" aria-label="Upload File">
-                                <i class="fa fa-upload"/>
+                                <i class="oi" data-icon="upload"/>
                             </button>
                         </t>
                     </FileUploader>
                     <button t-if="this.hasMarkDoneButton" class="o-mail-ActivityListPopoverItem-markAsDone btn btn-sm btn-success btn-link" title="Mark as done" aria-label="Mark as done" t-on-click="this.toggleFn(this.hasMarkDoneView)">
-                        <i class="fa fa-check"/>
+                        <i class="oi" data-icon="check"/>
                     </button>
                 </t>
                 <button t-if="this.hasEditButton" class="o-mail-ActivityListPopoverItem-editbtn btn btn-sm btn-success btn-link" title="Edit" aria-label="Edit" t-on-click="this.onClickEditActivityButton">
-                    <i class="fa fa-pencil"/>
+                    <i class="oi oi-filled" data-icon="edit"/>
                 </button>
             </div>
             <div class="o-mail-ActivityListPopoverItem-user d-flex align-items-center flex-wrap mx-3">

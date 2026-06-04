@@ -56,7 +56,7 @@
                 <div class="o_row" invisible="not allow_billable" groups="sales_team.group_sale_salesman">
                     <field name="so_line" widget="so_line_field" options='{"no_create": True}' context="{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True}" readonly="readonly_timesheet" placeholder="Non-billable"/>
                     <span
-                        class="fa fa-exclamation-triangle text-warning"
+                        class="oi text-warning" data-icon="warning"
                         title="The sales order associated with this timesheet entry has been cancelled."
                         invisible="sale_order_state != 'cancel'"
                     />
@@ -66,12 +66,12 @@
                 <t groups="sales_team.group_sale_salesman">
                     <field name="order_id" invisible="1"/>
                     <field name="reinvoice_move_id" invisible="1"/>
-                    <button name="action_sale_order_from_timesheet" type="object" class="oe_stat_button" icon="fa-dollar" invisible="not order_id">
+                    <button name="action_sale_order_from_timesheet" type="object" class="oe_stat_button" icon="attach_money" invisible="not order_id">
                         <div class="o_stat_info">
                             <span class="o_stat_text">Sales Order</span>
                         </div>
                     </button>
-                    <button name="action_invoice_from_timesheet" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="not reinvoice_move_id">
+                    <button name="action_invoice_from_timesheet" type="object" class="oe_stat_button" icon="edit_square" invisible="not reinvoice_move_id">
                         <div class="o_stat_info">
                             <span class="o_stat_text">Invoice</span>
                         </div>

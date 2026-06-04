@@ -111,21 +111,21 @@ test("Change the background position and apply", async () => {
     await dragAndDropBgImage();
     await contains(".o_we_image_position_overlay .btn-primary").click();
     expect(".o_we_image_position_overlay").toHaveCount(0);
-    expect("button.fa-undo").toBeEnabled();
+    expect("button[data-icon='undo']").toBeEnabled();
 });
 
 test("Change the background position and discard", async () => {
     await dragAndDropBgImage();
     await contains(".o_we_image_position_overlay .btn-danger").click();
     expect(".o_we_image_position_overlay").toHaveCount(0);
-    expect("button.fa-undo").not.toBeEnabled();
+    expect("button[data-icon='undo']").not.toBeEnabled();
 });
 
 test("Change the background position and click out of the iframe", async () => {
     await dragAndDropBgImage();
     await contains(".o_customize_tab").click();
     expect(".o_we_image_position_overlay").toHaveCount(0);
-    expect("button.fa-undo").not.toBeEnabled();
+    expect("button[data-icon='undo']").not.toBeEnabled();
 });
 
 test("Background position overlay layout", async () => {
@@ -641,7 +641,7 @@ test("Connections shape do not update if it is inside an invisible element", asy
         }
     );
     await contains(":iframe #section1").click();
-    await contains(".overlay .fa-angle-down").click();
+    await contains(".overlay [data-icon='keyboard_arrow_down']").click();
     let shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
     expect(shapeData.colors.c5).toBe(HEX_GREEN);
     await contains(
@@ -649,7 +649,7 @@ test("Connections shape do not update if it is inside an invisible element", asy
     ).click();
     await waitSidebarUpdated();
     await contains(".o_we_invisible_entry").click();
-    await contains(".overlay .fa-angle-up").click();
+    await contains(".overlay [data-icon='keyboard_arrow_up']").click();
     shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
     expect(shapeData.colors.c5).toBe(HEX_GREEN);
 });
