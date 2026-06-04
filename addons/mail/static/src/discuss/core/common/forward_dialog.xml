@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ForwardDialog">
+        <Dialog title.translate="Forward To" size="'md'" contentClass="'d-flex flex-column'">
+            <div class="o-mail-ForwardDialog d-flex flex-column gap-3 flex-grow-1 o-min-height-0">
+                <div class="o-mail-ForwardedMessage-preview border rounded p-2 bg-100">
+                    <div class="o-mail-ForwardedMessage-content text-break overflow-hidden" t-if="this.props.message.hasTextContent">
+                        <MessageBodyContent message="this.props.message"/>
+                    </div>
+                    <AttachmentList t-if="this.props.message.attachment_ids.length > 0"
+                        attachments="this.props.message.attachment_ids"
+                        unlinkAttachment="() => {}"
+                        imagesHeight="50"/>
+                </div>
+                <input class="form-control" type="search" t-att-placeholder="this.searchPlaceholder" t-att-value="this.searchStr" t-on-input="ev => { this.searchStr = ev.target.value; this.debouncedSearch(); }"/>
+                <ul class="o-mail-ForwardDialog-destinations list-group list-group-flush overflow-auto o-scrollbar-thin flex-grow-1 mb-0" style="max-height: 12rem;">
+                    <t t-foreach="this.selectableOptions" t-as="option" t-key="option.key">
+                        <li class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2"
+                            t-att-class="{ 'active': this.isSelected(option.key) }"
+                            t-on-click="() => this.toggleSelection(option.key)">
+                            <DiscussAvatar t-if="option.type === 'partner'" record="option.record"/>
+                            <DiscussAvatar t-else="" record="option.record"/>
+                            <span class="text-truncate flex-grow-1" t-out="option.label"/>
+                            <i t-if="this.isSelected(option.key)" class="fa fa-check text-success"/>
+                        </li>
+                    </t>
+                    <li t-if="this.selectableOptions.length === 0" class="list-group-item text-muted smaller border-0" t-out="this.emptyListText"/>
+                </ul>
+                <textarea class="form-control" rows="2" placeholder="Add an optional message…" t-att-value="this.state.optionalMessage" t-on-input="ev => this.state.optionalMessage = ev.target.value"/>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-secondary" t-on-click="this.props.close">Cancel</button>
+                <button class="btn btn-primary" t-att-disabled="!this.canSend or this.state.isSending" t-on-click="this.onClickSend">Send</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

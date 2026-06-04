@@ -2,6 +2,38 @@
     max-width: 500px;
 }
 
+.o-mail-Message-body:not(.o-note):has(.o-mail-ForwardedMessage-label) {
+    background-color: mix($o-view-background-color, $success, 90%);
+    border: 1px solid mix($o-view-background-color, $success, 82%);
+    border-left: 4px solid $success;
+    border-radius: $border-radius;
+    margin-inline: calc(-1 * (map-get($spacers, 2) + map-get($spacers, 3)) / 2);
+    min-width: 9.5rem;
+    max-width: none;
+    width: fit-content;
+    padding: map-get($spacers, 2);
+    padding-inline-start: map-get($spacers, 2);
+
+    .o-mail-ForwardedMessage-label {
+        opacity: 0.85;
+        border-bottom: 1px solid rgba($text-muted, 0.12);
+        white-space: nowrap;
+    }
+
+    .o-mail-ForwardedMessage-label ~ *:not(.o-mail-Message-edited) {
+        max-height: 6rem;
+        overflow: hidden;
+
+        p:first-child {
+            margin-top: 0 !important;
+        }
+
+        p:last-child {
+            margin-bottom: 0 !important;
+        }
+    }
+}
+
 .o-mail-Message {
     transition: background-color .2s ease-out, opacity .25s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
 

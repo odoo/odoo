@@ -10,6 +10,15 @@
     opacity: 50%;
 }
 
+.o-mail-Message-body:not(.o-note):has(.o-mail-ForwardedMessage-label) {
+    background-color: mix($gray-100, $success, 88%);
+    border-color: mix($gray-100, $success, 80%);
+
+    .o-mail-ForwardedMessage-label {
+        border-bottom-color: rgba($text-muted, 0.2);
+    }
+}
+
 .o-mail-Message-bubble, .o-mail-Message-bubbleTail {
     $_bubble_colors_map: (
         'o-blue': darken($info, 10%),

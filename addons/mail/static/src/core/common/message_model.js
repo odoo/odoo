@@ -10,7 +10,6 @@ import {
     htmlToTextContentInline,
     htmlToHtmlInline,
 } from "@mail/utils/common/format";
-
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { _t } from "@web/core/l10n/translation";
@@ -76,6 +75,15 @@ export class Message extends Record {
             return createDocumentFragmentFromContent(this.body).querySelector(
                 ".o-mail-Message-edited"
             )?.dataset.oDatetime;
+        },
+    });
+    forwarded = fields.Attr(false, {
+        compute() {
+            return Boolean(
+                createDocumentFragmentFromContent(this.body).querySelector(
+                    ".o-mail-Message-forward"
+                )
+            );
         },
     });
     /** attachments not already clearly visible in the body, unlike inlined images */
@@ -250,7 +258,7 @@ export class Message extends Record {
     }
 
     get editable() {
-        if (this.isEmpty || !this.allowsEdition || this.poll) {
+        if (this.forwarded || this.isEmpty || !this.allowsEdition || this.poll) {
             return false;
         }
         return this.message_type === "comment";
@@ -400,7 +408,11 @@ export class Message extends Record {
     });
     isBodyEmpty = fields.Attr(undefined, {
         compute() {
-            return !this.body || isEmptyBlock(createElementWithContent("div", this.body));
+            const fragment = createDocumentFragmentFromContent(this.body);
+            fragment.querySelector(".o-mail-Message-forward")?.remove();
+            const div = document.createElement("div");
+            div.append(...fragment.childNodes);
+            return !div.innerHTML || isEmptyBlock(div);
         },
     });
 
@@ -654,7 +666,9 @@ export class Message extends Record {
         const messageBodyEl = createElementWithContent("div", this.body);
         const updatedBodyEl = createElementWithContent("div", body);
         messageBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
+        messageBodyEl.querySelector("span.o-mail-Message-forward")?.remove();
         updatedBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
+        updatedBodyEl.querySelector("span.o-mail-Message-forward")?.remove();
         if (updatedBodyEl.innerHTML === messageBodyEl.innerHTML && attachments.length === 0) {
             return;
         }

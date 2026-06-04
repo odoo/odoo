@@ -762,6 +762,53 @@ export class DiscussChannel extends models.ServerModel {
     }
 
     /**
+     * @param {import("mock_models").DiscussChannel[]} channels
+     * @param {import("mock_models").MailMessage} sourceMessage
+     * @param {string|false} [optionalMsgBody]
+     */
+    _forward_message(channels, sourceMessage, optionalMsgBody = false) {
+        const kwargs = getKwArgs(arguments, "channels", "sourceMessage", "optionalMsgBody");
+        channels = ensureArray(kwargs.channels ?? channels);
+        sourceMessage = kwargs.sourceMessage ?? sourceMessage;
+        optionalMsgBody = kwargs.optionalMsgBody ?? optionalMsgBody;
+
+        /** @type {import("mock_models").IrAttachment} */
+        const IrAttachment = this.env["ir.attachment"];
+        for (const channel of channels) {
+            const channelId = channel.id;
+            const forwardedBody = `<span class="o-mail-Message-forward"/>${
+                sourceMessage.body || ""
+            }`;
+            const attachmentIds = [];
+            for (const attachmentId of sourceMessage.attachment_ids || []) {
+                const [attachment] = IrAttachment.read(attachmentId);
+                attachmentIds.push(
+                    IrAttachment.create({
+                        name: attachment.name,
+                        mimetype: attachment.mimetype,
+                        res_model: "discuss.channel",
+                        res_id: channelId,
+                    })
+                );
+            }
+            this.message_post(
+                channelId,
+                makeKwArgs({
+                    attachment_ids: attachmentIds,
+                    body: forwardedBody,
+                    message_type: "comment",
+                })
+            );
+            if (optionalMsgBody) {
+                this.message_post(
+                    channelId,
+                    makeKwArgs({ body: optionalMsgBody, message_type: "comment" })
+                );
+            }
+        }
+    }
+
+    /**
      * @param {number} id
      * @param {number} message_id
      * @param {boolean} pinned

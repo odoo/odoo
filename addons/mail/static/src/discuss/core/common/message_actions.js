@@ -3,6 +3,18 @@ import { registerMessageAction } from "@mail/core/common/message_actions";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 
+registerMessageAction("forward-message", {
+    condition: ({ message, store, thread }) =>
+        thread?.model === "discuss.channel" &&
+        !store.self_user?.share &&
+        !message.isEmpty &&
+        !message.poll,
+    icon: "fa fa-share",
+    name: _t("Forward"),
+    onSelected: ({ owner }) => owner.openForwardDialog(),
+    sequence: 60,
+});
+
 registerMessageAction("set-new-message-separator", {
     condition: ({ message, channel }) =>
         channel?.self_member_id &&
