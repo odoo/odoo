@@ -32,6 +32,10 @@ class BinaryValue(Buffer):
         """Length of the binary."""
         return len(self.content)
 
+    @property  # compatibility for requests to detect the size
+    def len(self):
+        return self.size
+
     def __bytes__(self):
         # shortcut for `bytes(...)`
         return self.content
