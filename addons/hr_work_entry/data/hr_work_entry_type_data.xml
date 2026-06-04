@@ -1447,6 +1447,21 @@
         <field name="count_as">absence</field>
     </record>
 
+    <record id="l10n_be_work_entry_type_public_holiday_working_without_recovery" model="hr.work.entry.type">
+        <field name="name">Public holiday worked (without recovery)</field>
+        <field name="code">WORK215</field>
+        <field name="display_code">PHW</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="amount_rate">2</field>
+    </record>
+
+    <record id="l10n_be_work_entry_type_public_holiday_working_with_recovery" model="hr.work.entry.type">
+        <field name="name">Public holiday worked (to recover)</field>
+        <field name="code">WORK216</field>
+        <field name="display_code">PHW</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
 <!-- BD : Bangladesh -->
     <record id="bd_work_entry_type_attendance" model="hr.work.entry.type">
         <field name="name">Attendance</field>
