@@ -703,6 +703,14 @@
           <field name="account_type">asset_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
         </record>
+        <record id="chart_at_template_2503" model="account.account.template">
+          <field name="name">Vorsteuern 4.9%</field>
+          <field name="code">2503</field>
+          <field name="reconcile" eval="False"/>
+          <field name="chart_template_id" ref="l10n_at_chart_template"/>
+          <field name="account_type">asset_current</field>
+          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
+        </record>
         <record id="chart_at_template_2505" model="account.account.template">
           <field name="name">Sonstige Vorsteuern</field>
           <field name="code">2505</field>
@@ -754,6 +762,14 @@
         <record id="chart_at_template_2513" model="account.account.template">
           <field name="name">Vorsteuern IGE 13%</field>
           <field name="code">2513</field>
+          <field name="reconcile" eval="False"/>
+          <field name="chart_template_id" ref="l10n_at_chart_template"/>
+          <field name="account_type">asset_current</field>
+          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_ABII4')])]" />
+        </record>
+        <record id="chart_at_template_2514" model="account.account.template">
+          <field name="name">Vorsteuern IGE 4.9%</field>
+          <field name="code">2514</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="account_type">asset_current</field>
@@ -977,6 +993,14 @@
           <field name="account_type">liability_current</field>
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
+        <record id="chart_at_template_3503" model="account.account.template">
+          <field name="name">Umsatzsteuer 4.9%</field>
+          <field name="code">3503</field>
+          <field name="reconcile" eval="False"/>
+          <field name="chart_template_id" ref="l10n_at_chart_template"/>
+          <field name="account_type">liability_current</field>
+          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
+        </record>
         <record id="chart_at_template_3505" model="account.account.template">
           <field name="name">Sonstige Umsatzsteuer</field>
           <field name="code">3505</field>
@@ -1012,6 +1036,14 @@
         <record id="chart_at_template_3513" model="account.account.template">
           <field name="name">Umsatzsteuer IGE 13%</field>
           <field name="code">3513</field>
+          <field name="reconcile" eval="False"/>
+          <field name="chart_template_id" ref="l10n_at_chart_template"/>
+          <field name="account_type">liability_current</field>
+          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
+        </record>
+        <record id="chart_at_template_3514" model="account.account.template">
+          <field name="name">Umsatzsteuer IGE 4.9%</field>
+          <field name="code">3514</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="account_type">liability_current</field>
