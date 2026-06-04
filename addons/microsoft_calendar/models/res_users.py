@@ -72,10 +72,14 @@ class User(models.Model):
                 MicrosoftService._get_token_endpoint(), params=data, headers=headers, method='POST', preuri=''
             )[1]
             ttl = response.get('expires_in')
-            self.write({
+            new_rtoken = response.get('refresh_token')
+            vals = {
                 'microsoft_calendar_token': response.get('access_token'),
                 'microsoft_calendar_token_validity': fields.Datetime.now() + timedelta(seconds=ttl),
-            })
+            }
+            if new_rtoken:
+                vals['microsoft_calendar_rtoken'] = new_rtoken
+            self.write(vals)
         except requests.HTTPError as error:
             if error.response.status_code in (400, 401):  # invalid grant or invalid client
                 # Delete refresh token and make sure it's commited
