@@ -1408,6 +1408,72 @@ class TestUpdateEvents(TestCommon):
         self.assertTrue(self.attendee_user.partner_id.id in new_event.partner_ids.ids,
                         "User B (self.attendee_user) should be listed as attendee after the event organizer update.")
 
+    @patch_api
+    def test_recurrence_sync_values(self):
+        """
+        Yearly recurrence patterns (absoluteYearly / relativeYearly) must include
+        the correct fields in the Microsoft Graph recurrencePattern
+        """
+        base_event_vals = {
+            'recurrency': True,
+            'follow_recurrence': True,
+            'rrule_type': 'yearly',
+            'interval': 1,
+            'end_type': 'count',
+            'count': 3,
+            'event_tz': 'Europe/London',
+        }
+        cases = [
+            {
+                'name': 'absoluteYearly',
+                'event_vals': {
+                    'name': 'Yearly absolute event',
+                    'start': datetime(2024, 3, 15, 10, 0, 0),
+                    'stop': datetime(2024, 3, 15, 11, 0, 0),
+                    'month_by': 'date',
+                    'day': 15,
+                },
+                'expected_pattern': {
+                    'type': 'absoluteYearly',
+                    'dayOfMonth': 15,
+                    'month': 3,
+                },
+            },
+            {
+                'name': 'relativeYearly',
+                'event_vals': {
+                    'name': 'Yearly relative event',
+                    'start': datetime(2024, 3, 14, 10, 0, 0),
+                    'stop': datetime(2024, 3, 14, 11, 0, 0),
+                    'month_by': 'day',
+                    'byday': '2',
+                    'weekday': 'THU',
+                    'thu': True,
+                },
+                'expected_pattern': {
+                    'type': 'relativeYearly',
+                    'index': 'second',
+                    'month': 3,
+                },
+            },
+        ]
+
+        for case in cases:
+            with self.subTest(case['name']):
+                record = self.env['calendar.event'].with_context(dont_notify=True).with_user(self.organizer_user).create(
+                    dict(base_event_vals, **case['event_vals']),
+                )
+                recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', record.id)])
+                fields_to_sync = recurrence._get_microsoft_synced_fields()
+                values = recurrence._microsoft_values(fields_to_sync)
+                pattern = values['recurrence']['pattern']
+
+                for key, expected_val in case['expected_pattern'].items():
+                    self.assertEqual(
+                        pattern.get(key), expected_val,
+                        f"{case['name']}: pattern['{key}'] should be {expected_val!r}",
+                    )
+
     @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'patch')
     def test_restart_sync_with_synced_recurrence(self, _mock_patch):
