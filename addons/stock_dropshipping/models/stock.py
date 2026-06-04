@@ -15,8 +15,8 @@ class StockRule(models.Model):
         return procurement.values.get('sale_line_id'), super(StockRule, self)._get_procurements_to_merge_groupby(procurement)
 
     def _get_partner_id(self, values, rule):
-        route = self.env.ref('stock_dropshipping.route_drop_shipping', raise_if_not_found=False)
-        if route and rule.route_id == route:
+        route_id = self.env['ir.model.data']._xmlid_to_res_id('stock_dropshipping.route_drop_shipping')
+        if route_id and rule.route_id.id == route_id:
             return False
         return super()._get_partner_id(values, rule)
 
