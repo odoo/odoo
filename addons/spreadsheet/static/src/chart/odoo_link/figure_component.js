@@ -36,7 +36,7 @@ patch(spreadsheet.components.ScorecardChart.prototype, {
         return this.env.model.getters.getChartOdooLink(this.props.chartId) !== undefined;
     },
     async onClick() {
-        if (this.env.isDashboard() && this.hasOdooLink) {
+        if (this.env.model.getters.isDashboard() && this.hasOdooLink) {
             await this.navigateToOdooLink();
         }
     },
@@ -55,7 +55,7 @@ patch(spreadsheet.components.GaugeChartComponent.prototype, {
         return this.env.model.getters.getChartOdooLink(this.props.chartId) !== undefined;
     },
     async onClick() {
-        if (this.env.isDashboard() && this.hasOdooLink) {
+        if (this.env.model.getters.isDashboard() && this.hasOdooLink) {
             await this.navigateToOdooLink();
         }
     },
