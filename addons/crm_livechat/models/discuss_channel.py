@@ -43,7 +43,7 @@ class DiscussChannel(models.Model):
             msg = Markup(
                 '<div class="o_mail_notification" data-oe-type="create-lead">%s</div>',
             ) % self.env._("created a new lead: %s", lead._get_html_link())
-            self.message_post(body=msg, subtype_xmlid="mail.mt_comment")
+            self.message_post(body=msg, message_type='notification')
 
     def _convert_visitor_to_lead(self, partner, key):
         """ Create a lead from channel /lead command
