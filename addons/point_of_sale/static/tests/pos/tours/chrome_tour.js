@@ -322,8 +322,14 @@ registry.category("web_tour.tours").add("test_click_all_orders_keep_customer", {
             Chrome.clickRegister(),
             ProductScreen.isShown(),
             {
+                isActive: ["desktop"],
                 content: "customer is selected",
                 trigger: ".product-screen .set-partner:contains('Partner Test 1')",
+            },
+            {
+                isActive: ["mobile"],
+                content: `customer is selected`,
+                trigger: `.product-screen .set-partner.btn-outline-secondary.active`,
             },
         ].flat(),
 });

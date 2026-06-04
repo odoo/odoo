@@ -2587,7 +2587,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     get showSaveOrderButton() {
-        return this.config.raw.trusted_config_ids.length > 0;
+        return true;
     }
 
     get isSelectedLineCombo() {

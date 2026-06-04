@@ -896,6 +896,10 @@ patch(PosStore.prototype, {
         return true;
     },
 
+    get showSaveOrderButton() {
+        return !this.getOrder().table_id && super.showSaveOrderButton;
+    },
+
     async onFloorPlanUpdate(payload) {
         const { session_id, device_identifier } = payload;
         const isSameDevice = isSamePosDevice(session_id, device_identifier, this);
