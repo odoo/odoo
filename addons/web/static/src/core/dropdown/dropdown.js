@@ -145,35 +145,7 @@ export class Dropdown extends Component {
 
         this.uiService = useService("ui");
 
-        const getPosition = () => this.position;
-        const options = {
-            animation: false,
-            arrow: false,
-            closeOnClickAway: (target) => this.popoverCloseOnClickAway(target),
-            closeOnEscape: false, // Handled via navigation and prevents closing root of nested dropdown
-            env: useChildEnv(),
-            holdOnHover: this.props.holdOnHover,
-            onClose: () => this.state.close(),
-            onPositioned: (el, { direction }) => this.setTargetDirectionClass(direction),
-            popoverClass: mergeClasses(
-                "o-dropdown--menu dropdown-menu mx-0",
-                { "o-dropdown--menu-submenu": this.hasParent },
-                this.props.menuClass
-            ),
-            role: "menu",
-            get position() {
-                return getPosition();
-            },
-            ref: this.menuRef,
-            shrink: true,
-            setActiveElement: false,
-        };
-        if (this.isBottomSheet) {
-            Object.assign(options, {
-                useBottomSheet: true,
-                class: mergeClasses("o-dropdown--menu dropdown-menu show", this.props.menuClass),
-            });
-        }
+        const options = this.getPopoverOptions();
         this.popover = usePopover(DropdownPopover, options);
 
         // As the popover is in another context we need to force
@@ -207,6 +179,39 @@ export class Dropdown extends Component {
                 this.closePopover();
             }
         });
+    }
+
+    getPopoverOptions() {
+        const getPosition = () => this.position;
+        const options = {
+            animation: false,
+            arrow: false,
+            closeOnClickAway: (target) => this.popoverCloseOnClickAway(target),
+            closeOnEscape: false, // Handled via navigation and prevents closing root of nested dropdown
+            env: useChildEnv(),
+            holdOnHover: this.props.holdOnHover,
+            onClose: () => this.state.close(),
+            onPositioned: (el, { direction }) => this.setTargetDirectionClass(direction),
+            popoverClass: mergeClasses(
+                "o-dropdown--menu dropdown-menu mx-0",
+                { "o-dropdown--menu-submenu": this.hasParent },
+                this.props.menuClass
+            ),
+            role: "menu",
+            get position() {
+                return getPosition();
+            },
+            ref: this.menuRef,
+            shrink: true,
+            setActiveElement: false,
+        };
+        if (this.isBottomSheet) {
+            Object.assign(options, {
+                useBottomSheet: true,
+                class: mergeClasses("o-dropdown--menu dropdown-menu show", this.props.menuClass),
+            });
+        }
+        return options;
     }
 
     get isBottomSheet() {
