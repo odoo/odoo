@@ -99,15 +99,19 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         given_name, family_name = payment_utils.split_partner_name(self.partner_name)
-        return {
+        billing_address = {
             "givenName": given_name,
             "familyName": family_name,
-            "streetAndNumber": self.partner_address or "",
-            "postalCode": self.partner_zip or "",
-            "city": self.partner_city or "",
-            "country": self.partner_country_id.code or "",
             "email": self.partner_email or "",
         }
+        if all((self.partner_address, self.partner_zip, self.partner_city, self.partner_country_id)):
+            billing_address |= {
+                "streetAndNumber": self.partner_address,
+                "postalCode": self.partner_zip,
+                "city": self.partner_city,
+                "country": self.partner_country_id.code,
+            }
+        return billing_address
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
