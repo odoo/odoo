@@ -3,7 +3,7 @@
     <record id="base.partner_demo_company_ee" model="res.partner" forcecreate="1">
         <field name="name">EE Company</field>
         <field name="vat">EE123456780</field>
-        <field name="company_registry">12345678</field>
+        <field name="additional_identifiers" eval="{'EE_EN': '12345678'}"/>
         <field name="street">Elektra tee 60</field>
         <field name="city">Alavere</field>
         <field name="country_id" ref="base.ee"/>

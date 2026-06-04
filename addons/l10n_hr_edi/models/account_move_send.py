@@ -4,7 +4,7 @@ import zoneinfo
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
-from ..tools import _mer_api_send, MojEracunServiceError
+from odoo.addons.l10n_hr_edi.tools.api import _mer_api_send, MojEracunServiceError
 
 _logger = logging.getLogger(__name__)
 

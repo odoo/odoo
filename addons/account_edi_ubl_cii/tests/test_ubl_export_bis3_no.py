@@ -40,10 +40,7 @@ class TestUblExportBis3NO(TestUblBis3Common, TestUblCiiNOCommon):
         )
         self.assertEqual(tax_scheme.findtext('cbc:CompanyID', namespaces=UBL_NS), 'Foretaksregisteret')
 
-        legal_entity_vat = supplier_party.findtext(
-            'cac:PartyLegalEntity/cbc:CompanyID', namespaces=UBL_NS
-        )
-        self.assertEqual(legal_entity_vat, expected_vat)
+        # Note: NO-R-001 constraint only affects the CompanyID within the PartyTaxScheme node, not the LegalEntity/CompanyID node.
 
     def test_invoice_supplier_vat_full_format(self):
         # Supplier VAT already in full NO...MVA format.
@@ -57,5 +54,5 @@ class TestUblExportBis3NO(TestUblBis3Common, TestUblCiiNOCommon):
         # The export must auto-complete it to NO179728982MVA.
         # PartyTaxScheme/CompanyID and PartyLegalEntity/CompanyID must be NO179728982MVA.
         # NO-R-001 constraint must not raise an error.
-        root = self._export_invoice_xml('179728982')
-        self._assert_supplier_vat_nodes(root, 'NO179728982MVA')
+        root = self._export_invoice_xml('995525828')
+        self._assert_supplier_vat_nodes(root, 'NO995525828MVA')

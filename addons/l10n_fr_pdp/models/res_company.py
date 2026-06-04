@@ -82,11 +82,11 @@ class ResCompany(models.Model):
         groups='account.group_account_invoice',
     )
 
-    @api.depends('peppol_eas', 'peppol_endpoint')
+    @api.depends('partner_id.routing_identifier')
     def _compute_pdp_identifier(self):
         for record in self:
             partner = record.partner_id
-            record.pdp_identifier = partner.peppol_endpoint if partner.peppol_eas == '0225' else False
+            record.pdp_identifier = partner.routing_endpoint if partner.routing_scheme == '0225' else False
 
     def _inverse_pdp_identifier(self):
         for record in self:
@@ -95,11 +95,12 @@ class ResCompany(models.Model):
             if not siren:
                 continue
             siret = match.group(2)[1:] if match and match.group(2) else False  # Remove `_` at the start
-            record.partner_id.write({
-                'peppol_eas': '0225',
-                'peppol_endpoint': record.pdp_identifier,  # Will be verified by `_check_peppol_fields` constraint
-                'company_registry': siret or siren,
-            })
+            # Set the registry identifier first: writes `additional_identifiers`, which
+            # would recompute `routing_scheme`/`routing_endpoint` and overwrite the 0225
+            # routing set below otherwise.
+            if registry := (siret or siren):
+                record.partner_id._set_additional_identifier('FR_SIRET' if len(registry) == 14 else 'FR_SIREN', registry)
+            record.partner_id.write({'routing_identifier': f'0225:{record.pdp_identifier}'})
 
     @api.depends('l10n_fr_pdp_annuaire_start_date', 'account_peppol_proxy_state')
     def _compute_l10n_fr_pdp_registered(self):

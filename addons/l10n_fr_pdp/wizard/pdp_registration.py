@@ -93,7 +93,7 @@ class PdpRegistration(models.TransientModel):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('company_id.company_registry')
+    @api.depends('company_id.partner_id.additional_identifiers')
     def _compute_siren_number(self):
         for wizard in self:
             wizard.siren_number = wizard.company_id.partner_id._l10n_fr_pdp_get_siren()

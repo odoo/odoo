@@ -26,7 +26,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         for partner_type in ('supplier', 'customer'):
             partner = vals[partner_type]
             commercial_partner = partner.commercial_partner_id
-            if commercial_partner.peppol_eas != '0225' or not commercial_partner.peppol_endpoint:
+            if commercial_partner.routing_scheme != '0225' or not commercial_partner.routing_endpoint:
                 constraints[f"ubl_21_fr_{partner_type}_pdp_identifier_required"] = self.env._("The following partner's PDP identifier is missing: %s", commercial_partner.display_name)
             id_type, id_value = commercial_partner._l10n_fr_pdp_get_base_identifier()
             if not id_type or not id_value:

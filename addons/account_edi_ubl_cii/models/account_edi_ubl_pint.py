@@ -2,6 +2,7 @@ from odoo import _, models
 from odoo.tools import formatLang, html2plaintext
 from odoo.tools.misc import NON_BREAKING_SPACE
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
+from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import normalize_iso_identifier
 
 
 class AccountEdiUBLPint(models.AbstractModel):
@@ -147,19 +148,27 @@ class AccountEdiUBLPint(models.AbstractModel):
     def _ubl_add_party_endpoint_id_node(self, vals):
         super()._ubl_add_party_endpoint_id_node(vals)
         partner = vals['party_vals']['partner']
-        commercial_partner = partner.commercial_partner_id
-        if commercial_partner.peppol_endpoint and commercial_partner.peppol_eas:
-            vals['party_node']['cbc:EndpointID']['_text'] = commercial_partner.peppol_endpoint
-            vals['party_node']['cbc:EndpointID']['schemeID'] = commercial_partner.peppol_eas
+        identifier_vals = partner._get_preferred_routing_identifier_vals()
+        if identifier_vals:
+            normalized_value = normalize_iso_identifier(identifier_vals['scheme'], identifier_vals['value'])
+            vals['party_node']['cbc:EndpointID']['_text'] = normalized_value
+            vals['party_node']['cbc:EndpointID']['schemeID'] = identifier_vals['scheme']
 
     def _ubl_add_party_identification_nodes(self, vals):
         super()._ubl_add_party_identification_nodes(vals)
-        self._ubl_add_party_identification_nodes_iso_6523_icd(vals)
 
         nodes = vals['party_node']['cac:PartyIdentification']
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
         country_code = commercial_partner.country_code
+
+        if country_code == 'BE' and (be_en := commercial_partner._get_additional_identifier('BE_EN')):
+            nodes.append({
+                'cbc:ID': {
+                    '_text': be_en,
+                    'schemeID': '0208',
+                },
+            })
 
         if not nodes and commercial_partner.ref and country_code != 'DK':  # DK-R-013
             nodes.append({
@@ -179,12 +188,12 @@ class AccountEdiUBLPint(models.AbstractModel):
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
         nodes = vals['party_node']['cac:PartyTaxScheme']
-        if not nodes and commercial_partner.peppol_endpoint and commercial_partner.peppol_eas:
-            # TaxScheme based on partner's EAS/Endpoint.
+        if not nodes and commercial_partner.routing_scheme and commercial_partner.routing_endpoint:
+            # TaxScheme based on partner's Scheme/Endpoint.
             nodes.append({
-                'cbc:CompanyID': {'_text': commercial_partner.peppol_endpoint},
+                'cbc:CompanyID': {'_text': commercial_partner.routing_endpoint},
                 'cac:TaxScheme': {
-                    'cbc:ID': {'_text': commercial_partner.peppol_eas},
+                    'cbc:ID': {'_text': commercial_partner.routing_scheme},
                 },
             })
 

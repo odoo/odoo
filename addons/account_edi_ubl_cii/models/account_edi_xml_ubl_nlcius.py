@@ -80,12 +80,11 @@ class AccountEdiXmlUbl_Nl(models.AbstractModel):
         super()._ubl_add_accounting_supplier_party_identification_nodes(vals)
         nodes = vals['party_node']['cac:PartyIdentification']
         partner = vals['party_vals']['partner']
-        commercial_partner = partner.commercial_partner_id
-
-        if commercial_partner.peppol_endpoint:
+        identifier_vals = partner._get_preferred_routing_identifier_vals()
+        if identifier_vals:
             nodes.append({
                 'cbc:ID': {
-                    '_text': commercial_partner.peppol_endpoint,
+                    '_text': identifier_vals['value'],
                     'schemeID': None,
                 },
             })
@@ -96,16 +95,24 @@ class AccountEdiXmlUbl_Nl(models.AbstractModel):
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
 
-        if (
-            commercial_partner.country_code == 'NL'
-            and commercial_partner.peppol_endpoint
-        ):
+        if commercial_partner.country_code != 'NL':
+            return
+
+        # NL customer: prefer the OIN/KVK as scheme-typed PartyIdentification.
+        if oin := commercial_partner._get_additional_identifier('NL_OIN'):
             vals['party_node']['cac:PartyIdentification'] = [{
-                'cbc:ID': {
-                    '_text': commercial_partner.peppol_endpoint,
-                    'schemeID': commercial_partner.peppol_eas if commercial_partner.peppol_eas in ('0106', '0190') else None,
-                },
+                'cbc:ID': {'_text': oin, 'schemeID': '0190'},
             }]
+        elif kvk := commercial_partner._get_additional_identifier('NL_KVK'):
+            vals['party_node']['cac:PartyIdentification'] = [{
+                'cbc:ID': {'_text': kvk, 'schemeID': '0106'},
+            }]
+        else:
+            identifier_vals = commercial_partner._get_preferred_routing_identifier_vals()
+            if identifier_vals:
+                vals['party_node']['cac:PartyIdentification'] = [{
+                    'cbc:ID': {'_text': identifier_vals['value'], 'schemeID': identifier_vals['scheme']},
+                }]
 
     def _ubl_add_customization_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3

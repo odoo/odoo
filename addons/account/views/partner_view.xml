@@ -169,12 +169,6 @@
                 <div id="vat_div" position="attributes">
                     <attribute name="class">o_row d-flex</attribute>
                 </div>
-                <div id="vat_div" position="inside">
-                    <field name="additional_identifiers" widget="additional_identifiers_button" nolabel="1"/>
-                </div>
-                <div id="vat_div" position="after">
-                    <field name="additional_identifiers" widget="additional_identifiers_list" colspan="2" nolabel="1"/>
-                </div>
 
                 <xpath expr=".//page[@name='sales_purchases']//group[@name='misc']" position="inside">
                     <field name="global_location_number" invisible="type != 'delivery'"/>
@@ -211,13 +205,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='company_id']" position="after">
                     <field name="fiscal_country_codes" invisible="1"/>
-                </xpath>
-                <xpath expr="//sheet" position="before">
-                    <div groups="account.group_account_invoice,account.group_account_readonly" class="alert alert-warning" role="alert"
-                         invisible="not duplicate_bank_partner_ids">
-                        <span class="me-1">One or more Bank Accounts set on this partner are also used by others:</span>
-                        <field name="duplicate_bank_partner_ids" widget="x2many_buttons" string="Partners with same bank"/>
-                    </div>
                 </xpath>
                 <page name="sales_purchases" position="after">
                     <page string="Invoicing" name="accounting" invisible="not is_company and parent_id" groups="account.group_account_invoice,account.group_account_readonly">

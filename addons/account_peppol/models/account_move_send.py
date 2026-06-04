@@ -129,7 +129,7 @@ class AccountMoveSend(models.AbstractModel):
             invoice_data['error'] = self.env._("Invoice %s exceeds the size limit of 64 MB to be sent via Peppol.", invoice.name)
             return None, None
 
-        receiver_identification = f"{partner.peppol_eas}:{partner.peppol_endpoint}"
+        receiver_identification = partner.routing_identifier
         document = {
             'filename': filename,
             'receiver': receiver_identification,

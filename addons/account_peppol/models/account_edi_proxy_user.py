@@ -219,10 +219,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
     def _get_proxy_identification(self, company, proxy_type):
         if proxy_type == 'peppol':
-            if not company.peppol_eas or not company.peppol_endpoint:
+            if not company.partner_id.routing_identifier:
                 raise UserError(
-                    _("Please fill in the EAS code and the Participant ID code."))
-            return f'{company.peppol_eas}:{company.peppol_endpoint}'
+                    _("Please fill in the company's routing identification."))
+            return company.partner_id.routing_identifier
         return super()._get_proxy_identification(company, proxy_type)
 
     @api.model

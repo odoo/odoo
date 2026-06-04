@@ -8,6 +8,11 @@ import { debounce } from "@web/core/utils/timing";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
+/**
+ * This widget is only used for the 'additional_identifiers' JSON field of the 'res.partner'
+ * form view. It displays the additional identifiers for a partner.
+ */
+
 const METADATA_FIELD = "available_additional_identifiers_metadata";
 
 function parseJson(value) {
@@ -47,7 +52,7 @@ export class AdditionalIdentifiersCommon extends Component {
 }
 
 export class AdditionalIdentifiersButton extends AdditionalIdentifiersCommon {
-    static template = "account.AdditionalIdentifiersButton";
+    static template = "web.AdditionalIdentifiersButton";
     static components = { Dropdown, DropdownItem };
 
     get identifiersInDropdown() {
@@ -70,7 +75,7 @@ export class AdditionalIdentifiersButton extends AdditionalIdentifiersCommon {
 }
 
 export class AdditionalIdentifiersList extends AdditionalIdentifiersCommon {
-    static template = "account.AdditionalIdentifiersList";
+    static template = "web.AdditionalIdentifiersList";
 
     get sortedIdentifiers() {
         return Object.entries(this.state.identifiers).sort(([keyA, _valA], [keyB, _valB]) => {

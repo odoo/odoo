@@ -215,7 +215,7 @@ class ResPartner(models.Model):
             'name': self.name,
             'email': self.email,
             'company_type': data.get('entity_type', ''),
-            'vat': self.vat or self.company_registry,
+            'vat': self.vat,
             'website': self.website,
             'logo': self.image_1920,
             'street': self.street,

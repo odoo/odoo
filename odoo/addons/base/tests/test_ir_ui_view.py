@@ -4850,7 +4850,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'account_disallowed_expenses',
             'account_edi',
             'account_edi_proxy_client',
-            'account_edi_ubl_cii',
             'account_external_tax',
             'account_fleet',
             'account_followup',

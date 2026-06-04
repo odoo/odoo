@@ -1,10 +1,9 @@
-from odoo.exceptions import ValidationError
-from odoo.tests import tagged
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests import TransactionCase, tagged
+from odoo.tools.partner_identifiers import get_additional_identifiers_metadata_of_country
 
 
 @tagged('post_install', '-at_install')
-class TestAdditionalIdentifiers(AccountTestInvoicingCommon):
+class TestAdditionalIdentifiers(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
@@ -32,7 +31,7 @@ class TestAdditionalIdentifiers(AccountTestInvoicingCommon):
 
     def test_identifier_metadata_gln(self):
         """ Global metadata method call """
-        metadata = self.env['res.partner'].get_available_additional_identifiers_metadata(None, seq_max=999)
+        metadata = get_additional_identifiers_metadata_of_country(None, seq_max=999)
         self.assertTrue(isinstance(metadata, dict))
         self.assertTrue(len(metadata) > 2)
         # Check standard properties for international
@@ -42,24 +41,9 @@ class TestAdditionalIdentifiers(AccountTestInvoicingCommon):
 
         self.assertNotIn('FR_VAT', metadata)  # Tax ids are excluded
 
-    def test_identifier_proxy_gln(self):
-        """ Test the "proxy" field (compute/inverse on the JSON) behavior. """
-        self.partner.global_location_number = '9780471117094'
-        self.assertEqual(self.partner.additional_identifiers, {'EAN_GLN': '9780471117094'})
-        self.partner.global_location_number = False
-        self.assertFalse(self.partner.additional_identifiers)
-
-        self.partner._set_additional_identifier('EAN_GLN', '9780471117094')
-        self.assertEqual(self.partner.additional_identifiers, {'EAN_GLN': '9780471117094'})
-        self.partner.global_location_number = ''
-        self.assertFalse(self.partner.additional_identifiers)
-
-        with self.assertRaisesRegex(ValidationError, "Invalid identifier: EAN/GLN."):
-            self.partner.global_location_number = 'wrong_gln'
-
     def test_identifier_metadata_by_country_multiple(self):
         """ Filters mapped directly to a country include generic and non-tax ids. """
-        metadata = self.env['res.partner'].get_available_additional_identifiers_metadata('FR', seq_max=999)
+        metadata = get_additional_identifiers_metadata_of_country('FR', seq_max=999)
         keys = metadata.keys()
         self.assertIn('FR_SIREN', keys)
         self.assertIn('FR_SIRET', keys)
@@ -67,14 +51,14 @@ class TestAdditionalIdentifiers(AccountTestInvoicingCommon):
 
     def test_identifier_metadata_by_country(self):
         """ Specific country check """
-        metadata = self.env['res.partner'].get_available_additional_identifiers_metadata('BE', seq_max=999)
+        metadata = get_additional_identifiers_metadata_of_country('BE', seq_max=999)
         keys = metadata.keys()
         self.assertIn('BE_EN', keys)
         self.assertNotIn('BE_VAT', keys)
 
-    def test_peppol_eas_metadata_keys(self):
+    def test_routing_scheme_metadata_keys(self):
         """ Check that essential non-tax EAS fallbacks are explicitly mapped. """
-        metadata = self.env['res.partner'].get_available_additional_identifiers_metadata('NO', seq_max=999)
+        metadata = get_additional_identifiers_metadata_of_country('NO', seq_max=999)
         keys_to_check = ['EAN_GLN', 'NO_EN']
         found_keys = [k for k in metadata if k in keys_to_check]
         self.assertEqual(len(found_keys), len(keys_to_check))
@@ -118,7 +102,7 @@ class TestAdditionalIdentifiers(AccountTestInvoicingCommon):
 
     def test_unknown_key_dropped(self):
         """Unknown identifier keys should be dropped on save with a logger warning."""
-        with self.assertLogs('odoo.addons.account.models.partner', level='WARNING') as logger:
+        with self.assertLogs('odoo.addons.base.models.res_partner', level='WARNING') as logger:
             partner = self.env['res.partner'].create({
                 'name': 'Test Unknown Key',
                 'country_id': self.env.ref('base.be').id,

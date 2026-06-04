@@ -5,7 +5,7 @@
         <field name="model">res.company</field>
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='company_registry']" position="after">
+            <xpath expr="//field[@name='vat']" position="after">
                 <field name="iap_enrich_auto_done" invisible="1"/>
             </xpath>
         </field>

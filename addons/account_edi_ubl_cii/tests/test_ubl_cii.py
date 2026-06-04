@@ -169,42 +169,6 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         new_invoice = invoice.journal_id._create_document_from_attachment(attachment.ids)
         self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
 
-    def test_peppol_eas_endpoint_compute(self):
-        partner = self.partner_a
-        partner.vat = 'DE123456788'
-        partner.country_id = self.env.ref('base.de')
-
-        self.assertRecordValues(partner, [{
-            'peppol_eas': '9930',
-            'peppol_endpoint': 'DE123456788',
-        }])
-
-        partner.country_id = self.env.ref('base.fr')
-        partner.vat = 'FR23334175221'
-
-        self.assertRecordValues(partner, [{
-            'peppol_eas': '9957',
-            'peppol_endpoint': 'FR23334175221',
-        }])
-
-        partner.vat = '23334175221'
-
-        self.assertRecordValues(partner, [{
-            'peppol_eas': '9957',
-            'peppol_endpoint': '23334175221',
-        }])
-
-        partner.write({
-            'vat': 'BE0477472701',
-            'company_registry': '0477472701',
-            'country_id': self.env.ref('base.be'),
-        })
-
-        self.assertRecordValues(partner, [{
-            'peppol_eas': '0208',
-            'peppol_endpoint': '0477472701',
-        }])
-
     def test_import_partner_peppol_fields(self):
         """ Check that the peppol fields are used to retrieve the partner when importing a Bis 3 xml. """
         invoice = self.env['account.move'].create({
@@ -520,8 +484,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
     def test_export_zip_includes_ubl_xml(self):
         partner = self._create_partner_be(invoice_edi_format='ubl_bis3')
         self.company_data['company'].partner_id.write({
-            'peppol_eas': '0230',
-            'peppol_endpoint': 'C2584563200',
+            'routing_identifier': '0230:C2584563200',
         })
         invoices = self.env['account.move'].create([
             {
@@ -691,8 +654,8 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
 
     def test_oin_code(self):
         partner = self.partner_a
-        partner.peppol_endpoint = '00000000001020304050'
         partner.country_id = self.env.ref('base.nl').id
+        partner.additional_identifiers = {'NL_OIN': '00000000001020304050'}
         partner.bank_ids = [Command.create({'account_number': "0123456789", 'allow_out_payment': True})]
         invoice = self.env['account.move'].create({
             'partner_id': partner.id,

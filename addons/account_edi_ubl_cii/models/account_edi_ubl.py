@@ -3,21 +3,27 @@ import re
 
 from collections import defaultdict
 from markupsafe import Markup
-from stdnum.be import vat as be_vat
 
 from odoo import _, fields, models, Command
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, unique
+from odoo.tools.partner_identifiers import get_tin_metadata_of_country
+
+from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
-    EAS_MAPPING,
     FloatFmt,
     GST_COUNTRY_CODES,
     UOM_TO_UNECE_CODE,
 )
-from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
+from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import (
+    ISO_6523_ICD_CODELIST,
+    ISO_IDENTIFIERS_METADATA,
+    normalize_iso_identifier,
+    normalize_vat_for_ubl,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -749,20 +755,6 @@ class AccountEdiUBL(models.AbstractModel):
             'schemeID': None,
         }
 
-    def _ubl_add_party_identification_nodes_iso_6523_icd(self, vals):
-        nodes = vals['party_node']['cac:PartyIdentification']
-        partner = vals['party_vals']['partner']
-        commercial_partner = partner.commercial_partner_id
-        country_code = commercial_partner.country_code
-
-        if country_code == 'BE' and commercial_partner.company_registry:
-            nodes.append({
-                'cbc:ID': {
-                    '_text': be_vat.compact(commercial_partner.company_registry),
-                    'schemeID': '0208',
-                },
-            })
-
     def _ubl_add_party_identification_nodes(self, vals):
         vals['party_node']['cac:PartyIdentification'] = []
 
@@ -802,32 +794,25 @@ class AccountEdiUBL(models.AbstractModel):
         nodes = vals['party_node']['cac:PartyTaxScheme']
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
-        country_code = commercial_partner.country_code
-        if not country_code:
+
+        identifier_vals = commercial_partner._get_preferred_tax_identifier_vals()
+        if not identifier_vals:
             return
+        if identifier_vals.get('category') == 'GST':
+            tax_scheme_id = 'GST'
+        else:
+            tax_scheme_id = 'VAT'
+        if identifier_vals.get('scheme') in ISO_IDENTIFIERS_METADATA:
+            normalized_value = normalize_iso_identifier(identifier_vals['scheme'], identifier_vals['value'])
+        else:
+            normalized_value = normalize_vat_for_ubl(commercial_partner.country_code, identifier_vals['value'])
 
-        if commercial_partner.vat and commercial_partner.vat != '/':
-            vat = commercial_partner.vat
-            country_code = commercial_partner.country_id.code
-            if country_code in GST_COUNTRY_CODES:
-                tax_scheme_id = 'GST'
-            else:
-                tax_scheme_id = 'VAT'
-
-            if country_code == 'HU' and not vat.upper().startswith('HU'):
-                vat = 'HU' + vat[:8]
-            if country_code == 'DK' and not vat.upper().startswith('DK'):
-                vat = f'DK{vat}'
-            if country_code == 'NO' and not vat.upper().startswith('NO'):
-                vat = f'NO{vat}'
-            if country_code == 'NO' and vat[-3:] != 'MVA':
-                vat += 'MVA'
-            nodes.append({
-                'cbc:CompanyID': {'_text': vat},
-                'cac:TaxScheme': {
-                    'cbc:ID': {'_text': tax_scheme_id},
-                },
-            })
+        nodes.append({
+            'cbc:CompanyID': {'_text': normalized_value},
+            'cac:TaxScheme': {
+                'cbc:ID': {'_text': tax_scheme_id},
+            },
+        })
 
     def _ubl_add_party_tax_scheme_nodes(self, vals):
         vals['party_node']['cac:PartyTaxScheme'] = []
@@ -836,123 +821,16 @@ class AccountEdiUBL(models.AbstractModel):
         nodes = vals['party_node']['cac:PartyLegalEntity']
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
-        vat = commercial_partner.vat != '/' and commercial_partner.vat
 
-        if commercial_partner.peppol_eas in ('0106', '0190'):
-            nl_id = commercial_partner.peppol_endpoint
-        else:
-            nl_id = commercial_partner.company_registry
-
-        if commercial_partner.country_code == 'NL' and nl_id:
-            # For NL, VAT can be used as a Peppol endpoint, but KVK/OIN has to be used as PartyLegalEntity/CompanyID
-            # To implement a workaround on stable, company_registry field is used without recording whether
-            # the number is a KVK or OIN, and the length of the number (8 = KVK, 20 = OIN) is used to determine the type
-            nodes.append({
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {
-                    '_text': nl_id,
-                    'schemeID': '0190' if len(nl_id) == 20 else '0106',
-                },
-            })
-        elif commercial_partner.country_code == 'LU' and commercial_partner.company_registry:
-            nodes.append({
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {
-                    '_text': commercial_partner.company_registry,
-                    'schemeID': None,
-                },
-            })
-        elif commercial_partner.country_code == 'SE' and commercial_partner.company_registry:
-            nodes.append({
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {
-                    '_text': ''.join(char for char in commercial_partner.company_registry if char.isdigit()),
-                },
-            })
-        elif commercial_partner.country_code == 'BE' and commercial_partner.company_registry:
-            nodes.append({
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {
-                    '_text': be_vat.compact(commercial_partner.company_registry),
-                    'schemeID': '0208',
-                },
-            })
-        elif (
-            commercial_partner.country_code == 'DK'
-            and commercial_partner.peppol_eas == '0184'
-            and commercial_partner.peppol_endpoint
-        ):
-            nodes.append({
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {
-                    '_text': commercial_partner.peppol_endpoint,
-                    'schemeID': '0184',
-                },
-            })
-        elif commercial_partner.country_code == 'AU' and vat:
-            nodes.append({
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {
-                    '_text': commercial_partner.vat,
-                    'schemeID': '0151',
-                },
-            })
-        elif commercial_partner.country_code == 'NZ' and vat:
-            nodes.append({
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {
-                    '_text': commercial_partner.vat,
-                    'schemeID': '0088',
-                },
-            })
-        elif (
-            commercial_partner.country_code == 'NO'
-            and (
-                no_id := (
-                    (
-                        'l10n_no_bronnoysund_number' in self.env['res.partner']._fields
-                        and commercial_partner.l10n_no_bronnoysund_number
-                    )
-                    or commercial_partner.company_registry
-                )
-            )
-        ):
-            nodes.append({
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {
-                    '_text': no_id,
-                    'schemeID': '0192',
-                },
-            })
-        elif commercial_partner.country_code == 'NO' and commercial_partner.vat != '/':
-            if not vat.startswith('NO'):
-                vat = f'NO{vat}'
-            if not vat.endswith('MVA'):
-                vat += 'MVA'
-            nodes.append({
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {
-                    '_text': vat,
-                    'schemeID': None,
-                },
-            })
-
-        elif commercial_partner.vat and commercial_partner.vat != '/':
-            nodes.append({
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {
-                    '_text': commercial_partner.vat,
-                    'schemeID': None,
-                },
-            })
-        elif commercial_partner.peppol_endpoint:
-            nodes.append({
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
-                'cbc:CompanyID': {
-                    '_text': commercial_partner.peppol_endpoint,
-                    'schemeID': None,
-                },
-            })
+        identifier_vals = commercial_partner._get_preferred_legal_entity_identifier_vals()
+        scheme, value = (identifier_vals.get('scheme'), identifier_vals['value']) if identifier_vals else (None, None)
+        nodes.append({
+            'cbc:RegistrationName': {'_text': commercial_partner.name},
+            'cbc:CompanyID': {
+                '_text': normalize_iso_identifier(scheme, value) if scheme and value else value,
+                'schemeID': scheme if scheme in ISO_6523_ICD_CODELIST else None,
+            },
+        })
 
     def _ubl_add_party_legal_entity_nodes(self, vals):
         vals['party_node']['cac:PartyLegalEntity'] = []
@@ -2143,24 +2021,26 @@ class AccountEdiUBL(models.AbstractModel):
                     customer_values[key] = node.text
                     break
 
-        # Peppol EAS/Endpoint.
+        # Routing endpoint (cbc:EndpointID schemeID="..."): feeds both routing_identifier
+        # and additional_identifiers.
         if (node := party_node.find(".//{*}EndpointID")) is not None and node.text:
-            customer_values['peppol_endpoint'] = node.text.strip()
-            if peppol_eas := node.attrib.get('schemeID'):
-                customer_values['peppol_eas'] = peppol_eas
+            scheme, value = node.attrib.get('schemeID'), node.text.strip()
+            customer_values['routing_scheme'] = scheme
+            customer_values['routing_endpoint'] = value
+            if (meta := ISO_IDENTIFIERS_METADATA.get(scheme)):
+                customer_values.setdefault('additional_identifiers', {})[meta['key']] = value
 
         if not customer_values['vat'] and (country_code := customer_values.get('country_code')):
-            for scheme_id, field in EAS_MAPPING.get(country_code, {}).items():
-                if field == 'vat' and (vat := party_node.findtext(f".//{{*}}PartyIdentification/{{*}}ID[@schemeID='{scheme_id}']")):
-                    customer_values['vat'] = vat
-                    break
+            vat_scheme = get_tin_metadata_of_country(country_code).get('scheme')
+            if vat := party_node.findtext(f".//{{*}}PartyIdentification/{{*}}ID[@schemeID='{vat_scheme}']"):
+                customer_values['vat'] = vat
 
     def _import_ubl_retrieve_customer_search_plan(self, collected_values):
         ResPartner = self.env['res.partner']
         return [
             ResPartner._import_retrieve_customer_from_vat,
             ResPartner._import_retrieve_customer_from_additional_identifiers,
-            ResPartner._import_retrieve_customer_from_eas_endpoint,
+            ResPartner._import_retrieve_customer_from_routing_identifier,
             ResPartner._import_retrieve_customer_from_bank_account_number,
             ResPartner._import_retrieve_customer_from_email,
             ResPartner._import_retrieve_customer_from_phone,
@@ -2198,17 +2078,18 @@ class AccountEdiUBL(models.AbstractModel):
         partner_create_values = {
             'is_company': True,
         }
-        for key in ('phone', 'name', 'email', 'street', 'street2', 'zip', 'city', 'additional_identifiers'):
+        for key in ('phone', 'name', 'email', 'street', 'street2', 'zip', 'city', 'additional_identifiers', 'routing_scheme', 'routing_endpoint'):
             if value := customer_values.get(key):
                 partner_create_values[key] = value
 
-        if (peppol_eas := customer_values.get('peppol_eas')) and (peppol_endpoint := customer_values.get('peppol_endpoint')):
-            partner_create_values['peppol_eas'] = peppol_eas
-            partner_create_values['peppol_endpoint'] = peppol_endpoint
+        if (routing_scheme := customer_values.get('routing_scheme')) and (routing_endpoint := customer_values.get('routing_endpoint')):
+            partner_create_values['routing_scheme'] = routing_scheme
+            partner_create_values['routing_endpoint'] = routing_endpoint
 
         country = self._import_ubl_get_country(collected_values)
         if country:
             partner_create_values['country_id'] = country.id
+
         if vat := customer_values.get('vat'):
             partner_create_values['vat'], _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
         return partner_create_values

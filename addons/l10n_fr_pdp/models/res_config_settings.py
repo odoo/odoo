@@ -42,7 +42,7 @@ class ResConfigSettings(models.TransientModel):
 
     def action_open_peppol_form(self):
         self.ensure_one()
-        if self.country_code != 'FR' and self.account_peppol_eas != '0225':
+        if self.country_code != 'FR' and self.routing_scheme != '0225':
             return super().action_open_peppol_form()
         return self.action_open_pdp_form()
 

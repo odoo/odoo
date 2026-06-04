@@ -99,8 +99,8 @@ class AccountEdiUBLPintEU(models.AbstractModel):
 
             # [NL-R-003] For suppliers in the Netherlands, the legal entity identifier MUST be either a
             # KVK or OIN number (schemeID 0106 or 0190)
-            if all(node['cbc:CompanyID'] not in ('0106', '0190') for node in document_node['cac:AccountingSupplierParty']['cac:Party']['cac:PartyLegalEntity']):
-                constraints['nl_r_003'] = self._check_required_fields(vals['supplier'], 'vat')
+            if all((node.get('cbc:CompanyID') or {}).get('schemeID') not in ('0106', '0190') for node in document_node['cac:AccountingSupplierParty']['cac:Party']['cac:PartyLegalEntity']):
+                constraints['nl_r_003'] = _("%s should have a KVK or OIN number set.", vals['supplier'].display_name)
 
             # [NL-R-007] For suppliers in the Netherlands, the supplier MUST provide a means of payment
             # (cac:PaymentMeans) if the payment is from customer to supplier
@@ -119,8 +119,8 @@ class AccountEdiUBLPintEU(models.AbstractModel):
 
                 # [NL-R-005] For suppliers in the Netherlands, if the customer is in the Netherlands,
                 # the customer's legal entity identifier MUST be either a KVK or OIN number (schemeID 0106 or 0190)
-                if all(node['cbc:CompanyID'] not in ('0106', '0190') for node in document_node['cac:AccountingCustomerParty']['cac:Party']['cac:PartyLegalEntity']):
-                    constraints['nl_r_005'] = self._check_required_fields(vals['customer'], 'vat')
+                if all((node.get('cbc:CompanyID') or {}).get('schemeID') not in ('0106', '0190') for node in document_node['cac:AccountingCustomerParty']['cac:Party']['cac:PartyLegalEntity']):
+                    constraints['nl_r_005'] = _("%s should have a KVK or OIN number set.", vals['customer'].display_name)
 
         if (
             self._is_document(vals, 'credit_note')

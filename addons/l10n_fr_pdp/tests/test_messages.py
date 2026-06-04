@@ -94,7 +94,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
 
         if r.path_url.startswith('/api/pdp/1/annuaire_lookup?pdp_identifier='):
             identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
-            return cls._get_annuaire_lookup_response(identifier, "968515759_96851575905823")
+            return cls._get_annuaire_lookup_response(identifier, "968515759_96851575905808")
         elif r.path_url.startswith('/api/pdp/1/lookup?peppol_identifier='):
             identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
             return cls._get_peppol_lookup_response(identifier, "0208:0239843188")
@@ -180,8 +180,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
     def test_send_pdp_not_valid_partner(self):
         partner = self.invalid_partner
         partner.write({
-            'peppol_eas': '0225',
-            'peppol_endpoint': '111111111',
+            'routing_identifier': '0225:111111111',
             'invoice_edi_format': 'ubl_21_fr',
         })
         move = self._create_french_invoice()

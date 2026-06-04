@@ -26,7 +26,7 @@ def _pre_init_nemhandel(env):
         )
         UPDATE res_partner p
            SET nemhandel_identifier_type = '0184',
-               nemhandel_identifier_value = p.company_registry
+               nemhandel_identifier_value = (p.additional_identifiers->>'DK_CVR')::text
           FROM _dk
          WHERE _dk.id = p.id
     """

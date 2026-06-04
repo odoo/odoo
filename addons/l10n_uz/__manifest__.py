@@ -18,8 +18,6 @@ Uzbekistan accounting chart and localization.
     ],
     'data': [
         'data/account.account.tag.csv',
-        'views/res_company_views.xml',
-        'views/res_partner_views.xml',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

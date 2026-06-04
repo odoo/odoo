@@ -40,7 +40,6 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             'city': "Ramillies",
             'vat': 'BE0477472701',
             'additional_identifiers': {'BE_EN': '0477472701'},
-            'company_registry': '0477472701',
             'bank_ids': [Command.create({'account_number': 'BE90735788866632', 'allow_out_payment': True})],
             'country_id': cls.env.ref('base.be').id,
             **kwargs,
@@ -54,12 +53,8 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             'street': "bd de la Foire",
             'zip': "L-1528",
             'city': "Luxembourg",
-            'vat': None,
-            'additional_identifiers': None,
-            'company_registry': None,
+            'vat': 'LU12345613',
             'country_id': cls.env.ref('base.lu').id,
-            'peppol_eas': '9938',
-            'peppol_endpoint': '00005000041',
             **kwargs,
         })
 
@@ -72,11 +67,9 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             'zip': "1000",
             'city': "Amsterdam",
             'vat': 'NL000099998B57',
-            'additional_identifiers': None,
-            'company_registry': None,
+            'additional_identifiers': {'NL_KVK': '77777677'},
             'country_id': cls.env.ref('base.nl').id,
-            'peppol_eas': '0106',
-            'peppol_endpoint': '77777677',
+            'routing_identifier': '0106:77777677',
             **kwargs,
         })
 
@@ -207,7 +200,6 @@ class TestUblCiiBECommon(TestUblCiiCommon):
             'city': "Ramillies",
             'vat': 'BE0202239951',
             'additional_identifiers': {'BE_EN': '0202239951'},
-            'company_registry': '0202239951',
             'country_id': cls.env.ref('base.be').id,
             'bank_ids': [Command.create({'account_number': 'BE15001559627230', 'allow_out_payment': True})],
         })
@@ -231,7 +223,6 @@ class TestUblCiiFRCommon(TestUblCiiCommon):
             'city': "Saint-Malo",
             'vat': 'FR23334175221',
             'additional_identifiers': {'FR_SIRET': '40678483500521'},
-            'company_registry': '40678483500521',
             'country_id': cls.env.ref('base.fr').id,
         })
         return company

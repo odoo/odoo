@@ -2,9 +2,8 @@ from stdnum import (
     ean,
     lei,
 )
-
 from stdnum.at import uid as at_en
-from stdnum.au import acn as au_acn
+from stdnum.au import acn as au_acn, abn as au_abn
 from stdnum.be import vat as be_vat
 from stdnum.br import cpf as br_cn
 from stdnum.ch import uid as ch_uid
@@ -13,19 +12,26 @@ from stdnum.ee import registrikood as ee_en
 from stdnum.eu import vat as eu_vat
 from stdnum.fi import ytunnus as fi_en
 from stdnum.fr import nir as fr_cn, siret as fr_siret, siren as fr_siren
+from stdnum.gb import vat as gb_vat
+from stdnum.ie import pps as ie_ppsn
 from stdnum.jp import cn as jp_en
 from stdnum.lv import pvn as lv_en
 from stdnum.ma import ice as ma_ice
 from stdnum.no import orgnr as no_en
+from stdnum.ro import cui as ro_cui
 from stdnum.se import orgnr as se_en
 from stdnum.sg import uen as sg_en
 
 from odoo.tools.translate import LazyTranslate
-from odoo.addons.account.tools.partner_identifier_validation import nl_kvk_validate, nl_oin_validate, th_branch_code_validate
-from odoo.addons.account.tools.country_groups import FR_AND_DOM_TOM, SEPA_COUNTRIES
+from odoo.tools.partner_identifier_validation import nl_kvk_validate, nl_oin_validate, th_branch_code_validate
 
+from odoo.addons.base.models.res_country import (
+    FR_AND_OVERSEAS_TERRITORIES,
+    SEPA_COUNTRIES,
+)
 
 _lt = LazyTranslate(__name__)
+
 
 # -------------------------------------------------------------------------
 # NAMING:
@@ -37,15 +43,13 @@ _lt = LazyTranslate(__name__)
 # DOCUMENTATION:
 # - https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/
 # -------------------------------------------------------------------------
-
 GLN_SHARED_VALS = {
     'placeholder': '9780471117094',
     'validation_function': ean.validate,
 }
 
-SHADOWS_GLN = ['HR_EN', 'HU_EN', 'NZ_EN']
-
 TIN_CATEGORIES = ['TIN', 'VAT', 'GST']
+
 
 IDENTIFIERS_METADATA = {
     'AD_VAT': {  # NRT
@@ -74,8 +78,8 @@ IDENTIFIERS_METADATA = {
     'AT_EN': {
         'sequence': 10,
         'scheme': '9915',
-        'label': _lt('Company registry'),
-        'help': _lt('Austrian company registry number (UID).'),
+        'label': _lt('Company ID'),
+        'help': _lt('Austrian company ID number (UID).'),
         'category': 'EN',
         'validation_function': at_en.validate,
         'countries': ['AT'],
@@ -99,6 +103,7 @@ IDENTIFIERS_METADATA = {
         'scheme': '0151',
         'placeholder': '83 914 571 673',
         'category': 'GST',
+        'validation_function': au_abn.validate,
         'countries': ['AU'],
     },
     'BA_VAT': {
@@ -107,11 +112,11 @@ IDENTIFIERS_METADATA = {
         'countries': ['BA'],
     },
     'BE_CN': {
-        'sequence': 200,
-        'scheme': '0008',
+        'sequence': 100,
         'label': _lt('Citizen Identification'),
         'help': _lt('Belgian national identification number.'),
         'placeholder': '12.34.55-555.6',
+        'category': 'CN',
         'countries': ['BE'],
     },
     'BE_EN': {
@@ -149,6 +154,7 @@ IDENTIFIERS_METADATA = {
         'placeholder': _lt('390.533.447-05'),
         'help': _lt('Brazilian individual identification number.'),
         'validation_function': br_cn.validate,
+        'category': 'CN',
         'countries': ['BR'],
     },
     'CH_EN': {
@@ -188,6 +194,14 @@ IDENTIFIERS_METADATA = {
         'category': 'VAT',
         'countries': ['CY'],
     },
+    'CZ_EN': {
+        'sequence': 10,
+        'label': _lt('IČO'),
+        'help': _lt('Czech business identification number (IČO).'),
+        'placeholder': '12345678',
+        'category': 'EN',
+        'countries': ['CZ'],
+    },
     'CZ_VAT': {
         'scheme': '9929',
         'placeholder': 'CZ12345679',
@@ -200,6 +214,14 @@ IDENTIFIERS_METADATA = {
         'label': _lt('GEBA'),
         'help': _lt('German Electronic Business Address.'),
         'placeholder': '',
+        'countries': ['DE'],
+    },
+    'DE_HRB': {
+        'sequence': 20,
+        'label': _lt('HRB Nr'),
+        'help': _lt('German Commercial Register (Handelsregister) number.'),
+        'placeholder': '0123456789',
+        'category': 'EN',
         'countries': ['DE'],
     },
     'DE_LTW': {
@@ -278,6 +300,11 @@ IDENTIFIERS_METADATA = {
         'category': 'VAT',
         'countries': ['ES'],
     },
+    'ES_EN': {
+        'label': _lt('Company ID'),
+        'category': 'EN',
+        'countries': ['ES'],
+    },
     'FI_EN': {
         'sequence': 10,
         'scheme': '0216',
@@ -292,7 +319,7 @@ IDENTIFIERS_METADATA = {
         'scheme': '0213',
         'placeholder': 'FI12345671',
         'category': 'VAT',
-        'countries': ['FI'],
+        'countries': ['FI', 'AX'],
     },
     'FR_CN': {
         'sequence': 200,
@@ -301,7 +328,8 @@ IDENTIFIERS_METADATA = {
         'help': _lt('French national identification number (NIR).'),
         'placeholder': '295109912611193',
         'validation_function': fr_cn.validate,
-        'countries': FR_AND_DOM_TOM,
+        'category': 'CN',
+        'countries': FR_AND_OVERSEAS_TERRITORIES,
     },
     'FR_CTC': {
         # EDI specific - French PDP/AP
@@ -309,7 +337,7 @@ IDENTIFIERS_METADATA = {
         'scheme': '0225',
         'label': _lt('France FRCTC Electronic Address'),
         'help': _lt('Electronic address for French e-invoicing platforms (PDP/PPF).'),
-        'countries': FR_AND_DOM_TOM,
+        'countries': FR_AND_OVERSEAS_TERRITORIES,
     },
     'FR_SIREN': {
         'sequence': 20,
@@ -319,7 +347,7 @@ IDENTIFIERS_METADATA = {
         'placeholder': '552008443',
         'category': 'EN',
         'validation_function': fr_siren.validate,
-        'countries': FR_AND_DOM_TOM,
+        'countries': FR_AND_OVERSEAS_TERRITORIES,
     },
     'FR_SIRET': {
         'sequence': 10,
@@ -329,18 +357,19 @@ IDENTIFIERS_METADATA = {
         'placeholder': '33417522101010',
         'category': 'EN',
         'validation_function': fr_siret.validate,
-        'countries': FR_AND_DOM_TOM,
+        'countries': FR_AND_OVERSEAS_TERRITORIES,
     },
     'FR_VAT': {
         'scheme': '9957',
         'placeholder': 'FR23334175221',
         'category': 'VAT',
-        'countries': FR_AND_DOM_TOM,
+        'countries': FR_AND_OVERSEAS_TERRITORIES,
     },
     'GB_VAT': {
         'scheme': '9932',
         'placeholder': _lt('GB123456782 or XI123456782'),
         'category': 'VAT',
+        'validation_function': gb_vat.validate,
         'countries': ['GB'],
     },
     'GR_VAT': {
@@ -354,11 +383,18 @@ IDENTIFIERS_METADATA = {
         'category': 'TIN',
         'countries': ['GT'],
     },
+    'HK_BRN': {
+        'label': _lt('BRN'),
+        'help': _lt('Business Registration Number.'),
+        'placeholder': _lt('12345678'),
+        'category': 'EN',
+        'countries': ['HK'],
+    },
     'HR_EN': {
         **GLN_SHARED_VALS,
         'sequence': 10,
-        'label': _lt('Company Registry'),
-        'help': _lt('Croatian company registry number.'),
+        'label': _lt('Company ID'),
+        'help': _lt('Croatian company ID number.'),
         'category': 'EN',
         'countries': ['HR'],
     },
@@ -369,15 +405,22 @@ IDENTIFIERS_METADATA = {
         'countries': ['HR'],
     },
     'HU_EN': {
-        **GLN_SHARED_VALS,
-        'sequence': 10,
-        'label': _lt('Company Registry'),
-        'help': _lt('Hungarian company registry number.'),
-        'placeholder': _lt('12345678-1-11 or 8071592153'),
+        'sequence': 30,
+        'label': _lt('Company ID'),
+        'help': _lt('Hungarian company ID number.'),
+        'placeholder': _lt('80-71-592153'),
         'category': 'EN',
         'countries': ['HU'],
     },
-    'HU_VAT': {  # That's the prefixed with HU VAT - the "EU" version
+    'HU_TIN': {  # Local Tax ID
+        'sequence': 20,
+        'label': _lt('Hungarian Tax ID'),
+        'placeholder': _lt('12345678-1-11'),
+        'category': 'TIN',
+        'countries': ['HU'],
+    },
+    'HU_VAT': {  # That's the prefixed with HU VAT - the "EU" version, sometimes called ANUM
+        'sequence': 10,
         'scheme': '9910',
         'placeholder': 'HU12345676',
         'category': 'VAT',
@@ -395,6 +438,14 @@ IDENTIFIERS_METADATA = {
         'placeholder': '000000',
         'category': 'EN',
         'countries': ['ID'],
+    },
+    'IE_PPSN': {
+        'label': _lt('PPSN'),
+        'help': _lt('Ireland Personal Public Service Number.'),
+        'placeholder': '6433435OA',
+        'category': 'CN',
+        'validation_function': ie_ppsn.validate,
+        'countries': ['IE'],
     },
     'IE_VAT': {
         'scheme': '9935',
@@ -443,6 +494,11 @@ IDENTIFIERS_METADATA = {
         'category': 'TIN',
         'countries': ['JP'],
     },
+    'KE_EN': {
+        'label': _lt('Company ID'),
+        'category': 'EN',
+        'countries': ['KE'],
+    },
     'KR_TIN': {
         'placeholder': _lt('123-45-67890 or 1234567890'),
         'category': 'TIN',
@@ -465,7 +521,7 @@ IDENTIFIERS_METADATA = {
     'LT_JAK': {
         'sequence': 10,
         'scheme': '0200',
-        'label': _lt('Company registry'),
+        'label': _lt('Company ID'),
         'help': _lt('Lithuanian legal entity code (JAK).'),
         'category': 'EN',
         'countries': ['LT'],
@@ -482,17 +538,18 @@ IDENTIFIERS_METADATA = {
         'category': 'VAT',
         'countries': ['LU'],
     },
-    'LU_EN': {
-        'label': _lt('Company registry'),
+    'LU_EN': {  # RCS
+        'sequence': 10,
+        'label': _lt('Company ID'),
         'help': _lt('Luxembourg business registry number.'),
-        'placeholder': '12345613',
+        'placeholder': 'B123456',
         'category': 'EN',
         'countries': ['LU'],
     },
     'LV_EN': {
         'sequence': 10,
         'scheme': '0218',
-        'label': _lt('Company registry'),
+        'label': _lt('Company ID'),
         'help': _lt('Latvian unified registration number.'),
         'placeholder': '40003521600',
         'category': 'EN',
@@ -543,6 +600,13 @@ IDENTIFIERS_METADATA = {
         'category': 'VAT',
         'countries': ['MT'],
     },
+    'MU_BRN': {
+        'sequence': 10,
+        'label': _lt('BRN'),
+        'help': _lt('Mauritian Business Registration Number.'),
+        'category': 'EN',
+        'countries': ['MU'],
+    },
     'MX_RFC': {
         'placeholder': 'GODE561231GR8',
         'category': 'TIN',
@@ -551,7 +615,7 @@ IDENTIFIERS_METADATA = {
     'MY_EN': {
         'sequence': 10,
         'scheme': '0230',
-        'label': _lt('Company registry'),
+        'label': _lt('Company ID'),
         'help': _lt('Malaysian company registration number.'),
         'category': 'EN',
         'countries': ['MY'],
@@ -559,6 +623,12 @@ IDENTIFIERS_METADATA = {
     'NG_VAT': {
         'scheme': '0244',
         'category': 'VAT',
+        'countries': ['NG'],
+    },
+    'NG_EN': {
+        'label': _lt('Company ID'),
+        'placeholder': _lt('RC123456'),
+        'category': 'EN',
         'countries': ['NG'],
     },
     'NL_KVK': {
@@ -605,6 +675,7 @@ IDENTIFIERS_METADATA = {
     'NZ_EN': {
         **GLN_SHARED_VALS,
         'sequence': 10,
+        'scheme': '0088',
         'label': _lt('NZBN'),
         'help': _lt('New Zealand Business Number.'),
         'category': 'EN',
@@ -617,7 +688,7 @@ IDENTIFIERS_METADATA = {
     },
     'PE_CUI': {  # CUI <-> RUT : to_ruc/to_dni
         'sequence': 10,
-        'label': _lt('Company registry'),
+        'label': _lt('Company ID'),
         'help': _lt('Peruvian unique taxpayer registry number (RUC).'),
         'placeholder': '101174102',
         'countries': ['PE'],
@@ -644,16 +715,34 @@ IDENTIFIERS_METADATA = {
         'category': 'VAT',
         'countries': ['PT'],
     },
+    'PT_EN': {
+        'label': _lt('Company ID'),
+        'placeholder': _lt('123456'),
+        'category': 'EN',
+        'countries': ['PT'],
+    },
     'RO_VAT': {
         'scheme': '9947',
         'placeholder': _lt('RO1234567897 or 8001011234567 or 9000123456789'),
         'category': 'VAT',
         'countries': ['RO'],
     },
+    'RO_EN': {  # Same as VAT without country prefix. Also called CUI or CIF.
+        'label': _lt('Company ID'),
+        'placeholder': _lt('1234567897'),
+        'category': 'EN',
+        'validation_function': ro_cui.validate,
+        'countries': ['RO'],
+    },
     'RS_VAT': {
         'scheme': '9948',
         'placeholder': 'RS101134702',
         'category': 'VAT',
+        'countries': ['RS'],
+    },
+    'RS_EN': {
+        'label': _lt('Company ID'),
+        'category': 'EN',
         'countries': ['RS'],
     },
     'RU_TIN': {
@@ -757,11 +846,12 @@ IDENTIFIERS_METADATA = {
     'SE_EN': {
         'sequence': 10,
         'scheme': '0007',
-        'label': _lt('Company registry'),
+        'label': _lt('Company ID'),
         'help': _lt('Swedish organization number (Organisationsnummer).'),
         'placeholder': '1234567897',
         'category': 'EN',
         'validation_function': se_en.validate,
+        'format': se_en.format,
         'countries': ['SE'],
     },
     'SE_VAT': {
@@ -796,7 +886,7 @@ IDENTIFIERS_METADATA = {
     'SK_EN': {
         'sequence': 10,
         'scheme': '0245',
-        'label': _lt('Company registry'),
+        'label': _lt('Company ID'),
         'help': _lt('Slovak company identification number (IČO).'),
         'category': 'EN',
         'countries': ['SK'],
@@ -827,6 +917,11 @@ IDENTIFIERS_METADATA = {
         'validation_function': th_branch_code_validate,
         'countries': ['TH'],
     },
+    'TR_EN': {
+        'label': _lt('Company ID'),
+        'category': 'EN',
+        'countries': ['TR'],
+    },
     'TR_VAT': {
         'scheme': '9952',
         'placeholder': _lt('11111111111 (NIN) or 2222222222 (VKN)'),
@@ -849,6 +944,13 @@ IDENTIFIERS_METADATA = {
         'category': 'TIN',
         'countries': ['UY'],
     },
+    'UZ_EN': {
+        'sequence': 20,
+        'label': _lt('VAT Registry (VAT ID)'),
+        'placeholder': _lt("402118559023"),
+        'category': 'EN',
+        'countries': ['UZ'],
+    },
     'VA_VAT': {
         'scheme': '9953',
         'category': 'VAT',
@@ -865,6 +967,12 @@ IDENTIFIERS_METADATA = {
         'countries': ['XI'],
     },
     # Keep international identifiers at the end of the dict
+    'OTHER': {  # this field is only to be used outside of EDI, for non-structured identifiers
+        'sequence': 200,
+        'label': _lt('Company ID'),
+        'help': _lt('Company identification number'),
+        'countries': False,
+    },
     'DUNS': {
         'sequence': 100,
         'scheme': '0060',
@@ -910,16 +1018,15 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
     if metadata.get('category') not in TIN_CATEGORIES
 }
 
-ISO_IDENTIFIERS_METADATA = {
-    metadata.get('scheme'): {'key': key, **metadata}
-    for key, metadata in IDENTIFIERS_METADATA.items()
-    if metadata.get('scheme')
-}
-
 
 def is_tin(identifier_type):
     """ Whether the identifier is a Tax Identification Number (VAT/GST, ...). """
     return identifier_type in TIN_METADATA
+
+
+def is_additional_identifier(identifier_type):
+    """ Whether the identifier is a non-TIN additional identifier (EN, EDI routing, GLN, ...). """
+    return identifier_type in ADDITIONAL_IDENTIFIERS_METADATA
 
 
 def get_identifier_metadata(identifier_type):
@@ -927,12 +1034,13 @@ def get_identifier_metadata(identifier_type):
     return IDENTIFIERS_METADATA.get(identifier_type) or {}
 
 
-def select_preferred_identifier(identifiers, filter_func=None, sort_key=None):
+def pick_preferred_identifier(identifiers, filter_func=None, sort_key=None):
     """ Pick the best identifier from a candidates dict.
 
     :param identifiers: dict {identifier_type: value} as from `_get_all_identifiers()`
     :param filter_func: optional (key, value, metadata) -> bool
     :param sort_key: optional (key, value, metadata) -> comparable
+    :return: dict `{'key': ..., 'value': ..., **metadata}` of the winner, or empty dict if no candidate.
     """
     candidates = []
     for key, value in identifiers.items():
@@ -941,10 +1049,11 @@ def select_preferred_identifier(identifiers, filter_func=None, sort_key=None):
             continue
         candidates.append((key, value, meta))
     if not candidates:
-        return (None, None)
+        return {}
     if sort_key:
         candidates.sort(key=lambda c: sort_key(*c))
-    return (candidates[0][0], candidates[0][1])
+    winner_key, winner_value, winner_meta = candidates[0]
+    return {'key': winner_key, 'value': winner_value, **winner_meta}
 
 
 def get_tin_metadata_of_country(country_code):
@@ -969,7 +1078,7 @@ def get_additional_identifiers_metadata_of_country(country_code, include_interna
     """ Identifiers that should be offered for `country_code`, optionally narrowed by the
     `sequence`.
     """
-    return {
+    vals = {
         key: metadata
         for key, metadata in ADDITIONAL_IDENTIFIERS_METADATA.items()
         if seq_min <= metadata.get('sequence', 100) <= seq_max and (
@@ -977,6 +1086,10 @@ def get_additional_identifiers_metadata_of_country(country_code, include_interna
             or (include_international and not metadata.get('countries'))
         )
     }
+    if not {key: metadata for key, metadata in vals.items() if metadata.get('category') == 'EN'}:
+        # Adds the default 'OTHER' only if no other 'EN' identifier is available
+        vals = {'OTHER': {**ADDITIONAL_IDENTIFIERS_METADATA.get('OTHER')}, **vals}
+    return vals
 
 
 def get_identifier_label(identifier_type):
@@ -992,17 +1105,19 @@ def get_deduced_identifiers(key, value):
     if key == 'AT_VAT':
         deduced['AT_EN'] = get_non_prefixed_identifier('AT', value)
     if key == 'AU_ACN':
-        deduced['AU_ANB'] = au_acn.to_abn(value)
+        deduced['AU_ABN'] = au_acn.to_abn(value)
     if key == 'BE_VAT':
         deduced['BE_EN'] = get_non_prefixed_identifier('BE', value)
     if key == 'DK_VAT':
         deduced['DK_CVR'] = get_non_prefixed_identifier('DK', value)
     if key == 'FR_SIRET':
         deduced['FR_SIREN'] = fr_siret.to_siren(value)
+    if key == 'HU_TIN':
+        deduced['HU_VAT'] = get_prefixed_identifier('HU', value)[:10]  # "HU" + 8 digits
     if key == 'SG_GST':
         deduced['SG_UEN'] = value
-    if key == 'LU_VAT':
-        deduced['LU_EN'] = get_non_prefixed_identifier('LU', value)
+    if key == 'RO_VAT':
+        deduced['RO_EN'] = get_non_prefixed_identifier('RO', value)
     return deduced
 
 
@@ -1012,8 +1127,6 @@ def get_prefixed_identifier(country_code, value):
     """
     if value.startswith(country_code):
         return value  # keep idempotent
-    if country_code == 'HU':
-        return f'{country_code}{value[:8]}'
     return f'{country_code}{value}'
 
 
@@ -1029,6 +1142,12 @@ def is_identifier_void(identifier):
     if not identifier:
         return True
     return identifier in ('/', 'na', 'NA', 'N/A', 'not applicable')
+
+
+def format_identifier(identifier_type, value):
+    if format_function := get_identifier_metadata(identifier_type).get('format'):
+        return format_function(value)
+    return value
 
 
 def normalize_identifier(identifier_type, value):
@@ -1050,7 +1169,10 @@ def validate_identifier(identifier_type, value):
     metadata = get_identifier_metadata(identifier_type)
     example = metadata.get('examples') or metadata.get('placeholder')
     function_validation = metadata.get('validation_function')
-    if not function_validation and metadata.get('category') == 'VAT':
+    # For VAT identifiers without a dedicated validator, fall back to eu_vat.validate
+    # only when the value looks like a prefixed EU VAT (starts with a 2-letter code).
+    supported_countries = eu_vat.MEMBER_STATES
+    if not function_validation and metadata.get('category') == 'VAT' and value[:2].lower() in supported_countries:
         function_validation = eu_vat.validate
     if function_validation:
         try:
@@ -1060,25 +1182,6 @@ def validate_identifier(identifier_type, value):
         else:
             return {'valid': True, 'value': value_normalized, 'example': example}
     return {'valid': True, 'value': value, 'example': example}
-
-
-def format_participant_identifier(identifier_type, value):
-    """ Format the identifier such as `eas_scheme:identifier`.
-    This format is used in many EDIs.
-    """
-    if eas := get_identifier_metadata(identifier_type).get('scheme'):
-        return f'{eas}:{value}'
-    return None
-
-
-def validate_participant_identifier(identifier):
-    """ Validate and normalize identifier formated `eas_scheme:identifier`. """
-    assert ':' in identifier
-    iso_scheme, _sep, value = identifier.partition(':')
-    identifier = ISO_IDENTIFIERS_METADATA[iso_scheme]
-    validation = validate_identifier(identifier['key'], value)
-    validation['value'] = f'{iso_scheme}:{validation['value']}'
-    return validation
 
 
 def validation_error_message(env, identifier_type, example=None):

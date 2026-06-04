@@ -31,7 +31,7 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         })
 
         cls.company_data['company'].partner_id.update({
-            'peppol_endpoint': False,
+            'routing_identifier': False,
         })
 
         cls.partner_a.write({
@@ -67,7 +67,7 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.fr').id,
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
-            'company_registry': '123 568 941 00056',
+            'additional_identifiers': {'FR_SIRET': '40678483500521'},
             'invoice_edi_format': 'oioubl_21',
             'nemhandel_identifier_type': '0088',
             'nemhandel_identifier_value': '5798009811639',
@@ -163,8 +163,8 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
 
     @freeze_time('2017-01-01')
     def test_export_invoice_foreign_partner_be(self):
-        # Set peppol endpoint to have schemeID of 'GLN'
-        self.company_data['company'].partner_id.peppol_endpoint = '0239843188'
+        # Set routing endpoint to have schemeID of 'GLN' (ISO 6523 ICD 0088)
+        self.company_data['company'].partner_id.routing_identifier = '0088:5798009811639'
         invoice = self.create_post_and_send_invoice(partner=self.partner_b)
         self.assertTrue(invoice.ubl_cii_xml_id)
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_foreign_partner_be.xml")
@@ -254,9 +254,9 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
 
     @freeze_time('2017-01-01')
     def test_export_partner_fr_without_siret_should_raise_an_error(self):
-        self.partner_c.company_registry = False
+        self.partner_c.additional_identifiers = False
         self.partner_c.invoice_edi_format = 'oioubl_21'
-        with self.assertRaisesRegex(UserError, "The company registry is required for french partner:"):
+        with self.assertRaisesRegex(UserError, "A SIRET is required for the french partner:"):
             self.create_post_and_send_invoice(partner=self.partner_c)
 
     @freeze_time('2017-01-01')

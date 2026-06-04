@@ -25,13 +25,13 @@
         </t>
 
         <xpath expr="//t[@name='address_not_same_as_shipping']" position="inside">
-            <span t-field="o.partner_id.company_registry"/>
+            <span t-out="o.partner_id._get_additional_identifier('MU_BRN')"/>
         </xpath>
         <xpath expr="//t[@name='address_same_as_shipping']" position="inside">
-            <span t-field="o.partner_id.company_registry"/>
+            <span t-out="o.partner_id._get_additional_identifier('MU_BRN')"/>
         </xpath>
         <xpath expr="//t[@name='no_shipping']" position="inside">
-            <span t-field="o.partner_id.company_registry"/>
+            <span t-out="o.partner_id._get_additional_identifier('MU_BRN')"/>
         </xpath>
 
         <xpath expr="//div[@id='total']" position="after">

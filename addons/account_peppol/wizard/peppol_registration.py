@@ -78,16 +78,52 @@ class PeppolRegistration(models.TransientModel):
         required=True,
     )
     phone_number = fields.Char(related='selected_company_id.account_peppol_phone_number', readonly=False)
-    peppol_eas = fields.Selection(related='selected_company_id.peppol_eas', readonly=False, required=True)
-    peppol_endpoint = fields.Char(related='selected_company_id.peppol_endpoint', readonly=False, required=True)
+    peppol_eas = fields.Selection(
+        selection=lambda self: self.env['res.partner']._fields['routing_scheme'].selection,
+        compute='_compute_peppol_eas_endpoint',
+        store=True,
+        readonly=False,
+    )
+    peppol_endpoint = fields.Char(
+        compute='_compute_peppol_eas_endpoint',
+        store=True,
+        readonly=False,
+    )
+    # Convenience technical field
+    peppol_identifier = fields.Char(
+        compute='_compute_peppol_identifier',
+    )
     smp_registration = fields.Boolean(  # you're registering to SMP when you register as a sender+receiver
         string='Register as a receiver',
-        compute='_compute_smp_registration_external_provider'
+        compute='_compute_smp_registration_external_provider',
     )
     peppol_external_provider = fields.Char(compute='_compute_smp_registration_external_provider')
     peppol_can_connect_data = fields.Json(compute='_compute_peppol_can_connect_data')
     display_itsme_login = fields.Boolean(compute='_compute_peppol_can_connect_data')
     display_no_auth_buttons = fields.Boolean(compute='_compute_peppol_can_connect_data')
+
+    # -------------------------------------------------------------------------
+    # COMPUTE / INVERSE
+    # -------------------------------------------------------------------------
+
+    @api.depends('selected_company_id.partner_id.routing_identifier')
+    def _compute_peppol_eas_endpoint(self):
+        for wizard in self:
+            if wizard.selected_company_id.partner_id.routing_identifier:
+                wizard.peppol_eas = wizard.selected_company_id.partner_id.routing_scheme
+                wizard.peppol_endpoint = wizard.selected_company_id.partner_id.routing_endpoint
+            else:
+                preferred_identifier = wizard.selected_company_id.partner_id._get_preferred_routing_identifier_vals()
+                wizard.peppol_eas = preferred_identifier.get('scheme')
+                wizard.peppol_endpoint = preferred_identifier.get('value')
+
+    @api.depends('peppol_eas', 'peppol_endpoint')
+    def _compute_peppol_identifier(self):
+        for wizard in self:
+            if wizard.peppol_eas and wizard.peppol_endpoint:
+                wizard.peppol_identifier = f'{wizard.peppol_eas}:{wizard.peppol_endpoint}'
+            else:
+                wizard.peppol_identifier = False
 
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
@@ -226,8 +262,8 @@ class PeppolRegistration(models.TransientModel):
         return (
             not self.use_parent_connection
             and self.company_id != self.parent_company_id
-            and self.peppol_eas == self.parent_company_id.peppol_eas
-            and self.peppol_endpoint == self.parent_company_id.peppol_endpoint
+            and bool(self.peppol_identifier)
+            and self.peppol_identifier == self.parent_company_id.routing_identifier
         )
 
     def _ensure_mandatory_fields(self):
@@ -329,11 +365,10 @@ class PeppolRegistration(models.TransientModel):
     def _can_connect(self):
         self.ensure_one()
         db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
-        peppol_identifier = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
-        connect_token = self._generate_connect_token(peppol_identifier, self.company_id)
+        connect_token = self._generate_connect_token(self.peppol_identifier, self.company_id)
         callback_url = urljoin(self.get_base_url(), '/peppol/authentication/callback')
         return PeppolIAPConnector(self.company_id).can_connect(
-            peppol_identifier=peppol_identifier,
+            peppol_identifier=self.peppol_identifier,
             db_uuid=db_uuid,
             callback_url=callback_url,
             connect_token=connect_token,
@@ -371,7 +406,10 @@ class PeppolRegistration(models.TransientModel):
             'private_key_id': private_key_sudo.id,
             'refresh_token': response['refresh_token'],
         })
-        company.account_peppol_proxy_state = response['peppol_state']
+        company.write({
+            'account_peppol_proxy_state': response['peppol_state'],
+            'routing_identifier': peppol_identifier,
+        })
         if self.env['account.move']._can_commit():
             self.env.cr.commit()
         if company.account_peppol_proxy_state == 'sender':
@@ -407,7 +445,7 @@ class PeppolRegistration(models.TransientModel):
         old_proxy_users = self.env['account_edi_proxy_client.user'].search([
             ('company_id', '=', self.company_id.id),
             ('proxy_type', '=', 'peppol'),
-            ('edi_identification', '=', f'{self.peppol_eas}:{self.peppol_endpoint}')
+            ('edi_identification', '=', self.peppol_identifier)
         ])
         old_proxy_users.active = False
         _logger.debug("De-registering existing Peppol proxy user for company %s", self.company_id.display_name)
@@ -420,8 +458,6 @@ class PeppolRegistration(models.TransientModel):
 
         if self.use_parent_connection:
             self.company_id.write({
-                'peppol_eas': self.peppol_eas,
-                'peppol_endpoint': self.peppol_endpoint,
                 'account_peppol_contact_email': self.contact_email,
                 'account_peppol_phone_number': self.phone_number,
             })
@@ -434,9 +470,8 @@ class PeppolRegistration(models.TransientModel):
             }
 
         # No auth required
-        peppol_identifier = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
         db_uuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
-        self._create_connection(peppol_identifier, db_uuid, self.company_id)
+        self._create_connection(self.peppol_identifier, db_uuid, self.company_id)
         notifications = {
             'sender': {
                 'message': _('You can now send electronic invoices via Peppol.'),

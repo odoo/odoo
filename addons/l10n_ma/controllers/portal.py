@@ -9,8 +9,8 @@ class L10nMAPortalAccount(PortalAccount):
         country_id = address_values.get('country_id')
         country = request.env['res.country'].browse(country_id)
         if country and country.code == 'MA':
-            ice_number = address_values.get('company_registry')
+            ice_number = address_values.get('ma_ice')
             if ice_number and (len(ice_number) != 15 or not ice_number.isdigit()):
-                invalid_fields.update({'company_registry'})
+                invalid_fields.update({'additional_identifiers'})
                 error_messages.append(request.env._("ICE number should consist of 15 digits."))
         return invalid_fields, missing_fields, error_messages

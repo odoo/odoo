@@ -499,12 +499,12 @@ class TestPartnerAddressCompany(TransactionCase):
 
         # pre-existing data
         cls.test_parent = cls.env['res.partner'].create({
-            'company_registry': '0477472701',
             'email': 'info@ghoststep.com',
             'industry_id': cls.test_industries[0].id,
             'name': 'GhostStep',
             'phone': '+32455001122',
             'vat': 'BE0477472701',
+            'additional_identifiers': {'BE_EN': '0477472701'},
             'type': 'contact',
             **cls.test_address_values,
         })
@@ -581,7 +581,7 @@ class TestPartnerAddressCompany(TransactionCase):
         self.assertEqual(ct1.type, 'contact', 'Type should be preserved after address sync')
         self.assertEqual(ct1.vat, 'BE0477472701', 'VAT should come from parent')
         self.assertEqual(ct1.industry_id, self.test_industries[0], 'Industry should come from parent')
-        self.assertEqual(ct1.company_registry, '0477472701', 'Company registry should come from parent')
+        self.assertEqual(ct1.additional_identifiers, {'BE_EN': '0477472701'}, 'Additional identifiers should come from parent')
 
         # turn off sync: do what you want
         ct1_street = 'Different street, 42'
@@ -852,55 +852,55 @@ class TestPartnerAddressCompany(TransactionCase):
         """Check if commercial fields are synced properly: testing with VAT field"""
         company_1, company_2 = self.env['res.partner'].create([
             {
-                'company_registry': '123456789',
                 'industry_id': self.test_industries[0].id,
                 'name': 'company 1',
-                'vat': 'BE013456789',
+                'vat': 'BE0428759497',
+                'additional_identifiers': {'BE_EN': '0428759497'},
             }, {
-                'company_registry': '9876543210',
                 'industry_id': self.test_industries[0].id,
                 'name': 'company 2',
-                'vat': 'BE9876543210',
+                'vat': 'BE0403019261',
+                'additional_identifiers': {'BE_EN': '0403019261'},
             },
         ])
 
         contact = self.env['res.partner'].create({'name': 'someone', 'parent_id': company_1.id})
         self.assertEqual(contact.commercial_partner_id, company_1, "Commercial partner should be recomputed")
-        for fname in ('company_registry', 'industry_id', 'vat'):
+        for fname in ('additional_identifiers', 'industry_id', 'vat'):
             self.assertEqual(contact[fname], company_1[fname], "Commercial field should be inherited from the company 1")
 
         # create a delivery address and a child for the partner
         contact_dlr = self.env['res.partner'].create({'name': 'somewhere', 'type': 'delivery', 'parent_id': contact.id})
         self.assertEqual(contact_dlr.commercial_partner_id, company_1, "Commercial partner should be recomputed")
-        for fname in ('company_registry', 'industry_id', 'vat'):
+        for fname in ('additional_identifiers', 'industry_id', 'vat'):
             self.assertEqual(contact_dlr[fname], company_1[fname], "Commercial field should be inherited from the company 1")
         contact_ct = self.env['res.partner'].create({'name': 'child someone', 'parent_id': contact.id})
         self.assertEqual(contact_dlr.commercial_partner_id, company_1, "Commercial partner should be recomputed")
-        for fname in ('company_registry', 'industry_id', 'vat'):
+        for fname in ('additional_identifiers', 'industry_id', 'vat'):
             self.assertEqual(contact_dlr[fname], company_1[fname], "Commercial field should be inherited from the company 1")
 
         # move the partner to another company
         contact.write({'parent_id': company_2.id})
         self.assertEqual(contact.commercial_partner_id, company_2, "Commercial partner should be recomputed")
-        for fname in ('company_registry', 'industry_id', 'vat'):
+        for fname in ('additional_identifiers', 'industry_id', 'vat'):
             self.assertEqual(contact[fname], company_2[fname], "Commercial field should be inherited from the company 2")
         self.assertEqual(contact_dlr.commercial_partner_id, company_2, "Commercial partner should be recomputed on delivery")
-        for fname in ('company_registry', 'industry_id', 'vat'):
+        for fname in ('additional_identifiers', 'industry_id', 'vat'):
             self.assertEqual(contact_dlr[fname], company_2[fname], "Commecial field should be inherited from the company 2 to delivery")
         self.assertEqual(contact_ct.commercial_partner_id, company_2, "Commercial partner should be recomputed on delivery")
-        for fname in ('company_registry', 'industry_id', 'vat'):
+        for fname in ('additional_identifiers', 'industry_id', 'vat'):
             self.assertEqual(contact_ct[fname], company_2[fname], "Commecial field should be inherited from the company 2 to delivery")
 
         # check using embedded 2many commands
         company_2.write({'child_ids': [(0, 0, {'name': 'Alrik Greenthorn', 'email': 'agr@sunhelm.com'})]})
         contact2 = self.env['res.partner'].search([('email', '=', 'agr@sunhelm.com')])
-        for fname in ('company_registry', 'industry_id', 'vat'):
+        for fname in ('additional_identifiers', 'industry_id', 'vat'):
             self.assertEqual(contact2[fname], company_2[fname], "Commercial field should be inherited from the company 2")
 
         # DOWNSTREAM update to descendants
-        company_2.write({'company_registry': 'new', 'industry_id': self.test_industries[1].id, 'vat': 'BEnew'})
+        company_2.write({'additional_identifiers': {'BE_EN': '0477472701'}, 'industry_id': self.test_industries[1].id, 'vat': 'BE0477472701'})
         for partner in contact + contact_dlr + contact_ct + contact2:
-            for fname, fvalue in (('company_registry', 'new'), ('industry_id', self.test_industries[1]), ('vat', 'BEnew')):
+            for fname, fvalue in (('additional_identifiers', {'BE_EN': '0477472701'}), ('industry_id', self.test_industries[1]), ('vat', 'BE0477472701')):
                 self.assertEqual(partner[fname], fvalue, "Commercial field should be updated from the company 2")
 
         # UPSTREAM: now supported

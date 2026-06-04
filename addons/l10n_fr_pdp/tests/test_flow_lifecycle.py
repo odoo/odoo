@@ -29,9 +29,9 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'l10n_fr_pdp_pilot_phase': True,
             'l10n_fr_pdp_send_to_ppf': True,
             'name': 'NOM MATELAS',
-            'company_registry': '34057796400024',
             'vat': 'FR23334175221',
         })
+        cls.company.partner_id._set_additional_identifier('FR_SIRET', '34057796400026')
         cls.company.invalidate_recordset([
             'account_peppol_edi_user',
             'l10n_fr_f10_enable_reporting',

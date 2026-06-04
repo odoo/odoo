@@ -7,7 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL
 from odoo.tools.sql import column_exists, create_column
 
-from ..tools import (
+from odoo.addons.l10n_hr_edi.tools.api import (
     _mer_api_mark_paid,
     _mer_api_query_document_process_status_inbox,
     _mer_api_query_document_process_status_outbox,

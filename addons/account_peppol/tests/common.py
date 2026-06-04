@@ -215,7 +215,7 @@ def mock_send_response(messages: list[dict] | None = None):
 def mock_documents_retrieval(messages=None, identifier=None):
     if messages is None:
         messages = [
-            {'uuid': '11111111-1111-4111-8111-111111111111', 'direction': 'incoming', 'filename': 'incoming_invoice', 'state': 'done', 'sender': '0208:2718281828'},
+            {'uuid': '11111111-1111-4111-8111-111111111111', 'direction': 'incoming', 'filename': 'incoming_invoice', 'state': 'done', 'sender': '0208:0428759497'},
         ]
 
     all_documents_json = {
@@ -228,7 +228,7 @@ def mock_documents_retrieval(messages=None, identifier=None):
                     'state': message.get('state', 'done'),
                     'direction': message.get('direction', 'incoming'),
                     'document_type': message.get('document_type', 'Invoice'),
-                    'sender': message.get('sender', '0208:2718281828'),
+                    'sender': message.get('sender', '0208:0428759497'),
                     'receiver': '0208:0477472701',
                     'timestamp': '2022-12-30',
                     'error': 'Test error' if message.get('state') == 'error' else False,
@@ -268,6 +268,6 @@ def mock_documents_retrieval(messages=None, identifier=None):
         MockHTTPClient(method='POST', url='https://peppol.test.odoo.com/api/peppol/1/get_all_documents', return_json=all_documents_json),
         MockHTTPClient(method='POST', url='https://peppol.test.odoo.com/api/peppol/1/get_document', return_json=get_document_response_json),
         MockHTTPClient(method='POST', url='https://peppol.test.odoo.com/api/peppol/1/send_response', return_json=send_response_response_json),
-        mock_lookup_success(identifier or '0088:9482348239847239874'),
+        mock_lookup_success(identifier or '0088:9780471117094'),
     ):
         yield

@@ -62,11 +62,11 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         commercial_partner = partner.commercial_partner_id
         company_id = None
 
-        if not _has_vat(commercial_partner.vat):
-            if commercial_partner.company_registry:
-                company_id = commercial_partner.company_registry
+        ro_vat = commercial_partner.vat or commercial_partner._get_additional_identifier('RO_VAT')
+        if not _has_vat(ro_vat):
+            company_id = commercial_partner._get_additional_identifier('RO_EN')
         else:
-            company_id = commercial_partner.vat
+            company_id = ro_vat
 
         vals['party_node']['cac:PartyTaxScheme'] = [{
             'cbc:CompanyID': {'_text': company_id},
@@ -81,12 +81,23 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
 
-        if not _has_vat(commercial_partner.vat):
-            if commercial_partner.company_registry:
+        ro_vat = commercial_partner.vat or commercial_partner._get_additional_identifier('RO_VAT')
+        if _has_vat(ro_vat):
+            # RO legal registration id is the (RO-prefixed) VAT, not the bare CUI/RO_EN.
+            vals['party_node']['cac:PartyLegalEntity'] = [{
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': ro_vat,
+                    'schemeID': None,
+                },
+            }]
+        else:
+            value = commercial_partner._get_additional_identifier('RO_EN')
+            if value:
                 vals['party_node']['cac:PartyLegalEntity'] = [{
                     'cbc:RegistrationName': {'_text': commercial_partner.name},
                     'cbc:CompanyID': {
-                        '_text': commercial_partner.company_registry,
+                        '_text': value,
                         'schemeID': None,
                     },
                 }]
@@ -100,10 +111,11 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         commercial_partner = partner.commercial_partner_id
         company_id = None
 
-        if not _has_vat(commercial_partner.vat):
+        ro_vat = commercial_partner.vat or commercial_partner._get_additional_identifier('RO_VAT')
+        if not _has_vat(ro_vat):
             company_id = DEFAULT_VAT
         else:
-            company_id = commercial_partner.vat
+            company_id = ro_vat
 
         vals['party_node']['cac:PartyTaxScheme'] = [{
             'cbc:CompanyID': {'_text': company_id},
@@ -118,7 +130,17 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
 
-        if not _has_vat(commercial_partner.vat):
+        ro_vat = commercial_partner.vat or commercial_partner._get_additional_identifier('RO_VAT')
+        if _has_vat(ro_vat):
+            # RO legal registration id is the (RO-prefixed) VAT, not the bare CUI/RO_EN.
+            vals['party_node']['cac:PartyLegalEntity'] = [{
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': ro_vat,
+                    'schemeID': None,
+                },
+            }]
+        else:
             vals['party_node']['cac:PartyLegalEntity'] = [{
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
                 'cbc:CompanyID': {
@@ -171,10 +193,10 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         supplier = vals['supplier'].commercial_partner_id
         if (
             not _has_vat(supplier.vat)
-            and not vals['supplier'].commercial_partner_id.company_registry
+            and not supplier._get_additional_identifier('RO_EN')
         ):
             constraints["ciusro_supplier_tax_identifier_required"] = _(
-                "The following partner doesn't have a VAT nor Company ID: %s. "
+                "The following partner doesn't have a VAT nor any other Peppol-routable identifier: %s. "
                 "At least one of them is required. ",
                 vals['supplier'].display_name)
 
@@ -207,11 +229,8 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
     def _import_retrieve_partner_vals(self, tree, role):
         # EXTENDS account.edi.xml.ubl_bis3
         partner_vals = super()._import_retrieve_partner_vals(tree, role)
-        if 'peppol_endpoint' in partner_vals:
-            # ANAF allows for endpoints to be an address mail, since we don't want to create a new
-            # user with an address mail as a Peppol endpoint, we simply remove it in that case.
-            error = self.env['res.partner']._build_error_peppol_endpoint(False, partner_vals['peppol_endpoint'])
-            if error:
-                partner_vals['peppol_endpoint'] = False
-                partner_vals['peppol_eas'] = False
+        # ANAF allows for endpoints to be an email address; we don't want to create
+        # a partner whose routing endpoint is an email, so drop it in that case.
+        if (endpoint := partner_vals.get('routing_identifier')) and '@' in endpoint:
+            partner_vals['routing_identifier'] = False
         return partner_vals

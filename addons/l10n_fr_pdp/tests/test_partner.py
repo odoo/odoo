@@ -11,70 +11,40 @@ from .common import TestL10nFrPdpCommon
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
 
-    def test_compute_pdp_identifier(self):
+    def test_pdp_identifier_derivation(self):
+        # `routing_identifier` is no longer auto-computed from the registry: the PDP routing endpoint
+        # is set explicitly, while the SIREN is derived from the FR SIRET/SIREN identifier.
         partner = self.env["res.partner"].create({
-            'name': 'SUPER FRENCH PARTNER 2',
+            'name': 'SUPER FRENCH PARTNER',
             'street': 'Rue Fabricy, 16',
             'zip': '59000',
             'city': 'Lille',
             'country_id': self.env.ref('base.fr').id,
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
-            'company_registry': '96851575905877',
+            'additional_identifiers': {'FR_SIRET': '96851575905808'},
             'invoice_edi_format': 'ubl_21_fr',
         })
-        self.assertRecordValues(partner, [{
-            'peppol_endpoint': '968515759',
-            'peppol_eas': '0225',
-        }])
+        # SIREN derived from the SIRET; no routing endpoint is auto-filled.
+        self.assertEqual(partner._l10n_fr_pdp_get_siren(), '968515759')
+        self.assertFalse(partner.routing_identifier)
 
-        partner = self.env["res.partner"].create({
-            'name': 'SUPER FRENCH PARTNER 2',
-            'street': 'Rue Fabricy, 16',
-            'zip': '59000',
-            'city': 'Lille',
-            'country_id': self.env.ref('base.fr').id,
-            'phone': '+33 1 23 45 67 89',
-            'vat': 'FR23334175221',
-            'company_registry': '96851575905877',
-            'invoice_edi_format': 'ubl_21_fr',
-        })
-        self.assertRecordValues(partner, [{
-            'peppol_endpoint': '968515759',
-            'peppol_eas': '0225',
-        }])
+        # Setting the endpoint explicitly routes the partner via PDP (EAS 0225).
+        partner.routing_identifier = '0225:968515759_96851575905808'
+        self.assertEqual(
+            partner._get_pdp_receiver_identification_info(),
+            ('pdp', '0225:968515759_96851575905808'),
+        )
 
-        partner = self.env["res.partner"].create({
+        # A partner identified by SIREN only (9 digits) derives the same SIREN.
+        partner_siren = self.env["res.partner"].create({
             'name': 'SUPER FRENCH PARTNER 2',
-            'street': 'Rue Fabricy, 16',
-            'zip': '59000',
-            'city': 'Lille',
             'country_id': self.env.ref('base.fr').id,
-            'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
-            'company_registry': '968515759',
+            'additional_identifiers': {'FR_SIREN': '968515759'},
             'invoice_edi_format': 'ubl_21_fr',
         })
-        self.assertRecordValues(partner, [{
-            'peppol_endpoint': '968515759',
-            'peppol_eas': '0225',
-        }])
-
-        partner = self.env["res.partner"].create({
-            'name': 'SUPER FRENCH PARTNER 2',
-            'street': 'Rue Fabricy, 16',
-            'zip': '59000',
-            'city': 'Lille',
-            'country_id': self.env.ref('base.fr').id,
-            'phone': '+33 1 23 45 67 89',
-            'vat': 'FR23334175221',
-            'company_registry': '968515759',
-            'invoice_edi_format': 'ubl_21_fr',
-        })
-        self.assertRecordValues(partner, [{
-            'peppol_endpoint': '968515759',
-            'peppol_eas': '0225',
-        }])
+        self.assertEqual(partner_siren._l10n_fr_pdp_get_siren(), '968515759')
 
     def test_pdp_edi_formats(self):
         partner = self.partner_a
@@ -173,7 +143,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         partner = self.partner_a
         self.assertEqual(
             partner._get_pdp_receiver_identification_info(),
-            ('pdp', "0225:968515759_96851575905823")
+            ('pdp', "0225:968515759_96851575905808")
         )
         partner.button_account_peppol_check_partner_endpoint()
         self.assertRecordValues(partner, [{
@@ -187,10 +157,10 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp']['test']
             if r.url.startswith(f"{origin}/api/pdp/1/annuaire_lookup?pdp_identifier="):
                 pdp_identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
-                return self._get_annuaire_lookup_response(pdp_identifier, "968515759_96851575905823")
-            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier=0225%3A968515759_96851575905823"):
+                return self._get_annuaire_lookup_response(pdp_identifier, "968515759_96851575905808")
+            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier=0225%3A968515759_96851575905808"):
                 peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
-                return self._get_peppol_lookup_response(peppol_identifier, "0225:968515759_96851575905823")
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:968515759_96851575905808")
 
         partner.invoice_sending_method = False
         with (

@@ -69,7 +69,7 @@
                         </t>
 
                         <!-- Billing Period -->
-                        <ram:BillingSpecifiedPeriod t-if="line_vals.get('billing_start') and line_vals.get('billing_end')"> 
+                        <ram:BillingSpecifiedPeriod t-if="line_vals.get('billing_start') and line_vals.get('billing_end')">
                             <ram:StartDateTime>
                                 <udt:DateTimeString format="102" t-out="format_date(line_vals['billing_start'])"/>
                             </ram:StartDateTime>
@@ -197,8 +197,8 @@
                                 partner="record.company_id.partner_id"
                                 specified_legal_organization_val="seller_specified_legal_organization"/>
 
-                            <ram:URIUniversalCommunication t-if="record.company_id.partner_id.peppol_eas and record.company_id.partner_id.peppol_endpoint">
-                                <ram:URIID t-att-schemeID="record.company_id.partner_id.peppol_eas" t-out="record.company_id.partner_id.peppol_endpoint"/>
+                            <ram:URIUniversalCommunication t-if="record.company_id.partner_id.routing_scheme and record.company_id.partner_id.routing_endpoint">
+                                <ram:URIID t-att-schemeID="record.company_id.partner_id.routing_scheme" t-out="record.company_id.partner_id.routing_endpoint"/>
                             </ram:URIUniversalCommunication>
 
                             <!-- VAT. -->
@@ -218,8 +218,8 @@
                                 partner="record.partner_id"
                                 specified_legal_organization_val="buyer_specified_legal_organization"/>
 
-                            <ram:URIUniversalCommunication t-if="record.partner_id.peppol_eas and record.partner_id.peppol_endpoint">
-                                <ram:URIID t-att-schemeID="record.partner_id.peppol_eas" t-out="record.partner_id.peppol_endpoint"/>
+                            <ram:URIUniversalCommunication t-if="record.partner_id.routing_scheme and record.partner_id.routing_endpoint">
+                                <ram:URIID t-att-schemeID="record.partner_id.routing_scheme" t-out="record.partner_id.routing_endpoint"/>
                             </ram:URIUniversalCommunication>
 
                             <!-- VAT. -->

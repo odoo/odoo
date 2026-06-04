@@ -18,7 +18,7 @@ def get_demo_vendor_bill(user):
         'receiver': user.edi_identification,
         'uuid': f'{user.company_id.id}_demo_vendor_bill',
         'origin_message_uuid': f'{user.company_id.id}_demo_vendor_bill',
-        'accounting_supplier_party': '0208:2718281828',
+        'accounting_supplier_party': '0208:0428759497',
         'state': 'done',
         'filename': f'{user.company_id.id}_demo_vendor_bill',
         'enc_key': file_read(DEMO_ENC_KEY),
@@ -92,8 +92,9 @@ def _mock_call_peppol_proxy(func, self, endpoint, params=None):
 
 
 def _mock_get_peppol_verification_state(func, self, *args, **kwargs):
-    (endpoint, eas, xml_format) = args
-    if not (eas and endpoint):
+    routing_identifier = args[0] if args else kwargs.get('routing_identifier')
+    xml_format = args[1] if len(args) > 1 else kwargs.get('invoice_edi_format')
+    if not routing_identifier or ':' not in (routing_identifier or ''):
         return 'not_verified'
     if not xml_format:
         return 'not_valid'
@@ -123,7 +124,10 @@ def _mock_create_connection(func, self, *args, **kwargs):
         'refresh_token': dummy_response['refresh_token'],
         'private_key_id': private_key_sudo.id,
     })
-    company.account_peppol_proxy_state = dummy_response['peppol_state']
+    company.write({
+        'account_peppol_proxy_state': dummy_response['peppol_state'],
+        'routing_identifier': peppol_identifier,
+    })
 
     content = file_read(DEMO_PRIVATE_KEY)
 

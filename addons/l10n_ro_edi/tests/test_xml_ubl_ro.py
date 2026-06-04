@@ -150,7 +150,7 @@ class TestUBLROCommon(TestUBLCommon):
         super().setUpClass()
         cls.other_currency = cls.setup_other_currency('EUR')
         cls.company_data['company'].write({
-            'country_id': cls.env.ref('base.ro').id,  # needed to compute peppol_endpoint based on VAT
+            'country_id': cls.env.ref('base.ro').id,  # needed to compute routing_endpoint based on VAT
             'state_id': cls.env.ref('base.RO_B').id,
             'name': 'Hudson Construction',
             'city': 'SECTOR1',
@@ -251,25 +251,23 @@ class TestUBLRO(TestUBLROCommon):
 
     def test_export_invoice_without_country_code_prefix_in_vat(self):
         self.company_data['company'].write({'vat': '1234567897'})
-        self.partner_a.write({'vat': False, 'peppol_eas': False, 'peppol_endpoint': False})
+        self.partner_a.write({'vat': False, 'routing_identifier': False})
         invoice = self.create_move("out_invoice", currency_id=self.company.currency_id.id)
         attachment = self.get_attachment(invoice)
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_no_prefix_vat.xml')
 
-    def test_export_no_vat_but_have_company_registry(self):
-        self.company_data['company'].write({'vat': False, 'company_registry': 'RO1234567897'})
-        invoice = self.create_move("out_invoice", currency_id=self.company.currency_id.id)
-        attachment = self.get_attachment(invoice)
-        self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice.xml')
-
     def test_export_no_vat_but_have_company_registry_without_prefix(self):
-        self.company_data['company'].write({'vat': False, 'company_registry': '1234567897'})
-        self.partner_a.write({'vat': False, 'peppol_eas': False, 'peppol_endpoint': False})
+        self.company_data['company'].partner_id.write({
+            'vat': False,
+            'additional_identifiers': {'RO_EN': '1234567897'},
+        })
+        self.partner_a.write({'vat': False, 'routing_identifier': False})
         invoice = self.create_move("out_invoice", currency_id=self.company.currency_id.id)
         attachment = self.get_attachment(invoice)
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_no_prefix_company_registry.xml')
 
     def test_export_invoice_no_vat_prefix(self):
+        self.company_data['company'].partner_id.routing_identifier = False
         self.company_data['company'].vat = self.company_data['company'].vat[2:]
         no_vat_partner = self.partner_a.copy({'name': 'Roasted Romanian Roller', 'vat': False, 'invoice_edi_format': 'ciusro'})
         invoice = self.create_move("out_invoice", partner_id=no_vat_partner.id, currency_id=self.company.currency_id.id)
@@ -277,9 +275,13 @@ class TestUBLRO(TestUBLROCommon):
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_defaults.xml')
 
     def test_export_no_vat_and_no_company_registry_raises_error(self):
-        self.company_data['company'].write({'vat': False, 'company_registry': False})
+        self.company_data['company'].partner_id.write({
+            'vat': False,
+            'additional_identifiers': False,
+            'routing_identifier': False,
+        })
         invoice = self.create_move("out_invoice", send=False)
-        with self.assertRaisesRegex(UserError, "doesn't have a VAT nor Company ID"):
+        with self.assertRaisesRegex(UserError, "doesn't have a VAT nor any other Peppol-routable identifier"):
             invoice._generate_and_send(allow_fallback_pdf=False, template_id=self.move_template.id)
 
     def test_export_invoice_cpv_code(self):
@@ -290,7 +292,10 @@ class TestUBLRO(TestUBLROCommon):
         self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_cpv_code.xml')
 
     def test_export_constraints(self):
-        self.company_data['company'].company_registry = False
+        self.company_data['company'].partner_id.write({
+            'additional_identifiers': False,
+            'routing_identifier': False,
+        })
         for required_field in ('city', 'street', 'state_id', 'vat'):
             with self.assertRaisesRegex(UserError, "required"):
                 self.company_data["company"][required_field] = False

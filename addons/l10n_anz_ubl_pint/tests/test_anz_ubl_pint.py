@@ -30,7 +30,7 @@ class TestAnzUBLPint(AccountTestInvoicingCommon):
         })
         cls.partner_a.write({
             'vat': '49098576',
-            'company_registry': '9429047488083',
+            'additional_identifiers': {'NZ_EN': '9429047488083'},
             'street': 'Victoria Street',
             'zip': '3247',
             'city': 'Hamilton',

@@ -68,10 +68,11 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
             building_number = tools.street_split(partner.street).get('street_number')
             if not building_number:
                 constraints[f"oioubl21_{partner_type}_building_number_required"] = _("The following partner's street number is missing: %s", partner.display_name)
-            if partner.country_code == "FR" and not partner.commercial_partner_id.company_registry:
-                constraints["oioubl21_company_registry_required_for_french_partner"] = _("The company registry is required for french partner: %s", partner.display_name)
+            if partner.country_code == "FR" and not partner.commercial_partner_id._get_additional_identifier('FR_SIRET'):
+                constraints["oioubl21_siret_required_for_french_partner"] = _("A SIRET is required for the french partner: %s", partner.display_name)
             constraints[f'oioubl21_{partner_type}_vat_required'] = self._check_required_fields(partner.commercial_partner_id, 'vat')
-        constraints['oioubl21_supplier_company_registry_required'] = self._check_required_fields(vals['supplier'], 'company_registry')
+            if not vals['supplier']._get_additional_identifier('DK_CVR'):
+                constraints['oioubl21_supplier_cvr_required'] = _("The Danish CVR is required for the supplier: %s", vals['supplier'].display_name)
 
         return constraints
 
@@ -135,7 +136,9 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
         party_node = super()._get_party_node(vals)
         partner = vals['partner'].commercial_partner_id
         vat = format_vat_number(partner, partner.vat)
-        cvr = format_vat_number(partner, partner.company_registry) or vat
+        # Legal registration id, country-prefixed (DK CVR, FR SIRET, …); fall back to the VAT.
+        legal_value = partner._get_preferred_legal_entity_identifier_vals().get('value')
+        cvr = format_vat_number(partner, legal_value) or vat
         party_node['cac:PartyLegalEntity'].update({
             # Even if not enforced by Schematron, only CVR (CPR which we don't use) can be used
             # https://oioubl21.oioubl.dk/Classes/da/PartyLegalEntity.html
