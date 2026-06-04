@@ -10,6 +10,10 @@
         'point_of_sale._assets_pos': [
             'pos_cashmatic/static/src/**/*',
         ],
+        'point_of_sale.payment_terminals': [
+            'pos_cashmatic/static/src/cashmatic_service.js',
+            'pos_cashmatic/static/src/app/payment_cashmatic.js',
+        ],
         'web.assets_unit_tests': [
             'pos_cashmatic/static/tests/**/*',
             'pos_cashmatic/static/src/cashmatic_service.js',
