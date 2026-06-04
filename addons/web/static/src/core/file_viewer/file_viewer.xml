@@ -42,6 +42,7 @@
                         t-att-src="this.state.file.defaultSource"
                         t-on-load="this.onIframeLoaded"
                         loading="lazy"
+                        sandbox=""
                     />
                     <iframe t-if="this.state.file.isUrlYoutube" allow="autoplay; encrypted-media" class="o-FileViewer-view w-75 h-100 border-0" t-att-src="this.state.file.defaultSource" height="315" width="560"/>
                     <video t-if="this.state.file.isVideo" class="o-FileViewer-view w-75 h-75" t-att-class="{ 'w-100 h-100': this.ui.isSmall }" t-on-click.stop="" controls="controls">

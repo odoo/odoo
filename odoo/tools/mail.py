@@ -550,6 +550,26 @@ def html_keep_url(text):
     return final
 
 
+def html_remove_links(body):
+    """Replace every ``<a>`` by its text content followed by its target.
+
+    ``<a href="https://odoo.com">Odoo</a>`` becomes ``Odoo (https://odoo.com)``.
+
+    Intended for content displayed inertly (e.g. sandboxed previews of files
+    uploaded by users).
+    """
+    if not body or not body.strip():
+        return body
+    root = html.fragment_fromstring(body, create_parent='div')
+    for link in list(root.iter('a')):
+        href = (link.get('href') or '').strip()
+        if href and not href.startswith('#'):
+            link.tail = f' ({href}){link.tail or ""}'
+        link.drop_tag()
+    result = html.tostring(root, encoding='unicode')[5:-6]
+    return markupsafe.Markup(result) if isinstance(body, markupsafe.Markup) else result
+
+
 def html_remove_xpath(body, xpath_expression):
     """Remove all elements matching some xpath."""
     BodyClass = type(body)

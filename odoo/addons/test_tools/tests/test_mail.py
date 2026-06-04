@@ -11,6 +11,7 @@ from odoo.tests import tagged
 from odoo.tests.common import BaseCase
 from odoo.tools import misc
 from odoo.tools.mail import (
+    html_remove_links,
     html_remove_xpath,
     is_html_empty, html2plaintext, html_to_inner_content, html_sanitize, append_content_to_html, plaintext2html,
     email_domain_normalize, email_normalize, email_re,
@@ -412,6 +413,39 @@ class TestSanitizer(BaseCase):
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHtmlTools(BaseCase):
     """ Test some of our generic utility functions about html """
+
+    def test_html_remove_links(self):
+        for source, expected in [
+            ('<p><a href="https://odoo.com">Odoo</a></p>',
+             '<p>Odoo (https://odoo.com)</p>'),
+            # label carries markup: url must go on the tail
+            ('<p><a href="https://odoo.com"><b>Odoo</b></a></p>',
+             '<p><b>Odoo</b> (https://odoo.com)</p>'),
+            # existing tail is preserved
+            ('<p><a href="https://odoo.com">Odoo</a> rocks</p>',
+             '<p>Odoo (https://odoo.com) rocks</p>'),
+            # parentheses in the url
+            ('<p><a href="https://x.test/a_(b)">l</a></p>',
+             '<p>l (https://x.test/a_(b))</p>'),
+            # no target to show: drop the tag, append nothing
+            ('<p><a href="#installation">see above</a></p>', '<p>see above</p>'),
+            ('<p><a>dead</a></p>', '<p>dead</p>'),
+            # dangerous schemes are flattened like any other
+            ('<p><a href="javascript:alert(1)">x</a></p>',
+             '<p>x (javascript:alert(1))</p>'),
+            ('<p>no link here</p>',
+             '<p>no link here</p>'),
+             # an image inside a link keeps rendering, the target becomes text
+            ('<p><a href="https://x.test"><img src="/web/image/1"></a></p>',
+             '<p><img src="/web/image/1"> (https://x.test)</p>'),
+            # several links in one node
+            ('<p><a href="https://a.test">a</a> and <a href="https://b.test">b</a></p>',
+             '<p>a (https://a.test) and b (https://b.test)</p>'),
+            # falsy values
+            ('', ''), ('   ', '   '), (None, None), (False, False),
+        ]:
+            with self.subTest(source=source):
+                self.assertEqual(html_remove_links(source), expected)
 
     def test_html_remove_xpath(self):
         cases = [
