@@ -1100,18 +1100,6 @@ class HrApplicant(models.Model):
         self.reset_applicant()
         return res
 
-    def action_send_email(self):
-        return {
-            'name': _('Send Email'),
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'view_mode': 'form',
-            'res_model': 'applicant.send.mail',
-            'context': {
-                'default_applicant_ids': self.ids,
-            }
-        }
-
     def _get_duration_from_tracking(self, trackings):
         json = super()._get_duration_from_tracking(trackings)
         now = datetime.now()
