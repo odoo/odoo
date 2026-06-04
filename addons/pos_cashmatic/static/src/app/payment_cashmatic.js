@@ -64,28 +64,24 @@ export class PaymentCashmatic extends PaymentInterface {
         }
 
         if (notDispensed > 0) {
-            this.showError(
-                _t(
-                    "The cash machine could not dispense %s. Please give the remaining amount to the customer manually.",
-                    this.env.utils.formatCurrency(this.cashmaticAmountToPosAmount(notDispensed))
-                )
-            );
+            this.showDispenseError(notDispensed);
         }
         return true;
     }
 
     async sendPaymentCancel() {
-        const success = await this.cashmaticService
-            .cancelCurrentPayment()
-            .then(() => {
-                this.cancelling = true;
-                return true;
-            })
-            .catch((error) => {
-                this.showError(_t("Cashmatic cancellation failed: %s", error.message));
-                return false;
-            });
-        return success;
+        let notDispensed;
+        try {
+            this.cancelling = true;
+            notDispensed = await this.cashmaticService.cancelCurrentPayment();
+        } catch (error) {
+            this.showError(_t("Cashmatic cancellation failed: %s", error.message));
+            return false;
+        }
+        if (notDispensed > 0) {
+            this.showDispenseError(notDispensed);
+        }
+        return true;
     }
 
     get amountInserted() {
@@ -99,6 +95,15 @@ export class PaymentCashmatic extends PaymentInterface {
     cashmaticAmountToPosAmount(amountInCents) {
         const amount = amountInCents / Math.pow(10, this.pos.currency.decimal_places);
         return this.env.utils.roundCurrency(amount);
+    }
+
+    showDispenseError(notDispensed) {
+        this.showError(
+            _t(
+                "The cash machine could not dispense %s. Please give the remaining amount to the customer manually.",
+                this.env.utils.formatCurrency(this.cashmaticAmountToPosAmount(notDispensed))
+            )
+        );
     }
 
     showError(message) {
