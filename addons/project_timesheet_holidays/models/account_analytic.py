@@ -40,6 +40,8 @@ class AccountAnalyticLine(models.Model):
             raise RedirectWarning(error_message, action, _('View Time Off'))
 
     def _check_can_write(self, values):
+        if not self.env.su and self.global_leave_id:
+            raise UserError(self.env._('Timesheets linked to public holidays cannot be modified.'))
         if not self.env.su and self.holiday_id:
             raise UserError(_('You cannot modify timesheets that are linked to time off requests. Please use the Time Off application to modify your time off requests instead.'))
         return super()._check_can_write(values)
