@@ -83,6 +83,7 @@ export class ColorSelector extends Component {
                 },
                 ref: colorPickerRef,
                 useBottomSheet: this.env.services.ui.isSmall && hasTouch(),
+                withUnfocus: true,
             }
         );
         useDropdownAutoVisibility(this.env.overlayState, colorPickerRef);
