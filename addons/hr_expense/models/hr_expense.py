@@ -8,8 +8,8 @@ import logging
 import werkzeug
 
 from odoo import api, fields, Command, models, _
-from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools import clean_context, email_normalize, float_repr, float_round, is_html_empty, format_amount, format_date
+from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
+from odoo.tools import clean_context, email_normalize, float_repr, float_round, is_html_empty, format_amount, parse_version
 from datetime import timedelta
 
 
@@ -46,6 +46,7 @@ class HrExpense(models.Model):
     _description = "Expense"
     _order = "date desc, id desc"
     _check_company_auto = True
+    _mail_post_access = 'read'
 
     @api.model
     def _default_employee_id(self):
@@ -1331,7 +1332,18 @@ class HrExpense(models.Model):
 
     def attach_document(self, **kwargs):
         """When an attachment is uploaded as a receipt, set it as the main attachment."""
-        self._message_set_main_attachment_id(self.env["ir.attachment"].browse(kwargs['attachment_ids'][-1:]), force=True)
+        if not self.has_access('write') and self.employee_id.user_id != self.env.user:
+            raise AccessError(self.env._("You don't have the access rights to modify this expense."))
+        attachment_ids = [attachment_id for attachment_id in kwargs.get('attachment_ids', []) if attachment_id]  # Filter out falsy values
+        if not attachment_ids:
+            # If uploading the document fails due to the checks in the create method of ir.attachment, the
+            # attachment_ids will contains [None], so we need to check here to raise the UserError.
+            raise UserError(self.env._("You can't add an attachment to an expense once it has been approved."))
+
+        attachment = self.env['ir.attachment'].browse(attachment_ids[-1:])
+        user_expenses = self.filtered(lambda expense: expense.employee_id.user_id == self.env.user)
+        user_expenses.sudo()._message_set_main_attachment_id(attachment, force=True)
+        (self - user_expenses)._message_set_main_attachment_id(attachment, force=True)
 
     @api.model
     def create_expense_from_attachments(self, attachment_ids=None, view_type='list'):
