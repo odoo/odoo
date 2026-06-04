@@ -262,7 +262,7 @@ class AccountMove(models.Model):
         # EXTENDS 'account'
         super()._compute_show_reset_to_draft_button()
         for move in self:
-            move.show_reset_to_draft_button = not move.l10n_it_edi_transaction and move.show_reset_to_draft_button
+            move.show_reset_to_draft_button = not (move.is_sale_document() and move.l10n_it_edi_transaction) and move.show_reset_to_draft_button
 
     def _parse_xml_with_recovery(self, content, name=None):
         def parse_xml(parser, content):
