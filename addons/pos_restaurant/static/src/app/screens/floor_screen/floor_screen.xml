@@ -132,6 +132,7 @@
                                 <t t-set="isOccupied" t-value="pos.tableHasOrders(table)"/>
                                 <t t-set="isIntersecting" t-value="state.potentialLink?.child?.id === table.id"/>
                                 <t t-set="isIntersected" t-value="state.potentialLink?.parent?.id === table.id"/>
+                                <t t-set="isSyncing" t-value="this.pos.isOrderSyncing(table.getOrder(), false)"/>
                                 <div
                                     role="button"
                                     t-on-click="(ev) => this.onClickTable(table, ev)"
@@ -141,6 +142,7 @@
                                         'position-absolute': pos.floorPlanStyle !== 'kanban',
                                         'selected': state.selectedTableIds.includes(table.id),
                                         'occupied': isOccupied,
+                                        'syncing': isSyncing,
                                     }"
                                     t-attf-class="tableId-{{table.id}}"
                                     t-attf-style="
