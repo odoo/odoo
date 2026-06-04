@@ -15,6 +15,9 @@ export const DIMENSIONS = {
         width: 360,
         height: 1000,
     }),
+    DESKTOP_MOBILE_BREAKPOINT: Object.freeze({
+        width: 768,
+    }),
 };
 
 /**

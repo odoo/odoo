@@ -11,12 +11,10 @@
         </table>
     </t>
     <t t-name="mail.TableNodePositionManager">
-        <tr>
-            <t t-foreach="this.nodeIds" t-as="nodeId" t-key="nodeId_index">
-                <td t-att="this.model.renderAttributes('')">
-                    
-                </td>
-            </t>
-        </tr>
+        <t t-foreach="this.nodeIds" t-as="nodeId" t-key="nodeId_index">
+            <td t-att="this.childRefs.renderAttributes('')">
+                
+            </td>
+        </t>
     </t>
 </templates>

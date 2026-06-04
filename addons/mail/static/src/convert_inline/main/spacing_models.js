@@ -8,6 +8,8 @@ export class SpacingLayout extends LayoutModel {
         options.refs = refs;
         refs.root = assignDefaultElementOptions(refs.root, {
             style: {
+                // TODO EGGMAIL: this is potentially in issue with box-sizing: content-box
+                // VERY IMPORTANT, to verify on MSO
                 width: "100%",
             },
         });

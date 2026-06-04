@@ -18,9 +18,12 @@ const PADDINGS = ["padding-top", "padding-right", "padding-bottom", "padding-lef
  * another.
  * TODO EGGMAIL: handle display-flex alignments as well? They don't use margin
  * but need centering => to investigate.
- * TODO EGGMAIL: re-check the style rule modifying padding computation with dimensions
- * ensure that we (can?) use the one typically used in web in mail clients, and if not
- * make the necessary adjustments
+ * TODO EGGMAIL: about box-sizing: border-box; it is not supported by all
+ * mail clients => the strategy is to never add padding and/or border on elements
+ * with specified dimensions (height/width) => always use wrappers, in that case
+ * there is no difference between content-box and border-box ; Add a warning when
+ * an element has a padding or a border AND a specified dimension in the same
+ * direction.
  */
 export class SpacingPlugin extends Plugin {
     static id = "spacing";
@@ -59,8 +62,8 @@ export class SpacingPlugin extends Plugin {
         const marginLayout = marginNode.layout;
         const styleInfo = facts.desktopSpacingStyleInfo;
         let isRelevant = false;
-        const setAttributes = (options) => {
-            marginLayout.setAttributes(options);
+        const setAttributes = (options, ref) => {
+            marginLayout.setAttributes(options, ref);
             isRelevant = true;
         };
         if (
@@ -95,8 +98,8 @@ export class SpacingPlugin extends Plugin {
         const paddingLayout = paddingNode.layout;
         const styleInfo = facts.desktopSpacingStyleInfo;
         let isRelevant = false;
-        const setAttributes = (options) => {
-            paddingLayout.setAttributes(options);
+        const setAttributes = (options, ref) => {
+            paddingLayout.setAttributes(options, ref);
             isRelevant = true;
         };
         for (const padding of PADDINGS) {

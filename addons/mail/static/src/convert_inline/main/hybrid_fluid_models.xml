@@ -7,4 +7,13 @@
             </div>
         </div>
     </t>
+    <t t-name="mail.HybridFluidTableRow">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+            t-att="this.model.renderAttributes()">
+            <tr>
+                <t t-call="mail.NodePositionManager"
+                    t-call-context="this.nodePositionManager.renderContext({ renderPositionedNodes: this.renderPositionedNodes })"/>
+            </tr>
+        </table>
+    </t>
 </templates>

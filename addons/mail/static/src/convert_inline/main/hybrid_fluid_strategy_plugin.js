@@ -7,7 +7,7 @@ import { HybridFluidCell, HybridFluidEmptyCell, HybridFluidRow } from "./hybrid_
 import { parseCssValue } from "../css_parsers";
 import { isAllowedContent } from "@html_editor/utils/dom_info";
 
-const { DESKTOP, MOBILE } = DIMENSIONS;
+const { DESKTOP, MOBILE, DESKTOP_MOBILE_BREAKPOINT } = DIMENSIONS;
 // Prevent the last inline-block element from wrapping to the next line due
 // to window zoom px rounding in some cases.
 const ZOOM_WIDTH_CORRECTION = 0.1;
@@ -28,10 +28,21 @@ export class HybridFluidStrategyPlugin extends Plugin {
     };
 
     setup() {
+        // inline-block strategy
         this.addToStyleSheet(
             ".o-ci-hybrid-fluid-cell, .o-ci-hybrid-fluid-cell-with-offset",
             { "max-width": { value: "100%", priority: "important" } },
-            768
+            DESKTOP_MOBILE_BREAKPOINT.width
+        );
+        // table strategy
+        this.addToStyleSheet(
+            ".o-ci-hybrid-fluid-table, .o-ci-hybrid-fluid-table tbody, .o-ci-hybrid-fluid-table tr, .o-ci-hybrid-fluid-table td",
+            {
+                display: { value: "block", priority: "important" },
+                width: { value: "100%", priority: "important" },
+                "max-width": { value: "100%", priority: "important" },
+            },
+            DESKTOP_MOBILE_BREAKPOINT.width
         );
     }
 
