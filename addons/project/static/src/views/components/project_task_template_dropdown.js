@@ -4,6 +4,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import { user } from "@web/core/user";
 
 import { ProjectTemplateButtons } from "./project_template_buttons";
 
@@ -49,6 +50,7 @@ export class ProjectTaskTemplateDropdown extends Component {
         this.addDialog = useOwnedDialogs();
         this.displayTasksLimit = 10;
         this.state = proxy({ taskTemplates: [] });
+        this.isProjectManager = false;
         onWillStart(this.onWillStart);
     }
 
@@ -60,19 +62,20 @@ export class ProjectTaskTemplateDropdown extends Component {
         return this.state.taskTemplates.slice(0, this.displayTasksLimit);
     }
 
+    get taskTemplateButtonClasses() {
+        let classes = 'btn btn-link o-dropdopwn-item-indent o-task-template d-flex align-items-center';
+        if (this.isProjectManager) {
+            classes += ' pe-0';
+        }
+        return classes;
+    }
+
     async onWillStart() {
         if (this.props.projectId) {
-            this.state.taskTemplates = await this.orm
-                .cache({
-                    type: "disk",
-                    update: "always",
-                    callback: (result, hasChanged) => {
-                        if (hasChanged) {
-                            this.state.taskTemplates = result;
-                        }
-                    },
-                })
-                .call("project.project", "get_template_tasks", [this.props.projectId]);
+            await Promise.all([
+                    user.hasGroup("project.group_project_manager").then((res) => (this.isProjectManager = res)),
+                    this._fetchTasktemplates(),
+                ]);
         }
     }
 
@@ -96,6 +99,20 @@ export class ProjectTaskTemplateDropdown extends Component {
             return this.offlineService.isAvailableOffline(actionId, "form", false);
         }
         return false;
+    }
+
+    async _fetchTasktemplates() {
+        this.state.taskTemplates = await this.orm
+            .cache({
+                type: "disk",
+                update: "always",
+                callback: (result, hasChanged) => {
+                    if (hasChanged) {
+                        this.state.taskTemplates = result;
+                    }
+                },
+            })
+            .call("project.project", "get_template_tasks", [this.props.projectId]);
     }
 
     async createTaskFromTemplate(templateId) {
