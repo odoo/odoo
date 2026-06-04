@@ -14,6 +14,10 @@ class TestOdoobot(MailCommon, TestRecipients):
     def setUpClass(cls):
         super().setUpClass()
         cls.test_record = cls.env['mail.test.simple'].create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        cls.canned_response = cls.env['mail.canned.response'].create({
+            'source': 'hello',
+            'substitution': 'Hello, how may I help you?',
+        })
 
         cls.odoobot = cls.env.ref("base.partner_root")
         cls.message_post_default_kwargs = {
@@ -56,19 +60,19 @@ class TestOdoobot(MailCommon, TestRecipients):
         channel = self.user_employee.with_user(self.user_employee)._init_odoobot()
 
         kwargs['body'] = 'tagada 😊'
-        last_message = self.assertNextMessage(
-            channel.message_post(**kwargs),
-            sender=self.odoobot,
-            answer=("help",)
-        )
-        channel.execute_command_help()
         self.assertNextMessage(
-            last_message,  # no message will be post with command help, use last odoobot message instead
+            channel.message_post(**kwargs),
             sender=self.odoobot,
             answer=("@OdooBot",)
         )
         kwargs['body'] = ''
         kwargs['partner_ids'] = [self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")]
+        self.assertNextMessage(
+            channel.message_post(**kwargs),
+            sender=self.odoobot,
+            answer=("#", "selecting a channel")
+        )
+        kwargs['body'] = '<a href="#" class="o_channel_redirect">#general</a>'
         self.assertNextMessage(
             channel.message_post(**kwargs),
             sender=self.odoobot,
@@ -81,11 +85,27 @@ class TestOdoobot(MailCommon, TestRecipients):
             'res_model': 'mail.compose.message',
         })
         kwargs['attachment_ids'] = [attachment.id]
-        # For the end of the flow, we only test that the state changed, but not to which
-        # one since it depends on the intalled apps, which can add more steps (like livechat)
         channel.message_post(**kwargs)
         self.assertNotEqual(self.user_employee.odoobot_state, 'onboarding_attachement')
-
+        kwargs['attachment_ids'] = []
+        kwargs['body'] = 'Thanks'
+        last_message = self.assertNextMessage(
+            self.assertNextMessage(
+                channel.with_context(canned_response_ids=[self.canned_response.id]).message_post(**kwargs),
+                sender=self.odoobot,
+                answer=("canned responses",)
+            ),
+            sender=self.odoobot,
+            answer=("/help",)
+        )
+        # The 'help' command is the last step of the onboarding flow
+        # (which can be extended by other apps like livechat).
+        channel.execute_command_help()
+        self.assertNextMessage(
+            last_message,  # No message is posted with 'help' command, so use the last odoobot message instead.
+            sender=self.odoobot,
+            answer=("close this conversation",)
+        )
         # Test miscellaneous messages
         self.user_employee.odoobot_state = "idle"
         kwargs['partner_ids'] = []
