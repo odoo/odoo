@@ -158,6 +158,9 @@ class MailScheduledMessage(models.Model):
             'views': [[False, 'form']],
             'target': 'new',
             'res_id': self.id,
+            'context': {
+                'is_thread_composer': True,
+            }
         }
 
     def post_message(self):
