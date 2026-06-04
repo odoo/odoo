@@ -61,7 +61,7 @@ class MicrosoftService(models.AbstractModel):
         """ Call Microsoft API to refresh the token, with the given authorization code
             :param service : the name of the microsoft service to actualize
             :param rtoken : the code to exchange against the new refresh token
-            :returns the new refresh token
+            :returns the new access token, its time to live and the new refresh token
         """
         ICP_sudo = self.env['ir.config_parameter'].sudo()
 
@@ -80,7 +80,7 @@ class MicrosoftService(models.AbstractModel):
             preuri=''
         )
         response = microsoft_data[1]
-        return response.get('access_token'), response.get('expires_in')
+        return response.get('access_token'), response.get('expires_in'), response.get('refresh_token')
 
     @api.model
     def _get_authorize_uri(self, from_url, service, scope, redirect_uri, prompt):
