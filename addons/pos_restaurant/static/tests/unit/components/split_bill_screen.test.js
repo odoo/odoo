@@ -127,3 +127,26 @@ test("createSplittedOrder", async () => {
     expect(currentOrder.getOrderlines()[0].getQuantity()).toBe(2);
     expect(order.getOrderlines()[0].getQuantity()).toBe(1);
 });
+
+test("createSplittedOrder copies preset from original order", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const nonDefaultPreset = store.models["pos.preset"].get(2);
+    order.setPreset(nonDefaultPreset);
+    expect(order.preset_id.id).toBe(nonDefaultPreset.id);
+    expect(store.config.default_preset_id.id).not.toBe(nonDefaultPreset.id);
+
+    const screen = await mountWithCleanup(SplitBillScreen, {
+        props: {
+            orderUuid: order.uuid,
+        },
+    });
+    const line = order.getOrderlines()[0];
+    screen.qtyTracker[line.uuid] = 1;
+    await screen.createSplittedOrder();
+
+    const newOrder = store.getOrder();
+    expect(newOrder.uuid).not.toBe(order.uuid);
+    expect(newOrder.preset_id?.id).toBe(nonDefaultPreset.id);
+    expect(order.preset_id.id).toBe(nonDefaultPreset.id);
+});
