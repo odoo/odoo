@@ -4,6 +4,12 @@ import { registry } from "@web/core/registry";
 import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
 import { services } from "@web/core/services";
 
+export const extra = {
+    getBottomSheetOptions(_props, _options) {
+        return {};
+    },
+};
+
 const BottomSheetOptionSchema = t.object({
     scope: t.object().optional(),
     onClose: t.function().optional(),
@@ -41,6 +47,7 @@ export class BottomSheetPlugin extends Plugin {
                 ref: options.ref,
                 class: options.class,
                 role: options.role,
+                ...extra.getBottomSheetOptions(props, options),
             },
             {
                 scope: options.scope,
