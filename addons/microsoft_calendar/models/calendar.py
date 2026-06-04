@@ -625,7 +625,7 @@ class CalendarEvent(models.Model):
                     }.items() if weekday]
                 pattern['firstDayOfWeek'] = 'sunday'
 
-            if recurrence.rrule_type == 'monthly' and recurrence.month_by == 'day':
+            if recurrence.rrule_type in ('monthly', 'yearly') and recurrence.month_by == 'day':
                 byday_selection = {
                     '1': 'first',
                     '2': 'second',
@@ -634,6 +634,9 @@ class CalendarEvent(models.Model):
                     '-1': 'last',
                 }
                 pattern['index'] = byday_selection[recurrence.byday]
+
+            if recurrence.rrule_type == 'yearly':
+                pattern['month'] = (recurrence.dtstart or recurrence.create_date or fields.Datetime.now()).month
 
             dtstart = recurrence.dtstart or fields.Datetime.now()
             rule_range = {
