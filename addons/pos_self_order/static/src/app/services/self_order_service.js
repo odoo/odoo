@@ -392,6 +392,20 @@ export class SelfOrder extends Reactive {
         }
     }
 
+    resetTip() {
+        const tipLine = this.currentOrder.lines.find((l) => l.isTipLine());
+        if (!tipLine) {
+            return;
+        }
+        // Synced tip lines are zeroed instead of deleted to avoid server-side issues (especially in pay-after-meal mode).
+        if (tipLine.isSynced) {
+            tipLine.setUnitPrice(0);
+        } else {
+            tipLine.delete();
+        }
+        this.currentOrder.setTip(false);
+    }
+
     async addToCart(
         productTemplate,
         qty,
@@ -401,6 +415,7 @@ export class SelfOrder extends Reactive {
         comboValues = {}
     ) {
         const product = productTemplate.product_variant_ids[0];
+        this.resetTip();
         const values = getOrderLineValues(
             this,
             productTemplate,
@@ -806,11 +821,11 @@ export class SelfOrder extends Reactive {
     }
 
     async sendDraftOrderToServer() {
-        if (
-            Object.keys(this.currentOrder.changes).length === 0 ||
-            this.currentOrder.lines.length === 0
-        ) {
-            return this.currentOrder;
+        const order = this.currentOrder;
+        const hasTipLine = this.config.tip_product_id && order.lines.some((l) => l.isTipLine());
+        // tip is excluded from `changes`, so a tip-only update still needs a sync
+        if ((Object.keys(order.changes).length === 0 && !hasTipLine) || order.lines.length === 0) {
+            return order;
         }
 
         try {
@@ -1117,6 +1132,9 @@ export class SelfOrder extends Reactive {
             (acc, [key, { qty }]) => {
                 const line = this.models["pos.order.line"].getBy("uuid", key);
                 if (line && qty && qty > 0) {
+                    if (line.isTipLine()) {
+                        return acc;
+                    }
                     if (!line.combo_parent_id) {
                         acc.count += qty;
                     }

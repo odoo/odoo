@@ -341,6 +341,7 @@ class PosOrder(models.Model):
         self.ensure_one()
         self._check_combo_lines()
         company = self.company_id
+        tip_product = self.config_id.tip_product_id
 
         service_fee_lines = self.lines.filtered(
             lambda line: line.product_id == self.preset_id.service_fee_product_id,
@@ -353,6 +354,12 @@ class PosOrder(models.Model):
                 self._compute_combo_price(line)
             elif line.product_id == self.preset_id.delivery_product_id:
                 self._compute_line_price(line, price=self.preset_id.delivery_product_price)
+            elif line.product_id == tip_product:
+                if line.price_unit <= 0:
+                    line.unlink()
+                else:
+                    line.qty = 1
+                    self._compute_line_price(line, price=line.price_unit)
             elif not line.combo_parent_id:
                 # Lines without a combo parent are priced on their own. A line whose combo
                 # parent doesn't belong to this order is never reached by _compute_combo_price,

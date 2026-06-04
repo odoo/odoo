@@ -145,3 +145,34 @@ class TestSelfOrderMobile(SelfOrderCommonTest, OnlinePaymentCommon):
         fanta_line = order_lines.get("Fanta")
         self.assertIsNotNone(fanta_line, "Expected order line not found")
         self.assertEqual(fanta_line.qty, 1, "Order line quantity mismatch")
+
+    def test_self_order_tip_amount_matches_backend(self):
+        """
+        Verify that the tip amount and order total match between the frontend
+        and backend, with and without taxes on the tip product.
+        """
+        self.pos_config.iface_tipproduct = True
+        tip_product = self.env.ref("point_of_sale.product_product_tip")
+        self.pos_config.write({
+            "self_ordering_mode": "mobile",
+            "self_ordering_pay_after": "each",
+            "use_presets": False,
+            "tip_product_id": tip_product.id,
+            'self_order_online_payment_method_id': self.online_payment_method.id,
+        })
+        tip_product.taxes_id = [(6, 0, self.default_tax15.ids)]
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        # With 15% default tax on tip product
+        self.start_tour(self.pos_config._get_self_order_route(), "self_order_tip_amount_with_tax")
+        order = self.pos_config.current_session_id.order_ids[0]
+        tip_line = order.lines.filtered(lambda line: line.product_id == tip_product)
+        self.assertEqual(tip_line.price_unit, 0.38)
+        self.assertEqual(order.amount_total, 2.97)
+        # Without tax on tip
+        tip_product.taxes_id = False
+        self.start_tour(self.pos_config._get_self_order_route(), "self_order_tip_amount_without_tax")
+        order = self.pos_config.current_session_id.order_ids[0]
+        tip_line = order.lines.filtered(lambda line: line.product_id == tip_product)
+        self.assertEqual(tip_line.price_unit, 0.38)
+        self.assertEqual(order.amount_total, 2.91)

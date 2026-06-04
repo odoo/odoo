@@ -2,9 +2,11 @@ import { test, expect, mockUserAgent } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { CartPage } from "@pos_self_order/app/pages/cart_page/cart_page";
+import { EatingLocationPage } from "@pos_self_order/app/pages/eating_location_page/eating_location_page";
 import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
 import { ChooseComboPopup } from "@pos_self_order/app/components/choose_combo_popup/choose_combo_popup";
+import { NumberPopup } from "@pos_self_order/app/components/number_popup/number_popup";
 import * as Utils from "@pos_self_order/../tests/unit/ui_utils";
 
 definePosSelfModels();
@@ -95,7 +97,7 @@ test("cart page is not affected by mobile dialog navigation", async () => {
     expect(".product-cart-item").toBeDisplayed();
     expect(".order-price").toHaveText("Total: $ 595.00");
 
-    await contains(".order-note button").click();
+    await contains(".order-note").click();
     await contains("textarea").fill("Cart Page Never Dies!!");
     await contains(".modal-footer button:contains(Apply)").click();
     expect(".order-price").toHaveText("Total: $ 595.00");
@@ -408,4 +410,101 @@ test("lines", async () => {
     comp = await mountWithCleanup(CartPage, {});
     const sentLines = order.lines.filter((line) => line.product_id.id !== 12);
     expect(comp.lines).toEqual(sentLines);
+});
+
+test("tip persists on reload/same preset, resets on line or preset change", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(CartPage, {});
+
+    await comp.setTip(5, "fixed", 5);
+    await mountWithCleanup(CartPage, {});
+    expect(order.is_tipped).toBe(true);
+    expect(order.tip_amount).toBe(5);
+    expect(order.lines.some((l) => l.isTipLine())).toBe(true);
+    comp.changeQuantity(
+        order.lines.find((l) => !l.isTipLine()),
+        true
+    );
+    expect(order.is_tipped).toBe(false);
+    expect(order.lines.some((l) => l.isTipLine())).toBe(false);
+
+    await comp.setTip(5, "fixed", 5);
+    await store.addToCart(store.models["product.template"].get(6), 1);
+    expect(order.is_tipped).toBe(false);
+    expect(order.lines.some((l) => l.isTipLine())).toBe(false);
+
+    // selectPreset resets tip on preset change, preserves on same preset
+    const loc = await mountWithCleanup(EatingLocationPage, {});
+    const [p1, p2] = [store.models["pos.preset"].get(1), store.models["pos.preset"].get(2)];
+    order.setPreset(p1);
+    await comp.setTip(10, "fixed", 10);
+    expect(order.is_tipped).toBe(true);
+    loc.selectPreset(p2);
+    expect(order.is_tipped).toBe(false);
+    await comp.setTip(20, "fixed", 20);
+    loc.selectPreset(p2);
+    expect(order.is_tipped).toBe(true);
+});
+
+test("tip can be set via percentage buttons and via numpad", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(CartPage, {});
+
+    // selectTipPercent: select 15% sets tip
+    const expected15 = comp.tipAmountForPercent(15);
+    comp.selectTipPercent(15);
+    expect(order.is_tipped).toBe(true);
+    expect(order.tip_amount).toBe(expected15);
+    expect(order.uiState.tip).toEqual({ type: "percent", value: 15 });
+    const tipLine = order.lines.find((l) => l.isTipLine());
+    expect(tipLine).not.toBe(undefined);
+    expect(tipLine.price_unit).toBe(expected15);
+    expect(tipLine.qty).toBe(1);
+    // Same percentage again toggles off
+    comp.selectTipPercent(15);
+    expect(order.is_tipped).toBe(false);
+    expect(order.lines.some((l) => l.isTipLine())).toBe(false);
+
+    // Custom fixed amount via numpad
+    patchWithCleanup(comp.dialog, {
+        add(component, props) {
+            expect(component).toBe(NumberPopup);
+            props.getPayload({ value: "7" });
+        },
+    });
+    await comp.openTipNumpad();
+    expect(order.is_tipped).toBe(true);
+    expect(order.tip_amount).toBe(7);
+    expect(order.uiState.tip).toEqual({ type: "fixed", value: 7 });
+    // Zero value resets tip
+    patchWithCleanup(comp.dialog, {
+        add(component, props) {
+            expect(component).toBe(NumberPopup);
+            props.getPayload({ value: "0" });
+        },
+    });
+    await comp.openTipNumpad();
+    expect(order.is_tipped).toBe(false);
+    expect(order.lines.some((l) => l.isTipLine())).toBe(false);
+});
+
+test("sendDraftOrderToServer syncs tip even when order.changes is empty (extra sync)", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(CartPage, {});
+    // First sync
+    expect(order.lines[0].id).toBeOfType("string");
+    await store.sendDraftOrderToServer();
+    expect(order.lines[0].id).toBeOfType("number");
+    // Add a tip with no other changes now tip line is unsynced
+    await comp.setTip(8, "fixed", 8);
+    const tipLine = order.lines.find((l) => l.isTipLine());
+    expect(tipLine.id).toBeOfType("string");
+    // Even though order.changes is empty, hasTipLine forces a sync
+    await store.sendDraftOrderToServer();
+    expect(tipLine.id).toBeOfType("number"); // synced to server
+    expect(order.lines.some((l) => l.isTipLine())).toBe(true);
+    expect(store.models["pos.order"].length).toBe(1);
 });
