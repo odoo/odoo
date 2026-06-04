@@ -397,7 +397,7 @@ class Meeting(models.Model):
 
         microsoft_attendees = microsoft_event.attendees or []
         emails = [
-            a.get('emailAddress').get('address')
+            email_normalize(a.get('emailAddress').get('address'))
             for a in microsoft_attendees
             if email_normalize(a.get('emailAddress').get('address'))
         ]
@@ -405,16 +405,16 @@ class Meeting(models.Model):
         if microsoft_event.match_with_odoo_events(self.env):
             existing_attendees = self.env['calendar.attendee'].search([
                 ('event_id', '=', microsoft_event.odoo_id(self.env)),
-                ('email', 'in', emails)])
-        elif self.env.user.partner_id.email not in emails:
+                ('partner_id.email_normalized', 'in', emails)])
+        elif self.env.user.partner_id.email_normalized not in emails:
             commands_attendee += [(0, 0, {'state': 'accepted', 'partner_id': self.env.user.partner_id.id})]
             commands_partner += [(4, self.env.user.partner_id.id)]
         partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True)
-        attendees_by_emails = {a.email: a for a in existing_attendees}
+        attendees_by_emails = {a.partner_id.email_normalized: a for a in existing_attendees}
         for email, partner, attendee_info in zip(emails, partners, microsoft_attendees):
             # Responses from external invitations are stored in the 'responseStatus' field.
             # This field only carries the current user's event status because Microsoft hides other user's status.
-            if self.env.user.email == email and microsoft_event.responseStatus:
+            if self.env.user.email_normalized == email and microsoft_event.responseStatus:
                 attendee_microsoft_status = microsoft_event.responseStatus.get('response', 'none')
             else:
                 attendee_microsoft_status = attendee_info.get('status').get('response')
@@ -431,7 +431,7 @@ class Meeting(models.Model):
                     partner.name = attendee_info.get('emailAddress').get('name')
         for odoo_attendee in attendees_by_emails.values():
             # Remove old attendees
-            if odoo_attendee.email not in emails:
+            if odoo_attendee.partner_id.email_normalized not in emails:
                 commands_attendee += [(2, odoo_attendee.id)]
                 commands_partner += [(3, odoo_attendee.partner_id.id)]
         return commands_attendee, commands_partner
