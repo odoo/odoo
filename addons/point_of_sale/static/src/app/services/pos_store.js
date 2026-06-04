@@ -2451,6 +2451,8 @@ export class PosStore extends WithLazyGetterTrap {
             order.setPreset(preset);
             if (preset.identification === "name") {
                 await this.handleSelectNamePreset(order);
+                // re-set the order in case an order was selected from the current orders list in the EditOrderNamePopup
+                order = this.getOrder();
             }
 
             if (preset.use_timing && !order.preset_time) {
