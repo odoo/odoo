@@ -110,3 +110,6 @@ from . import phase5_bundle_actions
 
 # Phase 8 — Record Types
 from . import phase8_record_types
+
+# Phase 9 — Deal UI helpers (transient toggle + future UI extensions)
+from . import phase9_deal_ui

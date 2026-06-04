@@ -1,0 +1,240 @@
+/* ============================================================================
+   Phase 9 - Deal form custom styling
+   ----------------------------------------------------------------------------
+   Scoped to the Deal form via the .mv-deal-redesign class (root <form>).
+   The redesigned essentials sections also carry .mv-essentials-grid on the
+   outer <group> so we can target them without depending on the `name=""`
+   attribute (which OWL strips from the DOM).
+   ============================================================================ */
+
+/* Card-like container around the sheet. */
+.mv-deal-redesign .o_form_sheet_bg {
+    background-color: #f6f7f9;
+    padding: 16px;
+}
+
+.mv-deal-redesign .o_form_sheet {
+    background-color: #ffffff;
+    border: 1px solid #e4e6eb;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(15, 17, 21, 0.04);
+    padding: 24px 28px;
+}
+
+/* "New Deal" banner. */
+.mv-deal-redesign .mv-deal-banner {
+    background: #f6f7f9;
+    border-bottom: 1px solid #e4e6eb;
+    margin: -24px -28px 18px -28px;
+    padding: 14px 24px;
+    border-radius: 8px 8px 0 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1d22;
+}
+
+/* Section labels (CAMPAIGN INFORMATION / SPOT DETAILS). */
+.mv-deal-redesign .mv-section-label {
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+    margin: 22px 0 10px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #eceef1;
+}
+
+/* ============================================================================
+   3-COLUMN GRID for essentials sections.
+   ============================================================================ */
+.mv-deal-redesign .mv-essentials-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-column-gap: 32px !important;
+    grid-row-gap: 4px !important;
+}
+
+.mv-deal-redesign .mv-essentials-grid > .o_inner_group,
+.mv-deal-redesign .mv-essentials-grid > .o_group {
+    grid-column: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+}
+
+/* ============================================================================
+   VERTICAL LABEL/INPUT STACKING inside essentials inner-groups.
+
+   Odoo's stock inner-group renders each field as a 2-cell row:
+       | label cell | input cell |
+   We need each field to render as 2 stacked rows:
+       | label cell |
+       | input cell |
+
+   Force the inner-group to ONE column so every cell wraps onto its own row,
+   then make labels + inputs full width and left-aligned.
+   ============================================================================ */
+.mv-deal-redesign .mv-essentials-grid .o_inner_group {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    row-gap: 12px !important;
+    column-gap: 0 !important;
+    padding: 0 !important;
+}
+
+/* Some Odoo versions wrap each field in .o_wrap_field — stack it too. */
+.mv-deal-redesign .mv-essentials-grid .o_wrap_field {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 4px !important;
+    width: 100% !important;
+    grid-column: 1 / -1 !important;
+}
+
+/* Labels: own line, full width, left-aligned, bold-ish. Targets every label
+   wrapper Odoo has ever used (.o_form_label / .o_wrap_label / .o_td_label). */
+.mv-deal-redesign .mv-essentials-grid label,
+.mv-deal-redesign .mv-essentials-grid .o_form_label,
+.mv-deal-redesign .mv-essentials-grid .o_wrap_label,
+.mv-deal-redesign .mv-essentials-grid .o_td_label {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    text-align: left !important;
+    padding: 0 !important;
+    margin: 0 0 4px 0 !important;
+    grid-column: 1 / -1 !important;
+    color: #1a1d22 !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+    white-space: normal !important;
+}
+
+/* Input cell takes full width, drops below the label. */
+.mv-deal-redesign .mv-essentials-grid .o_cell,
+.mv-deal-redesign .mv-essentials-grid .o_field_widget {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-column: 1 / -1 !important;
+}
+
+/* Style the actual <input> / <select> elements to look like the mockup. */
+.mv-deal-redesign .mv-essentials-grid input,
+.mv-deal-redesign .mv-essentials-grid select,
+.mv-deal-redesign .mv-essentials-grid .o_input,
+.mv-deal-redesign .mv-essentials-grid .o_field_widget input,
+.mv-deal-redesign .mv-essentials-grid .o_field_widget select {
+    width: 100% !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px !important;
+    padding: 8px 12px !important;
+    background-color: #ffffff !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+}
+
+/* Many2one fields use a wrapper — make it full width too. */
+.mv-deal-redesign .mv-essentials-grid .o_field_many2one,
+.mv-deal-redesign .mv-essentials-grid .o_field_many2one_selection {
+    width: 100% !important;
+    display: block !important;
+}
+
+/* Highlighted "Minimum Separation" input. */
+.mv-deal-redesign .mv-essentials-grid .mv-highlight input,
+.mv-deal-redesign .mv-essentials-grid .mv-highlight select,
+.mv-deal-redesign .mv-essentials-grid .mv-highlight .o_input {
+    background-color: #e9f1ff !important;
+    border-color: #3b82f6 !important;
+    border-radius: 6px;
+}
+
+/* ============================================================================
+   ADDITIONAL DETAILS collapse bar
+   ============================================================================ */
+.mv-deal-redesign .mv-additional-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f6f7f9;
+    border: 1px solid #e4e6eb;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 20px 0 8px 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+.mv-deal-redesign .mv-additional-bar:hover {
+    background-color: #eef0f3;
+}
+
+.mv-deal-redesign .mv-additional-bar .mv-additional-label {
+    font-weight: 600;
+    color: #1a1d22;
+    font-size: 13px;
+}
+
+.mv-deal-redesign .mv-additional-bar .mv-additional-hint {
+    font-size: 12px;
+    color: #6b7280;
+    font-style: italic;
+}
+
+.mv-deal-redesign .mv-additional-bar .mv-additional-caret::before {
+    content: "▸";
+    display: inline-block;
+    margin-right: 8px;
+    color: #6b7280;
+}
+
+/* ============================================================================
+   FOOTER (Cancel | Save Deal)
+   ============================================================================ */
+.mv-deal-redesign .mv-form-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 18px 0 4px 0;
+    margin-top: 14px;
+    border-top: 1px solid #eceef1;
+}
+
+.mv-deal-redesign .mv-form-footer .btn {
+    min-width: 110px;
+    font-weight: 600;
+}
+
+/* ============================================================================
+   KEY DEAL FACTS RIBBON (post-save)
+   ============================================================================ */
+.mv-deal-redesign .mv-key-ribbon {
+    background-color: #f6f7f9;
+    border: 1px solid #e4e6eb;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 6px 0 18px 0;
+}
+
+.mv-deal-redesign .mv-key-ribbon .o_form_label {
+    color: #6b7280;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+}
+
+.mv-deal-redesign .mv-key-ribbon .o_inner_group {
+    grid-template-columns: auto;
+}
+
+/* Responsive: collapse to 1 column on narrow screens. */
+@media (max-width: 768px) {
+    .mv-deal-redesign .mv-essentials-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
