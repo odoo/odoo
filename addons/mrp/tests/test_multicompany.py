@@ -339,3 +339,30 @@ class TestMrpMulticompany(common.TransactionCase):
         self.assertFalse(bom_report["docs"][0]["availability_delay"])
         self.assertEqual("unavailable", bom_overview["lines"]["availability_state"])
         self.assertEqual("unavailable", bom_report["docs"][0]["availability_state"])
+
+    def test_kit_multicompany_qty(self):
+
+        product = self.env['product.product'].create({
+            'name': 'Kit/Product',
+            'is_storable': True
+        })
+        comp = self.env['product.product'].create({
+            'name': 'Component',
+            'is_storable': True
+        })
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'company_id': self.company_b.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': comp.id,
+                'product_qty': 1
+            })]
+        })
+
+        self.env['stock.quant'].with_company(self.company_a)._update_available_quantity(product, self.stock_location_a, 10)
+
+        product_a = product.with_company(self.company_a)
+
+        self.assertEqual(product_a.qty_available, 10, "Product should have 10 units in company A")
