@@ -25,7 +25,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { createElementWithContent } from "@web/core/utils/html";
 import { getOrigin, url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
@@ -34,7 +34,6 @@ import { NotificationMessage } from "./notification_message";
 import { useForwardRefsToParent, useLongPress } from "@mail/utils/common/hooks";
 import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
-import { MessageContextMenu } from "@mail/core/common/message_context_menu";
 import { Priority } from "@mail/core/common/priority";
 
 /**
@@ -45,7 +44,6 @@ import { Priority } from "@mail/core/common/priority";
  * @property {import("models").Message} message
  * @property {boolean} [squashed]
  * @property {import("models").Thread} [thread]
- * @property {ReturnType<import('@mail/utils/common/hooks').useMessageSelection>} [messageSelection]
  * @property {ReturnType<import('@mail/core/common/message_search_hook').useMessageSearch>} [messageSearch]
  * @property {String} [className]
  * @extends {Component<Props, Env>}
@@ -62,7 +60,6 @@ export class Message extends Component {
         Composer,
         Dropdown,
         ImStatus,
-        MessageContextMenu,
         MessageInReply,
         MessageLinkPreviewList,
         MessageReactions,
@@ -82,7 +79,6 @@ export class Message extends Component {
         "hasActions?",
         "onParentMessageClick?",
         "message",
-        "messageSelection?",
         "messageRefs?",
         "previousMessage?",
         "squashed?",
@@ -95,13 +91,6 @@ export class Message extends Component {
     ];
     static template = "mail.Message";
 
-    /**
-     * @type {boolean} Whether the right-click drodpown is being closed.
-     * Useful to detect when close comes from another right-click on the same message,
-     * in order to show the browser right-click instead.
-     */
-    isRightClickDropdownOngoingClose = false;
-
     setup() {
         super.setup();
         this.nbsp = nbsp;
@@ -113,19 +102,6 @@ export class Message extends Component {
             expandOptions: false,
             emailHeaderOpen: false,
         });
-        this.rightClickDropdownState = useDropdownState({
-            onClose: async () => {
-                if (this.isRightClickDropdownOngoingClose) {
-                    return; // onClose can be called more than once. Limiting to a single onClose to prevent race-condition in tests.
-                }
-                this.props.messageSelection?.clearSelected();
-                this.isRightClickDropdownOngoingClose = true;
-                await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
-                this.isRightClickDropdownOngoingClose = false;
-                delete this.rootRef().dataset.rightClicking;
-            },
-        });
-        this.rightClickAnchor = useChildRef("rightClickAnchor");
         /** @type {import("@odoo/owl").Signal<Element>} */
         this.rootRef = signal();
         if (isMobileOS()) {
@@ -286,9 +262,7 @@ export class Message extends Component {
             "pt-1": !this.props.asCard && !this.props.squashed,
             "o-pt-0_5": !this.props.asCard && this.props.squashed,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
-            "o-selected":
-                this.props.message.composerAsReplyToMessage?.thread.eq(this.props.thread) ||
-                this.props.messageSelection?.isSelected(this.props.message),
+            "o-selected": this.props.message.composerAsReplyToMessage?.thread.eq(this.props.thread),
             "o-squashed": this.props.squashed,
             "mt-1":
                 !this.props.squashed &&
@@ -481,34 +455,6 @@ export class Message extends Component {
                 );
             }
         }
-    }
-
-    onContextMenu(ev) {
-        if (!document.getSelection()?.isCollapsed || isMobileOS()) {
-            // text selection by-passes message actions on right-click.
-            // Mobile OS long press is handled with useLongPress()
-            return;
-        }
-        if (
-            ev.composedPath()[0].closest("a") ||
-            !this.props.hasActions ||
-            this.isEditing ||
-            this.rightClickDropdownState.isOpen ||
-            this.isRightClickDropdownOngoingClose
-        ) {
-            return;
-        }
-        this.showRightClickMessageActions(ev);
-    }
-
-    showRightClickMessageActions(ev) {
-        this.rootRef().dataset.rightClicking = true;
-        const el = this.rightClickAnchor.el;
-        el.style.left = ev.clientX + "px";
-        el.style.top = ev.clientY + "px";
-        this.rightClickDropdownState.open();
-        this.props.messageSelection?.setSelected(this.props.message);
-        ev.preventDefault();
     }
 
     /** @param {HTMLElement} bodyEl */

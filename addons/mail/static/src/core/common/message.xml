@@ -11,13 +11,11 @@
                 role="group"
                 t-att-aria-label="this.messageTypeText"
                 t-on-click="this.onClick"
-                t-on-contextmenu="this.onContextMenu"
                 t-on-mouseenter="this.onMouseenter"
                 t-on-mouseleave="this.onMouseleave"
                 t-ref="this.rootRef"
                 t-if="this.message.exists()"
             >
-                <MessageContextMenu anchorRef="this.rightClickAnchor" dropdownState="this.rightClickDropdownState" message="this.message" thread="this.props.thread"/>
                 <div class="o-mail-Message-jumpTarget position-absolute top-0 pe-none"/>
                 <div t-if="this.props.asCard and this.isMobileOS" class="position-absolute end-0 z-1 m-n2"><t t-call="mail.Message.actions"/></div>
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0 bg-inherit">

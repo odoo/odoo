@@ -472,29 +472,6 @@ export function useMessageScrolling({
     return state;
 }
 
-export function useMessageSelection() {
-    let selectedMessageId;
-    const data = proxy(new Set());
-    return {
-        clearSelected() {
-            data.delete(selectedMessageId);
-        },
-        /** @param {import("models").Message} message */
-        isSelected(message) {
-            return data.has(message.id);
-        },
-        /** @param {import("models").Message} message */
-        setSelected(message) {
-            this.clearSelected();
-            data.add(message.id);
-            selectedMessageId = message.id;
-        },
-        get size() {
-            return data.size;
-        },
-    };
-}
-
 export function useMicrophoneVolume() {
     let isClosed = false;
     let audioTrack = null;

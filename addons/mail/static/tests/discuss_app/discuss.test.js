@@ -28,15 +28,7 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, expect, test } from "@odoo/hoot";
-import {
-    animationFrame,
-    press,
-    rightClick,
-    runAllTimers,
-    tick,
-    waitFor,
-    waitForNone,
-} from "@odoo/hoot-dom";
+import { animationFrame, press, runAllTimers, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 import { browser } from "@web/core/browser/browser";
@@ -55,7 +47,6 @@ import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { Settings } from "@mail/core/common/settings_model";
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { range } from "@web/core/utils/numbers";
-import { Message } from "@mail/core/common/message";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -833,144 +824,6 @@ test("rendering of inbox message", async () => {
     await contains(".o-dropdown-item:contains('Reply')");
     await contains(".o-dropdown-item:contains('Bookmark')");
     await contains(".o-dropdown-item:contains('Translate')");
-});
-
-test("Can right-click on message to opens message actions dropdown", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Refactoring" });
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    let lastOnContextMenuEv;
-    patchWithCleanup(Message.prototype, {
-        onContextMenu(ev) {
-            lastOnContextMenuEv = ev;
-            expect.step("Message.onContextMenu");
-            super.onContextMenu(...arguments);
-        },
-        showRightClickMessageActions() {
-            expect.step("Message.showRightClickMessageActions");
-            super.showRightClickMessageActions(...arguments);
-        },
-    });
-    const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
-        {
-            body: "message-body-1",
-            model: "res.partner",
-            needaction: true,
-            res_id: partnerId,
-        },
-        {
-            body: "msg-body-2 <a href='#'>Test link</a><a href='#'><font>Test link 2</font></a>",
-            model: "res.partner",
-            needaction: true,
-            res_id: partnerId,
-        },
-        {
-            body: "msg-body-3 <a href='#'>Test link</a><a href='#'><font>Test link 2</font></a>",
-            message_type: "email",
-            model: "res.partner",
-            needaction: true,
-            res_id: partnerId,
-        },
-        {
-            body: "message-body-4",
-            model: "discuss.channel",
-            pinned_at: "2023-03-30 11:27:11",
-            res_id: channelId,
-        },
-    ]);
-    pyEnv["mail.notification"].create([
-        {
-            mail_message_id: messageId_1,
-            notification_status: "sent",
-            notification_type: "inbox",
-            res_partner_id: serverState.partnerId,
-        },
-        {
-            mail_message_id: messageId_2,
-            notification_status: "sent",
-            notification_type: "inbox",
-            res_partner_id: serverState.partnerId,
-        },
-    ]);
-    await start();
-    await openDiscuss("mail.box_inbox");
-    await contains(".o-mail-Message", { count: 3 });
-    await rightClick(".o-mail-Message:eq(0)");
-    await animationFrame();
-    await expect.waitForSteps(["Message.onContextMenu", "Message.showRightClickMessageActions"]);
-    expect(lastOnContextMenuEv.defaultPrevented).toBe(true);
-    await contains(".o-dropdown-item", { count: 6 });
-    await contains(".o-dropdown-item:contains('Add a Reaction')");
-    await contains(".o-dropdown-item:contains('Bookmark')");
-    await contains(".o-dropdown-item:contains('Mark as Read')");
-    await contains(".o-dropdown-item:contains('Reply')");
-    await contains(".o-dropdown-item:contains('Translate')");
-    await contains(".o-dropdown-item:contains('Copy Text')");
-    await contains(".o-mail-Message:eq(0).o-selected");
-    await contains(".o-mail-Message:eq(1):not(.o-selected)");
-    // Test right-click again doesn't show the menu (shows browser context menu instead)
-    await rightClick(".o-mail-Message:eq(0)");
-    await contains(".o-dropdown-item", { count: 0 });
-    await animationFrame();
-    expect.verifySteps(["Message.onContextMenu"]);
-    expect(lastOnContextMenuEv.defaultPrevented).toBe(false);
-    // Test inner-link in body of message doesn't trigger showing of message actions
-    await click(".o-mail-Thread");
-    await contains(".o-dropdown-item", { count: 0 });
-    await rightClick(".o-mail-Message-body:eq(1) a:eq(0)");
-    await expect.waitForSteps(["Message.onContextMenu"]);
-    await animationFrame();
-    expect.verifySteps([]);
-    await rightClick(".o-mail-Message-body:eq(1) a:eq(1) font");
-    await expect.waitForSteps(["Message.onContextMenu"]);
-    await animationFrame();
-    expect.verifySteps([]);
-    // ...also inside shadow DOM (messages of type 'email')
-    await click(".o-mail-Thread");
-    await contains(".o-dropdown-item", { count: 0 });
-    await rightClick(".o-mail-Message-body:eq(2) .o-mail-Message-shadowBody:shadow a:eq(0)");
-    await expect.waitForSteps(["Message.onContextMenu"]);
-    await animationFrame();
-    expect.verifySteps([]);
-    await rightClick(".o-mail-Message-body:eq(2) .o-mail-Message-shadowBody:shadow a:eq(1) font");
-    await expect.waitForSteps(["Message.onContextMenu"]);
-    await animationFrame();
-    expect.verifySteps([]);
-    expect(lastOnContextMenuEv.defaultPrevented).toBe(false);
-    // Test Pinned Panel right-click doesn't show message actions
-    await click(".o-mail-DiscussSidebar-item:has(:text('General'))");
-    await contains(".o-mail-DiscussContent-threadName:value('General')");
-    await click("button[title='Pinned Messages']");
-    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message");
-    await rightClick(".o-discuss-PinnedMessagesPanel .o-mail-Message");
-    await expect.waitForSteps(["Message.onContextMenu"]);
-    await animationFrame();
-    expect.verifySteps([]);
-    expect(lastOnContextMenuEv.defaultPrevented).toBe(false);
-});
-
-test("Can add reaction from right-click on message", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Refactoring" });
-    const messageId = pyEnv["mail.message"].create({
-        body: "message-body-1",
-        model: "res.partner",
-        needaction: true,
-        res_id: partnerId,
-    });
-    pyEnv["mail.notification"].create({
-        mail_message_id: messageId,
-        notification_status: "sent",
-        notification_type: "inbox",
-        res_partner_id: serverState.partnerId,
-    });
-    await start();
-    await openDiscuss("mail.box_inbox");
-    await contains(".o-mail-Message");
-    await rightClick(".o-mail-Message");
-    await click(".o-dropdown-item:contains('Add a Reaction')");
-    await click(".o-Emoji:contains(😊)");
-    await contains(".o-mail-MessageReaction:contains(😊)");
 });
 
 test("Unfollow message", async function () {
