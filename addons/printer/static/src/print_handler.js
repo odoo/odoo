@@ -97,10 +97,6 @@ async function selectPrinters(reportId, env) {
 }
 
 async function printReportHandler(action, options, env) {
-    if (!action.printer_ids?.length) {
-        return false;
-    }
-
     const printerIds = await selectPrinters(action.id, env);
     if (!printerIds?.length) {
         return false;

@@ -17,19 +17,22 @@ export class SelectPrinterFormController extends FormController {
             // If the user closes the popup without selecting a printer we still send a message back
             this.env.bus.trigger("report-printer-selected", {
                 reportId: this.props.context.report_id,
-                printerSettings: null,
+                printerSettings: {},
             });
         });
         useSubEnv({ onClickViewButton: this.onClickViewButtonProxy.bind(this) });
     }
 
     async onClickViewButtonProxy(params) {
+        const download_pdf = this.model.root.evalContextWithVirtualIds.download_pdf;
         const printerSettings = {
-            selectedPrinters: this.model.root.evalContextWithVirtualIds.printer_ids,
+            selectedPrinters: download_pdf
+                ? []
+                : this.model.root.evalContextWithVirtualIds.printer_ids,
             skipDialog: this.model.root.evalContextWithVirtualIds.do_not_ask_again,
         };
 
-        if (printerSettings.selectedPrinters.length) {
+        if (printerSettings.selectedPrinters.length || download_pdf) {
             this.env.bus.trigger("report-printer-selected", {
                 reportId: this.props.context.report_id,
                 printerSettings,

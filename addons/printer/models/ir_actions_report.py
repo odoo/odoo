@@ -2,20 +2,11 @@
 
 import base64
 
-from odoo import _, fields, models
+from odoo import _, models
 
 
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
-
-    printer_ids = fields.Many2many(
-        'printer.printer',
-        'report_printer_rel',
-        'report_id',
-        'printer_id',
-        string="Printer",
-        help="Select the printers for this report.",
-    )
 
     def generate_print_data(self, printer_ids, res_ids, data=None):
         self.ensure_one()
@@ -31,25 +22,9 @@ class IrActionsReport(models.Model):
             },
         } for printer in printers]
 
-    def _get_readable_fields(self):
-        return super()._get_readable_fields() | {'printer_ids'}
-
-    def report_action(self, docids, data=None, config=True):
-        result = super().report_action(docids, data, config)
-        if result.get('type') != 'ir.actions.report':
-            return result
-
-        result['id'] = self.id
-        result['printer_ids'] = self.printer_ids.ids
-        return result
-
     def get_printer_selection_wizard(self, printer_ids):
         self.ensure_one()
-        if printer_ids:
-            printer_ids = [p for p in printer_ids if p in self.printer_ids.ids]
-
         wizard = self.env['select.printer.wizard'].create({
-            'display_printer_ids': self.printer_ids.ids,
             'printer_ids': printer_ids,
         })
         return {

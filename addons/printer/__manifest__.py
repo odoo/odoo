@@ -27,7 +27,6 @@ Printer application release link: https://github.com/odoo/epos-proxy/releases/la
         'security/ir.model.access.csv',
         'security/printer_security.xml',
         'views/printer.xml',
-        'views/ir_actions_report.xml',
         'wizard/select_printer_views.xml',
     ],
     'assets': {

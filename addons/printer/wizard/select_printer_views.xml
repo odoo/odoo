@@ -9,10 +9,13 @@
                     <field name="printer_ids" widget="many2many_tags" domain="[('id', 'in', display_printer_ids)]"/>
                 </group>
                 <group>
+                    <field name="download_pdf"/>
+                </group>                
+                <group>
                     <field name="do_not_ask_again"/>
                 </group>
                 <footer>
-                    <button string="Print" class="btn-primary" special="cancel" />
+                    <button string="Confirm" class="btn-primary" special="save" />
                 </footer>
             </form>
         </field>

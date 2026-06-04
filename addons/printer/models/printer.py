@@ -24,11 +24,3 @@ class Printer(models.Model):
             "- Office Printer: For standard documents such as PDF reports.\n"
         ),
     )
-    report_ids = fields.Many2many(
-        'ir.actions.report',
-        'report_printer_rel',
-        'printer_id',
-        'report_id',
-        string="Reports",
-        help="Choose the reports that can be printed with this printer.",
-    )

@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { Component, onWillStart } from "@odoo/owl";
 
-export const PRINTER_LINKED_TO_REPORT = `odoo-${odoo.info?.db}-report_printer_mapping`;
+export const PRINTER_LINKED_TO_REPORT = `odoo-${odoo.access_token}-report_printer_mapping`;
 
 export function removePrinterReportIdFromBrowserLocalStorage(report_id) {
     const linkedPrinters = JSON.parse(browser.localStorage.getItem(PRINTER_LINKED_TO_REPORT));
