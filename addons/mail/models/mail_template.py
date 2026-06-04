@@ -373,7 +373,7 @@ class MailTemplate(models.Model):
             if 'report_template_ids' in render_fields and self.report_template_ids:
                 for report in self.report_template_ids:
                     # generate content
-                    if report.report_type in ['qweb-html', 'qweb-pdf']:
+                    if report.report_type == 'qweb-html' or report.report_type.startswith('qweb-pdf'):
                         report_content, report_format = self.env['ir.actions.report']._render_qweb_pdf(report, [res_id])
                     else:
                         render_res = self.env['ir.actions.report']._render(report, [res_id])
