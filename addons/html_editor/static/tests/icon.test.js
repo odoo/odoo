@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { click, queryAll, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
@@ -544,4 +544,55 @@ test("should be able to unlink an icon", async () => {
     await waitFor(".o-we-toolbar");
     await click('[name="unlink"]');
     expect(".my_link").toHaveCount(0);
+});
+
+test("icon toolbar when only an icon is selected", async () => {
+    await setupEditor(`<p>[<span class="fa fa-glass" contenteditable="false"></span>]</p>`);
+    await waitFor(".o-we-toolbar");
+
+    // Check that the toolbar contains exactly these 5 groups
+    const toolbarGroups = queryAll(".o-we-toolbar .btn-group");
+    expect(toolbarGroups).toHaveCount(5);
+    expect(toolbarGroups.map((g) => g.getAttribute("name"))).toEqual([
+        "icon_color",
+        "icon_size",
+        "icon_spin",
+        "icon_replace",
+        "image_link",
+    ]);
+
+    // icon_color: exactly 2 buttons, one for font color and one for background color
+    expect(queryAll(".o-we-toolbar .btn-group[name='icon_color'] button")).toHaveCount(2);
+    expect(
+        queryAll(".o-we-toolbar .btn-group[name='icon_color'] .o-select-color-foreground")
+    ).toHaveCount(1);
+    expect(
+        queryAll(".o-we-toolbar .btn-group[name='icon_color'] .o-select-color-background")
+    ).toHaveCount(1);
+
+    // icon_size: exactly 5 buttons to resize the icon from 1x to 5x
+    expect(queryAll(".o-we-toolbar .btn-group[name='icon_size'] button")).toHaveCount(5);
+    for (const size of [1, 2, 3, 4, 5]) {
+        expect(
+            queryAll(`.o-we-toolbar .btn-group[name='icon_size'] button[name='icon_size_${size}']`)
+        ).toHaveCount(1);
+    }
+
+    // icon_spin: exactly 1 button to toggle the icon spin animation
+    expect(queryAll(".o-we-toolbar .btn-group[name='icon_spin'] button")).toHaveCount(1);
+    expect(
+        queryAll(".o-we-toolbar .btn-group[name='icon_spin'] button[name='icon_spin']")
+    ).toHaveCount(1);
+
+    // icon_replace: exactly 1 button to replace the icon
+    expect(queryAll(".o-we-toolbar .btn-group[name='icon_replace'] button")).toHaveCount(1);
+    expect(
+        queryAll(".o-we-toolbar .btn-group[name='icon_replace'] button[name='icon_replace']")
+    ).toHaveCount(1);
+
+    // image_link: exactly 1 button to add a link to the icon
+    expect(queryAll(".o-we-toolbar .btn-group[name='image_link'] button")).toHaveCount(1);
+    expect(queryAll(".o-we-toolbar .btn-group[name='image_link'] button[name='link']")).toHaveCount(
+        1
+    );
 });
