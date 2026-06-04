@@ -2,6 +2,7 @@
 DEFAULT_COLUMN_WIDTH = 150   # pixels, default width of a column
 MIN_COLUMNS = 26             # minimum number of columns (A-Z)
 MIN_ROWS = 100               # minimum number of rows
+DEFAULT_SHEET_ID = '918fd8b1-b6b0'  # fixed uuid to have a single file in the filestore for all spreadsheets.
 
 
 def index_to_column_letter(n):
