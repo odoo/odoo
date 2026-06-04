@@ -89,7 +89,7 @@ export class ProductConfiguratorDialog extends Component {
                 products,
                 optional_products,
                 currency_id,
-            } = this.props.preloadedData ?? await this._loadData(this.props.edit);
+            } = this.props.preloadedData;
 
             // If the product configurator is opened after the combo configurator (which happens if
             // a combo product has optional products), `_loadData` will return a single product
@@ -135,22 +135,6 @@ export class ProductConfiguratorDialog extends Component {
     //--------------------------------------------------------------------------
     // Data Exchanges
     //--------------------------------------------------------------------------
-
-    async _loadData(onlyMainProduct) {
-        return rpc(this.getValuesUrl, {
-            product_template_id: this.props.productTemplateId,
-            quantity: this.props.quantity,
-            currency_id: this.currency.id,
-            so_date: this.props.soDate,
-            product_uom_id: this.props.productUOMId,
-            company_id: this.props.companyId,
-            pricelist_id: this.props.pricelistId,
-            ptav_ids: this.props.ptavIds,
-            only_main_product: onlyMainProduct,
-            show_packaging: this.env.showPackaging,
-            ...this._getAdditionalRpcParams(),
-        });
-    }
 
     async _createProduct(product) {
         return rpc(this.createProductUrl, {

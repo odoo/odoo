@@ -66,8 +66,8 @@ test("pressing tab with incomplete text will create a product", async () => {
     });
 
     patchWithCleanup(SaleOrderLineProductField.prototype, {
-        async _getPreloadedConfigData() {
-            expect.step("_getPreloadedConfigData");
+        async _getProductConfiguratorData() {
+            expect.step("_getProductConfiguratorData");
             return {
                 product_id: { id: 42, display_name: "Test Product" },
                 product_name: "Test Product",
@@ -86,7 +86,7 @@ test("pressing tab with incomplete text will create a product", async () => {
         "onchange",
         "web_name_search",
         "name_create",
-        "_getPreloadedConfigData",
+        "_getProductConfiguratorData",
     ]);
 });
 

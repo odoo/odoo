@@ -55,6 +55,7 @@ export class ComboConfiguratorDialog extends Component {
         });
         this._initSelectedComboItems();
         this.getPriceUrl = '/sale/combo_configurator/get_price';
+        this.getValuesUrl = '/sale/product_configurator/get_values';
         useSubEnv({ currency: { id: this.props.currency_id } });
 
         this.unconfigurableCombos = this.props.combos.filter(combo => !combo.isConfigurable);
@@ -76,9 +77,22 @@ export class ComboConfiguratorDialog extends Component {
         comboItem = this.getSelectedOrProvidedComboItem(comboId, comboItem);
         let product = comboItem.product;
         if (comboItem.is_configurable) {
+            const preloadedData = await rpc(this.getValuesUrl,
+                {
+                    product_template_id: product.product_tmpl_id,
+                    quantity: 1,
+                    currency_id: this.props.currency_id,
+                    so_date: this.props.date,
+                    product_uom_id: null,
+                    company_id: this.props.company_id,
+                    pricelist_id: this.props.pricelist_id,
+                    ptav_ids:  product.selectedPtavIds,
+                    ...this._getAdditionalDialogProps(),
+                });
             this.dialog.add(ProductConfiguratorDialog, {
                 productTemplateId: product.product_tmpl_id,
                 ptavIds: product.selectedPtavIds,
+                preloadedData: preloadedData,
                 customPtavs: product.selectedCustomPtavs,
                 quantity: 1,
                 companyId: this.props.company_id,

@@ -75,7 +75,7 @@ export const saleProductMixin = () => ({
         return _t("Edit Configuration");
     },
 
-    async _getPreloadedConfigData() {
+    async _getProductConfiguratorData() {
         const saleOrderRecord = this.props.record.model.root;
         const saleOrderLine = this.props.record.data;
         const ptavIds = this._getVariantPtavIds(saleOrderLine);
@@ -94,7 +94,7 @@ export const saleProductMixin = () => ({
     },
 
     async _onProductTemplateUpdate() {
-        const result = await this._getPreloadedConfigData();
+        const result = await this._getProductConfiguratorData();
         if (result && result.product_id) {
             if (this.props.record.data.product_id != result.product_id.id) {
                 if (result.is_combo) {
@@ -123,12 +123,11 @@ export const saleProductMixin = () => ({
 
     async _onProductUpdate() {}, // event_booth_sale, event_sale, sale_renting
 
-    onEditConfiguration() {
-        super.onEditConfiguration();
+    async onEditConfiguration() {
         if (this.isCombo) {
             this._openComboConfigurator(true);
         } else if (this.isConfigurableTemplate) {
-            this._openProductConfigurator({edit: true});
+            this._openProductConfigurator({edit: true, preloadedData: await this._getProductConfiguratorData()});
         }
     },
 
@@ -242,7 +241,8 @@ export const saleProductMixin = () => ({
                     comboProductData,
                     selectedComboItems,
                     edit,
-                    hasOptionalProducts
+                    hasOptionalProducts,
+                    preloadedData,
                 );
             },
             discard: () => saleOrder.order_line.delete(comboLineRecord),
