@@ -79,6 +79,20 @@
         <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_interviewer'))]"/>
     </record>
 
+    <record id="hr_job_interviewer_rule" model="ir.rule">
+        <field name="name">Job Position Interviewer</field>
+        <field name="model_id" ref="model_hr_job"/>
+        <field name="domain_force">[
+            '|',
+                ('application_ids.interviewer_ids', 'in', user.id),
+                ('interviewer_ids', 'in', user.id),
+        ]</field>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_interviewer'))]"/>
+    </record>
+
     <record id="hr_applicant_user_rule" model="ir.rule">
         <field name="name">User: All Applicants</field>
         <field name="model_id" ref="model_hr_applicant"/>
