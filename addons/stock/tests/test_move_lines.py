@@ -283,3 +283,81 @@ class TestStockMoveLine(TestStockCommon):
             'quantity': 5.0,
         })
         self.assertEqual(initial_move_line | new_move_line, self.env['stock.move.line'].search(action['domain']))
+
+    def test_put_in_pack_with_split_1(self):
+        """
+        Check putting in pack with splitting. It should create 2 move lines
+        with different packages
+        """
+        move1 = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.productA.id,
+            'uom_id': self.uom_unit.id,
+            'product_uom_qty': 12.0,
+        })
+
+        self.env['stock.move.line'].create({
+            'move_id': move1.id,
+            'product_id': move1.product_id.id,
+            'quantity': 12,
+            'uom_id': move1.uom_id.id,
+            'location_id': move1.location_id.id,
+            'location_dest_id': move1.location_dest_id.id,
+        })
+
+        move1.move_line_ids.action_put_in_pack(package_capacity=6)
+        self.assertEqual(len(move1.move_line_ids), 2)
+        move_line1 = move1.move_line_ids[0]
+        move_line2 = move1.move_line_ids[1]
+        self.assertNotEqual(move_line1.result_package_id, move_line2.result_package_id)
+        self.assertEqual(move_line1.quantity, 6.0)
+        self.assertEqual(move_line2.quantity, 6.0)
+
+    def test_put_in_pack_with_split_2(self):
+        """
+        Check putting in pack with splitting. With provided package, it should only put
+        the first move line to the package, and for others new packages should be created.
+        Also checks that all packages are created from the same type
+        """
+        move1 = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.productA.id,
+            'uom_id': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+
+        package_type = self.env['stock.package.type'].create({
+            'name': 'Super Package Type',
+        })
+        pack = self.env['stock.package'].create({'name': 'pack', 'package_type_id': package_type.id})
+
+        self.env['stock.move.line'].create({
+            'move_id': move1.id,
+            'product_id': move1.product_id.id,
+            'quantity': 10,
+            'uom_id': move1.uom_id.id,
+            'location_id': move1.location_id.id,
+            'location_dest_id': move1.location_dest_id.id,
+        })
+
+        move1.move_line_ids.action_put_in_pack(package_id=pack.id, package_type_id=package_type.id, package_capacity=4)
+        self.assertEqual(len(move1.move_line_ids), 3)
+
+        [move_line1, move_line2, move_line3] = move1.move_line_ids
+
+        # check packages
+        self.assertEqual(move_line1.result_package_id.id, pack.id)
+        self.assertNotEqual(move_line1.result_package_id, move_line2.result_package_id)
+        self.assertNotEqual(move_line3.result_package_id, move_line2.result_package_id)
+
+        # check quantities
+        self.assertEqual(move_line1.quantity, 4.0)
+        self.assertEqual(move_line2.quantity, 4.0)
+        self.assertEqual(move_line3.quantity, 2.0)
+
+        # check package type
+        self.assertEqual(move_line1.result_package_id.package_type_id.id, package_type.id)
+        self.assertEqual(move_line2.result_package_id.package_type_id.id, package_type.id)
+        self.assertEqual(move_line3.result_package_id.package_type_id.id, package_type.id)

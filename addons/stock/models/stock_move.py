@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
-from collections import defaultdict
+from ast import literal_eval
+from collections import defaultdict, deque
 from datetime import timedelta
 from operator import itemgetter
 from re import findall as regex_findall
@@ -2800,3 +2801,130 @@ Please change the quantity done or the rounding precision in your settings.""",
                 'context': ctx,
                 'target': 'new'
             }
+
+    def action_put_in_pack(self):
+        self.ensure_one()
+
+        # if set_package type of the operation type is false
+        # put all in one package for this move
+        picking_type = self.picking_type_id
+
+        if not picking_type.set_package_type:
+            return self.move_line_ids.action_put_in_pack()
+
+        # otherwise, open the wizard
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_put_in_pack_wizard")
+
+        action['context'] = {
+            **literal_eval(action.get('context', '{}')),
+            'show_package_capacity': True,
+            'force_move_lines': True,
+            'default_move_line_ids': self.move_line_ids.ids,
+            'picking_ids': self.picking_id.ids,
+            'default_move_id': self.id,
+        }
+
+        return action
+
+    def split_move_lines(self, chunk_capacity):
+        """ This function separates move lines to create new ones with
+        capacity of chunk_capacity.
+        """
+        self.ensure_one()
+        curr_move_lines = deque(self.move_line_ids)
+        all_quantity = self.product_qty
+        splitted_move_lines = self.env['stock.move.line']
+
+        # if location is not internal, replace all move lines with new ones
+        if self.location_usage != "internal" or len(self.move_line_ids) == 0:
+            self.move_line_ids.unlink()
+            curr_move_lines = deque()
+
+        package = None
+        quantity_to_put = chunk_capacity
+        curr_move_line = curr_move_lines.popleft() if len(curr_move_lines) else None
+        prev_move_line = None # helps us understand whether we need to copy a line or not
+        existing_quantity = curr_move_line.quantity if curr_move_line else 0
+        line_quantity = 0
+        while all_quantity > 0:
+            if line_quantity:
+                # update existing move line
+                added_move_line = None
+                if curr_move_line:
+                    curr_move_line.write({
+                        'quantity': line_quantity,
+                        'uom_id': self.uom_id,
+                        'result_package_id': package.id,
+                    })
+                    added_move_line = curr_move_line
+                    prev_move_line = curr_move_line
+                    curr_move_line = None
+                else:
+                    # copy data from existing move line, and just change the quantity and package
+                    if prev_move_line:
+                        added_move_line = prev_move_line.copy({
+                            'uom_id': prev_move_line.uom_id.id,
+                            'quantity': line_quantity,
+                            'result_package_id': package.id,
+                        })
+                    # create a new move line
+                    else:
+                        added_move_line = self.env['stock.move.line'].create({
+                            'move_id': self.id,
+                            'product_id': self.product_id.id,
+                            'uom_id': self.uom_id.id,
+                            'location_id': self.location_id.id,
+                            'location_dest_id': self.location_dest_id.id,
+                            'picking_id': self.picking_id.id,
+                            'company_id': self.company_id.id,
+                            'quantity': line_quantity,
+                            'result_package_id': package.id,
+                        })
+
+                splitted_move_lines += added_move_line
+                all_quantity -= line_quantity
+
+            # do not create a new package if last package is not filled
+            if quantity_to_put == chunk_capacity:
+                package = self.env['stock.package'].create({})
+
+            if existing_quantity == 0:
+                # move to the next move line if we can, that has a quantity > 0
+                while len(curr_move_lines) and not curr_move_line:
+                    curr_move_line = curr_move_lines.popleft()
+                    if curr_move_line and not curr_move_line.quantity:
+                        curr_move_line.unlink()
+                        curr_move_line = None
+                prev_move_line = None
+                existing_quantity = curr_move_line.quantity if curr_move_line else 0
+
+            if existing_quantity > 0: # get data from existing move lines
+
+                # if this move line has more products than a package fits
+                # then we need to continue getting products from this package
+                if existing_quantity > quantity_to_put:
+                    line_quantity = quantity_to_put
+                    existing_quantity -= quantity_to_put
+                    quantity_to_put = chunk_capacity
+
+                # otherwise, put all products from a move line to the package
+                # if the package is not yet full, fill it if possible
+                # only if the package is full, create a new one
+                else:
+                    line_quantity = existing_quantity
+                    quantity_to_put -= existing_quantity
+                    existing_quantity = 0
+                    if quantity_to_put == 0:
+                        quantity_to_put = chunk_capacity
+
+            # if there are no move lines left, create new ones
+            else:
+                line_quantity = min(all_quantity, quantity_to_put)
+                quantity_to_put = chunk_capacity
+
+        # delete excess move lines
+        for to_delete in curr_move_lines:
+            to_delete.unlink()
+
+        self.write({'move_line_ids': splitted_move_lines.ids})
+        return splitted_move_lines

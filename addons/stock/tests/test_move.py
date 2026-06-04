@@ -6938,3 +6938,183 @@ class TestStockMove(TestStockCommon):
         self.assertIn(lot_1, picking.move_ids[0].lot_ids)
         self.assertIn(lot_2, picking.move_ids[0].lot_ids)
         self.assertIn(lot_3, picking.move_ids[0].lot_ids)
+
+    def test_split_move_lines_1(self):
+        """ Test splitting move lines functionality.
+        In this case, it should: create three move lines, with quantities 6, 6, 2
+        (14 // 6 == 2, 14 % 6 == 3)
+        """
+        # creation
+        move1 = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.productA.id,
+            'uom_id': self.uom_unit.id,
+            'product_uom_qty': 15.0,
+        })
+
+        self.env['stock.move.line'].create({
+            'move_id': move1.id,
+            'product_id': move1.product_id.id,
+            'quantity': 14,
+            'uom_id': move1.uom_id.id,
+            'location_id': move1.location_id.id,
+            'location_dest_id': move1.location_dest_id.id,
+        })
+
+        move1.split_move_lines(6.0)
+        self.assertEqual(len(move1.move_line_ids), 3)
+
+        # check quantities
+        self.assertEqual(move1.move_line_ids[0].quantity, 6.0)
+        self.assertEqual(move1.move_line_ids[1].quantity, 6.0)
+        self.assertEqual(move1.move_line_ids[2].quantity, 3.0)
+
+    def test_split_move_lines_2(self):
+        """ Test splitting move lines functionality.
+        In this case, it should: delete 1 move line, and change quantities to 6
+        (12 // 6 == 2, 12 % 6 == 0). Also check that packages are set to None,
+        and uom_id is the UoM of move
+        """
+        move1 = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.productA.id,
+            'uom_id': self.uom_unit.id,
+            'product_uom_qty': 12.0,
+        })
+
+        pack = self.env['stock.package'].create({'name': 'pack'})
+
+        self.env['stock.move.line'].create({
+            'move_id': move1.id,
+            'product_id': move1.product_id.id,
+            'quantity': 4,
+            'uom_id': move1.uom_id.id,
+            'location_id': move1.location_id.id,
+            'location_dest_id': move1.location_dest_id.id,
+            'result_package_id': pack.id,
+        })
+        self.env['stock.move.line'].create({
+            'move_id': move1.id,
+            'product_id': move1.product_id.id,
+            'quantity': 1,
+            'uom_id': self.uom_dozen.id,
+            'location_id': move1.location_id.id,
+            'location_dest_id': move1.location_dest_id.id,
+            'result_package_id': pack.id,
+        })
+        self.env['stock.move.line'].create({
+            'move_id': move1.id,
+            'product_id': move1.product_id.id,
+            'quantity': 4,
+            'uom_id': move1.uom_id.id,
+            'location_id': move1.location_id.id,
+            'location_dest_id': move1.location_dest_id.id,
+        })
+
+        move1.split_move_lines(6.0)
+        self.assertEqual(len(move1.move_line_ids), 2)
+
+        # check quantities
+        self.assertEqual(move1.move_line_ids[0].quantity, 6.0)
+        self.assertEqual(move1.move_line_ids[1].quantity, 6.0)
+
+        # check packages
+        self.assertNotEqual(move1.move_line_ids[0].result_package_id.id, move1.move_line_ids[1].result_package_id.id)
+
+        # check UoMs
+        self.assertEqual(move1.move_line_ids[0].uom_id.id, move1.uom_id.id)
+        self.assertEqual(move1.move_line_ids[1].uom_id.id, move1.uom_id.id)
+
+    def test_split_move_lines_3(self):
+        """ Test splitting move lines functionality.
+        We are also making sure that products are kept in the same location
+        Here we should have the following move lines after splitting
+        - Shelf 1, 3, Package 1
+        - Shelf 1, 3, Package 2
+        - Shelf 1, 2, Package 3
+        - Shelf 2, 1, Package 3
+        - Shelf 1, 3, Package 4
+        """
+        move1 = self.env['stock.move'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.productA.id,
+            'uom_id': self.uom_unit.id,
+            'product_uom_qty': 12.0,
+        })
+
+        pack = self.env['stock.package'].create({'name': 'pack'})
+
+        self.env['stock.move.line'].create({
+            'move_id': move1.id,
+            'product_id': move1.product_id.id,
+            'quantity': 8,
+            'uom_id': move1.uom_id.id,
+            'location_id': self.shelf_1.id,
+            'location_dest_id': move1.location_dest_id.id,
+            'result_package_id': pack.id,
+        })
+
+        self.env['stock.move.line'].create({
+            'move_id': move1.id,
+            'product_id': move1.product_id.id,
+            'quantity': 0,
+            'uom_id': move1.uom_id.id,
+            'location_id': self.shelf_1.id,
+            'location_dest_id': move1.location_dest_id.id,
+        })
+
+        self.env['stock.move.line'].create({
+            'move_id': move1.id,
+            'product_id': move1.product_id.id,
+            'quantity': 1,
+            'uom_id': self.uom_dozen.id,
+            'location_id': self.shelf_2.id,
+            'location_dest_id': move1.location_dest_id.id,
+            'result_package_id': pack.id,
+        })
+
+        self.env['stock.move.line'].create({
+            'move_id': move1.id,
+            'product_id': move1.product_id.id,
+            'quantity': 3,
+            'uom_id': move1.uom_id.id,
+            'location_id': self.shelf_1.id,
+            'location_dest_id': move1.location_dest_id.id,
+        })
+
+        new_move_lines = move1.split_move_lines(3.0)
+        self.assertEqual(len(move1.move_line_ids), 5)
+        ml1 = new_move_lines[0]
+        ml2 = new_move_lines[1]
+        ml3 = new_move_lines[2]
+        ml4 = new_move_lines[3]
+        ml5 = new_move_lines[4]
+
+
+        # check quantities
+        self.assertEqual(ml1.quantity, 3.0)
+        self.assertEqual(ml2.quantity, 3.0)
+        self.assertEqual(ml3.quantity, 2.0)
+        self.assertEqual(ml4.quantity, 1.0)
+        self.assertEqual(ml5.quantity, 3.0)
+
+        # check locations
+        self.assertEqual(ml1.location_id.id, ml2.location_id.id)
+        self.assertEqual(ml2.location_id.id, ml3.location_id.id)
+        self.assertNotEqual(ml3.location_id.id, ml4.location_id.id)
+
+        # check packages
+        self.assertNotEqual(ml1.result_package_id.id, ml2.result_package_id.id)
+        self.assertNotEqual(ml2.result_package_id.id, ml3.result_package_id.id)
+        self.assertEqual(ml3.result_package_id.id, ml4.result_package_id.id)
+        self.assertNotEqual(ml4.result_package_id.id, ml5.result_package_id.id)
+
+        # check UoMs
+        self.assertEqual(ml1.uom_id.id, move1.uom_id.id)
+        self.assertEqual(ml2.uom_id.id, move1.uom_id.id)
+        self.assertEqual(ml3.uom_id.id, move1.uom_id.id)
+        self.assertEqual(ml4.uom_id.id, move1.uom_id.id)
+        self.assertEqual(ml5.uom_id.id, move1.uom_id.id)

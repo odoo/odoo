@@ -1130,8 +1130,15 @@ class StockMoveLine(models.Model):
                 return action
         return package
 
-    def action_put_in_pack(self, *, package_id=False, package_type_id=False, package_name=False):
+    def action_put_in_pack(self, *, package_id=False, package_type_id=False, package_name=False, package_capacity=None):
         move_lines = self
+        if package_capacity:
+            # create new lines of package_capacity quantity
+            move = move_lines.move_id
+            if not len(move_lines):
+                move = self.env['stock.move'].browse(self.env.context.get('move_id'))
+            return move.split_move_lines(package_capacity)
+
         if self.env.context.get('all_move_line_ids'):
             move_lines = self.env['stock.move.line'].browse(self.env.context['all_move_line_ids'])
         # From the 'Moves' button, we want to take all move lines, without caring for picked or with/without packages.

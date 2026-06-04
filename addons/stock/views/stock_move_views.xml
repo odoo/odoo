@@ -156,10 +156,15 @@
                             </div>
                         </group>
                         <div>
-                            <div class="mt-1 mb-2 ms-auto d-flex flex-row flex-lg-column gap-2 w-lg-50"
-                                invisible="not display_assign_serial and not display_import_lot">
+                            <div class="mt-1 mb-2 ms-auto d-flex flex-row flex-lg-column gap-2 w-lg-50">
                                 <widget name="generate_serials" class="flex-grow-1" invisible="not display_assign_serial"/>
                                 <widget name="import_lots" class="flex-grow-1" invisible="not display_import_lot"/>
+                                <button class="flex-grow-1 btn-secondary"
+                                    name="action_put_in_pack"
+                                    type="object"
+                                    string="Put in Pack"
+                                    groups="stock.group_tracking_lot"
+                                />
                             </div>
                         </div>
                     </group>
