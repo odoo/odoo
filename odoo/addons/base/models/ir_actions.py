@@ -640,6 +640,7 @@ class IrActionsServer(models.Model):
                                  'act_id', 'gid', string='Allowed Groups', help='Groups that can execute the server action. Leave empty to allow everybody.')
 
     update_field_id = fields.Many2one('ir.model.fields', string='Field to Update', ondelete='cascade', compute='_compute_crud_relations', store=True, readonly=False)
+    update_field_name = fields.Char(related='update_field_id.name')
     update_property = fields.Char(string='Property to Update', compute='_compute_crud_relations', store=True, readonly=False)
     update_path = fields.Char(string='Field to Update Path', help="Path to the field to update, e.g. 'partner_id.name'", default=_default_update_path)
     update_related_model_id = fields.Many2one('ir.model', compute='_compute_crud_relations', readonly=False, store=True)
@@ -669,6 +670,7 @@ class IrActionsServer(models.Model):
         string='Record', selection='_selection_target_model', inverse='_set_resource_ref')
     selection_value = fields.Many2one('ir.model.fields.selection', string="Custom Value", ondelete='cascade',
                                       domain='[("field_id", "=", update_field_id)]', inverse='_set_selection_value')
+    property_selection = fields.Char()
 
     value_field_to_show = fields.Selection([
         ('value', 'value'),
@@ -677,6 +679,8 @@ class IrActionsServer(models.Model):
         ('resource_ref', 'reference'),
         ('update_boolean_value', 'update_boolean_value'),
         ('selection_value', 'selection_value'),
+        ('property_selection', 'property_selection'),
+        ('x2many', 'x2many'),
     ], compute='_compute_value_field_to_show')
     # Webhook
     webhook_url = fields.Char(string='Webhook URL', help="URL to send the POST request to.")
@@ -864,8 +868,9 @@ class IrActionsServer(models.Model):
                         action.crud_model_id = model
                         action.update_field_id = field
                         action.update_property = property and property.get("name")
-                        need_update_model = action.evaluation_type == 'value' and action.update_field_id and action.update_field_id.relation
-                        action.update_related_model_id = action.env["ir.model"]._get_id(field.relation) if need_update_model else False
+                        comodel = property and property.get("comodel")
+                        need_update_model = action.evaluation_type == 'value' and action.update_field_id and (action.update_field_id.relation or comodel)
+                        action.update_related_model_id = action.env["ir.model"]._get_id(field.relation or comodel) if need_update_model else False
                     else:
                         action.crud_model_id = action.model_id
                         action.update_field_id = False
@@ -1031,7 +1036,19 @@ class IrActionsServer(models.Model):
             path = self.update_path.split('.')
             target_records = reduce(getitem, path[:-1], starting_record)
             if self.update_property and starting_record.get_property_definition(self.update_field_id.name + "." + self.update_property):
-                res[self.update_field_id.name] = {**target_records, self.update_property: vals[self.id]}
+                value = vals[self.id]
+                property_value = starting_record._fields[self.update_field_id.name].convert_to_export(target_records, starting_record)
+                if self.value_field_to_show == 'x2many':
+                    value = property_value.get(self.update_property) or []
+                    command = vals[self.id][0]
+                    if command[0] == Command.LINK:
+                        value += [command[1]]
+                    elif command[0] == Command.UNLINK:
+                        value = list(filter(lambda e: e != command[1], value))
+                    elif command[0] == Command.SET:
+                        value = command[2]
+                    value = [] if command[0] == Command.CLEAR else value
+                res[self.update_field_id.name] = {**property_value, self.update_property: value}
                 starting_record.write(res)
             else:
                 target_records.write(res)
@@ -1243,7 +1260,9 @@ class IrActionsServer(models.Model):
     @api.depends('evaluation_type', 'update_field_id')
     def _compute_value_field_to_show(self):  # check if value_field_to_show can be removed and use ttype in xml view instead
         def _get_value_field_to_show(field_type):
-            if field_type in ('one2many', 'many2one', 'many2many'):
+            if field_type in ('one2many', 'many2many'):
+                return 'x2many'
+            elif field_type == 'many2one':
                 return 'resource_ref'
             elif field_type == 'selection':
                 return 'selection_value'
@@ -1258,9 +1277,15 @@ class IrActionsServer(models.Model):
             if action.evaluation_type == 'sequence':
                 action.value_field_to_show = 'sequence_id'
             elif action.update_field_id.ttype == 'properties':
+                if not action.update_property:
+                    action.value_field_to_show = False
+                    return
                 virtual = self.env[action.crud_model_name].new()
                 property_def = virtual.get_property_definition(action.update_field_id.name + "." + action.update_property)
-                action.value_field_to_show = _get_value_field_to_show(property_def.get('type'))
+                if property_def.get('type') == 'selection':
+                    action.value_field_to_show = 'property_selection'
+                else:
+                    action.value_field_to_show = _get_value_field_to_show(property_def.get('type'))
             else:
                 action.value_field_to_show = _get_value_field_to_show(action.update_field_id.ttype)
 
@@ -1279,7 +1304,7 @@ class IrActionsServer(models.Model):
 
     @api.onchange('resource_ref')
     def _set_resource_ref(self):
-        for action in self.filtered(lambda action: action.value_field_to_show == 'resource_ref'):
+        for action in self.filtered(lambda action: action.value_field_to_show in ['resource_ref', 'x2many']):
             if action.resource_ref:
                 action.value = str(action.resource_ref.id)
 
@@ -1289,15 +1314,26 @@ class IrActionsServer(models.Model):
             if action.selection_value:
                 action.value = action.selection_value.value
 
+    @api.onchange('property_selection')
+    def _set_property_selection(self):
+        for action in self.filtered(lambda action: action.value_field_to_show == 'property_selection'):
+            if action.property_selection:
+                action.value = action.property_selection
+
     def _eval_value(self, eval_context=None):
         result = {}
         for action in self:
             expr = action.value
+            field_type = action.update_field_id.ttype
+            if field_type == 'properties':
+                virtual = self.env[action.crud_model_name].new()
+                property_def = virtual.get_property_definition(action.update_field_id.name + "." + action.update_property)
+                field_type = property_def.get('type')
             if action.evaluation_type == 'equation':
                 expr = safe_eval(action.value, eval_context)
             elif action.evaluation_type == 'sequence':
                 expr = action.sequence_id.next_by_id()
-            elif action.update_field_id.ttype in ['one2many', 'many2many']:
+            elif field_type in ['one2many', 'many2many']:
                 operation = action.update_m2m_operation
                 if operation == 'add':
                     expr = [Command.link(int(action.value))]
@@ -1307,19 +1343,19 @@ class IrActionsServer(models.Model):
                     expr = [Command.set([int(action.value)])]
                 elif operation == 'clear':
                     expr = [Command.clear()]
-            elif action.update_field_id.ttype == 'boolean':
+            elif field_type == 'boolean':
                 expr = action.update_boolean_value == 'true'
-            elif action.update_field_id.ttype in ['many2one', 'integer']:
+            elif field_type in ['many2one', 'integer']:
                 try:
                     expr = int(action.value)
-                    if expr == 0 and action.update_field_id.ttype == 'many2one':
+                    if expr == 0 and field_type == 'many2one':
                         expr = False
                 except Exception:
                     pass
-            elif action.update_field_id.ttype == 'float':
+            elif field_type == 'float':
                 with contextlib.suppress(Exception):
                     expr = float(action.value)
-            elif action.update_field_id.ttype == 'html':
+            elif field_type == 'html':
                 expr = action.html_value
             result[action.id] = expr
         return result

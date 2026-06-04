@@ -1619,7 +1619,7 @@ class TestCompute(common.TransactionCase):
         f.evaluation_type = "value"
         f.update_path = "child_ids"
         self.assertEqual(f.update_m2m_operation, "add")
-        self.assertEqual(f.value_field_to_show, "resource_ref")
+        self.assertEqual(f.value_field_to_show, "x2many")
         f.resource_ref = f"res.partner,{bs_partner.id}"
         action = f.save()
 
