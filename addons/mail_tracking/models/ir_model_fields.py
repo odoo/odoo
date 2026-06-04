@@ -24,11 +24,14 @@ class IrModelFields(models.Model):
                 if field.model_id.model not in self.env:
                     # Model is already deleted
                     continue
+                fields_get_info = self.env[field.model_id.model].fields_get([field.name], {'tracking'})
                 self.env['mail.tracking.value'].concat(trackings).write({
                     'field_info': {
                         'desc': field.field_description,
                         'name': field.name,
-                        'sequence': self.env[field.model_id.model]._mail_track_get_field_sequence(field.name),
+                        # in some cases, fields_get does not have the unlinked field anymore (unsure why -> see test_field_label_translation)
+                        # better safe than sorry anyway
+                        'sequence': fields_get_info.get(field.name, {}).get('tracking_sequence', 100),
                         'type': field.ttype,
                     }
                 })

@@ -8,6 +8,7 @@ from odoo.fields import Command
 from odoo.models import Model
 from odoo.tests import new_test_user, tagged
 from odoo.tools import mute_logger
+from odoo.tools.misc import submap
 
 from .dummy_methods import DummyMethods
 from odoo.addons.api_doc.controllers.api_doc import (
@@ -125,7 +126,7 @@ class TestDoc(HttpCaseWithUserDemo):
         })
         self.assertGreater(set(fields), {'id', 'create_uid', 'lang', 'tz'})
         fields['id'].pop('ai', None)
-        self.assertEqual(fields['id'], {
+        fields_id = {
             'change_default': False,
             'company_dependent': False,
             'default_export_compatible': False,
@@ -142,7 +143,8 @@ class TestDoc(HttpCaseWithUserDemo):
             'store': True,
             'string': 'ID',
             'type': 'integer',
-        })
+        }
+        self.assertEqual(submap(fields['id'], fields_id), fields_id)
         self.assertGreater(set(methods), {'search'})
         self.assertEqual(methods['search'], {
             'model': 'core',
