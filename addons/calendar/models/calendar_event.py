@@ -371,8 +371,8 @@ class CalendarEvent(models.Model):
     @api.depends_context('uid')
     def _compute_user_can_edit(self):
         for event in self:
-            # By default, only current attendees and the organizer can edit the event.
-            editor_candidates = set(event.partner_ids.user_ids + event.user_id)
+            # By default, only current attendees, the organizer and the creator can edit the event.
+            editor_candidates = set(event.partner_ids.user_ids + event.user_id + (event.create_uid or self.env.user))
             # Right before saving the event, old partners must be able to save changes.
             if event._origin:
                 editor_candidates |= set(event._origin.partner_ids.user_ids)
@@ -908,10 +908,10 @@ class CalendarEvent(models.Model):
         if not private_fields:
             return super()._fetch_query(query, fields)
 
-        fields_to_fetch = list(fields) + [self._fields[name] for name in ('privacy', 'user_id', 'partner_ids')]
+        fields_to_fetch = list(fields) + [self._fields[name] for name in ('privacy', 'user_id', 'partner_ids', 'create_uid')]
         events = super()._fetch_query(query, fields_to_fetch)
 
-        # determine private events to which the user does not participate
+        # determine private events to which the user does not participate or is not the creator
         others_private_events = events.filtered(lambda ev: ev._check_private_event_conditions())
         if not others_private_events:
             return events
@@ -1051,7 +1051,8 @@ class CalendarEvent(models.Model):
         event_is_private = self.privacy == 'private'
         calendar_is_private = not self.privacy and self.sudo().user_id.calendar_default_privacy == 'private'
         user_is_not_partner = self.user_id.id != self.env.uid and self.env.user.partner_id not in self.partner_ids
-        return (event_is_private or calendar_is_private) and user_is_not_partner
+        user_is_not_creator = self.env.user != (self.create_uid or self.env.user)  # check if user has created the event
+        return (event_is_private or calendar_is_private) and user_is_not_partner and user_is_not_creator
 
     @api.depends('privacy', 'user_id')
     def _compute_display_name(self):
@@ -1947,7 +1948,7 @@ class CalendarEvent(models.Model):
         return self._get_recurrent_fields() | self._get_time_fields() | self._get_custom_fields() | {
             'id', 'active', 'allday',
             'duration', 'user_id', 'interval', 'partner_id',
-            'count', 'rrule', 'recurrence_id', 'show_as', 'privacy'}
+            'count', 'rrule', 'recurrence_id', 'show_as', 'privacy', 'create_uid'}
 
     @api.model
     def get_default_duration(self):
