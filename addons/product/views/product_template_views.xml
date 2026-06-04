@@ -78,13 +78,12 @@
             </div>
 
             <field name="categ_id" position="after">
-                <field name="default_code" string="Reference" invisible="product_variant_count &gt; 1"/>
+                <field name="default_code" string="Reference"/>
                 <field name="valid_product_template_attribute_line_ids" invisible="1"/>
-                <field name="barcode"
-                    invisible="product_variant_count &gt; 1
-                        or (product_variant_count == 0
-                        and valid_product_template_attribute_line_ids)
-                        or type in ['service', 'combo']"/>
+                <field
+                    name="barcode"
+                    invisible="type in ['service', 'combo']"
+                />
             </field>
 
             <button name="action_open_documents" position="before">
