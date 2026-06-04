@@ -7,7 +7,6 @@
         <field name="arch" type="xml">
             <form string="Payment Tokens" create="false" edit="false">
                 <sheet>
-                    <field name="active" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button"
                                 name="%(action_payment_transaction_linked_to_token)d"
@@ -15,17 +14,16 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="payment_details" string="Token"/>
+                        <h1><field name="payment_details" class="text-break"/></h1>
+                    </div>
                     <group>
-                        <group name="general_information">
-                            <field name="payment_details"/>
-                            <field name="payment_method_id"/>
-                            <field name="partner_id" />
-                        </group>
-                        <group name="technical_information">
-                            <field name="provider_id"/>
-                            <field name="provider_ref"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                        </group>
+                        <field name="partner_id" string="Customer"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="provider_id"/>
+                        <field name="payment_method_id" string="Method"/>
+                        <field name="provider_ref"/>
                     </group>
                 </sheet>
             </form>
@@ -37,9 +35,9 @@
         <field name="model">payment.token</field>
         <field name="arch" type="xml">
             <list string="Payment Tokens" create="false">
-                <field name="payment_details"/>
-                <field name="partner_id"/>
-                <field name="payment_method_id"/>
+                <field name="payment_details" string="Token"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="payment_method_id" string="Method"/>
                 <field name="provider_id"/>
                 <field name="provider_ref"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
