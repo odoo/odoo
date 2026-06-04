@@ -571,12 +571,12 @@ class HrVersion(models.Model):
                 if date_version_end:
                     date_version_end -= relativedelta(days=1)
 
-            date_version_end = date_version_end or date.max
-            date_contract_end = version.contract_date_end or date.max
-            date_departure = version.departure_date or date.max
-            version.date_end = False
-            if date_version_end != date.max or date_contract_end != date.max or date_departure != date.max:
-                version.date_end = min(date_version_end, date_contract_end, date_departure)
+            if date_version_end and version.contract_date_end:
+                version.date_end = min(date_version_end, version.contract_date_end)
+            elif date_version_end:
+                version.date_end = date_version_end
+            else:
+                version.date_end = version.contract_date_end
 
     def _search_start_date(self, operator, value):
         if operator in ('>', '>='):
