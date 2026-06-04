@@ -8,22 +8,12 @@
     >
         <div id="cart_totals" position="after">
             <span t-if="not hide_promotions" class="oe_website_sale_gift_card">
-                <t t-if="request.params.get('code_not_available')">
-                    <div class="alert alert-danger text-start small" role="alert">
-                        Invalid or expired promo code.
-                    </div>
-                </t>
                 <t t-if="website_sale_order.get_promo_code_error(delete=False)">
                     <div class="alert alert-danger text-start small" role="alert">
                         <t t-out="website_sale_order.get_promo_code_error()"/>
                     </div>
                 </t>
                 <t t-if="website_sale_order">
-                    <t t-if="website_sale_order.get_promo_code_success_message(delete=False)">
-                        <div class="alert alert-success text-start small" role="alert">
-                            You have successfully applied the following code: <strong t-out="website_sale_order.get_promo_code_success_message()"/>
-                        </div>
-                    </t>
                     <t t-foreach="website_sale_order._get_claimable_and_showable_rewards().items()" t-as="coupon_reward">
                         <t t-set="coupon" t-value="coupon_reward[0]"/>
                         <t t-set="rewards" t-value="coupon_reward[1]"/>

@@ -1111,6 +1111,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return {"success": True}
 
+    def _promo_code_unavailable_warning(self):
+        return self.env._("This promo code is not available.")
+
     def _apply_selectable_pricelist(self, pricelist_id):
         """Change the pricelist if selectable on the website.
 
