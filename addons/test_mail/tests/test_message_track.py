@@ -1133,6 +1133,13 @@ class TestTrackingInternals(TestTrackingCommon):
         )
         self.assertEqual(properties_record_1._mail_track_get_field_sequence("properties"), 13,
             "Properties field should have the same sequence as their parent")
+        self.assertEqual(properties_record_1.fields_get(['properties'], {'tracking'})['properties']['tracking_sequence'], 13,
+            "Properties field should have the same sequence as their parent")
+        # ensure that properties are before parent, so they are rendered after
+        # see `reversed` in `@_message_compute_body_with_trackings`
+        res = properties_record_1._mail_track_order_fields(properties_record_1._track_get_fields_info(['properties', 'properties_parent_id']))
+        self.assertEqual(res[1][0], 'properties_parent_id')
+        self.assertEqual(res[0][0], 'properties')
 
         # test monetary property tracking when parent changes
         record = self.properties_record_monetary

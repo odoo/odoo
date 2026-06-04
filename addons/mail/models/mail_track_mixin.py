@@ -11,7 +11,7 @@ from odoo.tools import clean_context, format_datetime, format_date, format_amoun
 if typing.TYPE_CHECKING:
     from odoo.api import ValuesType
     from odoo.models import BaseModel
-    from collections.abc import Iterable
+    from collections.abc import Collection, Iterable
     from markupsafe import Markup
 
 
@@ -33,6 +33,16 @@ class MailTrackMixin(models.AbstractModel):
     def _valid_field_parameter(self, field, name):
         # allow tracking on models inheriting from 'mail.thread'
         return name == 'tracking' or super()._valid_field_parameter(field, name)
+
+    @api.model
+    def fields_get(self, allfields: Collection[str] | None = None, attributes: Collection[str] | None = None) -> dict[str, ValuesType]:
+        # add tracking information at fields_get level
+        fields_get_dict = super().fields_get(allfields, attributes)
+        if attributes is None or 'tracking' in attributes:
+            for fname, field_values in fields_get_dict.items():  # do not iterate on _fields, to rely on access checks already done
+                field_values['tracking'] = getattr(self._fields[fname], 'tracking', False) is not False
+                field_values['tracking_sequence'] = self._mail_track_get_field_sequence(fname)
+        return fields_get_dict
 
     # track data storage / manipulation
     # ------------------------------------------------------
@@ -206,7 +216,14 @@ class MailTrackMixin(models.AbstractModel):
     def _track_get_fields_info(self, tracked_fields: Iterable[str]) -> ValuesType:
         tracked_fields_get = self.fields_get(
             tracked_fields,
-            attributes=('company_dependent', 'string', 'type', 'selection', 'currency_field')
+            attributes=(
+                'company_dependent',
+                'selection',
+                'string',
+                'tracking',  # includes tracking_sequence
+                'type',
+                'currency_field',
+            )
         )
         if set(tracked_fields_get.keys()) < set(tracked_fields):
             current_fields_info = self.env.cr.precommit.data.get(f'mail.tracking.fields_info.{self._name}', {})
@@ -337,8 +354,7 @@ class MailTrackMixin(models.AbstractModel):
         end_values = self.env.cr.precommit.data.get(f'mail.tracking.end_values.{self._name}', {})
         tracking_values = []
 
-        fields_track_info = self._mail_track_order_fields(tracked_fields_get)
-        for col_name, _sequence in fields_track_info:
+        for col_name, fields_get_info in self._mail_track_order_fields(tracked_fields_get):
             if col_name not in initial_values:
                 continue
             initial_value = initial_values[col_name]
@@ -361,7 +377,7 @@ class MailTrackMixin(models.AbstractModel):
 
                 updated.add(col_name)
                 tracking_values.extend(
-                    self._create_mail_tracking_values_property(property_, col_name, tracked_fields_get[col_name])
+                    self._create_mail_tracking_values_property(property_, col_name, fields_get_info)
                     # Show the properties in the same order as in the definition
                     for property_ in initial_value[::-1]
                     if property_['type'] not in ('separator', 'html', 'signature') and property_.get('value')
@@ -371,7 +387,7 @@ class MailTrackMixin(models.AbstractModel):
             updated.add(col_name)
             tracking_values.append(self._create_mail_tracking_values(
                 initial_value, new_value,
-                col_name, tracked_fields_get[col_name],
+                col_name, fields_get_info,
             ))
 
         return updated, tracking_values
@@ -383,18 +399,15 @@ class MailTrackMixin(models.AbstractModel):
         """ Order tracking, based on sequence found on field definition. When
         having several identical sequences, properties are added after,
         and then field name is used. """
-        fields_track_info = [
-            (col_name, self._mail_track_get_field_sequence(col_name))
-            for col_name in tracked_fields_get
-        ]
+        fields_track_info = list(tracked_fields_get.items())
         # sorting: sequence ASC, name ASC (higher sequence -> displayed last, then
         # order by name). Model order being id DESC (aka: first insert -> last
         # displayed) insert should be done by descending sequence then descending
         # name.
         fields_track_info.sort(key=lambda item: (
-            item[1],
-            tracked_fields_get[item[0]]['type'] != 'properties',
-            item[0],
+            item[1].get('tracking_sequence', 100),  # fields_get data
+            tracked_fields_get[item[0]]['type'] == 'properties',  # properties after regular fields
+            item[0],  # name
         ), reverse=True)
         return fields_track_info
 
