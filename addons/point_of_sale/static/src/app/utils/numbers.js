@@ -77,7 +77,7 @@ export class AbstractNumbers extends Base {
             a,
             this.precision,
             // If negative, invert the rounding method
-            this.isNegative(a) ? invertMethod(this.method) : this.method
+            a < 0 ? invertMethod(this.method) : this.method
         );
     }
 }
