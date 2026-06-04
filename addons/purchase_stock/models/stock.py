@@ -204,14 +204,16 @@ class StockWarehouseOrderpoint(models.Model):
 
     @api.depends('effective_route_id', 'supplier_id', 'rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_supplier_id_placeholder(self):
+        suppliers = self._get_default_suppliers()
         for orderpoint in self:
-            default_supplier = orderpoint._get_default_supplier()
+            default_supplier = suppliers[orderpoint.id]
             orderpoint.supplier_id_placeholder = default_supplier.display_name if default_supplier else ''
 
     @api.depends('effective_route_id', 'supplier_id', 'rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_effective_vendor_id(self):
+        suppliers = self._get_default_suppliers()
         for orderpoint in self:
-            orderpoint.effective_vendor_id = (orderpoint.supplier_id if orderpoint.supplier_id else orderpoint._get_default_supplier()).partner_id
+            orderpoint.effective_vendor_id = (orderpoint.supplier_id or suppliers[orderpoint.id]).partner_id
 
     def _search_effective_vendor_id(self, operator, value):
         vendors = self.env['res.partner'].search([('id', operator, value)])
@@ -266,6 +268,23 @@ class StockWarehouseOrderpoint(models.Model):
             )
         else:
             return self.env['product.supplierinfo']
+
+    def _get_default_suppliers(self):
+        result = {}
+        # Cache to reduce calls to _get_default_rule, see _compute_rules
+        rule_cache = {}
+        for orderpoint in self:
+            if orderpoint.show_supplier and orderpoint.product_id:
+                all_product_routes = orderpoint.product_id.route_ids | orderpoint.product_id.categ_id.total_route_ids
+                cache_key = (orderpoint.location_id, orderpoint.route_id, all_product_routes)
+                rule = rule_cache.get(cache_key) or orderpoint._get_default_rule()
+                result[orderpoint.id] = rule._get_matching_supplier(
+                    orderpoint.product_id, orderpoint.qty_to_order, orderpoint.product_uom, orderpoint.company_id, {}
+                )
+                rule_cache[cache_key] = rule
+            else:
+                result[orderpoint.id] = self.env['product.supplierinfo']
+        return result
 
     def _get_lead_days_values(self):
         values = super()._get_lead_days_values()
