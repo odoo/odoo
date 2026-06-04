@@ -911,7 +911,7 @@ class MassMailing(models.Model):
         }
 
     def _get_ab_testing_siblings_mailings(self):
-        return self.campaign_id.mailing_mail_ids.filtered(lambda m: m.ab_testing_enabled)
+        return self.with_context(prefetch_fields=False).campaign_id.mailing_mail_ids.filtered(lambda m: m.ab_testing_enabled)
 
     def _get_ab_testing_winner_selection(self):
         ab_testing_winner_selection_description = dict(
