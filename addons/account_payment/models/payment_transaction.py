@@ -241,6 +241,8 @@ class PaymentTransaction(models.Model):
 
         :return: None
         """
+        # Lock transaction to avoid multiple concurrent post-processing on the same transaction
+        self.env['res.company']._with_locked_records(self)
         super()._finalize_post_processing()
         for tx in self.filtered('payment_id'):
             message = _("The payment related to the transaction with reference %(ref)s has been posted: %(link)s",
