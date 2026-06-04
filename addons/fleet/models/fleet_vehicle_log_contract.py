@@ -161,7 +161,7 @@ class FleetVehicleLogContract(models.Model):
             ('user_id', '!=', False)
         ]
         ).filtered(
-            lambda nec: reminder_activity_type not in nec.activity_ids.activity_type_id
+            lambda nec: reminder_activity_type not in nec.with_context(active_test=False).activity_ids.activity_type_id
         )
 
         for contract in nearly_expired_contracts:
