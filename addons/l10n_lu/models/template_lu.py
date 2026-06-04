@@ -32,7 +32,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_account_id': 'lu_2020_account_703001',
                 'receivable_account_id': 'lu_2011_account_4011',
                 'payable_account_id': 'lu_2011_account_44111',
-                'account_stock_valuation_id': 'lu_2020_account_60761',
+                'account_stock_valuation_id': 'lu_2011_account_301',
             },
         }
 
