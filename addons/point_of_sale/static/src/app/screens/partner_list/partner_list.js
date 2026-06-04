@@ -170,7 +170,6 @@ export class PartnerList extends Component {
         return [
             "complete_name",
             "ref",
-            "company_registry",
             "vat",
             "street",
             "zip",

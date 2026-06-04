@@ -1,5 +1,5 @@
 import { patch } from "@web/core/utils/patch";
-import { AdditionalIdentifiersButton } from "@account/components/additional_identifiers/additional_identifiers";
+import { AdditionalIdentifiersButton } from "@web/views/fields/additional_identifiers/additional_identifiers";
 
 patch(AdditionalIdentifiersButton.prototype, {
     get identifiersInDropdown() {

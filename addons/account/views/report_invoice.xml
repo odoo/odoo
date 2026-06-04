@@ -77,8 +77,9 @@
                             <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
                             <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
                         </div>
-                        <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
-                            ICE: <a t-field="o.partner_id.company_registry"/>
+                        <t t-set="partner_ice" t-value="o.partner_id.country_code == 'MA' and o.partner_id._get_additional_identifier('MA_ICE')"/>
+                        <div t-if="partner_ice">
+                            ICE: <span t-out="partner_ice"/>
                         </div>
                     </t>
                 </t>
@@ -89,8 +90,9 @@
                             <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
                             <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
                         </div>
-                        <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
-                            ICE: <a t-field="o.partner_id.company_registry"/>
+                        <t t-set="partner_ice" t-value="o.partner_id.country_code == 'MA' and o.partner_id._get_additional_identifier('MA_ICE')"/>
+                        <div t-if="partner_ice">
+                            ICE: <span t-out="partner_ice"/>
                         </div>
                     </t>
                 </t>
@@ -101,8 +103,9 @@
                             <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
                             <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
                         </div>
-                        <div t-if="o.partner_id.country_code == 'MA' and o.partner_id.company_registry">
-                            ICE: <a t-field="o.partner_id.company_registry"/>
+                        <t t-set="partner_ice" t-value="o.partner_id.country_code == 'MA' and o.partner_id._get_additional_identifier('MA_ICE')"/>
+                        <div t-if="partner_ice">
+                            ICE: <span t-out="partner_ice"/>
                         </div>
                     </t>
                 </t>

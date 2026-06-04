@@ -16,15 +16,15 @@ class AccountMoveSendWizard(models.TransientModel):
     def _get_peppol_checkbox_addendum_disable_reason(self):
         self.ensure_one()
         peppol_partner = self.move_id.partner_id.commercial_partner_id.with_company(self.company_id)
-        if not peppol_partner.peppol_eas or not peppol_partner.peppol_endpoint:
-            peppol_partner._compute_peppol_endpoint()  # Try to recompute the Peppol credentials.
-        eas_label = dict(peppol_partner._fields['peppol_eas']._description_selection(self.env)).get(peppol_partner.peppol_eas)
+        if not peppol_partner.routing_scheme or not peppol_partner.routing_endpoint:
+            peppol_partner._compute_routing_scheme_endpoint()  # Try to recompute the Peppol credentials.
+        eas_label = dict(peppol_partner._fields['routing_scheme']._description_selection(self.env)).get(peppol_partner.routing_scheme)
         if peppol_partner.peppol_verification_state == 'not_valid':
             addendum_disable_reason = _(' (Customer not on Peppol)')
         elif peppol_partner.peppol_verification_state == 'not_verified':
             # The recomputation of the Peppol credentials did not manage to fill these fields.
             addendum_disable_reason = _(' (Customer not on Peppol)')
-            if not peppol_partner.peppol_eas or not peppol_partner.peppol_endpoint:
+            if not peppol_partner.routing_scheme or not peppol_partner.routing_endpoint:
                 if not peppol_partner.vat:
                     addendum_disable_reason = _(' (no VAT)')
                 elif eas_label:

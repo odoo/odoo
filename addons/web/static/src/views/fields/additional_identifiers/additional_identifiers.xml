@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="account.AdditionalIdentifiersButton">
+    <t t-name="web.AdditionalIdentifiersButton">
         <div class="ms-2 d-inline-block">
              <Dropdown t-if="this.identifiersInDropdown.length > 0">
                 <button class="btn btn-link p-0" type="button">
@@ -18,7 +18,7 @@
         </div>
     </t>
 
-    <t t-name="account.AdditionalIdentifiersList">
+    <t t-name="web.AdditionalIdentifiersList">
         <div class="o_additional_identifiers_list" t-if="this.sortedIdentifiers.length > 0">
             <t t-foreach="this.sortedIdentifiers" t-as="identifierPair" t-key="identifierPair[0]">
                 <t t-set="identifierType" t-value="identifierPair[0]"/>

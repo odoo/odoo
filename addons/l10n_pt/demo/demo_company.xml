@@ -3,6 +3,7 @@
     <record id="base.partner_demo_company_pt" model="res.partner" forcecreate="1">
         <field name="name">PT Company</field>
         <field name="vat">PT552091561</field>
+        <field name="additional_identifiers" eval="{'PT_EN': '123456'}"/>
         <field name="street">25 Avenida da Liberdade</field>
         <field name="city">Lisboa</field>
         <field name="country_id" ref="base.pt"/>
@@ -15,7 +16,6 @@
 
     <record id="base.demo_company_pt" model="res.company" forcecreate="1">
         <field name="name">PT Company</field>
-        <field name="company_registry">123456</field>
         <field name="partner_id" ref="base.partner_demo_company_pt"/>
     </record>
 

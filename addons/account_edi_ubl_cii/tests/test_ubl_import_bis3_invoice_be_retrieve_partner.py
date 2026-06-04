@@ -24,8 +24,7 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
             'city': "Bidule",
             'zip': "6713",
             'vat': 'BE0477472701',
-            'peppol_eas': '0208',
-            'peppol_endpoint': '0477472701',
+            'routing_identifier': '0208:0477472701',
         }])
 
         # Test the partner has been retrieved.
@@ -52,8 +51,8 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
             'city': "Bidule",
             'zip': "6713",
             'vat': 'BE0477472701',
-            'peppol_eas': 'EM',
-            'peppol_endpoint': 'info@belgium.test',
+            'routing_scheme': 'EM',
+            'routing_endpoint': 'info@belgium.test',
         }])
 
         # Test the partner has been retrieved.

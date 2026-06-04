@@ -118,22 +118,14 @@ class AccountEdiProxyClientUser(models.Model):
 
     @handle_demo
     def _call_peppol_proxy(self, endpoint, params=None):
-        if (
-            self.env.company._get_peppol_edi_mode() == 'demo'
-            and self.proxy_type == 'pdp'
-            and (demo_endpoint := DEMO_ENDPOINTS.get(endpoint.split('/')[-1]))
-        ):
-            self.ensure_one()
-            return demo_endpoint(params)
-        else:
-            return super()._call_peppol_proxy(endpoint, params)
+        # EXTENDS 'account_peppol' - add PDP handle_demo
+        return super()._call_peppol_proxy(endpoint, params=params)
 
     def _get_proxy_identification(self, company, proxy_type):
         if proxy_type != 'pdp':
             return super()._get_proxy_identification(company, proxy_type)
         if not company.pdp_identifier:
-            scheme = dict(self.env["res.partner"]._fields['peppol_eas']._description_selection(self.env))["0225"]
-            raise UserError(self.env._("Please fill the Peppol Endpoint field with scheme '%s' on the company partner.", scheme))
+            raise UserError(self.env._("Please fill the company routing endpoint with the PDP scheme (0225:<identifier>)."))
         return f'0225:{company.pdp_identifier}'
 
     @handle_demo

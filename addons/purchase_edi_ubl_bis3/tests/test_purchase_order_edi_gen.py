@@ -11,6 +11,7 @@ from datetime import datetime
 @tagged('post_install', '-at_install')
 class TestPurchaseOrderEDIGen(AccountTestInvoicingCommon):
     def test_purchase_order_download_edi(self):
+        self.env.company.country_id = self.env.ref('base.be').id
         self.env.company.vat = 'BE0477472701'
         self.partner_a.country_id = self.env.ref('base.nl')
         self.partner_a.vat = 'NL123456782B90'

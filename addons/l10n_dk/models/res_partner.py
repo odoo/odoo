@@ -57,17 +57,7 @@ class ResPartner(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('vat', 'country_id')
-    def _compute_company_registry(self):
-        # OVERRIDE
-        # In Denmark, if you have a VAT number, it's also your company registry (CVR) number
-        super()._compute_company_registry()
-        for partner in self.filtered(lambda p: p.country_id.code == 'DK' and p.vat):
-            vat_country, vat_number = self._split_vat(partner.vat)
-            if vat_country in ('DK', '') and self._check_vat_number('DK', vat_number):
-                partner.company_registry = vat_number
-
-    @api.depends('country_code', 'vat', 'company_registry')
+    @api.depends('country_code', 'vat')
     def _compute_nemhandel_identifier_type(self):
         for partner in self:
             partner.nemhandel_identifier_type = partner.nemhandel_identifier_type
@@ -77,7 +67,7 @@ class ResPartner(models.Model):
             elif country_code != 'DK':
                 partner.nemhandel_identifier_type = False
 
-    @api.depends('country_code', 'vat', 'company_registry', 'nemhandel_identifier_type')
+    @api.depends('country_code', 'vat', 'additional_identifiers', 'nemhandel_identifier_type')
     def _compute_nemhandel_identifier_value(self):
         for partner in self:
             if partner.nemhandel_identifier_value != partner._origin.nemhandel_identifier_value:
@@ -85,9 +75,10 @@ class ResPartner(models.Model):
                 partner.nemhandel_identifier_value = partner.nemhandel_identifier_value
                 continue
             country_code = partner._deduce_country_code()
+            cvr = partner._get_additional_identifier('DK_CVR')
             if country_code == 'DK' and partner.nemhandel_identifier_type == '0184':
-                vat_country, vat_number = partner._split_vat(partner.company_registry or '')
-                partner.nemhandel_identifier_value = vat_number if vat_country == 'DK' else partner.company_registry
+                vat_country, vat_number = partner._split_vat(cvr or '')
+                partner.nemhandel_identifier_value = vat_number if vat_country == 'DK' else cvr
             elif country_code == 'DK':
                 partner.nemhandel_identifier_value = partner.nemhandel_identifier_value
             else:

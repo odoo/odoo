@@ -8,6 +8,15 @@ class ResPartner(models.Model):
 
     invoice_edi_format = fields.Selection(selection_add=[('ciusro', "Romania (CIUS RO)")])
 
+    def _get_preferred_routing_identifier_vals(self, force_recompute=False):
+        vals = super()._get_preferred_routing_identifier_vals(force_recompute=force_recompute)
+        # Romania has no dedicated routing scheme for the RO_EN, nevertheless it is acceptable
+        # to use the same as the RO_VAT. RO_EN value is the same as RO_VAT without the 'RO' prefix.
+        if force_recompute and not vals and self.commercial_partner_id.country_code == 'RO' \
+                and (cui := self.commercial_partner_id._get_additional_identifier('RO_EN')):
+            return {'scheme': '9947', 'value': cui}
+        return vals
+
     def _get_edi_builder(self, invoice_edi_format):
         # EXTENDS 'account_ubl_cii'
         if invoice_edi_format == 'ciusro':

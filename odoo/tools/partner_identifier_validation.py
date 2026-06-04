@@ -1,5 +1,6 @@
 import re
 from stdnum.exceptions import InvalidFormat
+from odoo.tools import single_email_re
 
 NON_DIGIT_RE = re.compile(r'\D')
 # KVK: 8-digit
@@ -32,5 +33,11 @@ def nl_oin_validate(value):
 def th_branch_code_validate(value):
     """Validate a Thai branch code (exactly 5 digits)."""
     if not TH_BRANCH_CODE_RE.fullmatch(value):
+        raise InvalidFormat()
+    return value
+
+
+def validate_email(value):
+    if not single_email_re.match(value):
         raise InvalidFormat()
     return value

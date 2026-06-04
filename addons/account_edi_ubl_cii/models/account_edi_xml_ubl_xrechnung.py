@@ -62,8 +62,9 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
         node = vals['document_node']['cbc:BuyerReference']
 
         customer = vals['customer']
-        if customer.peppol_eas == "0204":
-            node['_text'] = customer.peppol_endpoint
+        if customer.routing_scheme == "0204":
+            # For B2G transactions in Germany: set the buyer_reference to the Leitweg-ID
+            node['_text'] = customer.routing_endpoint
 
         if not node['_text']:
             node['_text'] = 'N/A'
@@ -86,16 +87,15 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
 
-        if (
-            not nodes
-            and commercial_partner.peppol_eas
-        ):
-            nodes.append({
-                'cbc:CompanyID': {'_text': None},
-                'cac:TaxScheme': {
-                    'cbc:ID': {'_text': commercial_partner.peppol_eas},
-                },
-            })
+        if not nodes:
+            identifier_vals = commercial_partner._get_preferred_routing_identifier_vals()
+            if identifier_vals:
+                nodes.append({
+                    'cbc:CompanyID': {'_text': None},
+                    'cac:TaxScheme': {
+                        'cbc:ID': {'_text': identifier_vals['scheme']},
+                    },
+                })
 
     def _ubl_add_party_legal_entity_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3

@@ -44,7 +44,7 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'zip': '35043',
             'vat': 'FR91746948785',
             'phone': '+33612345678',
-            'pdp_identifier': '968515759_96851575905899'  # Should set company_id, peppol_eas and peppol_endpoint
+            'pdp_identifier': '968515759_96851575905899'  # Should set company_id, routing_scheme and routing_endpoint
         })
         cls.env['res.partner.bank'].create({
             'account_number': 'FR5000400440116243',
@@ -74,10 +74,9 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.fr').id,
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
-            'company_registry': '96851575905823',
+            'additional_identifiers': {'FR_SIRET': '96851575905808'},
             'invoice_edi_format': 'ubl_21_fr',
-            'peppol_eas': '0225',
-            'peppol_endpoint': '968515759_96851575905823',
+            'routing_identifier': '0225:968515759_96851575905808',
         })
         cls.partner_b.write({
             'name': 'SUPER BELGIAN PARTNER',
@@ -88,8 +87,7 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'phone': '061928374',
             'vat': 'BE0897223670',
             'invoice_edi_format': 'ubl_bis3',
-            'peppol_eas': '0208',
-            'peppol_endpoint': '0239843188',
+            'routing_identifier': '0208:0239843188',
         })
         cls.startClassPatcher(patch(
             'odoo.addons.l10n_fr_pdp.models.pdp_flow.PdpFlow._get_pdp_proxy_user',

@@ -15,7 +15,7 @@ from odoo.tools.float_utils import float_round
 from odoo.tools.misc import formatLang, html_escape
 from odoo.tools.xml_utils import find_xml_value
 
-from odoo.addons.account.tools.country_groups import EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
+from odoo.addons.base.models.res_country import EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
 
 # -------------------------------------------------------------------------
 # UNIT OF MEASURE
@@ -49,78 +49,6 @@ UOM_TO_UNECE_CODE = {
     'uom.product_uom_yard': 'YRD',
     'uom.product_uom_millimeter': 'MMT',
     'uom.product_uom_kwh': 'KWH',
-}
-
-# -------------------------------------------------------------------------
-# ELECTRONIC ADDRESS SCHEME (EAS), see https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/
-# -------------------------------------------------------------------------
-EAS_MAPPING = {
-    'AD': {'9922': 'vat'},
-    'AE': {'0235': 'vat'},
-    'AL': {'9923': 'vat'},
-    'AT': {'9915': 'vat'},
-    'AU': {'0151': 'vat'},
-    'BA': {'9924': 'vat'},
-    'BE': {'0208': 'additional_identifiers', '9925': 'vat'},
-    'BG': {'9926': 'vat'},
-    'CH': {'9927': 'vat', '0183': None},
-    'CY': {'9928': 'vat'},
-    'CZ': {'9929': 'vat'},
-    'DE': {'9930': 'vat', '0246': 'l10n_de_widnr'},
-    'DK': {'0184': 'vat', '0198': 'vat'},
-    'EE': {'9931': 'vat'},
-    'ES': {'9920': 'vat'},
-    'FI': {'0216': None},
-    'FR': {'0225': 'peppol_endpoint', '0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # `peppol_endpoint` used as place holder for custom logic via `_get_peppol_endpoint_value`
-    'SG': {'0195': 'additional_identifiers'},
-    'GB': {'9932': 'vat'},
-    'GR': {'9933': 'vat'},
-    'HR': {'9934': 'vat', '0088': 'company_registry'},
-    'HU': {'9910': 'l10n_hu_eu_vat'},
-    'IE': {'9935': 'vat'},
-    'IS': {'0196': 'vat'},
-    'IT': {'0211': 'vat', '0210': 'l10n_it_codice_fiscale'},
-    'JP': {'0221': 'vat'},
-    'LI': {'9936': 'vat'},
-    'LT': {'9937': 'vat'},
-    'LU': {'9938': 'vat'},
-    'LV': {'0218': 'company_registry', '9939': 'vat'},
-    'MC': {'9940': 'vat'},
-    'ME': {'9941': 'vat'},
-    'MK': {'9942': 'vat'},
-    'MT': {'9943': 'vat'},
-    'MY': {'0230': None},
-    # Do not add the vat for NL, since: "[NL-R-003] For suppliers in the Netherlands, the legal entity identifier
-    # MUST be either a KVK or OIN number (schemeID 0106 or 0190)" in the Bis 3 rules (in PartyLegalEntity/CompanyID).
-    'NG': {'0244': 'vat'},
-    'NL': {'0106': None, '0190': None},
-    'NO': {'0192': 'additional_identifiers'},
-    'NZ': {'0088': 'company_registry'},
-    'PL': {'9945': 'vat'},
-    'PT': {'9946': 'vat'},
-    'RO': {'9947': 'vat'},
-    'RS': {'9948': 'vat'},
-    'SE': {'0007': 'company_registry', '9955': 'vat'},
-    'SI': {'9949': 'vat'},
-    'SK': {'9950': 'vat', '0245': 'company_registry'},
-    'SM': {'9951': 'vat'},
-    'TR': {'9952': 'vat'},
-    'VA': {'9953': 'vat'},
-    # DOM-TOM
-    'BL': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Saint Barthélemy
-    'GF': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # French Guiana
-    'GP': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Guadeloupe
-    'MF': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Saint Martin
-    'MQ': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Martinique
-    'NC': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # New Caledonia
-    'PF': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # French Polynesia
-    'PM': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Saint Pierre and Miquelon
-    'RE': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Réunion
-    'TF': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # French Southern and Antarctic Lands
-    'WF': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Wallis and Futuna
-    'YT': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},  # Mayotte
-
-    'AX': {'0216': None},  # Åland Islands
 }
 
 # -------------------------------------------------------------------------
@@ -738,13 +666,13 @@ class AccountEdiCommon(models.AbstractModel):
 
         return attachments
 
-    def _import_partner(self, company_id, name, phone, email, vat, *, peppol_eas=False, peppol_endpoint=False, additional_identifiers=None, postal_address={}, **kwargs):
+    def _import_partner(self, company_id, name, phone, email, vat, *, routing_identifier=False, additional_identifiers=None, postal_address={}, **kwargs):
         """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name) """
         logs = []
-        if peppol_eas and peppol_endpoint:
-            domain = [('peppol_eas', '=', peppol_eas), ('peppol_endpoint', '=', peppol_endpoint)]
-        else:
-            domain = False
+        domain = False
+        if routing_identifier:
+            scheme, _sep, endpoint = routing_identifier.partition(':')
+            domain = [('routing_scheme', '=', scheme), ('routing_endpoint', '=', endpoint)]
         partner = self.env['res.partner'] \
             .with_company(company_id) \
             ._retrieve_partner(name=name, phone=phone, email=email, vat=vat, additional_identifiers=additional_identifiers, domain=domain)
@@ -757,8 +685,8 @@ class AccountEdiCommon(models.AbstractModel):
         ) if state_code and country else self.env['res.country.state']
         if not partner and name and vat:
             partner_vals = {'name': name, 'email': email, 'phone': phone, 'is_company': True}
-            if peppol_eas and peppol_endpoint:
-                partner_vals.update({'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint})
+            if routing_identifier:
+                partner_vals['routing_identifier'] = routing_identifier
             if additional_identifiers:
                 partner_vals['additional_identifiers'] = additional_identifiers
             partner = self.env['res.partner'].create(partner_vals)

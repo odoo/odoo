@@ -1,7 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 
 import {
     contains,
@@ -67,7 +66,6 @@ class Partner extends models.Model {
 }
 
 defineModels([Partner]);
-defineMailModels();
 
 test.tags("desktop");
 test("list widget renders existing identifiers as labeled inputs", async () => {

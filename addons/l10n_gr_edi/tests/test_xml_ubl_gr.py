@@ -22,8 +22,8 @@ class TestUBLGr(AccountTestInvoicingCommon):
             'l10n_gr_edi_aade_key': '20ea658627fd8c7d90594fe4601d3327',
         })
         cls.env.company.partner_id.write({
-            'peppol_endpoint': 'EL123456783',
-            'peppol_eas': '9933',
+            'routing_endpoint': 'EL123456783',
+            'routing_scheme': '9933',
         })
 
         cls.partner_a.write({
@@ -35,8 +35,8 @@ class TestUBLGr(AccountTestInvoicingCommon):
             'vat': 'EL094259216',
             'l10n_gr_edi_contracting_authority_name': 'Ministry of justice',
             'l10n_gr_edi_contracting_authority_code': '2048.8010430600.00061',
-            'peppol_endpoint': 'EL094259216',
-            'peppol_eas': '9933',
+            'routing_endpoint': 'EL094259216',
+            'routing_scheme': '9933',
         })
 
         cls.product_a.write({'default_code': 'E-COM08', 'l10n_gr_edi_cpv_code': '123123'})

@@ -178,8 +178,10 @@ class AccountEdiXmlCii(models.AbstractModel):
             'scheduled_delivery_time': self._get_scheduled_delivery_time(invoice),
             'intracom_delivery': False,
             'ExchangedDocument_vals': self._get_exchanged_document_vals(invoice),
-            'seller_specified_legal_organization': invoice.company_id.company_registry,
-            'buyer_specified_legal_organization': invoice.commercial_partner_id.company_registry,
+            # FIXME cii_22_templates hard-codes SpecifiedLegalOrganization/ID with schemeID="0002"
+            # (FR SIRENE), so only emit it when the party is French and has a SIREN/SIRET.
+            'seller_specified_legal_organization': invoice.company_id.partner_id._get_all_identifiers(enrich=True).get('FR_SIREN'),  # will retrieve SIREN from SIRET if available
+            'buyer_specified_legal_organization': invoice.commercial_partner_id._get_all_identifiers(enrich=True).get('FR_SIREN'),  # will retrieve SIREN from SIRET if available
             'ship_to_trade_party': invoice.partner_shipping_id if 'partner_shipping_id' in invoice._fields and invoice.partner_shipping_id
                 else invoice.commercial_partner_id,
             # Chorus Pro fields
