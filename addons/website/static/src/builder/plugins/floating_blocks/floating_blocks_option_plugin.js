@@ -11,8 +11,18 @@ export class FloatingBlocksOptionPlugin extends Plugin {
             FloatingBlocksRoundnessAction,
             AddFloatingBlockCardAction,
         },
+        clean_for_save_processors: this.cleanForSave.bind(this),
         on_prepare_drag_handlers: this.prepareDrag.bind(this),
     };
+
+    cleanForSave(rootEl) {
+        for (const snippetEl of rootEl.querySelectorAll(".s_floating_blocks")) {
+            const wrapperEl = snippetEl.querySelector(".s_floating_blocks_wrapper");
+            if (!wrapperEl || wrapperEl.children.length === 0) {
+                snippetEl.remove();
+            }
+        }
+    }
 
     prepareDrag() {
         // Prevent the blocks from overlapping during the drag and drop.
