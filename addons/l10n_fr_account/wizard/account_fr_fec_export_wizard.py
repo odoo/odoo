@@ -155,6 +155,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                 ])
                 account = query.table.account_id
                 query.groupby = account.id
+                query.having = SQL("SUM(account_move_line.balance) != 0")
                 sql_query = query.select(SQL(
                     """
                         'OUV' AS JournalCode,
@@ -230,6 +231,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                 account = query.table.account_id
                 partner = query.table.partner_id
                 query.groupby = SQL("%s, %s", partner.id, account.id)
+                query.having = SQL("SUM(account_move_line.balance) != 0")
                 sql_query = query.select(SQL(
                     """
                         'OUV' AS JournalCode,
