@@ -1952,15 +1952,14 @@ class PosSession(models.Model):
 
     @api.autovacuum
     def _gc_session_sequences(self):
-        sequence_fields = {
-            'pos.session.login_number': 'login_number_seq_id',
-            'pos.order_': 'order_seq_id',
-        }
-        for prefix, field in sequence_fields.items():
-            sequences = self.env['ir.sequence'].search([('code', 'ilike', prefix)])
+        for prefix in ('pos.login_number_', 'pos.order_'):
+            sequences = self.env['ir.sequence'].search([('code', '=like', f'{prefix}%')])
+            # =like uses SQL LIKE where '_' is a wildcard; filter to literal prefix matches only
+            sequences = sequences.filtered(lambda s: s.code.startswith(prefix))
             session_ids = [int(seq.code.split(prefix)[-1]) for seq in sequences if seq.code.split(prefix)[-1].isdigit()]
-            sessions = self.env['pos.session'].search([('id', 'in', session_ids), ('state', '=', 'closed')])
-            sequence_to_unlink_ids = sessions.mapped(field)
+            open_session_ids = self.env['pos.session'].search([('id', 'in', session_ids), ('state', '!=', 'closed')]).ids
+            keep_codes = {f'{prefix}{session_id}' for session_id in open_session_ids}
+            sequence_to_unlink_ids = sequences.filtered(lambda seq: seq.code not in keep_codes)
             if sequence_to_unlink_ids:
                 sequence_to_unlink_ids.sudo().unlink()
 
