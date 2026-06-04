@@ -1119,8 +1119,12 @@ class StockMoveLine(models.Model):
                 return action
         return package
 
-    def action_put_in_pack(self, *, package_id=False, package_type_id=False, package_name=False):
+    def action_put_in_pack(self, *, package_id=False, package_type_id=False, package_name=False, package_capacity=None):
         move_lines = self
+        if package_capacity and package_capacity != self.quantity:
+            # Split the move line if `package_capacity` is not equal to its quantity.
+            return move_lines._split_in_chunk(package_capacity, package_type_id, package_id=package_id)
+
         if self.env.context.get('all_move_line_ids'):
             move_lines = self.env['stock.move.line'].browse(self.env.context['all_move_line_ids'])
         # From the 'Moves' button, we want to take all move lines, without caring for picked or with/without packages.
@@ -1233,6 +1237,59 @@ class StockMoveLine(models.Model):
     def _should_set_package(self):
         package_type = self.picking_id.picking_type_id
         return len(package_type) == 1 and package_type.set_package_type
+
+    def _split(self, quantity_to_split, package_id):
+        """ Split the move line and return the generated line (or False if no line was split.)"""
+        self.ensure_one()
+        remaining_quantity = self.quantity - quantity_to_split
+
+        # Package the move line and set its quantity to the needed amount.
+        self.write({
+            'quantity': quantity_to_split,
+            'result_package_id': package_id,
+        })
+
+        if remaining_quantity > 0:
+            # Create a unpacked copy of the move line if there is an excess quantity.
+            return self.copy({
+                'quantity': remaining_quantity,
+                'result_package_id': None,
+            })
+        return False
+
+    def _split_in_chunk(self, chunk_capacity, package_type_id=None, package_id=None):
+        """ This function separates a single move line to create new ones with
+        capacity of chunk_capacity.
+        """
+        self.ensure_one()
+
+        # Raise an error if package capacity is bigger than all quantity.
+        if not (0 < chunk_capacity <= self.quantity):
+            raise ValidationError(_('Package size must be greater than zero and not exceed the initial quantity.'))
+
+        if package_id:
+            new_line = self._split(chunk_capacity, package_id)
+            return (self | new_line) if new_line else self
+
+        splitted_move_lines = self
+        move_line_to_split = self
+        remaining_quantity = self.quantity
+
+        while remaining_quantity > 0:
+            # Create a package with the package type if provided.
+            package = self.env['stock.package'].create(
+                {'package_type_id': package_type_id} if package_type_id else {}
+            )
+
+            quantity_to_split = min(remaining_quantity, chunk_capacity)
+            split_move_line = move_line_to_split._split(quantity_to_split, package.id)
+            splitted_move_lines += move_line_to_split
+            if split_move_line:
+                move_line_to_split = split_move_line
+
+            remaining_quantity -= quantity_to_split
+
+        return splitted_move_lines
 
     # ===== Batch business methods =====
 
