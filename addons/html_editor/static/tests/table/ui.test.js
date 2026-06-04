@@ -213,7 +213,7 @@ test("should not resize a table with a non-primary mouse button", async () => {
 });
 
 test.tags("desktop");
-test("should stop resize after table removal", async () => {
+test("should not allow key events during resize", async () => {
     const content = unformat(`
         <table class="table table-bordered o_table">
             <tbody>
@@ -256,14 +256,21 @@ test("should stop resize after table removal", async () => {
         clientY,
     });
     expect(el).toHaveClass("o_col_resize");
-    // Remove table
+    await expectElementCount(".o_table", 1);
+
+    // Try to Remove table via backspace key
     await press("backspace");
+    await animationFrame();
+
+    // Table should not be removed
+    await expectElementCount(".o_table", 1);
 
     manuallyDispatchProgrammaticEvent(el, "pointermove", {
         clientX: clientX + 110,
         clientY,
     });
-    expect(el).not.toHaveClass("o_col_resize");
+    // Resizing should still be active
+    expect(el).toHaveClass("o_col_resize");
 });
 
 test("should show the table UI menus when hovering a list inside a table cell", async () => {
