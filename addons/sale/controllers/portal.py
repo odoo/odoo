@@ -7,18 +7,18 @@ from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 
 class CustomerPortal(payment_portal.PaymentPortal):
-
     def _prepare_portal_counter_values(self, counter):
         partner = self.env.user.partner_id
-        if counter == 'quotation_count':
-            return 'sale.order', self._prepare_quotations_domain(partner), 'read'
-        if counter == 'order_count':
-            return 'sale.order', self._prepare_orders_domain(partner), 'read'
+        if counter == "quotation_count":
+            return "sale.order", self._prepare_quotations_domain(partner), "read"
+        if counter == "order_count":
+            return "sale.order", self._prepare_orders_domain(partner), "read"
         return super()._prepare_portal_counter_values(counter)
 
     def _prepare_quotations_domain(self, partner):
@@ -138,6 +138,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         message=False,
         download=False,
         payment_amount=None,
+        payment_token=None,
         amount_selection=None,
         **kw,
     ):
@@ -150,7 +151,12 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         payment_amount = self._cast_as_float(payment_amount)
         prepayment_amount = order_sudo._get_prepayment_required_amount()
-        if payment_amount and payment_amount < prepayment_amount and order_sudo.state != "sale":
+        if (
+            payment_amount
+            and payment_amount < prepayment_amount
+            and order_sudo.state != "sale"
+            and not payment_utils.check_access_token(payment_token, order_sudo.id, payment_amount)
+        ):
             raise MissingError(self.env._("The amount is lower than the prepayment amount."))
 
         advantage_tax_excl, advantage_tax_incl = order_sudo._get_advantages()

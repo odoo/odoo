@@ -130,7 +130,7 @@ class AccountMove(models.Model):
 
     def _get_default_payment_link_values(self):
         next_payment_values = self._get_invoice_next_payment_values()
-        amount_max = next_payment_values.get('amount_due')
+        amount_due = next_payment_values.get('amount_due')
         additional_info = {}
         open_installments = []
         installment_state = next_payment_values.get('installment_state')
@@ -147,7 +147,7 @@ class AccountMove(models.Model):
                 open_installments.append(data)
 
         elif installment_state == 'epd':
-            amount_max = next_amount_to_pay  # with epd, next_amount_to_pay is the invoice amount residual
+            amount_due = next_amount_to_pay  # with epd, next_amount_to_pay is the invoice amount residual
             additional_info.update({
                 'has_eligible_epd': True,
                 'discount_date': next_payment_values.get('discount_date')
@@ -158,7 +158,7 @@ class AccountMove(models.Model):
             'partner_id': self.partner_id.id,
             'open_installments': open_installments,
             'amount': next_amount_to_pay,
-            'amount_max': amount_max,
+            'invoice_amount_due': amount_due,
             **additional_info
         }
 

@@ -2312,16 +2312,14 @@ class SaleOrder(models.Model):
         self.ensure_one()
 
         prepayment_amount = self._get_prepayment_required_amount()
-        remaining_balance = self.amount_total - self.amount_paid
         if self.state in ("draft", "sent") and self.prepayment_percent > 0:
             suggested_amount = prepayment_amount  # Suggest the amount needed to confirm the quote.
         else:  # The order is confirmed or doesn't require payment.
-            suggested_amount = remaining_balance
+            suggested_amount = max(self.amount_total - self.amount_paid, 0.0)
         return {
             "currency_id": self.currency_id.id,
             "partner_id": self.partner_invoice_id.id,
             "amount": suggested_amount,
-            "amount_max": remaining_balance,
             "amount_paid": self.amount_paid,
             "prepayment_amount": prepayment_amount,
         }

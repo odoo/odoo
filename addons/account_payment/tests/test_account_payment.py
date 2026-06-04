@@ -286,7 +286,7 @@ class TestAccountPayment(AccountPaymentCommon):
             'partner_id': invoice.partner_id.id,
             'open_installments': [],
             'amount': None,
-            'amount_max': None,
+            'invoice_amount_due': None,
         })
 
     def test_payment_invoice_same_receivable(self):

@@ -24,7 +24,6 @@ class PaymentLinkWizard(models.TransientModel):
     res_model = fields.Char(string="Related Document Model", required=True)
     res_id = fields.Integer(string="Related Document ID", required=True)
     amount = fields.Monetary(currency_field="currency_id", required=True)
-    amount_max = fields.Monetary(currency_field="currency_id")
     currency_id = fields.Many2one(comodel_name="res.currency")
     partner_id = fields.Many2one(comodel_name="res.partner")
     partner_email = fields.Char(related="partner_id.email")
@@ -32,19 +31,12 @@ class PaymentLinkWizard(models.TransientModel):
     company_id = fields.Many2one(comodel_name="res.company", compute="_compute_company_id")
     warning_message = fields.Char(compute="_compute_warning_message")
 
-    @api.depends("amount", "amount_max")
+    @api.depends("amount")
     def _compute_warning_message(self):
         self.warning_message = ""
         for wizard in self:
-            if wizard.amount_max <= 0:
-                wizard.warning_message = wizard.env._("There is nothing to be paid.")
-            elif wizard.amount <= 0:
+            if wizard.amount <= 0:
                 wizard.warning_message = wizard.env._("Please set a positive amount.")
-            elif wizard.amount > wizard.amount_max:
-                wizard.warning_message = wizard.env._(
-                    "Please set an amount lower than %s.",
-                    wizard.currency_id.format(wizard.amount_max),
-                )
 
     @api.depends("res_model", "res_id")
     def _compute_company_id(self):
