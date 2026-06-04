@@ -19,6 +19,7 @@ import {
     throttleForAnimation,
     useDebounced,
     useThrottleForAnimation,
+    useTimer,
 } from "@web/core/utils/timing";
 
 describe.current.tags("headless");
@@ -546,5 +547,104 @@ describe("useThrottleForAnimation", () => {
         destroyApp();
         await animationFrame();
         expect.verifySteps([]);
+    });
+});
+
+describe("useTimer", () => {
+    test("progress starts at 0 and reaches 1 after the duration", async () => {
+        class TestComponent extends Component {
+            static template = xml`<div/>`;
+            static props = ["*"];
+            setup() {
+                this.timer = useTimer(1000);
+            }
+        }
+        const component = await mountWithCleanup(TestComponent);
+        expect(component.timer.progress() >= 0 && component.timer.progress() < 1).toBe(true);
+
+        await advanceTime(1000);
+        await animationFrame();
+        expect(component.timer.progress()).toBe(1);
+    });
+
+    test("stop halts the animation at the current progress", async () => {
+        class TestComponent extends Component {
+            static template = xml`<div/>`;
+            static props = ["*"];
+            setup() {
+                this.timer = useTimer(1000);
+            }
+        }
+        const component = await mountWithCleanup(TestComponent);
+
+        await advanceTime(500);
+        await animationFrame();
+        const frozenProgress = component.timer.progress();
+        component.timer.stop();
+        await advanceTime(500);
+        await animationFrame();
+        expect(component.timer.progress()).toBe(frozenProgress);
+    });
+
+    test("reset restarts the timer from 0", async () => {
+        class TestComponent extends Component {
+            static template = xml`<div/>`;
+            static props = ["*"];
+            setup() {
+                this.timer = useTimer(1000);
+            }
+        }
+        const component = await mountWithCleanup(TestComponent);
+
+        await advanceTime(500);
+        await animationFrame();
+        const progressBeforeReset = component.timer.progress();
+        component.timer.reset();
+        await animationFrame();
+        expect(component.timer.progress() >= 0 && component.timer.progress() < progressBeforeReset).toBe(true);
+        await advanceTime(1000);
+        await animationFrame();
+        expect(component.timer.progress()).toBe(1);
+    });
+
+    test("resume continues from the current progress", async () => {
+        class TestComponent extends Component {
+            static template = xml`<div/>`;
+            static props = ["*"];
+            setup() {
+                this.timer = useTimer(1000);
+            }
+        }
+        const component = await mountWithCleanup(TestComponent);
+
+        await advanceTime(500);
+        await animationFrame();
+        const progressAtStop = component.timer.progress();
+        component.timer.stop();
+        component.timer.resume();
+        expect(component.timer.progress()).toBe(progressAtStop);
+        await animationFrame();
+        await advanceTime(500);
+        await animationFrame();
+        expect(component.timer.progress()).toBe(1);
+    });
+
+    test("stops on component destroy", async () => {
+        class TestComponent extends Component {
+            static template = xml`<div/>`;
+            static props = ["*"];
+            setup() {
+                this.timer = useTimer(1000);
+            }
+        }
+        const component = await mountWithCleanup(TestComponent);
+
+        await advanceTime(500);
+        await animationFrame();
+        const progressAtDestroy = component.timer.progress();
+        destroyApp();
+        await advanceTime(500);
+        await animationFrame();
+        expect(component.timer.progress()).toBe(progressAtDestroy);
     });
 });

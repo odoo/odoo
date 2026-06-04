@@ -1,5 +1,6 @@
-import { Component, onMounted, props, signal } from "@odoo/owl";
+import { Component, useEffect, props, signal } from "@odoo/owl";
 import { NotificationSchema } from "./notification_plugin";
+import { useTimer } from "@web/core/utils/timing";
 
 const AUTOCLOSE_DELAY = 4000;
 
@@ -16,44 +17,31 @@ export class Notification extends Component {
     autocloseProgress = signal(null);
 
     setup() {
-        onMounted(() => this.startNotificationTimer());
+        if (!this.notification.sticky && (this.notification.autocloseDelay ?? AUTOCLOSE_DELAY) > 0) {
+            this.timer = useTimer(this.notification.autocloseDelay ?? AUTOCLOSE_DELAY);
+
+            useEffect(() => {
+                if (this.timer.progress() >= 1) {
+                    this.close();
+                } else if (this.autocloseProgress()) {
+                    this.autocloseProgress().style.width = `${(1 - this.timer.progress()) * 100}%`;
+                }
+            });
+        }
     }
 
     freeze() {
-        this.startedTimestamp = false;
+        this.timer?.stop();
         if (this.autocloseProgress()) {
             this.autocloseProgress().style.width = 0;
         }
     }
 
     refresh() {
-        this.startNotificationTimer();
+        this.timer?.reset();
     }
 
     close() {
         this.notification.close();
-    }
-
-    startNotificationTimer() {
-        if (this.notification.sticky) {
-            return;
-        }
-        this.startedTimestamp = luxon.DateTime.now().ts;
-
-        const cb = () => {
-            if (this.startedTimestamp) {
-                const currentProgress =
-                    (luxon.DateTime.now().ts - this.startedTimestamp) / (this.notification.autocloseDelay ?? AUTOCLOSE_DELAY);
-                if (currentProgress > 1) {
-                    this.close();
-                    return;
-                }
-                if (this.autocloseProgress()) {
-                    this.autocloseProgress().style.width = `${(1 - currentProgress) * 100}%`;
-                }
-                requestAnimationFrame(cb);
-            }
-        };
-        cb();
     }
 }
