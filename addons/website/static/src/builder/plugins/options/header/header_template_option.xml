@@ -110,7 +110,7 @@
                     classAction="'o_header_standard'"
                     className="'o_we_img_animate'"
                 >
-                    <Image src="'/website/static/src/img/snippets_options/header_effect_standard.png'" attrs="{style:`--animate-src: '/website/static/src/img/snippets_options/header_effect_standard.gif';`}"/>
+                    <t t-call="website.scrollEffectImages" imgName="'header_effect_standard'"/>
                     <span>Standard</span>
                 </BuilderSelectItem>
                 <BuilderSelectItem
@@ -120,7 +120,7 @@
                     classAction="''"
                     className="'o_we_img_animate'"
                 >
-                    <Image src="'/website/static/src/img/snippets_options/header_effect_scroll.png'" attrs="{style:`--animate-src: '/website/static/src/img/snippets_options/header_effect_scroll.gif';`}"/>
+                    <t t-call="website.scrollEffectImages" imgName="'header_effect_scroll'"/>
                     <span>Scroll</span>
                 </BuilderSelectItem>
                 <BuilderSelectItem
@@ -130,7 +130,7 @@
                     classAction="'o_header_fixed'"
                     className="'o_we_img_animate'"
                 >
-                    <Image src="'/website/static/src/img/snippets_options/header_effect_fixed.png'" attrs="{style:`--animate-src: '/website/static/src/img/snippets_options/header_effect_fixed.gif';`}"/>
+                    <t t-call="website.scrollEffectImages" imgName="'header_effect_fixed'"/>
                     <span>Fixed</span>
                 </BuilderSelectItem>
                 <BuilderSelectItem
@@ -140,7 +140,7 @@
                     classAction="'o_header_disappears'"
                     className="'o_we_img_animate'"
                 >
-                    <Image src="'/website/static/src/img/snippets_options/header_effect_disappears.png'" attrs="{style:`--animate-src: '/website/static/src/img/snippets_options/header_effect_disappears.gif';`}"/>
+                    <t t-call="website.scrollEffectImages" imgName="'header_effect_disappears'"/>
                     <span>Disappears</span>
                 </BuilderSelectItem>
                 <BuilderSelectItem
@@ -150,7 +150,7 @@
                     classAction="'o_header_fade_out'"
                     className="'o_we_img_animate'"
                 >
-                    <Image src="'/website/static/src/img/snippets_options/header_effect_fade_out.png'" attrs="{style:`--animate-src: '/website/static/src/img/snippets_options/header_effect_fade_out.gif';`}"/>
+                    <t t-call="website.scrollEffectImages" imgName="'header_effect_fade_out'"/>
                     <span>Fade Out</span>
                 </BuilderSelectItem>
             </BuilderSelect>
@@ -158,6 +158,11 @@
         <BuilderRow t-if="!this.isActiveItem('header_sidebar_opt')" label.translate="Show Disclaimer">
             <BuilderCheckbox action="'websiteConfig'" actionParam="{ views: ['website.option_header_disclaimer'] }"/>
         </BuilderRow>
+    </t>
+
+    <t t-name="website.scrollEffectImages">
+        <Image src="`/website/static/src/img/snippets_options/${imgName}.png`"/>
+        <Image src="'/web/static/img/transparent.png'" attrs="{style: `--animate-src: '/website/static/src/img/snippets_options/${imgName}.gif';`}"/>
     </t>
 
     <t t-name="website.HeaderTemplateChoice">
