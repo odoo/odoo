@@ -84,7 +84,7 @@ class L10nEsEdiSiiDocument(models.Model):
                 header = self._get_web_service_header(doc.company_id, communication_type)
                 info_list = doc.move_id._l10n_es_edi_get_invoices_info()
                 full_payload = {'Cabecera': header, 'Cuerpo': info_list}
-                json_str = json.dumps(full_payload, indent=4).encode('utf-8')
+                json_str = json.dumps(full_payload, indent=4, ensure_ascii=False).encode('utf-8')
                 doc.sii_json_file = base64.b64encode(json_str).decode('utf-8')
 
     # -------------------------------------------------------------------------
@@ -194,7 +194,7 @@ class L10nEsEdiSiiDocument(models.Model):
                     if not attachment:
                         attachment = self.env['ir.attachment'].sudo().create({
                             'name': doc._get_attachment_name(),
-                            'raw': json.dumps(full_payload, indent=4).encode('utf-8'),
+                            'raw': json.dumps(full_payload, indent=4, ensure_ascii=False).encode('utf-8'),
                             'mimetype': 'application/json',
                             'res_model': 'account.move',
                             'res_id': doc.move_id.id,
