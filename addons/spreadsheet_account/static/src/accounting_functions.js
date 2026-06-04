@@ -107,9 +107,9 @@ function parseAccountingDay(dateRange, locale) {
     const dateNumber = toNumber(dateRange?.value, locale);
     return {
         rangeType: "day",
-        year: functionRegistry.get("YEAR").compute.bind({ locale })(dateNumber),
-        month: functionRegistry.get("MONTH").compute.bind({ locale })(dateNumber),
-        day: functionRegistry.get("DAY").compute.bind({ locale })(dateNumber),
+        year: functionRegistry.get("YEAR").compute.bind({ locale })(dateNumber).value,
+        month: functionRegistry.get("MONTH").compute.bind({ locale })(dateNumber).value,
+        day: functionRegistry.get("DAY").compute.bind({ locale })(dateNumber).value,
     };
 }
 
@@ -352,7 +352,7 @@ functionRegistry.add("ODOO.ACCOUNT.GROUP", {
     returns: ["NUMBER"],
     compute: function (accountType) {
         const accountTypes = this.getters.getAccountGroupCodes(toString(accountType));
-        return accountTypes.join(",");
+        return { value: accountTypes.join(",") };
     },
 });
 
