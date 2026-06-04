@@ -218,7 +218,10 @@ export class LinkPlugin extends Plugin {
             },
         ],
 
-        toolbar_groups: [withSequence(40, { id: "link", namespaces: ["compact", "expanded"] })],
+        toolbar_groups: [
+            withSequence(40, { id: "link", namespaces: ["compact", "expanded"] }),
+            withSequence(30, { id: "image_link", namespaces: ["image", "icon"] }),
+        ],
         toolbar_items: [
             {
                 id: "link",
@@ -237,7 +240,7 @@ export class LinkPlugin extends Plugin {
             },
             withSequence(20, {
                 id: "link",
-                groupId: "image_actions",
+                groupId: "image_link",
                 commandId: "openLinkTools",
                 isActive: isLinkActive,
                 isDisabled: (sel, nodes) =>
@@ -245,7 +248,7 @@ export class LinkPlugin extends Plugin {
             }),
             withSequence(30, {
                 id: "unlink",
-                groupId: "image_actions",
+                groupId: "image_link",
                 commandId: "removeLinkFromSelection",
                 isDisabled: () => this.removeLinkFromSelectionIsDisabled(),
             }),
