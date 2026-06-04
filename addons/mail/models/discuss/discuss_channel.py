@@ -692,7 +692,10 @@ class DiscussChannel(models.Model):
             )
             # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
             member.channel_id.sudo().message_post(
-                body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id
+                body=notification,
+                message_type='notification',
+                subtype_xmlid="mail.mt_comment",
+                author_id=partner.id,
             )
         member.unlink()
 
