@@ -20,13 +20,13 @@
             <InternalNoteButton label.translate="Note" class="'btn-secondary '"/>
             <button 
                 t-if="this.pos.config.use_presets"
-                class="btn btn-secondary btn-lg flex-shrink-0 border-0 lh-lg text-truncate"
+                class="btn btn-secondary btn-lg border-0 lh-lg text-truncate"
                 t-attf-class="{{this.currentOrder.preset_id?.color and `o_colorlist_item_color_${this.currentOrder.preset_id?.color}`}}"
                 t-on-click="() => this.pos.selectPreset()">
                 <span t-if="this.currentOrder.preset_id?.name" t-out="this.currentOrder.preset_id?.name" />
                 <span t-else="">Preset</span>
             </button>
-            <button t-if="!this.ui.isSmall and this.pos.showSaveOrderButton" t-att-disabled="this.pos.getOrder().isEmpty()" t-attf-class="{{ this.buttonClass }} ms-auto" t-on-click="() => this.pos.clickSaveOrder()">
+            <button t-if="!this.ui.isSmall and this.pos.showSaveOrderButton" t-att-disabled="this.pos.getOrder().isEmpty()" t-attf-class="{{ this.buttonClass }}" t-on-click="() => this.pos.clickSaveOrder()">
                 <i class="fa fa-upload" aria-hidden="true"/>
             </button>
             <button t-if="!this.ui.isSmall and this.props.onClickMore" class="more-btn btn btn-secondary btn-lg flex-shrink-0 ms-auto lh-lg" t-on-click="this.props.onClickMore">
