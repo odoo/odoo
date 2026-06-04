@@ -140,7 +140,7 @@ class DeliveryCarrier(models.Model):
                 weight,
                 default_package_type,
                 total_cost=partial_cost,
-                currency=order.company_id.currency_id,
+                currency=order.currency_id,
                 order=order,
             ))
         return packages
@@ -155,7 +155,7 @@ class DeliveryCarrier(models.Model):
                 commodities,
                 weight,
                 default_package_type,
-                currency=picking.company_id.currency_id,
+                currency=picking.sale_id.currency_id or picking.company_id.currency_id,
                 picking=picking,
             ))
             return packages
@@ -175,7 +175,7 @@ class DeliveryCarrier(models.Model):
                 package.package_type_id,
                 name=package.name,
                 total_cost=package_total_cost,
-                currency=picking.company_id.currency_id,
+                currency=picking.sale_id.currency_id or picking.company_id.currency_id,
                 picking=picking,
             ))
 
@@ -193,7 +193,7 @@ class DeliveryCarrier(models.Model):
                 default_package_type,
                 name='Bulk Content',
                 total_cost=package_total_cost,
-                currency=picking.company_id.currency_id,
+                currency=picking.sale_id.currency_id or picking.company_id.currency_id,
                 picking=picking,
             ))
         elif not packages:
