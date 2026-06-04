@@ -334,12 +334,16 @@ export class Message extends Component {
         return this.props.message;
     }
 
-    /** Max amount of quick actions, including "..." */
+    /**
+     * Max amount of quick actions.
+     *
+     * This count includes the button to open the dropdown menu ("..." button)
+     */
     get quickActionCount() {
         if (isMobileOS()) {
             return 1;
         }
-        return this.env.inChatWindow || this.env.inMeetingChat ? 2 : 4;
+        return this.env.inChatWindow || this.env.inMeetingChat || this.env.inChatter ? 2 : 4;
     }
 
     get showSubtypeDescription() {
