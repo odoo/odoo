@@ -7,25 +7,31 @@
         <field name="arch" type="xml">
             <form string="Payment Tokens" create="false" edit="false">
                 <sheet>
-                    <field name="active" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button"
-                                name="%(action_payment_transaction_linked_to_token)d"
-                                type="action" icon="fa-money" string="Payments">
-                        </button>
+                        <button
+                            string="Payments"
+                            type="action"
+                            name="%(action_payment_transaction_linked_to_token)d"
+                            icon="fa-money"
+                            class="oe_stat_button"
+                        />
                     </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <widget
+                        title="Archived"
+                        name="web_ribbon"
+                        bg_color="text-bg-danger"
+                        invisible="active"
+                    />
+                    <div class="oe_title">
+                        <label string="Token" for="display_name"/>
+                        <h1><field name="display_name" class="text-break"/></h1>
+                    </div>
                     <group>
-                        <group name="general_information">
-                            <field name="payment_details"/>
-                            <field name="payment_method_id"/>
-                            <field name="partner_id" />
-                        </group>
-                        <group name="technical_information">
-                            <field name="provider_id"/>
-                            <field name="provider_ref"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                        </group>
+                        <field string="Customer" name="partner_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field string="Method" name="payment_method_id"/>
+                        <field name="provider_id"/>
+                        <field name="provider_ref"/>
                     </group>
                 </sheet>
             </form>
@@ -37,9 +43,9 @@
         <field name="model">payment.token</field>
         <field name="arch" type="xml">
             <list string="Payment Tokens" create="false">
-                <field name="payment_details"/>
-                <field name="partner_id"/>
-                <field name="payment_method_id"/>
+                <field string="Token" name="payment_details"/>
+                <field string="Customer" name="partner_id"/>
+                <field string="Method" name="payment_method_id"/>
                 <field name="provider_id"/>
                 <field name="provider_ref"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
@@ -56,9 +62,18 @@
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <group>
-                    <filter string="Provider" name="provider_id" context="{'group_by': 'provider_id'}"/>
-                    <filter string="Partner" name="partner_id" context="{'group_by': 'partner_id'}"/>
-                    <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter
+                        string="Provider" name="provider_id" context="{'group_by': 'provider_id'}"
+                    />
+                    <filter
+                        string="Partner" name="partner_id" context="{'group_by': 'partner_id'}"
+                    />
+                    <filter
+                        string="Company"
+                        name="company"
+                        context="{'group_by': 'company_id'}"
+                        groups="base.group_multi_company"
+                    />
                 </group>
             </search>
         </field>

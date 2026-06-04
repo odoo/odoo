@@ -5075,7 +5075,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'partner_autocomplete',
             'payment',
             'payment_adyen',
-            'payment_authorize',
             'payment_custom',
             'payment_demo',
             'planning',
