@@ -21,7 +21,7 @@ defineSpreadsheetModels();
  */
 async function mountPublicDashboard(dataUrl) {
     const env = getMockEnv();
-    env.isFrozenSpreadsheet = () => true;
+    env.isPublicSpreadsheet = () => true;
     const component = await mountWithCleanup(PublicDashboard, {
         props: {
             dataUrl,

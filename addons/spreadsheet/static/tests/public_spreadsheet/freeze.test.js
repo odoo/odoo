@@ -358,15 +358,15 @@ test("Lists are purged from the frozen data", async function () {
     expect(data.lists).toEqual({});
 });
 
-test("Cannot copy in frozen spreadsheets", async function () {
+test("Cannot copy in public spreadsheets", async function () {
     const env = await makeSpreadsheetMockEnv();
-    env.isFrozenSpreadsheet = () => true;
+    env.isPublicSpreadsheet = () => true;
     const model = new Model(
         {},
         {
             custom: {
                 env,
-                isFrozenSpreadsheet: true,
+                isPublicSpreadsheet: true,
             },
         }
     );
