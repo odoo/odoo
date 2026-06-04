@@ -3319,3 +3319,48 @@ test("properties: discard recent changes on click away", async () => {
         message: "Clicking away should discard changes in the property definition popover",
     });
 });
+
+test("properties: selection field", async () => {
+    onRpc("has_access", () => true);
+
+    class Action extends models.Model {
+        _name = "action.test";
+
+        property_field_name = fields.Char();
+        property_model_name = fields.Char();
+        property_name = fields.Char();
+        selection_value = fields.Char();
+
+        _records = [
+            {
+                id: 1,
+                property_model_name: "partner",
+                property_field_name: "properties",
+                property_name: "property_2",
+            },
+        ];
+    }
+
+    defineModels([Action]);
+
+    await mountView({
+        type: "form",
+        resModel: "action.test",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="selection_value" widget="property_selection" options="{'property_model_name': 'property_model_name', 'property_field_name': 'property_field_name', 'property_name': 'property_name'}"/>
+                        <field name="property_model_name"/>
+                        <field name="property_field_name"/>
+                        <field name="property_name"/>
+                    </group>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
+
+    expect(".o_field_property_selection[name='selection_value']").toHaveCount(1);
+    expect(queryAllTexts(".o_field_property_selection select option")).toEqual(["", "A", "B", "C"]);
+});
