@@ -1,4 +1,4 @@
-import { reactive, useRef, useState } from "@web/owl2/utils";
+import { reactive, useRef } from "@web/owl2/utils";
 import {
     expect,
     manuallyDispatchProgrammaticEvent,
@@ -9,7 +9,7 @@ import {
 } from "@odoo/hoot";
 import { queryFirst, queryRect } from "@odoo/hoot-dom";
 import { animationFrame, mockTouch } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { useDraggable } from "@web/core/utils/draggable";
@@ -128,7 +128,7 @@ test("Dynamically disable draggable feature", async () => {
             </div>`;
         static props = ["*"];
         setup() {
-            this.state = useState(state);
+            this.state = proxy(state);
             useDraggable({
                 ref: useRef("root"),
                 elements: ".item",
@@ -453,7 +453,7 @@ test("allowDisconnected option", async () => {
             </div>`;
         static props = ["*"];
         setup() {
-            this.state = useState({ hasHandle: true });
+            this.state = proxy({ hasHandle: true });
             useDraggable({
                 ref: useRef("root"),
                 elements: ".handle",

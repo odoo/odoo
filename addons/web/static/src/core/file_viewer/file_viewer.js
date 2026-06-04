@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { useAutofocus, useBackButton, useService } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
@@ -59,7 +59,7 @@ export class FileViewer extends Component {
             y: 0,
         };
 
-        this.state = useState({
+        this.state = proxy({
             index: this.props.startIndex,
             file: this.props.files[this.props.startIndex],
             imageLoaded: false,

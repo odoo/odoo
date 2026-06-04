@@ -1,5 +1,5 @@
-import { useLayoutEffect, useState } from '@web/owl2/utils';
-import { Component, onMounted, onWillUnmount } from '@odoo/owl';
+import { useLayoutEffect } from '@web/owl2/utils';
+import { Component, onMounted, onWillUnmount, proxy } from '@odoo/owl';
 import { browser } from '@web/core/browser/browser';
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';
@@ -25,7 +25,7 @@ export class LocationSelectorDialog extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             locations: [],
             error: false,
             viewMode: 'list',

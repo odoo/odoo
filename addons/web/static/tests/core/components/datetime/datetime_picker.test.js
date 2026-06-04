@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { ensureArray } from "@web/core/utils/arrays";
 import {
@@ -1181,7 +1180,7 @@ test("focus proper month when changing props out of current month", async () => 
         static components = { DateTimePicker };
         static props = ["*"];
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 current: DateTime.now(),
             });
         }

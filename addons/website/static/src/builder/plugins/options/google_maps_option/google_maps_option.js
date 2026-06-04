@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { onMounted, onWillDestroy } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onMounted, onWillDestroy, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
@@ -21,7 +21,7 @@ export class GoogleMapsOption extends BaseOptionComponent {
 
         this.inputRef = useRef("inputRef");
         /** @type {{ formattedAddress: string }} */
-        this.state = useState({
+        this.state = proxy({
             formattedAddress: this.env.getEditingElement().dataset.pinAddress || "",
         });
         useLayoutEffect(

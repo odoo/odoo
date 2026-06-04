@@ -1,5 +1,5 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
@@ -29,7 +29,7 @@ export function useSearchBarToggler() {
     const ui = useService("ui");
 
     let isToggled = false;
-    const state = useState({
+    const state = proxy({
         isSmall: ui.isSmall,
         showSearchBar: false,
     });

@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
@@ -50,7 +49,7 @@ export class ModelFieldSelector extends Component {
             useBottomSheet: this.isBottomSheet,
         });
         this.keepLast = new KeepLast();
-        this.state = useState({ isInvalid: false, displayNames: [] });
+        this.state = proxy({ isInvalid: false, displayNames: [] });
         onWillStart(() => this.updateState(this.props));
         onWillUpdateProps((nextProps) => {
             const modelPathKeys = ["resModel", "path", "allowEmpty"];

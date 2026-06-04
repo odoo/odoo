@@ -1,4 +1,4 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { CheckBox } from "@web/core/checkbox/checkbox";
@@ -20,7 +20,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 
 class Many2ManyTagsFieldColorListPopover extends Component {
@@ -75,7 +75,7 @@ export class Many2ManyTagsField extends Component {
     };
 
     setup() {
-        this.state = useState({ expanded: false });
+        this.state = proxy({ expanded: false });
         this.orm = useService("orm");
         this.previousColorsMap = {};
         this.popover = usePopover(this.constructor.components.Popover, {

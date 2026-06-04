@@ -1,8 +1,8 @@
-import { reactive, useRef, useState } from "@web/owl2/utils";
+import { reactive, useRef } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryFirst, queryOne, queryRect } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { contains, mountWithCleanup, sortableDrag } from "@web/../tests/web_test_helpers";
 
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
@@ -800,7 +800,7 @@ test("Dynamically disable NestedSortable feature", async () => {
             `;
 
         setup() {
-            this.state = useState(state);
+            this.state = proxy(state);
             useNestedSortable({
                 ref: useRef("root"),
                 elements: ".item",

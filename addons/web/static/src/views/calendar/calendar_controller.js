@@ -1,4 +1,4 @@
-import { reactive, useState } from "@web/owl2/utils";
+import { reactive } from "@web/owl2/utils";
 import {
     deleteConfirmationMessage,
     ConfirmationDialog,
@@ -21,7 +21,7 @@ import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiSelectionButtons } from "@web/views/view_components/multi_selection_buttons";
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
 const { DateTime } = luxon;
@@ -78,7 +78,7 @@ export class CalendarController extends Component {
         });
         this.keyExpandSidebar = `calendar_sidepanel_expanded,${this.env.config.viewId},${this.env.config.actionId}`;
         const localSidePanelExpanded = browser.localStorage.getItem(this.keyExpandSidebar);
-        this.state = useState({
+        this.state = proxy({
             isWeekendVisible:
                 browser.localStorage.getItem("calendar.isWeekendVisible") != null
                     ? JSON.parse(browser.localStorage.getItem("calendar.isWeekendVisible"))

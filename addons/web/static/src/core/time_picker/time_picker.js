@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -50,7 +50,7 @@ export class TimePicker extends Component {
         this.menuRef = useChildRef();
         this.dropdownState = useDropdownState();
 
-        this.state = useState({
+        this.state = proxy({
             value: null,
             inputValue: "",
             isValid: true,

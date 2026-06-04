@@ -1,8 +1,8 @@
-import { reactive, useState } from "@web/owl2/utils";
+import { reactive } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, markup, xml } from "@odoo/owl";
+import { Component, markup, xml, proxy } from "@odoo/owl";
 import {
     contains,
     editAce,
@@ -99,7 +99,7 @@ test("CodeEditor shouldn't accepts markup values", async () => {
         static template = xml`<Parent value="this.state.value"/>`;
         static props = ["*"];
         setup() {
-            this.state = useState({ value: `<div>Some Text</div>` });
+            this.state = proxy({ value: `<div>Some Text</div>` });
         }
     }
 
@@ -138,7 +138,7 @@ test("onChange props not called when value props is updated", async () => {
             />
         `;
         static props = ["*"];
-        state = useState({ value: "initial value" });
+        state = proxy({ value: "initial value" });
         onChange(value) {
             expect.step(value || "__emptystring__");
         }
@@ -172,7 +172,7 @@ test("Default value correctly set and updates", async () => {
         `;
         static props = ["*"];
         setup() {
-            this.state = useState({ value: textA });
+            this.state = proxy({ value: textA });
             this.onChange = debounce(this.onChange.bind(this));
         }
         onChange(value) {
@@ -225,7 +225,7 @@ test("Mode props update imports the mode", async () => {
         static template = xml`<CodeEditor maxLines="10" mode="this.state.mode" />`;
         static props = ["*"];
         setup() {
-            this.state = useState({ mode: "xml" });
+            this.state = proxy({ mode: "xml" });
         }
         setMode(newMode) {
             this.state.mode = newMode;
@@ -263,7 +263,7 @@ test("Theme props updates imports the theme", async () => {
         static template = xml`<CodeEditor maxLines="10" theme="this.state.theme" />`;
         static props = ["*"];
         setup() {
-            this.state = useState({ theme: "" });
+            this.state = proxy({ theme: "" });
         }
         setTheme(newTheme) {
             this.state.theme = newTheme;
@@ -332,7 +332,7 @@ test("code editor can set cursor position", async () => {
             5
             `.replace(/^\s*/gm, ""); // simple dedent
 
-            this.state = useState({
+            this.state = proxy({
                 cursorPosition: { row: 3, column: 2 },
             });
         }

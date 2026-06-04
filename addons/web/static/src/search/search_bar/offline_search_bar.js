@@ -1,6 +1,6 @@
-import { onWillRender, useRef, useState } from "@web/owl2/utils";
+import { onWillRender, useRef } from "@web/owl2/utils";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -28,7 +28,7 @@ export class OfflineSearchBar extends Component {
                 ? useRef("autofocus")
                 : useAutofocus({ mobile: this.ui.isSmall }); // only force the focus on touch devices on small screens
         this.searchBarDropdownState = useDropdownState();
-        this.visibilityState = useState(this.props.toggler?.state || { showSearchBar: true });
+        this.visibilityState = proxy(this.props.toggler?.state || { showSearchBar: true });
 
         useHotkey("backspace", () => this.onBackspace(), {
             area: () => this.inputRef.el,
@@ -37,7 +37,7 @@ export class OfflineSearchBar extends Component {
         });
 
         this.allSearches = [];
-        this.state = useState({
+        this.state = proxy({
             searches: [],
             limit: INITIAL_SEARCH_LIMIT,
         });

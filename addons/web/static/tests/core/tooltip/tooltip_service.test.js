@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { click, drag, hover, leave, pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, mockTouch, runAllTimers } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { makeMockEnv, mockService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { popoverService } from "@web/core/popover/popover_service";
@@ -65,7 +64,7 @@ test("remove element with opened tooltip", async () => {
                 <button t-if="this.state.visible" data-tooltip="hello">Action</button>
             </div>`;
         setup() {
-            this.state = useState({ visible: true });
+            this.state = proxy({ visible: true });
             compState = this.state;
         }
     }

@@ -1,7 +1,7 @@
-import { useExternalListener, useLayoutEffect, useState } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 /**
  * @typedef Common
@@ -45,7 +45,7 @@ export class RainbowMan extends Component {
 
     setup() {
         useExternalListener(document.body, "click", this.closeRainbowMan);
-        this.state = useState({ isFading: false });
+        this.state = proxy({ isFading: false });
         this.delay = RainbowMan.rainbowFadeouts[this.props.fadeout];
         if (this.delay) {
             useLayoutEffect(

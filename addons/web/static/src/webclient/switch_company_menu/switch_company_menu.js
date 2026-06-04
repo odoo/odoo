@@ -1,10 +1,10 @@
-import { useChildSubEnv, useRef, useState } from "@web/owl2/utils";
+import { useChildSubEnv, useRef } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { _t } from "@web/core/l10n/translation";
 import { symmetricalDifference } from "@web/core/utils/arrays";
@@ -195,13 +195,13 @@ export class SwitchCompanyMenu extends Component {
         this.user = user;
         const actionService = useService("action");
 
-        this.companySelector = useState(
+        this.companySelector = proxy(
             new this.constructor.CompanySelector(actionService, this.dropdown)
         );
         useChildSubEnv({ companySelector: this.companySelector });
 
         this.searchInputRef = useRef("inputRef");
-        this.state = useState({});
+        this.state = proxy({});
         this.resetState();
 
         useHotkey("control+enter", () => this.confirm(), {

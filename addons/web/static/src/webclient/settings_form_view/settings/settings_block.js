@@ -1,7 +1,7 @@
-import { onWillRender, useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { onWillRender, useChildSubEnv, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { HighlightText } from "../highlight_text/highlight_text";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { normalize } from "@web/core/l10n/utils";
 
 export class SettingsBlock extends Component {
@@ -16,10 +16,10 @@ export class SettingsBlock extends Component {
         class: { type: String, optional: true },
     };
     setup() {
-        this.state = useState({
+        this.state = proxy({
             search: this.env.searchState,
         });
-        this.showAllContainerState = useState({
+        this.showAllContainerState = proxy({
             showAllContainer: false,
         });
         useChildSubEnv({

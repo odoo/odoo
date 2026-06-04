@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import {
     defineModels,
@@ -12,7 +11,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -399,7 +398,7 @@ test("async method loadFields is protected", async () => {
         `;
         static props = ["*"];
         setup() {
-            this.state = useState({ displayChild: true });
+            this.state = proxy({ displayChild: true });
         }
     }
 

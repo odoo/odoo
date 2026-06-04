@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 const NO_OP = () => {};
 
@@ -35,7 +34,7 @@ export class WebsiteDialog extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             disabled: false,
         });
         this.modalRef = useChildRef();

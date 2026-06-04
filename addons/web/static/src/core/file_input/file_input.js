@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { useFileUploader } from "@web/core/utils/files";
 
 /**
@@ -46,7 +46,7 @@ export class FileInput extends Component {
     setup() {
         this.uploadFiles = useFileUploader();
         this.fileInputRef = useRef("file-input");
-        this.state = useState({
+        this.state = proxy({
             // Disables upload button if currently uploading.
             isDisable: false,
         });

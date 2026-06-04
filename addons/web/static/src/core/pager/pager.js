@@ -1,8 +1,8 @@
-import { useExternalListener, useLayoutEffect, useState } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { useAutofocus } from "../utils/hooks";
 import { clamp } from "../utils/numbers";
 
-import { Component, EventBus } from "@odoo/owl";
+import { Component, EventBus, proxy } from "@odoo/owl";
 
 export const PAGER_UPDATED_EVENT = "PAGER:UPDATED";
 export const pagerBus = new EventBus();
@@ -37,7 +37,7 @@ export class Pager extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             isEditing: false,
             isDisabled: false,
         });

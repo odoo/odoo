@@ -1,9 +1,8 @@
-import { useState } from "@web/owl2/utils";
 import { test, expect } from "@odoo/hoot";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { click, press } from "@odoo/hoot-dom";
 import { Pager } from "@web/core/pager/pager";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { config as transitionConfig } from "@web/core/transition";
 
@@ -12,7 +11,7 @@ class PagerController extends Component {
     static components = { Pager };
     static props = ["*"];
     setup() {
-        this.state = useState({ ...this.props });
+        this.state = proxy({ ...this.props });
     }
     async updateProps(nextProps) {
         Object.assign(this.state, nextProps);

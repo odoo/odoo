@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { beforeEach, expect, queryFirst, test } from "@odoo/hoot";
 import {
     click,
@@ -292,7 +291,7 @@ test("false, null and undefined are accepted values", async () => {
         static template = xml`<TimePicker value="this.state.value"/>`;
 
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 value: null,
             });
         }
@@ -358,7 +357,7 @@ test("changing the props value updates the input", async () => {
         static template = xml`<TimePicker value="this.state.value" onChange.bind="this.onChange"/>`;
 
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 value: null,
             });
         }
@@ -404,7 +403,7 @@ test("ensure placeholder is customizable", async () => {
         static template = xml`<TimePicker placeholder="this.state.placeholder"/>`;
 
         setup() {
-            this.state = useState({ placeholder: undefined });
+            this.state = proxy({ placeholder: undefined });
         }
     }
 

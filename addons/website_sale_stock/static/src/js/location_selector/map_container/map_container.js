@@ -1,9 +1,8 @@
-import { useState } from "@web/owl2/utils";
 import {
     LocationSchedule
 } from '@website_sale_stock/js/location_selector/location_schedule/location_schedule';
 import { Map } from '@website_sale_stock/js/location_selector/map/map';
-import { Component, onWillStart } from '@odoo/owl';
+import { Component, onWillStart, proxy } from '@odoo/owl';
 import { AssetsLoadingError, loadCSS, loadJS } from '@web/core/assets';
 import { _t } from '@web/core/l10n/translation';
 
@@ -46,7 +45,7 @@ export class MapContainer extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             shouldLoadMap: false,
         });
 

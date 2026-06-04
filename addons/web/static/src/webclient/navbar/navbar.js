@@ -1,4 +1,4 @@
-import { render, useChildSubEnv, useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { render, useChildSubEnv, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
@@ -12,6 +12,7 @@ import {
     Component,
     onWillDestroy,
     onWillUnmount,
+    proxy,
 } from "@odoo/owl";
 
 const systrayRegistry = registry.category("systray");
@@ -72,11 +73,11 @@ export class NavBar extends Component {
         // allow systray items to trigger an adapt when their layout changes
         useChildSubEnv({ redrawNavbar: renderAndAdapt });
 
-        this.state = useState({
+        this.state = proxy({
             isAllAppsMenuOpened: false,
             isAppMenuSidebarOpened: false,
         });
-        this.ui = useState(useService("ui"));
+        this.ui = proxy(useService("ui"));
     }
 
     handleItemError(error, item) {

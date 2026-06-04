@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 
 export class SettingsApp extends Component {
     static template = "web.SettingsApp";
@@ -11,7 +11,7 @@ export class SettingsApp extends Component {
         slots: Object,
     };
     setup() {
-        this.state = useState({
+        this.state = proxy({
             search: this.env.searchState,
         });
         this.settingsAppRef = useRef("settingsApp");

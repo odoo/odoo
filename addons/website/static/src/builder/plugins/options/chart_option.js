@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { registry } from "@web/core/registry";
@@ -19,7 +19,7 @@ export class ChartOption extends BaseOptionComponent {
             this.prepareData(this.env.getEditingElement())
         );
 
-        this.state = useState({ currentCell: {} });
+        this.state = proxy({ currentCell: {} });
 
         this.domState = useDomState((editingElement) => ({
             data: this.getData(editingElement),

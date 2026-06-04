@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
@@ -19,19 +18,19 @@ export class CourseTagAddDialog extends Component {
 
     async setup() {
         super.setup();
-        this.choices = useState({
+        this.choices = proxy({
             tagIds: [],
             tagGroupIds: [],
             tagId: null,
             tagGroupId: null,
         });
-        this.state = useState({
+        this.state = proxy({
             showTagGroup: false,
             canCreateTagGroup: false,
             canCreateTag: false,
             alertMsg: "",
         });
-        this.validation = useState({
+        this.validation = proxy({
             tagIsValid: undefined,
             tagGroupIsValid: undefined,
         });

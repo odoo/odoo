@@ -1,10 +1,9 @@
-import { useState } from "@web/owl2/utils";
 import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { Transition } from "../transition";
 import { useBus } from "../utils/hooks";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { PAGER_UPDATED_EVENT, pagerBus } from "./pager";
 
 export class PagerIndicator extends Component {
@@ -13,7 +12,7 @@ export class PagerIndicator extends Component {
     static props = {};
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             show: false,
             value: "-",
             total: 0,

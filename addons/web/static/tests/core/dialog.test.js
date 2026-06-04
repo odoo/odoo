@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { destroy, expect, mockTouch, mockUserAgent, test } from "@odoo/hoot";
 import { keyDown, keyUp, press, queryAllTexts, queryOne, resize } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onMounted, xml } from "@odoo/owl";
+import { Component, onMounted, xml, proxy } from "@odoo/owl";
 import {
     contains,
     getService,
@@ -118,7 +117,7 @@ test("hotkey control+enter on input triggers blur event before clicking dialog b
         static props = ["*"];
 
         setup() {
-            this.state = useState({ value: "" });
+            this.state = proxy({ value: "" });
         }
 
         onInputBlur(ev) {
@@ -248,7 +247,7 @@ test("render custom footer buttons is possible", async () => {
         static components = { SimpleButtonsDialog };
         setup() {
             super.setup();
-            this.state = useState({
+            this.state = proxy({
                 displayDialog: true,
             });
         }

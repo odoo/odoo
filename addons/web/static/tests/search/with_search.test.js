@@ -1,7 +1,7 @@
-import { useState, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onWillStart, onWillUpdateProps, xml } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, xml, proxy } from "@odoo/owl";
 import {
     defineModels,
     fields,
@@ -269,7 +269,7 @@ test("react to prop 'domain' changes", async () => {
         static components = { WithSearch, TestComponent };
         setup() {
             useSubEnv({ config: {} });
-            this.searchState = useState({
+            this.searchState = proxy({
                 resModel: "animal",
                 domain: [["type", "=", "carnivorous"]],
             });
@@ -327,7 +327,7 @@ test("search defaults are removed from context at reload", async function () {
         static components = { WithSearch, TestComponent };
         setup() {
             useSubEnv({ config: {} });
-            this.searchState = useState({
+            this.searchState = proxy({
                 resModel: "animal",
                 domain: [["type", "=", "carnivorous"]],
                 context,

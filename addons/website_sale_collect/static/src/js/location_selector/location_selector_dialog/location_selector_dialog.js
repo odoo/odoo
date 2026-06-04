@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { patch } from '@web/core/utils/patch';
 import { SelectMenu } from '@web/core/select_menu/select_menu';
 import { _t } from '@web/core/l10n/translation';
@@ -26,7 +26,7 @@ patch(LocationSelectorDialog.prototype, {
     setup() {
         super.setup();
         if (this.isClickAndCollect) {
-            this.state = useState({
+            this.state = proxy({
                 ...this.state,
                 countries: [],
                 selectedCountryData: {},

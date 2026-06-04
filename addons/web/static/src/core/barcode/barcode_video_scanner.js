@@ -1,4 +1,4 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 /* global BarcodeDetector */
 
 import { browser } from "@web/core/browser/browser";
@@ -6,7 +6,7 @@ import { delay } from "@web/core/utils/concurrency";
 import { loadJS } from "@web/core/assets";
 import { isVideoElementReady, buildZXingBarcodeDetector } from "./ZXingBarcodeDetector";
 import { CropOverlay } from "./crop_overlay";
-import { Component, onMounted, onWillStart, onWillUnmount, status } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, status, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 
@@ -42,7 +42,7 @@ export class BarcodeVideoScanner extends Component {
         this.overlayInfo = {};
         this.zoomRatio = 1;
         this.scanPaused = false;
-        this.state = useState({
+        this.state = proxy({
             isReady: false,
         });
 

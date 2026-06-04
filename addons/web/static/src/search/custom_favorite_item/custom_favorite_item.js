@@ -1,11 +1,11 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { AccordionItem } from "@web/core/dropdown/accordion_item";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
@@ -18,7 +18,7 @@ export class CustomFavoriteItem extends Component {
         this.actionService = useService("action");
         this.notificationService = useService("notification");
         this.descriptionRef = useRef("description");
-        this.state = useState({
+        this.state = proxy({
             description: this.env.config.getDisplayName(),
             isDefault: false,
         });

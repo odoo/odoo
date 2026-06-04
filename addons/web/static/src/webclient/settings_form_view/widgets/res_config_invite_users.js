@@ -1,10 +1,9 @@
-import { useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 class ResConfigInviteUsers extends Component {
@@ -19,7 +18,7 @@ class ResConfigInviteUsers extends Component {
         this.action = useService("action");
         this.notification = useService("notification");
 
-        this.state = useState({
+        this.state = proxy({
             status: "idle", // idle, inviting
             emails: "",
             invite: null,

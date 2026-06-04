@@ -1,5 +1,5 @@
-import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { sortBy } from "@web/core/utils/arrays";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -128,7 +128,7 @@ export class ModelFieldSelectorPopover extends Component {
 
     setup() {
         this.fieldService = useService("field");
-        this.state = useState({ page: null });
+        this.state = proxy({ page: null });
         this.keepLast = new KeepLast();
         this.debouncedSearchFields = debounce(this.searchFields.bind(this), 250);
 

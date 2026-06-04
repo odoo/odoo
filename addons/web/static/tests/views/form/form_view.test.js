@@ -1,4 +1,4 @@
-import { render, useRef, useState } from "@web/owl2/utils";
+import { render, useRef } from "@web/owl2/utils";
 import {
     after,
     before,
@@ -31,6 +31,7 @@ import {
     onWillUpdateProps,
     useEffect,
     xml,
+    proxy,
 } from "@odoo/owl";
 import {
     clickSave,
@@ -10091,7 +10092,7 @@ test(`basic support for widgets: onchange update`, async () => {
         static props = ["*"];
         static template = xml`<t t-out="this.state.dataToDisplay" />`;
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 dataToDisplay: this.props.record.data.foo,
             });
             useEffect(() => {

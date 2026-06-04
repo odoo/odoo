@@ -1,8 +1,8 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { destroy, expect, getFixture, onError, test } from "@odoo/hoot";
 import { keyDown, keyUp, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockUserAgent, tick } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import {
     contains,
     getService,
@@ -134,7 +134,7 @@ test("[accesskey] attrs replaced by [data-hotkey], part 2", async () => {
         `;
         static props = ["*"];
         setup() {
-            this.state = useState({ foo: true });
+            this.state = proxy({ foo: true });
             this.step = expect.step.bind();
         }
     }
@@ -859,7 +859,7 @@ test("operating area and UI active element", async () => {
         `;
         static props = ["*"];
         setup() {
-            this.state = useState({ foo: false });
+            this.state = proxy({ foo: false });
             const areaRef = useRef("area");
             useHotkey(
                 "space",

@@ -1,10 +1,10 @@
-import { onWillRender, useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { onWillRender, useExternalListener, useRef } from "@web/owl2/utils";
 import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
 import { mergeClasses } from "@web/core/utils/classname";
 
 export class AutoComplete extends Component {
@@ -74,7 +74,7 @@ export class AutoComplete extends Component {
         this.mouseSelectionActive = false;
         this.isOptionSelected = false;
 
-        this.state = useState({
+        this.state = proxy({
             navigationRev: 0,
             optionsRev: 0,
             open: false,

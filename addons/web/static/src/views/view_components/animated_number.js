@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { formatInteger, formatMonetary } from "@web/views/fields/formatters";
 
-import { Component, onWillUnmount, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUnmount, onWillUpdateProps, proxy } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { MultiCurrencyPopover } from "@web/views/view_components/multi_currency_popover";
@@ -26,7 +25,7 @@ export class AnimatedNumber extends Component {
     static enableAnimations = true;
 
     setup() {
-        this.state = useState({ value: this.props.value });
+        this.state = proxy({ value: this.props.value });
         this.handle = null;
         this.multiCurrencyPopover = usePopover(MultiCurrencyPopover, {
             position: "right",

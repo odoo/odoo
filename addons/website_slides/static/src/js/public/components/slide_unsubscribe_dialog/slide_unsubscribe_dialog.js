@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -17,7 +16,7 @@ export class SlideUnsubscribeDialog extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             buttonDisabled: false,
         });
         this.channelID = parseInt(this.props.channelId, 10);

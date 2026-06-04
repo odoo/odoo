@@ -1,8 +1,8 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { delay } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
-import { Component, EventBus } from "@odoo/owl";
+import { Component, EventBus, proxy } from "@odoo/owl";
 
 export class WebsiteLoader extends Component {
     static props = {
@@ -24,7 +24,7 @@ export class WebsiteLoader extends Component {
             showProgressBar: true,
             showCloseButton: false,
         };
-        this.state = useState({
+        this.state = proxy({
             ...initialState,
         });
         this.initInstanceVariables();

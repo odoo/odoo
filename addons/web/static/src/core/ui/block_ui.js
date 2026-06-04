@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 
-import { EventBus, Component } from "@odoo/owl";
+import { EventBus, Component, proxy } from "@odoo/owl";
 
 export class BlockUI extends Component {
     static props = {
@@ -41,7 +40,7 @@ export class BlockUI extends Component {
             },
         ];
         this.BLOCK_STATES = { UNBLOCKED: 0, BLOCKED: 1, VISIBLY_BLOCKED: 2 };
-        this.state = useState({
+        this.state = proxy({
             blockState: this.BLOCK_STATES.UNBLOCKED,
             line1: "",
             line2: "",

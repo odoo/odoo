@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { _t } from "@web/core/l10n/translation";
 import { useBus } from "@web/core/utils/hooks";
@@ -16,7 +15,7 @@ export class CalendarSidePanel extends Component {
     static props = ["model", "editRecord", "sidePanelExpanded", "toggleSidePanel"];
 
     setup() {
-        this.state = useState({ isDragging: false });
+        this.state = proxy({ isDragging: false });
         useBus(this.props.model.bus, "CALENDAR_EVENT_DRAG", ({ detail }) => {
             this.state.isDragging = detail.dragging;
         });

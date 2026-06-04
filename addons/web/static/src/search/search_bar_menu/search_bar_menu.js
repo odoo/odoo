@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -51,7 +50,7 @@ export class SearchBarMenu extends Component {
         }
         this.fields = sortBy(fields, "string");
         // Favorite
-        this.state = useState({ sharedFavoritesExpanded: false });
+        this.state = proxy({ sharedFavoritesExpanded: false });
         useBus(this.env.searchModel, "update", this.render);
         this.dialogService = useService("dialog");
         this.notificationService = useService("notification");

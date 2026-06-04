@@ -1,4 +1,4 @@
-import { render, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { render, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Notebook } from "@web/core/notebook/notebook";
 import { Setting } from "./setting/setting";
@@ -16,7 +16,7 @@ import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
 import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
 
-import { Component, onMounted, onWillUnmount, xml } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, xml, proxy } from "@odoo/owl";
 
 export class FormRenderer extends Component {
     static template = xml`<t t-call="{{ this.templates.FormRenderer }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this: this }) }" />`;
@@ -55,7 +55,7 @@ export class FormRenderer extends Component {
         this.evaluateBooleanExpr = evaluateBooleanExpr;
         const { archInfo, Compiler, record } = this.props;
         const templates = { FormRenderer: archInfo.xmlDoc };
-        this.state = useState({}); // Used by Form Compiler
+        this.state = proxy({}); // Used by Form Compiler
         this.templates = useViewCompiler(Compiler || FormCompiler, templates);
         useSubEnv({ model: record.model });
         this.uiService = useService("ui");

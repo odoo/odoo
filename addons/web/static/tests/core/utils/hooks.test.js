@@ -1,4 +1,4 @@
-import { reactive, render, useState } from "@web/owl2/utils";
+import { reactive, render } from "@web/owl2/utils";
 import { describe, destroy, expect, getFixture, mockUserAgent, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockTouch } from "@odoo/hoot-mock";
@@ -10,7 +10,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { Component, onMounted, xml } from "@odoo/owl";
+import { Component, onMounted, xml, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { CommandPalette } from "@web/core/commands/command_palette";
 import { registry } from "@web/core/registry";
@@ -40,7 +40,7 @@ describe("useAutofocus", () => {
             setup() {
                 useAutofocus();
 
-                this.state = useState(state);
+                this.state = proxy(state);
             }
         }
 
@@ -68,7 +68,7 @@ describe("useAutofocus", () => {
             setup() {
                 useAutofocus();
 
-                this.state = useState(state);
+                this.state = proxy(state);
             }
         }
 
@@ -96,7 +96,7 @@ describe("useAutofocus", () => {
             setup() {
                 useAutofocus();
 
-                this.state = useState(state);
+                this.state = proxy(state);
             }
         }
 
@@ -182,7 +182,7 @@ describe("useAutofocus", () => {
                 useAutofocus({ refName: "second" });
                 useAutofocus({ refName: "first" }); // test requires this at second position
 
-                this.state = useState(state);
+                this.state = proxy(state);
             }
         }
 
@@ -241,7 +241,7 @@ describe("useAutofocus", () => {
             setup() {
                 useAutofocus();
 
-                this.state = useState(state);
+                this.state = proxy(state);
             }
         }
 
@@ -285,7 +285,7 @@ describe("useBus", () => {
             static template = xml`<MyComponent t-if="this.state.child" />`;
 
             setup() {
-                this.state = useState(state);
+                this.state = proxy(state);
             }
         }
 
@@ -362,7 +362,7 @@ describe("useService", () => {
             static template = xml`<MyComponent t-if="this.state.child" />`;
 
             setup() {
-                this.state = useState(state);
+                this.state = proxy(state);
             }
         }
 
@@ -655,7 +655,7 @@ describe("useChildRef and useForwardRefToParent", () => {
             static components = { Child };
             setup() {
                 this.someRef = useChildRef();
-                this.state = useState({ hasChild: true });
+                this.state = proxy({ hasChild: true });
             }
         }
 

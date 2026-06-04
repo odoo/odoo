@@ -1,5 +1,5 @@
-import { useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { ExpressionEditor } from "@web/core/expression_editor/expression_editor";
 import { evaluateExpr } from "@web/core/py_js/py";
@@ -20,7 +20,7 @@ export class ExpressionEditorDialog extends Component {
 
     setup() {
         this.notification = useService("notification");
-        this.state = useState({
+        this.state = proxy({
             expression: this.props.expression,
         });
         this.confirmButtonRef = useRef("confirm");

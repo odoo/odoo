@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 
@@ -15,7 +14,7 @@ export class ResUserGroupIdsPopover extends Component {
     setup() {
         this.actionService = useService("action");
 
-        this.state = useState({
+        this.state = proxy({
             showExtraGroups: false,
         });
 

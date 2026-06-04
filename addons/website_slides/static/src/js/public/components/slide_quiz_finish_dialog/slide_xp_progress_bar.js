@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, proxy } from "@odoo/owl";
 
 export class SlideXPProgressBar extends Component {
     static props = {
@@ -12,7 +11,7 @@ export class SlideXPProgressBar extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({
+        this.state = proxy({
             hideRankBounds: true,
             rankLowerBound: this.props.previousRank.lower_bound,
             rankProgressPercentage: this.props.previousRank.progress,

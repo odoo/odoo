@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 /* global SignaturePad */
 
 import { loadJS } from "@web/core/assets";
@@ -10,7 +10,7 @@ import { useAutofocus } from "@web/core/utils/hooks";
 import { renderToString } from "@web/core/utils/render";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 
 let htmlId = 0;
 export class NameAndSignature extends Component {
@@ -41,7 +41,7 @@ export class NameAndSignature extends Component {
         this.currentFont = 0;
         this.drawTimeout = null;
 
-        this.state = useState({
+        this.state = proxy({
             signMode:
                 this.props.mode || (this.props.noInputName && !this.defaultName ? "draw" : "auto"),
             showSignatureArea: !!(this.props.noInputName || this.defaultName),

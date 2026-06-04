@@ -1,9 +1,9 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { HierarchyNavbar } from "./hierarchy_navbar";
 import { Layout } from "@web/search/layout";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
@@ -14,8 +14,8 @@ export class ViewHierarchy extends Component {
     setup() {
         this.action = useService("action");
         this.orm = useService("orm");
-        this.state = useState({ showInactive: false, searchedView: {}, viewTree: {} });
-        this.websites = useState({ names: new Set(["All Websites"]), selected: "All Websites" });
+        this.state = proxy({ showInactive: false, searchedView: {}, viewTree: {} });
+        this.websites = proxy({ names: new Set(["All Websites"]), selected: "All Websites" });
         this.viewId = this.props.action.context.active_id || router.current.active_id;
         this.hideGenericViewByWebsite = {};
 

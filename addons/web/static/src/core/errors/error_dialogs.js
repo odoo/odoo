@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import { browser } from "../browser/browser";
 import { Dialog } from "../dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -7,8 +6,7 @@ import { Tooltip } from "@web/core/tooltip/tooltip";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { capitalize } from "../utils/strings";
-
-import { Component, markup, signal } from "@odoo/owl";
+import { Component, markup, signal, proxy } from "@odoo/owl";
 
 const { DateTime } = luxon;
 
@@ -56,7 +54,7 @@ export class ErrorDialog extends Component {
     copyButtonRef = signal(null);
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             showTraceback: false,
         });
         this.popover = usePopover(Tooltip);

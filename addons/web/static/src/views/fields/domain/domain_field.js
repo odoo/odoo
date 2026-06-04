@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 import { useGetDefaultLeafDomain } from "@web/core/domain_selector/utils";
@@ -42,7 +41,7 @@ export class DomainField extends Component {
         this.getDefaultLeafDomain = useGetDefaultLeafDomain();
         this.addDialog = useOwnedDialogs();
 
-        this.state = useState({
+        this.state = proxy({
             isValid: null,
             recordCount: null,
             hasLimitedCount: null,

@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useState } from "@web/owl2/utils";
 import { advanceTime, after, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { leave, queryFirst, waitFor } from "@odoo/hoot-dom";
 import {
@@ -9,7 +8,7 @@ import {
     enableTransitions,
     runAllTimers,
 } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -39,7 +38,7 @@ class Counter extends Component {
         </div>
     `;
     setup() {
-        this.state = useState({ interval: 1, value: 0 });
+        this.state = proxy({ interval: 1, value: 0 });
     }
     onIncrement() {
         this.state.value += this.state.interval;
@@ -299,7 +298,7 @@ test("next step with new anchor at same position", async () => {
 
     class Dummy extends Component {
         static props = ["*"];
-        state = useState({ bool: true });
+        state = proxy({ bool: true });
         static template = xml/*html*/ `
             <button class="foo w-100" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
             <button class="bar w-100" t-if="!this.state.bool">Bar</button>

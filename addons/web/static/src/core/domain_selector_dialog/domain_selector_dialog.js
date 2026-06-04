@@ -1,6 +1,6 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Domain } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
@@ -39,7 +39,7 @@ export class DomainSelectorDialog extends Component {
     setup() {
         this.notification = useService("notification");
         this.orm = useService("orm");
-        this.state = useState({ domain: this.props.domain });
+        this.state = proxy({ domain: this.props.domain });
         this.confirmButtonRef = useRef("confirm");
     }
 

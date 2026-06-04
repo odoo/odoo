@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 
 export class FormActionFieldsOption extends BaseOptionComponent {
@@ -12,7 +11,7 @@ export class FormActionFieldsOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.prepareFormModel = this.dependencies.websiteFormOption.prepareFormModel;
-        this.state = useState({
+        this.state = proxy({
             formInfo: {
                 fields: [],
             },

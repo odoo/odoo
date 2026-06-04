@@ -1,4 +1,4 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { expect, getFixture, queryRect, test } from "@odoo/hoot";
 import {
     click,
@@ -13,7 +13,7 @@ import {
     resize,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
-import { Component, onMounted, onPatched, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, xml, proxy } from "@odoo/owl";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
@@ -93,7 +93,7 @@ class NoBottomSheetDropdown extends Component {
 }
 
 function startOpenState() {
-    const state = useState({
+    const state = proxy({
         isOpen: true,
         open: () => {
             state.isOpen = true;
@@ -235,7 +235,7 @@ test("close on click outside when the opening active element was removed", async
         `;
 
         setup() {
-            this.state = useState({ showActive: true });
+            this.state = proxy({ showActive: true });
             useActiveElement("active");
         }
     }
@@ -327,7 +327,7 @@ test("hold position on hover", async () => {
     let parentState;
     class Parent extends Component {
         setup() {
-            this.state = useState({ filler: false });
+            this.state = proxy({ filler: false });
             parentState = this.state;
         }
         static template = xml`
@@ -792,7 +792,7 @@ test("Dropdown with CheckboxItem: toggle value", async () => {
         static components = { Dropdown, CheckboxItem };
         static props = [];
         setup() {
-            this.state = useState({ checked: false });
+            this.state = proxy({ checked: false });
         }
         onSelected() {
             this.state.checked = !this.state.checked;
@@ -905,7 +905,7 @@ test("t-if t-else as toggler", async () => {
             `;
 
         setup() {
-            state = useState({ foo: "bar" });
+            state = proxy({ foo: "bar" });
             this.state = state;
         }
     }
@@ -1014,7 +1014,7 @@ test("multi-level dropdown: initial open state can be true", async () => {
     class Parent extends MultiLevelDropdown {
         setup() {
             this.dropdownProps = {
-                state: useState({
+                state: proxy({
                     isOpen: true,
                     open: () => {},
                     close: () => {},
@@ -1445,7 +1445,7 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
                 </Dropdown>
             `;
         setup() {
-            this.state = useState({ foo: false });
+            this.state = proxy({ foo: false });
             parentState = this.state;
         }
     }

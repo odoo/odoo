@@ -1,8 +1,8 @@
-import { render, useState } from "@web/owl2/utils";
+import { render } from "@web/owl2/utils";
 import { expect, test, getFixture } from "@odoo/hoot";
 import { press, queryAll, queryAllAttributes, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
@@ -872,7 +872,7 @@ test("support of connector '!' (mode readonly)", async () => {
         static template = xml`<DomainSelector resModel="'partner'" domain="this.state.domain"/>`;
         static props = ["*"];
         setup() {
-            this.state = useState({ domain: `[]` });
+            this.state = proxy({ domain: `[]` });
         }
     }
 
@@ -990,7 +990,7 @@ test("support of connector '!' (debug mode)", async () => {
         static template = xml`<DomainSelector resModel="'partner'" isDebugMode="true" domain="this.state.domain"/>`;
         static props = ["*"];
         setup() {
-            this.state = useState({ domain: `[]` });
+            this.state = proxy({ domain: `[]` });
         }
     }
 
@@ -1212,7 +1212,7 @@ test("support properties (mode readonly)", async () => {
         static template = xml`<DomainSelector resModel="'partner'" domain="this.state.domain"/>`;
         static props = ["*"];
         setup() {
-            this.state = useState({ domain: `[]` });
+            this.state = proxy({ domain: `[]` });
         }
     }
 

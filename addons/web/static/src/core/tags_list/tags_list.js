@@ -1,6 +1,5 @@
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
-import { useState } from "@web/owl2/utils";
 
 export class TagsList extends Component {
     static template = "web.TagsList";
@@ -12,7 +11,7 @@ export class TagsList extends Component {
     };
 
     setup() {
-        this.state = useState({ expanded: false });
+        this.state = proxy({ expanded: false });
     }
 
     get invisibleTags() {

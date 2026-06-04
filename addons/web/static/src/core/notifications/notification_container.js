@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { Notification } from "./notification";
 import { Transition } from "@web/core/transition";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 
 export class NotificationContainer extends Component {
     static props = {
@@ -20,6 +19,6 @@ export class NotificationContainer extends Component {
     static components = { Notification, Transition };
 
     setup() {
-        this.notifications = useState(this.props.notifications);
+        this.notifications = proxy(this.props.notifications);
     }
 }

@@ -1,5 +1,5 @@
-import { useState, useSubEnv } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { useOptionsSubEnv } from "@html_builder/utils/utils";
 
@@ -21,7 +21,7 @@ export class ThemeTab extends Component {
             colorPresetToShow: this.props.colorPresetToShow,
             shadowSizeToShow: this.props.shadowSizeToShow,
         });
-        this.state = useState({
+        this.state = proxy({
             fontsData: {},
         });
         this.optionsContainers = this.env.editor.resources["theme_options"];

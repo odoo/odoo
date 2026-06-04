@@ -1,4 +1,4 @@
-import { reactive, useState } from "@web/owl2/utils";
+import { reactive } from "@web/owl2/utils";
 import { expect, getFixture, test } from "@odoo/hoot";
 import {
     click,
@@ -11,7 +11,7 @@ import {
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 
-import { Component, onWillDestroy, onWillStart, xml } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, xml, proxy } from "@odoo/owl";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickFieldDropdown,
@@ -13247,7 +13247,7 @@ test("one2many custom which can be edited in dialog or on the line", async () =>
         setup() {
             super.setup();
             this.canOpenRecord = true;
-            this.customState = useState(customState);
+            this.customState = proxy(customState);
         }
 
         get rendererProps() {

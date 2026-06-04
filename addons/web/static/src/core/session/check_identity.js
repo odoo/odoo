@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, EventBus, onWillDestroy, onWillStart } from "@odoo/owl";
+import { Component, EventBus, onWillDestroy, onWillStart, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -37,7 +36,7 @@ export class CheckIdentityForm extends Component {
 
         this.checkIdentityService = useService("check_identity");
         this.checkIdentityService.bus.trigger("start");
-        this.state = useState({
+        this.state = proxy({
             error: false,
             authMethod: null,
         });

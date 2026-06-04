@@ -1,5 +1,5 @@
-import { onWillRender, useState } from "@web/owl2/utils";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { onWillRender } from "@web/owl2/utils";
+import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { MAX_VALID_DATE, MIN_VALID_DATE, clampDate, isInRange, today } from "../l10n/dates";
 import { localization } from "../l10n/localization";
@@ -364,7 +364,7 @@ export class DateTimePicker extends Component {
         this.title = "";
         this.shouldAdjustFocusDate = false;
 
-        this.state = useState({
+        this.state = proxy({
             /** @type {DateTime | null} */
             focusDate: null,
             /** @type {DateTime | null} */

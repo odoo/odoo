@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -17,7 +17,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { Transition } from "@web/core/transition";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, proxy } from "@odoo/owl";
 
 const STICKY_CLASS = "o_mobile_sticky";
 
@@ -113,10 +113,10 @@ export class ControlPanel extends Component {
         this.actionService = useService("action");
         this.offlineService = useService("offline");
         this.pagerProps = this.env.config.pagerProps
-            ? useState(this.env.config.pagerProps)
+            ? proxy(this.env.config.pagerProps)
             : undefined;
         this.notificationService = useService("notification");
-        this.breadcrumbs = useState(this.env.config.breadcrumbs);
+        this.breadcrumbs = proxy(this.env.config.breadcrumbs);
         this.orm = useService("orm");
         this.dialogService = useService("dialog");
 
@@ -153,7 +153,7 @@ export class ControlPanel extends Component {
             this.orm
         );
 
-        this.state = useState({
+        this.state = proxy({
             embeddedInfos: {
                 showEmbedded:
                     !!this.embeddedActionsConfigHandler.getEmbeddedActionsConfig(

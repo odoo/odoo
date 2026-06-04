@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { runAllTimers } from "@odoo/hoot-mock";
-import { Component, onError, xml } from "@odoo/owl";
+import { Component, onError, xml, proxy } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -80,7 +79,7 @@ test(`can be updated with different resId`, async () => {
         `;
 
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 resId: 1,
             });
         }
@@ -578,7 +577,7 @@ test(`supports passing dynamic values -- full control to the user of Record`, as
                     type: "boolean",
                 },
             };
-            this.values = useState({
+            this.values = proxy({
                 foo: "abc",
                 bar: true,
             });
@@ -619,7 +618,7 @@ test(`can switch records`, async () => {
         `;
 
         setup() {
-            this.state = useState({ currentId: 1, num: 0 });
+            this.state = proxy({ currentId: 1, num: 0 });
         }
 
         next() {
@@ -676,7 +675,7 @@ test(`can switch records with values`, async () => {
                 foo: "abc",
                 bar: true,
             };
-            this.state = useState({ currentId: 99 });
+            this.state = proxy({ currentId: 99 });
         }
 
         next() {
@@ -736,7 +735,7 @@ test(`faulty useRecordObserver in widget`, async () => {
         `;
 
         setup() {
-            this.state = useState({ error: false });
+            this.state = proxy({ error: false });
             onError((error) => {
                 this.state.error = error;
             });
@@ -803,7 +802,7 @@ test(`don't duplicate a useRecordObserver effect when switching back and forth b
             model.load({ resId: 2, values: { foo: "def" } });
             const record2 = model.root;
             this.records = [record1, record2];
-            this.state = useState({ recordIndex: 0 });
+            this.state = proxy({ recordIndex: 0 });
         }
 
         setRecord() {

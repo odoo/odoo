@@ -1,4 +1,4 @@
-import { onWillRender, render, useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { onWillRender, render, useExternalListener, useRef } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -33,6 +33,7 @@ import {
     onWillPatch,
     onWillStart,
     status,
+    proxy,
 } from "@odoo/owl";
 import { getCurrencyRates } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
@@ -196,7 +197,7 @@ export class ListRenderer extends Component {
         this.multiCurrencyPopover = usePopover(MultiCurrencyPopover, {
             position: "right",
         });
-        this.state = useState({
+        this.state = proxy({
             showGroupInput: false,
             altKeyMode: false,
         });

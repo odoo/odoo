@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onPatched } from "@odoo/owl";
+import { Component, onPatched, proxy } from "@odoo/owl";
 
 export const ACCORDION = Symbol("Accordion");
 export class AccordionItem extends Component {
@@ -33,7 +32,7 @@ export class AccordionItem extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             open: false,
         });
         this.parentComponent = this.env[ACCORDION];
