@@ -110,9 +110,14 @@ class SaleOrder(models.Model):
     def _compute_pricelist_id(self):
         # Override to compute pricelists for carts using the partner's GeoIP,
         # providing a fallback in case they don't have an address set.
+        if website_orders := self.filtered('website_id'):
+            # Website-specific pricelist filtering depends on the current website.
+            # Drop any cached partner pricelist before recomputing a cart to avoid
+            # reusing a value resolved outside the website context.
+            website_orders.partner_id.invalidate_recordset(['property_product_pricelist'])
         if not (country_code := self.env['website']._get_geoip_country_code()):
             return super()._compute_pricelist_id()
-        if website_orders := self.filtered('website_id'):
+        if website_orders:
             website_orders = website_orders.with_context(country_code=country_code)
             super(SaleOrder, website_orders)._compute_pricelist_id()
         return super(SaleOrder, self - website_orders)._compute_pricelist_id()

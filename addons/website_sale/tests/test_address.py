@@ -218,6 +218,37 @@ class TestCheckoutAddress(BaseUsersCommon, WebsiteSaleCommon):
             self.assertEqual(order, order_b)
             self.assertEqual(order_b.pricelist_id, pl_with_code)
 
+    def test_04_pl_reset_on_login_ignores_stale_backend_pricelist(self):
+        self.env.user.groups_id += self.env.ref('product.group_product_pricelist')
+        test_user = self.env['res.users'].create({
+            'name': 'Toto',
+            'login': 'long_enough_password',
+            'password': 'long_enough_password',
+        })
+        backend_pl = self.env['product.pricelist'].create({
+            'name': 'Backend test',
+            'website_id': False,
+        })
+        self.website.user_id.partner_id.property_product_pricelist = self.pricelist
+        test_user.partner_id.property_product_pricelist = backend_pl
+        # Prime the cache outside the website flow to reproduce the stale value.
+        test_user.partner_id.property_product_pricelist
+
+        public_user_env = self.env(user=self.website.user_id)
+        so = self._create_so(partner_id=public_user_env.user.partner_id.id)
+        self.assertEqual(so.pricelist_id, self.pricelist)
+
+        with MockRequest(
+            self.env, website=self.website,
+            sale_order_id=so.id,
+            website_sale_current_pl=so.pricelist_id.id
+        ):
+            order = self.website.with_env(public_user_env).sale_get_order()
+            self.assertEqual(order.pricelist_id, self.pricelist)
+            order_b = self.website.with_user(test_user).sale_get_order()
+            self.assertEqual(order, order_b)
+            self.assertEqual(order_b.pricelist_id, self.pricelist)
+
     # TEST WEBSITE & MULTI COMPANY
 
     def test_05_create_so_with_website_and_multi_company(self):
