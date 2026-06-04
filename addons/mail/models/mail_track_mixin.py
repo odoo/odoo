@@ -410,21 +410,17 @@ class MailTrackMixin(models.AbstractModel):
     def _mail_track_get_field_sequence(self, fname: str) -> int:
         """ Find tracking sequence of a given field, given their name. Current
         parameter 'tracking' should be an integer, but attributes with True
-        are still supported; old naming 'track_sequence' also. """
+        are still supported. """
         if fname not in self._fields:
             return 100
 
         def get_field_sequence(fname):
-            return getattr(
-                self._fields[fname], 'tracking',
-                getattr(self._fields[fname], 'track_sequence', True)
-            )
+            return getattr(self._fields[fname], 'tracking', True)
 
         sequence = get_field_sequence(fname)
         if self._fields[fname].type == 'properties' and sequence is True:
             # default properties sequence is after the definition record
-            parent_sequence = get_field_sequence(self._fields[fname].definition_record)
-            return 100 if parent_sequence is True else parent_sequence
+            sequence = get_field_sequence(self._fields[fname].definition_record)
         return 100 if sequence is True else sequence
 
     # track value management
