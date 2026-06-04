@@ -1780,14 +1780,18 @@ class SaleOrder(models.Model):
         # Rule will count the next time the points are updated
         if rule:
             self.code_enabled_rule_ids |= rule
-        program_is_applied = program in self._get_points_programs()
+        is_points_program_applied = program in self._get_points_programs()
+        is_reward_program_applied = program in self._get_reward_programs()
         # Condition that need to apply program (if not applied yet):
         # current -> always
         # future -> if no coupon
         # nominative -> non blocking if card exists with points
-        if coupon:
+        if coupon and coupon in self.applied_coupon_ids and is_reward_program_applied:
+            if claimable_rewards := self._get_claimable_rewards(forced_coupons=coupon):
+                return claimable_rewards
+        elif coupon:
             self.applied_coupon_ids += coupon
-        if program_is_applied:
+        if is_points_program_applied:
             # Update the points for our programs, this will take the new trigger in account
             self._update_programs_and_rewards()
         elif program.applies_on != "future" or not coupon:
