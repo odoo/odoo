@@ -128,9 +128,28 @@ describe("sendPaymentRequest", () => {
             token: "cashmaticRenewedToken",
         });
         mockCashmaticRequest(POST_REQUESTS.cancelPayment, "No error");
+        mockActiveTransaction("idle");
+        mockLastTransaction(0);
 
-        await cashmaticService.cancelCurrentPayment();
+        const notDispensed = await cashmaticService.cancelCurrentPayment();
 
-        expect(receivedRequests.length).toBe(2);
+        expect(notDispensed).toBe(0);
+        expect(receivedRequests.length).toBe(4);
+    });
+
+    test("Cancel payment with partial dispense", async () => {
+        const cashmaticService = new CashmaticService();
+        cashmaticService.connect("mock-ip", "mockUser", "mockPassword");
+
+        mockCashmaticRequest(POST_REQUESTS.renewToken, "No error", {
+            token: "cashmaticRenewedToken",
+        });
+        mockCashmaticRequest(POST_REQUESTS.cancelPayment, "No error");
+        mockActiveTransaction("idle");
+        mockLastTransaction(200);
+
+        const notDispensed = await cashmaticService.cancelCurrentPayment();
+
+        expect(notDispensed).toBe(200);
     });
 });
