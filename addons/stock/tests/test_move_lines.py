@@ -3,7 +3,7 @@
 
 from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged, Form
 
 
@@ -29,6 +29,9 @@ class TestStockMoveLine(TestStockCommon):
         })
         cls.pack = cls.env['stock.package'].create({
             'name': 'Pack A',
+        })
+        cls.package_type = cls.env['stock.package.type'].create({
+            'name': 'Super Package Type',
         })
         cls.lot = cls.env['stock.lot'].create({
             'product_id': cls.product.id,
@@ -151,6 +154,96 @@ class TestStockMoveLine(TestStockCommon):
         })
         (move_line1 | move_line2).action_put_in_pack()
         self.assertEqual(move_line1.result_package_id, move_line2.result_package_id)
+
+    def test_put_in_pack_with_split_picking_error(self):
+        """
+        Check putting in pack with splitting. It should throw an error,
+        because multiple MLs are passed
+        """
+
+        move1 = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.productA.id,
+            'uom_id': self.uom_unit.id,
+            'product_uom_qty': 12.0,
+            'move_line_ids': [Command.create({
+                'product_id': self.productA.id,
+                'quantity': qty,
+                'uom_id': self.uom_unit.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+            }) for qty in (6, 6)],
+        })
+
+        with self.assertRaises(ValueError):
+            move1.move_line_ids.action_put_in_pack(package_type_id=self.package_type.id, package_capacity=6)
+
+    def test_put_in_pack_with_split_moves(self):
+        """
+        Check putting in pack with splitting from the Moves button.
+        First time it should throw an error because we are trying to Put in Pack with
+        a capacity higher than the ML quantity.
+        Next time it should split existing line into 3 lines with quantity 5, 5, and 2.
+        """
+
+        move1 = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.productA.id,
+            'uom_id': self.uom_unit.id,
+            'product_uom_qty': 12.0,
+            'move_line_ids': [Command.create({
+                'product_id': self.productA.id,
+                'quantity': 12,
+                'uom_id': self.uom_unit.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+            })],
+        })
+
+        with self.assertRaises(ValidationError):
+            move1.move_line_ids.action_put_in_pack(package_type_id=self.package_type.id, package_capacity=13)
+
+        move1.move_line_ids.action_put_in_pack(package_type_id=self.package_type.id, package_capacity=5)
+        self.assertEqual(len(move1.move_line_ids), 3)
+        move_line1, move_line2, move_line3 = move1.move_line_ids[0], move1.move_line_ids[1], move1.move_line_ids[2]
+        self.assertEqual(move_line1.quantity, 5.0)
+        self.assertEqual(move_line2.quantity, 5.0)
+        self.assertEqual(move_line3.quantity, 2.0)
+        self.assertEqual(move_line1.result_package_id.package_type_id.id, self.package_type.id)
+        self.assertEqual(move_line2.result_package_id.package_type_id.id, self.package_type.id)
+        self.assertEqual(move_line3.result_package_id.package_type_id.id, self.package_type.id)
+
+    def test_put_in_pack_with_split_moves_with_package(self):
+        """
+        Check putting in pack with splitting from the Moves button with a package.
+        Should split existing line into 2 lines with quantity 5, 7, with the first
+        one having a package, and the second one not.
+        """
+
+        move1 = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.productA.id,
+            'uom_id': self.uom_unit.id,
+            'product_uom_qty': 12.0,
+            'move_line_ids': [Command.create({
+                'product_id': self.productA.id,
+                'quantity': 12,
+                'uom_id': self.uom_unit.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+            })],
+        })
+
+        move1.move_line_ids.action_put_in_pack(package_id=self.pack.id, package_capacity=5)
+        self.assertEqual(len(move1.move_line_ids), 2)
+        move_line1, move_line2 = move1.move_line_ids[0], move1.move_line_ids[1]
+        self.assertEqual(move_line1.quantity, 5.0)
+        self.assertEqual(move_line2.quantity, 7.0)
+        self.assertEqual(move_line1.result_package_id.id, self.pack.id)
+        self.assertEqual(move_line2.result_package_id.id, False)
 
     def test_multi_edit_quant_and_lot(self):
         """
