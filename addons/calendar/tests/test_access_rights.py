@@ -18,6 +18,7 @@ class TestAccessRights(TransactionCase):
         cls.john = new_test_user(cls.env, login='john', groups='base.group_user')
         cls.raoul = new_test_user(cls.env, login='raoul', groups='base.group_user')
         cls.george = new_test_user(cls.env, login='george', groups='base.group_user')
+        cls.user_internal_cynthia = new_test_user(cls.env, login='cynthia', groups='base.group_user')
         cls.portal = new_test_user(cls.env, login='pot', groups='base.group_portal')
         cls.admin_user = new_test_user(cls.env, login='admin_user', groups='base.group_partner_manager,base.group_user')
         cls.admin_system_user = new_test_user(cls.env, login='admin_system_user', groups='base.group_system')
@@ -181,23 +182,25 @@ class TestAccessRights(TransactionCase):
         self.assertFalse(query_private_event, "Private event must be inaccessible to other users.")
         self.assertTrue(query_confidential_event, "Confidential event must be accessible to other internal users.")
 
-    def test_edit_private_event_of_other_user(self):
+    def test_edit_event_of_other_user(self):
         """
-        Ensure that it is not possible editing the private event of another user when the current user is not an
-        attendee/organizer of that event. Attendees should be able to edit it, others will receive AccessError on write.
+        Ensure that it is not possible editing the event of another user when the current user is not an
+        attendee/organizer/creator of that event. Attendees/organizer/creator should be able to edit it, others will receive AccessError on write.
         """
         def ensure_user_can_update_event(self, event, user):
+            self.assertTrue(event.with_user(user).user_can_edit)
             event.with_user(user).write({'name': user.name})
             self.assertEqual(event.name, user.name, 'Event name should be updated by user %s' % user.name)
 
-        # Prepare events attendees/partners including organizer (john) and another user (raoul).
+        # Prepare events attendees/partners/organizer including organizer (john) and another user (raoul).
         events_attendees = [
             (0, 0, {'partner_id': self.john.partner_id.id, 'state': 'accepted'}),
             (0, 0, {'partner_id': self.raoul.partner_id.id, 'state': 'accepted'})
         ]
         events_partners = [self.john.partner_id.id, self.raoul.partner_id.id]
+        events_organizer = self.john.id
 
-        # Set calendar default privacy as private and create a normal event, only attendees/organizer can edit it.
+        # Set calendar default privacy as private and create a normal event, only attendees/organizer/creator can edit it.
         self.john.with_user(self.john).calendar_default_privacy = 'private'
         johns_default_privacy_event = self.create_event(self.john, name='my event with default privacy', attendee_ids=events_attendees, partner_ids=events_partners)
         ensure_user_can_update_event(self, johns_default_privacy_event, self.john)
@@ -207,7 +210,7 @@ class TestAccessRights(TransactionCase):
             self.assertEqual(self.john.res_users_settings_id.calendar_default_privacy, 'private', "Privacy field update was lost.")
             johns_default_privacy_event.with_user(self.george).write({'name': 'blocked-update-by-non-attendee'})
 
-        # Set calendar default privacy as public and create a private event, only attendees/organizer can edit it.
+        # Set calendar default privacy as public and create a private event, only attendees/organizer/creator can edit it.
         self.john.with_user(self.john).calendar_default_privacy = 'public'
         johns_private_event = self.create_event(self.john, name='my private event', privacy='private', attendee_ids=events_attendees, partner_ids=events_partners)
         ensure_user_can_update_event(self, johns_private_event, self.john)
@@ -216,6 +219,19 @@ class TestAccessRights(TransactionCase):
             self.assertEqual(len(self.john.res_users_settings_id), 1, "Res Users Settings for the user is not defined.")
             self.assertEqual(self.john.res_users_settings_id.calendar_default_privacy, 'public', "Privacy field update was lost.")
             johns_private_event.with_user(self.george).write({'name': 'blocked-update-by-non-attendee'})
+
+        # Create a private event for others, checks if creator can edit it.
+        johns_private_event_by_cynthia = self.create_event(self.user_internal_cynthia, name='random private event', privacy='private', user_id=events_organizer, attendee_ids=events_attendees, partner_ids=events_partners)
+        ensure_user_can_update_event(self, johns_private_event_by_cynthia, self.user_internal_cynthia)
+        with self.assertRaises(AccessError):
+            johns_private_event_by_cynthia.with_user(self.george).write({'name': 'blocked-update-by-non-creator'})
+
+        # Create a public event for others, checks if creator can edit it.
+        johns_public_event_by_cynthia = self.create_event(self.user_internal_cynthia, name='random public event', privacy='public', user_id=events_organizer, attendee_ids=events_attendees, partner_ids=events_partners)
+        ensure_user_can_update_event(self, johns_public_event_by_cynthia, self.user_internal_cynthia)
+        with self.assertRaises(AssertionError):
+            with Form(johns_public_event_by_cynthia.with_user(self.george)) as form:
+                form.name = "blocked-update-by-non-creator"
 
     def test_admin_cant_fetch_uninvited_private_events(self):
         """
