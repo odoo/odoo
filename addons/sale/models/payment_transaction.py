@@ -221,6 +221,8 @@ class PaymentTransaction(models.Model):
                 if invoices:
                     tx.invoice_ids = [Command.set(invoices.ids)]
 
+        self.env.flush_all()
+
     @api.model
     def _compute_reference_prefix(self, separator, **values):
         """ Override of payment to compute the reference prefix based on Sales-specific values.
