@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { onMounted } from "@odoo/owl";
+import { useEffect, onMounted } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
@@ -9,14 +8,11 @@ export class TodoFormControlPanel extends ControlPanel {
 
     setup() {
         super.setup();
-        useLayoutEffect(
-            (isSmall) => {
-                if (isSmall && !this.state.displayChatter) {
-                    this.toggleChatter();
-                }
-            },
-            () => [this.env.isSmall]
-        );
+        useEffect(() => {
+            if (this.env.isSmall && !this.state.displayChatter) {
+                this.toggleChatter();
+            }
+        });
         onMounted(() => {
             // We check if we have come from activity view using router action stack and toggle chatter
             const isFromActivityView =
