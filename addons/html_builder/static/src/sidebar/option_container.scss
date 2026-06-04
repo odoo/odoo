@@ -51,7 +51,14 @@
 
 .o_we_img_animate {
     padding-top: 10px;
-    &:hover img {
+
+    img:last-of-type {
+        display: none;
+    }
+
+    &:hover img:last-of-type {
         content: image-set(var(--animate-src));
+        position: absolute;
+        display: block;
     }
 }
