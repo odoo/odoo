@@ -2,13 +2,16 @@ import { registry } from "@web/core/registry";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { PropertiesField } from "./properties_field";
+import { useRecordObserver } from "@web/model/relational_model/utils";
 
 export class PropertiesDefinitionField extends PropertiesField {
     static template = "web.PropertiesDefinitionField";
 
     setup() {
         super.setup();
-        this.state.isInEditMode = this.definitionRecordId;
+        useRecordObserver((record) => {
+            this.state.isInEditMode = record.data.id;
+        });
     }
 
     /*
