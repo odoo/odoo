@@ -150,17 +150,17 @@ class ProjectTask(models.Model):
         return stages.search(['|', ('id', 'in', stages.ids), ('user_id', '=', self.env.user.id)])
 
     active = fields.Boolean(default=True, export_string_translation=False)
-    name = fields.Char(string='Title', tracking=True, required=True, index='trigram')
+    name = fields.Char(string='Title', tracking=1, required=True, index='trigram')
     description = fields.Html(string='Description', sanitize_attributes=False)
     priority = fields.Selection([
         ('0', 'Low priority'),
         ('1', 'Medium priority'),
         ('2', 'High priority'),
         ('3', 'Urgent'),
-    ], default='0', index=True, string="Priority", tracking=True)
+    ], default='0', index=True, string="Priority", tracking=2)
     sequence = fields.Integer(string='Sequence', default=10, export_string_translation=False)
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
-       store=True, readonly=False, ondelete='restrict', tracking=True, index=True,
+       store=True, readonly=False, ondelete='restrict', tracking=6, index=True,
        default=_get_default_stage_id, group_expand='_read_group_stage_ids',
        domain="[('project_ids', '=', project_id)]")
     tag_ids = fields.Many2many('project.tags', string='Tags')
@@ -172,7 +172,7 @@ class ProjectTask(models.Model):
         *CLOSED_STATES.items(),
         ('04_waiting_normal', 'Waiting'),
     ], string='State', copy=False, default='01_in_progress', required=True, compute='_compute_state',
-        inverse='_inverse_state', readonly=False, store=True, index=True, recursive=True, tracking=True)
+        inverse='_inverse_state', readonly=False, store=True, index=True, recursive=True, tracking=5)
     is_closed = fields.Boolean("Closed state", compute='_compute_is_closed', search='_search_is_closed')
 
     create_date = fields.Datetime("Created On", readonly=True, index=True)
@@ -180,7 +180,7 @@ class ProjectTask(models.Model):
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', copy=False, readonly=True,
         help="Date on which this task was last assigned (or unassigned). Based on this, you can get statistics on the time it usually takes to assign tasks.")
-    date_deadline = fields.Datetime(string='Deadline', index=True, tracking=True, copy=False)
+    date_deadline = fields.Datetime(string='Deadline', index=True, tracking=7, copy=False)
 
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         index=True,
@@ -190,10 +190,10 @@ class ProjectTask(models.Model):
             "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.")
 
     project_id = fields.Many2one('project.project', string='Project', domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]",
-                                 compute="_compute_project_id", store=True, precompute=True, recursive=True, readonly=False, index=True, tracking=True, change_default=True)
+                                 compute="_compute_project_id", store=True, precompute=True, recursive=True, readonly=False, index=True, tracking=4, change_default=True)
     display_in_project = fields.Boolean(compute='_compute_display_in_project', store=True, export_string_translation=False)
     task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
-    allocated_hours = fields.Float("Allocated Time", tracking=True)
+    allocated_hours = fields.Float("Allocated Time", tracking=8)
     subtask_allocated_hours = fields.Float("Sub-tasks Allocated Time", compute='_compute_subtask_allocated_hours', export_string_translation=False,
         help="Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) linked to this task. Usually less than or equal to the allocated hours of this task.")
     role_ids = fields.Many2many(
@@ -203,7 +203,7 @@ class ProjectTask(models.Model):
     )
     # Tracking of this field is done in the write function
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
-        string='Assignees', context={'active_test': False}, tracking=True, default=_default_user_ids,
+        string='Assignees', context={'active_test': False}, tracking=3, default=_default_user_ids,
         domain="['|', ('share', '=', False), '&', ('share', '=', True), ('followed_project_ids', '=', project_id), ('active', '=', True)]", falsy_value_label=_lt("👤 Unassigned"))
     # User names displayed in project sharing views
     portal_user_names = fields.Char(compute='_compute_portal_user_names', compute_sudo=True, search='_search_portal_user_names', export_string_translation=False)
@@ -224,7 +224,7 @@ class ProjectTask(models.Model):
         domain="[('user_id', '=', uid)]",
         group_expand='_read_group_personal_stage_type_ids')
     partner_id = fields.Many2one('res.partner',
-        string='Customer', recursive=True, tracking=True, compute='_compute_partner_id', store=True, readonly=False, index='btree_not_null',
+        string='Customer', recursive=True, tracking=10, compute='_compute_partner_id', store=True, readonly=False, index='btree_not_null',
         domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", )
     partner_phone = fields.Char(
         compute='_compute_partner_phone', inverse='_inverse_partner_phone',
@@ -245,7 +245,7 @@ class ProjectTask(models.Model):
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
 
-    parent_id = fields.Many2one('project.task', string='Parent Task', inverse="_inverse_parent_id", index=True, domain="['!', ('id', 'child_of', id)]", tracking=True)
+    parent_id = fields.Many2one('project.task', string='Parent Task', inverse="_inverse_parent_id", index=True, domain="['!', ('id', 'child_of', id)]", tracking=20)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain="[('recurring_task', '=', False)]", export_string_translation=False)
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count', export_string_translation=False)
     closed_subtask_count = fields.Integer("Closed Sub-tasks Count", compute='_compute_subtask_count', export_string_translation=False)
@@ -264,7 +264,7 @@ class ProjectTask(models.Model):
         compute='_compute_milestone_id',
         readonly=False,
         store=True,
-        tracking=True,
+        tracking=21,
         index='btree_not_null',
         help="Deliver your services automatically when a milestone is reached by linking it to a sales order item."
     )
@@ -277,7 +277,7 @@ class ProjectTask(models.Model):
     allow_task_dependencies = fields.Boolean(compute='_compute_allow_task_dependencies', export_string_translation=False)
     # Tracking of this field is done in the write function
     depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id",
-                                     column2="depends_on_id", string="Blocked By", tracking=True, copy=False,
+                                     column2="depends_on_id", string="Blocked By", tracking=22, copy=False,
                                      domain="[('project_id', '!=', False), ('id', '!=', id), ('is_template', '=', False)]")
     depend_on_count = fields.Integer(string="Depending on Tasks", compute='_compute_depend_on_count', compute_sudo=True)
     closed_depend_on_count = fields.Integer(string="Closed Depending on Tasks", compute='_compute_depend_on_count', compute_sudo=True)
