@@ -196,7 +196,9 @@ export class HootFixtureElement extends HTMLElement {
                 continue;
             }
             this._iframes.set(iframe, waitForIframe(iframe));
-            setupEventActions(iframe.contentWindow);
+            if (iframe.contentDocument) {
+                setupEventActions(iframe.contentWindow);
+            }
         }
         for (const iframe of toRemove) {
             this._iframes.delete(iframe);
