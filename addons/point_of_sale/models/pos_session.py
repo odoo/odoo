@@ -404,7 +404,9 @@ class PosSession(models.Model):
                 raise UserError(_('This session is already closed.'))
             self._check_if_no_draft_orders()
             self._check_invoices_are_posted()
-            self._process_session_validation(balancing_account, amount_to_balance, bank_payment_method_diffs)
+            action = self._process_session_validation(balancing_account, amount_to_balance, bank_payment_method_diffs)
+            if action:
+                return action
         else:
             self.sudo()._post_statement_difference(self.cash_register_difference)
 
