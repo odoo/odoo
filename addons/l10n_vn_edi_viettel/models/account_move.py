@@ -265,6 +265,18 @@ class AccountMove(models.Model):
 
         Returns a list of tuple with both file names, mimetype, content and the field it should be stored in.
         """
+
+        def _zip_to_xml_file_data(zip_file):
+            for file in zip_file.infolist():
+                if file.filename.endswith('.xml'):
+                    return {
+                        'name': file.filename,
+                        'mimetype': 'application/xml',
+                        'raw': zip_file.read(file),
+                        'res_field': 'l10n_vn_edi_sinvoice_xml_file',
+                    }
+            return None
+
         self.ensure_one()
         files_data, error_message = self._l10n_vn_edi_fetch_invoice_file_data('ZIP')
         if error_message:
@@ -272,20 +284,20 @@ class AccountMove(models.Model):
 
         file_bytes = base64.b64decode(files_data['fileToBytes'])
 
-        # For some reason, request_response['fileToBytes'] is a zip file containing the other zip file.
-        # The content of the inner zip is a xsl file as well as a xml file.
-        # In our case the xsl file is not important, so we can simply ignore it.
-        with zipfile.ZipFile(io.BytesIO(file_bytes)) as zip_file:
-            inner_zip_bytes = zip_file.read(zip_file.infolist()[0])
-            with zipfile.ZipFile(io.BytesIO(inner_zip_bytes)) as inner_zip:
-                for file in inner_zip.infolist():
-                    if file.filename.endswith('.xml'):
-                        return {
-                            'name': file.filename,
-                            'mimetype': 'application/xml',
-                            'raw': inner_zip.read(file),
-                            'res_field': 'l10n_vn_edi_sinvoice_xml_file',
-                        }, ""
+        with zipfile.ZipFile(io.BytesIO(file_bytes)) as outer_zip:
+            result = _zip_to_xml_file_data(outer_zip)
+            if not result:
+                for entry in outer_zip.infolist():
+                    if entry.filename.endswith('.zip'):
+                        with outer_zip.open(entry) as inner_bytes:
+                            with zipfile.ZipFile(inner_bytes) as inner_zip:
+                                result = _zip_to_xml_file_data(inner_zip)
+                                if result:
+                                    break
+
+        if not result:
+            return {}, _("No XML file found in the zip archive.")
+        return result, ""
 
     def _l10n_vn_edi_fetch_invoice_pdf_file_data(self):
         """
