@@ -260,14 +260,13 @@
                             <field name="manager_id" widget="many2one_avatar_user" readonly="state != 'draft'" placeholder="Auto-validation"/>
                             <field name="department_id" invisible="1" readonly="not is_editable"
                                    context="{'default_company_id': company_id}"/>
-                            <field name="vendor_id" invisible="payment_mode != 'company_account'" readonly="not is_editable"/>
+                            <field name="vendor_id" readonly="not is_editable"/>
 
-                            <label for="has_existing_bill" invisible="payment_mode != 'company_account'"/>
-                            <div class="d-flex flex-column flex-lg-row" invisible="payment_mode != 'company_account'">
+                            <label for="has_existing_bill"/>
+                            <div class="d-flex flex-column flex-lg-row">
                                 <field name="has_existing_bill"
                                        string="Existing Bill"
                                        widget="boolean_radio"
-                                       invisible="payment_mode != 'company_account'"
                                        options="{'no_label_element_id': 'direct_expense', 'yes_label_element_id': 'match_bill', 'first_element': false}"
                                        readonly="not is_editable"
                                        style="width: 60%"
@@ -302,9 +301,7 @@
                                    context="{'default_company_id': company_id}"/>
                             <field name="payment_method_line_id"
                                    options="{'no_open': True, 'no_create': True}"
-                                   invisible="payment_mode != 'company_account'"
-                                   readonly="not is_editable"
-                                   required="payment_mode == 'company_account'"/>
+                                   readonly="not is_editable"/>
                             <field name="analytic_distribution"
                                 string="Analytic"
                                 widget="analytic_distribution"
