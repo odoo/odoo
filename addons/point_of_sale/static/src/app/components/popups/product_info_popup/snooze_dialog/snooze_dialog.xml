@@ -10,7 +10,7 @@
                     <div class="row">
                         <label class="col form-check-label" t-attf-for="{{option.id}}"> <t t-out="option.label" /> </label>
                         <div class="col text-end pe-4">
-                            <input type="radio" class="form-check-input" name="btnradio" t-attf-for="{{option.id}}" t-on-click="() => this.select(option.value)" />
+                            <input type="radio" class="form-check-input" name="btnradio" t-att-id="option.id" t-att-checked="this.state.hours === option.value" t-on-click="() => this.select(option.value)" />
                         </div>
                     </div>
                 </t>
