@@ -257,7 +257,16 @@ class TranslateToAction extends BuilderAction {
             try {
                 translations = JSON.parse(response);
             } catch {
-                continue;
+                try {
+                    // Handle JSON structure AI errors:
+                    // - missing quote before closing curly brace
+                    // - double closing curly brace
+                    // - missing comma between array elements
+                    const ARRAY_ISSUE_REGEX = /(?:"?}}?,?)(\{"id":"t_)/g;
+                    translations = JSON.parse(response.replace(ARRAY_ISSUE_REGEX, '"},$1'));
+                } catch {
+                    continue;
+                }
             }
 
             for (const { id, text } of translations) {
