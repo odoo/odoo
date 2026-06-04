@@ -327,6 +327,8 @@ registry.category("web_tour.tours").add("test_self_order_product_availability", 
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
         LandingPage.selectLocation("Test-In"),
+        // 'Combo Product 2' is snoozed, so it should appear as Out of stock
+        ProductPage.isProductDisplayed("Combo Product 2", true),
         // Mark 'Combo Product 5' as unavailable and verify it is not displayed
         Utils.setProductAvailability("Combo Product 5", false),
         negateStep(ProductPage.isProductDisplayed("Combo Product 5")),

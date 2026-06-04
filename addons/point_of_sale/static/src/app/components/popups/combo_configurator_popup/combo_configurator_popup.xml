@@ -27,7 +27,7 @@
                                 class="'flex-column h-100'"
                                 isComboPopup="true"
                                 productId="product.id"
-                                available="!this.pos.isProductSnoozed(product)"
+                                available="!this.pos.isProductSnoozed(product.product_tmpl_id)"
                                 product="product"
                                 comboExtraPrice="this.formattedComboPrice(combo_item)"
                                 color="product.color || product.pos_categ_ids?.at(-1)?.color"
