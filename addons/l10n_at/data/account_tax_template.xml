@@ -569,6 +569,40 @@
                 }),
             ]"/>
         </record>
+        <record id="account_tax_template_sales_49_code124" model="account.tax.template">
+            <field name="name">UST_124 ermäßigter Steuersatz 4.9%</field>
+            <field name="description">4.9%</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template"/>
+            <field name="sequence">100</field>
+            <field name="type_tax_use">sale</field>
+            <field name="tax_scope">consu</field>
+            <field eval="4.9" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_49"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_1_tag'), ref('tax_report_line_l10n_at_tva_line_4_15_0_base_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3503'),
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_15_0_tax_tag')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_1_tag'), ref('tax_report_line_l10n_at_tva_line_4_15_0_base_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3503'),
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_15_0_tax_tag')],
+                }),
+            ]"/>
+        </record>
         <record id="account_tax_template_sales_10_code029" model="account.tax.template">
             <field name="name">UST_029 ermäßigter Steuersatz 10%</field>
             <field name="description">10%</field>
@@ -1074,6 +1108,51 @@
                 (0,0,{
                   'repartition_type': 'tax',
                   'account_id': ref('chart_at_template_2511'),
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_4_tag')],
+                }),
+            ]"/>
+        </record>
+        <record id="account_tax_template_purchase_eu_49" model="account.tax.template">
+            <field name="name">IGE 4.9%</field>
+            <field name="description">IGE 4.9%</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template"/>
+            <field name="sequence">500</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="price_include" eval="0"/>
+            <field name="amount">4.9</field>
+            <field name="amount_type">percent</field>
+            <field name="tax_group_id" ref="tax_group_49"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_25_tag'), ref('tax_report_line_l10n_at_tva_line_4_29_0_base_tag')],
+                }),
+                (0,0,{
+                  'factor_percent': -100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3514'),
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_29_0_tax_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_2514'),
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_4_tag')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_25_tag'), ref('tax_report_line_l10n_at_tva_line_4_29_0_base_tag')],
+                }),
+                (0,0,{
+                  'factor_percent': -100,
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_3514'),
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_29_0_tax_tag')],
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_2514'),
                   'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_4_tag')],
                 }),
             ]"/>
@@ -1695,6 +1774,38 @@
                 (0,0,{
                   'repartition_type': 'tax',
                   'account_id': ref('chart_at_template_2501'),
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_1_tag')],
+                }),
+            ]"/>
+        </record>
+        <record id="account_tax_template_purchase_49_code060" model="account.tax.template">
+            <field name="name">VST_060 ermäßigter Steuersatz 4.9%</field>
+            <field name="description">4.9%</field>
+            <field name="chart_template_id" ref="l10n_at_chart_template"/>
+            <field name="sequence">400</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="tax_scope">consu</field>
+            <field eval="4.9" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="price_include" eval="0"/>
+            <field name="tax_group_id" ref="tax_group_49"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_2503'),
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_1_tag')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0,{
+                  'repartition_type': 'base',
+                }),
+                (0,0,{
+                  'repartition_type': 'tax',
+                  'account_id': ref('chart_at_template_2503'),
                   'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_5_1_tag')],
                 }),
             ]"/>
