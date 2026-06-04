@@ -1,22 +1,30 @@
-import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
+import { DiscussSelectableList } from "@mail/discuss/core/common/selectable_list";
 
-import { Component, onWillStart, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
+import { useSubEnv } from "@web/owl2/utils";
 
-/**
- * Open the channel invitation UI as a centered dialog, reusing {@link ChannelInvitation}.
- *
- * @param {import("@web/env").OdooEnv} env environment providing the dialog service.
- * @param {import("models").DiscussChannel} [channel] channel to invite people to.
- * @returns {void}
- */
+function partnerItem(partner) {
+    return {
+        key: `partner-${partner.id}`,
+        label: partner.name,
+        subtitle: partner.email,
+        avatarRecord: partner,
+        partner,
+    };
+}
+
+function emailItem(email, subtitle) {
+    return { key: `email-${email}`, label: email, subtitle, avatarIcon: "fa fa-envelope", email };
+}
+
 export function openChannelInvitationDialog(env, channel) {
     env.services.dialog.add(ChannelActionDialog, {
         contentClass: "o-discuss-ChannelInvitation",
@@ -30,10 +38,8 @@ export function openChannelInvitationDialog(env, channel) {
 }
 
 export class ChannelInvitation extends Component {
-    static components = { ActionPanel, DiscussAvatar };
+    static components = { ActionPanel, DiscussSelectableList };
     static template = "discuss.ChannelInvitation";
-
-    inputRef = signal(null);
 
     setup() {
         super.setup();
@@ -56,12 +62,10 @@ export class ChannelInvitation extends Component {
                 .optional(),
         });
         this.rtc = useService("discuss.rtc");
-        this.notification = useService("notification");
         this.suggestionService = useService("mail.suggestion");
         this.sequential = useSequential();
         this.state = proxy({
             hasPendingRequest: false,
-            searchResultCount: 0,
             searchStr: "",
             selectableEmails: [],
             selectablePartners: [],
@@ -74,7 +78,7 @@ export class ChannelInvitation extends Component {
             this.fetchPartnersToInvite.bind(this),
             250
         );
-        useAutofocus({ ref: this.inputRef });
+        useSubEnv({ invitationChannel: this.props.channel });
         onWillStart(() => {
             if (this.store.self_user) {
                 this.fetchPartnersToInvite();
@@ -122,6 +126,26 @@ export class ChannelInvitation extends Component {
         }
     }
 
+    get searchPlaceholder() {
+        if (this.props.channel?.allow_invite_by_email) {
+            return _t("Enter name or email");
+        }
+        return _t("Search people to invite");
+    }
+
+    get emptyText() {
+        return this.props.channel ? _t("No one found to invite.") : _t("No users found.");
+    }
+
+    get search() {
+        return {
+            inputId: "o-discuss-ChannelInvitation-search",
+            onInput: (value) => this.onSearchInput(value),
+            placeholder: this.searchPlaceholder,
+            value: this.searchStr,
+        };
+    }
+
     get showingResultNarrowText() {
         return _t(
             "Showing the first %(search_limit)s results. Narrow your search to see more choices.",
@@ -129,11 +153,26 @@ export class ChannelInvitation extends Component {
         );
     }
 
-    get searchPlaceholder() {
-        if (this.props.channel?.allow_invite_by_email) {
-            return _t("Enter name or email");
+    get selectableItems() {
+        const items = this.selectablePartners.map(partnerItem);
+        for (const email of this.state.selectableEmails) {
+            items.push(
+                emailItem(
+                    email,
+                    this.state.sentEmails.has(email)
+                        ? _t("Invitation already sent to this address")
+                        : undefined
+                )
+            );
         }
-        return _t("Search people to invite");
+        return items;
+    }
+
+    get selectedItems() {
+        return [
+            ...this.selectedPartners.map(partnerItem),
+            ...this.state.selectedEmails.map((email) => emailItem(email)),
+        ];
     }
 
     async fetchPartnersToInvite() {
@@ -172,9 +211,26 @@ export class ChannelInvitation extends Component {
         this.state.selectableEmails = [...new Set(selectableEmails)];
     }
 
-    onInput() {
-        this.searchStr = this.inputRef()?.value;
+    onSearchInput(value) {
+        this.searchStr = value;
         this.debouncedFetchPartnersToInvite();
+    }
+
+    onToggle(item) {
+        if (item.partner) {
+            if (item.partner.in(this.selectedPartners)) {
+                this.selectedPartners.splice(this.selectedPartners.indexOf(item.partner), 1);
+            } else {
+                this.selectedPartners.push(item.partner);
+            }
+            return;
+        }
+        const index = this.state.selectedEmails.indexOf(item.email);
+        if (index === -1) {
+            this.state.selectedEmails.push(item.email);
+        } else {
+            this.state.selectedEmails.splice(index, 1);
+        }
     }
 
     onClickGenerateNewLink() {
@@ -190,36 +246,6 @@ export class ChannelInvitation extends Component {
                     [this.props.channel.id],
                 ]),
         });
-    }
-
-    onClickSelectablePartner(partner) {
-        if (partner.in(this.selectedPartners)) {
-            const index = this.selectedPartners.indexOf(partner);
-            if (index !== -1) {
-                this.selectedPartners.splice(index, 1);
-            }
-            return;
-        }
-        this.selectedPartners.push(partner);
-    }
-
-    onClickSelectableEmail(email) {
-        const index = this.state.selectedEmails.indexOf(email);
-        if (index !== -1) {
-            this.state.selectedEmails.splice(index, 1);
-            return;
-        }
-        this.state.selectedEmails.push(email);
-    }
-
-    onClickSelectedPartner(partner) {
-        const index = this.selectedPartners.indexOf(partner);
-        this.selectedPartners.splice(index, 1);
-    }
-
-    onClickSelectedEmail(email) {
-        const index = this.state.selectedEmails.indexOf(email);
-        this.state.selectedEmails.splice(index, 1);
     }
 
     onFocusInvitationLinkInput(ev) {
