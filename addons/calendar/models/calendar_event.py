@@ -364,8 +364,8 @@ class CalendarEvent(models.Model):
     @api.depends_context('uid')
     def _compute_user_can_edit(self):
         for event in self:
-            # By default, only current attendees and the organizer can edit the event.
-            editor_candidates = set(event.partner_ids.user_ids + event.user_id)
+            # By default, only current attendees, the organizer and the creator can edit the event.
+            editor_candidates = set(event.partner_ids.user_ids + event.user_id + event.create_uid)
             # Right before saving the event, old partners must be able to save changes.
             if event._origin:
                 editor_candidates |= set(event._origin.partner_ids.user_ids)
