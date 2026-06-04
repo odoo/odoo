@@ -13,7 +13,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'lu_2011_account_44111',
             'property_stock_account_input_categ_id': 'lu_2011_account_321',
             'property_stock_account_output_categ_id': 'lu_2011_account_321',
-            'property_stock_valuation_account_id': 'lu_2020_account_60761',
+            'property_stock_valuation_account_id': 'lu_2011_account_301',
             'code_digits': '6',
         }
 
