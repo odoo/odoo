@@ -3051,8 +3051,13 @@ class MailThread(models.AbstractModel):
         return author_id, email_from
 
     def _message_compute_body_with_trackings(self, body, tracking_values):
+        """ Append generated tracking HTML to body. Add html after body (as
+        tracking is always displayed after content). Also note that tracking
+        values are given in a reversed ordering, as DB model reads them by id
+        DESC -> most important one is given last to be inserted last (see
+        'mail_tracking' module). HTML therefore needs to reverse ordering. """
         tracking_html = self.env['ir.qweb']._render(
-            "mail.mail_tracking_template", {'trackingValues': tracking_values}
+            "mail.mail_tracking_template", {'trackingValues': reversed(tracking_values)}
         ).strip()
         return append_content_to_html(
             body, tracking_html,
