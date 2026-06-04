@@ -31,9 +31,11 @@ class TestMailThreadInternalsCommon(TestMailFullCommon, TestSMSRecipients):
             2,
         )
 
+        # avoid mobile rewriting links
+        cls.env["ir.config_parameter"].sudo().set_bool("mail_mobile.disable_redirect_firebase_dynamic_link", True)
+
 
 @tagged('mail_thread', 'portal')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailThreadInternals(TestMailThreadInternalsCommon):
 
     @users('employee')

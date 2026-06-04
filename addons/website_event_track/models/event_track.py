@@ -537,11 +537,11 @@ class EventTrack(models.Model):
             info['email_to_lst'] = tools.mail.email_split_and_format_normalize(track.partner_email) or [track.partner_email]
         return recipients
 
-    def _message_post_after_hook(self, message, msg_vals):
+    def _message_post_after_hook(self, message):
         #  OVERRIDE
         #  If no partner is set on track when sending a message, then we create one from suggested contact selected.
         #  If one or more have been created from chatter (Suggested Recipients) we search for the expected one and write the partner_id on track.
-        if msg_vals.get('partner_ids') and not self.partner_id:
+        if message.partner_ids and not self.partner_id:
             #  Contact(s) created from chatter set on track : we verify if at least one is the expected contact
             #  linked to the track. (created from contact_email if any, then partner_email if any)
             main_email = self.contact_email or self.partner_email
@@ -558,7 +558,7 @@ class EventTrack(models.Model):
                 self.search([
                     ('partner_id', '=', False), email_domain, ('stage_id.is_cancel', '=', False),
                 ]).write({'partner_id': new_partner[0].id})
-        return super()._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message)
 
     def _track_template_parameters(self, tracked_fields):
         res = super()._track_template_parameters(tracked_fields)

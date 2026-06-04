@@ -81,7 +81,7 @@ class MailMessageSchedule(models.Model):
                     schedule_notify_kwargs.pop('scheduled_date', None)
                     notify_kwargs.update(schedule_notify_kwargs)
 
-                record._notify_thread(schedule.mail_message_id, msg_vals=False, **notify_kwargs)
+                record._notify_thread(schedule.mail_message_id, **notify_kwargs)
 
         self.unlink()
         return True

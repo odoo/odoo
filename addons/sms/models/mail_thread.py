@@ -135,31 +135,28 @@ class MailThread(models.AbstractModel):
             **kwargs
         )
 
-    def _notify_thread(self, message, msg_vals=False, **kwargs):
+    def _notify_thread(self, message, **kwargs):
         # Main notification method. Override to add support of sending SMS notifications.
         scheduled_date = self._is_notification_scheduled(kwargs.get('scheduled_date'))
-        recipients_data = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
+        recipients_data = super()._notify_thread(message, **kwargs)
         if not scheduled_date:
-            self._notify_thread_by_sms(message, recipients_data, msg_vals=msg_vals, **kwargs)
+            self._notify_thread_by_sms(message, recipients_data, **kwargs)
         return recipients_data
 
-    def _notify_thread_by_sms(self, message, recipients_data, msg_vals=False,
+    def _notify_thread_by_sms(self, message, recipients_data,
                               sms_content=None, sms_numbers=None, sms_pid_to_number=None,
                               put_in_queue=False, **kwargs):
         """ Notification method: by SMS.
 
-        :param record message: <mail.message> record being notified. May be
-          void as 'msg_vals' superseeds it;
+        :param record message: <mail.message> record being notified;
         :param list recipients_data: list of recipients data based on <res.partner>
           records formatted like a list of dicts containing information. See
           ``MailThread._notify_get_recipients()``;
-        :param dict msg_vals: values dict used to create the message, allows to
-          skip message usage and spare some queries if given;
 
         :param sms_content: plaintext version of body, mainly to avoid
           conversion glitches by splitting html and plain text content formatting
-          (e.g.: links, styling.).
-          If not given, `msg_vals`'s `body` is used and converted from html to plaintext;
+          (e.g.: links, styling.). If not given, message `body` is used and
+          converted from html to plaintext;
         :param sms_numbers: additional numbers to notify in addition to partners
           and classic recipients;
         :param sms_pid_to_number: force a number to notify for a given partner ID
@@ -167,14 +164,13 @@ class MailThread(models.AbstractModel):
         :param put_in_queue: use cron to send queued SMS instead of sending them
           directly;
         """
-        msg_vals = msg_vals or {}
         sms_pid_to_number = sms_pid_to_number if sms_pid_to_number is not None else {}
         sms_numbers = sms_numbers if sms_numbers is not None else []
         sms_create_vals = []
         sms_all = self.env['sms.sms'].sudo()
 
         # pre-compute SMS data
-        body = sms_content or html2plaintext(msg_vals['body'] if 'body' in msg_vals else message.body)
+        body = sms_content or html2plaintext(message.body)
         sms_base_vals = {
             'body': body,
             'mail_message_id': message.id,

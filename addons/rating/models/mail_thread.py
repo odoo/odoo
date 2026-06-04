@@ -162,34 +162,48 @@ class MailThread(models.AbstractModel):
                 )
         return rating
 
-    def message_post(self, **kwargs):
-        rating_id = kwargs.pop('rating_id', False)
-        rating_value = kwargs.pop('rating_value', False)
-        # create rating.rating record linked to given rating_value. Using sudo as portal users may have
-        # rights to create messages and therefore ratings (security should be checked beforehand)
-        if rating_value:
-            rating_vals = {
-                'rating': float(rating_value) if rating_value is not None else False,
-                'feedback': tools.html2plaintext(kwargs.get('body', '')),
-                'res_model_id': self.env['ir.model']._get_id(self._name),
-                'res_id': self.id,
-                'consumed': True,
-                'partner_id': self.env.user.partner_id.id,
-            }
-            rating_id = self.env["rating.rating"].sudo().create(rating_vals).id
-        if rating_id:
-            kwargs["rating_id"] = rating_id
-        return super().message_post(**kwargs)
+    # POST SUPPORT
+    # --------------------------------------------------
 
-    def _message_post_after_hook(self, message, msg_values):
-        """Override to link rating to message as sudo. This is done in
-        _message_post_after_hook to be before _notify_thread."""
-        # sudo: rating.rating - can link rating to message from same author and thread
-        rating = self.env["rating.rating"].browse(msg_values.get("rating_id")).sudo()
-        same_author = rating.partner_id and rating.partner_id == message.author_id
-        if same_author and rating.res_model == message.model and rating.res_id == message.res_id:
-            rating.message_id = message.id
-        super()._message_post_after_hook(message, msg_values)
+    def _message_create(self, values_list):
+        inner_values_list = []
+        for values in values_list:
+            copied = values.copy()
+            copied.pop('rating_id', None)
+            copied.pop('rating_value', None)
+            inner_values_list.append(copied)
+
+        messages = super()._message_create(inner_values_list)
+
+        rating_vals_lst = []
+        for message, original_values in zip(messages, values_list, strict=True):
+            rating_value, rating_id = original_values.get('rating_value'), original_values.get('rating_id')
+            # create rating.rating record linked to given rating_value. Using sudo as portal users may have
+            # rights to create messages and therefore ratings (security should be checked beforehand)
+            if rating_value:
+                rating_vals = {
+                    'rating': float(rating_value) if rating_value is not None else False,
+                    'feedback': tools.html2plaintext(message.body or ''),
+                    'res_model_id': self.env['ir.model']._get_id(self._name),
+                    'res_id': message.res_id,
+                    'consumed': True,
+                    'partner_id': self.env.user.partner_id.id,
+                }
+                # can link rating to message from same author and thread
+                if message.author_id == self.env.user.partner_id:
+                    rating_vals['message_id'] = message.id
+                rating_vals_lst.append(rating_vals)
+            elif rating_id:
+                rating_su = self.env["rating.rating"].sudo().browse(rating_id)
+                # can link rating to message from same author and thread
+                if (
+                    rating_su.partner_id and message.author_id == rating_su.partner_id and
+                    rating_su.res_model == message.model and rating_su.res_id == message.res_id
+                ):
+                    rating_su.message_id = message.id
+        if rating_vals_lst:
+            self.env["rating.rating"].sudo().create(rating_vals_lst)
+        return messages
 
     def _get_allowed_message_params(self):
         return super()._get_allowed_message_params() | {"rating_value"}

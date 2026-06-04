@@ -85,10 +85,8 @@ class MailTestLang(models.Model):
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals
-        )
+    def _notify_get_recipients_groups(self, message, model_description):
+        groups = super()._notify_get_recipients_groups(message, model_description)
         for group in [g for g in groups if g[0] in('follower', 'customer')]:
             group_options = group[2]
             group_options['has_button_access'] = True

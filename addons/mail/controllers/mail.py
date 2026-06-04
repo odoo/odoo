@@ -44,12 +44,7 @@ class MailController(http.Controller):
     def _redirect_to_login_with_mail_view(cls, model, res_id, access_token=None, **kwargs):
         url_base = '/mail/view'
         url_params = request.env['mail.thread']._get_action_link_params(
-            'view', **{
-                'model': model,
-                'res_id': res_id,
-                'access_token': access_token,
-                **kwargs,
-            }
+            'view', model=model, res_id=res_id, access_token=access_token, **kwargs,
         )
         mail_view_url = f'{url_base}?{url_encode(url_params, sort=True)}'
         return request.redirect(f'/web/login?{url_encode({"redirect": mail_view_url})}')
@@ -241,7 +236,7 @@ class MailController(http.Controller):
         return request.render('mail.message_document_unfollowed', {
             'name': record_sudo.display_name,
             'model_name': request.env['ir.model'].sudo()._get(model).display_name,
-            'access_url': record._notify_get_action_link('view', model=model, res_id=res_id) if display_link else False,
+            'access_url': record_sudo._notify_get_action_link('view') if display_link else False,
         })
 
     @http.route('/mail/message/<int:message_id>', type='http', auth='public')

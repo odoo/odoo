@@ -224,7 +224,11 @@ def tag_quote(el):
             sibling.set('data-o-mail-quote', '1')
 
     # odoo, gmail and outlook automatic signature wrapper
-    is_signature_wrapper = 'odoo_signature_wrapper' in el_class or 'gmail_signature' in el_class or el_id == "Signature"
+    is_signature_wrapper = (
+        'odoo_signature_wrapper' in el_class or
+        # gmail
+        'gmail_signature' in el_class or el_id == "Signature" or el.get('data-smartmail')
+    )
     is_outlook_auto_message = 'appendonsend' in el_id
     # gmail and outlook reply quote
     is_outlook_reply_quote = 'divRplyFwdMsg' in el_id

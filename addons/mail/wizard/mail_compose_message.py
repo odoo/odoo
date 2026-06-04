@@ -1305,12 +1305,12 @@ class MailComposeMessage(models.TransientModel):
             if email_mode and self.email_layout_xmlid and mail_values['recipient_ids']:
                 lang = langs[res_id]
                 recipient_ids = [command[1] for command in mail_values['recipient_ids']]
-                msg_vals = {
+                new_mail_message_values = {
+                    'body': mail_values['body'],
                     'email_layout_xmlid': self.email_layout_xmlid,
                     'model': self.model,
                     'res_id': res_id,
                 }
-                new_mail_message_values = {'body': mail_values['body']}
                 if self.template_id:
                     new_mail_message_values['email_add_signature'] = False
                 message_inmem = self.env['mail.message'].new(new_mail_message_values)
@@ -1330,14 +1330,12 @@ class MailComposeMessage(models.TransientModel):
                         'uid': False,
                         'ushare': False,
                     } for pid in recipient_ids],
-                    msg_vals=msg_vals,
                     model_description=False,  # force dynamic computation
                     force_email_lang=lang,
                 ):
                     mail_body = record._notify_by_email_render_layout(
                         message_inmem,
                         recipients_group_data,
-                        msg_vals=msg_vals,
                         render_values=render_values,
                     )
                     mail_values['body_html'] = mail_body

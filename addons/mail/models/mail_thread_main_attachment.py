@@ -14,15 +14,10 @@ class MailThreadMainAttachment(models.AbstractModel):
 
     message_main_attachment_id = fields.Many2one(string="Main Attachment", comodel_name='ir.attachment', copy=False, index='btree_not_null')
 
-    def _message_post_after_hook(self, message, msg_values):
+    def _message_post_after_hook(self, message):
         """ Set main attachment field if necessary """
-        super()._message_post_after_hook(message, msg_values)
-        self.sudo()._message_set_main_attachment_id(
-            self.env["ir.attachment"].browse([
-                attachment_command[1]
-                for attachment_command in (msg_values['attachment_ids'] or [])
-            ])
-        )
+        super()._message_post_after_hook(message)
+        self.sudo()._message_set_main_attachment_id(message.attachment_ids)
 
     def _message_set_main_attachment_id(self, attachments, force=False, filter_xml=True):
         """ Update 'main' attachment.

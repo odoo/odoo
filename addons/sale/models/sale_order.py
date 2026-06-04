@@ -2128,13 +2128,11 @@ class SaleOrder(models.Model):
             kwargs["notify_author_mention"] = kwargs.get("notify_author_mention", True)
         return super().message_post(**kwargs)
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+    def _notify_get_recipients_groups(self, message, model_description):
         # Give access button to users and portal customer as portal is integrated
         # in sale. Customer and portal group have probably no right to see
         # the document so they don't have the access button.
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals
-        )
+        groups = super()._notify_get_recipients_groups(message, model_description)
         if not self:
             return groups
 
@@ -2161,7 +2159,6 @@ class SaleOrder(models.Model):
     def _notify_by_email_prepare_rendering_context(
         self,
         message,
-        msg_vals=False,
         model_description=False,
         force_email_company=False,
         force_email_lang=False,
@@ -2171,7 +2168,6 @@ class SaleOrder(models.Model):
     ):
         render_context = super()._notify_by_email_prepare_rendering_context(
             message,
-            msg_vals=msg_vals,
             model_description=model_description,
             force_email_company=force_email_company,
             force_email_lang=force_email_lang,

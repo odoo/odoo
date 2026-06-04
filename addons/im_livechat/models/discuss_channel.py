@@ -864,7 +864,7 @@ class DiscussChannel(models.Model):
             return self.env._("invited %s to the conversation", member._get_member_html_link())
         return super()._get_member_join_notification(member)
 
-    def _message_post_after_hook(self, message, msg_vals):
+    def _message_post_after_hook(self, message):
         """
         This method is called just before _notify_thread() method which is sending the message data.
         We need a 'chatbot.message' record before it happens to correctly display the message.
@@ -934,7 +934,7 @@ class DiscussChannel(models.Model):
             ).total_seconds() / 3600
         if not self.livechat_end_dt and author_history.livechat_member_type == "agent":
             self.livechat_failure = "no_failure"
-        return super()._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message)
 
     def _chatbot_restart(self, chatbot_script):
         # sudo: discuss.channel - visitor can clear current step to restart the script

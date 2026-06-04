@@ -491,6 +491,8 @@ class WebsitePublishedMixin(models.AbstractModel):
         transaction. This prevents long-lived transactions and stale cache
         issues, while keeping publish behavior identical whether it's triggered
         manually or via cron.
+
+        TDE: FIXME, lot of issues here
         """
 
         # Exit early if this call is explicitly skipped by context.
@@ -535,23 +537,12 @@ class WebsitePublishedMixin(models.AbstractModel):
             if not target_sudo:
                 continue
 
-            # Rebuild values similar to those passed by the mail composer.
-            msg_vals = {
-                'partner_ids': message.partner_ids.ids,
-                'message_type': message.message_type,
-                'subtype_id': message.subtype_id.id,
-                'author_id': message.author_id.id,
-                'incoming_email_to': message.incoming_email_to,
-                'incoming_email_cc': message.incoming_email_cc,
-                'outgoing_email_to': message.outgoing_email_to,
-            }
-
             # Compute recipients (followers, partners, etc.)
-            recipients = target_sudo._notify_get_recipients(message_sudo, msg_vals=msg_vals)
+            recipients = target_sudo._notify_get_recipients(message_sudo)
             if recipients:
                 # Mirror the UI path so followers receive the same notifications
                 # they would if the message had been posted manually.
-                target_sudo._notify_thread(message_sudo, msg_vals=msg_vals, skip_existing=True)
+                target_sudo._notify_thread(message_sudo, skip_existing=True)
 
                 # We've just sent notifications → clear caches again so
                 # message.notified_partner_ids and message.notification_ids

@@ -6566,15 +6566,14 @@ class AccountMove(models.Model):
             template_xmlid = 'account.email_template_edi_self_billing_credit_note'
         return self.env.ref(template_xmlid)
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
-        groups = super()._notify_get_recipients_groups(message, model_description, msg_vals=msg_vals)
+    def _notify_get_recipients_groups(self, message, model_description):
+        groups = super()._notify_get_recipients_groups(message, model_description)
         self.ensure_one()
 
         if self.move_type != 'entry':
-            local_msg_vals = dict(msg_vals or {})
-            partner_ids = local_msg_vals.get('partner_ids', []) if 'partner_ids' in local_msg_vals else message.partner_ids.ids
+            partner_ids = message.partner_ids.ids
             self._portal_ensure_token()
-            access_link = self._notify_get_action_link('view', **local_msg_vals, access_token=self.access_token)
+            access_link = self._notify_get_action_link('view', access_token=self.access_token)
 
             # Create a new group for partners that have been manually added as recipients.
             # Those partners should have access to the invoice.
@@ -7310,7 +7309,7 @@ class AccountMove(models.Model):
     def _attachment_fields_to_clear(self):
         return super()._attachment_fields_to_clear() + ['message_main_attachment_id']
 
-    def _message_post_after_hook(self, new_message, message_values):
+    def _message_post_after_hook(self, new_message):
         """ This method processes the attachments of a new mail.message. It handles the 3 following situations:
             (1) receiving an e-mail from a mail alias. In that case, we potentially want to split the attachments into several invoices.
             (2) receiving an e-mail / posting a message on an existing invoice via the webclient:
@@ -7326,7 +7325,7 @@ class AccountMove(models.Model):
 
         if not attachments or new_message.message_type not in {'email', 'comment'} or self.env.context.get('disable_attachment_import'):
             # No attachments, or the message was created in application code, so don't do anything.
-            return super()._message_post_after_hook(new_message, message_values)
+            return super()._message_post_after_hook(new_message)
 
         files_data = self._to_files_data(attachments)
 
@@ -7356,19 +7355,13 @@ class AccountMove(models.Model):
                 if invoice == self:
                     attachment_records |= self._from_files_data(extra_files_data)
                     new_message.attachment_ids = [Command.set(attachment_records.ids)]
-                    message_values['attachment_ids'] = [Command.link(attachment.id) for attachment in attachment_records]
-                    res = super(AccountMove, self.with_context(no_document=True))._message_post_after_hook(new_message, message_values)
+                    res = super(AccountMove, self.with_context(no_document=True))._message_post_after_hook(new_message)
                 else:
                     sub_new_message = new_message.copy({
                         'res_id': invoice.id,
                         'attachment_ids': [Command.set(attachment_records.ids)],
                     })
-                    sub_message_values = {
-                        **message_values,
-                        'res_id': invoice.id,
-                        'attachment_ids': [Command.link(attachment.id) for attachment in attachment_records],
-                    }
-                    super(AccountMove, invoice.with_context(no_document=True))._message_post_after_hook(sub_new_message, sub_message_values)
+                    super(AccountMove, invoice.with_context(no_document=True))._message_post_after_hook(sub_new_message)
                 invoice._fix_attachments_on_record_from_files_data(file_data_group, extra_files_data)
 
             for invoice, file_data_group in zip(invoices, file_data_groups):
@@ -7386,8 +7379,7 @@ class AccountMove(models.Model):
                 self._extend_with_attachments(files_data)
 
             new_message.attachment_ids = [Command.set(attachment_records.ids)]
-            message_values['attachment_ids'] = [Command.link(attachment.id) for attachment in attachment_records]
-            return super()._message_post_after_hook(new_message, message_values)
+            return super()._message_post_after_hook(new_message)
 
     def _creation_subtype(self):
         # EXTENDS mail mail.thread
@@ -7419,13 +7411,13 @@ class AccountMove(models.Model):
             'in_receipt': _('Purchase Receipt Created'),
         }[self.move_type]
 
-    def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
+    def _notify_by_email_prepare_rendering_context(self, message, model_description=False,
                                                    force_email_company=False, force_email_lang=False,
                                                    force_record_name=False, force_header=False,
                                                    force_footer=False):
         # EXTENDS mail mail.thread
         render_context = super()._notify_by_email_prepare_rendering_context(
-            message, msg_vals=msg_vals, model_description=model_description,
+            message, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang,
             force_record_name=force_record_name, force_header=force_header,
             force_footer=force_footer,

@@ -100,7 +100,7 @@ class MailTemplatePreview(models.TransientModel):
                         ActiveModel = preview.resource_ref if isinstance(preview.resource_ref, preview.pool["mail.thread"]) else preview.env["mail.thread"]
                         # Create a message without db entry for the layout.
                         message = preview.env['mail.message'].new(msg_vals)
-                        recipients_data = ActiveModel._notify_get_recipients(message, msg_vals, notify_author=True)
+                        recipients_data = ActiveModel._notify_get_recipients(message, notify_author=True)
                         if not recipients_data:
                             # Append a dummy recipient to ensure the layout is rendered
                             recipients_data.append({
@@ -120,7 +120,6 @@ class MailTemplatePreview(models.TransientModel):
                             ActiveModel._notify_get_classified_recipients_iterator(
                                 message,
                                 recipients_data,
-                                msg_vals=msg_vals,
                                 force_header=mail_template.email_layout_force_header,
                                 force_footer=mail_template.email_layout_force_footer,
                             )
@@ -129,7 +128,6 @@ class MailTemplatePreview(models.TransientModel):
                             ActiveModel._notify_by_email_render_layout(
                                 message,
                                 recipients_group,
-                                msg_vals=msg_vals,
                                 render_values=render_values,
                             )
                         )
