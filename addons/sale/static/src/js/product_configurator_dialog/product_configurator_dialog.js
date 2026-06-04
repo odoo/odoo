@@ -61,7 +61,7 @@ export class ProductConfiguratorDialog extends Component {
 
     setup() {
         this.title = _t("Configure your product");
-        this.env.dialogData.dismiss = !this.props.edit && this.props.discard.bind(this);
+        this.env.dialogData.dismiss = !this.props.edit && this._onDialogDismiss.bind(this);
         this.state = useState({
             products: [],
             optionalProducts: [],
@@ -522,5 +522,18 @@ export class ProductConfiguratorDialog extends Component {
             this.props.discard(); // clear the line
         }
         this.props.close();
+    }
+
+    _onDialogDismiss() {
+        if (this.isPossibleConfiguration()) {
+            const mainProduct = this.state.products.find(
+                (product) => product.product_tmpl_id === this.env.mainProductTmplId
+            );
+            const optionalProducts = this.state.products.filter(
+                (product) => product.product_tmpl_id !== this.env.mainProductTmplId
+            );
+            return this.props.discard(mainProduct, optionalProducts);
+        }
+        return this.props.discard();
     }
 }
