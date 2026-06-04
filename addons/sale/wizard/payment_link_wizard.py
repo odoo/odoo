@@ -2,6 +2,8 @@
 
 from odoo import api, fields, models
 
+from odoo.addons.payment import utils as payment_utils
+
 
 class PaymentLinkWizard(models.TransientModel):
     _inherit = "payment.link.wizard"
@@ -28,11 +30,6 @@ class PaymentLinkWizard(models.TransientModel):
         sale_wizards = self.env["payment.link.wizard"]
         for wizard in self.filtered(lambda w: w.res_model == "sale.order"):
             sale_order = wizard.env["sale.order"].browse(wizard.res_id)
-            if sale_order.state in ("draft", "sent") and wizard.amount < wizard.prepayment_amount:
-                wizard.warning_message = wizard.env._(
-                    "The amount must be greater than the prepayment amount."
-                )
-                sale_wizards |= wizard  # Prevent the super call from clearing the warning message.
             if sale_order.is_expired:
                 wizard.warning_message = wizard.env._("The sale order has expired.")
                 sale_wizards |= wizard
@@ -47,5 +44,11 @@ class PaymentLinkWizard(models.TransientModel):
     def _prepare_query_params(self, *args):
         """Override of `payment` to add SO-related values to the query params."""
         if self.res_model == "sale.order":
-            return {"payment_amount": self.amount}
+            return {"payment_amount": self.amount, "payment_token": self._prepare_access_token()}
         return super()._prepare_query_params(*args)
+
+    def _prepare_access_token(self):
+        """Override of `payment` to generate the access token only based on the order and amount."""
+        if self.res_model == "sale.order":
+            return payment_utils.generate_access_token(self.res_id, self.amount, env=self.env)
+        return super()._prepare_access_token()

@@ -460,7 +460,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         """
         self.amount = self.sale_order.amount_total
         tx = self._create_transaction(
-            flow="redirect", sale_order_ids=[self.sale_order.id], state="done",
+            flow="redirect", sale_order_ids=[self.sale_order.id], state="done"
         )
         with mute_logger("odoo.addons.sale.models.payment_transaction"):
             self._run_post_processing(tx)

@@ -11,8 +11,8 @@ class PaymentLinkWizard(models.TransientModel):
 
     invoice_amount_due = fields.Monetary(
         string="Amount Due",
-        compute='_compute_invoice_amount_due',
-        currency_field='currency_id'
+        currency_field='currency_id',
+        readonly=True,
     )
     open_installments = fields.Json(export_string_translation=False)
     open_installments_preview = fields.Html(
@@ -31,11 +31,6 @@ class PaymentLinkWizard(models.TransientModel):
         for wizard in self:
             if not wizard.warning_message and not self.env['ir.config_parameter'].sudo().get_bool('account_payment.enable_portal_payment'):
                 wizard.warning_message = _("Online payment option is not enabled in Configuration.")
-
-    @api.depends('amount_max')
-    def _compute_invoice_amount_due(self):
-        for wizard in self:
-            wizard.invoice_amount_due = wizard.amount_max
 
     @api.depends('open_installments')
     def _compute_open_installments_preview(self):
