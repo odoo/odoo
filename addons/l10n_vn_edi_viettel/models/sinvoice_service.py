@@ -251,26 +251,38 @@ class SInvoiceService:
     def extract_xml_from_zip(self, zip_bytes):
         """
         Extract the XML file from SInvoice's nested ZIP format.
+        First searches in the outer zip (first layer), then in nested zip files (second layer).
         :return: (file_dict, error_message).
         """
         try:
-            # SInvoice returns a zip containing another zip, which contains the xsl + xml files.
-            with zipfile.ZipFile(io.BytesIO(zip_bytes)) as zip_file:
-                outer_entry = zip_file.infolist()[0]
-                if outer_entry.file_size > SINVOICE_MAX_FILE_SIZE:
-                    return {}, self.env._('SInvoice ZIP entry exceeds maximum allowed file size.')
-                inner_zip_bytes = zip_file.read(outer_entry)
-                with zipfile.ZipFile(io.BytesIO(inner_zip_bytes)) as inner_zip:
-                    for file in inner_zip.infolist():
-                        if file.filename.endswith('.xml'):
-                            if file.file_size > SINVOICE_MAX_FILE_SIZE:
-                                return {}, self.env._('SInvoice ZIP entry exceeds maximum allowed file size.')
-                            return {
-                                'name': file.filename,
-                                'mimetype': 'application/xml',
-                                'raw': inner_zip.read(file),
-                            }, None
-            return {}, self.env._('No XML file found in the SInvoice ZIP response.')
+            with zipfile.ZipFile(io.BytesIO(zip_bytes)) as outer_zip:
+                for file in outer_zip.infolist():
+                    if file.filename.endswith('.xml'):
+                        if file.file_size > SINVOICE_MAX_FILE_SIZE:
+                            return {}, self.env._('SInvoice ZIP entry exceeds maximum allowed file size.')
+                        return {
+                            'name': file.filename,
+                            'mimetype': 'application/xml',
+                            'raw': outer_zip.read(file),
+                        }, None
+
+                for entry in outer_zip.infolist():
+                    if entry.filename.endswith('.zip'):
+                        if entry.file_size > SINVOICE_MAX_FILE_SIZE:
+                            return {}, self.env._('SInvoice ZIP entry exceeds maximum allowed file size.')
+                        with outer_zip.open(entry) as inner_bytes:
+                            with zipfile.ZipFile(io.BytesIO(inner_bytes.read())) as inner_zip:
+                                for file in inner_zip.infolist():
+                                    if file.filename.endswith('.xml'):
+                                        if file.file_size > SINVOICE_MAX_FILE_SIZE:
+                                            return {}, self.env._('SInvoice ZIP entry exceeds maximum allowed file size.')
+                                        return {
+                                            'name': file.filename,
+                                            'mimetype': 'application/xml',
+                                            'raw': inner_zip.read(file),
+                                        }, None
+
+                return {}, self.env._('No XML file found in the SInvoice ZIP response.')
         except Exception as err:  # noqa: BLE001
             return {}, self.env._('Failed to extract XML from SInvoice ZIP: %s', err)
 
