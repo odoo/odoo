@@ -116,8 +116,8 @@
             exclude=".o_grid_item_image"/>
 
         <animate_option
-            selector=".o_animable, section .row > div, img, .fa, .btn"
-            t-attf-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.fa, .s_share i.fa, .s_website_form_submit, {{socialMediaElementsSelector}}, {{this.specialBlockquoteSelector}}"/>
+            selector=".o_animable, section .row > div, img, .fa, .btn, .s_card"
+            t-attf-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_social_media i.fa, .s_share i.fa, .s_website_form_submit, {{socialMediaElementsSelector}}, {{this.specialBlockquoteSelector}}, div:is({{this.cardParentHandlers}}) > .s_card"/>
         <animate_option selector=".s_social_media, .s_share" t-att-applyTo="socialMediaElementsSelector"/>
         <visibility_option selector="section, .s_hr"/>
         <device_visibility_option
