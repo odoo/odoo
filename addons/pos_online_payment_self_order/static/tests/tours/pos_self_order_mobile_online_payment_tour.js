@@ -110,3 +110,27 @@ registry.category("web_tour.tours").add("test_kiosk_cart_restore_and_cancel", {
         ...ProductPage.clickCancel(),
     ],
 });
+
+registry.category("web_tour.tours").add("self_order_tip_amount_with_tax", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        Utils.clickBtn("15%"), // Select 15% tip
+        CartPage.checkTotalPrice("2.97"), // Total with tax on tip
+        Utils.clickBtn("Pay"),
+    ],
+});
+
+registry.category("web_tour.tours").add("self_order_tip_amount_without_tax", {
+    steps: () => [
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Checkout"),
+        CartPage.checkProduct("Coca-Cola", "2.53", "1"),
+        Utils.clickBtn("15%"), // Select 15% tip
+        CartPage.checkTotalPrice("2.91"), // Total without tax on tip
+        Utils.clickBtn("Pay"),
+    ],
+});

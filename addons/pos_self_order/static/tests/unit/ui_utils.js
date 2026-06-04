@@ -385,7 +385,7 @@ export async function fillInput(placeholder, value) {
 }
 
 export async function clickOrderNoteBtn() {
-    await contains(".order-note button").click();
+    await contains(".order-note").click();
     await animationFrame();
 }
 

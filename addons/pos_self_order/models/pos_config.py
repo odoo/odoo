@@ -112,7 +112,7 @@ class PosConfig(models.Model):
             'available_preset_ids', 'default_preset_id', 'use_presets', 'iface_tax_included',
             'status', 'self_ordering_image_background_ids', 'preparation_printer_ids',
             'receipt_printer_ids', 'use_order_printer', 'other_devices', 'pos_snooze_ids', 'self_ordering_primary_color',
-            'logo', 'receipt_address', 'phone', 'email', 'website',
+            'logo', 'receipt_address', 'phone', 'email', 'website', 'tip_product_id',
         ]
 
     def _update_access_token(self):

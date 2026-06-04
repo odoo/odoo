@@ -38,6 +38,10 @@ class ProductTemplate(models.Model):
             | presets.service_fee_product_id.product_tmpl_id
         )
         all_products = products | additional_products | preset_product_tmpls
+
+        if config.tip_product_id:
+            all_products |= config.tip_product_id.product_tmpl_id
+
         read_products = all_products.read(fields, load=False)
         self._process_pos_self_ui_products(read_products)
         return read_products

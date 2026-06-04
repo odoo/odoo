@@ -22,7 +22,14 @@ export class EatingLocationPage extends Component {
     }
 
     selectPreset(preset) {
-        this.selfOrder.currentOrder.setPreset(preset);
+        const order = this.selfOrder.currentOrder;
+        // Reset tip when switching to a different preset, as pricelist or fiscal
+        // position may differ, which would change the order total and invalidate
+        // the previously computed tip amount or percentage.
+        if (order.preset_id !== preset) {
+            this.selfOrder.resetTip();
+        }
+        order.setPreset(preset);
         this.router.navigate(history.state?.redirectPage || "product_list");
     }
 
