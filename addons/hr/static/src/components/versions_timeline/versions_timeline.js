@@ -25,6 +25,14 @@ export class VersionsTimeline extends StatusBarField {
                 return { type: "date" };
             },
         });
+        const { hooks } = this.props.record.model;
+        const onRecordSaved = hooks.onRecordSaved;
+        hooks.onRecordSaved = async (...args) => {
+            await onRecordSaved(...args);
+            const { specialDataCaches } = this.props.record.model;
+            Object.keys(specialDataCaches).forEach(key => delete specialDataCaches[key]);
+            await this.props.record.model.load();
+        };
     }
 
     /** @override **/
@@ -37,11 +45,11 @@ export class VersionsTimeline extends StatusBarField {
     /** @override **/
     getFieldNames() {
         const fieldNames = super.getFieldNames();
-        fieldNames.push([
+        fieldNames.push(
             "employee_type_id",
             "contract_date_start",
             "contract_date_end",
-        ]);
+        );
         return fieldNames.filter((fName) => fName in this.props.record.fields);
     }
 
@@ -57,10 +65,6 @@ export class VersionsTimeline extends StatusBarField {
             this.props.record.evalContext.id,
             { date_version: date },
         ]);
-
-        const { specialDataCaches } = this.props.record.model;
-        // Invalidate cache after creating new version.
-        Object.keys(specialDataCaches).forEach(key => delete specialDataCaches[key]);
 
         await this.props.record.model.load({
             context: {
