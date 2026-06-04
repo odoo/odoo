@@ -88,3 +88,12 @@ export class HybridFluidEmptyCell extends HybridFluidCell {
         return true;
     }
 }
+
+export class HybridFluidTableRow extends LayoutModel {
+    static template = "mail.HybridFluidTableRow";
+    constructor(options = {}) {
+        const refs = options.refs ?? {};
+        options.refs = refs;
+        refs.root = 
+    }
+}

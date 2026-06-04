@@ -12,6 +12,12 @@ const { DESKTOP, MOBILE, DESKTOP_MOBILE_BREAKPOINT } = DIMENSIONS;
 // to window zoom px rounding in some cases.
 const ZOOM_WIDTH_CORRECTION = 0.1;
 
+const VERTICAL_ALIGN = {
+    start: "top",
+    end: "bottom",
+    center: "middle",
+};
+
 export class HybridFluidStrategyPlugin extends Plugin {
     static id = "hybridFluidStrategy";
     static dependencies = [
@@ -88,13 +94,12 @@ export class HybridFluidStrategyPlugin extends Plugin {
                 "font-size": this.getStylePropertyValue(referenceNode, "font-size"),
             },
         };
+        // TODO EGGMAIL: approximate vertical alignment support:
+        // start/center/end/stretch -> default stretch
+        const verticalAlign =
+            VERTICAL_ALIGN[this.getStylePropertyValue(referenceNode, "align-items")];
         for (const band of desktopBlock.bands) {
-            const rowEmailNode = new EmailNode({
-                layout: new HybridFluidRow(),
-                analysis: new Analysis({
-                    facts: { isHybridFluidRow: true },
-                }),
-            });
+            const rowEmailNode = this.buildRow();
             rows.push(rowEmailNode);
             let prevCluster;
             if (band.clusters.length > 0) {
@@ -102,15 +107,15 @@ export class HybridFluidStrategyPlugin extends Plugin {
                 const isLast = band.clusters.length === 1;
                 if (!this.isZero(desktopBlock.padding.left)) {
                     const offsetWidth = desktopBlock.padding.left;
-                    rowEmailNode.appendChild(
-                        this.buildCellWithOffset(
-                            emailNode,
-                            offsetWidth,
-                            prevCluster,
-                            styleContext,
-                            isLast
-                        )
-                    );
+                    for (const cell of this.buildCellWithOffset(
+                        emailNode,
+                        offsetWidth,
+                        prevCluster,
+                        styleContext,
+                        isLast
+                    )) {
+                        rowEmailNode.appendChild(cell);
+                    }
                 } else {
                     rowEmailNode.appendChild(
                         this.buildCell(emailNode, prevCluster, styleContext, isLast)
@@ -122,9 +127,15 @@ export class HybridFluidStrategyPlugin extends Plugin {
                 const gap = this.gapX(prevCluster.rect, cluster.rect);
                 const isLast = i === band.clusters.length - 1;
                 if (gap > 0) {
-                    rowEmailNode.appendChild(
-                        this.buildCellWithOffset(emailNode, gap, cluster, styleContext, isLast)
-                    );
+                    for (const cell of this.buildCellWithOffset(
+                        emailNode,
+                        gap,
+                        cluster,
+                        styleContext,
+                        isLast
+                    )) {
+                        rowEmailNode.appendChild(cell);
+                    }
                 } else {
                     rowEmailNode.appendChild(
                         this.buildCell(emailNode, cluster, styleContext, isLast)
@@ -233,6 +244,15 @@ export class HybridFluidStrategyPlugin extends Plugin {
         return clusterEmailNodes;
     }
 
+    buildRow() {
+        return new EmailNode({
+            layout: new HybridFluidRow(),
+            analysis: new Analysis({
+                facts: { isHybridFluidRow: true },
+            }),
+        });
+    }
+
     buildCell(emailNode, cluster, styleContext, isLast = false) {
         const clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
         const clusterWidth = cluster.rect.width - (isLast ? ZOOM_WIDTH_CORRECTION : 0);
@@ -291,7 +311,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
         });
         cellWithOffsetEmailNode.appendChild(offsetEmailNode);
         cellWithOffsetEmailNode.appendChild(cellEmailNode);
-        return cellWithOffsetEmailNode;
+        return [cellWithOffsetEmailNode];
     }
 }
 
