@@ -595,6 +595,18 @@ class Meeting(models.Model):
                 }
                 pattern['index'] = byday_selection[recurrence.byday]
 
+            if recurrence.rrule_type == 'yearly':
+                pattern['month'] = (recurrence.dtstart or fields.Datetime.now()).month
+                if recurrence.month_by == 'day':
+                    byday_selection = {
+                        '1': 'first',
+                        '2': 'second',
+                        '3': 'third',
+                        '4': 'fourth',
+                        '-1': 'last',
+                    }
+                    pattern['index'] = byday_selection[recurrence.byday]
+
             dtstart = recurrence.dtstart or fields.Datetime.now()
             rule_range = {
                 'startDate': (dtstart.date()).isoformat()

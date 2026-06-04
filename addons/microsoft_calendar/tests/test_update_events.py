@@ -1491,6 +1491,84 @@ class TestUpdateEvents(TestCommon):
 
         self.assertFalse(base_event.follow_recurrence, "Base event should remain an exception")
 
+    @patch_api
+    def test_update_event_absolute_yearly_recurrence_month(self):
+        """
+        Yearly recurrences with month_by='date' must include both 'month' and 'dayOfMonth'
+        in the Graph recurrencePattern (absoluteYearly type).
+        """
+        # Disable sync to allow recurrence creation without Outlook spam checks.
+        sync_previous_state = self.organizer_user.microsoft_synchronization_stopped
+        self.organizer_user.microsoft_synchronization_stopped = False
+
+        # Create a yearly recurring event starting March 15.
+        record = self.env['calendar.event'].with_context(dont_notify=True).with_user(self.organizer_user).create({
+            'name': 'Yearly absolute event',
+            'start': datetime(2024, 3, 15, 10, 0, 0),
+            'stop': datetime(2024, 3, 15, 11, 0, 0),
+            'recurrency': True,
+            'follow_recurrence': True,
+            'rrule_type': 'yearly',
+            'interval': 1,
+            'end_type': 'count',
+            'count': 3,
+            'month_by': 'date',
+            'day': 15,
+            'event_tz': 'Europe/London',
+        })
+        recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', record.id)])
+
+        self.organizer_user.microsoft_synchronization_stopped = sync_previous_state
+
+        fields_to_sync = recurrence._get_microsoft_synced_fields()
+        values = recurrence._microsoft_values(fields_to_sync)
+        pattern = values['recurrence']['pattern']
+
+        self.assertEqual(pattern['type'], 'absoluteYearly')
+        self.assertEqual(pattern['dayOfMonth'], 15)
+        self.assertIn('month', pattern, "absoluteYearly pattern must include 'month'")
+        self.assertEqual(pattern['month'], 3)
+
+    @patch_api
+    def test_update_event_relative_yearly_recurrence_month(self):
+        """
+        Yearly recurrences with month_by='day' must include both 'month' and 'index'
+        in the Graph recurrencePattern (relativeYearly type).
+        """
+        sync_previous_state = self.organizer_user.microsoft_synchronization_stopped
+        self.organizer_user.microsoft_synchronization_stopped = False
+
+        # Create a yearly recurring event on the second Thursday of March.
+        record = self.env['calendar.event'].with_context(dont_notify=True).with_user(self.organizer_user).create({
+            'name': 'Yearly relative event',
+            'start': datetime(2024, 3, 14, 10, 0, 0),
+            'stop': datetime(2024, 3, 14, 11, 0, 0),
+            'recurrency': True,
+            'follow_recurrence': True,
+            'rrule_type': 'yearly',
+            'interval': 1,
+            'end_type': 'count',
+            'count': 3,
+            'month_by': 'day',
+            'byday': '2',
+            'weekday': 'THU',
+            'thu': True,
+            'event_tz': 'Europe/London',
+        })
+        recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', record.id)])
+
+        self.organizer_user.microsoft_synchronization_stopped = sync_previous_state
+
+        fields_to_sync = recurrence._get_microsoft_synced_fields()
+        values = recurrence._microsoft_values(fields_to_sync)
+        pattern = values['recurrence']['pattern']
+
+        self.assertEqual(pattern['type'], 'relativeYearly')
+        self.assertIn('index', pattern, "relativeYearly pattern must include 'index'")
+        self.assertEqual(pattern['index'], 'second')
+        self.assertIn('month', pattern, "relativeYearly pattern must include 'month'")
+        self.assertEqual(pattern['month'], 3)
+
     @patch.object(MicrosoftSync, '_write_from_microsoft')
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_update_old_event_synced_with_outlook(self, mock_get_events, mock_write_from_microsoft):
