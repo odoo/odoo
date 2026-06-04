@@ -182,7 +182,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                     aa_code=aa_code,
                     aa_name=aa_name,
                 ))
-                self.env.cr.execute(SQL('%s GROUP BY account_move_line__account_id.id', sql_query))
+                self.env.cr.execute(SQL('%s GROUP BY account_move_line__account_id.id HAVING SUM(account_move_line.balance) != 0', sql_query))
 
                 currency_digits = 2
                 for row in self.env.cr.fetchall():
@@ -255,7 +255,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                     aa_code=aa_code,
                     aa_name=aa_name,
                 ))
-                self.env.cr.execute(SQL('%s GROUP BY account_move_line__partner_id.id, account_move_line__account_id.id', sql_query))
+                self.env.cr.execute(SQL('%s GROUP BY account_move_line__partner_id.id, account_move_line__account_id.id HAVING SUM(account_move_line.balance) != 0', sql_query))
 
                 for row in self.env.cr.fetchall():
                     listrow = list(row)
