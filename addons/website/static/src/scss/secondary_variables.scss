@@ -165,6 +165,24 @@ $-actual-user-color-palette: map-merge($-palette-default, $o-user-color-palette)
 }
 $o-color-palettes: map-merge($o-color-palettes, ('user-palette': $-actual-user-color-palette));
 
+// Bridge between the color palette system and the website values system for
+// button gradients. 
+// Themes can define 'o-ccX-btn-primary-gradient' and
+// 'o-ccX-btn-secondary-gradient' directly in $o-color-palettes instead of
+// $o-website-values-palettes (used for gradient systeme).
+@for $-i from 1 through 5 {
+    @each $-btn-suffix in ('btn-primary-gradient', 'btn-secondary-gradient') {
+        $-key: 'o-cc#{$-i}-#{$-btn-suffix}';
+        @if not map-get($o-website-values, $-key) {
+            $-gradient: map-get($-actual-user-color-palette, $-key);
+            @if $-gradient {
+                $-gradient: o-resolve-palette-gradient($-gradient, $-actual-user-color-palette);
+                $o-website-values: map-merge($o-website-values, ($-key: $-gradient));
+            }
+        }
+    }
+}
+
 // Gray palette
 // ------------
 

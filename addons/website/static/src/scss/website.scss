@@ -289,6 +289,14 @@ h1, h2, h3, h4, h5, h6,
     .o_cc#{$index} {
         @include o-add-gradient('o-cc#{$index}-bg-gradient')
     }
+    .o_cc#{$index} .btn-primary,
+    .o_cc#{$index} .btn-fill-primary {
+        @include o-add-gradient('o-cc#{$index}-btn-primary-gradient')
+    }
+    .o_cc#{$index} .btn-secondary,
+    .o_cc#{$index} .btn-fill-secondary {
+        @include o-add-gradient('o-cc#{$index}-btn-secondary-gradient')
+    }
 }
 
 #wrapwrap {
