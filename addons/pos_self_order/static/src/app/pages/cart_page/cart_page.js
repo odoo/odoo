@@ -7,6 +7,7 @@ import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popu
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
 import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
+import { NumberPopup } from "@pos_self_order/app/components/number_popup/number_popup";
 import { _t } from "@web/core/l10n/translation";
 import { formatProductName } from "../../utils";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
@@ -50,6 +51,120 @@ export class CartPage extends Component {
                 return [order.preset_id?.id, applicableTotal];
             }
         );
+        this.setTip(false);
+    }
+
+    get tipPercentages() {
+        return [10, 15, 20];
+    }
+
+    tipAmountForPct(pct) {
+        const subtotal = this.selfOrder.currentOrder.lines
+            .filter((l) => !l.isTipLine() && !l.isDeliveryLine && !l.isServiceFeeLine())
+            .reduce((sum, l) => sum + l.prices.total_included, 0);
+        return this.selfOrder.currency.round((subtotal * pct) / 100);
+    }
+
+    get tipAmount() {
+        return this.selfOrder.currentOrder.tip_amount || 0;
+    }
+
+    get tipUiState() {
+        return this.selfOrder.currentOrder.uiState.tip;
+    }
+
+    get isCustomTip() {
+        if (!this.selfOrder.currentOrder.is_tipped) {
+            return false;
+        }
+        return this.tipPercentages.every((pct) => this.tipAmountForPct(pct) !== this.tipAmount);
+    }
+
+    get showTipSection() {
+        return (
+            this.selfOrder.config.tip_product_id &&
+            this.selfOrder.hasPaymentMethod() &&
+            this.lines.length > 0 &&
+            !(
+                this.selfOrder.config.self_ordering_pay_after === "meal" &&
+                Object.keys(this.selfOrder.currentOrder.changes).length > 0
+            )
+        );
+    }
+
+    setTip(amount, type = "fixed", value = false) {
+        const order = this.selfOrder.currentOrder;
+        const tipProduct = this.selfOrder.config.tip_product_id;
+        if (!order || !tipProduct) {
+            return;
+        }
+
+        const rounded = this.selfOrder.currency.round(amount || 0);
+        const tipLine = order.lines.find((l) => l.isTipLine());
+
+        if (!rounded) {
+            if (tipLine) {
+                if (tipLine.isSynced) {
+                    tipLine.qty = 1;
+                    tipLine.setUnitPrice(0);
+                } else {
+                    tipLine.delete();
+                }
+            }
+            order.setTip(false);
+            return;
+        }
+
+        if (tipLine) {
+            tipLine.qty = 1;
+            tipLine.setUnitPrice(rounded);
+        } else {
+            const line = this.selfOrder.models["pos.order.line"].create({
+                order_id: order,
+                product_id: tipProduct,
+                qty: 1,
+                price_type: "manual",
+            });
+            line.setUnitPrice(rounded);
+        }
+        order.setTip(rounded, type, value || rounded);
+    }
+
+    async selectTipPct(pct) {
+        if (this.tipAmountForPct(pct) === this.tipAmount) {
+            await this.setTip(false);
+        } else {
+            await this.setTip(this.tipAmountForPct(pct), "percent", pct);
+        }
+    }
+
+    async openTipNumpad() {
+        const { type: startingType, value: startingValue } = this.tipUiState;
+        const payload = await makeAwaitable(this.dialog, NumberPopup, {
+            title: _t("Add a tip"),
+            startingValue: String(startingValue || ""),
+            startingType: startingType || "fixed",
+            types: [
+                { name: "fixed", symbol: this.selfOrder.currency.symbol },
+                { name: "percent", symbol: "%" },
+            ],
+        });
+        if (!payload) {
+            return;
+        }
+
+        const value = parseFloat(payload.value) || 0;
+        if (!value) {
+            await this.setTip(false);
+            return;
+        }
+
+        const amount =
+            payload.type === "percent"
+                ? this.tipAmountForPct(value)
+                : this.selfOrder.currency.round(value);
+
+        await this.setTip(amount, payload.type, value);
     }
 
     get showCancelButton() {
@@ -75,7 +190,11 @@ export class CartPage extends Component {
 
         const regularLines = [];
         const serviceFeeLines = [];
-        for (const line of lines.filter((line) => !line.combo_parent_id)) {
+        for (const line of lines) {
+            if (line.combo_parent_id || line.isTipLine()) {
+                continue;
+            }
+
             (line.isServiceFeeLine() ? serviceFeeLines : regularLines).push(line);
         }
 
@@ -86,7 +205,10 @@ export class CartPage extends Component {
         const { amountTaxes, priceIncl } = this.selfOrder.currentOrder;
         const { priceWithTax, tax, count } = this.selfOrder.orderLineNotSend;
         return {
-            priceWithTax: count > 0 ? priceWithTax : priceIncl,
+            priceWithTax:
+                count > 0
+                    ? priceWithTax + (this.selfOrder.currentOrder.tip_amount || 0)
+                    : priceIncl,
             tax: count > 0 ? tax : amountTaxes,
         };
     }
@@ -340,7 +462,7 @@ export class CartPage extends Component {
         if (!increase && !this.canChangeQuantity(line)) {
             return;
         }
-
+        this.setTip(false);
         // Update combo first
         for (const cline of line.combo_line_ids) {
             this.changeQuantity(cline, increase);
@@ -363,11 +485,6 @@ export class CartPage extends Component {
     }
     get displayTaxes() {
         return !this.selfOrder.isTaxesIncludedInPrice();
-    }
-
-    isDeliveryLine(line) {
-        const deliveryProductId = this.selfOrder.currentOrder.preset_id?.delivery_product_id?.id;
-        return deliveryProductId && line.product_id?.id === deliveryProductId;
     }
 
     formatProductName(product) {

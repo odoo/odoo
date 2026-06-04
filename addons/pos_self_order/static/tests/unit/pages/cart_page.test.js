@@ -44,6 +44,27 @@ test("pay", async () => {
     expect(order.lines[0].id).toBeOfType("number");
 });
 
+test("setTip adds and removes tip correctly", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(CartPage, {});
+    await animationFrame();
+
+    const tipProductId = store.config.tip_product_id?.id;
+    // Add tip
+    await comp.setTip(5, "fixed", 5);
+    expect(order.is_tipped).toBe(true);
+    expect(order.tip_amount).toBe(5);
+    const tipLine = order.lines.find((l) => l.product_id?.id === tipProductId);
+    expect(tipLine).not.toBe(undefined);
+    expect(tipLine.price_unit).toBe(5);
+    // Remove tip
+    await comp.setTip(false);
+    expect(order.is_tipped).toBe(false);
+    const tipLineAfter = order.lines.find((l) => l.product_id?.id === tipProductId);
+    expect(tipLineAfter).toBe(undefined);
+});
+
 test("canChangeQuantity", async () => {
     const store = await setupSelfPosEnv();
     const order = await getFilledSelfOrder(store);

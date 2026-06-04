@@ -254,6 +254,7 @@ class PosOrder(models.Model):
     def recompute_prices(self):
         self.ensure_one()
         company = self.company_id
+        tip_product = self.config_id.tip_product_id
 
         service_fee_lines = self.lines.filtered(
             lambda line: line.product_id == self.preset_id.service_fee_product_id,
@@ -266,8 +267,10 @@ class PosOrder(models.Model):
                 self._compute_combo_price(line)
             elif line.product_id == self.preset_id.delivery_product_id:
                 self._compute_line_price(line, price=self.preset_id.delivery_product_price)
-            elif not line.combo_parent_id:
+            elif not line.combo_parent_id and line.product_id != tip_product:
                 self._compute_line_price(line)
+            elif line.product_id == tip_product and line.price_unit <= 0:
+                line.unlink()
 
         # Then process service fee lines using the now-computed applicable lines
         self._compute_service_fee_price()

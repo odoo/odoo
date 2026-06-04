@@ -38,6 +38,12 @@ patch(PosOrderline.prototype, {
     isLotTracked() {
         return false;
     },
+
+    get isDeliveryLine() {
+        const deliveryProductId = this.order_id.preset_id?.delivery_product_id?.id;
+        return deliveryProductId && this.product_id?.id === deliveryProductId;
+    },
+
     getDisplayPriceWithQty(qty) {
         const prices = this.order_id._constructPriceData({ baseLineOpts: { quantity: qty } })
             .baseLineByLineUuids[this.uuid].tax_details;

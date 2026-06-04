@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.NumberPopup">
+        <Dialog title="this.props.title" size="!this.ui.isSmall ? 'sm' : ''" contentClass="'w-100 m-0 position-absolute self_order_pills_selection_popup_dialog'">
+            <div class="mb-3">
+                <div class="form-control text-center py-3 fs-2 rounded-0">
+                    <t t-if="this.state.buffer">
+                        <t
+                            t-if="this.state.type === 'fixed'"
+                            t-out="`${this.currentSymbol}${this.state.buffer}`"
+                        />
+                        <t
+                            t-else=""
+                            t-out="`${this.state.buffer}${this.currentSymbol}`"
+                        />
+                    </t>
+                    <t t-else="" t-out="`${this.currentSymbol}0.00`"/>
+                </div>
+            </div>
+
+            <div t-if="this.props.types.length > 1" class="row g-0 mb-3 rounded overflow-hidden">
+                <button
+                    t-foreach="this.props.types"
+                    t-as="type"
+                    t-key="type.name"
+                    type="button"
+                    class="col btn rounded py-2"
+                    t-att-class="this.state.type === type.name ? 'text-primary border border-primary' : 'btn-light border'"
+                    t-on-click="() => this.selectType(type.name)"
+                    t-out="type.symbol"
+                />
+            </div>
+            <div class="row g-0">
+                <div
+                    t-foreach="['1','2','3','4','5','6','7','8','9','.','0','Backspace']"
+                    t-as="btn"
+                    t-key="btn"
+                    class="col-4 p-0"
+                >
+                    <button
+                        t-if="btn === '.'"
+                        class="btn rounded-0 w-100 border"
+                        style="min-height:56px;background:#ead1c8;"
+                        t-on-click="() => this.input(btn)">
+                        .
+                    </button>
+                    <button
+                        t-elif="btn === 'Backspace'"
+                        class="btn rounded-0 w-100 border"
+                        style="min-height:56px;background:#f5a5a5;"
+                        t-on-click="() => this.input(btn)">
+                        ⌫
+                    </button>
+                    <button
+                        t-else=""
+                        class="btn btn-light rounded-0 w-100 border fw-bold"
+                        style="min-height:56px;"
+                        t-on-click="() => this.input(btn)"
+                        t-out="btn"
+                    />
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <div class="row g-2 w-100 m-0 flex-nowrap">
+                    <div class="col-6 p-0 pe-1 rounded">
+                        <button
+                            class="btn btn-primary w-100 py-3"
+                            t-on-click="this.confirm">
+                            Confirm
+                        </button>
+                    </div>
+                    <div class="col-6 p-0 ps-1">
+                        <button
+                            class="btn btn-secondary w-100 py-3"
+                            t-on-click="this.cancel">
+                            Discard
+                        </button>
+                    </div>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>
