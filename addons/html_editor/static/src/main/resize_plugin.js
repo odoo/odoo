@@ -135,12 +135,19 @@ export class ResizePlugin extends Plugin {
             this.document.removeEventListener("pointermove", handleResize);
             this.document.removeEventListener("pointerup", endResizeOperation, true);
             this.document.removeEventListener("pointerleave", endResizeOperation);
+            this.document.removeEventListener("keydown", handleKeyDown);
+        };
+        // While resizing, prevent default key events to avoid unwanted behavior.
+        const handleKeyDown = (ev) => {
+            ev.preventDefault();
+            ev.stopImmediatePropagation();
         };
 
         // Set up global event listeners for resize operation.
         this.document.addEventListener("pointermove", handleResize);
         this.document.addEventListener("pointerup", endResizeOperation, true);
         this.document.addEventListener("pointerleave", endResizeOperation);
+        this.document.addEventListener("keydown", handleKeyDown);
     }
 
     /**
