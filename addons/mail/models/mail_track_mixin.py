@@ -11,7 +11,7 @@ from odoo.tools import clean_context, format_datetime, format_date, format_amoun
 if typing.TYPE_CHECKING:
     from odoo.api import ValuesType
     from odoo.models import BaseModel
-    from collections.abc import Iterable
+    from collections.abc import Collection, Iterable
     from markupsafe import Markup
 
 
@@ -33,6 +33,19 @@ class MailTrackMixin(models.AbstractModel):
     def _valid_field_parameter(self, field, name):
         # allow tracking on models inheriting from 'mail.thread'
         return name == 'tracking' or super()._valid_field_parameter(field, name)
+
+    @api.model
+    def fields_get(self, allfields: Collection[str] | None = None, attributes: Collection[str] | None = None) -> dict[str, ValuesType]:
+        # add tracking information at fields_get level
+        fields_get_dict = super().fields_get(allfields, attributes)
+        if not attributes or (set(attributes) & {'tracking', 'tracking_sequence'}):
+            for fname, field_values in fields_get_dict.items():  # do not iterate on _fields, to rely on access checks already done
+                track_value = field_values['tracking'] = getattr(self._fields[fname], 'tracking', False)
+                if (not attributes or 'tracking' in attributes):
+                    field_values['tracking'] = track_value is not False
+                if (not attributes or 'tracking_sequence' in attributes):
+                    field_values['tracking_sequence'] = self._mail_track_get_field_sequence(fname)
+        return fields_get_dict
 
     # track data storage / manipulation
     # ------------------------------------------------------
@@ -206,7 +219,15 @@ class MailTrackMixin(models.AbstractModel):
     def _track_get_fields_info(self, tracked_fields: Iterable[str]) -> ValuesType:
         tracked_fields_get = self.fields_get(
             tracked_fields,
-            attributes=('company_dependent', 'string', 'type', 'selection', 'currency_field')
+            attributes=(
+                'company_dependent',
+                'selection',
+                'string',
+                'tracking',
+                'tracking_sequence',
+                'type',
+                'currency_field',
+            )
         )
         if set(tracked_fields_get.keys()) < set(tracked_fields):
             current_fields_info = self.env.cr.precommit.data.get(f'mail.tracking.fields_info.{self._name}', {})
