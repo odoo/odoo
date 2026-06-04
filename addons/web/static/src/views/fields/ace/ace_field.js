@@ -1,11 +1,10 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { standardFieldProps } from "../standard_field_props";
 
 import { CodeEditor } from "@web/core/code_editor/code_editor";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { formatText } from "@web/views/fields/formatters";
 import { cookie } from "@web/core/browser/cookie";
@@ -24,7 +23,7 @@ export class AceField extends Component {
     static components = { CodeEditor };
 
     setup() {
-        this.state = useState({});
+        this.state = proxy({});
         useRecordObserver((record) => {
             this.state.initialValue = formatText(record.data[this.props.name]);
         });

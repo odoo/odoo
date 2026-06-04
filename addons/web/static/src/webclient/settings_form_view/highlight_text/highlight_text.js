@@ -1,5 +1,5 @@
-import { onWillRender, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { onWillRender } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { highlightText } from "@web/core/utils/html";
 
 export class HighlightText extends Component {
@@ -8,7 +8,7 @@ export class HighlightText extends Component {
         originalText: String,
     };
     setup() {
-        this.searchState = useState(this.env.searchState);
+        this.searchState = proxy(this.env.searchState);
 
         onWillRender(() => {
             this.text = highlightText(

@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { useState } from "@web/owl2/utils";
 import { after, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryFirst, waitFor, press, Deferred, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import {
     contains,
     getService,
@@ -61,7 +60,7 @@ class Counter extends Component {
         </div>
     `;
     setup() {
-        this.state = useState({ interval: 1, value: 0 });
+        this.state = proxy({ interval: 1, value: 0 });
     }
     onIncrement() {
         this.state.value += this.state.interval;
@@ -291,7 +290,7 @@ test("Tour backward when the pointed element disappear", async () => {
 
     class Dummy extends Component {
         static props = ["*"];
-        state = useState({ bool: true });
+        state = proxy({ bool: true });
         static components = {};
         static template = xml`
             <button class="fool w-100" t-on-click="() => { this.state.bool = true; }">You fool</button>
@@ -349,7 +348,7 @@ test("Tour backward when the pointed element disappear and ignore warn step", as
 
     class Dummy extends Component {
         static props = ["*"];
-        state = useState({ bool: true });
+        state = proxy({ bool: true });
         static components = {};
         static template = xml`
             <button class="fool" t-on-click="() => { this.state.bool = true; }">You fool</button>
@@ -398,7 +397,7 @@ test("Tour started by the URL", async () => {
 
     class Dummy extends Component {
         static props = ["*"];
-        state = useState({ bool: true });
+        state = proxy({ bool: true });
         static components = {};
         static template = xml`
             <button class="foo w-100" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
@@ -435,7 +434,7 @@ test("Log a warning if step ignored", async () => {
 
     class Dummy extends Component {
         static props = ["*"];
-        state = useState({ bool: true });
+        state = proxy({ bool: true });
         static components = {};
         static template = xml`
             <button class="foo w-100" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
@@ -680,7 +679,7 @@ test("Don't backward when action manager is busy", async () => {
 
     class Dummy extends Component {
         static props = ["*"];
-        state = useState({ bool: true });
+        state = proxy({ bool: true });
         static components = {};
         static template = xml`
             <button class="fool w-100" t-on-click="() => { this.state.bool = true; }">You fool</button>

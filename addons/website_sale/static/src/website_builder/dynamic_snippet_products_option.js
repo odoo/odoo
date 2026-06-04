@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { useDynamicSnippetOption } from "@website/builder/plugins/options/dynamic_snippet_hook";
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export class DynamicSnippetProductsOption extends BaseOptionComponent {
@@ -20,7 +19,7 @@ export class DynamicSnippetProductsOption extends BaseOptionComponent {
             this.modelNameFilter,
             contextualFilterDomain
         );
-        this.state = useState({
+        this.state = proxy({
             categories: [],
         });
         this.domState = useDomState((el) => ({

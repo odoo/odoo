@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { useBus } from "@web/core/utils/hooks";
-import { EventBus, Component, markup } from "@odoo/owl";
+import { EventBus, Component, markup, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class FullscreenIndication extends Component {
@@ -10,7 +9,7 @@ export class FullscreenIndication extends Component {
     static template = "website.FullscreenIndication";
 
     setup() {
-        this.state = useState({ isVisible: false });
+        this.state = proxy({ isVisible: false });
         useBus(this.props.bus, "FULLSCREEN-INDICATION-SHOW", this.show.bind(this));
         useBus(this.props.bus, "FULLSCREEN-INDICATION-HIDE", this.hide.bind(this));
     }

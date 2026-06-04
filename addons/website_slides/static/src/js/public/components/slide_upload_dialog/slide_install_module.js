@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { redirect } from "@web/core/utils/urls";
 import { _t } from "@web/core/l10n/translation";
@@ -20,7 +19,7 @@ export class SlideInstallModule extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.state = useState({
+        this.state = proxy({
             status: "start", // "failure", "installing"
             message: _t('Do you want to install "%s"?', this.props.moduleData.name),
         });

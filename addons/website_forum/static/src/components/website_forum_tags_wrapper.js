@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { get } from "@web/core/network/http_service";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -16,7 +15,7 @@ export class WebsiteForumTagsWrapper extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             value: this.props.defaulValue || [],
         });
         onWillStart(async () => {

@@ -1,7 +1,7 @@
-import { reactive, useChildEnv, useRef, useState } from "@web/owl2/utils";
+import { reactive, useChildEnv, useRef } from "@web/owl2/utils";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
@@ -302,7 +302,7 @@ class HighlightToolbarButton extends Component {
     `;
 
     setup() {
-        this.highlightState = useState(this.props.highlightConfiguratorProps.getHighlightState());
+        this.highlightState = proxy(this.props.highlightConfiguratorProps.getHighlightState());
         this.root = useRef("root");
         this.componentStack = useStackingComponentState();
         this.componentStack.push(HighlightConfigurator, {

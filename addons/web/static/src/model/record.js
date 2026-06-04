@@ -1,9 +1,8 @@
-import { useState } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { isObject, pick } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
-import { Component, xml, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, xml, onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
 
 const defaultActiveField = { attrs: {}, options: {}, domain: "[]", string: "" };
 
@@ -45,7 +44,7 @@ class _Record extends Component {
             StandaloneRelationalModel.services.map((servName) => [servName, useService(servName)])
         );
         modelServices.orm = this.orm;
-        this.model = useState(new StandaloneRelationalModel(this.env, modelParams, modelServices));
+        this.model = proxy(new StandaloneRelationalModel(this.env, modelParams, modelServices));
 
         const prepareLoadWithValues = async (values) => {
             values = pick(values, ...Object.keys(modelParams.config.activeFields));

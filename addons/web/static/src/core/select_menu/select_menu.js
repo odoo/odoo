@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -130,7 +130,7 @@ export class SelectMenu extends Component {
 
     setup() {
         this.selectMenuId = selectMenuId++;
-        this.state = useState({
+        this.state = proxy({
             choices: [],
             displayedOptions: [],
             searchValue: null,

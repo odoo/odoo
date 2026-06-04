@@ -1,10 +1,10 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { useExternalListener, useRef } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { browser } from "@web/core/browser/browser";
 import { queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { tourRecorderState } from "./tour_recorder_state";
@@ -136,7 +136,7 @@ export class TourRecorder extends Component {
         this.orm = useService("orm");
         this.action = useService("action");
         this.dialog = useService("dialog");
-        this.state = useState({
+        this.state = proxy({
             ...TourRecorder.defaultState,
             steps: [],
             position: {

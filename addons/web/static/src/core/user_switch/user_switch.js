@@ -1,5 +1,5 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
-import { Component, Portal, signal } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, Portal, signal, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { getLastConnectedUsers, setLastConnectedUsers } from "@web/core/user";
 import { imageUrl } from "@web/core/utils/urls";
@@ -13,7 +13,7 @@ export class UserSwitch extends Component {
 
     setup() {
         const users = getLastConnectedUsers();
-        this.state = useState({
+        this.state = proxy({
             users,
             displayUserChoice: users.length > 1,
         });

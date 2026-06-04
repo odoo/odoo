@@ -1,8 +1,8 @@
-import { reactive, useState } from "@web/owl2/utils";
+import { reactive } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { click, edit } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
@@ -52,7 +52,7 @@ test("reactivity: useState & update getter object", async () => {
     });
 
     await mountInput(() => {
-        const state = useState(pickerProps);
+        const state = proxy(pickerProps);
         state.value; // artificially subscribe to value
 
         useDateTimePicker({
@@ -176,7 +176,7 @@ test("close popover when owner component is unmounted", async () => {
         static template = xml`<Child t-if="!this.state.hidden"/>`;
 
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 hidden: false,
             });
             promise.then(() => {

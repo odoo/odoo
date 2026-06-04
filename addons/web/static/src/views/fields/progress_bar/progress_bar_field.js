@@ -1,4 +1,4 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
@@ -7,7 +7,7 @@ import { parseFloat } from "../parsers";
 import { useInputField } from "@web/views/fields/input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 const formatters = registry.category("formatters");
 
 export class ProgressBarField extends Component {
@@ -34,7 +34,7 @@ export class ProgressBarField extends Component {
             shouldSave: () => this.props.readonly,
         });
 
-        this.state = useState({
+        this.state = proxy({
             isEditing: false,
         });
     }

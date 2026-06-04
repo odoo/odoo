@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { checkFileSize } from "@web/core/utils/files";
@@ -30,7 +29,7 @@ export class ShareTargetItem extends Component {
                 await this.process();
             },
         });
-        this.state = useState(this.defaultState);
+        this.state = proxy(this.defaultState);
     }
 
     get defaultState() {

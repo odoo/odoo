@@ -1,8 +1,8 @@
-import { useChildSubEnv, useExternalListener, useState } from "@web/owl2/utils";
+import { useChildSubEnv, useExternalListener } from "@web/owl2/utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
 import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
-import { Component, onWillDestroy } from "@odoo/owl";
+import { Component, onWillDestroy, proxy } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { makeDraggableHook } from "../utils/draggable_hook_builder_owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -73,7 +73,7 @@ export class Dialog extends Component {
     setup() {
         this.modalRef = useForwardRefToParent("modalRef");
         useActiveElement("modalRef");
-        this.data = useState(this.env.dialogData);
+        this.data = proxy(this.env.dialogData);
         useHotkey("escape", () => this.onEscape());
         useHotkey(
             "control+enter",
@@ -97,7 +97,7 @@ export class Dialog extends Component {
         useChildSubEnv({ inDialog: true, dialogId: this.id });
         this.isMovable = this.props.header;
         if (this.isMovable) {
-            this.position = useState({ left: 0, top: 0 });
+            this.position = proxy({ left: 0, top: 0 });
             useDialogDraggable({
                 enable: () => !this.env.isSmall,
                 ref: this.modalRef,

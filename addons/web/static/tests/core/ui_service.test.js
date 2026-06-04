@@ -1,8 +1,8 @@
-import { render, useState } from "@web/owl2/utils";
+import { render } from "@web/owl2/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import { press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { getService, mountWithCleanup } from "../web_test_helpers";
 
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -198,7 +198,7 @@ test("UI active element: trap focus - first or last tabable changes", async () =
         `;
         static props = ["*"];
         setup() {
-            this.show = useState({ a: true, c: false });
+            this.show = proxy({ a: true, c: false });
             useActiveElement("delegatedRef");
         }
     }

@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 // import { registry } from "@web/core/registry";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 // -----------------------------------------------------------------------------
@@ -15,7 +14,7 @@ export class Counter extends Component {
     static props = {};
 
     setup() {
-        this.state = useState({ value: 1 });
+        this.state = proxy({ value: 1 });
         this.notification = useService("notification");
     }
 

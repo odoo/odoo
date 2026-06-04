@@ -1,7 +1,7 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
@@ -37,7 +37,7 @@ export class SocialMediaLinks extends BaseOptionComponent {
         this.idsElMap = new Map();
 
         // hack to trigger the rebuild
-        this.reorderTriggered = useState({ trigger: 0 });
+        this.reorderTriggered = proxy({ trigger: 0 });
 
         useSortable({
             ref: this.rootRef,

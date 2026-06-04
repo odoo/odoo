@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { redirect } from "@web/core/utils/urls";
@@ -64,7 +63,7 @@ export class SlideUploadDialog extends Component {
         this.orm = useService("orm");
         this.pagesTemplates = this.constructor.pagesTemplates;
         this.slideCategoryData = this.constructor.categoryData;
-        this.state = useState({ ...this.constructor.baseSettings });
+        this.state = proxy({ ...this.constructor.baseSettings });
         onMounted(() => {
             if (this.props.openModal && this.props.openModal in this.slideCategoryData) {
                 // Sets the appropriate category's upload template if one has to be opened on load.

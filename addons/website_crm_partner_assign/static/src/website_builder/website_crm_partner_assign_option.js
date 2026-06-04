@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
@@ -11,7 +10,7 @@ export class WebsiteCRMPartnersPageOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.googleMaps = useService("google_maps");
-        this.state = useState({
+        this.state = proxy({
             has_google_maps_api_key: false,
         });
 

@@ -1,4 +1,4 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { ColorList } from "@web/core/colorlist/colorlist";
@@ -19,7 +19,7 @@ import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
-import { Component, computed, onWillUpdateProps } from "@odoo/owl";
+import { Component, computed, onWillUpdateProps, proxy } from "@odoo/owl";
 
 const { COLORS } = ColorList;
 
@@ -198,7 +198,7 @@ export class KanbanRecord extends Component {
 
         this.showMenu = this.constructor.KANBAN_MENU_ATTRIBUTE in templates;
 
-        this.dataState = useState({ widget: {} });
+        this.dataState = proxy({ widget: {} });
         this.createWidget(this.props);
         onWillUpdateProps(this.createWidget);
         this.rootRef = useRef("root");

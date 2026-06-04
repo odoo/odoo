@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class CalendarScheduleSection extends Component {
@@ -10,7 +10,7 @@ export class CalendarScheduleSection extends Component {
     };
     setup() {
         this.rootRef = useRef("eventsToSchedule");
-        this.state = useState({ collapsed: false });
+        this.state = proxy({ collapsed: false });
         useLayoutEffect(
             (el) => {
                 new FullCalendar.Interaction.Draggable(el, {

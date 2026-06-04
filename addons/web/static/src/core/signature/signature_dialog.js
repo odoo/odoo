@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { NameAndSignature } from "./name_and_signature";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export class SignatureDialog extends Component {
     static template = "web.SignatureDialog";
@@ -18,7 +17,7 @@ export class SignatureDialog extends Component {
     };
 
     setup() {
-        this.signature = useState({
+        this.signature = proxy({
             name: this.props.defaultName,
             isSignatureEmpty: true,
         });

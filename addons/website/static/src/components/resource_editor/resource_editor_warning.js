@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { EditHeadBodyDialog } from "../edit_head_body_dialog/edit_head_body_dialog";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 
@@ -20,7 +19,7 @@ export class ResourceEditorWarningOverlay extends Component {
         this.dialog = useService("dialog");
 
         const localStorageValue = browser.localStorage.getItem("website.ace.doNotShowWarning");
-        this.state = useState({
+        this.state = proxy({
             visible: !localStorageValue || localStorageValue === "false",
         });
     }

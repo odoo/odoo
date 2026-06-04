@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import { test, expect } from "@odoo/hoot";
 import {
     press,
@@ -8,7 +7,7 @@ import {
     hover,
     manuallyDispatchProgrammaticEvent,
 } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ColorPicker, DEFAULT_COLORS } from "@web/core/color_picker/color_picker";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
@@ -278,7 +277,7 @@ test("should preserve color slider when picking max lightness color", async () =
         static components = { CustomColorPicker };
         static props = ["*"];
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 color: "#FFFF00",
             });
         }

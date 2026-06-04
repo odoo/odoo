@@ -1,5 +1,5 @@
-import { onRendered, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { onMounted } from "@odoo/owl";
+import { onRendered, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onMounted, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useDebounced } from "@web/core/utils/timing";
@@ -32,7 +32,7 @@ export class ProductImageViewer extends Dialog {
                 thumbnailSrc: image.src.replace('/image_1024/', '/image_256/'),
             };
         });
-        this.state = useState({
+        this.state = proxy({
             selectedImageIdx: this.props.selectedImageIdx || 0,
             imageScale: 1,
             carouselOffset: 0,

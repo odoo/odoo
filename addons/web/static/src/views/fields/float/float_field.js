@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useInputField } from "../input_field_hook";
@@ -7,7 +6,7 @@ import { formatFloat } from "../formatters";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export class FloatField extends Component {
     static template = "web.FloatField";
@@ -31,7 +30,7 @@ export class FloatField extends Component {
     };
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             hasFocus: false,
         });
         this.inputRef = useInputField({

@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -8,7 +7,7 @@ import { isBinarySize } from "@web/core/utils/binary";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export const fileTypeMagicWordMap = {
     "/": "jpg",
@@ -49,7 +48,7 @@ export class ImageField extends Component {
         this.notification = useService("notification");
         this.orm = useService("orm");
         this.isMobile = isMobileOS();
-        this.state = useState({
+        this.state = proxy({
             isValid: true,
         });
         this.lastURL = undefined;

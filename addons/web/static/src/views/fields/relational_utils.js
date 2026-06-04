@@ -1,4 +1,4 @@
-import { render, useComponent, useEnv, useLayoutEffect, useState, useSubEnv } from "@web/owl2/utils";
+import { render, useComponent, useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -38,7 +38,7 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @typedef {import("services").ServiceFactories} Services
  */
 
-import { Component, onWillUpdateProps, status } from "@odoo/owl";
+import { Component, onWillUpdateProps, status, proxy } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { highlightText, odoomark } from "@web/core/utils/html";
 import { deepEqual } from "@web/core/utils/objects";
@@ -170,7 +170,7 @@ export function useSpecialData(loadFn) {
     };
 
     /** @type {{ data: Record<string, T> }} */
-    const result = useState({ data: {} });
+    const result = proxy({ data: {} });
     useRecordObserver(async (record, props) => {
         result.data = await loadFn(ormWithCache, { ...props, record });
     });

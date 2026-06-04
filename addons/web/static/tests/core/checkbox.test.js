@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { check, uncheck } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { contains, defineParams, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { CheckBox } from "@web/core/checkbox/checkbox";
@@ -73,7 +72,7 @@ test("can toggle value by pressing ENTER", async () => {
         static template = xml`<CheckBox onChange.bind="this.onChange" value="this.state.value" />`;
 
         setup() {
-            this.state = useState({ value: false });
+            this.state = proxy({ value: false });
         }
 
         onChange(checked) {
@@ -103,7 +102,7 @@ test("toggling through multiple ways", async () => {
         static template = xml`<CheckBox onChange.bind="this.onChange" value="this.state.value" />`;
 
         setup() {
-            this.state = useState({ value: false });
+            this.state = proxy({ value: false });
         }
 
         onChange(checked) {

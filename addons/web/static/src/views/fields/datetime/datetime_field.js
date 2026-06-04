@@ -1,5 +1,5 @@
-import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, effect } from "@odoo/owl";
+import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, effect, proxy } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
@@ -150,8 +150,8 @@ export class DateTimeField extends Component {
             },
         });
         // Subscribes to changes made on the picker state
-        this.state = useState(dateTimePicker.state);
-        this.picker = useState({ activeInput: "" });
+        this.state = proxy(dateTimePicker.state);
+        this.picker = proxy({ activeInput: "" });
         this.openPicker = dateTimePicker.open;
         this.isPickerOpen = dateTimePicker.isOpen;
 

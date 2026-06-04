@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -341,7 +341,7 @@ export class FormController extends Component {
 
         this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
 
-        this.propertiesState = useState({
+        this.propertiesState = proxy({
             editable: false,
         });
         useSubEnv({ propertiesState: this.propertiesState });

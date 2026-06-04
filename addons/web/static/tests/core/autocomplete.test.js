@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import {
     Deferred,
@@ -16,7 +15,7 @@ import {
     queryRect,
     runAllTimers,
 } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -97,7 +96,7 @@ test.todo("select option with onChange", async () => {
         static template = xml`<AutoComplete value="this.state.value" sources="this.sources" onChange.bind="this.onChange" />`;
         static props = [];
 
-        state = useState({ value: "" });
+        state = proxy({ value: "" });
         sources = buildSources(() => [
             item("/contactus", this.onSelect.bind(this)),
             item("/contactus-thank-you", this.onSelect.bind(this)),
@@ -139,7 +138,7 @@ test("select option", async () => {
         static template = xml`<AutoComplete value="this.state.value" sources="this.sources"/>`;
         static props = [];
 
-        state = useState({ value: "Hello" });
+        state = proxy({ value: "Hello" });
         sources = buildSources(() => [
             item("World", this.onSelect.bind(this)),
             item("Hello", this.onSelect.bind(this)),
@@ -176,7 +175,7 @@ test("autocomplete with resetOnSelect='true'", async () => {
         `;
         static props = [];
 
-        state = useState({ value: "Hello" });
+        state = proxy({ value: "Hello" });
         sources = buildSources(() => [
             item("World", this.onSelect.bind(this)),
             item("Hello", this.onSelect.bind(this)),
@@ -489,7 +488,7 @@ test("autocomplete in edition keep edited value before select option", async () 
         static props = [];
 
         sources = buildSources(() => [item("My Selection", this.onSelect.bind(this))]);
-        state = useState({ value: "Hello" });
+        state = proxy({ value: "Hello" });
 
         onHover() {
             this.state.value = "My Click";
@@ -528,7 +527,7 @@ test("autocomplete in edition keep edited value before blur", async () => {
         `;
         static props = [];
 
-        state = useState({ value: "Hello" });
+        state = proxy({ value: "Hello" });
 
         onHover() {
             this.state.value = `My Click ${count++}`;
@@ -567,7 +566,7 @@ test("correct sequence of blur, focus and select", async () => {
         `;
         static props = [];
 
-        state = useState({ value: "" });
+        state = proxy({ value: "" });
         sources = buildSources(() => [
             item("World", this.onSelect.bind(this)),
             item("Hello", this.onSelect.bind(this)),
@@ -631,7 +630,7 @@ test("autocomplete arrow navigation", async () => {
         `;
         static props = [];
 
-        state = useState({ value: "" });
+        state = proxy({ value: "" });
         sources = buildSources(() => [item("World"), item("Hello")]);
     }
 
@@ -660,7 +659,7 @@ test("autocomplete always closes on click away", async () => {
         static components = { AutoComplete };
         static props = [];
 
-        state = useState({ value: "" });
+        state = proxy({ value: "" });
         sources = buildSources(() => [
             item("World", this.onSelect.bind(this)),
             item("Hello", this.onSelect.bind(this)),
@@ -690,7 +689,7 @@ test("autocomplete dropdown remains open when props.value changes", async () => 
 
         setup() {
             this.sources = buildSources(() => [item("World"), item("Hello")]);
-            this.state = useState({ value: "" });
+            this.state = proxy({ value: "" });
             state = this.state;
         }
     }
@@ -713,7 +712,7 @@ test("autocomplete trim spaces for search", async () => {
         static components = { AutoComplete };
         static props = [];
 
-        state = useState({ value: " World" });
+        state = proxy({ value: " World" });
         sources = buildSources((request) => ITEMS.filter(({ label }) => label.startsWith(request)));
     }
     await mountWithCleanup(Parent);
@@ -727,7 +726,7 @@ test("tab and shift+tab close the dropdown", async () => {
         static components = { AutoComplete };
         static props = [];
 
-        state = useState({ value: "" });
+        state = proxy({ value: "" });
         sources = buildSources(() => [item("World"), item("Hello")]);
     }
     await mountWithCleanup(Parent);
@@ -756,7 +755,7 @@ test("Clicking away selects the first option when selectOnBlur is true", async (
         static components = { AutoComplete };
         static props = [];
 
-        state = useState({ value: "" });
+        state = proxy({ value: "" });
         sources = buildSources(() => [
             item("World", this.onSelect.bind(this)),
             item("Hello", this.onSelect.bind(this)),
@@ -784,7 +783,7 @@ test("selectOnBlur doesn't interfere with selecting by mouse clicking", async ()
         static components = { AutoComplete };
         static props = [];
 
-        state = useState({ value: "" });
+        state = proxy({ value: "" });
         sources = buildSources(() => [
             item("World", this.onSelect.bind(this)),
             item("Hello", this.onSelect.bind(this)),
@@ -817,7 +816,7 @@ test("autocomplete scrolls when moving with arrows", async () => {
         static components = { AutoComplete };
         static props = [];
 
-        state = useState({ value: "" });
+        state = proxy({ value: "" });
         sources = buildSources(() => [
             item("Never"),
             item("Gonna"),

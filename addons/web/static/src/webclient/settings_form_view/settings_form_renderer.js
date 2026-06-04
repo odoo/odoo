@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { FormLabelHighlightText } from "./highlight_text/form_label_highlight_text";
 import { HighlightText } from "./highlight_text/highlight_text";
@@ -28,7 +28,7 @@ export class SettingsFormRenderer extends FormRenderer {
 
     setup() {
         super.setup();
-        this.searchState = useState(this.env.searchState);
+        this.searchState = proxy(this.env.searchState);
     }
 
     get shouldAutoFocus() {

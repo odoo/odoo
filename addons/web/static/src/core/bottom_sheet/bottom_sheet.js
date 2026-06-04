@@ -1,10 +1,10 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 /**
  * BottomSheet
  *
  * @class
  */
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -37,7 +37,7 @@ export class BottomSheet extends Component {
     setup() {
         this.maxHeightPercent = 90;
 
-        this.state = useState({
+        this.state = proxy({
             isPositionedReady: false, // Sheet is ready for display
             isSnappingEnabled: false,
             isDismissing: false, // Sheet is being dismissed

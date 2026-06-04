@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
 import { FormActionFieldsOption } from "./form_action_fields_option";
 import {
     getDependencyEl,
@@ -27,7 +26,7 @@ export class FormFieldOption extends BaseOptionComponent {
     setup() {
         super.setup();
         const { loadFieldOptionData } = this.dependencies.websiteFormOption;
-        this.state = useState({
+        this.state = proxy({
             availableFields: [],
             conditionInputs: [],
             conditionValueList: [],

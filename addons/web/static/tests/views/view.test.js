@@ -1,8 +1,7 @@
-import { useState } from "@web/owl2/utils";
 import { before, expect, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onWillStart, onWillUpdateProps, xml } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, xml, proxy } from "@odoo/owl";
 import {
     defineModels,
     expectMarkup,
@@ -1137,7 +1136,7 @@ test("react to prop 'domain' changes", async function () {
         static template = xml`<View t-props="this.state"/>`;
         static components = { View };
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 type: "toy",
                 resModel: "animal",
                 domain: [["type", "=", "carnivorous"]],

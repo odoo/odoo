@@ -1,10 +1,10 @@
-import { reactive, useRef, useState } from "@web/owl2/utils";
+import { reactive, useRef } from "@web/owl2/utils";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { advanceFrame, animationFrame, disableAnimations } from "@odoo/hoot-mock";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
 beforeEach(disableAnimations);
@@ -401,7 +401,7 @@ test("Dynamically disable sortable feature", async () => {
                     </ul>
                 </div>`;
         setup() {
-            this.state = useState(state);
+            this.state = proxy(state);
             useSortable({
                 ref: useRef("root"),
                 elements: ".item",
@@ -640,7 +640,7 @@ test("dragged element is removed from the DOM while being dragged", async () => 
                 </ul>
             </div>`;
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 items: [1, 2, 3],
             });
             useSortable({

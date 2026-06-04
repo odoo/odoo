@@ -1,8 +1,8 @@
-import { render, useState } from "@web/owl2/utils";
+import { render } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import {
     clickPrev,
     followRelation,
@@ -586,7 +586,7 @@ test("support of invalid paths (allowEmpty=false)", async () => {
         static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="this.state.path" />`;
         static props = ["*"];
         setup() {
-            this.state = useState({ path: `` });
+            this.state = proxy({ path: `` });
         }
     }
 
@@ -631,7 +631,7 @@ test("support of invalid paths (allowEmpty=true)", async () => {
         static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="this.state.path" allowEmpty="true" />`;
         static props = ["*"];
         setup() {
-            this.state = useState({ path: `` });
+            this.state = proxy({ path: `` });
         }
     }
 
@@ -678,7 +678,7 @@ test("debug input", async () => {
         static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" isDebugMode="true" path="this.state.path" update.bind="this.update"/>`;
         static props = ["*"];
         setup() {
-            this.state = useState({ path: `` });
+            this.state = proxy({ path: `` });
         }
         update(path, fieldInfo) {
             if (num === 1) {
@@ -734,7 +734,7 @@ test("focus on search input", async () => {
         static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="this.state.path" update.bind="this.update"/>`;
         static props = ["*"];
         setup() {
-            this.state = useState({ path: `foo` });
+            this.state = proxy({ path: `foo` });
         }
         update() {}
     }

@@ -1,10 +1,10 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
 import { session } from "@web/session";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export class EmailSharingInput extends Component {
     static template = "website_slides.EmailSharingInput";
@@ -19,7 +19,7 @@ export class EmailSharingInput extends Component {
         this.notification = useService("notification");
         this.input = useRef("input");
         this.isWebsiteUser = session.is_website_user;
-        this.state = useState({
+        this.state = proxy({
             isDone: false,
             isInvalid: false,
         });

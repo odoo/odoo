@@ -1,11 +1,10 @@
-import { useState } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { Transition } from "@web/core/transition";
 
-import { Component, untrack } from "@odoo/owl";
+import { Component, untrack, proxy } from "@odoo/owl";
 
 /**
  * Loading Indicator
@@ -23,7 +22,7 @@ export class LoadingIndicator extends Component {
     static props = {};
 
     setup() {
-        this.state = useState({
+        this.state = proxy({
             count: 0,
             show: false,
         });

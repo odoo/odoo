@@ -1,6 +1,6 @@
-import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -15,7 +15,7 @@ export class SettingsPage extends Component {
         slots: Object,
     };
     setup() {
-        this.state = useState({
+        this.state = proxy({
             selectedTab: "",
             search: this.env.searchState,
         });

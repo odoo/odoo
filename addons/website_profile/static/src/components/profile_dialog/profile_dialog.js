@@ -1,4 +1,4 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { Component, markup, onMounted, onWillStart, proxy, useEffect } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -41,7 +41,7 @@ export class ProfileDialog extends Component {
         this.upload = useRef("upload");
         this.profileImg = useRef("profileImg");
         this.profileImgData = null;
-        this.state = useState({
+        this.state = proxy({
             isProcessing: false,
             hasError: false,
             emailHasError: false,

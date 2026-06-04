@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formatFloatTime } from "../formatters";
@@ -7,7 +6,7 @@ import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { parseFloatTime } from "../parsers";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 export class FloatTimeField extends Component {
@@ -33,7 +32,7 @@ export class FloatTimeField extends Component {
             parse: (v) => parseFloatTime(v, this.props.unit),
         });
 
-        this.state = useState({
+        this.state = proxy({
             formattedResult: "",
         });
         this.resultPopover = usePopover(DurationPopover, {

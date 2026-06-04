@@ -1,6 +1,5 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from '@web/core/l10n/translation';
-import { Component, onWillStart } from '@odoo/owl';
+import { Component, onWillStart, proxy } from '@odoo/owl';
 import { formatCurrency } from '@web/core/currency';
 import { useService, useBus } from '@web/core/utils/hooks';
 import { DateFilterButton, DATE_OPTIONS } from '../date_filter_button/date_filter_button';
@@ -25,7 +24,7 @@ export class Dashboard extends Component {
 	static components = { DateFilterButton };
 
 	setup() {
-		this.state = useState({
+		this.state = proxy({
 			dashboardData: {},
 			selectedDateFilter: DATE_OPTIONS[0],
 			selectedCard: '',

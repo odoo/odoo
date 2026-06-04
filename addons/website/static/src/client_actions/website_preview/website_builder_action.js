@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import {
     Component,
@@ -9,6 +9,7 @@ import {
     onWillUnmount,
     status,
     immediateEffect,
+    proxy,
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { LazyComponent } from "@web/core/lazy_component";
@@ -86,8 +87,8 @@ export class WebsiteBuilderClientAction extends Component {
         useSubEnv({
             builderRef: useRef("container"),
         });
-        this.state = useState({ isEditing: false, showSidebar: true, key: 1, is404: false });
-        this.websiteContext = useState(this.websiteService.context);
+        this.state = proxy({ isEditing: false, showSidebar: true, key: 1, is404: false });
+        this.websiteContext = proxy(this.websiteService.context);
         this.component = useComponent();
 
         useBus(

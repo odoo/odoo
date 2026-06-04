@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, untrack } from "@odoo/owl";
+import { Component, untrack, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -45,7 +44,7 @@ export class ReferenceField extends Component {
 
     setup() {
         /** @type {{formattedCharValue?: ReferenceValue, modelName?: string}} */
-        this.state = useState({
+        this.state = proxy({
             formattedCharValue: undefined, // Value extracted from reference char field
             modelName: undefined, // Name get of the value of the model field
             currentRelation: undefined,

@@ -1,10 +1,9 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useInputField } from "@web/views/fields/input_field_hook";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export class PasswordField extends Component {
     static template = "web.PasswordField";
@@ -14,7 +13,7 @@ export class PasswordField extends Component {
     };
 
     setup() {
-        this.state = useState({ isRevealed: false });
+        this.state = proxy({ isRevealed: false });
         useInputField({
             getValue: () => this.props.record.data[this.props.name] || "",
         });

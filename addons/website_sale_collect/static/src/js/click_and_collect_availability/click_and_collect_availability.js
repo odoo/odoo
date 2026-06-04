@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component } from '@odoo/owl';
+import { Component, proxy } from '@odoo/owl';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { useBus, useService } from '@web/core/utils/hooks';
@@ -29,7 +28,7 @@ export class ClickAndCollectAvailability extends Component {
     setup() {
         super.setup();
         this.dialog = useService('dialog');
-        this.state = useState({
+        this.state = proxy({
             productId: this.props.productId,
             selectedLocationData: this.props.selectedLocationData,
             inStoreStockData: this.props.inStoreStockData,

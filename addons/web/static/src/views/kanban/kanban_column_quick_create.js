@@ -1,8 +1,8 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { useExternalListener, useRef } from "@web/owl2/utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
-import { Component, onPatched } from "@odoo/owl";
+import { Component, onPatched, proxy } from "@odoo/owl";
 
 export class KanbanColumnQuickCreate extends Component {
     static template = "web.KanbanColumnQuickCreate";
@@ -16,7 +16,7 @@ export class KanbanColumnQuickCreate extends Component {
     setup() {
         this.dialog = useService("dialog");
         this.root = useRef("root");
-        this.state = useState({
+        this.state = proxy({
             hasInputFocused: false,
         });
 

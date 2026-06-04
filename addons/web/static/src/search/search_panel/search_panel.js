@@ -1,4 +1,4 @@
-import { reactive, render, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { reactive, render, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -7,6 +7,7 @@ import {
     onMounted,
     onWillStart,
     onWillUpdateProps,
+    proxy,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { exprToBoolean } from "@web/core/utils/strings";
@@ -56,7 +57,7 @@ export class SearchPanel extends Component {
 
     setup() {
         this.keyExpandSidebar = `search_panel_expanded,${this.env.config.viewId},${this.env.config.actionId}`;
-        this.state = useState({
+        this.state = proxy({
             active: {},
             expanded: {},
             sidebarExpanded: true,

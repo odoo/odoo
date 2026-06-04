@@ -1,4 +1,3 @@
-import { useState } from "@web/owl2/utils";
 import {
     animationFrame,
     expect,
@@ -8,7 +7,7 @@ import {
     test,
 } from "@odoo/hoot";
 import { click, edit, press, queryAllTexts, queryOne, queryAll } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import {
     contains,
     editSelectMenu,
@@ -63,7 +62,7 @@ class Parent extends Component {
         />
     `;
     setup() {
-        this.state = useState({ value: "world" });
+        this.state = proxy({ value: "world" });
         this.choices = [
             { label: "Hello", value: "hello" },
             { label: "World", value: "world" },
@@ -122,7 +121,7 @@ test("Selecting a choice calls onSelect and the displayed value is updated", asy
             />
         `;
         setup() {
-            this.state = useState({ value: "world" });
+            this.state = proxy({ value: "world" });
             this.choices = [{ label: "Hello", value: "hello" }];
             this.groups = [
                 {
@@ -262,7 +261,7 @@ test("Value with no corresponding choices displays as if no choice was selected"
                 { label: "World", value: "world" },
                 { label: "Hello", value: "hello" },
             ];
-            this.state = useState({ value: "coucou" });
+            this.state = proxy({ value: "coucou" });
         }
         setValue(newValue) {
             this.state.value = newValue;
@@ -287,7 +286,7 @@ test("Changing value props properly updates the selected choice", async () => {
                 { label: "Z", value: "world" },
                 { label: "A", value: "company" },
             ];
-            this.state = useState({ value: "company" });
+            this.state = proxy({ value: "company" });
         }
         setValue(newValue) {
             this.state.value = newValue;
@@ -316,7 +315,7 @@ test("Use a null value for choices", async () => {
                 { label: "Nothing", value: null },
                 { label: "Everything", value: "things" },
             ];
-            this.state = useState({
+            this.state = proxy({
                 value: null,
             });
         }
@@ -347,7 +346,7 @@ test("Use an empty string as the value for a choice display the corresponding ch
                 { label: "Empty", value: "" },
                 { label: "Full", value: "full" },
             ];
-            this.state = useState({ value: "" });
+            this.state = proxy({ value: "" });
         }
         setValue(newValue) {
             this.state.value = newValue;
@@ -378,7 +377,7 @@ test("Clear the input calls 'onSelect' with null value and appears only when val
             />
         `;
         setup() {
-            this.state = useState({ value: "hello" });
+            this.state = proxy({ value: "hello" });
             this.choices = [
                 { label: "Hello", value: "hello" },
                 { label: "World", value: "world" },
@@ -409,7 +408,7 @@ test("When the 'required' props is set to true, the input cannot be cleared", as
             />
         `;
         setup() {
-            this.state = useState({ value: null });
+            this.state = proxy({ value: null });
             this.choices = [
                 { label: "Hello", value: "hello" },
                 { label: "World", value: "world" },
@@ -440,7 +439,7 @@ test("When the 'required' props is set to true, the clear button is not shown", 
             </SelectMenu>
         `;
         setup() {
-            this.state = useState({ value: null });
+            this.state = proxy({ value: null });
             this.choices = [
                 { label: "Hello", value: "hello" },
                 { label: "World", value: "world" },
@@ -711,7 +710,7 @@ test("When multiSelect is enable, value is an array of values, multiple choices 
             />
         `;
         setup() {
-            this.state = useState({ value: [] });
+            this.state = proxy({ value: [] });
             this.choices = [
                 { label: "A", value: "a" },
                 { label: "B", value: "b" },
@@ -762,7 +761,7 @@ test("When multiSelect is enable, allow deselecting elements by clicking the sel
             />
         `;
         setup() {
-            this.state = useState({ value: ["a", "b"] });
+            this.state = proxy({ value: ["a", "b"] });
             this.choices = [
                 { label: "A", value: "a" },
                 { label: "B", value: "b" },
@@ -809,7 +808,7 @@ test("Navigation is possible from the input when it is focused", async () => {
             />
         `;
         setup() {
-            this.state = useState({ value: "b" });
+            this.state = proxy({ value: "b" });
             this.choices = [
                 { label: "A", value: "a" },
                 { label: "B", value: "b" },
@@ -860,7 +859,7 @@ test("When only one choice is displayed, 'enter' key should select the value", a
             />
         `;
         setup() {
-            this.state = useState({ value: "b" });
+            this.state = proxy({ value: "b" });
             this.choices = [
                 { label: "A", value: "a" },
                 { label: "B", value: "b" },
@@ -898,7 +897,7 @@ test("Props onInput is executed when the search changes", async () => {
             />
         `;
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 choices: [{ label: "Hello", value: "hello" }],
                 value: "hello",
             });
@@ -954,7 +953,7 @@ test("Choices are updated and filtered when props change", async () => {
             />
         `;
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 choices: [
                     { label: "Hello", value: "hello" },
                     { label: "Coucou", value: "hello2" },
@@ -1015,7 +1014,7 @@ test("SelectMenu group items only after being opened", async () => {
             />
         `;
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 choices: [{ label: "Option A", value: "optionA" }],
                 groups: [
                     {
@@ -1086,7 +1085,7 @@ test("search value is cleared when reopening the menu", async () => {
             />
         `;
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 choices: [{ label: "Option A", value: "optionA" }],
                 value: "hello",
             });
@@ -1206,7 +1205,7 @@ test("placeholder added succesfully", async () => {
                 { label: "A", value: "company" },
             ];
             this.placeholder = "";
-            this.state = useState({ value: "" });
+            this.state = proxy({ value: "" });
         }
     }
     await mountSingleApp(MyParent);
@@ -1231,7 +1230,7 @@ test("disabled select list", async () => {
                 { label: "Z", value: "world" },
                 { label: "A", value: "company" },
             ];
-            this.state = useState({ value: "" });
+            this.state = proxy({ value: "" });
         }
     }
     await mountSingleApp(MyParent);
@@ -1250,7 +1249,7 @@ test("Fetch choices", async () => {
             />
         `;
         setup() {
-            this.state = useState({ choices: [] }, { value: "" });
+            this.state = proxy({ choices: [] }, { value: "" });
         }
         loadChoice(searchString) {
             if (searchString === "test") {
@@ -1279,7 +1278,7 @@ test("In the BottomSheet, a 'Clear' button is present", async () => {
             />
         `;
         setup() {
-            this.state = useState({ value: "hello" });
+            this.state = proxy({ value: "hello" });
             this.choices = [{ label: "Test", value: "test" }];
         }
         onSelect(value) {
@@ -1306,7 +1305,7 @@ test("Ensure items are properly sorted", async () => {
         `;
 
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 choices: [{ label: "item-group-none", value: 0 }],
                 groups: [
                     {
@@ -1435,7 +1434,7 @@ test("Prevents loss of value due to debounce when changing state (rendering)", a
                 { label: "Michael Olise", value: "olise" },
                 { label: "Vincent Kompany", value: "Kompany" },
             ];
-            this.state = useState({
+            this.state = proxy({
                 value: "",
                 placeholder: "brol",
                 searchPlaceholder: "search",

@@ -1,5 +1,5 @@
-import { useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
@@ -103,7 +103,7 @@ export class ColorPicker extends Component {
         this.getPreviewColor = () => {};
         this.isMobileOS = isMobileOS();
 
-        this.state = useState({
+        this.state = proxy({
             activeTab: this.props.state.selectedTab || this.getDefaultTab(),
             currentCustomColor: this.props.state.selectedColor,
             currentColorPreview: undefined,

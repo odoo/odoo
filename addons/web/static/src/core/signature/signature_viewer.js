@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SignatureDialog } from "@web/core/signature/signature_dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -27,7 +26,7 @@ export class SignatureViewer extends Component {
     setup() {
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-        this.state = useState({
+        this.state = proxy({
             isValid: true,
         });
         onWillUpdateProps((np) => {

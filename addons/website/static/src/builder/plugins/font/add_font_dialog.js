@@ -1,6 +1,6 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -90,7 +90,7 @@ export class AddFontDialog extends Component {
         customize: Function,
         reloadEditor: Function,
     };
-    state = useState({
+    state = proxy({
         valid: true,
         loading: false,
         googleFontFamily: undefined,

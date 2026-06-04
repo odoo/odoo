@@ -1,14 +1,13 @@
-import { useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 class FieldIframePreview extends Component {
     static template = "website.iframeWidget";
     static props = { ...standardFieldProps };
     setup() {
-        this.state = useState({ isMobile: false });
+        this.state = proxy({ isMobile: false });
 
         useBus(this.env.bus, "THEME_PREVIEW:SWITCH_MODE", (ev) => {
             this.state.isMobile = ev.detail.mode === "mobile";

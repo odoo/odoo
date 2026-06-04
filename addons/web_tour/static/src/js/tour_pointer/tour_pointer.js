@@ -1,5 +1,5 @@
-import { reactive, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { reactive, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, proxy } from "@odoo/owl";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { usePosition } from "@web/core/position/position_hook";
@@ -90,7 +90,7 @@ export class TourPointer extends Component {
         this.closeTimeout = null;
         this.anchor = useRef("anchor");
         this.dropzone = useRef("dropzone");
-        this.state = useState({
+        this.state = proxy({
             showContent: false,
             direction: "bottom", //The side towards which the ball hangs
             triggerPosition: "unknow",

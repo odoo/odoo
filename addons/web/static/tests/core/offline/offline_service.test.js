@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 
@@ -160,7 +159,7 @@ test("offlineUI: react to [data-available-offline] attribute changes", async () 
         static props = ["*"];
 
         setup() {
-            this.state = useState({
+            this.state = proxy({
                 btn1Available: true,
                 btn2Available: false,
             });

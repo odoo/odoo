@@ -1,5 +1,4 @@
-import { useState } from "@web/owl2/utils";
-import { onMounted } from "@odoo/owl";
+import { onMounted, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { normalize } from "@web/core/l10n/utils";
 import { Setting } from "@web/views/form/setting/setting";
@@ -14,7 +13,7 @@ export class SearchableSetting extends Setting {
         HighlightText,
     };
     setup() {
-        this.state = useState({
+        this.state = proxy({
             search: this.env.searchState,
             showAllContainer: this.env.showAllContainer,
             highlightClass: {},

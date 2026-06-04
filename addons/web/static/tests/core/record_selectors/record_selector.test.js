@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 import { test, expect } from "@odoo/hoot";
 import { RecordSelector } from "@web/core/record_selectors/record_selector";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, proxy } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -33,7 +32,7 @@ async function mountRecordSelector(props) {
         static template = xml`<RecordSelector t-props="this.recordProps" />`;
         static props = ["*"];
         setup() {
-            this.state = useState({ resId: props.resId });
+            this.state = proxy({ resId: props.resId });
         }
 
         get recordProps() {

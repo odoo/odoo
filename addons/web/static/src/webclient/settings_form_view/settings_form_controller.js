@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
+import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
@@ -19,8 +20,8 @@ export class SettingsFormController extends formView.Controller {
     setup() {
         super.setup();
         this.inputRef = useAutofocus({ mobile: this.ui.isSmall }); // only force the focus on touch devices on small screens
-        this.state = useState({ displayNoContent: false });
-        this.searchState = useState({
+        this.state = proxy({ displayNoContent: false });
+        this.searchState = proxy({
             value: "",
             clearSearch: () => {
                 if (this.inputRef.el) {

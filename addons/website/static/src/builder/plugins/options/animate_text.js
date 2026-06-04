@@ -1,5 +1,5 @@
-import { useChildEnv, useChildSubEnv, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillDestroy } from "@odoo/owl";
+import { useChildEnv, useChildSubEnv, useRef } from "@web/owl2/utils";
+import { Component, onMounted, onWillDestroy, proxy } from "@odoo/owl";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { AnimateOption } from "./animate_option";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -45,7 +45,7 @@ export class AnimateText extends Component {
     };
 
     setup() {
-        this.state = useState({});
+        this.state = proxy({});
         this.updateState();
 
         this.root = useRef("root");

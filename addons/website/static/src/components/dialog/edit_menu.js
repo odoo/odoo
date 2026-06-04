@@ -1,9 +1,9 @@
-import { reactive, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { reactive, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from "@website/js/utils";
 import { WebsiteDialog } from "./dialog";
-import { Component, onWillStart, useEffect } from "@odoo/owl";
+import { Component, onWillStart, useEffect, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { isEmail } from "@web/core/utils/strings";
@@ -77,7 +77,7 @@ export class MenuDialog extends Component {
         this.urlInputRef = useRef("url-input");
         this.urlInputEdited = !!this.props.url;
 
-        this.state = useState({
+        this.state = proxy({
             pageNotFound: false,
             url: this.props.url,
             name: this.props.name,
@@ -198,7 +198,7 @@ export class EditMenuDialog extends Component {
 
         this.menuEditor = useRef("menu-editor");
 
-        this.state = useState({ rootMenu: {} });
+        this.state = proxy({ rootMenu: {} });
 
         onWillStart(async () => {
             const menu = await this.orm.call(

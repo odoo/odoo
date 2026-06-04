@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { _t } from "@web/core/l10n/translation";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
@@ -8,7 +8,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { formView } from "@web/views/form/form_view";
 import { renderToFragment } from "@web/core/utils/render";
-import { Component, onWillDestroy, xml } from "@odoo/owl";
+import { Component, onWillDestroy, xml, proxy } from "@odoo/owl";
 import { FormController } from "@web/views/form/form_controller";
 import { registry } from "@web/core/registry";
 
@@ -40,7 +40,7 @@ export class PageDependencies extends Component {
             },
             () => []
         );
-        this.state = useState({
+        this.state = proxy({
             dependencies: {},
         });
 
@@ -143,7 +143,7 @@ export class DeletePageDialog extends Component {
     setup() {
         this.website = useService("website");
 
-        this.state = useState({
+        this.state = proxy({
             confirm: false,
         });
     }
@@ -172,7 +172,7 @@ export class DuplicatePageDialog extends Component {
         this.website = useService("website");
         useAutofocus();
 
-        this.state = useState({
+        this.state = proxy({
             name: "",
         });
     }
