@@ -1,4 +1,12 @@
 import { reactive } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+
+export class CashmaticError extends Error {
+    constructor(message, status) {
+        super(message);
+        this.status = status;
+    }
+}
 
 const HTTPS_PORT = 50301;
 const HTTP_PORT = 80;
@@ -26,18 +34,27 @@ export class CashmaticService {
         const protocol = this.forceHttp ? "http:" : window.location.protocol;
         const port = this.forceHttp ? HTTP_PORT : HTTPS_PORT;
         const url = `${protocol}//${this.ip}:${port}${operation}`;
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${this.token}`,
-            },
-            body: JSON.stringify(params),
-            targetAddressSpace: this.forceHttp ? "local" : undefined,
-        });
+        let response;
+        try {
+            response = await fetch(url, {
+                method: "POST",
+                signal: AbortSignal.timeout(5000),
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${this.token}`,
+                },
+                body: JSON.stringify(params),
+                targetAddressSpace: this.forceHttp ? "local" : undefined,
+            });
+        } catch (e) {
+            if (e.name === "TimeoutError" || e.name === "AbortError") {
+                throw new Error(_t("Cashmatic device unreachable"));
+            }
+            throw e;
+        }
 
         if (!response.ok) {
-            throw new Error(response.statusText);
+            throw new CashmaticError(response.statusText, response.status);
         }
 
         const cashmaticResult = await response.json();
@@ -50,6 +67,7 @@ export class CashmaticService {
     async cancelCurrentPayment() {
         await this.renewOrLogin();
         await this._sendRequest(POST_REQUESTS.cancelPayment, {});
+        return await this._cashmaticStatus();
     }
     async sendPaymentRequest(amount, reference) {
         this.state.amountInserted = 0;
@@ -74,15 +92,23 @@ export class CashmaticService {
     }
 
     async _cashmaticStatus() {
-        const response = await this._sendRequest(POST_REQUESTS.activeTransaction, {});
-        if (response.operation !== "idle") {
-            await new Promise((resolve) => setTimeout(resolve, 200));
-            this.state.amountInserted = response.inserted;
-            this.state.amountDispensed = response.dispensed;
-            return await this._cashmaticStatus();
+        try {
+            const response = await this._sendRequest(POST_REQUESTS.activeTransaction, {});
+            if (response.operation !== "idle") {
+                await new Promise((resolve) => setTimeout(resolve, 200));
+                this.state.amountInserted = response.inserted;
+                this.state.amountDispensed = response.dispensed;
+                return await this._cashmaticStatus();
+            }
+            const lastResponse = await this._sendRequest(POST_REQUESTS.lastTransaction, {});
+            return lastResponse.notDispensed;
+        } catch (e) {
+            if (e instanceof CashmaticError && (e.status === 401 || e.status === 403)) {
+                await this.renewOrLogin();
+                return await this._cashmaticStatus();
+            }
+            throw e;
         }
-        const lastResponse = await this._sendRequest(POST_REQUESTS.lastTransaction, {});
-        return lastResponse.notDispensed;
     }
     async renewOrLogin() {
         try {
