@@ -88,7 +88,7 @@ class PdpRegistration(models.TransientModel):
     @api.depends('company_id.company_registry')
     def _compute_siren_number(self):
         for wizard in self:
-            wizard.siren_number = wizard.company_id.company_registry[:9] if wizard.company_id.company_registry else ''
+            wizard.siren_number = wizard.company_id.partner_id._l10n_fr_pdp_get_siren()
 
     @api.depends('company_id.account_edi_proxy_client_ids')
     def _compute_edi_user_id(self):
