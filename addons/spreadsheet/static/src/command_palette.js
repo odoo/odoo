@@ -5,7 +5,7 @@ import { useSpreadsheetCommandPalette } from "./command_provider";
 patch(Spreadsheet.prototype, {
     setup() {
         super.setup();
-        if (this.env.isDashboard()) {
+        if (this.env.model.getters.isDashboard()) {
             return;
         }
         useSpreadsheetCommandPalette();
