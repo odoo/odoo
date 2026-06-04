@@ -23,8 +23,19 @@ const VERTICAL_ALIGN = {
     start: "top",
     end: "bottom",
     center: "middle",
+    "flex-start": "top",
+    "flex-end": "bottom",
 };
 
+/**
+ * TODO EGGMAIL NOW:
+ * WORKING HERE:
+ * check out getContextStyleInfo for the "table" case to revert table styling
+ * currently a table inside the td will not take the full height of the td
+ * current solution does not support well padding + border inside padding
+ * real solution implies converting the padding to filler cells and move the
+ * border on the stretched TD
+ */
 export class HybridFluidStrategyPlugin extends Plugin {
     static id = "hybridFluidStrategy";
     static dependencies = [
@@ -106,7 +117,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
                 }
             }
             for (let i = 1; i < band.clusters.length; i++) {
-                const cluster = band.cluster[i];
+                const cluster = band.clusters[i];
                 const gap = this.gapX(prevCluster.rect, cluster.rect);
                 const measures = {
                     styleContext,
@@ -296,7 +307,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
     }
 
     buildRow(rowMeasure) {
-        const layout = rowMeasure.verticalAlign ? HybridFluidRow() : HybridFluidTableRow();
+        const layout = rowMeasure.verticalAlign ? new HybridFluidRow() : new HybridFluidTableRow();
         return new EmailNode({
             layout,
             analysis: new Analysis({
