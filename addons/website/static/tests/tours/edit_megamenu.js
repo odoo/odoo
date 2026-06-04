@@ -17,11 +17,14 @@ const toggleMegaMenu = (stepOptions) =>
         {
             content: "Toggles the mega menu.",
             trigger: ":iframe .top_menu .nav-item a.o_mega_menu_toggle",
-            run(helpers) {
+            async run({ click, waitUntil }) {
                 // If the mega menu is displayed inside the extra menu items, it should
                 // already be displayed.
                 if (!this.anchor.closest(".o_extra_menu_items")) {
-                    helpers.click();
+                    await click();
+                    await waitUntil(() =>
+                        this.anchor.ownerDocument.querySelector(".o_mega_menu.show")
+                    );
                 }
             },
         },
@@ -79,7 +82,7 @@ registry.category("web_tour.tours").add("edit_megamenu", {
             trigger: ".o_builder_open .o_website_preview:not(.o_is_blocked)",
         },
         // Edit a menu item
-        clickOnExtraMenuItem({}, true),
+        clickOnExtraMenuItem(),
         toggleMegaMenu({}),
         {
             content: "Select the last menu link of the first column",
@@ -123,7 +126,7 @@ registry.category("web_tour.tours").add("edit_megamenu", {
             run: "press ArrowDown",
         },
         ...clickOnSave(),
-        clickOnExtraMenuItem({}, true),
+        clickOnExtraMenuItem(),
         toggleMegaMenu(),
         {
             content: "The menu item should have been renamed.",
@@ -132,11 +135,13 @@ registry.category("web_tour.tours").add("edit_megamenu", {
     ],
 });
 registry.category("web_tour.tours").add("megamenu_active_nav_link", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         waitForEditMode,
         // Add a megamenu item to the top menu.
-        ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Home')", "Home", 1),
+        ...openLinkPopup({
+            trigger: ":iframe .top_menu .nav-item a:contains('Home')",
+            label: "Home",
+        }),
         {
             content: "Click on 'Link' to open Link Dialog",
             trigger: ".o-we-linkpopover button.js_edit_menu",
@@ -175,13 +180,23 @@ registry.category("web_tour.tours").add("megamenu_active_nav_link", {
             content: "Check for the new mega menu",
             trigger: `:iframe .top_menu:has(.nav-item a.o_mega_menu_toggle:contains("Megatron"))`,
         },
-        clickOnExtraMenuItem({}, true),
+        clickOnExtraMenuItem(),
         toggleMegaMenu({}),
-        ...openLinkPopup(":iframe .s_mega_menu_odoo_menu .nav-link:contains('Laptops')", "Laptops"),
+        ...openLinkPopup({
+            trigger: ":iframe .o_mega_menu.show .nav-link:contains(Laptops)",
+            label: "Home",
+            url: "#",
+            focusNodeIndex: 0,
+            runClick: false,
+        }),
         {
             content: "Click on 'Edit Link'",
             trigger: ".o-we-linkpopover a.o_we_edit_link",
             run: "click",
+        },
+        {
+            content: "Wait for popover to switch to edit mode",
+            trigger: ".o-we-linkpopover:not(:has(.o_we_edit_link))",
         },
         {
             content: "Change the link",
@@ -189,7 +204,7 @@ registry.category("web_tour.tours").add("megamenu_active_nav_link", {
             run: "edit /new_page",
         },
         ...clickOnSave(),
-        clickOnExtraMenuItem({}, true),
+        clickOnExtraMenuItem(),
         toggleMegaMenu(),
         {
             content: "Click on the first menu link of the first column",
@@ -206,7 +221,10 @@ registry.category("web_tour.tours").add("edit_megamenu_big_icons_subtitles", {
     steps: () => [
         waitForEditMode,
         // Add a megamenu item to the top menu.
-        ...openLinkPopup(":iframe .top_menu .nav-item a", "Home", 1),
+        ...openLinkPopup({
+            trigger: ":iframe .top_menu .nav-item a",
+            label: "Home",
+        }),
         {
             content: "Click on 'Link' to open Link Dialog",
             trigger: ".o-we-linkpopover .js_edit_menu",
@@ -247,7 +265,7 @@ registry.category("web_tour.tours").add("edit_megamenu_big_icons_subtitles", {
             trigger: ':iframe .top_menu:has(.nav-item a.o_mega_menu_toggle:contains("Megaaaaa2!"))',
         },
         // Edit a menu item
-        clickOnExtraMenuItem({}, true),
+        clickOnExtraMenuItem(),
         toggleMegaMenu({}),
         {
             content: "Select the first menu link of the first column",
@@ -263,7 +281,7 @@ registry.category("web_tour.tours").add("edit_megamenu_big_icons_subtitles", {
             "Bold (Ctrl + B)"
         ),
         ...clickOnSave(),
-        clickOnExtraMenuItem({}, true),
+        clickOnExtraMenuItem(),
         toggleMegaMenu(),
         {
             content: "The menu item should only convert selected text to Bold.",

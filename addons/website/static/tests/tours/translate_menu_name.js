@@ -1,18 +1,10 @@
-import {
-    clickOnExtraMenuItem,
-    clickOnSave,
-    registerWebsitePreviewTour,
-} from "@website/js/tours/tour_utils";
+import { clickOnExtraMenuItem, clickOnSave } from "@website/js/tours/tour_utils";
 import { stepUtils } from "@web_tour/tour_utils";
 import { translationIsReady } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 
-registerWebsitePreviewTour(
-    "translate_menu_name",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        edition: false,
-    },
-    () => [
+registry.category("web_tour.tours").add("translate_menu_name", {
+    steps: () => [
         {
             content: "Open Edit dropdown",
             trigger: ".o_menu_systray button:contains('Edit')",
@@ -28,7 +20,7 @@ registerWebsitePreviewTour(
             trigger: ".modal-footer .btn-primary",
             run: "click",
         },
-        clickOnExtraMenuItem({}, true),
+        clickOnExtraMenuItem(),
         {
             content: "translate the menu entry",
             trigger: ':iframe a[href="/englishURL"] span',
@@ -50,5 +42,5 @@ registerWebsitePreviewTour(
                 await translationIsReady;
             },
         },
-    ]
-);
+    ],
+});
