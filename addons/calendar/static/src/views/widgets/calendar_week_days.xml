@@ -5,7 +5,13 @@
         <t t-foreach="this.weekdays" t-as="day" t-key="day">
                 <div t-attf-class="o_calendar_week_days_rounded {{this.data[day] ? 'text-bg-action' : 'btn-secondary'}}"
                     t-on-click="this.props.readonly? () => {} : () => this.onChange(day)">
+<<<<<<< 374406358ba6d2d5ed131bd13d66270e763702c6
                     <t t-out="this.props.record.fields[day].string[0]"/>
+||||||| 8191f184d3c7250ccd0e5f330160609be743880d
+                    <t t-esc="props.record.fields[day].string[0]"/>
+=======
+                    <t t-esc="getWeekDay(day_index)"/>
+>>>>>>> 00dfc4e301a43fec9956f83ca98e7a33f8f0655b
                 </div>
             </t>
         </div>
