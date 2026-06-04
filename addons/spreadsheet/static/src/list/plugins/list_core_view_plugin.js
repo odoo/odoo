@@ -478,7 +478,11 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      */
     getListHeaderValue(listId, path) {
         const columnDef = this.lists[listId].definition.columns.find((col) => col.name === path);
-        return columnDef?.string || this.lists[listId].dataSource.getListHeaderValue(path);
+
+        if (columnDef?.string) {
+            return { value: columnDef.string };
+        }
+        return this.lists[listId].dataSource.getListHeaderValue(path);
     }
 
     /**
@@ -567,7 +571,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
                 continue;
             }
             const currentColumn = [];
-            currentColumn.push({ value: this.getListHeaderValue(listId, column.name) });
+            currentColumn.push(this.getListHeaderValue(listId, column.name));
             for (let position = 0; position < numberRecordsToLoad; position++) {
                 if (column && column.computedBy) {
                     currentColumn.push(this._computeCellValue(listId, column, position));

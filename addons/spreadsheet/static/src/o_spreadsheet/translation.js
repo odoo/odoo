@@ -40,7 +40,7 @@ functionRegistry.add("_t", {
     description: _t("Get the translated value of the given string"),
     args: [arg("value (string)", _t("Value to translate."))],
     compute: function (value) {
-        return this.getters.dynamicTranslate(toString(value));
+        return { value: this.getters.dynamicTranslate(toString(value)) };
     },
     returns: ["STRING"],
     hidden: true,
