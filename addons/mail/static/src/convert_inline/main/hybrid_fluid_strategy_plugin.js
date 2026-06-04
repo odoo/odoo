@@ -3,7 +3,14 @@ import { Plugin } from "../plugin";
 import { zip } from "@web/core/utils/arrays";
 import { DIMENSIONS } from "../hooks";
 import { Analysis, EmailNode } from "../core/render_models";
-import { HybridFluidCell, HybridFluidEmptyCell, HybridFluidRow } from "./hybrid_fluid_models";
+import {
+    HybridFluidCell,
+    HybridFluidEmptyCell,
+    HybridFluidEmptyTableCell,
+    HybridFluidRow,
+    HybridFluidTableCell,
+    HybridFluidTableRow,
+} from "./hybrid_fluid_models";
 import { parseCssValue } from "../css_parsers";
 import { isAllowedContent } from "@html_editor/utils/dom_info";
 
@@ -52,6 +59,88 @@ export class HybridFluidStrategyPlugin extends Plugin {
         );
     }
 
+    extractHybridFluidInfo(emailNode) {
+        const referenceNode = emailNode.lastReferenceNode;
+        const desktopBlock = this.getLayoutBlock(referenceNode, DESKTOP);
+        // TODO EGGMAIL: some values for text-align are not supported
+        // getStylePropertyValue should probably filter values and only
+        // return what is allowed
+        // TODO EGGMAIL: style should probably be refined in this fragment
+        const styleContext = {
+            style: {
+                "text-align": this.getStylePropertyValue(referenceNode, "text-align"),
+                "font-size": this.getStylePropertyValue(referenceNode, "font-size"),
+            },
+        };
+        // TODO EGGMAIL: approximate vertical alignment support:
+        // start/center/end/stretch -> default stretch
+        const verticalAlign =
+            VERTICAL_ALIGN[this.getStylePropertyValue(referenceNode, "align-items")];
+        // STEP 1: construct measure bundles
+        const rowMeasures = [];
+        for (const band of desktopBlock.bands) {
+            const row = { verticalAlign, children: [] };
+            rowMeasures.push(row);
+            let width = 0;
+            let prevCluster;
+            const hasLastOffset = !this.isZero(desktopBlock.padding.right);
+            if (band.clusters.length > 0) {
+                prevCluster = band.clusters[0];
+                const measures = {
+                    styleContext,
+                    isLast: !hasLastOffset && band.clusters.length === 1,
+                    cluster: prevCluster,
+                    emailNode,
+                    width: prevCluster.rect.width,
+                    verticalAlign,
+                };
+                width += measures.width;
+                if (!this.isZero(desktopBlock.padding.left)) {
+                    const offsetWidth = desktopBlock.padding.left;
+                    width += offsetWidth;
+                    row.children.push(
+                        Object.assign({ type: "cellWithOffset", offsetWidth }, measures)
+                    );
+                } else {
+                    row.children.push(Object.assign({ type: "cell" }, measures));
+                }
+            }
+            for (let i = 1; i < band.clusters.length; i++) {
+                const cluster = band.cluster[i];
+                const gap = this.gapX(prevCluster.rect, cluster.rect);
+                const measures = {
+                    styleContext,
+                    isLast: !hasLastOffset && i === band.clusters.length - 1,
+                    cluster,
+                    emailNode,
+                    width: cluster.rect.width,
+                    verticalAlign,
+                };
+                width += measures.width;
+                if (gap > 0) {
+                    width += gap;
+                    row.children.push(
+                        Object.assign({ type: "cellWithOffset", offsetWidth: gap }, measures)
+                    );
+                } else {
+                    row.children.push(Object.assign({ type: "cell" }, measures));
+                }
+                prevCluster = cluster;
+            }
+            if (hasLastOffset) {
+                width += desktopBlock.padding.right;
+                row.children.push({
+                    type: "emptyCell",
+                    width: desktopBlock.padding.right,
+                    isLast: true,
+                    verticalAlign,
+                });
+            }
+            row.width = width;
+        }
+        return rowMeasures;
+    }
+
     // TODO EGGMAIL NOW:
     // we have a container which is supposed to be a hybrid fluid table
     // with potentially multiple rows, each with potentially multiple
@@ -81,70 +170,32 @@ export class HybridFluidStrategyPlugin extends Plugin {
         if (!emailNode.analysis.facts.isHybridFluidContainer) {
             return;
         }
-        const referenceNode = emailNode.lastReferenceNode;
-        const desktopBlock = this.getLayoutBlock(referenceNode, DESKTOP);
+        const rowMeasures = this.extractHybridFluidInfo(emailNode);
         const rows = [];
-        // TODO EGGMAIL: some values for text-align are not supported
-        // getStylePropertyValue should probably filter values and only
-        // return what is allowed
-        // TODO EGGMAIL: style should probably be refined in this fragment
-        const styleContext = {
-            style: {
-                "text-align": this.getStylePropertyValue(referenceNode, "text-align"),
-                "font-size": this.getStylePropertyValue(referenceNode, "font-size"),
-            },
-        };
-        // TODO EGGMAIL: approximate vertical alignment support:
-        // start/center/end/stretch -> default stretch
-        const verticalAlign =
-            VERTICAL_ALIGN[this.getStylePropertyValue(referenceNode, "align-items")];
-        for (const band of desktopBlock.bands) {
-            const rowEmailNode = this.buildRow();
+        for (const rowMeasure of rowMeasures) {
+            const width = rowMeasure.width;
+            let ratio = 100;
+            const rowEmailNode = this.buildRow(rowMeasure);
             rows.push(rowEmailNode);
-            let prevCluster;
-            if (band.clusters.length > 0) {
-                prevCluster = band.clusters[0];
-                const isLast = band.clusters.length === 1;
-                if (!this.isZero(desktopBlock.padding.left)) {
-                    const offsetWidth = desktopBlock.padding.left;
-                    for (const cell of this.buildCellWithOffset(
-                        emailNode,
-                        offsetWidth,
-                        prevCluster,
-                        styleContext,
-                        isLast
-                    )) {
+            for (const cellMeasure of rowMeasure.children) {
+                const widthRatio = this.ratioPercentage(cellMeasure.width, width, ratio);
+                cellMeasure.widthRatio = widthRatio;
+                ratio -= widthRatio;
+                if (cellMeasure.type === "cellWithOffset") {
+                    cellMeasure.offsetWidthRatio = this.ratioPercentage(
+                        cellMeasure.offsetWidth,
+                        width,
+                        ratio
+                    );
+                    ratio -= cellMeasure.offsetWidthRatio;
+                    for (const cell of this.buildCellWithOffset(cellMeasure)) {
                         rowEmailNode.appendChild(cell);
                     }
+                } else if (cellMeasure.type === "emptyCell") {
+                    rowEmailNode.appendChild(this.buildEmptyCell(cellMeasure));
                 } else {
-                    rowEmailNode.appendChild(
-                        this.buildCell(emailNode, prevCluster, styleContext, isLast)
-                    );
+                    rowEmailNode.appendChild(this.buildCell(cellMeasure));
                 }
-            }
-            for (let i = 1; i < band.clusters.length; i++) {
-                const cluster = band.clusters[i];
-                const gap = this.gapX(prevCluster.rect, cluster.rect);
-                const isLast = i === band.clusters.length - 1;
-                if (gap > 0) {
-                    for (const cell of this.buildCellWithOffset(
-                        emailNode,
-                        gap,
-                        cluster,
-                        styleContext,
-                        isLast
-                    )) {
-                        rowEmailNode.appendChild(cell);
-                    }
-                } else {
-                    rowEmailNode.appendChild(
-                        this.buildCell(emailNode, cluster, styleContext, isLast)
-                    );
-                }
-                prevCluster = cluster;
-            }
-            if (!this.isZero(desktopBlock.padding.right)) {
-                rowEmailNode.appendChild(this.buildEmptyCell(desktopBlock.padding.right));
             }
         }
         emailNode.spliceChildren(0, emailNode.children.length, ...rows);
@@ -244,24 +295,41 @@ export class HybridFluidStrategyPlugin extends Plugin {
         return clusterEmailNodes;
     }
 
-    buildRow() {
+    buildRow(rowMeasure) {
+        const layout = rowMeasure.verticalAlign ? HybridFluidRow() : HybridFluidTableRow();
         return new EmailNode({
-            layout: new HybridFluidRow(),
+            layout,
             analysis: new Analysis({
                 facts: { isHybridFluidRow: true },
             }),
         });
     }
 
-    buildCell(emailNode, cluster, styleContext, isLast = false) {
+    buildCell({ styleContext, isLast, cluster, emailNode, width, widthRatio, verticalAlign }) {
         const clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
-        const clusterWidth = cluster.rect.width - (isLast ? ZOOM_WIDTH_CORRECTION : 0);
         const refs = {
-            root: { style: { "max-width": `${clusterWidth}px` } },
+            root: {},
             styleContext,
         };
+        let layout;
+        if (verticalAlign) {
+            const cellWidth = width - (isLast ? ZOOM_WIDTH_CORRECTION : 0);
+            Object.assign(refs.root, {
+                style: {
+                    "vertical-align": verticalAlign,
+                    "max-width": `${cellWidth}px`,
+                },
+            });
+            layout = new HybridFluidCell({ refs });
+        } else {
+            Object.assign(refs.root, {
+                style: { width: `${widthRatio}%` },
+                attributes: { width: `${widthRatio}%` },
+            });
+            layout = new HybridFluidTableCell(refs.root);
+        }
         const cellEmailNode = new EmailNode({
-            layout: new HybridFluidCell({ refs }),
+            layout,
             analysis: new Analysis({
                 facts: {
                     isHybridFluidCell: true,
@@ -276,12 +344,24 @@ export class HybridFluidStrategyPlugin extends Plugin {
         return cellEmailNode;
     }
 
-    buildEmptyCell(width) {
-        const refs = {
-            root: { style: { "max-width": `${width}px` } },
-        };
+    buildEmptyCell({ isLast, width, widthRatio, verticalAlign }) {
+        const refs = { root: {} };
+        let layout;
+        if (verticalAlign) {
+            const cellWidth = width - (isLast ? ZOOM_WIDTH_CORRECTION : 0);
+            Object.assign(refs.root, {
+                style: { "max-width": `${cellWidth}px` },
+            });
+            layout = new HybridFluidEmptyCell({ refs });
+        } else {
+            Object.assign(refs.root, {
+                style: { width: `${widthRatio}%` },
+                attributes: { width: `${widthRatio}%` },
+            });
+            layout = new HybridFluidEmptyTableCell(refs.root);
+        }
         return new EmailNode({
-            layout: new HybridFluidEmptyCell({ refs }),
+            layout,
             analysis: new Analysis({
                 facts: {
                     isHybridFluidCell: true,
@@ -292,26 +372,59 @@ export class HybridFluidStrategyPlugin extends Plugin {
         });
     }
 
-    buildCellWithOffset(emailNode, offsetWidth, cluster, styleContext, isLast = false) {
-        const clusterWidth = cluster.rect.width - (isLast ? ZOOM_WIDTH_CORRECTION / 2 : 0);
-        const offsetEmailNode = this.buildEmptyCell(offsetWidth);
-        const cellEmailNode = this.buildCell(emailNode, cluster, styleContext, isLast);
-        const refs = {
-            root: { style: { "max-width": `${offsetWidth + clusterWidth}px` } },
-        };
-        const cellWithOffsetEmailNode = new EmailNode({
-            layout: new HybridFluidCell({ refs }),
-            analysis: new Analysis({
-                facts: {
-                    isHybridFluidCell: true,
-                    // TODO EGGMAIL: evaluate what positioning facts should be shared
-                    // and how
-                },
-            }),
-        });
-        cellWithOffsetEmailNode.appendChild(offsetEmailNode);
-        cellWithOffsetEmailNode.appendChild(cellEmailNode);
-        return [cellWithOffsetEmailNode];
+    buildCellWithOffset({
+        styleContext,
+        isLast,
+        cluster,
+        emailNode,
+        width,
+        widthRatio,
+        verticalAlign,
+        offsetWidth,
+        offsetWidthRatio,
+    }) {
+        const refs = { root: {} };
+        const cells = [];
+        if (verticalAlign) {
+            const cellOffsetWidth = offsetWidth - (isLast ? ZOOM_WIDTH_CORRECTION : 0);
+            const cellWidth = width + cellOffsetWidth;
+            const offsetEmailNode = this.buildEmptyCell({
+                verticalAlign,
+                width: cellOffsetWidth,
+                isLast,
+            });
+            const cellEmailNode = this.buildCell({
+                styleContext,
+                cluster,
+                emailNode,
+                width,
+                verticalAlign,
+            });
+            Object.assign(refs.root, { style: { "max-width": `${cellWidth}px` } });
+            const cellWithOffsetEmailNode = new EmailNode({
+                layout: new HybridFluidCell({ refs }),
+                analysis: new Analysis({
+                    facts: {
+                        isHybridFluidCell: true,
+                        // TODO EGGMAIL: evaluate what positioning facts should be shared
+                        // and how
+                    },
+                }),
+            });
+            cellWithOffsetEmailNode.appendChild(offsetEmailNode);
+            cellWithOffsetEmailNode.appendChild(cellEmailNode);
+            cells.push(cellWithOffsetEmailNode);
+        } else {
+            const offsetEmailNode = this.buildEmptyCell({ widthRatio: offsetWidthRatio });
+            const cellEmailNode = this.buildCell({
+                styleContext,
+                widthRatio,
+                emailNode,
+                cluster,
+            });
+            cells.push(offsetEmailNode, cellEmailNode);
+        }
+        return cells;
     }
 }
 

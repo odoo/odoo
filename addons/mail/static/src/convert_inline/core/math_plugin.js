@@ -15,6 +15,7 @@ export class MathPlugin extends Plugin {
         "gapY",
         "siblingSpacing",
         "containerPadding",
+        "ratioPercentage",
     ];
 
     pixelTolerance() {
@@ -102,6 +103,10 @@ export class MathPlugin extends Plugin {
             bottom: this.isZero(bottom) ? 0 : Math.max(0, bottom),
             right: this.isZero(right) ? 0 : Math.max(0, right),
         };
+    }
+
+    ratioPercentage(value, total, percentageLeft = 100) {
+        return Math.min(percentageLeft, Math.trunc((value / total) * 100000) / 1000);
     }
 }
 

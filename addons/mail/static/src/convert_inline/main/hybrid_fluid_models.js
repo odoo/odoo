@@ -1,8 +1,8 @@
 import { assignDefaultElementOptions, ElementLayout, LayoutModel } from "../core/render_models";
 
 export class HybridFluidRow extends ElementLayout {
-    constructor(options = {}) {
-        const root = assignDefaultElementOptions(options, {
+    constructor(root = {}) {
+        root = assignDefaultElementOptions(root, {
             // TODO EGGMAIL: RTL check
             style: {
                 "text-align": "center",
@@ -19,8 +19,8 @@ export class HybridFluidRow extends ElementLayout {
 }
 
 export class HybridFluidCellWithOffset extends ElementLayout {
-    constructor(options = {}) {
-        const root = assignDefaultElementOptions(options, {
+    constructor(root = {}) {
+        root = assignDefaultElementOptions(root, {
             style: {
                 "max-width": "100%",
                 "vertical-align": "top",
@@ -94,6 +94,33 @@ export class HybridFluidTableRow extends LayoutModel {
     constructor(options = {}) {
         const refs = options.refs ?? {};
         options.refs = refs;
-        refs.root = 
+        refs.root = assignDefaultElementOptions(refs.root, {
+            style: {
+                width: "100%",
+            },
+        });
+        super(options);
+        this.setAttributes({
+            classNames: "o-ci-hybrid-fluid-table-row",
+        });
+    }
+}
+
+export class HybridFluidTableCell extends ElementLayout {
+    constructor(root = {}) {
+        root.tag = "TD";
+        super(root);
+        this.setAttributes({
+            classNames: "o-ci-hybrid-fluid-table-cell",
+        });
+    }
+}
+
+export class HybridFluidEmptyTableCell extends HybridFluidTableCell {
+    constructor(root = {}) {
+        super(root);
+        this.setAttributes({
+            style: { height: 0 },
+        });
     }
 }

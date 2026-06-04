@@ -20,9 +20,9 @@ export class ImageLinkLayout extends LayoutModel {
 }
 
 export class ImageLayout extends ElementLayout {
-    constructor(options = {}) {
-        options.tag = "IMG";
-        super(options);
+    constructor(root = {}) {
+        root.tag = "IMG";
+        super(root);
         this.setAttributes({
             classNames: "o-ci-image",
         });
