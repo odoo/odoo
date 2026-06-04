@@ -25,6 +25,11 @@ class MailTrackMixin(models.AbstractModel):
     # model / crud helpers
     # ------------------------------------------------------
 
+    def write(self, vals):
+        if not self._track_disabled():
+            self._track_prepare(self._fields)
+        return super().write(vals)
+
     def _fallback_lang(self) -> BaseModel:
         if not self.env.context.get("lang"):
             return self.with_context(lang=self.env.user.lang)
