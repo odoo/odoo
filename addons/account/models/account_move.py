@@ -6241,6 +6241,18 @@ class AccountMove(models.Model):
         label = self.adjusting_entry_origin_label if len(self.adjusting_entries_move_ids) == 1 else 'Invoices'
         return self.adjusting_entry_origin_move_ids._get_records_action(name=label)
 
+    def open_journal_items(self):
+        self.ensure_one()
+        return {
+            'name': _("Journal Items"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move.line',
+            'target': 'current',
+            'context': dict(self.env.context),
+            'views': [(False, 'list')],
+            'domain': [('move_id', '=', self.id), ('display_type', 'not in', ('line_section', 'line_subsection', 'line_note'))],
+        }
+
     def action_switch_move_type(self):
         if any(move.move_type == "entry" for move in self):
             raise ValidationError(_("This action isn't available for this document."))
