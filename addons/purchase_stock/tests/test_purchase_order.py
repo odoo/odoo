@@ -637,6 +637,8 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(quant.quantity, 5)
 
     def test_po_edit_after_receive(self):
+        # Picking types can be detached from any warehouse; ensure PO confirmation still works.
+        self.company_data['default_warehouse'].in_type_id.warehouse_id = False
         self.po = self.env['purchase.order'].create(self.po_vals)
         self.po.button_confirm()
         self.po.picking_ids.move_ids.quantity = 5
