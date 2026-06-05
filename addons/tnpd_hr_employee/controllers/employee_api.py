@@ -403,6 +403,41 @@ class EmployeeAPI(http.Controller):
         domain += search_domain
         return domain
 
+    # ── GET /api/stats — public dashboard stats (no auth) ────────────────────
+
+    @http.route('/api/stats', auth='none', type='http', methods=['GET'], csrf=False)
+    def get_public_stats(self, **_kwargs):
+        """
+        Return public statistics for the login page.
+        No authentication required.
+
+        Response
+        --------
+        {
+          "active_officers": 8264,
+          "prison_facilities": 14
+        }
+        """
+        try:
+            active_officers = request.env['hr.employee'].sudo().search_count([
+                ('active', '=', True),
+                ('x_employee_code', '!=', False),
+                ('x_employee_code', '!=', ''),
+            ])
+            prison_facilities = request.env['prison.jail'].sudo().search_count([
+                ('active', '=', True),
+            ])
+            return self._json_response({
+                'active_officers':  active_officers,
+                'prison_facilities': prison_facilities,
+            })
+        except Exception as exc:
+            _logger.exception('GET /api/stats failed: %s', exc)
+            return self._json_response({
+                'active_officers':  0,
+                'prison_facilities': 0,
+            })
+
     # ── GET /api/employees — paginated list with filters ──────────────────────
 
     @http.route('/api/employees', auth='none', type='http', methods=['GET'], csrf=False)
