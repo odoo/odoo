@@ -1951,6 +1951,12 @@ export class PosStore extends WithLazyGetterTrap {
                 await this.syncAllOrders({ orders: [order] });
                 return;
             }
+        } catch (e) {
+            if (e instanceof ConnectionLostError) {
+                // print prep receipt even Offline
+                await this.sendOrderInPreparation(order, opts);
+            }
+            throw e;
         } finally {
             this.syncingOrders.delete(order.uuid);
         }
