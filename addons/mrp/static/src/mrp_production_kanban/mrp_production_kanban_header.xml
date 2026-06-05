@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp.MrpProductionKanbanHeader" t-inherit="web.KanbanHeader" t-inherit-mode="primary">
+
+        <xpath expr="//span[@t-out='this.odoomark(this.group.displayName)']" position="attributes">
+            <attribute name="t-out">this.odoomark(this.columnTitle)</attribute>
+        </xpath>
+
+        <xpath expr="//t[@t-out='this.odoomark(this.group.displayName)']" position="attributes">
+            <attribute name="t-out">this.odoomark(this.columnTitle)</attribute>
+        </xpath>
+
+    </t>
+
+</templates>
