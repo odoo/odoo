@@ -44,9 +44,9 @@
                         </div>
                     </div>
                 </div>
-                <iframe t-custom-ref="iframeRef" t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"/>
+                <iframe t-ref="this.iframeRef" t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"/>
                 <div t-if="this.state.isMobileMode" class="o_is_mobile_footer">
-                    <!-- 
+                    <!--
                     Mobile Footer
                     Has additional padding in which to display the bottom of the phone background image,
                     as the header inserts additional space not accounted for by the image we use

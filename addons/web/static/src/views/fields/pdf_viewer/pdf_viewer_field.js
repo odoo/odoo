@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -6,7 +6,7 @@ import { url } from "@web/core/utils/urls";
 import { standardFieldProps } from "../standard_field_props";
 import { FileUploader } from "../file_handler";
 
-import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
+import { Component, onWillUpdateProps, proxy, signal } from "@odoo/owl";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
 
 export class PdfViewerField extends Component {
@@ -19,6 +19,8 @@ export class PdfViewerField extends Component {
         fileNameField: { type: String, optional: true },
     };
 
+    iframeViewerPdfRef = signal(null);
+
     setup() {
         this.notification = useService("notification");
         this.action = useService("action");
@@ -26,7 +28,6 @@ export class PdfViewerField extends Component {
             isValid: true,
             objectUrl: "",
         });
-        this.iframeViewerPdfRef = useRef("iframeViewerPdf");
         onWillUpdateProps((nextProps) => {
             if (nextProps.readonly) {
                 this.state.objectUrl = "";
@@ -35,13 +36,13 @@ export class PdfViewerField extends Component {
         useLayoutEffect(
             (el) => {
                 if (el) {
-                    hidePDFJSButtons(this.iframeViewerPdfRef.el, {
+                    hidePDFJSButtons(el, {
                         hideDownload: true,
                         hidePrint: true,
                     });
                 }
             },
-            () => [this.iframeViewerPdfRef.el]
+            () => [this.iframeViewerPdfRef()]
         );
     }
 

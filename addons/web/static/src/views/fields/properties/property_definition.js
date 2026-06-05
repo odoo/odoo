@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onWillUpdateProps, proxy, signal } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Domain } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
@@ -114,10 +114,11 @@ export class PropertyDefinition extends Component {
         record: { type: Object, optional: true },
     };
 
+    propertyDefinitionRef = signal(null);
+
     setup() {
         this.orm = useService("orm");
 
-        this.propertyDefinitionRef = useRef("propertyDefinition");
         this.addDialog = useOwnedDialogs();
 
         const defaultDefinition = {
@@ -153,7 +154,7 @@ export class PropertyDefinition extends Component {
                 return;
             }
             this.labelFocused = true;
-            const labelInput = this.propertyDefinitionRef.el.querySelectorAll("input")[0];
+            const labelInput = this.propertyDefinitionRef()?.querySelectorAll("input")[0];
             if (labelInput) {
                 if (this.props.isNewlyCreated) {
                     labelInput.select();

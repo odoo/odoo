@@ -1,10 +1,10 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { getColor, hexToRGBA, getCustomColor } from "@web/core/colors/colors";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, signal } from "@odoo/owl";
 import { cookie } from "@web/core/browser/cookie";
 
 const colorScheme = cookie.get("color_scheme");
@@ -17,9 +17,10 @@ export class JournalDashboardGraphField extends Component {
         graphType: String,
     };
 
+    canvasRef = signal(null);
+
     setup() {
         this.chart = null;
-        this.canvasRef = useRef("canvas");
         this.data = JSON.parse(this.props.record.data[this.props.name]);
 
         onWillStart(async () => await loadBundle("web.chartjs_lib"));
@@ -48,7 +49,7 @@ export class JournalDashboardGraphField extends Component {
         } else if (this.props.graphType === "bar") {
             config = this.getBarChartConfig();
         }
-        this.chart = new Chart(this.canvasRef.el, config);
+        this.chart = new Chart(this.canvasRef(), config);
     }
     getLineChartConfig() {
         const labels = this.data[0].values.map(function (pt) {

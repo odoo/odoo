@@ -1,4 +1,4 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useExternalListener } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
@@ -23,6 +23,7 @@ import {
     onWillStart,
     onPatched,
     proxy,
+    signal,
     useListener,
 } from "@odoo/owl";
 
@@ -33,6 +34,11 @@ export class AnalyticDistribution extends Component {
         Record,
         Field,
     }
+
+    widgetRef = signal(null);
+    dropdownRef = signal(null);
+    mainRef = signal(null);
+    addLineButton = signal(null);
 
     static props = {
         ...standardFieldProps,
@@ -57,11 +63,7 @@ export class AnalyticDistribution extends Component {
             update_plan: {},
         });
 
-        this.widgetRef = useRef("analyticDistribution");
-        this.dropdownRef = useRef("analyticDropdown");
-        this.mainRef = useRef("mainElement");
-        this.addLineButton = useRef("addLineButton");
-        usePosition("analyticDropdown", () => this.widgetRef.el);
+        usePosition(this.dropdownRef, () => this.widgetRef());
 
         this.nextId = 1;
         this.focusSelector = false;
@@ -88,12 +90,12 @@ export class AnalyticDistribution extends Component {
             isToMany: false,
             onRecordSaved: async (record) => {
                 if (!this.props.record.model.multiEdit) {
-                    this.mainRef.el.focus();
+                    this.mainRef()?.focus();
                 }
             },
             onClose: () => {
                 if (!this.props.record.model.multiEdit) {
-                    this.mainRef.el.focus();
+                    this.mainRef()?.focus();
                 }
             },
             fieldString: _t("Analytic Distribution Model"),
@@ -446,7 +448,7 @@ export class AnalyticDistribution extends Component {
     }
 
     get isDropdownOpen() {
-        return this.state.showDropdown && !!this.dropdownRef.el;
+        return this.state.showDropdown && !!this.dropdownRef();
     }
 
     // actions
@@ -523,7 +525,7 @@ export class AnalyticDistribution extends Component {
         // focus to the main Element but the dropdown should not open
         this.preventOpen = true;
         this.closeAnalyticEditor();
-        this.mainRef.el.focus();
+        this.mainRef()?.focus();
         this.preventOpen = false;
     }
 
@@ -568,7 +570,12 @@ export class AnalyticDistribution extends Component {
 
     focusToSelector() {
         if (this.focusSelector && this.isDropdownOpen) {
-            this.focus(this.adjacentElementToFocus("next", this.dropdownRef.el.querySelector(this.focusSelector)));
+            this.focus(
+                this.adjacentElementToFocus(
+                    "next",
+                    this.dropdownRef()?.querySelector(this.focusSelector)
+                )
+            );
         }
         this.focusSelector = false;
     }
@@ -582,7 +589,7 @@ export class AnalyticDistribution extends Component {
             return null;
         }
         if (!el) {
-            el = this.dropdownRef.el;
+            el = this.dropdownRef();
         }
         return direction == "next" ? getNextTabableElement(el) : getPreviousTabableElement(el);
     }
@@ -621,7 +628,11 @@ export class AnalyticDistribution extends Component {
                     const closestCell = ev.target.closest("td, th");
                     const row = closestCell.parentElement;
                     const line = this.state.formattedData[parseInt(row.id)];
-                    if (this.adjacentElementToFocus("next") == this.addLineButton.el && line && this.lineIsValid(line)) {
+                    if (
+                        this.adjacentElementToFocus("next") == this.addLineButton() &&
+                        line &&
+                        this.lineIsValid(line)
+                    ) {
                         this.addLine();
                         break;
                     }
@@ -672,12 +683,15 @@ export class AnalyticDistribution extends Component {
             ".o_popover",
             ".modal:not(.o_inactive_modal):not(:has(.o_act_window))",
         ];
-        if (this.isDropdownOpen
-            && !this.widgetRef.el.contains(ev.target)
-            && (!ev.target.closest(selectors.join(",")) ||
-                document.querySelector(".modal:not(.o_inactive_modal)").contains(this.widgetRef.el))
-            && !ev.target.isSameNode(document.documentElement)
-           ) {
+        const widgetEl = this.widgetRef();
+        if (
+            this.isDropdownOpen &&
+            widgetEl &&
+            !widgetEl.contains(ev.target) &&
+            (!ev.target.closest(selectors.join(",")) ||
+                document.querySelector(".modal:not(.o_inactive_modal)").contains(widgetEl)) &&
+            !ev.target.isSameNode(document.documentElement)
+        ) {
             this.forceCloseEditor();
         }
     }

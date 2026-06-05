@@ -8,7 +8,7 @@
             <t t-else="">
                 <t t-call="web.SettingsPage.SidePanel.Regular"/>
             </t>
-            <div class="settings" t-custom-ref="settings">
+            <div class="settings" t-ref="this.settingsRef">
                 <t t-call-slot="NoContentHelper" t-if="this.props.slots['NoContentHelper'].isVisible"/>
                 <t t-call-slot="default" selectedTab="this.state.selectedTab"/>
             </div>

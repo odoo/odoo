@@ -1,5 +1,5 @@
 import { onWillRender, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, props, proxy, signal, t } from "@odoo/owl";
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
@@ -66,13 +66,13 @@ export class ColorPicker extends Component {
         useDefaultThemeColors: t.boolean().optional(true),
         onEscape: t.function().optional(() => () => {}),
     });
+    rootRef = signal(null);
 
     setup() {
         this.tabs = registry
             .category("color_picker_tabs")
             .getAll()
             .filter((tab) => this.props.enabledTabs.includes(tab.id));
-        this.root = useRef("root");
 
         this.DEFAULT_COLORS = DEFAULT_COLORS;
         this.grayscales = Object.assign({}, DEFAULT_GRAYSCALES, this.props.grayscales);
@@ -215,7 +215,7 @@ export class ColorPicker extends Component {
     }
     getTarget(ev) {
         const target = ev.target.closest(`[data-color]`);
-        return this.root.el.contains(target) ? target : ev.target;
+        return this.rootRef()?.contains(target) ? target : ev.target;
     }
 
     onColorFocusin(ev) {
@@ -322,7 +322,7 @@ export class ColorPicker extends Component {
         const previousTarget = ev.relatedTarget;
         const parentIframe = previousTarget?.ownerDocument?.defaultView?.frameElement;
         const mouseEnteredFromWithinPicker =
-            this.root.el.contains(previousTarget) || this.root.el.contains(parentIframe);
+            this.rootRef()?.contains(previousTarget) || this.rootRef()?.contains(parentIframe);
         // Re-apply the current preview only when the mouse genuinely
         // re-enters the picker from outside. Moving between internal
         // boundaries (like iframe inputs) should not reset previews.

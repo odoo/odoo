@@ -1,11 +1,10 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { CopyButton } from "@web/core/copy_button/copy_button";
 import { Dialog } from "@web/core/dialog/dialog";
 import { EmailSharingInput } from "./email_sharing_input";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 export class SlideShareDialog extends Component {
     static template = "website_slides.SlideShareDialog";
@@ -23,8 +22,9 @@ export class SlideShareDialog extends Component {
         url: { type: String },
     };
 
+    codeInputRef = signal(null);
+
     setup() {
-        this.codeInput = useRef("codeInput");
         this.copyUrlText = _t("Copy Link");
         this.copyEmbedCodeText = _t("Copy Embed Code");
         this.successText = _t("Copied");
@@ -36,7 +36,11 @@ export class SlideShareDialog extends Component {
 
     onPageChange(event) {
         const page = event.currentTarget.value;
-        const newEmbedCodeValue = this.codeInput.el.value.replace(/(page=).*?([^\d]+)/, "$1" + page + "$2");
-        this.codeInput.el.value = newEmbedCodeValue;
+        const el = this.codeInputRef();
+        if (!el) {
+            return;
+        }
+        const newEmbedCodeValue = el.value.replace(/(page=).*?([^\d]+)/, "$1" + page + "$2");
+        el.value = newEmbedCodeValue;
     }
 }

@@ -12,7 +12,7 @@
             'o-hasVideo': this.channel.videoCount > 0,
             'o-selfInCall': this.isActiveCall,
             'border-bottom': !this.isActiveCall,
-        }" t-custom-ref="root">
+        }" t-ref="this.rootRef">
             <div class="o-discuss-Call-main d-flex flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin" t-on-mouseleave="this.onMouseleaveMain">
                 <BlurPerformanceWarning t-if="this.store.settings.blurPerformanceWarning"/>
                 <CallPresentationBar t-if="this.rtc.selfSession and this.isAnyonePresenting" />
@@ -22,7 +22,7 @@
                     t-attf-style="--height:{{this.state.tileHeight}}px; --width:{{this.state.tileWidth}}px;"
                     t-on-click="() => this.showOverlay()"
                     t-on-mousemove="this.onMousemoveMain"
-                    t-custom-ref="grid"
+                    t-ref="this.gridRef"
                 >
                     <CallParticipantCard t-foreach="this.visibleMainCards.slice(0,6)" t-as="cardData" t-key="cardData.key"
                         cardData="cardData"

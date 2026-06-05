@@ -1,6 +1,5 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, props, proxy, signal, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Domain } from "@web/core/domain";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
@@ -31,11 +30,12 @@ export class DomainSelectorDialog extends Component {
         context: t.object().optional({}),
     });
 
+    confirmButtonRef = signal(null);
+
     setup() {
         this.notification = useService("notification");
         this.orm = useService("orm");
         this.state = proxy({ domain: this.props.domain });
-        this.confirmButtonRef = useRef("confirm");
     }
 
     get confirmButtonText() {
@@ -72,7 +72,10 @@ export class DomainSelectorDialog extends Component {
     }
 
     async onConfirm() {
-        this.confirmButtonRef.el.disabled = true;
+        const confirmEl = this.confirmButtonRef();
+        if (confirmEl) {
+            confirmEl.disabled = true;
+        }
         let domain;
         let isValid;
         try {
@@ -88,8 +91,9 @@ export class DomainSelectorDialog extends Component {
             });
         }
         if (!isValid) {
-            if (this.confirmButtonRef.el) {
-                this.confirmButtonRef.el.disabled = false;
+            const el = this.confirmButtonRef();
+            if (el) {
+                el.disabled = false;
             }
             this.notification.add(_t("Domain is invalid. Please correct it"), {
                 type: "danger",

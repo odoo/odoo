@@ -2,9 +2,8 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
-import { useChildRef } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
-import { Component, props, t } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
@@ -21,9 +20,10 @@ export class PhoneField extends Component {
     props = props(phoneFieldProps);
     static components = { Dropdown, DropdownItem };
 
+    inputRef = signal(null);
+
     setup() {
-        this.input = useChildRef();
-        useInputField({ getValue: () => this.value || "" });
+        useInputField({ ref: this.inputRef, getValue: () => this.value || "" });
     }
 
     get value() {

@@ -1,11 +1,11 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { Component, onMounted, status, proxy } from "@odoo/owl";
+import { Component, onMounted, signal, status, proxy } from "@odoo/owl";
 import { loadIframe } from "@mail/convert_inline/iframe_utils";
 import { MailPreviewRecordField } from "@mail/views/web/fields/mail_preview_record_field/mail_preview_record_field";
 import { MailingPreviewDisplayModeToggle } from "../mailing_preview_mode_toggle/mailing_preview_mode_toggle";
@@ -21,15 +21,16 @@ export class MailingPreviewIframe extends Component {
         MailingPreviewDisplayModeToggle,
     };
 
+    iframeRef = signal(null);
+
     setup() {
         this.state = proxy(this.env.displayState);
         this.action = useService("action");
         this.ui = useService("ui");
-        this.iframeRef = useRef("iframeRef");
         this.iframeLoaded = Promise.withResolvers();
 
         onMounted(() => {
-            loadIframe(this.iframeRef.el, (iframe) => {
+            loadIframe(this.iframeRef(), (iframe) => {
                 iframe.contentDocument.head.appendChild(this.renderHeadContent());
                 iframe.contentDocument.body.appendChild(this.renderBodyContent());
                 this.iframeLoaded.resolve();
@@ -39,7 +40,7 @@ export class MailingPreviewIframe extends Component {
         useLayoutEffect(
             () => {
                 this.iframeLoaded.promise.then(() => {
-                    this.iframeRef.el?.contentDocument.body.replaceChildren(
+                    this.iframeRef()?.contentDocument.body.replaceChildren(
                         this.renderBodyContent()
                     );
                 });
@@ -63,7 +64,7 @@ export class MailingPreviewIframe extends Component {
         });
 
         const updateIframeSize = () => {
-            const iframe = this.iframeRef.el;
+            const iframe = this.iframeRef();
             if (this.state.isMobileMode) {
                 // same styling for mobile as we have in 'mass_mailing_iframe'
                 iframe.style.width = "367px";

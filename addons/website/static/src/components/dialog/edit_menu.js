@@ -3,7 +3,7 @@ import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from "@website/js/utils";
 import { WebsiteDialog } from "./dialog";
-import { Component, onWillStart, useEffect, proxy, useApp } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, useApp, useEffect } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { isEmail } from "@web/core/utils/strings";
@@ -69,12 +69,14 @@ export class MenuDialog extends Component {
         close: Function,
     };
 
+    autofocusRef = signal(null);
+    urlInputRef = signal(null);
+
     setup() {
         this.website = useService("website");
         this.title = this.props.isMegaMenu ? _t("Mega menu item") : _t("Menu item");
-        useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
 
-        this.urlInputRef = useRef("url-input");
         this.urlInputEdited = !!this.props.url;
 
         this.state = proxy({
@@ -115,7 +117,7 @@ export class MenuDialog extends Component {
                 );
                 return () => unmountAutocompleteWithPages();
             },
-            () => [this.urlInputRef.el]
+            () => [this.urlInputRef()]
         );
     }
 
