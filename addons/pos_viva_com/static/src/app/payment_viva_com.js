@@ -47,7 +47,7 @@ export class PaymentVivaCom extends PaymentInterface {
     }
 
     getCashRegisterId() {
-        return this.pos.getCashier().name?.trim() || this.pos.config.name;
+        return this.pos.getCashier?.().name?.trim() || this.pos.config.name;
     }
 
     _call_viva_com(data, action, paymentLine) {
