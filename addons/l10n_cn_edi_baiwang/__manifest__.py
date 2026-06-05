@@ -15,17 +15,18 @@ Features:
 - Periodic status polling for pending red form confirmations
 - Support for both digital (01/02) and tax-controlled (004/007/026/028) invoice types
     """,
-    'depends': ['l10n_cn', 'account'],
+    'depends': ['l10n_cn', 'account', 'iap', 'account_edi_proxy_client'],
     'auto_install': ['l10n_cn'],
     'data': [
         'data/ir_cron.xml',
 
-        'security/ir.model.access.csv',
-
+        'data/l10n_cn_edi.tax.category.csv',
         'views/account_move_view.xml',
         'views/account_move_reversal_view.xml',
+        'views/account_tax_view.xml',
         'views/product_template_view.xml',
         'views/res_config_settings_view.xml',
+        'security/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'demo': [

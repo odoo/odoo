@@ -38,6 +38,7 @@ class AccountMove(models.Model):
     # Blue invoice fields
     l10n_cn_baiwang_state = fields.Selection(
         selection=BAIWANG_STATES,
+        default='not_sent',
         string="Baiwang Status",
         copy=False,
     )
@@ -45,6 +46,7 @@ class AccountMove(models.Model):
         selection=INVOICE_TYPE_CODES,
         string="Fapiao Type",
         default='02',
+        required=True,
         help="Type of e-Fapiao to issue: '01' for special (专票) or '02' for general (普票).",
     )
     l10n_cn_baiwang_invoice_no = fields.Char(string="Baiwang Fapiao Number", copy=False, readonly=True)
@@ -73,8 +75,61 @@ class AccountMove(models.Model):
 
     # Computed
     l10n_cn_baiwang_is_needed = fields.Boolean(compute='_compute_l10n_cn_baiwang_is_needed')
+    l10n_cn_baiwang_red_form_required = fields.Boolean(
+        compute='_compute_l10n_cn_baiwang_red_form_required',
+    )
+    l10n_cn_baiwang_date_consistency_warning = fields.Char(
+        string="Date Consistency Warning",
+        compute='_compute_l10n_cn_baiwang_date_consistency_warning',
+    )
+
+    l10n_cn_buyer_bank_id = fields.Many2one(
+        comodel_name='res.partner.bank',
+        string="Buyer Bank Account",
+        compute='_compute_l10n_cn_buyer_bank_id',
+        store=True,
+        readonly=False,
+        domain="[('partner_id', '=', partner_id)]",
+        help="The customer's bank account to be printed on the Chinese Baiwang E-Fapiao."
+    )
+    l10n_cn_baiwang_red_form_uuid = fields.Char(
+        string="Red Form UUID", 
+        compute='_compute_l10n_cn_baiwang_latest_edi_data'
+    )
+    l10n_cn_baiwang_red_form_number = fields.Char(
+        string="Red Form Number", 
+        compute='_compute_l10n_cn_baiwang_latest_edi_data'
+    )
+    l10n_cn_baiwang_red_form_status = fields.Selection(
+        selection=[
+            ('draft', 'Draft'),
+            ('red_form_pending', 'Red Form Pending'),
+            ('red_form_confirmed', 'Red Form Confirmed'),
+            ('failed', 'Failed'),
+        ],
+        string="Red Form Status",
+        compute='_compute_l10n_cn_baiwang_latest_edi_data'
+    )
 
     # ─── Computed Methods ───────────────────────────────────────────────
+
+    @api.depends(
+        'l10n_cn_edi_document_ids.state', 
+        'l10n_cn_edi_document_ids.baiwang_uuid', 
+        'l10n_cn_edi_document_ids.baiwang_red_form_number'
+    )
+    def _compute_l10n_cn_baiwang_latest_edi_data(self):
+        for move in self:
+            if move.l10n_cn_edi_document_ids:
+                # Safely sort and grab the most recently created tracking document
+                latest = move.l10n_cn_edi_document_ids.sorted('create_date', reverse=True)[0]
+                move.l10n_cn_baiwang_red_form_uuid = latest.baiwang_uuid
+                move.l10n_cn_baiwang_red_form_number = latest.baiwang_red_form_number
+                move.l10n_cn_baiwang_red_form_status = latest.state
+            else:
+                move.l10n_cn_baiwang_red_form_uuid = False
+                move.l10n_cn_baiwang_red_form_number = False
+                move.l10n_cn_baiwang_red_form_status = False
 
     @api.depends('country_code', 'move_type', 'state', 'l10n_cn_baiwang_state')
     def _compute_l10n_cn_baiwang_is_needed(self):
@@ -86,11 +141,56 @@ class AccountMove(models.Model):
                 and move.l10n_cn_baiwang_state not in ('issued', 'sent')
             )
 
+    @api.depends(
+        'country_code',
+        'move_type',
+        'state',
+        'l10n_cn_baiwang_original_invoice_id.l10n_cn_baiwang_invoice_no',
+        'reversed_entry_id.l10n_cn_baiwang_invoice_no',
+    )
+    def _compute_l10n_cn_baiwang_red_form_required(self):
+        for move in self:
+            original_move = move.l10n_cn_baiwang_original_invoice_id or move.reversed_entry_id
+            move.l10n_cn_baiwang_red_form_required = bool(
+                move.country_code == 'CN'
+                and move.move_type == 'out_refund'
+                and move.state == 'draft'
+                and original_move
+                and original_move.l10n_cn_baiwang_invoice_no,
+            )
+
+    @api.depends('invoice_date', 'l10n_cn_baiwang_invoice_date', 'l10n_cn_baiwang_invoice_no')
+    def _compute_l10n_cn_baiwang_date_consistency_warning(self):
+        warning_msg = self.env._(
+            "Invoice Date is different from Fapiao Date. Please be aware of the consistency between E-fapiao Date and Odoo Invoice Date.",
+        )
+        for move in self:
+            move.l10n_cn_baiwang_date_consistency_warning = False
+            if (
+                move.move_type != 'out_invoice'
+                or not move.l10n_cn_baiwang_invoice_no
+                or not move.invoice_date
+                or not move.l10n_cn_baiwang_invoice_date
+                or len(move.l10n_cn_baiwang_invoice_date) < 8
+            ):
+                continue
+            fapiao_yyyymmdd = move.l10n_cn_baiwang_invoice_date[:8]
+            if move.invoice_date.strftime('%Y%m%d') != fapiao_yyyymmdd:
+                move.l10n_cn_baiwang_date_consistency_warning = warning_msg
+
     def _l10n_cn_baiwang_generate_serial_no(self, prefix: str) -> str:
         """Generate a stable, human-readable request serial to send to Baiwang."""
         self.ensure_one()
         timestamp = fields.Datetime.now().strftime('%Y%m%d%H%M%S')
         return f"{prefix}_{self.id}_{timestamp}"
+
+    @api.depends('partner_id')
+    def _compute_l10n_cn_buyer_bank_id(self):
+        for move in self:
+            if move.partner_id and move.partner_id.bank_ids:
+                move.l10n_cn_buyer_bank_id = move.partner_id.bank_ids[0]
+            else:
+                move.l10n_cn_buyer_bank_id = False
 
     # ─── Blue Invoice Issuance ──────────────────────────────────────────
 
@@ -102,8 +202,8 @@ class AccountMove(models.Model):
         self.ensure_one()
         company = self.company_id
 
-        if not company.l10n_cn_baiwang_app_key:
-            raise UserError(self.env._("Baiwang API credentials are not configured. Please go to Settings > Invoicing > China Electronic Invoicing (Baiwang)."))
+        if company.l10n_cn_baiwang_subscription_status != 'authorized':
+            raise UserError(self.env._("Baiwang is not authorized. Please go to Settings."))
 
         client = BaiwangClient(company)
 
@@ -206,7 +306,6 @@ class AccountMove(models.Model):
         if self.partner_id.phone:
             invoice_data['buyerPhone'] = self.partner_id.phone
 
-
         return invoice_data
 
     def _l10n_cn_baiwang_prepare_lines(self) -> list:
@@ -226,7 +325,7 @@ class AccountMove(models.Model):
                 'goodsLineNo': index,
                 'invoiceLineNature': '0',  # 0=normal line
                 'goodsName': line.product_id.name or line.name or '',
-                'goodsCode': line.product_id.l10n_cn_tax_category_code or '1010101070000000000',
+                'goodsCode': line.product_id.l10n_cn_tax_category_id.code or '1010101070000000000',
                 'goodsTaxRate': tax_rate,
                 'goodsTotalPrice': round(line.price_subtotal, 2),
                 'goodsTotalTax': round(line.price_total - line.price_subtotal, 2),
@@ -255,8 +354,8 @@ class AccountMove(models.Model):
 
         if self.move_type != 'out_refund':
             raise UserError(self.env._("Red Form can only be requested for Credit Notes."))
-        if self.state != 'posted':
-            raise UserError(self.env._("Credit Note must be posted before requesting a Red Form."))
+        if self.state != 'draft':
+            raise UserError(self.env._("Credit Note must be in draft before requesting a Red Form."))
         if not self.l10n_cn_baiwang_red_form_type:
             raise UserError(self.env._("Please select a Red Form Reason before requesting."))
 
@@ -407,7 +506,7 @@ class AccountMove(models.Model):
             line_data = {
                 'originalInvoiceDetailNo': index,
                 'goodsLineNo': index,
-                'goodsCode': line.product_id.l10n_cn_tax_category_code or '1010101070000000000',
+                'goodsCode': line.product_id.l10n_cn_tax_category_id.code or '1010101070000000000',
                 'goodsName': line.product_id.name or line.name or '',
                 'goodsSimpleName': '',
                 'projectName': line.product_id.name or line.name or '',

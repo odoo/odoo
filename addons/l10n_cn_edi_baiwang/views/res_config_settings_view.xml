@@ -7,44 +7,57 @@
         <field name="arch" type="xml">
             <xpath expr="//block[@id='account_vendor_bills']" position="after">
                 <block title="China Electronic Invoicing (Baiwang)" id="china_edi" invisible="country_code != 'CN'">
-                    <setting string="Baiwang Integration Mode" company_dependent="1" help="Configure Baiwang e-Fapiao integration for automated invoice issuance.">
+                    <setting string="Baiwang Integration Mode" company_dependent="1">
                         <div class="content-group">
                             <field name="l10n_cn_edi_mode" widget="radio"/>
                         </div>
-                        <div class="mt8 text-muted" invisible="l10n_cn_edi_mode == 'prod'">
-                            In Test mode, e-Fapiao requests are sent to the Baiwang sandbox environment.
-                        </div>
-                        <div class="content-group mt16" invisible="not l10n_cn_edi_mode">
-                            <div class="row mt8">
-                                <label for="l10n_cn_baiwang_app_key" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_cn_baiwang_app_key" placeholder="10000000"/>
+                        <div class="mt8" invisible="l10n_cn_edi_mode == 'prod'"> In Test mode, e-Fapiao requests are sent to the Baiwang sandbox environment. </div>
+                        <div class="content-group" invisible="not l10n_cn_edi_mode">
+                            <div class="row mt8" groups="base.group_no_one">
+                                <label for="l10n_cn_baiwang_org_auth_code" class="col-lg-4"/>
+                                <field name="l10n_cn_baiwang_org_auth_code" placeholder="c7ed317328e8888afeeb2ac59c1b5436" readonly="1"/>
                             </div>
-                            <div class="row mt8">
-                                <label for="l10n_cn_baiwang_app_secret" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_cn_baiwang_app_secret" password="True" placeholder="0e32b1ce-b0e7-4b45-a4de-07a2fbc3147a"/>
+                            <div class="row">
+                                <label for="l10n_cn_baiwang_subscription_status" class="col-lg-4"/>
+                                <field name="l10n_cn_baiwang_subscription_status" readonly="1"/>
+                                <button invisible="l10n_cn_baiwang_subscription_status != 'not_subscribed'"
+                                    type="object"
+                                    name="action_l10n_cn_baiwang_subscribe"
+                                    string="Subscribe to Baiwang"
+                                    class="btn-primary"
+                                    icon="fa-external-link"/>
                             </div>
-                            <div class="row mt8">
-                                <label for="l10n_cn_baiwang_username" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_cn_baiwang_username" placeholder="user"/>
+                            <!-- <div class="row mt8">
+                                <label for="l10n_cn_baiwang_proxy_user_id" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_cn_baiwang_proxy_user_id" readonly="1"/>
+                            </div> -->
+                            <div class="mt16" invisible="l10n_cn_baiwang_subscription_status != 'subscribed'">
+                                <button name="action_l10n_cn_baiwang_authorize"
+                                    type="object"
+                                    string="Authorize Odoo to use Baiwang"
+                                    class="btn-primary"
+                                    icon="fa-key"/>
+                                <div class="mt8 text-muted"> After clicking authorize, check your email and approve the Baiwang authorization request. </div>
                             </div>
-                            <div class="row mt8">
-                                <label for="l10n_cn_baiwang_password" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_cn_baiwang_password" password="True" placeholder="password (hashed automatically)"/>
-                            </div>
-                            <div class="row mt8">
-                                <label for="l10n_cn_baiwang_salt" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_cn_baiwang_salt" password="True" placeholder="0895205868F79DAF65C08C97A44302BB "/>
-                            </div>
-                            <div class="row mt8">
-                                <label for="l10n_cn_baiwang_org_auth_code" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_cn_baiwang_org_auth_code" placeholder="c7ed317328e8888afeeb2ac59c1b5436"/>
-                            </div>
-                            <div class="mt16">
+                            <div class="mt16 text-success" invisible="l10n_cn_baiwang_subscription_status != 'authorized'">
+                                <i class="fa fa-check-circle"/> Baiwang is connected. </div>
+                            <div class="mt16" groups="base.group_no_one">
+                                <button name="action_l10n_cn_baiwang_register_proxy_user"
+                                    type="object"
+                                    string="Register Proxy User"
+                                    class="btn-secondary"
+                                    icon="fa-id-card"/>
                                 <button name="action_l10n_cn_baiwang_test_connection"
-                                        type="object"
-                                        string="Test Connection"
-                                        class="btn-primary"
-                                        icon="fa-plug"/>
+                                    type="object"
+                                    string="Test Connection"
+                                    class="btn-primary"
+                                    icon="fa-plug"
+                                    invisible="l10n_cn_baiwang_subscription_status != 'authorized'"/>
+                                <button name="action_l10n_cn_baiwang_sync_registration_status"
+                                    type="object"
+                                    string="Sync Registration Status"
+                                    class="btn-secondary"
+                                    icon="fa-refresh"/>
                             </div>
                         </div>
                     </setting>

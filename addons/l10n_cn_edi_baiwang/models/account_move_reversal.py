@@ -28,7 +28,7 @@ class AccountMoveReversal(models.TransientModel):
                 wizard.country_code == 'CN'
                 and wizard.move_type == 'out_invoice'
                 and bool(wizard.move_ids)
-                and bool(wizard.company_id.l10n_cn_baiwang_app_key)
+                and wizard.company_id.l10n_cn_baiwang_subscription_status == 'authorized'
             )
 
     @api.onchange('l10n_cn_baiwang_red_form_type')

@@ -15,7 +15,6 @@ class AccountMoveSend(models.AbstractModel):
             and move.move_type == 'out_invoice'
             and move.state == 'posted'
             and move.l10n_cn_baiwang_state not in ('issued', 'sent')
-            and move.company_id.l10n_cn_baiwang_app_key
         )
 
     def _get_all_extra_edis(self):
@@ -23,7 +22,7 @@ class AccountMoveSend(models.AbstractModel):
         res = super()._get_all_extra_edis()
         res.update({
             'cn_baiwang': {
-                'label': self.env._("by Baiwang (Issue E-Fapiao)"),
+                'label': self.env._("by Baiwang"),
                 'is_applicable': self._is_cn_baiwang_applicable,
                 'help': self.env._("Submit the invoice to Baiwang for official Chinese e-Fapiao issuance."),
             },
