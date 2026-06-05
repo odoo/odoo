@@ -91,5 +91,11 @@ export class ProductAttribute extends models.ServerModel {
             display_type: "radio",
             create_variant: "no_variant",
         },
+        {
+            id: 12,
+            name: "Engraving",
+            display_type: "radio",
+            create_variant: "dynamic",
+        },
     ];
 }
