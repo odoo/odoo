@@ -462,13 +462,19 @@ export class KanbanController extends Component {
     }
 
     get isNewButtonAvailableOffline() {
-        if (this.props.archInfo.activeActions.quickCreate) {
+        const { onCreate } = this.props.archInfo;
+        if (this.canQuickCreate && onCreate === "quick_create") {
             return this.offlineService.isAvailableOffline(
                 this.env.config.actionId,
                 "kanban_quick_create",
                 false
             );
         }
+
+        if (onCreate && onCreate !== "quick_create") {
+            return false;
+        }
+
         return this.offlineService.isAvailableOffline(this.env.config.actionId, "form", false);
     }
 
