@@ -60,7 +60,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
         );
         // table strategy
         this.addToStyleSheet(
-            ".o-ci-hybrid-fluid-table-row, .o-ci-hybrid-fluid-table-row tbody, .o-ci-hybrid-fluid-table-row tr, .o-ci-hybrid-fluid-table-row td",
+            ".o-ci-hybrid-fluid-table, .o-ci-hybrid-fluid-table > tbody, .o-ci-hybrid-fluid-table-row, .o-ci-hybrid-fluid-table-cell",
             {
                 display: { value: "block", priority: "important" },
                 width: { value: "100%", priority: "important" },

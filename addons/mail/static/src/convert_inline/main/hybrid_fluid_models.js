@@ -101,6 +101,9 @@ export class HybridFluidTableRow extends LayoutModel {
         });
         super(options);
         this.setAttributes({
+            classNames: "o-ci-hybrid-fluid-table",
+        });
+        this.setAttributes({
             classNames: "o-ci-hybrid-fluid-table-row",
         });
     }
