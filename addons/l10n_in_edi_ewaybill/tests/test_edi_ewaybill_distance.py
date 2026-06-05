@@ -57,9 +57,11 @@ class TestEdiEwaybillJson(TestEdiJson):
 
     def test_edi_distance(self):
         # Sub-test: Extract `Distance` when multiple alerts in response
+        partner_shipping_id = self.invoice.partner_shipping_id.copy({"zip": "500002"}).id
+
         with self.subTest(scenario="Extract distance when multiple alerts in response"):
             expected_distance = 118
-            copy_invoice = self.invoice.copy()
+            copy_invoice = self.invoice.copy({"partner_shipping_id": partner_shipping_id})
             copy_invoice.write({
                 "l10n_in_type_id": self.env.ref("l10n_in_edi_ewaybill.type_tax_invoice_sub_type_supply").id,
                 "l10n_in_distance": 0,
@@ -78,7 +80,7 @@ class TestEdiEwaybillJson(TestEdiJson):
         # Sub-test: Extract `Distance` when single alert in response
         with self.subTest(scenario="Extract distance when single alert in response"):
             expected_distance = 222
-            copy_invoice = self.invoice.copy()
+            copy_invoice = self.invoice.copy({"partner_shipping_id": partner_shipping_id})
             copy_invoice.write({
                 "l10n_in_type_id": self.env.ref("l10n_in_edi_ewaybill.type_tax_invoice_sub_type_supply").id,
                 "l10n_in_distance": 0,
