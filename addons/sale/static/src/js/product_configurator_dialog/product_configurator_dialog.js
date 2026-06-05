@@ -17,7 +17,8 @@ export const productConfiguratorDialogOptionsShape = {
 export const productConfiguratorDialogProps = {
     productTemplateId: t.number(),
     ptavIds: t.array(t.number()),
-    preloadedData: t.object(),
+    products: t.array(),
+    optionalProducts: t.array(),
     customPtavs: t.array(
         t.object({
             id: t.number(),
@@ -85,20 +86,14 @@ export class ProductConfiguratorDialog extends Component {
         });
 
         onWillStart(async () => {
-            const {
-                products,
-                optional_products,
-                currency_id,
-            } = this.props.preloadedData;
-
             // If the product configurator is opened after the combo configurator (which happens if
             // a combo product has optional products), `_loadData` will return a single product
             // (i.e. the combo product), which should be linked to the previously selected combo
             // items.
-            products[0].selectedComboItems = this.props.selectedComboItems || [];
+            this.props.products[0].selectedComboItems = this.props.selectedComboItems || [];
 
-            this.state.products = products;
-            this.state.optionalProducts = optional_products;
+            this.state.products = this.props.products;
+            this.state.optionalProducts = this.props.optional_products;
             for (const customPtav of this.props.customPtavs) {
                 this._updatePTAVCustomValue(
                     this.env.mainProductTmplId,
@@ -108,7 +103,7 @@ export class ProductConfiguratorDialog extends Component {
             }
             this._checkExclusions(this.state.products[0]);
             // Use the currency id retrieved from the server if none was provided in the props.
-            this.currency.id ??= currency_id;
+            this.currency.id ??= this.props.currency_id;
         });
 
         onMounted(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:ADD"));

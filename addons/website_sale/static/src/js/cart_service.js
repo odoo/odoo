@@ -349,10 +349,17 @@ export class CartService {
         additionalData
     ) {
         return await new Promise((resolve) => {
+            const {
+                products,
+                optional_products,
+                currency_id,
+            } = options.preloadedData;
             this.dialog.add(ProductConfiguratorDialog, {
                 productTemplateId: productTemplateId,
                 ptavIds: combination,
-                preloadedData: options.preloadedData,
+                products: products,
+                optional_products: optional_products,
+                currency_id: currency_id,
                 customPtavs: productCustomAttributeValues.map(customPtav => ({
                     id: customPtav.custom_product_template_attribute_value_id,
                     value: customPtav.custom_value,

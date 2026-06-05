@@ -89,10 +89,17 @@ export class ComboConfiguratorDialog extends Component {
                     ptav_ids:  product.selectedPtavIds,
                     ...this._getAdditionalDialogProps(),
                 });
+            const {
+                products,
+                optional_products,
+                currency_id,
+            } = preloadedData;
             this.dialog.add(ProductConfiguratorDialog, {
                 productTemplateId: product.product_tmpl_id,
                 ptavIds: product.selectedPtavIds,
-                preloadedData: preloadedData,
+                products: products,
+                optional_products: optional_products,
+                currency_id: currency_id,
                 customPtavs: product.selectedCustomPtavs,
                 quantity: 1,
                 companyId: this.props.company_id,

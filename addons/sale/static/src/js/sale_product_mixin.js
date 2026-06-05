@@ -149,11 +149,17 @@ export const saleProductMixin = () => ({
             ptavIds.push(...this._getNoVariantPtavIds(saleOrderLine));
             customPtavs = await this._getCustomPtavs(saleOrderLine);
         }
-
+        const {
+            products,
+            optional_products,
+            currency_id,
+        } = preloadedData;
         this.dialog.add(ProductConfiguratorDialog, {
             productTemplateId: saleOrderLine.product_template_id.id,
             ptavIds: ptavIds,
-            preloadedData: preloadedData,
+            products: products,
+            optional_products: optional_products,
+            currency_id: currency_id,
             customPtavs: customPtavs,
             quantity: saleOrderLine.product_uom_qty,
             productUOMId: saleOrderLine.product_uom_id.id,

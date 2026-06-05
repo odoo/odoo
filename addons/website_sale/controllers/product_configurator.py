@@ -14,20 +14,21 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         website=True,
         readonly=True,
     )
-    def website_sale_product_configurator_get_values(self, *args, **kwargs):
+    def website_sale_product_configurator_get_values(
+        self, product_template_id=None, is_product_configured=False, *args, **kwargs
+    ):
         self._populate_currency_and_pricelist(kwargs)
-
-        product_template_id = kwargs.get("product_template_id")
-        is_product_configured = kwargs.get("is_product_configured", False)
-
         should_show = self.website_sale_should_show_product_configurator(
             product_template_id, is_product_configured
         )
-
         if not should_show:
             return False
-
-        return super().sale_product_configurator_get_values(*args, **kwargs)
+        return super().sale_product_configurator_get_values(
+            product_template_id=product_template_id,
+            is_product_configured=is_product_configured,
+            *args,
+            **kwargs,
+        )
 
     def website_sale_should_show_product_configurator(
         self, product_template_id, is_product_configured
