@@ -25,7 +25,7 @@
                                     (<span t-out="timesheets._timesheet_convert_sol_uom(sol, 'uom.product_uom_day')" t-options='{"widget": "timesheet_uom"}'></span> Days Ordered, <span t-out="timesheets._convert_hours_to_days(sol.remaining_hours)" t-options='{"widget": "timesheet_uom"}'></span> Days Remaining)
                                 </t>
                                 <t t-else="">
-                                    (<span t-out="timesheets._timesheet_convert_sol_uom(sol, 'uom.product_uom_hour')" t-options='{"widget": "float_time"}'></span> Hours Ordered, <span t-out="sol.remaining_hours" t-options='{"widget": "float_time"}'></span> Hours Remaining)
+                                    (<span t-out="timesheets._format_portal_hours(timesheets._timesheet_convert_sol_uom(sol, 'uom.product_uom_hour'))"></span> Hours Ordered, <span t-out="timesheets._format_portal_hours(sol.remaining_hours)"></span> Hours Remaining)
                                 </t>
                             </span>
                         </t>

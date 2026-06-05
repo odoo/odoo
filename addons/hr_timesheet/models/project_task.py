@@ -293,6 +293,10 @@ class ProjectTask(models.Model):
         uom_day = self.env.ref('uom.product_uom_day')
         return round(uom_hour._compute_quantity(time, uom_day, raise_if_failure=False), 2)
 
+    @api.model
+    def _format_portal_hours(self, hours):
+        return self.env['account.analytic.line']._format_portal_hours(hours)
+
     def _get_portal_total_hours_dict(self):
         if not (timesheetable_tasks := self.filtered('allow_timesheets')):
             return {}

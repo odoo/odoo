@@ -26,7 +26,7 @@
                 <td><strong>Time Remaining on SO: </strong></td>
                 <td class="text-end">
                     <span t-if="is_uom_day" t-out="timesheets._convert_hours_to_days(task.remaining_hours_so)" t-options='{"widget": "timesheet_uom"}'/>
-                    <span t-else="" t-out="task.remaining_hours_so" t-options='{"widget": "float_time"}'/>
+                    <span t-else="" t-out="task._format_portal_hours(task.remaining_hours_so)"/>
                 </td>
             </tr>
         </xpath>
