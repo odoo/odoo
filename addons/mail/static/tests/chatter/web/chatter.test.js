@@ -46,7 +46,7 @@ test("simple chatter on a record", async () => {
     });
     listenStoreFetch(undefined, { logParams: ["mail.thread", "/mail/thread/messages"] });
     await start();
-    await waitStoreFetch(["failures", "systray_get_activities", "init_messaging"]);
+    await waitStoreFetch(["init_messaging", "failures", "systray_get_activities"]);
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Chatter-topbar");

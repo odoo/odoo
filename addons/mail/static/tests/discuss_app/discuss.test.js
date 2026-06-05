@@ -72,7 +72,7 @@ test("sanity check", async () => {
     });
     listenStoreFetch();
     await start();
-    await waitStoreFetch(["failures", "systray_get_activities", "init_messaging"]);
+    await waitStoreFetch(["init_messaging", "failures", "systray_get_activities"]);
     await openDiscuss("mail.box_inbox");
     await waitStoreFetch(["channels_as_member", "/mail/inbox/messages"]);
     await contains(".o-mail-DiscussSidebar");

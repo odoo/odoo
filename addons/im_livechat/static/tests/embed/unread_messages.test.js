@@ -96,7 +96,6 @@ test("focus on unread livechat marks it as read", async () => {
             pyEnv["discuss.channel.member"].search([["guest_id", "=", pyEnv.cookie.get("dgid")]]),
         ],
     ]);
-    await waitStoreFetch("init_messaging");
     queryFirst(".o-mail-Composer-input").blur();
     // send after init_messaging because bus subscription is done after init_messaging
     await withUser(userId, () =>

@@ -45,8 +45,8 @@ const StorePatch = {
             .filter((channel) => channel.self_member_id)
             .sort((a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id);
     },
-    onStarted() {
-        super.onStarted();
+    initialize() {
+        super.initialize(...arguments);
         if (this.discuss.isActive) {
             this.channels.fetch();
         }

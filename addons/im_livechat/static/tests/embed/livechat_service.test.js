@@ -85,9 +85,9 @@ test("Only necessary requests are made when creating a new chat", async () => {
     await start({ authenticateAs: false });
     await contains(".o-livechat-LivechatButton");
     await waitStoreFetch([
+        "init_messaging",
         "failures", // called because mail/core/web is loaded in test bundle
         "systray_get_activities", // called because mail/core/web is loaded in test bundle
-        "init_messaging",
         ["init_livechat", livechatChannelId],
     ]);
     await click(".o-livechat-LivechatButton");
@@ -104,33 +104,24 @@ test("Only necessary requests are made when creating a new chat", async () => {
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello!" });
     const [threadId] = pyEnv["discuss.channel"].search([], { order: "id DESC" });
-    await waitStoreFetch(
-        [
-            "failures", // called because mail/core/web is loaded in test bundle
-            "systray_get_activities", // called because mail/core/web is loaded in test bundle
-            "init_messaging",
-        ],
-        {
-            stepsBefore: [
-                `/im_livechat/get_session - ${JSON.stringify({
-                    channel_id: livechatChannelId,
-                    previous_operator_id: operatorPartnerId,
-                    persisted: true,
-                })}`,
-                `/mail/message/post - ${JSON.stringify({
-                    post_data: {
-                        body: "Hello!",
-                        email_add_signature: true,
-                        message_type: "comment",
-                        subtype_xmlid: "mail.mt_comment",
-                    },
-                    thread_id: threadId,
-                    thread_model: "discuss.channel",
-                    context: { ...userContext(), temporary_id: 0.8200000000000001 },
-                })}`,
-            ],
-        }
-    );
+    await expect.waitForSteps([
+        `/im_livechat/get_session - ${JSON.stringify({
+            channel_id: livechatChannelId,
+            previous_operator_id: operatorPartnerId,
+            persisted: true,
+        })}`,
+        `/mail/message/post - ${JSON.stringify({
+            post_data: {
+                body: "Hello!",
+                email_add_signature: true,
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: threadId,
+            thread_model: "discuss.channel",
+            context: { ...userContext(), temporary_id: 0.8200000000000001 },
+        })}`,
+    ]);
 });
 
 test("do not create new thread when operator answers to visitor", async () => {

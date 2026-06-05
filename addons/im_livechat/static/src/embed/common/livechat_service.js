@@ -38,10 +38,13 @@ export class LivechatService {
         this.env = env;
         this.notificationService = services.notification;
         this.store = services["mail.store"];
+        this.initializedPromise = new Promise((r) => (this._resolveInitializedPromise = r));
     }
 
     async initialize() {
-        this.store.fetchStoreData("init_livechat", this.options.channel_id);
+        this.store.fetchStoreData("init_livechat", this.options.channel_id).then(() => {
+            this._resolveInitializedPromise();
+        });
         if (this.options.chatbot_test_store) {
             await this.store.chatHub.initPromise;
             this.store.insert(this.options.chatbot_test_store);
@@ -81,7 +84,7 @@ export class LivechatService {
                 return;
             }
             savedChannel.fetchNewMessages();
-            this.env.services["mail.store"].initialize();
+            this.env.services["mail.store"].ensureInitialized();
             savedChannel.readyToSwapPromise.then(() => {
                 if (!savedChannel?.exists()) {
                     return;

@@ -33,5 +33,11 @@ const StorePatch = {
         this.livechat_rule = fields.One("im_livechat.channel.rule");
         this.livechat_available = false;
     },
+    onStarted() {
+        super.onStarted(...arguments);
+        if (this.guest_token) {
+            this.ensureInitialized();
+        }
+    },
 };
 patch(Store.prototype, StorePatch);
