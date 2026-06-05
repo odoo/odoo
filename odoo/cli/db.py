@@ -119,6 +119,10 @@ class Db(Command):
             help="neutralize the database after restore"
         )
         load.add_argument(
+            '--move', dest='copy', action='store_const', default=True, const=False,
+            help="restore as a moved database, keeping its UUID instead of generating a new one"
+        )
+        load.add_argument(
             'database', nargs='?',
             help="database to create, defaults to dump file's name "
                  "(without extension)"
@@ -236,7 +240,7 @@ class Db(Command):
         db.restore(
             db_name,
             dump_file,
-            copy=True,
+            copy=args.copy,
             neutralize_database=args.neutralize,
         )
 
