@@ -671,7 +671,7 @@ class EmployeePortalAPI(http.Controller):
         '/api/admin/bulk-create-portal-users',
         auth='none', type='http', methods=['POST'], csrf=False,
     )
-    def bulk_create_portal_users(self, **_kw):
+    def bulk_create_portal_users(self, limit='200', offset='0', **_kw):
         """
         One-time admin endpoint to pre-create Odoo portal users for ALL
         active employees who do not yet have a portal account.
@@ -708,11 +708,17 @@ class EmployeePortalAPI(http.Controller):
         request.update_env(user=uid)
         su_env = request.env
 
+        try:
+            batch_limit  = max(1, min(500, int(limit)))
+            batch_offset = max(0, int(offset))
+        except (TypeError, ValueError):
+            batch_limit, batch_offset = 200, 0
+
         employees = su_env['hr.employee'].search([
             ('active',          '=', True),
             ('x_employee_code', '!=', False),
             ('x_employee_code', '!=', ''),
-        ])
+        ], limit=batch_limit, offset=batch_offset, order='id asc')
 
         created = 0
         skipped = 0
@@ -808,16 +814,29 @@ class EmployeePortalAPI(http.Controller):
                     'status': 'failed', 'error': str(exc),
                 })
 
+        total_in_db = su_env['hr.employee'].search_count([
+            ('active',          '=', True),
+            ('x_employee_code', '!=', False),
+            ('x_employee_code', '!=', ''),
+        ])
+        next_offset  = batch_offset + batch_limit
+        has_more     = next_offset < total_in_db
+
         _logger.info(
-            'bulk_create_portal_users: created=%d skipped=%d failed=%d',
-            created, skipped, failed
+            'bulk_create_portal_users: offset=%d limit=%d created=%d skipped=%d failed=%d has_more=%s',
+            batch_offset, batch_limit, created, skipped, failed, has_more
         )
         return self._json_response({
-            'success': True,
-            'created': created,
-            'skipped': skipped,
-            'failed':  failed,
-            'details': details,
+            'success':      True,
+            'created':      created,
+            'skipped':      skipped,
+            'failed':       failed,
+            'offset':       batch_offset,
+            'limit':        batch_limit,
+            'total':        total_in_db,
+            'next_offset':  next_offset if has_more else None,
+            'has_more':     has_more,
+            'details':      details,
         })
 
     # ── POST /api/admin/bulk-create-portal-users/safe ─────────────────────────
