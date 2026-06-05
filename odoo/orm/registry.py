@@ -8,7 +8,6 @@ from __future__ import annotations
 import functools
 import inspect
 import logging
-import os
 import threading
 import time
 import typing
@@ -26,7 +25,6 @@ from odoo.tools import (
     SQL,
     OrderedSet,
     config,
-    lazy_classproperty,
     lazy_property,
     remove_accents,
     sql,
@@ -91,22 +89,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
     _lock: threading.RLock | DummyRLock = threading.RLock()
     _saved_lock: threading.RLock | DummyRLock | None = None
 
-    @lazy_classproperty
-    def registries(cls) -> LRU[str, Registry]:
-        """ A mapping from database names to registries. """
-        size = config.get('registry_lru_size', None)
-        if not size:
-            # Size the LRU depending of the memory limits
-            if os.name != 'posix':
-                # cannot specify the memory limit soft on windows...
-                size = 42
-            else:
-                # A registry takes 10MB of memory on average, so we reserve
-                # 10Mb (registry) + 5Mb (working memory) per registry
-                avgsz = 15 * 1024 * 1024
-                limit_memory_soft = config['limit_memory_soft'] if config['limit_memory_soft'] > 0 else (2048 * 1024 * 1024)
-                size = (limit_memory_soft // avgsz) or 1
-        return LRU(size)
+    registries = LRU[str, "Registry"](42)  # random default value
+    """ A mapping from database names to registries. """
 
     def __new__(cls, db_name: str):
         """ Return the registry for the given database name."""
