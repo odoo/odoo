@@ -21,12 +21,8 @@ class TestPosStockHttpCommon(TestPointOfSaleHttpCommon):
 class TestUi(TestPosStockHttpCommon):
 
     def test_receipt_screen_tour(self):
-        self.tip.write({
-            'taxes_id': False
-        })
         self.main_pos_config.write({
             'iface_tipproduct': True,
-            'tip_product_id': self.tip.id,
             'ship_later': True
         })
         self.start_pos_tour('StockFeedbackScreenTour')

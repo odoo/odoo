@@ -8,8 +8,7 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 def archive_products(env):
     # Archive all existing product to avoid noise during the tours
     all_pos_product = env['product.template'].search([('available_in_pos', '=', True)])
-    tip = env.ref('point_of_sale.product_product_tip').product_tmpl_id
-    (all_pos_product - tip)._write({'active': False})
+    all_pos_product._write({'active': False})
 
 
 class CommonPosStockTest(ValuationReconciliationTestCommon, CommonPosTest):

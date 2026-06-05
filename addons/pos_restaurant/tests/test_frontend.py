@@ -270,7 +270,7 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('PosResTicketScreenTour')
 
     def test_05_tip_screen(self):
-        self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True, 'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})
+        self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('PosResTipScreenTour')
 
@@ -777,7 +777,7 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('test_combo_apply_after_preparation', login="pos_user")
 
     def test_tip_after_payment(self):
-        self.pos_config.write({'iface_tipproduct': True, 'tip_product_id': self.tip.id})
+        self.pos_config.iface_tipproduct = True
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_tip_after_payment')
 

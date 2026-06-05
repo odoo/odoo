@@ -26,10 +26,6 @@ class PosConfig(models.Model):
             if is_restaurant:
                 if 'iface_printbill' not in vals:
                     vals['iface_printbill'] = True
-                if 'show_product_images' not in vals:
-                    vals['show_product_images'] = False
-                if 'show_category_images' not in vals:
-                    vals['show_category_images'] = False
         pos_configs = super().create(vals_list)
         for config in pos_configs:
             if config.module_pos_restaurant:
@@ -156,6 +152,10 @@ class PosConfig(models.Model):
         if restaurant_categories:
             self.limit_categories = True
             self.iface_available_categ_ids = restaurant_categories
+        self.write({
+            'show_product_images': False,
+            'show_category_images': False,
+        })
 
     def _get_demo_data_loader_methods(self):
         mapping = super()._get_demo_data_loader_methods()

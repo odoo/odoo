@@ -141,8 +141,6 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
         archive_products(env)
 
-        cls.tip = env.ref('point_of_sale.product_product_tip')
-
         cls.pos_desk_misc_test = env['pos.category'].create({
             'name': 'Misc test',
         })
@@ -664,12 +662,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour('PaymentScreenTour')
 
     def test_receipt_screen_tour(self):
-        self.tip.write({
-            'taxes_id': False
-        })
         self.main_pos_config.write({
             'iface_tipproduct': True,
-            'tip_product_id': self.tip.id,
         })
         self.start_pos_tour('FeedbackScreenTour')
         for order in self.env['pos.order'].search([]):
@@ -752,7 +746,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['res.lang']._lang_get(self.pos_user.lang).write({'date_format': 'MM/dd/yyyy', 'time_format': 'HH:mm:ss'})
 
     def test_06_tip_screen(self):
-        self.main_pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True, 'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})
+        self.main_pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True})
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PosTipAfterPaymentTour', login="pos_user")
 
