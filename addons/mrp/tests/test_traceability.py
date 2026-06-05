@@ -354,6 +354,50 @@ class TestTraceability(TestMrpCommon):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
 
+    def test_SN_manufactured_out_of_order(self):
+        """
+        Ensure that, when consuming serials before producing them, future production and assignation of
+        these serials work properly.
+        """
+        self.product_2.tracking = 'serial'
+        serial = self.env['stock.lot'].create({
+            'name': 'SN_PROD',
+            'product_id': self.product_2.id,
+        })
+        # First MO will consume a not-yet produced serial
+        mo_upper = self.env['mrp.production'].create({
+            'product_id': self.product_3.id,
+            'product_qty': 1,
+            'bom_id': False,
+            'move_raw_ids': [
+                Command.create({
+                    'product_id': self.product_2.id,
+                    'product_uom_qty': 1,
+                })
+            ]
+        })
+        mo_upper.action_confirm()
+        # Force the creation of a move line
+        mo_upper.move_raw_ids.quantity = 1
+        mo_upper.move_raw_ids.move_line_ids.write({
+            'lot_id': serial.id,
+            'picked': True,
+        })
+        mo_upper.button_mark_done()
+        # Second MO produces the same serial product that was consumed.
+        mo_lower = self.env['mrp.production'].create({
+            'product_id': self.product_2.id,
+            'product_qty': 1,
+            'bom_id': False,
+        })
+        mo_lower.action_confirm()
+        mo_lower.action_generate_serial()
+        mo_lower.action_clear_lot_producing_ids()
+        mo_lower.action_generate_serial()
+        produced_SN = mo_lower.lot_producing_ids
+        mo_lower.button_mark_done()
+        self.assertEqual(mo_lower.finished_move_line_ids.lot_id, produced_SN)
+
     def test_tracked_and_manufactured_component(self):
         """ Suppose this structure:
             productA --|- 1 x productB --|- 1 x productC
