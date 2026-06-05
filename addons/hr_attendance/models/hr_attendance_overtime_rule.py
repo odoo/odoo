@@ -155,8 +155,17 @@ class HrAttendanceOvertimeRule(models.Model):
         employee = attendances.employee_id
         if self.expected_hours_from_contract:
             if employee.version_id.is_flexible:
-                duration = employee.version_id.hours_per_week if self.quantity_period == 'week' else employee.version_id.hours_per_day
-                expected_duration = max(duration, 0)
+                date_start = date_end = start.date()
+                if self.quantity_period == 'week':
+                    date_start -= timedelta(days=date_start.weekday())  # Monday
+                    date_end = date_start + timedelta(days=6)           # Sunday
+                period_start = datetime.combine(date_start, datetime.min.time(), tzinfo=UTC)
+                period_end = datetime.combine(date_end, datetime.max.time(), tzinfo=UTC)
+
+                expected_work_time = employee._get_expected_attendances(period_start, period_end)
+                expected_duration = sum(
+                    (end - begin).total_seconds() for begin, end, *_ in expected_work_time
+                ) / 3600.0
             else:
                 period_schedule = schedule & Intervals([(start, stop, self.env['resource.calendar'])])
                 expected_duration = sum_intervals(period_schedule)
