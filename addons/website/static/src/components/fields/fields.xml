@@ -9,6 +9,16 @@
             t-out="this.serverUrl.length > slicingLength ? this.serverUrl.slice(0, (slicingLength / 2) - 1) + '..' + this.serverUrl.slice((-slicingLength / 2) + 1) : this.serverUrl"
         />
     </xpath>
+    <xpath expr="//input" position="after">
+        <t t-if="isTranslatable">
+            <div class="o_field_input_buttons">
+                <TranslationButton
+                    fieldName="props.name"
+                    record="props.record"
+                />
+            </div>
+        </t>
+    </xpath>
 </t>
 
 <t t-name="website.FieldImageRadio">

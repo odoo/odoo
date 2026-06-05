@@ -70,7 +70,7 @@
             <label for="url" string="Page URL"/>
             <div class="o_col">
                 <field name="url" widget="page_url"/>
-                <div class="my-4" invisible="url == old_url">
+                <div class="my-4" invisible="url_in_website_default_lang == old_url">
                     <div class="o_row">
                         <field name="redirect_old_url" widget="boolean_toggle"/>
                         <label for="redirect_old_url" string="Redirect Old URL"/>

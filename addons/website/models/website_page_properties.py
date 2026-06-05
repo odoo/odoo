@@ -116,6 +116,9 @@ class WebsitePagePropertiesBase(models.TransientModel):
     def _inverse_is_homepage(self):
         self.ensure_one()
         url = self.url
+        self._update_homepage(url)
+
+    def _update_homepage(self, url):
         if self.is_homepage:
             if url and url != '/':
                 self.website_id.homepage_url = url
@@ -216,6 +219,13 @@ class WebsitePageProperties(models.TransientModel):
         store=False,
         required=True,
     )
+    url_in_website_default_lang = fields.Char(compute='_compute_url_in_website_default_lang')
+
+    @api.depends('url')
+    def _compute_url_in_website_default_lang(self):
+        for record in self:
+            website_default_lang = record.website_id.default_lang_id.code
+            record.url_in_website_default_lang = record.with_context(lang=website_default_lang).url
 
     @api.depends('url', 'website_id.homepage_url')
     def _compute_is_homepage(self):
@@ -224,9 +234,16 @@ class WebsitePageProperties(models.TransientModel):
         accessed route's url.
         """
         for record in self:
-            url = record.url
+            website_default_lang = record.website_id.default_lang_id.code
+            url = record.with_context(lang=website_default_lang).url
             current_homepage_url = record.website_id.homepage_url or '/'
             record.is_homepage = url == current_homepage_url
+
+    def _inverse_is_homepage(self):
+        self.ensure_one()
+        website_default_lang = self.website_id.default_lang_id.code
+        url = self.with_context(lang=website_default_lang).url
+        self._update_homepage(url)
 
     @api.depends('parent_id')
     def _compute_has_parent_page(self):
@@ -246,7 +263,8 @@ class WebsitePageProperties(models.TransientModel):
                 vals['parent_id'] = False
         records = super().create(vals_list)
         for record in records:
-            record.old_url = record.url
+            website_default_lang = record.website_id.default_lang_id.code
+            record.old_url = record.with_context(lang=website_default_lang).url
         return records
 
     def write(self, vals):
@@ -257,21 +275,21 @@ class WebsitePageProperties(models.TransientModel):
 
         # Once website.page has been written, the url might have been modified.
         # We can now create the redirects.
-        if 'url' in vals:
-            for record in self:
-                old_url = record.old_url
-                new_url = record.url
-                if old_url != new_url:
-                    if record.redirect_old_url:
-                        self.env['website.rewrite'].create(
-                            {
-                                'name': record.with_context(lang='en_US').name,
-                                'redirect_type': record.redirect_type,
-                                'url_from': old_url,
-                                'url_to': new_url,
-                                'website_id': record.website_id.id,
-                            }
-                        )
-                    record.old_url = new_url
+        for record in self:
+            old_url = record.old_url
+            website_default_lang = record.website_id.default_lang_id.code
+            new_url = record.with_context(lang=website_default_lang).url
+            if old_url != new_url:
+                if record.redirect_old_url:
+                    self.env['website.rewrite'].create(
+                        {
+                            'name': record.with_context(lang='en_US').name,
+                            'redirect_type': record.redirect_type,
+                            'url_from': old_url,
+                            'url_to': new_url,
+                            'website_id': record.website_id.id,
+                        }
+                    )
+                record.old_url = new_url
 
         return write_result

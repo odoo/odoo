@@ -796,3 +796,43 @@ export function changeImageShape(shape = "html_builder/geometric/geo_shuriken") 
         },
     ];
 }
+
+export function addLanguage(lang, lang_code) {
+    return [
+        ...goToTheme(),
+        {
+            content: "click on Add a language",
+            trigger: "button[data-action-id='addLanguage']",
+            run: "click",
+        },
+        {
+            content: "confirm leave editor",
+            trigger: ".modal-dialog button.btn-primary",
+            run: "click",
+        },
+        {
+            content: `type ${lang}`,
+            trigger: 'div[name="lang_ids"] .o_input_dropdown input',
+            run: `edit ${lang}`,
+        },
+        {
+            content: `select ${lang}`,
+            trigger: `.dropdown-item:contains(${lang})`,
+            run: "click",
+        },
+        {
+            trigger: `.modal-dialog div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(${lang})`,
+        },
+        {
+            content: `load ${lang}`,
+            trigger: ".modal-footer .btn-primary",
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            content: `Check that the language of the page is ${lang}`,
+            trigger: `:iframe html[lang*="${lang_code}"]`,
+            timeout: 60000,
+        },
+    ];
+}
