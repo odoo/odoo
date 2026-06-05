@@ -663,3 +663,21 @@ class TestLotValuation(TestStockValuationCommon):
         self.product.standard_price = 12
         self.assertEqual(self.product.standard_price, 12)
         self.assertEqual(self.lot1.standard_price, 12)
+
+    def test_fifo_stock_reporting_move_view(self):
+        """ Check that the remaining value in the move view accessed through the stock report
+        is in sync the with total_value field for lot valuated products when FIFO products are moved
+        out of stock in non-chronological lot order
+        """
+        self.product.categ_id = self.category_fifo
+        self._make_in_move(self.product, 10, 15, lot_ids=[self.lot1])
+        self._make_in_move(self.product, 10, 50, lot_ids=[self.lot2])
+        self.assertEqual(self.product.total_value, 650)
+        moves_qty_dict = self.product._get_remaining_moves().get(self.product, {})
+        remaining_moves = self.env['stock.move'].concat(*moves_qty_dict.keys())
+        self.assertEqual(sum(remaining_moves.mapped('remaining_value')), 650)
+        self._make_out_move(self.product, 10, lot_ids=[self.lot2])
+        self.assertEqual(self.product.total_value, 150)
+        moves_qty_dict = self.product._get_remaining_moves().get(self.product, {})
+        remaining_moves = self.env['stock.move'].concat(*moves_qty_dict.keys())
+        self.assertEqual(sum(remaining_moves.mapped('remaining_value')), 150)
