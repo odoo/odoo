@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
             <xpath expr="//span[@name='address_name']" position="before">
-                <field name="l10n_ph_entity_type" string="Entity type" invisible="'PH' not in fiscal_country_codes" required="'PH' in fiscal_country_codes"/>
+                <field name="l10n_ph_entity_type" string="Entity type" invisible="'PH' not in fiscal_country_codes"/>
             </xpath>
             <xpath expr="//sheet" position="before">
                 <div class="alert alert-warning"
