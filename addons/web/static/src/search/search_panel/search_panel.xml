@@ -97,12 +97,14 @@
                 <t t-set="group" t-value="section.groups.get(groupId)"/>
                 <header class="o_search_panel_group_header pb-1">
                     <div class="form-check w-100">
-                        <!-- TODO: "indeterminate" could not be set in the template and had to be set in
-                            JS manually. See https://github.com/odoo/owl/issues/713 (adapt when solved)
-                        -->
+                        <t t-set="groupValues" t-value="[...group.values.values()]"/>
+                        <t t-set="allChecked" t-value="groupValues.every((v) => this.state.active[section.id][v.id])"/>
+                        <t t-set="someChecked" t-value="groupValues.some((v) => this.state.active[section.id][v.id])"/>
                         <input type="checkbox"
                             class="form-check-input"
                             t-attf-id="{{ section.id }}_input_{{ groupId }})"
+                            t-att-checked="allChecked"
+                            t-att-indeterminate="!allChecked and someChecked"
                             t-on-click="() => this.toggleFilterGroup(section.id, group)"
                         />
                         <label
