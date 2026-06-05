@@ -1,3 +1,4 @@
+import { untrack } from "@odoo/owl";
 import { clamp } from "@web/core/utils/numbers";
 import { omit } from "@web/core/utils/objects";
 import { closestScrollableX, closestScrollableY } from "@web/core/utils/scrolling";
@@ -138,7 +139,10 @@ const DEFAULT_ACCEPTED_PARAMS = {
     allowDisconnected: [Boolean], // do not use, introduced for stable versions, to challenge in master
     enable: [Boolean, Function],
     preventDrag: [Function],
-    ref: [Object],
+    // `ref` may be a legacy useRef/useChildRef (object, or callable exposing
+    // `.el`) or an Owl 3 native signal ref (zero-arg function). It is normalized
+    // by `makeRefAdapter`/`resolveRefEl` into a null-safe `.el` getter.
+    ref: [Object, Function],
     elements: [String],
     handle: [String, Function],
     ignore: [String, Function],
@@ -183,6 +187,62 @@ const elCache = {};
  */
 function camelToKebab(str) {
     return str.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+}
+
+/**
+ * Resolves the element backing a `ref` regardless of its kind, preserving every
+ * legacy form and ADDING the Owl 3 native signal case. Null-safe: never throws.
+ * - undefined/null ref           -> undefined (mirrors the old `ref.el`)
+ * - object refs (useRef)         -> `.el`
+ * - forwarded refs (useChildRef) -> a callable that ALSO exposes an `.el` getter
+ *   once mounted. `.el` must take precedence over calling it (calling a
+ *   useChildRef with no argument would clear its value). It also takes a value
+ *   argument (arity 1), so we never call it: before it is mounted `.el` is
+ *   simply absent (undefined), exactly like the original direct `ref.el` read.
+ * - Owl 3 native signal refs     -> a zero-argument callable with no `.el`,
+ *   resolved by calling it.
+ * @param {{ el?: HTMLElement } | (() => HTMLElement) | null | undefined} ref
+ * @returns {HTMLElement | null | undefined}
+ */
+function resolveRefEl(ref) {
+    if (ref == null) {
+        return undefined;
+    }
+    // Legacy contract: object refs (useRef) and mounted forwarded refs
+    // (useChildRef) expose the element through `.el`. Matches the original
+    // direct `ref.el`.
+    if (typeof ref !== "function") {
+        return ref.el;
+    }
+    // Forwarded refs (useChildRef) are callables that accept a value
+    // (length === 1) and surface the element via an `.el` getter. Never call
+    // them; read `.el` (undefined until mounted).
+    if (ref.length > 0 || "el" in ref) {
+        return ref.el;
+    }
+    // Owl 3 native signal ref: a zero-argument getter. Call it to read the element.
+    // Untrack the read so resolving a ref's element never subscribes the caller to
+    // the signal: this mirrors the legacy `useRef().el` contract (read through
+    // `owl.untrack`). Without this, reading the ref in a layout-effect dependency
+    // function (e.g. `() => [ctx.ref.el]`, evaluated during render) registers a
+    // spurious render dependency, causing the host component to re-patch when the
+    // ref signal is set on mount.
+    return untrack(ref);
+}
+
+/**
+ * Wraps a `ref` of any supported kind (legacy useRef/useChildRef object or
+ * callable, or an Owl 3 native signal) into an adapter exposing a null-safe
+ * `.el` getter, so all downstream `.el` reads keep working unchanged.
+ * @param {{ el?: HTMLElement } | (() => HTMLElement) | null | undefined} ref
+ * @returns {{ el: HTMLElement | null | undefined }}
+ */
+function makeRefAdapter(ref) {
+    return {
+        get el() {
+            return resolveRefEl(ref);
+        },
+    };
 }
 
 /**
@@ -480,6 +540,14 @@ export function makeDraggableHook(hookParams) {
             if (prop in params) {
                 if (prop === "enable") {
                     computedParams[prop] = toFunction(params[prop]);
+                } else if (prop === "ref") {
+                    // `ref` may be a bare Owl 3 native signal (a zero-arg function);
+                    // resolve it through `resolveRefEl` (which untracks) so this
+                    // dependency never subscribes the host component's render to the
+                    // ref signal. Otherwise `getReturnValue` would call the signal in
+                    // a tracked context, causing a spurious re-render when the ref is
+                    // set on mount. Legacy object refs resolve to their `.el` here too.
+                    computedParams[prop] = resolveRefEl(params[prop]);
                 } else if (
                     allAcceptedParams[prop].length === 1 &&
                     allAcceptedParams[prop][0] === Function
@@ -595,7 +663,7 @@ export function makeDraggableHook(hookParams) {
                 }
 
                 dom.addClass(document.body, "pe-none", "user-select-none");
-                for (const iframe of getIframes(params.ref.el)) {
+                for (const iframe of getIframes(ctx.ref.el)) {
                     dom.addClass(iframe, "pe-none", "user-select-none");
                 }
 
@@ -648,7 +716,7 @@ export function makeDraggableHook(hookParams) {
                 const iframes =
                     el && params.iframeSelector ? el.querySelectorAll(params.iframeSelector) : [];
                 yield* iframes;
-                if (params.iframeWindow && el === params.ref.el) {
+                if (params.iframeWindow && el === ctx.ref.el) {
                     yield params.iframeWindow.frameElement;
                 }
             }
@@ -1038,7 +1106,11 @@ export function makeDraggableHook(hookParams) {
             const ctx = {
                 enable: () => false,
                 preventDrag: () => false,
-                ref: params.ref,
+                // Normalize the ref ONCE into an adapter with a null-safe `.el`
+                // getter, so every downstream `ctx.ref.el` read (and the effect
+                // dependency `() => [ctx.ref.el]`) keeps working unchanged for
+                // legacy refs while also supporting Owl 3 native signal refs.
+                ref: makeRefAdapter(params.ref),
                 ignoreSelector: null,
                 fullSelector: null,
                 followCursor: true,
@@ -1189,7 +1261,7 @@ export function makeDraggableHook(hookParams) {
                         }
                         return cleanup;
                     },
-                    () => [...getIframes(params.ref.el)]
+                    () => [...getIframes(ctx.ref.el)]
                 );
             }
 
