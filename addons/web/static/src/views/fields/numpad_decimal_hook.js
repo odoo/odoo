@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { localization } from "@web/core/l10n/localization";
 import { isIOS } from "@web/core/browser/feature_detection";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 
 
 function onKeydown(ev) {
@@ -35,12 +36,12 @@ function onFocus(ev) {
  * entering a negative number (the minus sign is not on the virtual keyboard),
  * so we need to remove it.
  */
-export function useNumpadDecimal() {
-    const ref = useRef("numpadDecimal");
+export function useNumpadDecimal(ref) {
+    const refOrSignal = ref || useRef("numpadDecimal");
     const isIOSDevice = isIOS();
     useLayoutEffect(() => {
         let inputs = [];
-        const el = ref.el;
+        const el = resolveRefEl(refOrSignal);
         if (el) {
             inputs = el.nodeName === "INPUT" ? [el] : el.querySelectorAll("input");
             inputs.forEach((input) => input.addEventListener("keydown", onKeydown));
