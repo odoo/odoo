@@ -306,6 +306,7 @@ class HrEmployee(models.Model):
             "res_model": "hr.attendance",
             "views": [[self.env.ref('hr_attendance.hr_attendance_employee_calendar_view').id, "calendar"]],
             "context": {
+                "default_employee_id": self.id,
                 "display_extra_hours": self.display_extra_hours,
             },
             "domain": [('employee_id', '=', self.id)]
