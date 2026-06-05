@@ -1409,9 +1409,11 @@ class WorkerCron(Worker):
 
     def start(self):
         os.nice(10)     # mommy always told me to be nice with others...
-        Worker.start(self)
+        super().start()
         if self.multi.socket:
             self.multi.socket.close()
+        if registries_size := os.environ.get('ODOO_REGISTRY_LRU_SIZE_CRON'):
+            Registry.registries.count = int(registries_size)
 
         dbconn = sql_db.db_connect(config['db_system'])
         self.dbcursor = dbconn.cursor()
@@ -1503,6 +1505,21 @@ def preload_registries(dbnames):
     rc = 0
 
     preload_profiler = contextlib.nullcontext()
+
+    registries_size = int(os.environ.get('ODOO_REGISTRY_LRU_SIZE') or 0)
+    if not registries_size and os.name == 'posix':
+        # Size the LRU depending of the memory limits
+        # A registry takes 10MB of memory on average, so we reserve
+        # 10Mb (registry) + 5Mb (working memory) per registry
+        avgsz = 15 * 1024 * 1024
+        limit_memory_soft = config['limit_memory_soft'] if config['limit_memory_soft'] > 0 else (2048 * 1024 * 1024)
+        registries_size = (limit_memory_soft // avgsz) or 1
+    elif not registries_size and len(dbnames) > Registry.registries.count:
+        # If we give a list of databases higher and did not specify the size,
+        # use the number of preloaded databases as the limit.
+        registries_size = len(dbnames)
+    if registries_size:
+        Registry.registries.count = registries_size
 
     for dbname in dbnames:
         if os.environ.get('ODOO_PROFILE_PRELOAD'):
