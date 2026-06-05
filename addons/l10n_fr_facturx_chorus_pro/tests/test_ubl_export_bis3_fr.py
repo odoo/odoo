@@ -1,3 +1,7 @@
+from lxml import etree
+
+from odoo import Command
+from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_bis3 import CHORUS_PRO_PEPPOL_ID
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblBis3Common
 from odoo.addons.l10n_fr_facturx_chorus_pro.tests.common import TestUblCiiFRCommonChorusPro
 from odoo.tests import tagged
@@ -38,3 +42,35 @@ class TestUblExportBis3FRChorusPro(TestUblBis3Common, TestUblCiiFRCommonChorusPr
             partner=self.partner_fr_chorus_pro,
             test_file='test_invoice_customer_party_identifiers_partner_chorus_pro',
         )
+
+    def test_export_invoice_chorus_pro_overseas_drom(self):
+        """ A public customer located in a DROM, its SIRET must
+        be used in PartyIdentification, exactly like metropolitan France.
+        """
+        chorus_eas, chorus_endpoint = CHORUS_PRO_PEPPOL_ID.split(":")
+        drom_partner = self.env['res.partner'].create({
+            'name': "Chorus Pro - Ville du Lamentin (Martinique)",
+            'vat': "FR19219722139",
+            'siret': "21972213900017",
+            'peppol_eas': chorus_eas,
+            'peppol_endpoint': chorus_endpoint,
+            'country_id': self.env.ref('base.mq').id,  # Martinique (DROM)
+            'invoice_edi_format': 'ubl_bis3',
+        })
+        invoice = self.env['account.move'].create({
+            'company_id': self.env.company.id,
+            'partner_id': drom_partner.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+            })],
+        })
+        invoice.action_post()
+        xml = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        xml_etree = etree.fromstring(xml)
+
+        # The SIRET (not the VAT) must identify the overseas public customer
+        customer_identification_node = xml_etree.find("{*}AccountingCustomerParty/{*}Party/{*}PartyIdentification/{*}ID")
+        self.assertEqual(customer_identification_node.text, "21972213900017")
+        self.assertEqual(customer_identification_node.attrib, {'schemeID': '0009'})
