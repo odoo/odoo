@@ -634,3 +634,36 @@ describe("print history", () => {
         ]);
     });
 });
+
+test("Ignore attribute always extra price with combo", async () => {
+    const store = await setupPosEnv();
+    store.models["pos.preset"].get(1).pricelist_id = false;
+    const combo = store.models["product.combo"].get(1);
+    const comboItem = store.models["product.combo.item"].get(1);
+    comboItem.product_id = store.models["product.product"].get(52);
+    const comboTemplate = store.models["product.template"].get(7);
+    const comboProduct = store.models["product.product"].get(7);
+    comboTemplate.combo_ids = [combo.id];
+
+    const order = store.addNewOrder();
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: comboTemplate,
+            payload: [
+                [
+                    {
+                        combo_item_id: comboItem,
+                        configuration: {
+                            attribute_value_ids: [6],
+                        },
+                        qty: 1,
+                    },
+                ],
+            ],
+            qty: 1,
+        },
+        order
+    );
+    order.setOrderPrices();
+    expect(order.amount_total).toBe(comboProduct.lst_price);
+});
