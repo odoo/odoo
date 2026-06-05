@@ -1197,8 +1197,9 @@ class IrQweb(models.AbstractModel):
         if value.get('error'):
             raise value['error']
 
-        # In dev mode `_generate_code_cached` is not cached and the tree can be processed several times
-        value_tree = deepcopy(value['tree']) if 'xml' in tools.config['dev_mode'] else value['tree']
+        # The compiled template cache can evict entries during a render, causing
+        # the same preloaded tree to be processed several times.
+        value_tree = deepcopy(value['tree'])
         # return etree, document and ref
         return (value_tree, value['template'], value['ref'])
 
