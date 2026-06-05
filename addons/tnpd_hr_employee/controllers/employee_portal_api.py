@@ -811,3 +811,22 @@ class EmployeePortalAPI(http.Controller):
             'failed':  failed,
             'details': details,
         })
+
+    # ── POST /api/admin/bulk-create-portal-users/safe ─────────────────────────
+
+    @http.route(
+        '/api/admin/bulk-create-portal-users/safe',
+        auth='none', type='http', methods=['POST'], csrf=False,
+    )
+    def bulk_create_portal_users_safe(self, **_kw):
+        """Same as bulk_create_portal_users but wraps everything in try/except
+        and returns any top-level error as JSON instead of 500."""
+        try:
+            return self.bulk_create_portal_users(**_kw)
+        except Exception as exc:
+            _logger.exception('bulk_create_portal_users_safe top-level error')
+            return self._json_response({
+                'success': False,
+                'error':   str(exc),
+                'type':    type(exc).__name__,
+            }, status=200)
