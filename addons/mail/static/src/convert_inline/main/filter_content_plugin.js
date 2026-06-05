@@ -137,6 +137,7 @@ export class FilterContentPlugin extends Plugin {
         rules.allow("opacity");
         rules.allow("direction");
 
+        // TODO EGGMAIL: borders can not be bigger than 8px -> fix all incorrect borders?
         rules.allow(/^border(-.*)?$/, {
             when: ({ propertyName }) =>
                 propertyName !== "border-spacing" && propertyName !== "border-collapse",

@@ -217,7 +217,7 @@ export class RenderPlugin extends Plugin {
 
     /**
      * Allow descendants to propagate facts to their ancestors through constraints
-     * callbacks
+     * callbacks (reverse DFS propagation)
      */
     addBottomUpConstraints(emailNode) {
         const childConstraints = [];
@@ -226,10 +226,11 @@ export class RenderPlugin extends Plugin {
         }
         const propagatedConstraints = [];
         for (const constraint of childConstraints) {
-            // `constraint` API => return object with "shouldPropagate"+ "facts"
+            // `constraint` API => return object with "shouldPropagate"+ "facts" + "constraint" function
             const annotations = constraint(emailNode);
             if (annotations.shouldPropagate) {
-                propagatedConstraints.push(constraint);
+                const newConstraint = annotations.constraint ?? constraint;
+                propagatedConstraints.push(newConstraint);
             }
             for (const [fact, value] of Object.entries(annotations.facts ?? {})) {
                 if (!this.delegateTo("merge_fact_overrides", { emailNode, fact, value })) {
@@ -247,7 +248,7 @@ export class RenderPlugin extends Plugin {
 
     /**
      * Allow ancestors to propagate facts to their descendants through constraints
-     * callbacks
+     * callbacks (DFS propagation)
      */
     addTopDownConstraints(emailNode, constraints = []) {
         const propagatedConstraints = [];
@@ -293,8 +294,8 @@ export class RenderPlugin extends Plugin {
         emailNode.layout = this.processThrough("refine_layout_processors", emailNode.layout, {
             emailNode,
         });
-        for (const childAnalysis of emailNode.children) {
-            this.enforceConstraints(childAnalysis);
+        for (const childEmailNode of emailNode.children) {
+            this.enforceConstraints(childEmailNode);
         }
     }
 

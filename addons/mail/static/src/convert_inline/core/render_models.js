@@ -248,7 +248,7 @@ export class Analysis {
         };
         this.facts = { ...(options.facts ?? {}) };
         this.parsingFacts = { ...(options.parsingFacts ?? {}) };
-        // constraints are functions: (emailNode) => { shouldPropagate: bool, facts: {} }
+        // constraints are functions: (emailNode) => ({ shouldPropagate: bool, facts: {}, constraint: (emailNode) => (...) })
         this.constraintsForAncestors = [...(options.constraintsForAncestors ?? [])];
         this.constraintsForDescendants = [...(options.constraintsForDescendants ?? [])];
     }

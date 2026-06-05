@@ -102,10 +102,16 @@ export class HybridFluidTableRow extends LayoutModel {
         super(options);
         this.setAttributes({
             classNames: "o-ci-hybrid-fluid-table",
+            style: {
+                "border-collapse": "separate",
+            },
         });
-        this.setAttributes({
-            classNames: "o-ci-hybrid-fluid-table-row",
-        });
+        this.setAttributes(
+            {
+                classNames: "o-ci-hybrid-fluid-table-row",
+            },
+            "row"
+        );
     }
 }
 
@@ -115,6 +121,12 @@ export class HybridFluidTableCell extends ElementLayout {
         super(root);
         this.setAttributes({
             classNames: "o-ci-hybrid-fluid-table-cell",
+            attributes: {
+                valign: "top",
+            },
+            style: {
+                "vertical-align": "top",
+            },
         });
     }
 }
