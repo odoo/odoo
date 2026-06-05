@@ -13,7 +13,6 @@ import {
 } from "@website/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("parent_child_menu", {
-    url: "/odoo/action-website.action_website_menu",
     steps: () => [
         {
             content: "Open Menu Form View",
@@ -34,6 +33,10 @@ registry.category("web_tour.tours").add("parent_child_menu", {
             content: "Click on Save Button",
             trigger: ".o_form_button_save",
             run: "click",
+        },
+        {
+            content: "Wait for the record to be saved",
+            trigger: ".o_form_button_save:not(:visible)",
         },
         {
             content: "Click on Add a line button",
