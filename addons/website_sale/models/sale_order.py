@@ -1181,31 +1181,6 @@ class SaleOrder(models.Model):
         self.order_line._clear_alerts()
         return super()._clear_alerts()
 
-    def _validate_order(self):
-        super()._validate_order()
-        # After SO confirmation and email sending, archive customers without accounts
-        self.filtered("website_id")._archive_partner_if_no_user()
-
-    def _archive_partner_if_no_user(self):
-        """Archive SO customer if it has no linked users."""
-        if (
-            not self
-            .env["ir.config_parameter"]
-            .sudo()
-            .get_bool("website_sale.automatic_archiving_of_guest_contacts", True)
-        ):
-            return
-        partners_to_archive = self.env["res.partner"]
-        for order in self:
-            customer = order.partner_id
-            customer_comm_partner_contacts = (
-                customer | customer.commercial_partner_id | customer.commercial_partner_id.child_ids
-            )
-            if not customer_comm_partner_contacts.user_ids:
-                partners_to_archive |= customer_comm_partner_contacts
-
-        partners_to_archive.active = False
-
     @api.model
     def retrieve_ecommerce_dashboard(self, period_days):
         """Retrieve statistics for the eCommerce dashboard for a given period(number of days).
