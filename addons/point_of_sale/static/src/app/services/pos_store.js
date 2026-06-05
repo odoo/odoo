@@ -1307,14 +1307,20 @@ export class PosStore extends WithLazyGetterTrap {
                     l.product_template_value_ids.length === 1
             );
 
-            if (hasSingleValueDynamic) {
+            const dynamicValueIds = productTemplate.attribute_line_ids
+                .filter((l) => l.attribute_id.create_variant === "dynamic")
+                .flatMap((l) => l.product_template_value_ids.map((v) => v.id));
+            const currentValueIds = values.product_id.product_template_attribute_value_ids.map(
+                (v) => v.id
+            );
+            const variantAlreadyCreated = dynamicValueIds.every((id) =>
+                currentValueIds.includes(id)
+            );
+
+            if (hasSingleValueDynamic && !variantAlreadyCreated) {
                 const allAttributeValueIds = productTemplate.attribute_line_ids.flatMap((l) =>
                     l.product_template_value_ids.map((v) => v.id)
                 );
-
-                const dynamicValueIds = productTemplate.attribute_line_ids
-                    .filter((l) => l.attribute_id.create_variant === "dynamic")
-                    .flatMap((l) => l.product_template_value_ids.map((v) => v.id));
 
                 let candidate = productTemplate.product_variant_ids.find((variant) => {
                     const attributeIds = variant.product_template_attribute_value_ids.map(
