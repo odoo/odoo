@@ -12,6 +12,7 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
         'click .copy-to-clipboard': '_onCopyToClipboardClick',
         'click .o_website_links_edit_code': '_onEditCodeClick',
         'click .o_website_links_cancel_edit': '_onCancelEditClick',
+        'click .o_website_links_new_link_tracker': '_onNewLinkTrackerClick',
         'submit #edit-code-form': '_onEditCodeFormSubmit',
         'click .o_website_links_ok_edit': '_onEditCodeFormSubmit',
     },
@@ -116,20 +117,38 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
     },
     /**
      * @private
-     * @param {Event} ev
      */
-    _onCancelEditClick: function (ev) {
-        ev.preventDefault();
+    _cancelEdit: function () {
+        const editCodeForm = document.querySelector("#edit-code-form");
+        if (!editCodeForm) {
+            // Creating a new tracker should only cancel an active code edition.
+            return;
+        }
+
         $('.o_website_links_edit_code').show();
         $('.copy-to-clipboard').show();
         $('.o_website_links_edit_tools').hide();
         $('.o_website_links_code_error').hide();
 
-        var oldCode = $('#edit-code-form #init_code').val();
+        const oldCode = editCodeForm.querySelector("#init_code").value;
         $('#o_website_links_code').html(oldCode);
 
         $('#code-error').remove();
         $('#o_website_links_code form').remove();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onCancelEditClick: function (ev) {
+        ev.preventDefault();
+        this._cancelEdit();
+    },
+    /**
+     * @private
+     */
+    _onNewLinkTrackerClick: function () {
+        this._cancelEdit();
     },
     /**
      * @private
