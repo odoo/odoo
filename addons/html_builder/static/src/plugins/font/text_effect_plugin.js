@@ -168,7 +168,9 @@ export class TextEffectPlugin extends Plugin {
 
         If these splits would split an unsplittable node, we abort
         */
-        const selection = this.dependencies.split.splitSelection();
+        this.dependencies.split.splitSelection();
+        const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
+        this.dependencies.selection.setSelection(selection);
         const commonAncestor = this.splitForTextEffect(selection);
         if (!commonAncestor) {
             return {};
