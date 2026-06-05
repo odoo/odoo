@@ -282,9 +282,8 @@ class TestStockValuationCommon(BaseCommon):
 
     def _make_return(self, move, quantity_to_return):
         return_pick = move.picking_id._create_return()
-        return_pick.move_ids[0].quantity = quantity_to_return
-        return_pick.move_ids[0].picked = True
-        return_pick._action_done()
+        return_pick.move_ids.product_uom_qty = quantity_to_return
+        return_pick.button_validate()
         return return_pick.move_ids
 
     # Post move processing
