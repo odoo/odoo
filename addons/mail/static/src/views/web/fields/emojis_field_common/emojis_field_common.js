@@ -15,19 +15,23 @@ export const EmojisFieldCommon = (T) =>
                 useRef("emojisButton"),
                 {
                     onSelect: (codepoints) => {
-                        const originalContent = this.targetEditElement.el.value;
-                        const start = this.targetEditElement.el.selectionStart;
-                        const end = this.targetEditElement.el.selectionEnd;
+                        const el = this.targetEditElement();
+                        if (!el) {
+                            return;
+                        }
+                        const originalContent = el.value;
+                        const start = el.selectionStart;
+                        const end = el.selectionEnd;
                         const left = originalContent.slice(0, start);
                         const right = originalContent.slice(end, originalContent.length);
-                        this.targetEditElement.el.value = left + codepoints + right;
+                        el.value = left + codepoints + right;
                         // trigger onInput from input_field hook to set field as dirty
-                        this.targetEditElement.el.dispatchEvent(new InputEvent("input"));
+                        el.dispatchEvent(new InputEvent("input"));
                         // keydown serves to both commit the changes in input_field and trigger onchange for some fields
-                        this.targetEditElement.el.dispatchEvent(new KeyboardEvent("keydown"));
-                        this.targetEditElement.el.focus();
+                        el.dispatchEvent(new KeyboardEvent("keydown"));
+                        el.focus();
                         const newCursorPos = start + codepoints.length;
-                        this.targetEditElement.el.setSelectionRange(newCursorPos, newCursorPos);
+                        el.setSelectionRange(newCursorPos, newCursorPos);
                         if (this._emojiAdded) {
                             this._emojiAdded();
                         }

@@ -1,10 +1,10 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import {
     getEmbeddedProps,
     StateChangeManager,
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
-import { Component, onMounted, onWillStart, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillStart, proxy, signal } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { cookie } from "@web/core/browser/cookie";
 import {
@@ -28,6 +28,9 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
         host: { type: Object },
     };
 
+    preRef = signal(null);
+    textareaRef = signal(null);
+
     setup() {
         super.setup();
         this.state = proxy({
@@ -35,14 +38,10 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
             highlightedValue: "",
         });
         this.embeddedState = useEmbeddedState(this.props.host);
-        this.preRef = useRef("pre");
-        this.textareaRef = useRef("textarea");
 
         onWillStart(() => this.loadPrism());
         onMounted(() => {
-            this.pre = this.preRef.el;
-            this.textarea = this.textareaRef.el;
-            this.document = this.textarea.ownerDocument;
+            this.document = this.textareaRef().ownerDocument;
             this.highlight();
         });
 
@@ -67,26 +66,32 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
      * Highlight the content of the pre.
      */
     highlight() {
-        const focus = this.document.activeElement === this.textarea;
+        const pre = this.preRef();
+        const textarea = this.textareaRef();
+        if (!pre || !textarea) {
+            return;
+        }
+        const focus = this.document.activeElement === textarea;
 
-        highlightPre(this.pre, this.embeddedState.value, this.embeddedState.languageId);
+        highlightPre(pre, this.embeddedState.value, this.embeddedState.languageId);
 
         // Ensure the values match.
-        const preValue = getPreValue(this.pre);
-        if (this.textarea.value !== preValue) {
-            this.textarea.value = preValue;
+        const preValue = getPreValue(pre);
+        if (textarea.value !== preValue) {
+            textarea.value = preValue;
         }
         if (focus) {
-            this.textarea.focus({ preventScroll: true });
+            textarea.focus({ preventScroll: true });
             this.props.onTextareaFocus();
         }
-        this.embeddedState.value = this.textarea.value;
+        this.embeddedState.value = textarea.value;
     }
 
     onInput() {
-        this.textarea.focus();
+        const textarea = this.textareaRef();
+        textarea.focus();
         this.props.onTextareaFocus();
-        this.embeddedState.value = this.textarea.value;
+        this.embeddedState.value = textarea.value;
     }
 
     /**
@@ -95,69 +100,69 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
      * @param {KeyboardEvent} ev
      */
     onKeydown(ev) {
+        const textarea = this.textareaRef();
+        if (!textarea) {
+            return;
+        }
         if (ev.key === "Tab") {
             ev.preventDefault();
-            const tabSize = +getComputedStyle(this.textarea).tabSize || 4;
+            const tabSize = +getComputedStyle(textarea).tabSize || 4;
             const tab = " ".repeat(tabSize);
-            const { selectionStart, selectionEnd } = this.textarea;
+            const { selectionStart, selectionEnd } = textarea;
             const collapsed = selectionStart === selectionEnd;
-            let start = this.textarea.value.slice(0, selectionStart).lastIndexOf("\n");
+            let start = textarea.value.slice(0, selectionStart).lastIndexOf("\n");
             start = start === -1 ? 0 : start;
             let newValue = "";
             let spacesRemovedAtStart = 0;
             if (ev.shiftKey) {
                 // Remove tabs.
-                let end = this.textarea.value
-                    .slice(selectionEnd, this.textarea.value.length)
-                    .indexOf("\n");
+                let end = textarea.value.slice(selectionEnd, textarea.value.length).indexOf("\n");
                 end = end === -1 ? 0 : end;
                 end = selectionEnd + end;
                 // From 0 to the last \n before selection start.
-                newValue = this.textarea.value.slice(0, start);
+                newValue = textarea.value.slice(0, start);
                 // From the last \n before selection start to selection end.
                 const regex = new RegExp(`(\n|^)( |\u00A0){1,${tabSize}}`, "g");
-                const startSlice = this.textarea.value.slice(start, selectionStart);
+                const startSlice = textarea.value.slice(start, selectionStart);
                 const cleanStartSlice = startSlice.replace(regex, "$1");
                 spacesRemovedAtStart = startSlice.length - cleanStartSlice.length;
                 newValue += cleanStartSlice;
-                newValue += this.textarea.value
-                    .slice(selectionStart, selectionEnd)
-                    .replace(regex, "$1");
-                newValue += this.textarea.value.slice(selectionEnd, end).replace(regex, "$1");
+                newValue += textarea.value.slice(selectionStart, selectionEnd).replace(regex, "$1");
+                newValue += textarea.value.slice(selectionEnd, end).replace(regex, "$1");
                 // From selection end to end.
-                newValue += this.textarea.value.slice(end, this.textarea.value.length);
+                newValue += textarea.value.slice(end, textarea.value.length);
             } else {
                 // Insert tabs.
-                if (collapsed && /\S/.test(this.textarea.value.slice(start, selectionStart))) {
+                if (collapsed && /\S/.test(textarea.value.slice(start, selectionStart))) {
                     newValue =
-                        this.textarea.value.slice(0, selectionStart) +
+                        textarea.value.slice(0, selectionStart) +
                         tab +
-                        this.textarea.value.slice(selectionStart, this.textarea.value.length);
+                        textarea.value.slice(selectionStart, textarea.value.length);
                 } else {
                     // From 0 to the last \n before selection start.
-                    newValue = start ? this.textarea.value.slice(0, start) : tab;
+                    newValue = start ? textarea.value.slice(0, start) : tab;
                     // From the last \n before selection start to selection end.
-                    newValue += this.textarea.value
+                    newValue += textarea.value
                         .slice(start, selectionEnd)
                         .replaceAll("\n", `\n${tab}`);
                     // From selection end to end.
-                    newValue += this.textarea.value.slice(selectionEnd, this.textarea.value.length);
+                    newValue += textarea.value.slice(selectionEnd, textarea.value.length);
                 }
             }
-            const insertedChars = newValue.length - this.textarea.value.length;
-            this.textarea.value = newValue;
+            const insertedChars = newValue.length - textarea.value.length;
+            textarea.value = newValue;
             const newStart = selectionStart + (ev.shiftKey ? -spacesRemovedAtStart : tabSize);
             const newEnd = collapsed ? newStart : selectionEnd + insertedChars;
-            this.textarea.setSelectionRange(newStart, newEnd, this.textarea.selectionDirection);
-            this.embeddedState.value = this.textarea.value;
+            textarea.setSelectionRange(newStart, newEnd, textarea.selectionDirection);
+            this.embeddedState.value = textarea.value;
         } else if (ev.key === "Backspace") {
             // Transform empty code block into base container on backspace.
-            if (this.textarea.value === "") {
+            if (textarea.value === "") {
                 ev.preventDefault();
-                this.props.convertToParagraph({ target: this.pre });
+                this.props.convertToParagraph({ target: this.preRef() });
             }
         } else if (ev.key === "ArrowUp" || ev.key === "ArrowDown") {
-            const { value, selectionStart, selectionEnd } = this.textarea;
+            const { value, selectionStart, selectionEnd } = textarea;
             if (selectionStart !== selectionEnd) {
                 return;
             }
@@ -169,7 +174,7 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
                 return;
             }
             ev.preventDefault();
-            this.textarea.blur();
+            textarea.blur();
             const node = isArrowUp
                 ? this.props.host.previousElementSibling
                 : this.props.host.nextElementSibling;
@@ -184,8 +189,13 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
      * Ensure the pre and textarea's scrolls match so they remain aligned.
      */
     onScroll() {
-        this.pre.scrollTop = this.textarea.scrollTop;
-        this.pre.scrollLeft = this.textarea.scrollLeft;
+        const pre = this.preRef();
+        const textarea = this.textareaRef();
+        if (!pre || !textarea) {
+            return;
+        }
+        pre.scrollTop = textarea.scrollTop;
+        pre.scrollLeft = textarea.scrollLeft;
     }
 
     /**
@@ -195,7 +205,7 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
      */
     onLanguageChange(languageId) {
         if (languageId && this.embeddedState.languageId !== languageId) {
-            this.textarea.focus();
+            this.textareaRef()?.focus();
             this.props.onTextareaFocus();
             this.embeddedState.languageId = languageId;
         }

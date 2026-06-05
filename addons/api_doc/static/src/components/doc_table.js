@@ -1,5 +1,5 @@
-import { onWillRender, useExternalListener, useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { onWillRender, useExternalListener } from "@web/owl2/utils";
+import { Component, proxy, signal } from "@odoo/owl";
 import { localeCompare } from "@web/core/l10n/utils";
 
 export const TABLE_TYPES = {
@@ -16,9 +16,10 @@ export class DocTable extends Component {
         data: true,
     };
 
+    subTableRef = signal(null);
+    tooltipRef = signal(null);
+
     setup() {
-        this.subTableRef = useRef("subTableRef");
-        this.tooltipRef = useRef("tooltipRef");
         this.state = proxy({
             sortBy: 0,
             sortOrder: "desc",
@@ -35,11 +36,8 @@ export class DocTable extends Component {
         });
 
         useExternalListener(window, "click", (event) => {
-            if (
-                this.subTableRef.el &&
-                this.subTableRef.el !== event.target &&
-                !this.subTableRef.el.contains(event.target)
-            ) {
+            const el = this.subTableRef();
+            if (el && el !== event.target && !el.contains(event.target)) {
                 this.state.subTable = null;
             }
         });
@@ -57,7 +55,7 @@ export class DocTable extends Component {
         const triggerRect = event.target.getBoundingClientRect();
 
         this.requestAnim = requestAnimationFrame(() => {
-            if (!this.tooltipRef.el || !this.isHovering) {
+            if (!this.tooltipRef() || !this.isHovering) {
                 return;
             }
             const top = triggerRect.top;
@@ -80,9 +78,10 @@ export class DocTable extends Component {
 
         this.hideTimeout = setTimeout(() => {
             if (!this.isHovering) {
+                const tooltipEl = this.tooltipRef();
                 this.state.tooltipStyle = `
-                    top: ${this.tooltipRef.el ? this.tooltipRef.el.style.top : 0};
-                    left: ${this.tooltipRef.el ? this.tooltipRef.el.style.left : 0};
+                    top: ${tooltipEl ? tooltipEl.style.top : 0};
+                    left: ${tooltipEl ? tooltipEl.style.left : 0};
                     opacity: 0;
                     pointer-events: none;
                 `;

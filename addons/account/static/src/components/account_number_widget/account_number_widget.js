@@ -21,7 +21,7 @@ export class AccountNumberWidget extends CharField {
     }
 
     async validateAccountNumber() {
-        const accountNumber = this.props.readonly ? this.formattedValue : this.input.el?.value;
+        const accountNumber = this.props.readonly ? this.formattedValue : this.inputRef()?.value;
         const accountType = await this.orm.call("res.partner.bank", "retrieve_account_type", [accountNumber]);
         if (["iban", "clabe"].includes(accountType)) {
             this.state.label = accountType.toUpperCase();

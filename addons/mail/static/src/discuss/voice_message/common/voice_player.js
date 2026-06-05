@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, proxy, status } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onMounted, onWillUnmount, proxy, signal, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -38,21 +38,18 @@ export class VoicePlayer extends Component {
     width;
     /** @type {number} */
     height;
-    /** @type {HTMLElement} */
-    wrapper;
-    /** @type {HTMLElement} */
-    progressWave;
     /** @type {CanvasRenderingContext2D} */
     waveCtx;
     /** @type {CanvasRenderingContext2D} */
     progressCtx;
 
+    wrapperRef = signal(null);
+    drawerRef = signal(null);
+    waveRef = signal(null);
+    progressRef = signal(null);
+
     setup() {
         super.setup();
-        this.wrapperRef = useRef("wrapper");
-        this.drawerRef = useRef("drawer");
-        this.waveRef = useRef("wave");
-        this.progressRef = useRef("progress");
         /** @type {import("@mail/discuss/voice_message/common/voice_message_service").VoiceMessageService} */
         this.voiceMessageService = useService("discuss.voice_message");
         this.state = proxy({
@@ -83,15 +80,20 @@ export class VoicePlayer extends Component {
         );
         onMounted(() => {
             this.initElements();
-            this.wrapper.addEventListener("click", (e) => {
+            const wrapper = this.wrapperRef();
+            wrapper.addEventListener("click", (e) => {
                 if (this.props.attachment.uploading) {
                     return;
                 }
+                const wrapperEl = this.wrapperRef();
+                if (!wrapperEl) {
+                    return;
+                }
                 const clientX = (e.targetTouches ? e.targetTouches[0] : e).clientX;
-                const bcr = this.wrapper.getBoundingClientRect();
+                const bcr = wrapperEl.getBoundingClientRect();
                 const progressPixels = clientX - bcr.left;
                 const progress = Math.min(
-                    Math.max(0, progressPixels / this.wrapper.scrollWidth),
+                    Math.max(0, progressPixels / wrapperEl.scrollWidth),
                     1
                 );
                 this.seekTo(progress);
@@ -244,7 +246,10 @@ export class VoicePlayer extends Component {
         const position = Math.round(progress * this.width);
         if (position < this.lastPos || position - this.lastPos >= 1) {
             this.lastPos = position;
-            this.progressWave.style.width = position + "px";
+            const drawer = this.drawerRef();
+            if (drawer) {
+                drawer.style.width = position + "px";
+            }
         }
     }
 
@@ -310,19 +315,18 @@ export class VoicePlayer extends Component {
     }
 
     initElements() {
-        this.wrapper = this.wrapperRef.el;
-        this.progressWave = this.drawerRef.el;
-        this.progressColor = getComputedStyle(this.wrapper).getPropertyValue("--primary");
-        this.width = this.wrapper.clientWidth;
-        this.height = this.wrapper.clientHeight;
+        const wrapper = this.wrapperRef();
+        this.progressColor = getComputedStyle(wrapper).getPropertyValue("--primary");
+        this.width = wrapper.clientWidth;
+        this.height = wrapper.clientHeight;
 
-        const wave = this.waveRef.el;
+        const wave = this.waveRef();
         wave.width = this.width;
         wave.height = this.height;
         this.waveCtx = wave.getContext("2d");
         this.waveCtx.fillStyle = WAVE_COLOR;
 
-        const progress = this.progressRef.el;
+        const progress = this.progressRef();
         progress.width = this.width;
         progress.height = this.height;
         this.progressCtx = progress.getContext("2d");

@@ -1,8 +1,7 @@
-import { useRef } from "@web/owl2/utils";
 import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 import { usePopover } from "@web/core/popover/popover_hook";
 
@@ -35,9 +34,10 @@ export class ActivityCell extends Component {
     };
     static template = "mail.ActivityCell";
 
+    contentRef = signal(null);
+
     setup() {
         this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
-        this.contentRef = useRef("content");
     }
 
     get reportingDateFormatted() {
@@ -68,7 +68,7 @@ export class ActivityCell extends Component {
         if (this.popover.isOpen) {
             this.popover.close();
         } else {
-            this.popover.open(this.contentRef.el, {
+            this.popover.open(this.contentRef(), {
                 activityIds: this.props.activityIds,
                 defaultActivityTypeId: this.props.activityTypeId,
                 onActivityChanged: () => {

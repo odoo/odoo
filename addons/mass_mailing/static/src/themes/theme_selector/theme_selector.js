@@ -15,7 +15,7 @@ export class ThemeSelector extends Component {
         themesPromise: Promise,
         // Reactive wrapper for favoriteThemes promise: { promise }
         favoriteThemes: Object,
-        iframeRef: Object,
+        iframeRef: Function,
     };
     static components = {
         FavoritePreview,
@@ -56,7 +56,7 @@ export class ThemeSelector extends Component {
             if (status(this) === "destroyed") {
                 return;
             }
-            const iframe = this.props.iframeRef.el;
+            const iframe = this.props.iframeRef();
             iframe.style.width = "";
             const height = Math.trunc(
                 this.themeSelectorWrapperRef.el.getBoundingClientRect().height

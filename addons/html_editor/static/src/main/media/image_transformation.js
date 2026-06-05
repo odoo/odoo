@@ -23,9 +23,9 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useExternalListener } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../../utils/hooks";
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, signal } from "@odoo/owl";
 import { usePositionHook } from "@html_editor/position_hook";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
@@ -47,13 +47,14 @@ export class ImageTransformation extends Component {
         onComponentMounted: () => {},
     };
 
+    transfoContainerRef = signal(null);
+    transfoControlsRef = signal(null);
+    transfoCenterRef = signal(null);
+
     setup() {
         this.isCurrentlyTransforming = false;
         this.document = this.props.document;
         this.image = this.props.image;
-        this.transfoContainer = useRef("transfoContainer");
-        this.transfoControls = useRef("transfoControls");
-        this.transfoCenter = useRef("transfoCenter");
         this.computeImageTransformations();
         onMounted(() => {
             this.positionTransfoContainer();
@@ -258,7 +259,7 @@ export class ImageTransformation extends Component {
             pageY: pageY,
             width: parseFloat(getComputedStyle(this.image).width),
             height: parseFloat(getComputedStyle(this.image).height),
-            center: this.getOffset(this.transfoCenter.el),
+            center: this.getOffset(this.transfoCenterRef()),
         };
     }
 
@@ -284,19 +285,22 @@ export class ImageTransformation extends Component {
     }
 
     positionTransfoContainer() {
+        const container = this.transfoContainerRef();
+        const controls = this.transfoControlsRef();
+        if (!container || !controls) {
+            return;
+        }
         const settings = this.transfo.settings;
         const width = parseFloat(getComputedStyle(this.image).width);
         const height = parseFloat(getComputedStyle(this.image).height);
 
         this.setImageTransformation(this.image);
 
-        this.transfoContainer.el.style.position = "absolute";
-        this.transfoContainer.el.style.width = width + "px";
-        this.transfoContainer.el.style.height = height + "px";
-        this.transfoContainer.el.style.top = settings.pos.top + "px";
-        this.transfoContainer.el.style.left = settings.pos.left + "px";
-
-        const controls = this.transfoControls.el;
+        container.style.position = "absolute";
+        container.style.width = width + "px";
+        container.style.height = height + "px";
+        container.style.top = settings.pos.top + "px";
+        container.style.left = settings.pos.left + "px";
 
         this.setImageTransformation(controls);
         controls.style.width = width + "px";

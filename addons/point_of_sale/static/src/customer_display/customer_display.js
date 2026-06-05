@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, whenReady } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, signal, whenReady } from "@odoo/owl";
 import { OdooLogo } from "@point_of_sale/app/components/odoo_logo/odoo_logo";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { session } from "@web/session";
@@ -13,17 +13,23 @@ export class CustomerDisplay extends Component {
     static components = { OdooLogo, MainComponentsContainer, BadgeTag };
     static props = [];
 
+    scrollableRef = signal(null);
+
     setup() {
         this.session = session;
         this.dialog = useService("dialog");
         this.order = useService("customer_display_data");
         this.time = useTime();
 
-        this.scrollableRef = useRef("scrollable");
         useLayoutEffect(() => {
-            this.scrollableRef.el
-                ?.querySelector(".orderline.selected")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" });
+            const el = this.scrollableRef();
+            if (!el) {
+                return;
+            }
+            el.querySelector(".orderline.selected")?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
         });
     }
 

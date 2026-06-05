@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { FloatField, floatField } from "@web/views/fields/float/float_field";
 import { formatFloat } from "@web/views/fields/formatters";
 import { registry } from "@web/core/registry";
@@ -19,14 +18,15 @@ export class MrpShouldConsumeOwl extends FloatField {
         this.fields = this.props.record.fields;
         this.record = proxy(this.props.record);
         this.displayShouldConsume = !["done", "draft", "cancel"].includes(this.record.data.state);
-        this.inputSpanRef = useRef("numpadDecimal");
+        this.inputSpanRef = this.numpadDecimalRef;
         onMounted(this._renderPrefix);
         onPatched(this._renderPrefix);
     }
 
     _renderPrefix() {
-        if (this.displayShouldConsume && this.inputSpanRef.el) {
-            this.inputSpanRef.el.classList.add(
+        const el = this.inputSpanRef();
+        if (this.displayShouldConsume && el) {
+            el.classList.add(
                 "o_quick_editable",
                 "o_field_widget",
                 "o_field_number",

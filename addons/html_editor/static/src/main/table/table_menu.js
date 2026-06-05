@@ -1,7 +1,7 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../../utils/hooks";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, signal } from "@odoo/owl";
 import { getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -41,16 +41,16 @@ export class TableMenu extends Component {
     static defaultProps = { direction: "ltr" };
     static components = { Dropdown, DropdownItem };
 
+    menuRef = signal(null);
+
     setup() {
         this.editableDocument = this.props.editable.ownerDocument;
-        this.menuRef = useRef("menuRef");
         const onPointerDown = (ev) => this.onPointerDown(ev);
         onMounted(() => {
-            this.overlayEl = this.menuRef.el;
-            this.overlayEl.addEventListener("pointerdown", onPointerDown);
+            this.menuRef().addEventListener("pointerdown", onPointerDown);
         });
         onWillUnmount(() => {
-            this.menuRef?.el.removeEventListener("pointerdown", onPointerDown);
+            this.menuRef()?.removeEventListener("pointerdown", onPointerDown);
         });
         useCrossDocumentListener(this.props.document, "pointerup", this.onPointerUp);
         useLayoutEffect(
@@ -76,7 +76,7 @@ export class TableMenu extends Component {
                 this.updatePosition();
             });
             useExternalListener(this.props.document, "pointerdown", (ev) => {
-                if (!this.overlayEl.contains(ev.target)) {
+                if (!this.menuRef()?.contains(ev.target)) {
                     this.props.close();
                 }
             });
@@ -128,29 +128,30 @@ export class TableMenu extends Component {
 
     updatePosition() {
         const { target, type, direction } = this.props;
-        if (!this.overlayEl || !target) {
+        const overlayEl = this.menuRef();
+        if (!overlayEl || !target) {
             return;
         }
         const targetRect = getIframeAdjustedBoundingRect(target);
-        const container = this.overlayEl.parentElement;
+        const container = overlayEl.parentElement;
         const containerRect = container.getBoundingClientRect();
         const top = targetRect.top - containerRect.top;
         const left = targetRect.left - containerRect.left;
-        this.overlayEl.classList.remove("h-100", "w-100");
+        overlayEl.classList.remove("h-100", "w-100");
         if (type === "column") {
-            Object.assign(this.overlayEl.style, {
+            Object.assign(overlayEl.style, {
                 position: "absolute",
-                top: `${top - this.overlayEl.offsetHeight}px`,
+                top: `${top - overlayEl.offsetHeight}px`,
                 left: `${left}px`,
                 width: `${targetRect.width}px`,
             });
         } else {
             const isLTR = direction === "ltr";
             const inlineStartOffset = isLTR ? left : containerRect.right - targetRect.right;
-            Object.assign(this.overlayEl.style, {
+            Object.assign(overlayEl.style, {
                 position: "absolute",
                 top: `${top}px`,
-                insetInlineStart: `${inlineStartOffset - this.overlayEl.offsetWidth}px`,
+                insetInlineStart: `${inlineStartOffset - overlayEl.offsetWidth}px`,
                 height: `${targetRect.height}px`,
             });
         }

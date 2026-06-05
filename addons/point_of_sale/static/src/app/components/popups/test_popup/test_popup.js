@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, signal } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { renderToElement } from "@web/core/utils/render";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
@@ -8,17 +8,18 @@ export class TestPopup extends Component {
     static template = "point_of_sale.TestPopup";
     static components = { Dialog };
 
+    dialogRef = signal(null);
+
     setup() {
         this.pos = usePos();
-        this.ref = useRef("test-dialog");
 
         useLayoutEffect(
             () => {
-                if (this.ref.el) {
+                if (this.dialogRef()) {
                     this.fetchReceiptTemplate();
                 }
             },
-            () => [this.ref?.el]
+            () => [this.dialogRef()]
         );
     }
 
@@ -26,6 +27,6 @@ export class TestPopup extends Component {
         const data = await this.pos.data.call("pos.order", "get_example_order_data");
         const el = renderToElement("point_of_sale.pos_order_receipt", data);
         console.log(data);
-        this.ref.el.appendChild(el);
+        this.dialogRef()?.appendChild(el);
     }
 }

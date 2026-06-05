@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy, signal } from "@odoo/owl";
 import { simplifyString } from "@api_doc/utils/doc_model_search";
 
 export class DocSidebar extends Component {
@@ -8,8 +8,9 @@ export class DocSidebar extends Component {
     static components = {};
     static props = {};
 
+    containerRef = signal(null);
+
     setup() {
-        this.containerRef = useRef("containerRef");
         this.modelStore = proxy(this.env.modelStore);
         this.state = proxy({
             collapseAddons: {},
@@ -18,9 +19,9 @@ export class DocSidebar extends Component {
 
         useLayoutEffect(
             () => {
-                this.containerRef.el?.querySelector(":scope .o_active")?.scrollIntoView();
+                this.containerRef()?.querySelector(":scope .o_active")?.scrollIntoView();
             },
-            () => [this.containerRef.el]
+            () => [this.containerRef()]
         );
 
         for (const addon of this.filteredAddons) {
@@ -32,7 +33,10 @@ export class DocSidebar extends Component {
 
     onSearchInput(event) {
         this.state.searchValue = event.target.value;
-        this.containerRef.el.scrollTop = 0;
+        const el = this.containerRef();
+        if (el) {
+            el.scrollTop = 0;
+        }
     }
 
     _toggleAllAddons(isCollapsed) {

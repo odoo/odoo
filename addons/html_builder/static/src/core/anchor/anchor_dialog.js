@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 
@@ -14,14 +13,15 @@ export class AnchorDialog extends Component {
         close: { type: Function },
     };
 
+    inputRef = signal(null);
+
     setup() {
         this.title = _t("Link Anchor");
-        this.inputRef = useRef("anchor-input");
         this.state = proxy({ isValid: true });
     }
 
     async onConfirmClick() {
-        const newAnchorName = this.props.formatAnchor(this.inputRef.el.value);
+        const newAnchorName = this.props.formatAnchor(this.inputRef()?.value);
         if (newAnchorName === this.props.currentAnchorName) {
             this.props.close();
         }

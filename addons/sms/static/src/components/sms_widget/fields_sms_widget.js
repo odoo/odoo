@@ -15,7 +15,10 @@ export class SmsWidget extends EmojisTextField {
     static template = "sms.SmsWidget";
     setup() {
         super.setup();
-        this._emojiAdded = () => this.props.record.update({ [this.props.name]: this.targetEditElement.el.value });
+        this._emojiAdded = () =>
+            this.props.record.update({
+                [this.props.name]: this.targetEditElement()?.value,
+            });
         this.notification = useService('notification');
     }
 
@@ -112,7 +115,7 @@ export class SmsWidget extends EmojisTextField {
      */
     async onInput(ev) {
         super.onInput(...arguments);
-        await this.props.record.update({ [this.props.name]: this.targetEditElement.el.value });
+        await this.props.record.update({ [this.props.name]: this.targetEditElement()?.value });
     }
 }
 

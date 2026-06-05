@@ -1,10 +1,9 @@
-import { useRef } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { localization } from "@web/core/l10n/localization";
 import { clamp } from "@web/core/utils/numbers";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, signal } from "@odoo/owl";
 
 const isScrollSwipable = (scrollables) => ({
     left: !scrollables.filter((e) => e.scrollLeft !== 0).length,
@@ -61,14 +60,15 @@ export class ActionSwiper extends Component {
     static swipeEffectiveThreshold = 20;
     static animationLength = 400;
 
+    rootRef = signal(null);
+    targetContainerRef = signal(null);
+    leftPanelRef = signal(null);
+    rightPanelRef = signal(null);
+
     setup() {
         super.setup();
         this.actionTimeoutId = null;
         this.resetTimeoutId = null;
-        this.root = useRef("root");
-        this.targetContainer = useRef("targetContainer");
-        this.leftPanel = useRef("leftPanel");
-        this.rightPanel = useRef("rightPanel");
         this.isSwipeEnabled = false;
         this.scrollables = undefined;
         this.startX = undefined;
@@ -78,8 +78,11 @@ export class ActionSwiper extends Component {
         const _onTouchEnd = (ev) => this._onTouchEndSwipe(ev);
         onMounted(() => {
             if (this.localizedProps) {
-                this.root.el.addEventListener("touchmove", _onTouchMove, { capture: true });
-                this.root.el.addEventListener("touchend", _onTouchEnd, { capture: true });
+                const el = this.rootRef();
+                if (el) {
+                    el.addEventListener("touchmove", _onTouchMove, { capture: true });
+                    el.addEventListener("touchend", _onTouchEnd, { capture: true });
+                }
             }
         });
         onWillUnmount(() => {
@@ -105,7 +108,10 @@ export class ActionSwiper extends Component {
      */
     _onTouchEndSwipe(ev) {
         this.isSwipeEnabled = false;
-        this.targetContainer.el.classList.add("o_actionswiper_transition_enabled");
+        const tc = this.targetContainerRef();
+        if (tc) {
+            tc.classList.add("o_actionswiper_transition_enabled");
+        }
         if (this.isSwipeStarted) {
             ev.stopPropagation();
             ev.preventDefault();
@@ -125,7 +131,9 @@ export class ActionSwiper extends Component {
                 return;
             }
         }
-        this.targetContainer.el.style.transform = "translateX(0)";
+        if (tc) {
+            tc.style.transform = "translateX(0)";
+        }
         this.resetTimeoutId = browser.setTimeout(
             () => this._reset(),
             this.constructor.animationLength
@@ -173,21 +181,23 @@ export class ActionSwiper extends Component {
         if (this.isSwipeStarted) {
             return;
         }
+        const tc = this.targetContainerRef();
         this.scrollables = ev
             .composedPath()
             .filter(
                 (e) =>
                     e.nodeType === 1 &&
-                    this.targetContainer.el.contains(e) &&
+                    tc?.contains(e) &&
                     e.scrollWidth > e.getBoundingClientRect().width &&
                     ["auto", "scroll"].includes(window.getComputedStyle(e)["overflow-x"])
             );
         if (!this.containerWidth) {
-            this.containerWidth =
-                this.targetContainer && this.targetContainer.el.getBoundingClientRect().width;
+            this.containerWidth = tc && tc.getBoundingClientRect().width;
         }
         this.isSwipeEnabled = true;
-        this.targetContainer.el.classList.remove("o_actionswiper_transition_enabled");
+        if (tc) {
+            tc.classList.remove("o_actionswiper_transition_enabled");
+        }
         this.startX = ev.touches[0].clientX;
         if (this.props.enabledDuration) {
             this.enabledTimeoutId = browser.setTimeout(
@@ -207,8 +217,9 @@ export class ActionSwiper extends Component {
         this.isSwipeEnabled = false;
         this.isSwipeStarted = false;
         this.applyStyle(0);
-        if (this.targetContainer.el) {
-            this.targetContainer.el.classList.add("o_actionswiper_transition_enabled");
+        const tc = this.targetContainerRef();
+        if (tc) {
+            tc.classList.add("o_actionswiper_transition_enabled");
         }
     }
 
@@ -220,7 +231,10 @@ export class ActionSwiper extends Component {
                 this._reset();
             } else if (this.props.animationType === "forwards") {
                 await action();
-                this.targetContainer.el.classList.remove("o_actionswiper_transition_enabled");
+                const tc = this.targetContainerRef();
+                if (tc) {
+                    tc.classList.remove("o_actionswiper_transition_enabled");
+                }
                 this.applyStyle(0);
                 browser.requestAnimationFrame(() => this._reset());
             }
@@ -228,14 +242,17 @@ export class ActionSwiper extends Component {
     }
 
     applyStyle(distance) {
-        if (this.targetContainer.el) {
-            this.targetContainer.el.style.transform = distance ? `translateX(${distance}px)` : "";
+        const tc = this.targetContainerRef();
+        if (tc) {
+            tc.style.transform = distance ? `translateX(${distance}px)` : "";
         }
-        if (this.leftPanel.el) {
-            this.leftPanel.el.style.maxWidth = `${distance}px`;
+        const lp = this.leftPanelRef();
+        if (lp) {
+            lp.style.maxWidth = `${distance}px`;
         }
-        if (this.rightPanel.el) {
-            this.rightPanel.el.style.maxWidth = `${-distance}px`;
+        const rp = this.rightPanelRef();
+        if (rp) {
+            rp.style.maxWidth = `${-distance}px`;
         }
     }
 }

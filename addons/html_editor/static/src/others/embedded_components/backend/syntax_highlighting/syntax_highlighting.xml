@@ -3,12 +3,12 @@
     <!-- syntax highlighting template -->
     <t t-name="html_editor.EmbeddedSyntaxHighlighting">
         <CodeToolbar target="this.state.host" currentLanguage="this.embeddedState.languageId"
-            getContent="() => this.textarea.value" onLanguageChange="this.onLanguageChange.bind(this)"
+            getContent="() => this.textareaRef().value" onLanguageChange="this.onLanguageChange.bind(this)"
             convertToParagraph="this.props.convertToParagraph"
             toggleCodeWrap="this.toggleCodeWrap.bind(this)"
         />
-        <pre t-custom-ref="pre"/>
-        <textarea t-custom-ref="textarea" class="o_prism_source" contenteditable="true" placeholder="Code"
+        <pre t-ref="this.preRef"/>
+        <textarea t-ref="this.textareaRef" class="o_prism_source" contenteditable="true" placeholder="Code"
             t-on-input="this.onInput"
             t-on-scroll="this.onScroll"
             t-on-keydown="this.onKeydown"

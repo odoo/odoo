@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { FloatField, floatField } from "@web/views/fields/float/float_field";
 import { registry } from "@web/core/registry";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -8,7 +8,7 @@ export class CountedQuantityWidgetField extends FloatField {
         // Need to adapt useInputField to overide onInput and onChange
         super.setup();
 
-        const inputRef = useRef("numpadDecimal");
+        const inputRef = this.numpadDecimalRef;
 
         useLayoutEffect(
             (inputEl) => {
@@ -23,7 +23,7 @@ export class CountedQuantityWidgetField extends FloatField {
                     };
                 }
             },
-            () => [inputRef.el]
+            () => [inputRef()]
         );
     }
 

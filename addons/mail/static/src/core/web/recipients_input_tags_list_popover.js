@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { parseEmail } from "@mail/utils/common/format";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { useService } from "@web/core/utils/hooks";
@@ -18,13 +17,14 @@ export class RecipientsInputTagsListPopover extends Component {
     };
     static template = "mail.RecipientsInputTagsListPopover";
 
+    popoverRef = signal(null);
+
     setup() {
         this.orm = useService("orm");
         this.inputValue = signal("");
         this.inError = signal(false);
-        this.popoverRef = useRef("tagsListPopoverRef");
         useListener(window, "click", (ev) => {
-            if (!this.popoverRef.el?.contains(ev.target)) {
+            if (!this.popoverRef()?.contains(ev.target)) {
                 this.discardTag();
             }
         });

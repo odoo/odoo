@@ -1,4 +1,4 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { exprToBoolean } from "@web/core/utils/strings";
@@ -8,7 +8,7 @@ import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 export class CharField extends Component {
     static template = "web.CharField";
@@ -25,10 +25,11 @@ export class CharField extends Component {
     };
     static defaultProps = { dynamicPlaceholder: false };
 
+    inputRef = signal(null);
+
     setup() {
-        this.input = useRef("input");
         if (this.props.dynamicPlaceholder) {
-            this.dynamicPlaceholder = useDynamicPlaceholder(this.input);
+            this.dynamicPlaceholder = useDynamicPlaceholder(this.inputRef);
             useExternalListener(document, "keydown", this.dynamicPlaceholder.onKeydown);
             useLayoutEffect(() =>
                 this.dynamicPlaceholder.updateModel(
@@ -37,6 +38,7 @@ export class CharField extends Component {
             );
         }
         useInputField({
+            ref: this.inputRef,
             getValue: () => this.props.record.data[this.props.name] || "",
             parse: (v) => this.parse(v),
         });
@@ -70,8 +72,9 @@ export class CharField extends Component {
     }
 
     onBlur() {
-        if (this.input.el) {
-            this.selectionStart = this.input.el.selectionStart;
+        const input = this.inputRef();
+        if (input) {
+            this.selectionStart = input.selectionStart;
         }
     }
 
@@ -83,20 +86,16 @@ export class CharField extends Component {
 
     async onDynamicPlaceholderValidate(chain, defaultValue) {
         if (chain) {
-            this.input.el.focus();
+            const input = this.inputRef();
+            input.focus();
             const dynamicPlaceholder = ` {{object.${chain}${
                 defaultValue?.length ? ` ||| ${defaultValue}` : ""
             }}}`;
-            this.input.el.setRangeText(
-                dynamicPlaceholder,
-                this.selectionStart,
-                this.selectionStart,
-                "end"
-            );
+            input.setRangeText(dynamicPlaceholder, this.selectionStart, this.selectionStart, "end");
             // trigger events to make the field dirty
-            this.input.el.dispatchEvent(new InputEvent("input"));
-            this.input.el.dispatchEvent(new KeyboardEvent("keydown"));
-            this.input.el.focus();
+            input.dispatchEvent(new InputEvent("input"));
+            input.dispatchEvent(new KeyboardEvent("keydown"));
+            input.focus();
         }
     }
 }
