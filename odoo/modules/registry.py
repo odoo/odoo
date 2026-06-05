@@ -630,16 +630,36 @@ class Registry(Mapping):
         if not expected:
             return
 
-        # retrieve existing indexes with their corresponding table
-        cr.execute("SELECT indexname, tablename FROM pg_indexes WHERE indexname IN %s",
-                   [tuple(row[0] for row in expected)])
-        existing = dict(cr.fetchall())
+        # retrieve existing indexes with their table and access method
+        cr.execute("""
+            SELECT idx.relname, tbl.relname, am.amname
+              FROM pg_index ix
+              JOIN pg_class idx ON idx.oid = ix.indexrelid
+              JOIN pg_class tbl ON tbl.oid = ix.indrelid
+              JOIN pg_am am ON am.oid = idx.relam
+             WHERE idx.relname IN %s
+        """, [tuple(row[0] for row in expected)])
+        existing = {indexname: (tablename, method) for indexname, tablename, method in cr.fetchall()}
 
         for indexname, tablename, field in expected:
             index = field.index
             assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
-            if index and indexname not in existing and \
-                    ((not field.translate and index != 'trigram') or (index == 'trigram' and self.has_trigram)):
+
+            # whether the field should be backed by an index, and the access
+            # method (gin for trigram, btree otherwise) it is expected to use
+            will_index = bool(index) and (
+                (not field.translate and index != 'trigram')
+                or (index == 'trigram' and self.has_trigram)
+            )
+            if indexname in existing:
+                # The index exists, check if it is stale.
+                expected_method = 'gin' if index == 'trigram' else 'btree'
+                stale = existing[indexname][1] != expected_method
+                will_index &= stale  # create only when stale
+            else:
+                stale = False
+
+            if will_index:
                 column_expression = f'"{field.name}"'
                 if index == 'trigram':
                     if field.translate:
@@ -669,11 +689,13 @@ class Registry(Mapping):
                     where = f'{column_expression} IS NOT NULL' if index == 'btree_not_null' else ''
                 try:
                     with cr.savepoint(flush=False):
+                        if stale:
+                            sql.drop_index(cr, indexname, tablename)
                         sql.create_index(cr, indexname, tablename, [expression], method, where)
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index for %s", self)
 
-            elif not index and tablename == existing.get(indexname):
+            elif not index and tablename == existing.get(indexname, (None, None))[0]:
                 _schema.info("Keep unexpected index %s on table %s", indexname, tablename)
 
     def add_foreign_key(self, table1, column1, table2, column2, ondelete,
