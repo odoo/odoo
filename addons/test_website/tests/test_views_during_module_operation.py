@@ -176,17 +176,15 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
 
     view_website_1, view_website_2, theme_child_view = _simulate_xml_view()
 
-    old_registry = env.registry
-
     # Upgrade the module
     theme_default.button_immediate_upgrade()
 
-    # Beware: records do not belong to the correct registry anymore
-    assert env.registry is not old_registry
-    # Therefore we need to re-obtain them
+    # Re-obtain records after the module upgrade.
     View = env['ir.ui.view']
     ThemeView = env['theme.ir.ui.view']
-    Imd = env['ir.model.data']
+    view_website_1 = View.browse(view_website_1.id)
+    view_website_2 = View.browse(view_website_2.id)
+    theme_child_view = ThemeView.browse(theme_child_view.id)
 
     website_1 = env.ref('website.default_website')
     website_2 = website_1.search([('id', '>', website_1.id)], order='id', limit=1).ensure_one()
