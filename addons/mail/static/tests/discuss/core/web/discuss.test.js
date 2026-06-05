@@ -42,9 +42,9 @@ test("can create a new channel", async () => {
     await start();
     await openDiscuss();
     await waitStoreFetch([
+        "init_messaging",
         "failures",
         "systray_get_activities",
-        "init_messaging",
         "channels_as_member",
     ]);
     await contains(".o-mail-Discuss");
@@ -127,7 +127,7 @@ test("can make a DM chat", async () => {
         logParams: ["/discuss/get_or_create_chat", "/discuss/channel/messages"],
     });
     await start();
-    await waitStoreFetch(["failures", "systray_get_activities", "init_messaging"]);
+    await waitStoreFetch(["init_messaging", "failures", "systray_get_activities"]);
     await openDiscuss();
     await waitStoreFetch(["channels_as_member"]);
     await contains(".o-mail-Discuss");

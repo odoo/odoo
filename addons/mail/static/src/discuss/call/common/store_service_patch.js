@@ -47,8 +47,8 @@ const StorePatch = {
             fullscreen: this._hasFullscreenUrl ? true : undefined,
         });
     },
-    onStarted() {
-        super.onStarted(...arguments);
+    initialize() {
+        super.initialize(...arguments);
         this.rtc.start();
     },
     sortMembers(m1, m2) {

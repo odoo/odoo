@@ -3,8 +3,8 @@ import { fields } from "@mail/model/export";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 
-import { patch } from "@web/core/utils/patch";
 import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 
 const unread_store = (() => {
     if (!window.idbKeyval) {
@@ -47,16 +47,10 @@ const StorePatch = {
     computeGlobalCounter() {
         return this.inbox?.counter ?? 0;
     },
-    async initialize() {
-        await Promise.all([
-            this.fetchStoreData("failures"),
-            this.fetchStoreData("systray_get_activities"),
-            super.initialize(...arguments),
-        ]);
-    },
-    onPushNotificationDisplayed() {
-        super.onPushNotificationDisplayed(...arguments);
-        this.updateAppBadge();
+    initialize() {
+        super.initialize(...arguments);
+        this.fetchStoreData("failures");
+        this.fetchStoreData("systray_get_activities");
     },
     onStarted() {
         super.onStarted(...arguments);
@@ -84,6 +78,10 @@ const StorePatch = {
             // BroadcastChannel API is not supported (e.g. Safari < 15.4), so disabling it.
             this.activityBroadcastChannel = null;
         }
+    },
+    onPushNotificationDisplayed() {
+        super.onPushNotificationDisplayed(...arguments);
+        this.updateAppBadge();
     },
     onUpdateActivityGroups() {},
     /**

@@ -46,6 +46,7 @@ export class Store extends BaseStore {
     get self() {
         return this.self_user?.partner_id || this.self_guest;
     }
+    initialized = false;
     /**
      * Indicates whether the current user is using the application through the
      * public page.
@@ -157,6 +158,18 @@ export class Store extends BaseStore {
     }
 
     /**
+     * Ensure `initialize` is executed exactly once. Exposed as a separate function to
+     * allow overriding store initialization.
+     */
+    ensureInitialized() {
+        if (this.initialized) {
+            return;
+        }
+        this.initialized = true;
+        this.initialize();
+    }
+
+    /**
      * @param {string} name
      * @param {any} params
      * @param {Object} [options={}]
@@ -177,10 +190,52 @@ export class Store extends BaseStore {
         return dataRequest._resultResolvers.promise;
     }
 
-    /** Import data received from init_messaging */
-    async initialize() {
-        await this.fetchStoreData("init_messaging");
-        this._resolveIsReady();
+    /**
+     * Initialize the store by fetching the required data for the messaging system.
+     * Override to add data to be fetched. Do not call directly: use `ensureInitialized`
+     * to ensure the store is only initialized once.
+     */
+    initialize() {
+        this.fetchStoreData("init_messaging").then(() => {
+            this._resolveIsReady();
+        });
+    }
+
+    /**
+     * Called after the store is fully set up. Override to add listeners or set default field values.
+     * This avoids issues with the dummy store created during setup, which would cause computes to
+     * crash and listeners to be registered twice.
+     */
+    onStarted() {
+        this.isOdooWhiteTheme = cookie.get("color_scheme") !== "dark" || this.inPublicPage;
+        navigator.serviceWorker?.addEventListener("message", ({ data = {} }) => {
+            const { type, payload } = data;
+            if (type === "notification-display-request") {
+                const { correlationId, model, res_id } = payload;
+                const thread = this["mail.thread"].get({ model, id: res_id });
+                let isTabFocused;
+                try {
+                    isTabFocused = parent.document.hasFocus();
+                } catch {
+                    // assumes tab not focused: parent.document from iframe triggers CORS error
+                }
+                // Prevent duplicate inbox push notifications since they're already handled by
+                // `mail.message/inbox` bus notifications, and the `modelsHandleByPush` heuristic
+                // in `out_of_focus_service.js` isn't reliable enough to detect these cases.
+                const isInbox =
+                    this.store.self.main_user_id?.notification_type === "inbox" &&
+                    model !== "discuss.channel";
+                if ((isTabFocused && thread?.channel?.isDisplayed) || isInbox) {
+                    navigator.serviceWorker.controller?.postMessage({
+                        type: "notification-display-response",
+                        payload: { correlationId },
+                    });
+                }
+            }
+            if (type === "notification-displayed") {
+                this.onPushNotificationDisplayed(payload);
+            }
+        });
     }
 
     /**
@@ -376,39 +431,6 @@ export class Store extends BaseStore {
             this._fetchStoreDataDebounced,
             Store.FETCH_DATA_DEBOUNCE_DELAY
         );
-    }
-
-    /** Provides an override point for when the store service has started. */
-    onStarted() {
-        this.isOdooWhiteTheme = cookie.get("color_scheme") !== "dark" || this.inPublicPage;
-        navigator.serviceWorker?.addEventListener("message", ({ data = {} }) => {
-            const { type, payload } = data;
-            if (type === "notification-display-request") {
-                const { correlationId, model, res_id } = payload;
-                const thread = this["mail.thread"].get({ model, id: res_id });
-                let isTabFocused;
-                try {
-                    isTabFocused = parent.document.hasFocus();
-                } catch {
-                    // assumes tab not focused: parent.document from iframe triggers CORS error
-                }
-                // Prevent duplicate inbox push notifications since they're already handled by
-                // `mail.message/inbox` bus notifications, and the `modelsHandleByPush` heuristic
-                // in `out_of_focus_service.js` isn't reliable enough to detect these cases.
-                const isInbox =
-                    this.store.self.main_user_id?.notification_type === "inbox" &&
-                    model !== "discuss.channel";
-                if ((isTabFocused && thread?.channel?.isDisplayed) || isInbox) {
-                    navigator.serviceWorker.controller?.postMessage({
-                        type: "notification-display-response",
-                        payload: { correlationId },
-                    });
-                }
-            }
-            if (type === "notification-displayed") {
-                this.onPushNotificationDisplayed(payload);
-            }
-        });
     }
 
     onPushNotificationDisplayed(payload) {
@@ -686,7 +708,6 @@ export const storeService = {
          */
         store.self_guest ??= { id: -1 };
         store.settings ??= {};
-        store.initialize();
         store.onStarted();
         return store;
     },

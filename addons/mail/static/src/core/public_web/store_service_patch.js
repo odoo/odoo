@@ -60,15 +60,6 @@ patch(Store.prototype, {
     onStarted() {
         super.onStarted(...arguments);
         this.discuss = { activeTab: "notification" };
-        this.env.bus.addEventListener(
-            "discuss.channel/new_message",
-            ({ detail: { channel, message, silent } }) => {
-                if (this.env.services.ui.isSmall || message.isSelfAuthored || silent) {
-                    return;
-                }
-                channel.notifyMessageToUser(message);
-            }
-        );
     },
 });
 
