@@ -1259,6 +1259,7 @@ class HrExpense(models.Model):
 
         for attachment in attachments:
             expense = self.env['hr.expense'].create([{
+                'name': attachment.name,
                 'price_unit': 0,
             }])
             attachment.write({'res_model': 'hr.expense', 'res_id': expense.id})
