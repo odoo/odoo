@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import inspect
 import logging
-import os
 import threading
 import time
 import typing
@@ -25,7 +24,6 @@ from odoo.tools import (
     SQL,
     OrderedSet,
     config,
-    lazy_classproperty,
     lazy_property,
     remove_accents,
     sql,
@@ -38,7 +36,7 @@ from .utils import SUPERUSER_ID
 from . import model_classes
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable, Collection, Iterable, Iterator, MutableMapping
+    from collections.abc import Callable, Collection, Iterable, Iterator
     from odoo.fields import Field
     from odoo.models import BaseModel
     from odoo.sql_db import BaseCursor, Connection, Cursor
@@ -90,21 +88,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
     _lock: threading.RLock | DummyRLock = threading.RLock()
     _saved_lock: threading.RLock | DummyRLock | None = None
 
-    @lazy_classproperty
-    def registries(cls) -> MutableMapping[str, Registry]:
-        """ A mapping from database names to registries. """
-        size = config.get('registry_lru_size', None)
-        if not size:
-            # Size the LRU depending of the memory limits
-            if os.name != 'posix':
-                # cannot specify the memory limit soft on windows...
-                size = 42
-            else:
-                # A registry takes 10MB of memory on average, so we reserve
-                # 10Mb (registry) + 5Mb (working memory) per registry
-                avgsz = 15 * 1024 * 1024
-                size = int(config['limit_memory_soft'] / avgsz)
-        return LRU(size)
+    registries = LRU[str, "Registry"](42)  # random default value
+    """ A mapping from database names to registries. """
 
     def __new__(cls, db_name: str):
         """ Return the registry for the given database name."""
