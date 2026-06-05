@@ -277,7 +277,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         if move.narration:
             invoice['IncludedNote'] = {
                 'Subject': {'_text': 'AAB'},
-                'Content': html2plaintext(move.narration).strip(),
+                'Content':  {'_text': html2plaintext(move.narration).strip()},
             }
 
     @api.model
