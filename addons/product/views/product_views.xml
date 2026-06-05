@@ -138,15 +138,20 @@
                                             options="{'no_quick_create': True}"
                                         />
                                     </div>
-                                    <div colspan="2" class="d-flex align-items-baseline gap-2" name="standard_price_uom" invisible="type == 'combo'
+
+                                    <label for="standard_price" class="o_form_label" invisible="type == 'combo'
+                                        or (not is_product_variant and (
+                                            product_variant_count &gt; 1
+                                            or (product_variant_count == 0 and is_dynamically_created)
+                                        ))"/>
+                                    <div class="d-flex align-items-baseline gap-2" name="standard_price_uom" invisible="type == 'combo'
                                         or (not is_product_variant and (
                                             product_variant_count &gt; 1
                                             or (product_variant_count == 0 and is_dynamically_created)
                                         ))"
                                     >
-                                        <label for="standard_price" class="o_form_label"/>
+                                        
                                         <field
-                                            class="oe_inline"
                                             name="standard_price"
                                             widget="monetary"
                                             options="{
