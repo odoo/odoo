@@ -12,7 +12,6 @@ from operator import attrgetter
 
 import inspect
 import logging
-import os
 import threading
 import time
 import warnings
@@ -25,7 +24,7 @@ from odoo.osv.expression import get_unaccent_wrapper
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
 from odoo.tools import (
-    config, existing_tables, lazy_classproperty,
+    existing_tables,
     lazy_property, sql, Collector, OrderedSet, SQL,
     format_frame
 )
@@ -64,21 +63,8 @@ class Registry(Mapping):
     _lock = threading.RLock()
     _saved_lock = None
 
-    @lazy_classproperty
-    def registries(cls):
-        """ A mapping from database names to registries. """
-        size = config.get('registry_lru_size', None)
-        if not size:
-            # Size the LRU depending of the memory limits
-            if os.name != 'posix':
-                # cannot specify the memory limit soft on windows...
-                size = 42
-            else:
-                # A registry takes 10MB of memory on average, so we reserve
-                # 10Mb (registry) + 5Mb (working memory) per registry
-                avgsz = 15 * 1024 * 1024
-                size = int(config['limit_memory_soft'] / avgsz)
-        return LRU(size)
+    registries = LRU(42)  # random default value
+    """ A mapping from database names to registries. """
 
     def __new__(cls, db_name):
         """ Return the registry for the given database name."""
