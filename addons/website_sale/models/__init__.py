@@ -8,7 +8,6 @@ from . import (
     ir_http,
     ir_module_module,
     payment_token,
-    payment_transaction,
     product_attribute,
     product_attribute_category,
     product_document,
