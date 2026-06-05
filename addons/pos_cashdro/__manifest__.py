@@ -8,12 +8,15 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'pos_cashdro/static/src/**/*',
-            ('remove', 'pos_cashdro/static/src/app/**/*'),
+            'pos_cashdro/static/src/cashdro_service.js',
+            'pos_cashdro/static/src/backend/**/*',
+        ],
+        'point_of_sale._assets_pos': [
+            'pos_cashdro/static/src/app/**/*',
         ],
         'point_of_sale.payment_terminals': [
-            'pos_cashdro/static/src/**/*',
-            ('remove', 'pos_cashdro/static/src/backend/**/*'),
+            'pos_cashdro/static/src/cashdro_service.js',
+            'pos_cashdro/static/src/app/payment_cashdro.js',
         ],
         'web.assets_unit_tests': [
             'pos_cashdro/static/tests/**/*',
