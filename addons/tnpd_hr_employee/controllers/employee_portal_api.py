@@ -664,3 +664,150 @@ class EmployeePortalAPI(http.Controller):
         # Change password — Odoo stores as bcrypt hash
         emp.user_id.sudo().write({'password': new_pw})
         return self._ok('Password changed successfully')
+
+    # ── POST /api/admin/bulk-create-portal-users ──────────────────────────────
+
+    @http.route(
+        '/api/admin/bulk-create-portal-users',
+        auth='none', type='http', methods=['POST'], csrf=False,
+    )
+    def bulk_create_portal_users(self, **_kw):
+        """
+        One-time admin endpoint to pre-create Odoo portal users for ALL
+        active employees who do not yet have a portal account.
+
+        Protected by admin Odoo session (is_admin check).
+
+        Response
+        --------
+        {
+          "success": true,
+          "created": 42,
+          "skipped": 6,
+          "failed":  0,
+          "details": [
+            {"code": "EMP001", "name": "...", "status": "created"},
+            ...
+          ]
+        }
+        """
+        # Require active Odoo session
+        uid = request.session.uid
+        if not uid:
+            return self._err('Authentication required', status=401)
+
+        # Require admin user
+        user = request.env['res.users'].sudo().browse(uid)
+        if not user.exists() or not user._is_admin():
+            return self._err('Admin access required', status=403)
+
+        su_env = request.env(user=SUPERUSER_ID)
+
+        employees = su_env['hr.employee'].search([
+            ('active',          '=', True),
+            ('x_employee_code', '!=', False),
+            ('x_employee_code', '!=', ''),
+        ])
+
+        created = 0
+        skipped = 0
+        failed  = 0
+        details = []
+
+        # Pre-fetch group IDs once via SQL
+        su_env.cr.execute("""
+            SELECT name, res_id FROM ir_model_data
+            WHERE module='base' AND name IN ('group_portal','group_user','group_public')
+        """)
+        group_map    = {row[0]: row[1] for row in su_env.cr.fetchall()}
+        portal_gid   = group_map.get('group_portal')
+        internal_gid = group_map.get('group_user')
+        public_gid   = group_map.get('group_public')
+        all_type_gids = tuple(filter(None, [portal_gid, internal_gid, public_gid]))
+
+        ctx       = su_env['res.users']._crypt_context()
+        hashed_pw = ctx.hash('Welcome@123')
+
+        for emp in employees:
+            code = emp.x_employee_code
+            name = emp.name or ''
+            try:
+                # Already has a linked portal user — skip
+                if emp.user_id:
+                    su_env.cr.execute(
+                        'SELECT 1 FROM res_groups_users_rel '
+                        'WHERE uid=%s AND gid=%s',
+                        (emp.user_id.id, portal_gid)
+                    )
+                    if su_env.cr.fetchone():
+                        skipped += 1
+                        details.append({'code': code, 'name': name, 'status': 'skipped'})
+                        continue
+
+                # Re-use orphaned user with same login
+                su_env.cr.execute(
+                    'SELECT id FROM res_users WHERE login=%s LIMIT 1', (code,)
+                )
+                row = su_env.cr.fetchone()
+                if row:
+                    user_id = row[0]
+                    emp.write({'user_id': user_id})
+                else:
+                    company_id = (
+                        emp.company_id.id
+                        or su_env['res.company'].search([], limit=1).id
+                    )
+                    new_user = su_env['res.users'].with_context(
+                        no_reset_password=True
+                    ).create({
+                        'name':        name,
+                        'login':       code,
+                        'email':       emp.work_email or f'{code}@tnpd.local',
+                        'company_id':  company_id,
+                        'company_ids': [(6, 0, [company_id])],
+                    })
+                    user_id = new_user.id
+                    emp.write({'user_id': user_id})
+
+                # Set password via SQL (bypasses ORM compute/inverse chain)
+                su_env.cr.execute(
+                    'UPDATE res_users SET password=%s WHERE id=%s',
+                    (hashed_pw, user_id)
+                )
+
+                # Assign portal group via SQL (Odoo 19 constraint workaround)
+                if all_type_gids:
+                    su_env.cr.execute(
+                        'DELETE FROM res_groups_users_rel WHERE uid=%s AND gid IN %s',
+                        (user_id, all_type_gids)
+                    )
+                su_env.cr.execute(
+                    'INSERT INTO res_groups_users_rel (uid, gid) VALUES (%s, %s) '
+                    'ON CONFLICT DO NOTHING',
+                    (user_id, portal_gid)
+                )
+
+                created += 1
+                details.append({'code': code, 'name': name, 'status': 'created'})
+
+            except Exception as exc:
+                _logger.exception(
+                    'bulk_create_portal_users: failed for %s — %s', code, exc
+                )
+                failed += 1
+                details.append({
+                    'code': code, 'name': name,
+                    'status': 'failed', 'error': str(exc),
+                })
+
+        _logger.info(
+            'bulk_create_portal_users: created=%d skipped=%d failed=%d',
+            created, skipped, failed
+        )
+        return self._json_response({
+            'success': True,
+            'created': created,
+            'skipped': skipped,
+            'failed':  failed,
+            'details': details,
+        })
