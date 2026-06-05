@@ -28,9 +28,6 @@
         'wizard/pdp_registration_views.xml',
         'wizard/pdp_response_wizard_views.xml',
     ],
-    'demo': [
-        'demo/demo.xml',
-    ],
     'license': 'LGPL-3',
     'pre_init_hook': '_pre_init_pdp',
     'post_init_hook': '_post_init_pdp',
