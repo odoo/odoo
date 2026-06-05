@@ -10,13 +10,6 @@ from odoo import models
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
-    def _send_invoice(self):
-        """Override of `sale` to archive guest contacts."""
-        super()._send_invoice()
-        self.sale_order_ids.filtered(
-            lambda so: so.state == "sale" and so.website_id
-        )._archive_partner_if_no_user()
-
     def _process(self, payment_data):
         """Override of `payment` to allow retrying if the transaction is canceled or has an error,
         by redirecting the user back to the payment page."""
