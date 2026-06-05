@@ -56,6 +56,13 @@ class AccountMoveLine(models.Model):
     l10n_in_withhold_tax_amount = fields.Monetary(string="TDS Tax Amount", compute='_compute_l10n_in_withhold_tax_amount')
     l10n_in_tds_tcs_section_id = fields.Many2one(related="account_id.l10n_in_tds_tcs_section_id")
 
+    # Internal Tax fields
+    l10n_in_line_tax_rate = fields.Float()
+    l10n_in_line_sgst_amt = fields.Monetary()
+    l10n_in_line_cgst_amt = fields.Monetary()
+    l10n_in_line_igst_amt = fields.Monetary()
+    l10n_in_line_cess_amt = fields.Monetary()
+
     @api.depends('tax_ids')
     def _compute_l10n_in_withhold_tax_amount(self):
         # Compute the withhold tax amount for the withholding lines
