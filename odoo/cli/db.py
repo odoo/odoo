@@ -57,6 +57,10 @@ class Db(Command):
             help="neutralize the database after restore"
         )
         load.add_argument(
+            '--move', dest='copy', action='store_const', default=True, const=False,
+            help="restore as a moved database, keeping its UUID instead of generating a new one"
+        )
+        load.add_argument(
             'database', nargs='?',
             help="database to create, defaults to dump file's name "
                  "(without extension)"
@@ -144,7 +148,7 @@ class Db(Command):
             exit("Not a zipped dump file, use `pg_restore` to restore raw dumps,"
                  " and `psql` to execute sql dumps or scripts.")
 
-        restore_db(db=db_name, dump_file=dump_file, copy=True, neutralize_database=args.neutralize)
+        restore_db(db=db_name, dump_file=dump_file, copy=args.copy, neutralize_database=args.neutralize)
 
     def dump(self, args):
         if args.dump_path == '-':
