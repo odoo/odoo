@@ -64,6 +64,38 @@ class TestChorusProXml(TestAccountMoveSendCommon):
         self.assertEqual(xml_etree.findtext("{*}BuyerReference"), "buyer_ref_123")
         self.assertEqual(xml_etree.findtext("{*}OrderReference/{*}ID"), "order_ref_123")
 
+    def test_export_invoice_chorus_pro_overseas_drom(self):
+        """ A public customer located in a DROM, its SIRET must
+        be used in PartyIdentification, exactly like metropolitan France.
+        """
+        chorus_eas, chorus_endpoint = CHORUS_PRO_PEPPOL_ID.split(":")
+        drom_partner = self.env['res.partner'].create({
+            'name': "Chorus Pro - Ville du Lamentin (Martinique)",
+            'vat': "FR19219722139",
+            'siret': "21972213900017",
+            'peppol_eas': chorus_eas,
+            'peppol_endpoint': chorus_endpoint,
+            'country_id': self.env.ref('base.mq').id,  # Martinique (DROM)
+            'ubl_cii_format': 'ubl_bis3',
+        })
+        invoice = self.env['account.move'].create({
+            'company_id': self.company.id,
+            'partner_id': drom_partner.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+            })],
+        })
+        invoice.action_post()
+        xml = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0]
+        xml_etree = etree.fromstring(xml)
+
+        # The SIRET (not the VAT) must identify the overseas public customer
+        customer_identification_node = xml_etree.find("{*}AccountingCustomerParty/{*}Party/{*}PartyIdentification/{*}ID")
+        self.assertEqual(customer_identification_node.text, "21972213900017")
+        self.assertEqual(customer_identification_node.attrib, {'schemeID': '0009'})
+
     def test_export_invoice_chorus_pro_no_bic(self):
         invoice = self.env['account.move'].create({
             'company_id': self.company.id,
