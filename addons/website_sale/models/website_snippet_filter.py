@@ -97,7 +97,9 @@ class WebsiteSnippetFilter(models.Model):
             data = [
                 {
                     "id": 1,
-                    "cover_image": BinaryBytes(b"/website_sale/static/src/img/categories/desks.jpg"),
+                    "cover_image": BinaryBytes(
+                        b"/website_sale/static/src/img/categories/desks.jpg"
+                    ),
                     "name": self.env._("Desks"),
                 },
                 {
@@ -109,12 +111,16 @@ class WebsiteSnippetFilter(models.Model):
                 },
                 {
                     "id": 3,
-                    "cover_image": BinaryBytes(b"/website_sale/static/src/img/categories/boxes.jpg"),
+                    "cover_image": BinaryBytes(
+                        b"/website_sale/static/src/img/categories/boxes.jpg"
+                    ),
                     "name": self.env._("Boxes"),
                 },
                 {
                     "id": 4,
-                    "cover_image": BinaryBytes(b"/website_sale/static/src/img/categories/drawers.jpg"),
+                    "cover_image": BinaryBytes(
+                        b"/website_sale/static/src/img/categories/drawers.jpg"
+                    ),
                     "name": self.env._("Drawers"),
                 },
             ]
@@ -162,7 +168,7 @@ class WebsiteSnippetFilter(models.Model):
         :return: List of dictionaries containing category ID, name, and cover image URL.
         :rtype: list[dict]
         """
-        website = self.env['website'].get_current_website()
+        website = self.env["website"].get_current_website()
         CategorySudo = self.env["product.public.category"].sudo()
         domain = CategorySudo._get_available_category_domain(website.id)
         if parent_id:
@@ -180,9 +186,7 @@ class WebsiteSnippetFilter(models.Model):
                 "name": cat.name,
                 "unpublished": not cat.has_published_products,
                 "cover_image": (
-                    website.image_url(cat, 'cover_image')
-                    if cat.cover_image
-                    else default_img_url
+                    website.image_url(cat, "cover_image") if cat.cover_image else default_img_url
                 ),
             }
             for cat in categories

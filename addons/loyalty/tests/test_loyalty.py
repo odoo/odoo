@@ -5,8 +5,8 @@ from unittest.mock import patch
 
 from psycopg2 import IntegrityError
 
-from odoo.exceptions import UserError, ValidationError
 from odoo import Command, fields
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import Form, TransactionCase, tagged
 from odoo.tools import mute_logger
 
@@ -323,7 +323,7 @@ class TestLoyalty(TransactionCase):
             (program1 + program2).action_unarchive()
 
     def test_card_write_with_past_expiration_date(self):
-        """A loyalty card should not allow an expiry date in the past"""
+        """A loyalty card should not allow an expiry date in the past."""
         partner = self.env["res.partner"].create({"name": "Test Partner"})
         card = self.env["loyalty.card"].create({
             "program_id": self.program.id,

@@ -215,9 +215,7 @@
             # TODO Re-activate when testing edit mode
             # ('remove', 'website_sale/static/src/snippets/**/*.edit.js'),
         ],
-        "html_builder.iframe_add_dialog": [
-            "website_sale/static/src/snippets/**/*.preview.scss",
-        ],
+        "html_builder.iframe_add_dialog": ["website_sale/static/src/snippets/**/*.preview.scss"],
     },
     "author": "Odoo S.A.",
     "license": "LGPL-3",

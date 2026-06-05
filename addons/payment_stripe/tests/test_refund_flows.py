@@ -57,11 +57,12 @@ class TestRefundFlows(StripeCommon, PaymentHttpCommon):
         self.provider.capture_manually = True
         tx = self._create_transaction("direct", state="authorized")
         url = self._build_url(StripeController._webhook_url)
-        with patch(
-            "odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature"
-        ), patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-        ) as process_mock:
+        with (
+            patch("odoo.addons.payment_stripe.controllers.main.StripeController._verify_signature"),
+            patch(
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
+            ) as process_mock,
+        ):
             self._make_json_request(url, data=self.void_payment_data)
         self.assertEqual(process_mock.call_count, 0)
         self.assertFalse(tx.child_transaction_ids)

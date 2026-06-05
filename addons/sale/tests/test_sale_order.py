@@ -496,7 +496,7 @@ class TestSaleOrder(SaleCommon):
             patched.assert_not_called()
 
     def test_so_company_empty(self):
-        """Check emptying company on SO form"""
+        """Check emptying company on SO form."""
         self.env["res.company"].create({  # activate multi company for the form view
             "name": "Company 2"
         })
@@ -1242,7 +1242,7 @@ class TestSalesTeam(SaleCommon):
 
         # Setting a partner with the same fpos shouldn't recompute taxes.
         with patch(
-            'odoo.addons.sale.models.sale_order_line.SaleOrderLine._compute_tax_ids'
+            "odoo.addons.sale.models.sale_order_line.SaleOrderLine._compute_tax_ids"
         ) as patched:
             order_form.partner_id = partner_fpos_a_2
             form_order = order_form.save()
@@ -1303,7 +1303,9 @@ class TestSaleMailComposerUI(MailCommon, HttpCase):
             },
         ]
 
-        iterator = self.quotation._notify_get_classified_recipients_iterator(message=self.message, recipients_data=recipients_data)
+        iterator = self.quotation._notify_get_classified_recipients_iterator(
+            message=self.message, recipients_data=recipients_data
+        )
         results = {lang: group for lang, render_values, group in iterator}
 
         button_en = results["en_US"].get("button_access", {}).get("title", "")

@@ -14,7 +14,7 @@ class ProductWishlist(Controller):
 
         price = product._get_combination_info_variant()["price"]
 
-        website = self.env['website'].get_current_website()
+        website = self.env["website"].get_current_website()
         Wishlist = self.env["product.wishlist"]
         if website.is_public_user():
             Wishlist = Wishlist.sudo()
@@ -23,12 +23,7 @@ class ProductWishlist(Controller):
             partner_id = self.env.user.partner_id.id
 
         wish = Wishlist._add_to_wishlist(
-            request.pricelist.id,
-            website.currency_id.id,
-            website.id,
-            price,
-            product_id,
-            partner_id,
+            request.pricelist.id, website.currency_id.id, website.id, price, product_id, partner_id
         )
 
         if not partner_id:
@@ -48,7 +43,7 @@ class ProductWishlist(Controller):
     @route("/shop/wishlist/remove/<int:wish_id>", type="jsonrpc", auth="public", website=True)
     def remove_from_wishlist(self, wish_id, **_kw):
         wish = self.env["product.wishlist"].browse(wish_id)
-        website = self.env['website'].get_current_website()
+        website = self.env["website"].get_current_website()
         if website.is_public_user():
             wish_ids = request.session.get("wishlist_ids") or []
             if wish_id in wish_ids:
@@ -77,7 +72,7 @@ class ProductWishlist(Controller):
         if not product._has_stock_notification(partner):
             product.sudo().stock_notification_partner_ids += partner
 
-        website = self.env['website'].sudo().get_current_website()
+        website = self.env["website"].sudo().get_current_website()
         if website.is_public_user():
             request.session["product_with_stock_notification_enabled"] = list(
                 set(request.session.get("product_with_stock_notification_enabled", []))

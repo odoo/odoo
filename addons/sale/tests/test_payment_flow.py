@@ -569,15 +569,23 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertEqual(author_id, self.user.partner_id.id)
 
     def test_payment_linking_when_invoice_already_created(self):
+        """Check that the invoice is correctly linked to the transaction, even if created manually
+        during before the payment was confirmed and processed.
+
+        Example of when this will occur: ACH Direct Debit has a delay, user creates invoice,
+        _invoice_sale_orders eventually hits and removes connection between invoice and transaction.
         """
-        Example of when this will occur: ACH Direct Debit has a delay, user creates invoice, _invoice_sale_orders eventually hits and
-        removes connection between invoice and transaction
-        """
-        transaction = self._create_transaction("redirect", sale_order_ids=self.sale_order, state="pending")
+        transaction = self._create_transaction(
+            "redirect", sale_order_ids=self.sale_order, state="pending"
+        )
         self.sale_order.action_confirm()
         invoice = self.sale_order._create_invoices()
 
         transaction._set_done()
         transaction._invoice_sale_orders()
 
-        self.assertEqual(transaction.invoice_ids, invoice, "Invoice id was incorrectly removed from payment.transaction")
+        self.assertEqual(
+            transaction.invoice_ids,
+            invoice,
+            "Invoice id was incorrectly removed from payment.transaction",
+        )

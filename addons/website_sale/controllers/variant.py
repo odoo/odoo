@@ -89,7 +89,7 @@ class WebsiteSaleVariantController(Controller):
         readonly=True,
     )
     def get_dynamic_attribute_images(self, product_template_id, combination, **_kwargs):
-        website = self.env['website'].get_current_website()
+        website = self.env["website"].get_current_website()
         product_template = self.env["product.template"].browse(int(product_template_id))
         return product_template._get_dynamic_attribute_images(
             self.env["product.template.attribute.value"].browse(combination).exists().ids,

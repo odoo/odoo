@@ -26,7 +26,9 @@ class ProductWishlist(models.Model):
     )
     website_id = fields.Many2one("website", ondelete="cascade", required=True, index=True)
     active = fields.Boolean(default=True, required=True)
-    stock_notification = fields.Boolean(compute="_compute_stock_notification", default=False, required=True)
+    stock_notification = fields.Boolean(
+        compute="_compute_stock_notification", default=False, required=True
+    )
 
     @api.model
     def current(self):

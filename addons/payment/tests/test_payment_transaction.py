@@ -284,12 +284,10 @@ class TestPaymentTransaction(PaymentCommon):
             tx = self._create_transaction(
                 "redirect", reference=f"Test {state}", state=state, amount=100
             )
-            with (
-                patch(
-                    "odoo.addons.payment.models.payment_transaction.PaymentTransaction"
-                    "._extract_amount_data",
-                    return_value={"amount": 10, "currency_code": "USD"},
-                ),
+            with patch(
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction"
+                "._extract_amount_data",
+                return_value={"amount": 10, "currency_code": "USD"},
             ):
                 tx._process("test", {})
             self.assertEqual(tx.state, "error")
@@ -298,8 +296,7 @@ class TestPaymentTransaction(PaymentCommon):
         for state in ["draft", "pending", "error", "cancel"]:
             tx = self._create_transaction("redirect", reference=f"Test {state}", state=state)
             with patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction"
-                "._validate_amount",
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._validate_amount"
             ) as validate_amount_mock:
                 tx._process("test", {})
             self.assertEqual(validate_amount_mock.call_count, 0)

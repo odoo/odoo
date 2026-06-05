@@ -4,7 +4,7 @@ from odoo import models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = "res.config.settings"
 
     def action_install_more_provider(self):
-        return self.env['delivery.carrier'].install_more_provider()
+        return self.env["delivery.carrier"].install_more_provider()

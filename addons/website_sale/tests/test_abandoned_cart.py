@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from dateutil.relativedelta import relativedelta
 
-from odoo.tests import tagged, RecordCapturer
+from odoo.tests import RecordCapturer, tagged
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserPortal
 from odoo.addons.mail.models.mail_template import MailTemplate
@@ -170,24 +170,19 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             self.env["website"]._send_abandoned_cart_email()
             # Currently the class init level sales orders might be created in the time window
             # of the abandoned delay configured on the website, thus interfering here.
-            # Without modifying the whole legacy test, we filter the captured records based on res_id,
-            # so that other SOs don't interfere with this test case
+            # Without modifying the whole legacy test, we filter the captured records based on
+            # res_id, so that other SOs don't interfere with this test case
             abandoned_sale_order_mails = captured_mails.records.filtered(
-                lambda rec: (
-                    rec.res_id == abandoned_sale_order.id and rec.model == "sale.order"
-                )
+                lambda rec: rec.res_id == abandoned_sale_order.id and rec.model == "sale.order"
             )
             self.assertEqual(
-                len(abandoned_sale_order_mails),
-                1,
-                "more than one email for abandoned cart sent",
+                len(abandoned_sale_order_mails), 1, "more than one email for abandoned cart sent"
             )
-            # since saas-18.1, the default email template for abandoned carts uses use_default_to == True
-            # thus it should not create an explicit email_to value but use partner_ids
+            # since saas-18.1, the default email template for abandoned carts uses
+            # use_default_to == True thus it should not create an explicit email_to value but use
+            # partner_ids
             self.assertFalse(abandoned_sale_order_mails["email_to"])
-            self.assertEqual(
-                abandoned_sale_order_mails["partner_ids"].id, self.customer.id
-            )
+            self.assertEqual(abandoned_sale_order_mails["partner_ids"].id, self.customer.id)
 
         # Test that no mail is sent if the partner has no email address.
         self.customer.email = False
@@ -250,7 +245,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             "order_line": order_line,
         })
         transaction = self.env["payment.transaction"].create({
-            'provider_id': self.ref('payment.payment_provider_demo'),
+            "provider_id": self.ref("payment.payment_provider_demo"),
             "payment_method_id": self.payment_method_id,
             "partner_id": self.customer.id,
             "reference": abandoned_sale_order.name,

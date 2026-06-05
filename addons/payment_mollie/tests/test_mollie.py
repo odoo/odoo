@@ -91,17 +91,17 @@ class MollieTest(MollieCommon, PaymentHttpCommon):
         )
 
     def test_incomplete_billing_address_not_sent(self):
-        self.default_partner.zip = ''
-        tx = self._create_transaction(flow='redirect')
+        self.default_partner.zip = ""
+        tx = self._create_transaction(flow="redirect")
 
         payload = tx._mollie_prepare_payment_request_payload()
         expected_billing_address = {
-            'givenName': 'Norbert',
-            'familyName': 'Buyer',
-            'email': 'norbert.buyer@example.com',
+            "givenName": "Norbert",
+            "familyName": "Buyer",
+            "email": "norbert.buyer@example.com",
         }
 
-        self.assertDictEqual(payload['billingAddress'], expected_billing_address)
+        self.assertDictEqual(payload["billingAddress"], expected_billing_address)
 
     @mute_logger(
         "odoo.addons.payment_mollie.controllers.main",

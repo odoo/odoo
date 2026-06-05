@@ -623,7 +623,7 @@ class SaleOrder(models.Model):
             raise UserError(self.env._("There is nothing to discount"))
 
         max_discount = reward_currency._convert(
-            reward.discount_max_amount, self.currency_id, self.company_id,
+            reward.discount_max_amount, self.currency_id, self.company_id
         ) or float("inf")
         # discount should never surpass the order's current total amount
         max_discount = min(self.amount_total, max_discount)
@@ -635,15 +635,13 @@ class SaleOrder(models.Model):
             max_discount = min(
                 max_discount,
                 reward_currency._convert(
-                    reward.discount * points, self.currency_id, self.company_id,
+                    reward.discount * points, self.currency_id, self.company_id
                 ),
             )
         elif reward.discount_mode == "per_order":
             max_discount = min(
                 max_discount,
-                reward_currency._convert(
-                    reward.discount, self.currency_id, self.company_id,
-                ),
+                reward_currency._convert(reward.discount, self.currency_id, self.company_id),
             )
         elif reward.discount_mode == "percent":
             max_discount = min(max_discount, discountable * (reward.discount / 100))
@@ -657,9 +655,7 @@ class SaleOrder(models.Model):
         if reward.discount_mode == "per_point" and not reward.clear_wallet:
             # Calculate the actual point cost if the cost is per point
             converted_discount = self.currency_id._convert(
-                min(max_discount, discountable),
-                reward_currency,
-                self.company_id,
+                min(max_discount, discountable), reward_currency, self.company_id
             )
             point_cost = coupon.currency_id.round(converted_discount / reward.discount)
 
@@ -999,9 +995,7 @@ class SaleOrder(models.Model):
         """
         if reward.discount_mode == "per_order":
             return reward.currency_id._convert(
-                from_amount=reward.discount,
-                to_currency=self.currency_id,
-                company=self.company_id,
+                from_amount=reward.discount, to_currency=self.currency_id, company=self.company_id
             )
         if reward.discount_mode == "percent":
             return discountable * (reward.discount / 100)

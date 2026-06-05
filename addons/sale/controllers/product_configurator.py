@@ -392,7 +392,7 @@ class SaleProductConfiguratorController(Controller):
             pricelist=pricelist,
             **kwargs,
         )
-        if kwargs.get('show_packaging', True) and product_or_template._has_multiple_uoms():
+        if kwargs.get("show_packaging", True) and product_or_template._has_multiple_uoms():
             basic_information["available_uoms"] = product_or_template._get_available_uoms().read([
                 "id",
                 "display_name",
@@ -418,9 +418,7 @@ class SaleProductConfiguratorController(Controller):
         :rtype: float
         :return: The extra price for the product template attribute value.
         """
-        return ptav.currency_id._convert(
-            ptav.price_extra, currency, self.env.company, date.date()
-        )
+        return ptav.currency_id._convert(ptav.price_extra, currency, self.env.company, date.date())
 
     def _should_show_product(self, product_template):  # noqa: ARG002
         """Decide whether a product should be shown in the configurator.

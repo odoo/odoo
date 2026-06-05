@@ -53,16 +53,11 @@ class TestSnippets(HttpCase):
             "description_sale": "Pedal-based opening system",
         })
 
-        self.authenticate('admin', 'admin')
+        self.authenticate("admin", "admin")
         self.url_open(
             "/website/odoo_track",
             headers={"referer": product.website_url},
-            json={
-                "params": {
-                    "res_model": "product.product",
-                    "res_id": product.id,
-                }
-            },
+            json={"params": {"res_model": "product.product", "res_id": product.id}},
         )
         website_visitor = Visitor.search([("partner_id", "=", user.partner_id.id)])
 
@@ -72,9 +67,7 @@ class TestSnippets(HttpCase):
             "The visitor should be linked to the admin user, not OdooBot or anything.",
         )
         self.assertIn(
-            product.id,
-            website_visitor.product_ids.ids,
-            "The product should be recently viewed",
+            product.id, website_visitor.product_ids.ids, "The product should be recently viewed"
         )
 
         self.start_tour(
@@ -106,6 +99,6 @@ class TestSnippets(HttpCase):
             )
 
         # Assert that the returned cover_image use absolute URL without domain
-        self.assertTrue(data[0]['cover_image'].startswith('/'))
-        self.assertNotIn(original_get_base_url, data[0]['cover_image'])
-        self.assertNotIn(website.domain, data[0]['cover_image'])
+        self.assertTrue(data[0]["cover_image"].startswith("/"))
+        self.assertNotIn(original_get_base_url, data[0]["cover_image"])
+        self.assertNotIn(website.domain, data[0]["cover_image"])

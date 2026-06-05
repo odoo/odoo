@@ -110,7 +110,7 @@ class StripeController(http.Controller):
                     if not stripe_object["captured"]:  # The charge was authorized and then voided
                         return request.make_json_response("")  # Don't process void-related events
 
-                    refunds = stripe_object['refunds']['data']
+                    refunds = stripe_object["refunds"]["data"]
                     # The refunds linked to this charge are paginated, fetch the remaining refunds.
                     has_more = stripe_object["refunds"]["has_more"]
                     while has_more:

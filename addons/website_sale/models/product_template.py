@@ -664,8 +664,10 @@ class ProductTemplate(models.Model):
                 )
 
             if uom_price_enabled:
-                template_price_vals["base_unit_price"] = template.product_variant_id._get_base_unit_price(
-                    template_price_vals["price_reduce"]
+                template_price_vals["base_unit_price"] = (
+                    template.product_variant_id._get_base_unit_price(
+                        template_price_vals["price_reduce"]
+                    )
                 )
 
             res[template.id] = template_price_vals
@@ -740,7 +742,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
 
         combination = combination or self.env["product.template.attribute.value"]
-        website = self.env['website'].get_current_website()
+        website = self.env["website"].get_current_website()
         uom = self.env["uom.uom"].browse(uom_id) or self._get_main_uom()
 
         if not product_id and not combination and not only_template:
@@ -1215,7 +1217,7 @@ class ProductTemplate(models.Model):
         ]
 
     @api.model
-    def _search_get_detail(self, website, order, options):
+    def _search_get_detail(self, website, order, options):  # noqa: ARG002
         domains = [website.sale_product_domain()]
         category = options.get("category")
         tags = options.get("tags")
@@ -1380,7 +1382,7 @@ class ProductTemplate(models.Model):
             product_or_template, quantity, date, currency, pricelist, **kwargs
         )
 
-        if website := self.env['website'].get_current_website(fallback=False):
+        if website := self.env["website"].get_current_website(fallback=False):
             price = product_or_template._apply_taxes_to_price(price, currency, website=website)
 
         return price, pricelist_rule_id
@@ -1589,7 +1591,9 @@ class ProductTemplate(models.Model):
             product_or_template, date, currency, pricelist, **kwargs
         )
 
-        if (website := self.env['website'].get_current_website(fallback=False)) and product_or_template.is_product_variant:
+        if (
+            website := self.env["website"].get_current_website(fallback=False)
+        ) and product_or_template.is_product_variant:
             max_quantity = product_or_template._get_max_quantity(website, request.cart, **kwargs)
             if max_quantity is not None:
                 if uom:

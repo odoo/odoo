@@ -359,7 +359,7 @@ class ProductFeed(models.Model):
         return {}
 
     def _prepare_gmc_stock_info(self, product):
-        """ Prepare availability info for Google Merchant Center. """
+        """Prepare availability info for Google Merchant Center."""
         return {"availability": "out_of_stock" if product._is_sold_out() else "in_stock"}
 
     def _prepare_gmc_additional_info(self, product):

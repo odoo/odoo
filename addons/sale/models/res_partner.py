@@ -6,7 +6,9 @@ from odoo.fields import Domain
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
-    _explanation = "In the Sales context, partners represent Customers. Use this to track sales history, credit limits, and pricing lists specific to the customer's relationship with the company."
+    _explanation = "In the Sales context, partners represent Customers. Use this to track sales"
+    " history, credit limits, and pricing lists specific to the customer's relationship with the"
+    " company."
 
     sale_order_count = fields.Integer(
         string="Sale Order Count",
@@ -113,6 +115,6 @@ class ResPartner(models.Model):
         ).items():
             amount_to_invoice_sum = sum(orders.mapped("amount_to_invoice"))
             credit_company_currency = currency._convert(
-                amount_to_invoice_sum, company.currency_id, company,
+                amount_to_invoice_sum, company.currency_id, company
             )
             partner.commercial_partner_id.credit_to_invoice += credit_company_currency

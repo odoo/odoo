@@ -369,31 +369,27 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         self.partner_a.credit_limit = 3000.0
 
         self.empty_order.write({
-            "order_line": [Command.create({
-                "product_id": self.company_data["product_order_no"].id,
-                "price_unit": 2000.0,
-            })]
+            "order_line": [
+                Command.create({
+                    "product_id": self.company_data["product_order_no"].id,
+                    "price_unit": 2000.0,
+                })
+            ]
         })
         self.empty_order.action_confirm()
         sale_orders = self.empty_order + self.empty_order.copy()
 
-        self.assertRecordValues(self.partner_a, [{
-            "credit": 0.0,
-            "credit_to_invoice": 2000.0,
-        }])
+        self.assertRecordValues(self.partner_a, [{"credit": 0.0, "credit_to_invoice": 2000.0}])
 
         self.assertEqual(
             sale_orders[1].partner_credit_warning,
             "partner_a has reached its credit limit of: $\xa03,000.00\n"
-            "Total amount due (including sales orders and this document): $\xa04,000.00"
+            "Total amount due (including sales orders and this document): $\xa04,000.00",
         )
 
         sale_orders[0].action_close_invoicing()
         self.partner_a.invalidate_recordset(["credit", "credit_to_invoice"])
-        self.assertRecordValues(self.partner_a, [{
-            "credit": 0.0,
-            "credit_to_invoice": 0.0,
-        }])
+        self.assertRecordValues(self.partner_a, [{"credit": 0.0, "credit_to_invoice": 0.0}])
 
         sale_orders[1].invalidate_recordset(["partner_credit_warning"])
         self.assertFalse(sale_orders[1].partner_credit_warning)

@@ -14,7 +14,7 @@ class InStoreDelivery(LocationSelector):
         """
         if kwargs.get("product_id"):  # Called from the product page.
             order_sudo = request.cart
-            website = request.env['website'].get_current_website()
+            website = request.env["website"].get_current_website()
             in_store_dm = website.sudo().in_store_dm_id
             if order_sudo and order_sudo.carrier_id.delivery_type != "in_store":
                 order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
@@ -26,8 +26,8 @@ class InStoreDelivery(LocationSelector):
         one.
 
         This route is called from location selector on /product and is distinct from
-        /website_sale_stock/set_pickup_location as the latter is only called from the checkout page after
-        the delivery method is selected.
+        /website_sale_stock/set_pickup_location as the latter is only called from the checkout page
+        after the delivery method is selected.
 
         :param str pickup_location_data: The JSON-formatted pickup location data.
         :return: None
@@ -51,7 +51,8 @@ class InStoreDelivery(LocationSelector):
 
     @classmethod
     def _get_delivery_methods_express_checkout(cls, order_sudo):
-        """Override to exclude `in_store` delivery methods from exress checkout delivery options."""
+        """Override to exclude `in_store` delivery methods from express checkout delivery
+        options."""
         dm_rate_mapping = super()._get_delivery_methods_express_checkout(order_sudo)
         for dm in list(dm_rate_mapping):
             if dm.delivery_type == "in_store":

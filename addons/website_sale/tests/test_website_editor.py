@@ -33,7 +33,7 @@ class TestProductPictureController(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.website = cls.env.ref('base.default_website')
+        cls.website = cls.env.ref("base.default_website")
         cls.WebsiteSaleController = WebsiteSale()
         cls.product = cls.env["product.product"].create({
             "name": "Storage Test Box",
@@ -267,7 +267,7 @@ class TestProductVideoUpload(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.website = cls.env.ref('base.default_website')
+        cls.website = cls.env.ref("base.default_website")
         cls.WebsiteSaleController = WebsiteSale()
         cls.product = cls.env["product.product"].create({
             "name": "Test Video Product",
@@ -280,16 +280,18 @@ class TestProductVideoUpload(HttpCase):
             "platform": "YouTube",
         }
         # 1x1 pixel PNG image, used as a mock thumbnail for video uploads
-        cls.mock_b64_image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/D/PwAHAwL/qGeMxAAAAABJRU5ErkJggg=="
+        cls.mock_b64_image = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/D/PwAHAwL/qGeMxAAAAABJRU5ErkJggg=="  # noqa: E501
 
     def _upload_video(self):
         with MockRequest(self.product.env, website=self.website):
             self.WebsiteSaleController.add_product_media(
-                [{
-                    "name": self.video_data["platform"] + " - [Video]",
-                    "video_url": self.video_data["embed_url"],
-                    "image_1920": self.mock_b64_image,
-                }],
+                [
+                    {
+                        "name": self.video_data["platform"] + " - [Video]",
+                        "video_url": self.video_data["embed_url"],
+                        "image_1920": self.mock_b64_image,
+                    }
+                ],
                 "video",
                 self.product.id,
                 self.product.product_tmpl_id.id,
@@ -326,12 +328,14 @@ class TestProductVideoUpload(HttpCase):
         with MockRequest(self.product.env, website=self.website):
             with self.assertRaises(binascii.Error):
                 self.WebsiteSaleController.add_product_media(
-                    [{
-                        'name': 'Invalid Video',
-                        'video_url': self.video_data['embed_url'],
-                        'image_1920': 'not-a-valid-image',
-                    }],
-                    'video',
+                    [
+                        {
+                            "name": "Invalid Video",
+                            "video_url": self.video_data["embed_url"],
+                            "image_1920": "not-a-valid-image",
+                        }
+                    ],
+                    "video",
                     self.product.id,
                     self.product.product_tmpl_id.id,
                 )

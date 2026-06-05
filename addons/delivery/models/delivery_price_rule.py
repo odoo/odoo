@@ -90,7 +90,9 @@ class DeliveryPriceRule(models.Model):
                 case "volume":
                     rule.variable_unit = carrier_id.volume_uom_name
                 case "wv":
-                    rule.variable_unit = f"{carrier_id.weight_uom_name} * {carrier_id.volume_uom_name}"
+                    rule.variable_unit = (
+                        f"{carrier_id.weight_uom_name} * {carrier_id.volume_uom_name}"
+                    )
                 case "price":
                     rule.variable_unit = rule.currency_id.symbol or rule.currency_id.name or ""
                 case _:

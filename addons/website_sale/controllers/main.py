@@ -141,7 +141,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _get_search_order(self, post):
         # OrderBy will be parsed in orm and so no direct sql injection
         # id is added to be sure that order is a unique sort key
-        order = post.get("order") or self.env['website'].get_current_website().shop_default_sort
+        order = post.get("order") or self.env["website"].get_current_website().shop_default_sort
         return "is_published desc, %s, id desc" % order
 
     def _add_search_subdomains_hook(self, _search):
@@ -150,7 +150,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _get_shop_domain(
         self, search, category, attribute_value_dict, search_in_description=True, tags=None
     ):
-        website = request.env['website'].get_current_website()
+        website = request.env["website"].get_current_website()
         domains = [website.sale_product_domain()]
         if search:
             for srch in search.split(" "):
@@ -388,10 +388,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if filter_by_price_enabled:
             company_currency = website.company_id.sudo().currency_id
             conversion_rate = self.env["res.currency"]._get_conversion_rate(
-                company_currency,
-                website.currency_id,
-                website.company_id,
-                fields.Date.today(),
+                company_currency, website.currency_id, website.company_id, fields.Date.today()
             )
         else:
             conversion_rate = 1
@@ -527,20 +524,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 lambda c: c.website_id.id in (website.id, False)
             )
             category_entries = (
-                (not search
-                and available_categories)
-                or available_categories.filtered(lambda c: c.id in search_categories.ids)
-            )
+                not search and available_categories
+            ) or available_categories.filtered(lambda c: c.id in search_categories.ids)
             if not category_entries:
                 parent = category.parent_id
                 available_categories = parent.child_id.filtered(
                     lambda c: c.website_id.id in (website.id, False)
                 )
                 category_entries = (
-                    (not search
-                    and available_categories)
-                    or available_categories.filtered(lambda c: c.id in search_categories.ids)
-                )
+                    not search and available_categories
+                ) or available_categories.filtered(lambda c: c.id in search_categories.ids)
             if not search and not self.env.user._is_internal():
                 # We know the user has access to `categs` and `search_categories` because they come
                 # from a regular `search`, but we have not checked access to `category`'s children,
@@ -670,7 +663,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         handle_params_access_error=lambda e, **_kwargs: NotFound.code,  # noqa: ARG005
     )
     def product(self, product, pricelist=None, **kwargs):
-        website = self.env['website'].get_current_website()
+        website = self.env["website"].get_current_website()
         if not website.has_ecommerce_access():
             return request.redirect(f"/web/login?redirect={request.httprequest.path}")
 
@@ -920,7 +913,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return product.sudo()._is_add_to_cart_allowed()
 
     def _prepare_product_values(self, product, **kwargs):
-        website = self.env['website'].get_current_website()
+        website = self.env["website"].get_current_website()
         category = product.public_categ_ids.filtered(
             lambda categ: categ.website_id.id in (website.id, False)
         )[:1]
@@ -1049,10 +1042,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     min_price = float(min_price)
                     args["min_price"] = min_price and str(
                         prev_pricelist.currency_id._convert(
-                            min_price,
-                            pricelist.currency_id,
-                            website.company_id,
-                            round=False,
+                            min_price, pricelist.currency_id, website.company_id, round=False
                         )
                     )
                 except (ValueError, TypeError):
@@ -1061,10 +1051,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     max_price = float(max_price)
                     args["max_price"] = max_price and str(
                         prev_pricelist.currency_id._convert(
-                            max_price,
-                            pricelist.currency_id,
-                            website.company_id,
-                            round=False,
+                            max_price, pricelist.currency_id, website.company_id, round=False
                         )
                     )
                 except (ValueError, TypeError):
@@ -1670,13 +1657,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         list_as_website_content=system_page_extra_info,
     )
     def extra_info(self, **post):
-        website = request.env['website'].get_current_website()
+        website = request.env["website"].get_current_website()
         # Check that this option is activated
         extra_step = website.viewref("website_sale.extra_info")
         if not extra_step.active:
-            return request.redirect(
-                website._get_next_breadcrumb_step_href("/shop/extra_info")
-            )
+            return request.redirect(website._get_next_breadcrumb_step_href("/shop/extra_info"))
 
         order_sudo = request.cart
         if redirect := self.env["website.checkout.step"].validate_checkout_progress(
@@ -1699,7 +1684,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     # === CHECKOUT FLOW - PAYMENT/CONFIRMATION METHODS === #
 
     def _get_shop_payment_values(self, order, **_kwargs):
-        website = request.env['website'].get_current_website()
+        website = request.env["website"].get_current_website()
         checkout_page_values = {
             "sale_order": order,
             "website_sale_order": order,
@@ -1709,11 +1694,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "only_services": order.only_services,
             **website._get_checkout_step_values("/shop/payment"),
         }
-        website = request.env['website'].get_current_website()
+        website = request.env["website"].get_current_website()
         payment_form_values = {
-            **sale_portal.CustomerPortal._get_payment_values(
-                self, order, website_id=website.id
-            ),
+            **sale_portal.CustomerPortal._get_payment_values(self, order, website_id=website.id),
             "display_submit_button": False,  # The submit button is re-added outside the form.
             "transaction_route": f"/shop/payment/transaction/{order.id}",
             "landing_route": "/shop/payment/validate",
@@ -1826,7 +1809,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "website_sale_order": order,
             "order_tracking_info": self.order_2_return_dict(order),
         }
-        website = self.env['website'].get_current_website()
+        website = self.env["website"].get_current_website()
         if (
             self.env["res.users"]._get_signup_invitation_scope() == "b2c"
             and website.is_public_user()
@@ -2058,7 +2041,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     @staticmethod
     def _populate_currency_and_pricelist(kwargs):
-        website = request.env['website'].get_current_website()
+        website = request.env["website"].get_current_website()
         kwargs.update({"currency_id": website.currency_id.id, "pricelist_id": request.pricelist.id})
 
     @staticmethod
@@ -2076,7 +2059,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductCategory = request.env["product.public.category"]
         if category and isinstance(category, str) and not category.isdigit():
             return ProductCategory
-        website = request.env['website'].get_current_website()
+        website = request.env["website"].get_current_website()
         if (
             category := ProductCategory.browse(category and int(category)).exists()
         ) and category.website_id.id in (website.id, False):

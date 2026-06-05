@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from urllib.parse import urlparse
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.image import is_image_size_above
-from urllib.parse import urlparse
 
 
 class ProductImage(models.Model):
