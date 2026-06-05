@@ -26,3 +26,13 @@ class PageAttributes(StrEnum):
     CONTENTS = "/Contents"  # stream or array, optional
     ANNOTS = "/Annots"  # array, optional; an array of annotations
     ID = "/ID"  # byte string, optional
+
+
+class CatalogDictionary(StrEnum):
+    """§7.7.2 of the 1.7 and 2.0 references."""
+
+    ACRO_FORM = "/AcroForm"  # dictionary, optional
+
+
+class InteractiveFormDictEntries(StrEnum):
+    SigFlags = "/SigFlags"

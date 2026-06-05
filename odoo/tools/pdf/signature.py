@@ -1,6 +1,8 @@
 import datetime
 import hashlib
 import io
+import uuid
+from typing import Any
 from asn1crypto import cms, algos, core, x509
 import logging
 
@@ -9,7 +11,7 @@ try:
     from cryptography.hazmat.primitives.asymmetric.types import PrivateKeyTypes
     from cryptography.hazmat.primitives.serialization import Encoding, load_pem_private_key
     from cryptography.hazmat.primitives.asymmetric import padding
-    from cryptography.x509 import Certificate, load_pem_x509_certificate
+    from cryptography.x509 import Certificate, load_pem_x509_certificates
 except ImportError:
     # cryptography 41.0.7 and above is supported
     hashes = None
@@ -18,274 +20,450 @@ except ImportError:
     load_pem_private_key = None
     padding = None
     Certificate = None
-    load_pem_x509_certificate = None
+    load_pem_x509_certificates = None
 
 from odoo.addons.base.models.res_company import ResCompany
-from odoo.addons.base.models.res_users import ResUsers
-from odoo.tools.pdf import PdfReader, PdfWriter, ArrayObject, ByteStringObject, DictionaryObject, NameObject, NumberObject, create_string_object, DecodedStreamObject as StreamObject
+from odoo.tools.pdf import (
+    PdfFileReader,
+    IndirectObject,
+    ArrayObject,
+    DictionaryObject,
+    NameObject,
+    NumberObject,
+    ByteStringObject,
+    DecodedStreamObject as StreamObject,
+    create_string_object
+)
+
+from .incremental_pdf_merge import IncrementalPdfMerge, IndirectObjectsWrapper
+from .constants import TrailerKeys as TK, PageAttributes as PG, CatalogDictionary as CD, InteractiveFormDictEntries as IF
 
 _logger = logging.getLogger(__name__)
 
 
+class _SignatureContentsPlaceholder(ByteStringObject):
+    """
+    A placeholder for the `/Contents` field in a PDF signature.
+
+    We handle the serialization of the object rather than relying on the pypdf library.
+    This prevents the library from changing the format (like encrypting it,
+    or changing how the hex is formatted).
+
+    It also records the exact byte location of this placeholder in the file. This way,
+    the signing tool knows exactly where to inject the final signature later without
+    having to search the entire file to find the right spot.
+    """
+    RAW_LEN = 16 * 1024  # 16 KiB raw - leaves headroom for LTV / timestamped CMS payloads
+
+    def __new__(cls):
+        return bytes.__new__(cls, b"\0" * cls.RAW_LEN)
+
+    def __init__(self):
+        super().__init__()
+        self.hex_start = None  # absolute offset of the first hex char (after '<')
+        self.hex_end = None    # absolute offset of '>' (exclusive end of hex)
+
+    def write_to_stream(self, stream, encryption_key=None):
+        stream.write(b"<")
+        self.hex_start = stream.tell()
+        stream.write(b"0" * self.RAW_LEN * 2)  # hex encoding is 2 chars per raw byte
+        self.hex_end = stream.tell()
+        stream.write(b">")
+
+
+class _ByteRangePlaceholder(ArrayObject):
+    """ ``/ByteRange`` placeholder for the PDF signature dictionary.
+
+    Reserves a fixed-width slot (``[`` followed by spaces and ``]``) and records its
+    absolute offsets in the output stream, so while signing we can fill it directly
+    without searching for the bracket.
+    """
+    SLOT_LEN = 60  # total bytes including '[' and ']' (room for four 10-digit ints + spaces)
+
+    def __init__(self):
+        super().__init__()
+        self.start = None  # absolute offset of '['
+        self.end = None    # absolute offset just past ']'
+
+    def write_to_stream(self, stream, encryption_key=None):
+        self.start = stream.tell()
+        stream.write(b"[" + b" " * (self.SLOT_LEN - 2) + b"]")
+        self.end = stream.tell()
+
+
 class PdfSigner:
-    """Class that defines methods uses in the signing process of pdf documents
+    """
+    Manages the cryptographic signing of PDF documents using incremental updates.
 
-    The PdfSigner will perform the following operations on a PDF document:
-        - Modifiying the document by adding a signature field via a form,
-        - Performing a cryptographic signature of the document.
+    This class implements the **PAdES** (PDF Advanced Electronic Signatures) standard basics.
+    It performs the following operations:
 
-    This implementation follows the Adobe PDF Reference (v1.7) (https://ia601001.us.archive.org/1/items/pdf1.7/pdf_reference_1-7.pdf)
-    for the structure of the PDF document,
-    and Digital Signatures in a PDF (https://www.adobe.com/devnet-docs/acrobatetk/tools/DigSig/Acrobat_DigitalSignatures_in_PDF.pdf),
-    for the structure of the signature in a PDF.
+    1.  **Modification:** Modifies the document by adding a signature field via a form
+        (AcroForm) and optionally merges a visual overlay.
+    2.  **Signing:** Computes a cryptographic signature (PKCS#7/CMS).
+    3.  **Injection:** Inserts the signature into the file without invalidating existing
+        signatures (incremental update).
+
+    **References:**
+    This implementation adheres to the standards defined in:
+
+    * `ISO 32000-1:2008 <https://opensource.adobe.com/dc-acrobat-sdk-docs/pdfstandards/PDF32000_2008.pdf>`_
+        (For the general structure of the PDF document).
+    * `Digital Signatures in a PDF <https://www.adobe.com/devnet-docs/acrobatetk/tools/DigSig/Acrobat_DigitalSignatures_in_PDF.pdf>`_
+        (For the specific structure of the signature dictionary).
+
+    :param pdf_raw: The raw bytes of the original PDF file.
+    :param company: The Odoo company record containing the signing certificate/key.
+    :param signing_time: Optional datetime to use as the signing timestamp.
+                         Defaults to ``datetime.now()``.
     """
 
-    def __init__(self, stream: io.BytesIO, company: ResCompany | None = None, signing_time=None) -> None:
-        self.signing_time = signing_time
+    def __init__(self, pdf_raw: bytes, company: ResCompany | None = None, signing_time: datetime.datetime | None = None) -> None:
+        self.pdf_raw = pdf_raw
+        self.pdf_reader = PdfFileReader(io.BytesIO(pdf_raw), strict=False)
         self.company = company
-        if not 'clone_document_from_reader' in dir(PdfWriter):
-            _logger.info("PDF signature is supported by Python 3.12 and above")
-            return
-        reader = PdfReader(stream)
-        self.writer = PdfWriter()
-        self.writer.clone_document_from_reader(reader)
+        self.signing_time = signing_time or datetime.datetime.now(datetime.timezone.utc)
 
-    def sign_pdf(self, visible_signature: bool = False, field_name: str = "Odoo Signature", signer: ResUsers | None = None) -> io.BytesIO | None:
-        """Signs the pdf document using a PdfWriter object
+    def pdf_contains_signature(self) -> bool:
+        """ Checks if the PDF document contains at least one actively applied digital signature.
 
-        Returns:
-            Optional[io.BytesIO]: the resulting output stream after the signature has been performed, or None in case of error
+        :return: True if at least one applied signature exists, False otherwise.
         """
-        if not self.company or not load_pem_x509_certificate:
-            return
+        form_fields = self.pdf_reader.get_fields()
+        if form_fields:
+            for field_dict in form_fields.values():
+                if field_dict.get("/FT") == "/Sig" and "/V" in field_dict:
+                    return True
 
-        dummy, sig_field_value = self._setup_form(visible_signature, field_name,  signer)
+        return False
 
-        if not self._perform_signature(sig_field_value):
-            return
+    def sign_pdf(self, sig_overlay_pdf: PdfFileReader | None = None, field_name: str | None = None) -> bytes | None:
+        """ Inject a cryptographic digital signature into the PDF document.
 
-        out_stream = io.BytesIO()
-        self.writer.write_stream(out_stream)
-        return out_stream
+        Prepares the document by creating a signature field and appending an
+        optional visual representation, then finalizes the file with an
+        incremental update and cryptographic injection.
 
-    def _load_key_and_certificate(self) -> tuple[PrivateKeyTypes | None, Certificate | None]:
-        """Loads the private key
-
-        Returns:
-            Optional[PrivateKeyTypes]: a private key object, or None if the key couldn't be loaded.
+        :param sig_overlay_pdf: The parsed PDF widget to overlay as the signature appearance.
+        :param field_name: The dictionary name for the signature field. If left as
+            ``None``, a unique name of the form ``"Odoo Signature <uuid>"`` is
+            generated so re-signing the same document never collides with an existing
+            ``/T`` field.
+        :return: The signed PDF data, or None if cryptographic keys/dependencies are missing.
         """
-        if "signing_certificate_id" not in self.company._fields \
-            or not self.company.signing_certificate_id.pem_certificate:
-            return None, None
+        if not self.company or not load_pem_x509_certificates:
+            return
 
-        certificate = self.company.signing_certificate_id
+        # Encrypted PDFs would end up corrupt: the new objects are written in
+        # plaintext while the trailer still carries /Encrypt, so readers reject
+        # the result.
+        if TK.ENCRYPT in self.pdf_reader.trailer:
+            _logger.warning("Skipping PDF signature: encrypted PDFs are not supported.")
+            return None
+
+        # Need at least one page to host the signature widget.
+        if not self.pdf_reader.pages:
+            _logger.warning("Skipping PDF signature: the PDF has no pages.")
+            return None
+
+        # Make the field name unique so re-signing the same document does not
+        # produce duplicate /T entries (which break form validation in strict viewers).
+        if field_name is None:
+            field_name = f"Odoo Signature {uuid.uuid4()}"
+
+        incremented_objects = {}
+
+        # 1. Normalize PDF annotations in case it wasn't signed before
+        self._normalize_unsigned_pdf_annotations()
+
+        # 2. Prepare the Signature Field Structure
+        contents_placeholder, byte_range_placeholder = self._setup_form(
+            self.pdf_reader, field_name, incremented_objects, sig_overlay_pdf,
+        )
+
+        # 3. Write the Incremental Updated PDF, the placeholders record their own offsets while serializing
+        pdf_merger = IncrementalPdfMerge(self.pdf_raw)
+        pdf_merger.write_incremented_pdf(self.pdf_reader, incremented_objects)
+
+        # 4. Sign the Document (fill the signature placeholders)
+        final_output = pdf_merger.get_output_stream_value()
+        signed_pdf_bytes = self._perform_signature(
+            final_output, contents_placeholder, byte_range_placeholder,
+        )
+
+        return signed_pdf_bytes
+
+    def _normalize_unsigned_pdf_annotations(self):
+        """ Prepares an unsigned PDF for sequential digital signing by normalizing annotations.
+
+        If the document is already signed, this method safely exits to preserve the
+        existing cryptographic hashes. For unsigned documents, it runs a discrete
+        incremental update to force all page ``/Annots`` arrays into indirect objects.
+
+        This structural normalization ensures that when subsequent signatures are
+        applied, only the isolated annotation arrays are modified in the XRef table.
+        """
+        if not self.pdf_contains_signature():
+            pdf_merger = IncrementalPdfMerge(self.pdf_raw)
+            pdf_merger.normalize_pages_annotations_to_indirect()
+            self.pdf_raw = pdf_merger.get_output_stream_value()
+            self.pdf_reader = PdfFileReader(io.BytesIO(self.pdf_raw), strict=False)
+
+    def _load_key_and_certificates(self) -> tuple[PrivateKeyTypes | None, Certificate | None, list[Certificate] | None]:
+        """ Retrieves and deserializes the private key and certificate from the company record.
+
+        :return: A tuple ``(private_key, certificate)``. Returns ``(None, None)`` if
+                 the company has no valid certificate configured.
+        """
+        certificate = self.company.signing_certificate_id if "signing_certificate_id" in self.company._fields else None
+        if not (certificate and certificate.pem_certificate and certificate.private_key_id and certificate.private_key_id.content):
+            return None, None, None
+
         cert_bytes = certificate.pem_certificate.content
         private_key_bytes = certificate.private_key_id.content.content
-        return load_pem_private_key(private_key_bytes, None), load_pem_x509_certificate(cert_bytes)
+        all_certs = load_pem_x509_certificates(cert_bytes)
 
-    def _setup_form(self, visible_signature: bool, field_name: str, signer: ResUsers | None = None) -> tuple[DictionaryObject, DictionaryObject] | None:
-        """Creates the /AcroForm and populates it with the appropriate field for the signature
+        leaf_cert = all_certs[0]
+        cert_chain = all_certs[1:]
+        private_key = load_pem_private_key(private_key_bytes, None)
 
-        Args:
-            visible_signature (bool): boolean value that determines if the signature should be visible on the document
-            field_name (str): the name of the signature field
-            signer (Optional[ResUsers]): user that will be used in the visuals of the signature field
+        return private_key, leaf_cert, cert_chain
 
-        Returns:
-            tuple[DictionaryObject, DictionaryObject]: a tuple containing the signature field and the signature content
+    def _setup_form(
+            self,
+            pdf_reader: PdfFileReader,
+            field_name: str,
+            incremented_objects: dict[tuple[int, int], Any],
+            sig_overlay_pdf: PdfFileReader | None = None,
+    ) -> tuple[_SignatureContentsPlaceholder, _ByteRangePlaceholder]:
+        """ Configure the PDF ``/AcroForm`` and create the required Signature Field dictionaries.
+
+        This method mutates the PDF object graph by injecting:
+        1. **AcroForm Dictionary:** Enables forms and sets ``SigFlags`` to 3 (Signatures Exist | Append Only).
+        2. **Signature Field:** The core field definition (e.g., ``/FT /Sig``).
+        3. **Visual Appearance:** If provided, embeds the ``sig_overlay_pdf`` as a Form XObject widget.
+        4. **Signature Value:** A placeholder dictionary (``/Contents`` and ``/ByteRange``) ready for cryptographic injection.
+
+        :param pdf_reader: The reader object holding the current document state.
+        :param field_name: The internal name identifier for the signature field.
+        :param incremented_objects: Mapping of modified ``(object_id, generation)`` tuples for the incremental save.
+        :param sig_overlay_pdf: An optional pre-rendered PDF containing the visual widget overlay.
         """
-        if "/AcroForm" not in self.writer._root_object:
-            form = DictionaryObject()
-            form.update({
-                NameObject("/SigFlags"): NumberObject(3)
-            })
-            form_ref = self.writer._add_object(form)
+        indirect_obj_wrapper = IndirectObjectsWrapper()  # A temporary Wrapper for new objects, useful for the indirect traverse
+        catalog = pdf_reader.trailer[TK.ROOT]
 
-            self.writer._root_object.update({
-                NameObject("/AcroForm"): form_ref
+        # 1. Setup the AcroForm
+        acro_form_originally_exist = False
+        if CD.ACRO_FORM not in catalog:
+            acro_form = DictionaryObject()
+            acro_form.update({
+                NameObject(IF.SigFlags): NumberObject(3)
             })
+            catalog[NameObject(CD.ACRO_FORM)] = indirect_obj_wrapper.add_object(acro_form)
         else:
-            form = self.writer._root_object["/AcroForm"].get_object()
+            acro_form_originally_exist = True
+            acro_form = catalog[CD.ACRO_FORM].get_object()
+            # Update flags: Allow Append Mode (Bit 2) | Signatures Exist (Bit 1) = 3
+            if IF.SigFlags not in acro_form:
+                acro_form[NameObject(IF.SigFlags)] = NumberObject(3)
+            else:
+                current_flags = acro_form[IF.SigFlags]
+                acro_form[NameObject(IF.SigFlags)] = NumberObject(int(current_flags) | 3)
 
-
-            # SigFlags(3) = SignatureExists = true && AppendOnly = true.
-            # The document contains signed signature and must be modified in incremental mode (see https://github.com/pdf-association/pdf-issues/issues/457)
-            form.update({
-                NameObject("/SigFlags"): NumberObject(3)
-            })
-
-        # Assigning the newly created field to a page
-        page = self.writer.pages[0]
-
-        # Setting up the signature field properties
-        signature_field = DictionaryObject()
-
-        # Metadata of the signature field
-        # /FT = Field Type, here set to /Sig the signature type
-        # /T = name of the field
-        # /Type = type of object, in this case annotation (/Annot)
-        # /Subtype = type of annotation
-        # /F = annotation flags, represented as a 32 bit unsigned integer. 132 corresponds to the Print and Locked flags
-        #   Print : corresponds to printing the signature when the page is printed
-        #   Locked : preventing the annotation properties to be modfied or the annotation to be deletd by the user
-        #   (see section 8.4.2 of the Adobe PDF Reference (v1.7) https://ia601001.us.archive.org/1/items/pdf1.7/pdf_reference_1-7.pdf),
-        # /P = page reference, reference to the page where the signature field is located
-        signature_field.update({
-            NameObject("/FT"): NameObject("/Sig"),
+        # 2. Define the signature annotation dictionary
+        # We create a Widget Annotation that acts as the signature field.
+        # Flags=132 (Print + Locked): Visible when printed, cannot be deleted by user.
+        page = pdf_reader.pages[0]
+        signature_annotation = DictionaryObject()
+        signature_annotation.update({
+            NameObject("/FT"): NameObject("/Sig"),  # Field Type: Signature
             NameObject("/T"): create_string_object(field_name),
-            NameObject("/Type"): NameObject("/Annot"),
+            NameObject("/Type"): NameObject("/Annot"),  # Object Type: Annotation
             NameObject("/Subtype"): NameObject("/Widget"),
-            NameObject("/F"): NumberObject(132),
+            NameObject("/F"): NumberObject(132),  # Flags: Print | Locked
             NameObject("/P"): page.indirect_reference,
         })
 
+        # 3. Construct the visual appearance widget (optional)
+        signature_overlay = None
+        content_stream = None
 
-        # Creating the appearance (visible elements of the signature)
-        if visible_signature:
-            origin = page.mediabox.upper_right # retrieves the top-right coordinates of the page
-            rect_size = (200, 20) # dimensions of the box (width, height)
-            padding = 5
+        if sig_overlay_pdf:
+            signature_overlay = sig_overlay_pdf.pages[0]
+            content_stream = signature_overlay.get_contents()
 
-            # Box that will contain the signature, defined as [x1, y1, x2, y2]
-            # where (x1, y1) is the bottom left coordinates of the box,
-            # and (x2, y2) the top-right coordinates.
-            rect = [
-                origin[0] - rect_size[0] - padding,
-                origin[1] - rect_size[1] - padding,
-                origin[0] - padding,
-                origin[1] - padding
-            ]
+        if content_stream is not None:
+            # Extract the font dictionaries and formatting from the overlay
+            signature_resources = signature_overlay.get(PG.RESOURCES, DictionaryObject())
 
-            # Here is defined the StreamObject that contains the information about the visible
-            # parts of the signature
-            #
-            # Dictionary contents:
-            # /BBox = coordinates of the 'visible' box, relative to the /Rect definition of the signature field
-            # /Resources = resources needed to properly render the signature,
-            #   /Font = dictionary containing the information about the font used by the signature
-            #       /F1 = font resource, used to define a font that will be usable in the signature
-            stream = StreamObject()
-            stream.update({
-                NameObject("/BBox"): self._create_number_array_object([0, 0, rect_size[0], rect_size[1]]),
-                NameObject("/Resources"): DictionaryObject({
-                    NameObject("/Font"): DictionaryObject({
-                        NameObject("/F1"): DictionaryObject({
-                            NameObject("/Type"): NameObject("/Font"),
-                            NameObject("/Subtype"): NameObject("/Type1"),
-                            NameObject("/BaseFont"): NameObject("/Helvetica")
-                        })
-                    })
-                }),
+            # Determine the exact dimensions of the signature block
+            calc_width = float(abs(signature_overlay.mediabox.width))
+            calc_height = float(abs(signature_overlay.mediabox.height))
+
+            # Calculate absolute coordinates on the first page (Top-Right placement)
+            origin = page.mediabox.upper_right
+            margin = 20
+
+            x2 = int(float(origin[0]) - margin)
+            y2 = int(float(origin[1]) - margin)
+            x1 = int(x2 - calc_width)
+            y1 = int(y2 - calc_height)
+
+            rect = [x1, y1, x2, y2]
+
+            # Build the Form XObject appearance stream dictionary
+            # The /BBox uses local coordinates starting at (0,0) for the internal drawing
+            signature_appearance_stream = StreamObject()
+            signature_appearance_stream.update({
                 NameObject("/Type"): NameObject("/XObject"),
-                NameObject("/Subtype"): NameObject("/Form")
+                NameObject("/Subtype"): NameObject("/Form"),
+                NameObject("/BBox"): ArrayObject([
+                    NumberObject(0), NumberObject(0),
+                    NumberObject(calc_width), NumberObject(calc_height)
+                ]),
+                NameObject("/Resources"): signature_resources
             })
 
-            #
-            content = "Digitally signed"
-            content = create_string_object(f'{content} by {signer.name} <{signer.email}>') if signer is not None else create_string_object(content)
+            # Inject the raw, drawing operations
+            signature_appearance_stream._data = content_stream.get_data()
 
-            # Setting the parameters used to display the text object of the signature
-            # More details on this subject can be found in the sections 4.3 and 5.3
-            # of the Adobe PDF Reference (v1.7) https://ia601001.us.archive.org/1/items/pdf1.7/pdf_reference_1-7.pdf
-            #
-            # Parameters:
-            # q = saves the the current graphics state on the graphics state stack
-            # 0.5 0 0 0.5 0 0 cm = modification of the current transformation matrix. Here used to scale down the text size by 0.5 in x and y
-            # BT = begin text object
-            # /F1 = reference to the font resource named F1
-            # 12 Tf = set the font size to 12
-            # 0 TL = defines text leading, the space between lines, here set to 0
-            # 0 10 Td = moves the text to the start of the next line, expressed in text space units. Here (x, y) = (0, 10)
-            # (text_content) Tj = renders a text string
-            # ET = end text object
-            # Q = Restore the graphics state by removing the most recently saved state from the stack and making it the current state
-            stream._data = f"q 0.5 0 0 0.5 0 0 cm BT /F1 12 Tf 0 TL 0 10 Td ({content}) Tj ET Q".encode()
-            signature_appearence = DictionaryObject()
-            signature_appearence.update({
-                NameObject("/N"): stream
+            # Wrap the XObject in an Appearance Dictionary (/AP) under the Normal (/N) state
+            signature_appearance = DictionaryObject()
+            signature_appearance.update({
+                NameObject("/N"): signature_appearance_stream
             })
-            signature_field.update({
-                NameObject("/AP"): signature_appearence,
+
+            # Bind the calculated position (/Rect) and the appearance (/AP) to the Annotation
+            signature_annotation.update({
+                NameObject("/Rect"): ArrayObject([NumberObject(x) for x in rect]),
+                NameObject("/AP"): signature_appearance
             })
         else:
-            rect = [0,0,0,0]
+            # Invisible signature (Zero-width rect)
+            signature_annotation.update({
+                NameObject("/Rect"): ArrayObject([NumberObject(0), NumberObject(0), NumberObject(0), NumberObject(0)])
+            })
 
-        signature_field.update({
-            NameObject("/Rect"): self._create_number_array_object(rect)
-        })
+        # 4. Prepare the signature object placeholders.
+        # The custom placeholder types own their serialization (so the serialization
+        # form is independent of the pypdf library) and record their absolute byte
+        # offsets so we can fill them directly.
+        contents_placeholder = _SignatureContentsPlaceholder()
+        byte_range_placeholder = _ByteRangePlaceholder()
 
-        # Setting up the actual signature contents with placeholders for /Contents and /ByteRange
-        #
-        # Dictionary contents:
-        # /Contents = content of the signature field. The content is a byte string of an object that follows
-        # the Cryptographic Message Syntax (CMS). The object is converted in hexadecimal and stored as bytes.
-        # The /Contents are pre-filled with placeholder values of an arbitrary size (i.e. 8KB) to ensure that
-        # the signature will fit in the "<>" bounds of the field
-        # /ByteRange = an array represented as [offset, length, offset, length, ...] which defines the bytes that
-        # are used when computing the digest of the document. Similarly to the /Contents, the /ByteRange is set to
-        # a placeholder as we aren't yet able to compute the range at this point.
-        # /Type = the type of form field. Here /Sig, the signature field
-        # /Filter
-        # /SubFilter
-        # /M = the timestamp of the signature. Indicates when the document was signed.
-        signature_field_value = DictionaryObject()
-        signature_field_value.update({
-            NameObject("/Contents"): ByteStringObject(b"\0" * 8192),
-            NameObject("/ByteRange"): self._create_number_array_object([0, 0, 0, 0]),
+        signature_object = DictionaryObject()
+        signature_object.update({
             NameObject("/Type"): NameObject("/Sig"),
+            NameObject("/Contents"): contents_placeholder,
+            NameObject("/ByteRange"): byte_range_placeholder,
             NameObject("/Filter"): NameObject("/Adobe.PPKLite"),
             NameObject("/SubFilter"): NameObject("/adbe.pkcs7.detached"),
-            NameObject("/M"): create_string_object(datetime.datetime.now(datetime.timezone.utc).strftime("D:%Y%m%d%H%M%S")),
+            NameObject("/M"): create_string_object(self.signing_time.strftime("D:%Y%m%d%H%M%SZ")),
         })
 
-        # Here we add the reference to be written in a specific order. This is needed
-        # by Adobe Acrobat to consider the signature valid.
-        signature_field_ref = self.writer._add_object(signature_field)
-        signature_field_value_ref = self.writer._add_object(signature_field_value)
+        # Register objects with the temporary wrapper to get references
+        signature_annotation_ref = indirect_obj_wrapper.add_object(signature_annotation)
+        signature_object_ref = indirect_obj_wrapper.add_object(signature_object)
 
-        # /V = the actual value of the signature field. Used to store the dictionary of the field
-        signature_field.update({
-            NameObject("/V"): signature_field_value_ref
+        # Link signature value dict to the field dict
+        signature_annotation.update({
+            NameObject("/V"): signature_object_ref
         })
 
-        # Definition of the fields array linked to the form (/AcroForm)
-        if "/Fields" not in self.writer._root_object:
-            fields = ArrayObject()
+        # 5. Register the signature annotation in the AcroForm fields, and the page annotations
+
+        # Add to /AcroForm /Fields
+        try:
+            raw_fields = acro_form.raw_get("/Fields")
+        except KeyError:
+            raw_fields = None
+        if isinstance(raw_fields, IndirectObject):
+            fields_array = raw_fields.get_object()
+            fields_array.append(signature_annotation_ref)
+            raw_id = raw_fields.idnum
+            raw_gen = raw_fields.generation
+            incremented_objects.setdefault((raw_id, raw_gen), fields_array)
+            IncrementalPdfMerge.update_cached_indirect_object(pdf_reader, raw_gen, raw_id, fields_array)
         else:
-            fields = self.writer._root_object["/Fields"].get_object()
-        fields.append(signature_field_ref)
-        form.update({
-            NameObject("/Fields"): fields
-        })
+            if raw_fields is None:
+                raw_fields = ArrayObject()
+            raw_fields.append(signature_annotation_ref)
+            acro_form[NameObject("/Fields")] = raw_fields
 
-        # The signature field reference is added to the annotations array
-        if "/Annots" not in page:
-            page[NameObject("/Annots")] = ArrayObject()
-        page[NameObject("/Annots")].append(signature_field_ref)
+        # Add to Page /Annots
+        try:
+            raw_annots = page.raw_get(PG.ANNOTS)
+        except KeyError:
+            raw_annots = None
+        if isinstance(raw_annots, IndirectObject):
+            annots_array = raw_annots.get_object()
+            annots_array.append(signature_annotation_ref)
+            raw_id = raw_annots.idnum
+            raw_gen = raw_annots.generation
+            incremented_objects.setdefault((raw_id, raw_gen), annots_array)
+            IncrementalPdfMerge.update_cached_indirect_object(pdf_reader, raw_gen, raw_id, annots_array)
+        else:
+            if raw_annots is None:
+                raw_annots = ArrayObject()
+            raw_annots.append(signature_annotation_ref)
+            page[NameObject(PG.ANNOTS)] = raw_annots
 
-        return signature_field, signature_field_value
+            page_ref_id = page.indirect_reference.idnum
+            page_ref_gen = page.indirect_reference.generation
+            incremented_objects.setdefault((page_ref_id, page_ref_gen), page)
+            IncrementalPdfMerge.update_cached_indirect_object(pdf_reader, page_ref_gen, page_ref_id, page)
+
+        root_entry = pdf_reader.trailer.raw_get(TK.ROOT)
+        if isinstance(root_entry, IndirectObject):
+            # If Root is indirect, we must explicitly track it for the incremental update
+            incremented_objects[root_entry.idnum, root_entry.generation] = catalog
+            IncrementalPdfMerge.update_cached_indirect_object(pdf_reader, root_entry.generation, root_entry.idnum, catalog)
+
+        acro_ref = catalog.raw_get(CD.ACRO_FORM)
+        if acro_form_originally_exist and isinstance(acro_ref, IndirectObject):
+            incremented_objects[acro_ref.idnum, acro_ref.generation] = acro_form
+            IncrementalPdfMerge.update_cached_indirect_object(pdf_reader, acro_ref.generation, acro_ref.idnum, acro_form)
+
+        return contents_placeholder, byte_range_placeholder
 
     def _get_cms_object(self, digest: bytes) -> cms.ContentInfo | None:
-        """Creates an object that follows the Cryptographic Message Syntax(CMS)
+        """ Wraps the document hash in a Cryptographic Message Syntax (CMS) structure.
+
+        This conforms to **RFC 5652**. It creates a detached signature (ContentInfo)
+        containing the signer's leaf_cert, the signing time, and the signed digest.
 
         RFC: https://datatracker.ietf.org/doc/html/rfc5652
 
-        Args:
-            digest (bytes): the digest of the document in bytes
-
-        Returns:
-            cms.ContentInfo: a CMS object containing the information of the signature
+        :param digest: The SHA-256 hash of the relevant PDF byte ranges.
+        :return: A CMS object populated with the signature data.
         """
-        private_key, certificate = self._load_key_and_certificate()
-        if private_key == None or certificate == None:
+        try:
+            private_key, leaf_cert, cert_chain = self._load_key_and_certificates()
+        except ValueError as e:
+            _logger.warning("Skipping PDF signature: Unable to load PEM file. Reason: %s", e)
             return None
+
+        if private_key is None or leaf_cert is None:
+            return None
+
         cert = x509.Certificate.load(
-            certificate.public_bytes(encoding=Encoding.DER))
+            leaf_cert.public_bytes(encoding=Encoding.DER)
+        )
+        all_certificates = [cert]
+        if cert_chain:
+            for intermediate_cert in cert_chain:
+                all_certificates.append(
+                    x509.Certificate.load(
+                        intermediate_cert.public_bytes(encoding=Encoding.DER)
+                    )
+                )
+
         encap_content_info = {
             'content_type': 'data',
             'content': None
         }
 
+        # Define CMS attributes (ContentType, SigningTime, AlgorithmProtection, MessageDigest)
         attrs = cms.CMSAttributes([
             cms.CMSAttribute({
                 'type': 'content_type',
@@ -293,7 +471,7 @@ class PdfSigner:
             }),
             cms.CMSAttribute({
                 'type': 'signing_time',
-                'values': [cms.Time({'utc_time': core.UTCTime(self.signing_time or datetime.datetime.now(datetime.timezone.utc))})]
+                'values': [cms.Time({'utc_time': core.UTCTime(self.signing_time)})]
             }),
             cms.CMSAttribute({
                 'type': 'cms_algorithm_protection',
@@ -318,12 +496,14 @@ class PdfSigner:
             }),
         ])
 
+        # Sign the attributes
         signed_attrs = private_key.sign(
             attrs.dump(),
             padding.PKCS1v15(),
             hashes.SHA256()
         )
 
+        # Assemble SignerInfo
         signer_info = cms.SignerInfo({
             'version': "v1",
             'digest_algorithm': algos.DigestAlgorithm({'algorithm': 'sha256'}),
@@ -337,11 +517,12 @@ class PdfSigner:
             }),
             'signed_attrs': attrs})
 
+        # Encapsulate in SignedData
         signed_data = {
             'version': 'v1',
             'digest_algorithms': [algos.DigestAlgorithm({'algorithm': 'sha256'})],
             'encap_content_info': encap_content_info,
-            'certificates': [cert],
+            'certificates': all_certificates,
             'signer_infos': [signer_info]
         }
 
@@ -350,114 +531,94 @@ class PdfSigner:
             'content': cms.SignedData(signed_data)
         })
 
-    def _perform_signature(self, sig_field_value: DictionaryObject) -> bool:
-        """Creates the actual signature content and populate /ByteRange and /Contents properties with meaningful content.
+    def _perform_signature(
+            self,
+            pdf_data: bytes,
+            contents_placeholder: _SignatureContentsPlaceholder,
+            byte_range_placeholder: _ByteRangePlaceholder,
+    ) -> bytes | None:
+        """ Injects the cryptographic signature into the reserved placeholders.
 
-        Args:
-            sig_field_value (DictionaryObject): the value (/V) of the signature field which needs to be modified
+        This method performs the physical byte-level signing:
+        1.  **Calculate:** Determines the byte offsets to exclude the signature "hole"
+            from the hash calculation, using the offsets recorded by the placeholders
+            during serialization.
+        2.  **Hash & Sign:** Hashes the valid ranges, generates the CMS object.
+        3.  **Inject:** Overwrites the placeholders in the byte stream with the
+            calculated ByteRange and the hex-encoded CMS signature.
+
+        :param pdf_data: The complete PDF file bytes containing the empty signature fields.
+        :param contents_placeholder: The ``/Contents`` placeholder, which has recorded
+            the absolute byte offsets of its hex window during serialization.
+        :param byte_range_placeholder: The ``/ByteRange`` placeholder, which has recorded
+            the absolute byte offsets of its slot during serialization.
+        :return: The final signed PDF bytes.
+        :raises ValueError: If the placeholders were not serialized (no recorded
+            offsets), or if the generated CMS signature is too large for the reserved
+            buffer.
         """
-        pdf_data = self._get_document_data()
+        if contents_placeholder.hex_start is None or byte_range_placeholder.start is None:
+            raise ValueError("Signature placeholders were not serialized into the incremental update.")
 
-        # Computation of the location of the last inserted contents for the signature field
-        signature_field_pos = pdf_data.rfind(b"/FT /Sig")
-        contents_field_pos = pdf_data.find(b"Contents", signature_field_pos)
+        pdf_buffer = bytearray(pdf_data)
 
-        # Computing the start and end position of the /Contents <signature> field
-        # to exclude the content of <> (aka the actual signature) from the byte range
-        placeholder_start = contents_field_pos + 9
-        placeholder_end = placeholder_start + len(b"\0" * 8192) * 2 + 2
+        # Recover the placeholder slots from the offsets captured at write time
+        array_start = byte_range_placeholder.start
+        array_end = byte_range_placeholder.end
+        placeholder_len = array_end - array_start
 
-        # Replacing the placeholder byte range with the actual range
-        # that will be used to compute the document digest
-        placeholder_byte_range = sig_field_value.get("/ByteRange")
+        hex_start = contents_placeholder.hex_start
+        hex_end = contents_placeholder.hex_end
 
-        # Here the byte range represents an array [index, length, index, length, ...]
-        # where 'index' represents the index of a byte, and length the number of bytes to take
-        # This array indicates the bytes that are used when computing the digest of the document
-        byte_range = [0, placeholder_start,
-                      placeholder_end, abs(len(pdf_data) - placeholder_end)]
+        # Calculate the signature byte-range values
+        # val1: Start of file (always 0)
+        # val2: Length of first chunk (up to the opening '<')
+        # val3: Offset where second chunk starts (after the closing '>')
+        # val4: Length of the second chunk (from val3 to EOF)
+        val1 = 0
+        val2 = hex_start - 1  # The index of the '<'
+        val3 = hex_end + 1  # The index after the '>'
+        val4 = len(pdf_buffer) - val3
 
-        byte_range = self._correct_byte_range(
-            placeholder_byte_range, byte_range, len(pdf_data))
+        # Update the byte-range placeholder and space pad it by transforming  "[0 999...]" into "[0 123 456 789     ]",
+        # This keeps the total length IDENTICAL and valid.
+        prefix = f"[{val1} {val2} {val3} ".encode('ascii')
+        suffix = b"]"
 
-        sig_field_value.update({
-            NameObject("/ByteRange"): self._create_number_array_object(byte_range)
-        })
+        # Calculate how much room is left for the last number
+        # Total Available - Prefix length - Suffix length
+        available_len_for_val4 = placeholder_len - len(prefix) - len(suffix)
 
-        pdf_data = self._get_document_data()
+        if available_len_for_val4 < len(str(val4)):
+            raise ValueError(f"Not enough space! Need {len(str(val4))}, have {available_len_for_val4}")
 
-        digest = self._compute_digest_from_byte_range(pdf_data, byte_range)
+        # Format val4 with trailing spaces
+        s_val4 = f"{val4:<{available_len_for_val4}}".encode('ascii')
 
+        # Combine the new byte range
+        new_range_str = prefix + s_val4 + suffix
+
+        # Overwrite the buffer
+        pdf_buffer[array_start:array_end] = new_range_str
+
+        # We take every byte except the actual signature hex between hex_start-1 and hex_end+1
+        data_to_hash = (
+                pdf_buffer[val1 : val1 + val2] +
+                pdf_buffer[val3 : val3 + val4]
+        )
+        digest = hashlib.sha256(data_to_hash).digest()
+
+        # Generate and inject the CMS
         cms_content_info = self._get_cms_object(digest)
+        if cms_content_info is None:
+            return None
 
-        if cms_content_info == None:
-            return False
+        signature_hex = cms_content_info.dump().hex().encode('ascii')
 
-        signature_hex = cms_content_info.dump().hex()
-        signature_hex = signature_hex.ljust(8192 * 2, "0")
+        max_hex_len = hex_end - hex_start
+        if len(signature_hex) > max_hex_len:
+            raise ValueError(f"CMS signature ({len(signature_hex)}) too large for hole ({max_hex_len})")
 
-        sig_field_value.update({
-            NameObject("/Contents"): ByteStringObject(bytes.fromhex(signature_hex))
-        })
-        return True
+        pdf_buffer[hex_start:hex_start + len(signature_hex)] = signature_hex
 
-    def _get_document_data(self):
-        """Retrieves the bytes of the document from the writer"""
-        output_stream = io.BytesIO()
-        self.writer.write_stream(output_stream)
-        return output_stream.getvalue()
-
-
-    def _correct_byte_range(self, old_range: list[int], new_range: list[int], base_pdf_len: int) -> list[int]:
-        """Corrects the last value of the new byte range
-
-        This function corrects the initial byte range (old_range) which was computed for document containing
-        the placeholder values for the /ByteRange and /Contents fields. This is needed because when updating
-        /ByteRange, the length of the document will change as the byte range will take more bytes of the
-        document, resulting in an invalid byte range.
-
-        Args:
-            old_range (list[int]): the previous byte range
-            new_range (list[int]): the new byte range
-            base_pdf_len (int): the base length of the pdf, before insertion of the actual byte range
-
-        Returns:
-            list[int]: the corrected byte range
-        """
-        # Computing the difference of length of the strings of the old and new byte ranges.
-        # Used to determine if a re-computation of the range is needed or not
-        current_len = len(str(old_range))
-        corrected_len = len(str(new_range))
-        diff = corrected_len - current_len
-
-        if diff == 0:
-            return new_range
-
-        corrected_range = new_range.copy()
-        corrected_range[-1] = abs((base_pdf_len + diff) - new_range[-2])
-        return self._correct_byte_range(new_range, corrected_range, base_pdf_len)
-
-
-    def _compute_digest_from_byte_range(self, data: bytes, byte_range: list[int]) -> bytes:
-        """Computes the digest of the data from a byte range. Uses SHA256 algorithm to compute the hash.
-
-        The byte range is defined as an array [offset, length, offset, length, ...] which corresponds to the bytes from the document
-        that will be used in the computation of the hash.
-
-        i.e. for document = b'example' and byte_range = [0, 1, 6, 1],
-        the hash will be computed from b'ee'
-
-        Args:
-            document (bytes): the data in bytes
-            byte_range (list[int]): the byte range used to compute the digest.
-
-        Returns:
-            bytes: the computed digest
-        """
-        hashed = hashlib.sha256()
-        for i in range(0, len(byte_range), 2):
-            hashed.update(data[byte_range[i]:byte_range[i] + byte_range[i+1]])
-        return hashed.digest()
-
-    def _create_number_array_object(self, array: list[int]) -> ArrayObject:
-        return ArrayObject([NumberObject(item) for item in array])
+        return bytes(pdf_buffer)
