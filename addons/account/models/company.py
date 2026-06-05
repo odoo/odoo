@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from collections import defaultdict
 from datetime import timedelta, datetime, date
 import calendar
@@ -9,12 +7,12 @@ from odoo.exceptions import LockError, ValidationError, UserError, RedirectWarni
 from odoo.tools import date_utils, format_list, SQL
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
+
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 from odoo.addons.account.models.product import ACCOUNT_DOMAIN
 from odoo.addons.account.models.partner import _ref_company_registry
 from odoo.addons.base_vat.models.res_partner import _ref_vat
 from odoo.fields import Domain
-
 
 MONTH_SELECTION = [
     ('1', 'January'),
@@ -163,14 +161,6 @@ class ResCompany(models.Model):
         comodel_name='ir.sequence',
         readonly=True,
         copy=False,
-        default=lambda self: self.env['ir.sequence'].sudo().create({
-            'name': _("Group Payments Number Sequence"),
-            'implementation': 'no_gap',
-            'padding': 5,
-            'use_date_range': True,
-            'company_id': self.id,
-            'prefix': 'GROUP/%(year)s/',
-        }),
     )
 
     #Fields of the setup step for opening move
@@ -487,6 +477,15 @@ class ResCompany(models.Model):
                         install_demo=False,
                     )
                 self.env.cr.precommit.add(try_loading)
+            if not company.batch_payment_sequence_id:
+                company.batch_payment_sequence_id = self.env['ir.sequence'].sudo().create({
+                    'name': _("Group Payments Number Sequence"),
+                    'implementation': 'no_gap',
+                    'padding': 5,
+                    'use_date_range': True,
+                    'company_id': company.id,
+                    'prefix': 'GROUP/%(year)s/',
+                })
         companies._set_category_defaults()
         return companies
 
