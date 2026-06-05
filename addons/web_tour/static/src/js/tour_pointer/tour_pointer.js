@@ -1,5 +1,5 @@
-import { reactive, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { reactive, useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy, signal } from "@odoo/owl";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { usePosition } from "@web/core/position/position_hook";
@@ -86,10 +86,11 @@ export class TourPointer extends Component {
     static width = 28; // in pixels
     static height = 28; // in pixels
 
+    anchorRef = signal(null);
+    dropzoneRef = signal(null);
+
     setup() {
         this.closeTimeout = null;
-        this.anchor = useRef("anchor");
-        this.dropzone = useRef("dropzone");
         this.state = proxy({
             showContent: false,
             direction: "bottom", //The side towards which the ball hangs
@@ -109,7 +110,7 @@ export class TourPointer extends Component {
         });
 
         this.anchorUsePosition = usePosition(
-            "anchor",
+            this.anchorRef,
             () => this.scrollParent,
             anchorPositionOptions
         );
@@ -159,7 +160,7 @@ export class TourPointer extends Component {
                 if (this.triggerPosition === "in") {
                     return this.trigger;
                 } else {
-                    return this.anchor.el;
+                    return this.anchorRef();
                 }
             },
             pointerPositionOptions
@@ -173,10 +174,11 @@ export class TourPointer extends Component {
                 }
 
                 this.popover.close();
-                if (this.props.pointerState.isZone && this.dropzone.el) {
+                const dz = this.dropzoneRef();
+                if (this.props.pointerState.isZone && dz) {
                     const triggerRect = this.trigger.getBoundingClientRect();
-                    this.dropzone.el.style.width = `${triggerRect.width}px`;
-                    this.dropzone.el.style.height = `${triggerRect.height}px`;
+                    dz.style.width = `${triggerRect.width}px`;
+                    dz.style.height = `${triggerRect.height}px`;
                 }
                 this.state.scrollParent = getScrollParent(trigger);
                 this.anchorUsePosition.unlock();
@@ -306,7 +308,7 @@ export class TourPointer extends Component {
         const triggerPosition = this.triggerPosition;
         let target = this.trigger;
         if (this.trigger && triggerPosition !== "in") {
-            target = this.anchor.el;
+            target = this.anchorRef();
         }
         this.popover.open(target, {
             content: this.content,

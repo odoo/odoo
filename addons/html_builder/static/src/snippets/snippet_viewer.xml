@@ -6,7 +6,7 @@
     <div id="o_snippet_viewer_description" class="visually-hidden">
         Navigate around the blocks with <kbd>Tab</kbd> or the arrow keys. Select with <kbd>Enter</kbd> or <kbd>Space</kbd>.
     </div>
-    <div t-custom-ref="content"
+    <div t-ref="this.contentRef"
          class="row g-0 o_snippets_preview_row"
          t-att-class="{ 'flex-row-reverse': this.props.frontendDirection !== this.backendDirection }"
          t-att-dir="this.props.frontendDirection"

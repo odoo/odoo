@@ -17,7 +17,12 @@ export class Dropzone extends Component {
             isDraggingInside: false,
         });
         useLayoutEffect(() => {
-            const { top, left, width, height } = this.props.ref.el.getBoundingClientRect();
+            const ref = this.props.ref;
+            const refEl = (typeof ref === "function" ? ref() : ref?.el) ?? null;
+            if (!refEl) {
+                return;
+            }
+            const { top, left, width, height } = refEl.getBoundingClientRect();
             this.root.el.style = `top:${top}px;left:${left}px;width:${width}px;height:${height}px;`;
         });
     }

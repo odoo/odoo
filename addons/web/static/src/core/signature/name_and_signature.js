@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 /* global SignaturePad */
 
 import { loadJS } from "@web/core/assets";
@@ -10,10 +10,14 @@ import { useAutofocus } from "@web/core/utils/hooks";
 import { renderToString } from "@web/core/utils/render";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal } from "@odoo/owl";
 
 let htmlId = 0;
 export class NameAndSignature extends Component {
+    signNameInputRef = signal(null);
+    signInputLoad = signal(null);
+    signatureRef = signal(null);
+
     static template = "web.NameAndSignature";
     static components = { Dropdown, DropdownItem };
     static props = {
@@ -48,16 +52,14 @@ export class NameAndSignature extends Component {
             showFontList: false,
         });
 
-        this.signNameInputRef = useRef("signNameInput");
-        this.signInputLoad = useRef("signInputLoad");
-        useAutofocus({ refName: "signNameInput" });
+        useAutofocus({ ref: this.signNameInputRef });
         useLayoutEffect(
             (el) => {
                 if (el) {
                     el.click();
                 }
             },
-            () => [this.signInputLoad.el]
+            () => [this.signInputLoad()]
         );
 
         onWillStart(async () => {
@@ -68,7 +70,6 @@ export class NameAndSignature extends Component {
             await loadJS("/web/static/lib/signature_pad/signature_pad.umd.js");
         });
 
-        this.signatureRef = useRef("signature");
         useLayoutEffect(
             (el) => {
                 if (el) {
@@ -94,7 +95,7 @@ export class NameAndSignature extends Component {
                     }
                 }
             },
-            () => [this.signatureRef.el]
+            () => [this.signatureRef()]
         );
     }
 
@@ -108,7 +109,7 @@ export class NameAndSignature extends Component {
             this.clear();
             return;
         }
-        const canvas = this.signatureRef.el;
+        const canvas = this.signatureRef();
         if (!canvas) {
             return;
         }
@@ -118,8 +119,8 @@ export class NameAndSignature extends Component {
 
     focusName() {
         // Don't focus on mobile
-        if (!isMobileOS() && this.signNameInputRef.el) {
-            this.signNameInputRef.el.focus();
+        if (!isMobileOS() && this.signNameInputRef()) {
+            this.signNameInputRef().focus();
         }
     }
 
@@ -195,7 +196,7 @@ export class NameAndSignature extends Component {
     }
 
     uploadFile() {
-        this.signInputLoad.el?.click();
+        this.signInputLoad()?.click();
     }
 
     /**
@@ -303,10 +304,10 @@ export class NameAndSignature extends Component {
 
     resizeSignature() {
         // recompute size based on the current width
-        const width = this.signatureRef.el.clientWidth;
+        const width = this.signatureRef().clientWidth;
         const height = parseInt(width / this.props.displaySignatureRatio);
 
-        Object.assign(this.signatureRef.el, { width, height });
+        Object.assign(this.signatureRef(), { width, height });
     }
 
     /**

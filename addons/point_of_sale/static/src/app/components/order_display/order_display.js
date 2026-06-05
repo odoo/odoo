@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, signal } from "@odoo/owl";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { formatCurrency } from "@web/core/currency";
@@ -18,12 +18,18 @@ export class OrderDisplay extends Component {
         mode: "display",
     };
 
+    scrollableRef = signal(null);
+
     setup() {
-        this.scrollableRef = useRef("scrollable");
         useLayoutEffect(() => {
-            this.scrollableRef.el
-                ?.querySelector(".orderline.selected")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" });
+            const el = this.scrollableRef();
+            if (!el) {
+                return;
+            }
+            el.querySelector(".orderline.selected")?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
         });
     }
 

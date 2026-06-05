@@ -1,10 +1,14 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy, signal } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 
 export class WebsiteSlidesCourseQuizQuestionForm extends Component {
+    inputRef = signal(null);
+    formRef = signal(null);
+    sequenceRef = signal(null);
+
     static template = "slide.quiz.question.input";
     static props = {
         update: Boolean,
@@ -41,9 +45,7 @@ export class WebsiteSlidesCourseQuizQuestionForm extends Component {
             ];
         }
 
-        this.inputRef = useAutofocus({ refName: "input" });
-        this.formRef = useRef("form");
-        this.sequenceRef = useRef("sequence");
+        useAutofocus({ ref: this.inputRef });
 
         useLayoutEffect(
             (update) => {
@@ -61,7 +63,7 @@ export class WebsiteSlidesCourseQuizQuestionForm extends Component {
     }
 
     onQuestionsReordered() {
-        this.props.question.sequence = parseInt(this.sequenceRef.el.textContent);
+        this.props.question.sequence = parseInt(this.sequenceRef().textContent);
     }
 
     onIsCorrectClick(answer, isCorrect) {
@@ -122,8 +124,9 @@ export class WebsiteSlidesCourseQuizQuestionForm extends Component {
      * Handler when user click on 'Save' or 'Update' buttons.
      */
     async onValidateQuestionClick() {
-        if (this.isValidForm(this.formRef.el)) {
-            const values = this.serializeForm(this.formRef.el);
+        const formEl = this.formRef();
+        if (this.isValidForm(formEl)) {
+            const values = this.serializeForm(formEl);
             const renderedQuestion = await rpc("/slides/slide/quiz/question_add_or_update", values);
             if (typeof renderedQuestion === "object" && renderedQuestion.error) {
                 this.state.error = renderedQuestion.error;
@@ -133,7 +136,7 @@ export class WebsiteSlidesCourseQuizQuestionForm extends Component {
             }
         } else {
             this.state.error = _t("Please fill in the question");
-            this.inputRef.el.focus();
+            this.inputRef()?.focus();
         }
     }
 

@@ -6,7 +6,7 @@ import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 
 export class IntegerField extends Component {
     static template = "web.IntegerField";
@@ -27,16 +27,18 @@ export class IntegerField extends Component {
         decimals: 0,
     };
 
+    numpadDecimalRef = signal(null);
+
     setup() {
         this.state = proxy({
             hasFocus: false,
         });
         useInputField({
             getValue: () => this.formattedValue,
-            refName: "numpadDecimal",
+            ref: this.numpadDecimalRef,
             parse: (v) => parseInteger(v, { allowOperation: true }),
         });
-        useNumpadDecimal();
+        useNumpadDecimal(this.numpadDecimalRef);
     }
 
     onFocusIn() {

@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, signal } from "@odoo/owl";
 
 const AUTOCLOSE_DELAY = 4000;
 
@@ -44,14 +43,17 @@ export class Notification extends Component {
         type: "warning",
         autocloseDelay: AUTOCLOSE_DELAY,
     };
+    autocloseProgressRef = signal(null);
     setup() {
-        this.autocloseProgress = useRef("autoclose_progress_bar");
         onMounted(() => this.startNotificationTimer());
     }
 
     freeze() {
         this.startedTimestamp = false;
-        this.autocloseProgress.el.style.width = 0;
+        const el = this.autocloseProgressRef();
+        if (el) {
+            el.style.width = 0;
+        }
     }
 
     refresh() {
@@ -76,8 +78,9 @@ export class Notification extends Component {
                     this.close();
                     return;
                 }
-                if (this.autocloseProgress.el) {
-                    this.autocloseProgress.el.style.width = `${(1 - currentProgress) * 100}%`;
+                const el = this.autocloseProgressRef();
+                if (el) {
+                    el.style.width = `${(1 - currentProgress) * 100}%`;
                 }
                 requestAnimationFrame(cb);
             }

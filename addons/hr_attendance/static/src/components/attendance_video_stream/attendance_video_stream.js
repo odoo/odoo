@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, signal } from "@odoo/owl";
 import { useCamera } from "@hr_attendance/components/hooks/use_camera";
 
 export class AttendanceVideoStream extends Component {
@@ -11,8 +10,9 @@ export class AttendanceVideoStream extends Component {
         onStreamStateChange: { type: Function },
     };
 
+    attendanceVideoRef = signal(null);
+
     setup() {
-        this.attendanceVideo = useRef("attendanceVideo");
         this.camera = useCamera({
             width: this.props.width,
             height: this.props.height,
@@ -28,7 +28,7 @@ export class AttendanceVideoStream extends Component {
             if (this.streamAvailable) {
                 this.props.exposeCameraCapture(this.camera.capturePicture);
             }
-            await this.camera.attachStreamToVideo(this.attendanceVideo.el);
+            await this.camera.attachStreamToVideo(this.attendanceVideoRef());
         });
 
         onWillUnmount(() => {

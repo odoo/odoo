@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { ExpressionEditor } from "@web/core/expression_editor/expression_editor";
 import { evaluateExpr } from "@web/core/py_js/py";
@@ -18,12 +17,13 @@ export class ExpressionEditorDialog extends Component {
         onConfirm: Function,
     };
 
+    confirmButtonRef = signal(null);
+
     setup() {
         this.notification = useService("notification");
         this.state = proxy({
             expression: this.props.expression,
         });
-        this.confirmButtonRef = useRef("confirm");
     }
 
     get expressionEditorProps() {
@@ -58,14 +58,18 @@ export class ExpressionEditorDialog extends Component {
     }
 
     async onConfirm() {
-        this.confirmButtonRef.el.disabled = true;
+        const confirmEl = this.confirmButtonRef();
+        if (confirmEl) {
+            confirmEl.disabled = true;
+        }
         const record = this.makeDefaultRecord();
         const evalContext = { ...user.context, ...record };
         try {
             evaluateExpr(this.state.expression, evalContext);
         } catch {
-            if (this.confirmButtonRef.el) {
-                this.confirmButtonRef.el.disabled = false;
+            const el = this.confirmButtonRef();
+            if (el) {
+                el.disabled = false;
             }
             this.notification.add(_t("Expression is invalid. Please correct it"), {
                 type: "danger",

@@ -139,7 +139,7 @@
     </div>
     <div class="col-10" role="form">
         <div class="input-group w-auto">
-            <input t-custom-model="this.link.newLink" type="text" class="form-control" t-custom-ref="url-input"
+            <input t-custom-model="this.link.newLink" type="text" class="form-control" t-ref="this.urlInputRef"
                     t-att-class="this.link.validLink == this.link.newLink.trim() ? 'is-valid' : 'is-invalid'"
                     t-on-blur="() => this.modifyLink(this.link)"/>
             <button class="btn btn-primary" t-on-click="() => this.modifyLink(this.link)"
@@ -254,7 +254,7 @@
                     <label for="website_meta_title">
                         Title <i class="fa fa-question-circle text-primary" data-tooltip-position="right" t-att-data-tooltip="this.titleTooltip"/>
                     </label>
-                    <input type="text" t-custom-model="this.seoContext.title" t-att-disabled="!this.props.canEditTitle" class="form-control" t-att-placeholder="this.props.defaultTitle" maxlength="70" size="70" t-custom-ref="autofocus"/>
+                    <input type="text" t-custom-model="this.seoContext.title" t-att-disabled="!this.props.canEditTitle" class="form-control" t-att-placeholder="this.props.defaultTitle" maxlength="70" size="70" t-ref="this.autofocusRef"/>
                 </div>
                 <div class="mb-3">
                     <div class="d-flex justify-content-between align-items-center">

@@ -1,10 +1,9 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { checkFileSize } from "@web/core/utils/files";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 
 export class FileUploader extends Component {
     static template = "web.FileUploader";
@@ -27,9 +26,10 @@ export class FileUploader extends Component {
         showUploadingText: true,
     };
 
+    fileInputRef = signal(null);
+
     setup() {
         this.notification = useService("notification");
-        this.fileInputRef = useRef("fileInput");
         this.state = proxy({
             isUploading: false,
         });
@@ -104,6 +104,6 @@ export class FileUploader extends Component {
                 return;
             }
         }
-        this.fileInputRef.el.click();
+        this.fileInputRef()?.click();
     }
 }

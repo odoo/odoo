@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="web_tour.TourPointer">
-        <div 
-            t-custom-ref="anchor"
+        <div
+            t-ref="this.anchorRef"
             class="o_tour_anchor"
         />
         <div
@@ -18,7 +18,7 @@
             "
         >   
             <div
-                t-custom-ref="dropzone"
+                t-ref="this.dropzoneRef"
                 t-if="this.props.pointerState.isZone"
                 class="o_tour_dropzone pe-none"
             />

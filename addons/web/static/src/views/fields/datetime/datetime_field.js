@@ -1,5 +1,5 @@
 import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, effect, proxy } from "@odoo/owl";
+import { Component, effect, proxy, signal } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
@@ -71,6 +71,8 @@ export class DateTimeField extends Component {
 
     static template = "web.DateTimeField";
 
+    rootRef = signal(null);
+
     //-------------------------------------------------------------------------
     // Getters
     //-------------------------------------------------------------------------
@@ -102,7 +104,7 @@ export class DateTimeField extends Component {
     setup() {
         const getPickerProps = () => this.getPickerProps();
         const dateTimePicker = useDateTimePicker({
-            target: "root",
+            target: this.rootRef,
             showSeconds: this.props.showSeconds,
             get pickerProps() {
                 return getPickerProps();

@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <button type="button" class="o_notification_close flex-shrink-0 btn-close mx-1" aria-label="Close" t-on-click="this.close" data-available-offline=""/>
-                <div t-custom-ref="autoclose_progress_bar"  t-attf-class="o_notification_progress opacity-75 bg-{{this.props.type}}"></div>
+                <div t-ref="this.autocloseProgressRef"  t-attf-class="o_notification_progress opacity-75 bg-{{this.props.type}}"></div>
             </div>
         </div>
     </t>

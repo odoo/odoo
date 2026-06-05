@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, useState } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, useState, signal } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 
 export function useStatusIndicator(model, actions = {}) {
@@ -37,14 +37,19 @@ export class FormStatusIndicator extends Component {
         isNew: false,
     };
 
+    saveButtonRef = signal(null);
+
     setup() {
-        this.saveButton = useRef("save");
         useLayoutEffect(
             () => {
+                const el = this.saveButtonRef();
+                if (!el) {
+                    return;
+                }
                 if (!this.props.isNew && this.indicatorMode === "invalid") {
-                    this.saveButton.el.setAttribute("disabled", "1");
+                    el.setAttribute("disabled", "1");
                 } else {
-                    this.saveButton.el.removeAttribute("disabled");
+                    el.removeAttribute("disabled");
                 }
             },
             () => [this.props.isValid, this.props.isDirty]

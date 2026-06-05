@@ -1,6 +1,5 @@
-import { useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
-import { Component, onMounted, onWillStart, onWillUnmount, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, proxy, signal } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { _t } from "@web/core/l10n/translation";
@@ -19,6 +18,9 @@ export class FeedbackScreen extends Component {
         waitFor: { type: Object, optional: true },
     };
 
+    containerRef = signal(null);
+    amountRef = signal(null);
+
     setup() {
         super.setup();
         this.pos = usePos();
@@ -27,8 +29,6 @@ export class FeedbackScreen extends Component {
         this.notification = useService("notification");
         this.ui = useService("ui");
         this.dialog = useService("dialog");
-        this.containerRef = useRef("feedback-screen");
-        this.amountRef = useRef("amount");
         this.state = proxy({
             loading: true,
             timeout: false,
@@ -74,11 +74,16 @@ export class FeedbackScreen extends Component {
     }
 
     scaleText() {
-        const containerWidth = this.containerRef.el.offsetWidth * 0.8; // 80% of the container width to have some space on the sides
-        const textWidth = this.amountRef.el.scrollWidth;
+        const container = this.containerRef();
+        const amount = this.amountRef();
+        if (!container || !amount) {
+            return;
+        }
+        const containerWidth = container.offsetWidth * 0.8; // 80% of the container width to have some space on the sides
+        const textWidth = amount.scrollWidth;
 
         const scale = Math.min(1, containerWidth / textWidth);
-        this.amountRef.el.style.transform = `scale(${scale})`;
+        amount.style.transform = `scale(${scale})`;
     }
 
     get currentOrder() {

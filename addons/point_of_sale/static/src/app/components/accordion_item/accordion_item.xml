@@ -9,7 +9,7 @@
             >
                 <t t-call-slot="header"/>
             </button>
-            <div t-custom-ref="content_container" class="accordion-content-container" t-attf-style="max-height: {{this.state.open ? this.contentHeight : 0}}px;">
+            <div t-ref="this.contentRef" class="accordion-content-container" t-attf-style="max-height: {{this.state.open ? this.contentHeight : 0}}px;">
                 <div class="accordion-content" >
                     <t t-call-slot="content"/>
                 </div>

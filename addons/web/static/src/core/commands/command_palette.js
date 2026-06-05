@@ -1,4 +1,4 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useExternalListener } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
@@ -10,7 +10,7 @@ import { debounce } from "@web/core/utils/timing";
 import { isMacOS, hasTouch } from "@web/core/browser/feature_detection";
 import { highlightText } from "@web/core/utils/html";
 
-import { Component, onWillStart, onWillDestroy, EventBus, markRaw, proxy } from "@odoo/owl";
+import { Component, onWillStart, onWillDestroy, EventBus, markRaw, proxy, signal } from "@odoo/owl";
 
 const DEFAULT_PLACEHOLDER = _t("Search...");
 const DEFAULT_EMPTY_MESSAGE = _t("No result found");
@@ -92,6 +92,10 @@ export class CommandPalette extends Component {
         closeMe: { type: Function, optional: true },
     };
 
+    autofocusRef = signal(null);
+    rootRef = signal(null);
+    listboxRef = signal(null);
+
     setup() {
         if (this.props.bus) {
             const setConfig = ({ detail }) => this.setCommandPaletteConfig(detail);
@@ -105,7 +109,8 @@ export class CommandPalette extends Component {
         this._sessionId = CommandPalette.lastSessionId++;
         this.DefaultCommandItem = DefaultCommandItem;
         this.activeElement = useService("ui").activeElement;
-        this.inputRef = useAutofocus();
+        useAutofocus({ ref: this.autofocusRef });
+        this.inputRef = this.autofocusRef;
 
         useHotkey("Enter", () => this.executeSelectedCommand(), { bypassEditableProtection: true });
         useHotkey("Control+Enter", () => this.executeSelectedCommand(true), {
@@ -131,9 +136,6 @@ export class CommandPalette extends Component {
          *          selectedCommand: CommandItem }}
          */
         this.state = proxy({});
-
-        this.root = useRef("root");
-        this.listboxRef = useRef("listbox");
 
         onWillStart(() => this.setCommandPaletteConfig(this.props.config));
     }
@@ -253,8 +255,12 @@ export class CommandPalette extends Component {
         }
         this.selectCommand(nextIndex);
 
-        const command = this.listboxRef.el.querySelector(`#o_command_${nextIndex}`);
-        scrollTo(command, { scrollable: this.listboxRef.el });
+        const listEl = this.listboxRef();
+        if (!listEl) {
+            return;
+        }
+        const command = listEl.querySelector(`#o_command_${nextIndex}`);
+        scrollTo(command, { scrollable: listEl });
     }
 
     onCommandClicked(event, index) {
@@ -310,8 +316,9 @@ export class CommandPalette extends Component {
         } finally {
             this.state.isLoading = false;
         }
-        if (this.inputRef.el) {
-            this.inputRef.el.focus();
+        const el = this.inputRef();
+        if (el) {
+            el.focus();
         }
     }
 
@@ -344,7 +351,7 @@ export class CommandPalette extends Component {
      * Close the palette on outside click.
      */
     onWindowMouseDown(ev) {
-        if (!this.root.el.contains(ev.target)) {
+        if (!this.rootRef()?.contains(ev.target)) {
             this.props.close();
         }
     }

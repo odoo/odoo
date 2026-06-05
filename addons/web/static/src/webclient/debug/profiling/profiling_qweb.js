@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { loadBundle } from "@web/core/assets";
@@ -6,7 +5,7 @@ import { renderToString } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component, onWillStart, onMounted, onWillUnmount, proxy } from "@odoo/owl";
+import { Component, onWillStart, onMounted, onWillUnmount, proxy, signal } from "@odoo/owl";
 
 class MenuItem extends Component {
     static template = "web.ProfilingQwebView.menuitem";
@@ -32,12 +31,13 @@ export class ProfilingQwebView extends Component {
     static components = { MenuItem };
     static props = { ...standardFieldProps };
 
+    aceRef = signal(null);
+    selectorRef = signal(null);
+
     setup() {
         super.setup();
 
         this.orm = useService("orm");
-        this.ace = useRef("ace");
-        this.selector = useRef("selector");
 
         this.value = processValue(this.props.record.data[this.props.name]);
         this.state = proxy({
@@ -53,7 +53,7 @@ export class ProfilingQwebView extends Component {
             this.state.view = this.viewObjects.find((view) => view.id === this.state.viewID);
         });
         onMounted(() => {
-            this._startAce(this.ace.el);
+            this._startAce(this.aceRef());
             this._renderView();
         });
         onWillUnmount(() => {
@@ -155,10 +155,14 @@ export class ProfilingQwebView extends Component {
     renderProfilingInformation() {
         this._unmoutInfo();
 
+        const aceEl = this.aceRef();
+        if (!aceEl) {
+            return;
+        }
         const flat = {};
         const arch = [{ xpath: "", children: [] }];
-        const rows = this.ace.el.querySelectorAll(".ace_gutter .ace_gutter-cell");
-        const elems = this.ace.el.querySelectorAll(
+        const rows = aceEl.querySelectorAll(".ace_gutter .ace_gutter-cell");
+        const elems = aceEl.querySelectorAll(
             ".ace_tag-open, .ace_end-tag-close, .ace_end-tag-open, .ace_qweb"
         );
         elems.forEach((node) => {
@@ -286,14 +290,18 @@ export class ProfilingQwebView extends Component {
         this.state.view = view;
     }
     _unmoutInfo() {
+        const aceEl = this.aceRef();
+        if (!aceEl) {
+            return;
+        }
         if (this.hover) {
-            if (this.ace.el.querySelector(".o_ace_hover")) {
-                this.ace.el.querySelector(".o_ace_hover").remove();
+            if (aceEl.querySelector(".o_ace_hover")) {
+                aceEl.querySelector(".o_ace_hover").remove();
             }
         }
         if (this.info) {
-            if (this.ace.el.querySelector(".o_ace_info")) {
-                this.ace.el.querySelector(".o_ace_info").remove();
+            if (aceEl.querySelector(".o_ace_info")) {
+                aceEl.querySelector(".o_ace_info").remove();
             }
         }
     }

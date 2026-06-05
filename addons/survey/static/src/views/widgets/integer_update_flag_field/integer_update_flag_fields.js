@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { integerField, IntegerField } from "@web/views/fields/integer/integer_field";
@@ -28,7 +28,7 @@ export class IntegerUpdateFlagField extends IntegerField {
      */
     setup() {
         super.setup(...arguments);
-        const inputRef = useRef("numpadDecimal");
+        const inputRef = this.numpadDecimalRef;
         const onChange = async () => {
             await this.props.record._update({
                 [this.props.flagFieldName]: parseInt(this.formattedValue) !== this.props.referenceValue}
@@ -43,7 +43,7 @@ export class IntegerUpdateFlagField extends IntegerField {
                     };
                 }
             },
-            () => [inputRef.el]
+            () => [inputRef()]
         );
     }
 }
