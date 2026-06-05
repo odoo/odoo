@@ -10119,7 +10119,7 @@ test("[Offline] disable new button if not previously visited", async () => {
 });
 
 test.tags("desktop");
-test("[Offline] create record when offline QuickCreate", async () => {
+test("[Offline] create record when offline (quickCreate)", async () => {
     expect.errors(1); // 1x ConnectionLostError
     onRpc("web_save", () => expect.step(`web_save`));
     Partner._views = {
@@ -10195,4 +10195,140 @@ test("[Offline] create record when offline QuickCreate", async () => {
     //The offline create record is there
     await getService("action").doAction(1);
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
+});
+
+test.tags("desktop");
+test("[Offline] create record when offline (form view)", async () => {
+    expect.errors(2); // 2x ConnectionLostError
+    onRpc("web_save", () => expect.step(`web_save`));
+    Partner._views = {
+        "kanban,false": `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        "form,false": `<form><field name="foo"/></form>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "partner",
+            views: [
+                [false, "kanban"],
+                [false, "form"],
+            ],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
+
+    // Put in cache the on_change
+    await createKanbanRecord();
+    await contains(`.o_back_button`).click();
+
+    await setOffline(true);
+    expect("button.o-kanban-button-new").not.toHaveClass("o_disabled_offline");
+
+    //Open the form view Offline
+    await createKanbanRecord();
+    await contains(".o_field_widget[name=foo] input").edit("twilight sparkle");
+    await contains(".o_form_button_save").click();
+    await contains(`.o_back_button`).click();
+
+    // The edited record will be save the next time we are online
+    await contains(`.o_menu_systray .o_nav_entry .fa-chain-broken`).click();
+    expect(queryAllTexts`.o-dropdown--menu .o_offline_systray_content div`).toEqual([
+        "PARTNERS ACTION",
+        "Record",
+        "Created",
+        "",
+    ]);
+
+    expect.verifyErrors([
+        `Error: Connection to "/web/dataset/call_kw/partner/onchange" couldn't be established or was interrupted`,
+        `Error: Connection to "/web/dataset/call_kw/partner/web_search_read" couldn't be established or was interrupted`,
+    ]);
+
+    // go online and save the record.
+    await setOffline(false);
+
+    expect(getService("offline").offline).toBe(false);
+    await expect.waitForSteps(["web_save"]); // We sync when the connection returns
+    //The current view is not updated when the offline is sync.
+    //In this case we don't see the newly created record, until the view is reloaded.
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4, {
+        message: "The new record is not showed in the list.",
+    });
+
+    //Reload the view
+    //The offline create record is there
+    await getService("action").doAction(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
+});
+
+test.tags("desktop");
+test("[Offline] disable new button even if previously visited (on_create)", async () => {
+    onRpc("web_save", () => expect.step(`web_save`));
+    Partner._views = {
+        "kanban,false": `
+            <kanban on_create="some.action">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        "form,false": `<form><field name="foo"/></form>`,
+        "form,create_view_ref": `
+            <form>
+                <field name="foo"/>
+                <footer>
+                    <button string="Create Card" name="open_new_card" type="object" class="btn-primary"/>
+                </footer>
+            </form>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "partner",
+            views: [
+                [false, "kanban"],
+                [false, "form"],
+            ],
+            search_view_id: [false, "search"],
+        },
+        {
+            id: 2,
+            xml_id: "some.action",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            target: "new",
+            views: [["create_view_ref", "form"]],
+        },
+    ]);
+
+    const setOffline = mockOffline();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
+
+    // Put in cache the on_change
+    await createKanbanRecord();
+    await contains(`.btn-close`).click();
+
+    await setOffline(true);
+    expect("button.o-kanban-button-new").toHaveClass("o_disabled_offline");
 });
