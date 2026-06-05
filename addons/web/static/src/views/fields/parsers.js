@@ -153,8 +153,8 @@ function parseDuration(value, unit = "hours") {
 
     value = value.replaceAll(" ", "");
     value = value
-        .replaceAll(localization.decimalPoint, ".")
-        .replaceAll(localization.thousandsSep, "");
+        .replaceAll(localization.thousandsSep, "")
+        .replaceAll(localization.decimalPoint, ".");
 
     // Single number
     if (!isNaN(value)) {
