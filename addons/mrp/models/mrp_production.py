@@ -2112,7 +2112,8 @@ class MrpProduction(models.Model):
                     backorder_vals,
                     product_qty=qty_to_backorder,
                     name=production._get_name_backorder(production.name, next_seq),
-                    backorder_sequence=next_seq
+                    backorder_sequence=next_seq,
+                    note=production.note,
                 ))
 
         backorders = self.env['mrp.production'].with_context(skip_confirm=True).sudo().create(backorder_vals_list)
