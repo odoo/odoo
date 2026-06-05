@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.CropOverlay">
-        <div t-custom-ref="crop-container"
+        <div t-ref="this.cropContainerRef"
              t-on-mousedown="this.pointerDown" t-on-touchstart="this.pointerDown"
              t-on-mousemove="this.pointerMove" t-on-touchmove="this.pointerMove"
              t-on-mouseup="this.pointerUp" t-on-touchend="this.pointerUp"

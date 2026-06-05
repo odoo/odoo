@@ -1,10 +1,9 @@
-import { useRef } from "@web/owl2/utils";
 import {
     applyObjectPropertyDifference,
     getEmbeddedProps,
     StateChangeManager,
 } from "@html_editor/others/embedded_component_utils";
-import { Component, onMounted, onWillDestroy, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, proxy, signal } from "@odoo/owl";
 
 export class EmbeddedCaptionComponent extends Component {
     static template = "html_editor.EmbeddedCaption";
@@ -17,16 +16,17 @@ export class EmbeddedCaptionComponent extends Component {
         host: { type: Object },
     };
 
+    captionInputRef = signal(null);
+
     setup() {
         super.setup();
         this.state = proxy({
             caption: this.props.image.getAttribute("data-caption") || "",
             host: this.props.host,
         });
-        this.captionInput = useRef("captionInput");
         if (this.props.focusInput) {
             onMounted(() => {
-                this.captionInput.el.focus();
+                this.captionInputRef()?.focus();
             });
         }
         this._appliedNativeHistory = true;
@@ -58,8 +58,9 @@ export class EmbeddedCaptionComponent extends Component {
         // so when the history commit triggers a normalization, it restores that
         // new selection and not the old one.
         setTimeout(() => {
-            if (this.captionInput.el) {
-                this.updateCaption(this.captionInput.el.value || "");
+            const el = this.captionInputRef();
+            if (el) {
+                this.updateCaption(el.value || "");
             }
         });
     }

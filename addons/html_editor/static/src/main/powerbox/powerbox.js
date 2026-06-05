@@ -1,5 +1,5 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onPatched } from "@odoo/owl";
+import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { Component, onPatched, signal } from "@odoo/owl";
 
 /**
  * @todo @phoenix i think that most of the "control" code in this component
@@ -15,11 +15,11 @@ export class Powerbox extends Component {
         applyCommand: Function,
     };
 
-    setup() {
-        const ref = useRef("root");
+    rootRef = signal(null);
 
+    setup() {
         onPatched(() => {
-            const activeCommand = ref.el.querySelector(".o-we-command.active");
+            const activeCommand = this.rootRef()?.querySelector(".o-we-command.active");
             if (activeCommand) {
                 activeCommand.scrollIntoView({ block: "nearest", inline: "nearest" });
             }
@@ -39,7 +39,7 @@ export class Powerbox extends Component {
                     return () => ownDoc.removeEventListener("mousemove", onMouseMove);
                 }
             },
-            () => [ref.el?.ownerDocument, this.props.document]
+            () => [this.rootRef()?.ownerDocument, this.props.document]
         );
     }
 

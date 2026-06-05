@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy, signal } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { useAutofocus, useBackButton, useService } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
@@ -34,12 +34,14 @@ export class FileViewer extends Component {
         modal: true,
     };
 
+    autofocusRef = signal(null);
+    imageRef = signal(null);
+    imageToolbarRef = signal(null);
+    zoomerRef = signal(null);
+    iframeViewerPdfRef = signal(null);
+
     setup() {
-        useAutofocus();
-        this.imageRef = useRef("image");
-        this.imageToolbarRef = useRef("imageToolbar");
-        this.zoomerRef = useRef("zoomer");
-        this.iframeViewerPdfRef = useRef("iframeViewerPdf");
+        useAutofocus({ ref: this.autofocusRef });
         this.hasTouch = hasTouch();
 
         this.isDragging = false;
@@ -70,12 +72,12 @@ export class FileViewer extends Component {
         useLayoutEffect(
             (el) => {
                 if (el) {
-                    hidePDFJSButtons(this.iframeViewerPdfRef.el, {
+                    hidePDFJSButtons(el, {
                         hideDownload: true,
                     });
                 }
             },
-            () => [this.iframeViewerPdfRef.el]
+            () => [this.iframeViewerPdfRef()]
         );
         useBackButton(() => this.close());
     }
@@ -281,15 +283,21 @@ export class FileViewer extends Component {
     }
 
     updateZoomerStyle() {
+        const imageEl = this.imageRef();
+        const zoomerEl = this.zoomerRef();
+        const toolbarEl = this.imageToolbarRef();
+        if (!imageEl || !zoomerEl || !toolbarEl) {
+            return;
+        }
         const isImageRotated = this.state.angle % 180 !== 0;
-        const { offsetWidth, offsetHeight } = this.imageRef.el;
+        const { offsetWidth, offsetHeight } = imageEl;
         const imageWidth = (isImageRotated ? offsetHeight : offsetWidth) * this.state.scale;
         const imageHeight = (isImageRotated ? offsetWidth : offsetHeight) * this.state.scale;
-        const diffX = imageWidth - this.zoomerRef.el.offsetWidth + IMAGE_BUFFER_PADDING;
+        const diffX = imageWidth - zoomerEl.offsetWidth + IMAGE_BUFFER_PADDING;
         const diffY =
             imageHeight -
-            this.zoomerRef.el.offsetHeight +
-            2 * this.imageToolbarRef.el.clientHeight +
+            zoomerEl.offsetHeight +
+            2 * toolbarEl.clientHeight +
             IMAGE_BUFFER_PADDING;
         let tx = diffX > 0 ? this.translate.x + this.translate.dx : 0;
         let ty = diffY > 0 ? this.translate.y + this.translate.dy : 0;
@@ -309,7 +317,7 @@ export class FileViewer extends Component {
         if (ty === 0) {
             this.translate.y = 0;
         }
-        this.zoomerRef.el.style = "transform: " + `translate(${tx}px, ${ty}px)`;
+        zoomerEl.style = "transform: " + `translate(${tx}px, ${ty}px)`;
     }
 
     get imageStyle() {

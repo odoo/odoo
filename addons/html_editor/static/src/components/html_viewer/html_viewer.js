@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     markup,
@@ -7,6 +7,7 @@ import {
     onWillUnmount,
     onWillUpdateProps,
     proxy,
+    signal,
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
@@ -27,10 +28,12 @@ export class HtmlViewer extends Component {
         migrateHTML: true,
     };
 
+    iframeRef = signal(null);
+    readonlyElementRef = signal(null);
+
     setup() {
         this._cleanups = [];
         this.htmlUpgradeManager = new HtmlUpgradeManager();
-        this.iframeRef = useRef("iframe");
 
         this.state = proxy({
             iframeVisible: false,
@@ -58,18 +61,20 @@ export class HtmlViewer extends Component {
         if (this.showIframe) {
             onMounted(() => {
                 const onLoadIframe = () => this.onLoadIframe(this.state.value);
-                this.iframeRef.el.addEventListener("load", onLoadIframe, { once: true });
-                // Force the iframe to call the `load` event. Without this line, the
-                // event 'load' might never trigger.
-                this.iframeRef.el.after(this.iframeRef.el);
+                const el = this.iframeRef();
+                if (el) {
+                    el.addEventListener("load", onLoadIframe, { once: true });
+                    // Force the iframe to call the `load` event. Without this line, the
+                    // event 'load' might never trigger.
+                    el.after(el);
+                }
             });
         } else {
-            this.readonlyElementRef = useRef("readonlyContent");
             useLayoutEffect(
                 () => {
-                    this.processReadonlyContent(this.readonlyElementRef.el);
+                    this.processReadonlyContent(this.readonlyElementRef());
                 },
-                () => [this.props.config.value.toString(), this.readonlyElementRef?.el]
+                () => [this.props.config.value.toString(), this.readonlyElementRef()]
             );
         }
 
@@ -90,13 +95,18 @@ export class HtmlViewer extends Component {
             });
             useLayoutEffect(
                 () => {
-                    if (this.readonlyElementRef?.el) {
+                    if (this.readonlyElementRef()) {
                         this.mountComponents();
                     }
                 },
-                () => [this.props.config.value.toString(), this.readonlyElementRef?.el]
+                () => [this.props.config.value.toString(), this.readonlyElementRef()]
             );
-            this.tocManager = new TableOfContentManager(this.readonlyElementRef);
+            const readonlyElementRef = this.readonlyElementRef;
+            this.tocManager = new TableOfContentManager({
+                get el() {
+                    return readonlyElementRef();
+                },
+            });
         }
     }
 
@@ -188,7 +198,7 @@ export class HtmlViewer extends Component {
     }
 
     updateIframeContent(content) {
-        const contentWindow = this.iframeRef.el.contentWindow;
+        const contentWindow = this.iframeRef().contentWindow;
         const iframeTarget = this.props.config.hasFullHtml
             ? contentWindow.document.documentElement
             : contentWindow.document.querySelector("#iframe_target");
@@ -197,7 +207,7 @@ export class HtmlViewer extends Component {
     }
 
     onLoadIframe(value) {
-        const contentWindow = this.iframeRef.el.contentWindow;
+        const contentWindow = this.iframeRef().contentWindow;
         if (!this.props.config.hasFullHtml) {
             contentWindow.document.open("text/html", "replace").write(
                 `<!DOCTYPE html><html>
@@ -309,7 +319,7 @@ export class HtmlViewer extends Component {
     }
 
     mountComponents() {
-        this.forEachEmbeddedComponentHost(this.readonlyElementRef.el, (host, embedding) => {
+        this.forEachEmbeddedComponentHost(this.readonlyElementRef(), (host, embedding) => {
             this.mountComponent(host, embedding);
         });
     }

@@ -10,13 +10,13 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 class GoogleFontAutoComplete extends AutoComplete {
     setup() {
         super.setup();
-        this.inputRef = useRef("input");
-        this.sourcesListRef = useRef("sourcesList");
+        // `inputRef`/`listRef` are Owl 3 signals declared on the parent AutoComplete;
+        // read them through their callable form rather than the legacy `.el`.
         useLayoutEffect(
             (el) => {
                 el.setAttribute("id", "google_font");
             },
-            () => [this.inputRef.el]
+            () => [this.inputRef()]
         );
     }
 
@@ -29,8 +29,8 @@ class GoogleFontAutoComplete extends AutoComplete {
 
     onInput(ev) {
         super.onInput(ev);
-        if (this.sourcesListRef.el) {
-            this.sourcesListRef.el.scrollTop = 0;
+        if (this.listRef()) {
+            this.listRef().scrollTop = 0;
         }
     }
 }

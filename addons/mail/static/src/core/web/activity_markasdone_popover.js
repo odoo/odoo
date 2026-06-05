@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { Component, onMounted, signal, useListener } from "@odoo/owl";
 
 export class ActivityMarkAsDone extends Component {
@@ -15,12 +14,13 @@ export class ActivityMarkAsDone extends Component {
         hasHeader: false,
     };
 
+    textAreaRef = signal(null);
+
     setup() {
         super.setup();
-        this.textArea = useRef("textarea");
         this.disableDoneButton = signal(false);
         onMounted(() => {
-            this.textArea.el.focus();
+            this.textAreaRef()?.focus();
         });
         useListener(window, "keydown", (ev) => this.onKeydown(ev));
     }

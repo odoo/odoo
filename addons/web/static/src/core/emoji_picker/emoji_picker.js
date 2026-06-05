@@ -33,6 +33,25 @@ import { emojiLoader, useLoadEmoji } from "./emoji_loader";
  * @typedef {import("./emoji_loader").Emoji} Emoji
  */
 
+/**
+ * @typedef {(() => HTMLElement | null) | { el: HTMLElement | null } | null | undefined} AnchorRef
+ *   An anchor for the emoji picker popover. Accepts either:
+ *     - an Owl 3 signal ref: a callable returning the element (or null);
+ *     - a legacy Owl `useRef` object exposing `.el`;
+ *     - `null` / `undefined` when the consumer prefers to register an anchor
+ *       later via the returned state's `open`/`toggle`/`add` helpers.
+ */
+
+/**
+ * Thin wrapper around {@link usePicker} that defaults the picker component to
+ * {@link EmojiPicker}. Forwards every argument unchanged, so it accepts both
+ * legacy `useRef` anchors and Owl 3 signal-callable anchors (see {@link AnchorRef}).
+ *
+ * @param {AnchorRef} [ref]
+ * @param {object} [props]
+ * @param {object} [options]
+ * @returns {ReturnType<typeof usePicker>}
+ */
 export function useEmojiPicker(...args) {
     return usePicker(EmojiPicker, ...args);
 }
@@ -475,8 +494,16 @@ export class EmojiPicker extends Component {
 }
 
 /**
+ * Hook that wires an anchor element to a popover picker (typically the emoji
+ * picker). The anchor `ref` is **dual-form**: it can be either an Owl 3 signal
+ * (a callable returning the anchor element) or a legacy Owl `useRef` object
+ * exposing `.el`. Internally all element reads go through `resolveRefEl`, so
+ * existing callers passing a `useRef` object keep working unchanged while new
+ * Owl 3 callers can pass a signal callable.
+ *
  * @param {import("@odoo/owl").ComponentConstructor} PickerComponent
- * @param {import("@web/core/utils/hooks").Ref} [ref]
+ * @param {AnchorRef} [ref] Anchor for the picker; may be a signal callable,
+ *   a legacy `useRef` object, or nullish (anchor registered later).
  * @param {Object} props
  * @param {() => {}} [props.onSelect] function that is invoked when an item in picker has been selected.
  *   When explicit value `false` is returned, this will keep the picker open (= it won't auto-close it)

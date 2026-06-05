@@ -36,7 +36,7 @@ export class AutoCompleteWithPages extends AutoComplete {
                     input.removeEventListener("focus", targetFocus);
                 };
             },
-            () => [this.targetDropdown, this.inputRef.el]
+            () => [this.targetDropdown, this.inputRef()]
         );
     }
 
@@ -50,8 +50,8 @@ export class AutoCompleteWithPages extends AutoComplete {
     }
 
     async _syncInputValue() {
-        if (this.inputRef.el) {
-            this.inputRef.el.value = this.targetDropdown.value;
+        if (this.inputRef()) {
+            this.inputRef().value = this.targetDropdown.value;
             this.onInput();
         }
     }

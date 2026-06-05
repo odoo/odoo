@@ -1,10 +1,10 @@
-import { reactive, useExternalListener, useRef, useSubEnv } from "@web/owl2/utils";
+import { reactive, useExternalListener, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { parseXML } from "@web/core/utils/xml";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 
-import { Component, EventBus, onMounted, onWillStart, proxy } from "@odoo/owl";
+import { Component, EventBus, onMounted, onWillStart, proxy, signal } from "@odoo/owl";
 import { RPCError } from "@web/core/network/rpc";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { useSetupAction } from "@web/search/action_hook";
@@ -69,12 +69,12 @@ export class KanbanQuickCreateController extends Component {
         archInfo: { type: Object },
     };
     static template = "web.KanbanQuickCreateController";
+    rootRef = signal(null);
     setup() {
         super.setup();
 
         this.uiService = useService("ui");
         this.offlineService = useService("offline");
-        this.rootRef = useRef("root");
         this.state = proxy({ disabled: false });
         this.addDialog = useOwnedDialogs();
 
@@ -126,10 +126,10 @@ export class KanbanQuickCreateController extends Component {
                     return;
                 }
                 const target = this.mousedownTarget || ev.target;
-                if (!this.rootRef.el.contains(target)) {
+                const el = this.rootRef();
+                if (el && !el.contains(target)) {
                     const isSameOverlay =
-                        this.rootRef.el.closest(".o-overlay-item") ===
-                        target.closest(".o-overlay-item");
+                        el.closest(".o-overlay-item") === target.closest(".o-overlay-item");
                     if (isSameOverlay) {
                         if (!target.closest(".o_kanban_quick_add,.o-kanban-button-new")) {
                             await this.validate("close");
@@ -158,7 +158,7 @@ export class KanbanQuickCreateController extends Component {
 
         // Key Navigation
         useHotkey("enter", () => this.validate("add"), {
-            area: () => this.rootRef.el.querySelector(".o_kanban_quick_create_form"),
+            area: () => this.rootRef()?.querySelector(".o_kanban_quick_create_form"),
             bypassEditableProtection: true,
         });
         useHotkey("escape", () => this.cancel(true));

@@ -1,8 +1,8 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useExternalListener } from "@web/owl2/utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
-import { Component, onPatched, proxy } from "@odoo/owl";
+import { Component, onPatched, proxy, signal } from "@odoo/owl";
 
 export class KanbanColumnQuickCreate extends Component {
     static template = "web.KanbanColumnQuickCreate";
@@ -13,15 +13,17 @@ export class KanbanColumnQuickCreate extends Component {
         groupByField: Object,
     };
 
+    rootRef = signal(null);
+    autofocusRef = signal(null);
+
     setup() {
         this.dialog = useService("dialog");
-        this.root = useRef("root");
         this.state = proxy({
             hasInputFocused: false,
         });
 
-        useAutofocus();
-        this.inputRef = useRef("autofocus");
+        useAutofocus({ ref: this.autofocusRef });
+        this.inputRef = this.autofocusRef;
 
         // Close on outside click
         useExternalListener(window, "mousedown", (/** @type {MouseEvent} */ ev) => {
@@ -34,7 +36,7 @@ export class KanbanColumnQuickCreate extends Component {
             "click",
             (/** @type {MouseEvent} */ ev) => {
                 const target = this.mousedownTarget || ev.target;
-                const gotClickedInside = this.root.el.contains(target);
+                const gotClickedInside = this.rootRef()?.contains(target);
                 if (!gotClickedInside) {
                     this.fold();
                 }
@@ -47,7 +49,7 @@ export class KanbanColumnQuickCreate extends Component {
         useHotkey("escape", () => this.fold());
         onPatched(() => {
             if (this.state.hasInputFocused && !this.props.folded) {
-                this.root.el.scrollIntoView({ behavior: "smooth" });
+                this.rootRef()?.scrollIntoView({ behavior: "smooth" });
             }
         });
     }
@@ -65,11 +67,15 @@ export class KanbanColumnQuickCreate extends Component {
     }
 
     validate() {
-        const title = this.inputRef.el.value.trim();
+        const el = this.inputRef();
+        if (!el) {
+            return;
+        }
+        const title = el.value.trim();
         if (title.length) {
             this.props.onValidate(title);
-            this.inputRef.el.value = "";
-            this.inputRef.el.focus();
+            el.value = "";
+            el.focus();
             this.state.hasInputFocused = true;
         }
     }

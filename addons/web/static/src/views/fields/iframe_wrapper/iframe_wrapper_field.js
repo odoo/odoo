@@ -1,8 +1,8 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 export class IframeWrapperField extends Component {
     static template = "web.IframeWrapperField";
@@ -10,9 +10,9 @@ export class IframeWrapperField extends Component {
         ...standardFieldProps,
     };
 
-    setup() {
-        this.iframeRef = useRef("iframe");
+    iframeRef = signal(null);
 
+    setup() {
         useLayoutEffect(
             (value) => {
                 /**
@@ -25,7 +25,7 @@ export class IframeWrapperField extends Component {
                  * nodes, parsing to HTML complex elements, etc.
                  * Therefore, document.write makes it much more trivial in our situation.
                  */
-                const iframeDoc = this.iframeRef.el.contentDocument;
+                const iframeDoc = this.iframeRef()?.contentDocument;
                 iframeDoc.open();
                 iframeDoc.write(value);
                 iframeDoc.close();

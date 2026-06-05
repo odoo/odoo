@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, proxy, signal } from "@odoo/owl";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -15,12 +14,13 @@ export class EventRegistrationSummaryDialog extends Component {
         registration: { type: Object },
     };
 
+    continueButtonRef = signal(null);
+
     setup() {
         this.actionService = useService("action");
         this.isBarcodeScannerSupported = isBarcodeScannerSupported();
         this.orm = useService("orm");
         this.notification = useService("notification");
-        this.continueButtonRef = useRef("continueButton");
         this.button = proxy({enabled: true});
 
         this.registrationStatus = proxy({value: this.registration.status});
@@ -32,7 +32,7 @@ export class EventRegistrationSummaryDialog extends Component {
                 this.props.playSound("error");
             }
             // Without this, repeat barcode scans don't work as focus is lost
-            this.continueButtonRef.el?.focus();
+            this.continueButtonRef()?.focus();
         });
     }
 

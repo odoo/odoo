@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.AutoComplete">
-        <div class="o-autocomplete" t-custom-ref="root" t-att-class="this.autoCompleteRootClass">
+        <div class="o-autocomplete" t-ref="this.rootRef" t-att-class="this.autoCompleteRootClass">
             <input
                 type="text"
                 t-att-id="this.props.id"
@@ -22,14 +22,14 @@
                 t-on-input="this.onInput"
                 t-on-keydown="this.onInputKeydown"
                 t-on-focus="this.onInputFocus"
-                t-custom-ref="input"
+                t-ref="this.inputRef"
             />
             <t t-if="this.displayOptions">
                 <ul
                     role="menu"
                     class="o-autocomplete--dropdown-menu ui-widget show"
                     t-att-class="this.ulDropdownClass"
-                    t-custom-ref="sourcesList">
+                    t-ref="this.listRef">
                     <t t-foreach="this.sources" t-as="source" t-key="source.id">
                         <t t-if="source.isLoading">
                             <li class="ui-menu-item"

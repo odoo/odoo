@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
@@ -7,7 +6,7 @@ import { parseFloat } from "../parsers";
 import { useInputField } from "@web/views/fields/input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 const formatters = registry.category("formatters");
 
 export class ProgressBarField extends Component {
@@ -22,14 +21,16 @@ export class ProgressBarField extends Component {
         decorations: {},
     };
 
+    numpadDecimalRef = signal(null);
+    currentValueRefSignal = signal(null);
+
     setup() {
-        useNumpadDecimal();
-        this.root = useRef("numpadDecimal");
+        useNumpadDecimal(this.numpadDecimalRef);
 
         this.currentValueRef = useInputField({
             getValue: () => this.formatCurrentValue(),
             parse: (v) => this.parseCurrentValue(v),
-            refName: "currentValue",
+            ref: this.currentValueRefSignal,
             fieldName: this.props.name,
             shouldSave: () => this.props.readonly,
         });
@@ -95,7 +96,7 @@ export class ProgressBarField extends Component {
 
     onProgressClick() {
         if (this.isEditable) {
-            const input = this.root.el?.querySelector(".o_progressbar_value input");
+            const input = this.numpadDecimalRef()?.querySelector(".o_progressbar_value input");
             if (input) {
                 input.focus();
             }

@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { onMounted, Component, onWillDestroy } from "@odoo/owl";
+import { onMounted, Component, onWillDestroy, signal } from "@odoo/owl";
 import {
     applyTextHighlight,
     textHighlightFactory,
@@ -15,10 +14,11 @@ export class HighlightPicker extends Component {
         style: { type: String, optional: true },
     };
 
+    rootRef = signal(null);
+
     setup() {
-        const root = useRef("root");
         onMounted(() => {
-            for (const textEl of root.el.querySelectorAll(".o_text_highlight")) {
+            for (const textEl of this.rootRef()?.querySelectorAll(".o_text_highlight") ?? []) {
                 const highlightId = getCurrentTextHighlight(textEl);
                 applyTextHighlight(textEl, highlightId);
             }

@@ -1,5 +1,5 @@
-import { render, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { render, useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { Component, signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -7,9 +7,8 @@ import { useThrottleForAnimation } from "@web/core/utils/timing";
 class ActionsOne2ManyField extends Component {
     static props = ["*"];
     static template = "base_automation.ActionsOne2ManyField";
+    rootRef = signal(null);
     setup() {
-        this.root = useRef("root");
-
         let adaptCounter = 0;
         useLayoutEffect(
             () => {
@@ -27,12 +26,16 @@ class ActionsOne2ManyField extends Component {
     }
     async adapt() {
         // --- Initialize ---
+        const el = this.rootRef();
+        if (!el) {
+            return;
+        }
         // use getBoundingClientRect to get unrounded width
         // of the elements in order to avoid rounding issues
-        const rootWidth = this.root.el.getBoundingClientRect().width;
+        const rootWidth = el.getBoundingClientRect().width;
 
         // remove all d-none classes (needed to get the real width of the elements)
-        const actionsEls = Array.from(this.root.el.children).filter((el) => el.dataset.actionId);
+        const actionsEls = Array.from(el.children).filter((el) => el.dataset.actionId);
         actionsEls.forEach((el) => el.classList.remove("d-none"));
         const actionsTotalWidth = actionsEls.reduce(
             (sum, el) => sum + el.getBoundingClientRect().width,

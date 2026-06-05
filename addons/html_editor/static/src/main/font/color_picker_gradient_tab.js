@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy, signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { applyOpacityToGradient, isColorGradient } from "@web/core/utils/colors";
@@ -19,6 +19,7 @@ const DEFAULT_GRADIENT_COLORS = [
 export class ColorPickerGradientTab extends Component {
     static template = "html_editor.ColorPickerGradientTab";
     static components = { GradientPicker };
+    customGradientButtonRef = signal(null);
     static props = {
         applyColor: Function,
         onColorClick: Function,
@@ -41,11 +42,10 @@ export class ColorPickerGradientTab extends Component {
         });
         this.applyOpacityToGradient = applyOpacityToGradient;
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
-        this.customGradientButton = useRef("customGradientButton");
         useLayoutEffect(
             () => {
                 if (this.state.showGradientPicker) {
-                    this.customGradientButton.el.focus();
+                    this.customGradientButtonRef()?.focus();
                 }
             },
             () => [this.state.showGradientPicker]
