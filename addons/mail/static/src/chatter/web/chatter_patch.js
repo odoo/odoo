@@ -264,10 +264,6 @@ const chatterPatch = {
         return !this.state.thread.id || !this.state.thread?.hasReadAccess;
     },
 
-    get onCloseFullComposerRequestList() {
-        return [...super.onCloseFullComposerRequestList, "scheduledMessages"];
-    },
-
     get requestList() {
         return [
             ...super.requestList,
