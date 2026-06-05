@@ -87,34 +87,17 @@ class AccountTax(models.Model):
 
     @api.model
     def _l10n_es_edi_verifactu_get_tax_details_functions(self, company):
-        def base_line_filter(base_line):
-            return any(t != 'ignore' for t in base_line['tax_ids'].flatten_taxes_hierarchy().mapped('l10n_es_type'))
-
-        def total_grouping_function(base_line, tax_data):
-            return (tax_data
-                    and not tax_data['is_reverse_charge']
-                    and tax_data['tax'].amount != -100.0
-                    and tax_data['tax'].l10n_es_type not in ('ignore', 'retencion'))
+        tax_details_functions = self._l10n_es_get_tax_details_functions(company)
+        base_line_filter = tax_details_functions['base_line_filter']
+        total_grouping_function = tax_details_functions['total_grouping_function']
 
         def tax_details_grouping_function(base_line, tax_data):
             if not total_grouping_function(base_line, tax_data):
                 return None
 
             tax = tax_data['tax']
-            l10n_es_exempt_reason = tax.l10n_es_exempt_reason if tax.l10n_es_type == 'exento' else False
-
-            # Sujeto taxes with different recargo taxes are kept separate for the output
-            # Note: In `_check_record_values` we assert that there is only a single (main tax, recargo tax) pair
-            recargo_taxes = self.env['account.tax']
-            if tax.l10n_es_type in self.env['account.tax']._l10n_es_get_sujeto_tax_types():
-                recargo_taxes = base_line['tax_ids'].filtered(lambda t: t.l10n_es_type == 'recargo')
-
             grouping_key = {
-                'amount': tax.amount,
-                'recargo_taxes': recargo_taxes,
-                'l10n_es_bien_inversion': tax.l10n_es_bien_inversion,
-                'l10n_es_exempt_reason': l10n_es_exempt_reason,
-                'l10n_es_type': tax.l10n_es_type,
+                **tax_details_functions['tax_details_grouping_function'](base_line, tax_data),
                 'l10n_es_applicability': tax._l10n_es_edi_verifactu_get_applicability(),
             }
             return grouping_key
