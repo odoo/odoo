@@ -22,6 +22,7 @@ class WebsiteLinksCodeEditor extends Interaction {
         ".o_website_links_edit_tools": { "t-att-class": () => ({ "d-none": !this.editing }) },
         ".o_website_links_code_error": { "t-att-class": () => ({ "d-none": !this.error }) },
         ".o_website_links_cancel_edit": { "t-on-click.prevent": this.onCancelEditClick },
+        ".o_website_links_new_link_tracker": { "t-on-click": this.onCancelEditClick },
         "#edit-code-form": { "t-on-submit.prevent": this.onEditCodeFormSubmit },
         ".o_website_links_ok_edit": { "t-on-click.prevent": this.onEditCodeFormSubmit },
     };
@@ -66,7 +67,12 @@ class WebsiteLinksCodeEditor extends Interaction {
     }
 
     onCancelEditClick() {
-        this.codeEl.replaceChildren(this.codeEl.querySelector("#edit-code-form #init_code").value);
+        const initCode = this.codeEl.querySelector("#edit-code-form #init_code");
+        if (!initCode) {
+            return;
+        }
+
+        this.codeEl.replaceChildren(initCode.value);
         this.editing = false;
         this.error = false;
     }
