@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add("website_sale.category_page_and_products
             trigger: "#category_header .s_dynamic_snippet_products:has(.oe_product_image_link)",
             run() {
                 const productGridEl = document.getElementById("o_wsale_products_grid");
-                const regex = new RegExp(`^/shop/product/[\\w-/]+-(\\d+)$`);
+                const regex = new RegExp(`^/shop/[\\w-/]+-(\\d+)$`);
                 const allPageProductIDs = [
                     ...productGridEl.querySelectorAll(".oe_product_image_link"),
                 ].map(el => el.getAttribute("href").match(regex)[1]);
