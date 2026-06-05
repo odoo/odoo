@@ -2,7 +2,7 @@
 <templates>
     <t t-name="sale_management.SaleTemplateDropdown">
         <button
-            t-if="!this.state.hasQuotationTemplateFeature || !this.state.quotationTemplates.length"
+            t-if="!this.state.quotationTemplates.length"
             type="button"
             t-att-class="this.props.newButtonClasses"
             t-att-disabled="this.props.isDisabled"
