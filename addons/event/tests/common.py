@@ -1,7 +1,3 @@
-from contextlib import contextmanager
-from freezegun import freeze_time
-from unittest.mock import patch
-
 from odoo import Command, fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
@@ -230,12 +226,3 @@ class EventCase(common.TransactionCase):
         for record, call_at in zip(capture.records, call_at_list):
             self.assertEqual(record.call_at, call_at.replace(microsecond=0))
             self.assertEqual(record.cron_id, self.env.ref('event.event_mail_scheduler'))
-
-    @contextmanager
-    def mock_datetime_and_now(self, mock_dt):
-        """ Used when synchronization date (using env.cr.now()) is important
-        in addition to standard datetime mocks. Used mainly to detect sync
-        issues. """
-        with freeze_time(mock_dt), \
-             patch.object(self.env.cr, 'now', lambda: mock_dt):
-            yield

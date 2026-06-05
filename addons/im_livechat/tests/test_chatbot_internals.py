@@ -7,7 +7,7 @@ from odoo.addons.im_livechat.tests import chatbot_common
 from odoo.addons.bus.tests.common import BusResult
 from odoo.tests.common import JsonRpcException, new_test_user
 from odoo.tools.misc import mute_logger
-from odoo.addons.mail.tests.common import freeze_all_time, MailCommon
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -120,7 +120,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         self.assertEqual(welcome_steps, self.chatbot_script.script_step_ids[0])
 
     def test_chatbot_not_invited_to_rtc_calls(self):
-        with freeze_all_time():
+        with self.mock_datetime_and_now():
             data = self.make_jsonrpc_request(
                 "/im_livechat/get_session",
                 {
