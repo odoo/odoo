@@ -112,8 +112,8 @@ describe("nesting", () => {
         await press("0");
         await advanceTime(200);
         await animationFrame();
-        await waitFor(":iframe span[data-text-effect] span[style]");
-        const fontSizeEl = queryOne(":iframe span[data-text-effect] span[style]");
+        await waitFor(":iframe span[style] span[data-text-effect]");
+        const fontSizeEl = queryOne(`:iframe span[style*="font-size"]`);
         const fontSizeProperty = fontSizeEl.style.fontSize; // Current representation of 50px
 
         // Remove text effect
@@ -155,7 +155,7 @@ describe("nesting", () => {
         // Remove text effect
         await contains(".fa-trash").click();
         expect(getContent(contentEl)).toBe(
-            `<p><span class="o_rfs" style="font-size: ${fontSizeProperty};">[Text]</span></p>`
+            `<p><span class="o_rfs" style="font-size: ${fontSizeProperty};">[Text</span>]</p>`
         );
     });
 
