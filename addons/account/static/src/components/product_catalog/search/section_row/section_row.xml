@@ -2,22 +2,21 @@
     <t t-name="account.SectionRow">
         <li
             class="list-group-item border-0 o_section px-0"
-            t-attf-class="{{this.props.section.display_type === 'line_subsection' &amp;&amp; !this.env.isSmall ? 'o_treeEntry' : ''}}"
+            t-attf-class="{{this.props.isSubsection &amp;&amp; !this.env.isSmall ? 'o_treeEntry' : ''}}"
             t-att-data-id="this.props.section.id"
             t-att-data-sequence="this.props.section.sequence"
         >
 
             <div
                 t-attf-class="o_section_row list-group-item list-group-item-action d-flex align-items-center gap-1 border-0 cursor-pointer
-                    {{this.props.section.display_type === 'line_subsection' ? 'o_subsection_row' : ''}}
-                    {{this.props.selectedSection.sectionId == this.props.section.id ? 'o_selected_section' : ''}}
+                    {{this.props.isSubsection ? 'o_subsection_row' : ''}} {{this.isSelected ? 'o_selected_section' : ''}}
                 "
                 t-on-click="() => this.env.setSelectedSection(this.props.section.id, this.props.selectedSection.filtered)"
             >
                 <button
                     class="o_toggle_fold btn border-0 rounded-end-0 px-0 bg-transparent"
-                    t-attf-class="{{this.props.section.isOpen ? 'fa fa-caret-down' : 'fa fa-caret-right'}} {{this.props.section.children.length ? '' : 'opacity-0 pe-none'}}"
-                    t-att-tabindex="this.props.section.children.length ? '0' : '-1'"
+                    t-attf-class="{{this.props.section.isOpen ? 'fa fa-caret-down' : 'fa fa-caret-right'}} {{this.hasChildren ? '' : 'opacity-0 pe-none'}}"
+                    t-att-tabindex="this.hasChildren ? '0' : '-1'"
                 />
 
                 <input
@@ -38,7 +37,7 @@
                     t-att-title="this.props.section.name"
                 >
                     <span
-                        t-attf-class="o_search_panel_label_title d-flex align-items-center flex-grow-1 {{this.props.selectedSection.sectionId == this.props.section.id ? 'fw-bold' : ''}}"
+                        t-attf-class="o_search_panel_label_title d-flex align-items-center flex-grow-1 {{this.isSelected ? 'fw-bold' : ''}}"
                     >
                         <span
                             class="text-truncate me-1"
@@ -50,7 +49,7 @@
                             t-out="this.env.getFormattedSubTotal(this.props.section.subtotal)"
                         />
                         <div
-                            t-if="this.props.selectedSection.sectionId == this.props.section.id"
+                            t-if="this.isSelected"
                             class="ms-auto align-items-center o_section_toggle"
                         >
                             <span class="me-2">Filter</span>
@@ -72,11 +71,12 @@
             </div>
 
             <ul
-                t-if="this.props.section.isOpen and this.props.section.children.length"
+                t-if="this.props.section.isOpen and this.hasChildren"
                 class="list-group border-0"
             >
                 <t t-foreach="this.props.section.children" t-as="child" t-key="child.id">
                     <SectionRow
+                        isSubsection="true"
                         section="child"
                         state="this.props.state"
                         selectedSection="this.props.selectedSection"
@@ -85,7 +85,7 @@
             </ul>
 
             <input
-                t-if="this.props.state.isAddingSection === ('subsection_' + this.props.section.id) and this.props.section.display_type === 'line_section'"
+                t-if="this.props.state.addingSectionTarget === ('subsection_' + this.props.section.id) and !this.props.isSubsection"
                 class="o_section_input ms-4 mt-1"
                 style="width: 90%;"
                 type="text"

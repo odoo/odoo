@@ -16,7 +16,6 @@ export class ProductCatalogOrderLine extends Component {
         productUomFactor: { type: Number, optional: true },
         productUomDisplayName: { type: String, optional: true },
         sellerUomFactor: { type: Number, optional: true },
-        code: { type: String, optional: true },
         readOnly: { type: Boolean, optional: true },
         warning: { type: String, optional: true },
     };

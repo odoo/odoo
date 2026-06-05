@@ -19,7 +19,7 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
         this.state = proxy({
             ...this.state,
             dragging: false,
-            isAddingSection: "",
+            addingSectionTarget: "",
             newSectionName: "",
             renamingSectionId: null,
             sections: [],
@@ -45,36 +45,41 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
                 return;
             }
 
-            const [orderResult] = await Promise.all([
-                this.orm.read(
-                    this.env.model.config.context.product_catalog_order_model,
-                    [this.env.model.config.context.order_id],
-                    ["amount_untaxed", "currency_id", "name"]
-                ),
-                this.loadSections(),
-            ]);
+            const { order_details, sections } = await this.orm.call(
+                this.env.model.config.context.product_catalog_order_model,
+                "get_catalog_data",
+                [this.env.model.config.context.order_id],
+                {
+                    child_field: this.env.model.config.context.child_field,
+                }
+            );
 
-            this.order = orderResult[0];
-            this.state.totalUntaxedAmount = this.order.amount_untaxed;
+            this.order = {
+                name: order_details.name,
+                currency_id: order_details.currency_id,
+            };
+            this.state.totalUntaxedAmount = order_details.amount_untaxed;
+
+            this._setSectionsState(sections);
+            if (this.state.sections.length) {
+                this.setSelectedSection(this.state.sections[0].id);
+            }
         });
 
         this.sectionTreeRef = useRef("sectionTreeRef");
         this.sectionInputRef = useRef("sectionInputRef");
 
         onPatched(() => {
-            if (this.state.isAddingSection) {
+            if (this.state.addingSectionTarget) {
                 this.sectionInputRef.el?.focus();
             }
         });
 
         useNestedSortable({
             ref: this.sectionTreeRef,
-            elements: "li.o_section",
             nest: true,
-            listTagName: "ul",
             useElementSize: true,
             maxLevels: 2,
-            preventDrag: (el) => !el.dataset.id,
             isAllowed: ({ element, placeHolder }) => {
                 const id = parseInt(element.dataset.id);
                 const node = id && this._findSectionById(id);
@@ -116,21 +121,16 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
     }
 
     enableSectionInput(parentId = null) {
-        this.state.isAddingSection = parentId ? `subsection_${parentId}` : "section";
+        this.state.addingSectionTarget = parentId ? `subsection_${parentId}` : "section";
     }
 
-    enableRenameSectionInput(sectionId) {
-        const section = this._findSectionById(sectionId);
-        if (!section) {
-            return;
-        }
-
-        this.state.renamingSectionId = sectionId;
+    enableRenameSectionInput(section) {
+        this.state.renamingSectionId = section.id;
         this.state.newSectionName = section.name;
     }
 
     getFormattedSubTotal(amount) {
-        return formatCurrency(amount, this.order.currency_id[0]);
+        return formatCurrency(amount, this.order.currency_id);
     }
 
     onSectionInputKeydown(ev, parentId, renameId = null) {
@@ -147,7 +147,7 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
             }
         } else if (hotkey === "escape") {
             Object.assign(this.state, {
-                isAddingSection: "",
+                addingSectionTarget: "",
                 newSectionName: "",
                 renamingSectionId: null,
             });
@@ -167,7 +167,7 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
     async createSection(parentId = null) {
         const sectionName = this.state.newSectionName.trim();
         if (!sectionName) {
-            this.state.isAddingSection = "";
+            this.state.addingSectionTarget = "";
             return;
         }
 
@@ -201,7 +201,7 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
             this.setSelectedSection(section.id);
         }
         Object.assign(this.state, {
-            isAddingSection: "",
+            addingSectionTarget: "",
             newSectionName: "",
         });
     }
@@ -229,8 +229,12 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
             subtotalDelta: -section.subtotal,
         });
 
-        if (this.selectedSection.sectionId === section.id) {
+        const { sectionId, filtered } = this.selectedSection;
+
+        if (sectionId === section.id) {
             this.setSelectedSection(this.state.sections[0]?.id || false, false);
+        } else if (sectionId === section.parent_id) {
+            this.setSelectedSection(sectionId, filtered);
         }
     }
 
@@ -248,26 +252,6 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
 
         this._setSectionsState(sections);
         this.env.setSelectedSection(duplicated_section_id, false);
-    }
-
-    async loadSections() {
-        if (!this.showSections) {
-            return;
-        }
-
-        const sections = await this.orm.call(
-            this.env.model.config.context.product_catalog_order_model,
-            "get_sections",
-            [this.env.model.config.context.order_id],
-            {
-                child_field: this.env.model.config.context.child_field,
-            }
-        );
-
-        this._setSectionsState(sections);
-        if (this.state.sections.length) {
-            this.setSelectedSection(this.state.sections[0].id);
-        }
     }
 
     async renameSection(sectionId) {
@@ -305,8 +289,29 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
 
         const newParentSectionId = parent ? parseInt(parent.dataset.id) : false;
         const insertBeforeSectionSequence = next ? parseInt(next.dataset.sequence) : null;
+        const insertBeforeSectionId = next ? parseInt(next.dataset.id) : null;
 
-        const sections = await this.orm.call(
+        const node = this._extractNode(movedSectionId);
+        if (!node) {
+            return;
+        }
+
+        node.parent_id = newParentSectionId;
+
+        const parentNode = newParentSectionId ? this._findSectionById(newParentSectionId) : null;
+        const list = parentNode ? parentNode.children : this.state.sections;
+
+        const index = insertBeforeSectionId
+            ? list.findIndex((n) => n.id === insertBeforeSectionId)
+            : list.length;
+
+        list.splice(index >= 0 ? index : list.length, 0, node);
+
+        if (parentNode) {
+            parentNode.isOpen = true;
+        }
+
+        await this.orm.call(
             this.env.model.config.context.product_catalog_order_model,
             "resequence_sections",
             [this.env.model.config.context.order_id],
@@ -317,13 +322,6 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
                 insert_before_section_sequence: insertBeforeSectionSequence,
             }
         );
-
-        if (sections.length) {
-            this._setSectionsState(sections);
-            if (newParentSectionId) {
-                this._findSectionById(newParentSectionId).isOpen = true;
-            }
-        }
     }
 
     updateSectionSubtotal({ detail: { sectionId, subtotalDelta } }) {
@@ -376,6 +374,20 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
             const child = sec.children.find((c) => c.id === id);
             if (child) {
                 return child;
+            }
+        }
+        return null;
+    }
+
+    _extractNode(id) {
+        const rootIdx = this.state.sections.findIndex((n) => n.id === id);
+        if (rootIdx !== -1) {
+            return this.state.sections.splice(rootIdx, 1)[0];
+        }
+        for (const section of this.state.sections) {
+            const idx = section.children.findIndex((n) => n.id === id);
+            if (idx !== -1) {
+                return section.children.splice(idx, 1)[0];
             }
         }
         return null;

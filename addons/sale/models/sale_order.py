@@ -2655,15 +2655,15 @@ class SaleOrder(models.Model):
     def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):  # noqa: ARG002
         grouped_lines = defaultdict(lambda: self.env["sale.order.line"])
         if section_id is None:
-            section_id = (
-                self.order_line.filtered(lambda line: line.display_type == "line_section")[:1].id
-                or False
-            )
+            section_id = self.order_line.filtered(lambda line: line.display_type == "line_section")[
+                :1
+            ].id
+        section = self.order_line.browse(section_id)
         for line in self.order_line:
             if (
                 line.display_type
                 or line.product_id.id not in product_ids
-                or not line.is_in_section(section_id)
+                or not line.is_in_section(section)
             ):
                 continue
             grouped_lines[line.product_id] |= line
@@ -2687,8 +2687,9 @@ class SaleOrder(models.Model):
         :rtype: float
         """
         request.update_context(catalog_skip_tracking=True)
+        section = self.order_line.browse(section_id)
         sol = self.order_line.filtered(
-            lambda line: line.product_id.id == product.id and line.is_in_section(section_id)
+            lambda line: line.product_id.id == product.id and line.is_in_section(section)
         )
         if sol:
             if uom and sol.product_uom_id != uom:

@@ -10,29 +10,15 @@
                 <i class="fa fa-ellipsis-v text-muted"/>
             </button>
             <t t-set-slot="content">
-                <DropdownItem
-                    t-if="this.props.section.display_type === 'line_section'"
-                    closingMode="'closest'"
-                    onSelected="() => this.env.enableSectionInput(this.props.section.id)"
-                >
-                    <i class="me-1 fa fa-fw fa-level-down"/><span>Add a subsection</span>
-                </DropdownItem>
-                <DropdownItem
-                    closingMode="'closest'"
-                    onSelected="() => this.env.enableRenameSectionInput(this.props.section.id)"
-                >
-                    <i class="me-1 fa fa-fw fa-pencil"/><span>Rename</span>
-                </DropdownItem>
-                <DropdownItem closingMode="'closest'" onSelected="() => this.env.duplicateSection(this.props.section)">
-                    <i class="me-1 fa fa-fw fa-clone"/><span>Duplicate</span>
-                </DropdownItem>
-                <DropdownItem
-                    class="'text-danger'"
-                    closingMode="'closest'"
-                    onSelected="() => this.env.deleteSection(this.props.section)"
-                >
-                    <i class="me-1 fa fa-fw fa-trash"/><span>Delete</span>
-                </DropdownItem>
+                <t t-foreach= "this.dropdownItems" t-as="item" t-key="item.label">
+                    <DropdownItem
+                        closingMode="'closest'"
+                        class="item.class"
+                        onSelected="item.action"
+                    >
+                        <i class="me-1" t-att-class="item.iconClass"/><span t-out="item.label"/>
+                    </DropdownItem>
+                </t>
             </t>
         </Dropdown>
     </t>

@@ -3801,30 +3801,16 @@ class AccountMoveLine(models.Model):
         section_lines = self._get_section_lines()
         return sum(section_lines.mapped('price_total'))
 
-    def is_in_section(self, section_id):
+    def is_in_section(self, section):
         """Check if line belongs to given section or subsection in catalog."""
         self.ensure_one()
 
-        has_parent_section = bool(
-            self.parent_id.parent_id
-            if self.display_type == "product"
-            and self.parent_id.display_type == "line_subsection"
-            else self.parent_id
-        )
-
-        if not section_id:
-            # If the caller did not pass a section_id, return True only for lines that are not
+        if not section:
+            # If the caller did not pass a section, return True only for lines that are not
             # inside any section.
-            return not has_parent_section
+            return not self.parent_id
 
-        section = self.browse(section_id)
         return section._is_line_in_section(self)
-
-    def _get_section_totals(self, totals_field):
-        """Return the total/subtotal amount sale order lines linked to section."""
-        self.ensure_one()
-        section_lines = self._get_section_lines()
-        return sum(section_lines.mapped(totals_field))
 
     def _get_section_lines(self):
         self.ensure_one()

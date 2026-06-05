@@ -67,6 +67,7 @@
         <ul class="list-group d-block" t-custom-ref="sectionTreeRef">
             <t t-foreach="this.state.sections" t-as="section" t-key="section.id">
                 <SectionRow
+                    isSubsection="false"
                     section="section"
                     selectedSection="this.selectedSection"
                     state="this.state"
@@ -74,7 +75,7 @@
             </t>
         </ul>
         <input
-            t-if="this.state.isAddingSection === 'section'"
+            t-if="this.state.addingSectionTarget === 'section'"
             class="o_section_input py-1"
             type="text"
             placeholder="Enter a description"

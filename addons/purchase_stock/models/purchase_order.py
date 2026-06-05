@@ -183,7 +183,8 @@ class PurchaseOrder(models.Model):
             )
             existing_lines = self.order_line.filtered(lambda pol: pol.product_id == product)
             if section_id := ctx.get("section_id"):
-                existing_lines = existing_lines.filtered(lambda pol: pol.is_in_section(section_id))
+                section = self.order_line.browse(section_id)
+                existing_lines = existing_lines.filtered(lambda pol: pol.is_in_section(section))
                 suggest_line["sequence"] = self._get_new_line_sequence("order_line", section_id)
             else:
                 existing_lines = existing_lines.filtered(lambda pol: not pol.parent_id)  # lines with no sections

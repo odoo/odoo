@@ -2958,11 +2958,11 @@ class AccountMove(models.Model):
         if section_id is None:
             section_id = (
                 self.line_ids.filtered(lambda line: line.display_type == "line_section")[:1].id
-                or False
             )
+        section = self.line_ids.browse(section_id)
         for line in self.line_ids:
             if (
-                line.is_in_section(section_id)
+                line.is_in_section(section)
                 and line.display_type == 'product'
                 and line.product_id.id in product_ids
             ):
@@ -2982,8 +2982,9 @@ class AccountMove(models.Model):
                  sale order and the quantity selected.
         :rtype: float
         """
+        section = self.line_ids.browse(section_id)
         move_line = self.line_ids.filtered(
-            lambda line: line.product_id.id == product.id and line.is_in_section(section_id)
+            lambda line: line.product_id.id == product.id and line.is_in_section(section)
         )
         if move_line:
             if quantity != 0:

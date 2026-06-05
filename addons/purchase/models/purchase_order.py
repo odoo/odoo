@@ -1257,13 +1257,13 @@ class PurchaseOrder(models.Model):
         if section_id is None:
             section_id = (
                 self.order_line.filtered(lambda line: line.display_type == "line_section")[:1].id
-                or False
             )
+        section = self.order_line.browse(section_id)
         for line in self.order_line:
             if (
                 line.display_type
                 or line.product_id.id not in product_ids
-                or not line.is_in_section(section_id)
+                or not line.is_in_section(section)
             ):
                 continue
             grouped_lines[line.product_id] |= line
@@ -1393,9 +1393,10 @@ class PurchaseOrder(models.Model):
         :rtype: float
         """
         self.ensure_one()
+        section = self.order_line.browse(section_id)
         pol = self.order_line.filtered(
             lambda l: l.product_id.id == product.id
-            and l.is_in_section(section_id)
+            and l.is_in_section(section)
         )
         if pol:
             if uom and pol.uom_id != uom:

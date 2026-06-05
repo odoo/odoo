@@ -81,7 +81,6 @@ class ProductCatalogMixin(models.AbstractModel):
             order_line_info[product.id] = {
                **record_lines._get_product_catalog_lines_data(parent_record=self, **kwargs),
                'productType': product.type,
-               'code': product.code if product.code else '',
             }
             if self.env['res.groups']._is_feature_enabled('uom.group_uom') and not order_line_info[product.id]['uomDisplayName']:
                 order_line_info[product.id]['uomDisplayName'] = product.uom_id.display_name
@@ -134,7 +133,6 @@ class ProductCatalogMixin(models.AbstractModel):
         return {
             'productType': product.type,
             'price': product.standard_price,
-            'code': product.code if product.code else '',
             'availableUoms': product._get_available_uoms().read(['name', 'factor']),
             **self._get_product_catalog_uom_data(product, product.uom_id)
         }

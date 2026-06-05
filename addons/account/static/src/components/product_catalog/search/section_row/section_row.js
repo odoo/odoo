@@ -9,6 +9,7 @@ export class SectionRow extends Component {
     static components = { SectionRow, SectionDropdown };
 
     static props = {
+        isSubsection: Boolean,
         section: Object,
         state: Object,
         selectedSection: Object,
@@ -18,10 +19,18 @@ export class SectionRow extends Component {
         this.InputRef = useRef("InputRef");
 
         onPatched(() => {
-            if (this.props.state.isAddingSection || this.props.state.renamingSectionId) {
+            if (this.props.state.addingSectionTarget || this.props.state.renamingSectionId) {
                 this.InputRef.el?.focus();
             }
         });
+    }
+
+    get hasChildren() {
+        return this.props.section.children.length;
+    }
+
+    get isSelected() {
+        return this.props.selectedSection.sectionId == this.props.section.id;
     }
 
     onSectionLabelKeydown(ev) {

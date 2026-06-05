@@ -1890,22 +1890,15 @@ class SaleOrderLine(models.Model):
             ]
         return res or [{"tax_labels": [], "price_subtotal": 0.0, "price_total": 0.0}]
 
-    def is_in_section(self, section_id):
+    def is_in_section(self, section):
         """Check if line belongs to given section or subsection in catalog."""
         self.ensure_one()
 
-        has_parent_section = bool(
-            self.parent_id.parent_id
-            if not self.display_type and self.parent_id.display_type == "line_subsection"
-            else self.parent_id
-        )
-
-        if not section_id:
-            # If the caller did not pass a section_id, return True only for lines that are not
+        if not section:
+            # If the caller did not pass a section, return True only for lines that are not
             # inside any section.
-            return not has_parent_section
+            return not self.parent_id
 
-        section = self.browse(section_id)
         return section._is_line_in_section(self)
 
     def get_section_subtotal(self):

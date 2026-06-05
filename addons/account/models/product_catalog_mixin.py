@@ -38,10 +38,10 @@ class ProductCatalogMixin(models.AbstractModel):
                 if line.id == parent_id:
                     section_found = True
 
-        order[child_field] = [
-            Command.update(line.id, {'sequence': line.sequence + 1})
-            for line in lines.filtered_domain([('sequence', '>=', sequence)])
-        ]
+            order[child_field] = [
+                Command.update(line.id, {'sequence': line.sequence + 1})
+                for line in lines.filtered_domain([('sequence', '>=', sequence)])
+            ]
 
         section = order.env[line_model].create({
             parent_field: order.id,
@@ -96,6 +96,25 @@ class ProductCatalogMixin(models.AbstractModel):
 
         return sequence
 
+    def get_catalog_data(self, child_field):
+        """Return order information and sections for the product catalog.
+
+        :param str child_field: Field name of the order's lines (e.g., 'order_line').
+        :rtype: dict
+        :return: A dictionary containing order information and sections data.
+        """
+
+        self.ensure_one()
+
+        return {
+            "order_details": {
+                "amount_untaxed": self.amount_untaxed,
+                "currency_id": self.currency_id.id,
+                "name": self.name,
+            },
+            "sections": self.get_sections(child_field),
+        }
+
     def get_sections(self, child_field):
         """Return section data for the product catalog display.
 
@@ -148,15 +167,15 @@ class ProductCatalogMixin(models.AbstractModel):
         :param int moved_section_id: ID of the section to move.
         :param int new_parent_section_id: ID of the new parent section.
         :param int insert_before_section_sequence: Sequence of the section to insert before.
-        :rtype: list
-        :return: List of sections
+        :rtype: None
+        :return: None
         """
         order = self.with_company(self.company_id)
         lines = order[child_field].sorted('sequence')
         moved_section = lines.browse(moved_section_id)
 
         if not moved_section:
-            return []
+            return
 
         moved_block = lines.filtered(
             lambda line: (
@@ -164,8 +183,6 @@ class ProductCatalogMixin(models.AbstractModel):
             )
         )
 
-        old_start = moved_block[0].sequence
-        old_end = moved_block[-1].sequence
         block_size = len(moved_block)
 
         # Target position
@@ -186,38 +203,26 @@ class ProductCatalogMixin(models.AbstractModel):
         else:
             target_sequence = lines[-1].sequence + 1
 
-        # Moving upward
-        if target_sequence < old_start:
-            affected_lines = lines.filtered(
+        affected_lines = (
+            lines.filtered(
                 lambda line:
-                    target_sequence <= line.sequence < old_start
+                    line.sequence >= target_sequence
                     and line not in moved_block
             )
-            shift = block_size
-            new_start = target_sequence
-
-        else:  # Moving downward
-            affected_lines = lines.filtered(
-                lambda line:
-                    old_end < line.sequence < target_sequence
-                    and line not in moved_block
-            )
-            shift = -block_size
-            new_start = target_sequence - block_size
+        )
 
         commands = [
-            Command.update(line.id, {"sequence": line.sequence + shift}) for line in affected_lines
+            Command.update(line.id, {"sequence": line.sequence + block_size})
+            for line in affected_lines
         ]
         # Place moved block in new position
         commands.extend(
-            Command.update(line.id, {"sequence": new_start + index})
+            Command.update(line.id, {"sequence": target_sequence + index})
             for index, line in enumerate(moved_block)
         )
         self[child_field] = commands
 
         order[child_field].invalidate_recordset(['parent_id'])
-
-        return order.get_sections(child_field)
 
     def duplicate_section(self, child_field, section_id, *, parent_id=None):
         """Duplicate the given section with all its children.
@@ -232,13 +237,7 @@ class ProductCatalogMixin(models.AbstractModel):
         lines = order[child_field]
         section = lines.browse(section_id)
 
-        section_children = (
-            lines.filtered(lambda line: line.parent_id.id == section_id)
-            if parent_id
-            else section._get_section_lines()
-        )
-
-        section_lines = (section | section_children).sorted("sequence")
+        section_lines = (section | section._get_section_lines()).sorted("sequence")
 
         # If duplicating a section with children, insert the duplicated block after the last child
         # to keep them together.
@@ -284,18 +283,12 @@ class ProductCatalogMixin(models.AbstractModel):
         :param int section_id: The section id.
         """
         lines = self.with_company(self.company_id)[child_field]
-        section = lines.browse(section_id)
+        section = lines.browse(section_id).exists()
 
         if not section:
             return
 
-        section_children = (
-            section._get_section_lines()
-            if section.display_type == "line_section"
-            else lines.filtered(lambda line: line.parent_id == section)
-        )
-
-        (section | section_children).unlink()
+        (section | section._get_section_lines()).unlink()
 
     def rename_section(self, child_field, section_id, new_name):
         """Rename the given section.
