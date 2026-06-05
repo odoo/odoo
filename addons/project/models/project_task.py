@@ -928,6 +928,8 @@ class ProjectTask(models.Model):
                     del vals[field]
                 if not vals.get('project_id'):
                     vals['project_id'] = self.env.context.get('default_project_id')
+                if task.date_deadline and task.create_date:
+                    vals['date_deadline'] = fields.Date.context_today(self) + (task.date_deadline.date() - task.create_date.date())
         return vals_list
 
     def _create_task_mapping(self, copied_tasks):
