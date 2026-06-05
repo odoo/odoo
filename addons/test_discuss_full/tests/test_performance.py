@@ -368,6 +368,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             else:
                 res = fn()
         res.pop("__store_version__", False)
+
+        # social add its own keys in discuss channel,
+        # so the tests will fail when running with enterprise
+        for channel in res.get('discuss.channel', ()):
+            channel.pop('livechat_social_account_id', None)
+
         self.assertEqual(res, results)
 
     @freeze_time("2025-04-22 21:18:33")
