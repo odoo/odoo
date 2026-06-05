@@ -16,6 +16,7 @@ export const computeComboItems = (
 
     const getAttributesPriceExtra = (attributeValueIds) =>
         (attributeValueIds ?? [])
+            .filter((attr) => attr?.attribute_id?.create_variant !== "always")
             .map((attr) => attr?.price_extra || 0)
             .reduce((acc, price) => acc + price, 0);
 
