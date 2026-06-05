@@ -749,48 +749,51 @@ class EmployeePortalAPI(http.Controller):
                         details.append({'code': code, 'name': name, 'status': 'skipped'})
                         continue
 
-                # Re-use orphaned user with same login
-                su_env.cr.execute(
-                    'SELECT id FROM res_users WHERE login=%s LIMIT 1', (code,)
-                )
-                row = su_env.cr.fetchone()
-                if row:
-                    user_id = row[0]
-                    emp.write({'user_id': user_id})
-                else:
-                    company_id = (
-                        emp.company_id.id
-                        or su_env['res.company'].search([], limit=1).id
-                    )
-                    new_user = su_env['res.users'].with_context(
-                        no_reset_password=True
-                    ).create({
-                        'name':        name,
-                        'login':       code,
-                        'email':       emp.work_email or f'{code}@tnpd.local',
-                        'company_id':  company_id,
-                        'company_ids': [(6, 0, [company_id])],
-                    })
-                    user_id = new_user.id
-                    emp.write({'user_id': user_id})
-
-                # Set password via SQL (bypasses ORM compute/inverse chain)
-                su_env.cr.execute(
-                    'UPDATE res_users SET password=%s WHERE id=%s',
-                    (hashed_pw, user_id)
-                )
-
-                # Assign portal group via SQL (Odoo 19 constraint workaround)
-                if all_type_gids:
+                # Wrap each employee in a savepoint so a failure for one
+                # employee does not abort the entire transaction.
+                with su_env.cr.savepoint():
+                    # Re-use orphaned user with same login
                     su_env.cr.execute(
-                        'DELETE FROM res_groups_users_rel WHERE uid=%s AND gid IN %s',
-                        (user_id, all_type_gids)
+                        'SELECT id FROM res_users WHERE login=%s LIMIT 1', (code,)
                     )
-                su_env.cr.execute(
-                    'INSERT INTO res_groups_users_rel (uid, gid) VALUES (%s, %s) '
-                    'ON CONFLICT DO NOTHING',
-                    (user_id, portal_gid)
-                )
+                    row = su_env.cr.fetchone()
+                    if row:
+                        user_id = row[0]
+                        emp.write({'user_id': user_id})
+                    else:
+                        company_id = (
+                            emp.company_id.id
+                            or su_env['res.company'].search([], limit=1).id
+                        )
+                        new_user = su_env['res.users'].with_context(
+                            no_reset_password=True
+                        ).create({
+                            'name':        name,
+                            'login':       code,
+                            'email':       emp.work_email or f'{code}@tnpd.local',
+                            'company_id':  company_id,
+                            'company_ids': [(6, 0, [company_id])],
+                        })
+                        user_id = new_user.id
+                        emp.write({'user_id': user_id})
+
+                    # Set password via SQL (bypasses ORM compute/inverse chain)
+                    su_env.cr.execute(
+                        'UPDATE res_users SET password=%s WHERE id=%s',
+                        (hashed_pw, user_id)
+                    )
+
+                    # Assign portal group via SQL (Odoo 19 constraint workaround)
+                    if all_type_gids:
+                        su_env.cr.execute(
+                            'DELETE FROM res_groups_users_rel WHERE uid=%s AND gid IN %s',
+                            (user_id, all_type_gids)
+                        )
+                    su_env.cr.execute(
+                        'INSERT INTO res_groups_users_rel (uid, gid) VALUES (%s, %s) '
+                        'ON CONFLICT DO NOTHING',
+                        (user_id, portal_gid)
+                    )
 
                 created += 1
                 details.append({'code': code, 'name': name, 'status': 'created'})
