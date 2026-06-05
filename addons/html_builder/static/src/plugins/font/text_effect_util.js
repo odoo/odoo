@@ -1,83 +1,133 @@
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
-import { mixCssColors } from "@web/core/utils/colors";
+import { hashCode } from "@web/core/utils/strings";
+
+export const TEXT_EFFECT_PRESET_HASH = "presetHash";
 
 export const defaults = {
-    shadow: "false",
     shadowColor: "rgba(0, 0, 0, 0.5)",
-    shadowOffsetX: "5px",
-    shadowOffsetY: "5px",
+    shadowOffsetX: "2px",
+    shadowOffsetY: "2px",
     shadowBlur: "3px",
     outline: "0px",
     outlineColor: "#808080",
-    trailCount: "0",
-    trailOffsetX: "10px",
-    trailOffsetY: "10px",
-    trailStartColor: "#2F80ED",
-    trailEndColor: "#B2FFDA",
-    rotate: "0deg",
-    tiltX: "0deg",
-    tiltY: "0deg",
-    tiltPerspective: "1",
-    skewX: "0deg",
-    skewY: "0deg",
-    moveX: "0%",
-    moveY: "0%",
-    scale: "100%",
 };
 
-export function applyConfiguredEffects(element) {
+export const shadowParams = ["shadowColor", "shadowOffsetX", "shadowOffsetY", "shadowBlur"];
+
+function getShadowValues(shadow = {}) {
+    return Object.fromEntries(
+        shadowParams.map((paramName) => [paramName, shadow[paramName] || defaults[paramName]])
+    );
+}
+
+export function isShadowParam(paramName) {
+    return shadowParams.includes(paramName);
+}
+
+export function getShadowCount(textEffect) {
+    return textEffect.shadows?.length || 0;
+}
+
+function getStableTextEffectCopy(value) {
+    if (Array.isArray(value)) {
+        return value.map((item) => getStableTextEffectCopy(item));
+    }
+    if (value && typeof value === "object") {
+        return Object.fromEntries(
+            Object.keys(value)
+                .filter((key) => key !== TEXT_EFFECT_PRESET_HASH)
+                .sort()
+                .map((key) => [key, getStableTextEffectCopy(value[key])])
+        );
+    }
+    return value;
+}
+
+export function getTextEffectPresetHash(textEffect) {
+    return hashCode(JSON.stringify(getStableTextEffectCopy(textEffect)));
+}
+
+export function updateTextEffectPresetHash(textEffect) {
+    if (textEffect.preset === "custom") {
+        textEffect[TEXT_EFFECT_PRESET_HASH] = getTextEffectPresetHash(textEffect);
+    } else {
+        delete textEffect[TEXT_EFFECT_PRESET_HASH];
+    }
+}
+
+export function getTextEffectPresetId(textEffect) {
+    return textEffect.preset === "custom"
+        ? textEffect[TEXT_EFFECT_PRESET_HASH] || getTextEffectPresetHash(textEffect)
+        : textEffect.preset;
+}
+
+export function hasConfiguredTextEffect(textEffect) {
+    return getShadowCount(textEffect) > 0 || parseFloat(textEffect.outline || "0") > 0;
+}
+
+export function getShadows(textEffect) {
+    return (textEffect.shadows || []).map((shadow) => getShadowValues(shadow));
+}
+
+export function setShadowParam(textEffect, paramName, shadowIndex, value) {
+    const shadows = getShadows(textEffect);
+    while (shadows.length <= shadowIndex) {
+        shadows.push(getShadowValues({}));
+    }
+    shadows[shadowIndex][paramName] = value;
+    textEffect.shadows = shadows;
+}
+
+export function deleteShadowParam(textEffect, paramName, shadowIndex) {
+    const shadows = getShadows(textEffect);
+    if (shadows[shadowIndex]) {
+        delete shadows[shadowIndex][paramName];
+    }
+    textEffect.shadows = shadows;
+}
+
+export function addShadow(textEffect) {
+    const shadows = getShadows(textEffect);
+    shadows.push(getShadowValues({}));
+    textEffect.shadows = shadows;
+}
+
+export function removeShadow(textEffect, shadowIndex) {
+    const shadows = getShadows(textEffect);
+    if (!shadows.length) {
+        return false;
+    }
+    if (shadows.length === 1) {
+        delete textEffect.shadows;
+        return true;
+    }
+    shadows.splice(shadowIndex, 1);
+    textEffect.shadows = shadows;
+    return true;
+}
+
+export function applyConfiguredEffects(element, previousTextEffect = {}) {
     let json = {};
     if (element.dataset.textEffect) {
         json = JSON.parse(element.dataset.textEffect);
     }
+    if (
+        Object.keys(previousTextEffect).length &&
+        json.preset === "custom" &&
+        Object.keys(json).filter((key) => key !== TEXT_EFFECT_PRESET_HASH).length === 1
+    ) {
+        json = Object.assign({}, previousTextEffect, json);
+        element.dataset.textEffect = JSON.stringify(json);
+    }
     const values = Object.assign({}, defaults, json);
-    const shadows = [];
-    if (json.trailCount) {
-        const trailCount = parseInt(values.trailCount);
-        const startColor = getActualColor(values.trailStartColor, element.ownerDocument);
-        const endColor = getActualColor(values.trailEndColor, element.ownerDocument);
-        for (let trailIndex = 0; trailIndex < trailCount; trailIndex++) {
-            const ratio = (trailIndex + 1) / trailCount;
-            const color = mixCssColors(endColor, startColor, ratio);
-            const dx = parseInt(values.trailOffsetX) * ratio + "px";
-            const dy = parseInt(values.trailOffsetY) * ratio + "px";
-            shadows.push(`${dx} ${dy} ${color}`);
-        }
-    }
-    if (json.shadowOffsetX || json.shadowOffsetY || json.shadowBlur || json.shadowColor) {
-        shadows.push(
-            `${values.shadowOffsetX} ${values.shadowOffsetY} ${values.shadowBlur} ${values.shadowColor}`
-        );
-    }
+    const shadows = getShadows(json).map(
+        (shadow) =>
+            `${shadow.shadowOffsetX} ${shadow.shadowOffsetY} ${shadow.shadowBlur} ${shadow.shadowColor}`
+    );
     if (shadows.length) {
         element.style.setProperty("text-shadow", shadows.join(", "));
     } else {
         element.style.removeProperty("text-shadow");
-    }
-    const transforms = [];
-    if (json.rotate) {
-        transforms.push(`rotate(${json.rotate})`);
-    }
-    if (json.skewX || json.skewY) {
-        transforms.push(`skew(${values.skewX}, ${values.skewY})`);
-    }
-    if (json.tiltX || json.tiltY) {
-        transforms.push(`perspective(${values.tiltPerspective}em)`);
-        transforms.push(`rotateX(${values.tiltX})`);
-        transforms.push(`rotateY(${values.tiltY})`);
-    }
-    if (json.moveX || json.moveY) {
-        transforms.push(`translate(${values.moveX}, ${values.moveY})`);
-    }
-    if (json.scale) {
-        transforms.push(`scale(${values.scale})`);
-    }
-    if (transforms.length) {
-        element.style.setProperty("transform", transforms.join(" "));
-        element.style.setProperty("display", "inline-block");
-    } else {
-        element.style.removeProperty("transform");
-        element.style.removeProperty("display");
     }
     if (json.outline) {
         element.style.setProperty(
@@ -99,9 +149,3 @@ export function getActualColor(color, doc) {
     }
     return color;
 }
-
-export const TextEffectUtil = {
-    applyConfiguredEffects,
-    defaults,
-    getActualColor,
-};

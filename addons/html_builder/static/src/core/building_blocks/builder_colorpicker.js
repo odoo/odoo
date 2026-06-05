@@ -153,6 +153,8 @@ export class BuilderColorPicker extends Component {
         selectedTab: t.string().optional("theme"),
         defaultColor: t.string().optional("#FFFFFF00"),
         defaultOpacity: t.number().optional(),
+        colorPickerClassName: t.string().optional("o-hb-colorpicker"),
+        colorPickerPopoverClassName: t.string().optional("o-hb-colorpicker-popover"),
     });
     static components = {
         ColorSelector: ColorSelector,
@@ -179,12 +181,12 @@ export class BuilderColorPicker extends Component {
                 enabledTabs: this.props.enabledTabs,
                 grayscales: this.props.grayscales,
                 defaultOpacity: this.props.defaultOpacity,
-                className: "o-hb-colorpicker",
+                className: this.props.colorPickerClassName,
                 editColorCombination: this.env.editColorCombination,
             },
             options: {
                 onClose: onPreviewRevert,
-                popoverClass: "o-hb-colorpicker-popover",
+                popoverClass: this.props.colorPickerPopoverClassName,
             },
         };
     }

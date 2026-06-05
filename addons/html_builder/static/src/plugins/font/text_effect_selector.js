@@ -1,266 +1,267 @@
-import { useChildEnv, useChildSubEnv, useRef } from "@web/owl2/utils";
+import { useChildSubEnv } from "@web/owl2/utils";
 import { Component, proxy } from "@odoo/owl";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useDropdownCloser, useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { useService } from "@web/core/utils/hooks";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { DependencyManager } from "@html_builder/core/dependency_manager";
 import { useDomState } from "@html_builder/core/utils";
-import { InputConfirmationDialog } from "@html_builder/snippets/input_confirmation_dialog";
-import { TextEffectUtil } from "./text_effect_util";
+import {
+    addShadow,
+    applyConfiguredEffects,
+    getShadowCount,
+    getTextEffectPresetHash,
+    getTextEffectPresetId,
+    hasConfiguredTextEffect,
+    removeShadow,
+    updateTextEffectPresetHash,
+} from "./text_effect_util";
+
+const DEFAULT_TEXT_EFFECT = {
+    preset: "blurred_black",
+    shadows: [
+        {
+            shadowBlur: "10px",
+        },
+    ],
+};
 
 export class TextEffectOption extends BaseOptionComponent {
     static template = "html_builder.TextEffectOption";
-    static props = {
-        onReset: Function,
-        showLettersOnly: Boolean,
+    static components = { DropdownItem };
 
-        // Popover service
-        close: { type: Function, optional: true },
-    };
-    static dependencies = ["builderActions"];
     setup() {
         super.setup();
-        this.dialog = useService("dialog");
-        this.notification = useService("notification");
+        const editingElement = this.env.getEditingElement();
         this.state = proxy({
             presets: this.getPresets(),
-            showBack: false,
+            showPresetDropdown: !editingElement || !this.isCustom(editingElement),
+            appliedPreset: editingElement ? this.getAppliedPreset(editingElement) : undefined,
         });
-        this.domState = useDomState(async (editingElement) => ({
-            showPresets: !this.getEffectParam(editingElement, "preset"),
-            presetName: this.getPresetName(editingElement),
-            hasOutline: this.hasOutline(editingElement),
-            hasTrail: this.hasTrail(editingElement),
-            hasTilt: this.hasTilt(editingElement, "X") || this.hasTilt(editingElement, "Y"),
-            effect: editingElement.dataset.textEffect,
-            hasShadowPart: this.hasPart(editingElement, "shadow"),
-            hasOutlinePart: this.hasPart(editingElement, "outline"),
-            hasTrailPart: this.hasPart(editingElement, "trail"),
-            hasGeometryPart: this.hasPart(editingElement, "geometry"),
-        }));
-    }
-    getEffectParam(editingElement, paramName) {
-        const { getAction } = this.dependencies.builderActions;
-        return getAction("updateTextEffect").getValue({
-            editingElement,
-            params: {
-                mainParam: paramName,
-            },
+        this.dropdownControl = useDropdownCloser();
+        this.domState = useDomState(async (editingElement) => {
+            if (!editingElement) {
+                return {
+                    hasOutline: false,
+                    shadowIndexes: [],
+                };
+            }
+            return {
+                hasOutline: this.hasOutline(editingElement),
+                shadowIndexes: this.getShadowIndexes(editingElement),
+            };
         });
     }
-    getPresetName(editingElement) {
-        const value = this.getEffectParam(editingElement, "preset");
-        if (!value) {
-            return _t("Custom");
-        }
-        let preset = this.state.presets.find((preset) => preset.id === value);
-        if (preset) {
-            return preset.name;
-        }
-        const idHead = value.match(/\D+/)[0];
-        preset = this.state.presets.find((preset) => preset.id === idHead);
-        return preset?.name || _t("Custom");
+    isCustom(editingElement) {
+        return this.getTextEffect(editingElement).preset === "custom";
+    }
+    getTextEffect(editingElement) {
+        return JSON.parse(editingElement.dataset.textEffect || "{}");
+    }
+    getAppliedPreset(editingElement) {
+        return getTextEffectPresetId(this.getTextEffect(editingElement));
+    }
+    getShadowCount(editingElement) {
+        return getShadowCount(this.getTextEffect(editingElement));
+    }
+    getShadowIndexes(editingElement) {
+        return Array.from({ length: this.getShadowCount(editingElement) }, (_, index) => index);
     }
     hasOutline(editingElement) {
-        const styleActionValue = this.getEffectParam(editingElement, "outline");
-        const values = (styleActionValue || "0").match(/\d+/g);
+        const values = (this.getTextEffect(editingElement).outline || "0").match(/\d+/g);
         return values.some((value) => parseInt(value) > 0);
-    }
-    hasTrail(editingElement) {
-        const styleActionValue = this.getEffectParam(editingElement, "trailCount");
-        const values = (styleActionValue || "0").match(/\d+/g);
-        return values.some((value) => parseInt(value) > 0);
-    }
-    hasTilt(editingElement, axis) {
-        const styleActionValue = this.getEffectParam(editingElement, `tilt${axis}`);
-        const values = (styleActionValue || "0").match(/\d+/g);
-        return values.some((value) => parseInt(value) > 0);
-    }
-    hasPart(editingElement, part) {
-        const value = this.getEffectParam(editingElement, "preset");
-        if (!value) {
-            return true;
-        }
-        const idHead = value.match(/\D+/)[0];
-        if (idHead === "custom") {
-            return true;
-        }
-        const rootPreset = this.state.presets.find((preset) => preset.id === idHead);
-        const keys = Object.keys(rootPreset.effect);
-        const regex = {
-            shadow: /^shadow/,
-            outline: /^outline/,
-            trail: /^trail/,
-            geometry: /^(rotate|tilt|skew|move|scale)/,
-        }[part];
-        return keys.some((key) => regex.test(key));
     }
     getPresets() {
-        const savedPresets = JSON.parse(window.localStorage.getItem("textEffectPresets") || "[]");
+        const customPresetIds = new Set();
+        const customPresets = [...this.document.querySelectorAll("#wrap span[data-text-effect]")]
+            .map((el) => JSON.parse(el.dataset.textEffect))
+            .filter(
+                (textEffect) =>
+                    textEffect.preset === "custom" && hasConfiguredTextEffect(textEffect)
+            )
+            .reduce((presets, textEffect) => {
+                const presetHash = textEffect.presetHash || getTextEffectPresetHash(textEffect);
+                if (customPresetIds.has(presetHash)) {
+                    return presets;
+                }
+                customPresetIds.add(presetHash);
+                presets.push({
+                    id: presetHash,
+                    name: _t("Custom Shadow"),
+                    isCustom: true,
+                    effect: { ...textEffect, presetHash },
+                });
+                return presets;
+            }, []);
         const presets = [
-            ...savedPresets,
+            {
+                id: "no_shadow",
+                name: _t("No Shadow"),
+                effect: {},
+            },
+            {
+                id: "blurred_black",
+                name: _t("Blurred (Black)"),
+                effect: DEFAULT_TEXT_EFFECT,
+            },
+            {
+                id: "blurred_white",
+                name: _t("Blurred (White)"),
+                previewBackground: "dark",
+                effect: {
+                    shadows: [
+                        {
+                            shadowColor: "rgba(255, 255, 255, 0.5)",
+                            shadowBlur: "10px",
+                        },
+                    ],
+                },
+            },
             {
                 id: "outline",
                 name: _t("Outline"),
                 effect: {
                     outline: "2px",
-                    outlineColor: "#808080",
+                    outlineColor: "var(--o-color-1)",
                 },
             },
             {
-                id: "sharp",
-                name: _t("Sharp Shadow"),
-                effect: { shadowBlur: "1px" },
-            },
-            {
-                id: "blurred",
-                name: _t("Blurred Shadow"),
-                effect: { shadowBlur: "10px" },
+                id: "flat",
+                name: _t("Flat"),
+                effect: {
+                    shadows: [
+                        {
+                            shadowBlur: "1px",
+                        },
+                    ],
+                },
             },
             {
                 id: "glow",
                 name: _t("Glow"),
                 effect: {
-                    shadowBlur: "10px",
-                    shadowColor: "#3dd5f3",
-                    shadowOffsetX: "0px",
-                    shadowOffsetY: "0px",
+                    shadows: [
+                        {
+                            shadowBlur: "1px",
+                            shadowColor: "#FFFFFF",
+                            shadowOffsetX: "0px",
+                            shadowOffsetY: "0px",
+                        },
+                        {
+                            shadowBlur: "2px",
+                            shadowColor: "var(--o-color-1)",
+                            shadowOffsetX: "0px",
+                            shadowOffsetY: "0px",
+                        },
+                        {
+                            shadowBlur: "8px",
+                            shadowColor: "var(--o-color-1)",
+                            shadowOffsetX: "0px",
+                            shadowOffsetY: "0px",
+                        },
+                    ],
                 },
             },
+            ...customPresets,
             {
-                id: "trail",
-                name: _t("Trail Art"),
+                id: "custom",
+                name: _t("Custom"),
                 effect: {
-                    trailCount: "10",
-                    trailOffsetX: "30px",
-                    trailOffsetY: "30px",
-                    skewX: "-15deg",
-                },
-            },
-            {
-                id: "warp",
-                name: _t("Warp"),
-                effect: {
-                    trailCount: "3",
-                    trailOffsetX: "0px",
-                    trailOffsetY: "-10px",
-                    trailStartColor: "var(--600)",
-                    trailEndColor: "var(--white)",
-                },
-            },
-            {
-                id: "ribbon",
-                name: _t("Ribbon"),
-                effect: {
-                    shadowBlur: "10px",
-                    shadowColor: "#FFFFFF",
-                    shadowOffsetX: "0px",
-                    shadowOffsetY: "0px",
-                    outline: "2px",
-                    outlineColor: "#FF0000",
-                    rotate: "-10deg",
-                },
-            },
-            {
-                id: "speed",
-                name: _t("Speed"),
-                effect: {
-                    trailCount: "10",
-                    trailOffsetX: "-30px",
-                    trailOffsetY: "0px",
-                    trailStartColor: "#ED452F",
-                    trailEndColor: "#FFFEB2",
-                    skewX: "-15deg",
+                    preset: "custom",
                 },
             },
         ];
         for (const preset of presets) {
-            preset.effect.preset = preset.id;
+            if (!preset.isCustom && preset.id !== "no_shadow" && preset.id !== "custom") {
+                preset.effect.preset = preset.id;
+            }
             preset.effectJson = JSON.stringify(preset.effect);
-            const el = document.createElement("span");
-            el.dataset.textEffect = preset.effectJson;
-            TextEffectUtil.applyConfiguredEffects(el);
-            preset.effectStyle = el.getAttribute("style");
-            if (preset.effectStyle?.includes("-webkit") || this.props.showLettersOnly) {
-                preset.sampleText = "A";
-            } else {
-                preset.sampleText = "\uD83E\uDD84";
-            }
-            if (/\d+$/.test(preset.id)) {
-                preset.isCustom = true;
-            }
+            Object.assign(preset, this.getEffectPreview(preset.effectJson));
         }
         return presets;
     }
-    onClickOpenPresets() {
-        this.domState.showPresets = true;
-        this.state.showBack = true;
+    getEffectPreview(effectJson) {
+        const el = this.document.createElement("span");
+        el.dataset.textEffect = effectJson;
+        applyConfiguredEffects(el);
+        const effectStyle = el
+            .getAttribute("style")
+            ?.replaceAll(/var\(--(o-color-\d+)\)/g, "var(--hb-cp-$1)");
+        return {
+            effectStyle,
+        };
     }
-    onClickClosePresets() {
-        this.domState.showPresets = false;
-        this.state.showBack = false;
-    }
-    onClickSavePreset() {
-        this.dialog.add(InputConfirmationDialog, {
-            title: _t("Save text effect preset"),
-            inputLabel: _t("Name"),
-            defaultValue: _t("My custom effect"),
-            confirmLabel: _t("Save"),
-            confirm: (inputValue) => {
-                const json = JSON.parse(this.domState.effect || "{}");
-                const savedPresets = JSON.parse(
-                    window.localStorage.getItem("textEffectPresets") || "[]"
-                );
-                function generateId() {
-                    const idHead = (json.preset || "custom").match(/\D+/)[0];
-                    let count = 1;
-                    while (count > 0) {
-                        const id = `${idHead}${count}`;
-                        if (savedPresets.every((preset) => preset.id !== id)) {
-                            return id;
-                        }
-                        count++;
-                    }
-                }
-                savedPresets.unshift({
-                    id: generateId(),
-                    name: inputValue,
-                    effect: json,
-                });
-                window.localStorage.setItem("textEffectPresets", JSON.stringify(savedPresets));
-                this.notification.add(_t("Custom effect saved"), {
-                    type: "info",
-                });
-                this.state.presets = this.getPresets();
-            },
-            cancel: () => {},
-        });
-    }
-    onClickRemovePreset(presetId) {
-        const savedPresets = JSON.parse(window.localStorage.getItem("textEffectPresets") || "[]");
-        const filteredPresets = savedPresets.filter((preset) => preset.id !== presetId);
-        window.localStorage.setItem("textEffectPresets", JSON.stringify(filteredPresets));
-        this.notification.add(_t("Custom effect removed"), {
-            type: "info",
-        });
+    onClickBack() {
         this.state.presets = this.getPresets();
+        const editingElement = this.env.getEditingElement();
+        this.state.appliedPreset = editingElement
+            ? this.getAppliedPreset(editingElement)
+            : undefined;
+        this.state.showPresetDropdown = true;
     }
-    onClickReset() {
-        this.props.onReset();
+    async updateTextEffect(mutator) {
+        const editingElement = this.env.getEditingElement();
+        if (!editingElement) {
+            return;
+        }
+        const textEffect = this.getTextEffect(editingElement);
+        const didUpdate = mutator(textEffect);
+        if (didUpdate === false) {
+            return;
+        }
+        updateTextEffectPresetHash(textEffect);
+        editingElement.dataset.textEffect = JSON.stringify(textEffect);
+        applyConfiguredEffects(editingElement);
+        this.domState.shadowIndexes = this.getShadowIndexes(editingElement);
+        this.domState.hasOutline = this.hasOutline(editingElement);
+        this.state.presets = this.getPresets();
+        this.state.appliedPreset = this.getAppliedPreset(editingElement);
+        this.env.editor.shared.history.commit();
+    }
+    onClickAddShadow() {
+        this.updateTextEffect((textEffect) => addShadow(textEffect));
+    }
+    onClickRemoveShadow(shadowIndex) {
+        this.updateTextEffect((textEffect) => removeShadow(textEffect, shadowIndex));
+    }
+    onPreviewTextEffect(effectJson) {
+        this.env.previewTextEffect(effectJson);
+    }
+    restoreTextEffectPreview() {
+        this.env.revertTextEffect();
+    }
+    onSelectedTextEffect(effectJson) {
+        const effect = JSON.parse(effectJson);
+        const isCustom = effect.preset === "custom";
+        const { element: editingElement, activePreset } = this.env.applyTextEffect(effectJson);
+        this.state.presets = this.getPresets();
+        this.state.appliedPreset = activePreset;
+        if (editingElement) {
+            this.domState.shadowIndexes = this.getShadowIndexes(editingElement);
+            this.domState.hasOutline = this.hasOutline(editingElement);
+        }
+        this.state.showPresetDropdown = !isCustom;
+        if (!isCustom) {
+            this.dropdownControl.close();
+        }
     }
 }
 
 export class TextEffectSelector extends Component {
     static template = "html_builder.TextEffectSelector";
+    static components = { Dropdown, TextEffectOption };
     static props = {
         ...toolbarButtonProps,
         config: {
             type: Object,
             shape: { editor: Object, editorBus: Object },
         },
-        getTextEffectOrCreateDefault: Function,
+        prepareTextEffectSelection: Function,
+        applyTextEffect: Function,
+        previewTextEffect: Function,
+        revertTextEffect: Function,
         getState: Function,
         updateState: Function,
     };
@@ -268,52 +269,50 @@ export class TextEffectSelector extends Component {
     setup() {
         this.props.updateState();
         this.state = this.props.getState();
-        this.root = useRef("root");
+        this.dropdown = useDropdownState({
+            onClose: () => this.onCloseDropdown(),
+        });
         useChildSubEnv({
             dependencyManager: new DependencyManager(),
             getEditingElement: () => this.activeElement,
             getEditingElements: () => (this.activeElement ? [this.activeElement] : []),
+            applyTextEffect: (effectJson) => this.applyTextEffect(effectJson),
+            previewTextEffect: (effectJson) => this.props.previewTextEffect(effectJson),
+            revertTextEffect: () => this.props.revertTextEffect(),
             weContext: {},
             editor: this.props.config.editor,
             editorBus: this.props.config.editorBus,
             services: this.props.config.editor.services,
         });
-        this.popover = usePopover(TextEffectOption, {
-            env: useChildEnv(), // owl3 migration, this should be replaced
-            onClose: () => {
-                if (this.activeElement && this.activeElement.dataset.textEffect) {
-                    const json = JSON.parse(this.activeElement.dataset.textEffect);
-                    if (!json.preset) {
-                        this.onReset?.(this.activeElement);
-                        delete this.onReset;
-                    }
-                }
-                if (!this.props.config.editor.isDestroyed) {
-                    this.props.updateState();
-                }
-            },
-        });
     }
 
-    onClick(ev) {
-        if (this.popover.isOpen) {
-            this.popover.close();
+    onClickTextEffect() {
+        if (this.state.isDisabled) {
             return;
         }
-        const { element, onReset } = this.props.getTextEffectOrCreateDefault();
-        if (!element) {
+        if (this.dropdown.isOpen) {
+            this.dropdown.close();
             return;
         }
-        this.activeElement = element;
-        this.onReset = onReset;
+        let state = this.props.prepareTextEffectSelection();
+        if (!state.hasTextEffect) {
+            state = this.props.applyTextEffect(JSON.stringify(DEFAULT_TEXT_EFFECT));
+        }
+        this.activeElement = state.element;
+        this.dropdown.open();
+    }
 
-        this.props.updateState();
-        this.popover.open(this.root.el, {
-            onReset: () => {
-                onReset(this.activeElement);
-                this.popover.close();
-            },
-            showLettersOnly: !ev.shiftKey,
-        });
+    applyTextEffect(effectJson) {
+        const state = this.props.applyTextEffect(effectJson);
+        this.activeElement = state.element;
+        return state;
+    }
+
+    onCloseDropdown() {
+        this.props.revertTextEffect();
+        this.activeElement = undefined;
+        if (!this.props.config.editor.isDestroyed) {
+            this.props.updateState();
+        }
     }
 }
