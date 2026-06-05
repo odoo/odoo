@@ -701,7 +701,12 @@ class EmployeePortalAPI(http.Controller):
         if not user.exists() or not user._is_admin():
             return self._err('Admin access required', status=403)
 
-        su_env = request.env(user=SUPERUSER_ID)
+        # Upgrade request.env to the admin user so that env.cr.flush()
+        # at the end of the request uses a valid user (not auth='none' uid=None).
+        # Without this, Odoo's post-request recompute fails with
+        # "Expected singleton: res.users()" when flushing image field computations.
+        request.update_env(user=uid)
+        su_env = request.env
 
         employees = su_env['hr.employee'].search([
             ('active',          '=', True),
@@ -848,7 +853,8 @@ class EmployeePortalAPI(http.Controller):
         if not uid:
             return self._err('Authentication required', status=401)
 
-        su_env = request.env(user=SUPERUSER_ID)
+        request.update_env(user=uid)
+        su_env = request.env
 
         try:
             user = su_env['res.users'].browse(uid)
