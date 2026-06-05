@@ -27,7 +27,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
 
     def _get_tax_details(self, fallback=False, extra_domain=None):
         domain = [('company_id', '=', self.env.company.id)] + (extra_domain or [])
-        tax_details_query = self.env['account.move.line']._get_query_tax_details_from_domain(domain, fallback=fallback)
+        tax_details_query = self.env['account.move.line']._get_query_tax_details_from_domain(domain)
         self.env['account.move.line'].flush_model()
         self.cr.execute(tax_details_query)
         tax_details_res = self.cr.dictfetchall()
@@ -49,7 +49,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
             tax_amount = sum(lines.mapped('balance'))
             tax_details_amount = sum(x['tax_amount']
                                      for x in tax_details
-                                     if (x['group_tax_id'] or x['tax_id']) == tax.id)
+                                     if (x['effective_tax_id']) == tax.id)
             self.assertAlmostEqual(tax_amount, tax_details_amount)
 
     def test_affect_base_amount_1(self):
@@ -1097,32 +1097,24 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                     'tax_line_id': tax_lines[0].id,
                     'base_amount': 1200.0,
                     'tax_amount': 10.91,
-                    'base_amount_currency': 2400.0,
-                    'tax_amount_currency': 102.857, # (2400.0 / 8400.0) * (360.0 / 560.0) * 560.0
                 },
                 {
                     'base_line_id': base_lines[0].id,
                     'tax_line_id': tax_lines[1].id,
                     'base_amount': 1200.0,
                     'tax_amount': 109.09,
-                    'base_amount_currency': 2400.0,
-                    'tax_amount_currency': 57.143, # (2400.0 / 8400.0) * (200.0 / 560.0) * 560.0
                 },
                 {
                     'base_line_id': base_lines[1].id,
                     'tax_line_id': tax_lines[0].id,
                     'base_amount': 12000.0,
                     'tax_amount': 109.09,
-                    'base_amount_currency': 6000.0,
-                    'tax_amount_currency': 257.143, # (6000.0 / 8400.0) * (360.0 / 560.0) * 560.0
                 },
                 {
                     'base_line_id': base_lines[1].id,
                     'tax_line_id': tax_lines[1].id,
                     'base_amount': 12000.0,
                     'tax_amount': 1090.91,
-                    'base_amount_currency': 6000.0,
-                    'tax_amount_currency': 142.857, # (6000.0 / 8400.0) * (200.0 / 560.0) * 560.0
                 },
             ],
         )

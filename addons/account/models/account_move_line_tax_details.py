@@ -8,505 +8,430 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     @api.model
-    def _get_query_tax_details_from_domain(self, domain, fallback=True) -> SQL:
+    def _get_query_tax_details_from_domain(self, domain) -> SQL:
         """ Create the tax details sub-query based on the orm domain passed as parameter.
 
         :param domain:      An orm domain on account.move.line.
-        :param fallback:    Fallback on an approximated mapping if the mapping failed.
         :return:            query as SQL object
         """
         query = self.env['account.move.line']._search(domain)
 
-        return self._get_query_tax_details(query.from_clause, query.where_clause, fallback=fallback)
+        return self._get_query_tax_details(query.from_clause, query.where_clause)
 
     @api.model
-    def _get_extra_query_base_tax_line_mapping(self) -> SQL:
+    def _get_tax_query_extra_clauses(self) -> tuple[SQL, SQL]:
         #TO OVERRIDE
-        return SQL()
+        return SQL(), SQL()
 
     @api.model
-    def _get_query_tax_details(self, table_references, search_condition, fallback=True) -> SQL:
-        """ Create the tax details sub-query based on the orm domain passed as parameter.
-
-        :param table_references:    The query to inject after the FROM, as an SQL object.
-        :param search_condition:    The query to inject in the WHERE clause, as an SQL object.
-        :param fallback:            Fallback on an approximated mapping if the mapping failed.
-        :return:                    query as an SQL object
+    def _get_query_tax_details(self, table_references, search_condition):
         """
-        group_taxes = self.env['account.tax'].search([('amount_type', '=', 'group')])
+        Create the tax details sub-query for the given account move lines.
 
-        group_taxes_query_list = []
-        for group_tax in group_taxes:
-            children_taxes = group_tax.children_tax_ids
-            if not children_taxes:
-                continue
+        This query maps tax lines to their corresponding base lines and computes the
+        portion of each tax amount attributable to every base line. If a tax line
+        matches multiple base lines, the tax amount is distributed proportionally
+        according to their base amounts.
 
-            children_taxes_in_query = SQL(','.join('%s' for dummy in children_taxes),
-                                          *children_taxes.ids)
-            group_taxes_query_list.append(SQL('WHEN tax.id = %s THEN ARRAY[%s]', group_tax.id, children_taxes_in_query))
+        Example:
 
-        if group_taxes_query_list:
-            group_taxes_query = SQL('''UNNEST(CASE %s ELSE ARRAY[tax.id] END)''', SQL(' ').join(group_taxes_query_list))
-        else:
-            group_taxes_query = SQL('tax.id')
+            Move lines:
+                Name            Balance     Tax
+                ---------------------------------
+                base_line_1      100        VAT 10%
+                base_line_2      200        VAT 10%
+                tax_line         30
 
-        if fallback:
-            fallback_query = SQL(
-                '''
-                UNION ALL
+            Result:
+                base_line_id    tax_line_id    base_amount    tax_amount
+                --------------------------------------------------------
+                base_line_1     tax_line       100            10
+                base_line_2     tax_line       200            20
+        """
 
+        def _prepare_filtered_aml_tmp_table(extra_aml_select_clause, table_references, search_condition):
+            """
+            Prepare the temporary table containing the account move lines relevant to the
+            tax mapping query.
+
+            The table materializes the filtered dataset once so that all subsequent
+            preparation and matching steps operate on the same input without repeatedly
+            filtering ``account_move_line``.
+            """
+            return SQL("""
+                CREATE TEMPORARY TABLE filtered_aml_tmp ON COMMIT DROP AS
                 SELECT
-                    account_move_line.id AS tax_line_id,
-                    base_line.id AS base_line_id,
-                    base_line.id AS src_line_id,
-                    base_line.balance AS base_amount,
-                    base_line.amount_currency AS base_amount_currency
+                    account_move_line.id,
+                    account_move_line.move_id,
+                    account_move_line.account_id,
+                    account_move_line.partner_id,
+                    account_move_line.currency_id,
+                    account_move_line.company_currency_id,
+                    account_move_line.balance,
+                    account_move_line.amount_currency,
+                    account_move_line.quantity,
+                    account_move_line.tax_line_id,
+                    account_move_line.group_tax_id,
+                    account_move_line.tax_repartition_line_id,
+                    account_move_line.analytic_distribution,
+                    account_move_line.display_type
+                    %(extra_aml_select_clause)s
                 FROM %(table_references)s
-                LEFT JOIN base_tax_line_mapping ON
-                    base_tax_line_mapping.tax_line_id = account_move_line.id
-                JOIN account_move_line_account_tax_rel tax_rel ON
-                    tax_rel.account_tax_id = COALESCE(account_move_line.group_tax_id, account_move_line.tax_line_id)
-                JOIN account_move_line base_line ON
-                    base_line.id = tax_rel.account_move_line_id
-                    AND base_line.tax_repartition_line_id IS NULL
-                    AND base_line.move_id = account_move_line.move_id
-                    AND base_line.currency_id = account_move_line.currency_id
-                WHERE base_tax_line_mapping.tax_line_id IS NULL
-                AND %(search_condition)s
-                ''',
+                WHERE %(search_condition)s;
+                ANALYZE filtered_aml_tmp;
+                """,
+                extra_aml_select_clause=extra_aml_select_clause,
                 table_references=table_references,
-                search_condition=search_condition,
+                search_condition=search_condition
             )
-        else:
-            fallback_query = SQL()
 
-        extra_query_base_tax_line_mapping = self._get_extra_query_base_tax_line_mapping()
+        def _prepare_tax_matching_data_tables():
+            """
+            Prepare the temporary tables used to match base lines with tax lines.
 
-        return SQL(
-            '''
-            /*
-            As example to explain the different parts of the query, we'll consider a move with the following lines:
-            Name            Tax_line_id         Tax_ids                 Debit       Credit      Base lines
-            ---------------------------------------------------------------------------------------------------
-            base_line_1                         10_affect_base, 20      1000
-            base_line_2                         10_affect_base, 5       2000
-            base_line_3                         10_affect_base, 5       3000
-            tax_line_1      10_affect_base      20                                  100         base_line_1
-            tax_line_2      20                                                      220         base_line_1
-            tax_line_3      10_affect_base      5                                   500         base_line_2/3
-            tax_line_4      5                                                       275         base_line_2/3
-            */
+            ``line_base_affecting_tmp`` resolves group taxes into the ordered list of
+            effective tax IDs that affect each base line.
 
-            WITH base_tax_line_mapping AS (
+            ``base_lines_tmp`` prepares the base lines by attaching these tax IDs and
+            building a common join key.
 
-                /*
-                Create the mapping of each tax lines with their corresponding base lines.
-
-                In the example, it will give the following values:
-                    base_line_id     tax_line_id    base_amount
-                    -------------------------------------------
-                    base_line_1      tax_line_1         1000
-                    base_line_1      tax_line_2         1000
-                    base_line_2      tax_line_3         2000
-                    base_line_2      tax_line_4         2000
-                    base_line_3      tax_line_3         3000
-                    base_line_3      tax_line_4         3000
-                */
-
+            ``tax_lines_tmp`` prepares the tax lines by enriching them with the tax
+            metadata required for matching and building the same join key.
+            """
+            return SQL("""
+                CREATE TEMPORARY TABLE line_base_affecting_tmp ON COMMIT DROP AS
                 SELECT
-                    account_move_line.id AS tax_line_id,
-                    base_line.id AS base_line_id,
-                    base_line.balance AS base_amount,
-                    base_line.amount_currency AS base_amount_currency
+                    tax_rel.account_move_line_id AS line_id,
+                    ARRAY_AGG(
+                        COALESCE(fil.child_tax, tax.id)
+                        ORDER BY tax.sequence, COALESCE(fil.child_tax, tax.id)
+                    ) AS tax_ids
+                FROM filtered_aml_tmp f
+                JOIN account_move_line_account_tax_rel tax_rel
+                    ON tax_rel.account_move_line_id = f.id
+                JOIN account_tax tax
+                    ON tax.id = tax_rel.account_tax_id
+                LEFT JOIN account_tax_filiation_rel fil
+                    ON fil.parent_tax = tax.id
+                WHERE tax.is_base_affected
+                GROUP BY tax_rel.account_move_line_id;
+                ANALYZE line_base_affecting_tmp;
 
-                FROM %(table_references)s
-                JOIN account_tax_repartition_line tax_rep ON
-                    tax_rep.id = account_move_line.tax_repartition_line_id
-                JOIN account_tax tax ON
-                    tax.id = account_move_line.tax_line_id
-                JOIN account_move_line_account_tax_rel tax_rel ON
-                    tax_rel.account_tax_id = COALESCE(account_move_line.group_tax_id, account_move_line.tax_line_id)
-                JOIN account_move move ON
-                    move.id = account_move_line.move_id
-                JOIN account_move_line base_line ON
-                    base_line.id = tax_rel.account_move_line_id
-                    AND base_line.tax_repartition_line_id IS NULL
-                    AND base_line.move_id = account_move_line.move_id
-                    AND (
-                        move.move_type != 'entry'
-                        OR (tax.tax_exigibility = 'on_payment' AND tax.cash_basis_transition_account_id IS NOT NULL)
-                        OR sign(account_move_line.balance) = sign(base_line.balance * tax.amount * tax_rep.factor_percent)
-                    )
-                    AND COALESCE(base_line.partner_id, 0) = COALESCE(account_move_line.partner_id, 0)
-                    AND base_line.currency_id = account_move_line.currency_id
-                    AND (
-                        COALESCE(tax_rep.account_id, base_line.account_id) = account_move_line.account_id
-                        OR (tax.tax_exigibility = 'on_payment' AND tax.cash_basis_transition_account_id IS NOT NULL)
-                    )
-                    AND (
-                        (tax.analytic IS NOT TRUE AND tax_rep.use_in_tax_closing IS TRUE)
-                        OR (base_line.analytic_distribution IS NULL AND account_move_line.analytic_distribution IS NULL)
-                        OR base_line.analytic_distribution = account_move_line.analytic_distribution
-                    )
-                    %(extra_query_base_tax_line_mapping)s
-                JOIN res_currency curr ON
-                    curr.id = account_move_line.currency_id
-                JOIN res_currency comp_curr ON
-                    comp_curr.id = account_move_line.company_currency_id
-                LEFT JOIN LATERAL (
-                    /*
-                        This table builds a reference table based on the tax_ids field, with the following changes:
-                          - flatten the group of taxes
-                          - exclude the taxes having 'is_base_affected' set to False.
-                        Those allow to match only base_line_1 when finding the base lines of tax_line_1, as we need to find
-                        base lines having a 'affecting_base_tax_ids' ending with [10_affect_base, 20], not only containing
-                        '10_affect_base'. Otherwise, base_line_2/3 would also be matched.
-                        In our example, as all the taxes are set to be affected by previous ones affecting the base, the
-                        result is similar to the table 'account_move_line_account_tax_rel':
-                        Id                 Tax_ids
-                        -------------------------------------------
-                        base_line_1        [10_affect_base, 20]
-                        base_line_2        [10_affect_base, 5]
-                        base_line_3        [10_affect_base, 5]
-                    */
-                    SELECT ARRAY_AGG(sub.tax_id ORDER BY sub.sequence, sub.tax_id) AS tax_ids
-                    FROM (
-                        SELECT
-                            %(group_taxes_query)s AS tax_id,
-                            tax.sequence
-                        FROM account_move_line_account_tax_rel tax_rel
-                        JOIN account_tax tax ON tax.id = tax_rel.account_tax_id
-                        WHERE tax.is_base_affected
-                        AND tax_rel.account_move_line_id = account_move_line.id
-                    ) AS sub
-                ) tax_line_tax_ids ON TRUE
-                LEFT JOIN LATERAL (
-                    SELECT ARRAY_AGG(sub.tax_id ORDER BY sub.sequence, sub.tax_id) AS tax_ids
-                    FROM (
-                        SELECT
-                            %(group_taxes_query)s AS tax_id,
-                            tax.sequence
-                        FROM account_move_line_account_tax_rel tax_rel
-                        JOIN account_tax tax ON tax.id = tax_rel.account_tax_id
-                        WHERE tax.is_base_affected
-                        AND tax_rel.account_move_line_id = base_line.id
-                    ) AS sub
-                ) base_line_tax_ids ON TRUE
-                WHERE account_move_line.tax_repartition_line_id IS NOT NULL
-                    AND %(search_condition)s
-                    AND (
-                        -- keeping only the rows from affecting_base_tax_lines that end with the same taxes applied (see comment in tax_line_tax_ids)
-                        NOT tax.include_base_amount
-                        OR base_line_tax_ids.tax_ids[ARRAY_LENGTH(base_line_tax_ids.tax_ids, 1) - COALESCE(ARRAY_LENGTH(tax_line_tax_ids.tax_ids, 1), 0):ARRAY_LENGTH(base_line_tax_ids.tax_ids, 1)]
-                            = ARRAY[account_move_line.tax_line_id] || COALESCE(tax_line_tax_ids.tax_ids, ARRAY[]::INTEGER[])
-                    )
-            ),
-
-
-            tax_amount_affecting_base_to_dispatch AS (
-
-                /*
-                Computes the total amount to dispatch in case of tax lines affecting the base of subsequent taxes.
-                Such tax lines are an additional base amount for others lines, that will be truly dispatch in next
-                CTE.
-
-                In the example:
-                    - tax_line_1 is an additional base of 100.0 from base_line_1 for tax_line_2.
-                    - tax_line_3 is an additional base of 2/5 * 500.0 = 200.0 from base_line_2 for tax_line_4.
-                    - tax_line_3 is an additional base of 3/5 * 500.0 = 300.0 from base_line_3 for tax_line_4.
-
-                    src_line_id    base_line_id     tax_line_id    total_base_amount
-                    -------------------------------------------------------------
-                    tax_line_1     base_line_1      tax_line_2         1000
-                    tax_line_3     base_line_2      tax_line_4         5000
-                    tax_line_3     base_line_3      tax_line_4         5000
-                */
-
+                -- filter out base_lines, create a single join key
+                CREATE TEMPORARY TABLE base_lines_tmp ON COMMIT DROP AS
                 SELECT
-                    tax_line.id AS tax_line_id,
-                    base_line.id AS base_line_id,
-                    account_move_line.id AS src_line_id,
+                    f.*, lba.tax_ids, rel.account_tax_id AS applied_tax_id,
+                    (f.move_id::text || ':' || f.currency_id::text || ':' || rel.account_tax_id::text) AS join_key
+                FROM filtered_aml_tmp f
+                JOIN account_move_line_account_tax_rel rel ON f.id = rel.account_move_line_id
+                LEFT JOIN line_base_affecting_tmp lba ON lba.line_id = f.id
+                WHERE f.tax_repartition_line_id IS NULL;
+                ANALYZE base_lines_tmp;
 
-                    tax_line.company_id,
-                    comp_curr.id AS company_currency_id,
+                -- filter out tax_lines, create a single join key, fetch tax/currency data
+                CREATE TEMPORARY TABLE tax_lines_tmp ON COMMIT DROP AS
+                SELECT f.*, tax_rep.tax_id, tax_rep.account_id AS rep_account_id, lba.tax_ids,
+                    tax_rep.factor_percent, tax_rep.use_in_tax_closing,
+                    COALESCE(f.group_tax_id, f.tax_line_id) AS effective_tax_id,
+                    (f.move_id::text || ':' || f.currency_id::text || ':' || COALESCE(f.group_tax_id, f.tax_line_id)::text) AS join_key,
+                    tax.amount AS tax_amount_rate,
+                    tax.amount_type,
+                    tax.tax_exigibility,
+                    tax.cash_basis_transition_account_id,
+                    tax.analytic,
+                    tax.include_base_amount,
+                    move.tax_cash_basis_rec_id,
+                    move.always_tax_exigible,
+                    move.move_type,
                     comp_curr.decimal_places AS comp_curr_prec,
-                    curr.id AS currency_id,
-                    curr.decimal_places AS curr_prec,
-
-                    tax_line.tax_line_id AS tax_id,
-
-                    base_line.balance AS base_amount,
-                    SUM(
-                        CASE WHEN tax.amount_type = 'fixed'
-                        THEN CASE WHEN base_line.balance < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_line.quantity, 1.0))
-                        ELSE base_line.balance
-                        END
-                    ) OVER (PARTITION BY tax_line.id, account_move_line.id ORDER BY tax_line.tax_line_id, base_line.id) AS cumulated_base_amount,
-                    SUM(
-                        CASE WHEN tax.amount_type = 'fixed'
-                        THEN CASE WHEN base_line.balance < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_line.quantity, 1.0))
-                        ELSE base_line.balance
-                        END
-                    ) OVER (PARTITION BY tax_line.id, account_move_line.id) AS total_base_amount,
-                    account_move_line.balance AS total_tax_amount,
-
-                    base_line.amount_currency AS base_amount_currency,
-                    SUM(
-                        CASE WHEN tax.amount_type = 'fixed'
-                        THEN CASE WHEN base_line.amount_currency < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_line.quantity, 1.0))
-                        ELSE base_line.amount_currency
-                        END
-                    ) OVER (PARTITION BY tax_line.id, account_move_line.id ORDER BY tax_line.tax_line_id, base_line.id) AS cumulated_base_amount_currency,
-                    SUM(
-                        CASE WHEN tax.amount_type = 'fixed'
-                        THEN CASE WHEN base_line.amount_currency < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_line.quantity, 1.0))
-                        ELSE base_line.amount_currency
-                        END
-                    ) OVER (PARTITION BY tax_line.id, account_move_line.id) AS total_base_amount_currency,
-                    account_move_line.amount_currency AS total_tax_amount_currency
-
-                FROM %(table_references)s
-                JOIN account_tax tax_include_base_amount ON
-                    tax_include_base_amount.include_base_amount
-                    AND tax_include_base_amount.id = account_move_line.tax_line_id
-                JOIN base_tax_line_mapping base_tax_line_mapping ON
-                    base_tax_line_mapping.tax_line_id = account_move_line.id
-                JOIN account_move_line_account_tax_rel tax_rel ON
-                    tax_rel.account_move_line_id = base_tax_line_mapping.tax_line_id
-                JOIN account_tax tax ON
-                    tax.id = tax_rel.account_tax_id
-                JOIN base_tax_line_mapping tax_line_matching ON
-                    tax_line_matching.base_line_id = base_tax_line_mapping.base_line_id
-                JOIN account_move_line tax_line ON
-                    tax_line.id = tax_line_matching.tax_line_id
-                    AND tax_line.tax_line_id = tax_rel.account_tax_id
-                JOIN res_currency curr ON
-                    curr.id = tax_line.currency_id
-                JOIN res_currency comp_curr ON
-                    comp_curr.id = tax_line.company_currency_id
-                JOIN account_move_line base_line ON
-                    base_line.id = base_tax_line_mapping.base_line_id
-                WHERE %(search_condition)s
-            ),
-
-
-            base_tax_matching_base_amounts AS (
-
-                /*
-                Build here the full mapping tax lines <=> base lines containing the final base amounts.
-                This is done in a 3-parts union.
-
-                Note: src_line_id is used only to build a unique ID.
-                */
-
-                /*
-                PART 1: raw mapping computed in base_tax_line_mapping.
-                */
-
-                SELECT
-                    tax_line_id,
-                    base_line_id,
-                    base_line_id AS src_line_id,
-                    base_amount,
-                    base_amount_currency
-                FROM base_tax_line_mapping
-
-                UNION ALL
-
-                /*
-                PART 2: Dispatch the tax amount of tax lines affecting the base of subsequent ones, using
-                tax_amount_affecting_base_to_dispatch.
-
-                This will effectively add the following rows:
-                base_line_id    tax_line_id     src_line_id     base_amount
-                -------------------------------------------------------------
-                base_line_1     tax_line_2      tax_line_1      100
-                base_line_2     tax_line_4      tax_line_3      200
-                base_line_3     tax_line_4      tax_line_3      300
-                */
-
-                SELECT
-                    sub.tax_line_id,
-                    sub.base_line_id,
-                    sub.src_line_id,
-
-                    ROUND(
-                        COALESCE(SIGN(sub.cumulated_base_amount) * sub.total_tax_amount * ABS(sub.cumulated_base_amount) / NULLIF(sub.total_base_amount, 0.0), 0.0),
-                        sub.comp_curr_prec
-                    )
-                    - LAG(ROUND(
-                        COALESCE(SIGN(sub.cumulated_base_amount) * sub.total_tax_amount * ABS(sub.cumulated_base_amount) / NULLIF(sub.total_base_amount, 0.0), 0.0),
-                        sub.comp_curr_prec
-                    ), 1, 0.0)
-                    OVER (
-                        PARTITION BY sub.tax_line_id, sub.src_line_id ORDER BY sub.tax_id, sub.base_line_id
-                    ) AS base_amount,
-
-                    ROUND(
-                        COALESCE(SIGN(sub.cumulated_base_amount_currency) * sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / NULLIF(sub.total_base_amount_currency, 0.0), 0.0),
-                        sub.curr_prec
-                    )
-                    - LAG(ROUND(
-                        COALESCE(SIGN(sub.cumulated_base_amount_currency) * sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / NULLIF(sub.total_base_amount_currency, 0.0), 0.0),
-                        sub.curr_prec
-                    ), 1, 0.0)
-                    OVER (
-                        PARTITION BY sub.tax_line_id, sub.src_line_id ORDER BY sub.tax_id, sub.base_line_id
-                    ) AS base_amount_currency
-                FROM tax_amount_affecting_base_to_dispatch sub
-                JOIN account_move_line tax_line ON
-                    tax_line.id = sub.tax_line_id
-
-                /*
-                PART 3: In case of the matching failed because the configuration changed or some journal entries
-                have been imported, construct a simple mapping as a fallback. This mapping is super naive and only
-                build based on the 'tax_ids' and 'tax_line_id' fields, nothing else. Hence, the mapping will not be
-                exact but will give an acceptable approximation.
-
-                Skipped if the 'fallback' method parameter is False.
-                */
-                %(fallback_query)s
-            ),
-
-
-            base_tax_matching_all_amounts AS (
-
-                /*
-                Complete base_tax_matching_base_amounts with the tax amounts (prorata):
-                base_line_id    tax_line_id     src_line_id     base_amount     tax_amount
-                --------------------------------------------------------------------------
-                base_line_1     tax_line_1      base_line_1     1000            100
-                base_line_1     tax_line_2      base_line_1     1000            (1000 / 1100) * 220 = 200
-                base_line_1     tax_line_2      tax_line_1      100             (100 / 1100) * 220 = 20
-                base_line_2     tax_line_3      base_line_2     2000            (2000 / 5000) * 500 = 200
-                base_line_2     tax_line_4      base_line_2     2000            (2000 / 5500) * 275 = 100
-                base_line_2     tax_line_4      tax_line_3      200             (200 / 5500) * 275 = 10
-                base_line_3     tax_line_3      base_line_3     3000            (3000 / 5000) * 500 = 300
-                base_line_3     tax_line_4      base_line_3     3000            (3000 / 5500) * 275 = 150
-                base_line_3     tax_line_4      tax_line_3      300             (300 / 5500) * 275 = 15
-                */
-
-                SELECT
-                    sub.tax_line_id,
-                    sub.base_line_id,
-                    sub.src_line_id,
-
-                    tax_line.tax_line_id AS tax_id,
-                    tax_line.group_tax_id,
-                    tax_line.tax_repartition_line_id,
-
-                    tax_line.company_id,
-                    tax_line.display_type AS display_type,
-                    comp_curr.id AS company_currency_id,
-                    comp_curr.decimal_places AS comp_curr_prec,
-                    curr.id AS currency_id,
                     curr.decimal_places AS curr_prec,
                     (
                         tax.tax_exigibility != 'on_payment'
-                        OR tax_move.tax_cash_basis_rec_id IS NOT NULL
-                        OR tax_move.always_tax_exigible
-                    ) AS tax_exigible,
-                    base_line.account_id AS base_account_id,
+                        OR move.tax_cash_basis_rec_id IS NOT NULL
+                        OR move.always_tax_exigible
+                    ) AS tax_exigible
+                FROM filtered_aml_tmp f
+                LEFT JOIN line_base_affecting_tmp lba ON lba.line_id = f.id
+                JOIN account_tax_repartition_line tax_rep ON tax_rep.id = f.tax_repartition_line_id
+                JOIN account_tax tax ON tax.id = f.tax_line_id
+                JOIN account_move move ON move.id = f.move_id
+                JOIN res_currency comp_curr ON comp_curr.id = f.company_currency_id
+                JOIN res_currency curr ON curr.id = f.currency_id;
+                ANALYZE tax_lines_tmp;
+            """)
 
-                    sub.base_amount,
-                    SUM(
-                        CASE WHEN tax.amount_type = 'fixed'
-                        THEN CASE WHEN base_line.balance < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_line.quantity, 1.0))
-                        ELSE sub.base_amount
-                        END
-                    ) OVER (PARTITION BY tax_line.id ORDER BY tax_line.tax_line_id, sub.base_line_id, sub.src_line_id) AS cumulated_base_amount,
-                    SUM(
-                        CASE WHEN tax.amount_type = 'fixed'
-                        THEN CASE WHEN base_line.balance < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_line.quantity, 1.0))
-                        ELSE sub.base_amount
-                        END
-                    ) OVER (PARTITION BY tax_line.id) AS total_base_amount,
-                    tax_line.balance AS total_tax_amount,
+        def _prepare_matching_tables(extra_td_where_clause):
+            """
+            Prepare the temporary tables required for tax line matching.
 
-                    sub.base_amount_currency,
-                    SUM(
-                        CASE WHEN tax.amount_type = 'fixed'
-                        THEN CASE WHEN base_line.amount_currency < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_line.quantity, 1.0))
-                        ELSE sub.base_amount_currency
-                        END
-                    ) OVER (PARTITION BY tax_line.id ORDER BY tax_line.tax_line_id, sub.base_line_id, sub.src_line_id) AS cumulated_base_amount_currency,
-                    SUM(
-                        CASE WHEN tax.amount_type = 'fixed'
-                        THEN CASE WHEN base_line.amount_currency < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_line.quantity, 1.0))
-                        ELSE sub.base_amount_currency
-                        END
-                    ) OVER (PARTITION BY tax_line.id) AS total_base_amount_currency,
-                    tax_line.amount_currency AS total_tax_amount_currency
+            ``base_lines_mapping_tmp_with_fallback_tmp`` stores the resolved base-to-tax line mapping after
+            applying all matching conditions, allowing the mapping to be reused by the
+            remaining query. Additionally, it determines whether each tax line has at least one valid base-line match.
+            If not, the query falls back to using all candidate mappings for that tax line,
+            providing an approximate mapping instead of returning no result.
 
-                FROM base_tax_matching_base_amounts sub
-                JOIN account_move_line tax_line ON
-                    tax_line.id = sub.tax_line_id
-                JOIN account_move tax_move ON
-                    tax_move.id = tax_line.move_id
-                JOIN account_move_line base_line ON
-                    base_line.id = sub.base_line_id
-                JOIN account_tax tax ON
-                    tax.id = tax_line.tax_line_id
-                JOIN res_currency curr ON
-                    curr.id = tax_line.currency_id
-                JOIN res_currency comp_curr ON
-                    comp_curr.id = tax_line.company_currency_id
+            ``tax_lines_tax_ids_tmp`` stores an unnested representation of ``tax_ids`` to
+            provide an efficient row-based lookup for cascading tax resolution.
+            """
+            return SQL("""
+                CREATE TEMPORARY TABLE base_lines_mapping_tmp_with_fallback_tmp ON COMMIT DROP AS
+                SELECT
+                    base_lines_mapping_tmp.*,
+                    BOOL_OR(is_matched) OVER (PARTITION BY tax_line_id) AS tax_line_has_match
+                FROM (
+                    SELECT
+                        base_line.id AS base_line_id,
+                        tax_line.id AS tax_line_id,
+                        base_line.id AS src_line_id,
+                        base_line.quantity AS base_quantity,
+                        base_line.balance AS base_amount,
+                        base_line.amount_currency AS base_amount_currency,
+                        tax_line.balance AS total_tax_amount,
+                        tax_line.amount_currency AS total_tax_amount_currency,
+                        tax_line.tax_line_id AS tax_id,
+                        tax_line.effective_tax_id,
+                        tax_line.tax_repartition_line_id,
+                        base_line.account_id AS base_account_id,
+                        tax_line.comp_curr_prec,
+                        tax_line.curr_prec,
+                        tax_line.amount_type,
+                        tax_line.display_type,
+                        tax_line.tax_exigible,
+                        COALESCE(
+                            COALESCE(base_line.partner_id, 0) = COALESCE(tax_line.partner_id, 0)
+                            AND (
+                                tax_line.move_type != 'entry'
+                                OR (tax_line.tax_exigibility = 'on_payment' AND tax_line.cash_basis_transition_account_id IS NOT NULL)
+                                OR sign(base_line.balance) = sign(tax_line.balance * tax_line.tax_amount_rate * tax_line.factor_percent)
+                            ) AND (
+                                COALESCE(tax_line.rep_account_id, base_line.account_id) = tax_line.account_id
+                                OR (tax_line.tax_exigibility = 'on_payment' AND tax_line.cash_basis_transition_account_id IS NOT NULL)
+                            ) AND (
+                                (tax_line.analytic IS NOT TRUE AND tax_line.use_in_tax_closing IS TRUE)
+                                OR (base_line.analytic_distribution IS NULL AND tax_line.analytic_distribution IS NULL)
+                                OR base_line.analytic_distribution = tax_line.analytic_distribution
+                            ) AND (
+                                NOT tax_line.include_base_amount
+                                OR base_line.tax_ids[
+                                    ARRAY_LENGTH(base_line.tax_ids, 1) - COALESCE(ARRAY_LENGTH(tax_line.tax_ids, 1), 0)
+                                    : ARRAY_LENGTH(base_line.tax_ids, 1)
+                                ] = ARRAY[tax_line.tax_line_id] || COALESCE(tax_line.tax_ids, ARRAY[]::int[])
+                            ) %(extra_td_where_clause)s,
+                            FALSE
+                        ) AS is_matched
+                    FROM tax_lines_tmp tax_line
+                    JOIN base_lines_tmp base_line
+                        ON base_line.join_key = tax_line.join_key
+                ) base_lines_mapping_tmp;
+                ANALYZE base_lines_mapping_tmp_with_fallback_tmp;
 
+                CREATE TEMPORARY TABLE tax_lines_tax_ids_tmp ON COMMIT DROP AS
+                SELECT id AS source_tax_line_id, unnest(tax_ids) AS tax_id
+                FROM tax_lines_tmp
+                WHERE tax_ids IS NOT NULL;
+                ANALYZE tax_lines_tax_ids_tmp;
+                """,
+                extra_td_where_clause=extra_td_where_clause,
             )
 
+        extra_aml_select_clause, extra_td_where_clause = self._get_tax_query_extra_clauses()
+        # Prepare temporary tables
+        self.env.cr.execute(SQL("""
+            DROP TABLE IF EXISTS
+                filtered_aml_tmp,
+                line_base_affecting_tmp,
+                base_lines_tmp,
+                tax_lines_tmp,
+                base_lines_mapping_tmp_with_fallback_tmp,
+                tax_lines_tax_ids_tmp;
 
-           /* Final select that makes sure to deal with rounding errors, using LAG to dispatch the last cents. */
+            %(filtered_aml_tmp_table)s
+            %(tax_matching_data_tables)s
+            %(matching_tables)s
+            """,
+            filtered_aml_tmp_table=_prepare_filtered_aml_tmp_table(extra_aml_select_clause, table_references, search_condition),
+            tax_matching_data_tables=_prepare_tax_matching_data_tables(),
+            matching_tables=_prepare_matching_tables(extra_td_where_clause),
+        ))
 
+        return SQL("""
+            -- dispatch tax lines that themselves affect the base of OTHER taxes (include_base_amount = true) onto the tax lines that stack on top of them.
+            WITH tax_lines_mapping AS (
+                SELECT
+                    base_line_id, tax_line_id, src_line_id, base_quantity,
+                    ROUND(
+                        COALESCE(SIGN(cumulative_base_amount) * source_total_tax_amount * ABS(cumulative_base_amount) / NULLIF(total_base_amount, 0), 0),
+                        comp_curr_prec
+                    ) - LAG(ROUND(
+                        COALESCE(SIGN(cumulative_base_amount) * source_total_tax_amount * ABS(cumulative_base_amount) / NULLIF(total_base_amount, 0), 0),
+                        comp_curr_prec
+                    ), 1, 0) OVER (PARTITION BY tax_line_id, src_line_id ORDER BY tax_id, base_line_id) AS base_amount,
+
+                    ROUND(
+                        COALESCE(SIGN(cumulative_base_amount_currency) * source_total_tax_amount_currency * ABS(cumulative_base_amount_currency) / NULLIF(total_base_amount_currency, 0), 0),
+                        curr_prec
+                    ) - LAG(ROUND(
+                        COALESCE(SIGN(cumulative_base_amount_currency) * source_total_tax_amount_currency * ABS(cumulative_base_amount_currency) / NULLIF(total_base_amount_currency, 0), 0),
+                        curr_prec
+                    ), 1, 0) OVER (PARTITION BY tax_line_id, src_line_id ORDER BY tax_id, base_line_id) AS base_amount_currency,
+
+                    target_total_tax_amount AS total_tax_amount,
+                    target_total_tax_amount_currency AS total_tax_amount_currency,
+                    tax_id, effective_tax_id, tax_repartition_line_id,
+                    base_account_id, comp_curr_prec, curr_prec, amount_type, display_type, tax_exigible
+                FROM (
+                    SELECT
+                        base_line.base_line_id,
+                        target_tax_line.tax_line_id,
+                        source_tax_line.id AS src_line_id,
+                        base_line.base_quantity,
+                        source_tax_line.balance AS source_total_tax_amount,
+                        source_tax_line.amount_currency AS source_total_tax_amount_currency,
+                        target_tax_line.total_tax_amount AS target_total_tax_amount,
+                        target_tax_line.total_tax_amount_currency AS target_total_tax_amount_currency,
+                        target_tax_line.tax_id,
+                        target_tax_line.effective_tax_id,
+                        target_tax_line.tax_repartition_line_id,
+                        target_tax_line.base_account_id,
+                        target_tax_line.comp_curr_prec,
+                        target_tax_line.curr_prec,
+                        target_tax_line.amount_type,
+                        target_tax_line.display_type,
+                        target_tax_line.tax_exigible,
+
+                        SUM(
+                            CASE WHEN target_tax_line.amount_type = 'fixed'
+                                THEN CASE WHEN base_line.base_amount < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_line.base_quantity, 1.0))
+                                ELSE base_line.base_amount
+                            END
+                        ) OVER (PARTITION BY target_tax_line.tax_line_id, source_tax_line.id ORDER BY target_tax_line.tax_id, base_line.base_line_id) AS cumulative_base_amount,
+                        SUM(
+                            CASE WHEN target_tax_line.amount_type = 'fixed'
+                                THEN CASE WHEN base_line.base_amount < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_line.base_quantity, 1.0))
+                                ELSE base_line.base_amount
+                            END
+                        ) OVER (PARTITION BY target_tax_line.tax_line_id, source_tax_line.id) AS total_base_amount,
+
+                        SUM(
+                            CASE WHEN target_tax_line.amount_type = 'fixed'
+                                THEN CASE WHEN base_line.base_amount_currency < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_line.base_quantity, 1.0))
+                                ELSE base_line.base_amount_currency
+                            END
+                        ) OVER (PARTITION BY target_tax_line.tax_line_id, source_tax_line.id ORDER BY target_tax_line.tax_id, base_line.base_line_id) AS cumulative_base_amount_currency,
+                        SUM(
+                            CASE WHEN target_tax_line.amount_type = 'fixed'
+                                THEN CASE WHEN base_line.base_amount_currency < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_line.base_quantity, 1.0))
+                                ELSE base_line.base_amount_currency
+                            END
+                        ) OVER (PARTITION BY target_tax_line.tax_line_id, source_tax_line.id) AS total_base_amount_currency
+
+                    FROM tax_lines_tmp source_tax_line
+                    JOIN base_lines_mapping_tmp_with_fallback_tmp base_line
+                        ON base_line.tax_line_id = source_tax_line.id
+                        AND base_line.is_matched                                  -- to avoid fallback lines
+                    JOIN base_lines_mapping_tmp_with_fallback_tmp target_tax_line
+                        ON target_tax_line.base_line_id = base_line.base_line_id
+                        AND target_tax_line.tax_line_id != source_tax_line.id
+                        AND target_tax_line.is_matched                            -- to avoid fallback lines
+                    JOIN tax_lines_tax_ids_tmp bti
+                        ON bti.source_tax_line_id = source_tax_line.id
+                        AND bti.tax_id = target_tax_line.tax_id
+                    WHERE source_tax_line.include_base_amount
+                ) source_target_tax_lines_mapping
+            ),
+
+            -- union the two sources of base<->tax pairs (direct + fallback match, cascade-dispatched match)
+            -- and compute, the cumulative/total base amounts needed for the final proportional split below.
+            tax_data AS (
+                SELECT
+                    base_line_id, tax_line_id, src_line_id,
+                    base_amount, base_amount_currency,
+                    total_tax_amount, total_tax_amount_currency,
+                    tax_repartition_line_id, tax_id, effective_tax_id, display_type,
+                    base_account_id, comp_curr_prec, curr_prec, tax_exigible,
+                    SUM(
+                        CASE WHEN amount_type = 'fixed'
+                            THEN CASE WHEN base_amount < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_quantity, 1.0))
+                            ELSE base_amount
+                        END
+                    ) OVER (PARTITION BY tax_line_id ORDER BY tax_id, base_line_id, src_line_id) AS cumulated_base_amount,
+                    SUM(
+                        CASE WHEN amount_type = 'fixed'
+                            THEN CASE WHEN base_amount < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_quantity, 1.0))
+                            ELSE base_amount
+                        END
+                    ) OVER (PARTITION BY tax_line_id) AS total_base_amount,
+
+                    SUM(
+                        CASE WHEN amount_type = 'fixed'
+                            THEN CASE WHEN base_amount_currency < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_quantity, 1.0))
+                            ELSE base_amount_currency
+                        END
+                    ) OVER (PARTITION BY tax_line_id ORDER BY tax_id, base_line_id, src_line_id) AS cumulated_base_amount_currency,
+                    SUM(
+                        CASE WHEN amount_type = 'fixed'
+                            THEN CASE WHEN base_amount_currency < 0 THEN -1 ELSE 1 END * ABS(COALESCE(base_quantity, 1.0))
+                            ELSE base_amount_currency
+                        END
+                    ) OVER (PARTITION BY tax_line_id) AS total_base_amount_currency
+                FROM (
+                    -- matched base_line <-> tax_line
+                    SELECT base_line_id, tax_line_id, src_line_id,
+                        base_amount, base_amount_currency,
+                        total_tax_amount, total_tax_amount_currency,
+                        base_quantity, tax_id, effective_tax_id, tax_repartition_line_id,
+                        base_account_id, comp_curr_prec, curr_prec, amount_type, display_type, tax_exigible
+                    FROM base_lines_mapping_tmp_with_fallback_tmp
+                    WHERE is_matched
+
+                    UNION ALL
+
+                    -- fallback lines
+                    SELECT base_line_id, tax_line_id, src_line_id,
+                        base_amount, base_amount_currency,
+                        total_tax_amount, total_tax_amount_currency,
+                        base_quantity, tax_id, effective_tax_id, tax_repartition_line_id,
+                        base_account_id, comp_curr_prec, curr_prec, amount_type, display_type, tax_exigible
+                    FROM base_lines_mapping_tmp_with_fallback_tmp
+                    WHERE NOT tax_line_has_match
+
+                    UNION ALL
+
+                    -- matched tax_line <-> tax_line
+                    SELECT base_line_id, tax_line_id, src_line_id,
+                        base_amount, base_amount_currency,
+                        total_tax_amount, total_tax_amount_currency,
+                        base_quantity, tax_id, effective_tax_id, tax_repartition_line_id,
+                        base_account_id, comp_curr_prec, curr_prec, amount_type, display_type, tax_exigible
+                    FROM tax_lines_mapping
+                ) matched_tax_data
+            )
+
+            -- Final select that makes sure to deal with rounding errors, using LAG to dispatch the last cents.
             SELECT
-                sub.tax_line_id || '-' || sub.base_line_id || '-' || sub.src_line_id AS id,
+                base_line_id, tax_line_id, src_line_id, base_amount, base_amount_currency,
 
-                sub.base_line_id,
-                sub.tax_line_id,
-                sub.display_type,
-                sub.src_line_id,
-
-                sub.tax_id,
-                sub.group_tax_id,
-                sub.tax_exigible,
-                sub.base_account_id,
-                sub.tax_repartition_line_id,
-
-                sub.base_amount,
-                COALESCE(
+                ROUND(
+                    COALESCE(SIGN(cumulated_base_amount) * total_tax_amount * ABS(cumulated_base_amount) / NULLIF(total_base_amount, 0), 0),
+                    comp_curr_prec
+                ) - LAG(
                     ROUND(
-                        COALESCE(SIGN(sub.cumulated_base_amount) * sub.total_tax_amount * ABS(sub.cumulated_base_amount) / NULLIF(sub.total_base_amount, 0.0), 0.0),
-                        sub.comp_curr_prec
-                    )
-                    - LAG(ROUND(
-                        COALESCE(SIGN(sub.cumulated_base_amount) * sub.total_tax_amount * ABS(sub.cumulated_base_amount) / NULLIF(sub.total_base_amount, 0.0), 0.0),
-                        sub.comp_curr_prec
-                    ), 1, 0.0)
-                    OVER (
-                        PARTITION BY sub.tax_line_id ORDER BY sub.tax_id, sub.base_line_id
-                    ),
-                    0.0
-                ) AS tax_amount,
+                        COALESCE(SIGN(cumulated_base_amount) * total_tax_amount * ABS(cumulated_base_amount) / NULLIF(total_base_amount, 0), 0),
+                        comp_curr_prec
+                    ), 1, 0
+                ) OVER (PARTITION BY tax_line_id ORDER BY tax_id, base_line_id, src_line_id) AS tax_amount,
 
-                sub.base_amount_currency,
-                COALESCE(
+                ROUND(
+                    COALESCE(SIGN(cumulated_base_amount_currency) * total_tax_amount_currency * ABS(cumulated_base_amount_currency) / NULLIF(total_base_amount_currency, 0), 0),
+                    curr_prec
+                ) - LAG(
                     ROUND(
-                        COALESCE(SIGN(sub.cumulated_base_amount_currency) * sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / NULLIF(sub.total_base_amount_currency, 0.0), 0.0),
-                        sub.curr_prec
-                    )
-                    - LAG(ROUND(
-                        COALESCE(SIGN(sub.cumulated_base_amount_currency) * sub.total_tax_amount_currency * ABS(sub.cumulated_base_amount_currency) / NULLIF(sub.total_base_amount_currency, 0.0), 0.0),
-                        sub.curr_prec
-                    ), 1, 0.0)
-                    OVER (
-                        PARTITION BY sub.tax_line_id ORDER BY sub.tax_id, sub.base_line_id
-                    ),
-                    0.0
-                ) AS tax_amount_currency
-            FROM base_tax_matching_all_amounts sub
-            ''',
-            extra_query_base_tax_line_mapping=extra_query_base_tax_line_mapping,
-            group_taxes_query=group_taxes_query,
-            search_condition=search_condition,
-            table_references=table_references,
-            fallback_query=fallback_query,
-        )
+                        COALESCE(SIGN(cumulated_base_amount_currency) * total_tax_amount_currency * ABS(cumulated_base_amount_currency) / NULLIF(total_base_amount_currency, 0), 0),
+                        curr_prec
+                    ), 1, 0
+                ) OVER (PARTITION BY tax_line_id ORDER BY tax_id, base_line_id, src_line_id) AS tax_amount_currency,
+
+                tax_id, display_type, effective_tax_id, tax_repartition_line_id, base_account_id, tax_exigible
+            FROM tax_data
+            ORDER BY tax_line_id, base_line_id, src_line_id
+        """)
