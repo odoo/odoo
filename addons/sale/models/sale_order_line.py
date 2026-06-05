@@ -880,14 +880,14 @@ class SaleOrderLine(models.Model):
         # attributes to the combo price.
         extra_price = self.combo_item_id.currency_id._convert(
             from_amount=self.combo_item_id.extra_price
-                        + self.product_id._get_no_variant_attributes_price_extra(
-                            self.product_no_variant_attribute_value_ids
-                        ),
+            + self.product_id._get_no_variant_attributes_price_extra(
+                self.product_no_variant_attribute_value_ids
+            ),
             to_currency=self.currency_id,
             company=self.company_id,
             date=self.order_id.date_order,
         )
-        return (combo_prices[self.combo_item_id.combo_id] + extra_price)
+        return combo_prices[self.combo_item_id.combo_id] + extra_price
 
     @api.depends("product_id", "product_uom_id", "product_uom_qty")
     def _compute_discount(self):
@@ -1155,7 +1155,7 @@ class SaleOrderLine(models.Model):
                     or invoice_line.move_id.payment_state == "invoicing_legacy"
                 ):
                     invoice_qty = invoice_line.product_uom_id._compute_quantity(
-                        invoice_line.quantity, line.product_uom_id, round=False,
+                        invoice_line.quantity, line.product_uom_id, round=False
                     )
                     if invoice_line.move_id.move_type == "out_invoice":
                         invoiced_qties[line] += invoice_qty
@@ -1330,7 +1330,10 @@ class SaleOrderLine(models.Model):
                     or invoice_line.move_id.payment_state == "invoicing_legacy"
                 ):
                     amount_invoiced_unsigned = invoice_line.currency_id._convert(
-                        invoice_line.price_total, line.currency_id, line.company_id, invoice.invoice_date,
+                        invoice_line.price_total,
+                        line.currency_id,
+                        line.company_id,
+                        invoice.invoice_date,
                     )
                     amount_invoiced += amount_invoiced_unsigned * -invoice.direction_sign
             line.amount_invoiced = amount_invoiced

@@ -94,11 +94,12 @@ class TestSaleOrder(WebsiteSaleCommon):
         cart = self._create_so(partner_id=customer.parent_id.id)
         cart._archive_partner_if_no_user()
         self.assertTrue(
-            self.cart.partner_id.active, "Registered company shouldn't be archived if any contact has a user"
+            self.cart.partner_id.active,
+            "Registered company shouldn't be archived if any contact has a user",
         )
 
     def test_change_company_on_sale_order(self):
-        company = self.env['res.company'].create({'name': 'Test Company'})
+        company = self.env["res.company"].create({"name": "Test Company"})
         self.cart.action_confirm()
         with self.assertRaises(UserError):
-            self.cart.write({'company_id': company.id})
+            self.cart.write({"company_id": company.id})

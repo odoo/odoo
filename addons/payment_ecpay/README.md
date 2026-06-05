@@ -30,7 +30,7 @@ expected option on the ECPay page.
 - Webhook notifications
 - Multiple payment methods:
   - Credit/debit card (Visa, Mastercard, JCB, UnionPay)
-  - Bank transfer 
+  - Bank transfer
   - WeChat Pay
   - CVS (convenience stores: 7-Eleven, FamilyMart, Hi-Life, OK Mart)
   - Mobile wallets (JKO Pay, iPASS Money)

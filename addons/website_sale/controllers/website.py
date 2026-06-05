@@ -41,12 +41,12 @@ class WebsiteSaleForm(WebsiteForm):
         return json.dumps({"id": order_sudo.id})
 
     def extract_data(self, model_sudo, values):
-        parent_name = values.pop('parent_name', None)
+        parent_name = values.pop("parent_name", None)
         data = super().extract_data(model_sudo, values)
-        if model_sudo.model == 'res.partner' and parent_name:
+        if model_sudo.model == "res.partner" and parent_name:
             # `parent_name` is a non-stored field, passing it in the record
             # allows to create the parent company during record creation.
-            data['record']['parent_name'] = parent_name
+            data["record"]["parent_name"] = parent_name
         return data
 
 
@@ -60,16 +60,25 @@ class Website(main.Website):
         return super()._login_redirect(uid, redirect=redirect)
 
     @route()
-    def autocomplete(self, search_type=None, term=None, order=None, offset=0, limit=5, max_nb_chars=999, options=None):
+    def autocomplete(
+        self,
+        search_type=None,
+        term=None,
+        order=None,
+        offset=0,
+        limit=5,
+        max_nb_chars=999,
+        options=None,
+    ):
         options = options or {}
         if "display_currency" not in options:
-            website = request.env['website'].get_current_website()
+            website = request.env["website"].get_current_website()
             options["display_currency"] = website.currency_id
         return super().autocomplete(search_type, term, order, offset, limit, max_nb_chars, options)
 
     @route()
     def get_current_currency(self, **_kwargs):
-        website = request.env['website'].get_current_website()
+        website = request.env["website"].get_current_website()
         return {
             "id": website.currency_id.id,
             "symbol": website.currency_id.symbol,

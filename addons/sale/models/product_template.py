@@ -65,7 +65,8 @@ class ProductTemplate(models.Model):
         "Delivery Time",
         default=0,
         company_dependent=True,
-        help="Delivery lead time, in days. It's the number of days, promised to the customer, between the confirmation of the sales order and the delivery.",
+        help="Delivery lead time, in days. It's the number of days, promised to the customer,"
+        " between the confirmation of the sales order and the delivery.",
     )
 
     @api.depends("invoice_policy", "sale_ok", "service_tracking")

@@ -9,7 +9,7 @@ export class ProductMatrixDialog extends Component {
     static props = {
         header: { type: Object },
         rows: { type: Object },
-        dialogTitle: { type: String }, 
+        dialogTitle: { type: String },
         editedCellAttributes: { type: String },
         product_template_id: { type: Number },
         record: { type: Object },

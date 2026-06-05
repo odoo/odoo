@@ -121,7 +121,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
             ),
             self.mock_request() as request,
         ):
-            website = request.env['website'].get_current_website()
+            website = request.env["website"].get_current_website()
             website._create_cart()
             # service_tracking 'no' should not raise error
             request.cart._cart_add(product_id=product_service.id, quantity=1)
@@ -460,7 +460,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         """
         # Arrange
         with self.mock_request(path="/shop/cart") as request:
-            website = request.env['website'].get_current_website()
+            website = request.env["website"].get_current_website()
             order = website._create_cart()
             order.order_line = [Command.create({"name": "Note", "display_type": "line_note"})]
 
@@ -485,7 +485,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
                 return_value=self.env["delivery.carrier"],
             ),
         ):
-            website = request.env['website'].get_current_website()
+            website = request.env["website"].get_current_website()
             order = website._create_cart()
             order.order_line = [
                 Command.create({"product_id": self.product.id, "product_uom_qty": 1.0})

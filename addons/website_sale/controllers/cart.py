@@ -250,7 +250,7 @@ class Cart(PaymentPortal):
     def quick_add(self, product_template_id, product_id, quantity=1.0, **kwargs):
         values = self.add_to_cart(product_template_id, product_id, quantity=quantity, **kwargs)
 
-        website = self.env['website'].get_current_website()
+        website = self.env["website"].get_current_website()
         order_sudo = request.cart
         values.update(self._get_updated_cart_page_values(order_sudo))
         # If the cart was empty, no cart summary was rendered on the page. However, we just
@@ -330,7 +330,7 @@ class Cart(PaymentPortal):
                 :1
             ].id
 
-        website = self.env['website'].get_current_website()
+        website = self.env["website"].get_current_website()
         values = order_sudo._cart_update_line_quantity(line_id, quantity, **kwargs)
         values.update(self._get_updated_cart_page_values(order_sudo))
         # Products already in the cart should not appear in quick reorder suggestions.
@@ -396,7 +396,7 @@ class Cart(PaymentPortal):
             """Check if two combo lines have the same linked product combination."""
             return line1_.linked_line_ids.product_id.ids == line2_.linked_line_ids.product_id.ids
 
-        website = request.env['website'].get_current_website()
+        website = request.env["website"].get_current_website()
 
         # Get the last 10 confirmed orders from the current website user.
         previous_orders_lines_sudo = (

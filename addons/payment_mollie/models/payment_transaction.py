@@ -129,7 +129,12 @@ class PaymentTransaction(models.Model):
             "familyName": family_name,
             "email": self.partner_email or "",
         }
-        if all((self.partner_address, self.partner_zip, self.partner_city, self.partner_country_id)):
+        if all((
+            self.partner_address,
+            self.partner_zip,
+            self.partner_city,
+            self.partner_country_id,
+        )):
             billing_address |= {
                 "streetAndNumber": self.partner_address,
                 "postalCode": self.partner_zip,

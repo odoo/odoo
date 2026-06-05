@@ -246,7 +246,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         with self.mock_request(
             sale_order_id=so.id, website_sale_current_pl=so.pricelist_id.id
         ) as request:
-            website = request.env['website'].get_current_website()
+            website = request.env["website"].get_current_website()
             self.assertEqual(request.pricelist, self.pricelist)
             order = request.cart
             self.assertEqual(order, so)

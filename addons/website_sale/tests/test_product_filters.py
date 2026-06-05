@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
+
 from lxml import html
+
 from odoo import Command, fields
 from odoo.tests import HttpCase, tagged
 from odoo.tools import SQL
@@ -103,41 +105,56 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             )
         )
 
-    def assert_snippet_filters_route_public_access(self, filter, products, **kwargs):
-        """Assert the access as a public user to the data returned by the route /website/snippet/filters
+    def assert_snippet_filters_route_public_access(self, filter, products, **kwargs):  # noqa: A002
+        """Assert the access as a public user to the data returned by the route
+        /website/snippet/filters.
 
         The route must allow the public user to see the expected products
         while ensuring he cannot extract data with a dichotomic search using the `search_domain`
         e.g. the search of products is done with the (public) user access rights.
         """
-
-        result = self.url_open("/website/snippet/filters", json={"params": {
-            "filter_id": filter.id,
-            "template_key": "website_sale.dynamic_filter_template_product_product_products_item",
-            "limit": 16,
-            "search_domain": [],
-            **kwargs,
-        }}).json()["result"]
+        result = self.url_open(
+            "/website/snippet/filters",
+            json={
+                "params": {
+                    "filter_id": filter.id,
+                    "template_key": "website_sale.dynamic_filter_template_product_product_products_item",  # noqa: E501
+                    "limit": 16,
+                    "search_domain": [],
+                    **kwargs,
+                }
+            },
+        ).json()["result"]
         self.assertEqual(len(result), len(products))
         for product, html_description in zip(products, result):
             tree = html.fromstring(html_description)
-            self.assertEqual(' '.join(tree.xpath('//h6')[0].text_content().split()), product.display_name)
+            self.assertEqual(
+                " ".join(tree.xpath("//h6")[0].text_content().split()), product.display_name
+            )
             self.assertEqual(
                 tree.xpath('//*[@name="product_price"]/span')[0].text,
-                self.env['ir.qweb.field.float'].value_to_html(product.lst_price, {'precision': 2})
+                self.env["ir.qweb.field.float"].value_to_html(product.lst_price, {"precision": 2}),
             )
 
-        # A visitor / public user must not be able to guess the cost price of sold products through the search domain
+        # A visitor / public user must not be able to guess the cost price of sold products through
+        # the search domain
         with self.assertLogs("odoo.http", "WARNING") as logs:
-            result = self.url_open("/website/snippet/filters", json={"params": {
-                "filter_id": filter.id,
-                "template_key": "website_sale.dynamic_filter_template_product_product_products_item",
-                "limit": 16,
-                "search_domain": [("standard_price", "=", 42)],
-                **kwargs,
-            }}).json()
-            self.assertIn('You do not have enough rights to access the field "standard_price"', logs.output[0])
-            self.assertTrue(result.get('error'))
+            result = self.url_open(
+                "/website/snippet/filters",
+                json={
+                    "params": {
+                        "filter_id": filter.id,
+                        "template_key": "website_sale.dynamic_filter_template_product_product_products_item",  # noqa: E501
+                        "limit": 16,
+                        "search_domain": [("standard_price", "=", 42)],
+                        **kwargs,
+                    }
+                },
+            ).json()
+            self.assertIn(
+                'You do not have enough rights to access the field "standard_price"', logs.output[0]
+            )
+            self.assertTrue(result.get("error"))
 
     def test_latest_sold_filter_returns_latest_sold_product(self):
         base_time = fields.Datetime.now()
@@ -178,7 +195,9 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         product_ids = {p["product_id"] for p in products}
         self.assertSetEqual(product_ids, {self.pink_case_M.id, self.pink_case_L.id})
 
-        self.assert_snippet_filters_route_public_access(dyn_filter, self.pink_case_M + self.pink_case_L)
+        self.assert_snippet_filters_route_public_access(
+            dyn_filter, self.pink_case_M + self.pink_case_L
+        )
 
     def test_latest_sold_filter_hides_variants_if_context(self):
         self._create_so(
@@ -196,7 +215,9 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         product_ids = {p["product_id"] for p in products}
         self.assertSetEqual(product_ids, {self.computer_case.product_variant_id.id})
 
-        self.assert_snippet_filters_route_public_access(dyn_filter, self.pink_case_M + self.pink_case_L)
+        self.assert_snippet_filters_route_public_access(
+            dyn_filter, self.pink_case_M + self.pink_case_L
+        )
 
     def test_latest_sold_filter_returns_only_sellable_products(self):
         not_sellable_product = self.env["product.product"].create({
@@ -228,7 +249,9 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         viewed_products = self.black_case_M + self.pink_case_L + self.computer.product_variant_id
         dyn_filter = self.env.ref("website_sale.dynamic_filter_latest_viewed_products")
         with self.mock_request(user=self.env.user):
-            visitor = self.env["website.visitor"]._upsert_visitor(self.env.user.partner_id.id, website_id=self.website.id)
+            visitor = self.env["website.visitor"]._upsert_visitor(
+                self.env.user.partner_id.id, website_id=self.website.id
+            )
             self.env["website.track"].create([
                 {"visitor_id": visitor[0], "product_id": product_id}
                 for product_id in viewed_products.ids
@@ -251,19 +274,16 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 'When hiding variants, "Latest viewed" filter should return 1 variant per template',
             )
 
-        for i, product in enumerate(viewed_products):
+        for _i, product in enumerate(viewed_products):
             self.url_open(
                 "/website/odoo_track",
-                headers={'referer': product.website_url},
-                json={
-                    "params": {
-                        "res_model": "product.product",
-                        "res_id": product.id,
-                    }
-                },
+                headers={"referer": product.website_url},
+                json={"params": {"res_model": "product.product", "res_id": product.id}},
             )
 
-        self.assert_snippet_filters_route_public_access(dyn_filter, self.env['product.product'].browse(reversed(viewed_products.ids)))
+        self.assert_snippet_filters_route_public_access(
+            dyn_filter, self.env["product.product"].browse(reversed(viewed_products.ids))
+        )
 
     def test_recently_sold_with_filter(self):
         """Check the recently-sold-with filter after selling 1 computer, 1 monitor & 1 case.
@@ -301,9 +321,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             )
 
         self.assert_snippet_filters_route_public_access(
-            dyn_filter,
-            self.pink_case_L + monitor,
-            productTemplateId=str(self.computer.id)
+            dyn_filter, self.pink_case_L + monitor, productTemplateId=str(self.computer.id)
         )
 
     def test_accessories_filter(self):
@@ -335,7 +353,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         self.assert_snippet_filters_route_public_access(
             dyn_filter,
             self.computer_case.product_variant_ids[:16],
-            productTemplateId=str(self.computer.id)
+            productTemplateId=str(self.computer.id),
         )
 
     def test_alternative_products_filter(self):
@@ -367,7 +385,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         self.assert_snippet_filters_route_public_access(
             dyn_filter,
             self.mac.alternative_product_ids.product_variant_ids[:16],
-            productTemplateId=str(self.mac.id)
+            productTemplateId=str(self.mac.id),
         )
 
     def test_newest_products_filter(self):
@@ -411,7 +429,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         for i, product in enumerate(products):
             self.env.cr.execute(
                 "UPDATE product_product SET create_date = %s WHERE id = %s",
-                (fields.Datetime.to_string(now + timedelta(seconds=i)), product.id)
+                (fields.Datetime.to_string(now + timedelta(seconds=i)), product.id),
             )
         self.assert_snippet_filters_route_public_access(dyn_filter, products.sorted(reverse=True))
 
@@ -426,31 +444,50 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
 
     def test_product_public_category_model_access(self):
         """Ensure that access to models not linked to a dynamic snippet filter is denied."""
-
-        product_public_category_filter = self.env.ref('website_sale.dynamic_filter_category_list')
-        result = self.url_open("/website/snippet/filters", json={"params": {
-            "template_key": "website_sale.dynamic_filter_template_product_public_category_default",
-            "filter_id": product_public_category_filter.id,
-            "res_model": "product.template",
-            "search_domain": [],
-            "res_id": self.computer.id,
-            "limit": 1,
-        }}).json().get('result', [])
+        product_public_category_filter = self.env.ref("website_sale.dynamic_filter_category_list")
+        result = (
+            self
+            .url_open(
+                "/website/snippet/filters",
+                json={
+                    "params": {
+                        "template_key": "website_sale.dynamic_filter_template_product_public_category_default",  # noqa: E501
+                        "filter_id": product_public_category_filter.id,
+                        "res_model": "product.template",
+                        "search_domain": [],
+                        "res_id": self.computer.id,
+                        "limit": 1,
+                    }
+                },
+            )
+            .json()
+            .get("result", [])
+        )
         self.assertEqual(len(result), 0)
 
     def test_newest_products_filter_unpublished_access(self):
-        """Ensure unpublished products cannot be fetched using a mono-record snippet configuration"""
-
-        product_filter = self.env.ref('website_sale.dynamic_filter_newest_products')
+        """Ensure unpublished products cannot be fetched using a mono-record snippet
+        configuration."""
+        product_filter = self.env.ref("website_sale.dynamic_filter_newest_products")
         # Unpublish products. The product dynamic snippet should be empty.
-        products = self.env['product.product'].search([])
-        products.write({'website_published': False})
-        result = self.url_open("/website/snippet/filters", json={"params": {
-            "template_key": "website_sale.dynamic_filter_template_product_product_products_item",
-            "filter_id": product_filter.id,
-            "res_model": "product.product",
-            "search_domain": [],
-            "res_id": self.computer.product_variant_id.id,
-            "limit": 1,
-        }}).json().get('result', [])
+        products = self.env["product.product"].search([])
+        products.write({"website_published": False})
+        result = (
+            self
+            .url_open(
+                "/website/snippet/filters",
+                json={
+                    "params": {
+                        "template_key": "website_sale.dynamic_filter_template_product_product_products_item",  # noqa: E501
+                        "filter_id": product_filter.id,
+                        "res_model": "product.product",
+                        "search_domain": [],
+                        "res_id": self.computer.product_variant_id.id,
+                        "limit": 1,
+                    }
+                },
+            )
+            .json()
+            .get("result", [])
+        )
         self.assertEqual(len(result), 0)

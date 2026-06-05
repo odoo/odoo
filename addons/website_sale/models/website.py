@@ -263,7 +263,8 @@ class Website(models.Model):
     )
 
     currency_id = fields.Many2one(
-        string="Default Currency", comodel_name="res.currency",
+        string="Default Currency",
+        comodel_name="res.currency",
         compute="_compute_currency_id",
         compute_sql="_compute_sql_currency_id",
         compute_sudo=True,
@@ -303,8 +304,9 @@ class Website(models.Model):
                 request and hasattr(request, "pricelist") and request.pricelist.currency_id
             ) or website.company_id.sudo().currency_id
 
-    def _compute_sql_currency_id(self, table):
-        raise ValueError("website.currency_id is not searchable")  # depends on request
+    def _compute_sql_currency_id(self, table):  # noqa: ARG002
+        msg = "website.currency_id is not searchable"
+        raise ValueError(msg)  # depends on request
 
     @api.depends("send_abandoned_cart_email")
     def _compute_send_abandoned_cart_email_activation_time(self):
@@ -699,7 +701,7 @@ class Website(models.Model):
                     self.env["product.template"]._get_saleable_tracking_types(),
                 ),
             ]
-        company_domain = [('company_id', 'in', [False, website.company_id.id])]
+        company_domain = [("company_id", "in", [False, website.company_id.id])]
         return Domain.AND([website._product_domain(), website_domain, user_domain, company_domain])
 
     def _product_domain(self):  # noqa: PLR6301
@@ -871,9 +873,9 @@ class Website(models.Model):
             and self.env.user.partner_id.filtered_domain(
                 self.env["res.partner"]._check_company_domain(self.company_id.id)
             )
-        ):  # Search for abandonned cart.
+        ):  # Search for abandoned cart.
             partner_sudo = self.env.user.partner_id
-            abandonned_cart_sudo = SaleOrderSudo.search(
+            abandoned_cart_sudo = SaleOrderSudo.search(
                 [
                     ("partner_id", "=", partner_sudo.id),
                     ("website_id", "=", self.id),
@@ -881,13 +883,13 @@ class Website(models.Model):
                 ],
                 limit=1,
             )
-            if abandonned_cart_sudo:
+            if abandoned_cart_sudo:
                 if not self.env.cr.readonly:
                     # Force the recomputation of the pricelist and fiscal position when resurrecting
-                    # an abandonned cart
-                    abandonned_cart_sudo._update_address(partner_sudo.id, ["partner_id"])
-                    abandonned_cart_sudo._verify_cart()
-                sale_order_sudo = abandonned_cart_sudo
+                    # an abandoned cart
+                    abandoned_cart_sudo._update_address(partner_sudo.id, ["partner_id"])
+                    abandoned_cart_sudo._verify_cart()
+                sale_order_sudo = abandoned_cart_sudo
 
         if (
             sale_order_sudo or not self.env.user._is_public()

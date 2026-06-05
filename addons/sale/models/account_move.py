@@ -254,9 +254,7 @@ class AccountMove(models.Model):
         for order in self.line_ids.sale_line_ids.order_id:
             order_amount = min(self._get_sale_order_invoiced_amount(order), order.amount_to_invoice)
             order_amount_company = order.currency_id._convert(
-                max(order_amount, 0),
-                self.company_id.currency_id,
-                self.company_id,
+                max(order_amount, 0), self.company_id.currency_id, self.company_id
             )
             exclude_amount += order_amount_company
         return exclude_amount

@@ -16,7 +16,7 @@ class SaleOrder(models.Model):
         store=True,
         readonly=False,
         check_company=True,
-        index='btree_not_null',
+        index="btree_not_null",
         domain="""[
             ('template_type', '=', 'quotation'),
             '|',

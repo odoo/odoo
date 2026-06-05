@@ -32,7 +32,8 @@ SALE_ORDER_STATE = [
 
 class SaleOrder(models.Model):
     _name = "sale.order"
-    _explanation = "Represents a customer quotation that can be converted into a sales order. Used to manage pricing, product quantities, and status"
+    _explanation = "Represents a customer quotation that can be converted into a sales order. Used"
+    " to manage pricing, product quantities, and status"
     _inherit = [
         "account.document.import.mixin",
         "mail.activity.mixin",
@@ -903,7 +904,7 @@ class SaleOrder(models.Model):
         :rtype: tuple(float, float)
         """
 
-        def grouping_function(base_line, tax_data):
+        def grouping_function(base_line, tax_data):  # noqa: ARG001
             return base_line["special_type"] not in ("global_discount", "loyalty_discount")
 
         self.ensure_one()
@@ -1056,7 +1057,7 @@ class SaleOrder(models.Model):
             )
 
     def _search_is_expired(self, operator, value):  # noqa: ARG002
-        expired_domain = [("state", "in", ("draft", "sent")), ("validity_date", "<", 'today')]
+        expired_domain = [("state", "in", ("draft", "sent")), ("validity_date", "<", "today")]
         if operator == "in":
             return expired_domain
         return ["!", "&"] + expired_domain
@@ -1543,7 +1544,7 @@ class SaleOrder(models.Model):
         return self.env["res.groups"]._is_feature_enabled("sale.group_auto_done_setting")
 
     def _confirmation_error_message(self):
-        """Return whether order can be confirmed or not if not then returm error message."""
+        """Return whether order can be confirmed or not if not then return error message."""
         self.ensure_one()
         if self.state not in {"draft", "sent"}:
             return self.env._("Some orders are not in a state requiring confirmation.")
@@ -2620,14 +2621,14 @@ class SaleOrder(models.Model):
             res[product.id]["price"] = prices.get(product.id)
         return res
 
-    def _get_product_catalog_product_data(self, product, **kwargs):
+    def _get_product_catalog_product_data(self, product, **kwargs):  # noqa: ARG002
         product_data = super()._get_product_catalog_product_data(product)
         has_warning_group = self.env["res.groups"]._is_feature_enabled("sale.group_warning_sale")
         if product.sale_line_warn_msg and has_warning_group:
             product_data.update(warning=product.sale_line_warn_msg)
         return product_data
 
-    def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):
+    def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):  # noqa: ARG002
         grouped_lines = defaultdict(lambda: self.env["sale.order.line"])
         if section_id is None:
             section_id = (
@@ -2694,7 +2695,7 @@ class SaleOrder(models.Model):
                 "sequence": self._get_new_line_sequence(child_field, section_id),
                 "product_uom_id": uom.id,
             })
-        else:  # quantity of 0, no line to update, return defaut pricelist price
+        else:  # quantity of 0, no line to update, return default pricelist price
             return self.pricelist_id._get_product_price(
                 product=product,
                 quantity=1.0,
