@@ -6,6 +6,7 @@ import { makePopover } from "../popover/popover_hook";
 import { registry } from "../registry";
 import { ensureArray, zip, zipWith } from "../utils/arrays";
 import { shallowEqual } from "../utils/objects";
+import { resolveRefEl } from "../utils/ref_utils";
 import { DateTimePicker } from "./datetime_picker";
 import { DateTimePickerPopover } from "./datetime_picker_popover";
 
@@ -154,7 +155,20 @@ export const datetimePickerService = {
                 }
 
                 function getTarget() {
-                    return targetRef ? targetRef.el : params.target;
+                    if (targetRef) {
+                        return targetRef.el;
+                    }
+                    // `params.target` may be a raw HTMLElement, an Owl ref object
+                    // or an Owl 3 signal ref (a callable). Resolve ref-like
+                    // values to their element; pass raw elements through.
+                    const target = params.target;
+                    if (
+                        typeof target === "function" ||
+                        (target && typeof target === "object" && "el" in target)
+                    ) {
+                        return resolveRefEl(target);
+                    }
+                    return target;
                 }
 
                 function initInputs(...inputs) {
