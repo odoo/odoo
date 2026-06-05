@@ -97,12 +97,13 @@
                 <t t-set="group" t-value="section.groups.get(groupId)"/>
                 <header class="o_search_panel_group_header pb-1">
                     <div class="form-check w-100">
-                        <!-- TODO: "indeterminate" could not be set in the template and had to be set in
-                            JS manually. See https://github.com/odoo/owl/issues/713 (adapt when solved)
-                        -->
+                        <t t-set="groupValues" t-value="[...group.values.values()]"/>
+                        <t t-set="numberChecked" t-value="groupValues.filter((v) => this.state.active[section.id][v.id]).length"/>
                         <input type="checkbox"
                             class="form-check-input"
                             t-attf-id="{{ section.id }}_input_{{ groupId }})"
+                            t-att-checked="numberChecked === groupValues.length"
+                            t-att-indeterminate="numberChecked gt 0 and numberChecked lt groupValues.length"
                             t-on-click="() => this.toggleFilterGroup(section.id, group)"
                         />
                         <label
@@ -154,7 +155,7 @@
                     <div class="d-flex align-items-center me-2 ms-auto">All</div>
                 </button>
             </div>
-            <Dropdown t-foreach="this.sections" t-as="section" t-key="section.id" state="this.getDropdownState(section.id)" menuClass="'my-2 mx-1'" onOpened.bind="this.updateGroupHeadersChecked">
+            <Dropdown t-foreach="this.sections" t-as="section" t-key="section.id" state="this.getDropdownState(section.id)" menuClass="'my-2 mx-1'">
                 <span class="btn btn-secondary my-2 mx-1 o-dropdown-caret">
                     <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2"
                         t-att-style="section.color and ('color: ' + section.color)"
