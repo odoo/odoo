@@ -114,11 +114,14 @@
         'views/phase8_record_type_views.xml',
         'views/phase9_deal_layout_views.xml',
         'views/phase9_deal_system_views.xml',
+        'views/phase9_schedule_layout_views.xml',
+        'data/phase9_calendar_settings.xml',
         'views/menus_root_action.xml',
     ],
     'assets': {
         'web.assets_backend': [
             'marathon_ventures/static/src/scss/phase9_deal_layout.scss',
+            'marathon_ventures/static/src/scss/phase9_calendar.scss',
         ],
     },
     'installable': True,

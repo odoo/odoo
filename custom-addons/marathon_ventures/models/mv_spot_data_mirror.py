@@ -53,7 +53,7 @@ class MvSpotDataMirror(models.Model):
 
     # === Computed / Roll-Up ===
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_air_date_time(self):
         # SF formula (verbatim, may need translation):
         #   TEXT(Air_Date__c ) &" - "& Air_Time__c
@@ -61,7 +61,7 @@ class MvSpotDataMirror(models.Model):
             # TODO: translate SF formula to Python
             rec.air_date_time = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_air_date_yyyy(self):
         # SF formula (verbatim, may need translation):
         #   text( Air_Date__c )
@@ -69,7 +69,7 @@ class MvSpotDataMirror(models.Model):
             # TODO: translate SF formula to Python
             rec.air_date_yyyy = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_air_time_hour(self):
         # SF formula (verbatim, may need translation):
         #   VALUE(SUBSTITUTE(LEFT( Air_Time__c , 2 ) , ":",""))
@@ -77,7 +77,7 @@ class MvSpotDataMirror(models.Model):
             # TODO: translate SF formula to Python
             rec.air_time_hour = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_hour_of_day(self):
         # SF formula (verbatim, may need translation):
         #   CASE(LEFT(Air_Time__c, 2),
@@ -116,7 +116,7 @@ class MvSpotDataMirror(models.Model):
             # TODO: translate SF formula to Python
             rec.hour_of_day = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_pp(self):
         # SF formula (verbatim, may need translation):
         #   Value(Text(Length__c)) > 500
@@ -124,7 +124,7 @@ class MvSpotDataMirror(models.Model):
             # TODO: translate SF formula to Python
             rec.pp = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_scheduleweek(self):
         # SF formula (verbatim, may need translation):
         #   Schedule__r.Week__c
@@ -132,7 +132,7 @@ class MvSpotDataMirror(models.Model):
             # TODO: translate SF formula to Python
             rec.scheduleweek = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_spot_equiv_30(self):
         # SF formula (verbatim, may need translation):
         #   VALUE(TEXT(Length__c)) / 30
@@ -140,7 +140,7 @@ class MvSpotDataMirror(models.Model):
             # TODO: translate SF formula to Python
             rec.spot_equiv_30 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_week(self):
         # SF formula (verbatim, may need translation):
         #   CASE(

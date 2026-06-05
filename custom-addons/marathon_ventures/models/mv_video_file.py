@@ -33,7 +33,7 @@ class MvVideoFile(models.Model):
 
     # === Computed / Roll-Up ===
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_isci_no_char(self):
         # SF formula (verbatim, may need translation):
         #   SUBSTITUTE(ISCI__c, "-", "")

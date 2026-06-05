@@ -257,7 +257,7 @@ class MvSchedules(models.Model):
 
     # === Computed / Roll-Up ===
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_adus_estimated(self):
         # SF formula (verbatim, may need translation):
         #   IF(
@@ -275,7 +275,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.adus_estimated = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_adus_generated(self):
         # SF formula (verbatim, may need translation):
         #   IF(
@@ -292,7 +292,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.adus_generated = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_access_code(self):
         # SF formula (verbatim, may need translation):
         #   Deal_Parent__r.Access_Code__c
@@ -300,7 +300,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.access_code = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_account_advertiser_program(self):
         # SF formula (verbatim, may need translation):
         #   DealAccount__c &"-"&  DealAdvertiser__c  &"-"& DealProgram__c
@@ -308,7 +308,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.account_advertiser_program = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_account_advertiser(self):
         # SF formula (verbatim, may need translation):
         #   DealAccount__c  &"-"&  DealAdvertiser__c
@@ -316,7 +316,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.account_advertiser = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_account_brand_program(self):
         # SF formula (verbatim, may need translation):
         #   DealAccount__c &"-"& DealBrand__c &"-"& DealProgram__c
@@ -324,7 +324,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.account_brand_program = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_actual_total_000_primary_demo(self):
         # SF formula (verbatim, may need translation):
         #   BLANKVALUE(Units_Aired__c, 0)
@@ -371,7 +371,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.actual_total_000_primary_demo = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_advertiser_brand_program(self):
         # SF formula (verbatim, may need translation):
         #   DealAdvertiser__c & "-" &  DealBrand__c & "-" & DealProgram__c
@@ -379,7 +379,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.advertiser_brand_program = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_bgcolor(self):
         # SF formula (verbatim, may need translation):
         #   IF ( ISPICKVAL(Status__c ,'Canceled' ) , "#FE2E2E" ,
@@ -392,7 +392,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.bgcolor = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_bpu_units(self):
         # SF formula (verbatim, may need translation):
         #   IF(ISPICKVAL(Status__c, 'Canceled'),
@@ -406,7 +406,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.bpu_units = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_booked_digital_total_dollars(self):
         # SF formula (verbatim, may need translation):
         #   ( Impressions__c * CPM__c )/1000
@@ -414,7 +414,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.booked_digital_total_dollars = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_booked_dollars_live_demo(self):
         # SF formula (verbatim, may need translation):
         #   Dollars_Booked__c *(7543/10000)
@@ -422,7 +422,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.booked_dollars_live_demo = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_booked_increvenue(self):
         # SF formula (verbatim, may need translation):
         #   If(  Units_Available__c <0, 0,(X30_Rate__c - Filler_Rate__c )*  Equiv_30_Booked__c)
@@ -430,7 +430,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.booked_increvenue = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_booking_timeline(self):
         # SF formula (verbatim, may need translation):
         #   Week__c - datevalue(CreatedDate)
@@ -438,7 +438,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.booking_timeline = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_broadcast_month(self):
         # SF formula (verbatim, may need translation):
         #   (Week__c +6)-  DAY(Week__c +6)+1
@@ -446,21 +446,21 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.broadcast_month = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_broadcast_spot_count(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.broadcast_spot_count = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_broadcast_spot_total(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.broadcast_spot_total = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_calc_equiv_30(self):
         # SF formula (verbatim, may need translation):
         #   if( AND(Units_Available__c >0, NOT(DealBrand__c = "GM Units")),
@@ -470,7 +470,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.calc_equiv_30 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_cia(self):
         # SF formula (verbatim, may need translation):
         #   IF( Deal_Parent__r.Contact__r.Account.CIA__c = TRUE, "YES", "NO")
@@ -478,7 +478,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.cia = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_countmenot(self):
         # SF formula (verbatim, may need translation):
         #   if(or( case(Deal_Parent__r.Status__c, "Canceled", "N", "Pre-Empted", "N", "Y") = "N",
@@ -488,7 +488,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.countmenot = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_cable_synd_pp(self):
         # SF formula (verbatim, may need translation):
         #   Text(Deal_Parent__r.Program__r.Cable_Synd__c)
@@ -496,7 +496,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.cable_synd_pp = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_campaign_total(self):
         # SF formula (verbatim, may need translation):
         #   Rate__c*Impressions__c/1000
@@ -504,7 +504,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.campaign_total = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_capped_30_units(self):
         # SF formula (verbatim, may need translation):
         #   IF((ispickval( Status__c , "Canceled")), 0, ROUND( IF(1.5 = (CASE( Cap__c , "Uncapped", 1, "Ghost", 0, "0%", 0, "80%", 0.8,"50%", 0.5, 1)* Equiv_30_Booked__c ), 1.4, CASE( Cap__c , "Uncapped", 1, "Ghost", 0, "0%", 0, "80%", 0.8,"50%", 0.5, 1)* Equiv_30_Booked__c), 0 ))
@@ -512,7 +512,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.capped_30_units = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_capped_booked(self):
         # SF formula (verbatim, may need translation):
         #   Capped_Units__c*Rate__c
@@ -520,7 +520,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.capped_booked = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_capped_dollars(self):
         # SF formula (verbatim, may need translation):
         #   IF((ispickval( Status__c , "Canceled")), 0, ( Capped_Units__c * Rate__c))
@@ -528,7 +528,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.capped_dollars = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_capped_units(self):
         # SF formula (verbatim, may need translation):
         #   IF((ispickval( Status__c , "Canceled")), 0, ROUND( IF(1.5 = (CASE( Cap__c , "Uncapped", 1, "Ghost", 0,"0%", 0, "80%", 0.8,"50%", 0.5, 1)* Units_Available__c ), 1.4, CASE( Cap__c , "Uncapped", 1, "Ghost", 0, "0%", 0,"80%", 0.8,"50%", 0.5, 1)* Units_Available__c), 0 ))
@@ -536,7 +536,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.capped_units = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_clearance(self):
         # SF formula (verbatim, may need translation):
         #   if( Units_Available__c = 0, 0,   Units_Aired__c / Units_Available__c  )
@@ -544,7 +544,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.clearance = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_contactaccountcolor(self):
         # SF formula (verbatim, may need translation):
         #   Deal_Parent__r.Contact__r.Account.Brand_Color__c
@@ -552,7 +552,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.contactaccountcolor = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_created_date_time(self):
         # SF formula (verbatim, may need translation):
         #   CreatedDate
@@ -560,7 +560,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.created_date_time = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_created_week_in_quarter(self):
         # SF formula (verbatim, may need translation):
         #   Datevalue( CreatedDate )-
@@ -581,7 +581,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.created_week_in_quarter = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_day_of_air_check(self):
         # SF formula (verbatim, may need translation):
         #   OR(
@@ -606,7 +606,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.day_of_air_check = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_day_of_week(self):
         # SF formula (verbatim, may need translation):
         #   CASE(
@@ -622,7 +622,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.day_of_week = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_daypart(self):
         # SF formula (verbatim, may need translation):
         #   IF(
@@ -668,7 +668,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.daypart = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_daysallowedformula(self):
         # SF formula (verbatim, may need translation):
         #   IF ( INCLUDES ( Days_Allowed__c , "Mon" ) , "M" , "-" ) &
@@ -682,7 +682,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.daysallowedformula = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_days_allowed_formula(self):
         # SF formula (verbatim, may need translation):
         #   IF ( INCLUDES ( Days_Allowed__c , "Mon" ) , "M" , "-" ) &
@@ -696,7 +696,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.days_allowed_formula = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_dealaccount(self):
         # SF formula (verbatim, may need translation):
         #   Deal_Parent__r.Contact__r.Account.Name
@@ -704,7 +704,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.dealaccount = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_dealadvertiser(self):
         # SF formula (verbatim, may need translation):
         #   Deal_Parent__r.Advertiser__c
@@ -712,7 +712,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.dealadvertiser = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_dealbrand(self):
         # SF formula (verbatim, may need translation):
         #   Deal_Parent__r.Brands__r.Name
@@ -720,7 +720,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.dealbrand = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_dealclientcode(self):
         # SF formula (verbatim, may need translation):
         #   Deal_Parent__r.ClientCode__c
@@ -728,7 +728,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.dealclientcode = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_dealcontactid(self):
         # SF formula (verbatim, may need translation):
         #   Deal_Parent__r.Contact__c
@@ -736,7 +736,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.dealcontactid = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_dealcontact(self):
         # SF formula (verbatim, may need translation):
         #   HYPERLINK ("/" & Deal_Parent__r.Contact__r.Id, Deal_Parent__r.Contact__r.FirstName & " " & Deal_Parent__r.Contact__r.LastName)
@@ -744,7 +744,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.dealcontact = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_dealestimate(self):
         # SF formula (verbatim, may need translation):
         #   Deal_Parent__r.Estimate__c
@@ -752,7 +752,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.dealestimate = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_dealname(self):
         # SF formula (verbatim, may need translation):
         #   Deal_Parent__r.Name
@@ -760,7 +760,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.dealname = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_dealprogramid(self):
         # SF formula (verbatim, may need translation):
         #   Deal_Parent__r.Program__c
@@ -768,7 +768,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.dealprogramid = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_dealprogram(self):
         # SF formula (verbatim, may need translation):
         #   Deal_Parent__r.Program__r.Name
@@ -776,7 +776,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.dealprogram = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_demo_30_rate(self):
         # SF formula (verbatim, may need translation):
         #   Demo_Rate__c / (VALUE(TEXT(Deal_Parent__r.Length__c)) / 30)
@@ -784,7 +784,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.demo_30_rate = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_demo_program(self):
         # SF formula (verbatim, may need translation):
         #   If(OR(DealProgram__c ="BounceTV",DealProgram__c ="COZI"),"National Network",
@@ -794,7 +794,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.demo_program = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_demo_rate(self):
         # SF formula (verbatim, may need translation):
         #   ROUND(Rate__c *(7543/10000),2)
@@ -802,7 +802,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.demo_rate = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_digital_total_dollars(self):
         # SF formula (verbatim, may need translation):
         #   (Impressions_Aired__c * CPM__c )/1000
@@ -810,7 +810,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.digital_total_dollars = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_discrepancy_report_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -826,14 +826,14 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.discrepancy_report_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_discrepancy_total_amount(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.discrepancy_total_amount = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_dollars_booked(self):
         # SF formula (verbatim, may need translation):
         #   if( or(ispickval( Status__c , "Canceled"),Units_Aired__c < 0), 0,
@@ -843,7 +843,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.dollars_booked = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_dollars_canceled(self):
         # SF formula (verbatim, may need translation):
         #   if(ispickval( Status__c , "Canceled"), Units_Available__c * Rate__c ,0)
@@ -851,7 +851,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.dollars_canceled = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_dollars_cap(self):
         # SF formula (verbatim, may need translation):
         #   IF((ispickval( Status__c , "Canceled")), 0, (Units_Cap__c * Rate__c))
@@ -859,7 +859,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.dollars_cap = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_due_date(self):
         # SF formula (verbatim, may need translation):
         #   Week__c  + (Deal_Parent__r.Program__r.Log_Week__c *(7))
@@ -867,7 +867,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.due_date = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_duplicate_check_1a(self):
         # SF formula (verbatim, may need translation):
         #   TEXT(Week__c) & TEXT(Rate__c) & Network_Deal_Number__c & DealProgram__c & DealAccount__c  &  DealBrand__c & IF( LEN(DealAdvertiser__c) >= 20, LEFT(DealAdvertiser__c, 15), DealAdvertiser__c) & Deal_Parent__r.Campaign__c & Deal_Parent__r.Access_Code__c &  TEXT(UnitLength__c) &  TEXT(Units_Aired__c) &  TEXT(Status__c) &  DaysAllowedFormula__c  & Start_End_Time__c & TEXT( MGM_HD_Daypart__c ) & TEXT(Long_Form__c) & IF( LEN(Deal_Parent__r.Campaign__c) >= 20, LEFT(Deal_Parent__r.Campaign__c, 15), Deal_Parent__r.Campaign__c)
@@ -875,7 +875,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.duplicate_check_1a = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_duplicate_check_digital(self):
         # SF formula (verbatim, may need translation):
         #   TEXT(Week__c) & TEXT(Rate__c) & Network_Deal_Number__c & DealProgram__c & DealAccount__c & DealBrand__c & IF( LEN(DealAdvertiser__c) >= 20, LEFT(DealAdvertiser__c, 15), DealAdvertiser__c) & Deal_Parent__r.Campaign__c & Deal_Parent__r.Access_Code__c & TEXT(UnitLength__c) & TEXT(Impressions_000__c) & TEXT(Status__c) & DaysAllowedFormula__c & IF( LEN(Deal_Parent__r.Campaign__c) >= 20, LEFT(Deal_Parent__r.Campaign__c, 15), Deal_Parent__r.Campaign__c)
@@ -883,7 +883,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.duplicate_check_digital = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_eur_filler_decile(self):
         # SF formula (verbatim, may need translation):
         #   ROUND(
@@ -895,7 +895,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.eur_filler_decile = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_equiv_30_booked(self):
         # SF formula (verbatim, may need translation):
         #   if( ISPICKVAL( Status__c , "Canceled"), 0,
@@ -905,7 +905,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.equiv_30_booked = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_equiv_30_canceled(self):
         # SF formula (verbatim, may need translation):
         #   if( ISPICKVAL( Status__c , "Canceled"),
@@ -916,7 +916,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.equiv_30_canceled = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_equiv_30(self):
         # SF formula (verbatim, may need translation):
         #   if(Deal_Parent__r.Brands__r.Name  ="Budget" , 0,
@@ -926,7 +926,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.equiv_30 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_estimated_total_000_primary_demo(self):
         # SF formula (verbatim, may need translation):
         #   BLANKVALUE(Units_Aired__c, 0)
@@ -961,7 +961,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.estimated_total_000_primary_demo = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_filler_rate(self):
         # SF formula (verbatim, may need translation):
         #   IF( LEFT(Text(MGM_HD_Daypart__c), 2) = "EM", Deal_Parent__r.Program__r.Filler_EM__c ,
@@ -978,7 +978,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.filler_rate = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_filler_test(self):
         # SF formula (verbatim, may need translation):
         #   CASE( LEFT(Text(MGM_HD_Daypart__c), 2) ,
@@ -997,7 +997,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.filler_test = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_guaranteed_total_000_primary_demo(self):
         # SF formula (verbatim, may need translation):
         #   Guaranteed_000_Primary_Demo__c  *  Units_Aired__c
@@ -1005,7 +1005,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.guaranteed_total_000_primary_demo = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_half_units_round_up(self):
         # SF formula (verbatim, may need translation):
         #   CEILING(
@@ -1022,7 +1022,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.half_units_round_up = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_impressions_000(self):
         # SF formula (verbatim, may need translation):
         #   Ratings__r.Actual_Ratings__r.HH__c
@@ -1030,14 +1030,14 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.impressions_000 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_impressions_aired(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.impressions_aired = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_increvenue(self):
         # SF formula (verbatim, may need translation):
         #   (X30_Rate__c - Filler_Rate__c )*  CALC_EQUIV_30__c
@@ -1045,7 +1045,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.increvenue = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_intg_date(self):
         # SF formula (verbatim, may need translation):
         #   Week__c +
@@ -1054,7 +1054,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.intg_date = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_invoice_date(self):
         # SF formula (verbatim, may need translation):
         #   if(MONTH( Broadcast_Month__c )=12,
@@ -1065,7 +1065,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.invoice_date = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_lf_daypart(self):
         # SF formula (verbatim, may need translation):
         #   IF (AND ((DealProgram__c  <>  "FB PP"), ( DealProgram__c  <>  "DOC PP"), ( DealProgram__c <> "Outdoor PP") ), "ON",
@@ -1101,7 +1101,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.lf_daypart = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_lf_unique_key(self):
         # SF formula (verbatim, may need translation):
         #   IF(RecordType.Name = "Paid Programming",
@@ -1165,7 +1165,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.lf_unique_key = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_lf_week(self):
         # SF formula (verbatim, may need translation):
         #   CASE(
@@ -1181,7 +1181,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.lf_week = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_last_modified_time(self):
         # SF formula (verbatim, may need translation):
         #   LastModifiedDate
@@ -1189,7 +1189,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.last_modified_time = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_liability_000(self):
         # SF formula (verbatim, may need translation):
         #   IF(ISNULL(Ratings__r.Actual_Ratings__c), Estimated_Total_000_Primary_Demo__c - Guaranteed_Total_000_Primary_Demo__c, Total_000_Primary_Demo__c - Guaranteed_Total_000_Primary_Demo__c)
@@ -1197,7 +1197,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.liability_000 = False
 
-    @api.depends('sf_external_id')
+    @api.depends('total_dollars')
     def _compute_liability(self):
         # SF formula (verbatim, may need translation):
         #   IF(
@@ -1209,14 +1209,14 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.liability = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_locked_units(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.locked_units = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_max_allowable_units_per_day(self):
         # SF formula (verbatim, may need translation):
         #   (IF(INCLUDES(Days_Allowed__c,'Mon'),1,0) + IF(INCLUDES(Days_Allowed__c,'Tue'),1,0) + IF(INCLUDES(Days_Allowed__c,'Wed'),1,0) + IF(INCLUDES(Days_Allowed__c,'Thu'),1,0) + IF(INCLUDES(Days_Allowed__c,'Fri'),1,0) + IF(INCLUDES(Days_Allowed__c,'Sat'),1,0) + IF(INCLUDES(Days_Allowed__c,'Sun'),1,0)) *  Max_Per_Day__c
@@ -1224,7 +1224,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.max_allowable_units_per_day = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_militarytime(self):
         # SF formula (verbatim, may need translation):
         #   CASE ( TEXT ( Start_Time__c ) ,
@@ -1280,7 +1280,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.militarytime = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_missing_traffic_current_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1296,7 +1296,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.missing_traffic_current_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_month(self):
         # SF formula (verbatim, may need translation):
         #   MONTH( (LF_Week__c) +6)
@@ -1304,7 +1304,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.month = False
 
-    @api.depends('sf_external_id')
+    @api.depends('total_dollars')
     def _compute_net_total(self):
         # SF formula (verbatim, may need translation):
         #   if(Deal_Parent__r.ContactAccount__c = "BathWraps",Total_Dollars__c,Total_Dollars__c * 17/20)
@@ -1312,7 +1312,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.net_total = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_network_deal_number(self):
         # SF formula (verbatim, may need translation):
         #   Deal_Parent__r.Network_Deal_Number__c
@@ -1320,7 +1320,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.network_deal_number = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_new_filler(self):
         # SF formula (verbatim, may need translation):
         #   IF(
@@ -1332,7 +1332,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.new_filler = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_orderline_number_mpd(self):
         # SF formula (verbatim, may need translation):
         #   OrderLineNumber__c  +  TEXT(Max_Per_Day__c) + '0'
@@ -1340,7 +1340,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.orderline_number_mpd = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_overran_units_dynamic(self):
         # SF formula (verbatim, may need translation):
         #   CASE(Deal_Parent__r.Program__r.Prelog_Version__c, 1,(Overran_Units_v1__c), 2, (Overran_Units_V2__c),3, (Overran_Units_V3__c),4,(Overran_Units_V4__c),5,(Overran_Units_V5__c),6, (Overran_Units_V6__c), 00)
@@ -1348,7 +1348,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.overran_units_dynamic = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_overran_units_v2(self):
         # SF formula (verbatim, may need translation):
         #   if((Units_Available__c-Prelog_Count_Version_2__c)<0,Units_Available__c-Prelog_Count_Version_2__c,0)
@@ -1356,7 +1356,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.overran_units_v2 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_overran_units_v3(self):
         # SF formula (verbatim, may need translation):
         #   IF((Units_Available__c - Prelog_Count_Version_3__c)>0,0,Units_Available__c - Prelog_Count_Version_3__c)
@@ -1364,7 +1364,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.overran_units_v3 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_overran_units_v4(self):
         # SF formula (verbatim, may need translation):
         #   IF((Units_Available__c -  Prelog_Count_Version_4__c )>0,0,Units_Available__c - Prelog_Count_Version_4__c )
@@ -1372,7 +1372,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.overran_units_v4 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_overran_units_v5(self):
         # SF formula (verbatim, may need translation):
         #   IF((Units_Available__c -  Prelog_Count_Version_5__c )>0,0,Units_Available__c - Prelog_Count_Version_5__c )
@@ -1380,7 +1380,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.overran_units_v5 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_overran_units_v6(self):
         # SF formula (verbatim, may need translation):
         #   IF((Units_Available__c -  Prelog_Count_Version_6__c )>0,0,Units_Available__c - Prelog_Count_Version_6__c )
@@ -1388,7 +1388,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.overran_units_v6 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_overran_units_v1(self):
         # SF formula (verbatim, may need translation):
         #   if((Units_Available__c-Prelog_Count_Version_1__c)<0,Units_Available__c-Prelog_Count_Version_1__c,0)
@@ -1396,14 +1396,14 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.overran_units_v1 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_pi_payout_test(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.pi_payout_test = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_pi(self):
         # SF formula (verbatim, may need translation):
         #   if(Deal_Parent__r.PI__c, "x", "")
@@ -1411,7 +1411,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.pi = False
 
-    @api.depends('sf_external_id')
+    @api.depends('total_dollars')
     def _compute_performance_dollars(self):
         # SF formula (verbatim, may need translation):
         #   if(  Deal_Parent__r.PI__c ,
@@ -1421,7 +1421,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.performance_dollars = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_pod_check(self):
         # SF formula (verbatim, may need translation):
         #   AND(
@@ -1465,7 +1465,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.pod_check = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_prelog_count_dynamic(self):
         # SF formula (verbatim, may need translation):
         #   CASE(Deal_Parent__r.Program__r.Prelog_Version__c, 1,(Prelog_Count_Version_1__c), 2, (Prelog_Count_Version_2__c),3, (Prelog_Count_Version_3__c),4,(Prelog_Count_Version_4__c),5,(Prelog_Count_Version_5__c),6, (Prelog_Count_Version_6__c), 00)
@@ -1473,56 +1473,56 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.prelog_count_dynamic = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_prelog_count_version_1(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.prelog_count_version_1 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_prelog_count_version_2(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.prelog_count_version_2 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_prelog_count_version_3(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.prelog_count_version_3 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_prelog_count_version_4(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.prelog_count_version_4 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_prelog_count_version_5(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.prelog_count_version_5 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_prelog_count_version_6(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.prelog_count_version_6 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_prelog_count(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.prelog_count = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_priority_weight_multiplier(self):
         # SF formula (verbatim, may need translation):
         #   CASE(Weighted_Priority__c,
@@ -1538,7 +1538,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.priority_weight_multiplier = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_quarter_change(self):
         # SF formula (verbatim, may need translation):
         #   If(ISPICKVAL(Deal_Parent__r.Program__r.Cable_Synd__c, "PP"), "",
@@ -1548,7 +1548,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.quarter_change = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_quarter(self):
         # SF formula (verbatim, may need translation):
         #   IF( Month__c  < 4, 1,  IF( ((Month__c >3) &&  (Month__c  < 7)), 2,  IF( ((Month__c >6)  &&  (Month__c <10)),3,  IF(( Month__c >9), 4, 0) ) ) )
@@ -1556,7 +1556,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.quarter = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_rating_check(self):
         # SF formula (verbatim, may need translation):
         #   AND(
@@ -1569,7 +1569,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.rating_check = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_ratings_recieved(self):
         # SF formula (verbatim, may need translation):
         #   ISPICKVAL(Ratings__r.Actual_Ratings__r.Type__c, "Actual")
@@ -1577,7 +1577,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.ratings_recieved = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_reconciled(self):
         # SF formula (verbatim, may need translation):
         #   if( LF_Week__c <= Deal_Parent__r.Program__r.Reconciled_Week__c , "Y", "N")
@@ -1585,7 +1585,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.reconciled = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_request_missing_traffic_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1601,14 +1601,14 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.request_missing_traffic_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_spot_count(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.spot_count = False
 
-    @api.depends('sf_external_id')
+    @api.depends('total_dollars')
     def _compute_spot_data_dollars_check(self):
         # SF formula (verbatim, may need translation):
         #   IF(OR(Working_Log_Count__c = 0, ISPICKVAL(Deal_Parent__r.Program__r.Cable_Synd__c ,"Syndication")), IF(  Total_Dollars__c  = Spot_Total__c, "True", "False"), IF( Total_Dollars__c = Broadcast_Spot_Total__c , "True", "False"))
@@ -1616,7 +1616,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.spot_data_dollars_check = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_spot_data_unit_check(self):
         # SF formula (verbatim, may need translation):
         #   IF(OR(Working_Log_Count__c = 0, ISPICKVAL(Deal_Parent__r.Program__r.Cable_Synd__c ,"Syndication")),IF( Spot_Count__c = Units_Aired__c , "True", "False"),IF( Broadcast_Spot_Count__c = Units_Aired__c, "True", "False"))
@@ -1624,14 +1624,14 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.spot_data_unit_check = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_spot_total(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.spot_total = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_start_end_time(self):
         # SF formula (verbatim, may need translation):
         #   TEXT(Start_Time__c) &"-"& TEXT( End_Time__c)
@@ -1639,14 +1639,14 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.start_end_time = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_sum_spot_equiv_30(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.sum_spot_equiv_30 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_total_000_primary_demo(self):
         # SF formula (verbatim, may need translation):
         #   if( Ratings_Recieved__c  = True, Actual_Total_000_Primary_Demo__c,  Estimated_Total_000_Primary_Demo__c)
@@ -1654,7 +1654,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.total_000_primary_demo = False
 
-    @api.depends('sf_external_id')
+    @api.depends('total_dollars')
     def _compute_total_dollars_earned(self):
         # SF formula (verbatim, may need translation):
         #   IF( Rate__c = 0,
@@ -1667,7 +1667,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.total_dollars_earned = False
 
-    @api.depends('sf_external_id')
+    @api.depends('total_dollars')
     def _compute_total_dollars_live_demo(self):
         # SF formula (verbatim, may need translation):
         #   Total_Dollars__c *(7543/10000)
@@ -1675,7 +1675,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.total_dollars_live_demo = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_total_dollars(self):
         # SF formula (verbatim, may need translation):
         #   if(  PI_Payout_TEST__c >0,  PI_Payout_TEST__c *20/17,
@@ -1688,7 +1688,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.total_dollars = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_total_historical_dollars(self):
         # SF formula (verbatim, may need translation):
         #   if( ispickval(Deal_Parent__r.Status__c, "Historical"), Rate__c * Units_Aired__c, 0 )
@@ -1696,7 +1696,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.total_historical_dollars = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_total_time(self):
         # SF formula (verbatim, may need translation):
         #   case(Deal_Parent__r.Length__c, "30", 30, "45", 45, "60", 60, "75", 75, "120", 120, "300", 300, "15", 15, "90", 90, "180", 180, "10", 10, "240", 240, 0) *   Units_Aired__c
@@ -1704,7 +1704,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.total_time = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_traffic_contact(self):
         # SF formula (verbatim, may need translation):
         #   HYPERLINK ("/" & Deal_Parent__r.Contact__r.Traffic_Contact__c,  Deal_Parent__r.Contact__r.Traffic_Contact__r.FirstName  & " " &  Deal_Parent__r.Contact__r.Traffic_Contact__r.LastName)
@@ -1712,7 +1712,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.traffic_contact = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_uneq_total_000_primary_demo(self):
         # SF formula (verbatim, may need translation):
         #   CASE( LEFT(TEXT(Deal_Parent__r.Sales_Plan__r.Primary_Demographic__c), 1),
@@ -1764,7 +1764,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.uneq_total_000_primary_demo = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_unitlength(self):
         # SF formula (verbatim, may need translation):
         #   VALUE(TEXT(Deal_Parent__r.Length__c))
@@ -1772,7 +1772,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.unitlength = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_unit_sep_check(self):
         # SF formula (verbatim, may need translation):
         #   IF(ROUND( WO_Units__c ,1) <= ROUND(Units_by_Separation__c,1) ,
@@ -1782,7 +1782,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.unit_sep_check = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_units_aired(self):
         # SF formula (verbatim, may need translation):
         #   case( Status__c, "Canceled", 0, Units_Available__c - Units_Preempted__c)
@@ -1790,7 +1790,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.units_aired = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_units_cap(self):
         # SF formula (verbatim, may need translation):
         #   IF((ispickval( Status__c , "Canceled")), 0, ROUND( IF(1.5 = (CASE( Cap__c , "Uncapped", 1, "Ghost", 0, "0%", 0, "80%", 0.8,"50%", 0.5, 1)* Units_Available__c ), 1.4, CASE( Cap__c , "Uncapped", 1, "Ghost", 0, "0%", 0, "80%", 0.8,"50%", 0.5, 1)* Units_Available__c), 0 ))
@@ -1798,7 +1798,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.units_cap = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_units_remaining(self):
         # SF formula (verbatim, may need translation):
         #   if( Cable_Synd_PP__c = 'Syndication',  Units_Aired__c, Units_Cap__c -  Locked_Units__c)
@@ -1806,7 +1806,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.units_remaining = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_units_by_separation(self):
         # SF formula (verbatim, may need translation):
         #   (IF(INCLUDES(Days_Allowed__c,'Mon'),1,0) + IF(INCLUDES(Days_Allowed__c,'Tue'),1,0) + IF(INCLUDES(Days_Allowed__c,'Wed'),1,0) + IF(INCLUDES(Days_Allowed__c,'Thu'),1,0) + IF(INCLUDES(Days_Allowed__c,'Fri'),1,0) + IF(INCLUDES(Days_Allowed__c,'Sat'),1,0) + IF(INCLUDES(Days_Allowed__c,'Sun'),1,0)) *
@@ -1820,7 +1820,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.units_by_separation = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_wo_30_units(self):
         # SF formula (verbatim, may need translation):
         #   IF((ispickval( Status__c , "Canceled")), 0, ROUND( IF(1.5 = (CASE( Cap__c , "Uncapped", 1, "Ghost", 0, "0%", 0, "80%", 0.8,"50%", 0.5, 1)* Equiv_30_Booked__c ), 1.4, CASE( Cap__c , "Uncapped", 1, "Ghost", 0, "0%", 0, "80%", 0.8,"50%", 0.5, 1)* Equiv_30_Booked__c), 0 ))
@@ -1828,7 +1828,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.wo_30_units = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_wo_booked(self):
         # SF formula (verbatim, may need translation):
         #   WO_Units__c*Rate__c
@@ -1836,7 +1836,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.wo_booked = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_wo_dollars(self):
         # SF formula (verbatim, may need translation):
         #   IF((ispickval( Status__c , "Canceled")), 0, (WO_Units__c * Rate__c))
@@ -1844,7 +1844,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.wo_dollars = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_wo_units(self):
         # SF formula (verbatim, may need translation):
         #   IF((ispickval( Status__c , "Canceled")), 0, ROUND( IF(1.5 = (CASE( Cap__c , "Uncapped", 1, "Ghost", 0,"0%", 0, "80%", 0.8,"50%", 0.5, 1)* Units_Available__c ), 1.4, CASE( Cap__c , "Uncapped", 1, "Ghost", 0, "0%", 0,"80%", 0.8,"50%", 0.5, 1)* Units_Available__c), 0 ))
@@ -1852,7 +1852,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.wo_units = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_week_number(self):
         # SF formula (verbatim, may need translation):
         #   ((LF_Week__c  - date(2007,12,31))/7) + 1
@@ -1860,7 +1860,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.week_number = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_week_in_month(self):
         # SF formula (verbatim, may need translation):
         #   if(MONTH(Week__c + 6) <> MONTH(Week__c) || DAY(Week__c) = 1, 1,
@@ -1872,7 +1872,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.week_in_month = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_week_in_quarter(self):
         # SF formula (verbatim, may need translation):
         #   if(OR(LF_Week__c = date(2012,9,24), (LF_Week__c = date(2017,12,25)),(LF_Week__c = date(2023,12,25))),14,
@@ -1897,7 +1897,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.week_in_quarter = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_week_in_year(self):
         # SF formula (verbatim, may need translation):
         #   if(
@@ -1947,7 +1947,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.week_in_year = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_weighted_30_rate(self):
         # SF formula (verbatim, may need translation):
         #   IF(
@@ -1959,7 +1959,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.weighted_30_rate = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_weighted_rate(self):
         # SF formula (verbatim, may need translation):
         #   IF(
@@ -1971,14 +1971,14 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.weighted_rate = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_working_log_count(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.working_log_count = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_working_log_double_check(self):
         # SF formula (verbatim, may need translation):
         #   !(Units_Aired__c =  Working_Log_Count__c)
@@ -1986,14 +1986,14 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.working_log_double_check = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_working_log_version(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.working_log_version = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_x120s(self):
         # SF formula (verbatim, may need translation):
         #   if( UnitLength__c = 120,  Units_Aired__c , 0)
@@ -2001,7 +2001,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.x120s = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_x15s(self):
         # SF formula (verbatim, may need translation):
         #   if( UnitLength__c = 15,  Units_Aired__c , 0)
@@ -2009,7 +2009,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.x15s = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_x2calculated_time_period(self):
         # SF formula (verbatim, may need translation):
         #   Case(  Day_of_Week__c,
@@ -2065,7 +2065,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.x2calculated_time_period = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_x30_rate_round(self):
         # SF formula (verbatim, may need translation):
         #   ROUND(
@@ -2077,7 +2077,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.x30_rate_round = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_x30_rate(self):
         # SF formula (verbatim, may need translation):
         #   Rate__c  / (VALUE(TEXT(Deal_Parent__r.Length__c))/30)
@@ -2085,7 +2085,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.x30_rate = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_x30s(self):
         # SF formula (verbatim, may need translation):
         #   if(  AND( DealBrand__c <> "Availability",UnitLength__c = 30),  Units_Aired__c , 0)
@@ -2093,7 +2093,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.x30s = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_year(self):
         # SF formula (verbatim, may need translation):
         #   YEAR( LF_Week__c  + 6)
@@ -2101,7 +2101,7 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.year = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_temp_working_log_check(self):
         # SF formula (verbatim, may need translation):
         for rec in self:

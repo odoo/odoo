@@ -41,7 +41,7 @@ class MvTraffic(models.Model):
 
     # === Computed / Roll-Up ===
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_advertiser(self):
         # SF formula (verbatim, may need translation):
         #   Brands__r.Advertiser__r.Name
@@ -49,14 +49,14 @@ class MvTraffic(models.Model):
             # TODO: translate SF formula to Python
             rec.advertiser = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_end_date(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.end_date = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_quarter(self):
         # SF formula (verbatim, may need translation):
         #   IF( MONTH( Start_Date__c) < 4, 1, IF( ((MONTH( Start_Date__c) >3) && (MONTH( Start_Date__c) < 7)), 2, IF( ((MONTH( Start_Date__c) >6) && (MONTH( Start_Date__c) <10)),3, IF(( MONTH( Start_Date__c) >9), 4, 0) ) ) )
@@ -64,14 +64,14 @@ class MvTraffic(models.Model):
             # TODO: translate SF formula to Python
             rec.quarter = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_start_date(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.start_date = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_year(self):
         # SF formula (verbatim, may need translation):
         #   TEXT(YEAR( Start_Date__c ))

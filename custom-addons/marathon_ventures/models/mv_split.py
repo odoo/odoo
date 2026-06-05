@@ -39,7 +39,7 @@ class MvSplit(models.Model):
 
     # === Computed / Roll-Up ===
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_active(self):
         # SF formula (verbatim, may need translation):
         #   AND(
@@ -50,7 +50,7 @@ class MvSplit(models.Model):
             # TODO: translate SF formula to Python
             rec.active = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_isci_no_char(self):
         # SF formula (verbatim, may need translation):
         #   SUBSTITUTE(ISCI__c, "-", "")

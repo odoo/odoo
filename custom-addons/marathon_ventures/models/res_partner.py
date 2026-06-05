@@ -509,7 +509,7 @@ class ResPartner(models.Model):
 
     # === Computed / Roll-Up ===
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_account_count(self):
         # SF formula (verbatim, may need translation):
         #   1
@@ -517,7 +517,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.account_count = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_air_affidavit(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -530,7 +530,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.air_affidavit = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_cia_due_date(self):
         # SF formula (verbatim, may need translation):
         #   TODAY() +7
@@ -538,7 +538,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.cia_due_date = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_cia_invoice_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -558,7 +558,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.cia_invoice_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_cia_month(self):
         # SF formula (verbatim, may need translation):
         #   CASE( TEXT( MONTH(TODAY())) ,
@@ -579,7 +579,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.cia_month = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_invoice_date(self):
         # SF formula (verbatim, may need translation):
         #   CASE( TEXT( MONTH(TODAY())) ,
@@ -600,7 +600,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.invoice_date = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_last_activity(self):
         # SF formula (verbatim, may need translation):
         #   Last_Account_Activity__c
@@ -608,7 +608,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.last_activity = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.parent_id')
     def _compute_zaapit__hierarchy_level(self):
         # SF formula (verbatim, may need translation):
         #   IF(ParentId==null,0,1+
@@ -618,7 +618,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.zaapit__hierarchy_level = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_accuweather_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -641,7 +641,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.accuweather_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_accuweather_prelog_1a_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -664,7 +664,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.accuweather_prelog_1a_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_accuweather_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -687,7 +687,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.accuweather_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_accuweather_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -710,7 +710,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.accuweather_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_accuweather_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -733,7 +733,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.accuweather_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_accuweather_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -756,7 +756,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.accuweather_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_x_sf_contact_agency_status(self):
         # SF formula (verbatim, may need translation):
         #   TEXT(Account.Agency_Status__c)
@@ -764,7 +764,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.x_sf_contact_agency_status = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_btt_missing_video_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -784,7 +784,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.btt_missing_video_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_btt_postlog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -807,7 +807,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.btt_postlog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_busted_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -830,7 +830,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.busted_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_busted_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -853,7 +853,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.busted_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_bouncetv_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -876,7 +876,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.bouncetv_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_bouncetv_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -899,7 +899,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.bouncetv_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_bouncetv_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -922,7 +922,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.bouncetv_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_bounce_pp_postlog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -945,7 +945,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.bounce_pp_postlog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_bounce_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -968,7 +968,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.bounce_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_bounce_prelog_1a_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -991,7 +991,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.bounce_prelog_1a_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_bounce_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1014,7 +1014,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.bounce_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_busted_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1037,7 +1037,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.busted_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_confess_postlog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1060,7 +1060,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.confess_postlog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_confess_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1083,7 +1083,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.confess_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_confess_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1106,7 +1106,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.confess_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_courttv_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1129,7 +1129,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.courttv_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_courttv_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1152,7 +1152,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.courttv_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_courttv_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1175,7 +1175,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.courttv_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_courttv_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1198,7 +1198,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.courttv_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_courttv_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1221,7 +1221,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.courttv_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_courttv_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1244,7 +1244,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.courttv_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_defy_ftv_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1267,7 +1267,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.defy_ftv_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_defy_ftv_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1290,7 +1290,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.defy_ftv_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_defy_ftv_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1313,7 +1313,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.defy_ftv_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_defy_scripps_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1336,7 +1336,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.defy_scripps_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_defy_scripps_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1359,7 +1359,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.defy_scripps_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_defy_scripps_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1382,7 +1382,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.defy_scripps_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_defy_scripps_query_post_logs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1405,7 +1405,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.defy_scripps_query_post_logs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_defy_scripps_query_pre_logs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1428,7 +1428,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.defy_scripps_query_pre_logs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_defy_scripps_query_pre_logs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1451,7 +1451,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.defy_scripps_query_pre_logs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_digital_postlog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1473,7 +1473,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.digital_postlog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_disney_postlog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1495,7 +1495,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.disney_postlog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_disney_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1517,7 +1517,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.disney_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_disney_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1539,7 +1539,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.disney_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_fox_postlog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1561,7 +1561,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.fox_postlog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_fox_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1583,7 +1583,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.fox_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_fox_synd_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1605,7 +1605,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.fox_synd_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_green_incumbency_sheet_url(self):
         # SF formula (verbatim, may need translation):
         #   "&Id=" + Id +
@@ -1621,7 +1621,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.green_incumbency_sheet_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_grittv_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1644,7 +1644,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.grittv_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_grittv_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1667,7 +1667,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.grittv_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_grittv_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1690,7 +1690,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.grittv_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_grittv_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1713,7 +1713,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.grittv_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_grit_pp_postlog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1736,7 +1736,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.grit_pp_postlog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_grit_pp_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1759,7 +1759,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.grit_pp_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_grit_prelog_1a_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1782,7 +1782,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.grit_prelog_1a_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_grit_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1805,7 +1805,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.grit_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_hemisphere_pp_pre_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1827,7 +1827,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.hemisphere_pp_pre_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_hemisphere_pp_pre_tw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1849,7 +1849,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.hemisphere_pp_pre_tw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_hemisphere_paid_programing_post_logs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1872,7 +1872,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.hemisphere_paid_programing_post_logs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_hemisphere_sf_prelog_tw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1892,7 +1892,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.hemisphere_sf_prelog_tw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_hemisphere_short_form_postlog(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1915,7 +1915,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.hemisphere_short_form_postlog = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_hemisphere_short_form_pre_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1935,7 +1935,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.hemisphere_short_form_pre_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_hemisphere_short_form_pre_tw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1957,7 +1957,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.hemisphere_short_form_pre_tw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_ion_mystery_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -1980,7 +1980,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.ion_mystery_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_ion_mystery_prelog_1a_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2003,7 +2003,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.ion_mystery_prelog_1a_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_ion_mystery_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2026,7 +2026,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.ion_mystery_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_ion_mystery_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2049,7 +2049,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.ion_mystery_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_ion_mystery_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2072,7 +2072,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.ion_mystery_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_ion_mystery_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2095,7 +2095,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.ion_mystery_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_ion_pp_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2118,7 +2118,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.ion_pp_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_ion_plus_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2141,7 +2141,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.ion_plus_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_ion_plus_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2164,7 +2164,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.ion_plus_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_ion_plus_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2187,7 +2187,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.ion_plus_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_ion_pre_logs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2210,7 +2210,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.ion_pre_logs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_ion_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2233,7 +2233,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.ion_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_ion_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2256,7 +2256,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.ion_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_ion_pp_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2279,7 +2279,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.ion_pp_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_kiy_test_lightning_conductor(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2302,7 +2302,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.kiy_test_lightning_conductor = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_lf_current_month(self):
         # SF formula (verbatim, may need translation):
         #   CASE( TEXT( MONTH(TODAY())) ,
@@ -2323,7 +2323,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.lf_current_month = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_lf_month(self):
         # SF formula (verbatim, may need translation):
         #   CASE( TEXT( MONTH(TODAY())) ,
@@ -2344,7 +2344,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.lf_month = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_laff_pp_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2367,7 +2367,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.laff_pp_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_laff_pp_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2390,7 +2390,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.laff_pp_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_laff_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2413,7 +2413,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.laff_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_laff_prelog_1a_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2436,7 +2436,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.laff_prelog_1a_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_laff_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2459,7 +2459,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.laff_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_laff_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2482,7 +2482,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.laff_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_laff_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2505,7 +2505,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.laff_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_laff_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2528,7 +2528,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.laff_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_mlbappletv_postlog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2551,7 +2551,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.mlbappletv_postlog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_mlbappletv_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2574,7 +2574,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.mlbappletv_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_mlbappletv_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2597,7 +2597,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.mlbappletv_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_mlbappletv_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2620,7 +2620,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.mlbappletv_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_mlbappletv_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2643,7 +2643,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.mlbappletv_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_mlb_appletv_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2666,7 +2666,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.mlb_appletv_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_mlb_network_prelog_1a_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2689,7 +2689,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.mlb_network_prelog_1a_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_mlb_network_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2712,7 +2712,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.mlb_network_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_mlb_post_log_url1(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2735,7 +2735,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.mlb_post_log_url1 = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_mlb_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2758,7 +2758,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.mlb_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_mlb_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2781,7 +2781,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.mlb_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_mlb_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2804,7 +2804,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.mlb_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_merit_street_postlog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2827,7 +2827,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.merit_street_postlog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_merit_street_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2850,7 +2850,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.merit_street_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_merit_street_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2873,7 +2873,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.merit_street_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_merit_street_query_postlog(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2896,7 +2896,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.merit_street_query_postlog = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_merit_street_query_prelog_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2919,7 +2919,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.merit_street_query_prelog_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_merit_street_query_prelog(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2942,7 +2942,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.merit_street_query_prelog = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nbcu_synd_post_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2964,7 +2964,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nbcu_synd_post_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nbcu_synd_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -2986,7 +2986,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nbcu_synd_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nbcu_synd_prelog_pd360(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3008,7 +3008,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nbcu_synd_prelog_pd360 = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nbcu_synd_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3030,7 +3030,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nbcu_synd_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nhl_local_network_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3053,7 +3053,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nhl_local_network_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nhl_local_network_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3076,7 +3076,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nhl_local_network_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nhl_local_network_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3099,7 +3099,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nhl_local_network_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nhl_local_network_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3122,7 +3122,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nhl_local_network_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nhl_local_network_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3145,7 +3145,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nhl_local_network_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nhl_local_network_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3168,7 +3168,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nhl_local_network_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nhl_network_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3191,7 +3191,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nhl_network_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nhl_network_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3214,7 +3214,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nhl_network_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nhl_network_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3237,7 +3237,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nhl_network_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nhl_network_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3260,7 +3260,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nhl_network_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nhl_network_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3283,7 +3283,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nhl_network_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_nhl_network_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3306,7 +3306,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.nhl_network_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_newsy_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3329,7 +3329,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.newsy_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_newsy_pre_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3352,7 +3352,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.newsy_pre_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_newsy_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3375,7 +3375,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.newsy_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_newsy_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3398,7 +3398,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.newsy_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_newsy_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3421,7 +3421,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.newsy_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_newsy_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3444,7 +3444,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.newsy_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_noseytv_postlog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3467,7 +3467,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.noseytv_postlog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_noseytv_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3490,7 +3490,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.noseytv_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_noseytv_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3513,7 +3513,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.noseytv_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_noseytv_query_postlog(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3536,7 +3536,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.noseytv_query_postlog = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_noseytv_query_prelog(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3559,7 +3559,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.noseytv_query_prelog = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_noseytv_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3582,7 +3582,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.noseytv_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_novelisima_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3605,7 +3605,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.novelisima_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_novelisima_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3628,7 +3628,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.novelisima_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_outlaw_pp_postlog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3651,7 +3651,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.outlaw_pp_postlog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_outlaw_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3674,7 +3674,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.outlaw_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_outlaw_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3697,7 +3697,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.outlaw_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_outlaw_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3720,7 +3720,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.outlaw_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_outlaw_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3743,7 +3743,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.outlaw_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_outlaw_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3766,7 +3766,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.outlaw_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_outlaw_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3789,7 +3789,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.outlaw_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_quest_network_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3812,7 +3812,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.quest_network_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_quest_network_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3835,7 +3835,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.quest_network_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_quest_network_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3858,7 +3858,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.quest_network_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_quest_post_log(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3881,7 +3881,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.quest_post_log = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_quest_pre_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3904,7 +3904,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.quest_pre_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_quest_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3927,7 +3927,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.quest_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_synd_post_log_query_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3947,7 +3947,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.synd_post_log_query_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_synd_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3969,7 +3969,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.synd_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_synd_pre_log_query_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -3989,7 +3989,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.synd_pre_log_query_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_synd_pre_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4011,7 +4011,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.synd_pre_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_the365_pp_postlog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4034,7 +4034,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.the365_pp_postlog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_the365_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4057,7 +4057,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.the365_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_the365_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4080,7 +4080,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.the365_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_the365_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4103,7 +4103,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.the365_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_the365_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4126,7 +4126,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.the365_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_the365_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4149,7 +4149,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.the365_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_the365_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4172,7 +4172,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.the365_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_twist_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4195,7 +4195,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.twist_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_true_crime_network_post_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4218,7 +4218,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.true_crime_network_post_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_true_crime_network_prelog_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4241,7 +4241,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.true_crime_network_prelog_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_true_crime_network_prelog_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4264,7 +4264,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.true_crime_network_prelog_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_true_crime_network_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4287,7 +4287,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.true_crime_network_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_true_crime_network_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4309,7 +4309,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.true_crime_network_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_true_crime_network_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4331,7 +4331,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.true_crime_network_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_true_real_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4354,7 +4354,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.true_real_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_true_real_prelog_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4377,7 +4377,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.true_real_prelog_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_true_real_query_post_logs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4400,7 +4400,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.true_real_query_post_logs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_true_real_query_pre_logs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4423,7 +4423,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.true_real_query_pre_logs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_true_real_query_pre_logs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4446,7 +4446,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.true_real_query_pre_logs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_twist_pp_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4469,7 +4469,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.twist_pp_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_twist_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4492,7 +4492,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.twist_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_twist_query_prelogs_nw(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4515,7 +4515,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.twist_query_prelogs_nw = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_twist_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4538,7 +4538,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.twist_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_univision_synd_post_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4560,7 +4560,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.univision_synd_post_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_univision_synd_pre_log_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4582,7 +4582,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.univision_synd_pre_log_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_univision_synd_query_postlogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4604,7 +4604,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.univision_synd_query_postlogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_univision_synd_query_prelogs(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4626,7 +4626,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.univision_synd_query_prelogs = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_wapa_cinco_post_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4648,7 +4648,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.wapa_cinco_post_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_wapa_cinco_pre_nw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4670,7 +4670,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.wapa_cinco_pre_nw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_wapa_cinco_pre_tw_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4692,7 +4692,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.wapa_cinco_pre_tw_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_wapa_cinco_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4714,7 +4714,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.wapa_cinco_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_wapa_cinco_post_log_bundle(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -4737,7 +4737,7 @@ class ResPartner(models.Model):
             # TODO: translate SF formula to Python
             rec.wapa_cinco_post_log_bundle = False
 
-    @api.depends('sf_external_id')
+    @api.depends('parent_id.name')
     def _compute_wapa_cinco_post_log_spot(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +

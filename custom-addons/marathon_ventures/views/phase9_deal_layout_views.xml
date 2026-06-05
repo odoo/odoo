@@ -64,14 +64,14 @@
                label/input stacking (phase9_deal_layout.scss). -->
           <group col="3" name="grp_campaign_info" class="mv-essentials-grid">
             <group>
-              <field name="program" required="1" invisible="id"
+              <field name="program" required="1"
                      placeholder="Select program..."/>
-              <field name="client_account" string="Advertiser"
-                     required="1" invisible="id"
+              <field name="advertiser" string="Advertiser"
+                     required="1"
                      placeholder="Select advertiser..."/>
             </group>
             <group>
-              <field name="brands" required="1" invisible="id"
+              <field name="brands" required="1"
                      placeholder="Select brand..."/>
               <field name="contact" placeholder="Select contact..."/>
             </group>
@@ -85,7 +85,7 @@
           <div class="mv-section-label">SPOT DETAILS</div>
           <group col="3" name="grp_spot_details" class="mv-essentials-grid">
             <group>
-              <field name="length" required="1" invisible="id"/>
+              <field name="length" required="1"/>
             </group>
             <group>
               <field name="client_dr_gm_hybrid"
@@ -94,6 +94,30 @@
             <group>
               <field name="min_sep" string="Minimum Separation"
                      class="mv-highlight"/>
+            </group>
+          </group>
+
+          <div class="mv-section-label">Network DETAILS</div>
+          <group col="3" name="grp_nwtwork_details" class="mv-essentials-grid">
+            <group>
+              <field name="network_deal_number"/>
+            </group>
+            <group>
+              <field name="product_code"/>
+            </group>
+            <group>
+              <field name="access_code" />
+            </group>
+          </group>
+          <group col="3" name="grp_nwtwork_details" class="mv-essentials-grid">
+            <group>
+              <field name="client_code"/>
+            </group>
+            <group>
+              <field name="estimate"/>
+            </group>
+            <group>
+              <field name="create_uid" readonly="1"/>
             </group>
           </group>
 

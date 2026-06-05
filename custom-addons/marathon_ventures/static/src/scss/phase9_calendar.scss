@@ -1,0 +1,63 @@
+/* ============================================================================
+   Phase 9 - Global calendar / date picker refinements.
+
+   Applies to EVERY date or week picker in Odoo (deal, schedule, traffic,
+   invoice, etc.) - intentionally not scoped to any specific form. Pairs
+   with data/phase9_calendar_settings.xml which sets res.lang.week_start
+   to Monday so the leftmost column is always "Mon".
+
+   Targets the Odoo 17+ OWL DateTimePicker (.o_datetime_picker). Falls
+   back to the legacy class names too just in case a different widget
+   version is rendered somewhere.
+   ============================================================================ */
+
+/* Hide the week-number column - it's confusing per Arianna's feedback. */
+.o_datetime_picker_table th.o_datetime_picker_week_number,
+.o_datetime_picker_table td.o_datetime_picker_week_number,
+.o_datetime_picker .o_datetime_picker_weeknumber,
+.o_datetime_picker .o_datetime_picker_week_number,
+.o_datetime_picker .o_week_number,
+.bootstrap-datetimepicker-widget .week {
+    display: none !important;
+}
+
+/* Modern Odoo OWL DateTimePicker uses a CSS grid - keep the 7-day grid
+   (no extra column for week numbers). */
+.o_datetime_picker .o_datetime_picker_table {
+    grid-template-columns: repeat(7, 1fr) !important;
+}
+
+/* "Mon" header: bold + soft blue tint to make it visually distinct. */
+.o_datetime_picker .o_datetime_picker_weekday:first-child,
+.o_datetime_picker_table thead th:first-child,
+.o_datetime_picker_table .o_day_names > *:first-child,
+.bootstrap-datetimepicker-widget .dow:first-child {
+    background-color: #e9f1ff !important;
+    color: #1d4ed8 !important;
+    font-weight: 700 !important;
+    border-radius: 4px;
+}
+
+/* Subtle Monday-column tint on the day cells themselves. nth-child
+   targets the first cell of every row when the grid is laid out as
+   7 columns (no week-number column thanks to the rule above). */
+.o_datetime_picker .o_datetime_picker_cell:nth-child(7n+1):not(.o_datetime_picker_cell_selected):not(.o_datetime_picker_cell_today),
+.o_datetime_picker_table tbody td:first-child:not(.active):not(.today),
+.bootstrap-datetimepicker-widget td.day:nth-child(7n+1):not(.active):not(.today) {
+    background-color: #f5f8ff;
+}
+
+/* Slightly stronger hover for Monday so the user feels the click target. */
+.o_datetime_picker .o_datetime_picker_cell:nth-child(7n+1):hover {
+    background-color: #dbe7ff !important;
+}
+
+/* Make the day-names row a touch more legible. */
+.o_datetime_picker .o_datetime_picker_weekday,
+.o_datetime_picker_table thead th {
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: #6b7280;
+    padding: 4px 0;
+}

@@ -104,7 +104,7 @@ class MvDeal(models.Model):
 
     # === Computed / Roll-Up ===
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_account_advertiser_brand(self):
         # SF formula (verbatim, may need translation):
         #   ContactAccount__c &"-"& Advertiser__c &"-"& Brands__r.Name
@@ -112,7 +112,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.account_advertiser_brand = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_account_advertiser_program(self):
         # SF formula (verbatim, may need translation):
         #   ContactAccount__c & " - " &  Advertiser__c & " - " & Program__r.Name
@@ -120,7 +120,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.account_advertiser_program = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_account_advertiser(self):
         # SF formula (verbatim, may need translation):
         #   ContactAccount__c &"-"& Advertiser__c
@@ -128,7 +128,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.account_advertiser = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_account_brand_program(self):
         # SF formula (verbatim, may need translation):
         #   ContactAccount__c & " - " &  Brands__r.Name & " - " &  Program__r.Name
@@ -136,7 +136,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.account_brand_program = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_account_brand(self):
         # SF formula (verbatim, may need translation):
         #   ContactAccount__c & " - " &  Brands__r.Name
@@ -144,7 +144,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.account_brand = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_actual_rating_year(self):
         # SF formula (verbatim, may need translation):
         #   YEAR(Week_Max__c + 7)
@@ -152,7 +152,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.actual_rating_year = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_advertiser_id(self):
         # SF formula (verbatim, may need translation):
         #   Brands__r.Advertiser__r.Id
@@ -160,7 +160,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.advertiser_id = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_advertiser(self):
         # SF formula (verbatim, may need translation):
         #   Brands__r.Advertiser__r.Name
@@ -168,7 +168,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.advertiser = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_brand_id(self):
         # SF formula (verbatim, may need translation):
         #   Brands__r.Id
@@ -176,7 +176,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.brand_id = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_cable_synd_pp_del(self):
         # SF formula (verbatim, may need translation):
         #   Text(Program__r.Cable_Synd__c)
@@ -184,7 +184,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.cable_synd_pp_del = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_clientcode(self):
         # SF formula (verbatim, may need translation):
         #   Program__r.ClientCode__c
@@ -192,7 +192,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.clientcode = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_commercial_type(self):
         # SF formula (verbatim, may need translation):
         #   TEXT(Brands__r.Advertiser__r.Commercial__c)
@@ -200,7 +200,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.commercial_type = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_conga_invoice_wapa(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id
@@ -213,7 +213,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.conga_invoice_wapa = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_contactaccount(self):
         # SF formula (verbatim, may need translation):
         #   Contact__r.Account.Name
@@ -221,7 +221,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.contactaccount = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_contact_email(self):
         # SF formula (verbatim, may need translation):
         #   Contact__r.Email
@@ -229,21 +229,21 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.contact_email = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_count_of_schedules(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.count_of_schedules = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_count_of_weeks(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.count_of_weeks = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_deal_count(self):
         # SF formula (verbatim, may need translation):
         #   1
@@ -251,7 +251,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.deal_count = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_disfox_conga_invoice_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id
@@ -264,7 +264,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.disfox_conga_invoice_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_entity_name(self):
         # SF formula (verbatim, may need translation):
         #   IF( ISPICKVAL( Program__r.Deal_Entity__c , "Marathon Ventures LLC") , "Marathon Ventures LLC", "")
@@ -272,21 +272,21 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.entity_name = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_ff_invoice_month(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.ff_invoice_month = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_ff_long_form_invoice_month(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.ff_long_form_invoice_month = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_merit_street_media_2025(self):
         # SF formula (verbatim, may need translation):
         #   "&EmailSubject=" & Name & " - " & Advertiser__c & " - " & Brands__r.Name & " - " & Campaign__c &
@@ -309,7 +309,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.merit_street_media_2025 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_program_account_advertiser_brand(self):
         # SF formula (verbatim, may need translation):
         #   Program__r.Name &"-"& ContactAccount__c &"-"& Advertiser__c &"-"& Brands__r.Name
@@ -317,7 +317,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.program_account_advertiser_brand = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_program_team_del_del(self):
         # SF formula (verbatim, may need translation):
         #   Program__r.Team__c
@@ -325,14 +325,14 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.program_team_del_del = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_ratings_quarter(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.ratings_quarter = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_ratings_year(self):
         # SF formula (verbatim, may need translation):
         #   YEAR( Week_Max__c )
@@ -340,7 +340,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.ratings_year = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_related_advertiser_log_exp_date(self):
         # SF formula (verbatim, may need translation):
         #   Brands__r.Advertiser__r.ADV_LOG_with_Expiration_Date__c
@@ -348,7 +348,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.related_advertiser_log_exp_date = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_sf_conga_invoice_formula(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id
@@ -361,7 +361,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.sf_conga_invoice_formula = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_sf_conga_invoice_new_synd(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id
@@ -374,7 +374,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.sf_conga_invoice_new_synd = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_sf_conga_invoice_nosey(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id
@@ -387,7 +387,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.sf_conga_invoice_nosey = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_sf_deal_id(self):
         # SF formula (verbatim, may need translation):
         #   "(ref:" & Id & ")"
@@ -395,21 +395,21 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.sf_deal_id = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_sum_of_total_dollars(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.sum_of_total_dollars = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_sum_of_units_available(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.sum_of_units_available = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_vendor_account(self):
         # SF formula (verbatim, may need translation):
         #   Program__r.Vendor_Account__r.Name
@@ -417,7 +417,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.vendor_account = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_vendor_commission(self):
         # SF formula (verbatim, may need translation):
         #   Program__r.Vendor_Account__r.Network_Commission__c
@@ -425,7 +425,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.vendor_commission = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_wapa_cinco_unwired_pi_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -446,7 +446,7 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.wapa_cinco_unwired_pi_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_wapa_cinco_unwired_url(self):
         # SF formula (verbatim, may need translation):
         #   "&id=" + Id +
@@ -467,21 +467,21 @@ class MvDeal(models.Model):
             # TODO: translate SF formula to Python
             rec.wapa_cinco_unwired_url = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_week_min_field(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.week_min_field = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_week_max(self):
         # SF formula (verbatim, may need translation):
         for rec in self:
             # TODO: translate SF formula to Python
             rec.week_max = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_week_pending(self):
         # SF formula (verbatim, may need translation):
         #   Program__r.Week_Pending__c

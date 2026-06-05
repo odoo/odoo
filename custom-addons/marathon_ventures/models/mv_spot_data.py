@@ -83,7 +83,7 @@ class MvSpotData(models.Model):
 
     # === Computed / Roll-Up ===
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_am_pm(self):
         # SF formula (verbatim, may need translation):
         #   IF( RIGHT( Air_Time__c ,2)="am","am",
@@ -97,7 +97,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.am_pm = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_agency_commission(self):
         # SF formula (verbatim, may need translation):
         #   Spot_Rate__c *15/100
@@ -105,7 +105,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.agency_commission = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_air_date_time(self):
         # SF formula (verbatim, may need translation):
         #   TEXT(Air_Date__c ) &" - "& Air_Time__c
@@ -113,7 +113,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.air_date_time = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_air_date_yyyy(self):
         # SF formula (verbatim, may need translation):
         #   text( Air_Date__c )
@@ -121,7 +121,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.air_date_yyyy = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_brand(self):
         # SF formula (verbatim, may need translation):
         #   Schedule__r.DealBrand__c
@@ -129,7 +129,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.brand = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_bundle_avail_30(self):
         # SF formula (verbatim, may need translation):
         #   IF( Availability__c = TRUE, (VALUE(TEXT(Length__c)) / 30)*   Schedule__r.Units_Available__c   , 0)
@@ -137,7 +137,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.bundle_avail_30 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_bundle_spot_30(self):
         # SF formula (verbatim, may need translation):
         #   IF( AND(Availability__c = FALSE,  NOT(CONTAINS(TEXT(Length__c),":"))), VALUE(TEXT( Schedule__r.Deal_Parent__r.Length__c )) / 30 , 0)
@@ -145,7 +145,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.bundle_spot_30 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_bundle_spot_rate(self):
         # SF formula (verbatim, may need translation):
         #   IF( Availability__c = FALSE, Spot_Rate__c , 0)
@@ -153,7 +153,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.bundle_spot_rate = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_bundle(self):
         # SF formula (verbatim, may need translation):
         #   IF( Availability__c = TRUE, Spot_Rate__c *  Schedule__r.CALC_EQUIV_30__c    , 0)
@@ -161,7 +161,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.bundle = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_day_of_week(self):
         # SF formula (verbatim, may need translation):
         #   CASE(
@@ -177,7 +177,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.day_of_week = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_daypart(self):
         # SF formula (verbatim, may need translation):
         #   IF(AND(
@@ -188,7 +188,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.daypart = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_hour(self):
         # SF formula (verbatim, may need translation):
         #   IF(LEFT( Air_Time__c , 2)="1:","1",
@@ -217,7 +217,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.hour = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_hour_of_day(self):
         # SF formula (verbatim, may need translation):
         #   Hour__c  & AM_PM__c
@@ -225,7 +225,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.hour_of_day = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_log_schedule_mismatch(self):
         # SF formula (verbatim, may need translation):
         #   Schedule__r.Name != SpotDataMirror__r.Log_Schedule__c
@@ -233,7 +233,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.log_schedule_mismatch = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_long_form_match(self):
         # SF formula (verbatim, may need translation):
         #   And(TEXT(Schedule__r.Long_Form__c) = Long_Form__c,  Air_Date__c  =  Schedule__r.Week__c )
@@ -241,7 +241,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.long_form_match = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_long_form_rate(self):
         # SF formula (verbatim, may need translation):
         #   IF(And(TEXT(Schedule__r.Long_Form__c) = Long_Form__c,  Air_Date__c  =  Schedule__r.Week__c ),  Schedule__r.Rate__c , 0)
@@ -249,7 +249,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.long_form_rate = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_main_network(self):
         # SF formula (verbatim, may need translation):
         #   if(Broadcast_Network__c =  Main_Broadcast_Program__c , 1,0)
@@ -257,7 +257,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.main_network = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_net_total(self):
         # SF formula (verbatim, may need translation):
         #   Spot_Rate__c *85/100
@@ -265,7 +265,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.net_total = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_network_deal_number(self):
         # SF formula (verbatim, may need translation):
         #   Schedule__r.Deal_Parent__r.Network_Deal_Number__c
@@ -273,7 +273,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.network_deal_number = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_product(self):
         # SF formula (verbatim, may need translation):
         #   SpotDataMirror__r.Product__c
@@ -281,7 +281,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.product = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_program(self):
         # SF formula (verbatim, may need translation):
         #   Schedule__r.DealProgram__c
@@ -289,7 +289,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.program = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_rate_check(self):
         # SF formula (verbatim, may need translation):
         #   if( Schedule_Rate__c = Spot_Rate__c ,"True","False")
@@ -297,7 +297,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.rate_check = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_raycom_order_account_brand(self):
         # SF formula (verbatim, may need translation):
         #   Raycom_Order_Number__c &" - "&  Raycom_Invoice_Number__c  &" - "& Schedule__r.DealAccount__c &" - "& Brand__c
@@ -305,7 +305,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.raycom_order_account_brand = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_sdm_created_by(self):
         # SF formula (verbatim, may need translation):
         #   SpotDataMirror__r.CreatedBy.Username
@@ -313,7 +313,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.sdm_created_by = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_schedule_id(self):
         # SF formula (verbatim, may need translation):
         #   Schedule__r.Id
@@ -321,7 +321,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.schedule_id = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_schedule_rate(self):
         # SF formula (verbatim, may need translation):
         #   Schedule__r.Rate__c
@@ -329,7 +329,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.schedule_rate = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_spotdatarefequal(self):
         # SF formula (verbatim, may need translation):
         #   IF ( OR ( LEFT(Id,15) = LEFT(SpotDataRef__c,15), ISBLANK(SpotDataMirror__c)) , true, false)
@@ -337,7 +337,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.spotdatarefequal = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_spotdataref(self):
         # SF formula (verbatim, may need translation):
         #   SpotDataMirror__r.Spot_Data__c
@@ -345,7 +345,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.spotdataref = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_spot_30_rate(self):
         # SF formula (verbatim, may need translation):
         #   Spot_Rate__c  / (VALUE(TEXT( Schedule__r.Deal_Parent__r.Length__c ))/30)
@@ -353,7 +353,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.spot_30_rate = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_spot_equiv_30(self):
         # SF formula (verbatim, may need translation):
         #   IF(NOT(CONTAINS(TEXT(Length__c),':')),VALUE(TEXT(Length__c)) / 30,0)
@@ -361,7 +361,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.spot_equiv_30 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_spot_week(self):
         # SF formula (verbatim, may need translation):
         #   CASE(
@@ -377,7 +377,7 @@ class MvSpotData(models.Model):
             # TODO: translate SF formula to Python
             rec.spot_week = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_station_market_affiliate(self):
         # SF formula (verbatim, may need translation):
         #   Station__r.Call_Letters__c &" - "& Station__r.Market__r.Name &" - "& Station__r.Affiliate__c

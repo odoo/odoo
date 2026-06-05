@@ -34,7 +34,7 @@ class MvStation(models.Model):
 
     # === Computed / Roll-Up ===
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_rank(self):
         # SF formula (verbatim, may need translation):
         #   Market__r.DMA_Rank__c
@@ -42,7 +42,7 @@ class MvStation(models.Model):
             # TODO: translate SF formula to Python
             rec.rank = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_station_count(self):
         # SF formula (verbatim, may need translation):
         #   1

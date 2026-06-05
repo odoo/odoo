@@ -62,21 +62,11 @@
             </list>
           </field>
         </page>
-        <page string="Double Check Report" name="double_check_tab">
-          <p class="oe_grey">Summary of all schedules under this Deal. Verify against the agency paperwork before sending to the network.</p>
-          <field name="schedule_ids" nolabel="1" readonly="1">
-            <list default_group_by="week">
-              <field name="week"/>
-              <field name="networks"/>
-              <field name="daypart"/>
-              <field name="days_allowed" widget="many2many_tags"/>
-              <field name="rate" widget="monetary" sum="Rate"/>
-              <field name="units_available" sum="Units"/>
-              <field name="total_dollars" widget="monetary" sum="Total $"/>
-              <field name="status"/>
-              <field name="currency_id" column_invisible="1"/>
-            </list>
-          </field>
+        <page string="Units Report" name="unit_report_tab">
+          <p>In Development</p>
+        </page>
+        <page string="Capping Report" name="capping_report_tab">
+          <p>In Development</p>
         </page>
       </xpath>
 

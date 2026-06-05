@@ -56,7 +56,7 @@ class MvWorkingLog(models.Model):
 
     # === Computed / Roll-Up ===
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_air_date_air_time(self):
         # SF formula (verbatim, may need translation):
         #   LPAD(TEXT(MONTH(Air_Date__c)), 2, '0') & "/" &
@@ -92,7 +92,7 @@ class MvWorkingLog(models.Model):
             # TODO: translate SF formula to Python
             rec.air_date_air_time = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_created_date_time(self):
         # SF formula (verbatim, may need translation):
         #   CreatedDate
@@ -100,7 +100,7 @@ class MvWorkingLog(models.Model):
             # TODO: translate SF formula to Python
             rec.created_date_time = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_current_version(self):
         # SF formula (verbatim, may need translation):
         #   Schedule__r.Working_Log_Version__c =  Version__c
@@ -108,7 +108,7 @@ class MvWorkingLog(models.Model):
             # TODO: translate SF formula to Python
             rec.current_version = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_day_of_week(self):
         # SF formula (verbatim, may need translation):
         #   CASE(
@@ -124,7 +124,7 @@ class MvWorkingLog(models.Model):
             # TODO: translate SF formula to Python
             rec.day_of_week = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_double_check_pod(self):
         # SF formula (verbatim, may need translation):
         #   IF(
@@ -163,7 +163,7 @@ class MvWorkingLog(models.Model):
             # TODO: translate SF formula to Python
             rec.double_check_pod = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_equiv_30(self):
         # SF formula (verbatim, may need translation):
         #   Schedule__r.UnitLength__c /30
@@ -171,7 +171,7 @@ class MvWorkingLog(models.Model):
             # TODO: translate SF formula to Python
             rec.equiv_30 = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_hour_of_day(self):
         # SF formula (verbatim, may need translation):
         #   IF(LEFT( Air_Time__c , 2)="1:","1",
@@ -208,7 +208,7 @@ class MvWorkingLog(models.Model):
             # TODO: translate SF formula to Python
             rec.hour_of_day = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_main_network(self):
         # SF formula (verbatim, may need translation):
         #   Broadcast_Network__c = Schedule__r.DealProgram__c
@@ -216,7 +216,7 @@ class MvWorkingLog(models.Model):
             # TODO: translate SF formula to Python
             rec.main_network = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_podded_day(self):
         # SF formula (verbatim, may need translation):
         #   CASE(
@@ -232,7 +232,7 @@ class MvWorkingLog(models.Model):
             # TODO: translate SF formula to Python
             rec.podded_day = False
 
-    @api.depends('sf_external_id')
+    @api.depends()
     def _compute_spot_rate(self):
         # SF formula (verbatim, may need translation):
         #   Schedule__r.Rate__c

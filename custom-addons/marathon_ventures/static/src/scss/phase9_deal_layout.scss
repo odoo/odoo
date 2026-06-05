@@ -238,3 +238,86 @@
         grid-template-columns: 1fr !important;
     }
 }
+
+/* ============================================================================
+   CAMPAIGN TOTAL summary card (Schedule form)
+   ============================================================================ */
+.mv-deal-redesign .mv-campaign-total {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    background-color: #f6f7f9;
+    border: 1px solid #e4e6eb;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 18px 0 8px 0;
+}
+
+.mv-deal-redesign .mv-campaign-total-label {
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #6b7280;
+}
+
+.mv-deal-redesign .mv-campaign-total-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1d22;
+}
+
+.mv-deal-redesign .mv-campaign-total-value .o_field_widget {
+    display: inline-block;
+    width: auto !important;
+}
+
+.mv-deal-redesign .mv-campaign-total-formula {
+    font-size: 12px;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* ============================================================================
+   Grid variants for sections that need different column counts (Schedule
+   form): 4-col (Timing, Pricing) and 2-col (Additional). All variants
+   inherit the same label-on-top / full-width-input rules via the shared
+   .mv-essentials-grid base class on the same element.
+   ============================================================================ */
+.mv-deal-redesign .mv-essentials-grid-4 {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    grid-column-gap: 24px !important;
+    grid-row-gap: 4px !important;
+}
+
+.mv-deal-redesign .mv-essentials-grid-2 {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-column-gap: 32px !important;
+    grid-row-gap: 4px !important;
+}
+
+.mv-deal-redesign .mv-essentials-grid-4 > .o_inner_group,
+.mv-deal-redesign .mv-essentials-grid-4 > .o_group,
+.mv-deal-redesign .mv-essentials-grid-2 > .o_inner_group,
+.mv-deal-redesign .mv-essentials-grid-2 > .o_group {
+    grid-column: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+}
+
+/* Responsive: 4-col collapses to 2 then 1; 2-col collapses to 1. */
+@media (max-width: 1024px) {
+    .mv-deal-redesign .mv-essentials-grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+@media (max-width: 640px) {
+    .mv-deal-redesign .mv-essentials-grid-4,
+    .mv-deal-redesign .mv-essentials-grid-2 {
+        grid-template-columns: 1fr !important;
+    }
+}
