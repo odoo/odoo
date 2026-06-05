@@ -8,7 +8,7 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     @api.model
-    def _get_query_tax_details_from_domain(self, domain, fallback=True) -> SQL:
+    def _get_query_tax_details_from_domain(self, domain, fallback=True, use_simplified_query=False) -> SQL:
         """ Create the tax details sub-query based on the orm domain passed as parameter.
 
         :param domain:      An orm domain on account.move.line.
@@ -16,13 +16,89 @@ class AccountMoveLine(models.Model):
         :return:            query as SQL object
         """
         query = self.env['account.move.line']._search(domain)
-
+        if use_simplified_query:
+            return self._get_query_tax_details_simplified(query.from_clause, query.where_clause)
         return self._get_query_tax_details(query.from_clause, query.where_clause, fallback=fallback)
 
     @api.model
     def _get_extra_query_base_tax_line_mapping(self) -> SQL:
         #TO OVERRIDE
         return SQL()
+
+    def _get_query_tax_details_simplified(self, table_references, search_condition):
+        return SQL('''
+            WITH filtered_aml AS MATERIALIZED (
+                SELECT account_move_line.*, account_move_line__move_id.move_type AS move_type
+                FROM %(table_references)s
+                WHERE %(search_condition)s
+            ),
+            base_lines AS (
+                SELECT f.*, rel.account_tax_id AS applied_tax_id
+                FROM filtered_aml f
+                JOIN account_move_line_account_tax_rel rel ON f.id = rel.account_move_line_id
+                WHERE f.tax_repartition_line_id IS NULL
+            ),
+            tax_lines AS (
+                SELECT
+                    f.*,
+                    tax_rep.tax_id,
+                    tax_rep.account_id AS rep_account_id,
+                    tax_rep.factor_percent AS factor_percent,
+                    tax_rep.use_in_tax_closing AS use_in_tax_closing,
+                    COALESCE(f.group_tax_id, f.tax_line_id) AS effective_tax_id
+                FROM filtered_aml f
+                JOIN account_tax_repartition_line tax_rep ON tax_rep.id = f.tax_repartition_line_id
+            ),
+            tax_data AS (
+                SELECT
+                    lt.id AS tax_line_id, lt.balance AS tax_amount,
+                    aml.id AS base_line_id, aml.move_id,
+                    t.sequence, t.id AS tax_id,
+                    CASE WHEN t.amount_type <> 'fixed' THEN aml.balance ELSE aml.quantity END AS base_value
+                FROM base_lines aml
+                JOIN tax_lines lt
+                ON lt.move_id = aml.move_id
+                AND lt.currency_id = aml.currency_id
+                AND lt.partner_id IS NOT DISTINCT FROM aml.partner_id
+                AND lt.effective_tax_id = aml.applied_tax_id
+                JOIN account_tax t ON aml.applied_tax_id = t.id
+                WHERE (
+                    aml.move_type != 'entry'
+                    OR (t.tax_exigibility = 'on_payment' AND t.cash_basis_transition_account_id IS NOT NULL)
+                    OR sign(aml.balance) = sign(lt.balance * t.amount * lt.factor_percent)
+                ) AND (
+                    COALESCE(rep_account_id, aml.account_id) = lt.account_id
+                    OR (t.tax_exigibility = 'on_payment' AND t.cash_basis_transition_account_id IS NOT NULL)
+                ) AND (
+                    (t.analytic IS NOT TRUE AND use_in_tax_closing IS TRUE)
+                    OR (aml.analytic_distribution IS NULL AND lt.analytic_distribution IS NULL)
+                    OR aml.analytic_distribution = lt.analytic_distribution
+                )
+            ),
+            aggregated AS (
+                SELECT
+                    *,
+                    SUM(base_value) OVER (
+                        PARTITION BY tax_line_id, tax_id
+                        ORDER BY sequence, base_line_id
+                    ) AS base_cumul,
+                    SUM(base_value) OVER (PARTITION BY tax_line_id, tax_id) AS base
+                FROM tax_data
+            )
+            SELECT
+                move_id,
+                tax_line_id,
+                base_line_id,
+                ROUND(tax_amount * base_cumul / NULLIF(base, 0), 2)
+                - LAG(ROUND(tax_amount * base_cumul / NULLIF(base, 0), 2), 1, 0.0)
+                    OVER (PARTITION BY tax_line_id, tax_id ORDER BY tax_line_id, base_line_id)
+                    AS tax_amount
+            FROM aggregated
+            ORDER BY tax_line_id, base_line_id;
+            ''',
+            table_references=table_references,
+            search_condition=search_condition,
+        )
 
     @api.model
     def _get_query_tax_details(self, table_references, search_condition, fallback=True) -> SQL:
