@@ -60,7 +60,7 @@ class TestStockEwaybill(L10nInTestInvoicingCommon):
             'docType': 'CHL',
             'transactionType': 1,
             'transDistance': '0',
-            'docNo': 'compa/OUT/00001',
+            'docNo': delivery_picking.name,
             'docDate': '26/04/2024',
             'fromGstin': '24AAGCC7144L6ZE',
             'toGstin': '27DJMPM8965E1ZE',
@@ -118,7 +118,7 @@ class TestStockEwaybill(L10nInTestInvoicingCommon):
           'docType': 'CHL',
           'transactionType': 1,
           'transDistance': '0',
-          'docNo': 'compa/OUT/00002',
+          'docNo': delivery_picking.name,
           'docDate': '26/04/2024',
           'fromGstin': '24AAGCC7144L6ZE',
           'toGstin': '27DJMPM8965E1ZE',
@@ -157,5 +157,80 @@ class TestStockEwaybill(L10nInTestInvoicingCommon):
           'cessNonAdvolValue': 0.0,
           'otherValue': 0.0,
           'totInvValue': 2625.0
+        }
+        self.assertDictEqual(ewaybill._ewaybill_generate_direct_json(), expected_json)
+
+    @freeze_time('2024-04-26')
+    def test_ewaybill_stock_price_include(self):
+        """
+        Test E-Way Bill from delivery challan with tax-included prices.
+        Flow: Sale Order (tax-included) → Delivery → E-Way Bill
+        The ewaybill_price_unit should be the original tax-included price
+        and compute_all should correctly extract the tax.
+        """
+        L10n_in_sale_stock = self.env['ir.module.module'].sudo().search([('name', '=', 'l10n_in_sale_stock')])
+        if not L10n_in_sale_stock or L10n_in_sale_stock.state != 'installed':
+            self.skipTest("l10n_in_sale_stock is not installed")
+        igst_sale_18 = self.env['account.chart.template'].ref('igst_sale_18')
+        tax_included_igst_18 = igst_sale_18.copy({'price_include_override': 'tax_included'})
+        sale_order = self.env['sale.order'].sudo().create({  # noqa: OLS03001
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 5,
+                'price_unit': 300,
+                'tax_ids': [Command.set(tax_included_igst_18.ids)],
+            })],
+        })
+        sale_order.action_confirm()
+        delivery_picking = sale_order.picking_ids
+        delivery_picking.move_ids.quantity = 5
+        delivery_picking.button_validate()
+        ewaybill = self.env['l10n.in.ewaybill'].create({
+            'picking_id': delivery_picking.id,
+            'mode': False,
+            'type_id': self.env.ref('l10n_in_ewaybill_stock.type_delivery_challan_sub_line_sales').id,
+        })
+        expected_json = {
+            'supplyType': 'O',
+            'subSupplyType': '10',
+            'docType': 'CHL',
+            'transactionType': 1,
+            'transDistance': '0',
+            'docNo': delivery_picking.name,
+            'docDate': '26/04/2024',
+            'fromGstin': '24AAGCC7144L6ZE',
+            'toGstin': '27DJMPM8965E1ZE',
+            'fromTrdName': 'Default Company',
+            'toTrdName': 'Partner Intra State',
+            'fromStateCode': 24,
+            'toStateCode': 27,
+            'fromAddr1': 'Khodiyar Chowk',
+            'toAddr1': 'Karansinhji Rd',
+            'fromAddr2': 'Sala Number 3',
+            'toAddr2': 'Karanpara',
+            'fromPlace': 'Amreli',
+            'toPlace': 'Rajkot',
+            'fromPincode': 365220,
+            'toPincode': 431122,
+            'actToStateCode': 27,
+            'actFromStateCode': 24,
+            'itemList': [{
+                'productName': 'product_a',
+                'hsnCode': '111111',
+                'productDesc': '',
+                'quantity': 5.0,
+                'qtyUnit': 'UNT',
+                'taxableAmount': 1271.19,
+                'igstRate': 18.0,
+            }],
+            'totalValue': 1271.19,
+            'cgstValue': 0.0,
+            'sgstValue': 0.0,
+            'igstValue': 228.81,
+            'cessValue': 0.0,
+            'cessNonAdvolValue': 0.0,
+            'otherValue': 0.0,
+            'totInvValue': 1500.0,
         }
         self.assertDictEqual(ewaybill._ewaybill_generate_direct_json(), expected_json)

@@ -11,8 +11,12 @@ class StockMove(models.Model):
         if line_id := self.sale_line_id:
             if qty := line_id.product_uom_qty:
                 company_id = line_id.company_id
+                price = (
+                    line_id.price_total if any(tax.price_include for tax in line_id.tax_ids.flatten_taxes_hierarchy())
+                    else line_id.price_subtotal
+                )
                 return line_id.currency_id._convert(
-                    line_id.product_uom_id._compute_price(line_id.price_subtotal / qty, self.uom_id),
+                    line_id.product_uom_id._compute_price(price / qty, self.uom_id),
                     company_id.currency_id,
                     company_id,
                     self.date,
