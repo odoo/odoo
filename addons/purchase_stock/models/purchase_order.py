@@ -288,7 +288,7 @@ class PurchaseOrder(models.Model):
     def _get_domain_is_late(self, operator, value):
         domain = super()._get_domain_is_late(operator, value)
         if operator == "=" and value or operator == "!=" and not value:
-            domain &= Domain.OR([Domain('picking_ids', '=', False), Domain('picking_ids.state', '!=', 'done')])
+            domain &= Domain.OR([Domain('picking_ids', '=', False), Domain('picking_ids.state', 'not in', ['done', 'cancel'])])
         return domain
 
     def _get_action_view_picking(self, pickings):
