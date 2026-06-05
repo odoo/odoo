@@ -6,7 +6,6 @@ import {
     many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { roundDecimals } from "@web/core/utils/numbers";
-import { onWillUpdateProps } from "@odoo/owl";
 
 export function getProductRelatedModel() {
     const field = this.props.record.fields[this.props.productField];
@@ -26,33 +25,39 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
         productQuantity: { type: Number, optional: true },
     };
 
-    async setup() {
-        super.setup();
-        onWillUpdateProps(async (nextProps) => {
-            if (nextProps.productModel !== this.props.productModel ||
-                nextProps.productId !== this.props.productId
-            ) {
-                await this.updateReferenceUnit(nextProps);
-            }
-        });
-        await this.updateReferenceUnit();
-    }
-
-    async updateReferenceUnit(props = this.props) {
-        if (props.productModel && props.productId) {
-            const context = { "active_test" : false };
-            const product = await this.orm.searchRead(props.productModel, [["id", "=", props.productId]], ["uom_id"], { context });
-            this.referenceUnit = (await this.orm.searchRead("uom.uom", [["id", "=", product[0].uom_id[0]]], ["name", "factor", "parent_path"]))[0];
-            this.roundingDigits = await this.orm.call("decimal.precision", "precision_get", ["Product Unit"]);
-        }
-    }
-
     async search(name) {
-        let records = await this.orm.searchRead(
+        let roundingDigitsPromise = null;
+        let referenceUnitPromise = null;
+        let records;
+
+        const recordsPromise = this.orm.searchRead(
             this.props.resModel,
             [...this.props.getDomain(), ["name", "ilike", name]],
             ["id", "display_name", "relative_factor", "factor", "relative_uom_id", "parent_path"],
-        );
+        ).then((res) => records = res);
+
+        if (
+            this.props.productModel &&
+            this.props.productId &&
+            (
+                this.props.productModel !== this.currentProductModel ||
+                this.props.productId !== this.currentProductId
+            )
+        ) {
+            this.currentProductModel = this.props.productModel;
+            this.currentProductId = this.props.productId;
+            roundingDigitsPromise = this.orm.cache({ type: "disk" })
+                .call("decimal.precision", "precision_get", ["Product Unit"])
+                .then((res) => this.roundingDigits = res);
+            referenceUnitPromise = this.orm.read(
+                this.props.productModel, [this.props.productId], ["uom_id"], { context: { "active_test": false } }
+            ).then((product) =>
+                this.orm.cache({ type: "disk" }).read("uom.uom", [product[0].uom_id[0]], ["name", "factor", "parent_path"])
+            ).then((res) => this.referenceUnit = res[0]);
+        }
+
+        await Promise.all([recordsPromise, roundingDigitsPromise, referenceUnitPromise]);
+
         const hasCommonReference = (uom1, uom2) => {
             const uom1Path = uom1.parent_path.split("/");
             const uom2Path = uom2.parent_path.split("/");
