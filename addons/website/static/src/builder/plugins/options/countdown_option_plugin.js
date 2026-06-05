@@ -197,18 +197,23 @@ export class SelectCountdownInlineTemplateAction extends BuilderAction {
 
 class SetCountdownTitlePositionAction extends ClassAction {
     static id = "setCountdownTitlePosition";
-    apply({ editingElement, params: { mainParam: className } }) {
+
+    apply({ editingElement }) {
         super.apply(...arguments);
         // Compatibility for old snippets (without a title element).
-        if (className && !editingElement.querySelector(".s_countdown_title")) {
-            const containerEl = editingElement.querySelector(
-                ".s_countdown_canvas_wrapper"
-            ).parentElement;
-            containerEl.insertAdjacentElement(
-                "afterbegin",
-                renderToElement("website.s_countdown.title")
-            );
+        if (!editingElement.querySelector(".s_countdown_title")) {
+            const wrapperEl = editingElement.querySelector(".s_countdown_canvas_wrapper");
+            const titleEl = renderToElement("website.s_countdown.title");
+            wrapperEl.insertAdjacentElement("beforebegin", titleEl);
         }
+    }
+
+    isApplied({ editingElement }) {
+        // Compatibility for old snippets: no title is considered as hidden.
+        if (!editingElement.querySelector(".s_countdown_title")) {
+            return "s_countdown_title_hidden";
+        }
+        return super.isApplied(...arguments);
     }
 }
 
