@@ -4,6 +4,7 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { localization } from "@web/core/l10n/localization";
 import { Pager } from "@web/core/pager/pager";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
@@ -292,6 +293,11 @@ export class ListRenderer extends Component {
         useListener(window, "keydown", (ev) => {
             this.state.altKeyMode = ev.altKey;
             this.shiftKeyMode = ev.shiftKey;
+        });
+        useHotkey("escape", () => {
+            if (this.props.list.selection.length > 0) {
+                this.props.list.unselectAll();
+            }
         });
         useListener(window, "keyup", (ev) => {
             this.state.altKeyMode = ev.altKey;
@@ -737,6 +743,11 @@ export class ListRenderer extends Component {
         } else {
             return nbDisplayedRecords > 0 && list.selection.length === nbDisplayedRecords;
         }
+    }
+
+    get someSelected() {
+        const list = this.props.list;
+        return list.selection.length > 0 && list.selection.length < list.records.length;
     }
 
     computeAggregates() {

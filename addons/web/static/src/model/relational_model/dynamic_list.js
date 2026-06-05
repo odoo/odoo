@@ -292,7 +292,7 @@ export class DynamicList extends DataPoint {
                         extras: getScheduleORMExtras(this.model, records),
                     }
                 );
-                this._unSelectAll();
+                this._unselectAll();
                 return true;
             }
             throw e;
@@ -501,7 +501,7 @@ export class DynamicList extends DataPoint {
                         extras: getScheduleORMExtras(this.model, records),
                     }
                 );
-                this._unSelectAll();
+                this._unselectAll();
                 return true;
             }
             throw e;
@@ -543,9 +543,13 @@ export class DynamicList extends DataPoint {
         }
     }
 
-    _unSelectAll() {
+    unselectAll() {
+        return this.model.mutex.exec(() => this._unselectAll());
+    }
+
+    _unselectAll() {
         this.selection.forEach((record) => {
-            record.toggleSelection(false);
+            record._toggleSelection(false);
         });
         this._selectDomain(false);
     }
