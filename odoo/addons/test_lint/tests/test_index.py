@@ -128,6 +128,40 @@ class TestIndexMeta(TransactionCase):
 
 
 @tagged('post_install', '-at_install')
+class TestTableObjects(TransactionCase):
+
+    def test_declared_table_objects_are_installed(self):
+        """Every declared table object (UNIQUE/CHECK/FK constraint, index) must
+        actually be installed in the database with its declared definition.
+
+        A mismatch means the declaration is not enforced: the object failed to
+        install (e.g. pre-existing duplicates blocked a UNIQUE constraint) or was
+        dropped/altered out of band. Such cases silently break the guarantee the
+        model relies on, so surface them here instead of at runtime.
+        """
+        mismatches = []
+        for model_name, model_class in self.registry.items():
+            # only models whose table objects are applied (see _add_sql_constraints)
+            if model_class._abstract or not model_class._auto:
+                continue
+            model = self.env[model_name]
+            for obj in model_class._table_objects.values():
+                try:
+                    matches = obj.matches_database(model)
+                    if not matches:
+                        mismatches.append(f"{model_name}: {obj.full_name(model)} ({obj.get_definition(model.pool)})")
+                except Exception as exc:  # noqa: BLE001 - report, don't abort the sweep
+                    mismatches.append(f"{model_name}: {obj.full_name(model)} -> {exc!r}")
+
+        if mismatches:
+            self.fail(
+                "The following declared table objects are not enforced in the "
+                "database (failed to install, dropped, or altered):\n"
+                + "\n".join(f"  - {m}" for m in sorted(mismatches))
+            )
+
+
+@tagged('post_install', '-at_install')
 class TestIndex(TransactionCase):
 
     @functools.cached_property
