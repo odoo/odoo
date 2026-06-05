@@ -12,6 +12,7 @@ from . import (
     test_domain,
     test_fields,
     test_html_converter,
+    test_index_method,
     test_indexed_translation,
     test_inherits,
     test_ir_rules,
