@@ -9,6 +9,7 @@ import email.policy
 import encodings
 import hashlib
 import hmac
+from itertools import chain
 import json
 import lxml
 import logging
@@ -2077,6 +2078,8 @@ class MailThread(models.AbstractModel):
         alias_emails = self.env['mail.alias.domain'].sudo()._find_aliases(emails_key_all) if avoid_alias else []
         ban_emails = (ban_emails or []) + alias_emails
 
+        emails_set = set(chain.from_iterable(records_emails.values()))
+
         # inspired notably from odoo/odoo@80a0b45df806ffecfb068b5ef05ae1931d655810; final
         # ordering is search order defined in '_find_or_create_from_emails', which is id ASC
         def sort_key(p):
@@ -2088,6 +2091,7 @@ class MailThread(models.AbstractModel):
                 p.company_id.id == emails_key_company_id.get(
                     p.email_normalized, False
                 ),                                                  # then partner associated w/ record's company
+                p.email_formatted in emails_set,                    # prioritize exact mail match
                 not p.company_id,                                   # then company-agnostic to avoid issues
             )
 
