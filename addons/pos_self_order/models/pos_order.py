@@ -45,7 +45,7 @@ class PosOrder(models.Model):
     ])
 
     def write(self, vals):
-        if 'table_id' in vals and self.self_ordering_table_id:
+        if 'table_id' in vals and vals['table_id'] and self.self_ordering_table_id:
             # Clear stale self-order table link when the order is transferred to a new table.
             vals['self_ordering_table_id'] = vals['table_id']
         return super().write(vals)
