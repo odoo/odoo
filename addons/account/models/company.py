@@ -159,14 +159,6 @@ class ResCompany(models.Model):
         comodel_name='ir.sequence',
         readonly=True,
         copy=False,
-        default=lambda self: self.env['ir.sequence'].sudo().create({
-            'name': _("Batch Payment Number Sequence"),
-            'implementation': 'no_gap',
-            'padding': 5,
-            'use_date_range': True,
-            'company_id': self.id,
-            'prefix': 'BATCH/%(year)s/',
-        }),
     )
 
     #Fields of the setup step for opening move
@@ -422,6 +414,16 @@ class ResCompany(models.Model):
                         install_demo=False,
                     )
                 self.env.cr.precommit.add(try_loading)
+            if not company.batch_payment_sequence_id:
+                sequence = self.env['ir.sequence'].sudo().create({
+                    'name': _("Batch Payment Number Sequence"),
+                    'implementation': 'no_gap',
+                    'padding': 5,
+                    'use_date_range': True,
+                    'company_id': company.id,
+                    'prefix': 'BATCH/%(range_year)s/',
+                })
+                company.batch_payment_sequence_id = sequence
         return companies
 
     def get_new_account_code(self, current_code, old_prefix, new_prefix):
