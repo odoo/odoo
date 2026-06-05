@@ -501,12 +501,16 @@ class ProductProduct(models.Model):
                     if move.is_out or move.is_dropship:
                         out_qty = move._get_valued_qty()
                         out_value = out_qty * average_cost
+                        if move.is_dropship:
+                            out_value = in_value
                         if lot:
                             lot_qty = move._get_valued_qty(lot)
                             out_value = (out_value * lot_qty / out_qty) if out_qty else 0
                             out_qty = lot_qty
                         value -= out_value
                         quantity -= out_qty
+                        if move.is_dropship:
+                            average_cost = value / quantity if quantity else average_cost
 
                 self.env['stock.move'].invalidate_model()  # Avoid keeping too many records in cache
                 self.env['stock.move.line'].invalidate_model()
