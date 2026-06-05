@@ -14,7 +14,10 @@ test("Can't drop some snippets in the s_table_of_content snippet", async () => {
     const { moveTo, drop } = await contains(
         ".o-snippets-menu #snippet_groups .o_snippet_thumbnail"
     ).drag();
-    await moveTo(":iframe .s_table_of_content .oe_drop_zone");
+    await moveTo(":iframe .s_table_of_content .oe_drop_zone:nth-child(3)");
+    expect(":iframe .s_table_of_content .oe_drop_zone:nth-child(3)").toHaveClass(
+        "o_dropzone_highlighted"
+    );
     await drop(getDragHelper());
     await waitForSnippetDialog();
     const snippetsToTest = ["s_popup", "s_tabs", "s_table_of_content", "s_faq_horizontal"];
