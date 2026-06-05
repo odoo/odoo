@@ -500,6 +500,17 @@ class AccountAnalyticLine(models.Model):
         uom_day = self.env.ref('uom.product_uom_day')
         return round(uom_hour._compute_quantity(time, uom_day, raise_if_failure=False), 2)
 
+    @api.model
+    def _format_portal_hours(self, hours):
+        sign = "-" if hours < 0 else ""
+        display_hours, minutes = divmod(round(abs(hours) * 60), 60)
+        kwargs = {"sign": sign, "hours": display_hours, "minutes": minutes}
+        if display_hours and minutes:
+            return self.env._("%(sign)s%(hours)sh %(minutes)sm", **kwargs)
+        if display_hours:
+            return self.env._("%(sign)s%(hours)sh", **kwargs)
+        return self.env._("%(sign)s%(minutes)sm", **kwargs)
+
     def _get_timesheet_time_day(self):
         return self._convert_hours_to_days(self.unit_amount)
 
