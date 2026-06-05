@@ -1,11 +1,10 @@
-import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { AccordionItem } from "@web/core/dropdown/accordion_item";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
@@ -14,10 +13,11 @@ export class CustomFavoriteItem extends Component {
     static components = { CheckBox, AccordionItem };
     static props = {};
 
+    descriptionRef = signal(null);
+
     setup() {
         this.actionService = useService("action");
         this.notificationService = useService("notification");
-        this.descriptionRef = useRef("description");
         this.state = proxy({
             description: this.env.config.getDisplayName(),
             isDefault: false,
@@ -33,7 +33,7 @@ export class CustomFavoriteItem extends Component {
                 type: "danger",
             });
             ev.stopPropagation();
-            this.descriptionRef.el.focus();
+            this.descriptionRef()?.focus();
             return false;
         }
         const { description, isDefault } = this.state;

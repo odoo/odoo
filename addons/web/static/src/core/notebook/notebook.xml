@@ -14,7 +14,7 @@
                 </ul>
             </div>
             <div class="o_notebook_content tab-content">
-                <div class="tab-pane active fade" t-custom-ref="activePane">
+                <div class="tab-pane active fade" t-ref="this.activePaneRef">
                     <t t-if="this.page" t-component="this.page.Component" t-key="this.state.currentPage" t-props="this.page.props" />
                     <t t-else="" t-call-slot="{{ this.state.currentPage }}" />
                 </div>

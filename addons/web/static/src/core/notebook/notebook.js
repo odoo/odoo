@@ -1,5 +1,5 @@
-import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
+import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
+import { Component, onWillUpdateProps, proxy, signal } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 /**
@@ -71,8 +71,9 @@ export class Notebook extends Component {
         onWillActivatePage: { type: Function, optional: true },
     };
 
+    activePaneRef = signal(null);
+
     setup() {
-        this.activePane = useRef("activePane");
         this.pages = this.computePages(this.props);
         this.invalidPages = new Set();
         this.state = proxy({ currentPage: null });
@@ -81,7 +82,7 @@ export class Notebook extends Component {
         useLayoutEffect(
             () => {
                 this.props.onPageUpdate(this.state.currentPage);
-                this.activePane.el?.classList.add("show");
+                this.activePaneRef()?.classList.add("show");
             },
             () => [this.state.currentPage]
         );
@@ -110,7 +111,7 @@ export class Notebook extends Component {
             const prom = (async () => this.props.onWillActivatePage(pageIndex))();
             const canProceed = await this.keepLastPageTransition.add(prom);
             if (canProceed !== false) {
-                this.activePane.el?.classList.remove("show");
+                this.activePaneRef()?.classList.remove("show");
                 this.state.currentPage = pageIndex;
             }
         }

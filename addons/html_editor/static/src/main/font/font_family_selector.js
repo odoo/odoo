@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
@@ -7,7 +7,6 @@ import {
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
 import { useChildRef } from "@web/core/utils/hooks";
-import { useRef } from "@web/owl2/utils";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 export class FontFamilySelector extends Component {
@@ -22,11 +21,12 @@ export class FontFamilySelector extends Component {
     };
     static components = { Dropdown, DropdownItem };
 
+    fontFamilySelectorRef = signal(null);
+
     setup() {
         this.menuRef = useChildRef();
-        this.fontFamilySelector = useRef("fontFamilySelector");
         this.dropdown = useDropdownState();
-        useToolbarDropdownFocus(this.dropdown, this.fontFamilySelector);
+        useToolbarDropdownFocus(this.dropdown, this.fontFamilySelectorRef);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
     }
 

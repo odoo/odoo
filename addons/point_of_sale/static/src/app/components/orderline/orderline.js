@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { useTimedPress } from "@point_of_sale/app/utils/use_timed_press";
 import { formatCurrency } from "@web/core/currency";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -27,10 +26,11 @@ export class Orderline extends Component {
         onLongPress: () => {},
     };
 
+    rootRef = signal(null);
+
     setup() {
-        this.root = useRef("root");
         if (this.props.mode === "display") {
-            useTimedPress(this.root, [
+            useTimedPress(this.rootRef, [
                 {
                     type: "release",
                     maxDelay: 500,

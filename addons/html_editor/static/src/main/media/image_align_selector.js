@@ -3,10 +3,9 @@ import {
     useDropdownAutoVisibility,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useRef } from "@web/owl2/utils";
 import { useChildRef } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
@@ -21,12 +20,13 @@ export class ImageAlignSelector extends Component {
         ...toolbarButtonProps,
     };
 
+    imageAlignSelectorRef = signal(null);
+
     setup() {
         this.state = proxy(this.props.getDisplay());
         this.menuRef = useChildRef();
-        this.imageAlignSelector = useRef("imageAlignSelector");
         this.dropdown = useDropdownState();
-        useToolbarDropdownFocus(this.dropdown, this.imageAlignSelector);
+        useToolbarDropdownFocus(this.dropdown, this.imageAlignSelectorRef);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
     }
 

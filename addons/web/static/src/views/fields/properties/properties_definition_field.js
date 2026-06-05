@@ -58,7 +58,7 @@ export class PropertiesDefinitionField extends PropertiesField {
     }
 
     _getClosestField() {
-        return this.propertiesRef.el.closest(".o_field_properties_definition");
+        return this.propertiesRef()?.closest(".o_field_properties_definition");
     }
 
     _getDisplayData() {

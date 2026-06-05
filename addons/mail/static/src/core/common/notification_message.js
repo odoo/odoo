@@ -7,9 +7,10 @@ export class NotificationMessage extends Component {
     static template = "mail.NotificationMessage";
     static props = ["message", "messageRefs?", "thread"];
 
+    rootRef = signal(null);
+
     setup() {
         super.setup();
-        this.rootRef = signal();
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
         this.htmlEscape = htmlEscape;
         this.store = useService("mail.store");

@@ -3,7 +3,7 @@
 
     <t t-name="web.GaugeField">
         <div class="oe_gauge position-relative">
-            <canvas t-custom-ref="canvas"/>
+            <canvas t-ref="this.canvasRef"/>
             <span class="o_gauge_value position-absolute start-0 end-0 bottom-0 text-center" t-out="this.props.record.data[this.props.name]"/>
         </div>
     </t>

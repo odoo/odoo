@@ -1,8 +1,8 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { uuid } from "@web/core/utils/strings";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
 export class PropertyDefinitionSelection extends Component {
@@ -16,6 +16,9 @@ export class PropertyDefinitionSelection extends Component {
         onDefaultOptionChange: { type: Function, optional: true }, // we select a default value
     };
 
+    propertyDefinitionSelectionRef = signal(null);
+    addButtonRef = signal(null);
+
     setup() {
         this.notification = useService("notification");
 
@@ -26,17 +29,16 @@ export class PropertyDefinitionSelection extends Component {
             newOption: null,
         });
 
-        this.propertyDefinitionSelectionRef = useRef("propertyDefinitionSelection");
-        this.addButtonRef = useRef("addButton");
-
         useLayoutEffect(() => {
             // automatically give the focus to the new option if it is empty
             if (!this.state.newOption) {
                 return;
             }
-            const inputs = this.propertyDefinitionSelectionRef.el.querySelectorAll(
-                ".o_field_property_selection_option input"
-            );
+            const rootEl = this.propertyDefinitionSelectionRef();
+            if (!rootEl) {
+                return;
+            }
+            const inputs = rootEl.querySelectorAll(".o_field_property_selection_option input");
             if (inputs && inputs.length && !inputs[this.state.newOption.index].value) {
                 inputs[this.state.newOption.index].focus();
             }
@@ -45,6 +47,7 @@ export class PropertyDefinitionSelection extends Component {
         useSortable({
             enable: () => this.props.canChangeDefinition && !this.props.readonly,
             ref: this.propertyDefinitionSelectionRef,
+            // ^ Owl 3 native signal ref, accepted by the signal-aware hook
             handle: ".o_field_property_selection_drag",
             elements: ".o_field_property_selection_option",
             cursor: "grabbing",
@@ -154,7 +157,7 @@ export class PropertyDefinitionSelection extends Component {
             return;
         }
 
-        if (event.relatedTarget === this.addButtonRef.el) {
+        if (event.relatedTarget === this.addButtonRef()) {
             // lost the focus because we click on the add button
             // if the value is empty, just ignore and cancel the event
             event.stopPropagation();
@@ -255,11 +258,8 @@ export class PropertyDefinitionSelection extends Component {
         }
 
         const activeEl = document.activeElement;
-        if (
-            activeEl &&
-            this.propertyDefinitionSelectionRef.el.contains(activeEl) &&
-            activeEl.tagName === "INPUT"
-        ) {
+        const rootEl = this.propertyDefinitionSelectionRef();
+        if (activeEl && rootEl && rootEl.contains(activeEl) && activeEl.tagName === "INPUT") {
             const optionName = activeEl
                 .closest(".o_field_property_selection_option")
                 .getAttribute("option-name");

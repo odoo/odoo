@@ -305,7 +305,8 @@ export function useOwnedDialogs() {
  * components. If your hook only needs a single event listener, consider simply
  * returning it from the hook and letting the user attach it with t-on.
  *
- * @param {Ref} ref
+ * @param {Ref | (() => HTMLElement | null)} ref a legacy `.el` ref or an Owl 3
+ *  signal ref
  * @param {Parameters<typeof EventTarget.prototype.addEventListener>} listener
  */
 export function useRefListener(ref, ...listener) {
@@ -314,7 +315,7 @@ export function useRefListener(ref, ...listener) {
             el?.addEventListener(...listener);
             return () => el?.removeEventListener(...listener);
         },
-        () => [ref.el]
+        () => [resolveRefEl(ref)]
     );
 }
 

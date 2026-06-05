@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useAutoresize } from "@web/core/utils/autoresize";
 
@@ -12,8 +11,9 @@ export class CustomFieldCard extends Component {
         readonly: { type: Boolean, optional: true },
     };
 
+    customFormFieldTextAreaRef = signal(null);
+
     setup() {
-        this.customFormFieldTextAreaRef = useRef('customFieldCardTextArea');
         this.placeholder = _t("Click to write content for the PDF quote...");
         useAutoresize(this.customFormFieldTextAreaRef);
     }

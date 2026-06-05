@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -9,6 +9,7 @@ import { useCommand } from "@web/core/commands/command_hook";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useSortable } from "@web/core/utils/sortable_owl";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { user } from "@web/core/user";
 import { AccordionItem } from "@web/core/dropdown/accordion_item";
 import { CheckBox } from "@web/core/checkbox/checkbox";
@@ -17,7 +18,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { Transition } from "@web/core/transition";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, proxy, signal } from "@odoo/owl";
 
 const STICKY_CLASS = "o_mobile_sticky";
 
@@ -109,6 +110,9 @@ export class ControlPanel extends Component {
         },
     };
 
+    rootRef = signal(null);
+    newActionNameRef = signal(null);
+
     setup() {
         this.actionService = useService("action");
         this.offlineService = useService("offline");
@@ -120,8 +124,6 @@ export class ControlPanel extends Component {
         this.orm = useService("orm");
         this.dialogService = useService("dialog");
 
-        this.root = useRef("root");
-        this.newActionNameRef = useRef("newActionNameRef");
         this.defaultEmbeddedActions = this.env.config.embeddedActions;
         if (this.env.config.embeddedActions?.length > 0 && !this.env.config.parentActionId) {
             const { parent_res_model, parent_action_id } = this.env.config.embeddedActions[0];
@@ -188,7 +190,8 @@ export class ControlPanel extends Component {
                 },
                 {
                     bypassEditableProtection: true,
-                    withOverlay: () => this.root.el.querySelector("nav.o_cp_switch_buttons"),
+                    withOverlay: () =>
+                        resolveRefEl(this.rootRef)?.querySelector("nav.o_cp_switch_buttons"),
                 }
             );
         }
@@ -203,7 +206,10 @@ export class ControlPanel extends Component {
             const scrollingEl = this.getScrollingElement();
             this.scrollingElementResizeObserver.observe(scrollingEl);
             scrollingEl.addEventListener("scroll", this.onScrollThrottledBound);
-            this.root.el.style.top = "0px";
+            const rootEl = resolveRefEl(this.rootRef);
+            if (rootEl) {
+                rootEl.style.top = "0px";
+            }
             this.scrollingElementHeight = scrollingEl.scrollHeight;
             return () => {
                 this.scrollingElementResizeObserver.unobserve(scrollingEl);
@@ -220,12 +226,12 @@ export class ControlPanel extends Component {
                         showEmbedded &&
                         this.state.embeddedInfos.visibleEmbeddedActions.length === 1
                     ) {
-                        el.querySelector(".btn[name='openEmbeddedActions']")?.click();
+                        el?.querySelector(".btn[name='openEmbeddedActions']")?.click();
                     }
                 }, 100);
                 return () => clearTimeout(timer);
             },
-            () => [this.root.el, this.state.embeddedInfos.showEmbedded]
+            () => [resolveRefEl(this.rootRef), this.state.embeddedInfos.showEmbedded]
         );
 
         onMounted(() => {
@@ -251,7 +257,7 @@ export class ControlPanel extends Component {
 
         useSortable({
             enable: true,
-            ref: this.root,
+            ref: this.rootRef,
             elements: ".o_draggable",
             cursor: "move",
             delay: 200,
@@ -279,7 +285,7 @@ export class ControlPanel extends Component {
     }
 
     getScrollingElement() {
-        return this.root.el.parentElement;
+        return resolveRefEl(this.rootRef)?.parentElement;
     }
 
     /**
@@ -382,26 +388,27 @@ export class ControlPanel extends Component {
         this.isScrolling = true;
         browser.requestAnimationFrame(() => (this.isScrolling = false));
 
+        const rootEl = resolveRefEl(this.rootRef);
+        if (!rootEl) {
+            return;
+        }
         const scrollTop = this.getScrollingElement().scrollTop;
         const delta = Math.round(scrollTop - this.oldScrollTop);
 
         if (scrollTop > this.initialScrollTop) {
             // Beneath initial position => sticky display
-            this.root.el.classList.add(STICKY_CLASS);
+            rootEl.classList.add(STICKY_CLASS);
             if (delta <= 0) {
                 // Going up | not moving
                 this.lastScrollTop = Math.min(0, this.lastScrollTop - delta);
             } else {
                 // Going down
-                this.lastScrollTop = Math.max(
-                    -this.root.el.offsetHeight,
-                    -this.root.el.offsetTop - delta
-                );
+                this.lastScrollTop = Math.max(-rootEl.offsetHeight, -rootEl.offsetTop - delta);
             }
-            this.root.el.style.top = `${this.lastScrollTop}px`;
+            rootEl.style.top = `${this.lastScrollTop}px`;
         } else {
             // Above initial position => standard display
-            this.root.el.classList.remove(STICKY_CLASS);
+            rootEl.classList.remove(STICKY_CLASS);
             this.lastScrollTop = 0;
         }
 
@@ -496,7 +503,7 @@ export class ControlPanel extends Component {
                 type: "danger",
             });
             ev.stopPropagation();
-            return this.newActionNameRef.el.focus();
+            return resolveRefEl(this.newActionNameRef)?.focus();
         }
         const duplicateName = embeddedActions.some(({ name }) => name === newActionName);
         if (duplicateName) {
@@ -504,7 +511,7 @@ export class ControlPanel extends Component {
                 type: "danger",
             });
             ev.stopPropagation();
-            return this.newActionNameRef.el.focus();
+            return resolveRefEl(this.newActionNameRef)?.focus();
         }
         const userId = newActionIsShared ? false : user.userId;
 

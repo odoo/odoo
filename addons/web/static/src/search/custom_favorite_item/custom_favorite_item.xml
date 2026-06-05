@@ -6,7 +6,7 @@
             <div class="px-3 py-1">
                 <input type="text"
                     class="o_input my-1"
-                    t-custom-ref="description"
+                    t-ref="this.descriptionRef"
                     t-custom-model.trim="this.state.description"
                     t-on-keydown="this.onInputKeydown"
                     />

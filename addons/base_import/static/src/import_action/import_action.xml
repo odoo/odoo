@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="ImportAction">
-        <div t-custom-ref="root" class="h-100 d-flex flex-column">
+        <div t-ref="this.rootRef" class="h-100 d-flex flex-column">
             <Layout className="'o_import_action d-flex h-100 overflow-auto'" display="this.display">
                 <t t-set-slot="control-panel-buttons">
                     <t t-if="this.isPreviewing">

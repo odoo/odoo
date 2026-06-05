@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { resolveRefEl } from "@web/core/utils/ref_utils";
 import { Component, proxy } from "@odoo/owl";
 
 export class Dropzone extends Component {
@@ -17,7 +18,7 @@ export class Dropzone extends Component {
             isDraggingInside: false,
         });
         useLayoutEffect(() => {
-            const { top, left, width, height } = this.props.ref.el.getBoundingClientRect();
+            const { top, left, width, height } = resolveRefEl(this.props.ref).getBoundingClientRect();
             this.root.el.style = `top:${top}px;left:${left}px;width:${width}px;height:${height}px;`;
         });
     }

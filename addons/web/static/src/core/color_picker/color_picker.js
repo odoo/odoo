@@ -362,7 +362,47 @@ export class ColorPicker extends Component {
     }
 }
 
-export function useColorPicker(refName, props, options = {}) {
+/**
+ * Resolves the element backing a `ref` regardless of its kind, preserving every
+ * legacy form and ADDING the Owl 3 native signal case. Null-safe: never throws.
+ * - undefined/null ref           -> undefined (mirrors the old `ref.el`)
+ * - object refs (useRef)         -> `.el`
+ * - forwarded refs (useChildRef) -> a callable that ALSO exposes an `.el` getter
+ *   once mounted. `.el` must take precedence over calling it (calling a
+ *   useChildRef with no argument would clear its value). It also takes a value
+ *   argument (arity 1), so we never call it: before it is mounted `.el` is
+ *   simply absent (undefined), exactly like the original direct `ref.el` read.
+ * - Owl 3 native signal refs     -> a zero-argument callable with no `.el`,
+ *   resolved by calling it.
+ * @param {{ el?: HTMLElement } | (() => HTMLElement) | null | undefined} ref
+ * @returns {HTMLElement | null | undefined}
+ */
+function resolveRefEl(ref) {
+    if (ref == null) {
+        return undefined;
+    }
+    // Legacy contract: object refs (useRef) and mounted forwarded refs
+    // (useChildRef) expose the element through `.el`. Matches the original
+    // direct `ref.el`.
+    if (typeof ref !== "function") {
+        return ref.el;
+    }
+    // Forwarded refs (useChildRef) are callables that accept a value
+    // (length === 1) and surface the element via an `.el` getter. Never call
+    // them; read `.el` (undefined until mounted).
+    if (ref.length > 0 || "el" in ref) {
+        return ref.el;
+    }
+    // Owl 3 native signal ref: a zero-argument getter. Call it to read the element.
+    return ref();
+}
+
+/**
+ * @param {string | { el?: HTMLElement } | (() => HTMLElement)} refOrName the
+ *   ref whose element triggers the color picker. Either a string name resolved
+ *   via `useRef` (legacy), a ref object/forwarded ref, or an Owl 3 signal ref.
+ */
+export function useColorPicker(refOrName, props, options = {}) {
     // Callback to be overridden by child components (e.g. custom color picker).
     let onCloseCallback = () => {};
     const setOnCloseCallback = (cb) => {
@@ -379,13 +419,17 @@ export function useColorPicker(refName, props, options = {}) {
     }
 
     const colorPicker = usePopover(ColorPicker, options);
-    const root = useRef(refName);
+    // Legacy string-name callers go through `useRef`; any other kind of ref
+    // (ref object, forwarded ref, or Owl 3 signal) is used directly and
+    // resolved via `resolveRefEl`. In both cases reads go through `getRootEl`.
+    const root = typeof refOrName === "string" ? useRef(refOrName) : refOrName;
+    const getRootEl = () => resolveRefEl(root);
 
     function onClick() {
         if (colorPicker.isOpen) {
             colorPicker.close();
         } else {
-            colorPicker.open(root.el, props);
+            colorPicker.open(getRootEl(), props);
             options.onOpen?.();
         }
     }
@@ -400,7 +444,7 @@ export function useColorPicker(refName, props, options = {}) {
                 el.removeEventListener("click", onClick);
             };
         },
-        () => [root.el]
+        () => [getRootEl()]
     );
 
     return colorPicker;

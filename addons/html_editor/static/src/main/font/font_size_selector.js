@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, onMounted, proxy, signal } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
@@ -32,19 +32,20 @@ export class FontSizeSelector extends Component {
     };
     static components = { Dropdown, DropdownItem };
 
+    fontSizeSelectorRef = signal(null);
+    iframeContentRef = signal(null);
+
     setup() {
         this.items = this.props.getItems();
         this.state = proxy(this.props.getDisplay());
-        this.fontSizeSelector = useRef("fontSizeSelector");
         this.dropdown = useDropdownState();
         this.menuRef = useChildRef();
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
-        this.iframeContentRef = useRef("iframeContent");
         this.debouncedCustomFontSizeInput = useDebounced(this.onCustomFontSizeInput, 200);
-        useToolbarDropdownFocus(this.dropdown, this.fontSizeSelector);
+        useToolbarDropdownFocus(this.dropdown, this.fontSizeSelectorRef);
 
         onMounted(() => {
-            const iframeEl = this.iframeContentRef.el;
+            const iframeEl = this.iframeContentRef();
 
             const initFontSizeInput = () => {
                 const iframeDoc = iframeEl.contentWindow.document;
@@ -100,11 +101,6 @@ export class FontSizeSelector extends Component {
                 this.fontSizeInput.addEventListener("click", () => {
                     if (!this.dropdown.isOpen) {
                         this.dropdown.open();
-                        requestAnimationFrame(() => {
-                            if (this.menuRef.el?.closest(".o_bottom_sheet")) {
-                                this.props.onBlur?.();
-                            }
-                        });
                     }
                 });
                 this.fontSizeInput.addEventListener("input", this.debouncedCustomFontSizeInput);
@@ -112,6 +108,14 @@ export class FontSizeSelector extends Component {
                     "keydown",
                     this.onKeyDownFontSizeInput.bind(this)
                 );
+                // On mobile, opening the bottom sheet moves the iframe in the DOM,
+                // which reloads it and recreates the input. The dropdown-open layout
+                // effect may already have run `select()` on the previous input, so
+                // re-select the freshly created input to keep it focused for keyboard
+                // navigation while the menu is open.
+                if (this.dropdown.isOpen) {
+                    this.fontSizeInput.select();
+                }
             };
             if (iframeEl.contentDocument.readyState === "complete") {
                 initFontSizeInput();
@@ -136,7 +140,7 @@ export class FontSizeSelector extends Component {
                     if (this.dropdown.isOpen) {
                         this.fontSizeInput.select();
                     } else if (
-                        this.iframeContentRef.el?.contains(this.props.document.activeElement)
+                        this.iframeContentRef()?.contains(this.props.document.activeElement)
                     ) {
                         this.fontSizeInput.blur();
                         this.props.onBlur?.();

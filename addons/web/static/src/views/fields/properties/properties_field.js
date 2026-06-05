@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -15,7 +15,7 @@ import { standardFieldProps } from "../standard_field_props";
 import { PropertyDefinition } from "./property_definition";
 import { PropertyValue } from "./property_value";
 
-import { Component, onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, proxy, signal } from "@odoo/owl";
 
 export class PropertiesField extends Component {
     static template = "web.PropertiesField";
@@ -36,6 +36,8 @@ export class PropertiesField extends Component {
         editMode: { type: Boolean, optional: true },
     };
 
+    propertiesRef = signal(null);
+
     setup() {
         this.notification = useService("notification");
         this.orm = useService("orm");
@@ -49,7 +51,6 @@ export class PropertiesField extends Component {
             arrow: false,
             setActiveElement: false, // make tag navigation work when adding a tag property
         });
-        this.propertiesRef = useRef("properties");
 
         let currentResId;
         useRecordObserver((record) => {
@@ -151,9 +152,9 @@ export class PropertiesField extends Component {
 
         useLayoutEffect(
             () => {
-                if (this.openPropertyDefinition) {
+                if (this.openPropertyDefinition && this.propertiesRef()) {
                     const propertyName = this.openPropertyDefinition;
-                    const labels = this.propertiesRef.el.querySelectorAll(
+                    const labels = this.propertiesRef().querySelectorAll(
                         `.o_property_field[property-name="${propertyName}"] .o_field_property_open_popover`
                     );
                     this.openPropertyDefinition = null;
@@ -181,7 +182,7 @@ export class PropertiesField extends Component {
             cursor: "grabbing",
             onDragStart: ({ element, group }) => {
                 this.state.isDragging = true;
-                this.propertiesRef.el.classList.add("o_property_dragging");
+                this.propertiesRef()?.classList.add("o_property_dragging");
                 element.classList.add("o_property_drag_item");
                 group.classList.add("o_property_drag_group");
                 // without this, if we edit a char property, move it,
@@ -220,9 +221,9 @@ export class PropertiesField extends Component {
             },
             onDragEnd: ({ element }) => {
                 this.state.isDragging = false;
-                this.propertiesRef.el.classList.remove("o_property_dragging");
+                this.propertiesRef()?.classList.remove("o_property_dragging");
                 element.classList.remove("o_property_drag_item");
-                const targetGroup = this.propertiesRef.el.querySelector(".o_property_drag_group");
+                const targetGroup = this.propertiesRef()?.querySelector(".o_property_drag_group");
                 if (targetGroup) {
                     targetGroup.classList.remove("o_property_drag_group");
                 }
@@ -245,7 +246,7 @@ export class PropertiesField extends Component {
             cursor: "grabbing",
             onDragStart: ({ element }) => {
                 this.state.isDragging = true;
-                this.propertiesRef.el.classList.add("o_property_dragging");
+                this.propertiesRef()?.classList.add("o_property_dragging");
                 element.classList.add("o_property_drag_item");
                 document.activeElement.blur();
             },
@@ -256,7 +257,7 @@ export class PropertiesField extends Component {
             },
             onDragEnd: ({ element }) => {
                 this.state.isDragging = false;
-                this.propertiesRef.el.classList.remove("o_property_dragging");
+                this.propertiesRef()?.classList.remove("o_property_dragging");
                 element.classList.remove("o_property_drag_item");
             },
         });
@@ -991,7 +992,7 @@ export class PropertiesField extends Component {
     }
 
     _getClosestField() {
-        return this.propertiesRef.el.closest(".o_field_properties");
+        return this.propertiesRef()?.closest(".o_field_properties");
     }
 
     _getNewPropertyDefinition(newName, count) {

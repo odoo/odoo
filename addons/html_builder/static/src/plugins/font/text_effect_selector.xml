@@ -1,7 +1,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.TextEffectSelector">
-    <button t-custom-ref="root" class="btn btn-light o-select-text-effect" t-att-title="this.props.title" t-att-class="{ active: this.state.isActive }" t-att="{ disabled: this.state.isDisabled }" t-on-click="this.onClick">
+    <button t-ref="this.rootRef" class="btn btn-light o-select-text-effect" t-att-title="this.props.title" t-att-class="{ active: this.state.isActive }" t-att="{ disabled: this.state.isDisabled }" t-on-click="this.onClick">
         <t t-call="html_builder.TextEffectSelectorSvg"/>
     </button>
 </t>

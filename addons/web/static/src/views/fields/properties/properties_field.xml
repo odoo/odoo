@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.PropertiesField">
-        <div t-custom-ref="properties" class="row" t-att-columns="this.renderedColumnsCount">
+        <div t-ref="this.propertiesRef" class="row" t-att-columns="this.renderedColumnsCount">
             <t t-set="unfoldedSeparators" t-value="this.state.unfoldedSeparators"/>
             <t t-set="_groupedPropertiesList" t-value="this.groupedPropertiesList"/>
             <t t-foreach="this.groupedPropertiesList" t-as="propertiesListGroup" t-key="propertiesListGroup_index">

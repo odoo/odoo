@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
@@ -21,13 +20,14 @@ export class AlignSelector extends Component {
     };
     static components = { Dropdown, DropdownItem };
 
+    alignSelectorRef = signal(null);
+
     setup() {
         this.items = this.props.getItems();
         this.state = proxy(this.props.getDisplay());
         this.menuRef = useChildRef();
-        this.alignSelector = useRef("alignSelector");
         this.dropdown = useDropdownState();
-        useToolbarDropdownFocus(this.dropdown, this.alignSelector);
+        useToolbarDropdownFocus(this.dropdown, this.alignSelectorRef);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
     }
 
