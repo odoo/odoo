@@ -5,21 +5,28 @@
 Users REST API
 ==============
 
-Admin-only endpoints for listing and viewing system users (res.users).
+Admin-only endpoints for listing and managing system users (res.users).
 
 Auth: all endpoints require a valid Odoo admin session (auth='none' + _require_auth + _is_admin).
 
 Endpoints
 ---------
-GET  /api/users           — Paginated list with search / filter
-GET  /api/users/<int:id>  — Single user detail
+GET    /api/users                      — Paginated list with search / filter
+GET    /api/users/<int:id>             — Single user detail
+PUT    /api/users/<int:id>             — Update name / email / mobile / user_type
+DELETE /api/users/<int:id>             — Archive user (soft-delete, active=False)
+POST   /api/users/<int:id>/reactivate  — Restore archived user (active=True)
 """
 
 import json
 import logging
+import re
 
 from odoo import http
 from odoo.http import request
+
+_EMAIL_RE  = re.compile(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
+_MOBILE_RE = re.compile(r'^[+]?[\d\s\-()×]{7,20}$')
 
 _logger    = logging.getLogger(__name__)
 _MAX_LIMIT = 100
@@ -253,3 +260,161 @@ class UsersApiController(http.Controller):
         except Exception as exc:
             _logger.exception('GET /api/users/%s failed: %s', user_id, exc)
             return self._err('Failed to load user.', status=500)
+
+    # ── PUT /api/users/<int:user_id> ──────────────────────────────────────────
+
+    @http.route(
+        '/api/users/<int:user_id>',
+        auth='none',
+        type='http',
+        methods=['PUT'],
+        csrf=False,
+    )
+    def update_user(self, user_id, **kwargs):
+        """Update editable fields for a user: name, email, mobile, user_type."""
+        uid, err = self._require_auth()
+        if err:
+            return err
+
+        current_user = request.env['res.users'].sudo().browse(uid)
+        if not self._is_admin_user(current_user):
+            return self._err('Access denied. Admin privileges required.', status=403)
+
+        try:
+            body = json.loads(request.httprequest.get_data(as_text=True) or '{}')
+        except Exception:
+            return self._err('Invalid JSON body.')
+
+        try:
+            env  = request.env
+            user = env['res.users'].sudo().with_context(active_test=False).browse(user_id)
+            if not user.exists() or user.share:
+                return self._err('User not found.', status=404)
+
+            # Super Admin can only be edited by another Super Admin
+            target_type = self._get_user_type(user)
+            is_current_super = current_user.has_group('base.group_system')
+            if target_type == 'Super Admin' and not is_current_super:
+                return self._err('Only a Super Admin can edit a Super Admin account.', status=403)
+
+            # ── Field validation ──────────────────────────────────────────────
+            name      = (body.get('name')      or '').strip()
+            email     = (body.get('email')     or '').strip()
+            mobile    = (body.get('mobile')    or '').strip()
+            user_type = (body.get('user_type') or '').strip().lower()
+
+            if not name:
+                return self._err('Name is required.')
+            if email and not _EMAIL_RE.match(email):
+                return self._err('Invalid email address format.')
+            if mobile and not _MOBILE_RE.match(mobile):
+                return self._err('Invalid mobile number format.')
+            if user_type and user_type not in ('admin', 'user'):
+                return self._err('user_type must be "admin" or "user".')
+
+            # ── Apply updates ─────────────────────────────────────────────────
+            user_vals = {'name': name}
+            if email:
+                user_vals['email'] = email
+            user.write(user_vals)
+
+            # Sync to linked employee if present
+            emp = user.employee_ids[:1] if user.employee_ids else None
+            if emp:
+                emp_vals = {}
+                if email:
+                    emp_vals['work_email'] = email
+                if mobile:
+                    emp_vals['x_mobile_no'] = mobile
+                if emp_vals:
+                    emp.write(emp_vals)
+
+            # ── User type change ──────────────────────────────────────────────
+            if user_type and target_type != 'Super Admin':
+                group_erp = env.ref('base.group_erp_manager', raise_if_not_found=False)
+                if group_erp:
+                    if user_type == 'admin':
+                        user.write({'groups_id': [(4, group_erp.id)]})
+                    elif user_type == 'user':
+                        user.write({'groups_id': [(3, group_erp.id)]})
+
+            return self._json({'success': True, 'message': 'User updated successfully.', 'user': self._format_user(user)})
+
+        except Exception as exc:
+            _logger.exception('PUT /api/users/%s failed: %s', user_id, exc)
+            return self._err('Failed to update user.', status=500)
+
+    # ── DELETE /api/users/<int:user_id> ───────────────────────────────────────
+
+    @http.route(
+        '/api/users/<int:user_id>',
+        auth='none',
+        type='http',
+        methods=['DELETE'],
+        csrf=False,
+    )
+    def delete_user(self, user_id, **kwargs):
+        """Archive (soft-delete) a user — sets active=False."""
+        uid, err = self._require_auth()
+        if err:
+            return err
+
+        current_user = request.env['res.users'].sudo().browse(uid)
+        if not self._is_admin_user(current_user):
+            return self._err('Access denied. Admin privileges required.', status=403)
+
+        # Prevent self-deletion
+        if user_id == uid:
+            return self._err('You cannot delete your own account.', status=400)
+
+        try:
+            user = request.env['res.users'].sudo().with_context(active_test=False).browse(user_id)
+            if not user.exists() or user.share:
+                return self._err('User not found.', status=404)
+
+            # Super Admin can only be deleted by another Super Admin
+            target_type = self._get_user_type(user)
+            is_current_super = current_user.has_group('base.group_system')
+            if target_type == 'Super Admin' and not is_current_super:
+                return self._err('Only a Super Admin can delete a Super Admin account.', status=403)
+
+            user.write({'active': False})
+            return self._json({'success': True, 'message': f'User "{user.name}" has been deactivated.'})
+
+        except Exception as exc:
+            _logger.exception('DELETE /api/users/%s failed: %s', user_id, exc)
+            return self._err('Failed to delete user.', status=500)
+
+    # ── POST /api/users/<int:user_id>/reactivate ──────────────────────────────
+
+    @http.route(
+        '/api/users/<int:user_id>/reactivate',
+        auth='none',
+        type='http',
+        methods=['POST'],
+        csrf=False,
+    )
+    def reactivate_user(self, user_id, **kwargs):
+        """Restore an archived user — sets active=True."""
+        uid, err = self._require_auth()
+        if err:
+            return err
+
+        current_user = request.env['res.users'].sudo().browse(uid)
+        if not self._is_admin_user(current_user):
+            return self._err('Access denied. Admin privileges required.', status=403)
+
+        try:
+            user = request.env['res.users'].sudo().with_context(active_test=False).browse(user_id)
+            if not user.exists() or user.share:
+                return self._err('User not found.', status=404)
+
+            if user.active:
+                return self._err('User is already active.', status=400)
+
+            user.write({'active': True})
+            return self._json({'success': True, 'message': f'User "{user.name}" has been reactivated.'})
+
+        except Exception as exc:
+            _logger.exception('POST /api/users/%s/reactivate failed: %s', user_id, exc)
+            return self._err('Failed to reactivate user.', status=500)
