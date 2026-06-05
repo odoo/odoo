@@ -233,7 +233,7 @@ class HrVersion(models.Model):
             real_attendances = attendances - leaves - worked_leaves
             if not calendar:
                 real_leaves = leaves
-                real_worked_leaves = worked_leaves
+                real_worked_leaves = worked_leaves - real_leaves
             elif calendar.flexible_hours:
                 # Flexible hours case
                 # For multi day leaves, we want them to occupy the virtual working schedule 12 AM to average working days
@@ -246,7 +246,9 @@ class HrVersion(models.Model):
                 static_attendances = calendar._attendance_intervals_batch(
                     start_dt, end_dt, resources=resource, tz=tz)[resource.id]
                 real_leaves = (static_attendances & multi_day_leaves) | one_day_leaves
-                real_worked_leaves = (static_attendances & multi_day_worked_leaves) | one_day_worked_leaves
+                real_worked_leaves = (
+                    (static_attendances & multi_day_worked_leaves) | one_day_worked_leaves
+                ) - real_leaves
 
             elif version.has_static_work_entries() or not leaves:
                 # Empty leaves means empty real_leaves
@@ -257,7 +259,7 @@ class HrVersion(models.Model):
                 static_attendances = calendar._attendance_intervals_batch(
                     start_dt, end_dt, resources=resource, tz=tz)[resource.id]
                 real_leaves = static_attendances & leaves
-                real_worked_leaves = static_attendances & worked_leaves
+                real_worked_leaves = (static_attendances & worked_leaves) - real_leaves
 
             real_attendances = self._get_real_attendances(attendances, leaves, worked_leaves)
 
