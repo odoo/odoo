@@ -354,6 +354,32 @@ class TestTraceability(TestMrpCommon):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
 
+    def test_SN_tracked_and_manufactured(self):
+        """
+        Ensure that, when we modify the SN on a MO, it will be correctly assigned.
+        """
+        self.product_5.tracking = 'serial'
+        self.bom_2.type = 'normal'
+        SN_PROD = self.env['stock.lot'].create({
+            'name': 'SN_PROD',
+            'product_id': self.product_5.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_5, self.product_5.property_stock_production, 10, lot_id=SN_PROD)
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_5.id,
+            'product_qty': 1,
+            'bom_id': self.bom_2.id,
+            })
+
+        mo.action_confirm()
+        mo.action_generate_serial()
+        mo.action_clear_lot_producing_ids()
+        mo.action_generate_serial()
+        produced_SN = mo.lot_producing_ids
+        mo.button_mark_done()
+
+        self.assertEqual(mo.finished_move_line_ids.lot_id, produced_SN)
+
     def test_tracked_and_manufactured_component(self):
         """ Suppose this structure:
             productA --|- 1 x productB --|- 1 x productC
