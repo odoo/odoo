@@ -1,10 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from contextlib import contextmanager
 from datetime import datetime, timedelta, UTC
 from unittest.mock import patch, MagicMock
-
-from freezegun import freeze_time
 from markupsafe import Markup
 
 from odoo import fields
@@ -422,17 +419,6 @@ class TestCommon(HttpCase):
             for i in range(self.recurrent_events_count)
         ]
         self.env.cr.postcommit.clear()
-
-    @contextmanager
-    def mock_datetime_and_now(self, mock_dt):
-        """
-        Used when synchronization date (using env.cr.now()) is important
-        in addition to standard datetime mocks. Used mainly to detect sync
-        issues.
-        """
-        with freeze_time(mock_dt), \
-                patch.object(self.env.cr, 'now', lambda: mock_dt):
-            yield
 
     def sync_odoo_recurrences_with_outlook_feature(self):
         """

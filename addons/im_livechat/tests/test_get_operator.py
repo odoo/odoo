@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from odoo import Command, fields
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
-from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests.common import users
 
 
@@ -113,7 +113,7 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
                 "user_ids": [first_operator.id, second_operator.id],
             }
         )
-        with freeze_all_time():
+        with self.mock_datetime_and_now():
             self._create_conversation(livechat_channel, first_operator)
             self._create_conversation(livechat_channel, first_operator)
             # Previous operator is not in a call so it should be available, even if
@@ -136,7 +136,7 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
                 "user_ids": [first_operator.id, second_operator.id],
             }
         )
-        with freeze_all_time():
+        with self.mock_datetime_and_now():
             self._create_conversation(livechat_channel, first_operator)
             self._create_conversation(livechat_channel, second_operator)
             self._create_conversation(livechat_channel, second_operator)
@@ -164,7 +164,7 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
                 "user_ids": [first_operator.id, second_operator.id],
             }
         )
-        with freeze_all_time():
+        with self.mock_datetime_and_now():
             self._create_conversation(livechat_channel, first_operator, in_call=True)
             self._create_conversation(livechat_channel, second_operator)
             self._create_conversation(livechat_channel, second_operator)
@@ -179,7 +179,7 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
                 "user_ids": [first_operator.id, second_operator.id],
             }
         )
-        with freeze_all_time():
+        with self.mock_datetime_and_now():
             self._create_conversation(livechat_channel, first_operator, in_call=True)
             self._create_conversation(livechat_channel, first_operator)
             self._create_conversation(livechat_channel, second_operator, in_call=True)
@@ -278,7 +278,7 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
             "block_assignment_during_call": True,
         }
         livechat_channel = self.env["im_livechat.channel"].sudo().create(livechat_channel_data)
-        with freeze_all_time():
+        with self.mock_datetime_and_now():
             self._create_conversation(livechat_channel, operator, in_call=True)
             self.assertFalse(livechat_channel.available_operator_ids)
 
@@ -422,12 +422,12 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
             }
         )
         now = fields.Datetime.now()
-        with freeze_all_time(now + timedelta(minutes=-3)):
+        with self.mock_datetime_and_now(now + timedelta(minutes=-3)):
             self._create_conversation(livechat_channel, second_operator)
-        with freeze_all_time(now):
+        with self.mock_datetime_and_now(now):
             self._create_conversation(livechat_channel, first_operator)
             self.assertEqual(second_operator, livechat_channel._get_operator())
-        with freeze_all_time(now + timedelta(seconds=121)):
+        with self.mock_datetime_and_now(now + timedelta(seconds=121)):
             self.assertEqual(first_operator, livechat_channel._get_operator())
 
     def test_bypass_buffer_time_when_impossible_selection(self):
@@ -440,7 +440,7 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
             }
         )
         now = fields.Datetime.now()
-        with freeze_all_time(now):
+        with self.mock_datetime_and_now(now):
             self._create_conversation(livechat_channel, first_operator)
             self._create_conversation(livechat_channel, second_operator)
             self.assertEqual(first_operator, livechat_channel._get_operator())
