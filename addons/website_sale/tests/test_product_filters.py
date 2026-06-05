@@ -454,3 +454,21 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             "limit": 1,
         }}).json().get('result', [])
         self.assertEqual(len(result), 0)
+
+    def test_dynamic_filter_with_sample_products(self):
+        """Test that the dynamic product snippet uses sample products."""
+        product_filter = self.env.ref('website_sale.dynamic_filter_newest_products')
+        self.env.ref('website_sale.new_ribbon').assign = 'new'
+
+        # Unpublish products. The dynamic snippet should use sample products.
+        self.env['product.product'].search([]).write({'website_published': False})
+
+        result = self.url_open("/website/snippet/filters", json={"params": {
+            "filter_id": product_filter.id,
+            "template_key": "website_sale.dynamic_filter_template_product_product_products_item",
+            "limit": 16,
+            "search_domain": [],
+            "with_sample": True,
+        }}).json().get('result', [])
+
+        self.assertTrue(len(result))
