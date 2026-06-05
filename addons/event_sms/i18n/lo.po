@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-05-20 16:56+0000\n"
+"PO-Revision-Date: 2026-06-05 07:27+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-17/event_sms/"
 "lo/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail
@@ -27,7 +27,7 @@ msgstr "ການສົ່ງອີເມວກິດຈະກຳອັດຕະ
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_registration
 msgid "Event: Registration"
-msgstr ""
+msgstr "ເຫດການ: ການລົງທະບຽນ"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_reminder
@@ -60,7 +60,7 @@ msgstr "SMS"
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_sms_template
 msgid "SMS Templates"
-msgstr ""
+msgstr "ແມ່ແບບ SMS ທັງໝົດ"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type
@@ -75,3 +75,6 @@ msgid ""
 "user.env.company.name }}: We are happy to confirm your registration for the "
 "{{ object.event_id.name }} event."
 msgstr ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: ພວກເຮົາມີຄວາມຍິນດີທີ່ຈະຢືນຢັນການລົງທະບຽນຂອງທ່ານສຳລັບເຫດການ {{ "
+"object.event_id.name }}."

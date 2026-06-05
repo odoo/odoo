@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:36+0000\n"
-"PO-Revision-Date: 2026-05-18 07:43+0000\n"
+"PO-Revision-Date: 2026-06-05 07:24+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-17/project/lo/>"
 "\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project
 #. odoo-python
@@ -32,6 +32,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    ບໍ່ພົບຫຼັກໝາຍ. ມາສ້າງໃໝ່ນຳກັນ!\n"
+"                </p><p>\n"
+"                    ຕິດຕາມຈຸດຄວາມຄືບໜ້າທີ່ສຳຄັນທີ່ຕ້ອງບັນລຸເພື່ອໃຫ້ປະສົບຜົນສຳເລັດ.\n"
+"                </p>\n"
+"            "
 
 #. module: project
 #. odoo-javascript
@@ -48,7 +55,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
 msgid "# Ratings"
-msgstr ""
+msgstr "# ການໃຫ້ຄະແນນ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
@@ -68,7 +75,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
 #, python-format
 msgid "# of Tasks"
-msgstr ""
+msgstr "ຈຳນວນວຽກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -76,25 +83,27 @@ msgid ""
 "#{record.milestone_count_reached.value} Milestones reached out of "
 "#{record.milestone_count.value}"
 msgstr ""
+"#{record.milestone_count_reached.value} ໝຸດໝາຍທີ່ບັນລຸໄດ້ ຈາກທັງໝົດ #"
+"{record.milestone_count.value}"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "#{task.stage_id.name}"
-msgstr ""
+msgstr "#{task.stage_id.name}"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(closed_task_count)s / %(task_count)s"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
-msgstr ""
+msgstr "%(closed_task_count)s / %(task_count)s (%(closed_rate)s%%)"
 
 #. module: project
 #. odoo-python
@@ -108,28 +117,28 @@ msgstr ""
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(name)s's Burndown Chart"
-msgstr ""
+msgstr "ຕາຕະລາງການເຮັດວຽກຂອງ %(name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(name)s's Milestones"
-msgstr ""
+msgstr "ໝຸດໝາຍຂອງ %(name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(name)s's Rating"
-msgstr ""
+msgstr "ການໃຫ້ຄະແນນຂອງ %(name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "%(name)s's Tasks Analysis"
-msgstr ""
+msgstr "ການວິເຄາະໜ້າວຽກຂອງ %(name)s"
 
 #. module: project
 #. odoo-python
@@ -146,17 +155,17 @@ msgstr ""
 #: code:addons/project/models/project_task_type.py:0
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (ສຳເນົາ)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "(due"
-msgstr ""
+msgstr "(ຄົບກຳນົດ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "(last project update),"
-msgstr ""
+msgstr "(ອັບເດດໂຄງການຫຼ້າສຸດ),"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
@@ -164,18 +173,20 @@ msgid ""
 ",\n"
 "    <br/><br/>"
 msgstr ""
+",\n"
+"    <br/><br/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "- reached on"
-msgstr ""
+msgstr "- ບັນລຸໄດ້ເມື່ອ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "<b>Drag &amp; drop</b> the card to change your task from stage."
-msgstr ""
+msgstr "<b>ລາກ ແລະ ວາງ</b> ບັດເພື່ອປ່ຽນຂັ້ນຕອນຂອງໜ້າວຽກ."
 
 #. module: project
 #. odoo-javascript
@@ -187,6 +198,9 @@ msgid ""
 "tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
 "<b>mentions</b> to reach an entire team."
 msgstr ""
+"<b>ບັນທຶກໂນ້ດ</b> ສຳລັບການສື່ສານພາຍໃນ <i>(ຄົນທີ່ຕິດຕາມໜ້າວຽກນີ້ຈະບໍ່ໄດ້ຮັບການແຈ້ງເຕືອນ ກ່ຽວກັບໂນ້ດທີ່"
+"ທ່ານບັນທຶກ ນອກຈາກວ່າທ່ານຈະແທັກພວກເຂົາໂດຍສະເພາະ)</i>. ໃຊ້ @ <b>ກ່າວເຖິງ</b> ເພື່ອສົ່ງສັນຍານຫາ"
+"ເພື່ອນຮ່ວມງານ ຫຼື # <b>ກ່າວເຖິງ</b> ເພື່ອຕິດຕໍ່ຫາທັງທີມ."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -307,16 +321,23 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Dissatisfied\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" "
+"invisible=\"rating_avg &lt; 3.66\" title=\"ພໍໃຈ\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-"
+"warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" "
+"title=\"ປານກາງ\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o "
+"text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"ບໍ່ພໍໃຈ\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-lightbulb-o\"/>&amp;nbsp;"
-msgstr ""
+msgstr "<i class=\"fa fa-lightbulb-o\"/>&amp;nbsp;"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "<i class=\"fa fa-lock\"/> Private"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"/> ສ່ວນຕົວ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -324,41 +345,43 @@ msgid ""
 "<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> "
 "Customer Ratings</b> are disabled on the following project(s) : <br/>"
 msgstr ""
+"<i class=\"fa fa-warning\" title=\"ລູກຄ້າຖືກປິດໃຊ້ງານໃນໂຄງການ\"/><b> ການໃຫ້ຄະແນນຈາກ"
+"ລູກຄ້າ</b> ຖືກປິດໃຊ້ງານໃນໂຄງການຕໍ່ໄປນີ້ : <br/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-warning\"/>&amp;nbsp;"
-msgstr ""
+msgstr "<i class=\"fa fa-warning\"/>&amp;nbsp;"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>ກັບຄືນສູ່ໂໝດແກ້ໄຂ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "<i title=\"Private Task\" class=\"fa fa-lock\"/>"
-msgstr ""
+msgstr "<i title=\"ໜ້າວຽກສ່ວນຕົວ\" class=\"fa fa-lock\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-end\">Stage:</small>"
-msgstr ""
+msgstr "<small class=\"text-end\">ຂັ້ນຕອນ:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Assignees</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">ຜູ້ຮັບຜິດຊອບ</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Customer</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">ລູກຄ້າ</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-clock-o me-2\" title=\"Dates\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-clock-o me-2\" title=\"ວັນທີ\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -366,21 +389,24 @@ msgid ""
 "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
+"<span class=\"fa fa-envelope-o me-2\" aria-label=\"ນາມແຝງໂດເມນ\" title=\"ນາມແ"
+"ຝງໂດເມນ\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
 msgstr ""
+"<span class=\"fa fa-user me-2\" aria-label=\"ຄູ່ຄ້າ\" title=\"ຄູ່ຄ້າ\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Done</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\"> ສຳເລັດແລ້ວ</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"fw-normal\"> ໜ້າວຽກ</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -403,18 +429,18 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Last Rating</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ການໃຫ້ຄະແນນຫຼ້າສຸດ</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Parent Task</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ໜ້າວຽກຫຼັກ</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<span class=\"text-muted o_row ps-1 pb-3\">Send a rating request:</span>"
-msgstr ""
+msgstr "<span class=\"text-muted o_row ps-1 pb-3\">ສົ່ງຄຳຂໍການໃຫ້ຄະແນນ:</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -425,16 +451,26 @@ msgid ""
 "                                                    <span invisible=\"rating_status == 'stage'\">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>\n"
 "                                                </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                                    <i class=\"fa fa-"
+"lightbulb-o pe-2\"/>\n"
+"                                                    <span "
+"invisible=\"rating_status == 'periodic'\">ຄຳຂໍການໃຫ້ຄະແນນຈະຖືກສົ່ງທັນທີເມື່ອໜ້າວຽກໄປຮອດ"
+"ຂັ້ນຕອນທີ່ມີການກຳນົດແມ່ແບບອີເມລໃຫ້ຄະແນນໄວ້.</span>\n"
+"                                                    <span "
+"invisible=\"rating_status == 'stage'\">ຄຳຂໍການໃຫ້ຄະແນນຈະຖືກສົ່ງຕາບໃດທີ່ໜ້າວຽກຍັງຢູ່ໃນຂັ້ນຕ"
+"ອນທີ່ມີການກຳນົດແມ່ແບບອີເມລໃຫ້ຄະແນນໄວ້.</span>\n"
+"                                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>ການລາຍງານ</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>View</span>"
-msgstr ""
+msgstr "<span>ເບິ່ງ</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -444,27 +480,27 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Deadline:</strong>"
-msgstr ""
+msgstr "<strong>ກຳນົດເວລາ:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Milestone:</strong>"
-msgstr ""
+msgstr "<strong>ໝຸດໝາຍຄວາມຄືບໜ້າ:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Project:</strong>"
-msgstr ""
+msgstr "<strong>ໂຄງການ:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Milestones</u>"
-msgstr ""
+msgstr "<u>ໝຸດໝາຍຄວາມຄືບໜ້າ</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "=&gt;"
-msgstr ""
+msgstr "=&gt;"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_defaults
@@ -472,6 +508,7 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"Dictionary ຂອງ Python ທີ່ຈະຖືກປະເມີນເພື່ອໃຫ້ຄ່າເລີ່ມຕົ້ນ ເມື່ອສ້າງບັນທຶກໃໝ່ສຳລັບນາມແຝງນີ້."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_collaborator_unique_collaborator
@@ -479,6 +516,8 @@ msgid ""
 "A collaborator cannot be selected more than once in the project sharing "
 "access. Please remove duplicate(s) and try again."
 msgstr ""
+"ຜູ້ຮ່ວມງານບໍ່ສາມາດຖືກເລືອກຫຼາຍກວ່າໜຶ່ງຄັ້ງໃນການແບ່ງປັນສິດເຂົ້າເຖິງໂຄງການ. ກະລຸນາລຶບລາຍການທີ່ຊ້ຳກັນອອກ "
+"ແລ້ວລອງໃໝ່ອີກຄັ້ງ."
 
 #. module: project
 #. odoo-python
@@ -488,48 +527,49 @@ msgid ""
 "A personal stage cannot be linked to a project because it is only visible to"
 " its corresponding user."
 msgstr ""
+"ຂັ້ນຕອນສ່ວນຕົວບໍ່ສາມາດເຊື່ອມໂຍງກັບໂຄງການໄດ້ ເພາະວ່າມັນຈະສະແດງໃຫ້ເຫັນສະເພາະຜູ້ໃຊ້ທີ່ກ່ຽວຂ້ອງເທົ່ານັ້ນ."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_private_task_has_no_parent
 msgid "A private task cannot have a parent."
-msgstr ""
+msgstr "ໜ້າວຽກສ່ວນຕົວບໍ່ສາມາດມີໜ້າວຽກຫຼັກໄດ້."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
 msgid "A subtask cannot be recurrent."
-msgstr ""
+msgstr "ໜ້າວຽກຍ່ອຍບໍ່ສາມາດເປັນໜ້າວຽກທີ່ເກີດຂຶ້ນຊ້ຳໄດ້."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
 msgid "A tag with the same name already exists."
-msgstr ""
+msgstr "ມີແທັກ (Tag) ທີ່ມີຊື່ນີ້ຢູ່ແລ້ວ."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
-msgstr ""
+msgstr "ໜ້າວຽກໜຶ່ງສາມາດມີຂັ້ນຕອນສ່ວນຕົວໄດ້ພຽງອັນດຽວຕໍ່ຜູ້ໃຊ້."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Accept Emails From"
-msgstr ""
+msgstr "ຮັບອີເມວຈາກ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_instruction_message
 msgid "Access Instruction Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມແນະນຳການເຂົ້າເຖິງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__access_mode
 msgid "Access Mode"
-msgstr ""
+msgstr "ໂໝດການເຂົ້າເຖິງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_warning
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__access_warning
 #: model:ir.model.fields,field_description:project.field_project_task__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "ຄໍາເຕືອນການເຂົ້າເຖິງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_needaction
@@ -537,7 +577,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction
 #: model:ir.model.fields,field_description:project.field_project_update__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "ຈຳເປັນຕ້ອງດຳເນີນການ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__active
@@ -546,7 +586,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type__active
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__active
 msgid "Active"
-msgstr ""
+msgstr "ເປີດໃຊ້ງານ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_ids
@@ -554,58 +594,58 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__activity_ids
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "Activities"
-msgstr ""
+msgstr "ກິດຈະກຳ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_update__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "ການຕົກແຕ່ງກິດຈະກຳທີ່ຍົກເວັ້ນ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_project_task_plan
 #: model:ir.ui.menu,name:project.mail_activity_plan_menu_config_project
 msgid "Activity Plans"
-msgstr ""
+msgstr "ແຜນກິດຈະກຳ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_state
 #: model:ir.model.fields,field_description:project.field_project_task__activity_state
 #: model:ir.model.fields,field_description:project.field_project_update__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "ສະຖານະກິດຈະກຳ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_type_icon
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_icon
 #: model:ir.model.fields,field_description:project.field_project_update__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "ໄອຄອນປະເພດກິດຈະກຳ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
 #: model:ir.ui.menu,name:project.project_menu_config_activity_type
 msgid "Activity Types"
-msgstr ""
+msgstr "ປະເພດກິດຈະກຳ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Add Milestone"
-msgstr ""
+msgstr "ເພີ່ມໝຸດໝາຍຄວາມຄືບໜ້າ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_project_task_plan
 #: model_terms:ir.actions.act_window,help:project.mail_activity_plan_action_config_task_plan
 msgid "Add a new plan"
-msgstr ""
+msgstr "ເພີ່ມແຜນການໃໝ່"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add a note"
-msgstr ""
+msgstr "ເພີ່ມບັນທຶກ"
 
 #. module: project
 #. odoo-javascript
@@ -616,6 +656,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
+"ເພີ່ມຄໍລຳເພື່ອຈັດລະບຽບໜ້າວຽກຂອງທ່ານເຂົ້າໃນ <b>ຂັ້ນຕອນ</b> <i>ເຊັ່ນ: ໃໝ່ - ພວມດຳເນີນການ - ສຳເລັ"
+"ດແລ້ວ</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -625,106 +667,106 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Add details about this task..."
-msgstr ""
+msgstr "ເພີ່ມລາຍລະອຽດກ່ຽວກັບໜ້າວຽກນີ້..."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__note
 msgid "Add extra content to display in the email"
-msgstr ""
+msgstr "ເພີ່ມເນື້ອໃນເພີ່ມເຕີມເພື່ອສະແດງໃນອີເມວ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Add your task once it is ready."
-msgstr ""
+msgstr "ເພີ່ມໜ້າວຽກຂອງທ່ານເມື່ອມັນພ້ອມແລ້ວ."
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
 msgid "Administrator"
-msgstr ""
+msgstr "ຜູ້ດູແລລະບົບ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Agile Scrum"
-msgstr ""
+msgstr "Agile Scrum"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
 msgid "Alias"
-msgstr ""
+msgstr "ນາມແຝງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "ຄວາມປອດໄພຂອງການຕິດຕໍ່ຜ່ານຊື່ແຝງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain_id
 msgid "Alias Domain"
-msgstr ""
+msgstr "ໂດເມນນາມແຝງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain
 msgid "Alias Domain Name"
-msgstr ""
+msgstr "ຊື່ໂດເມນນາມແຝງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_full_name
 msgid "Alias Email"
-msgstr ""
+msgstr "ອີເມວນາມແຝງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "ຊື່ແຝງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "ສະຖານະຊື່ແຝງ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "ສະຖານະຊື່ແຝງທີ່ຖືກປະເມີນຈາກຂໍ້ຄວາມຫຼ້າສຸດທີ່ໄດ້ຮັບ."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
 msgid "Aliased Model"
-msgstr ""
+msgstr "ໂມເດວຊື່ແຝງ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "All"
-msgstr ""
+msgstr "ທັງໝົດ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_all_task
 #: model:ir.ui.menu,name:project.menu_project_management_all_tasks
 msgid "All Tasks"
-msgstr ""
+msgstr "ວຽກທັງໝົດ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
-msgstr ""
+msgstr "ຜູ້ໃຊ້ພາຍໃນທັງໝົດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__allocated_hours
 msgid "Allocated Time"
-msgstr ""
+msgstr "ເວລາທີ່ຈັດສັນ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_allocated_hours_template
 msgid "Allocated Time:"
-msgstr ""
+msgstr "ເວລາທີ່ຈັດສັນ:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_rating
@@ -736,12 +778,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__analytic_account_id
 #: model:ir.model.fields,field_description:project.field_project_task__analytic_account_id
 msgid "Analytic Account"
-msgstr ""
+msgstr "ບັນຊີວິເຄາະ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__analytic_plan_id
 msgid "Analytic Plan"
-msgstr ""
+msgstr "ແຜນວິເຄາະ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__analytic_account_id
@@ -751,6 +793,11 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
+"ບັນຊີວິເຄາະທີ່ໂຄງການນີ້, ໜ້າວຽກ ແລະ ໃບບັນທຶກເວລາຂອງມັນຖືກເຊື່ອມໂຍງ. \n"
+"ຕິດຕາມຕົ້ນທຶນ ແລະ ລາຍຮັບຂອງໂຄງການໂດຍການກຳນົດບັນຊີວິເຄາະນີ້ໃນເອກະສານທີ່ກ່ຽວຂ້ອງ (ເຊັ່ນ: ໃບສັ່ງຂາ"
+"ຍ, ໃບແຈ້ງໜີ້, ໃບສັ່ງຊື້, ໃບບິນຜູ້ສະໜອງ, ຄ່າໃຊ້ຈ່າຍ ແລະ ອື່ນໆ).\n"
+"ບັນຊີວິເຄາະນີ້ສາມາດປ່ຽນແປງໄດ້ໃນແຕ່ລະໜ້າວຽກແຍກກັນໄດ້ຕາມຄວາມຈຳເປັນ.\n"
+"ຕ້ອງມີບັນຊີວິເຄາະເພື່ອໃຊ້ໃບບັນທຶກເວລາ."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
@@ -764,7 +811,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Analytics"
-msgstr ""
+msgstr "ການວິເຄາະ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
@@ -772,25 +819,27 @@ msgid ""
 "Analyze how quickly your team is completing your project's tasks and check "
 "if everything is progressing according to plan."
 msgstr ""
+"ວິເຄາະວ່າທີມງານຂອງທ່ານສຳເລັດໜ້າວຽກຂອງໂຄງການໄດ້ໄວປານໃດ ແລະ ກວດສອບເບິ່ງວ່າທຸກຢ່າງມີຄວາມຄືບໜ້າຕ"
+"າມແຜນການ ຫຼື ບໍ່."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid ""
 "Analyze the progress of your projects and the performance of your employees."
-msgstr ""
+msgstr "ວິເຄາະຄວາມຄືບໜ້າຂອງໂຄງການ ແລະ ປະສິດທິພາບການເຮັດວຽກຂອງພະນັກງານຂອງທ່ານ."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__03_approved
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__state__03_approved
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__03_approved
 msgid "Approved"
-msgstr ""
+msgstr "ອະນຸມັດແລ້ວ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Archive Stages"
-msgstr ""
+msgstr "ເກັບຄັງຂັ້ນຕອນ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -804,18 +853,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Archived"
-msgstr ""
+msgstr "ເກັບໄວ້"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 msgid "Are you sure you want to continue?"
-msgstr ""
+msgstr "ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການສືບຕໍ່?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete these stages?"
-msgstr ""
+msgstr "ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການລຶບຂັ້ນຕອນເຫຼົ່ານີ້?"
 
 #. module: project
 #. odoo-javascript
@@ -823,38 +872,38 @@ msgstr ""
 #: code:addons/project/static/src/components/subtask_one2many_field/subtask_list_renderer.js:0
 #, python-format
 msgid "Are you sure you want to delete this record?"
-msgstr ""
+msgstr "ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການລຶບຂໍ້ມູນນີ້?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Arrow"
-msgstr ""
+msgstr "ລູກສອນ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Arrow icon"
-msgstr ""
+msgstr "ໄອຄອນລູກສອນ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Assembling"
-msgstr ""
+msgstr "ການປະກອບ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Assign a responsible to your task"
-msgstr ""
+msgstr "ມອບໝາຍຜູ້ຮັບຜິດຊອບໃຫ້ກັບໜ້າວຽກຂອງທ່ານ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Assigned"
-msgstr ""
+msgstr "ມອບໝາຍແລ້ວ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -866,7 +915,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
 msgid "Assigned to"
-msgstr ""
+msgstr "ມອບໝາຍໃຫ້"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
@@ -877,30 +926,30 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Assignees"
-msgstr ""
+msgstr "ຜູ້ຮັບຜິດຊອບ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Assignement Date"
-msgstr ""
+msgstr "ວັນທີມອບໝາຍ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
 msgid "Assigning Date"
-msgstr ""
+msgstr "ວັນທີກຳລັງມອບໝາຍ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_assign
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_assign
 msgid "Assignment Date"
-msgstr ""
+msgstr "ວັນທີມອບໝາຍ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__at_risk
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__at_risk
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "At Risk"
-msgstr ""
+msgstr "ມີຄວາມສ່ຽງ"
 
 #. module: project
 #. odoo-javascript
@@ -910,6 +959,7 @@ msgid ""
 "Attach all documents or links to the task directly, to have all research "
 "information centralized."
 msgstr ""
+"ແນບເອກະສານ ຫຼື ລິ້ງທັງໝົດໃສ່ໜ້າວຽກໂດຍກົງ ເພື່ອໃຫ້ຂໍ້ມູນການຄົ້ນຄວ້າທັງໝົດຖືກລວມສູນໄວ້ບ່ອນດຽວ."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -917,7 +967,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_attachment_count
 #: model:ir.model.fields,field_description:project.field_project_update__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "ຈຳເນົາໄຟລ໌ຄັດຕິດ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
@@ -927,17 +977,17 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__user_id
 msgid "Author"
-msgstr ""
+msgstr "ຜູ້ຂຽນ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Auto-generate tasks for regular activities"
-msgstr ""
+msgstr "ສ້າງໜ້າວຽກອັດຕະໂນມັດສຳລັບກິດຈະກຳປົກກະຕິ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_state
 msgid "Automatic Kanban Status"
-msgstr ""
+msgstr "ສະຖານະ Kanban ອັດຕະໂນມັດ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__auto_validation_state
@@ -946,13 +996,16 @@ msgid ""
 " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n"
 msgstr ""
+"ແກ້ໄຂສະຖານະອັດຕະໂນມັດເມື່ອລູກຄ້າຕອບກັບຄຳຄິດເຫັນສຳລັບຂັ້ນຕອນນີ້.\n"
+" * ຄຳຄິດເຫັນທີ່ດີຈາກລູກຄ້າຈະອັບເດດສະຖານະເປັນ 'ອະນຸມັດແລ້ວ' (ຈຸດສີຂຽວ).\n"
+" * ຄຳຄິດເຫັນປານກາງ ຫຼື ບໍ່ດີ ຈະຕັ້ງສະຖານະເປັນ 'ມີການຂໍໃຫ້ປ່ຽນແປງ' (ຈຸດສີສົ້ມ).\n"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "Avatar"
-msgstr ""
+msgstr "ຮູບຕົວແທນ"
 
 #. module: project
 #. odoo-python
@@ -962,30 +1015,30 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 #, python-format
 msgid "Average Rating"
-msgstr ""
+msgstr "ຄະແນນສະເລ່ຍ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
 msgid "Average Rating (%)"
-msgstr ""
+msgstr "ຄະແນນສະເລ່ຍ (%)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Dissatisfied"
-msgstr ""
+msgstr "ຄະແນນສະເລ່ຍ: ບໍ່ພໍໃຈ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Okay"
-msgstr ""
+msgstr "ຄະແນນສະເລ່ຍ: ປານກາງ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Satisfied"
-msgstr ""
+msgstr "ຄະແນນສະເລ່ຍ: ພໍໃຈ"
 
 #. module: project
 #. odoo-javascript
@@ -993,41 +1046,41 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Backlog"
-msgstr ""
+msgstr "ວຽກທີ່ຄ້າງຄາ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__analytic_account_balance
 msgid "Balance"
-msgstr ""
+msgstr "ຍອດຄົງເຫຼືອ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Billed"
-msgstr ""
+msgstr "ອອກບິນແລ້ວ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__dependent_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__dependent_ids
 msgid "Block"
-msgstr ""
+msgstr "ບລັອກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Blocked"
-msgstr ""
+msgstr "ຖືກບລັອກ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__depend_on_ids
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocked By"
-msgstr ""
+msgstr "ຖືກບລັອກໂດຍ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Blocking"
-msgstr ""
+msgstr "ກຳລັງບລັອກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1039,12 +1092,12 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Brainstorm"
-msgstr ""
+msgstr "ລະດົມສະໝອງ"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_00
 msgid "Bug"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດ (Bug)"
 
 #. module: project
 #. odoo-python
@@ -1056,7 +1109,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #, python-format
 msgid "Burndown Chart"
-msgstr ""
+msgstr "ແຜນພູມການເຮັດວຽກ (Burndown Chart)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__can_be_marked_as_done
@@ -1075,7 +1128,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Canceled"
-msgstr ""
+msgstr "ຍົກເລີກແລ້ວ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__02_changes_requested
@@ -1085,7 +1138,7 @@ msgstr ""
 #: model:mail.message.subtype,name:project.mt_project_task_changes_requested
 #: model:mail.message.subtype,name:project.mt_task_changes_requested
 msgid "Changes Requested"
-msgstr ""
+msgstr "ມີການຮ້ອງຂໍການປ່ຽນແປງ"
 
 #. module: project
 #. odoo-javascript
@@ -1096,6 +1149,8 @@ msgid ""
 "name of a customer, of a product, of a team, of a construction site, "
 "etc.</i>"
 msgstr ""
+"ເລືອກ <b>ຊື່</b> ສຳລັບໂຄງການຂອງທ່ານ. <i>ມັນສາມາດເປັນຫຍັງກໍໄດ້ຕາມທີ່ທ່ານຕ້ອງການ: ຊື່ລູກຄ້າ, ຊື່ຜະລິ"
+"ດຕະພັນ, ຊື່ທີມ, ຊື່ສະຖານທີ່ກໍ່ສ້າງ, ແລະ ອື່ນໆ.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1103,19 +1158,19 @@ msgstr ""
 #, python-format
 msgid ""
 "Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>"
-msgstr ""
+msgstr "ເລືອກ <b>ຊື່</b> ໜ້າວຽກ <i>(ເຊັ່ນ: ອອກແບບເວັບໄຊ, ຊື້ສິນຄ້າ...)</i>"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Client Review"
-msgstr ""
+msgstr "ການກວດສອບຈາກລູກຄ້າ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Closed On"
-msgstr ""
+msgstr "ປິດເມື່ອ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__closed_subtask_count
@@ -1137,7 +1192,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Closed Tasks"
-msgstr ""
+msgstr "ໜ້າວຽກທີ່ປິດແລ້ວ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
@@ -1151,17 +1206,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_collaborator__partner_id
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
 msgid "Collaborator"
-msgstr ""
+msgstr "ຜູ້ຮ່ວມງານ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_ids
 msgid "Collaborators"
-msgstr ""
+msgstr "ຜູ້ຮ່ວມງານທັງໝົດ"
 
 #. module: project
 #: model:ir.model,name:project.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr ""
+msgstr "ຜູ້ຮ່ວມງານໃນໂຄງການທີ່ແບ່ງປັນ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_status
@@ -1170,18 +1225,24 @@ msgid ""
 "Rating when changing stage: an email will be automatically sent when the task reaches the stage on which the rating email template is set.\n"
 "Periodic rating: an email will be automatically sent at regular intervals as long as the task remains in the stage in which the rating email template is set."
 msgstr ""
+"ຮວບຮວມຄຳຄິດເຫັນຈາກລູກຄ້າຂອງທ່ານ ໂດຍການສົ່ງຄຳຂໍການໃຫ້ຄະແນນເມື່ອໜ້າວຽກເຂົ້າສູ່ຂັ້ນຕອນໃດໜຶ່ງ. ເພື່ອເຮັດ"
+"ສິ່ງນີ້, ໃຫ້ກຳນົດແມ່ແບບອີເມລໃຫ້ຄະແນນໃນຂັ້ນຕອນທີ່ກ່ຽວຂ້ອງ.\n"
+"ການໃຫ້ຄະແນນເມື່ອປ່ຽນຂັ້ນຕອນ: ອີເມລຈະຖືກສົ່ງໂດຍອັດຕະໂນມັດເມື່ອໜ້າວຽກໄປຮອດຂັ້ນຕອນທີ່ມີການຕັ້ງຄ່າແມ່ແບບອີ"
+"ເມລໃຫ້ຄະແນນໄວ້.\n"
+"ການໃຫ້ຄະແນນເປັນໄລຍະ: ອີເມລຈະຖືກສົ່ງໂດຍອັດຕະໂນມັດຕາມຊ່ວງເວລາທີ່ກຳນົດ ຕາບໃດທີ່ໜ້າວຽກຍັງຢູ່ໃນຂັ້ນຕອນ"
+"ທີ່ມີການຕັ້ງຄ່າແມ່ແບບອີເມລໃຫ້ຄະແນນໄວ້."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
 #: model:ir.model.fields,field_description:project.field_project_update__color
 msgid "Color"
-msgstr ""
+msgstr "ສີ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__color
 #: model:ir.model.fields,field_description:project.field_project_task__color
 msgid "Color Index"
-msgstr ""
+msgstr "ດັດຊະນີສີ"
 
 #. module: project
 #. odoo-javascript
@@ -1191,11 +1252,13 @@ msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt."
 msgstr ""
+"ສື່ສານກັບລູກຄ້າໃນໜ້າວຽກໂດຍໃຊ້ລະບົບອີເມລ. ແນບໄຟລອອກແບບໂລໂກ້ໃສ່ໜ້າວຽກ ເພື່ອໃຫ້ຂໍ້ມູນສົ່ງຕໍ່ຈາກ\n"
+"      ຜູ້ອອກແບບ ໄປຫາຄົນງານທີ່ເຮັດໜ້າທີ່ສະກີນເສື້ອຢືດ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Communication history"
-msgstr ""
+msgstr "ປະຫວັດການສື່ສານ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -1211,7 +1274,7 @@ msgstr "ບໍລິສັດ"
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າລະບົບ"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
@@ -1221,7 +1284,7 @@ msgstr "ການກໍານົດຄ່າ"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Configure Stages"
-msgstr ""
+msgstr "ກຳນົດຄ່າຂັ້ນຕອນ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_unarchive_wizard
@@ -1237,32 +1300,32 @@ msgstr "ຢືນຢັນ"
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 #, python-format
 msgid "Confirmation"
-msgstr ""
+msgstr "ການຢືນຢັນ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Congratulations, you are now a master of project management."
-msgstr ""
+msgstr "ຍິນດີດ້ວຍ, ຕອນນີ້ທ່ານຄືຜູ້ຊ່ຽວຊານດ້ານການຈັດການໂຄງການແລ້ວ."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Consulting"
-msgstr ""
+msgstr "ການໃຫ້ຄຳປຶກສາ"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban
 msgid "Contact"
-msgstr ""
+msgstr "ຜູ້ຕິດຕໍ່"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
 msgid "Convert Task"
-msgstr ""
+msgstr "ປ່ຽນໜ້າວຽກ"
 
 #. module: project
 #. odoo-python
@@ -1270,26 +1333,26 @@ msgstr ""
 #: model:ir.actions.server,name:project.action_server_convert_to_subtask
 #, python-format
 msgid "Convert to Task/Sub-Task"
-msgstr ""
+msgstr "ປ່ຽນເປັນ ໜ້າວຽກ/ໜ້າວຽກຍ່ອຍ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Copywriting"
-msgstr ""
+msgstr "ການຂຽນບົດໂຄສະນາ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Costs"
-msgstr ""
+msgstr "ຕົ້ນທຶນ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
 msgid "Cover Image"
-msgstr ""
+msgstr "ຮູບໜ້າປົກ"
 
 #. module: project
 #. odoo-javascript
@@ -1298,26 +1361,27 @@ msgstr ""
 msgid ""
 "Create <b>activities</b> to set yourself to-dos or to schedule meetings."
 msgstr ""
+"ສ້າງ <b>ກິດຈະກຳ</b> ເພື່ອຕັ້ງລາຍການທີ່ຕ້ອງເຮັດໃຫ້ຕົວເອງ ຫຼື ກຳນົດເວລາການປະຊຸມ."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__create_date
 msgid "Create Date"
-msgstr ""
+msgstr "ວັນທີສ້າງ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
-msgstr ""
+msgstr "ສ້າງໂຄງການ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
 msgid "Create a new stage in the task pipeline"
-msgstr ""
+msgstr "ສ້າງຂັ້ນຕອນໃໝ່ໃນລະບົບໜ້າວຽກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
 msgid "Create project"
-msgstr ""
+msgstr "ສ້າງໂຄງການ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
@@ -1325,6 +1389,7 @@ msgid ""
 "Create projects to organize your tasks and define a different workflow for "
 "each project."
 msgstr ""
+"ສ້າງໂຄງການເພື່ອຈັດລະບຽບວຽກ ແລະ ກຳນົດຂັ້ນຕອນການເຮັດວຽກທີ່ແຕກຕ່າງກັນສຳລັບແຕ່ລະໂຄງການ."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -1332,22 +1397,23 @@ msgid ""
 "Create projects to organize your tasks. Define a different workflow for each"
 " project."
 msgstr ""
+"ສ້າງໂຄງການເພື່ອຈັດລະບຽບໜ້າວຽກຂອງທ່ານ. ກຳນົດຂັ້ນຕອນການເຮັດວຽກທີ່ແຕກຕ່າງກັນສຳລັບແຕ່ລະໂຄງການ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create tasks by sending an email to"
-msgstr ""
+msgstr "ສ້າງໜ້າວຽກໂດຍການສົ່ງອີເມລຫາ"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Create tasks by sending an email to the email address of your project."
-msgstr ""
+msgstr "ສ້າງໜ້າວຽກໂດຍການສົ່ງອີເມລຫາທີ່ຢູ່ອີເມລຂອງໂຄງການຂອງທ່ານ."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
 msgid "Created On"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__create_uid
@@ -1364,7 +1430,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__create_uid
 #: model:ir.model.fields,field_description:project.field_project_update__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__create_date
@@ -1380,12 +1446,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__create_date
 #: model:ir.model.fields,field_description:project.field_project_update__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Creation Date"
-msgstr ""
+msgstr "ວັນທີສ້າງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__currency_id
@@ -1395,12 +1461,12 @@ msgstr "ເງິນຕາ"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "Current project of the task"
-msgstr ""
+msgstr "ໂຄງການປັດຈຸບັນຂອງໜ້າວຽກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Current stage of this task"
-msgstr ""
+msgstr "ຂັ້ນຕອນປັດຈຸບັນຂອງໜ້າວຽກນີ້"
 
 #. module: project
 #. odoo-javascript
@@ -1410,6 +1476,7 @@ msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
 msgstr ""
+"ຕອນນີ້ທຸກຄົນທີ່ເບິ່ງເອກະສານນີ້ສາມາດເຫັນໄດ້, ຄລິກເພື່ອຈຳກັດໃຫ້ເຫັນສະເພາະພະນັກງານພາຍໃນ."
 
 #. module: project
 #. odoo-javascript
@@ -1419,11 +1486,12 @@ msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
+"ຕອນນີ້ຖືກຈຳກັດໃຫ້ເຫັນສະເພາະພະນັກງານພາຍໃນ, ຄລິກເພື່ອໃຫ້ທຸກຄົນທີ່ເບິ່ງເອກະສານນີ້ສາມາດເຫັນໄດ້."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມຕີກັບແບບກຳນົດເອງ"
 
 #. module: project
 #. odoo-python
@@ -1445,20 +1513,20 @@ msgstr "ຄຸ່ຄ້າ"
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "ອີເມລລູກຄ້າ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Customer Feedback"
-msgstr ""
+msgstr "ຄຳຄິດເຫັນຈາກລູກຄ້າ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
 #: model:ir.model.fields,help:project.field_project_task__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "URL ຂອງປະຕູເວັບໄຊລູກຄ້າ (Customer Portal)"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -1466,12 +1534,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
 #: model:ir.ui.menu,name:project.rating_rating_menu_project
 msgid "Customer Ratings"
-msgstr ""
+msgstr "ການໃຫ້ຄະແນນຈາກລູກຄ້າ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
 msgid "Customer Ratings Status"
-msgstr ""
+msgstr "ສະຖານະການໃຫ້ຄະແນນຈາກລູກຄ້າ"
 
 #. module: project
 #. odoo-javascript
@@ -1481,18 +1549,20 @@ msgid ""
 "Customers propose feedbacks by email; Odoo creates tasks automatically, and you can\n"
 "      communicate on the task directly."
 msgstr ""
+"ລູກຄ້າສົ່ງຄຳຄິດເຫັນຜ່ານອີເມລ; Odoo ຈະສ້າງໜ້າວຽກໃຫ້ໂດຍອັດຕະໂນມັດ, ແລະ ທ່ານສາມາດ\n"
+"      ສື່ສານໃນໜ້າວຽກນັ້ນໄດ້ໂດຍກົງ."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "Customers will be added to the followers of their project and tasks."
-msgstr ""
+msgstr "ລູກຄ້າຈະຖືກເພີ່ມເຂົ້າໃນລາຍຊື່ຜູ້ຕິດຕາມໂຄງການ ແລະ ໜ້າວຽກຂອງພວກເຂົາ."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
 msgid "Daily"
-msgstr ""
+msgstr "ລາຍວັນ"
 
 #. module: project
 #. odoo-javascript
@@ -1505,7 +1575,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #, python-format
 msgid "Date"
-msgstr ""
+msgstr "ວັນທີ"
 
 #. module: project
 #. odoo-javascript
@@ -1520,6 +1590,9 @@ msgid ""
 "Date on which the state of your task has last been modified.\n"
 "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another."
 msgstr ""
+"ວັນທີທີ່ສະຖານະຂອງໜ້າວຽກຖືກແກ້ໄຂຫຼ້າສຸດ.\n"
+"ອີງຕາມຂໍ້ມູນນີ້ ທ່ານສາມາດລະບຸໜ້າວຽກທີ່ຢຸດສະງັກ ແລະ ເບິ່ງສະຖິຕິເວລາທີ່ໃຊ້ໃນການຍ້າຍໜ້າວຽກຈາກຂັ້ນຕອນ/ສະຖ"
+"ານະໜຶ່ງ ໄປຫາອີກອັນໜຶ່ງ."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
@@ -1527,6 +1600,7 @@ msgid ""
 "Date on which this project ends. The timeframe defined on the project is "
 "taken into account when viewing its planning."
 msgstr ""
+"ວັນທີທີ່ໂຄງການນີ້ສິ້ນສຸດ. ຊ່ວງເວລາທີ່ກຳນົດໄວ້ໃນໂຄງການຈະຖືກນຳມາຄິດໄລ່ເມື່ອເບິ່ງແຜນການ."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__date_assign
@@ -1534,18 +1608,20 @@ msgid ""
 "Date on which this task was last assigned (or unassigned). Based on this, "
 "you can get statistics on the time it usually takes to assign tasks."
 msgstr ""
+"ວັນທີທີ່ໜ້າວຽກນີ້ຖືກມອບໝາຍ (ຫຼື ຍົກເລີກການມອບໝາຍ) ຫຼ້າສຸດ. ອີງຕາມສິ່ງນີ້, ທ່ານສາມາດເບິ່ງສະຖິຕິເວລາທີ່ໃຊ້ໃ"
+"ນການມອບໝາຍໜ້າວຽກ."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__day
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Days"
-msgstr ""
+msgstr "ມື້"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
 msgid "Days to Deadline"
-msgstr ""
+msgstr "ຈຳນວນວັນກ່ອນຮອດກຳນົດ"
 
 #. module: project
 #. odoo-python
@@ -1557,17 +1633,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 #, python-format
 msgid "Deadline"
-msgstr ""
+msgstr "ກຳນົດເວລາ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
 msgid "Dear"
-msgstr ""
+msgstr "ຮຽນ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
 msgid "Default Values"
-msgstr ""
+msgstr "ຄ່າເລີ່ມຕົ້ນ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -1577,17 +1653,21 @@ msgid ""
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
 msgstr ""
+"ກຳນົດຂັ້ນຕອນທີ່ຈະໃຊ້ໃນໂຄງການ ຕັ້ງແຕ່\n"
+"                ການສ້າງໜ້າວຽກ, ຈົນຮອດການປິດໜ້າວຽກ ຫຼື ບັນຫາ.\n"
+"                ທ່ານຈະໃຊ້ຂັ້ນຕອນເຫຼົ່ານີ້ເພື່ອຕິດຕາມຄວາມຄືບໜ້າໃນ\n"
+"                ການແກ້ໄຂໜ້າວຽກ ຫຼື ບັນຫາ."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid ""
 "Define the steps your projects move through from creation to completion."
-msgstr ""
+msgstr "ກຳນົດຂັ້ນຕອນທີ່ໂຄງການຂອງທ່ານຈະຜ່ານ ຕັ້ງແຕ່ການສ້າງຈົນເຖິງການສຳເລັດ."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Define the steps your tasks move through from creation to completion."
-msgstr ""
+msgstr "ກຳນົດຂັ້ນຕອນທີ່ໜ້າວຽກຂອງທ່ານຈະຜ່ານ ຕັ້ງແຕ່ການສ້າງຈົນເຖິງການສຳເລັດ."
 
 #. module: project
 #. odoo-javascript
@@ -1599,14 +1679,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 #, python-format
 msgid "Delete"
-msgstr ""
+msgstr "ລຶບ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 #, python-format
 msgid "Delete Milestone"
-msgstr ""
+msgstr "ລຶບໝຸດໝາຍຄວາມຄືບໜ້າ"
 
 #. module: project
 #. odoo-python
@@ -1614,7 +1694,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #, python-format
 msgid "Delete Project Stage"
-msgstr ""
+msgstr "ລຶບຂັ້ນຕອນໂຄງການ"
 
 #. module: project
 #. odoo-python
@@ -1625,7 +1705,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 #, python-format
 msgid "Delete Stage"
-msgstr ""
+msgstr "ລຶບຂັ້ນຕອນ"
 
 #. module: project
 #. odoo-javascript
@@ -1643,6 +1723,7 @@ msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
 msgstr ""
+"ສົ່ງມອບການບໍລິການຂອງທ່ານໂດຍອັດຕະໂນມັດເມື່ອບັນລຸໝຸດໝາຍ ໂດຍການເຊື່ອມໂຍງມັນກັບລາຍການໃບສັ່ງຂາຍ."
 
 #. module: project
 #. odoo-javascript
@@ -1650,7 +1731,7 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Delivered"
-msgstr ""
+msgstr "ຈັດສົ່ງແລ້ວ"
 
 #. module: project
 #. odoo-python
@@ -1658,7 +1739,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__dependent_tasks_count
 #, python-format
 msgid "Dependent Tasks"
-msgstr ""
+msgstr "ໜ້າວຽກທີ່ຂຶ້ນຕໍ່ກັນ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
@@ -1677,7 +1758,7 @@ msgstr "ຄຳອະທິບາຍ"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__description
 msgid "Description to provide more information and context about this project"
-msgstr ""
+msgstr "ຄຳອະທິບາຍເພື່ອໃຫ້ຂໍ້ມູນເພີ່ມເຕີມ ແລະ ບໍລິບົດກ່ຽວກັບໂຄງການນີ້"
 
 #. module: project
 #. odoo-javascript
@@ -1686,32 +1767,32 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Design"
-msgstr ""
+msgstr "ການອອກແບບ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Determine the order in which to perform tasks"
-msgstr ""
+msgstr "ກຳນົດລຳດັບການເຮັດໜ້າວຽກ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Development"
-msgstr ""
+msgstr "ການພັດທະນາ"
 
 #. module: project
 #: model:ir.model,name:project.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "ສັງລວມ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Digital Marketing"
-msgstr ""
+msgstr "ການຕະຫຼາດດິຈິຕອນ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__disabled_rating_warning
@@ -1729,7 +1810,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 msgid "Discard"
-msgstr ""
+msgstr "ຍົກເລີກ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__display_access_mode
@@ -1757,7 +1838,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ທີ່ສະແດງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_parent_task_button
@@ -1769,7 +1850,7 @@ msgstr ""
 #: code:addons/project/models/digest_digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "ບໍ່ມີສິດເຂົ້າເຖິງ, ຂ້າມຂໍ້ມູນນີ້ສຳລັບອີເມວສະຫຼຸບລາຍງານຂອງຜູ້ໃຊ້"
 
 #. module: project
 #. odoo-javascript
@@ -1808,11 +1889,13 @@ msgid ""
 "Each user should have at least one personal stage. Create a new stage to "
 "which the tasks can be transferred after the selected ones are deleted."
 msgstr ""
+"ຜູ້ໃຊ້ແຕ່ລະຄົນຄວນມີຂັ້ນຕອນສ່ວນຕົວຢ່າງໜ້ອຍໜຶ່ງຂັ້ນຕອນ. ສ້າງຂັ້ນຕອນໃໝ່ເພື່ອໃຫ້ສາມາດຍ້າຍວຽກໄປໃສ່ໄດ້ ຫຼັງຈາກຂັ້"
+"ນຕອນທີ່ເລືອກໄວ້ຖືກລຶບອອກ."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
 msgid "Edit"
-msgstr ""
+msgstr "ແກ້ໄຂ"
 
 #. module: project
 #. odoo-javascript
@@ -1820,23 +1903,23 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Editing"
-msgstr ""
+msgstr "ກຳລັງແກ້ໄຂ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__partner_email
 msgid "Email"
-msgstr ""
+msgstr "ອີເມວ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_email
 msgid "Email Alias"
-msgstr ""
+msgstr "ນາມແຝງອີເມວ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__mail_template_id
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "ແມ່ແບບອີເມວ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -1844,56 +1927,57 @@ msgid ""
 "Email addresses that were in the CC of the incoming emails from this task "
 "and that are not currently linked to an existing customer."
 msgstr ""
+"ທີ່ຢື່ອີເມລທີ່ຢູ່ໃນ CC ຂອງອີເມລຂາເຂົ້າຈາກວຽກນີ້ ແລະ ຍັງບໍ່ທັນໄດ້ເຊື່ອມໂຍງກັບລູກຄ້າທີ່ມີຢູ່."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 #: model:ir.model.fields,field_description:project.field_project_update__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "ສຳເນົາອີເມລ (cc)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "ໂດເມນອີເມວ ເຊັ່ນ: 'example.com' ໃນ 'odoo@example.com'"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Emails sent to"
-msgstr ""
+msgstr "ອີເມວສົ່ງໄປຫາ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 #, python-format
 msgid "Employees Only"
-msgstr ""
+msgstr "ສະເພາະພະນັກງານເທົ່ານັ້ນ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_until
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_until
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "End Date"
-msgstr ""
+msgstr "ວັນທີສິ້ນສຸດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_end
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_end
 msgid "Ending Date"
-msgstr ""
+msgstr "ວັນທີສິ້ນສຸດ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Error! You cannot create a recursive hierarchy of tasks."
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດ! ທ່ານບໍ່ສາມາດສ້າງລຳດັບຊັ້ນຂອງວຽກແບບວົນຊ້ຳໄດ້."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Everyone can propose ideas, and the Editor marks the best ones as"
-msgstr ""
+msgstr "ທຸກຄົນສາມາດສະເໜີແນວຄວາມຄິດໄດ້, ແລະ ຜູ້ແກ້ໄຂຈະໝາຍອັນທີ່ດີທີ່ສຸດເປັນ"
 
 #. module: project
 #. odoo-javascript
@@ -1901,61 +1985,61 @@ msgstr ""
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Expected"
-msgstr ""
+msgstr "ຄາດໝາຍ"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_02
 msgid "Experiment"
-msgstr ""
+msgstr "ການທົດລອງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
 msgid "Expiration Date"
-msgstr ""
+msgstr "ວັນໝົດອາຍຸ"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_05
 msgid "External"
-msgstr ""
+msgstr "ພາຍນອກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Extra Info"
-msgstr ""
+msgstr "ຂໍ້ມູນເພີ່ມເຕີມ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_calendar
 msgid "Favorite"
-msgstr ""
+msgstr "ລາຍການທີ່ມັກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Favorite Projects"
-msgstr ""
+msgstr "ໂຄງການທີ່ມັກ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Final Document"
-msgstr ""
+msgstr "ເອກະສານຂັ້ນສຸດທ້າຍ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded in Kanban"
-msgstr ""
+msgstr "ພັບໄວ້ໃນ Kanban"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comments tasks of your projects"
-msgstr ""
+msgstr "ຕິດຕາມ ແລະ ສະແດງຄວາມຄິດເຫັນຕໍ່ວຽກໃນໂຄງການຂອງທ່ານ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow the evolution of your projects"
-msgstr ""
+msgstr "ຕິດຕາມຄວາມຄືບໜ້າຂອງໂຄງການຂອງທ່ານ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1967,12 +2051,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Followed"
-msgstr ""
+msgstr "ຕິດຕາມແລ້ວ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Followed Updates"
-msgstr ""
+msgstr "ການອັບເດດທີ່ຕິດຕາມ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_follower_ids
@@ -1980,7 +2064,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_follower_ids
 #: model:ir.model.fields,field_description:project.field_project_update__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "ຜູ້ຕິດຕາມ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_partner_ids
@@ -1988,31 +2072,31 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_update__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "ຜູ້ຕິດຕາມ (ຄູ່ຮ່ວມງານ)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_type_icon
 #: model:ir.model.fields,help:project.field_project_task__activity_type_icon
 #: model:ir.model.fields,help:project.field_project_update__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "ໄອຄອນ Font awesome ຕົວຢ່າງ: fa-tasks"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__forever
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_type__forever
 msgid "Forever"
-msgstr ""
+msgstr "ຕະຫຼອດໄປ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Frequency"
-msgstr ""
+msgstr "ຄວາມຖີ່"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
-msgstr ""
+msgstr "ກິດຈະກຳໃນອະນາຄົດ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
@@ -2020,16 +2104,17 @@ msgid ""
 "Get a snapshot of the status of your project and share its progress with key"
 " stakeholders."
 msgstr ""
+"ເບິ່ງພາບລວມສະຖານະຂອງໂຄງການທ່ານ ແລະ ແບ່ງປັນຄວາມຄືບໜ້າໃຫ້ກັບຜູ້ມີສ່ວນໄດ້ສ່ວນເສຍທີ່ສຳຄັນ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback and evaluate the performance of your employees"
-msgstr ""
+msgstr "ຮັບຄຳຕິຊົມຈາກລູກຄ້າ ແລະ ປະເມີນຜົນງານຂອງພະນັກງານຂອງທ່ານ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 msgid "Grant Portal Access"
-msgstr ""
+msgstr "ອະນຸຍາດການເຂົ້າເຖິງພໍທໍ"
 
 #. module: project
 #. odoo-python
@@ -2039,6 +2124,8 @@ msgid ""
 "Grant employees access to your project or tasks by adding them as followers."
 " Employees automatically get access to the tasks they are assigned to."
 msgstr ""
+"ອະນຸຍາດໃຫ້ພະນັກງານເຂົ້າເຖິງໂຄງການ ຫຼື ວຽກຂອງທ່ານໂດຍການເພີ່ມພວກເຂົາເປັນຜູ້ຕິດຕາມ. ພະນັກງານຈະໄດ້ຮັ"
+"ບສິດເຂົ້າເຖິງວຽກທີ່ພວກເຂົາໄດ້ຮັບມອບໝາຍໂດຍອັດຕະໂນມັດ."
 
 #. module: project
 #. odoo-python
@@ -2056,7 +2143,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Group By"
-msgstr ""
+msgstr "ຈັດກຸ່ມໂດຍ"
 
 #. module: project
 #. odoo-javascript
@@ -2066,19 +2153,21 @@ msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them"
 " in the chatter of the tasks."
 msgstr ""
+"ຈັດການການຮວບຮວມແນວຄວາມຄິດຂອງທ່ານພາຍໃນວຽກຂອງໂຄງການໃໝ່ ແລະ ສົນທະນາກ່ຽວກັບພວກມັນໃນຊ່ອງສົນທ"
+"ະນາຂອງວຽກ."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Handoff"
-msgstr ""
+msgstr "ສົ່ງມອບວຽກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Happy face"
-msgstr ""
+msgstr "ໃບໜ້າຍິ້ມ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__has_late_and_unreached_milestone
@@ -2091,33 +2180,33 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__has_message
 #: model:ir.model.fields,field_description:project.field_project_update__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "ມີຂໍ້ຄວາມ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__1
 msgid "High"
-msgstr ""
+msgstr "ສູງ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "History"
-msgstr ""
+msgstr "ປະຫວັດ"
 
 #. module: project
 #: model:project.project,name:project.project_project_4
 msgid "Home Make Over"
-msgstr ""
+msgstr "ການປັບປຸງເຮືອນໃໝ່"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Hours"
-msgstr ""
+msgstr "ຊົ່ວໂມງ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "How’s this project going?"
-msgstr ""
+msgstr "ໂຄງການນີ້ເປັນແນວໃດແດ່?"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__id
@@ -2135,7 +2224,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_thread_id
@@ -2143,20 +2232,21 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"ໄອດີຂອງບັນທຶກຫຼັກທີ່ມີຊື່ແຝງ (ຕົວຢ່າງ: ໂຄງການທີ່ມີຊື່ແຝງໃນການສ້າງໜ້າວຽກ)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_exception_icon
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_icon
 #: model:ir.model.fields,field_description:project.field_project_update__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "ໄອຄອນ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_exception_icon
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_icon
 #: model:ir.model.fields,help:project.field_project_update__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "ໄອຄອນເພື່ອສະແດງເຖິງກິດຈະກຳທີ່ຍົກເວັ້ນ."
 
 #. module: project
 #. odoo-javascript
@@ -2164,7 +2254,7 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Ideas"
-msgstr ""
+msgstr "ແນວຄວາມຄິດ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_needaction
@@ -2172,7 +2262,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__message_needaction
 #: model:ir.model.fields,help:project.field_project_update__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "ຖ້າໝາຍໄວ້, ຂໍ້ຄວາມໃໝ່ຕ້ອງການຄວາມສົນໃຈຈາກເຈົ້າ."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_has_error
@@ -2184,7 +2274,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_update__message_has_error
 #: model:ir.model.fields,help:project.field_project_update__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "ຖ້າໝາຍໄວ້, ບາງຂໍ້ຄວາມມີຂໍ້ຜິດພາດໃນການສົ່ງ."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__fold
@@ -2192,6 +2282,8 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban view of "
 "your projects. Projects in a folded stage are considered as closed."
 msgstr ""
+"ຖ້າເປີດໃຊ້, ຂັ້ນຕອນນີ້ຈະຖືກສະແດງແບບພັບໄວ້ໃນມຸມມອງ Kanban ຂອງໂຄງການທ່ານ. ໂຄງການທີ່ຢູ່ໃນຂັ້ນຕອນທີ່ພັ"
+"ບໄວ້ ຈະຖືກຖືວ່າປິດແລ້ວ."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2200,6 +2292,10 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
 "To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
 msgstr ""
+"ຫາກຕັ້ງໄວ້, ຄຳຂໍການໃຫ້ຄະແນນຈະຖືກສົ່ງທາງອີເມລຫາລູກຄ້າໂດຍອັດຕະໂນມັດ ເມື່ອໜ້າວຽກໄປຮອດຂັ້ນຕອນນີ້.\n"
+"ຫຼື ມັນຈະຖືກສົ່ງຕາມຊ່ວງເວລາທີ່ກຳນົດ ຕາບໃດທີ່ໜ້າວຽກຍັງຢູ່ໃນຂັ້ນຕອນນີ້, ຂຶ້ນຢູ່ກັບການກຳນົດຄ່າຂອງໂຄງການທ່າ"
+"ນ.\n"
+"ເພື່ອໃຊ້ຟີເຈີນີ້, ໃຫ້ແນ່ໃຈວ່າໄດ້ເປີດໃຊ້ຕົວເລືອກ 'ການໃຫ້ຄະແນນຈາກລູກຄ້າ' ໃນໂຄງການຂອງທ່ານແລ້ວ."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2207,6 +2303,7 @@ msgid ""
 "If set, an email will be automatically sent to the customer when the project"
 " reaches this stage."
 msgstr ""
+"ຫາກຕັ້ງໄວ້, ອີເມລຈະຖືກສົ່ງຫາລູກຄ້າໂດຍອັດຕະໂນມັດ ເມື່ອໂຄງການໄປຮອດຂັ້ນຕອນນີ້."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -2214,6 +2311,7 @@ msgid ""
 "If set, an email will be automatically sent to the customer when the task "
 "reaches this stage."
 msgstr ""
+"ຫາກຕັ້ງໄວ້, ອີເມລຈະຖືກສົ່ງຫາລູກຄ້າໂດຍອັດຕະໂນມັດ ເມື່ອໜ້າວຽກໄປຮອດຂັ້ນຕອນນີ້."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_bounced_content
@@ -2221,6 +2319,7 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"ຫາກຕັ້ງໄວ້, ເນື້ອຫາ ນີ້ຈະຖືກສົ່ງອອກໄປຫາຜູ້ໃຊ້ທີ່ບໍ່ໄດ້ຮັບອະນຸຍາດໂດຍອັດຕະໂນມັດ ແທນຂໍ້ຄວາມເລີ່ມຕົ້ນ."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -2241,14 +2340,14 @@ msgstr ""
 #: model:project.task.type,name:project.project_stage_1
 #, python-format
 msgid "In Progress"
-msgstr ""
+msgstr "ກຳລັງດຳເນີນການ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "In development"
-msgstr ""
+msgstr "ກຳລັງພັດທະນາ"
 
 #. module: project
 #. odoo-python
@@ -2257,19 +2356,19 @@ msgstr ""
 #: model:project.task.type,name:project.project_personal_stage_demo_0
 #, python-format
 msgid "Inbox"
-msgstr ""
+msgstr "ກ່ອງຂໍ້ຄວາມ"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_04
 msgid "Internal"
-msgstr ""
+msgstr "ພາຍໃນ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 #, python-format
 msgid "Internal Note"
-msgstr ""
+msgstr "ໝາຍເຫດພາຍໃນ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_id
@@ -2278,27 +2377,29 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
+"ອີເມລພາຍໃນທີ່ກ່ຽວຂ້ອງກັບໂຄງການນີ້. ອີເມລຂາເຂົ້າຈະຖືກຊິງໂຄໄນກັບໜ້າວຽກໂດຍອັດຕະໂນມັດ (ຫຼື ບັນຫາ ຫາກຕິ"
+"ດຕັ້ງໂມດູນຕິດຕາມບັນຫາ)."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 #, python-format
 msgid "Internal notes are only displayed to internal users."
-msgstr ""
+msgstr "ບັນທຶກພາຍໃນຈະຖືກສະແດງໃຫ້ເຫັນສະເພາະຜູ້ໃຊ້ພາຍໃນເທົ່ານັ້ນ."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "Invalid operator: %s"
-msgstr ""
+msgstr "ຕົວປະຕິບັດການບໍ່ຖືກຕ້ອງ: %s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "Invalid value: %s"
-msgstr ""
+msgstr "ຄ່າບໍ່ຖືກຕ້ອງ: %s"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_access_view_tree
@@ -2308,24 +2409,24 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Invite People"
-msgstr ""
+msgstr "ເຊີນຄົນ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users (private)"
-msgstr ""
+msgstr "ຜູ້ໃຊ້ພາຍໃນທີ່ຖືກເຊີນ (ສ່ວນຕົວ)"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all internal users (public)"
-msgstr ""
+msgstr "ຜູ້ໃຊ້ພໍທັລທີ່ຖືກເຊີນ ແລະ ຜູ້ໃຊ້ພາຍໃນທັງໝົດ (ສາທາລະນະ)"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Invoiced"
-msgstr ""
+msgstr "ອອກໃບແຈ້ງໜີ້ແລ້ວ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_exceeded
@@ -2344,7 +2445,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__message_is_follower
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "ເປັນຜູ້ຕິດຕາມ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_milestone_exceeded
@@ -2356,17 +2457,17 @@ msgstr ""
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Is toggle mode"
-msgstr ""
+msgstr "ແມ່ນໂໝດສະຫຼັບ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
 msgid "Issue Version"
-msgstr ""
+msgstr "ເວີຊັນຂອງບັນຫາ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
-msgstr ""
+msgstr "JSON ທີ່ຈັບຄູ່ລະຫັດຈາກຟິວ many2one ຫາວິນາທີທີ່ໃຊ້ໄປ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2377,6 +2478,8 @@ msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"ຕິດຕາມຄວາມຄືບໜ້າຂອງໜ້າວຽກຂອງທ່ານ ຕັ້ງແຕ່ການສ້າງຈົນເຖິງການສຳເລັດ.<br>\n"
+"                    ຮ່ວມມືກັນຢ່າງມີປະສິດທິພາບໂດຍການແຊັດແບບທັນທີ ຫຼື ຜ່ານອີເມລ."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
@@ -2384,6 +2487,8 @@ msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
 "                Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"ຕິດຕາມຄວາມຄືບໜ້າຂອງໜ້າວຽກຂອງທ່ານ ຕັ້ງແຕ່ການສ້າງຈົນເຖິງການສຳເລັດ.<br>\n"
+"                ຮ່ວມມືກັນຢ່າງມີປະສິດທິພາບໂດຍການແຊັດແບບທັນທີ ຫຼື ຜ່ານອີເມລ."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
@@ -2393,7 +2498,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Last Month"
-msgstr ""
+msgstr "ເດືອນແລ້ວ"
 
 #. module: project
 #. odoo-python
@@ -2404,12 +2509,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, python-format
 msgid "Last Stage Update"
-msgstr ""
+msgstr "ອັບເດດຂັ້ນຕອນລ່າສຸດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_id
 msgid "Last Update"
-msgstr ""
+msgstr "ອັບເດດຫຼ້າສຸດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_color
@@ -2419,12 +2524,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_status
 msgid "Last Update Status"
-msgstr ""
+msgstr "ສະຖານະການອັບເດດລ່າສຸດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "ອັບເດດຫຼ້າສຸດເມື່ອ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__write_uid
@@ -2441,7 +2546,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__write_uid
 #: model:ir.model.fields,field_description:project.field_project_update__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ອັບເດດລ້າສຸດໂດຍ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__write_date
@@ -2457,18 +2562,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__write_date
 #: model:ir.model.fields,field_description:project.field_project_update__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ອັບເດດລ້າສຸດເມື່ອ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
-msgstr ""
+msgstr "ກິດຈະກຳທີ່ຊັກຊ້າ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Late Milestones"
-msgstr ""
+msgstr "ໝຸດໝາຍຄວາມຄືບໜ້າທີ່ຊັກຊ້າ"
 
 #. module: project
 #. odoo-python
@@ -2477,14 +2582,14 @@ msgstr ""
 #: model:project.task.type,name:project.project_personal_stage_demo_4
 #, python-format
 msgid "Later"
-msgstr ""
+msgstr "ພາຍຫຼັງ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "Leave a comment"
-msgstr ""
+msgstr "ສະແດງຄວາມຄິດເຫັນ"
 
 #. module: project
 #. odoo-javascript
@@ -2492,28 +2597,28 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
-msgstr ""
+msgstr "ມາສ້າງ <b>ໂຄງການ</b> ທຳອິດຂອງທ່ານກັນເລີຍ."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>stage</b>."
-msgstr ""
+msgstr "ມາສ້າງ <b>ຂັ້ນຕອນ</b> ທຳອິດຂອງທ່ານກັນເລີຍ."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>task</b>."
-msgstr ""
+msgstr "ມາສ້າງ <b>ວຽກ</b> ທຳອິດຂອງທ່ານ."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your second <b>stage</b>."
-msgstr ""
+msgstr "ມາສ້າງ <b>ຂັ້ນຕອນ</b> ທີສອງຂອງທ່ານກັນເລີຍ."
 
 #. module: project
 #. odoo-javascript
@@ -2523,56 +2628,57 @@ msgid ""
 "Let's go back to the <b>kanban view</b> to have an overview of your next "
 "tasks."
 msgstr ""
+"ກັບໄປທີ່ <b>ມຸມມອງຄຳບັງ (Kanban)</b> ເພື່ອເບິ່ງພາບລວມຂອງວຽກຕໍ່ໄປຂອງທ່ານ."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's start working on your task."
-msgstr ""
+msgstr "ເລີ່ມລົງມືເຮັດວຽກຂອງທ່ານກັນເລີຍ."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "Let's wait for your customers to manifest themselves."
-msgstr ""
+msgstr "ລໍຖ້າໃຫ້ລູກຄ້າຂອງທ່ານສະແດງຄວາມຄິດເຫັນອອກມາ."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Link"
-msgstr ""
+msgstr "ລິ້ງ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Live"
-msgstr ""
+msgstr "ໃຊ້ງານຈິງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "ການກວດຈັບຂາເຂົ້າໂດຍອີງຕາມພາກສ່ວນທ້ອງຖິ່ນ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Logo Design"
-msgstr ""
+msgstr "ການອອກແບບໂລໂກ້"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Look for the"
-msgstr ""
+msgstr "ຊອກຫາ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__0
 msgid "Low"
-msgstr ""
+msgstr "ຕ່ຳ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__attachment_ids
@@ -2587,6 +2693,8 @@ msgid ""
 "Manage the lifecycle of your project using the kanban view. Add newly acquired projects,\n"
 "      assign them and use the"
 msgstr ""
+"ຄຸ້ມຄອງວົງຈອນຊີວິດຂອງໂຄງການຂອງທ່ານໂດຍໃຊ້ການເບິ່ງແບບຄານບານ. ເພີ່ມໂຄງການທີ່ໄດ້ມາໃໝ່,\n"
+"      ມອບໝາຍພວກມັນ ແລະ ນຳໃຊ້"
 
 #. module: project
 #. odoo-javascript
@@ -2594,28 +2702,28 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Manufacturing"
-msgstr ""
+msgstr "ການຜະລິດ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Margin"
-msgstr ""
+msgstr "ສ່ວນຕ່າງ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 #, python-format
 msgid "Mark as done"
-msgstr ""
+msgstr "ໝາຍວ່າສຳເລັດ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Material Sourcing"
-msgstr ""
+msgstr "ການຈັດຫາວັດສະດຸ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -2623,21 +2731,22 @@ msgid ""
 "Measure your customer satisfaction by sending rating requests when your "
 "tasks reach a certain stage."
 msgstr ""
+"ວັດແທກຄວາມເພິ່ງພໍໃຈຂອງລູກຄ້າໂດຍການສົ່ງຄຳຮ້ອງຂໍການໃຫ້ຄະແນນເມື່ອວຽກຮອດຂັ້ນຕອນໃດໜຶ່ງ."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "ສະມາຊິກ"
 
 #. module: project
 #: model:ir.model,name:project.model_ir_ui_menu
 msgid "Menu"
-msgstr ""
+msgstr "ເມນູ"
 
 #. module: project
 #: model:ir.model,name:project.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_error
@@ -2645,7 +2754,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດໃນການສົ່ງຂໍ້ຄວາມ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_ids
@@ -2653,7 +2762,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_ids
 #: model:ir.model.fields,field_description:project.field_project_update__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "ຂໍ້ຄວາມ"
 
 #. module: project
 #. odoo-javascript
@@ -2669,7 +2778,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, python-format
 msgid "Milestone"
-msgstr ""
+msgstr "ຈຸດໝາຍສຳຄັນ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_count
@@ -2691,43 +2800,43 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #, python-format
 msgid "Milestones"
-msgstr ""
+msgstr "ເປົ້າໝາຍສຳຄັນ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Mixing"
-msgstr ""
+msgstr "ການປະສົມ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__month
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__month
 msgid "Months"
-msgstr ""
+msgstr "ເດືອນ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__my_activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task__my_activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "ວັນກຳນົດກິດຈະກຳຂອງຂ້ອຍ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "My Deadline"
-msgstr ""
+msgstr "ກຳນົດເວລາຂອງຂ້ອຍ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
-msgstr ""
+msgstr "ລາຍການທີ່ຂ້ອຍມັກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Projects"
-msgstr ""
+msgstr "ໂຄງການຂອງຂ້ອຍ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_my_task
@@ -2735,12 +2844,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 msgid "My Tasks"
-msgstr ""
+msgstr "ວຽກຂອງຂ້ອຍ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "My Updates"
-msgstr ""
+msgstr "ການອັບເດດຂອງຂ້ອຍ"
 
 #. module: project
 #. odoo-python
@@ -2766,7 +2875,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the Tasks"
-msgstr ""
+msgstr "ຊື່ຂອງວຽກ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
@@ -2774,12 +2883,13 @@ msgid ""
 "Name used to refer to the tasks of your project e.g. tasks, tickets, "
 "sprints, etc..."
 msgstr ""
+"ຊື່ທີ່ໃຊ້ເພື່ອອ້າງອີງເຖິງວຽກຕ່າງໆໃນໂຄງການຂອງທ່ານ ເຊັ່ນ: ວຽກ, ບັດແຈ້ງບັນຫາ, sprints, ແລະ ອື່ນໆ..."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
-msgstr ""
+msgstr "ໃບໜ້າປົກກະຕິ"
 
 #. module: project
 #. odoo-javascript
@@ -2790,19 +2900,19 @@ msgstr ""
 #: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "ໃໝ່"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_01
 msgid "New Feature"
-msgstr ""
+msgstr "ຄຸນສົມບັດໃໝ່"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.js:0
 #, python-format
 msgid "New Milestone"
-msgstr ""
+msgstr "ຫຼັກໝາຍໃໝ່"
 
 #. module: project
 #. odoo-javascript
@@ -2810,35 +2920,35 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "New Orders"
-msgstr ""
+msgstr "ຄຳສັ່ງຊື້ໃໝ່"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_project_calendar/project_project_calendar_controller.js:0
 #, python-format
 msgid "New Project"
-msgstr ""
+msgstr "ໂຄງການໃໝ່"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "New Projects"
-msgstr ""
+msgstr "ໂຄງການໃໝ່"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "New Request"
-msgstr ""
+msgstr "ຄຳຮ້ອງຂໍໃໝ່"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_calendar/project_task_calendar_controller.js:0
 #, python-format
 msgid "New Task"
-msgstr ""
+msgstr "ວຽກໃໝ່"
 
 #. module: project
 #. odoo-python
@@ -2846,7 +2956,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Newest"
-msgstr ""
+msgstr "ໃໝ່ທີ່ສຸດ"
 
 #. module: project
 #. odoo-javascript
@@ -2854,68 +2964,68 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_pager.xml:0
 #, python-format
 msgid "Next"
-msgstr ""
+msgstr "ຖັດໄປ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Next Activity"
-msgstr ""
+msgstr "ກິດຈະກຳຖັດໄປ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
 #: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
 #: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "ເຫດການປະຕິທິນກິດຈະກຳຖັດໄປ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "ວັນກຳນົດກິດຈະກຳຖັດໄປ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_summary
 #: model:ir.model.fields,field_description:project.field_project_task__activity_summary
 #: model:ir.model.fields,field_description:project.field_project_update__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "ສະຫຼຸບກິດຈະກຳຖັດໄປ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_type_id
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_id
 #: model:ir.model.fields,field_description:project.field_project_update__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "ປະເພດກິດຈະກຳຖັດໄປ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Customer"
-msgstr ""
+msgstr "ບໍ່ມີລູກຄ້າ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Milestone"
-msgstr ""
+msgstr "ບໍ່ມີຫຼັກໝາຍ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Project"
-msgstr ""
+msgstr "ບໍ່ມີໂຄງການ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "ບໍ່ມີຫົວຂໍ້"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_type_action_config_project_types
 msgid "No activity types found. Let's create one!"
-msgstr ""
+msgstr "ບໍ່ພົບປະເພດກິດຈະກຳ. ມາສ້າງໃໝ່ກັນເທາະ!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
@@ -2926,13 +3036,13 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "No customer ratings yet"
-msgstr ""
+msgstr "ຍັງບໍ່ມີການໃຫ້ຄະແນນຈາກລູກຄ້າ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid "No data yet!"
-msgstr ""
+msgstr "ຍັງບໍ່ມີຂໍ້ມູນ!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -2940,18 +3050,18 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config_group_stage
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_group_stage
 msgid "No projects found. Let's create one!"
-msgstr ""
+msgstr "ບໍ່ພົບໂຄງການ. ມາສ້າງໂຄງການໃໝ່ກັນເລີຍ!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid "No stages found. Let's create one!"
-msgstr ""
+msgstr "ບໍ່ພົບຂັ້ນຕອນ. ມາສ້າງຂັ້ນຕອນໃໝ່ກັນເລີຍ!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "No tags found. Let's create one!"
-msgstr ""
+msgstr "ບໍ່ພົບແທັກ. ມາສ້າງກັນເລີຍ!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2963,31 +3073,31 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action_sub_task
 #: model_terms:ir.actions.act_window,help:project.project_task_action_sub_task
 msgid "No tasks found. Let's create one!"
-msgstr ""
+msgstr "ບໍ່ພົບໜ້າວຽກ. ມາສ້າງໃໝ່ນຳກັນເລີຍ!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
 msgid "No updates found. Let's create one!"
-msgstr ""
+msgstr "ບໍ່ພົບການອັບເດດ. ມາສ້າງກັນເລີຍ!"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "None"
-msgstr ""
+msgstr "ບໍ່ມີ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Not Implemented."
-msgstr ""
+msgstr "ຍັງບໍ່ໄດ້ຈັດຕັ້ງປະຕິບັດ."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__note
 msgid "Note"
-msgstr ""
+msgstr "ໝາຍເຫດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_needaction_counter
@@ -2995,7 +3105,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction_counter
 #: model:ir.model.fields,field_description:project.field_project_update__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "ຈຳນວນການດຳເນີນການ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage_delete_wizard__projects_count
@@ -3018,7 +3128,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error_counter
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຜິດພາດ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_needaction_counter
@@ -3026,7 +3136,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_update__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ຕ້ອງໄດ້ດຳເນີນການ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_has_error_counter
@@ -3034,60 +3144,60 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__message_has_error_counter
 #: model:ir.model.fields,help:project.field_project_update__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ມີຂໍ້ຜິດພາດໃນການສົ່ງ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__off_track
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__off_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Off Track"
-msgstr ""
+msgstr "ຫຼຸດແຜນ"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_office_design
 #: model:project.project,name:project.project_project_1
 msgid "Office Design"
-msgstr ""
+msgstr "ການອອກແບບຫ້ອງການ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Old Completed Sprint"
-msgstr ""
+msgstr "Sprint ທີ່ສຳເລັດແລ້ວໃນອະດີດ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_hold
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_hold
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Hold"
-msgstr ""
+msgstr "ຢຸດຊົ່ວຄາວ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_track
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Track"
-msgstr ""
+msgstr "ຕາມແຜນ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
 msgid "Once a Month"
-msgstr ""
+msgstr "ເດືອນລະຄັ້ງ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Only jpeg, png, bmp and tiff images are allowed as attachments."
-msgstr ""
+msgstr "ອະນຸຍາດໃຫ້ຄັດຕິດສະເພາະຮູບພາບ jpeg, png, bmp ແລະ tiff ເທົັ້ນັ້ນ."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
+msgstr "ຂໍອະໄພ! ມີບາງຢ່າງຜິດພາດ. ກະລຸນາລອງໂຫຼດໜ້າໃໝ່ ແລະ ເຂົ້າລະບົບຄືນ."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__open_task_count
@@ -3099,14 +3209,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Open Tasks"
-msgstr ""
+msgstr "ວຽກທີ່ກຳລັງເປີດ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "ບໍ່ຮອງຮັບການດຳເນີນການນີ້"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -3115,13 +3225,15 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"ໄອດີທາງເລືອກຂອງຫົວຂໍ້ (ບັນທຶກ) ທີ່ຂໍ້ຄວາມຂາເຂົ້າທັງໝົດຈະຖືກຄັດຕິດ, ເຖິງແມ່ນວ່າພວກເຂົາບໍ່ໄດ້ຕອບກັບກໍຕາມ. "
+"ຫາກຕັ້ງໄວ້, ສິ່ງນີ້ຈະປິດການສ້າງບັນທຶກໃໝ່ໂດຍສິ້ນເຊີງ."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Organize priorities amongst orders using the"
-msgstr ""
+msgstr "ຈັດລໍາດັບຄວາມສໍາຄັນໃນບັນດາຄໍາສັ່ງຊື້ໂດຍໃຊ້"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3130,35 +3242,37 @@ msgid ""
 "Organize your tasks by dispatching them across the pipeline.<br>\n"
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"ຈັດລະບຽບວຽກຂອງທ່ານໂດຍການກະຈາຍພວກມັນໄປຕາມ pipeline.<br> ຮ່ວມມືກັນຢ່າງມີປະສິດທິພາບໂດຍການສົ"
+"ນທະນາແບບສົດໆ ຫຼື ຜ່ານອີເມລ."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Others"
-msgstr ""
+msgstr "ອື່ນໆ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
-msgstr ""
+msgstr "ວຽກທີ່ກາຍກຳນົດ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Page Ideas"
-msgstr ""
+msgstr "ໄອເດຍຂອງໜ້າ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_model_id
 msgid "Parent Model"
-msgstr ""
+msgstr "ໂມເດວຫຼັກ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "ໄອດີຫົວຂໍ້ບັນທຶກຫຼັກ"
 
 #. module: project
 #. odoo-python
@@ -3167,7 +3281,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__parent_id
 #, python-format
 msgid "Parent Task"
-msgstr ""
+msgstr "ວຽກຫຼັກ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_model_id
@@ -3176,6 +3290,8 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"ໂມເດວຫຼັກທີ່ມີຊື່ແຝງ. ໂມເດວທີ່ມີການອ້າງອີງຊື່ແຝງນັ້ນ ບໍ່ຈຳເປັນຕ້ອງເປັນໂມເດວທີ່ລະບຸໂດຍ alias_model_id "
+"(ຕົວຢ່າງ: project (parent_model) ແລະ task (model))"
 
 #. module: project
 #. odoo-python
@@ -3183,20 +3299,20 @@ msgstr ""
 #, python-format
 msgid ""
 "Partner company cannot be different from its assigned projects' company"
-msgstr ""
+msgstr "ບໍລິສັດຄູ່ຮ່ວມງານບໍ່ສາມາດແຕກຕ່າງຈາກບໍລິສັດຂອງໂຄງການທີ່ໄດ້ຮັບມອບໝາຍ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/res_partner.py:0
 #, python-format
 msgid "Partner company cannot be different from its assigned tasks' company"
-msgstr ""
+msgstr "ບໍລິສັດຄູ່ຮ່ວມງານບໍ່ສາມາດແຕກຕ່າງຈາກບໍລິສັດຂອງວຽກທີ່ໄດ້ຮັບມອບໝາຍ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
 msgid ""
 "People invited to collaborate on the project will have portal access rights."
-msgstr ""
+msgstr "ຜູ້ທີ່ຖືກເຊີນໃຫ້ຮ່ວມມືໃນໂຄງການຈະໄດ້ຮັບສິດເຂົ້າເຖິງຜ່ານ portal."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3221,7 +3337,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr ""
+msgstr "ເປີເຊັນຂອງການໃຫ້ຄະແນນທີ່ພໍໃຈ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_id
@@ -3230,12 +3346,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_calendar
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Personal Stage"
-msgstr ""
+msgstr "ຂັ້ນຕອນສ່ວນຕົວ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_id
 msgid "Personal Stage State"
-msgstr ""
+msgstr "ສະຖານະຂັ້ນຕອນສ່ວນຕົວ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
@@ -3245,13 +3361,13 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_task_stage_personal
 msgid "Personal Task Stage"
-msgstr ""
+msgstr "ຂັ້ນຕອນວຽກສ່ວນຕົວ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "Planned Date"
-msgstr ""
+msgstr "ວັນທີວາງແຜນ"
 
 #. module: project
 #. odoo-python
@@ -3260,14 +3376,14 @@ msgstr ""
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
 "to delete."
-msgstr ""
+msgstr "ກະລຸນາລຶບວຽກທີ່ມີຢູ່ໃນໂຄງການທີ່ເຊື່ອມໂຍງກັບບັນຊີທີ່ທ່ານຕ້ອງການລຶບ."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Podcast and Video Production"
-msgstr ""
+msgstr "ການຜະລິດພອດແຄສ ແລະ ວິດີໂອ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_contact
@@ -3277,12 +3393,16 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"ນະໂຍບາຍການໂພສຂໍ້ຄວາມລົງໃນເອກະສານໂດຍໃຊ້ mailgateway.\n"
+"- everyone: ທຸກຄົນສາມາດໂພສໄດ້\n"
+"- partners: ສະເພາະຄູ່ຄ້າທີ່ຢືນຢັນຕົວຕົນແລ້ວ\n"
+"- followers: ສະເພາະຜູ້ຕິດຕາມເອກະສານທີ່ກ່ຽວຂ້ອງ ຫຼື ສະມາຊິກຂອງຊ່ອງທາງທີ່ຕິດຕາມ\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_url
 #: model:ir.model.fields,field_description:project.field_project_task__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "URL ເຂົ້າເຖິງ Portal"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__portal_user_names
@@ -3296,7 +3416,7 @@ msgstr ""
 msgid ""
 "Portal users will be removed from the followers of the project and its "
 "tasks."
-msgstr ""
+msgstr "ຜູ້ໃຊ້ Portal ຈະຖືກລຶບອອກຈາກການຕິດຕາມໂຄງການ ແລະ ວຽກຂອງມັນ."
 
 #. module: project
 #. odoo-javascript
@@ -3304,14 +3424,14 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_pager.xml:0
 #, python-format
 msgid "Previous"
-msgstr ""
+msgstr "ກ່ອນໜ້າ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Prioritize your tasks by marking important ones using the"
-msgstr ""
+msgstr "ຈັດລໍາດັບຄວາມສໍາຄັນຂອງວຽກໂດຍການໝາຍວຽກທີ່ສໍາຄັນໂດຍໃຊ້"
 
 #. module: project
 #. odoo-python
@@ -3321,17 +3441,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__priority
 #, python-format
 msgid "Priority"
-msgstr ""
+msgstr "ລຳດັບຄວາມສຳຄັນ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks_priority_widget_template
 msgid "Priority: {{'Important' if task.priority == '1' else 'Normal'}}"
-msgstr ""
+msgstr "Priority: {{'Important' if task.priority == '1' else 'Normal'}}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility_warning
 msgid "Privacy Visibility Warning"
-msgstr ""
+msgstr "ຄຳເຕືອນຄວາມເປັນສ່ວນຕົວໃນການເບິ່ງເຫັນ"
 
 #. module: project
 #. odoo-javascript
@@ -3343,12 +3463,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 #, python-format
 msgid "Private"
-msgstr ""
+msgstr "ສ່ວນຕົວ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Private Tasks"
-msgstr ""
+msgstr "ວຽກສ່ວນຕົວ"
 
 #. module: project
 #. odoo-python
@@ -3365,14 +3485,14 @@ msgstr ""
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Profitability"
-msgstr ""
+msgstr "ຄວາມສາມາດໃນການສ້າງກຳໄລ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__progress
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_tree
 msgid "Progress"
-msgstr ""
+msgstr "ຄວາມຄືບໜ້າ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__progress_percentage
@@ -3409,7 +3529,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 #, python-format
 msgid "Project"
-msgstr ""
+msgstr "ໂຄງການ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_collaborator_action
@@ -3429,23 +3549,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Manager"
-msgstr ""
+msgstr "ຜູ້ຈັດການໂຄງການ"
 
 #. module: project
 #: model:ir.model,name:project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "ຫຼັກໝາຍໂຄງການ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_activity
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban
 msgid "Project Name"
-msgstr ""
+msgstr "ຊື່ໂຄງການ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
 msgid "Project Rating Status"
-msgstr ""
+msgstr "ສະຖານະການໃຫ້ຄະແນນໂຄງການ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__project_id
@@ -3456,60 +3576,60 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action
 #: model:ir.model,name:project.model_project_share_wizard
 msgid "Project Sharing"
-msgstr ""
+msgstr "ການແບ່ງປັນໂຄງການ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "Project Sharing: Task"
-msgstr ""
+msgstr "ການແບ່ງປັນໂຄງການ: ວຽກ"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage
 msgid "Project Stage"
-msgstr ""
+msgstr "ຂັ້ນຕອນໂຄງການ"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_stage_change
 msgid "Project Stage Changed"
-msgstr ""
+msgstr "ຂັ້ນຕອນໂຄງການປ່ຽນແລ້ວ"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project_stage_delete_wizard
 msgid "Project Stage Delete Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍສ້າງການລຶບຂັ້ນຕອນໂຄງການ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_stages
 #: model:ir.ui.menu,name:project.menu_project_config_project_stage
 msgid "Project Stages"
-msgstr ""
+msgstr "ຂັ້ນຕອນໂຄງການ"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tags"
-msgstr ""
+msgstr "ແທັກໂຄງການ"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Task Stage Delete Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍສ້າງການລຶບຂັ້ນຕອນວຽກໂຄງການ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "Project Tasks"
-msgstr ""
+msgstr "ວຽກໂຄງການ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.quick_create_project_form
 msgid "Project Title"
-msgstr ""
+msgstr "ຫົວຂໍ້ໂຄງການ"
 
 #. module: project
 #: model:ir.model,name:project.model_project_update
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "Project Update"
-msgstr ""
+msgstr "ການອັບເດດໂຄງການ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_update_all_action
@@ -3520,42 +3640,42 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
 msgid "Project Visibility"
-msgstr ""
+msgstr "ການເບິ່ງເຫັນໂຄງການ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Project description..."
-msgstr ""
+msgstr "ລາຍລະອຽດໂຄງການ..."
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
 msgid "Project status - {{ object.name }}"
-msgstr ""
+msgstr "ສະຖານະໂຄງການ - {{ object.name }}"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr ""
+msgstr "ວຽກຂອງໂຄງການ"
 
 #. module: project
 #: model:mail.template,name:project.project_done_email_template
 msgid "Project: Project Completed"
-msgstr ""
+msgstr "ໂຄງການ: ໂຄງການສຳເລັດແລ້ວ"
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
 msgid "Project: Request Acknowledgment"
-msgstr ""
+msgstr "ໂຄງການ: ຄຳຮ້ອງຂໍການຮັບຊາບ"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 msgid "Project: Send rating"
-msgstr ""
+msgstr "ໂຄງການ: ສົ່ງການໃຫ້ຄະແນນ"
 
 #. module: project
 #: model:mail.template,name:project.rating_project_request_email_template
 msgid "Project: Task Rating Request"
-msgstr ""
+msgstr "ໂຄງການ: ຄຳຮ້ອງຂໍການໃຫ້ຄະແນນວຽກ"
 
 #. module: project
 #. odoo-python
@@ -3582,7 +3702,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_calendar
 #, python-format
 msgid "Projects"
-msgstr ""
+msgstr "ໂຄງການ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config_group_stage
@@ -3590,6 +3710,7 @@ msgstr ""
 msgid ""
 "Projects contain tasks on the same topic, and each has its own dashboard."
 msgstr ""
+"ໂຄງການປະກອບດ້ວຍວຽກໃນຫົວຂໍ້ດຽວກັນ, ແລະ ແຕ່ລະໂຄງການມີ dashboard ຂອງຕົນເອງ."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__project_ids
@@ -3598,13 +3719,14 @@ msgid ""
 " several projects, you can share this stage among them and get consolidated "
 "information this way."
 msgstr ""
+"ໂຄງການທີ່ຂັ້ນຕອນນີ້ປະກົດຢູ່. ທ່ານສາມາດແບ່ງປັນຂັ້ນຕອນນີ້ລະຫວ່າງຫຼາຍໂຄງການໄດ້."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__task_properties
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Properties"
-msgstr ""
+msgstr "ຄຸນສົມບັດ"
 
 #. module: project
 #. odoo-javascript
@@ -3612,26 +3734,26 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Published"
-msgstr ""
+msgstr "ເຜີຍແຜ່ແລ້ວ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 #, python-format
 msgid "Published on"
-msgstr ""
+msgstr "ເຜີຍແຜ່ເມື່ອ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Publishing"
-msgstr ""
+msgstr "ກຳລັງເຜີຍແຜ່"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
 msgid "Quarterly"
-msgstr ""
+msgstr "ປະຈຳໄຕມາດ"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -3639,49 +3761,49 @@ msgid ""
 "Quickly check the status of tasks for approvals or change requests and "
 "identify those on hold until dependencies are resolved with the hourglass "
 "icon."
-msgstr ""
+msgstr "ກວດສອບສະຖານະຂອງວຽກເພື່ອການອະນຸມັດ ຫຼື ການຮ້ອງຂໍການປ່ຽນແປງຢ່າງວ່ອງໄວ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Rating"
-msgstr ""
+msgstr "ການໃຫ້ຄະແນນ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
 msgid "Rating (/5)"
-msgstr ""
+msgstr "ຄະແນນ (/5)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
 msgid "Rating Avg Text"
-msgstr ""
+msgstr "ຂໍ້ຄວາມຄະແນນສະເລ່ຍ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
 msgid "Rating Email Template"
-msgstr ""
+msgstr "ເທມເພລດອີເມລການໃຫ້ຄະແນນ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status_period
 msgid "Rating Frequency"
-msgstr ""
+msgstr "ຄວາມຖີ່ຂອງການໃຫ້ຄະແນນ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "ຄຳຕິຊົມຫຼ້າສຸດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "ຮູບພາບການໃຫ້ຄະແນນຫຼ້າສຸດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "ຄ່າການໃຫ້ຄະແນນຫຼ້າສຸດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
@@ -3692,12 +3814,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
 #: model:ir.model.fields,field_description:project.field_project_task__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr ""
+msgstr "ຄວາມເພິ່ງພໍໃຈໃນການໃຫ້ຄະແນນ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_text
 msgid "Rating Text"
-msgstr ""
+msgstr "ຂໍ້ຄວາມການໃຫ້ຄະແນນ"
 
 #. module: project
 #. odoo-javascript
@@ -3710,7 +3832,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "ຈຳນວນການໃຫ້ຄະແນນ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_task
@@ -3720,100 +3842,100 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__rating_ids
 #: model:ir.model.fields,field_description:project.field_project_update__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "ການໃຫ້ຄະແນນ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_reached
 msgid "Reached"
-msgstr ""
+msgstr "ບັນລຸແລ້ວ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__reached_date
 msgid "Reached Date"
-msgstr ""
+msgstr "ວັນທີບັນລຸ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__read
 msgid "Readonly"
-msgstr ""
+msgstr "ອ່ານໄດ້ຢ່າງດຽວ"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of {{ object.name }}"
-msgstr ""
+msgstr "ການຮັບຂອງ {{ object.name }}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__partner_ids
 msgid "Recipients"
-msgstr ""
+msgstr "ຜູ້ຮັບ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "ໄອດີຫົວຂໍ້ບັນທຶກ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Recording"
-msgstr ""
+msgstr "ການບັນທຶກ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_id
 msgid "Recurrence"
-msgstr ""
+msgstr "ການເກີດຊ້ຳ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_task
 msgid "Recurrent"
-msgstr ""
+msgstr "ທີ່ເກີດຊ້ຳ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_recurring_tasks
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Recurring Tasks"
-msgstr ""
+msgstr "ວຽກທີ່ເກີດຊໍ້າ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Refused"
-msgstr ""
+msgstr "ຖືກປະຕິເສດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__resource_ref
 msgid "Related Document"
-msgstr ""
+msgstr "ເອກະສານທີ່ກ່ຽວຂ້ອງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_id
 msgid "Related Document ID"
-msgstr ""
+msgstr "ລະຫັດເອກະສານທີ່ກ່ຽວຂ້ອງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_model
 msgid "Related Document Model"
-msgstr ""
+msgstr "ແບບຈຳລອງເອກະສານທີ່ກ່ຽວຂ້ອງ"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_renovations
 #: model:project.project,name:project.project_project_3
 msgid "Renovations"
-msgstr ""
+msgstr "ການປັບປຸງໃໝ່"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_interval
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_interval
 msgid "Repeat Every"
-msgstr ""
+msgstr "ເຮັດຊ້ຳທຸກໆ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_unit
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_unit
 msgid "Repeat Unit"
-msgstr ""
+msgstr "ຫົວໜ່ວຍການເຮັດຊ້ຳ"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
@@ -3826,48 +3948,48 @@ msgstr "ບົດລາຍງານ"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research"
-msgstr ""
+msgstr "ການວິໄຈ"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_research_development
 #: model:project.project,name:project.project_project_2
 msgid "Research & Development"
-msgstr ""
+msgstr "ການວິໄຈ ແລະ ພັດທະນາ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research Project"
-msgstr ""
+msgstr "ໂຄງການວິໄຈ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Researching"
-msgstr ""
+msgstr "ກຳລັງວິໄຈ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Resources Allocation"
-msgstr ""
+msgstr "ການຈັດສັນຊັບພະຍາກອນ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_user_id
 #: model:ir.model.fields,field_description:project.field_project_task__activity_user_id
 #: model:ir.model.fields,field_description:project.field_project_update__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "ຜູ້ຮັບຜິດຊອບ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Revenues"
-msgstr ""
+msgstr "ລາຍຮັບ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_sms_error
@@ -3875,107 +3997,107 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_sms_error
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດໃນການສົ່ງ SMS"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
-msgstr ""
+msgstr "ໃບໜ້າເສົ້າ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 #, python-format
 msgid "Save the task to be able to drag images in description"
-msgstr ""
+msgstr "ບັນທຶກວຽກເພື່ອໃຫ້ສາມາດລາກຮູບພາບລົງໃນລາຍລະອຽດໄດ້"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/views/form/project_sharing_form_controller.js:0
 #, python-format
 msgid "Save the task to be able to paste images in description"
-msgstr ""
+msgstr "ບັນທຶກວຽກເພື່ອໃຫ້ສາມາດວາງຮູບພາບລົງໃນລາຍລະອຽດໄດ້"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Schedule your activity once it is ready."
-msgstr ""
+msgstr "ຈັດຕາຕະລາງກິດຈະກຳຂອງທ່ານເມື່ອມັນພ້ອມແລ້ວ."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Script"
-msgstr ""
+msgstr "ສະຄຣິບ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
-msgstr ""
+msgstr "ຄົ້ນຫາ <span class=\"nolabel\"> (ໃນເນື້ອຫາ)</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Search Project"
-msgstr ""
+msgstr "ຄົ້ນຫາໂຄງການ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Search Update"
-msgstr ""
+msgstr "ຄົ້ນຫາການອັບເດດ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in All"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນທັງໝົດ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Assignees"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນຜູ້ຮັບມອບໝາຍ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Customer"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນລູກຄ້າ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Messages"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນ ຂໍ້ຄວາມ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Milestone"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນຫຼັກໝາຍ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Priority"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນຄວາມສໍາຄັນ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Project"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນໂຄງການ"
 
 #. module: project
 #. odoo-python
@@ -3989,20 +4111,20 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນຂັ້ນຕອນ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Status"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນສະຖານະ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
 #: model:ir.model.fields,field_description:project.field_project_task__access_token
 msgid "Security Token"
-msgstr ""
+msgstr "ໂທເຄັນຄວາມປອດໄພ"
 
 #. module: project
 #. odoo-javascript
@@ -4010,13 +4132,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 #, python-format
 msgid "Send"
-msgstr ""
+msgstr "ສົ່ງ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_task
 msgid "Send Email"
-msgstr ""
+msgstr "ສົ່ງອີເມລ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__sequence
@@ -4024,12 +4146,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "ລຳດັບ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr ""
+msgstr "ຕັ້ງຮູບໜ້າປົກ"
 
 #. module: project
 #. odoo-python
@@ -4037,34 +4159,34 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__to_define
 #, python-format
 msgid "Set Status"
-msgstr ""
+msgstr "ຕັ້ງສະຖານະ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set a Rating Email Template on Stages"
-msgstr ""
+msgstr "ຕັ້ງເທມເພລດອີເມລການໃຫ້ຄະແນນໃນແຕ່ລະຂັ້ນຕອນ"
 
 #. module: project
 #: model:mail.template,description:project.project_done_email_template
 msgid ""
 "Set on project's stages to inform customers when a project reaches that "
 "stage"
-msgstr ""
+msgstr "ຕັ້ງໃນຂັ້ນຕອນຂອງໂຄງການເພື່ອແຈ້ງໃຫ້ລູກຄ້າຊາບເມື່ອໂຄງການໄປຮອດຂັ້ນຕອນນັ້ນ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_priority_switch_field/project_task_priority_switch_field.js:0
 #, python-format
 msgid "Set priority as %s"
-msgstr ""
+msgstr "ຕັ້ງຄວາມສໍາຄັນເປັນ %s"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.js:0
 #, python-format
 msgid "Set state as..."
-msgstr ""
+msgstr "ຕັ້ງສະພາບເປັນ..."
 
 #. module: project
 #: model:mail.template,description:project.rating_project_request_email_template
@@ -4072,6 +4194,8 @@ msgid ""
 "Set this template on a project stage to request feedback from your "
 "customers. Enable the \"customer ratings\" feature on the project"
 msgstr ""
+"ກໍານົດແບບຟອມນີ້ໃນຂັ້ນຕອນຂອງໂຄງການເພື່ອຂໍຄຳຄິດເຫັນຈາກລູກຄ້າຂອງທ່ານ. ເປີດນຳໃຊ້ຄຸນສົມບັດ \"ການໃຫ້ຄະແ"
+"ນນຂອງລູກຄ້າ\" ໃນໂຄງການ"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -4079,6 +4203,7 @@ msgid ""
 "Set this template on a project's stage to automate email when tasks reach "
 "stages"
 msgstr ""
+"ຕັ້ງແມ່ແບບນີ້ໄວ້ໃນຂັ້ນຕອນຂອງໂຄງການເພື່ອສົ່ງອີເມວອັດຕະໂນມັດເມື່ອວຽກຮອດຂັ້ນຕອນນັ້ນ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -4093,7 +4218,7 @@ msgstr "ການກໍານົດຄ່າ"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Share"
-msgstr ""
+msgstr "ແບ່ງປັນ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4104,7 +4229,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.project_share_wizard_action
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Share Project"
-msgstr ""
+msgstr "ແບ່ງປັນໂຄງການ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4120,54 +4245,54 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "ສະແດງທຸກລາຍການທີ່ມີກຳນົດການດຳເນີນການຖັດໄປກ່ອນມື້ນີ້"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "Since"
-msgstr ""
+msgstr "ຕັ້ງແຕ່"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Software Development"
-msgstr ""
+msgstr "ການພັດທະນາຊອບແວ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Sorry. You can't set a task as its parent task."
-msgstr ""
+msgstr "ຂໍອະໄພ. ທ່ານບໍ່ສາມາດຕັ້ງວຽກໃຫ້ເປັນວຽກແມ່ຂອງຕົວມັນເອງໄດ້."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Specifications"
-msgstr ""
+msgstr "ຂໍ້ມູນຈໍາເພາະ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Backlog"
-msgstr ""
+msgstr "Sprint Backlog"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint Complete"
-msgstr ""
+msgstr "Sprint ສຳເລັດແລ້ວ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Sprint in Progress"
-msgstr ""
+msgstr "Sprint ທີ່ກຳລັງດຳເນີນການ"
 
 #. module: project
 #. odoo-javascript
@@ -4186,52 +4311,52 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, python-format
 msgid "Stage"
-msgstr ""
+msgstr "ຂັ້ນຕອນ"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "ປ່ຽນຂັ້ນຕອນແລ້ວ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
 msgid "Stage Owner"
-msgstr ""
+msgstr "ເຈົ້າຂອງຂັ້ນຕອນ"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "ປ່ຽນຂັ້ນຕອນແລ້ວ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Stage: %s"
-msgstr ""
+msgstr "ຂັ້ນຕອນ: %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage_delete_wizard__stages_active
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stages_active
 msgid "Stages Active"
-msgstr ""
+msgstr "ຂັ້ນຕອນທີ່ໃຊ້ງານຢູ່"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage_delete_wizard__stage_ids
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stage_ids
 msgid "Stages To Delete"
-msgstr ""
+msgstr "ຂັ້ນຕອນທີ່ຈະລຶບ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Starred Tasks"
-msgstr ""
+msgstr "ວຽກທີ່ຕິດດາວ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date_start
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Start Date"
-msgstr ""
+msgstr "ວັນທີເລີ່ມຕົ້ນ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__state
@@ -4269,11 +4394,15 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"ສະຖານະຕາມກິດຈະກຳ\n"
+"ກາຍກຳນົດ: ວັນກຳນົດໄດ້ຜ່ານໄປແລ້ວ\n"
+"ມື້ນີ້: ວັນກິດຈະກຳແມ່ນມື້ນີ້\n"
+"ວາງແຜນໄວ້: ກິດຈະກຳໃນອະນາຄົດ."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__duration_tracking
 msgid "Status time"
-msgstr ""
+msgstr "ເວລາຂອງສະຖານະ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count
@@ -4288,7 +4417,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr ""
+msgstr "ວຽກຍ່ອຍ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_allocated_hours
@@ -4299,7 +4428,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Submitted On"
-msgstr ""
+msgstr "ສົ່ງເມື່ອ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_allocated_hours
@@ -4307,19 +4436,19 @@ msgid ""
 "Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) "
 "linked to this task. Usually less than or equal to the allocated hours of "
 "this task."
-msgstr ""
+msgstr "ຜົນລວມຂອງຊົ່ວໂມງທີ່ຈັດສັນໃຫ້ກັບວຽກຍ່ອຍທັງໝົດ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "Summary"
-msgstr ""
+msgstr "ບົດສະຫຼຸບ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "T-shirt Printing"
-msgstr ""
+msgstr "ການພິມເສື້ອຢືດ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -4333,7 +4462,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Tags"
-msgstr ""
+msgstr "ແທັກ"
 
 #. module: project
 #. odoo-javascript
@@ -4351,24 +4480,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
 msgid "Task"
-msgstr ""
+msgstr "ໜ້າວຽກ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
 msgid "Task Activities"
-msgstr ""
+msgstr "ກິດຈະກຳຂອງວຽກ"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_approved
 #: model:mail.message.subtype,name:project.mt_task_approved
 msgid "Task Approved"
-msgstr ""
+msgstr "ວຽກໄດ້ຮັບການອະນຸມັດແລ້ວ"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_canceled
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Canceled"
-msgstr ""
+msgstr "ວຽກຖືກຍົກເລີກແລ້ວ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
@@ -4381,32 +4510,32 @@ msgstr ""
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr ""
+msgstr "ວຽກຖືກສ້າງແລ້ວ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_task_dependencies
 #: model:ir.model.fields,field_description:project.field_project_task__allow_task_dependencies
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_task_dependencies
 msgid "Task Dependencies"
-msgstr ""
+msgstr "ວຽກທີ່ຂຶ້ນຕໍ່ກັນ"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_done
 #: model:mail.message.subtype,name:project.mt_task_done
 msgid "Task Done"
-msgstr ""
+msgstr "ວຽກສຳເລັດແລ້ວ"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_in_progress
 #: model:mail.message.subtype,name:project.mt_project_task_in_progress
 #: model:mail.message.subtype,name:project.mt_task_in_progress
 msgid "Task In Progress"
-msgstr ""
+msgstr "ວຽກທີ່ກຳລັງດຳເນີນການ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
 msgid "Task Logs"
-msgstr ""
+msgstr "ບັນທຶກວຽກງານ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_task_plan
@@ -4416,18 +4545,18 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_properties_definition
 msgid "Task Properties"
-msgstr ""
+msgstr "ຄຸນສົມບັດຂອງວຽກ"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_rating
 #: model:mail.message.subtype,name:project.mt_task_rating
 msgid "Task Rating"
-msgstr ""
+msgstr "ການໃຫ້ຄະແນນວຽກ"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "ການເຮັດຊ້ຳຂອງວຽກ"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -4435,43 +4564,43 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
-msgstr ""
+msgstr "ຂັ້ນຕອນຂອງວຽກ"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr ""
+msgstr "ຂັ້ນຕອນວຽກປ່ຽນແລ້ວ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.actions.act_window,name:project.open_task_type_form_domain
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Task Stages"
-msgstr ""
+msgstr "ຂັ້ນຕອນວຽກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "Task Title"
-msgstr ""
+msgstr "ຊື່ວຽກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
-msgstr ""
+msgstr "ຫົວຂໍ້ວຽກ..."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
 #: model:mail.message.subtype,name:project.mt_project_task_waiting
 #: model:mail.message.subtype,name:project.mt_task_waiting
 msgid "Task Waiting"
-msgstr ""
+msgstr "ວຽກທີ່ກຳລັງລໍຖ້າ"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_approved
 msgid "Task approved"
-msgstr ""
+msgstr "ວຽກໄດ້ຮັບການອະນຸມັດແລ້ວ"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
@@ -4481,17 +4610,17 @@ msgstr ""
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
 msgid "Task done"
-msgstr ""
+msgstr "ວຽກສຳເລັດແລ້ວ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
 msgid "Task:"
-msgstr ""
+msgstr "ວຽກ:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task: Rating Request"
-msgstr ""
+msgstr "ວຽກ: ຄຳຮ້ອງຂໍການໃຫ້ຄະແນນ"
 
 #. module: project
 #. odoo-python
@@ -4528,7 +4657,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, python-format
 msgid "Tasks"
-msgstr ""
+msgstr "ໜ້າວຽກ"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -4539,19 +4668,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "ການວິເຄາະວຽກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Tasks Management"
-msgstr ""
+msgstr "ການຈັດການວຽກ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
 #: model_terms:ir.ui.view,arch_db:project.task_type_search
 msgid "Tasks Stages"
-msgstr ""
+msgstr "ຂັ້ນຕອນວຽກ"
 
 #. module: project
 #. odoo-python
@@ -4559,14 +4688,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
 #, python-format
 msgid "Tasks in Recurrence"
-msgstr ""
+msgstr "ວຽກທີ່ເກີດຊໍ້າ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Tests"
-msgstr ""
+msgstr "ການທົດສອບ"
 
 #. module: project
 #. odoo-javascript
@@ -4578,12 +4707,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
 msgid "The current user's personal stage."
-msgstr ""
+msgstr "ຂັ້ນຕອນສ່ວນຕົວຂອງຜູ້ໃຊ້ປັດຈຸບັນ."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
-msgstr ""
+msgstr "ຂັ້ນຕອນວຽກສ່ວນຕົວຂອງຜູ້ໃຊ້ປັດຈຸບັນ."
 
 #. module: project
 #. odoo-python
@@ -4591,31 +4720,31 @@ msgstr ""
 #, python-format
 msgid ""
 "The document does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "ເອກະສານບໍ່ມີຢູ່ ຫຼື ທ່ານບໍ່ມີສິດເຂົ້າເຖິງ."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
 msgid "The end date should be in the future"
-msgstr ""
+msgstr "ວັນທີສິ້ນສຸດຄວນຢູ່ໃນອະນາຄົດ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestone has been added:"
-msgstr ""
+msgstr "ຫຼັກໝາຍຕໍ່ໄປນີ້ຖືກເພີ່ມເຂົ້າແລ້ວ:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "The following milestones have been added:"
-msgstr ""
+msgstr "ຫຼັກໝາຍຕໍ່ໄປນີ້ຖືກເພີ່ມເຂົ້າແລ້ວ:"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
 msgid "The interval should be greater than 0"
-msgstr ""
+msgstr "ໄລຍະຫ່າງຄວນໃຫຍ່ກວ່າ 0"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -4624,6 +4753,8 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"ໂມເດວ (ປະເພດເອກະສານ Odoo) ທີ່ຊື່ແຝງນີ້ກ່ຽວຂ້ອງ. ອີເມລຂາເຂົ້າໃດໆ ທີ່ບໍ່ໄດ້ຕອບກັບບັນທຶກທີ່ມີຢູ່ ຈະເຮັດໃຫ້"
+"ເກີດການສ້າງບັນທຶກໃໝ່ຂອງໂມເດວນີ້ (ຕົວຢ່າງ: ໜ້າວຽກຂອງໂຄງການ)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -4631,6 +4762,7 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"ຊື່ຂອງນາມແຝງອີເມວ ເຊັ່ນ: 'jobs' ຖ້າທ່ານຕ້ອງການຮັບອີເມວສຳລັບ <jobs@example.odoo.com>"
 
 #. module: project
 #. odoo-python
@@ -4638,7 +4770,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The project and the associated partner must be linked to the same company."
-msgstr ""
+msgstr "ໂໂຄງການ ແລະ ຄູ່ຮ່ວມງານທີ່ກ່ຽວຂ້ອງຕ້ອງເຊື່ອມໂຍງກັບບໍລິສັດດຽວກັນ."
 
 #. module: project
 #. odoo-python
@@ -4657,12 +4789,12 @@ msgstr ""
 msgid ""
 "The project's company cannot be changed if its analytic account has analytic"
 " lines or if more than one project is linked to it."
-msgstr ""
+msgstr "ບໍລິສັດຂອງໂຄງການບໍ່ສາມາດປ່ຽນແປງໄດ້ຖ້າມີການໃຊ້ບັນຊີວິເຄາະແລ້ວ."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "The project's start date must be before its end date."
-msgstr ""
+msgstr "ວັນທີເລີ່ມຕົ້ນຂອງໂຄງການຕ້ອງມາກ່ອນວັນທີສິ້ນສຸດ."
 
 #. module: project
 #. odoo-python
@@ -4677,7 +4809,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The task and the associated partner must be linked to the same company."
-msgstr ""
+msgstr "ວຽກ ແລະ ຄູ່ຮ່ວມງານທີ່ກ່ຽວຂ້ອງຕ້ອງເຊື່ອມໂຍງກັບບໍລິສັດດຽວກັນ."
 
 #. module: project
 #. odoo-python
@@ -4701,30 +4833,30 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_message_counter.xml:0
 #, python-format
 msgid "There are no comments for now."
-msgstr ""
+msgstr "ຍັງບໍ່ທັນມີຄຳຄິດເຫັນເທື່ອ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
 msgid "There are no projects."
-msgstr ""
+msgstr "ບໍ່ມີໂຄງການ."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There are no ratings for this project at the moment"
-msgstr ""
+msgstr "ບໍ່ມີການໃຫ້ຄະແນນສຳລັບໂຄງການນີ້ໃນເວລານີ້"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
-msgstr ""
+msgstr "ບໍ່ມີໜ້າວຽກ."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "There is nothing to report."
-msgstr ""
+msgstr "ບໍ່ມີຫຍັງທີ່ຈະລາຍງານ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -4741,7 +4873,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_personal_stage_demo_3
 #, python-format
 msgid "This Month"
-msgstr ""
+msgstr "ເດືອນນີ້"
 
 #. module: project
 #. odoo-python
@@ -4750,7 +4882,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_personal_stage_demo_2
 #, python-format
 msgid "This Week"
-msgstr ""
+msgstr "ອາທິດນີ້"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -4758,6 +4890,7 @@ msgid ""
 "This is a preview of how the project will look when it's shared with "
 "customers and they have editing access."
 msgstr ""
+"ນີ້ແມ່ນຕົວຢ່າງຂອງຮູບແບບໂຄງການທີ່ຈະປະກົດຂຶ້ນ ເມື່ອມີການແບ່ງປັນກັບລູກຄ້າ ແລະ ພວກເຂົາມີສິດໃນການແກ້ໄຂ."
 
 #. module: project
 #. odoo-python
@@ -4788,7 +4921,7 @@ msgstr ""
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 #, python-format
 msgid "This task is blocked by another unfinished task"
-msgstr ""
+msgstr "ໜ້າວຽກນີ້ຖືກບລັອກໂດຍໜ້າວຽກອື່ນທີ່ຍັງບໍ່ທັນສຳເລັດ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -4796,6 +4929,7 @@ msgid ""
 "This will archive the stages and all the tasks they contain from the "
 "following projects:"
 msgstr ""
+"ສິ່ງນີ້ຈະຈັດເກັບຂັ້ນຕອນ ແລະ ໜ້າວຽກທັງໝົດທີ່ມີຢູ່ໃນນັ້ນ ຈາກໂຄງການດັ່ງຕໍ່ໄປນີ້:"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_type_action_config_project_types
@@ -4803,24 +4937,25 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Send email\")."
 msgstr ""
+"ສິ່ງເຫຼົ່ານີ້ສະແດງເຖິງປະເພດຕ່າງໆຂອງສິ່ງທີ່ທ່ານຕ້ອງເຮັດ (ຕົວຢ່າງ \"ໂທຫາ\" ຫຼື \"ສົ່ງອີເມລ\")."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr ""
+msgstr "ການຈັດການເວລາ"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_1
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Tip: Create tasks from incoming emails"
-msgstr ""
+msgstr "ຄຳແນະນຳ: ສ້າງໜ້າວຽກຈາກອີເມວທີ່ເຂົ້າມາ"
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Use task states to keep track of your tasks' progression"
-msgstr ""
+msgstr "ຄຳແນະນຳ: ໃຊ້ສະຖານະໜ້າວຽກເພື່ອຕິດຕາມຄວາມຄືບໜ້າຂອງໜ້າວຽກຂອງທ່ານ"
 
 #. module: project
 #. odoo-python
@@ -4830,19 +4965,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_main_base
 #, python-format
 msgid "Title"
-msgstr ""
+msgstr "ຄຳນຳໜ້າຊື່"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "To Bill"
-msgstr ""
+msgstr "ລໍຖ້າອອກບິນ"
 
 #. module: project
 #: model:project.project.stage,name:project.project_project_stage_0
 msgid "To Do"
-msgstr ""
+msgstr "ສິ່ງທີ່ຕ້ອງເຮັດ"
 
 #. module: project
 #. odoo-javascript
@@ -4856,7 +4991,7 @@ msgstr "ອອກໃບຮັບເງິນ"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "To Print"
-msgstr ""
+msgstr "ລໍຖ້າພິມ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action_sub_task
@@ -4864,6 +4999,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                Chat in real time or by email to collaborate efficiently."
 msgstr ""
+"ເພື່ອເຮັດສິ່ງຕ່າງໆໃຫ້ສຳເລັດ, ໃຫ້ໃຊ້ກິດຈະກຳ ແລະ ສະຖານະໃນໜ້າວຽກ.<br>\n"
+"                ສົນທະນາແບບສົດໆ ຫຼື ຜ່ານອີເມວເພື່ອຮ່ວມມືກັນຢ່າງມີປະສິດທິພາບ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
@@ -4872,6 +5009,8 @@ msgid ""
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
 msgstr ""
+"ເພື່ອປ່ຽນໜ້າວຽກໃຫ້ເປັນໜ້າວຽກຍ່ອຍ, ໃຫ້ເລືອກໜ້າວຽກຫຼັກ. ຫຼືອີກທາງເລືອກໜຶ່ງ, ໃຫ້ປະຟິວໜ້າວຽກຫຼັກໄວ້ຫວ່າງເປົ່າ"
+"ເພື່ອປ່ຽນໜ້າວຽກຍ່ອຍໃຫ້ເປັນໜ້າວຽກອິດສະຫຼະ."
 
 #. module: project
 #. odoo-python
@@ -4880,13 +5019,13 @@ msgstr ""
 #: model:project.task.type,name:project.project_personal_stage_demo_1
 #, python-format
 msgid "Today"
-msgstr ""
+msgstr "ມື້ນີ້"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
-msgstr ""
+msgstr "ກິດຈະກຳມື້ນີ້"
 
 #. module: project
 #. odoo-javascript
@@ -4899,20 +5038,20 @@ msgstr "ລວມທັງໝົດ"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
-msgstr ""
+msgstr "ຕິດຕາມຄວາມພໍໃຈຂອງລູກຄ້າໃນໜ້າວຽກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track major progress points that must be reached to achieve success"
-msgstr ""
+msgstr "ຕິດຕາມຈຸດຄວາມຄືບໜ້າທີ່ສຳຄັນ ທີ່ຕ້ອງບັນລຸເພື່ອໃຫ້ປະສົບຜົນສຳເລັດ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Track major progress points that must be reached to achieve success."
-msgstr ""
+msgstr "ຕິດຕາມຈຸດຄວາມຄືບໜ້າທີ່ສຳຄັນ ທີ່ຕ້ອງບັນລຸເພື່ອໃຫ້ປະສົບຜົນສຳເລັດ."
 
 #. module: project
 #. odoo-javascript
@@ -4922,6 +5061,8 @@ msgid ""
 "Track project costs, revenues, and margin by setting the analytic account "
 "associated with the project on relevant documents."
 msgstr ""
+"ຕິດຕາມຕົ້ນທຶນ, ລາຍຮັບ, ແລະ ກຳໄລຂອງໂຄງການ ໂດຍການກຳນົດບັນຊີວິເຄາະທີ່ກ່ຽວຂ້ອງກັບໂຄງການໃນເອກະສາ"
+"ນທີ່ກ່ຽວຂ້ອງ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -4941,12 +5082,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track the progress of your projects"
-msgstr ""
+msgstr "ຕິດຕາມຄວາມຄືບໜ້າຂອງໂຄງການຂອງທ່ານ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr ""
+msgstr "ຕິດຕາມເວລາທີ່ໃຊ້ໃນໂຄງການ ແລະ ໜ້າວຽກ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_tags__color
@@ -4954,39 +5095,40 @@ msgid ""
 "Transparent tags are not visible in the kanban view of your projects and "
 "tasks."
 msgstr ""
+"ແທັກແບບໂປ່ງໃສຈະບໍ່ປະກົດໃຫ້ເຫັນໃນມຸມມອງຄັນບັງຂອງໂຄງການ ແລະ ໜ້າວຽກຂອງທ່ານ."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__bimonthly
 msgid "Twice a Month"
-msgstr ""
+msgstr "ສອງຄັ້ງຕໍ່ເດືອນ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Two tasks cannot depend on each other."
-msgstr ""
+msgstr "ສອງໜ້າວຽກບໍ່ສາມາດຂຶ້ນຕໍ່ກັນແລະກັນໄດ້."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_exception_decoration
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,help:project.field_project_update__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "ປະເພດຂອງກິດຈະກຳທີ່ຍົກເວັ້ນໃນຂໍ້ມູນ."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project_stage.py:0
 #, python-format
 msgid "Unarchive Projects"
-msgstr ""
+msgstr "ເລີກຈັດເກັບໂຄງການ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task_type.py:0
 #, python-format
 msgid "Unarchive Tasks"
-msgstr ""
+msgstr "ເລີກຈັດເກັບໜ້າວຽກ"
 
 #. module: project
 #. odoo-javascript
@@ -4996,14 +5138,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, python-format
 msgid "Unassigned"
-msgstr ""
+msgstr "ບໍ່ໄດ້ມອບໝາຍ"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #, python-format
 msgid "Unknown Analytic Account"
-msgstr ""
+msgstr "ບໍ່ຮູ້ຈັກບັນຊີວິເຄາະ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -5016,66 +5158,66 @@ msgstr "ຂໍ້ຄວາມບໍ່ໄດ້ອ່ານ"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__until
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_type__until
 msgid "Until"
-msgstr ""
+msgstr "ຈົນກ່ວາ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__update_ids
 msgid "Update"
-msgstr ""
+msgstr "ອັບເດດ"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_update_create
 #: model:mail.message.subtype,name:project.mt_project_update_create
 #: model:mail.message.subtype,name:project.mt_update_create
 msgid "Update Created"
-msgstr ""
+msgstr "ອັບເດດທີ່ຖືກສ້າງຂຶ້ນ"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_03
 msgid "Usability"
-msgstr ""
+msgstr "ການໃຊ້ງານ"
 
 #. module: project
 #: model:res.groups,name:project.group_project_milestone
 msgid "Use Milestones"
-msgstr ""
+msgstr "ໃຊ້ຈຸດໝາຍຄວາມຄືບໜ້າ"
 
 #. module: project
 #: model:res.groups,name:project.group_project_rating
 msgid "Use Rating on Project"
-msgstr ""
+msgstr "ໃຊ້ການໃຫ້ຄະແນນໃນໂຄງການ"
 
 #. module: project
 #: model:res.groups,name:project.group_project_recurring_tasks
 msgid "Use Recurring Tasks"
-msgstr ""
+msgstr "ໃຊ້ໜ້າວຽກທີ່ເກີດຂຶ້ນຊ້ຳ"
 
 #. module: project
 #: model:res.groups,name:project.group_project_stages
 msgid "Use Stages on Project"
-msgstr ""
+msgstr "ໃຊ້ຂັ້ນຕອນໃນໂຄງການ"
 
 #. module: project
 #: model:res.groups,name:project.group_project_task_dependencies
 msgid "Use Task Dependencies"
-msgstr ""
+msgstr "ໃຊ້ການຂຶ້ນຕໍ່ກັນຂອງໜ້າວຽກ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
 msgid "Use Tasks as"
-msgstr ""
+msgstr "ໃຊ້ໜ້າວຽກເປັນ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Use This For My Project"
-msgstr ""
+msgstr "ໃຊ້ສິ່ງນີ້ສຳລັບໂຄງການຂອງຂ້ອຍ"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Use tags to categorize your tasks."
-msgstr ""
+msgstr "ໃຊ້ແທັກເພື່ອແຍກປະເພດໜ້າວຽກຂອງທ່ານ."
 
 #. module: project
 #. odoo-javascript
@@ -5095,7 +5237,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Use the"
-msgstr ""
+msgstr "ໃຊ້"
 
 #. module: project
 #. odoo-javascript
@@ -5106,6 +5248,8 @@ msgid ""
 "customers. Add new people to the followers' list to make them aware of the "
 "main changes about this task."
 msgstr ""
+"ໃຊ້ຫ້ອງສົນທະນາເພື່ອ <b>ສົ່ງອີເມວ</b> ແລະ ສື່ສານກັບລູກຄ້າຂອງທ່ານຢ່າງມີປະສິດທິພາບ. ເພີ່ມຄົນໃໝ່ເຂົ້າໃນລາ"
+"ຍຊື່ຜູ້ຕິດຕາມເພື່ອໃຫ້ພວກເຂົາຮັບຮູ້ກ່ຽວກັບການປ່ຽນແປງທີ່ສຳຄັນຂອງໜ້າວຽກນີ້."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name
@@ -5119,41 +5263,50 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"ໃຊ້ຄຳສຳຄັນເຫຼົ່ານີ້ໃນຫົວຂໍ້ເພື່ອຕັ້ງໜ້າວຽກໃໝ່:\n"
+"\n"
+"        30h ຈັດສັນເວລາ 30 ຊົ່ວໂມງໃຫ້ກັບໜ້າວຽກ\n"
+"        #tags ຕັ້ງແທັກໃນໜ້າວຽກ\n"
+"        @user ມອບໝາຍໜ້າວຽກໃຫ້ກັບຜູ້ໃຊ້\n"
+"        ! ຕັ້ງຄ່າໃຫ້ໜ້າວຽກມີລຳດັບຄວາມສຳຄັນສູງ\n"
+"\n"
+"        ໃຫ້ແນ່ໃຈວ່າໃຊ້ຮູບແບບ ແລະ ລຳດັບທີ່ຖືກຕ້ອງ ເຊັ່ນ: ປັບປຸງໜ້າຈໍການກຳນົດຄ່າ 5h #feature "
+"#v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
 #: model:res.groups,name:project.group_project_user
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "User"
-msgstr ""
+msgstr "ຜູ້ໃຊ້"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "View"
-msgstr ""
+msgstr "ເບິ່ງ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "View Task"
-msgstr ""
+msgstr "ເບິ່ງໜ້າວຽກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "View Tasks"
-msgstr ""
+msgstr "ເບິ່ງໜ້າວຽກ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
 msgid "Visibility"
-msgstr ""
+msgstr "ການເບິ່ງເຫັນ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 #, python-format
 msgid "Visible"
-msgstr ""
+msgstr "ເຫັນໄດ້"
 
 #. module: project
 #. odoo-javascript
@@ -5163,7 +5316,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__04_waiting_normal
 #, python-format
 msgid "Waiting"
-msgstr ""
+msgstr "ລໍຖ້າ"
 
 #. module: project
 #. odoo-javascript
@@ -5173,6 +5326,7 @@ msgstr ""
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
 msgstr ""
+"ຕ້ອງການວິທີທີ່ດີກວ່າໃນການ <b>ຈັດການໂຄງການຂອງທ່ານ</b> ບໍ່? <i>ມັນເລີ່ມຕົ້ນທີ່ນີ້.</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__website_message_ids
@@ -5180,14 +5334,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__website_message_ids
 #: model:ir.model.fields,field_description:project.field_project_update__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "ຂໍ້ຄວາມຈາກເວັບໄຊ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Website Redesign"
-msgstr ""
+msgstr "ອອກແບບເວັບໄຊໃໝ່"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__website_message_ids
@@ -5195,18 +5349,18 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__website_message_ids
 #: model:ir.model.fields,help:project.field_project_update__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "ປະຫວັດການສື່ສານທາງເວັບໄຊ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__weekly
 msgid "Weekly"
-msgstr ""
+msgstr "ລາຍອາທິດ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__week
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__week
 msgid "Weeks"
-msgstr ""
+msgstr "ອາທິດ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -5226,61 +5380,61 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_open
 msgid "Working Days to Assign"
-msgstr ""
+msgstr "ຈຳນວນມື້ເຮັດວຽກກ່ອນການມອບໝາຍ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_close
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_close
 msgid "Working Days to Close"
-msgstr ""
+msgstr "ຈຳນວນມື້ເຮັດວຽກກ່ອນການປິດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_hours_open
 msgid "Working Hours to Assign"
-msgstr ""
+msgstr "ຈຳນວນຊົ່ວໂມງເຮັດວຽກກ່ອນການມອບໝາຍ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_hours_close
 msgid "Working Hours to Close"
-msgstr ""
+msgstr "ຈຳນວນຊົ່ວໂມງເຮັດວຽກກ່ອນການປິດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
 msgid "Working Time"
-msgstr ""
+msgstr "ເວລາເຮັດວຽກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "ເວລາເຮັດວຽກທີ່ໃຊ້ໃນການມອບໝາຍ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
+msgstr "ເວລາເຮັດວຽກທີ່ໃຊ້ໃນການປິດ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_unarchive_wizard
 msgid ""
 "Would you like to unarchive all of the projects contained in these stages as"
 " well?"
-msgstr ""
+msgstr "ທ່ານຕ້ອງການເລີກຈັດເກັບໂຄງການທັງໝົດທີ່ມີຢູ່ໃນຂັ້ນຕອນເຫຼົ່ານີ້ຄືກັນບໍ່?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 msgid ""
 "Would you like to unarchive all of the tasks contained in these stages as "
 "well?"
-msgstr ""
+msgstr "ທ່ານຕ້ອງການເລີກຈັດເກັບໜ້າວຽກທັງໝົດທີ່ມີຢູ່ໃນຂັ້ນຕອນເຫຼົ່ານີ້ຄືກັນບໍ່?"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "Write a message..."
-msgstr ""
+msgstr "ຂຽນຂໍ້ຄວາມ..."
 
 #. module: project
 #. odoo-javascript
@@ -5288,18 +5442,18 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Writing"
-msgstr ""
+msgstr "ກຳລັງຂຽນ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__yearly
 msgid "Yearly"
-msgstr ""
+msgstr "ລາຍປີ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__year
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__year
 msgid "Years"
-msgstr ""
+msgstr "ປີ"
 
 #. module: project
 #. odoo-python
@@ -5311,13 +5465,16 @@ msgid ""
 "%(project_company_name)s. Please ensure that this stage exclusively consists"
 " of projects linked to %(company_name)s."
 msgstr ""
+"ທ່ານບໍ່ສາມາດປ່ຽນບໍລິສັດຂອງຂັ້ນຕອນນີ້ເປັນ %(company_name)s ເນື່ອງຈາກປະຈຸບັນມັນລວມມີໂຄງການທີ່ກ່ຽວຂ້ອງ"
+"ກັບ %(project_company_name)s. ກະລຸນາໃຫ້ແນ່ໃຈວ່າຂັ້ນຕອນນີ້ປະກອບມີສະເພາະໂຄງການທີ່ເຊື່ອມໂຍງກັບ "
+"%(company_name)s ເທົ່ານັ້ນ."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "You can only set a personal stage on a private task."
-msgstr ""
+msgstr "ທ່ານສາມາດຕັ້ງຂັ້ນຕອນສ່ວນຕົວໄດ້ສະເພາະໃນໜ້າວຽກສ່ວນຕົວເທົ່ານັ້ນ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5325,6 +5482,8 @@ msgid ""
 "You cannot delete stages containing projects. You can either archive them or"
 " first delete all of their projects."
 msgstr ""
+"ທ່ານບໍ່ສາມາດລຶບຂັ້ນຕອນທີ່ມີໂຄງການໄດ້. ທ່ານສາມາດຈັດເກັບພວກມັນໄວ້ ຫຼື ລຶບໂຄງການທັງໝົດຂອງພວກມັນອອກກ່ອ"
+"ນ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5332,6 +5491,7 @@ msgid ""
 "You cannot delete stages containing projects. You should first delete all of"
 " their projects."
 msgstr ""
+"ທ່ານບໍ່ສາມາດລຶບຂັ້ນຕອນທີ່ມີໂຄງການໄດ້. ທ່ານຄວນລຶບໂຄງການທັງໝົດຂອງພວກມັນອອກກ່ອນ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5339,6 +5499,7 @@ msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
 msgstr ""
+"ທ່ານບໍ່ສາມາດລຶບຂັ້ນຕອນທີ່ມີໜ້າວຽກໄດ້. ທ່ານສາມາດຈັດເກັບພວກມັນໄວ້ ຫຼື ລຶບໜ້າວຽກທັງໝົດຂອງພວກມັນອອກກ່ອນ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5346,6 +5507,7 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr ""
+"ທ່ານບໍ່ສາມາດລຶບຂັ້ນຕອນທີ່ມີໜ້າວຽກໄດ້. ທ່ານຄວນລຶບໜ້າວຽກທັງໝົດຂອງພວກມັນອອກກ່ອນ."
 
 #. module: project
 #. odoo-python
@@ -5366,12 +5528,12 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "You have been assigned to %s"
-msgstr ""
+msgstr "ທ່ານໄດ້ຖືກມອບໝາຍໃຫ້ກັບ %s"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
 msgid "You have been assigned to the"
-msgstr ""
+msgstr "ທ່ານໄດ້ຖືກມອບໝາຍໃຫ້ກັບ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -5379,6 +5541,7 @@ msgid ""
 "You have full control and can revoke portal access anytime. Are you ready to"
 " proceed?"
 msgstr ""
+"ທ່ານມີການຄວບຄຸມຢ່າງເຕັມທີ່ ແລະ ສາມາດຍົກເລີກການເຂົ້າເຖິງພອດທໍໄດ້ທຸກເວລາ. ທ່ານພ້ອມທີ່ຈະດຳເນີນການຕໍ່ບໍ່?"
 
 #. module: project
 #. odoo-python
@@ -5392,14 +5555,14 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "You must be"
-msgstr ""
+msgstr "ທ່ານຕ້ອງ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Your managers decide which feedback is accepted"
-msgstr ""
+msgstr "ຜູ້ຈັດການຂອງທ່ານຈະຕັດສິນໃຈວ່າຄຳຕິຊົມໃດທີ່ໄດ້ຮັບການຍອມຮັບ"
 
 #. module: project
 #. odoo-javascript
@@ -5407,7 +5570,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "and"
-msgstr ""
+msgstr "ແລະ"
 
 #. module: project
 #. odoo-javascript
@@ -5417,61 +5580,63 @@ msgid ""
 "and which feedback is\n"
 "      moved to the \"Refused\" column."
 msgstr ""
+"ແລະຄຳຕິຊົມໃດທີ່ຖືກ\n"
+"      ຍ້າຍໄປທີ່ຄໍລຳ \"ຖືກປະຕິເສດ\"."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 msgid "assignees"
-msgstr ""
+msgstr "ຜູ້ຮັບຜິດຊອບ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 #, python-format
 msgid "avatar"
-msgstr ""
+msgstr "ອາວາຕາ"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "button."
-msgstr ""
+msgstr "ປຸ່ມ."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_message_counter.xml:0
 #, python-format
 msgid "comments"
-msgstr ""
+msgstr "ຄຳຄິດເຫັນ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "e.g. Monthly review"
-msgstr ""
+msgstr "ເຊັ່ນ: ການທົບທວນປະຈຳເດືອນ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #: model_terms:ir.ui.view,arch_db:project.quick_create_project_form
 msgid "e.g. Office Party"
-msgstr ""
+msgstr "ເຊັ່ນ: ງານລ້ຽງໃນຫ້ອງການ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "e.g. Product Launch"
-msgstr ""
+msgstr "ເຊັ່ນ: ການເປີດຕົວຜະລິດຕະພັນ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. Send Invitations"
-msgstr ""
+msgstr "ຕົວຢ່າງ: ສົ່ງຄຳເຊີນ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "e.g. Tasks"
-msgstr ""
+msgstr "ເຊັ່ນ: ໜ້າວຽກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
@@ -5481,7 +5646,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "e.g. To Do"
-msgstr ""
+msgstr "ເຊັ່ນ: ສິ່ງທີ່ຈະເຮັດ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5492,12 +5657,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. office-party"
-msgstr ""
+msgstr "ເຊັ່ນ: office-party"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "e.g: Product Launch"
-msgstr ""
+msgstr "ເຊັ່ນ: ການເປີດຕົວຜະລິດຕະພັນ"
 
 #. module: project
 #. odoo-javascript
@@ -5510,7 +5675,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon to organize your daily activities."
-msgstr ""
+msgstr "ໄອຄອນເພື່ອຈັດລະບຽບກິດຈະກຳປະຈຳວັນຂອງທ່ານ."
 
 #. module: project
 #. odoo-javascript
@@ -5526,34 +5691,34 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon."
-msgstr ""
+msgstr "ໄອຄອນ."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "logged in"
-msgstr ""
+msgstr "ເຂົ້າລະບົບແລ້ວ"
 
 #. module: project
 #: model:ir.actions.server,name:project.action_server_view_my_task
 msgid "menu view My Tasks"
-msgstr ""
+msgstr "ມຸມມອງເມນູ ໜ້າວຽກຂອງຂ້ອຍ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "on a periodic basis"
-msgstr ""
+msgstr "ເປັນໄລຍະ"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "project."
-msgstr ""
+msgstr "ໂຄງການ."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "ready to be marked as reached"
-msgstr ""
+msgstr "ພ້ອມທີ່ຈະຖືກໝາຍວ່າບັນລຸແລ້ວ"
 
 #. module: project
 #. odoo-javascript
@@ -5563,6 +5728,7 @@ msgstr ""
 msgid ""
 "state to indicate a request for changes or a need for discussion on a task."
 msgstr ""
+"ສະຖານະເພື່ອລະບຸການຮ້ອງຂໍການປ່ຽນແປງ ຫຼື ຄວາມຕ້ອງການໃນການປຶກສາຫາລືກ່ຽວກັບໜ້າວຽກ."
 
 #. module: project
 #. odoo-javascript
@@ -5572,6 +5738,7 @@ msgstr ""
 msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
 msgstr ""
+"ສະຖານະເພື່ອແຈ້ງໃຫ້ເພື່ອນຮ່ວມງານຂອງທ່ານຊາບວ່າໜ້າວຽກໄດ້ຮັບການອະນຸມັດສຳລັບຂັ້ນຕອນຕໍ່ໄປ."
 
 #. module: project
 #. odoo-javascript
@@ -5585,31 +5752,31 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "state to mark the task as complete."
-msgstr ""
+msgstr "ສະຖານະເພື່ອໝາຍໜ້າວຽກວ່າສຳເລັດ."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 #, python-format
 msgid "sub-tasks)"
-msgstr ""
+msgstr "ໜ້າວຽກຍ່ອຍ)"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "task"
-msgstr ""
+msgstr "ໜ້າວຽກ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline for the following milestone has been updated:"
-msgstr ""
+msgstr "ກຳນົດເວລາສຳລັບຈຸດໝາຍຄວາມຄືບໜ້າດັ່ງຕໍ່ໄປນີ້ໄດ້ຖືກອັບເດດແລ້ວ:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline for the following milestones has been updated:"
-msgstr ""
+msgstr "ກຳນົດເວລາສຳລັບຈຸດໝາຍຄວາມຄືບໜ້າດັ່ງຕໍ່ໄປນີ້ໄດ້ຖືກອັບເດດແລ້ວ:"
 
 #. module: project
 #. odoo-javascript
@@ -5619,30 +5786,32 @@ msgid ""
 "to define if the project is\n"
 "      ready for the next step."
 msgstr ""
+"ເພື່ອລະບຸວ່າໂຄງການ\n"
+"      ພ້ອມສຳລັບຂັ້ນຕອນຕໍ່ໄປຫຼືບໍ່."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "to post a comment."
-msgstr ""
+msgstr "ເພື່ອສະແດງຄວາມຄິດເຫັນ."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "to signalize what is the current status of your Idea."
-msgstr ""
+msgstr "ເພື່ອບົ່ງບອກສະຖານະປະຈຸບັນຂອງໄອເດຍຂອງທ່ານ."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "when reaching a given stage"
-msgstr ""
+msgstr "ເມື່ອບັນລຸຂັ້ນຕອນທີ່ກຳນົດໄວ້"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "will generate tasks in your"
-msgstr ""
+msgstr "ຈະສ້າງໜ້າວຽກໃນ"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
@@ -5650,6 +5819,8 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: ແບບສຳຫຼວດຄວາ"
+"ມພໍໃຈ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -5664,7 +5835,7 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_list/project_task_list_renderer.js:0
 #, python-format
 msgid "👤 Unassigned"
-msgstr ""
+msgstr "👤 ບໍ່ໄດ້ມອບໝາຍ"
 
 #. module: project
 #. odoo-javascript
@@ -5673,4 +5844,4 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_list/project_task_list_renderer.js:0
 #, python-format
 msgid "🔒 Private"
-msgstr ""
+msgstr "🔒 ສ່ວນຕົວ"
