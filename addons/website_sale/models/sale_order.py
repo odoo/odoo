@@ -384,7 +384,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         self = self.with_company(self.company_id)
 
-        product = self.env['product.product'].browse(product_id)
+        product = self.env["product.product"].browse(product_id)
         if not uom_id or not product._has_multiple_uoms():
             # Fall back on product uom if uom is not specified or if multi-uom is not
             # allowed/supported for that product.
@@ -1089,12 +1089,7 @@ class SaleOrder(models.Model):
         self._recompute_taxes()
         self._recompute_prices()
 
-    def _validate_order(self):
-        super()._validate_order()
-        # After SO confirmation and email sending, archive customers without accounts
-        self.filtered("website_id")._archive_partner_if_no_user()
-
-    def _archive_partner_if_no_user(self):
+    def _archive_partner_if_no_user(self):  # TODO: remove in master
         """Archive SO customer if it has no linked users."""
         if (
             not self
@@ -1107,9 +1102,7 @@ class SaleOrder(models.Model):
         for order in self:
             customer = order.partner_id
             customer_comm_partner_contacts = (
-                customer
-                | customer.commercial_partner_id
-                | customer.commercial_partner_id.child_ids
+                customer | customer.commercial_partner_id | customer.commercial_partner_id.child_ids
             )
             if not customer_comm_partner_contacts.user_ids:
                 partners_to_archive |= customer_comm_partner_contacts
