@@ -525,20 +525,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 lambda c: c.can_access_from_current_website()
             )
             category_entries = (
-                (not search
-                and available_categories)
-                or available_categories.filtered(lambda c: c.id in search_categories.ids)
-            )
+                not search and available_categories
+            ) or available_categories.filtered(lambda c: c.id in search_categories.ids)
             if not category_entries:
                 parent = category.parent_id
                 available_categories = parent.child_id.filtered(
                     lambda c: c.can_access_from_current_website()
                 )
                 category_entries = (
-                    (not search
-                    and available_categories)
-                    or available_categories.filtered(lambda c: c.id in search_categories.ids)
-                )
+                    not search and available_categories
+                ) or available_categories.filtered(lambda c: c.id in search_categories.ids)
             if not search and not self.env.user._is_internal():
                 # We know the user has access to `categs` and `search_categories` because they come
                 # from a regular `search`, but we have not checked access to `category`'s children,
@@ -656,9 +652,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     @route(
         [
-            f"{SHOP_PATH}/product/<model('product.template'):product>",
             f"{SHOP_PATH}/<model('product.template'):product>",
             f"{SHOP_PATH}/<model('product.public.category'):category>/<model('product.template'):product>",
+            f"{SHOP_PATH}/product/<model('product.template'):product>",
         ],
         type="http",
         auth="public",
@@ -683,7 +679,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         request.update_context(website_sale_product_page=True)
         # TODO: remove support for deprecated paths in version 20 (or later).
-        if not request.httprequest.path.startswith(f"{SHOP_PATH}/product/"):
+        path = product.website_url
+        # Redirect to the correct product URL if needed. There are 2 potential reasons for
+        # redirecting:
+        # - A `/product` prefix was included in the path,
+        # - A category slug was included in the path.
+        if path != request.httprequest.path:
             query = request.httprequest.args.to_dict(flat=False)
             return request.redirect(product._get_product_url(query), code=301)
 

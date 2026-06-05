@@ -29,13 +29,13 @@ class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
         )
 
         response = self.url_open(
-            f"/shop/{slug(test_product)}?category={test_category.id}&some-key=some-value",
+            f"/shop/product/{slug(test_product)}?category={test_category.id}&some-key=some-value",
             allow_redirects=False,
         )
         self.assertEqual(response.status_code, 301)
         self.assertURLEqual(
             response.headers.get("Location"),
-            f"/shop/product/{slug(test_product)}?category={test_category.id}&some-key=some-value",
+            f"/shop/{slug(test_product)}?category={test_category.id}&some-key=some-value",
         )
 
         response = self.url_open(
@@ -44,8 +44,7 @@ class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
         )
         self.assertEqual(response.status_code, 301)
         self.assertURLEqual(
-            response.headers.get("Location"),
-            f"/shop/product/{slug(test_product)}?some-key=some-value",
+            response.headers.get("Location"), f"/shop/{slug(test_product)}?some-key=some-value"
         )
 
     def test_ecommerce_product_page_url_unpublished_product(self):
@@ -54,7 +53,7 @@ class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
             "name": "Access Product",
             "is_published": False,
         })
-        url = f"{SHOP_PATH}/product/{accessory_product.id}"
+        url = f"{SHOP_PATH}/{accessory_product.id}"
         res = self.url_open(url)
         self.assertEqual(len(res.history), 0, "Unpublished products shouldn't redirect.")
         self.assertURLEqual(res.url, url, "Unpublished products shouldn't slug the URL.")

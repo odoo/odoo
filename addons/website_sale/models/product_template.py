@@ -260,7 +260,7 @@ class ProductTemplate(models.Model):
         super()._compute_website_url()
         for product in self:
             if product.id:
-                product.website_url = "/shop/product/%s" % self.env["ir.http"]._slug(product)
+                product.website_url = "/shop/%s" % self.env["ir.http"]._slug(product)
 
     @api.depends("product_variant_ids.default_code")
     def _compute_variants_default_code(self):
@@ -665,8 +665,10 @@ class ProductTemplate(models.Model):
                 )
 
             if uom_price_enabled:
-                template_price_vals["base_unit_price"] = template.product_variant_id._get_base_unit_price(
-                    template_price_vals["price_reduce"]
+                template_price_vals["base_unit_price"] = (
+                    template.product_variant_id._get_base_unit_price(
+                        template_price_vals["price_reduce"]
+                    )
                 )
 
             res[template.id] = template_price_vals
