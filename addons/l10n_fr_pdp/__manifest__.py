@@ -28,9 +28,6 @@
         'wizard/pdp_registration_views.xml',
         'wizard/pdp_response_wizard_views.xml',
     ],
-    'demo': [
-        'demo/demo.xml',
-    ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'pre_init_hook': '_pre_init_pdp',
