@@ -2094,7 +2094,8 @@ class MailThread(models.AbstractModel):
         partners = []
         for contact in emails:
             normalized_email = email_normalize(contact, strict=False)
-            partner = next((partner for partner in done_partners if partner.email_normalized == normalized_email), self.env['res.partner'])
+            partner = next((partner for partner in done_partners if (partner.email_formatted == contact)), self.env['res.partner'])
+            partner = partner or next((partner for partner in done_partners if (partner.email_normalized == normalized_email)), self.env['res.partner'])
             if not partner and force_create and normalized_email in normalized_emails:
                 partner = self.env['res.partner'].browse(self.env['res.partner'].name_create(contact)[0])
             partners.append(partner)
