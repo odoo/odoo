@@ -226,11 +226,17 @@ async function clickControlPanelAction(buttonName) {
     }
 }
 
+// Simulates a long press by starting a drag and immediately dropping without moving.
+async function longPress(target) {
+    const { drop } = await contains(target).drag();
+    await drop();
+}
+
 async function clickRecordSelector(count = 1) {
     if (getMockEnv().isSmall) {
         const cells = queryAll(".o_data_row").slice(0, count);
         for (const cell of cells) {
-            await contains(cell).drag();
+            await longPress(cell);
         }
     } else {
         for (let i = 0; i < count; i++) {
@@ -243,7 +249,7 @@ async function selectAllRecords() {
     if (getMockEnv().isSmall) {
         const cells = queryAll("tbody tr.o_data_row[data-id]:not(.o_data_row_selected)");
         for (const cell of cells) {
-            await contains(cell).drag();
+            await longPress(cell);
         }
     } else {
         await contains(`thead .o_list_record_selector input`).click();
@@ -253,7 +259,7 @@ async function unselectAllRecords() {
     if (getMockEnv().isSmall) {
         const cells = queryAll("tbody tr.o_data_row.o_data_row_selected[data-id]");
         for (const cell of cells) {
-            await contains(cell).drag();
+            await longPress(cell);
         }
     } else {
         await contains(`thead .o_list_record_selector input`).click();
@@ -4361,6 +4367,65 @@ test(`head selector is toggled by the other selectors`, async () => {
 });
 
 test.tags("desktop");
+test(`header checkbox is indeterminate when only some records are selected`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
+    });
+    const headerInput = () => queryFirst(`thead .o_list_record_selector input`);
+
+    // No selection: unchecked, not indeterminate
+    expect(`thead .o_list_record_selector input`).not.toBeChecked();
+    expect(headerInput().indeterminate).toBe(false);
+
+    // One out of four records selected: indeterminate
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    expect(`thead .o_list_record_selector input`).toBeChecked({ indeterminate: true });
+    expect(headerInput().indeterminate).toBe(true);
+
+    // Select all: fully checked, not indeterminate
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`thead .o_list_record_selector input`).toBeChecked();
+    expect(headerInput().indeterminate).toBe(false);
+
+    // Deselect one record: indeterminate again
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    expect(`thead .o_list_record_selector input`).toBeChecked({ indeterminate: true });
+    expect(headerInput().indeterminate).toBe(true);
+});
+
+test.tags("desktop");
+test(`pressing Escape in a readonly list clears the selection`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/><field name="bar"/></list>`,
+    });
+
+    // Press escape with focus in cells
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(1);
+    expect(`thead .o_list_record_selector input`).toBeChecked({ indeterminate: true });
+    await press("Escape");
+    await animationFrame();
+    expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0, {
+        message: "all records should be deselected after pressing Escape",
+    });
+
+    // Press escape without focus in cells
+    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
+    expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(1);
+    expect(`thead .o_list_record_selector input`).toBeChecked({ indeterminate: true });
+    getFixture().focus();
+    await press("Escape");
+    await animationFrame();
+    expect(`.o_data_row .o_list_record_selector input:checked`).toHaveCount(0, {
+        message: "all records should be deselected after pressing Escape",
+    });
+});
+
+test.tags("desktop");
 test(`selection box is properly displayed (single page)`, async () => {
     await mountView({
         resModel: "foo",
@@ -4448,7 +4513,7 @@ test("selection box is properly displayed (multi pages) on mobile", async () => 
     expect(".o_selection_box").toHaveCount(0);
 
     // select a record
-    await contains(".o_data_row:nth-child(1)").drag();
+    await longPress(".o_data_row:nth-child(1)");
     await animationFrame();
 
     expect(".o_selection_box").toHaveCount(1);
@@ -4461,8 +4526,8 @@ test("selection box is properly displayed (multi pages) on mobile", async () => 
 
     expect(getMenuItemTexts()).toEqual(["Export", "Duplicate", "Delete"]);
     // select all records of first page
-    await contains(".o_data_row:nth-child(2)").drag();
-    await contains(".o_data_row:nth-child(3)").drag();
+    await longPress(".o_data_row:nth-child(2)");
+    await longPress(".o_data_row:nth-child(3)");
     await animationFrame();
 
     expect(".o_selection_box").toHaveCount(1);
@@ -4974,8 +5039,8 @@ test(`aggregates are computed correctly on mobile`, async () => {
     });
     expect(queryAllTexts(`tfoot td`)).toEqual(["", "32", "1.50"]);
 
-    await contains("tbody td.o_data_cell:eq(0)").drag();
-    await contains("tbody td.o_data_cell:eq(9)").drag();
+    await longPress("tbody td.o_data_cell:eq(0)");
+    await longPress("tbody td.o_data_cell:eq(9)");
     expect(queryAllTexts(`tfoot td`)).toEqual(["", "6", "0.50"]);
 
     await contains(`thead th`).click();
@@ -9939,8 +10004,8 @@ test(`execute ActionMenus actions with correct params (single page) on mobile`, 
     await toggleSearchBarMenu();
     expect(`.o_data_row`).toHaveCount(3);
     expect(`.o_data_row.o_data_row_selected`).toHaveCount(0);
-    await contains(`.o_data_row:eq(0)`).drag();
-    await contains(`.o_data_row:eq(1)`).drag();
+    await longPress(`.o_data_row:eq(0)`);
+    await longPress(`.o_data_row:eq(1)`);
     expect(`.o_data_row.o_data_row_selected`).toHaveCount(2);
 
     await toggleActionMenu();
@@ -19068,19 +19133,19 @@ test("selection is properly displayed (single page) on mobile", async () => {
     expect(".o_control_panel .fa-search").toHaveCount(1);
 
     // select a record
-    await contains(".o_data_row:nth-child(1)").drag();
+    await longPress(".o_data_row:nth-child(1)");
     expect(".o_selection_box").toHaveCount(1);
     expect(".o_selection_box .o_select_domain").toHaveCount(1);
     expect(".o_control_panel .o_cp_searchview").toHaveCount(0);
     expect(queryFirst(".o_selection_box")).toHaveText("1\nselected\nAll");
 
     // unselect a record
-    await contains(".o_data_row:nth-child(1)").drag();
+    await longPress(".o_data_row:nth-child(1)");
     expect(".o_selection_box .o_select_domain").toHaveCount(0);
 
     // select 2 records
-    await contains(".o_data_row:nth-child(1)").drag();
-    await contains(".o_data_row:nth-child(2)").drag();
+    await longPress(".o_data_row:nth-child(1)");
+    await longPress(".o_data_row:nth-child(2)");
     expect(queryFirst(".o_selection_box")).toHaveText("2\nselected\nAll");
 
     expect("div.o_control_panel .o_cp_action_menus").toHaveCount(1);

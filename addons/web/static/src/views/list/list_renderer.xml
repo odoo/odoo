@@ -15,7 +15,7 @@
                 <thead>
                     <tr>
                         <th t-if="this.hasSelectors" class="o_list_record_selector o_list_controller align-middle pe-1 cursor-pointer" tabindex="-1" t-on-keydown="(ev) => this.onCellKeydown(ev)" t-on-click.stop="this.toggleSelection">
-                            <CheckBox disabled="!_canSelectRecord" value="this.selectAll" className="'d-flex m-0'" onChange.bind="this.toggleSelection"/>
+                            <CheckBox disabled="!_canSelectRecord" indeterminate="this.someSelected" value="this.selectAll" className="'d-flex m-0'" onChange.bind="this.toggleSelection"/>
                         </th>
                         <t t-foreach="this.columns" t-as="column" t-key="column.id">
                             <th t-if="column.type === 'field'"
