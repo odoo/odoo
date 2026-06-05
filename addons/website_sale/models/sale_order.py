@@ -928,12 +928,7 @@ class SaleOrder(models.Model):
         self._recompute_taxes()
         self._recompute_prices()
 
-    def _validate_order(self):
-        super()._validate_order()
-        # After SO confirmation and email sending, archive customers without accounts
-        self.filtered('website_id')._archive_partner_if_no_user()
-
-    def _archive_partner_if_no_user(self):
+    def _archive_partner_if_no_user(self):  # TODO: remove in master
         """Archive SO customer if it has no linked users."""
         if (
             not self
