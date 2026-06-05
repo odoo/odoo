@@ -1900,10 +1900,36 @@ export class PosStore extends WithLazyGetterTrap {
                 ),
             });
 
+<<<<<<< 5b2e0ff7e6fea77967eaf49573a29e386e03ed24
             // Update before syncing otherwise it will overwrite the last change
             order.last_order_preparation_change = lastChanges;
             await this.syncAllOrders({ orders: [order] });
             return;
+||||||| e8aa9219e3c72a987f431e47a1534f9ccb0028b2
+                // Update before syncing otherwise it will overwrite the last change
+                order.last_order_preparation_change = lastChanges;
+                this.syncingOrders.delete(order.uuid);
+                await this.syncAllOrders({ orders: [order] });
+                return;
+            }
+        } finally {
+            this.syncingOrders.delete(order.uuid);
+=======
+                // Update before syncing otherwise it will overwrite the last change
+                order.last_order_preparation_change = lastChanges;
+                this.syncingOrders.delete(order.uuid);
+                await this.syncAllOrders({ orders: [order] });
+                return;
+            }
+        } catch (e) {
+            if (e instanceof ConnectionLostError) {
+                // print prep receipt even Offline
+                await this.sendOrderInPreparation(order, opts);
+            }
+            throw e;
+        } finally {
+            this.syncingOrders.delete(order.uuid);
+>>>>>>> dbbd5b9c7c2ae7e08df28aaa0086402b9b64fdf9
         }
 
         return this.sendOrderInPreparation(order, opts);
