@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 
 export class UrlField extends Component {
     static template = "web.UrlField";
@@ -14,8 +14,10 @@ export class UrlField extends Component {
         websitePath: { type: Boolean, optional: true },
     };
 
+    inputRef = signal(null);
+
     setup() {
-        useInputField({ getValue: () => this.value });
+        useInputField({ getValue: () => this.value, ref: this.inputRef });
     }
 
     get value() {

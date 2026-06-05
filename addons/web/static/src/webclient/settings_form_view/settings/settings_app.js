@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy, signal } from "@odoo/owl";
 
 export class SettingsApp extends Component {
     static template = "web.SettingsApp";
@@ -10,23 +10,20 @@ export class SettingsApp extends Component {
         selectedTab: { type: String, optional: true },
         slots: Object,
     };
+    settingsAppRef = signal(null);
     setup() {
         this.state = proxy({
             search: this.env.searchState,
         });
-        this.settingsAppRef = useRef("settingsApp");
         useLayoutEffect(
             () => {
-                if (this.settingsAppRef.el) {
+                const el = this.settingsAppRef();
+                if (el) {
                     const force =
                         this.state.search.value &&
-                        !this.settingsAppRef.el.querySelector(
-                            ".o_settings_container:not(.d-none)"
-                        ) &&
-                        !this.settingsAppRef.el.querySelector(
-                            ".o_setting_box.o_searchable_setting"
-                        );
-                    this.settingsAppRef.el.classList.toggle("d-none", force);
+                        !el.querySelector(".o_settings_container:not(.d-none)") &&
+                        !el.querySelector(".o_setting_box.o_searchable_setting");
+                    el.classList.toggle("d-none", force);
                 }
             },
             () => [this.state.search.value]

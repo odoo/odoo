@@ -9,7 +9,7 @@
                     type="text"
                     autocomplete="off"
                     t-custom-model="this.state.inputValue"
-                    t-custom-ref="input"
+                    t-ref="this.inputRef"
                     t-on-keydown="this.onKeydownGiftCardCode"
                     t-att-placeholder="this.props.placeholder"
                     t-att-style="this.state.error ? 'border-color: red;' : ''" />
@@ -26,7 +26,7 @@
                             type="number"
                             t-att-disabled="this.state.lockGiftCardFields || this.state.loading"
                             t-custom-model="this.state.amountValue"
-                            t-custom-ref="amountInput"
+                            t-ref="this.amountInputRef"
                             placeholder="Enter amount"
                             t-att-style="this.state.amountError ? 'border-color: red;' : ''"/>
                     </div>

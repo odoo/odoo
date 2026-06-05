@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -73,8 +72,9 @@ export class ContractTemplateField extends Component {
     static template = "hr.ContractTemplateField";
     static props = standardFieldProps;
 
+    templateButtonRef = signal(null);
+
     setup() {
-        this.templateButtonRef = useRef("templateButton");
         this.templatePopover = usePopover(TemplateSelectionPopover, {
             closeOnClickAway: true,
             position: "bottom",
@@ -82,7 +82,7 @@ export class ContractTemplateField extends Component {
     }
 
     async onSelectTemplate() {
-        this.templatePopover.open(this.templateButtonRef.el, {
+        this.templatePopover.open(this.templateButtonRef(), {
             fieldProps: this.props,
             record: this.props.record,
             onSelect: (template) => this.loadTemplate(template),

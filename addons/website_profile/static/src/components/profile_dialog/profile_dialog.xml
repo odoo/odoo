@@ -8,7 +8,7 @@
                     <div class="card o_card_people">
                         <div class="card-body">
                             <div class="ratio ratio-1x1 w-100 mb-3">
-                                <img class="o_wforum_avatar_img object-fit-cover" t-custom-ref="profileImg" t-attf-src="/web/image/res.users/#{this.user.id}/avatar_128"/>
+                                <img class="o_wforum_avatar_img object-fit-cover" t-ref="this.profileImgRef" t-attf-src="/web/image/res.users/#{this.user.id}/avatar_128"/>
                             </div>
                             <div class="d-flex justify-content-center gap-1">
                                 <FileUploader onUploaded.bind="this.onUploadProfileImg" acceptedFileExtensions="'image/*'">
@@ -35,7 +35,7 @@
                         <div class="mb-3 col-12">
                             <label class="text-primary mb-1 d-block fw-bold" for="website_profile_profile_dialog_user_name">Name</label>
                             <input type="text" t-attf-class="form-control #{this.state.nameHasError ? 'is-invalid': ''}" name="name" id="website_profile_profile_dialog_user_name" required="True"
-                                t-custom-model="this.user.name" t-custom-ref="name"/>
+                                t-custom-model="this.user.name" t-ref="this.nameRef"/>
                         </div>
 
                         <div class="mb-3 col-6">

@@ -70,7 +70,7 @@
                 </div>
                 <span class="o_resource_editor_resource_info" t-out="this.resourceInfo"/>
             </div>
-            <div t-if="this.state.currentResource" id="resource-editor" t-custom-ref="editor">
+            <div t-if="this.state.currentResource" id="resource-editor" t-ref="this.editorRef">
                 <CodeEditor
                     class="'h-100'"
                     value="this.state.currentResource.arch"

@@ -2,7 +2,7 @@
 
 <templates xml:space="preserve">
 
-    <div t-name="project_todo.TodoChatterPanel" t-custom-ref="root">
+    <div t-name="project_todo.TodoChatterPanel" t-ref="this.rootRef">
         <chatter t-if="this.state.displayChatter" class="o_FormRenderer_chatterContainer">
             <Chatter
                 threadModel="'project.task'"

@@ -1,6 +1,6 @@
-import { onWillRender, useRef } from "@web/owl2/utils";
+import { onWillRender } from "@web/owl2/utils";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -20,20 +20,23 @@ export class OfflineSearchBar extends Component {
         toggler: { type: Object, optional: true },
     };
 
+    rootRef = signal(null);
+    autofocusRef = signal(null);
+
     setup() {
         this.ui = useService("ui");
-        this.rootRef = useRef("root");
-        this.inputRef =
-            this.env.config.disableSearchBarAutofocus || !this.props.autofocus
-                ? useRef("autofocus")
-                : useAutofocus({ mobile: this.ui.isSmall }); // only force the focus on touch devices on small screens
+        this.inputRef = this.autofocusRef;
+        if (!(this.env.config.disableSearchBarAutofocus || !this.props.autofocus)) {
+            // only force the focus on touch devices on small screens
+            useAutofocus({ ref: this.autofocusRef, mobile: this.ui.isSmall });
+        }
         this.searchBarDropdownState = useDropdownState();
         this.visibilityState = proxy(this.props.toggler?.state || { showSearchBar: true });
 
         useHotkey("backspace", () => this.onBackspace(), {
-            area: () => this.inputRef.el,
+            area: () => this.inputRef(),
             bypassEditableProtection: true,
-            isAvailable: () => this.inputRef.el.value === "",
+            isAvailable: () => this.inputRef()?.value === "",
         });
 
         this.allSearches = [];
@@ -78,7 +81,7 @@ export class OfflineSearchBar extends Component {
     }
 
     onBackspace() {
-        if (this.emptySearch && this.inputRef.el.value === "") {
+        if (this.emptySearch && this.inputRef()?.value === "") {
             this.selectSearch(this.emptySearch);
         }
     }
@@ -104,7 +107,10 @@ export class OfflineSearchBar extends Component {
     }
 
     onSelect(search) {
-        this.inputRef.el.value = "";
+        const el = this.inputRef();
+        if (el) {
+            el.value = "";
+        }
         this.selectSearch(search);
     }
 

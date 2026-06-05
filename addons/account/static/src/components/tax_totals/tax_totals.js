@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { formatFloat } from "@web/core/utils/numbers";
 import { parseFloat } from "@web/views/fields/parsers";
@@ -8,6 +7,7 @@ import {
     Component,
     computed,
     onPatched,
+    signal,
     toRaw,
     proxy,
     useEffect,
@@ -28,22 +28,28 @@ class TaxGroupComponent extends Component {
     };
     static template = "account.TaxGroupComponent";
 
+    inputTaxRef = signal(null);
+    numpadDecimalRef = signal(null);
+
     setup() {
-        this.inputTax = useRef("taxValueInput");
         this.state = proxy({ value: "readonly" });
         onPatched(() => {
             if (this.state.value === "edit") {
+                const el = this.inputTaxRef();
+                if (!el) {
+                    return;
+                }
                 const { taxGroup } = this.props;
                 const newVal = formatFloat(taxGroup.tax_amount_currency, { digits: this.props.totals.currency_pd });
-                this.inputTax.el.value = newVal;
-                this.inputTax.el.focus(); // Focus the input
+                el.value = newVal;
+                el.focus(); // Focus the input
             }
         });
         useEffect(() => {
             this.props.taxGroup;
             this.setState("readonly");
         });
-        useNumpadDecimal();
+        useNumpadDecimal(this.numpadDecimalRef);
     }
 
     formatMonetary(value) {
@@ -87,11 +93,15 @@ class TaxGroupComponent extends Component {
     _onChangeTaxValue() {
         this.setState("disable"); // Disable the input
         const oldValue = this.props.taxGroup.tax_amount_currency;
+        const el = this.inputTaxRef();
+        if (!el) {
+            return;
+        }
         let newValue;
         try {
-            newValue = parseFloat(this.inputTax.el.value); // Get the new value
+            newValue = parseFloat(el.value); // Get the new value
         } catch {
-            this.inputTax.el.value = oldValue;
+            el.value = oldValue;
             this.setState("edit");
             return;
         }

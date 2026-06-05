@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.MobileToolbar">
-        <div t-custom-ref="toolbarWrapper" class="o-toolbar-above-keyboard">
+        <div t-ref="this.toolbarRef" class="o-toolbar-above-keyboard">
             <Toolbar
                 state="this.props.state"
                 getSelection="this.props.getSelection"

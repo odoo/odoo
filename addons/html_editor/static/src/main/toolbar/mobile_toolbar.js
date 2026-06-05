@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, useListener } from "@odoo/owl";
+import { Component, onMounted, signal, useListener } from "@odoo/owl";
 import { Toolbar } from "./toolbar";
 
 export class ToolbarMobile extends Component {
@@ -15,8 +14,9 @@ export class ToolbarMobile extends Component {
         Toolbar,
     };
 
+    toolbarRef = signal(null);
+
     setup() {
-        this.toolbar = useRef("toolbarWrapper");
         try {
             const innerWindow = this.props.editable.ownerDocument.defaultView;
             const frameElement = innerWindow.frameElement;
@@ -35,12 +35,16 @@ export class ToolbarMobile extends Component {
      * Fixes the position of the toolbar for the keyboard height.
      */
     fixToolbarPosition() {
+        const el = this.toolbarRef();
+        if (!el) {
+            return;
+        }
         const visualViewport = this.targetWindow.visualViewport;
         const keyboardHeight = Math.max(
             0,
             this.targetWindow.innerHeight - (visualViewport.height + visualViewport.offsetTop)
         );
 
-        this.toolbar.el.style.bottom = `${keyboardHeight}px`;
+        el.style.bottom = `${keyboardHeight}px`;
     }
 }

@@ -1,4 +1,3 @@
-import { useRef } from "@web/owl2/utils";
 import { PageDependencies } from "@website/components/dialog/page_properties";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { UrlField, urlField } from "@web/views/fields/url/url_field";
@@ -27,7 +26,6 @@ class PageUrlField extends UrlField {
     setup() {
         super.setup();
         this.serverUrl = `${window.location.origin}/`;
-        this.inputRef = useRef("input");
 
         // Trigger onchange api on input event to display redirection
         // parameters as soon as the user types.
@@ -36,7 +34,7 @@ class PageUrlField extends UrlField {
         let cleanup;
         let listenedEl;
         const setupInputListener = () => {
-            const inputEl = this.inputRef.el;
+            const inputEl = this.inputRef();
             if (inputEl === listenedEl) {
                 return;
             }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.PropertyDefinition">
-        <div class="o_field_property_definition o_field_widget o_form_view d-block" t-custom-ref="propertyDefinition">
+        <div class="o_field_property_definition o_field_widget o_form_view d-block" t-ref="this.propertyDefinitionRef">
             <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
                 <span class="fw-bold" t-out="this.currentPropertyDefinitionTitle"/>
                 <button type="button"

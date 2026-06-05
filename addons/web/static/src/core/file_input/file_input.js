@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
 import { useFileUploader } from "@web/core/utils/files";
 
 /**
@@ -35,9 +34,10 @@ export class FileInput extends Component {
         route: t.string().optional("/web/binary/upload_attachment"),
     });
 
+    fileInputRef = signal(null);
+
     setup() {
         this.uploadFiles = useFileUploader();
-        this.fileInputRef = useRef("file-input");
         this.state = proxy({
             // Disables upload button if currently uploading.
             isDisable: false,
@@ -54,7 +54,7 @@ export class FileInput extends Component {
         const { resId, resModel } = this.props;
         const params = {
             csrf_token: odoo.csrf_token,
-            ufile: [...this.fileInputRef.el.files],
+            ufile: [...(this.fileInputRef()?.files ?? [])],
         };
         if (resModel) {
             params.model = resModel;
@@ -93,11 +93,14 @@ export class FileInput extends Component {
             // When calling onUpload, also pass the files to allow to get data like their names
             this.props.onUpload(
                 parsedFileData,
-                this.fileInputRef.el ? this.fileInputRef.el.files : []
+                this.fileInputRef()?.files ?? []
             );
             // Because the input would not trigger this method if the same file name is uploaded,
             // we must clear the value after handling the upload
-            this.fileInputRef.el.value = null;
+            const el = this.fileInputRef();
+            if (el) {
+                el.value = null;
+            }
         }
         this.state.isDisable = false;
     }
@@ -107,7 +110,7 @@ export class FileInput extends Component {
      */
     async onTriggerClicked() {
         if (await this.props.beforeOpen()) {
-            this.fileInputRef.el.click();
+            this.fileInputRef()?.click();
         }
     }
 }

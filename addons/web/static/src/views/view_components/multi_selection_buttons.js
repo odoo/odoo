@@ -1,5 +1,5 @@
-import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, toRaw, proxy } from "@odoo/owl";
+import { onWillRender, useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy, signal, toRaw } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -36,6 +36,9 @@ export class MultiSelectionButtons extends Component {
         Popover: MultiCreatePopover,
     };
 
+    addButtonRef = signal(null);
+    rootRef = signal(null);
+
     setup() {
         this.viewService = useService("view");
         this.dialogService = useService("dialog");
@@ -68,9 +71,6 @@ export class MultiSelectionButtons extends Component {
                 }
             },
         });
-        this.addButtonRef = useRef("addButton");
-
-        const rootRef = useRef("root");
         useLayoutEffect(
             (el) => {
                 if (!el) {
@@ -82,7 +82,7 @@ export class MultiSelectionButtons extends Component {
                 const left = Math.floor((parentWidth - width) / 2);
                 el.style.setProperty("left", `${left}px`);
             },
-            () => [rootRef.el]
+            () => [this.rootRef()]
         );
 
         useHotkey("escape", () => {
@@ -184,7 +184,7 @@ export class MultiSelectionButtons extends Component {
         if (this.multiCreatePopover.isOpen) {
             return;
         }
-        this.multiCreatePopover.open(this.addButtonRef.el, this.getMultiCreatePopoverProps());
+        this.multiCreatePopover.open(this.addButtonRef(), this.getMultiCreatePopoverProps());
     }
 
     onDelete() {

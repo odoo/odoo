@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class TextInputPopup extends Component {
@@ -16,14 +15,14 @@ export class TextInputPopup extends Component {
         close: t.function(),
     });
 
+    inputRef = signal(null);
     setup() {
         this.state = proxy({ inputValue: this.props.startingValue });
-        this.inputRef = useRef("input");
         onMounted(this.onMounted);
     }
     onMounted() {
-        this.inputRef.el.focus();
-        this.inputRef.el.select();
+        this.inputRef()?.focus();
+        this.inputRef()?.select();
     }
     confirm() {
         this.props.getPayload(this.state.inputValue);

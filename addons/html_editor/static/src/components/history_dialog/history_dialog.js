@@ -1,9 +1,8 @@
-import { useRef } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { memoize } from "@web/core/utils/functions";
-import { Component, onMounted, markup, onWillStart, props, proxy, t } from "@odoo/owl";
+import { Component, onMounted, markup, onWillStart, props, proxy, signal, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
@@ -32,6 +31,7 @@ export class HistoryDialog extends Component {
     });
 
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
+    listboxRef = signal(null);
 
     state = proxy({
         revisionsData: [],
@@ -49,7 +49,6 @@ export class HistoryDialog extends Component {
         this.title = this.props.title;
         this.orm = useService("orm");
         this.toggleFullscreen = this.toggleFullscreen.bind(this);
-        this.listboxRef = useRef("listbox");
 
         useHotkey("ArrowUp", () => this.navigateRevisions("PREV"), { allowRepeat: true });
         useHotkey("ArrowDown", () => this.navigateRevisions("NEXT"), { allowRepeat: true });
@@ -304,13 +303,14 @@ export class HistoryDialog extends Component {
         const nextRevision = this.state.revisionsData[nextIndex];
         this.updateCurrentRevision(nextRevision.revision_id);
 
-        if (this.listboxRef.el) {
-            const revisionElement = this.listboxRef.el.querySelector(
+        const el = this.listboxRef();
+        if (el) {
+            const revisionElement = el.querySelector(
                 `[data-revision-id="${nextRevision.revision_id}"]`
             );
             if (revisionElement) {
                 revisionElement.focus();
-                scrollTo(revisionElement, { scrollable: this.listboxRef.el });
+                scrollTo(revisionElement, { scrollable: el });
             }
         }
     }

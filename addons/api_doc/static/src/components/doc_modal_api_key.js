@@ -1,5 +1,4 @@
-import { useRef } from "@web/owl2/utils";
-import { Component, useListener } from "@odoo/owl";
+import { Component, signal, useListener } from "@odoo/owl";
 
 export class ApiKeyModal extends Component {
     static template = "web.DocApiKeyModal";
@@ -7,9 +6,9 @@ export class ApiKeyModal extends Component {
     static components = {};
     static props = {};
 
-    setup() {
-        this.modalRef = useRef("modalRef");
+    modalRef = signal(null);
 
+    setup() {
         useListener(window, "keydown", (event) => {
             if (event.key === "Escape") {
                 this.cancel();
@@ -17,14 +16,14 @@ export class ApiKeyModal extends Component {
         });
 
         useListener(window, "click", (event) => {
-            if (!this.modalRef.el.contains(event.target)) {
+            if (!this.modalRef()?.contains(event.target)) {
                 this.cancel();
             }
         });
     }
 
     save() {
-        this.env.modelStore.setAPIKey(this.modalRef.el.querySelector(":scope input").value.trim());
+        this.env.modelStore.setAPIKey(this.modalRef()?.querySelector(":scope input")?.value.trim());
         this.env.modelStore.showApiKeyModal = false;
     }
 

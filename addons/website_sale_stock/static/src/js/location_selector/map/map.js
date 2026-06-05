@@ -1,7 +1,7 @@
 /*global L*/
 
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component } from '@odoo/owl';
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, signal } from "@odoo/owl";
 import { renderToString } from '@web/core/utils/render';
 
 export class Map extends Component {
@@ -40,15 +40,16 @@ export class Map extends Component {
         setSelectedLocation: Function,
     };
 
+    mapRef = signal(null);
+
     setup() {
         this.leafletMap = null;
         this.markers = [];
-        this.mapRef = useRef('map');
 
         // Create the map.
         useLayoutEffect(
             () => {
-                this.leafletMap = L.map(this.mapRef.el, {
+                this.leafletMap = L.map(this.mapRef(), {
                     zoom: 13,
                 });
                 this.leafletMap.attributionControl.setPrefix(

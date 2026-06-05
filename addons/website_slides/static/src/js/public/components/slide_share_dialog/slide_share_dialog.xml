@@ -49,9 +49,9 @@
                 <div class="col-12 o_wslides_embed_code" t-if="this.props.embedCode">
                     <h5 class="mt-4">Embed in another Website</h5>
                     <div class="input-group">
-                        <textarea t-custom-ref="codeInput" class="form-control" t-att-value="this.props.embedCode"
+                        <textarea t-ref="this.codeInputRef" class="form-control" t-att-value="this.props.embedCode"
                                   readonly="readonly" onClick="this.select();"/>
-                        <CopyButton content="() => this.codeInput.el.value" copyText="this.copyEmbedCodeText"
+                        <CopyButton content="() => this.codeInputRef()?.value" copyText="this.copyEmbedCodeText"
                                     successText="this.successText"/>
                     </div>
                     <div t-if="this.props.category == 'document' and this.props.documentMaxPage > 1" class="input-group mt-4">
