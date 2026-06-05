@@ -29,9 +29,10 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             # Pagero doc states that the 'Commitment Number' should be in the OrderReference/ID node
             vals['vals']['order_reference'] = invoice.purchase_order_reference
 
+        france_country_codes = self.env['res.company']._get_france_country_codes()
         for role in ('supplier', 'customer'):
             partner = vals[role].commercial_partner_id
-            if 'siret' in partner._fields and partner.siret and partner.country_code == 'FR':
+            if 'siret' in partner._fields and partner.siret and partner.country_code in france_country_codes:
                 vals['vals'][f'accounting_{role}_party_vals']['party_vals']['party_identification_vals'] = [{
                     'id': partner.siret,
                     'id_attrs': {'schemeID': '0009'},
@@ -65,9 +66,10 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         if self._is_customer_behind_chorus_pro(customer):
             if 'siret' not in customer._fields or not customer.siret:
                 constraints['chorus_customer'] = _("The siret of the final recipient is mandatory for the customer when invoicing through Chorus Pro.")
-            if supplier.country_code == 'FR' and ('siret' not in supplier._fields or not supplier.siret):
+            france_country_codes = self.env['res.company']._get_france_country_codes()
+            if supplier.country_code in france_country_codes and ('siret' not in supplier._fields or not supplier.siret):
                 constraints['chorus_supplier_fr'] = _("The siret is mandatory for french suppliers when invoicing to Chorus Pro.")
-            if supplier.country_code != 'FR' and not supplier.vat:
+            if supplier.country_code not in france_country_codes and not supplier.vat:
                 constraints['chorus_supplier_not_fr'] = _("The VAT is mandatory for non-french suppliers when invoicing to Chorus Pro.")
         return constraints
 
@@ -109,7 +111,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         nodes = vals['party_node']['cac:PartyIdentification'] = []
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
-        if commercial_partner.country_code == 'FR' and commercial_partner.siret:
+        if commercial_partner.country_code in self.env['res.company']._get_france_country_codes() and commercial_partner.siret:
             nodes.append({
                 'cbc:ID': {
                     '_text': commercial_partner.siret,
@@ -137,7 +139,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
-        if commercial_partner.country_code == 'FR' and commercial_partner.siret:
+        if commercial_partner.country_code in self.env['res.company']._get_france_country_codes() and commercial_partner.siret:
             vals['party_node']['cac:PartyLegalEntity'] = [{
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
                 'cbc:CompanyID': {
