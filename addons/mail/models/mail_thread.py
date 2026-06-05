@@ -2085,11 +2085,13 @@ class MailThread(models.AbstractModel):
         done_partners += [partner for partner in partners]
 
         # prioritize current user if exists in list, and partners with matching company ids
+        emails_set = set(emails)
         if company_fname := records and records._mail_get_company_field():
             def sort_key(p):
                 return (
                     self.env.user.partner_id == p,           # prioritize user
                     p.company_id in records[company_fname],  # then partner associated w/ records
+                    p.email_formatted in emails_set,         # prioritize exact mail match
                     not p.company_id,                        # else pick partner w/out company_id
                     -p.id,                                   # finally use a deterministic id ASC tie-breaker
                 )
@@ -2097,6 +2099,7 @@ class MailThread(models.AbstractModel):
             def sort_key(p):
                 return (
                     self.env.user.partner_id == p,          # prioritize user
+                    p.email_formatted in emails_set,        # prioritize exact mail match
                     not p.company_id,                       # else pick partner w/out company_id
                     -p.id,                                  # finally use a deterministic id ASC tie-breaker
                 )
