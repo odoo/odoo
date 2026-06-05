@@ -1,0 +1,60 @@
+<odoo>
+    <record id="view_tool_post_form" model="ir.ui.view">
+        <field name="name">tool.post.form</field>
+        <field name="model">tool.post</field>
+        <field name="arch" type="xml">
+            <form string="Post">
+                <header>
+                    <button
+                        name="action_send_to_bot"
+                        string="Gửi Bot"
+                        type="object"
+                        class="btn-primary"
+                    />
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"
+                                placeholder="Nhập tiêu đề bài viết..."/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="uid"/>
+                        </group>
+
+                        <group>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+
+                        <page string="Nội dung">
+                            <field name="content"
+                                nolabel="1"
+                                placeholder="Nhập nội dung..."
+                                style="min-height:300px;"/>
+                        </page>
+
+                        <page string="Đính kèm">
+                            <group>
+                                <field name="attachment_ids"
+                                    widget="many2many_binary"/>
+                            </group>
+
+                            <div class="text-muted mt-2">
+                                Tối đa 10 file đính kèm.
+                            </div>
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

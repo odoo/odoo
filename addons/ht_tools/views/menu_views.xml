@@ -1,0 +1,21 @@
+<odoo>
+    <record id="action_post" model="ir.actions.act_window">
+        <field name="name">HT Tools</field>
+        <field name="res_model">tool.post</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_post_root"
+        name="HT Tools"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_post"
+        name="Danh sách bài viết"
+        parent="menu_post_root"
+        action="action_post"
+    />
+
+</odoo>
