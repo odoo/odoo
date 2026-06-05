@@ -946,3 +946,23 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         cogs_lines = bill.line_ids.filtered(lambda l: l.display_type == 'cogs')
         self.assertRecordValues(cogs_lines, [{'tax_ids': []} for _ in cogs_lines])
+
+    def test_po_late_receipt_ignores_cancelled_receipts(self):
+        """Tests that a cancelled backorder doesn't comes under the PO late"""
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_qty': 5.0,
+                    'date_planned': fields.Datetime.now() - timedelta(days=1),
+                }),
+            ],
+        })
+        po.button_confirm()
+        self.assertIn(po, self.env['purchase.order'].search([('is_late', '=', True)]))
+        picking = po.picking_ids
+        picking.move_ids.quantity = 2
+        Form.from_action(self.env, picking.button_validate()).save().process()
+        picking.backorder_ids.action_cancel()
+        self.assertNotIn(po, self.env['purchase.order'].search([('is_late', '=', True)]))
