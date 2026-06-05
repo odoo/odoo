@@ -39,7 +39,6 @@ The Dashboard for the Sales Manager will include
     "data": [
         "data/digest_data.xml",
         "security/ir.model.access.csv",
-        "security/res_groups.xml",
         "security/ir_rules.xml",
         # Define SO template views & actions before their place of use
         "views/sale_order_template_views.xml",

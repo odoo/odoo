@@ -33,7 +33,6 @@ export class SaleTemplateDropdown extends Component {
         this.dialogService = useService("dialog");
         this.orm = useService("orm");
         this.state = proxy({
-            hasQuotationTemplateFeature: false,
             canManageTemplates: false,
             quotationTemplates: [],
         });
@@ -41,13 +40,7 @@ export class SaleTemplateDropdown extends Component {
     }
 
     async onWillStart() {
-        this.state.hasQuotationTemplateFeature = await user.hasGroup(
-            "sale_management.group_sale_order_template"
-        );
         this.state.canManageTemplates = await user.hasGroup("sales_team.group_sale_manager");
-        if (!this.state.hasQuotationTemplateFeature) {
-            return;
-        }
         this.state.quotationTemplates = await this.orm.searchRead(
             "sale.order.template",
             [["template_type", "=", "quotation"]],
