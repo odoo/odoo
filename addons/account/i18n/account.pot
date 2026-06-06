@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2026-05-29 17:38+0000\n"
+"POT-Creation-Date: 2026-06-05 19:32+0000\n"
+"PO-Revision-Date: 2026-06-05 19:32+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1823,13 +1823,30 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-msgid "Account %s is of payable type, but is used in a sale operation."
+msgid "Account '%s' is of payable type, but is used in a sale operation."
 msgstr ""
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgid ""
+"Account '%s' is of receivable type, but is used in a purchase operation."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid ""
+"Account '%s' used for payable line is not of payable type. Check if the "
+"account type is correct."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid ""
+"Account '%s' used for receivable line is not of receivable type. Check if "
+"the account type is correct."
 msgstr ""
 
 #. module: account
@@ -3223,16 +3240,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-msgid ""
-"Any journal item on a payable account must have a due date and vice versa."
+msgid "Any journal item on '%s' (Payable) must have a due date."
 msgstr ""
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-msgid ""
-"Any journal item on a receivable account must have a due date and vice "
-"versa."
+msgid "Any journal item on '%s' (Receivable) must have a due date."
 msgstr ""
 
 #. module: account
@@ -4277,6 +4291,16 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.22_account_account_us_local_tax
 msgid "Business or income taxes owed to local or municipal governments"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__journal_group_id
+#: model:ir.model.fields,help:account.field_account_journal__journal_group_id
+#: model:ir.model.fields,help:account.field_account_move__journal_group_id
+#: model:ir.model.fields,help:account.field_account_move_line__journal_group_id
+msgid ""
+"By default, all journals post to the Statutory Ledger (Local GAAP). \n"
+"Specifying a ledger allows you to isolate IFRS, Tax, or Intercompany adjustments without affecting local statutory accounts."
 msgstr ""
 
 #. module: account
@@ -5363,6 +5387,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/upload_drop_zone/upload_drop_zone.js:0
 msgid "Could not upload files"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Couldn't reload data."
 msgstr ""
 
 #. module: account
@@ -9535,6 +9565,12 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.22_account_account_us_import_fees
 msgid "Import Fees"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__import_source_attachment_id
+#: model:ir.model.fields,field_description:account.field_account_move__import_source_attachment_id
+msgid "Import Source Attachment"
 msgstr ""
 
 #. module: account
@@ -14084,6 +14120,7 @@ msgstr ""
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -14681,6 +14718,11 @@ msgid "Reload"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Reload Data"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Reload accounting data (taxes, accounts, ...) if you notice inconsistencies."
@@ -14769,6 +14811,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__report_line_id
 msgid "Report Line"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__filter_line_comparison
+msgid "Report Line Comparison"
 msgstr ""
 
 #. module: account
@@ -15610,6 +15657,7 @@ msgid "Send Invoice Wizard"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_register__allow_out_payment
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__allow_out_payment
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__allow_out_payment
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__outbound
@@ -15680,6 +15728,7 @@ msgid "Sending Methods"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_payment_register__allow_out_payment
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__allow_out_payment
 #: model:ir.model.fields,help:account.field_res_partner_bank__allow_out_payment
 msgid ""
@@ -20829,14 +20878,14 @@ msgid "e.g. Bank Fees"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "e.g. Current Assets"
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_tree
+msgid "e.g. CONSO, IFRS, ..."
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_tree
-msgid "e.g. GAAP, IFRS, ..."
+#: model_terms:ir.ui.view,arch_db:account.view_account_form
+msgid "e.g. Current Assets"
 msgstr ""
 
 #. module: account

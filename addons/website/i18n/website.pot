@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2026-05-29 17:38+0000\n"
+"POT-Creation-Date: 2026-06-05 19:32+0000\n"
+"PO-Revision-Date: 2026-06-05 19:32+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -373,7 +373,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model:website,contact_us_link_url:website.default_website
 #: model:website,contact_us_link_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -1519,14 +1518,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
 msgid ""
 "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-"                            <span class=\"visually-hidden\">Next</span>"
+"                            <span class=\"visually-hidden\">Next slide</span>"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
 msgid ""
 "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-"                        <span class=\"visually-hidden\">Next</span>"
+"                        <span class=\"visually-hidden\">Next slide</span>"
 msgstr ""
 
 #. module: website
@@ -1535,7 +1534,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
 msgid ""
 "<span class=\"carousel-control-next-icon\" aria-hidden=\"true\"/>\n"
-"                <span class=\"visually-hidden\">Next</span>"
+"                <span class=\"visually-hidden\">Next slide</span>"
 msgstr ""
 
 #. module: website
@@ -1544,14 +1543,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
 msgid ""
 "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-"                            <span class=\"visually-hidden\">Previous</span>"
+"                            <span class=\"visually-hidden\">Previous slide</span>"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
 msgid ""
 "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-"                        <span class=\"visually-hidden\">Previous</span>"
+"                        <span class=\"visually-hidden\">Previous slide</span>"
 msgstr ""
 
 #. module: website
@@ -1559,14 +1558,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
 msgid ""
 "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-"                    <span class=\"visually-hidden\">Previous</span>"
+"                    <span class=\"visually-hidden\">Previous slide</span>"
 msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 msgid ""
 "<span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"/>\n"
-"                <span class=\"visually-hidden\">Previous</span>"
+"                <span class=\"visually-hidden\">Previous slide</span>"
 msgstr ""
 
 #. module: website
@@ -2061,9 +2060,18 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.new_page_template_team_s_image_gallery
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery
-msgid "<span class=\"visually-hidden\">Carousel indicator</span>"
+msgid "<span class=\"visually-hidden\">Slide 1 of 3</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery
+msgid "<span class=\"visually-hidden\">Slide 2 of 3</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery
+msgid "<span class=\"visually-hidden\">Slide 3 of 3</span>"
 msgstr ""
 
 #. module: website
@@ -4657,19 +4665,6 @@ msgid "Carousel Intro"
 msgstr ""
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/carousel_option_plugin.js:0
-#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
-#: code:addons/website/static/src/interactions/image_lightbox.xml:0
-#: model_terms:ir.ui.view,arch_db:website.s_carousel
-#: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
-#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
-#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
-#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
-msgid "Carousel indicator"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Carrot Cake"
 msgstr ""
@@ -5269,7 +5264,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/website/models/website.py:0
 #: model:ir.model,name:website.model_res_company
-#: model:ir.model.fields,field_description:website.field_website__company_id
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_cards
 msgid "Company"
@@ -5799,7 +5793,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__create_uid
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__create_uid
 #: model:ir.model.fields,field_description:website.field_theme_website_page__create_uid
-#: model:ir.model.fields,field_description:website.field_website__create_uid
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__create_uid
 #: model:ir.model.fields,field_description:website.field_website_controller_page__create_uid
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__create_uid
@@ -5831,7 +5824,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__create_date
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__create_date
 #: model:ir.model.fields,field_description:website.field_theme_website_page__create_date
-#: model:ir.model.fields,field_description:website.field_website__create_date
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__create_date
 #: model:ir.model.fields,field_description:website.field_website_controller_page__create_date
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__create_date
@@ -5908,12 +5900,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/card_image_option.xml:0
 msgid "Custom Ratio"
-msgstr ""
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
-msgid "Custom Text"
 msgstr ""
 
 #. module: website
@@ -7030,7 +7016,6 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_domain
-#: model:ir.model.fields,help:website.field_website__domain
 msgid "E.g. https://www.mydomain.com"
 msgstr ""
 
@@ -10809,7 +10794,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__write_uid
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__write_uid
 #: model:ir.model.fields,field_description:website.field_theme_website_page__write_uid
-#: model:ir.model.fields,field_description:website.field_website__write_uid
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__write_uid
 #: model:ir.model.fields,field_description:website.field_website_controller_page__write_uid
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__write_uid
@@ -10831,7 +10815,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__write_date
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__write_date
 #: model:ir.model.fields,field_description:website.field_theme_website_page__write_date
-#: model:ir.model.fields,field_description:website.field_website__write_date
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__write_date
 #: model:ir.model.fields,field_description:website.field_website_controller_page__write_date
 #: model:ir.model.fields,field_description:website.field_website_custom_blocked_third_party_domains__write_date
@@ -12264,17 +12247,8 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
-#: code:addons/website/static/src/interactions/image_lightbox.xml:0
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:ir.ui.view,arch_db:website.s_carousel
-#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
-#: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
-#: model_terms:ir.ui.view,arch_db:website.s_image_gallery
-#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
-#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
-#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
 msgid "Next"
 msgstr ""
 
@@ -12282,6 +12256,20 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/timeline_option.xml:0
 msgid "Next Feature"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
+#: code:addons/website/static/src/interactions/image_lightbox.xml:0
+#: model_terms:ir.ui.view,arch_db:website.s_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
+msgid "Next slide"
 msgstr ""
 
 #. module: website
@@ -13533,7 +13521,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/send_mail_form.js:0
+#: code:addons/website/static/src/js/send_mail_form.edit.js:0
 msgid "Phone Number"
 msgstr ""
 
@@ -13667,6 +13655,7 @@ msgstr ""
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/cookies_bar_option.xml:0
+#: code:addons/website/static/src/interactions/popup/popup.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_popup
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Popup"
@@ -13720,6 +13709,12 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__prepend
 msgid "Prepend"
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+msgid "Presence of publishing branding in html content is forbidden"
 msgstr ""
 
 #. module: website
@@ -13778,17 +13773,8 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
-#: code:addons/website/static/src/interactions/image_lightbox.xml:0
 #: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:ir.ui.view,arch_db:website.s_carousel
-#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
-#: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
-#: model_terms:ir.ui.view,arch_db:website.s_image_gallery
-#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
-#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
-#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
 msgid "Previous"
 msgstr ""
 
@@ -13796,6 +13782,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_controller_page__arch_prev
 #: model:ir.model.fields,field_description:website.field_website_page__arch_prev
 msgid "Previous View Architecture"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
+#: code:addons/website/static/src/interactions/image_lightbox.xml:0
+#: model_terms:ir.ui.view,arch_db:website.s_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
+msgid "Previous slide"
 msgstr ""
 
 #. module: website
@@ -13995,11 +13995,6 @@ msgid "Public Partner"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website__user_id
-msgid "Public User"
-msgstr ""
-
-#. module: website
 #: model:res.groups,name:website.website_page_controller_expose
 msgid "Public access to arbitrary exposed model"
 msgstr ""
@@ -14084,11 +14079,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Punchy Image"
-msgstr ""
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website__domain_punycode
-msgid "Punycode Domain"
 msgstr ""
 
 #. module: website
@@ -15369,7 +15359,6 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__sequence
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__sequence
-#: model:ir.model.fields,field_description:website.field_website__sequence
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__sequence
 #: model:ir.model.fields,field_description:website.field_website_controller_page__priority
 #: model:ir.model.fields,field_description:website.field_website_menu__sequence
@@ -15831,6 +15820,47 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/navtabs_style_option.xml:0
 msgid "Slide"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/carousel_option_plugin.js:0
+msgid "Slide %(itemIndex)s of %(total)s"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option_plugin.js:0
+#: code:addons/website/static/src/interactions/image_popup.js:0
+#: code:addons/website/static/src/snippets/s_image_gallery/gallery.js:0
+msgid "Slide %(itemPosition)s of %(total)s"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
+msgid "Slide 1 of 3"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
+msgid "Slide 2 of 3"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
+msgid "Slide 3 of 3"
 msgstr ""
 
 #. module: website
@@ -16297,7 +16327,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/send_mail_form.js:0
+#: code:addons/website/static/src/js/send_mail_form.edit.js:0
 msgid "Subject"
 msgstr ""
 
@@ -18894,13 +18924,7 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_domain
-#: model:ir.model.fields,field_description:website.field_website__domain
 msgid "Website Domain"
-msgstr ""
-
-#. module: website
-#: model:ir.model.constraint,message:website.constraint_website_domain_unique
-msgid "Website Domain should be unique."
 msgstr ""
 
 #. module: website
@@ -18965,7 +18989,6 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_name
-#: model:ir.model.fields,field_description:website.field_website__name
 msgid "Website Name"
 msgstr ""
 
@@ -19589,7 +19612,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/send_mail_form.js:0
+#: code:addons/website/static/src/js/send_mail_form.edit.js:0
 msgid "Your Company"
 msgstr ""
 
@@ -19602,7 +19625,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/send_mail_form.js:0
+#: code:addons/website/static/src/js/send_mail_form.edit.js:0
 msgid "Your Email"
 msgstr ""
 
@@ -19639,7 +19662,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/send_mail_form.js:0
+#: code:addons/website/static/src/js/send_mail_form.edit.js:0
 msgid "Your Name"
 msgstr ""
 
@@ -19652,7 +19675,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/send_mail_form.js:0
+#: code:addons/website/static/src/js/send_mail_form.edit.js:0
 msgid "Your Question"
 msgstr ""
 
@@ -19895,6 +19918,21 @@ msgid ""
 " pictures, photos, illustration, media, visuals, intro, home, coupon, code, "
 "description, rounded, card, call to action, cta, marketing, showcase, "
 "mosaic, collage, arrangement, collection, visual-grid"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
+#: code:addons/website/static/src/interactions/image_lightbox.xml:0
+#: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
+#: model_terms:ir.ui.view,arch_db:website.s_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
+msgid "carousel"
 msgstr ""
 
 #. module: website
@@ -20863,6 +20901,21 @@ msgstr ""
 msgid ""
 "shop, group, list, card, cart, products, inventory, catalog, merchandise, "
 "goods"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
+#: code:addons/website/static/src/interactions/image_lightbox.xml:0
+#: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
+#: model_terms:ir.ui.view,arch_db:website.s_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_cards
+#: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
+#: model_terms:ir.ui.view,arch_db:website.s_image_gallery
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
+#: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_minimal
+msgid "slide"
 msgstr ""
 
 #. module: website
