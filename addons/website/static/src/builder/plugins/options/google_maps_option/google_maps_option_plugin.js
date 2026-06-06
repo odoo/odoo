@@ -82,7 +82,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
     upgradeSnippets() {
         // This is for pages which already existed before the plugin was created.
         this.document.querySelectorAll(".s_google_map").forEach((mapSnippetEl) => {
-            mapSnippetEl.classList.add("o_not_editable");
+            mapSnippetEl.classList.remove("o_not_editable");
             mapSnippetEl.dataset.vxml = "001";
         });
     }
