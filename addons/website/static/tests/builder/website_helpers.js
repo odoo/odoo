@@ -24,7 +24,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
-import { registry } from "@web/core/registry";
+import { Registry, registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
 import { EditInteractionPlugin } from "@website/builder/plugins/edit_interaction_plugin";
@@ -38,6 +38,7 @@ import { WebsiteBuilder } from "@website/builder/website_builder";
 import { session } from "@web/session";
 import { getTranslatedElements } from "./translated_elements_getter.hoot";
 import { BackgroundShapeOptionPlugin } from "@html_builder/plugins/background_option/background_shape_option_plugin";
+import { _t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
 
 class Website extends models.Model {
     _name = "website";
@@ -109,6 +110,7 @@ export async function setupWebsiteBuilder(
         openEditor = true,
         loadIframeBundles = false,
         loadAssetsFrontendJS = false,
+        loadIframeMinimalJS = false,
         hasToCreateWebsite = true,
         styleContent,
         headerContent = "",
@@ -116,10 +118,12 @@ export async function setupWebsiteBuilder(
         beforeWrapwrapContent = "",
         translateMode = false,
         enableIframeTransitions = false,
+        withIframeRegistry,
         onIframeLoaded = () => {},
         delayReload = async () => {},
     } = {}
 ) {
+    loadIframeMinimalJS ||= withIframeRegistry;
     // TODO: fix when the iframe is reloaded and become empty (e.g. discard button)
     if (hasToCreateWebsite) {
         const pyEnv = await startServer();
@@ -194,16 +198,27 @@ export async function setupWebsiteBuilder(
         // with Hoot.
         preparePublicRootReady() {},
         async loadAssetsEditBundle() {
+            const { contentDocument: targetDoc, contentWindow } = queryOne(
+                "iframe[data-src^='/website/force/1']"
+            );
             // To instantiate interactions in the iframe test we need to load
             // the frontend bundle in it. The problem is that Hoot does not have
             // control of this iframe and therefore does not mock anything in it
             // (location, rpc, ...). So we don't load the js part of the bundle
-
             if (loadIframeBundles) {
-                await loadBundle("website.assets_inside_builder_iframe", {
-                    targetDoc: queryOne("iframe[data-src^='/website/force/1']").contentDocument,
-                    js: false,
-                });
+                await loadBundle("website.assets_inside_builder_iframe", { targetDoc, js: false });
+            }
+            if (loadIframeMinimalJS) {
+                // Load the builder's *.edit.xml, needed for some options
+                await loadBundle("website.assets_inside_builder_iframe_tests", { targetDoc });
+                // Reuse the translation in the iframe to avoid loading them
+                const translation = contentWindow.odoo.loader.require("@web/core/l10n/translation");
+                translation.translatedTerms[translation.translationLoaded] =
+                    translatedTerms[translationLoaded];
+
+                withIframeRegistry?.(
+                    contentWindow.odoo.loader.require("@web/core/registry").registry
+                );
             }
             await resolveEditAssetsLoaded();
         },
@@ -281,10 +296,12 @@ export async function setupWebsiteBuilder(
             return {};
         },
         getRegistry() {
-            return registry;
+            return loadIframeMinimalJS || loadAssetsFrontendJS
+                ? super.getRegistry()
+                : new Registry();
         },
-        _t() {
-            return (source, ...substitutions) => source;
+        get _t() {
+            return _t;
         },
     });
 

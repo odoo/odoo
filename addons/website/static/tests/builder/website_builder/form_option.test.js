@@ -12,7 +12,6 @@ import {
     patchWithCleanup,
     webModels,
 } from "@web/../tests/web_test_helpers";
-import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
@@ -64,22 +63,23 @@ defineWebsiteModels();
 
 test("change action of form changes available options", async () => {
     // reduced version of form_editor_actions
-    registry
-        .category("website.form_editor_actions")
-        .add("apply_job", {
-            formFields: [
-                { type: "char", name: "partner_name", fillWith: "name", string: "Your Name" },
-            ],
-            fields: [
-                { name: "job_id", type: "many2one", relation: "hr.job", string: "Applied Job" },
-            ],
-            successPage: "/job-thank-you",
-        })
-        .add("create_customer", {
-            formFields: [{ type: "char", name: "name", fillWith: "name", string: "Your Name" }],
-        });
-
-    await setupWebsiteBuilderWithSnippet("s_website_form");
+    function withIframeRegistry(registry) {
+        registry
+            .category("website.form_editor_actions")
+            .add("apply_job", {
+                formFields: [
+                    { type: "char", name: "partner_name", fillWith: "name", string: "Your Name" },
+                ],
+                fields: [
+                    { name: "job_id", type: "many2one", relation: "hr.job", string: "Applied Job" },
+                ],
+                successPage: "/job-thank-you",
+            })
+            .add("create_customer", {
+                formFields: [{ type: "char", name: "name", fillWith: "name", string: "Your Name" }],
+            });
+    }
+    await setupWebsiteBuilderWithSnippet("s_website_form", { withIframeRegistry });
 
     await contains(":iframe section").click();
     await contains(".hb-row[data-label='Action'] button").click();
