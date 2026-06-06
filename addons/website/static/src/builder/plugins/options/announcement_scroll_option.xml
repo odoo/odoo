@@ -2,11 +2,6 @@
 <templates xml:space="preserve">
 
 <t t-name="website.AnnouncementScrollOption">
-    <BuilderRow label.translate="Text">
-        <BuilderTextInput action="'setItemTextAction'"
-            default.translate="Write your text"
-            applyTo="'.s_announcement_scroll_marquee_item:first-child'"/>
-    </BuilderRow>
     <BuilderRow label.translate="Direction">
         <BuilderSelect>
             <BuilderSelectItem ltrRtlMapping="'left-right'" classAction="'s_announcement_scroll_direction_left'">
