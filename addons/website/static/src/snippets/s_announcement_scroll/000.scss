@@ -4,7 +4,15 @@
 
     .s_announcement_scroll_marquee_item {
         white-space: preserve nowrap;
-        caret-color: transparent; // o_not_editable doesn't hide the caret on Firefox
+        margin-bottom: 0;
+
+        &::before {
+            // This ensures a minimum width to the item, in case the user
+            // deletes the content
+            content: "";
+            float: left;
+            min-width: 1.5vw;
+        }
 
         @media (prefers-reduced-motion: reduce) {
             & {
@@ -63,6 +71,10 @@
             &.s_announcement_scroll_parallax .s_announcement_scroll_marquee_item {
                 animation-play-state: paused;
             }
+        }
+
+        .o_marquee_has_selection .s_announcement_scroll_marquee_item {
+            animation-play-state: paused;
         }
     }
 }

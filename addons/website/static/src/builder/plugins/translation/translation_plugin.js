@@ -28,10 +28,6 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  * @property {TranslationPlugin["getDirtyTranslationsInfo"]} getDirtyTranslationsInfo
  */
 
-/**
- * @typedef {((editableEls: HTMLElement[]) => void)[]} on_nodes_marked_translatable_handlers
- */
-
 const TRANSLATED_ATTRS = [
     "placeholder",
     "title",
@@ -40,6 +36,7 @@ const TRANSLATED_ATTRS = [
     "data-oe-translate-src",
     "data-oe-translate-srcset",
 ];
+
 const TRANSLATION_ATTRIBUTES_SELECTOR = TRANSLATED_ATTRS.map(
     (att) => `[${att}*="data-oe-translation-source-sha="]`
 ).join(", ");
@@ -336,7 +333,6 @@ export class TranslationPlugin extends Plugin {
                 }
             }
         }
-        this.trigger("on_nodes_marked_translatable_handlers", this.editableEls);
     }
 
     parseTranslationEl(translationHtml) {
