@@ -2,7 +2,6 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { generateGMapLink } from "@website/js/utils";
-import { renderToElement } from "@web/core/utils/render";
 
 export class MapOptionPlugin extends Plugin {
     static id = "mapOption";
@@ -60,11 +59,13 @@ export class MapUpdateSrcAction extends BuilderAction {
 }
 export class MapDescriptionAction extends BuilderAction {
     static id = "mapDescription";
+    static dependencies = ["websiteBridge"];
     isApplied({ editingElement }) {
         return !!editingElement.querySelector(".description");
     }
     apply({ editingElement }) {
-        editingElement.append(renderToElement("website.MapsDescription"));
+        const newEl = this.dependencies.websiteBridge.renderToElement("website.MapsDescription");
+        editingElement.append(newEl);
     }
     clean({ editingElement }) {
         editingElement.querySelector(".description").remove();
