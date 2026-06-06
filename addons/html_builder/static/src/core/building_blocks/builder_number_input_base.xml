@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.BuilderNumberInputBase">
-    <div class="d-flex flex-row flex-nowrap w-100 align-items-center"
+    <div class="d-flex flex-row flex-nowrap w-100 align-items-baseline"
         t-attf-class="{{ this.props.classes + ( this.props.prefix ? ' o-hb-input-base' : '' ) }}"
         t-att-data-action-id="this.info.actionId"
         t-att-data-action-param="this.info.actionParam"
@@ -13,7 +13,7 @@
         t-att-data-attribute-action="this.info.attributeAction"
         t-att-data-attribute-action-value="this.info.attributeActionValue">
         <span t-if="this.props.prefix" class="o-hb-input-prefix" t-out="this.props.prefix"/>
-        <i t-if="this.props.prefixIcon" role="img" t-att-class="'o-hb-input-prefix ' + this.props.prefixIcon"/> 
+        <i t-if="this.props.prefixIcon" role="img" t-att-class="'o-hb-input-prefix align-self-center ' + this.props.prefixIcon"/> 
         <input
             t-custom-ref="inputRef"
             t-att-type="this.props.composable ? 'text' : 'number'"
