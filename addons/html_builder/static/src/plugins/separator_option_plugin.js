@@ -8,6 +8,7 @@ export class SeparatorOptionPlugin extends Plugin {
         dropzone_selectors: {
             selector: ".s_hr",
             dropNear: "p, h1, h2, h3, blockquote, .s_hr",
+            excludeAncestor: ".s_map, .s_google_map, .s_website_form_label",
         },
         so_content_addition_selectors: [".s_hr"],
         is_movable_selectors: { selector: ".s_hr", direction: "vertical" },

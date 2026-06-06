@@ -65,25 +65,6 @@
     <t t-call="website.MapDescriptionOption"/>
 </t>
 
-<t t-name="website.MapDescriptionOption">
-    <BuilderRow label.translate="Description">
-        <BuilderCheckbox id="'map_description'" action="'mapDescription'"/>
-    </BuilderRow>
-    <t t-if="this.isActiveItem('map_description')">
-        <BuilderRow label.translate="Description Text" level="1">
-            <BuilderTextInput action="'mapDescriptionTextValue'"/>
-        </BuilderRow>
-        <BuilderContext applyTo="'.description'">
-            <BuilderRow label.translate="Text Color" level="1">
-                <BuilderColorPicker enabledTabs="['custom']" styleAction="'color'"/>
-            </BuilderRow>
-            <BuilderRow label.translate="Background Color" level="1">
-                <BuilderColorPicker enabledTabs="['custom', 'gradient']" styleAction="'background-color'"/>
-            </BuilderRow>
-        </BuilderContext>
-    </t>
-</t>
-
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <map_option template="website.mapOption" selector=".s_map"/>
