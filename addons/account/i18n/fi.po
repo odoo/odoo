@@ -50,8 +50,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:36+0000\n"
-"PO-Revision-Date: 2026-05-16 16:40+0000\n"
+"POT-Creation-Date: 2026-06-05 19:32+0000\n"
+"PO-Revision-Date: 2026-06-06 13:25+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-2/"
 "account/fi/>\n"
@@ -60,7 +60,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -2599,7 +2599,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign Tax ID already exists in this country."
-msgstr ""
+msgstr "Tälle maalle on jo olemassa verokantasääntö ulkomaan verotunnuksella."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3820,7 +3820,7 @@ msgstr "Kaikki täsmäyttämättömät tilioterivit ennen valittua päivämäär
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
 msgid "Allow Foreign Tax ID"
-msgstr ""
+msgstr "Salli ulkomainen verotunnus"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -4297,7 +4297,7 @@ msgstr "Sovella vain, jos toimitusmaa täsmää."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
 msgid "Apply only if partner has a Tax ID."
-msgstr ""
+msgstr "Sovella vain, jos kumppanilla on verotunnus."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
@@ -4305,6 +4305,8 @@ msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
 "criterias (Tax ID/Country) are met."
 msgstr ""
+"Sovellat vero- ja tilikkartoituksia laskuihin automaattisesti, jos "
+"yhteensopivuuskriteerit (verotunnus/maa) täyttyvät."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
@@ -5224,6 +5226,17 @@ msgstr ""
 msgid "Business or income taxes owed to local or municipal governments"
 msgstr ""
 "Paikallis- tai kunnallishallinnolle maksettavat elinkeino- tai tuloverot"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__journal_group_id
+#: model:ir.model.fields,help:account.field_account_journal__journal_group_id
+#: model:ir.model.fields,help:account.field_account_move__journal_group_id
+#: model:ir.model.fields,help:account.field_account_move_line__journal_group_id
+msgid ""
+"By default, all journals post to the Statutory Ledger (Local GAAP). \n"
+"Specifying a ledger allows you to isolate IFRS, Tax, or Intercompany "
+"adjustments without affecting local statutory accounts."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__foldable
@@ -6271,7 +6284,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Cost of revenue"
-msgstr ""
+msgstr "Liikevaihdon kulut"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_postage
@@ -6325,7 +6338,7 @@ msgstr "Vastakappaleet"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a Tax ID"
-msgstr ""
+msgstr "Maat, joissa yrityksellä on verotunnus"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -9409,7 +9422,7 @@ msgstr "Ulkomaan verotunniste"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Foreign Tax ID countries"
-msgstr ""
+msgstr "Ulkomaisen verotunnuksen maat"
 
 #. module: account
 #: model:account.fiscal.position,name:account.1_template_generic_export_fiscal_position
@@ -17674,7 +17687,7 @@ msgstr "Verotunniste"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
 msgid "Tax ID required"
-msgstr ""
+msgstr "Verotunnus vaaditaan"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
@@ -18446,6 +18459,8 @@ msgid ""
 "The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
+"Ulkomaisen verotunnuksen maata ei tunnistettu. Määritä verokantasäännölle "
+"maa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -19378,6 +19393,8 @@ msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
 "this screen.  -  This action will affect your current company only."
 msgstr ""
+"Tätä toimintoa ei voi peruuttaa: kredittä/debetiä ei voi muuttaa uudelleen "
+"tästä näytöstä.  -  Tämä toiminto vaikuttaa vain nykyiseen yritykseesi."
 
 #. module: account
 #. odoo-python
@@ -19473,6 +19490,8 @@ msgid ""
 "This entry has already been supervised. You need the accounting manager role "
 "to change it."
 msgstr ""
+"Tämä kirjaus on jo valvottu. Tarvitset kirjanpitopäällikön roolin "
+"muuttaaksesi sitä."
 
 #. module: account
 #. odoo-python
@@ -19498,6 +19517,8 @@ msgstr "Tämä kirjaus on kumottu kohteesta %s"
 msgid ""
 "This entry has been reviewed, You need the bookkeeper role to change it."
 msgstr ""
+"Tämä kirjaus on jo tarkastettu. Tarvitset kirjanpitäjän roolin muuttaaksesi "
+"sitä."
 
 #. module: account
 #. odoo-python
@@ -21369,6 +21390,8 @@ msgid ""
 "You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
+"Et voi luoda verokantasääntöä ulkomaisella verotunnuksella veromaassasi "
+"ilman, että määrität sille osavaltiota."
 
 #. module: account
 #. odoo-python
@@ -22121,15 +22144,15 @@ msgid "e.g. Bank Fees"
 msgstr "esim. pankkimaksut"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_tree
+msgid "e.g. CONSO, IFRS, ..."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "e.g. Current Assets"
 msgstr "esim. Lyhytaikaiset varat"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_tree
-msgid "e.g. GAAP, IFRS, ..."
-msgstr "esim. GAAP, IFRS, …"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -22530,6 +22553,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Itselaskutettu lasku (viite {{ object.name or "
 "'n/a' }})"
+
+#~ msgid "e.g. GAAP, IFRS, ..."
+#~ msgstr "esim. GAAP, IFRS, …"
 
 #~ msgid "A fiscal position with a foreign VAT already exists in this country."
 #~ msgstr ""
