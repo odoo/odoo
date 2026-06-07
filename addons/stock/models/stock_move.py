@@ -2100,7 +2100,10 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _skip_push(self):
         return self.is_inventory or (
-            self.move_dest_ids and any(m.location_id._child_of(self.location_dest_id) for m in self.move_dest_ids)
+            self.move_dest_ids and any(
+                m.location_id._child_of(self.location_dest_id) or self.location_dest_id._child_of(m.location_id)
+                for m in self.move_dest_ids
+            )
         )
 
     def _check_quantity(self):
