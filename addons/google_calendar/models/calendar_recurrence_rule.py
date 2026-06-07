@@ -95,7 +95,7 @@ class CalendarRecurrence(models.Model):
         # We update the attendee status for all events in the recurrence
         google_attendees = gevent.attendees or []
         emails = [a.get('email') for a in google_attendees]
-        partners = self._get_sync_partner(emails)
+        partners = self._get_sync_partner({a.get('email'): a.get('displayName') for a in google_attendees})
         existing_attendees = self.calendar_event_ids.attendee_ids
         for attendee in zip(emails, partners, google_attendees):
             email = attendee[0]
