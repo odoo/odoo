@@ -1096,3 +1096,14 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertTrue(bill.id in po.invoice_ids.ids)
         self.assertTrue(bill.id in po_2.invoice_ids.ids)
         self.assertEqual(bill.amount_total, po.amount_total + po_2.amount_total)
+
+    def test_link_bill_origin_skips_whitespace(self):
+        po = self.init_purchase(confirm=True, products=[self.product_order])
+        po.partner_ref = ''  # don't matching on empty reference
+
+        bill = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order, self.service_order])
+        bill.invoice_origin = ' '
+
+        bill._link_bill_origin_to_purchase_orders()
+
+        self.assertFalse(po.invoice_ids)
