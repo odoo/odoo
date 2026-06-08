@@ -233,6 +233,26 @@ describe("file command", () => {
             expect(getContent(fileNameEl)).toBe("file.txt[]");
         });
     });
+
+    test.tags("desktop");
+    test("should not open powerbox inside a static file box", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        patchUpload(editor);
+        execCommand(editor, "uploadFile");
+        // Wait until the file name is rendered.
+        await waitFor('.o_file_box .o_file_name_container:contains("file.txt")');
+
+        // Enable editing on the file name.
+        const fileNameEl = queryOne(".o_file_box .o_file_name_container .o_link_readonly");
+        await click(fileNameEl);
+        await animationFrame();
+        expect(fileNameEl).toHaveAttribute("contenteditable", "true");
+
+        // Typing "/" inside the file name should NOT open the powerbox.
+        await insertText(editor, "/");
+        await animationFrame();
+        expect(".o-we-powerbox").toHaveCount(0);
+    });
 });
 
 describe("document tab in media dialog", () => {
