@@ -1,6 +1,6 @@
 import { useComponent } from "@web/owl2/utils";
 import { isRecord, STORE_SYM } from "@mail/model/misc";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, signal } from "@odoo/owl";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
@@ -104,6 +104,7 @@ export class Action {
     id;
     /** @type {import("models").Store} */
     store;
+    actionRef = signal(null);
 
     /**
      * param `store` is required for actions made with new Action() by hand in components and outside component.setup()

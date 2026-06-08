@@ -283,6 +283,7 @@ export class Rtc extends Record {
     isSendingScreen = false;
     /** @type {MediaStreamTrack} */
     micAudioTrack;
+    isMicAudioTrackMuted = false;
     /** @type {MediaStreamTrack} */
     screenAudioTrack;
     /** @type {MediaStreamTrack} */
@@ -304,6 +305,7 @@ export class Rtc extends Record {
      * @type {import("@mail/utils/common/media_monitoring").MonitorAudioReturnType}
      */
     disconnectAudioMonitor;
+    disconnectMicAudioTrackListeners;
     /** @type {ReturnType<setTimeout>} */
     pttReleaseTimeout;
     /**
@@ -329,6 +331,7 @@ export class Rtc extends Record {
     });
     /** @type {"granted" | "denied" | "prompt" | undefined} */
     microphonePermission;
+    isMicrophonePermissionWarningDismissed = false;
     /** @type {"granted" | "denied" | "prompt" | undefined} */
     cameraPermission;
     /**
@@ -422,6 +425,16 @@ export class Rtc extends Record {
      */
     get isHost() {
         return Boolean(this.localSession);
+    }
+
+    get showMicrophonePermissionWarning() {
+        return (
+            !this.isMicrophonePermissionWarningDismissed && this.microphonePermission !== "granted"
+        );
+    }
+
+    get showMicrophoneSilentWarning() {
+        return !this.selfSession?.isMute && this.isMicAudioTrackMuted;
     }
 
     /** @type {CallAction[]} */
@@ -1753,6 +1766,7 @@ export class Rtc extends Record {
         this.closeCallPermissionDialog?.();
         this.updateAndBroadcastDebounce?.cancel();
         this.disconnectAudioMonitor?.();
+        this.disconnectMicAudioTrackListeners?.();
         this.micAudioTrack?.stop();
         this.screenAudioTrack?.stop();
         this.audioTrack?.stop();
@@ -1773,9 +1787,12 @@ export class Rtc extends Record {
             cameraTrack: undefined,
             connectionType: undefined,
             disconnectAudioMonitor: undefined,
+            disconnectMicAudioTrackListeners: undefined,
             fallbackMode: false,
             isSendingCamera: false,
             isSendingScreen: false,
+            isMicAudioTrackMuted: false,
+            isMicrophonePermissionWarningDismissed: false,
             localChannel: undefined,
             localSession: undefined,
             micAudioTrack: undefined,
@@ -2158,8 +2175,10 @@ export class Rtc extends Record {
     }
 
     async resetMicAudioTrack({ force = false }) {
+        this.disconnectMicAudioTrackListeners?.();
         this.micAudioTrack?.stop();
         this.micAudioTrack = undefined;
+        this.isMicAudioTrackMuted = false;
         this.audioTrack?.stop();
         this.audioTrack = undefined;
         if (!this.localChannel) {
@@ -2195,9 +2214,27 @@ export class Rtc extends Record {
             });
             micAudioTrack.enabled = !this.localSession.isMute && this.localSession.isTalking;
             this.micAudioTrack = micAudioTrack;
+            this.setupMicAudioTrackListeners();
             this.linkVoiceActivationDebounce();
             this.updateAudioTrack();
         }
+    }
+
+    setupMicAudioTrackListeners() {
+        if (!this.micAudioTrack) {
+            this.isMicAudioTrackMuted = false;
+            return;
+        }
+        const syncMutedState = () => {
+            this.isMicAudioTrackMuted = this.micAudioTrack.muted;
+        };
+        const disconnectMute = subscribe(this.micAudioTrack, "mute", syncMutedState);
+        const disconnectUnmute = subscribe(this.micAudioTrack, "unmute", syncMutedState);
+        this.disconnectMicAudioTrackListeners = () => {
+            disconnectMute();
+            disconnectUnmute();
+        };
+        syncMutedState();
     }
 
     /**

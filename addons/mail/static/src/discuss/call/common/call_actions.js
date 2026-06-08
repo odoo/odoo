@@ -6,6 +6,9 @@ import { QuickVoiceSettings } from "@mail/discuss/call/common/quick_voice_settin
 import { QuickVideoSettings } from "@mail/discuss/call/common/quick_video_settings";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/discuss_channel_model_patch";
+import { MicrophoneWarning } from "@mail/discuss/call/common/microphone_warning";
+import { Component, useEffect } from "@odoo/owl";
+import { usePopover } from "@web/core/popover/popover_hook";
 
 export const callActionsRegistry = registry.category("discuss.call/actions");
 export const CALL_ICON_DEAFEN = "fa fa-deaf";
@@ -29,10 +32,12 @@ export function registerCallAction(id, definition) {
 
 /** @type {CallActionDefinition} */
 export const muteAction = {
-    badge: ({ owner, store }) => store.rtc.microphonePermission !== "granted",
+    badge: ({ store }) =>
+        store.rtc.microphonePermission !== "granted" || store.rtc.showMicrophoneSilentWarning,
     badgeIcon: "fa fa-exclamation",
     condition: ({ owner, store, channel }) =>
         channel?.isSelfInCall && (owner.env.inCallMenu || !store.rtc.selfSession?.is_deaf),
+    disabledCondition: ({ store }) => store.rtc.showMicrophoneSilentWarning,
     name: ({ store }) => (store.rtc.selfSession?.isMute ? _t("Unmute") : _t("Mute")),
     isActive: ({ store }) => store.rtc.selfSession?.isMute,
     icon: ({ action, owner, store }) =>
@@ -45,12 +50,31 @@ export const muteAction = {
     onSelected: ({ store }) => store.rtc.toggleMicrophone(),
     sequence: 10,
     sequenceGroup: 100,
+    setup({ action, owner, store }) {
+        if (owner instanceof Component) {
+            this.popover = usePopover(MicrophoneWarning, {
+                closeOnClickAway: false,
+                closeOnEscape: false,
+                position: "top-middle",
+            });
+            useEffect(() => {
+                const hasWarning =
+                    store.rtc.showMicrophonePermissionWarning ||
+                    store.rtc.showMicrophoneSilentWarning;
+                if (!action.popover.isOpen && action.actionRef() && hasWarning) {
+                    action.popover.open(action.actionRef(), {});
+                } else {
+                    action.popover.close();
+                }
+            });
+        }
+    },
     tags: ({ action, store }) => {
         const tags = [ACTION_TAGS.CALL_ACTION_TRACKED];
         if (action.isActive) {
             tags.push(ACTION_TAGS.DANGER);
         }
-        if (store.rtc.microphonePermission !== "granted") {
+        if (store.rtc.microphonePermission !== "granted" || store.rtc.showMicrophoneSilentWarning) {
             tags.push(ACTION_TAGS.DANGER, ACTION_TAGS.WARNING_BADGE);
         }
         return tags;
