@@ -1854,32 +1854,6 @@ class TranslationModuleReader(TranslationReader):
             for translation in IrModuleModule._extract_resource_attachment_translations(module, self._lang):
                 self._push_translation(*translation)
 
-        # Include translations defined inside flagged fields evaluated server side (using safe_eval)
-        python_fields_by_model = self.env['ir.model']._get_translation_parsed_fields()
-        for model, fields in python_fields_by_model.items():
-            if model not in self.env:
-                continue
-            modules_to_check = self._installed_modules if 'all' in self._modules else self._modules
-            for module in modules_to_check:
-                # Find all related records tied to the modules currently being exported
-                imds = self.env['ir.model.data'].search([
-                    ('model', '=', model),
-                    ('module', '=', module)
-                ])
-                for imd in imds:
-                    record = self.env[model].browse(imd.res_id).exists()
-                    if not record:
-                        continue
-                    for field in fields:
-                        if not record[field]:
-                            continue
-                        code_stream = io.BytesIO(record[field].encode('utf-8'))
-                        try:
-                            for extracted in extract.extract('odoo.tools.babel:extract_python', code_stream, keywords={'_': None}, options={'encoding': 'UTF-8'}):
-                                lineno, message, comments = extracted[:3]
-                                self._push_translation(module, 'code', f"{model}:{imd.name}", lineno, message, comments)
-                        except Exception as e:
-                            _logger.warning("Failed to extract Python terms from %(model)s %(name)s: %(error)s", model=model, name=imd.name, error=e)
 
 def DeepDefaultDict():
     return defaultdict(DeepDefaultDict)

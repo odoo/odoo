@@ -553,12 +553,6 @@ class IrModel(models.Model):
         if not self._is_manual_name(name):
             raise ValidationError(_("The model name must start with 'x_'."))
 
-    def _get_translation_parsed_fields(self):
-        # Returns {model: [fields]} for Char fields containing python code
-        # evaluated using safe_eval for which we would like to export the
-        # translated terms contained inside it.
-        return {}
-
 
 # retrieve field types defined by the framework only (not extensions)
 FIELD_TYPES = [(key, key) for key in sorted(fields.Field._by_type__)]
