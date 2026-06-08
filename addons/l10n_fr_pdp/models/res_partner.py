@@ -86,12 +86,19 @@ class ResPartner(models.Model):
 
     def _l10n_fr_pdp_get_base_identifier(self):
         self.ensure_one()
-        siret = self.company_registry if self.company_registry and siren_siret_re.match(self.company_registry) else ''
-        siren = siret[:9]
-        if len(siret) == 9:
-            return 'siren', siren
-        elif len(siret) == 14:
-            return 'siret', siret
+        candidates = [
+            self.additional_identifiers['FR_SIRET'] if self.additional_identifiers and siren_siret_re.match(self.additional_identifiers.get('FR_SIRET', '')) else '',
+            self.additional_identifiers['FR_SIREN'] if self.additional_identifiers and siren_siret_re.match(self.additional_identifiers.get('FR_SIREN', '')) else '',
+            self.company_registry if self.company_registry and siren_siret_re.match(self.company_registry) else '',
+        ]
+        for identifier in candidates:
+            if not identifier:
+                continue
+            if len(identifier) == 9:
+                return 'siren', identifier
+            elif len(identifier) == 14:
+                return 'siret', identifier
+
         return None, None
 
     def _get_suggested_pdp_identifier(self):
