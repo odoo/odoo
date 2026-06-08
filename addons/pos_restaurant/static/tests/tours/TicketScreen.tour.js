@@ -6,6 +6,7 @@ const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 import * as FloorScreen from "@pos_restaurant/../tests/tours/helpers/FloorScreenTourMethods";
 import * as TicketScreen from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
+import { delay } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosResTicketScreenTour", {
@@ -44,6 +45,13 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
             Chrome.clickTicketButton(),
             TicketScreen.deleteOrder("-0003"),
             Chrome.confirmPopup(),
+            {
+                content: "Wait 300ms after deleting a order",
+                trigger: "body",
+                async run() {
+                    await delay(300);
+                },
+            },
             TicketScreen.doubleClickOrder("-0002"),
             ProductScreen.isShown(),
             ProductScreen.totalAmountIs("2.0"),
@@ -59,6 +67,13 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
             Chrome.clickTicketButton(),
             TicketScreen.deleteOrder("-0004"),
             Chrome.confirmPopup(),
+            {
+                content: "Wait 300ms after deleting a order",
+                trigger: "body",
+                async run() {
+                    await delay(300);
+                },
+            },
             TicketScreen.clickDiscard(),
             FloorScreen.isShown(),
             FloorScreen.clickTable("5"),

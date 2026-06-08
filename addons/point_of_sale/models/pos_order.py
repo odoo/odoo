@@ -1162,8 +1162,8 @@ class PosOrder(models.Model):
         :type server_ids: list.
         :returns: list -- list of db-ids for the removed orders.
         """
-        orders = self.search([('id', 'in', server_ids), ('state', '=', 'draft')])
-        orders.write({'state': 'cancel'})
+        orders = self.search([('id', 'in', server_ids), ('state', 'in', ('draft', 'cancel'))])
+        orders.filtered(lambda o: o.state == "draft").write({'state': 'cancel'})
         # TODO Looks like delete cascade is a better solution.
         orders.mapped('payment_ids').sudo().unlink()
         orders.sudo().unlink()

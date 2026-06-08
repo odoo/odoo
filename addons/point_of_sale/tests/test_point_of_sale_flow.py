@@ -2781,3 +2781,33 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         res = order.action_pos_order_invoice()
         invoice = self.env["account.move"].browse(res["res_id"])
         self.assertEqual(self.env.company.partner_id.bank_ids[0].id, invoice.partner_bank_id.id)
+
+    def test_cancelled_order_is_unlinked(self):
+        """Test that order in cancelled state is properly unlinked."""
+
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+
+        pos_order = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner1.id,
+            'lines': [Command.create({
+                'name': "OL/0001",
+                'product_id': self.product3.id,
+                'price_unit': 100,
+                'qty': 1.0,
+                'tax_ids': [],
+                'price_subtotal': 100,
+                'price_subtotal_incl': 100,
+            })],
+            'amount_tax': 0,
+            'amount_total': 100,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}'
+        })
+
+        pos_order.state = 'cancel'
+        self.PosOrder.remove_from_ui([pos_order.id])
+        self.assertFalse(pos_order.exists())
