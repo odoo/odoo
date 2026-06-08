@@ -895,6 +895,8 @@ class ProjectTask(models.Model):
             if self.env.context.get('copy_from_template'):
                 for field in set(self._get_template_field_blacklist()) & set(vals.keys()):
                     del vals[field]
+                if task.date_deadline and task.create_date:
+                    vals['date_deadline'] = fields.Date.context_today(self) + (task.date_deadline.date() - task.create_date.date())
         return vals_list
 
     def _create_task_mapping(self, copied_tasks):
