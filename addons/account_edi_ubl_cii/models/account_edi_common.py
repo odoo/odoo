@@ -305,7 +305,7 @@ class AccountEdiCommon(models.AbstractModel):
             if customer.zip[:2] in ('51', '52'):
                 return 'M'  # Ceuta & Mellila
 
-        if self._is_cocontractant_fiscal_position(self.env.context.get('tax_exemption_reason_invoice'), customer, supplier):
+        if not tax.amount and self._is_cocontractant_fiscal_position(self.env.context.get('tax_exemption_reason_invoice'), customer, supplier):
             return 'AE'
 
         if supplier.country_id == customer.country_id:
