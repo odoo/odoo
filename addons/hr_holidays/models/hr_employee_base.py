@@ -490,6 +490,26 @@ class HrEmployeeBase(models.AbstractModel):
                                         "leaves allocated to accomodate for their leaves already taken in the future. Please "
                                         "review this employee's leaves and adjust their allocation accordingly."))
 
+            # Hour-based allocations store their duration in number_of_days, from
+            # which the accrued hours (number_of_hours_display) are derived using
+            # the employee's hours per day. When the schedule changes number_of_days
+            # is left stale: the next accrual adds to it and number_of_hours_display
+            # is then recomputed at the new hours per day, revaluing the hours
+            # accrued under the old schedule and losing part of the balance.
+            # Recompute number_of_days now from the still-correct
+            # number_of_hours_display so the accrued hours are preserved. It is set
+            # explicitly rather than through the compute graph because number_of_days
+            # and number_of_hours_display depend on each other and the recomputation
+            # order is not guaranteed.
+            allocations = self.env['hr.leave.allocation'].search([
+                ('employee_id', 'in', self.ids),
+            ])
+            hour_allocations = allocations.filtered(lambda a: a.type_request_unit == 'hour')
+            for allocation in hour_allocations:
+                hours_per_day = allocation.employee_id._get_hours_per_day(allocation.date_from)
+                if hours_per_day:
+                    allocation.number_of_days = allocation.number_of_hours_display / hours_per_day
+
         if 'parent_id' in values or 'department_id' in values:
             today_date = fields.Datetime.now()
             hr_vals = {}
