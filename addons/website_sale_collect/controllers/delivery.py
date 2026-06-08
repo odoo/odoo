@@ -14,8 +14,7 @@ class InStoreDelivery(LocationSelector):
         """
         if kwargs.get("product_id"):  # Called from the product page.
             order_sudo = request.cart
-            website = request.env["website"].get_current_website()
-            in_store_dm = website.sudo().in_store_dm_id
+            in_store_dm = self.env.website.sudo().in_store_dm_id
             if order_sudo and order_sudo.carrier_id.delivery_type != "in_store":
                 order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
         return super().website_sale_get_pickup_locations(**kwargs)
@@ -32,10 +31,9 @@ class InStoreDelivery(LocationSelector):
         :param str pickup_location_data: The JSON-formatted pickup location data.
         :return: None
         """
-        website = self.env["website"].get_current_website()
-        order_sudo = request.cart or website._create_cart()
+        order_sudo = request.cart or self.env.website._create_cart()
         if order_sudo.carrier_id.delivery_type != "in_store":
-            in_store_dm = website.sudo().in_store_dm_id
+            in_store_dm = self.env.website.sudo().in_store_dm_id
             order_sudo.set_delivery_line(in_store_dm, in_store_dm.product_id.list_price)
         order_sudo.set_pickup_location(pickup_location_data)
 
@@ -43,9 +41,8 @@ class InStoreDelivery(LocationSelector):
         """Override of `website_sale` to include the default pickup location data for in-store
         delivery methods with a single warehouse."""
         res = super()._get_additional_delivery_context()
-        website = self.env["website"].get_current_website()
         order_sudo = request.cart
-        if website.sudo().in_store_dm_id:
+        if self.env.website.sudo().in_store_dm_id:
             res.update(order_sudo._prepare_in_store_default_location_data())
         return res
 

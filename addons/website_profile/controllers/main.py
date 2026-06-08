@@ -55,16 +55,15 @@ class WebsiteProfile(http.Controller):
         elif not user_sudo.exists():
             raise request.not_found()
 
-        elif request.env.user.karma < request.env['website'].get_current_website().karma_profile_min:
+        elif request.env.user.karma < self.env.website.karma_profile_min:
             return False, _("Not have enough karma to view other users' profile.")
         return user_sudo, False
 
     def _prepare_user_values(self, **kwargs):
         kwargs.pop('edit_translations', None) # avoid nuking edit_translations
-        website = request.env['website'].get_current_website()
         values = {
             'user': request.env.user,
-            'is_public_user': website.is_public_user(),
+            'is_public_user': self.env.website.is_public_user(),
             'validation_email_sent': request.session.get('validation_email_sent', False),
             'validation_email_done': request.session.get('validation_email_done', False),
         }
@@ -230,8 +229,7 @@ class WebsiteProfile(http.Controller):
         current_user_values = False
         if user_count:
             page_count = math.ceil(user_count / self._users_per_page)
-            website = request.env['website'].get_current_website()
-            pager = website.pager(url="/profile/users", total=user_count, page=page, step=self._users_per_page,
+            pager = self.env.website.pager(url="/profile/users", total=user_count, page=page, step=self._users_per_page,
                                           scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages,
                                           url_args=kwargs)
 
@@ -320,8 +318,7 @@ class WebsiteProfile(http.Controller):
 
     @http.route('/profile/send_validation_email', type='jsonrpc', auth='user', website=True)
     def send_validation_email(self, **kwargs):
-        website = request.env['website'].get_current_website()
-        if request.env.uid != website.user_id.id:
+        if request.env.uid != self.env.website.user_id.id:
             request.env.user._send_profile_validation_email(**kwargs)
         request.session['validation_email_sent'] = True
         return True

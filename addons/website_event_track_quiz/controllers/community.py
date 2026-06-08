@@ -44,8 +44,7 @@ class WebsiteEventTrackQuizCommunityController(EventCommunityController):
                 page = math.ceil(values['current_visitor_position'] / self._visitors_per_page)
             elif not page:
                 page = 1
-            website = request.env['website'].get_current_website()
-            pager = website.pager(url=url, total=user_count, page=page, step=self._visitors_per_page,
+            pager = self.env.website.pager(url=url, total=user_count, page=page, step=self._visitors_per_page,
                                           scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages,
                                           url_args={'search': search_term})
             values['visitors'] = values['visitors'][(page - 1) * self._visitors_per_page: (page) * self._visitors_per_page]

@@ -33,8 +33,7 @@ class ProductFeed(Controller):
 
         feed_sudo = self._find_and_check_feed_access(feed_id, access_token)
 
-        website = request.env["website"].get_current_website()
-        if feed_sudo.website_id != website:
+        if feed_sudo.website_id != self.env.website:
             raise BadRequest(self.env._("Website does not match."))
 
         compressed_gmc_xml = feed_sudo._render_and_cache_compressed_gmc_feed()

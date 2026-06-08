@@ -72,17 +72,15 @@ class Website(main.Website):
     ):
         options = options or {}
         if "display_currency" not in options:
-            website = request.env["website"].get_current_website()
-            options["display_currency"] = website.currency_id
+            options["display_currency"] = self.env.website.currency_id
         return super().autocomplete(search_type, term, order, offset, limit, max_nb_chars, options)
 
     @route()
     def get_current_currency(self, **_kwargs):
-        website = request.env["website"].get_current_website()
         return {
-            "id": website.currency_id.id,
-            "symbol": website.currency_id.symbol,
-            "position": website.currency_id.position,
+            "id": self.env.website.currency_id.id,
+            "symbol": self.env.website.currency_id.symbol,
+            "position": self.env.website.currency_id.position,
         }
 
     @route()

@@ -52,8 +52,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 raise ValidationError(_('Email is required.'))
             if not details.get('partner_country_id'):
                 raise ValidationError(_('Country is required.'))
-            website = request.env['website'].get_current_website()
-            partner_id = website.user_id.partner_id.id
+            partner_id = self.env.website.user_id.partner_id.id
             del kwargs['partner_details']
         else:
             partner_id = request.env.user.partner_id.id
@@ -203,16 +202,15 @@ class PaymentPortal(payment_portal.PaymentPortal):
         :rtype: list[dict]
         """
         limit = self._cast_as_int(limit)
-        website = request.env['website'].get_current_website()
 
         # For any primary payment method with at least one compatible provider.
         compatible_providers_sudo = (
             request.env['payment.provider']
                 # Force the public user such that editors see what customers will see
-                .with_user(website.user_id)
+                .with_user(self.env.website.user_id)
                 .sudo()  # Needed to read providers' fields with public user
                 ._get_compatible_providers(
-                    website.company_id.id, None, 0, website_id=website.id
+                    self.env.website.company_id.id, None, 0, website_id=self.env.website.id
                 )
         )
         # Select the brands, i.e. non-primary payment methods. E.g., Amex for Card.
@@ -253,5 +251,4 @@ class PaymentPortal(payment_portal.PaymentPortal):
 class PortalAccount(account_payment_portal.PortalAccount):
     def _invoice_get_page_view_values(self, *args, **kwargs):
         """Override of `account_payment` to make the providers filtering website-aware."""
-        website = request.env['website'].get_current_website()
-        return super()._invoice_get_page_view_values(*args, website_id=website.id, **kwargs)
+        return super()._invoice_get_page_view_values(*args, website_id=self.env.website.id, **kwargs)

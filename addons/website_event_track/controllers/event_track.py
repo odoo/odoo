@@ -521,8 +521,7 @@ class EventTrackController(http.Controller):
             'image': base64.b64encode(post['image'].read()) if post.get('image') else False,
         })
 
-        website = request.env['website'].get_current_website()
-        if request.env.user != website.user_id:
+        if request.env.user != self.env.website.user_id:
             track.sudo().message_subscribe(partner_ids=request.env.user.partner_id.ids)
 
         return json.dumps({'success': True})
