@@ -523,7 +523,10 @@ class ResourceCalendar(models.Model):
             work_intervals = resources_work_intervals[resource.id]
             utc_work_intervals = []
             for (start, stop, meta) in work_intervals:
-                utc_work_intervals.append((start.astimezone(UTC), stop.astimezone(UTC), meta))
+                rounded_start = start.astimezone(UTC).replace(microsecond=0)
+                rounded_stop = stop.astimezone(UTC).replace(microsecond=0) + timedelta(seconds=1) \
+                    if stop.microsecond >= 500000 else stop.astimezone(UTC).replace(microsecond=0)
+                utc_work_intervals.append((rounded_start, rounded_stop, meta))
 
             utc_work_intervals = Intervals(utc_work_intervals)
             full_interval_UTC = Intervals([(
