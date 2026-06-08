@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
+
+from odoo import Command
 from odoo.tests import Form
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests.test_report import TestReportsCommon
@@ -198,6 +201,31 @@ class TestPurchaseStockReports(TestReportsCommon):
 
         docs = self.get_report_forecast(product_template_ids=self.product_template.ids)[1]
         self.assertEqual(docs['draft_purchase_qty'], 150)
+
+    def test_purchase_report_effective_days_to_arrival(self):
+        """ Test that 'Effective Days To Arrival' counts the days between the
+        order confirmation date and the effective receipt date.
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'date_order': datetime.now() - timedelta(days=10),
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+                'product_qty': 1,
+                'date_planned': datetime.now() + timedelta(days=5),
+            })],
+        })
+        po.button_confirm()
+        po.picking_ids.button_validate()
+
+        po.flush_model()
+        po.picking_ids.flush_recordset(['date_done'])
+        report = self.env['purchase.report'].read_group(
+            [('order_id', '=', po.id)],
+            ['order_id', 'days_to_arrival'],
+            ['order_id'],
+        )
+        self.assertEqual(round(report[0]['days_to_arrival']), 10)
 
     def test_vendor_delay_report_with_uom(self):
         """
