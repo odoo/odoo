@@ -1,0 +1,48 @@
+  [data-layout="list"] {
+    .col {
+      min-width: 100%;
+
+      .card {
+        flex-direction: row;
+
+        img {
+          @include media-breakpoint-up(lg) {
+            max-width: 10%;
+          }
+
+          @include media-breakpoint-down(lg) {
+            max-width: 30%;
+          }
+
+          object-fit: cover;
+        }
+      }
+    }
+  }
+
+  [data-layout="grid"] {
+    .row {
+      .col {
+        width: 33.33%;
+        flex: 0 0 auto;
+
+        .card {
+          img {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  [data-density="dense"] {
+    .card {
+      .card-body {
+        padding: 0rem;
+
+        * {
+          font-size: 80%;
+        }
+      }
+    }
+  }

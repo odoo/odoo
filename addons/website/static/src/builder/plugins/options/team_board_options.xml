@@ -1,0 +1,23 @@
+<templates>
+	<t t-name="website.TeamBoardOption">
+		<BuilderRow label.translate="Card Layout">
+			<BuilderSelect dataAttributeAction="'layout'">
+				<BuilderSelectItem dataAttributeActionValue="'grid'">Grid</BuilderSelectItem>
+				<BuilderSelectItem dataAttributeActionValue="'list'">List</BuilderSelectItem>
+			</BuilderSelect>
+		</BuilderRow>
+		<BuilderRow label.translate="Density">
+			<BuilderSelect dataAttributeAction="'density'">
+				<BuilderSelectItem dataAttributeActionValue="'confortable'">Confortable</BuilderSelectItem>
+				<BuilderSelectItem dataAttributeActionValue="'dense'">Dense</BuilderSelectItem>
+			</BuilderSelect>
+		</BuilderRow>
+	</t>
+	<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+		<xpath expr="//t[@id='snippet_specific_options']" position="after">
+			<image_comparison_option
+				template="website.TeamBoardOption"
+				selector=".s_team_board"/>
+		</xpath>
+	</t>
+</templates>
