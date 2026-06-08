@@ -18,6 +18,7 @@ class PaymentTransaction(models.Model):
             default_msg = self.env._("Payment was not successful, please try again.")
             params = {"error_msg": self.state_message or default_msg}
             self.landing_route = f"/shop/payment?{urlencode(params)}"
+            self.sale_order_ids.state = "draft"
 
     def _get_status_message(self, *, order=None, **kwargs):
         """Override of `payment` to add a custom message when the cart amount is different after

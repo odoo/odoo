@@ -14,10 +14,10 @@ export class PaymentStatus extends Interaction {
         this.busService.addChannel(this.notificationChannel);
         this.busService.subscribe(this.notificationType, this.onProcessingCompleteBind);
 
-        // Redirect automatically after 10 seconds to avoid waiting for post-processing forever.
+        // Redirect automatically after a delay to avoid waiting for post-processing forever.
         this.redirectTimeout = this.waitForTimeout(() => {
             this.redirectToLandingPage();
-        }, 10000);
+        }, PaymentStatus.getRedirectTimeoutDelay(this.el.dataset.providerCode));
     }
 
     async willStart() {
@@ -38,25 +38,30 @@ export class PaymentStatus extends Interaction {
         const postProcessingData = await rpc(
             "/payment/post_process", { csrf_token: odoo.csrf_token }
         );
-        const { provider_code, state, is_post_processed } = postProcessingData;
+        const { provider_code, state, is_post_processed, landing_route } = postProcessingData;
         if (is_post_processed && PaymentStatus.getFinalStates(provider_code).has(state)) {
-            this.redirectToLandingPage();
+            this.redirectToLandingPage(landing_route);
         }
     }
 
     /**
      * Clean up bus subscriptions and the timer and redirect to the landing route.
      *
+     * @param {string} [landingRoute] - The up-to-date landing route; the one rendered on the page
+     *                                  may be outdated if the transaction was updated since then.
      * @returns {void}
      */
-    redirectToLandingPage() {
+    redirectToLandingPage(landingRoute) {
         // Cleanup before leaving the page, make sure bus listener is disposed properly on redirect.
         clearTimeout(this.redirectTimeout);
         this.busService.unsubscribe(this.notificationType, this.onProcessingCompleteBind);
         this.busService.deleteChannel(this.notificationChannel);
 
         // Redirect the user to the landing route
-        window.location = this.el.dataset.landingRoute;
+        const url = new URL(landingRoute || this.el.dataset.landingRoute, window.location.origin);
+        window.location = url.origin === window.location.origin
+            ? url.pathname + url.search + url.hash
+            : "/";
     }
 
     /**
@@ -67,6 +72,17 @@ export class PaymentStatus extends Interaction {
      */
     static getFinalStates(providerCode) {
         return new Set(["authorized", "done", "cancel", "error"]);
+    }
+
+    /**
+     * Returns the delay after which customers are redirected to the landing route, even if the
+     * transaction has not reached a final state yet.
+     *
+     * @param {string} providerCode - The payment provider code.
+     * @returns {number} - The redirect delay in milliseconds.
+     */
+    static getRedirectTimeoutDelay(providerCode) {
+        return 10000;
     }
 }
 

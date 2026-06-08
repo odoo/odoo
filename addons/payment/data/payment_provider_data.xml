@@ -121,6 +121,12 @@
         <field name="module_id" ref="base.module_payment_redsys"/>
     </record>
 
+    <record id="payment_provider_safaricom" model="payment.provider">
+        <field name="name">Safaricom M-PESA</field>
+        <field name="image_128" type="bytes" file="payment_safaricom/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_safaricom"/>
+    </record>
+
     <record id="payment_provider_sepa_direct_debit" model="payment.provider">
         <field name="name">SEPA Direct Debit</field>
         <field name="image_128"
