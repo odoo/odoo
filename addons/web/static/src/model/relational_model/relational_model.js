@@ -280,6 +280,7 @@ export class RelationalModel extends Model {
         if (!this.withCache) {
             return;
         }
+        const currentResId = config.resId;
         if (
             !this.isReady || // first load of the model
             // monorecord, loading a different id, or creating a new record (onchange)
@@ -291,6 +292,10 @@ export class RelationalModel extends Model {
                         return;
                     }
                     const { root, loadId } = await rootLoadDef;
+                    if (root.config.isMonoRecord && currentResId !== root.config.resId) {
+                        // The record ID has been changed, likely because a new record was saved.
+                        return;
+                    }
                     if (root.id !== this.root.id) {
                         // The root id might have changed, either because:
                         //  1) the user already changed the domain and a second load has been done
