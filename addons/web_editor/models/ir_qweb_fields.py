@@ -58,7 +58,7 @@ class IrQWeb(models.AbstractModel):
                 # The first node might be a call to a sub template
                 sub_call = el.get('t-call')
                 if sub_call:
-                    el.set('t-options', f"{{'snippet-key': '{snippet_key}', 'snippet-sub-call-key': '{sub_call}'}}")
+                    el.set('t-options', f"{{'snippet-key': {snippet_key!r}, 'snippet-sub-call-key': {sub_call!r}}}")
                 # If it already has a data-snippet it is a saved or an inherited snippet.
                 # Do not override it.
                 elif 'data-snippet' not in el.attrib:
