@@ -31,16 +31,30 @@ class IrDefault(models.Model):
             except json.JSONDecodeError:
                 raise ValidationError(_('Invalid JSON format in Default Value field.'))
 
+    def _check_accessible_field_id(self):
+        # using current environment as function is called after checking
+        # permissions on the record
+        if self.env.su:
+            return
+        for record in self:
+            if record.field_id:
+                field = record.field_id.sudo()
+                model = self.env[field.model]
+                model.check_field_access_rights('write', [field.name])
+
     @api.model_create_multi
     def create(self, vals_list):
         self.clear_caches()
-        return super(IrDefault, self).create(vals_list)
+        new_defaults = super().create(vals_list)
+        new_defaults._check_accessible_field_id()
+        return new_defaults
 
     def write(self, vals):
         if self:
             self.clear_caches()
         new_default = super().write(vals)
         self.check_access_rule('write')
+        self._check_accessible_field_id()
         return new_default
 
     def unlink(self):
