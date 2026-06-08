@@ -74,6 +74,13 @@ export class FilePlugin extends Plugin {
                 return false;
             }
         },
+
+        /** Predicates */
+        should_paste_as_text_predicates: (selection) => {
+            if (closestElement(selection.anchorNode, ".o_file_box")) {
+                return true;
+            }
+        },
     };
 
     setup() {

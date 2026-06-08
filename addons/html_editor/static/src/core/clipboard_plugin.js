@@ -115,6 +115,7 @@ const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
  * @typedef {(() => void)[]} on_will_paste_handlers
  *
  * @typedef {((selection: EditorSelection, text: string) => boolean)[]} paste_text_overrides
+ * @typedef {((selection: EditorSelection, clipboardData: DataTransfer) => boolean | undefined)[]} should_paste_as_text_predicates
  *
  * @typedef {((
  *     clonedContents: DocumentFragment,
@@ -208,7 +209,9 @@ export class ClipboardPlugin extends Plugin {
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
 
-        if (!this.delegateTo("paste_overrides", selection, ev.clipboardData)) {
+        if (this.checkPredicates("should_paste_as_text_predicates", selection, ev.clipboardData) ?? false) {
+            this.pasteText(ev.clipboardData.getData("text/plain"));
+        } else {
             this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
                 this.handlePasteOdooEditorHtml(selection, ev.clipboardData) ||
                 this.handlePasteHtml(selection, ev.clipboardData) ||

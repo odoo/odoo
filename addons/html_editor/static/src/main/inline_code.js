@@ -11,7 +11,7 @@ import { DISABLED_NAMESPACE } from "./toolbar/toolbar_plugin";
 
 export class InlineCodePlugin extends Plugin {
     static id = "inlineCode";
-    static dependencies = ["clipboard", "feff", "history", "input", "selection", "split"];
+    static dependencies = ["feff", "history", "input", "selection", "split"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_input_handlers: this.onInput.bind(this),
@@ -44,13 +44,14 @@ export class InlineCodePlugin extends Plugin {
                 return true;
             }
         },
-        paste_overrides: (selection, clipboardData) => {
+
+        /** Predicates */
+        should_paste_as_text_predicates: (selection) => {
             const caretNode =
                 selection.direction === DIRECTIONS.RIGHT
                     ? selection.anchorNode
                     : selection.focusNode;
             if (closestElement(caretNode, "code.o_inline_code")) {
-                this.dependencies.clipboard.pasteText(clipboardData.getData("text/plain"));
                 return true;
             }
         },
