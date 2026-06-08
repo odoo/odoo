@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
@@ -13,7 +13,7 @@ export class ContractEndDialog extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.state = useState({
+        this.state = proxy({
             reason: "correction",
             template: { id: false, name: "" },
         });

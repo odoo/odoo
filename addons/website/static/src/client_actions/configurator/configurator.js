@@ -4,7 +4,6 @@ import {
     useExternalListener,
     useLayoutEffect,
     useRef,
-    useState,
     useSubEnv,
 } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
@@ -29,6 +28,7 @@ import {
     markup,
     onMounted,
     onWillStart,
+    proxy,
     useEffect,
 } from "@odoo/owl";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
@@ -799,7 +799,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         const env = useEnv();
         env.store["extraThemesLoaded"] = false;
         env.store["extraThemes"] = [];
-        this.state = useState(env.store);
+        this.state = proxy(env.store);
         this.themeSVGPreviews = [
             useRef("ThemePreview1"),
             useRef("ThemePreview2"),
@@ -1054,7 +1054,7 @@ export class Store {
 
 export function useStore() {
     const env = useEnv();
-    return useState(env.store);
+    return proxy(env.store);
 }
 
 export class Configurator extends Component {
@@ -1094,7 +1094,7 @@ export class Configurator extends Component {
             this.updateStorage(store);
         });
 
-        this.state = useState({
+        this.state = proxy({
             currentStep: initialStep,
         });
 

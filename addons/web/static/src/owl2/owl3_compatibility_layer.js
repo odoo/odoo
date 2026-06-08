@@ -140,14 +140,6 @@ owl.useExternalListener = function useExternalListener(target, eventName, handle
 /**
  * @template T
  * @param {T} data
- */
-owl.useState = function useState(data) {
-    return owl.proxy(data);
-};
-
-/**
- * @template T
- * @param {T} data
  * @param {() => void} [callback]
  */
 owl.reactive = function reactive(data, callback) {

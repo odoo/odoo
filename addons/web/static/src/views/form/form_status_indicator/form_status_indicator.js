@@ -1,9 +1,9 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, useState } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 
 export function useStatusIndicator(model, actions = {}) {
-    const _fieldIsDirty = useState({ value: false });
+    const _fieldIsDirty = proxy({ value: false });
     useBus(model.bus, "FIELD_IS_DIRTY", (ev) => {
         _fieldIsDirty.value = ev.detail;
     });

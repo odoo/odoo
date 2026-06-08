@@ -4,7 +4,6 @@ import {
     useExternalListener,
     useLayoutEffect,
     useRef,
-    useState,
 } from "@web/owl2/utils";
 
 import {
@@ -15,6 +14,7 @@ import {
     onWillPatch,
     onWillStart,
     onWillUnmount,
+    proxy,
     xml,
 } from "@odoo/owl";
 
@@ -70,7 +70,7 @@ export class EmojiPicker extends Component {
         this.navbarRef = useRef("navbar");
         this.ui = useService("ui");
         this.isMobileOS = isMobileOS();
-        this.state = useState({
+        this.state = proxy({
             activeEmojiIndex: 0,
             categoryId: null,
             searchTerm: this.props.initialSearchTerm ?? "",
@@ -485,7 +485,7 @@ export class EmojiPicker extends Component {
 export function usePicker(PickerComponent, ref, props, options = {}) {
     const component = useComponent();
     const targets = [];
-    const state = useState({ isOpen: false });
+    const state = proxy({ isOpen: false });
     const ui = useService("ui");
     const dialog = useService("dialog");
     const loadEmoji = useLoadEmoji();
