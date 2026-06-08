@@ -419,3 +419,47 @@ class PosOrderLine(models.Model):
         self.ensure_one()
         original_price = self.tax_ids_after_fiscal_position.compute_all(self.price_unit, self.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)['total_included']
         return original_price - self.price_subtotal_incl
+
+    def _get_full_product_name(self, lang=None):
+        self.ensure_one()
+        product = self.product_id.with_context(lang=lang)
+        attribute_values = self.attribute_value_ids.with_context(lang=lang)
+        custom_values = self.custom_attribute_value_ids
+
+        attribute_string = ""
+        if attribute_values:
+            parts = []
+            for value in attribute_values:
+                if value.is_custom:
+                    custom_value = custom_values.filtered(
+                        lambda c: c.custom_product_template_attribute_value_id.id == value.id
+                    )
+                    if custom_value:
+                        attr_name = value.attribute_id.with_context(lang=lang).name
+                        parts.append(f"{attr_name}: {value.name}: {custom_value[0].custom_value}")
+                else:
+                    parts.append(value.name)
+            attribute_string = ", ".join(parts)
+        elif product.product_template_variant_value_ids:
+            attribute_string = ", ".join(product.product_template_variant_value_ids.with_context(lang=lang).mapped('name'))
+
+        if attribute_string:
+            return f"{product.name} ({attribute_string})"
+        else:
+            return product.name
+
+    def _get_translated_line_data(self, lang):
+        """Return translated display data for preparation tickets."""
+        self.ensure_one()
+        product = self.product_id.with_context(lang=lang)
+        attr_names = list(self.attribute_value_ids.with_context(lang=lang).mapped('name'))
+        for custom_val in self.custom_attribute_value_ids:
+            ptav = custom_val.custom_product_template_attribute_value_id
+            attr_name = ptav.attribute_id.with_context(lang=lang).name
+            attr_names.append(f"{attr_name}: {ptav.name}: {custom_val.custom_value}")
+        return {
+            'basic_name': product.name,
+            'display_name': product.display_name,
+            'attribute_value_names': attr_names,
+            'full_name': self._get_full_product_name(lang),
+        }

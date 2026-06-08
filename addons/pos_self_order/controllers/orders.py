@@ -90,6 +90,15 @@ class PosSelfOrderController(http.Controller):
 
         pos_order.remove_from_ui([pos_order.id])
 
+    @http.route('/pos-self-order/get-preparation-changes-receipt', auth='public', type='jsonrpc', website=True)
+    def get_preparation_changes_receipt(self, access_token, order_id, order_access_token, category_ids=None, reprint=False):
+        pos_config = self._verify_pos_config(access_token)
+        pos_order = pos_config.env['pos.order'].sudo().browse(order_id)
+        if not pos_order.exists() or not consteq(pos_order.access_token, order_access_token):
+            raise MissingError(pos_config.env._("Your order does not exist or has been removed"))
+
+        return pos_order.generate_preparation_changes_html(category_ids, reprint)
+
     @http.route('/pos-self-order/get-user-data', auth='public', type='jsonrpc', website=True)
     def get_orders_by_access_token(self, access_token, order_access_tokens, table_identifier=None):
         pos_config = self._verify_pos_config(access_token)
