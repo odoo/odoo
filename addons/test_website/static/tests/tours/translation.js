@@ -97,7 +97,8 @@ function saveHtmlEditor() {
     return [
         {
             content: "Save the html editor",
-            trigger: ".o_resource_editor button.btn-primary",
+            // In debug, there is another primary button "Filter"
+            trigger: ".o_resource_editor button.btn-primary:not(.o_resource_editor_filter button)",
             run: "click",
         },
         {
