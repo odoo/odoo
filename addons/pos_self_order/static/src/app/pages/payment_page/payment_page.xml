@@ -32,7 +32,14 @@
                             </div>
                         </t>
                         <t name="cash_machine" t-elif="this.state.paymentMethodType === 'cash_machine'">
-                            <h1 class="text-center">Follow instructions on the cash machine</h1>
+                            <h1 class="text-center">
+                                <t t-if="this.state.paymentCancelled">
+                                    Cancellation in progress
+                                </t>
+                                <t t-else="">
+                                    Follow instructions on the cash machine
+                                </t>
+                            </h1>
                             <div class="btn btn-light btn-lg w-100 py-5 border border-light shadow-sm">
                                 Remaining: <t t-out="this.selfOrder.formatMonetary(this.selfOrder.currentOrder.totalDue - this.selectedPaymentMethod.payment_interface.amountInserted)" />
                             </div>
@@ -48,7 +55,7 @@
             </div>
 
             <div class="o_self_footer container o_self_container d-flex justify-content-between align-items-center position-relative py-3">
-                <button class="btn btn-secondary btn-lg" t-if="this.state.selection || this.state.paymentMethodType !== 'terminal' || this.selfOrder.paymentError" t-on-click="this.back">Back</button>
+                <button class="btn btn-secondary btn-lg" t-if="(this.state.selection || this.state.paymentMethodType !== 'terminal' || this.selfOrder.paymentError) and !this.state.paymentCancelled" t-on-click="this.back">Back</button>
                 <button class="btn btn-primary btn-lg" t-if="!this.state.selection and this.selfOrder.paymentError" t-on-click="this.startPayment">Retry</button>
             </div>
 
