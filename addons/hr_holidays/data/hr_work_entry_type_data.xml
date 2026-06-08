@@ -1157,6 +1157,23 @@
         <field name="country_id" ref="base.tr"/>
     </record>
 
+<!-- US : United States -->
+    <record id="hr_work_entry.l10n_us_work_entry_type_jury_duty" model="hr.work.entry.type">
+        <field name="request_unit">hour</field>
+        <field name="employee_requests">True</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_us_work_entry_type_bereavement" model="hr.work.entry.type">
+        <field name="request_unit">hour</field>
+        <field name="unit_of_measure">day</field>
+        <field name="employee_requests">True</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_us_work_entry_type_fmla_leave" model="hr.work.entry.type">
+        <field name="request_unit">hour</field>
+        <field name="unit_of_measure">day</field>
+    </record>
+
 <!-- PH : Philippines -->
     <!-- Batch update the work entry types that should be set up in the same way (attendance, night shifts, overtimes) -->
     <function model="hr.work.entry.type" name="write">

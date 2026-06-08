@@ -4484,41 +4484,6 @@
         <field name="country_id" ref="base.us"/>
     </record>
 
-    <record id="us_work_entry_type_overtime" model="hr.work.entry.type">
-        <field name="name">Overtime Hours</field>
-        <field name="color">4</field>
-        <field name="display_code">OT</field>
-        <field name="code">OVERTIME</field>
-        <field name="is_extra_hours" eval="True"/>
-        <field name="country_id" ref="base.us"/>
-    </record>
-
-    <record id="us_hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
-        <field name="name">Out of Contract</field>
-        <field name="color">0</field>
-        <field name="display_code">OoC</field>
-        <field name="code">OUT</field>
-        <field name="country_id" ref="base.us"/>
-    </record>
-
-     <record id="us_work_entry_type_leave" model="hr.work.entry.type">
-        <field name="name">Generic Time Off</field>
-         <field name="display_code">GTO</field>
-        <field name="code">LEAVE100</field>
-        <field name="color">3</field>
-        <field name="count_as">absence</field>
-        <field name="country_id" ref="base.us"/>
-    </record>
-
-    <record id="us_work_entry_type_compensatory" model="hr.work.entry.type">
-        <field name="name">Compensatory Time Off</field>
-        <field name="display_code">CTO</field>
-        <field name="code">LEAVE105</field>
-        <field name="color">3</field>
-        <field name="count_as">absence</field>
-        <field name="country_id" ref="base.us"/>
-    </record>
-
     <record id="us_work_entry_type_home_working" model="hr.work.entry.type">
         <field name="name">Home Working</field>
         <field name="display_code">HW</field>
@@ -4534,6 +4499,7 @@
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
+        <field name="amount_rate">0</field>
         <field name="country_id" ref="base.us"/>
     </record>
 
@@ -4556,7 +4522,7 @@
     </record>
 
     <record id="l10n_us_work_entry_type_overtime" model="hr.work.entry.type">
-        <field name="name">Overtime Hours (Paid at 150%)</field>
+        <field name="name">Overtime (1.5x)</field>
         <field name="color">4</field>
         <field name="code">USOVERTIME150</field>
         <field name="country_id" ref="base.us"/>
@@ -4564,27 +4530,46 @@
     </record>
 
     <record id="l10n_us_work_entry_type_double" model="hr.work.entry.type">
-        <field name="name">Double Time Hours</field>
+        <field name="name">Double Time (2x)</field>
         <field name="color">4</field>
         <field name="code">USDOUBLE</field>
         <field name="country_id" ref="base.us"/>
         <field name="amount_rate">2.0</field>
     </record>
 
-    <record id="l10n_us_work_entry_type_retro_overtime" model="hr.work.entry.type">
-        <field name="name">Retro Overtime Hours</field>
-        <field name="color">4</field>
-        <field name="code">USRETROOVERTIME</field>
+    <record id="l10n_us_work_entry_type_statutory_holiday" model="hr.work.entry.type">
+        <field name="name">Statutory Holiday</field>
+        <field name="color">0</field>
+        <field name="code">HOLI</field>
+        <field name="count_as">absence</field>
         <field name="country_id" ref="base.us"/>
-        <field name="amount_rate">1.5</field>
     </record>
 
-    <record id="l10n_us_work_entry_type_retro_regular" model="hr.work.entry.type">
-        <field name="name">Retro Regular Pay Hours</field>
-        <field name="color">4</field>
-        <field name="code">USRETROREGULAR</field>
+    <record id="l10n_us_work_entry_type_jury_duty" model="hr.work.entry.type">
+        <field name="name">Jury Duty</field>
+        <field name="color">0</field>
+        <field name="code">JURY</field>
+        <field name="count_as">absence</field>
         <field name="country_id" ref="base.us"/>
     </record>
+
+    <record id="l10n_us_work_entry_type_bereavement" model="hr.work.entry.type">
+        <field name="name">Bereavement</field>
+        <field name="color">0</field>
+        <field name="code">BRVT</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+
+    <record id="l10n_us_work_entry_type_fmla_leave" model="hr.work.entry.type">
+        <field name="name">FMLA Leave</field>
+        <field name="color">0</field>
+        <field name="code">FMLA</field>
+        <field name="count_as">absence</field>
+        <field name="amount_rate">0</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+
 <!-- PH : Philippines -->
 <record id="l10n_ph_hr_payroll_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
