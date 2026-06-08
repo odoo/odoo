@@ -135,7 +135,7 @@ function clocReport({ env }) {
     if (user.isAdmin) {
         return {
             type: "item",
-            description: "Count LoC",
+            description: _t("Count LoC"),
             sequence: 541,
             section: "tools",
             callback: () => {
