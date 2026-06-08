@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-
 /**
  * @typedef { Object } WebsiteBridgeShared
  * @property { WebsiteBridgePlugin['getRegistry'] } getRegistry
@@ -26,6 +25,7 @@ export class WebsiteBridgePlugin extends Plugin {
         return this.getModule("@web/core/registry").registry;
     }
     get _t() {
+        // To ensure terms are exported, they must use the `_t` function (avoid renaming)
         return this.getModule("@web/core/l10n/translation")._t;
     }
     getWebsiteContextLang() {
