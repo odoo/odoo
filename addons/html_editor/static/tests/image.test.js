@@ -5,6 +5,7 @@ import {
     queryOne,
     waitFor,
     manuallyDispatchProgrammaticEvent,
+    queryAll,
 } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -34,22 +35,22 @@ test("Can change an image size", async () => {
     await waitFor(".o-we-toolbar");
     expect(queryOne("img").style.width).toBe("");
 
-    await click(".o-we-toolbar [name='image_size'] .dropdown-toggle");
+    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('100%')");
     expect(queryOne("img").style.width).toBe("100%");
 
-    await click(".o-we-toolbar [name='image_size'] .dropdown-toggle");
+    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('50%')");
     expect(queryOne("img").style.width).toBe("50%");
 
-    await click(".o-we-toolbar [name='image_size'] .dropdown-toggle");
+    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('25%')");
     expect(queryOne("img").style.width).toBe("25%");
 
-    await click(".o-we-toolbar [name='image_size'] .dropdown-toggle");
+    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('Default')");
     expect(queryOne("img").style.width).toBe("");
@@ -78,7 +79,7 @@ test("Can undo the image sizing", async () => {
     await click("img.test-image");
     await waitFor(".o-we-toolbar");
 
-    await click(".o-we-toolbar [name='image_size'] .dropdown-toggle");
+    await click(".o-we-toolbar [name='image_actions'] .dropdown-toggle");
     await animationFrame();
     await click(".image_size_selector .dropdown-item:contains('100%')");
     expect(queryOne("img").style.width).toBe("100%");
@@ -425,4 +426,32 @@ test("changing image alignment should not remove any existing classes", async ()
     await click(".o-we-toolbar-dropdown .btn[title='Wrap text']");
     await animationFrame();
     expect("img").toHaveClass("p-2 img-fluid float-start");
+});
+
+test("test order of image options in image toolbar", async () => {
+    await setupEditor(`<img src="${base64Img}">`);
+    await click("img");
+    await waitFor(".o-we-toolbar");
+
+    const toolbarGroups = queryAll(".o-we-toolbar .btn-group");
+    expect(toolbarGroups).toHaveCount(5);
+    expect(toolbarGroups.map((g) => g.getAttribute("name"))).toEqual([
+        "image_modifiers",
+        "image_actions",
+        "image_link",
+        "image_replace",
+        "image_delete",
+    ]);
+
+    expect(
+        queryAll(".o-we-toolbar .btn-group[name='image_modifiers'] .btn").map((b) =>
+            b.getAttribute("title")
+        )
+    ).toMatchObject(["Set image alignment", "Set image padding", "Crop image"]);
+
+    expect(
+        queryAll(".o-we-toolbar .btn-group[name='image_actions'] .btn").map((b) =>
+            b.getAttribute("title")
+        )
+    ).toMatchObject(["Resize image", "Preview image"]);
 });
