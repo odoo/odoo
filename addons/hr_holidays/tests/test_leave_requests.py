@@ -1564,6 +1564,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         search_result = self.env['hr.work.entry.type'].with_context(employee_id=False).name_search(domain=search_domain)
         self.assertFalse(self.holidays_type_2.id in [alloc_id for (alloc_id, _) in search_result])
 
+    @freeze_time('2026-06-09')  # Tuesday
     def test_holiday_type_allocation_requirement_edit(self):
         # Does not raise an error since no leave of this type exists yet
         self.holidays_type_2.requires_allocation = False
