@@ -51,6 +51,23 @@ test("setPreset", async () => {
     expect(order.fiscal_position_id).toBe(inPreset.fiscal_position_id);
 });
 
+test("test_not_available_pricelist_not_set_on_order: setPartner falls back when partner pricelist is not available", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const availablePricelist = store.models["product.pricelist"].get(1);
+    const unavailablePricelist = store.models["product.pricelist"].get(2);
+    const partner = store.models["res.partner"].get(3);
+
+    store.config.pricelist_id = availablePricelist;
+    store.config.available_pricelist_ids = [availablePricelist];
+    partner.property_product_pricelist = unavailablePricelist;
+
+    order.setPartner(partner);
+
+    expect(order.partner_id).toBe(partner);
+    expect(order.pricelist_id).toBe(availablePricelist);
+});
+
 test("updateLastOrderChange", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);

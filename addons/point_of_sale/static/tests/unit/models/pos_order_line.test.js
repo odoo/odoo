@@ -263,6 +263,34 @@ test("[canBeMergedWith]: Base test", async () => {
     expect(line1.qty).toBe(5);
 });
 
+test("test_orderline_merge_with_higher_price_precision: orderline merge preserves higher product price precision", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const product = store.models["product.template"].get(5);
+    const productVariant = product.product_variant_ids[0];
+
+    store.models["decimal.precision"].find((dp) => dp.name === "Product Price").digits = 3;
+    product.update({
+        name: "High Precision Product",
+        display_name: "High Precision Product",
+        list_price: 8.245,
+        taxes_id: [],
+    });
+    productVariant.update({
+        display_name: "High Precision Product",
+        lst_price: 8.245,
+    });
+    order.pricelist_id = false;
+
+    await store.addLineToOrder({ product_tmpl_id: product }, order);
+    await store.addLineToOrder({ product_tmpl_id: product }, order);
+
+    expect(order.lines).toHaveLength(1);
+    expect(order.lines[0].qty).toBe(2);
+    expect(order.lines[0].price_unit).toBe(8.245);
+    expect(order.lines[0].displayPrice).toBe(16.49);
+});
+
 describe("Test taxes after fiscal position", () => {
     test("Orderline containing a taxed product", async () => {
         const store = await setupPosEnv();

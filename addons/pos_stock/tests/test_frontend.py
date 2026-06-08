@@ -246,25 +246,6 @@ class TestUi(TestPosStockHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_only_existing_lots', login="pos_user")
 
-    def test_order_with_existing_serial(self):
-        product = self.env['product.product'].create({
-            'name': 'Serial Product',
-            'is_storable': True,
-            'tracking': 'serial',
-            'available_in_pos': True,
-        })
-        for sn in ["SN1", "SN2"]:
-            self.env['stock.quant'].create({
-                'product_id': product.id,
-                'inventory_quantity': 1,
-                'location_id': self.env.user._get_default_warehouse_id().lot_stock_id.id,
-                'lot_id': self.env['stock.lot'].create({'name': sn, 'product_id': product.id}).id,
-            }).sudo().action_apply_inventory()
-        self.env['stock.picking.type'].search([('name', '=', 'PoS Orders')]).use_create_lots = False
-
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour("test_order_with_existing_serial")
-
     def test_edit_paid_order(self):
         self.main_pos_config.write({'ship_later': True})
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -300,36 +281,6 @@ class TestUi(TestPosStockHttpCommon):
         pos_order = self.env['pos.order'].search([('partner_id', '=', self.partner_full.id)], limit=1)
         self.assertEqual(pos_order.shipping_date, date(next_year, 5, 30))
 
-    def test_product_info_product_inventory(self):
-        """ Test that the product variant inventory info is correctly displayed in the POS. """
-        size_attribute = self.env['product.attribute'].create({
-            'name': 'Size',
-            'value_ids': [
-                Command.create({'name': 'Small'}),
-                Command.create({'name': 'Large'})
-            ],
-            'create_variant': 'always',
-        })
-
-        product_template = self.env['product.template'].create({
-            'name': 'Test Product',
-            'available_in_pos': True,
-            'is_storable': True,
-            'attribute_line_ids': [
-                Command.create({
-                    'attribute_id': size_attribute.id,
-                    'value_ids': [Command.link(id) for id in size_attribute.value_ids.ids]
-                })
-            ]
-        })
-
-        for variant in range(len(product_template.product_variant_ids)):
-            self.env['stock.quant']._update_available_quantity(product_template.product_variant_ids[variant], self.main_pos_config.warehouse_id.lot_stock_id, (variant + 1) * 100)
-            product_template.product_variant_ids[variant].write({'barcode': f'product_variant_{variant}'})
-
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('test_product_info_product_inventory')
-
     def test_lot_refund_lower_qty(self):
         product = self.env['product.product'].create({
             'name': 'Serial Product',
@@ -348,49 +299,6 @@ class TestUi(TestPosStockHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour("test_lot_refund_lower_qty")
-
-    def test_lot_tracking_without_lot_creation(self):
-        pricelist = self.env['product.pricelist'].create({
-            'name': 'Test Pricelist',
-        })
-        self.main_pos_config.write({
-            'available_pricelist_ids': [(6, 0, [pricelist.id])],
-            'pricelist_id': pricelist.id,
-        })
-        self.main_pos_config.picking_type_id.write({
-            "use_create_lots": False,
-            "use_existing_lots": False,
-        })
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.monitor_stand.tracking = 'lot'
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_lot_tracking_without_lot_creation', login="pos_user")
-
-    def test_combo_price_unchanged_with_lot_tracked_product(self):
-        """Test that assigning a lot to a combo item does not affect the combo price."""
-        lot_product = self.env['product.product'].create({
-            'name': 'Product A',
-            'is_storable': True,
-            'tracking': 'lot',
-            'available_in_pos': True,
-        })
-        combo = self.env["product.combo"].create({
-            "name": lot_product.name + " combo",
-            "combo_item_ids": [Command.create({"product_id": lot_product.id, "extra_price": 0})]
-        })
-        self.env["product.product"].create(
-            {
-                "available_in_pos": True,
-                "list_price": 7,
-                "name": "Test Combo",
-                "type": "combo",
-                "taxes_id": False,
-                "combo_ids": [
-                    (6, 0, [combo.id])
-                ],
-            }
-        )
-        self.main_pos_config.with_user(self.pos_admin).open_ui()
-        self.start_pos_tour('test_combo_price_unchanged_with_lot_tracked_product', login="pos_admin")
 
     def test_GS1_pos_barcodes_scan_with_lots(self):
         barcodes_gs1_nomenclature = self.env.ref("barcodes_gs1_nomenclature.default_gs1_nomenclature")

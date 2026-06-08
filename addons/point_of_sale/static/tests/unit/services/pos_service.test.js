@@ -411,6 +411,40 @@ describe("pos_store.js", () => {
         expect(products[0].id).toBe(6);
     });
 
+    test("SearchProducts: productsToDisplay search matches case, accents, default code, and barcode", async () => {
+        const store = await setupPosEnv();
+        const products = store.models["product.template"].readMany([8, 9, 10, 11, 12]);
+        products[0].update({ name: "Test chair 1", display_name: "Test chair 1" });
+        products[1].update({ name: "Test CHAIR 2", display_name: "Test CHAIR 2" });
+        products[2].update({
+            name: "Test sofa",
+            display_name: "Test sofa",
+            default_code: "CHAIR_01",
+        });
+        products[3].update({ name: "clémentine", display_name: "clémentine" });
+        products[4].update({
+            name: "Wall Shelf Unit",
+            display_name: "Wall Shelf Unit",
+            barcode: "2100005000000",
+        });
+
+        store.searchProductWord = "chair";
+        expect(store.productsToDisplay.map((p) => p.name)).toInclude("Test chair 1");
+        expect(store.productsToDisplay.map((p) => p.name)).toInclude("Test CHAIR 2");
+        expect(store.productsToDisplay.map((p) => p.name)).toInclude("Test sofa");
+
+        store.searchProductWord = "CHAIR";
+        expect(store.productsToDisplay.map((p) => p.name)).toInclude("Test chair 1");
+        expect(store.productsToDisplay.map((p) => p.name)).toInclude("Test CHAIR 2");
+        expect(store.productsToDisplay.map((p) => p.name)).toInclude("Test sofa");
+
+        store.searchProductWord = "clémentine";
+        expect(store.productsToDisplay.map((p) => p.name)).toEqual(["clémentine"]);
+
+        store.searchProductWord = "2100005000000";
+        expect(store.productsToDisplay.map((p) => p.name)).toEqual(["Wall Shelf Unit"]);
+    });
+
     test("productToDisplayByCateg", async () => {
         const store = await setupPosEnv();
 

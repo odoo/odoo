@@ -1,7 +1,7 @@
 import { test, expect } from "@odoo/hoot";
 import { setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
-import { getFilledOrderForPriceCheck, prepareRoundingVals } from "./utils";
+import { getFilledOrderForPriceCheck, prepareRoundingVals, getSingleProductOrder } from "./utils";
 
 definePosModels();
 
@@ -164,6 +164,61 @@ test("Rounding sale DOWN 1 (cash only)", async () => {
     expect(order.canBeValidated()).toBe(true);
     expect(order.appliedRounding).toBe(-0.54);
     expect(order.change).toBe(0);
+});
+
+test("PaymentScreenRoundingUp: Rounding sale UP 0.05 (cash only)", async () => {
+    const store = await setupPosEnv();
+    const { cashPm } = prepareRoundingVals(store, 0.05, "UP", true);
+    const order = await getSingleProductOrder(store, `Rounding Product ${1.96}`, 1.96);
+
+    expect(order.totalDue).toBe(1.96);
+    order.addPaymentline(cashPm);
+    expect(order.payment_ids[0].amount).toBe(2);
+    expect(order.remainingDue).toBe(0);
+    expect(order.canBeValidated()).toBe(true);
+
+    const refundOrder = await getSingleProductOrder(store, `Rounding Product ${1.96}`, 1.96, [], {
+        isRefund: true,
+    });
+    expect(refundOrder.totalDue).toBe(-1.96);
+    refundOrder.addPaymentline(cashPm);
+    expect(refundOrder.payment_ids[0].amount).toBe(-2);
+    expect(refundOrder.remainingDue).toBe(0);
+    expect(refundOrder.canBeValidated()).toBe(true);
+});
+
+test("PaymentScreenRoundingDown: Rounding sale DOWN 0.05 (cash only)", async () => {
+    const store = await setupPosEnv();
+    const { cashPm } = prepareRoundingVals(store, 0.05, "DOWN", true);
+    const order = await getSingleProductOrder(store, `Rounding Product ${1.98}`, 1.98);
+
+    expect(order.totalDue).toBe(1.98);
+    order.addPaymentline(cashPm);
+    expect(order.payment_ids[0].amount).toBe(1.95);
+    expect(order.remainingDue).toBe(0);
+    expect(order.canBeValidated()).toBe(true);
+
+    const refundOrder = await getSingleProductOrder(store, `Rounding Product ${1.98}`, 1.98, [], {
+        isRefund: true,
+    });
+    expect(refundOrder.totalDue).toBe(-1.98);
+    refundOrder.addPaymentline(cashPm);
+    expect(refundOrder.payment_ids[0].amount).toBe(-1.95);
+    expect(refundOrder.remainingDue).toBe(0);
+    expect(refundOrder.canBeValidated()).toBe(true);
+});
+
+test("PaymentScreenTotalDueWithOverPayment: total due calculation with overpayment", async () => {
+    const store = await setupPosEnv();
+    const { cashPm } = prepareRoundingVals(store, 0.05, "DOWN", true);
+    const order = await getSingleProductOrder(store, `Rounding Product ${1.98}`, 1.98);
+    expect(order.totalDue).toBe(1.98);
+
+    order.addPaymentline(cashPm);
+    order.payment_ids[0].setAmount(5);
+
+    expect(order.amountPaid).toBe(5);
+    expect(order.remainingDue).toBe(0);
 });
 
 test("Rounding sale DOWN 1 (all methods)", async () => {

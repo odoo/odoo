@@ -141,3 +141,25 @@ test("multiplePrinter using mock records", async () => {
     const defaultPrinter2 = await printer.selectPrinter();
     expect(defaultPrinter2.id).toBe(4);
 });
+
+test("FloatingOrderTour: floating orders can be switched", async () => {
+    const store = await setupPosEnv();
+    const product1 = store.models["product.template"].get(5);
+    const product2 = store.models["product.template"].get(6);
+
+    const order1 = store.addNewOrder();
+    await store.addLineToOrder({ product_tmpl_id: product1, qty: 1 }, order1);
+
+    const order2 = store.addNewOrder();
+    await store.addLineToOrder({ product_tmpl_id: product2, qty: 2 }, order2);
+
+    store.setOrder(order1);
+    expect(store.getOrder().uuid).toBe(order1.uuid);
+    expect(store.getOrder().lines[0].product_id.id).toBe(product1.id);
+    expect(store.getOrder().lines[0].qty).toBe(1);
+
+    store.setOrder(order2);
+    expect(store.getOrder().uuid).toBe(order2.uuid);
+    expect(store.getOrder().lines[0].product_id.id).toBe(product2.id);
+    expect(store.getOrder().lines[0].qty).toBe(2);
+});

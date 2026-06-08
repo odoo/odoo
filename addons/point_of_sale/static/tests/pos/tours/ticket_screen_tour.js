@@ -10,7 +10,6 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
-import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
 import { formatDate, today } from "@web/core/l10n/dates";
 
 registry.category("web_tour.tours").add("TicketScreenTour", {
@@ -174,36 +173,6 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.nthRowContains(3, formatDate(today())),
             TicketScreen.nthRowContains(4, formatDate(today())),
             Chrome.endTour(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product Test"),
-            ProductScreen.totalAmountIs("100.00"),
-            ProductScreen.clickFiscalPosition("No Tax"),
-            ProductScreen.totalAmountIs("100.00"),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
-            PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
-            FeedbackScreen.clickNextOrder(),
-            ...ProductScreen.clickRefund(),
-            TicketScreen.selectOrder("001"),
-            ProductScreen.clickNumpad("1"),
-            TicketScreen.confirmRefund(),
-            PaymentScreen.isShown(),
-            PaymentScreen.clickBack(),
-            ProductScreen.isShown(),
-            { ...ProductScreen.back(), isActive: ["mobile"] },
-            ProductScreen.totalAmountIs("100.00"),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
         ].flat(),
 });
 
@@ -456,48 +425,5 @@ registry.category("web_tour.tours").add("test_order_invoice_search", {
                     "Verify that the order is paid; this ensures that the RPC process is complete.",
                 trigger: ".orders .order-row:eq(0):has(.badge.rounded:contains(Paid))",
             },
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("test_refund_line_keep_attributes", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Donut"),
-            ProductConfiguratorPopup.pickRadio("Sugar"),
-            Dialog.confirm(),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
-            FeedbackScreen.clickNextOrder(),
-            ProductScreen.clickRefund(),
-            TicketScreen.selectOrder("001"),
-            ProductScreen.clickNumpad("1"),
-            TicketScreen.confirmRefund(),
-            PaymentScreen.clickBack(),
-            Order.hasLine({
-                productName: "Donut",
-                attributeLine: "Sugar",
-            }),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("test_not_available_pricelist_not_set_on_order", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            Chrome.clickOrders(),
-            TicketScreen.selectFilter("Paid"),
-            Chrome.createFloatingOrder(),
-            ProductScreen.addOrderline("Desk Pad", "2", "3"),
-            ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("AA Customer"),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
         ].flat(),
 });

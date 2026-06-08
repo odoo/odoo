@@ -47,6 +47,7 @@ export class PosSession extends models.ServerModel {
             "ir.module.module",
             "pos.prep.order",
             "pos.prep.line",
+            "pos.product.template.snooze",
         ];
     }
 
@@ -168,7 +169,7 @@ export class PosSession extends models.ServerModel {
             start_at: false,
             stop_at: false,
             payment_method_ids: [2, 1],
-            state: "opening_control",
+            state: "opened",
             cash_register_balance_start: 0.0,
             access_token: "e09c4843-c913-463a-959d-b9e235881201",
         },

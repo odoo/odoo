@@ -43,6 +43,7 @@ export class ResCompany extends webModels.ResCompany {
             country_id: 233,
             state_id: false,
             tax_calculation_rounding_method: "round_per_line",
+            nomenclature_id: 1,
             point_of_sale_use_ticket_qr_code: true,
             point_of_sale_ticket_unique_code: false,
             point_of_sale_ticket_portal_url_display_mode: "qr_code_and_url",

@@ -144,17 +144,7 @@ test("order change ticket renders cancelled lines", async () => {
     const line = await store.addLineToOrder({ product_tmpl_id: product, qty: 3 }, order);
 
     // Simulate line was already sent to preparation
-    order.last_order_preparation_change.lines[line.uuid] = {
-        uuid: line.uuid,
-        product_id: line.product_id.id,
-        name: "Desk Pad",
-        basic_name: "Desk Pad",
-        display_name: "Desk Pad",
-        quantity: 3,
-        note: "",
-        customer_note: "",
-        attribute_value_names: [],
-    };
+    order.updateLastOrderChange();
 
     // Remove line to simulate cancellation
     order.removeOrderline(line);

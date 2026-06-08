@@ -1,5 +1,5 @@
 import { test, expect, animationFrame } from "@odoo/hoot";
-import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupPosEnv, getFilledOrder, expectFormattedPrice } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { queryOne } from "@odoo/hoot-dom";
@@ -93,4 +93,24 @@ test("addTip startingValue uses locale decimal separator on overpayment", async 
         type: "fixed",
     });
     expect(tipAmount).toBe(4.15);
+});
+
+test("+50 payment input respects comma decimal separator", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const card = store.models["pos.payment.method"].get(2);
+    patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
+
+    const comp = await mountWithCleanup(PaymentScreen, {
+        props: { orderUuid: order.uuid },
+    });
+    await comp.addNewPaymentLine(card);
+    const numberBuffer = getService("number_buffer");
+
+    numberBuffer.sendKey("+50");
+    numberBuffer.capture();
+
+    expect(numberBuffer.get()).toBe("67,85");
+    expect(order.payment_ids[0].amount).toBe(67.85);
+    expect(order.change).toBe(-50);
 });

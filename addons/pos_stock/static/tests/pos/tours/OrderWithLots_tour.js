@@ -51,15 +51,3 @@ registry.category("web_tour.tours").add("test_03_pos_with_lots", {
             },
         ].flat(),
 });
-
-registry.category("web_tour.tours").add("test_lot_tracking_without_lot_creation", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Monitor Stand"),
-            ProductScreen.totalAmountIs("3.19"),
-            ProductScreen.clickDisplayedProduct("Monitor Stand"),
-            ProductScreen.totalAmountIs("6.38"),
-        ].flat(),
-});

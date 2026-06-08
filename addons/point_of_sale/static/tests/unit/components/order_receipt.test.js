@@ -2,7 +2,7 @@ import { test, expect } from "@odoo/hoot";
 import { renderToElement } from "@web/core/utils/render";
 import { setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
-import { prepareRoundingVals, getSingleProductRoundingOrder } from "../accounting/utils";
+import { prepareRoundingVals, getSingleProductOrder } from "../accounting/utils";
 import { imageDataUri } from "@point_of_sale/utils";
 
 definePosModels();
@@ -514,7 +514,7 @@ test("ticket data renders rounding amounts on receipts", async () => {
     const store = await setupPosEnv();
 
     const { cashPm } = prepareRoundingVals(store, 0.05, "DOWN", true);
-    const order = await getSingleProductRoundingOrder(store, 1.98);
+    const order = await getSingleProductOrder(store, `Rounding Product ${1.98}`, 1.98);
     expect(order.totalDue).toBe(1.98);
     order.addPaymentline(cashPm);
     order.setOrderPrices();
@@ -957,11 +957,15 @@ for (const roundingCase of cashRoundingCases) {
         const store = await setupPosEnv();
 
         prepareRoundingVals(store, 0.05, "HALF-UP", roundingCase.onlyRoundCashMethod);
-        const order = await getSingleProductRoundingOrder(
+        const order = await getSingleProductOrder(
             store,
-            roundingCase.price,
-            roundingCase.isRefund
+            `Rounding Product ${roundingCase.price}`,
+            roundingCase.price
         );
+        if (roundingCase.isRefund) {
+            order.is_refund = true;
+            order.lines.map((line) => line.setQuantity(-line.qty));
+        }
         const expectedLineName = order.lines[0].product_id.display_name;
 
         const expectedPayments = [];

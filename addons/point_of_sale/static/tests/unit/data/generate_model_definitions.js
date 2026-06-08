@@ -44,9 +44,11 @@ import { IrModuleModule } from "./ir_module_module.data";
 import { AccountJournal } from "./account_journal.data";
 import { IrSequence } from "./ir_sequence.data";
 import { BarcodeNomenclature } from "./barcode_nomenclature.data";
+import { BarcodeRule } from "./barcode_rule.data";
 import { ProductAttributeValue } from "./product_attribute_value.data";
 import { PosPrepOrder } from "./pos_prep_order.data";
 import { PosPrepLine } from "./pos_prep_line.data";
+import { PosProductTemplateSnooze } from "./pos_product_template_snooze.data";
 
 export const hootPosModels = [
     ResCountry,
@@ -94,8 +96,10 @@ export const hootPosModels = [
     AccountJournal,
     ResourceCalendar,
     BarcodeNomenclature,
+    BarcodeRule,
     PosPrepOrder,
     PosPrepLine,
+    PosProductTemplateSnooze,
 ];
 
 export const definePosModels = () => {

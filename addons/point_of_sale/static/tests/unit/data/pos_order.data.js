@@ -194,4 +194,11 @@ export class PosOrder extends models.ServerModel {
             "pos.prep.line": posPrepLine,
         };
     }
+
+    search_paid_order_ids(config_id, domain, limit, offset) {
+        return {
+            ordersInfo: [],
+            totalCount: 0,
+        };
+    }
 }
