@@ -301,6 +301,22 @@ class AccountMoveLine(models.Model):
         help="The residual amount (at date) on a journal item expressed in its currency.",
     )
 
+    # Those fields are here only to be used in the Bankrec widget JS for performance purpose
+    first_reconciled_lines_id = fields.Many2one(
+        comodel_name='account.move.line',
+        compute='_compute_reconciled_lines_ids',
+    )
+    count_reconciled_lines = fields.Integer(compute='_compute_reconciled_lines_ids')
+    first_reconciled_lines_excluding_exchange_diff_id = fields.Many2one(
+        comodel_name='account.move.line',
+        compute='_compute_reconciled_lines_excluding_exchange_diff_ids',
+    )
+    count_reconciled_lines_excluding_exchange_diff = fields.Boolean(compute='_compute_reconciled_lines_excluding_exchange_diff_ids')
+    exchange_move_ids = fields.Many2many(
+        comodel_name='account.move',
+        compute='_compute_exchange_move',
+    )
+
     matching_number = fields.Char(
         string="Matching #",
         copy=False,
@@ -1346,6 +1362,11 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.payment_date = line.discount_date if line.discount_date and date.today() <= line.discount_date else line.date_maturity
 
+    @api.depends('matched_debit_ids', 'matched_credit_ids')
+    def _compute_exchange_move(self):
+        for line in self:
+            line.exchange_move_ids = (line.matched_debit_ids | line.matched_credit_ids).exchange_move_id
+
     def _compute_sql_payment_date(self, table):
         return SQL("""
             CASE
@@ -1362,12 +1383,16 @@ class AccountMoveLine(models.Model):
         accessible_lines = set((self.matched_debit_ids.debit_move_id + self.matched_credit_ids.credit_move_id)._filtered_access('read'))
         for line in self:
             line.reconciled_lines_ids = (line.matched_debit_ids.debit_move_id + line.matched_credit_ids.credit_move_id).filtered(accessible_lines.__contains__)
+            line.first_reconciled_lines_id = line.reconciled_lines_ids[:1]
+            line.count_reconciled_lines = len(line.reconciled_lines_ids)
 
     @api.depends('reconciled_lines_ids', 'matched_debit_ids', 'matched_credit_ids')
     def _compute_reconciled_lines_excluding_exchange_diff_ids(self):
         for line in self:
             excluded_ids = (line.matched_debit_ids + line.matched_credit_ids).exchange_move_id.line_ids
             line.sudo().reconciled_lines_excluding_exchange_diff_ids = line.reconciled_lines_ids - excluded_ids
+            line.first_reconciled_lines_excluding_exchange_diff_id = line.reconciled_lines_excluding_exchange_diff_ids[:1]
+            line.count_reconciled_lines_excluding_exchange_diff = len(line.reconciled_lines_excluding_exchange_diff_ids)
 
     def _compute_parent_id(self):
         parent_id_vals_to_lines = defaultdict(list)
