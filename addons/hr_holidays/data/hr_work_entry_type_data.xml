@@ -201,6 +201,33 @@
         <field name="country_id" ref="base.be"/>
     </record>
 
+    <record id="hr_work_entry.l10n_be_work_entry_type_training_time_off_with_meal_voucher" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_flemish_training_time_off" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_flemish_training_time_off_with_meal_voucher" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
     <record id="hr_work_entry.l10n_be_work_entry_type_extra_legal" model="hr.work.entry.type">
         <field name="requires_allocation">True</field>
         <field name="employee_requests">True</field>
