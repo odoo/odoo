@@ -96,12 +96,17 @@ class ResPartner(models.Model):
         compute='_compute_vies_valid', store=True, readonly=False,
         tracking=True,
         help='European VAT numbers are automatically checked on the VIES database.',
+        recursive=True,
     )
     # Field representing whether vies_valid is relevant for selecting a fiscal position on this partner
     perform_vies_validation = fields.Boolean(compute='_compute_perform_vies_validation')
     # We put on inverse because a compute with a dependency to itself is not well managed in the ORM (it should be triggered first)
     country_id = fields.Many2one(inverse="_inverse_vat", store=True)
     vat = fields.Char(inverse="_inverse_vat", store=True)
+
+    @api.model
+    def _synced_commercial_fields(self):
+        return super()._synced_commercial_fields() + ['vies_valid']
 
     @api.model
     def _run_vat_checks(self, country, vat, partner_name='', validation='error'):
@@ -194,7 +199,7 @@ class ResPartner(models.Model):
                 and self.env.company.vat_check_vies
             )
 
-    @api.depends('vat')
+    @api.depends('vat', 'parent_id', 'parent_id.vat', 'parent_id.vies_valid')
     def _compute_vies_valid(self):
         """ Check the VAT number with VIES, if enabled."""
         if not self.env['res.company'].sudo().search_count([('vat_check_vies', '=', True)]):
