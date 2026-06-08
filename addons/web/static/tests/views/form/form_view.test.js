@@ -13363,6 +13363,77 @@ test(`cached web_read`, async () => {
     expect.verifySteps(["web_read", "web_read", "web_read"]);
 });
 
+test("onchange callback arriving after web_save does not crash", async () => {
+    //   1. Open a new-record form (to cache the onchange RPC)
+    //   2. Open a second time the new-record form (It will use the cached onchange RPC to open).
+    //   3. Save the record (web_save) before the onchange RPC returns.
+    //   4. The web_save will change the record id, from false to a real id, without reloading the form.
+    //   5. When the onchange RPC returns, on the callback code of the cache it will be considered as a web_read and not an onchange.
+
+    Partner._views = {
+        form: `<form><field name="foo"/></form>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+        },
+        {
+            id: 99,
+            name: "Partner",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+        },
+    ]);
+
+    let onchangeCallCount = 0;
+    const def = new Deferred();
+    onRpc("onchange", async () => {
+        onchangeCallCount++;
+        expect.step("onchange");
+        if (onchangeCallCount > 1) {
+            return def;
+        }
+        return { value: { foo: "blap" } };
+    });
+
+    await mountWithCleanup(WebClient);
+
+    // Open the new-record form (to cache the onchange RPC)
+    await getService("action").doAction(99);
+    await animationFrame();
+    expect(".o_form_view").toHaveCount(1);
+    expect(`.o_field_char input`).toHaveValue("blap");
+    expect.verifySteps(["onchange"]);
+
+    // Open another action
+    await getService("action").doAction(1);
+    await animationFrame();
+    expect(".o_form_view").toHaveCount(1);
+    expect(`.o_field_char input`).toHaveValue("yop");
+
+    // Open the new-record form again (to use the cached onchange RPC)
+    await getService("action").doAction(99);
+    await animationFrame();
+    expect(".o_form_view").toHaveCount(1);
+    expect(`.o_field_char input`).toHaveValue("blap");
+    expect.verifySteps(["onchange"]);
+
+    await contains(`.o_form_button_save`).click();
+
+    // Resolve the onchange RPC after the web_save is done.
+    // The config.resId is not false anymore, it's the real id of the record.
+    def.resolve({ value: { foo: "boom" } });
+    await animationFrame();
+    // The record shouldn't be updated.
+    expect(`.o_field_char input`).toHaveValue("blap");
+});
+
 test(`cached web_read: don't cache if action have cache:false`, async () => {
     let def = null;
     onRpc("web_read", async () => {
