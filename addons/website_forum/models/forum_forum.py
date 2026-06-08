@@ -311,7 +311,7 @@ class ForumForum(models.Model):
         return res
 
     def _set_default_faq(self):
-        website = self.env["website"].get_current_website()
+        website = self.env.website or self.env.website.browse(self.env.context.get('host_id')) or self.env.ref('base.default_website')
         for forum in self:
             forum.faq = website._render_template('website_forum.faq_accordion', {"forum": forum})
 

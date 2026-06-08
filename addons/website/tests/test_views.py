@@ -867,7 +867,7 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         self.assertEqual(inherit_view.active, False, "_get_template_view should return the specific one")
 
         # Test get_related_views() return the inactive specific over active generic
-        # Note that we cannot test get_related_views without a website in context as it will fallback on a website with get_current_website()
+        # Note that we cannot test get_related_views without a website in context as it will fallback on a website
         views = View.with_context(**self.website_ctx).get_related_views(self.base_view.key)
         self.assertEqual(views.mapped('active'), [True, False], "get_related_views should return the specific child")
 
@@ -1304,11 +1304,10 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
         specific_view = self.base_view._get_specific_views() - self.base_view
 
         # generic view without website_id but with website for request
-        with patch('odoo.addons.website.models.website.Website.get_current_website', lambda self, fallback=None: website):
-            self.base_view.invalidate_recordset()
-            self.assertIn('to_translate', self.base_view.with_context(lang='en_US', edit_translations=True).arch)
-            self.assertIn('translated', self.base_view.with_context(lang='fr_BE', edit_translations=True).arch)
-            self.base_view.invalidate_recordset()
+        self.base_view.invalidate_recordset()
+        self.assertIn('to_translate', self.base_view.with_context(lang='en_US', edit_translations=True, website_id=website.id).arch)
+        self.assertIn('translated', self.base_view.with_context(lang='fr_BE', edit_translations=True, website_id=website.id).arch)
+        self.base_view.invalidate_recordset()
 
         # generic view without website_id
         self.assertIn('translated', self.base_view.with_context(lang='en_US', edit_translations=True).arch)

@@ -18,11 +18,10 @@ class WebsiteSnippetFilter(models.Model):
     )
 
     def _prepare_values(self, limit=None, search_domain=None, **kwargs):
-        website = self.env["website"].get_current_website()
         if (self.model_name or kwargs.get("res_model")) in {
             "product.product",
             "product.public.category",
-        } and not website.has_ecommerce_access():
+        } and not self.env.website.has_ecommerce_access():
             return []
         hide_variants = False
         if search_domain and "hide_variants" in search_domain:
@@ -47,8 +46,7 @@ class WebsiteSnippetFilter(models.Model):
 
     @api.model
     def _get_website_currency(self):
-        website = self.env["website"].get_current_website()
-        return website.currency_id
+        return self.env.website.currency_id
 
     def _get_hardcoded_sample(self, model):
         samples = super()._get_hardcoded_sample(model)
@@ -168,9 +166,8 @@ class WebsiteSnippetFilter(models.Model):
         :return: List of dictionaries containing category ID, name, and cover image URL.
         :rtype: list[dict]
         """
-        website = self.env["website"].get_current_website()
         CategorySudo = self.env["product.public.category"].sudo()
-        domain = CategorySudo._get_available_category_domain(website.id)
+        domain = CategorySudo._get_available_category_domain(self.env.website.id)
         if parent_id:
             parent_category = CategorySudo.browse(parent_id)
             # Parent category should be first.
@@ -186,7 +183,7 @@ class WebsiteSnippetFilter(models.Model):
                 "name": cat.name,
                 "unpublished": not cat.has_published_products,
                 "cover_image": (
-                    website.image_url(cat, "cover_image") if cat.cover_image else default_img_url
+                    self.env.website.image_url(cat, "cover_image") if cat.cover_image else default_img_url
                 ),
             }
             for cat in categories
@@ -196,7 +193,7 @@ class WebsiteSnippetFilter(models.Model):
     def _get_products(self, mode, **kwargs):
         dynamic_filter = self.env.context.get("dynamic_filter")
         handler = getattr(self.sudo(False), "_get_products_%s" % mode, self.sudo(False)._get_products_latest_sold)
-        website = self.env["website"].get_current_website()
+        website = self.env.website
         search_domain = self.env.context.get("search_domain")
         limit = self.env.context.get("limit")
         hide_variants = self.env.context.get("hide_variants")

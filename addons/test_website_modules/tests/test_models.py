@@ -6,10 +6,9 @@ from odoo.tests import HttpCase, tagged
 @tagged('-at_install', 'post_install')
 class TestWebsiteModels(HttpCase):
     def test_access_with_website_record_rule(self):
-        website = self.env['website'].get_current_website()
         blog = self.env['blog.blog'].create({
             'name': 'test blog',
-            'website_id': website.id,
+            'website_id': self.ref('base.default_website'),
         })
         post = self.env['blog.post'].create({
             'name': 'test post',

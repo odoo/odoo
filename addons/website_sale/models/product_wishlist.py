@@ -34,7 +34,7 @@ class ProductWishlist(models.Model):
     def current(self):
         """Get all wishlist items that belong to current user or session,
         filter products that are unpublished."""
-        website = self.env["website"].get_current_website()
+        website = self.env.website
         if not request or not website:
             return self
 

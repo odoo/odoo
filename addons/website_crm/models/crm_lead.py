@@ -45,14 +45,13 @@ class CrmLead(models.Model):
         return fields_info
 
     def website_form_input_filter(self, request, values):
-        website = self.env["website"].get_current_website()
         values['medium_id'] = values.get('medium_id') or \
                               self.sudo().default_get(['medium_id']).get('medium_id') or \
                               self.env['utm.mixin']._utm_ref('utm.utm_medium_website').id
         values['team_id'] = values.get('team_id') or \
-                            website.crm_default_team_id.id
+                            self.env.website.crm_default_team_id.id
         values['user_id'] = values.get('user_id') or \
-                            website.crm_default_user_id.id
+                            self.env.website.crm_default_user_id.id
         if not values['user_id'] and values['team_id'] and not self._is_rule_based_assignment_activated():
             values['user_id'] = self.env['crm.team'].sudo().browse([values['team_id']]).user_id.id
         if values.get('team_id'):

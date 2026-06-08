@@ -11,6 +11,7 @@ import time
 import typing
 import unicodedata
 
+from urllib3.util import parse_url
 import werkzeug.exceptions
 import werkzeug.routing
 import werkzeug.utils
@@ -244,6 +245,59 @@ class IrHttp(models.AbstractModel):
     def _match(cls, path_info):
         rule, args = request.env['ir.http'].routing_map().bind_to_environ(request.httprequest.environ).match(path_info=path_info, return_rule=True)
         return rule, args
+
+    @api.model
+    @api.ormcache('domain_name')
+    def _get_host_id_from_domain(self, domain_name):
+        """Get the website that matches domain_name.
+
+        First find the website for which the configured ``domain`` (after
+        ignoring a potential scheme) is equal to the given
+        ``domain_name``. If a match is found, return it immediately.
+
+        If there is no website found for the given ``domain_name``, either
+        fallback to the first found website (no matter its ``domain``).
+
+        :param str domain_name: An URL (e.g. ``http://example.com:80/``)
+            from which the domain is extracted, or a domain name (e.g.
+            ``example.com``, possibly with a port) directly.
+
+        :returns: The ID of the first website that matched the domain,
+            falling back on the website with lowest ``(sequence, id)``.
+        """
+        #    http://example.com:8042/over/there?name=ferret#nose
+        #     \_/   \_________/ \__/\_________/ \_________/ \__/
+        #      |         |       |       |           |        |
+        #   scheme      host   port    path       query   fragment
+        #            \_____________/
+        #                  |
+        #               netloc
+        #
+        # http://localhost:8080/hẞello => http://localhost/hẞello
+
+        def _filter_domain(website, domain_name, ignore_port=False):
+            """Ignore ``scheme`` from the ``domain``, just match the ``netloc``
+            which is host:port in the version of ``parse_url`` we use."""
+            url1 = parse_url(website.domain if '://' in str(website.domain) else f'//{website.domain}')
+            url2 = parse_url(domain_name if '://' in str(domain_name) else f'//{domain_name}')
+            if ignore_port:
+                return url1.host == url2.host
+            return url1.netloc == url2.netloc
+
+        Website = self.env['website'].sudo()
+        existings = Website.get_all().sorted(lambda w: (w.sequence, w.id))
+
+        # Filter for the exact domain (to filter out potential subdomains) due
+        # to the use of ilike.
+        # ``domain_name` could be an empty string, in that case multiple website
+        # without a domain will be returned
+        return (
+            existings.filtered(lambda w: _filter_domain(w, domain_name))
+            # If there is no domain matching for the given port, ignore the port.
+            or existings.filtered(lambda w: _filter_domain(w, domain_name, ignore_port=True))
+            # default to any
+            or existings
+        )[:1].id
 
     @classmethod
     def _get_public_users(cls):

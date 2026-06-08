@@ -381,6 +381,8 @@ def serve_db(request: Request) -> Response:
             cr = registry.cursor(readonly=True)
             # check signaling
             request.env = Environment(cr, request.session.uid, request.session.context)
+            request.update_context(host_id=request.env['ir.http']._get_host_id_from_domain(request.httprequest.host))
+
             request.registry = request.env.registry
         except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError) as e:
             raise RegistryError(f"Cannot get registry {request.db}") from e

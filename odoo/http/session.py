@@ -186,7 +186,11 @@ class Session(MutableMapping):
 def get_default_session() -> dict:
     """ The dictionary to initialise a new session with. """
     return {
-        'context': {},  # 'lang': request.default_lang()  # must be set at runtime
+        'context': {
+            # the following keys must be set at runtime:
+            # 'lang': request.default_lang(),
+            # 'host_id': env['ir.http']._get_host_id_from_domain(request.httprequest.host),
+        },
         'create_time': time.time(),
         'db': None,
         'debug': '',

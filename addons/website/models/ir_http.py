@@ -2,13 +2,11 @@
 import contextlib
 import functools
 import logging
-import threading
 import unittest
 from zoneinfo import ZoneInfoNotFoundError, ZoneInfo
 
 import werkzeug
 from lxml import etree
-from urllib3.util import parse_url
 
 import odoo
 from odoo import api, models
@@ -42,7 +40,7 @@ class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
     def routing_map(self, key=None):
-        key = self.env['website'].get_current_website().id
+        key = self.env.website.id or self.env.context.get('host_id') or None
         return super().routing_map(key=key)
 
     @classmethod
@@ -76,10 +74,12 @@ class IrHttp(models.AbstractModel):
         if not qs:
             path, sep, qs = (url_from or '').partition('#')
 
+        website_id = request.env.website.id or request.env.context['host_id']
+
         if (
             path
             # don't try to match route if we know that no rewrite has been loaded.
-            and request.env['ir.http']._rewrite_len(request.env['website'].get_current_website().id)
+            and request.env['ir.http']._rewrite_len(website_id)
             and (
                 len(path) > 1
                 and path.startswith('/')
@@ -116,7 +116,7 @@ class IrHttp(models.AbstractModel):
         if not request:
             yield from super()._generate_routing_rules(modules, converters)
             return
-        website_id = self.env['website'].get_current_website().id
+        website_id = self.env.website.id or self.env.context['host_id']
         logger.debug("_generate_routing_rules for website: %s", website_id)
         rewrites = self._get_rewrites(website_id)
         self._rewrite_len.__cache__.add_value(self, website_id, cache_value=len(rewrites))
@@ -160,7 +160,8 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _get_public_users(cls):
         public_users = super()._get_public_users()
-        website = request.env(user=SUPERUSER_ID)['website'].with_context(lang='en_US').get_current_website()  # sudo
+        website_id = request.env.website.id or request.env.context.get('host_id')
+        website = request.env(user=SUPERUSER_ID)['website'].with_context(lang='en_US').browse(website_id)
         if website:
             public_users.append(website.user_id.id)
         return public_users
@@ -171,7 +172,8 @@ class IrHttp(models.AbstractModel):
             public user as request uid.
         """
         if not request.session.uid:
-            website = request.env(user=SUPERUSER_ID)['website'].with_context(lang='en_US').get_current_website()  # sudo
+            website_id = request.env.context.get('website_id') or request.env.context.get('host_id')
+            website = request.env(user=SUPERUSER_ID)['website'].with_context(lang='en_US').browse(website_id)  # sudo
             if website:
                 request.update_env(user=website.user_id.id)
 
@@ -192,7 +194,7 @@ class IrHttp(models.AbstractModel):
             return None
 
         website_id = get_current_website_id()
-        host_id = request.env['ir.http']._get_host_id()
+        host_id = request.env.context.get('host_id')
 
         # set website into the context, used by match for the default lang
         if website_id or host_id:
@@ -225,89 +227,6 @@ class IrHttp(models.AbstractModel):
                     # 403 instead of using `sudo()` for perfs as this is
                     # low level.
                     raise werkzeug.exceptions.Forbidden()
-
-    @api.model
-    def _get_host_id(self):
-        """ The current fallback website is return in the following order:
-
-        - (if frontend or fallback) the website matching the request's "domain"
-        - arbitrary the first website found in the database if ``fallback`` is set
-          to ``True``
-        """
-        # TODO: move this method in base.
-
-        # Reaching this point means that:
-        # - We didn't find a website in the session or in the context.
-        # - And we are either:
-        #   - in a frontend context
-        #   - in a backend context (or early in the dispatch stack) and a
-        #     fallback website is requested.
-        # We will now try to find a website matching the request host/domain (if
-        # there is one on request) or return a random one.
-
-        # The format of `httprequest.host` is `domain:port`
-        domain_name = (
-            (request and request.httprequest.host)
-            or getattr(threading.current_thread(), 'url', None)
-            or '')
-        return self._get_website_id_from_domain(domain_name)
-
-    @api.model
-    @api.ormcache('domain_name')
-    def _get_website_id_from_domain(self, domain_name):
-        """Get the current website id.
-
-        First find the website for which the configured ``domain`` (after
-        ignoring a potential scheme) is equal to the given
-        ``domain_name``. If a match is found, return it immediately.
-
-        If there is no website found for the given ``domain_name``, either
-        fallback to the first found website (no matter its ``domain``) or return
-        False depending on the ``fallback`` parameter.
-
-        :param domain_name: the domain for which we want the website.
-            In regard to the ``parse_url`` method, only the ``netloc`` part
-            should be given here, no ``scheme``.
-        :type domain_name: string
-
-        :return: id of the found website, or False if no website is found and
-            ``fallback`` is False
-        :rtype: int or False
-        """
-        #    http://example.com:8042/over/there?name=ferret#nose
-        #     \_/   \_________/ \__/\_________/ \_________/ \__/
-        #      |         |       |       |           |        |
-        #   scheme      host   port    path       query   fragment
-        #            \_____________/
-        #                  |
-        #               netloc
-        #
-        # http://localhost:8080/hẞello => http://localhost/hẞello
-
-        def _filter_domain(website, domain_name, ignore_port=False):
-            """Ignore ``scheme`` from the ``domain``, just match the ``netloc``
-            which is host:port in the version of ``parse_url`` we use."""
-            url1 = parse_url(website.domain if '://' in str(website.domain) else f'//{website.domain}')
-            url2 = parse_url(domain_name if '://' in str(domain_name) else f'//{domain_name}')
-            if ignore_port:
-                return url1.host == url2.host
-            return url1.netloc == url2.netloc
-
-        Website = self.env['website'].sudo()
-        existings = Website.get_all().sorted(lambda w: (w.sequence, w.id))
-
-        # Filter for the exact domain (to filter out potential subdomains) due
-        # to the use of ilike.
-        # ``domain_name` could be an empty string, in that case multiple website
-        # without a domain will be returned
-        websites = existings.filtered(lambda w: _filter_domain(w, domain_name))
-        # If there is no domain matching for the given port, ignore the port.
-        websites = websites or existings.filtered(lambda w: _filter_domain(w, domain_name, ignore_port=True))
-
-        if not websites:
-            websites = existings
-
-        return websites[0].id if websites else False
 
     @classmethod
     def _get_editor_context(cls):
@@ -353,7 +272,7 @@ class IrHttp(models.AbstractModel):
 
     @api.model
     def _get_default_lang(self):
-        website = self.env['website'].sudo().get_current_website()
+        website = self.env.website or self.env.website.browse(request.env.context['host_id'])
         if website:
             return self.env['res.lang']._get_data(id=website.default_lang_id.id)
         return super()._get_default_lang()
@@ -402,7 +321,7 @@ class IrHttp(models.AbstractModel):
             Domain('redirect_type', 'in', ('301', '302'))
             # trailing / could have been removed by server_page
             & Domain('url_from', 'in', [req_page_with_qs, req_page.rstrip('/'), req_page + '/'])
-            & request.env['website'].get_current_website().website_domain()
+            & request.env.website.website_domain()
         )
         return request.env['website.rewrite'].sudo().search(domain, order='url_from DESC', limit=1)
 
@@ -479,7 +398,7 @@ class IrHttp(models.AbstractModel):
 
     @api.model
     def get_frontend_session_info(self):
-        website = self.env['website'].get_current_website()
+        website = self.env.website
         session_info = super().get_frontend_session_info()
         geoip_country_code = request.geoip.country_code
         geoip_phone_code = request.env['res.country']._phone_code_for(geoip_country_code) if geoip_country_code else None
@@ -501,7 +420,7 @@ class IrHttp(models.AbstractModel):
     def _is_allowed_cookie(self, cookie_type):
         result = super()._is_allowed_cookie(cookie_type)
         if result and cookie_type == 'optional':
-            if not self.env["website"].get_current_website().cookies_bar:
+            if not self.env.website.cookies_bar:
                 # Cookies bar is disabled on this website
                 return True
             accepted_cookie_types = json_scriptsafe.loads(request.cookies.get('website_cookies_bar', '{}'))
@@ -537,13 +456,13 @@ class IrHttp(models.AbstractModel):
             return None
 
         access_token = self.env['website.visitor']._get_access_token()
+        website_id = request.env.website.id or request.env.context.get('host_id')
 
         if force_create:
             force_track_values = force_track_values or {}
-            website = self.env['website'].sudo().get_current_website()
             visitor_id, _ = self.env['website.visitor']._upsert_visitor(
                 token_or_partner_id=access_token,
-                website_id=website.id,
+                website_id=website_id,
                 lang_id=request.lang.id,
                 country_code=request.geoip.country_code,  # GEOIP might return a country code unknown to odoo
                 timezone=self.env['website.visitor']._get_visitor_timezone(),
@@ -570,8 +489,8 @@ class ModelConverter(ir_http.ModelConverter):
 
     def generate(self, env, args, dom=None):
         Model = env[self.model]
-        # Allow to current_website_id directly in route domain
-        args['current_website_id'] = env['website'].get_current_website().id
+        # Allow to the current website or the host website directly in route domain
+        args['current_website_id'] = env.website.id or env.context.get('host_id')
         domain = safe_eval(self.domain, args)
         domain = Domain(domain)
         if dom:

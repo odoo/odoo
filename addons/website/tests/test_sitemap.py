@@ -8,7 +8,9 @@ from unittest.mock import patch
 @tagged('-at_install', 'post_install')
 class TestWebsiteSitemap(TransactionCase):
     def test_sitemap_page_lastmod(self):
-        website = self.env['website'].search([], limit=1)
+        website = self.env.ref('base.default_website')
+        website = website.with_context(website_id=website.id)
+
         page_url = '/test-page'
         Page = self.env['website.page']
         page = Page.create({
@@ -124,7 +126,7 @@ class TestWebsiteSitemap(TransactionCase):
         self.assertIn({'loc': '/once'}, locs)
 
     def test_enumerate_pages_homepage_filtering(self):
-        website = self.env['website'].search([], limit=1)
+        website = self.env.ref('base.default_website')
         homepage_url = '/custom-homepage'
         self.env['website.page'].create({
             'name': 'Custom Homepage',

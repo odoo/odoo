@@ -1043,7 +1043,7 @@ class ProductTemplate(models.Model):
 
         if not tax_display:
             show_tax = (
-                website or self.env["website"].get_current_website()
+                website or self.env.website
             ).show_line_subtotals_tax_selection
             tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
 
@@ -1369,10 +1369,9 @@ class ProductTemplate(models.Model):
             return False
         if not self._get_available_uoms():
             return False
-        website = self.env["website"].get_current_website()
         return not (
-            website.prevent_sale
-            and website._prevent_product_sale(self, not self._get_contextual_price())
+            self.env.website.prevent_sale
+            and self.env.website._prevent_product_sale(self, not self._get_contextual_price())
         )
 
     @api.model
@@ -1395,7 +1394,7 @@ class ProductTemplate(models.Model):
             product_or_template, quantity, date, currency, pricelist, **kwargs
         )
 
-        if website := self.env["website"].get_current_website(fallback=False):
+        if website := self.env.website:
             price = product_or_template._apply_taxes_to_price(price, currency, website=website)
 
         return price, pricelist_rule_id
@@ -1553,7 +1552,7 @@ class ProductTemplate(models.Model):
         if self.env["res.groups"]._is_feature_enabled("uom.group_uom") and self.env.context.get(
             "website_id"
         ):
-            return all_uoms - self.env["website"].get_current_website().restricted_uom_ids
+            return all_uoms - self.env.website.restricted_uom_ids
         return all_uoms
 
     def _get_main_uom(self):
@@ -1605,7 +1604,7 @@ class ProductTemplate(models.Model):
         )
 
         if (
-            website := self.env["website"].get_current_website(fallback=False)
+            website := self.env.website
         ) and product_or_template.is_product_variant:
             max_quantity = product_or_template._get_max_quantity(website, request.cart, **kwargs)
             if max_quantity is not None:

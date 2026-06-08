@@ -27,11 +27,9 @@ def MockRequest(
     lang_code = context.get('lang', env.context.get('lang', 'en_US'))
     env_context = dict(context, lang=lang_code)
 
-    if 'website' in env:
-        if website:
-            env_context['website_id'] = website.id
-        else:
-            env_context['host_id'] = env.ref('base.default_website').id
+    if 'website' in env and website:
+        env_context['website_id'] = website.id
+    env_context['host_id'] = website.id if website else env.ref('base.default_website').id
 
     env = env(context=env_context)
 
