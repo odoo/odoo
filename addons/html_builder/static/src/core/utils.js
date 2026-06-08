@@ -739,7 +739,7 @@ export function useClickableBuilderComponent() {
                         isPreviewing,
                         editingElement: applySpec.editingElement,
                         params: applySpec.actionParam,
-                        value: applySpec.actionValue,
+                        value: !isAlreadyApplied ? applySpec.actionValue : null,
                         loadResult: applySpec.loadResult,
                         dependencyManager: comp.env.dependencyManager,
                         selectableContext: comp.env.selectableContext,

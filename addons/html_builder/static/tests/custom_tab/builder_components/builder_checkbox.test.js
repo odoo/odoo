@@ -1,4 +1,9 @@
-import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import {
+    addBuilderOption,
+    addBuilderAction,
+    setupHTMLBuilder,
+} from "@html_builder/../tests/helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { expect, test, describe } from "@odoo/hoot";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -68,4 +73,36 @@ test("click on BuilderCheckbox with inverseAction", async () => {
     await contains(".o-checkbox").click();
     expect(":iframe .test-options-target").toHaveClass("my-custom-class");
     expect(".o-checkbox .form-check-input:checked").toHaveCount(0);
+});
+
+test("checkbox should pass null value on toggle off", async () => {
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            apply({ editingElement, value }) {
+                if (value) {
+                    editingElement.dataset.mainParam = value;
+                } else {
+                    delete editingElement.dataset.mainParam;
+                }
+            }
+            isApplied({ editingElement }) {
+                return editingElement.dataset.mainParam;
+            }
+        },
+    });
+
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderCheckbox action="'customAction'" actionValue="'test'"/>`,
+    });
+
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+
+    await contains(".o-checkbox").click();
+    expect(":iframe .test-options-target[data-main-param='test']").toHaveCount(1);
+
+    await contains(".o-checkbox").click();
+    expect(":iframe .test-options-target[data-main-param='test']").toHaveCount(0);
 });
