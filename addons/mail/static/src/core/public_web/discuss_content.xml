@@ -10,7 +10,7 @@
                     <DiscussAvatar record="this.thread" size="26"/>
                     <FileUploader t-if="this.isThreadAvatarEditable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
                         <t t-set-slot="toggler">
-                            <a href="#" class="position-absolute z-1 h-100 w-100 rounded-2 start-0 bottom-0" title="Upload Avatar">
+                            <a href="#" class="position-absolute z-1 h-100 w-100 rounded-2 start-0 bottom-0" title="Change Picture">
                                 <i class="position-absolute top-50 start-50 fa fa-sm fa-pencil text-white"/>
                             </a>
                         </t>
