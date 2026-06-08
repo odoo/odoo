@@ -19,7 +19,7 @@ class ResLang(models.Model):
         """ Return the available languages for current request
         :return: LangDataDict({code: LangData})
         """
-        website = self.env["website"].get_current_website(fallback=False)
+        website = self.env.website
         if website:
             # get languages while ignoring current language as the one in the context may be invalid
             if self.env.context.get('web_force_installed_langs'):

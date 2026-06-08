@@ -16,7 +16,7 @@ class TestPaymentProviderVisibility(PaymentHttpCommon, SaleCommon):
 
         The current website must be considered to filter the providers.
         """
-        website_portal = self.env["website"].get_current_website()
+        website_portal = self.env.ref('base.default_website')
         website_shop = self.env["website"].create({"name": "Shop Website"})
 
         base_url = self.env["ir.config_parameter"].sudo().get_base_url()

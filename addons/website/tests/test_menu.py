@@ -35,7 +35,7 @@ class TestMenu(common.TransactionCase):
         Menu = self.env['website.menu']
         total_menu_items = Menu.search_count([])
 
-        top_menu = self.env['website'].get_current_website().menu_id
+        top_menu = self.env.ref('base.default_website').menu_id
         data = [
             {
                 'id': 'new-1',

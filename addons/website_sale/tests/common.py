@@ -29,7 +29,7 @@ def MockRequest(  # noqa: N802
     **kwargs,
 ):
     with websiteMockRequest(*args, **kwargs) as request:
-        website = request.env["website"].get_current_website()
+        website = request.env.website
 
         if sale_order_id is not None:
             request.session[CART_SESSION_CACHE_KEY] = sale_order_id

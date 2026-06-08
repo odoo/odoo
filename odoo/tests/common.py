@@ -2725,6 +2725,7 @@ class HttpCase(TransactionCase):
             _trace_disable=True,  # saves a query on all requests
         )
         self.session.context['lang'] = DEFAULT_LANG
+        self.session.context['host_id'] = self.env['ir.http']._get_host_id_from_domain(self.base_url())
 
         if session_extra:
             if extra_ctx := session_extra.pop('context', None):
@@ -2744,7 +2745,7 @@ class HttpCase(TransactionCase):
             # patching to speedup the check in case the password is hashed with many hashround + avoid to update the password
             with flushing, patch('odoo.addons.base.models.res_users.ResUsersPatchedInTest._check_credentials', new=patched_check_credentials):
                 credential = {'login': user, 'password': password, 'type': 'password'}
-                auth_info = self.env['res.users'].authenticate(credential, {'interactive': False})
+                auth_info = self.env(context=self.session.context)['res.users'].authenticate(credential, {'interactive': False})
             uid = auth_info['uid']
             env = api.Environment(self.cr, uid, {})
             self.session['uid'] = uid

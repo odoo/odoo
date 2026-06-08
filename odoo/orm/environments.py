@@ -306,7 +306,7 @@ class Environment(Mapping[str, "BaseModel"]):
     def website(self) -> BaseModel:
         """Return the current website (as an instance).
 
-        :returns: current website (possibly empty) - sudoed
+        :returns: current website (possibly empty)
         :rtype: :class:`website record<~odoo.addons.base.models.website.Website>`
         """
         return self['website'].browse(self.context.get('website_id'))

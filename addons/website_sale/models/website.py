@@ -368,7 +368,7 @@ class Website(models.Model):
         """
         res = super().configurator_apply(**kwargs)
 
-        website = self.get_current_website()
+        website = self.env.website
         website_settings = {}
         category_settings = {}
         views_to_disable = []
@@ -607,6 +607,7 @@ class Website(models.Model):
         :returns: pricelist recordset
         """
         self.ensure_one()
+        self = self.with_context(website_id=self.id)  # noqa: PLW0642
 
         ProductPricelist = self.env["product.pricelist"]
 
@@ -654,7 +655,7 @@ class Website(models.Model):
         return (request and request.geoip.country_code) or False
 
     def sale_product_domain(self):
-        website = self or self.get_current_website()
+        website = self or self.env.website
         website_domain = website.website_domain()
         if self.env.user._is_internal():
             user_domain = Domain.TRUE
@@ -717,6 +718,8 @@ class Website(models.Model):
         :rtype: product.pricelist
         """
         self.ensure_one()
+
+        self = self.with_context(website_id=self.id)  # noqa: PLW0642
 
         ProductPricelistSudo = self.env["product.pricelist"].sudo()
         if not self.env["res.groups"]._is_feature_enabled("product.group_product_pricelist"):

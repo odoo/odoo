@@ -48,7 +48,7 @@ class IrModuleModule(models.Model):
             which would be confusing for the user.
         """
         for module in self:
-            module.is_installed_on_current_website = module == self.env['website'].get_current_website().theme_id
+            module.is_installed_on_current_website = module == self.env.website.theme_id
 
     def write(self, vals):
         """
@@ -89,8 +89,7 @@ class IrModuleModule(models.Model):
 
                     if module.state == 'to upgrade' and request:
                         Website = self.env['website']
-                        current_website = Website.get_current_website()
-                        websites_to_update = current_website if current_website in websites_to_update else Website
+                        websites_to_update = self.env.website if self.env.website in websites_to_update else Website
 
                     for website in websites_to_update:
                         module._theme_load(website)
@@ -408,7 +407,7 @@ class IrModuleModule(models.Model):
             :return: dict with the next action to execute
         """
         self.ensure_one()
-        website = self.env['website'].get_current_website()
+        website = self.env.website
 
         self._theme_remove(website)
 
@@ -425,8 +424,7 @@ class IrModuleModule(models.Model):
 
     def button_remove_theme(self):
         """Remove the current theme of the current website."""
-        website = self.env['website'].get_current_website()
-        self._theme_remove(website)
+        self._theme_remove(self.env.website)
 
     def button_refresh_theme(self):
         """
@@ -435,8 +433,7 @@ class IrModuleModule(models.Model):
             To refresh it, we only need to upgrade the modules.
             Indeed the (re)loading of the theme will be done automatically on ``write``.
         """
-        website = self.env['website'].get_current_website()
-        website.theme_id._theme_upgrade_upstream()
+        self.env.website.theme_id._theme_upgrade_upstream()
 
     @api.model
     def update_list(self):

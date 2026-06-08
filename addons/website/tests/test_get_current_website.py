@@ -17,8 +17,8 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
         super().setUpClass()
         cls.website = cls.env.ref('base.default_website')
 
-    def test_01_get_website_id_from_domain(self):
-        """Make sure `_get_website_id_from_domain works`."""
+    def test_01_get_host_id_from_domain(self):
+        """Make sure `_get_host_id_from_domain works`."""
 
         Website = self.env['website']
         irHttp = self.env["ir.http"]
@@ -30,63 +30,63 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
         website2 = Website.create({'name': 'My Website 2'})
 
         # CASE: no domain: get first
-        self.assertEqual(irHttp._get_website_id_from_domain(''), website1.id)
+        self.assertEqual(irHttp._get_host_id_from_domain(''), website1.id)
 
         # setup domain
         website1.domain = 'my-site-1.fr'
         website2.domain = 'https://my2ndsite.com:80'
 
         # CASE: domain set: get matching domain
-        self.assertEqual(irHttp._get_website_id_from_domain('my-site-1.fr'), website1.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('my-site-1.fr'), website1.id)
 
         # CASE: domain set: get matching domain (scheme and port supported)
-        self.assertEqual(irHttp._get_website_id_from_domain('my-site-1.fr:8069'), website1.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('my-site-1.fr:8069'), website1.id)
 
-        self.assertEqual(irHttp._get_website_id_from_domain('my2ndsite.com:80'), website2.id)
-        self.assertEqual(irHttp._get_website_id_from_domain('my2ndsite.com:8069'), website2.id)
-        self.assertEqual(irHttp._get_website_id_from_domain('my2ndsite.com'), website2.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('my2ndsite.com:80'), website2.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('my2ndsite.com:8069'), website2.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('my2ndsite.com'), website2.id)
 
         # CASE: domain set, wrong domain: get first
-        self.assertEqual(irHttp._get_website_id_from_domain('test.com'), website1.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('test.com'), website1.id)
 
         # CASE: subdomain: not supported
-        self.assertEqual(irHttp._get_website_id_from_domain('www.my2ndsite.com'), website1.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('www.my2ndsite.com'), website1.id)
 
         # CASE: domain set: get by domain in priority
-        self.assertEqual(irHttp._get_website_id_from_domain('my2ndsite.com'), website2.id)
-        self.assertEqual(irHttp._get_website_id_from_domain('my-site-1.fr'), website1.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('my2ndsite.com'), website2.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('my-site-1.fr'), website1.id)
 
         # CASE: overlapping domain: get exact match
         website1.domain = 'site-1.com'
         website2.domain = 'even-better-site-1.com'
-        self.assertEqual(irHttp._get_website_id_from_domain('site-1.com'), website1.id)
-        self.assertEqual(irHttp._get_website_id_from_domain('even-better-site-1.com'), website2.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('site-1.com'), website1.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('even-better-site-1.com'), website2.id)
 
         # CASE: case insensitive
         website1.domain = 'Site-1.com'
         website2.domain = 'Even-Better-site-1.com'
-        self.assertEqual(irHttp._get_website_id_from_domain('sitE-1.com'), website1.id)
-        self.assertEqual(irHttp._get_website_id_from_domain('even-beTTer-site-1.com'), website2.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('sitE-1.com'), website1.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('even-beTTer-site-1.com'), website2.id)
 
         # CASE: same domain, different port
         website1.domain = 'site-1.com:80'
         website2.domain = 'site-1.com:81'
-        self.assertEqual(irHttp._get_website_id_from_domain('site-1.com:80'), website1.id)
-        self.assertEqual(irHttp._get_website_id_from_domain('site-1.com:81'), website2.id)
-        self.assertEqual(irHttp._get_website_id_from_domain('site-1.com:82'), website1.id)
-        self.assertEqual(irHttp._get_website_id_from_domain('site-1.com'), website1.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('site-1.com:80'), website1.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('site-1.com:81'), website2.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('site-1.com:82'), website1.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('site-1.com'), website1.id)
 
         # CASE: Unicode domain (IDNA) support
         website2.domain = 'düsseldorf.com'
-        self.assertEqual(irHttp._get_website_id_from_domain('xn--dsseldorf-q9a.com'), website2.id)
-        self.assertEqual(irHttp._get_website_id_from_domain('düsseldorf.com'), website2.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('xn--dsseldorf-q9a.com'), website2.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('düsseldorf.com'), website2.id)
 
         # CASE: domain stored as punycode
         website2.domain = 'xn--dsseldorf-q9a.com'
-        self.assertEqual(irHttp._get_website_id_from_domain('xn--dsseldorf-q9a.com'), website2.id)
-        self.assertEqual(irHttp._get_website_id_from_domain('düsseldorf.com'), website2.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('xn--dsseldorf-q9a.com'), website2.id)
+        self.assertEqual(irHttp._get_host_id_from_domain('düsseldorf.com'), website2.id)
 
-    def test_04_get_current_website_id_sequence(self):
+    def test_04_http_website_id_sequence(self):
         """Verify the default website updates after changing website sequence."""
         irHttp = self.env["ir.http"]
         Website = self.env['website']
@@ -96,10 +96,10 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
         website1.sequence = 10
         website2.sequence = 20
 
-        self.assertEqual(irHttp._get_website_id_from_domain(''), website1.id)
+        self.assertEqual(irHttp._get_host_id_from_domain(''), website1.id)
 
         website2.sequence = 5
-        self.assertEqual(irHttp._get_website_id_from_domain(''), website2.id)
+        self.assertEqual(irHttp._get_host_id_from_domain(''), website2.id)
 
     def test_02_signup_user_website_id(self):
         website = self.website
@@ -162,7 +162,7 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
             'operation': 'crud',
         })
         # Ensure the cache is invalidated, it is not needed at the time but some
-        # code might one day go through _get_website_id_from_domain
+        # code might one day go through _get_host_id_from_domain
         # before reaching this code, making this test useless
         self.env.transaction.invalidate_ormcache()
         failed = False

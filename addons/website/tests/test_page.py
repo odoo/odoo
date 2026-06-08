@@ -106,7 +106,7 @@ class TestPage(common.TransactionCase):
 
     def test_clone_page_edited_in_default_language(self):
         self.env['res.lang']._activate_lang('fr_FR')
-        website = self.env['website'].get_current_website()
+        website = self.env.ref('base.default_website')
 
         self.assertEqual(website.default_lang_id.code, 'en_US')
 
@@ -270,7 +270,7 @@ class WithContext(HttpCase):
         })
 
     def test_unpublished_page(self):
-        specific_page = self.page.copy({'website_id': self.env['website'].get_current_website().id})
+        specific_page = self.page.copy({'website_id': self.env.ref('base.default_website').id})
         specific_page.write({'is_published': False, 'arch': self.page.arch.replace('I am a generic page', 'I am a specific page')})
 
         self.authenticate(None, None)
@@ -286,11 +286,10 @@ class WithContext(HttpCase):
     def test_search(self):
         dbname = common.get_db_name()
         admin_uid = self.env.ref('base.user_admin').id
-        website = self.env['website'].get_current_website()
 
         pages = self.xmlrpc_object.execute(
             dbname, admin_uid, 'admin',
-            'website', 'search_pages', [website.id], 'page'
+            'website', 'search_pages', [self.ref('base.default_website')], 'page'
         )
         self.assertIn(
             '/page_1',
@@ -573,7 +572,7 @@ class WithContext(HttpCase):
             self.assertEqual(alternate_fr_url, f'{self.base_url()}/fr/page_1')
 
     def test_alternate_hreflang(self):
-        website = self.env['website'].get_current_website() or self.env.ref('base.default_website')
+        website = self.env.ref('base.default_website')
         lang_en = self.env.ref('base.lang_en')
         ResLang = self.env['res.lang'].with_context(website_id=website.id)
         lang_fr = ResLang._activate_lang('fr_FR')
@@ -605,7 +604,7 @@ class WithContext(HttpCase):
 
     def test_07_not_authorized(self):
         # Create page that requires specific user role.
-        specific_page = self.page.copy({'website_id': self.env['website'].get_current_website().id})
+        specific_page = self.page.copy({'website_id': self.ref('base.default_website')})
         specific_page.write({
             'arch': self.page.arch.replace('I am a generic page', 'I am a specific page not available for visitors'),
             'is_published': True,

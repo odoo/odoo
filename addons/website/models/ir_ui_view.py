@@ -289,11 +289,10 @@ class IrUiView(models.Model):
         # website_id. (It will then always fallback on a website, this
         # method should never be called in a generic context, even for
         # tests)
-        current_website = self.env['website'].get_current_website()
         return super(IrUiView, self.with_context(
-            website_id=current_website.id
+            website_id=self.env.website.id
         )).get_related_views(key, bundles=bundles).with_context(
-            lang=current_website.default_lang_id.code,
+            lang=self.env.website.default_lang_id.code,
         )
 
     def filter_duplicate(self):
@@ -424,11 +423,10 @@ class IrUiView(models.Model):
         visibility = self._get_cached_visibility()
 
         if visibility != 'public' and not request.env.user.has_group('website.group_website_designer'):
-            website = self.env["website"].get_current_website()
-            if (visibility == 'connected' and website.is_public_user()):
+            if (visibility == 'connected' and self.env.website.is_public_user()):
                 error = werkzeug.exceptions.Forbidden()
             elif visibility == 'password' and \
-                    (website.is_public_user() or self.id not in request.session.get('views_unlock', [])):
+                    (self.env.website.is_public_user() or self.id not in request.session.get('views_unlock', [])):
                 pwd = request.params.get('visibility_password')
                 if pwd and self.env.user._crypt_context().verify(
                         pwd, self.visibility_password):
@@ -624,7 +622,7 @@ class IrUiView(models.Model):
     @api.model
     def _save_oe_structure_hook(self):
         res = {}
-        res['website_id'] = self.env['website'].get_current_website().id
+        res['website_id'] = self.env.website.id
         return res
 
     @api.model

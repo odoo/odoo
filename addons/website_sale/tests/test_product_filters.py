@@ -437,7 +437,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         self.env["product.attribute"].search([]).write({"visibility": "hidden"})
         self.color_attribute.visibility = "visible"
         self.size_attribute.visibility = "visible"
-        self.env["website"].get_current_website().shop_ppg = 1
+        self.env.ref('base.default_website').shop_ppg = 1
         computer_case_copy = self.computer_case.copy()
         computer_case_copy.website_published = True
         self.start_tour("/shop", "shop_attribute_filters_remain_when_changing_page")

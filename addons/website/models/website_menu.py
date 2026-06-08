@@ -48,11 +48,10 @@ class WebsiteMenu(models.Model):
             menu.is_mega_menu = bool(menu.mega_menu_content)
 
     def _inverse_field_is_mega_menu(self):
-        website = self.env["website"].get_current_website()
         for menu in self:
             if menu.is_mega_menu:
                 if not menu.mega_menu_content:
-                    menu.mega_menu_content = (menu.website_id or website).with_context(inherit_branding=False)._render_template('website.s_mega_menu_odoo_menu')
+                    menu.mega_menu_content = (menu.website_id or self.env.website).with_context(inherit_branding=False)._render_template('website.s_mega_menu_odoo_menu')
             else:
                 menu.mega_menu_content = False
                 menu.mega_menu_classes = False

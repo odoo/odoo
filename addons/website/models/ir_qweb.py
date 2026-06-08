@@ -55,7 +55,7 @@ class IrQweb(models.AbstractModel):
 
         atts = super()._post_processing_att(tagName, atts)
 
-        website = self.env['website'].get_current_website(fallback=False)
+        website = self.env.website
         if website and tagName == 'img' and 'loading' not in atts:
             atts['loading'] = 'lazy'  # default is auto
 

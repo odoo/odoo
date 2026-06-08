@@ -15,8 +15,8 @@ class TestInboxPerformance(HttpCase, MailCommon):
         Computation of rating_stats should run a single query per model with rating_stats enabled.
         """
         # Queries (in order):
-        #   - search website (get_current_website by domain)
-        #   - search website (get_current_website default)
+        #   - search website (by domain)
+        #   - search website (default)
         #   - sometimes could occur depending on the routing cache (website_rewrite, ir_config_parameter, res.lang flag_image)
         #   4 _message_fetch:
         #       - fetch res_users (search_needaction)

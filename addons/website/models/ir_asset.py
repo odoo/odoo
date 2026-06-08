@@ -12,7 +12,7 @@ class IrAsset(models.Model):
 
     def _get_asset_params(self):
         params = super()._get_asset_params()
-        params['website_id'] = self.env['website'].get_current_website(fallback=False).id
+        params['website_id'] = self.env.website.id
         return params
 
     def _get_asset_bundle_url(self, filename, unique, assets_params, ignore_params=False):
@@ -51,7 +51,7 @@ class IrAsset(models.Model):
               * In a website context, every asset from another website
         """
         if website_id is None:
-            website_id = self.env['website'].get_current_website(fallback=False).id
+            website_id = self.env.website.id
         if not website_id:
             return self.filtered(lambda asset: not asset.website_id)
 

@@ -181,7 +181,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         :return: The extra price for the product template attribute value.
         """
         price_extra = super()._get_ptav_price_extra(ptav, currency, date, product_or_template)
-        website = request.env["website"].get_current_website(fallback=False)
+        website = request.env.website
         if website:
             return product_or_template._apply_taxes_to_price(price_extra, currency, website=website)
         return price_extra

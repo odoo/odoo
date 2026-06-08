@@ -45,7 +45,7 @@ class TestUiCustomizeTheme(odoo.tests.HttpCase):
 
         # simulate PDF from ecommerce order
         # Note: it will only have its website_id flag if the website has a domain
-        # equal to the current URL (fallback or get_current_website())
+        # equal to the current URL.
         so_attachment = Attachment.create({
             'name': 'SO036.pdf',
             'type': 'binary',
@@ -601,7 +601,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         to test (TODO).
         """
         # Remove all menu items but the first one
-        website = self.env['website'].get_current_website()
+        website = self.env.ref('base.default_website')
         website.menu_id.child_id[1:].unlink()
         # Create a new menu item whose text is very long so that we are sure
         # it is folded into the extra items "+" menu outside of edit mode and
@@ -618,8 +618,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         # Previous tests are testing the dirty behavior when the extra items
         # "+" menu comes in play. For other "no dirty" tests, we just remove
         # most menu items first to make sure they pass independently.
-        website = self.env['website'].get_current_website()
-        website.menu_id.child_id[1:].unlink()
+        self.env.ref('base.default_website').menu_id.child_id[1:].unlink()
 
         self.start_tour(self.env["website"].get_client_action_url('/', True), 'website_no_dirty_page', login='admin')
 

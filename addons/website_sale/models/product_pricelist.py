@@ -78,7 +78,7 @@ class ProductPricelist(models.Model):
 
     def _get_partner_pricelist_multi_filter_hook(self):
         res = super()._get_partner_pricelist_multi_filter_hook()
-        website = self.env["website"].get_current_website(fallback=False)
+        website = self.env.website
         if website:
             res = res.filtered(lambda pl: pl._is_available_on_website(website))
         return res

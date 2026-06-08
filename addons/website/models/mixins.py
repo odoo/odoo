@@ -43,7 +43,7 @@ class WebsiteSeoMetadata(models.AbstractModel):
             images instead of default images
         """
         self.ensure_one()
-        website = self.env["website"].get_current_website()
+        website = self.env.website
         title = website.name
         if 'name' in self:
             title = '%s | %s' % (self.name, title)
@@ -77,8 +77,7 @@ class WebsiteSeoMetadata(models.AbstractModel):
             override `_default_website_meta` method instead of this method. This
             method only replaces user custom values in defaults.
         """
-        website = self.env["website"].get_current_website()
-        root_url = website.domain or request.httprequest.url_root.strip('/')
+        root_url = self.env.website.domain or request.httprequest.url_root.strip('/')
         default_meta = self._default_website_meta()
         opengraph_meta, twitter_meta = default_meta['default_opengraph'], default_meta['default_twitter']
         if self.website_meta_title:
@@ -592,7 +591,7 @@ class WebsitePublishedMixin(models.AbstractModel):
         the 'website_published' value if this method sets can_publish False """
         for record in self:
             try:
-                self.env['website'].get_current_website()._check_user_can_modify(record)
+                self.env.website._check_user_can_modify(record)
                 record.can_publish = True
             except AccessError:
                 record.can_publish = False
@@ -867,8 +866,7 @@ class WebsiteSearchableMixin(models.AbstractModel):
         parts, has_highlight = self._split_for_highlight(value, term)
 
         if has_highlight:
-            website = self.env["website"].get_current_website()
-            value = website._render_template(
+            value = self.env.website._render_template(
                 "website.search_text_with_highlight",
                 {'parts': parts}
             )
@@ -898,7 +896,7 @@ class WebsiteSearchableMixin(models.AbstractModel):
                 highlighted_tags.append(tag)
 
         if highlighted_tags:
-            website = self.env["website"].get_current_website()
+            website = self.env.website or self.env.ref('base.default_website')
             value = website.sudo()._render_template(
                 "website.search_tags_highlight",
                 {'tags': highlighted_tags}

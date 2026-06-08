@@ -66,7 +66,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'website_event_tour', login='admin')
 
     def test_website_event_pages_seo(self):
-        website = self.env["website"].get_current_website(fallback=True)
+        website = self.env.ref('base.default_website')
         event = self.env['event.event'].create({
             'name': 'Event With Menu',
             'website_menu': True,
@@ -201,13 +201,12 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.start_tour('/event', 'test_website_event_search', login='admin')
 
     def test_website_event_social_image(self):
-        website = self.env['website'].get_current_website()
         event = self.env['event.event'].create({
             'name': 'Event With Menu',
             'website_menu': True,
-            'website_id': website.id,
+            'website_id': self.env.ref('base.default_website').id,
         })
-        with MockRequest(self.env, website=website, url_root='http://example.com'):
+        with MockRequest(self.env, website=self.env.ref('base.default_website'), url_root='http://example.com'):
             event.cover_properties = """{"background-image": "url('/1.jpg')"}"""
             meta = event.get_website_meta()
             self.assertEqual(meta['opengraph_meta']['og:image'], 'http://example.com/1.jpg')

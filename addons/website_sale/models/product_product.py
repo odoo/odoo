@@ -93,10 +93,9 @@ class ProductProduct(models.Model):
             return False
         if not self._get_available_uoms():
             return False
-        website = self.env["website"].get_current_website()
         return not (
-            website.prevent_sale
-            and website._prevent_product_sale(self, not self._get_contextual_price())
+            self.env.website.prevent_sale
+            and self.env.website._prevent_product_sale(self, not self._get_contextual_price())
         )
 
     def _is_add_to_cart_allowed(self):
@@ -107,7 +106,7 @@ class ProductProduct(models.Model):
             return False
         if not self.filtered_domain(self.env["website"]._product_domain()):
             return False
-        website = self.env["website"].get_current_website()
+        website = self.env.website
         if website.prevent_sale and website._prevent_product_sale(
             self, not self._get_contextual_price()
         ):
@@ -279,7 +278,7 @@ class ProductProduct(models.Model):
         if self.env["res.groups"]._is_feature_enabled("uom.group_uom") and self.env.context.get(
             "website_id"
         ):
-            return all_uoms - self.env["website"].get_current_website().restricted_uom_ids
+            return all_uoms - self.env.website.restricted_uom_ids
         return all_uoms
 
     def _get_main_uom(self):
@@ -313,7 +312,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if not self.is_storable or self.allow_out_of_stock_order:
             return False
-        free_qty = self.env["website"].get_current_website()._get_product_available_qty(self.sudo())
+        free_qty = self.env.website._get_product_available_qty(self.sudo())
         return free_qty <= 0
 
     def _has_stock_notification(self, partner):
@@ -348,7 +347,6 @@ class ProductProduct(models.Model):
         )
         if not email_template:
             return
-        website = self.env["website"].get_current_website()
         for product_id in products.ids:
             product = self.env["product.product"].browse(product_id)
             for partner_id in product.with_context(
@@ -356,14 +354,14 @@ class ProductProduct(models.Model):
                 prefetch_fields=False
             ).stock_notification_partner_ids.ids:
                 partner = self.env["res.partner"].browse(partner_id)
-                email_template.with_user(website.salesperson_id).with_context(
+                email_template.with_user(self.env.website.salesperson_id).with_context(
                     customer_name=partner.name, lang=partner.lang
                 ).send_mail(
                     product.id,
                     force_send=True,
                     email_values={
                         "email_to": partner.email_formatted,
-                        "email_from": website.company_id.partner_id.email_formatted,
+                        "email_from": self.env.website.company_id.partner_id.email_formatted,
                     },
                 )
 

@@ -12,7 +12,7 @@ class ResPartner(models.Model):
     visitor_ids = fields.One2many('website.visitor', 'partner_id', string='Visitors')
 
     def google_map_img(self, zoom=8, width=298, height=298):
-        google_maps_api_key = self.env['website'].get_current_website().google_maps_api_key
+        google_maps_api_key = self.env.website.google_maps_api_key
         if not google_maps_api_key:
             return False
         params = {

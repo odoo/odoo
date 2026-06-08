@@ -60,7 +60,7 @@ class WebsiteCheckoutStep(models.Model):
         :return: The incomplete or invalid step href if any; otherwise, None.
         :rtype: str | None
         """
-        website = kwargs.get("website") or self.env["website"].get_current_website()
+        website = kwargs.get("website") or self.env.website
         kwargs.setdefault("website", website)
 
         current_step_sudo = self.sudo()._get_step_by_href(step_href, website)
@@ -105,7 +105,7 @@ class WebsiteCheckoutStep(models.Model):
             return const.SHOP_PATH
 
         # Check that public orders are allowed.
-        website = kwargs.get("website") or self.env["website"].get_current_website()
+        website = kwargs.get("website") or self.env.website
         if self.env.user._is_public() and website.account_on_checkout == "mandatory":
             return "/web/login?redirect=/shop/checkout"
 

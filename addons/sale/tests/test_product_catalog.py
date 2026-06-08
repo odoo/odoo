@@ -17,7 +17,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
 
         cls.res_model = cls.empty_order._name
         cls.res_id = cls.empty_order.id
-        cls.base_url = cls.base_url()
+        cls._base_url = cls.base_url()
         cls.products = cls.product + cls.service_product
 
     def setUp(self):
@@ -27,7 +27,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
 
     def request_get_order_lines_info(self, products, **kwargs):
         response = self.opener.post(
-            url=self.base_url + "/product/catalog/order_lines_info",
+            url=self._base_url + "/product/catalog/order_lines_info",
             json={
                 "params": {
                     "res_model": self.res_model,
@@ -41,7 +41,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
 
     def request_update_order_line_info(self, product, quantity=1.0, **kwargs):
         response = self.opener.post(
-            url=self.base_url + "/product/catalog/update_order_line_info",
+            url=self._base_url + "/product/catalog/update_order_line_info",
             json={
                 "params": {
                     "res_model": self.res_model,

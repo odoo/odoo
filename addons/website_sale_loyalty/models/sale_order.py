@@ -208,7 +208,7 @@ class SaleOrder(models.Model):
         return self.order_line.filtered(lambda line: line.reward_id.reward_type == "shipping")
 
     def _allow_nominative_programs(self):
-        website = self.env["website"].get_current_website(fallback=False)
+        website = self.env.website
         if not website:
             return super()._allow_nominative_programs()
         return not website.is_public_user() and super()._allow_nominative_programs()

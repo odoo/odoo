@@ -729,9 +729,8 @@ class Website(models.CachedModel):
 
     @api.model
     def configurator_skip(self):
-        website = self.get_current_website()
         theme = self.env["ir.module.module"].search([("name", "=", "theme_default")])
-        website.configurator_done = True
+        self.env.website.configurator_done = True
         return theme.button_choose_theme()
 
     @api.model
@@ -1200,7 +1199,7 @@ class Website(models.CachedModel):
             name = 'Home'
             page_key = 'home'
 
-        website = self.get_current_website()
+        website = self.env.website
         template_record = self.env.ref(template).with_context(website_id=website.id)
         arch = template_record.arch
         if sections_arch:
@@ -1221,7 +1220,7 @@ class Website(models.CachedModel):
         if view.arch_fs:
             view.arch_fs = False
 
-        website = self.get_current_website()
+        website = self.env.website
         if ispage:
             default_page_values = {
                 'url': page_url,
@@ -1302,7 +1301,7 @@ class Website(models.CachedModel):
         # Look for unique key
         key_copy = string
         inc = 0
-        domain_static = self.get_current_website().website_domain()
+        domain_static = self.env.website.website_domain()
         website_id = self.env.context.get('website_id', False)
         if website_id:
             domain_static = [('website_id', 'in', (False, website_id))]
@@ -1321,7 +1320,6 @@ class Website(models.CachedModel):
             view, and the value is the list of text and link to the resource using given page
         """
         dependencies = {}
-        current_website = self.get_current_website()
         page_model_name = 'Page'
 
         def _handle_views_and_pages(views):
@@ -1345,7 +1343,7 @@ class Website(models.CachedModel):
         # given records
         search_criteria = []
         for record in self.env[res_model].browse([int(res_id) for res_id in res_ids]):
-            website = 'website_id' in record and record.website_id or current_website
+            website = 'website_id' in record and record.website_id or self.env.website
             url = 'website_url' in record and record.website_url or record.url
             search_criteria.append((url, website.website_domain()))
 
@@ -1425,7 +1423,12 @@ class Website(models.CachedModel):
             # The request is not currently accessible for this route; you must
             # call the fallback which will be done with respect to the URL on
             # the current thread.
-            website_id = self.env['ir.http']._get_host_id()
+            import threading  # noqa: PLC0415
+            domain_name = (
+                (request and request.httprequest.host)
+                or getattr(threading.current_thread(), 'url', None)
+                or '')
+            website_id = self.env["ir.http"]._get_host_id_from_domain(domain_name)
 
         if website_id not in existing_ids:
             if fallback and existing_ids:
@@ -1442,8 +1445,7 @@ class Website(models.CachedModel):
 
     @api.model
     def is_public_user(self):
-        website = self.get_current_website()
-        return self.env.user == website.user_id
+        return self.env.user == self.env.website.user_id
 
     @api.model
     def viewref(self, view_id, raise_if_not_found=True):
@@ -1593,6 +1595,8 @@ class Website(models.CachedModel):
                       of the same.
             :rtype: list({name: str, url: str})
         """
+        self = self.with_context(website_id=self.id)  # noqa: PLW0642
+
         # ==== WEBSITE.PAGES ====
         # '/' already has a http.route & is in the routing_map so it will already have an entry in the xml
         domain = [('view_id', '!=', False), ('url', '!=', '/')]
@@ -1760,10 +1764,9 @@ class Website(models.CachedModel):
         return pages_by_website
 
     def _get_website_pages(self, domain=None, order='name', limit=None):
-        website = self.get_current_website()
-        domain = Domain(domain or Domain.TRUE) & website.website_domain()
+        domain = Domain(domain or Domain.TRUE) & self.env.website.website_domain()
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
-        pages = pages.with_context(website_id=website.id)._get_most_specific_pages()
+        pages = pages.with_context(website_id=self.env.website.id)._get_most_specific_pages()
         return pages
 
     def search_pages(self, needle=None, limit=None):
@@ -1787,7 +1790,7 @@ class Website(models.CachedModel):
         # The page is considered to exist if there is a 'website.rewrite' record
         # that does a redirect 301 or 302, for simplicity we do not check
         # further whether the redirection points to an existing url.
-        redirects_domain = self.get_current_website().website_domain() & Domain(
+        redirects_domain = self.env.website.website_domain() & Domain(
             [('url_from', '=', page), ('redirect_type', 'in', ('301', '302'))]
         )
         if len(self.env['website.rewrite'].search(redirects_domain, limit=1)) > 0:

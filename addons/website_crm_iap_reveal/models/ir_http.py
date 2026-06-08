@@ -29,7 +29,7 @@ class IrHttp(models.AbstractModel):
                         ip_address = request.httprequest.remote_addr
                         if not ip_address:
                             return response
-                        website_id = request.env['website'].get_current_website().id
+                        website_id = request.env.website.id
                         rules_excluded = (request.cookies.get('rule_ids') or '').split(',')
                         before = time.time()
                         new_rules_excluded = request.env['crm.reveal.view'].sudo()._create_reveal_view(website_id, url, ip_address, country_code, state_code, rules_excluded)
