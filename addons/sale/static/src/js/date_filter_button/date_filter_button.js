@@ -11,7 +11,7 @@ export const DATE_OPTIONS = [
 ];
 
 export class DateFilterButton extends Component {
-	static template = 'website_sale.DateFilterButton';
+	static template = 'sale.DateFilterButton';
 	static components = { Dropdown, DropdownItem };
 	static props = {
 		selectedDateFilter: {
