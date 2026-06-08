@@ -24,21 +24,33 @@ class OnboardingItem extends Component {
 }
 
 const stepSchema = {
+    trigger: t.string(),
     "id?": t.string(),
-    "content?": t.or([t.string(), t.object()]), //allow object(_t && markup)
-    "debugHelp?": t.string(),
     "isActive?": t.array(t.string()),
     "run?": t.or([t.string(), t.function(), t.boolean()]),
+};
+
+const stepSchemaAuto = {
+    ...stepSchema,
+    "content?": t.string(),
+    "expectUnloadPage?": t.boolean(),
     "timeout?": t.customValidator(t.number(), (value) => value >= 0 && value <= 60000),
     "tooltipPosition?": t.customValidator(t.string(), (value) =>
         ["top", "bottom", "left", "right"].includes(value)
     ),
-    trigger: t.string(),
-    "expectUnloadPage?": t.boolean(),
+};
+
+const stepSchemaOnboarding = {
+    ...stepSchema,
+    "content?": t.or([t.string(), t.object()]), //allow object(_t && markup)
+    "tooltipPosition?": t.customValidator(t.string(), (value) =>
+        ["top", "bottom", "left", "right"].includes(value)
+    ),
 };
 
 const stepSchemaDebug = {
-    ...stepSchema,
+    ...stepSchemaAuto,
+    ...stepSchemaOnboarding,
     "pause?": t.boolean(),
     "break?": t.boolean(),
 };
@@ -329,12 +341,13 @@ export class TourService {
      */
     validateStep(step) {
         const tourConfig = tourState.getCurrentConfig();
+        const schema = tourConfig.debug
+            ? t.strictObject(stepSchemaDebug)
+            : tourConfig.mode === "auto"
+            ? t.strictObject(stepSchemaAuto)
+            : t.strictObject(stepSchemaOnboarding);
         try {
-            assertType(
-                step,
-                tourConfig.debug ? t.strictObject(stepSchemaDebug) : t.strictObject(stepSchema),
-                "Error in schema for TourStep"
-            );
+            assertType(step, schema, "Error in schema for TourStep");
         } catch (error) {
             console.error(error.message);
         }

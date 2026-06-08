@@ -35,7 +35,6 @@ registry.category("web_tour.tours").add("test_website_event_search", {
         },
         {
             trigger: '.badge.bg-primary:contains(1)',
-            run: () => {}
         },
     ],
 });

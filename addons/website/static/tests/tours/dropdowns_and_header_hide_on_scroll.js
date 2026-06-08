@@ -62,7 +62,7 @@ registry.category("web_tour.tours").add("dropdowns_and_header_hide_on_scroll", {
             trigger:
                 ":iframe #wrapwrap header.o_header_fixed div[aria-label=Middle] div[role=search]",
         },
-        ...clickOnSave(undefined, 30000),
+        ...clickOnSave(30000),
         ...checkIfUserMenuNotMasked(),
         // We scroll the page a little because when clicking on the dropdown,
         // the page needs to scroll to the top first and then open the dropdown

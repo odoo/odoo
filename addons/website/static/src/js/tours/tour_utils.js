@@ -6,11 +6,10 @@ import { markup } from "@odoo/owl";
 import { omit } from "@web/core/utils/objects";
 import { stepUtils } from "@web_tour/tour_utils";
 
-export function addMedia(position = "right") {
+export function addMedia() {
     return {
         trigger: `.modal-content footer .btn-primary`,
         content: markup(_t("<b>Add</b> the selected image.")),
-        tooltipPosition: position,
         run: "click",
     };
 }
@@ -33,7 +32,7 @@ export function assertCssVariable(variableName, variableValue, trigger = ":ifram
     };
 }
 
-export function changeBackground(snippet, position = "bottom") {
+export function changeBackground() {
     return [
         {
             trigger: `.o_customize_tab button[data-action-id="replaceBgImage"]`,
@@ -42,13 +41,12 @@ export function changeBackground(snippet, position = "bottom") {
                     "<b>Customize</b> any block through this menu. Try to change the background image of this block."
                 )
             ),
-            tooltipPosition: position,
             run: "click",
         },
     ];
 }
 
-export function changeBackgroundColor(position = "bottom") {
+export function changeBackgroundColor() {
     return {
         trigger: ".o_customize_tab .o_we_color_preview",
         content: markup(
@@ -56,32 +54,11 @@ export function changeBackgroundColor(position = "bottom") {
                 "<b>Customize</b> any block through this menu. Try to change the background color of this block."
             )
         ),
-        tooltipPosition: position,
         run: "click",
     };
 }
 
-// TODO: RAHG: This function's trigger is same as above. need to be changed
-// to avoid duplication
-export function selectColorPalette(position = "left") {
-    return {
-        trigger: ".o_customize_tab .o_we_color_preview",
-        content: markup(_t(`<b>Select</b> a Color Palette.`)),
-        tooltipPosition: position,
-        run: "click",
-    };
-}
-
-export function changeColumnSize(position = "right") {
-    return {
-        trigger: `.oe_overlay.oe_active .o_handles .o_handle:not(.readonly)`,
-        content: markup(_t("<b>Slide</b> this button to change the column size.")),
-        tooltipPosition: position,
-        run: "click",
-    };
-}
-
-export function changeImage(snippet, position = "bottom") {
+export function changeImage(snippet) {
     return [
         {
             trigger: ".o_builder_sidebar_open",
@@ -91,7 +68,6 @@ export function changeImage(snippet, position = "bottom") {
             content: markup(
                 _t("<b>Double click on an image</b> to change it with one of your choice.")
             ),
-            tooltipPosition: position,
             run: "dblclick",
         },
     ];
@@ -106,7 +82,6 @@ export function changeOption(
     blockName,
     actionId = "",
     optionTooltipLabel = "",
-    position = "bottom",
     allowPalette = false
 ) {
     const noPalette = allowPalette
@@ -119,7 +94,6 @@ export function changeOption(
         content: markup(
             _t("<b>Click</b> on this option to change the %s of the block.", optionTooltipLabel)
         ),
-        tooltipPosition: position,
         run: "click",
     };
 }
@@ -186,7 +160,6 @@ export function selectNested(
     return {
         trigger: trigger + (altTrigger ? `, ${option_block} ${altTrigger}` : ""),
         content: markup(_t("<b>Select</b> a %s.", optionTooltipLabel)),
-        tooltipPosition: position,
         run: "click",
     };
 }
@@ -250,13 +223,12 @@ export function clickOnElement(elementName, selector) {
  *
  * @param {string} position Where the purple arrow will show up
  */
-export function clickOnEditAndWaitEditMode(position = "bottom") {
+export function clickOnEditAndWaitEditMode() {
     return [
         {
             content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
             trigger:
                 "body:has(:iframe body[is-ready=true]) .o_menu_systray .o_menu_systray_item.o_edit_website_container button",
-            tooltipPosition: position,
             run: "click",
         },
         {
@@ -272,19 +244,17 @@ export function clickOnEditAndWaitEditMode(position = "bottom") {
  *
  * @param {string} position Where the purple arrow will show up
  */
-export function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") {
+export function clickOnEditAndWaitEditModeInTranslatedPage() {
     return [
         {
             content: markup(_t("<b>Click Edit</b> dropdown")),
             trigger:
                 "body:has(:iframe body[is-ready=true]) .o_menu_systray button:contains('Edit')",
-            tooltipPosition: position,
             run: "click",
         },
         {
             content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
             trigger: ".o_edit_website_dropdown_item",
-            tooltipPosition: position,
             run: "click",
         },
         {
@@ -313,8 +283,7 @@ export function clickOnSnippet(snippet, position = "bottom") {
         },
     ];
 }
-
-export function clickOnSave(position = "bottom", timeout = 50000, withContains = true) {
+export function clickOnSave(timeout = 50000, withContains = true) {
     return [
         {
             trigger: ".o-snippets-menu:not(:has(.o_we_ongoing_insertion))",
@@ -326,8 +295,7 @@ export function clickOnSave(position = "bottom", timeout = 50000, withContains =
             trigger: withContains
                 ? "button[data-action=save]:enabled:contains(save)"
                 : "button[data-action=save]:enabled",
-            content: markup(_t("Good job! It's time to <b>Save</b> your work.")),
-            tooltipPosition: position,
+            content: "Good job! It's time to save your work.",
             run: "click",
             timeout,
         },
@@ -345,7 +313,7 @@ export function clickOnSave(position = "bottom", timeout = 50000, withContains =
  * @param {*} element Target the element which should be rewrite
  * @param {*} position
  */
-export function clickOnText(snippet, element, position = "bottom") {
+export function clickOnText(snippet, element) {
     return [
         {
             trigger: ":iframe body .odoo-editor-editable",
@@ -353,7 +321,6 @@ export function clickOnText(snippet, element, position = "bottom") {
         {
             trigger: snippet.id ? `:iframe #wrapwrap .${snippet.id} ${element}` : snippet,
             content: markup(_t("<b>Click on a text</b> to start editing it.")),
-            tooltipPosition: position,
             run: "click",
         },
         {
@@ -417,16 +384,15 @@ export function insertSnippet(snippet, { position = "bottom", ignoreLoading = fa
     return insertSnippetSteps;
 }
 
-export function goBackToBlocks(position = "bottom") {
+export function goBackToBlocks() {
     return {
         trigger: "button[data-name='blocks']",
         content: _t("Click here to go back to block tab."),
-        tooltipPosition: position,
         run: "click",
     };
 }
 
-export function goToTheme(position = "bottom") {
+export function goToTheme() {
     return [
         {
             trigger: ".o-website-builder_sidebar",
@@ -434,7 +400,6 @@ export function goToTheme(position = "bottom") {
         {
             trigger: "button[data-name='theme']",
             content: _t("Go to the Theme tab"),
-            tooltipPosition: position,
             run: "click",
         },
         {
@@ -444,20 +409,10 @@ export function goToTheme(position = "bottom") {
     ];
 }
 
-export function selectHeader(position = "bottom") {
+export function selectHeader() {
     return {
         trigger: `:iframe header#top`,
         content: markup(_t(`<b>Click</b> on this header to configure it.`)),
-        tooltipPosition: position,
-        run: "click",
-    };
-}
-
-export function selectSnippetColumn(snippet, index = 0, position = "bottom") {
-    return {
-        trigger: `:iframe #wrapwrap .${snippet.id} .row div[class*="col-lg-"]:eq(${index})`,
-        content: markup(_t("<b>Click</b> on this column to access its options.")),
-        tooltipPosition: position,
         run: "click",
     };
 }
