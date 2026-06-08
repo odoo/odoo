@@ -865,12 +865,14 @@ class AccountJournal(models.Model):
                     'image': '/account/static/src/img/bill.svg',
                     'text': _('Drop and let the AI process your bills automatically.'),
                 }
+                onboarding_action_data = {}
             else:
                 title_has_sequence_holes = _("Irregularities due to draft, cancelled or deleted invoices with a sequence number since last lock date.")
                 drag_drop_settings = {
                     'image': '/web/static/img/quotation.svg',
                     'text': _('Drop to import your invoices.'),
                 }
+                onboarding_action_data = journal._get_onboarding_action_data()
 
             dashboard_data[journal.id].update({
                 'number_to_check': number_to_check,
@@ -888,6 +890,7 @@ class AccountJournal(models.Model):
                 'is_sample_data': is_sample_data_by_journal_id[journal.id],
                 'has_entries': not is_sample_data_by_journal_id[journal.id],
                 'drag_drop_settings': drag_drop_settings,
+                'onboarding_action_data': onboarding_action_data,
             })
 
     def _fill_general_dashboard_data(self, dashboard_data):
@@ -924,7 +927,7 @@ class AccountJournal(models.Model):
         """ Populate journals with onboarding data if they have no entries"""
         journal_onboarding_map = {
             'sale': 'account_invoice',
-            'general': 'account_dashboard',
+            'general': 'account_return_dashboard',
         }
         onboarding_data = defaultdict(dict)
         onboarding_progresses = self.env['onboarding.progress'].sudo().search([
@@ -1028,6 +1031,14 @@ class AccountJournal(models.Model):
             else:
                 total_amount += document_currency._convert(result.get('amount_total'), target_currency, document_company, date)
         return count, target_currency.round(total_amount)
+
+    def _get_onboarding_action_data(self):
+        """This method can be overridden by other localisations to give specific action for Sales Journal onboarding"""
+        self.ensure_one()
+        return {
+            'title': self.env._("Activate E-Invoicing"),
+            'action': self.env.ref('account.action_account_config')._get_action_dict(),
+        }
 
     def _get_journal_dashboard_bank_running_balance(self):
         # In order to not recompute everything from the start, we take the last

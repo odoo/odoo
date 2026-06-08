@@ -1270,6 +1270,9 @@ class AccountMoveLine(models.Model):
     def _get_computed_taxes(self):
         self.ensure_one()
 
+        if self.company_id.vat_disabled and self.move_id.is_sale_document(include_receipts=True):
+            return self._get_default_taxes_on_vat_disabled()
+
         company_domain = self.env['account.tax']._check_company_domain(self.move_id.company_id)
         all_account_taxes = self.account_id.sudo().tax_ids
         if self.move_id.is_sale_document(include_receipts=True):
@@ -1301,6 +1304,14 @@ class AccountMoveLine(models.Model):
             tax_ids = self.move_id.fiscal_position_id.map_tax(tax_ids)
 
         return tax_ids.with_env(self.env) if tax_ids else tax_ids
+
+    def _get_default_taxes_on_vat_disabled(self):
+        """
+        returns the taxes that needs to be applied on invoices if company is not subject to VAT.
+        can be overridden by localisations to set taxes as per their requirements.
+        """
+        self.ensure_one()
+        return False
 
     @api.depends('account_id', 'company_id')
     def _compute_discount_allocation_key(self):

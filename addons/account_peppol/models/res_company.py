@@ -334,3 +334,8 @@ class ResCompany(models.Model):
             lambda u: u.proxy_type in self.env['account_edi_proxy_client.user']._get_peppol_proxy_types()
         )
         return peppol_user.proxy_type or 'peppol'
+
+    def _action_open_peppol_form(self):
+        self.ensure_one()
+        registration_wizard = self.env['peppol.registration'].create({'company_id': self.id})
+        return registration_wizard._action_open_peppol_form()

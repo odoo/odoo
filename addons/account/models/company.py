@@ -221,6 +221,12 @@ class ResCompany(models.Model):
         compute='_compute_account_enabled_tax_country_ids',
         help="Technical field containing the countries for which this company is using tax-related features"
              "(hence the ones for which l10n modules need to show tax-related fields).")
+    vat_disabled = fields.Boolean(
+        string="Not Subject to VAT",
+        compute='_compute_vat_disabled',
+        inverse='_inverse_vat_disabled',
+        store=True,
+    )
 
     # Cash basis taxes
     tax_exigibility = fields.Boolean(string='Use Cash Basis')
@@ -425,6 +431,12 @@ class ResCompany(models.Model):
             ])
             record.account_enabled_tax_country_ids = foreign_vat_fpos.country_id + record.account_fiscal_country_id
 
+    @api.depends('parent_id')
+    def _compute_vat_disabled(self):
+        for record in self:
+            if record.parent_id:
+                record.vat_disabled = record.parent_id.vat_disabled
+
     @api.depends('terms_type')
     def _compute_invoice_terms_html(self):
         for company in self.filtered(lambda company: is_html_empty(company.invoice_terms_html) and company.terms_type == 'html'):
@@ -489,9 +501,14 @@ class ResCompany(models.Model):
             limit=1,
         ))
 
+    def _inverse_vat_disabled(self):
+        """Can be overridden by localisations to perform specific actions when VAT is disabled."""
+        pass
+
     def _initiate_account_onboardings(self):
         account_onboarding_routes = [
             'account_dashboard',
+            'account_return_dashboard',
         ]
         onboardings = self.env['onboarding.onboarding'].sudo().search([('route_name', 'in', account_onboarding_routes)])
         for company in self:

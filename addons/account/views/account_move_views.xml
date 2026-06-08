@@ -1084,6 +1084,7 @@
                         <field name="show_delivery_date" invisible="1"/>
                         <field name="is_being_sent" invisible="1"/>
                         <field name="show_update_fpos" invisible="1"/>
+                        <field name="company_vat_disabled" invisible="1"/>
 
                         <div class="oe_title">
                             <span class="o_form_label">
@@ -1338,7 +1339,7 @@
                                                     'dynamic_fiscal_position_id': parent.fiscal_position_id,
                                                }"
                                                options="{'no_create': True}"
-                                               optional="show"/>
+                                               optional="conditional"/>
                                         <field name="deductible_percentage"
                                                column_invisible="parent.move_type not in ('in_invoice', 'in_refund', 'in_receipt')"
                                                string="Professional"

@@ -75,5 +75,14 @@
             ]"/>
             <field name="route_name">account_dashboard</field>
         </record>
+
+        <record id="onboarding_onboarding_account_return_dashboard" model="onboarding.onboarding">
+            <field name="name">Account Return Dashboard Onboarding</field>
+            <field name="step_ids" eval="[
+                Command.link(ref('account.onboarding_onboarding_step_chart_of_accounts')),
+            ]"/>
+            <field name="route_name">account_return_dashboard</field>
+        </record>
+
     </data>
 </odoo>

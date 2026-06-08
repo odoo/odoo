@@ -37,15 +37,11 @@ class ResConfigSettings(models.TransientModel):
         """,
     )
 
-    def action_open_pdp_form(self):
-        registration_wizard = self.env['pdp.registration'].create({'company_id': self.company_id.id})
-        return registration_wizard._action_open_pdp_form(reopen=False)
-
     def action_open_peppol_form(self):
         self.ensure_one()
         if self.country_code != 'FR' and self.routing_scheme != '0225':
             return super().action_open_peppol_form()
-        return self.action_open_pdp_form()
+        return self.company_id._action_open_pdp_form()
 
     @api.depends('company_id.l10n_fr_pdp_pilot_phase')
     def _compute_l10n_fr_pdp_pilot_phase(self):
