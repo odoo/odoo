@@ -54,6 +54,7 @@
         'views/snippets/s_banner.xml',
         'views/snippets/s_bento_block.xml',
         'views/snippets/s_snippet_group.xml',
+        'views/snippets/s_team_board.xml',
         'views/snippets/s_text_block.xml',
         'views/snippets/s_features.xml',
         'views/snippets/s_features_wall.xml',
