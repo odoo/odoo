@@ -96,7 +96,7 @@
                             <!-- Actions -->
                             <div class="oe_website_sale o_wsale_product_btn">
                                 <div class="o_wsale_product_action_row">
-                                    <t t-if="product._website_show_quick_add()">
+                                    <t t-if="(product_variant or product)._website_show_quick_add()">
                                         <button
                                             name="add_to_cart"
                                             class="o_wsale_product_btn_primary btn"

@@ -236,7 +236,7 @@
     <t name="buttons_container">
         <div class="o_wsale_product_action_row">
             <t
-                t-if="product._website_show_quick_add()"
+                t-if="(product_variant or product)._website_show_quick_add()"
                 t-call="website_sale.product_tile_element_visibility"
                 visible_element_class.f="o_wsale_products_opt_has_cta"
             >
