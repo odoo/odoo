@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add("test_company_switch_access_error", {
             run: "click",
         },
         {
-            trigger: ".o_switch_company_item:contains(second company) [role=menuitemcheckbox]",
+            trigger: ".o_switch_company_item:contains(second company) input[type='checkbox']",
             run: "click",
         },
         {
