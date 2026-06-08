@@ -106,6 +106,24 @@ class HrPayslip(models.Model):
         help='Daily wage / 8 hours.',
     )
 
+    # ------------------------------------------------------------------
+    # Net wage — stored so it can be shown in the batch payslip list
+    # ------------------------------------------------------------------
+
+    x_net_wage = fields.Float(
+        string='Net Salary',
+        compute='_compute_net_wage',
+        store=True,
+        digits=(16, 0),
+        help='Total of the NET salary rule line after compute_sheet().',
+    )
+
+    @api.depends('line_ids.total', 'line_ids.code')
+    def _compute_net_wage(self):
+        for slip in self:
+            net_lines = slip.line_ids.filtered(lambda l: l.code == 'NET')
+            slip.x_net_wage = sum(net_lines.mapped('total'))
+
     @api.depends('version_id.wage',
                  'version_id.travel_allowance', 'version_id.mobile_allowance',
                  'version_id.other_allowance')
@@ -336,29 +354,47 @@ class HrPayslip(models.Model):
     # Vacation-return guard
     # ------------------------------------------------------------------
 
-    @staticmethod
-    def _check_unresolved_vacation(payslip):
-        """Raise if the employee has an approved annual leave whose return
-        has not yet been HR-confirmed and that started on or before the
-        payslip end date.
+    @api.model
+    def _get_unresolved_vacation_leaves(self, employee_id, date_to,
+                                        exclude_payslip_id=None):
+        """Return validated annual-leave records whose return is still
+        pending (x_return_state == 'on_vacation').
+
+        :param employee_id: int — employee DB id
+        :param date_to: date — payslip end date
+        :param exclude_payslip_id: int|None — exclude leaves whose
+               vacation payslip IS this payslip (avoids self-blocking)
+        :return: hr.leave recordset (may be empty)
+        """
+        if not employee_id or not date_to:
+            return self.env['hr.leave']
+        unresolved = self.env['hr.leave'].sudo().search([
+            ('employee_id', '=', employee_id),
+            ('state', '=', 'validate'),
+            ('holiday_status_id.is_annual_leave', '=', True),
+            ('x_return_state', '=', 'on_vacation'),
+            ('request_date_from', '<=', date_to),
+        ])
+        if exclude_payslip_id:
+            unresolved = unresolved.filtered(
+                lambda l: exclude_payslip_id not in l.x_vacation_payslip_ids.ids
+            )
+        return unresolved
+
+    def _check_unresolved_vacation(self, payslip):
+        """Raise ValidationError if the employee has an unresolved
+        vacation return for the payslip period.
 
         Leaves whose vacation payslip IS the current payslip are excluded
         (so recomputing the vacation payslip itself doesn't block).
         """
         if not payslip.employee_id or not payslip.date_to:
             return
-        unresolved = payslip.env['hr.leave'].sudo().search([
-            ('employee_id', '=', payslip.employee_id.id),
-            ('state', '=', 'validate'),
-            ('holiday_status_id.is_annual_leave', '=', True),
-            ('x_return_state', '=', 'on_vacation'),
-            ('request_date_from', '<=', payslip.date_to),
-        ])
-        # Exclude leaves where this payslip is one of the vacation payslips
-        if payslip.id:
-            unresolved = unresolved.filtered(
-                lambda l: payslip.id not in l.x_vacation_payslip_ids.ids
-            )
+        unresolved = self._get_unresolved_vacation_leaves(
+            payslip.employee_id.id,
+            payslip.date_to,
+            exclude_payslip_id=payslip.id,
+        )
         if unresolved:
             details = '\n'.join(
                 '  • %s (%s → %s)' % (
@@ -479,6 +515,25 @@ class HrPayslip(models.Model):
                     'code': 'ATT_DED',
                     'number_of_days': pre_return_days,
                     'number_of_hours': 0,
+                    'amount': pre_return_deduction,
+                    'version_id': version.id,
+                })
+
+        # Legacy compatibility: some payroll structures still reference
+        # ``MISDAYS`` for the same deduction concept.
+        if pre_return_deduction > 0:
+            misdays = next((d for d in wd_vals if d.get('code') == 'MISDAYS'), None)
+            if misdays:
+                misdays['number_of_days'] += pre_return_days
+                misdays['amount'] = (misdays.get('amount', 0)
+                                     + pre_return_deduction)
+            else:
+                wd_vals.append({
+                    'name': _('Missing Days'),
+                    'sequence': 16,
+                    'code': 'MISDAYS',
+                    'number_of_days': pre_return_days,
+                    'number_of_hours': pre_return_hours,
                     'amount': pre_return_deduction,
                     'version_id': version.id,
                 })
@@ -619,6 +674,17 @@ class HrPayslip(models.Model):
                     'version_id': version.id,
                 })
 
+                # Legacy compatibility alias for older payroll structures.
+                lines.append({
+                    'name': _('Missing Days'),
+                    'sequence': 16,
+                    'code': 'MISDAYS',
+                    'number_of_days': absent_count,
+                    'number_of_hours': 0,
+                    'amount': deduction_total,
+                    'version_id': version.id,
+                })
+
         return lines
 
     # ------------------------------------------------------------------
@@ -737,6 +803,17 @@ class HrPayslip(models.Model):
                 'name': _('Attendance Deduction'),
                 'sequence': 15,
                 'code': 'ATT_DED',
+                'number_of_days': deduction_days,
+                'number_of_hours': 0,
+                'amount': deduction_total,
+                'version_id': version.id,
+            })
+
+            # Legacy compatibility alias for older payroll structures.
+            lines.append({
+                'name': _('Missing Days'),
+                'sequence': 16,
+                'code': 'MISDAYS',
                 'number_of_days': deduction_days,
                 'number_of_hours': 0,
                 'amount': deduction_total,

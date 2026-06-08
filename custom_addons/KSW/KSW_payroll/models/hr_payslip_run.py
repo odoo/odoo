@@ -8,6 +8,24 @@ except ImportError:
     openpyxl = None
 
 
+class KswPayslipRunSkipLine(models.Model):
+    """Records employees that were skipped during batch payslip generation,
+    along with the reason they were excluded."""
+    _name = 'ksw.payslip.run.skip.line'
+    _description = 'Payslip Batch — Skipped Employee Log'
+    _order = 'employee_id'
+
+    run_id = fields.Many2one(
+        'hr.payslip.run', string='Payslip Batch',
+        required=True, ondelete='cascade', index=True,
+    )
+    employee_id = fields.Many2one(
+        'hr.employee', string='Employee',
+        required=True, ondelete='cascade',
+    )
+    reason = fields.Char(string='Reason', required=True)
+
+
 class HrPayslipRun(models.Model):
     _inherit = 'hr.payslip.run'
 
@@ -18,6 +36,19 @@ class HrPayslipRun(models.Model):
              'Employees with their own Salary Paying Bank Account '
              'will override this.',
     )
+
+    x_skip_line_ids = fields.One2many(
+        'ksw.payslip.run.skip.line', 'run_id',
+        string='Skipped Employees',
+        help='Employees that were automatically skipped during payslip '
+             'generation and the reason they were excluded.',
+    )
+
+    def action_clear_skip_log(self):
+        """Remove all skipped-employee log entries for this batch."""
+        self.ensure_one()
+        self.x_skip_line_ids.unlink()
+        return True
 
 
     # ------------------------------------------------------------------
@@ -52,6 +83,22 @@ class HrPayslipRun(models.Model):
             },
         }
 
+    def action_open_batch_payslips(self):
+        """Open batch payslip lines in the standard searchable payslip view."""
+        self.ensure_one()
+        action = self.env['ir.actions.actions']._for_xml_id(
+            'om_hr_payroll.action_view_hr_payslip_form'
+        )
+        action.update({
+            'name': _('Payslips - %s') % (self.name or _('Batch')),
+            'domain': [('payslip_run_id', '=', self.id)],
+            'context': {
+                'default_payslip_run_id': self.id,
+                'search_default_payslip_run_id': self.id,
+            },
+        })
+        return action
+
     def _group_slips_by_bank_account(self):
         """Group payslips by the paying bank account
 
@@ -74,6 +121,22 @@ class HrPayslipRun(models.Model):
             groups.setdefault(bank, self.env['hr.payslip'])
             groups[bank] |= slip
         return groups
+
+    def _sorted_export_slips(self, slips):
+        """Sort slips by configured employee export order, then name.
+
+        ``x_payslip_export_order`` values <= 0 are treated as unset and sent
+        to the end so explicitly configured employees always come first.
+        """
+        return slips.sorted(
+            lambda s: (
+                not bool(s.employee_id.sudo().x_payslip_export_order > 0),
+                s.employee_id.sudo().x_payslip_export_order
+                if s.employee_id.sudo().x_payslip_export_order > 0 else 0,
+                s.employee_id.name or '',
+                s.employee_id.id,
+            )
+        )
 
     # ------------------------------------------------------------------
     # Sheet 1 — Internal payroll summary
@@ -108,8 +171,7 @@ class HrPayslipRun(models.Model):
             c.alignment = hdr_align
             c.border = thin
 
-        for ri, slip in enumerate(
-                slips.sorted(lambda s: s.employee_id.name or ''), 2):
+        for ri, slip in enumerate(self._sorted_export_slips(slips), 2):
             emp = slip.employee_id
             bank = emp.sudo().primary_bank_account_id
             is_sheet = emp.sudo().x_is_attendance_sheet
@@ -148,7 +210,7 @@ class HrPayslipRun(models.Model):
 
             row = [
                 emp.name or '',
-                emp.identification_id or '',
+                emp.ssnid or emp.identification_id or '',
                 slip.date_from,
                 slip.date_to,
                 emp.department_id.name if emp.department_id else '',
@@ -263,8 +325,7 @@ class HrPayslipRun(models.Model):
 
         # ── Data rows (row 8+), skip employees with net == 0 ──
         ri = 8
-        for slip in slips.sorted(
-                lambda s: s.employee_id.name or ''):
+        for slip in self._sorted_export_slips(slips):
             net = self._get_line_total(slip, 'NET')
             if not net:
                 continue
@@ -287,7 +348,7 @@ class HrPayslipRun(models.Model):
                 bank.acc_number if bank else '',
                 emp.name or '',
                 emp.barcode or '',
-                emp.identification_id or '',
+                emp.ssnid or emp.identification_id or '',
                 net,              # F: Salary (net)
                 basic,            # G: Basic
                 hra,              # H: Housing

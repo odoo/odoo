@@ -404,20 +404,69 @@ class BiometricAttendanceSync(models.AbstractModel):
 
     @api.model
     def action_generate_all_absences(self):
-        """Manual button: scan all historical days for all biometric employees."""
-        employees = self.env['hr.employee'].search([
-            ('biometric_user_id', '!=', False),
-        ])
-        if not employees:
+        """Schedule the heavy historical scan as a background cron job.
+
+        Running the full scan inside the HTTP request thread routinely
+        exceeds the 120s real-time limit, which causes Werkzeug to kill
+        the worker mid-transaction (resulting in
+        ``SerializationFailure`` / ``cursor already closed`` errors).
+
+        Instead, we trigger a dedicated ``ir.cron`` record. Cron threads
+        have no HTTP timeout, so the job runs to completion in the
+        background and the user gets an instant "scheduled" notification.
+        """
+        cron = self.env.ref(
+            'hr_biometric_attendance.ir_cron_biometric_generate_all_absences',
+            raise_if_not_found=False,
+        )
+        if not cron:
+            # Fallback: run inline (should not happen after module upgrade).
+            self._run_generate_all_absences()
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
-                    'message': _("No employees with biometric IDs found."),
-                    'type': 'warning',
+                    'message': _("Historical absence scan complete."),
+                    'type': 'success',
                     'sticky': False,
                 },
             }
+
+        # Make sure the cron is enabled for this run and fire it now.
+        cron.sudo().write({'active': True})
+        cron.sudo()._trigger()
+        _logger.info("Triggered background cron 'Generate All Absences'.")
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _("Scheduled"),
+                'message': _(
+                    "The historical absence scan has been scheduled and "
+                    "will run in the background. Check the server log for "
+                    "progress; it may take several minutes."
+                ),
+                'type': 'success',
+                'sticky': False,
+            },
+        }
+
+    @api.model
+    def _run_generate_all_absences(self):
+        """Heavy historical scan executed by the background cron."""
+        cron_start = fields.Datetime.now()
+        _logger.info("=" * 80)
+        _logger.info("GENERATE-ALL-ABSENCES BACKGROUND JOB STARTED - %s",
+                     cron_start)
+        _logger.info("=" * 80)
+
+        employees = self.env['hr.employee'].search([
+            ('biometric_user_id', '!=', False),
+        ])
+        if not employees:
+            _logger.info("No employees with biometric IDs found; aborting.")
+            return True
 
         today = fields.Date.context_today(self)
         yesterday = today - timedelta(days=1)
@@ -438,17 +487,14 @@ class BiometricAttendanceSync(models.AbstractModel):
         )
         self._generate_weekend_records(employees, earliest, yesterday)
 
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'message': _(
-                    "Historical absence scan complete: %d records created"
-                ) % total_created,
-                'type': 'success',
-                'sticky': False,
-            },
-        }
+        duration = (fields.Datetime.now() - cron_start).total_seconds()
+        _logger.info("=" * 80)
+        _logger.info(
+            "GENERATE-ALL-ABSENCES COMPLETE: %.2fs | employees: %d "
+            "| absences created: %d",
+            duration, len(employees), total_created)
+        _logger.info("=" * 80)
+        return True
 
     # -- Grouping -------------------------------------------------------------
 

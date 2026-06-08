@@ -140,10 +140,10 @@ class KawtharFileWizard(models.TransientModel):
             raise UserError(_('No payslips in this batch to export.'))
 
         # Filter to employees with a bank account and positive NET
-        valid_slips = batch.slip_ids.filtered(
+        valid_slips = batch._sorted_export_slips(batch.slip_ids.filtered(
             lambda s: s.employee_id.sudo().primary_bank_account_id
             and self._get_line_total(s, 'NET') > 0
-        ).sorted(lambda s: s.employee_id.name or '')
+        ))
 
         if not valid_slips:
             raise UserError(_(
@@ -187,8 +187,7 @@ class KawtharFileWizard(models.TransientModel):
     def _fill_kawthar_sheet(self, wb, slips):
         """Build the PREFORMAT PAYMENTS sheet in the Al Rajhi Kawthar
         template format."""
-        ws = wb.active
-        ws.title = 'PREFORMAT PAYMENTS'
+        ws = wb.create_sheet('PREFORMAT PAYMENTS')
 
         bold = Font(bold=True, size=11)
         title_font = Font(bold=True, size=12)
@@ -282,7 +281,7 @@ class KawtharFileWizard(models.TransientModel):
                 seq,                                                   # A: Employee ID (sequential)
                 bank.acc_number or '' if bank else '',                 # B: Payroll Card No.
                 (emp.name or '').upper(),                              # C: Employee Name
-                emp.identification_id or '',                           # D: National ID
+                emp.ssnid or emp.identification_id or '',              # D: National ID
                 int(round(net)),                                       # E: Amount (whole SAR)
                 op_label,                                              # F: Operating Code
                 '',                                                    # G: Department ID
@@ -324,10 +323,10 @@ class KawtharFileWizard(models.TransientModel):
           Basic in halalas (12N) | Housing in halalas (12N) |
           Other allowance in halalas (12N) | Deductions in halalas (12N)
         """
-        valid = slips.filtered(
+        valid = self.payslip_run_id._sorted_export_slips(slips.filtered(
             lambda s: s.employee_id.sudo().primary_bank_account_id
             and self._get_line_total(s, 'NET') > 0
-        ).sorted(lambda s: s.employee_id.name or '')
+        ))
 
         if not valid:
             from odoo.exceptions import UserError
@@ -345,7 +344,7 @@ class KawtharFileWizard(models.TransientModel):
             emp_ref = emp.barcode or '0'
             card_no = (bank.acc_number or '').replace(' ', '')
             emp_name = (emp.name or '')
-            emp_id = emp.identification_id or '0'
+            emp_id = emp.ssnid or emp.identification_id or '0'
 
             net = self._get_line_total(slip, 'NET')
             basic = self._get_line_total(slip, 'BASIC')

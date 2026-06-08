@@ -27,4 +27,19 @@
         <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).replace(hour=1, minute=0, second=0)"/>
     </record>
 
+    <!-- Background job for the "Generate All Absences" button.
+         Disabled by default; triggered on demand via cron._trigger() so the
+         heavy historical scan runs in a worker thread instead of blocking
+         the HTTP request (which hits the 120s real-time limit). -->
+    <record id="ir_cron_biometric_generate_all_absences" model="ir.cron">
+        <field name="name">Biometric: Generate All Absences (manual trigger)</field>
+        <field name="model_id" ref="model_biometric_attendance_sync"/>
+        <field name="state">code</field>
+        <field name="code">model._run_generate_all_absences()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active">False</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=365)).replace(hour=2, minute=0, second=0)"/>
+    </record>
+
 </odoo>

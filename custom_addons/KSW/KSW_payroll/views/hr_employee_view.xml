@@ -4,11 +4,15 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook/page[@name='work_information']/div/div[@id='o_work_information']/group[1]/field[@name='job_title']" position="after">
+                <field name="x_employee_no"/>
+            </xpath>
             <xpath expr="//sheet/notebook/page[@name='payroll_information']" position="inside">
                 <group>
                     <group string="Salary Payment">
                         <field name="company_partner_id" invisible="1"/>
                         <field name="x_salary_bank_account_id"/>
+                        <field name="x_payslip_export_order"/>
                     </group>
                     <group string="Allowances">
                         <field name="hra"/>

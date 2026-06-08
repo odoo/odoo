@@ -145,10 +145,10 @@ class BankFileExportWizard(models.TransientModel):
         batch = self.payslip_run_id
         wb = openpyxl.Workbook()
         # Filter to employees with bank account and positive NET
-        valid_slips = slips.filtered(
+        valid_slips = batch._sorted_export_slips(slips.filtered(
             lambda s: s.employee_id.sudo().primary_bank_account_id
             and kaw_wiz._get_line_total(s, 'NET') > 0
-        ).sorted(lambda s: s.employee_id.name or '')
+        ))
         if not valid_slips:
             return None
         batch._fill_payroll_summary_sheet(wb, valid_slips)

@@ -131,7 +131,21 @@
     </record>
 
     <!-- ============================================================ -->
-    <!-- Payslip Batch: Export Bank File button                        -->
+    <!-- Payslip List: add Net Salary column                        -->
+    <!-- ============================================================ -->
+    <record id="view_hr_payslip_list_inherit_ksw_net" model="ir.ui.view">
+        <field name="name">hr.payslip.list.inherit.ksw.net</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="om_hr_payroll.view_hr_payslip_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list/field[@name='state']" position="before">
+                <field name="x_net_wage" string="Net Salary" digits="[16,0]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Payslip Batch: Export Bank File button + Skip log section  -->
     <!-- ============================================================ -->
     <record id="hr_payslip_run_form_inherit_ksw" model="ir.ui.view">
         <field name="name">hr.payslip.run.form.inherit.ksw</field>
@@ -148,6 +162,38 @@
             <!-- Bank account selector for WPS export -->
             <xpath expr="//field[@name='credit_note']" position="after">
                 <field name="x_salary_bank_account_id"/>
+            </xpath>
+            <xpath expr="//field[@name='slip_ids']" position="before">
+                <button name="action_open_batch_payslips" type="object"
+                        string="Search Payslip Lines"
+                        icon="fa-search"
+                        class="btn-secondary"/>
+            </xpath>
+            <!-- Skipped employees log below the payslips list -->
+            <xpath expr="//field[@name='slip_ids']" position="after">
+                <separator string="⚠ Skipped Employees"
+                           invisible="not x_skip_line_ids"/>
+                <div class="alert alert-warning mb-0"
+                     invisible="not x_skip_line_ids">
+                    The following employees were automatically skipped during
+                    payslip generation. Resolve the issue shown and
+                    re-generate payslips to include them.
+                </div>
+                <field name="x_skip_line_ids" readonly="1"
+                       invisible="not x_skip_line_ids">
+                    <list string="Skipped Employees"
+                          decoration-warning="True">
+                        <field name="employee_id"/>
+                        <field name="reason" string="Reason Skipped"/>
+                    </list>
+                </field>
+                <div invisible="not x_skip_line_ids">
+                    <button name="action_clear_skip_log" type="object"
+                            string="Clear Skip Log"
+                            icon="fa-trash"
+                            class="btn-sm btn-secondary"
+                            confirm="Remove all skipped-employee entries from this batch?"/>
+                </div>
             </xpath>
         </field>
     </record>

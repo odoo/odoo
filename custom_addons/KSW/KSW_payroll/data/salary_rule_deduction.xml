@@ -167,6 +167,10 @@ The rate is maintained in Settings → Payroll → Social Insurance (GOSI).</fie
                    eval="[(4, ref('hr_rule_gosi'))]"/>
         </record>
 
+        <!-- Keep legacy ABSENCE_DED records compatible with the current
+             KSW worked-day codes. -->
+        <function model="hr.salary.rule" name="_ksw_sync_legacy_absence_deduction_rule"/>
+
     </data>
 
 </odoo>

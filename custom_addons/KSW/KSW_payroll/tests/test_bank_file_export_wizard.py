@@ -300,6 +300,117 @@ class TestBankFileExportWizard(TransactionCase):
         self.assertNotIn('OLIVER KAWTHAR TWO', names)
 
     # ================================================================
+    # Tests — Export order by employee x_payslip_export_order
+    # ================================================================
+
+    def test_specific_wps_txt_respects_export_order(self):
+        """WPS TXT detail lines follow employee export order; unset is last."""
+        emp_1 = self._create_employee(
+            'ZZ ORDER ONE', '301', '3003003001',
+            self.bank_anb, 'SA11111111111111111W0301',
+        )
+        emp_2 = self._create_employee(
+            'AA ORDER TWO', '302', '3003003002',
+            self.bank_anb, 'SA11111111111111111W0302',
+        )
+        emp_1.sudo().write({
+            'x_salary_bank_account_id': self.wps_bank.id,
+            'x_payslip_export_order': 1,
+        })
+        emp_2.sudo().write({
+            'x_salary_bank_account_id': self.wps_bank.id,
+            'x_payslip_export_order': 2,
+        })
+
+        self._create_payslip(
+            emp_1, self.batch,
+            basic=5000, hra=1000, gross=7000, deductions=200, net=6800,
+        )
+        self._create_payslip(
+            emp_2, self.batch,
+            basic=5000, hra=1000, gross=7000, deductions=150, net=6850,
+        )
+
+        wiz = self._make_wizard(
+            mode='specific_txt', bank=self.wps_bank,
+            value_date=date(2026, 3, 30),
+        )
+        result = wiz.action_export()
+        att_id = int(result['url'].split('/web/content/')[1].split('?')[0])
+        att = self.env['ir.attachment'].browse(att_id)
+
+        lines = [l for l in base64.b64decode(att.datas).decode('utf-8').split('\n') if l]
+        detail_barcodes = [line[:12] for line in lines[1:]]
+        self.assertEqual(
+            detail_barcodes,
+            ['000000000301', '000000000302', '000000000101'],
+        )
+
+    def test_specific_wps_excel_respects_export_order(self):
+        """WPS Excel summary rows follow employee export order; unset is last."""
+        emp_1 = self._create_employee(
+            'ZZ EXCEL ONE', '401', '4004004001',
+            self.bank_anb, 'SA11111111111111111W0401',
+        )
+        emp_2 = self._create_employee(
+            'AA EXCEL TWO', '402', '4004004002',
+            self.bank_anb, 'SA11111111111111111W0402',
+        )
+        emp_1.sudo().write({
+            'x_salary_bank_account_id': self.wps_bank.id,
+            'x_payslip_export_order': 1,
+        })
+        emp_2.sudo().write({
+            'x_salary_bank_account_id': self.wps_bank.id,
+            'x_payslip_export_order': 2,
+        })
+
+        self._create_payslip(
+            emp_1, self.batch,
+            basic=5000, hra=1000, gross=7000, deductions=200, net=6800,
+        )
+        self._create_payslip(
+            emp_2, self.batch,
+            basic=5000, hra=1000, gross=7000, deductions=150, net=6850,
+        )
+
+        wiz = self._make_wizard(mode='specific_excel', bank=self.wps_bank)
+        result = wiz.action_export()
+        att_id = int(result['url'].split('/web/content/')[1].split('?')[0])
+        att = self.env['ir.attachment'].browse(att_id)
+
+        wb = openpyxl.load_workbook(io.BytesIO(base64.b64decode(att.datas)))
+        ws_summary = wb['Payroll Summary']
+        names = []
+        for r in range(2, ws_summary.max_row + 1):
+            name = ws_summary.cell(r, 1).value
+            if name:
+                names.append(name)
+        self.assertEqual(
+            names,
+            ['ZZ EXCEL ONE', 'AA EXCEL TWO', 'AHMED WPS EMPLOYEE'],
+        )
+
+    def test_kawthar_excel_has_payroll_summary_sheet(self):
+        """Kawthar Excel export includes both Payroll Summary and PREFORMAT PAYMENTS sheets."""
+        wiz = self._make_wizard(mode='specific_excel', bank=self.kawthar_bank_1)
+        result = wiz.action_export()
+        att_id = int(result['url'].split('/web/content/')[1].split('?')[0])
+        att = self.env['ir.attachment'].browse(att_id)
+        wb = openpyxl.load_workbook(io.BytesIO(base64.b64decode(att.datas)))
+        self.assertIn('Payroll Summary', wb.sheetnames)
+        self.assertIn('PREFORMAT PAYMENTS', wb.sheetnames)
+        # Payroll Summary must have the Kawthar employee name
+        ws_summary = wb['Payroll Summary']
+        names = [
+            ws_summary.cell(r, 1).value
+            for r in range(2, ws_summary.max_row + 1)
+            if ws_summary.cell(r, 1).value
+        ]
+        self.assertIn('ANITA KAWTHAR ONE', names)
+        self.assertNotIn('AHMED WPS EMPLOYEE', names)
+
+    # ================================================================
     # Tests — All Excel mode
     # ================================================================
 

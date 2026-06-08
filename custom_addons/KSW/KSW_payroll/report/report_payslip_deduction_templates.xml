@@ -30,7 +30,7 @@
                         <td><strong>Department</strong></td>
                         <td t-out="o.employee_id.department_id.name or ''"/>
                         <td><strong>ID No.</strong></td>
-                        <td t-out="o.employee_id.identification_id or ''"/>
+                        <td t-out="o.employee_id.ssnid or o.employee_id.identification_id or ''"/>
                     </tr>
                     <tr>
                         <td><strong>Reference</strong></td>

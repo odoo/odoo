@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-
-    <!-- ============================================================ -->
-    <!-- Server Action: Generate / Refresh All                         -->
-    <!-- ============================================================ -->
     <record id="action_generate_all_annual_leave" model="ir.actions.server">
         <field name="name">Generate / Refresh All</field>
         <field name="model_id" ref="model_ksw_annual_leave"/>
@@ -12,10 +8,6 @@
         <field name="state">code</field>
         <field name="code">action = model.action_generate_all()</field>
     </record>
-
-    <!-- ============================================================ -->
-    <!-- List View                                                     -->
-    <!-- ============================================================ -->
     <record id="ksw_annual_leave_view_list" model="ir.ui.view">
         <field name="name">ksw.annual.leave.list</field>
         <field name="model">ksw.annual.leave</field>
@@ -23,37 +15,41 @@
             <list string="Annual Leave Dashboard" create="false" edit="false">
                 <header>
                     <button name="action_generate_all" type="object"
-                            string="⟳ Refresh All" class="btn-primary"/>
+                            string="Refresh All" class="btn-primary"/>
                 </header>
                 <field name="employee_id"/>
                 <field name="department_id"/>
                 <field name="joining_date"/>
+                <field name="x_effective_start_date" string="Effective Start" optional="show"/>
                 <field name="years_of_service"/>
                 <field name="daily_rate"/>
                 <field name="total_accrued_days"/>
                 <field name="leaves_taken"/>
                 <field name="remaining_balance"
-                       decoration-success="remaining_balance > 0"
+                       decoration-success="remaining_balance &gt; 0"
                        decoration-danger="remaining_balance &lt;= 0"/>
+                <field name="x_opening_reset_date"
+                       groups="KSW_annual_leave.group_annual_leave_hr"
+                       optional="hide"/>
+                <field name="x_opening_extra_days"
+                       groups="KSW_annual_leave.group_annual_leave_hr"
+                       optional="hide"/>
                 <field name="allocation_id" string="Allocation" optional="show"/>
             </list>
         </field>
     </record>
-
-    <!-- ============================================================ -->
-    <!-- Form View                                                     -->
-    <!-- ============================================================ -->
     <record id="ksw_annual_leave_view_form" model="ir.ui.view">
         <field name="name">ksw.annual.leave.form</field>
         <field name="model">ksw.annual.leave</field>
         <field name="arch" type="xml">
-            <form string="Annual Leave" create="false" edit="false">
+            <form string="Annual Leave">
                 <sheet>
                     <group>
                         <group string="Employee">
                             <field name="employee_id"/>
                             <field name="department_id"/>
                             <field name="joining_date"/>
+                            <field name="x_effective_start_date" string="Effective Start Date"/>
                         </group>
                         <group string="Service">
                             <field name="years_of_service"/>
@@ -70,6 +66,19 @@
                             <field name="remaining_balance" class="fw-bold text-success"/>
                         </group>
                     </group>
+                    <separator string="Opening Balance (Go-Live Setup)"
+                               groups="KSW_annual_leave.group_annual_leave_hr"/>
+                    <group groups="KSW_annual_leave.group_annual_leave_hr">
+                        <group string="Baseline">
+                            <field name="x_opening_reset_date"
+                                   readonly="x_opening_is_locked"/>
+                            <field name="x_opening_extra_days"
+                                   readonly="x_opening_is_locked"/>
+                        </group>
+                        <group string="Lock">
+                            <field name="x_opening_is_locked"/>
+                        </group>
+                    </group>
                     <separator string="Allocation"/>
                     <group>
                         <field name="allocation_id"/>
@@ -78,10 +87,6 @@
             </form>
         </field>
     </record>
-
-    <!-- ============================================================ -->
-    <!-- Search View                                                   -->
-    <!-- ============================================================ -->
     <record id="ksw_annual_leave_view_search" model="ir.ui.view">
         <field name="name">ksw.annual.leave.search</field>
         <field name="model">ksw.annual.leave</field>
@@ -91,6 +96,10 @@
                 <field name="department_id"/>
                 <filter name="no_joining_date" string="Missing Joining Date"
                         domain="[('joining_date', '=', False)]"/>
+                <filter name="has_opening_reset" string="Has Opening Reset Date"
+                        domain="[('x_opening_reset_date', '!=', False)]"/>
+                <filter name="opening_locked" string="Opening Locked"
+                        domain="[('x_opening_is_locked', '=', True)]"/>
                 <group>
                     <filter string="Department" name="group_department"
                             domain="[]" context="{'group_by': 'department_id'}"/>
@@ -98,31 +107,19 @@
             </search>
         </field>
     </record>
-
-    <!-- ============================================================ -->
-    <!-- Window Action                                                 -->
-    <!-- ============================================================ -->
     <record id="action_ksw_annual_leave" model="ir.actions.act_window">
         <field name="name">Annual Leave</field>
         <field name="res_model">ksw.annual.leave</field>
         <field name="view_mode">list,form</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No annual leave records yet.
-            </p>
-            <p>Use the <b>Generate / Refresh All</b> action to create records
-               for all employees automatically.</p>
+            <p class="o_view_nocontent_smiling_face">No annual leave records yet.</p>
+            <p>Use the Generate / Refresh All action to create records for all employees.</p>
         </field>
     </record>
-
-    <!-- ============================================================ -->
-    <!-- Menu Item under Management                                    -->
-    <!-- ============================================================ -->
     <menuitem
         id="menu_ksw_annual_leave"
         name="Annual Leave"
         parent="hr_holidays.menu_hr_holidays_management"
         action="action_ksw_annual_leave"
         sequence="20"/>
-
 </odoo>

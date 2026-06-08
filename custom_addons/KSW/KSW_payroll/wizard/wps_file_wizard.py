@@ -85,9 +85,9 @@ class WpsFileWizard(models.TransientModel):
     # Text-file builders
     # ------------------------------------------------------------------
     def _build_wps_text(self, bank_account, slips):
-        valid = slips.filtered(
+        valid = self.payslip_run_id._sorted_export_slips(slips.filtered(
             lambda s: self._get_line_total(s, 'NET') > 0
-        ).sorted(lambda s: s.employee_id.name or '')
+        ))
         if not valid:
             raise UserError(_('No payslips with a positive NET salary.'))
         total_sar = sum(
@@ -141,7 +141,7 @@ class WpsFileWizard(models.TransientModel):
         emp_ref = emp.barcode or '0'
         emp_iban = (bank.acc_number or '').replace(' ', '') if bank else ''
         emp_name = (emp.name or '').upper()
-        emp_id = emp.identification_id or '0'
+        emp_id = emp.ssnid or emp.identification_id or '0'
         d = ''.join([
             self._pz(int(emp_ref) if emp_ref.isdigit() else 0, 12),
             self._swift4(bank) if bank else '    ',
