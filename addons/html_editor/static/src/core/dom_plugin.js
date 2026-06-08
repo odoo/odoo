@@ -372,7 +372,8 @@ export class DomPlugin extends Plugin {
             if (
                 !this.config.allowInlineAtRoot &&
                 this.isEditionBoundary(parent) &&
-                allowsParagraphRelatedElements(parent)
+                allowsParagraphRelatedElements(parent) &&
+                !isPhrasingContent(parent)
             ) {
                 // Ensure that edition boundaries do not have inline content.
                 wrapInlinesInBlocks(parent, {
