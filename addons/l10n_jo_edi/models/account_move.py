@@ -55,6 +55,9 @@ class AccountMove(models.Model):
             ('local', 'Local'),
             ('export', 'Export'),
             ('development', 'Development Area'),
+            ('transit', 'Transit'),
+            ('foreign', 'Foreign Trade'),
+            ('freezone', 'Free Zone Transfer'),
         ],
         string="Invoice Type",
         precompute=True,
@@ -156,6 +159,9 @@ class AccountMove(models.Model):
             'local': '0',
             'export': '1',
             'development': '2',
+            'transit': '3',
+            'foreign': '4',
+            'freezone': '5',
         }.get(self.l10n_jo_edi_invoice_type, '0')
 
     def _get_invoice_payment_method_code(self):
@@ -241,6 +247,8 @@ class AccountMove(models.Model):
             error_msgs.append(_("Please select a payment method before submission."))
         if not self.l10n_jo_edi_invoice_type:
             error_msgs.append(_("Please select an invoice type before submitting this invoice to JoFotara."))
+        if self.l10n_jo_edi_invoice_type in ('transit', 'foreign', 'freezone') and self.company_id.l10n_jo_edi_taxpayer_type != 'sales':
+            error_msgs.append(_("To issue the selected Invoice type, please set the Taxpayer Type to 'Registered in the sales tax' by going to Accounting > Configuration > Settings > Electronic Invoicing (Jordan)"))
 
         customer = self.partner_id
         has_non_digit_vat(customer, 'customer', error_msgs)
