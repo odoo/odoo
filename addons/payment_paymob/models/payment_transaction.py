@@ -60,8 +60,7 @@ class PaymentTransaction(models.Model):
             self._set_error(str(error))
             return {}
 
-        # The provider reference is set to allow fetching the payment status after redirection.
-        self.provider_reference = payment_data.get("id")
+        self.provider_reference = payment_data["intention_order_id"]
         paymob_client_secret = payment_data.get("client_secret")
 
         paymob_url = self.provider_id._paymob_get_api_url()
