@@ -714,3 +714,46 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon, MailC
         transaction._invoice_sale_orders()
 
         self.assertEqual(transaction.invoice_ids, invoice, "Invoice id was incorrectly removed from payment.transaction")
+
+    def test_payment_state_with_partial_invoice(self):
+        """A transaction payment must remain in_process while a residual amount is still open.
+        This covers partial invoicing where one payment is consumed across multiple
+        invoices created at different times.
+        """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [(0, 0, {
+                'product_id': self.service_product.id,
+                'product_uom_qty': 2,
+            })],
+        })
+        sale_order.action_confirm()
+        transaction = self._create_transaction(
+            flow='redirect',
+            sale_order_ids=[sale_order.id],
+            amount=sale_order.amount_total,
+            state='done',
+        )
+        with mute_logger('odoo.addons.sale.models.payment_transaction'):
+            transaction._post_process()
+        payment = transaction.payment_id
+        self.assertEqual(payment.state, 'in_process')
+        self.assertEqual(sale_order.order_line.qty_to_invoice, 2)
+        first_invoice = sale_order._create_invoices()
+        self.assertEqual(len(first_invoice.invoice_line_ids), 1)
+        self.assertEqual(first_invoice.invoice_line_ids.quantity, 2)
+        # Invoice only part of the order to keep some payment amount unapplied.
+        first_invoice.invoice_line_ids.quantity = 1
+        first_invoice.action_post()
+        self.assertEqual(payment.state, 'in_process')
+        self.assertIn(first_invoice, payment.reconciled_invoice_ids)
+        self.assertEqual(first_invoice.payment_state, 'paid')
+        self.assertEqual(sale_order.order_line.qty_to_invoice, 1)
+        second_invoice = sale_order._create_invoices()
+        self.assertEqual(len(second_invoice.invoice_line_ids), 1)
+        self.assertEqual(second_invoice.invoice_line_ids.quantity, 1)
+        second_invoice.action_post()
+        self.assertEqual(payment.state, 'paid')
+        self.assertIn(second_invoice, payment.reconciled_invoice_ids)
+        self.assertEqual(second_invoice.payment_state, 'paid')
+        self.assertEqual(sale_order.order_line.qty_to_invoice, 0)
