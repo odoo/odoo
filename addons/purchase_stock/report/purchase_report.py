@@ -34,7 +34,7 @@ class PurchaseReport(models.Model):
             SQL("%s AS picking_type_id", table.order_id.picking_type_id.warehouse_id),
             table.order_id.effective_date,
             SQL(
-                """EXTRACT(epoch FROM AGE(%s, COALESCE(order_effective_date.date_done, %s)))/(24*60*60)::decimal(16,2) as days_to_arrival""",
+                """EXTRACT(epoch FROM AGE(COALESCE(order_effective_date.date_done, %s), %s))/(24*60*60)::decimal(16,2) as days_to_arrival""",
                 table.date_planned, table.order_id.date_order,
             ),
         ]
