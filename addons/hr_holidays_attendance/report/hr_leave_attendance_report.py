@@ -80,11 +80,17 @@ class HrLeaveAttendanceReport(models.Model):
                 emp.id AS employee_id,
                 rc.id AS schedule_id,
                 ROUND(COALESCE(att.worked_hours, 0.0)::numeric, 2) AS worked_hours,
-                ROUND(COALESCE(rc.hours_per_day, 0.0)::numeric, 2) AS expected_hours,
+                ROUND(CASE WHEN rcl.holiday_date IS NOT NULL
+                           THEN 0.0
+                           ELSE COALESCE(rc.hours_per_day, 0.0)
+                      END::numeric, 2) AS expected_hours,
                 ROUND(COALESCE(dlh.leave_hours, 0.0)::numeric, 2) AS leave_hours,
                 (
                     ROUND(COALESCE(att.worked_hours, 0.0)::numeric, 2)
-                    - ROUND(COALESCE(rc.hours_per_day, 0.0)::numeric, 2)
+                    - ROUND(CASE WHEN rcl.holiday_date IS NOT NULL
+                                 THEN 0.0
+                                 ELSE COALESCE(rc.hours_per_day, 0.0)
+                            END::numeric, 2)
                     + ROUND(COALESCE(dlh.leave_hours, 0.0)::numeric, 2)
                 ) AS difference_hours
         """
@@ -132,15 +138,21 @@ class HrLeaveAttendanceReport(models.Model):
 
     def _join_calendar_leaves(self):
         return """
-            LEFT JOIN resource_calendar_leaves AS rcl
-                   ON (
-                               (rc.id = rcl.calendar_id OR rcl.calendar_id IS NULL)
-                           AND rcl.resource_id IS NULL
-                           AND rcl.company_id = emp.company_id
-                           AND gs.day
-                       BETWEEN (rcl.date_from AT TIME ZONE 'UTC' AT TIME ZONE COALESCE(rc.tz, 'UTC'))::date
-                           AND (rcl.date_to AT TIME ZONE 'UTC' AT TIME ZONE COALESCE(rc.tz, 'UTC'))::date
-                      )
+            LEFT JOIN (
+                SELECT DISTINCT
+                    company_id,
+                    generate_series(
+                        (date_from AT TIME ZONE 'UTC')::date,
+                        (date_to   AT TIME ZONE 'UTC')::date - INTERVAL '1 day',
+                        INTERVAL '1 day'
+                    )::date AS holiday_date
+                  FROM resource_calendar_leaves
+                 WHERE resource_id IS NULL
+                   AND (date_to   AT TIME ZONE 'UTC')::date >= (date_trunc('month', CURRENT_DATE) - INTERVAL '1 year')::date
+                   AND (date_from AT TIME ZONE 'UTC')::date <= CURRENT_DATE
+            ) AS rcl
+                   ON rcl.company_id = emp.company_id
+                  AND rcl.holiday_date = gs.day
         """
 
     def _join_resource_calendar_attendance(self):
@@ -215,7 +227,6 @@ class HrLeaveAttendanceReport(models.Model):
     def _where(self):
         return """
             WHERE rca.id IS NOT NULL
-              AND rcl.id IS NULL
         """
 
     def init(self):
