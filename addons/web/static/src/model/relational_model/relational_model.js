@@ -344,6 +344,7 @@ export class RelationalModel extends Model {
             return;
         }
         const firstLoad = !this.isReady();
+        const currentResId = config.resId;
         // Do not use a cached result if we're online and this isn't the first load of the model,
         // except if we're loading another record (form view) or creating a new record (onchange).
         const noCache =
@@ -356,11 +357,15 @@ export class RelationalModel extends Model {
             noCache,
             callback: async (result, hasChanged) => {
                 this._setAvailableOffline(config, result);
+                const { root, loadId } = await rootLoadProm;
+                if (root.config.isMonoRecord && currentResId !== root.config.resId) {
+                    // The record ID has been changed, likely because a new record was saved.
+                    return;
+                }
                 this._cacheMany2X(config, result);
                 if (!hasChanged) {
                     return;
                 }
-                const { root, loadId } = await rootLoadProm;
                 if (root.id !== this.root.id) {
                     // The root id might have changed, either because:
                     //  1) the user already changed the domain and a second load has been done
