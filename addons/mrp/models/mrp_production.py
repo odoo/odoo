@@ -1401,11 +1401,8 @@ class MrpProduction(models.Model):
             if qty_producing_uom != qty_production_uom and not (qty_producing_uom == 0 and self._origin.qty_producing != self.qty_producing):
                 self.qty_producing = self.product_id.uom_id._compute_quantity(len(self.lot_producing_ids), self.product_uom_id, rounding_method='HALF-UP')
 
-        # waiting for a preproduction move before assignement
-        is_waiting = self.warehouse_id.manufacture_steps != 'mrp_one_step' and self.picking_ids.filtered(lambda p: p.picking_type_id == self.warehouse_id.pbm_type_id and p.state not in ('done', 'cancel'))
-
         for move in (
-            self.move_raw_ids.filtered(lambda m: not is_waiting or m.product_id.tracking == 'none')
+            self.move_raw_ids
             | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id or m.product_id.tracking == 'serial')
         ):
             is_byproduct = move in self.move_byproduct_ids
@@ -1418,6 +1415,13 @@ class MrpProduction(models.Model):
                 continue
 
             new_qty = move.product_uom.round((self.qty_producing - self.qty_produced) * move.unit_factor)
+            if move.has_tracking != 'none':
+                qty_waiting = 0
+                for move_orig in move.move_orig_ids:
+                    if move_orig.state not in ('draft', 'done', 'cancel'):
+                        qty_waiting += move_orig.product_uom._compute_quantity(move_orig.quantity, move.product_uom)
+                if not move.product_uom.is_zero(qty_waiting):
+                    new_qty = min(new_qty, move.product_uom_qty - qty_waiting)
             move._set_quantity_done(new_qty)
             if (not move.manual_consumption or pick_manual_consumption_moves) \
                     and move.quantity \
