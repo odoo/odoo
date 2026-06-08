@@ -1,5 +1,5 @@
-import { test, describe, expect } from "@odoo/hoot";
-import { mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
+import { test, describe, expect, queryOne, click } from "@odoo/hoot";
+import { mountWithCleanup, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { PaymentPage } from "@pos_self_order/app/pages/payment_page/payment_page";
 import { setupSelfPosEnv, getFilledSelfOrder } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
@@ -11,6 +11,7 @@ definePosSelfModels();
 class MockPaymentInterface extends PaymentInterface {
     setup() {
         this.hasBeenCalled = false;
+        this.hasBeenCancelled = false;
         this.amountPaid = 0;
         this.amountChange = 0;
     }
@@ -26,6 +27,9 @@ class MockPaymentInterface extends PaymentInterface {
             line.setAmount(line.amount + this.amountChange);
         }
         return true;
+    }
+    sendPaymentCancel(line) {
+        this.hasBeenCancelled = true;
     }
 }
 
@@ -43,35 +47,41 @@ const setupPaymentPage = async () => {
     const store = await setupSelfPosEnv();
 
     const paymentNoProvider = store.models["pos.payment.method"].create({
+        name: "Card",
         payment_provider: null,
         payment_method_type: "none",
     });
 
     const paymentTerminal = store.models["pos.payment.method"].create({
+        name: "Terminal",
         payment_provider: "mock_terminal",
         payment_method_type: "terminal",
     });
     paymentTerminal.payment_interface = new MockPaymentInterface();
 
     const paymentTerminalWithError = store.models["pos.payment.method"].create({
+        name: "TerminalError",
         payment_provider: "mock_terminal",
         payment_method_type: "terminal",
     });
     paymentTerminalWithError.payment_interface = new MockPaymentInterfaceWithError();
 
     const paymentExternalQr = store.models["pos.payment.method"].create({
+        name: "QR",
         payment_provider: "mock_qr",
         payment_method_type: "external_qr",
     });
     paymentExternalQr.payment_interface = new MockPaymentInterface();
 
     const paymentExternalQrWithError = store.models["pos.payment.method"].create({
+        name: "QRError",
         payment_provider: "mock_qr",
         payment_method_type: "external_qr",
     });
     paymentExternalQrWithError.payment_interface = new MockPaymentInterfaceWithError();
 
     const paymentCashMachine = store.models["pos.payment.method"].create({
+        name: "CashMachine",
         payment_provider: "mock_cash_machine",
         payment_method_type: "cash_machine",
     });
@@ -92,59 +102,66 @@ const setupPaymentPage = async () => {
     };
 };
 
+const clickPaymentMethod = async (paymentMethod) => {
+    const paymentMethodButton = queryOne(`button:text(${paymentMethod.name})`);
+    await click(paymentMethodButton);
+};
+
+const clickBackButton = async () => {
+    const backButton = queryOne(`button:text(Back)`);
+    await click(backButton);
+};
+
 describe("startPayment", () => {
     test("succeeds if the backend returns no error", async () => {
-        const { paymentPage, store, paymentNoProvider } = await setupPaymentPage();
-        paymentPage.state.paymentMethodId = paymentNoProvider.id;
+        const { store, paymentNoProvider } = await setupPaymentPage();
 
         onRpc("/kiosk/payment/1/kiosk", () => true);
-        await paymentPage.startPayment();
+        await clickPaymentMethod(paymentNoProvider);
 
         expect(store.paymentError).toBe(false);
     });
 
     test("fails if the backend returns an error", async () => {
-        const { paymentPage, store, paymentNoProvider } = await setupPaymentPage();
-        paymentPage.state.paymentMethodId = paymentNoProvider.id;
+        const { store, paymentNoProvider } = await setupPaymentPage();
 
         onRpc("/kiosk/payment/1/kiosk", () => {
             throw new Error();
         });
-        await paymentPage.startPayment();
+        await clickPaymentMethod(paymentNoProvider);
 
         expect(store.paymentError).toBe(true);
     });
 
     test("succeeds if the payment terminal succeeds and backend returns no error", async () => {
-        const { paymentPage, store, paymentTerminal } = await setupPaymentPage();
-        paymentPage.state.paymentMethodId = paymentTerminal.id;
+        const { store, paymentTerminal } = await setupPaymentPage();
 
         onRpc("/kiosk/payment/1/kiosk", () => true);
-        await paymentPage.startPayment();
+        await clickPaymentMethod(paymentTerminal);
 
         expect(paymentTerminal.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(false);
     });
 
     test("fails if the payment terminal fails", async () => {
-        const { paymentPage, store, paymentTerminalWithError } = await setupPaymentPage();
-        paymentPage.state.paymentMethodId = paymentTerminalWithError.id;
+        const { store, paymentTerminalWithError } = await setupPaymentPage();
+        await clickPaymentMethod(paymentTerminalWithError);
 
         onRpc("/kiosk/payment/1/kiosk", () => true);
-        await paymentPage.startPayment();
+        await clickPaymentMethod(paymentTerminalWithError);
 
         expect(paymentTerminalWithError.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(true);
     });
 
     test("fails if the payment terminal succeeds but the backend returns an error", async () => {
-        const { paymentPage, store, paymentTerminal } = await setupPaymentPage();
-        paymentPage.state.paymentMethodId = paymentTerminal.id;
+        const { store, paymentTerminal } = await setupPaymentPage();
+        await clickPaymentMethod(paymentTerminal);
 
         onRpc("/kiosk/payment/1/kiosk", () => {
             throw new Error();
         });
-        await paymentPage.startPayment();
+        await clickPaymentMethod(paymentTerminal);
 
         expect(paymentTerminal.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(true);
@@ -152,9 +169,8 @@ describe("startPayment", () => {
 
     test("succeeds if the external QR code payment interface succeeds and backend returns no error", async () => {
         const { paymentPage, store, paymentExternalQr } = await setupPaymentPage();
-        paymentPage.state.paymentMethodId = paymentExternalQr.id;
 
-        await paymentPage.startPayment();
+        await clickPaymentMethod(paymentExternalQr);
 
         expect(paymentExternalQr.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(false);
@@ -163,29 +179,26 @@ describe("startPayment", () => {
     });
 
     test("fails if the external QR code payment interface fails", async () => {
-        const { paymentPage, store, paymentExternalQrWithError } = await setupPaymentPage();
-        paymentPage.state.paymentMethodId = paymentExternalQrWithError.id;
+        const { store, paymentExternalQrWithError } = await setupPaymentPage();
 
-        await paymentPage.startPayment();
+        await clickPaymentMethod(paymentExternalQrWithError);
 
         expect(paymentExternalQrWithError.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(true);
     });
 
     test("succeeds if the cash machine payment interface succeeds", async () => {
-        const { paymentPage, store, paymentCashMachine } = await setupPaymentPage();
-        paymentPage.state.paymentMethodId = paymentCashMachine.id;
+        const { store, paymentCashMachine } = await setupPaymentPage();
 
         onRpc("/kiosk/payment/1/kiosk", () => true);
-        await paymentPage.startPayment();
+        await clickPaymentMethod(paymentCashMachine);
 
         expect(paymentCashMachine.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(false);
     });
 
     test("sets the cash machine payment amount to the order price if change is given", async () => {
-        const { paymentPage, store, paymentCashMachine } = await setupPaymentPage();
-        paymentPage.state.paymentMethodId = paymentCashMachine.id;
+        const { store, paymentCashMachine } = await setupPaymentPage();
         paymentCashMachine.payment_interface.amountChange = 5;
 
         onRpc("/kiosk/payment/1/kiosk", async (request) => {
@@ -194,9 +207,23 @@ describe("startPayment", () => {
             expect(amountPaid).toBe(paymentCashMachine.payment_interface.amountPaid);
             return true;
         });
-        await paymentPage.startPayment();
+        await clickPaymentMethod(paymentCashMachine);
 
         expect(paymentCashMachine.payment_interface.hasBeenCalled).toBe(true);
         expect(store.paymentError).toBe(false);
+    });
+
+    test("cancels cash machine payment when Back is pressed", async () => {
+        const { store, paymentCashMachine } = await setupPaymentPage();
+
+        patchWithCleanup(store.dialog, {
+            add: (component, { confirm }) => confirm(true),
+        });
+
+        onRpc("/kiosk/payment/1/kiosk", () => true);
+        await clickPaymentMethod(paymentCashMachine);
+        await clickBackButton();
+
+        expect(paymentCashMachine.payment_interface.hasBeenCancelled).toBe(true);
     });
 });
