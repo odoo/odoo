@@ -553,23 +553,46 @@ class EmployeePortalAPI(http.Controller):
         '/api/employee-portal/notifications',
         auth='none', type='http', methods=['GET'], csrf=False,
     )
-    def get_notifications(self, page='1', limit='20', **_kw):
+    def get_notifications(self, **_kw):
         emp, err = self._require_employee_session()
         if err:
             return err
 
+        args = request.httprequest.args
         try:
-            page  = max(1, int(page))
-            limit = min(50, max(1, int(limit)))
+            page  = max(1, int(args.get('page', 1)))
+            limit = min(50, max(1, int(args.get('limit', 20))))
         except ValueError:
             page, limit = 1, 20
 
-        offset       = (page - 1) * limit
+        timeframe   = args.get('timeframe', 'all')
+        read_status = args.get('read_status', 'all')
+
+        from datetime import datetime, timedelta
+
         Notif        = request.env['tnpd.notification'].sudo()
-        domain       = [('employee_id', '=', emp.id)]
-        total        = Notif.search_count(domain)
-        unread_count = Notif.search_count(domain + [('is_read', '=', False)])
-        records      = Notif.search(domain, limit=limit, offset=offset, order='sent_date desc')
+        base_domain  = [('employee_id', '=', emp.id)]
+
+        # Always compute global unread count (ignores filters — used for sidebar badge)
+        unread_count = Notif.search_count(base_domain + [('is_read', '=', False)])
+
+        # Build filtered domain
+        domain = list(base_domain)
+
+        tf_map = {'1h': timedelta(hours=1), '24h': timedelta(hours=24),
+                  '7d': timedelta(days=7), '30d': timedelta(days=30)}
+        if timeframe in tf_map:
+            since = datetime.utcnow() - tf_map[timeframe]
+            domain.append(('sent_date', '>=', since.strftime('%Y-%m-%d %H:%M:%S')))
+
+        if read_status == 'unread':
+            domain.append(('is_read', '=', False))
+        elif read_status == 'read':
+            domain.append(('is_read', '=', True))
+
+        offset  = (page - 1) * limit
+        total   = Notif.search_count(domain)
+        records = Notif.search(domain, limit=limit, offset=offset, order='sent_date desc')
 
         def _fmt(n):
             return {

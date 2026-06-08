@@ -438,6 +438,40 @@ class EmployeeAPI(http.Controller):
                 'prison_facilities': 0,
             })
 
+    # ── GET /api/admin/check-session — verify caller is an internal admin user ─
+
+    @http.route('/api/admin/check-session', auth='none', type='http', methods=['GET'], csrf=False)
+    def check_admin_session(self, **_kw):
+        """
+        Called by the frontend immediately after /web/session/authenticate
+        to confirm the authenticated user is an internal (non-portal) Odoo user.
+
+        Portal/employee users have share=True.  If a portal user somehow
+        reaches this endpoint we destroy their session and return 403 so
+        the admin login page can show a clear error.
+        """
+        uid = request.session.uid
+        if not uid:
+            return self._json_response({'success': False, 'message': 'Not authenticated'}, status=401)
+
+        user = request.env['res.users'].sudo().browse(uid)
+        if not user.exists():
+            return self._json_response({'success': False, 'message': 'User not found'}, status=401)
+
+        if user.share:
+            # Portal or public user — must use Employee Login, not Admin Login.
+            request.session.logout(keep_db=True)
+            return self._json_response(
+                {'success': False, 'message': 'Employee accounts must use the Employee Login.'},
+                status=403,
+            )
+
+        return self._json_response({
+            'success':  True,
+            'uid':      uid,
+            'is_admin': user._is_admin(),
+        })
+
     # ── GET /api/employees — paginated list with filters ──────────────────────
 
     @http.route('/api/employees', auth='none', type='http', methods=['GET'], csrf=False)
