@@ -17,6 +17,7 @@ from . import test_scenario
 from . import test_hr_department
 from . import test_hr_version
 from . import test_hr_contract_versions
+from . import test_hr_version_contract_overlap
 from . import test_flexible_resource_calendar
 from . import test_get_employee_working_periods
 from . import test_multiple_bank_accounts
