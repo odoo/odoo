@@ -71,7 +71,7 @@ class AccountEdiFormat(models.Model):
 
         try:
             response_data = request_response.json()
-        except requests.exceptions.JSONDecodeError:
+        except JSONDecodeError:
             response_data = {}
 
         return {
