@@ -374,20 +374,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
     <section class="s_newsletter_waiting_list s_newsletter_list o_colored_level pt136 pb136 o_cc o_cc2" data-list-id="0" data-oe-shape-data="{'shape':'html_builder/Grids/01','colors':{'c5':'o-color-1'},'flip':[],'showOnMobile':false}">
         <div class="o_we_shape o_html_builder_Grids_01" style="background-image: url('/html_editor/shape/html_builder/Grids/01.svg?c5=o-color-1');"/>
         <div class="o_container_small">
-            <div class="s_avatars o_not_editable d-flex flex-row flex-wrap o_avatars_center" data-snippet="s_avatars" data-name="Avatars">
-                <div class="s_avatars_wrapper d-flex">
-                    <img src="/web/image/website.s_company_team_image_1" class="s_avatars_avatar o_editable_media o_avatar img border rounded-circle" style="border-color: var(--body-bg) !important; --box-border-left-width: 3px; --box-border-bottom-width: 3px; --box-border-right-width: 3px; --box-border-top-width: 3px;" alt=""/>
-                    <img src="/web/image/website.s_company_team_image_2" class="s_avatars_avatar o_editable_media o_avatar img border rounded-circle" style="border-color: var(--body-bg) !important; --box-border-left-width: 3px; --box-border-bottom-width: 3px; --box-border-right-width: 3px; --box-border-top-width: 3px;" alt=""/>
-                    <img src="/web/image/website.s_company_team_image_3" class="s_avatars_avatar o_editable_media o_avatar img border rounded-circle" style="border-color: var(--body-bg) !important; --box-border-left-width: 3px; --box-border-bottom-width: 3px; --box-border-right-width: 3px; --box-border-top-width: 3px;" alt=""/>
-                    <div class="s_avatars_more s_avatars_avatar d-flex justify-content-center align-items-center d-none text-bg-light border rounded-circle o-contenteditable-true" style="border-color: var(--body-bg) !important; --box-border-left-width: 3px; --box-border-bottom-width: 3px; --box-border-right-width: 3px; --box-border-top-width: 3px;">
-                        <p class="m-0">10+</p>
-                    </div>
-                </div>
-                <p class="s_avatars_label o_small-fs m-0 o-contenteditable-true" style="text-align: start;">
-                    <strong>500+</strong><br/>
-                    people on the waitlist.
-                </p>
-            </div>
+            <t t-snippet-call="website.s_avatars" string="Avatars" extraClasses.f="o_avatars_center" hideMore.f="True" count.f="500+" labelText.translate="people on the waitlist."/>
             <h1 class="display-2-fs" style="text-align: center;">Join the waitlist.</h1>
             <p class="lead" style="text-align: center;">Be the first to know when we launch.<br/>Leave your email and we'll notify you at launch.</p>
             <p><br/></p>
