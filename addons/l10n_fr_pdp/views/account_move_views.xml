@@ -62,13 +62,6 @@
         <field name="priority">30</field>
         <field name="inherit_id" ref="account_peppol.account_peppol_view_move_form"/>
         <field name="arch" type="xml">
-            <header position="inside">
-                <button name="action_pdp_open_response_wizard"
-                        type="object"
-                        class="btn btn-secondary"
-                        string="Send Response"
-                        invisible="not pdp_can_send_response"/>
-            </header>
             <!-- We do not show the "Reset to draft" but stil need to be able to cancel-->
             <button name="button_cancel" position="after">
                 <button name="button_cancel" type="object" groups="account.group_account_invoice" data-hotkey="x"
@@ -232,4 +225,16 @@
         </field>
     </record>
 
+    <record id="l10n_fr_pdp_action_open_response_wizard" model="ir.actions.server">
+        <field name="name">Send Response</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="sequence">8</field>
+        <field name="code">
+            if records:
+                action = records.action_pdp_open_response_wizard()
+        </field>
+    </record>
 </odoo>
