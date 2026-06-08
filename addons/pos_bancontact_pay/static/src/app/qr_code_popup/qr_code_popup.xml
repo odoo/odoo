@@ -5,7 +5,7 @@
             <div t-if="this.props.provider === 'bancontact_pay'" class="o_bancontact_qr_code_container">
                 <div class="o_bancontact_stack_image position-relative">
                     <img class="o_bancontact_frame w-100"
-                        t-attf-src="/pos_bancontact_pay/static/img/frames/frame_{{ this.props.frameLanguage }}.svg"
+                        t-attf-src="/pos_bancontact_pay/static/img/frames/frame_{{ this.posBancontactPayProps.frameLanguage }}.svg"
                         style="max-height: 60vh;"/>
                     <img class="o_bancontact_qr_code position-absolute top-50 start-50 translate-middle"
                         style="width: 55%; max-width: 23vh"

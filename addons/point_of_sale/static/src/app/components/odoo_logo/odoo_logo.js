@@ -1,15 +1,17 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 
 export class OdooLogo extends Component {
     static template = "point_of_sale.OdooLogo";
-    static props = {
-        class: { type: String, optional: true },
-        style: { type: String, optional: true },
-        monochrome: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        class: "",
-        style: "",
-        monochrome: false,
-    };
+    props = props(
+        {
+            "class?": types.string(),
+            "style?": types.string(),
+            "monochrome?": types.boolean(),
+        },
+        {
+            class: "",
+            style: "",
+            monochrome: false,
+        }
+    );
 }

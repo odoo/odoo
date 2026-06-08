@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
@@ -19,13 +19,14 @@ export class ControlButtons extends Component {
         SelectPartnerButton,
         InternalNoteButton,
     };
-    static props = {
-        showRemainingButtons: { type: Boolean, optional: true },
-        onClickMore: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        showRemainingButtons: false,
-    };
+    props = props(
+        {
+            "showRemainingButtons?": types.boolean(),
+            "onClickMore?": types.function(),
+        },
+        { showRemainingButtons: false }
+    );
+
     setup() {
         this.pos = usePos();
         this.ui = useService("ui");

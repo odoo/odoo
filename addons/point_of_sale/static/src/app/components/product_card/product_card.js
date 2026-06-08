@@ -1,29 +1,31 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 
 export class ProductCard extends Component {
     static template = "point_of_sale.ProductCard";
-    static props = {
-        class: { type: String, optional: true },
-        name: String,
-        available: { type: Boolean, optional: true },
-        product: Object,
-        productId: [Number, String],
-        comboExtraPrice: { type: String, optional: true },
-        color: { type: [Number, { value: undefined }], optional: true },
-        imageUrl: [String, Boolean],
-        onClick: { type: Function, optional: true },
-        showWarning: { type: Boolean, optional: true },
-        productCartQty: { type: [Number, { value: undefined }], optional: true },
-        slots: { type: Object, optional: true },
-        isComboPopup: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        onClick: () => {},
-        class: "",
-        showWarning: false,
-        isComboPopup: false,
-        available: true,
-    };
+    props = props(
+        {
+            "class?": types.string(),
+            name: types.string(),
+            "available?": types.boolean(),
+            product: types.object(),
+            productId: types.or([types.number(), types.string()]),
+            "comboExtraPrice?": types.string(),
+            "color?": types.or([types.number(), types.literal(undefined)]),
+            imageUrl: types.or([types.string(), types.boolean()]),
+            "onClick?": types.function(),
+            "showWarning?": types.boolean(),
+            "productCartQty?": types.or([types.number(), types.literal(undefined)]),
+            "slots?": types.object(),
+            "isComboPopup?": types.boolean(),
+        },
+        {
+            onClick: () => {},
+            class: "",
+            showWarning: false,
+            isComboPopup: false,
+            available: true,
+        }
+    );
 
     get productQty() {
         return this.env.utils.formatProductQty(this.props.productCartQty ?? 0, false);

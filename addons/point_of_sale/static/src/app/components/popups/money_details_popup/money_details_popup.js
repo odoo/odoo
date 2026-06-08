@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props, types } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
 import { _t } from "@web/core/l10n/translation";
@@ -8,17 +8,16 @@ import { useService } from "@web/core/utils/hooks";
 export class MoneyDetailsPopup extends Component {
     static template = "point_of_sale.MoneyDetailsPopup";
     static components = { NumericInput, Dialog };
-    static props = {
-        moneyDetails: { type: [Object, { value: null }], optional: true },
-        action: String,
-        getPayload: Function,
-        close: Function,
-        context: { type: String, optional: true },
-    };
-    static defaultProps = {
-        moneyDetails: null,
-    };
-
+    props = props(
+        {
+            "moneyDetails?": types.object(),
+            action: types.string(),
+            getPayload: types.function(),
+            close: types.function(),
+            "context?": types.string(),
+        },
+        { moneyDetails: null }
+    );
     setup() {
         super.setup();
         this.pos = usePos();

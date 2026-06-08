@@ -11,7 +11,6 @@ import { useTime } from "@point_of_sale/app/hooks/time_hook";
 export class CustomerDisplay extends Component {
     static template = "point_of_sale.CustomerDisplay";
     static components = { OdooLogo, MainComponentsContainer, BadgeTag };
-    static props = [];
 
     setup() {
         this.session = session;

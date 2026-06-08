@@ -1,25 +1,22 @@
+import { props, types } from "@odoo/owl";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { patch } from "@web/core/utils/patch";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 
-patch(QRPopup, {
-    props: {
-        ...QRPopup.props,
-        paymentMethod: { type: Object, optional: true },
-        order: { type: Object, optional: true },
-    },
-});
-
 patch(QRPopup.prototype, {
     setup() {
         super.setup(...arguments);
+        this.l10nIdPosProps = props({
+            "paymentMethod?": types.object(),
+            "order?": types.object(),
+        });
         this.orm = useService("orm");
     },
 
     async confirm() {
-        if (!this.props.paymentMethod?.id || !this.props.order?.uuid) {
+        if (!this.l10nIdPosProps.paymentMethod?.id || !this.l10nIdPosProps.order?.uuid) {
             this.env.services.dialog.add(AlertDialog, {
                 title: _t("Verification Error"),
                 body: _t("We couldn't verify the QRIS payment. Please try again."),
@@ -34,8 +31,8 @@ patch(QRPopup.prototype, {
         let result;
         try {
             result = await this.orm.call("pos.payment.method", "l10n_id_verify_qris_status", [
-                [this.props.paymentMethod.id],
-                this.props.order.uuid,
+                [this.l10nIdPosProps.paymentMethod.id],
+                this.l10nIdPosProps.order.uuid,
             ]);
         } catch {
             this.env.services.dialog.add(AlertDialog, {

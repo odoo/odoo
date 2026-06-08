@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { onPatched, proxy } from "@odoo/owl";
+import { onPatched, proxy, props, types } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 import { TModelInput } from "@point_of_sale/app/components/inputs/t_model_input";
@@ -11,49 +11,46 @@ import { TModelInput } from "@point_of_sale/app/components/inputs/t_model_input"
  */
 export class Input extends TModelInput {
     static template = "point_of_sale.input";
-    static props = {
-        ...super.props,
-        isSmall: { type: Boolean, optional: true },
-        debounceMillis: { type: Number, optional: true },
-        icon: {
-            type: Object,
-            optional: true,
-            shape: { type: String, value: String },
-        },
-        getRef: { type: Function, optional: true },
-        autofocus: { type: Boolean, optional: true },
-        autofocusMobile: { type: Boolean, optional: true },
-        iconOnLeftSide: { type: Boolean, optional: true },
-        isValid: { type: Function, optional: true },
-        placeholder: { type: String, optional: true },
-        class: { type: String, optional: true },
-        callback: { type: Function, optional: true },
-        isOpenCallback: { type: Function, optional: true },
-        readonly: { type: Boolean, optional: true },
-        onBlur: { type: Function, optional: true },
-        onClick: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        class: "",
-        isSmall: false,
-        debounceMillis: 0,
-        icon: {},
-        placeholder: "",
-        autofocus: false,
-        autofocusMobile: false,
-        iconOnLeftSide: true,
-        isValid: () => true,
-        readonly: false,
-    };
     setup() {
+        this.inputProps = props(
+            {
+                "isSmall?": types.boolean(),
+                "debounceMillis?": types.number(),
+                "icon?": types.object({ type: types.string(), value: types.string() }),
+                "getRef?": types.function(),
+                "autofocus?": types.boolean(),
+                "autofocusMobile?": types.boolean(),
+                "iconOnLeftSide?": types.boolean(),
+                "isValid?": types.function(),
+                "placeholder?": types.string(),
+                "class?": types.string(),
+                "callback?": types.function(),
+                "isOpenCallback?": types.function(),
+                "readonly?": types.boolean(),
+                "onBlur?": types.function(),
+                "onClick?": types.function(),
+            },
+            {
+                class: "",
+                isSmall: false,
+                debounceMillis: 0,
+                icon: { type: "", value: "" },
+                placeholder: "",
+                autofocus: false,
+                autofocusMobile: false,
+                iconOnLeftSide: true,
+                isValid: () => true,
+                readonly: false,
+            }
+        );
         this.state = proxy({ isOpen: false });
         // Bind setValue to ensure that 'this' remains the component instance.
-        this.setValue = debounce(this.setValue.bind(this), this.props.debounceMillis);
+        this.setValue = debounce(this.setValue.bind(this), this.inputProps.debounceMillis);
         const ref =
-            (this.props.autofocus &&
-                useAutofocus({ refName: "input", mobile: this.props.autofocusMobile })) ||
+            (this.inputProps.autofocus &&
+                useAutofocus({ refName: "input", mobile: this.inputProps.autofocusMobile })) ||
             useRef("input");
-        this.props.getRef?.(ref);
+        this.inputProps.getRef?.(ref);
         onPatched(() => {
             this.setValue.cancel(true);
         });

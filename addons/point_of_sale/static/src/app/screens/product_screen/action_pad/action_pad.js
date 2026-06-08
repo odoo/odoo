@@ -1,5 +1,5 @@
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { SelectPartnerButton } from "@point_of_sale/app/screens/product_screen/control_buttons/select_partner_button/select_partner_button";
 import { useService } from "@web/core/utils/hooks";
 import { BackButton } from "@point_of_sale/app/screens/product_screen/action_pad/back_button/back_button";
@@ -7,19 +7,21 @@ import { BackButton } from "@point_of_sale/app/screens/product_screen/action_pad
 export class ActionpadWidget extends Component {
     static template = "point_of_sale.ActionpadWidget";
     static components = { SelectPartnerButton, BackButton };
-    static props = {
-        order: Object,
-        onClickMore: { type: Function, optional: true },
-        actionName: String,
-        actionToTrigger: Function,
-        showActionButton: { type: Boolean, optional: true },
-        fastValidate: { type: Function, optional: true },
-        buttonClasses: { type: String, optional: true },
-    };
-    static defaultProps = {
-        showActionButton: true,
-        buttonClasses: "",
-    };
+    props = props(
+        {
+            order: types.object(),
+            "onClickMore?": types.function(),
+            actionName: types.string(),
+            actionToTrigger: types.function(),
+            "showActionButton?": types.boolean(),
+            "fastValidate?": types.function(),
+            "buttonClasses?": types.string(),
+        },
+        {
+            showActionButton: true,
+            buttonClasses: "",
+        }
+    );
 
     setup() {
         this.pos = usePos();

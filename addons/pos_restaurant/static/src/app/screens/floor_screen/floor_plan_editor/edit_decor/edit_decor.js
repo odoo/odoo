@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, types, props } from "@odoo/owl";
 import { getColors } from "@pos_restaurant/app/services/floor_plan/utils/colors";
 import {
     opacityToTransparency,
@@ -11,12 +11,12 @@ import { _t } from "@web/core/l10n/translation";
 export class EditDecorProperties extends Component {
     static template = "pos_restaurant.floor_editor.edit_decor_properties";
     static components = {};
-    static props = {
-        element: { optional: true },
-        updateElement: { type: Function },
-        moveLayer: { type: Function },
-        isTextContentEditable: { optional: true },
-    };
+    props = props({
+        "element?": types.any(),
+        updateElement: types.function(),
+        moveLayer: types.function(),
+        "isTextContentEditable?": types.boolean(),
+    });
 
     setup() {
         this.dialog = useService("dialog");

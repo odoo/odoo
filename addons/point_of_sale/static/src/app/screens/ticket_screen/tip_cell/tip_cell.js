@@ -1,11 +1,11 @@
 import { useAutofocus } from "@web/core/utils/hooks";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props, types } from "@odoo/owl";
 
 export class TipCell extends Component {
     static template = "point_of_sale.TipCell";
-    static props = {
-        order: Object,
-    };
+    props = props({
+        order: types.object(),
+    });
 
     setup() {
         this.state = proxy({ isEditing: false });

@@ -1,5 +1,5 @@
 import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props, types } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 /**
@@ -26,13 +26,12 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
  */
 export class SearchBar extends Component {
     static template = "point_of_sale.SearchBar";
-    static props = {
-        config: Object,
-        placeholder: String,
-        onSearch: Function,
-        onFilterSelected: Function,
-    };
-
+    props = props({
+        config: types.object(),
+        placeholder: types.string(),
+        onSearch: types.function(),
+        onFilterSelected: types.function(),
+    });
     setup() {
         this.ui = useService("ui");
         useAutofocus();

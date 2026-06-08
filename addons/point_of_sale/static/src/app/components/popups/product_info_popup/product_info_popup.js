@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { SnoozeDialog } from "./snooze_dialog/snooze_dialog";
@@ -13,7 +13,7 @@ const { DateTime } = luxon;
 export class ProductInfoPopup extends Component {
     static template = "point_of_sale.ProductInfoPopup";
     static components = { Dialog, SnoozeDialog };
-    static props = ["info", "productTemplate", "close"];
+    props = props(["info", "productTemplate", "close"]);
 
     setup() {
         this.pos = usePos();

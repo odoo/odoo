@@ -19,7 +19,6 @@ import { insertKioskStyle } from "./kiosk_style";
 
 export class selfOrderIndex extends Component {
     static template = "pos_self_order.selfOrderIndex";
-    static props = [];
     static components = {
         Router,
         ProductPage,

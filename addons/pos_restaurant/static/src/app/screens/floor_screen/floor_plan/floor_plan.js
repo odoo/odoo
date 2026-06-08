@@ -13,7 +13,6 @@ const TABLE_LINKING_DELAY = 400;
 export class FloorPlan extends FloorPlanBase {
     static template = "pos_restaurant.floor_plan";
     static components = {};
-    static props = {};
 
     setup() {
         super.setup();

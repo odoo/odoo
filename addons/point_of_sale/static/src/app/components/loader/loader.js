@@ -1,11 +1,13 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { CriticalPOSError } from "./critical_pos_error/critical_pos_error";
 
 export class Loader extends Component {
     static template = "point_of_sale.Loader";
-    static props = { loader: { type: Object, shape: { isShown: Boolean, error: Object } } };
     static components = { CriticalPOSError };
+    props = props({
+        loader: types.object({ isShown: types.boolean(), error: types.object() }),
+    });
 
     setup() {
         useLayoutEffect(

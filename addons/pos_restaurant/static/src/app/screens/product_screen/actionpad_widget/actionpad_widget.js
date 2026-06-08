@@ -2,21 +2,19 @@ import { patch } from "@web/core/utils/patch";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 import { _t } from "@web/core/l10n/translation";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
+import { props, types } from "@odoo/owl";
 
 /**
  * @props partner
  */
-patch(ActionpadWidget, {
-    props: {
-        ...ActionpadWidget.props,
-        setTable: { type: Function, optional: true },
-        assignOrder: { type: Function, optional: true },
-    },
-});
 
 patch(ActionpadWidget.prototype, {
     setup() {
         super.setup();
+        this.posRestaurantProps = props({
+            "setTable?": types.function(),
+            "assignOrder?": types.function(),
+        });
         this.doSubmitOrder = useTrackedAsync(() => this.pos.submitOrder());
         this.doReprintOrder = useTrackedAsync(() => this.pos.reprintOrder());
     },

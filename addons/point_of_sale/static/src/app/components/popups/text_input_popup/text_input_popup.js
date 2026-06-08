@@ -1,27 +1,29 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, proxy, props, types } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class TextInputPopup extends Component {
     static template = "point_of_sale.TextInputPopup";
     static components = { Dialog };
-    static props = {
-        title: String,
-        size: { type: String, optional: true },
-        buttons: { type: Array, optional: true },
-        startingValue: { type: String, optional: true },
-        placeholder: { type: String, optional: true },
-        rows: { type: Number, optional: true },
-        getPayload: Function,
-        close: Function,
-    };
-    static defaultProps = {
-        startingValue: "",
-        placeholder: "",
-        size: "lg",
-        rows: 1,
-        buttons: [],
-    };
+    props = props(
+        {
+            title: types.string(),
+            "size?": types.string(),
+            "buttons?": types.array(),
+            "startingValue?": types.string(),
+            "placeholder?": types.string(),
+            "rows?": types.number(),
+            getPayload: types.function(),
+            close: types.function(),
+        },
+        {
+            startingValue: "",
+            placeholder: "",
+            size: "lg",
+            rows: 1,
+            buttons: [],
+        }
+    );
 
     setup() {
         this.state = proxy({ inputValue: this.props.startingValue });

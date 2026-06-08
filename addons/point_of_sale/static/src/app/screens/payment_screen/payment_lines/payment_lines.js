@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { parseFloat } from "@web/views/fields/parsers";
 import { enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
@@ -10,17 +10,17 @@ import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/pr
 export class PaymentScreenPaymentLines extends Component {
     static template = "point_of_sale.PaymentScreenPaymentLines";
     static components = { PriceFormatter };
-    static props = {
-        paymentLines: { type: Array, optional: true },
-        deleteLine: Function,
-        selectLine: Function,
-        sendForceDone: Function,
-        sendForceCancel: Function,
-        sendPaymentCancel: Function,
-        sendPaymentRequest: Function,
-        updateSelectedPaymentline: Function,
-        isRefundOrder: Boolean,
-    };
+    props = props({
+        "paymentLines?": types.array(),
+        deleteLine: types.function(),
+        selectLine: types.function(),
+        sendForceDone: types.function(),
+        sendForceCancel: types.function(),
+        sendPaymentCancel: types.function(),
+        sendPaymentRequest: types.function(),
+        updateSelectedPaymentline: types.function(),
+        isRefundOrder: types.boolean(),
+    });
 
     setup() {
         this.ui = useService("ui");

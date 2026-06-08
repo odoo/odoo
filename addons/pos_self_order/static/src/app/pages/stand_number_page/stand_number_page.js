@@ -7,7 +7,6 @@ import { _t } from "@web/core/l10n/translation";
 export class StandNumberPage extends Component {
     static template = "pos_self_order.StandNumberPage";
     static components = { Numpad };
-    static props = {};
 
     setup() {
         this.selfOrder = useSelfOrder();

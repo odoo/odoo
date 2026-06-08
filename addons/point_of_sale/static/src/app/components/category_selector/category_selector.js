@@ -5,7 +5,6 @@ import { pick } from "@web/core/utils/objects";
 
 export class CategorySelector extends Component {
     static template = "point_of_sale.CategorySelector";
-    static props = {};
 
     setup() {
         this.ui = useService("ui");

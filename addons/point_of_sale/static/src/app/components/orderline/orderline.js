@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { useTimedPress } from "@point_of_sale/app/utils/use_timed_press";
 import { formatCurrency } from "@web/core/currency";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
@@ -7,25 +7,27 @@ import { BadgeTag } from "@web/core/tags_list/badge_tag";
 export class Orderline extends Component {
     static components = { BadgeTag };
     static template = "point_of_sale.Orderline";
-    static props = {
-        line: Object,
-        class: { type: Object, optional: true },
-        slots: { type: Object, optional: true },
-        showTaxGroupLabels: { type: Boolean, optional: true },
-        showTaxGroup: { type: Boolean, optional: true },
-        mode: { type: String, optional: true }, // display, split
-        onClick: { type: Function, optional: true },
-        onLongPress: { type: Function, optional: true },
-        toRefund: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        showImage: false,
-        showTaxGroupLabels: false,
-        showTaxGroup: false,
-        mode: "display",
-        onClick: () => {},
-        onLongPress: () => {},
-    };
+    props = props(
+        {
+            line: types.object(),
+            "class?": types.object(),
+            "showTaxGroupLabels?": types.boolean(),
+            "showTaxGroup?": types.boolean(),
+            "mode?": types.string(),
+            "onClick?": types.function(),
+            "onLongPress?": types.function(),
+            "toRefund?": types.number(),
+            "showImage?": types.boolean(),
+        },
+        {
+            showImage: false,
+            showTaxGroupLabels: false,
+            showTaxGroup: false,
+            mode: "display",
+            onClick: () => {},
+            onLongPress: () => {},
+        }
+    );
 
     setup() {
         this.root = useRef("root");

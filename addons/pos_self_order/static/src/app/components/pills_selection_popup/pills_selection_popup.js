@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props, types } from "@odoo/owl";
 import { scrollToSelected } from "@pos_self_order/app/utils/scroll_to_selected";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -31,14 +31,14 @@ const { DateTime } = luxon;
 export class PillsSelectionPopup extends Component {
     static template = "pos_self_order.PillsSelectionPopup";
     static components = { Dialog };
-    static props = {
-        options: Object,
-        title: String,
-        subtitle: String,
-        close: Function,
-        getPayload: Function,
-        selectionType: String,
-    };
+    props = props({
+        options: types.object(),
+        title: types.string(),
+        subtitle: types.string(),
+        close: types.function(),
+        getPayload: types.function(),
+        selectionType: types.string(),
+    });
 
     setup() {
         this.ui = useService("ui");

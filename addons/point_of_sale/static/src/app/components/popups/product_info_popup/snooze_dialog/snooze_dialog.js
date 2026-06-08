@@ -1,12 +1,11 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class SnoozeDialog extends Component {
     static components = { Dialog };
-    static props = ["close", "name", "onSave"];
     static template = "point_of_sale.SnoozeDialog";
-
+    props = props(["close", "name", "onSave"]);
     setup() {
         this.state = proxy({ hours: 1 });
     }

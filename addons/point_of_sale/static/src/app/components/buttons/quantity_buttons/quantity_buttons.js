@@ -1,13 +1,13 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 
 export class QuantityButtons extends Component {
     static template = "point_of_sale.QuantityButtons";
-    static props = {
-        quantity: Number,
-        setQuantity: Function,
-        isPlusButtonDisabled: { type: Boolean, optional: true },
-        btnClasses: { type: String, optional: true },
-    };
+    props = props({
+        quantity: types.number(),
+        setQuantity: types.function(),
+        "isPlusButtonDisabled?": types.boolean(),
+        "btnClasses?": types.string(),
+    });
 
     changeQuantity(increment) {
         const isDisabled = increment == 1 && this.props.isPlusButtonDisabled;

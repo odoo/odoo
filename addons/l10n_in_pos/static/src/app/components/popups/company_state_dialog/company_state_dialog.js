@@ -1,13 +1,13 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 
 export class companyStateDialog extends Component {
     static components = { Dialog };
     static template = "l10n_in_pos.companyStateDialog";
-    static props = {
-        close: Function,
-    };
+    props = props({
+        close: types.function(),
+    });
 
     setup() {
         this.pos = usePos();

@@ -1,5 +1,5 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, proxy, props, types } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useAutoFocusToLast } from "@point_of_sale/app/hooks/hooks";
@@ -8,18 +8,18 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 export class SelectLotPopup extends Component {
     static template = "pos_stock.SelectLotPopup";
     static components = { Dialog, AutoComplete };
-    static props = {
-        array: Array,
-        isSingleItem: Boolean,
-        title: String,
-        name: String,
-        getPayload: Function,
-        close: Function,
-        options: { type: Array, optional: true },
-        customInput: { type: Boolean, optional: true },
-        uniqueValues: { type: Boolean, optional: true },
-        isLotNameUsed: { type: Function, optional: true },
-    };
+    props = props({
+        array: types.array(),
+        isSingleItem: types.boolean(),
+        title: types.string(),
+        name: types.string(),
+        getPayload: types.function(),
+        close: types.function(),
+        "options?": types.array(),
+        "customInput?": types.boolean(),
+        "uniqueValues?": types.boolean(),
+        "isLotNameUsed?": types.function(),
+    });
 
     setup() {
         this._id = 0;

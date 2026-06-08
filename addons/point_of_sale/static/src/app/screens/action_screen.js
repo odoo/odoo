@@ -1,19 +1,19 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, props, types } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { ActionContainer } from "@web/webclient/actions/action_container";
 
 export class ActionScreen extends Component {
     static components = { ActionContainer };
-    static props = {
-        actionName: String,
-        viewMode: { type: String, optional: true },
-    };
     static storeOnOrder = false;
     static template = xml`
         <div class="o_web_client">
             <ActionContainer/>
         </div>
     `;
+    props = props({
+        actionName: types.string(),
+        "viewMode?": types.string(),
+    });
 }
 
 registry.category("pos_pages").add("ActionScreen", {

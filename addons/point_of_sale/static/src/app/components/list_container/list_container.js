@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, props, types } from "@odoo/owl";
 import { useIsChildLarger } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -7,11 +7,11 @@ import { _t } from "@web/core/l10n/translation";
 
 class ListContainerDialog extends Component {
     static components = { Dialog };
-    static props = {
-        items: Array,
-        slots: { type: Object },
-        close: Function,
-    };
+    props = props({
+        items: types.array(),
+        "slots?": types.object(),
+        close: types.function(),
+    });
     static template = xml`
         <Dialog title="this.title" footer="false">
             <div class="list-container-items d-flex p-2 flex-wrap" style="gap: 0.5rem;">
@@ -27,16 +27,18 @@ class ListContainerDialog extends Component {
 }
 
 export class ListContainer extends Component {
-    static props = {
-        items: Array,
-        onClickPlus: { type: Function, optional: true },
-        slots: { type: Object },
-        class: { type: String, optional: true },
-        forceSmall: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        class: "",
-    };
+    props = props(
+        {
+            items: types.array(),
+            "onClickPlus?": types.function(),
+            "slots?": types.object(),
+            "class?": types.string(),
+            "forceSmall?": types.boolean(),
+        },
+        {
+            class: "",
+        }
+    );
     static template = xml`
         <div class="d-flex gap-1 align-items-center flex-grow-1" t-attf-class="{{this.props.class}}" t-att-class="{'overflow-hidden': !this.isUiSmall}">
             <button t-if="this.props.onClickPlus" class="list-plus-btn btn btn-secondary btn-lg flex-shrink-0 lh-lg" t-on-click="this.props.onClickPlus">

@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props, types } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Numpad, buttonsType } from "@point_of_sale/app/components/numpad/numpad";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -8,38 +8,35 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 export class NumberPopup extends Component {
     static template = "point_of_sale.NumberPopup";
     static components = { Numpad, Dialog };
-    static props = {
-        title: { type: String, optional: true },
-        subtitle: { type: String, optional: true },
-        buttons: { type: buttonsType, optional: true },
-        startingValue: { type: [Number, String], optional: true },
-        types: {
-            type: Array,
-            optional: true,
-            element: {
-                type: Object,
-                shape: {
-                    name: String,
-                    symbol: String,
-                },
-            },
+    props = props(
+        {
+            "title?": types.string(),
+            "subtitle?": types.string(),
+            "buttons?": buttonsType,
+            "startingValue?": types.or([types.number(), types.string()]),
+            "types?": types.array(
+                types.object({
+                    name: types.string(),
+                    symbol: types.string(),
+                })
+            ),
+            "startingType?": types.string(),
+            "feedback?": types.function(),
+            "formatDisplayedValue?": types.function(),
+            "placeholder?": types.string(),
+            "isValid?": types.function(),
+            "confirmButtonLabel?": types.string(),
+            getPayload: types.function(),
+            close: types.function(),
         },
-        startingType: { type: String, optional: true },
-        feedback: { type: Function, optional: true },
-        formatDisplayedValue: { type: Function, optional: true },
-        placeholder: { type: String, optional: true },
-        isValid: { type: Function, optional: true },
-        confirmButtonLabel: { type: String, optional: true },
-        getPayload: Function,
-        close: Function,
-    };
-    static defaultProps = {
-        title: _t("Amount of guests"),
-        startingValue: "",
-        isValid: () => true,
-        formatDisplayedValue: (x) => x,
-        feedback: () => false,
-    };
+        {
+            title: _t("Amount of guests"),
+            startingValue: "",
+            isValid: () => true,
+            formatDisplayedValue: (x) => x,
+            feedback: () => false,
+        }
+    );
 
     setup() {
         this.numberBuffer = useService("number_buffer");

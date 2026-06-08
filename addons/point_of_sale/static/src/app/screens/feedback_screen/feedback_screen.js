@@ -1,6 +1,6 @@
 import { useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
-import { Component, onMounted, onWillStart, onWillUnmount, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, proxy, props, types } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { _t } from "@web/core/l10n/translation";
@@ -14,11 +14,10 @@ export class FeedbackScreen extends Component {
     static template = "point_of_sale.FeedbackScreen";
     static storeOnOrder = false;
     static components = { PriceFormatter };
-    static props = {
-        orderUuid: String,
-        waitFor: { type: Object, optional: true },
-    };
-
+    props = props({
+        orderUuid: types.string(),
+        "waitFor?": types.object(),
+    });
     setup() {
         super.setup();
         this.pos = usePos();

@@ -13,7 +13,7 @@ import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, onWillStart, onWillUnmount, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, proxy, props, types } from "@odoo/owl";
 import {
     BACKSPACE,
     Numpad,
@@ -53,18 +53,21 @@ export class TicketScreen extends Component {
         TipCell,
         ProgressBar,
     };
-    static props = {
-        reuseSavedUIState: { type: Boolean, optional: true },
-        stateOverride: { type: Object, optional: true },
-    };
-    static defaultProps = {
-        // When passed as true, it will use the saved _state.ui as default
-        // value when this component is reinstantiated.
-        // After setting the default value, the _state.ui will be overridden
-        // by the passed props.ui if there is any.
-        reuseSavedUIState: false,
-        ui: {},
-    };
+    props = props(
+        {
+            "reuseSavedUIState?": types.boolean(),
+            "stateOverride?": types.object(),
+            "ui?": types.object(),
+        },
+        {
+            // When passed as true, it will use the saved _state.ui as default
+            // value when this component is reinstantiated.
+            // After setting the default value, the _state.ui will be overridden
+            // by the passed props.ui if there is any.
+            reuseSavedUIState: false,
+            ui: {},
+        }
+    );
 
     setup() {
         this.pos = usePos();

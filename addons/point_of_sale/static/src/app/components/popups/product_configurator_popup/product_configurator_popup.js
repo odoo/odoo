@@ -1,19 +1,18 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props, types } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_banner/product_info_banner";
 
 export class BaseProductAttribute extends Component {
     static template = "";
-    static props = [
+    props = props([
         "attribute",
         "selected",
         "setSelected",
         "customValue",
         "setCustomValue",
         "allSelectedValues",
-    ];
-
+    ]);
     setup() {
         super.setup(...arguments);
         this.pos = usePos();
@@ -53,13 +52,13 @@ export class ImageProductAttribute extends BaseProductAttribute {
 
 export class MultiProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.MultiProductAttribute";
-    static props = [...BaseProductAttribute.props, "selected?", "customValue?"];
 
     setup() {
         super.setup(...arguments);
+        this.multiProductAttributeProps = props(["selected?", "customValue?"]);
         this.state = proxy({
             is_value_selected: this.props.attribute.values().reduce((acc, value) => {
-                acc[value.id] = this.props.selected?.includes(value) || false;
+                acc[value.id] = this.multiProductAttributeProps.selected?.includes(value) || false;
                 return acc;
             }, {}),
         });
@@ -85,16 +84,16 @@ export class ProductConfiguratorPopup extends Component {
         MultiProductAttribute,
         Dialog,
     };
-    static props = {
-        productTemplate: Object,
-        getPayload: Function,
-        close: Function,
-        hideAlwaysVariants: { type: Boolean, optional: true },
-        forceVariantValue: { type: Object, optional: true },
-        line: { type: Object, optional: true },
-    };
 
     setup() {
+        this.props = props({
+            productTemplate: types.object(),
+            getPayload: types.function(),
+            close: types.function(),
+            "hideAlwaysVariants?": types.boolean(),
+            "forceVariantValue?": types.array(),
+            "line?": types.object(),
+        });
         this.pos = usePos();
         this.state = proxy({
             attributes:

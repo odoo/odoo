@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 import { _t } from "@web/core/l10n/translation";
@@ -16,11 +16,10 @@ const WALL_HEIGHT = 6;
 export class AddDecorPopup extends Component {
     static template = "pos_restaurant.floor_editor.add_decor_popup";
     static components = { Dialog };
-
-    static props = {
-        addDecor: { type: Function },
-        close: { optional: false },
-    };
+    props = props({
+        addDecor: types.function(),
+        close: types.function(),
+    });
 
     setup() {
         this.dialog = useService("dialog");

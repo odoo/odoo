@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { useFloorPlanStore } from "@pos_restaurant/app/hooks/floor_plan_hook";
 import { AddTablePopup } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/add_table_popup/add_table_popup";
 import { AddDecorPopup } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup";
@@ -12,10 +12,9 @@ export class FloorEditorToolBar extends Component {
         Dropdown,
         DropdownItem,
     };
-
-    static props = {
-        actionHandler: Function,
-    };
+    props = props({
+        actionHandler: types.function(),
+    });
 
     setup() {
         this.floorStore = useFloorPlanStore();
