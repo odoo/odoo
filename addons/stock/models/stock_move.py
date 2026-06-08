@@ -320,7 +320,7 @@ class StockMove(models.Model):
     @api.depends('picking_id.priority')
     def _compute_priority(self):
         for move in self:
-            move.priority = move.picking_id.priority or '0'
+            move.priority = move.picking_id.priority or move.priority or '0'
 
     @api.depends('picking_id.picking_type_id')
     def _compute_picking_type_id(self):
@@ -1582,7 +1582,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _key_assign_picking(self):
         self.ensure_one()
-        keys = (self.reference_ids, self.location_id, self.location_dest_id, self.picking_type_id)
+        keys = (self.reference_ids, self.location_id, self.location_dest_id, self.picking_type_id, self.priority)
         if self.move_orig_ids.picking_id and not self.reference_ids:
             keys += (self.move_orig_ids.picking_id, )
         return keys
@@ -1733,6 +1733,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             'user_id': False,
             'partner_id': self.env.context.get('move_picking_partner_id', partner).id,
             'picking_type_id': self.mapped('picking_type_id').id,
+            'priority': '1' if any(move.priority == '1' for move in self) else '0',
             'location_id': self.mapped('location_id').id,
         }
         if self.location_dest_id.ids:
