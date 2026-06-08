@@ -5107,7 +5107,10 @@ class AccountTax(models.Model):
                 (ubl_cii_tax_category_code := tax_values.get('ubl_cii_tax_category_code'))
                 and 'ubl_cii_tax_category_code' in self._fields
             ):
-                tax_domain &= Domain('ubl_cii_tax_category_code', 'in', (ubl_cii_tax_category_code, False))
+                allowed_tax_category_codes = [ubl_cii_tax_category_code, False]
+                if company.vat_disabled and ubl_cii_tax_category_code != 'O':
+                    allowed_tax_category_codes.append('O')
+                tax_domain &= Domain('ubl_cii_tax_category_code', 'in', allowed_tax_category_codes)
                 orders.insert(0, 'ubl_cii_tax_category_code')
             if extra_domain := tax_values.get("extra_domain"):
                 tax_domain &= Domain(extra_domain)

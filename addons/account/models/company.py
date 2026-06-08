@@ -223,6 +223,16 @@ class ResCompany(models.Model):
         compute='_compute_account_enabled_tax_country_ids',
         help="Technical field containing the countries for which this company is using tax-related features"
              "(hence the ones for which l10n modules need to show tax-related fields).")
+    vat_disabled = fields.Boolean(
+        string="Not Subject to VAT",
+        compute='_compute_vat_disabled',
+        inverse='_inverse_vat_disabled',
+        store=True,
+    )
+    vat_disabled_available = fields.Boolean(
+        string="'Not Subject to VAT' Available",
+        compute='_compute_vat_disabled_available',
+    )
 
     # Cash basis taxes
     tax_exigibility = fields.Boolean(string='Use Cash Basis')
@@ -477,6 +487,46 @@ class ResCompany(models.Model):
             ])
             record.account_enabled_tax_country_ids = foreign_vat_fpos.country_id + record.account_fiscal_country_id
 
+    @api.depends('country_id')
+    def _compute_vat_disabled_available(self):
+        for company in self:
+            company.vat_disabled_available = 'EU' in company.account_fiscal_country_group_codes or company.country_code == 'CH'
+
+    @api.depends('parent_id')
+    def _compute_vat_disabled(self):
+        for company in self:
+            if company.parent_id:
+                company.vat_disabled = company.parent_id.vat_disabled
+
+    def _inverse_vat_disabled(self):
+        """
+        This function does two things:
+        1. Enables or disables Sales Tax when VAT applicability is changed.
+        2. Changes the default sale tax of the company to a tax specified in the localisation.
+        Can be overridden by localisations to perform specific actions when VAT is disabled.
+        """
+        for company in self:
+            if company.parent_id or not company.vat_disabled_available or not company.chart_template:
+                continue
+            ChartTemplate = self.env['account.chart.template'].with_company(self)
+            chart_template_data = ChartTemplate._get_chart_template_data(company.chart_template)
+
+            tax_data = chart_template_data['account.tax']
+            default_inactive_tax_ids = {ChartTemplate.ref(key).id for key, values in tax_data.items() if not values.get('active', True)}
+
+            taxes_to_toggle = self.env['account.tax'].with_context(active_test=False).search([
+                *self.env['account.tax']._check_company_domain(company),
+                ('type_tax_use', '=', 'sale'),
+                ('id', 'not in', default_inactive_tax_ids),
+            ])
+            company_data = chart_template_data['res.company'][company.id]
+            default_sale_tax = ChartTemplate.ref(company_data['account_sale_tax_id'], raise_if_not_found=None)
+            no_vat_tax = self._get_default_vat_disabled_tax()
+
+            taxes_to_toggle.write({'active': not company.vat_disabled})
+            company.account_sale_tax_id = no_vat_tax if company.vat_disabled else default_sale_tax
+            no_vat_tax.active = company.vat_disabled
+
     @api.depends('terms_type')
     def _compute_invoice_terms_html(self):
         for company in self.filtered(lambda company: is_html_empty(company.invoice_terms_html) and company.terms_type == 'html'):
@@ -541,9 +591,14 @@ class ResCompany(models.Model):
             limit=1,
         ))
 
+    def _get_default_vat_disabled_tax(self):
+        """Return the default tax to be used as sale tax when the company is `vat_disabled`. Needs to be overridden by localisations."""
+        return self.env['account.tax']
+
     def _initiate_account_onboardings(self):
         account_onboarding_routes = [
             'account_dashboard',
+            'account_return_dashboard',
         ]
         onboardings = self.env['onboarding.onboarding'].sudo().search([('route_name', 'in', account_onboarding_routes)])
         for company in self:
