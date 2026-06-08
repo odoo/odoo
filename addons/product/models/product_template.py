@@ -552,6 +552,22 @@ class ProductTemplate(models.Model):
             result = {'ids': [], 'messages': [], 'nextrow': 0}
 
         if data_list_products:
+            # Merge identical products
+            column_t_no = None
+            if 'template_id' in fields:
+                column_t_no = fields.index('template_id')
+            elif 'name' in fields:
+                column_t_no = fields.index('name')
+            elif 'id' in fields:
+                column_t_no = fields.index('id')
+            if column_t_no is not None:
+                reduced_list = {}
+                for values in data_list_products:
+                    idx = (values[column_t_no], *(sorted(values[column_no].strip().split(','))))
+                    reduced_list[idx] = values
+                data_list_products = list(reduced_list.values())
+
+            # load products
             ProductProduct = self.env['product.product'].with_context(from_template_import=True)
             result_product = ProductProduct.load(fields, data_list_products)
             if any(message['type'] == 'error' for message in result_product['messages']):
