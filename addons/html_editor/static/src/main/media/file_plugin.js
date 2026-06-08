@@ -11,7 +11,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export class FilePlugin extends Plugin {
     static id = "file";
-    static dependencies = ["dom", "history", "selection"];
+    static dependencies = ["clipboard", "dom", "history", "selection"];
     static defaultConfig = {
         allowFile: true,
     };
@@ -57,6 +57,16 @@ export class FilePlugin extends Plugin {
         is_powerbox_available_predicates: (node) => {
             if (closestElement(node, ".o_file_box")) {
                 return false;
+            }
+        },
+
+        /** Overrides */
+        paste_overrides: (selection, clipboardData) => {
+            if (closestElement(selection.anchorNode, ".o_file_box")) {
+                this.dependencies.clipboard.pasteText(
+                    clipboardData.getData("text/plain")
+                );
+                return true;
             }
         },
     };
