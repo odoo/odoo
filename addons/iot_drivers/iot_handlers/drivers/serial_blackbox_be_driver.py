@@ -103,7 +103,10 @@ class BlackBoxDriver(SerialDriver):
                     if len(buffer) > 0 and buffer[0:1] == ACK:
                         return True
             except serial.SerialException:
-                _logger.exception('Error while probing %s with protocol %s', device, protocol.name)
+                _logger.warning(
+                    "Error while probing %s with protocol %s",
+                    device, protocol.name, exc_info=True, stack_info=True,
+                )
             time.sleep(3)
         return False
 
