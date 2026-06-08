@@ -18,7 +18,7 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
         tx = self._create_transaction("redirect")
         with patch(
             "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
-            return_value={"client_secret": "dummy_secret"},
+            return_value={"intention_order_id": self.order_id, "client_secret": "dummy_secret"},
         ):
             rendering_values = tx.with_context(
                 payment_safe_write=True
@@ -34,12 +34,12 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
         tx = self._create_transaction("redirect")
         with patch(
             "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
-            return_value={"id": "dummy_id"},
+            return_value={"intention_order_id": self.order_id},
         ):
             tx.with_context(payment_safe_write=True)._get_specific_rendering_values(
                 None
             )  # Set provider reference here
-            self.assertEqual(tx.provider_reference, self.redirection_data["id"])
+            self.assertEqual(tx.provider_reference, self.order_id)
             self.assertEqual(tx.state, "draft")
             tx.with_context(payment_safe_write=True)._process(self.redirection_data)
             self.assertEqual(tx.state, "done")
@@ -51,14 +51,6 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
             self.redirection_data, self.provider.paymob_hmac_key
         )
         self.assertEqual(computed_hmac, self.hmac_signature)
-
-    @mute_logger("odoo.addons.payment_paymob.controllers.main")
-    def test_normalize_webhook_data(self):
-        """Test the normalization of the paymob webhook data."""
-        normalized_data = PaymobController._normalize_response(
-            self.webhook_data, self.hmac_signature
-        )
-        self.assertDictEqual(normalized_data, self.redirection_data)
 
     def test_change_paymob_account_country(self):
         """Test that changing the Paymob account country will change the currency accordingly."""

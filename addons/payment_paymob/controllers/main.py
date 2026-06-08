@@ -5,6 +5,8 @@ import hmac
 import json
 import pprint
 
+from werkzeug.exceptions import Forbidden
+
 from odoo import http
 from odoo.http import request
 
@@ -28,6 +30,9 @@ class PaymobController(http.Controller):
         _logger.info("Handling redirection from Paymob with data:\n%s", pprint.pformat(data))
         tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("paymob", data)
         if tx_sudo:
+            if data["order"] != tx_sudo.provider_reference:
+                raise Forbidden()
+
             received_signature = data.get("hmac", "")
             hmac_key = tx_sudo.provider_id.paymob_hmac_key
             expected_signature = PaymobController._compute_signature(data, hmac_key)
@@ -52,9 +57,12 @@ class PaymobController(http.Controller):
             self.env["payment.transaction"].sudo()._search_by_reference("paymob", normalized_data)
         )
         if tx_sudo:
+            if normalized_data["order"] != tx_sudo.provider_reference:
+                raise Forbidden()
+
             received_signature = data.get("hmac", "")
             hmac_key = tx_sudo.provider_id.paymob_hmac_key
-            expected_signature = PaymobController._compute_signature(data, hmac_key)
+            expected_signature = PaymobController._compute_signature(normalized_data, hmac_key)
             payment_utils.verify_signature(received_signature, expected_signature)
             tx_sudo._record(normalized_data)
         return ""  # Acknowledge the notification

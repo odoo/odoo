@@ -28,8 +28,7 @@ class PaymobCommon(PaymentCommon):
             "2c2d37cd55ff98a46a0e28e1ccf2e4a907e6683aa5"
         )
 
-        cls.order_id = "123DUMMY456"
-
+        cls.order_id = "123"
         cls.redirection_data = {
             "amount_cents": "111111",
             "created_at": "2025-04-01T17:29:16.967925",
@@ -44,7 +43,7 @@ class PaymobCommon(PaymentCommon):
             "is_refunded": "false",
             "is_standalone_payment": "true",
             "is_voided": "false",
-            "order": "123",
+            "order": cls.order_id,
             "owner": "12",
             "pending": "false",
             "source_data.pan": "1111",
@@ -56,24 +55,26 @@ class PaymobCommon(PaymentCommon):
             "merchant_order_id": cls.reference,
         }
         cls.webhook_data = {
-            "amount_cents": 111111,
-            "created_at": "2025-04-01T17:29:16.967925",
-            "currency": cls.currency.name,
-            "error_occured": False,
-            "has_parent_transaction": False,
-            "id": "dummy_id",
-            "integration_id": 1234,
-            "is_3d_secure": True,
-            "is_auth": False,
-            "is_capture": False,
-            "is_hidden": False,
-            "is_refunded": False,
-            "is_standalone_payment": True,
-            "is_voided": False,
-            "order": {"id": 123, "merchant_order_id": cls.reference},
-            "owner": 12,
-            "pending": False,
-            "source_data": {"pan": "1111", "sub_type": "Visa", "type": "card"},
-            "success": True,
-            "data": {"message": "Approved"},
+            "obj": {
+                "amount_cents": 111111,
+                "created_at": "2025-04-01T17:29:16.967925",
+                "currency": cls.currency.name,
+                "error_occured": False,
+                "has_parent_transaction": False,
+                "id": "dummy_id",
+                "integration_id": 1234,
+                "is_3d_secure": True,
+                "is_auth": False,
+                "is_capture": False,
+                "is_hidden": False,
+                "is_refunded": False,
+                "is_standalone_payment": True,
+                "is_voided": False,
+                "order": {"id": cls.order_id, "merchant_order_id": cls.reference},
+                "owner": 12,
+                "pending": False,
+                "source_data": {"pan": "1111", "sub_type": "Visa", "type": "card"},
+                "success": True,
+                "data": {"message": "Approved"},
+            }
         }
