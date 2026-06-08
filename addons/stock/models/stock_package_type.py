@@ -22,7 +22,7 @@ class StockPackageType(models.Model):
     height = fields.Float('Height', help="Packaging Height")
     width = fields.Float('Width', help="Packaging Width")
     packaging_length = fields.Float('Length', help="Packaging Length")
-    base_volume = fields.Float('Technical field for type volume instead of replecating inline code.', compute='_compute_base_volume')
+    base_volume = fields.Float('Volume of the package type.', compute='_compute_base_volume')
     base_weight = fields.Float(string='Weight', help='Weight of the package type')
     max_weight = fields.Float('Max Weight', help='Maximum weight shippable in this packaging')
     barcode = fields.Char('Barcode', copy=False)
