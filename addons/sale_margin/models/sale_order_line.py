@@ -35,7 +35,7 @@ class SaleOrderLine(models.Model):
     @api.depends("product_id", "company_id", "currency_id", "product_uom_id")
     def _compute_purchase_price(self):
         for line in self:
-            if line.display_type:
+            if not line._is_product_line():
                 line.purchase_price = 0.0
                 continue
             if line.product_id:

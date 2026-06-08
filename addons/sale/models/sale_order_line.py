@@ -1328,10 +1328,6 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return self.product_id.id != self.company_id.sale_discount_product_id.id
 
-    def _is_discount_line(self):
-        self.ensure_one()
-        return self.product_id in self.company_id.sale_discount_product_id
-
     @api.depends(
         "invoice_lines",
         "invoice_lines.price_total",
@@ -1997,18 +1993,6 @@ class SaleOrderLine(models.Model):
 
     # === HOOKS ===#
 
-    def _is_product_line(self):
-        """Return whether it is a product line.
-
-        A product line is not a section/note, not a combo sub-line , and not a delivery.
-        """
-        self.ensure_one()
-        return not self.display_type and not self.combo_item_id and not self._is_delivery()
-
-    def _is_delivery(self):
-        self.ensure_one()
-        return False
-
     def _get_product_catalog_lines_data(self, **kwargs):
         """Return information about sale order lines in `self`.
 
@@ -2106,16 +2090,44 @@ class SaleOrderLine(models.Model):
             )
         return amount
 
+    def _get_discounted_price(self):
+        self.ensure_one()
+        return self.price_unit * (1 - (self.discount or 0.0) / 100.0)
+
+    def _is_product_line(self):
+        """Return whether it is a product line.
+
+        A product line is not a section/note, not a combo sub-line , and not a delivery.
+        """
+        self.ensure_one()
+        return (
+            not self.display_type
+            and not self._is_delivery()
+            and not self._is_downpayment()
+            and not self._is_discount_line()
+        )
+
+    def _is_delivery(self):
+        """Allow `sale` and modules without dependency to `delivery` to consider delivery lines."""
+        self.ensure_one()
+        return False
+
+    def _is_downpayment(self):
+        self.ensure_one()
+        # The "Down Payments" section shouldn't be considered a down payment line
+        return self.is_downpayment and not self.display_type
+
+    def _is_discount_line(self):
+        """Return whether the given line is a discount (global discount, loyalty reward, ...)."""
+        self.ensure_one()
+        return self.product_id and self.product_id == self.company_id.sale_discount_product_id
+
     @api.model
     def _date_in_the_past(self):
         if not "accrual_entry_date" in self.env.context:
             return False
         accrual_date = fields.Date.from_string(self.env.context["accrual_entry_date"])
         return accrual_date < fields.Date.context_today(self)
-
-    def _get_discounted_price(self):
-        self.ensure_one()
-        return self.price_unit * (1 - (self.discount or 0.0) / 100.0)
 
     def _get_linked_line(self):
         """Return the linked line of this line, if any.
@@ -2185,7 +2197,7 @@ class SaleOrderLine(models.Model):
         return (
             self.order_id._can_be_edited_on_portal()
             and not self.combo_item_id
-            and (not self.product_id or self.product_id != self.company_id.sale_discount_product_id)
+            and not self._is_discount_line()
         )
 
     def _get_rounding(self):

@@ -1382,7 +1382,7 @@ class SaleOrder(models.Model):
 
     def _get_not_rewarded_order_lines(self):
         return self.order_line.filtered(
-            lambda line: not line.display_type and not line.is_downpayment and not line.reward_id
+            lambda line: line._is_product_line() and not line.reward_id and not line.combo_item_id
         )
 
     def _get_order_line_price(self, order_line, price_type):
@@ -1398,9 +1398,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
 
         # Prepare quantities
-        order_lines = self._get_not_rewarded_order_lines().filtered(
-            lambda line: not line.combo_item_id
-        )
+        order_lines = self._get_not_rewarded_order_lines()
         productless_order_lines = order_lines.filtered(lambda line: not line.product_id)
         products = order_lines.product_id
         products_qties = dict.fromkeys(products, 0)

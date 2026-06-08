@@ -441,6 +441,7 @@ class SaleOrderLine(models.Model):
             self.product_type == "consu"
             and self._is_product_line()
             and self.has_valued_move_ids()
+            and not self.combo_item_id
         )
 
     def has_valued_move_ids(self):
