@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
-from unittest.mock import patch
+from imaplib import IMAP4
+from unittest.mock import Mock, patch
 
+from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, mute_logger
 
 
@@ -104,3 +106,34 @@ class TestFetchmail(TransactionCase):
             self.assertIs(exc, connection_failed_exception)
             self.assertEqual(server.state, 'draft')
             self.assertIn('WARNING:odoo.addons.base.models.ir_cron:Deactivating fetchmail imap server test deactivation server (too many failures)', cron_log_catcher.output)
+
+
+class TestFetchmailOAuthErrors(TransactionCase):
+    def test_fetchmail_imap_login_error_raised_as_usererror(self):
+        """IMAP login errors should be converted to UserError, not traceback."""
+        mail_server = self.env['fetchmail.server'].create({
+            'name': 'Test Server',
+            'server': 'imap.example.com',
+            'port': 993,
+            'is_ssl': True,
+        })
+        mocked_connection = Mock()
+        error_message = "Authentication failed: AUTHENTICATIONFAILED"
+
+        with (
+            patch('odoo.addons.mail.models.fetchmail.IMAP4Connection', return_value=mocked_connection),
+            patch.object(
+                self.registry['fetchmail.server'],
+                '_imap_login',
+                side_effect=IMAP4.error('AUTHENTICATIONFAILED'),
+            ),
+            patch.object(
+                self.registry['fetchmail.server'],
+                '_imap_login_error_message',
+                return_value=error_message,
+            ),
+        ):
+            with self.assertRaises(UserError) as error:
+                mail_server.connect()
+
+            self.assertEqual(str(error.exception), error_message)
