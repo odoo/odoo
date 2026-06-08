@@ -574,6 +574,20 @@ class OdooPdfFileWriter(PdfFileWriter):
 
         pages = self._root_object['/Pages']['/Kids']
 
+        # [PDF/A 6.3.2-1] Except for Popup annotations, all annotation dictionaries shall contain the /F key
+        # [PDF/A 6.3.2-2] The /F key must have Print flag (bit 4) set and Hidden/Invisible/ToggleNoView/NoView clear
+        # Value 4 = Print flag only, satisfying both requirements
+        for page in pages:
+            page_dict = page.getObject()
+            annots_obj = page_dict.get('/Annots')
+            if not annots_obj:
+                continue
+            for annot_ref in annots_obj.getObject():
+                annot = annot_ref.getObject()
+                subtype = annot.get('/Subtype')
+                if not (subtype and str(subtype) == '/Popup'):
+                    annot[NameObject('/F')] = NumberObject(4)
+
         # PDF/A needs the glyphs width array embedded in the pdf to be consistent with the ones from the font file.
         # But it seems like it is not the case when exporting from wkhtmltopdf.
         try:
