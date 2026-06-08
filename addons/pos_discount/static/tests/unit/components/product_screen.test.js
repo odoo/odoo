@@ -1,4 +1,5 @@
 import { animationFrame, expect, test } from "@odoo/hoot";
+import { click, waitFor } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupPosEnv, expectFormattedPrice } from "@point_of_sale/../tests/unit/utils";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
@@ -68,4 +69,53 @@ test("addProductToOrder reapplies the global discount", async () => {
     expect(order.priceIncl).toBeCloseTo(6.21, { margin: 1e-12 });
     expect(order.priceExcl).toBe(5.4);
     expect(order.amountTaxes).toBe(0.81);
+});
+
+test("pos_discount_numpad", async () => {
+    const store = await setupPosEnv();
+    store.config.discount_pc = 20;
+    store.session.state = "opened";
+
+    const order = store.addNewOrder();
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: store.models["product.template"].get(5),
+            qty: 4,
+            price_unit: 25,
+        },
+        order
+    );
+    const productScreen = await mountWithCleanup(ProductScreen, {
+        props: { orderUuid: order.uuid },
+    });
+
+    productScreen.displayAllControlPopup();
+    await waitFor(".modal .js_discount");
+    await click(".modal .js_discount");
+    await waitFor(".modal-title:contains('Discount')");
+    expect(".modal .input-value").toHaveText("20 %");
+    await click(".modal .number-popup-type-fixed");
+    await waitFor(".modal .number-popup-type-fixed.text-primary");
+    await click(".modal .numpad-button[value='1']");
+    await click(".modal .numpad-button[value='0']");
+    expect(".modal .number-popup-type-fixed").toHaveClass("text-primary");
+    await waitFor(".modal .input-value:contains('$ 10.00')");
+    await click(".modal .pos-number-popup .modal-footer .btn-primary");
+    await animationFrame();
+
+    expect(order.priceIncl).toBe(105);
+
+    productScreen.displayAllControlPopup();
+    await waitFor(".modal .js_discount");
+    await click(".modal .js_discount");
+    await waitFor(".modal-title:contains('Discount')");
+    expect(".modal .input-value").toHaveText("20 %");
+    await click(".modal .numpad-button[value='2']");
+    await click(".modal .numpad-button[value='5']");
+    expect(".modal .number-popup-type-percent").toHaveClass("text-primary");
+    await waitFor(".modal .input-value:contains('25 %')");
+    await click(".modal .pos-number-popup .modal-footer .btn-primary");
+    await animationFrame();
+
+    expect(order.priceIncl).toBe(86.25);
 });
