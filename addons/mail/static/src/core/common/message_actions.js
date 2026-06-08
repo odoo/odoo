@@ -36,7 +36,7 @@ registerMessageAction("reaction", {
     componentProps: ({ message, owner }) => ({
         message,
         action: messageActionsRegistry.get("reaction"),
-        messageActive: owner.isActive,
+        messageActive: owner.isActive(),
     }),
     componentCondition: ({ owner }) => !isMobileOS() && !owner.isMessageContextMenu,
     condition: ({ message, thread }) => message.canAddReaction(thread),
