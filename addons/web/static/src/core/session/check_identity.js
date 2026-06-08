@@ -343,7 +343,6 @@ registry.category("services").add("check_identity", checkIdentityService);
 
 // Patch RPC to replay it automatically when the identity is verified
 const originalRpc = rpc._rpc;
-
 rpc._rpc = function (...args) {
     const originalPromise = originalRpc(...args);
     const promise = originalPromise.catch(async (error) => {
@@ -356,3 +355,4 @@ rpc._rpc = function (...args) {
     promise.abort = originalPromise.abort;
     return promise;
 };
+rpc._originalRpc = originalRpc;
