@@ -205,6 +205,23 @@ describe("file command", () => {
             // ArrowRight at end should do nothing.
             await press("ArrowRight");
             expect(getContent(fileNameEl)).toBe("file.txt[]");
+
+            // Delete all content to make the file name empty.
+            editor.shared.selection.setSelection({
+                anchorNode: fileNameEl,
+                anchorOffset: 0,
+                focusNode: fileNameEl,
+                focusOffset: nodeSize(fileNameEl),
+            });
+            await animationFrame();
+            await press("Backspace");
+            await animationFrame();
+
+            // ArrowLeft and ArrowRight should do nothing in an empty file name.
+            await press("ArrowLeft");
+            expect(getContent(fileNameEl)).toBe("[]<br>");
+            await press("ArrowRight");
+            expect(getContent(fileNameEl)).toBe("[]<br>");
         });
 
         test.tags("desktop");
