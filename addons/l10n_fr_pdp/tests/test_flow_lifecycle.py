@@ -1188,7 +1188,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         )
         initial_flow = invoice.l10n_fr_pdp_last_flow_id
 
-        invoice.with_context(l10n_fr_pdp_bypass_draft_check=True).button_draft()
+        invoice.button_draft()
         invoice.invoice_line_ids.price_unit = 150.0
         invoice.action_post()
         invoice.is_move_sent = True
@@ -1643,7 +1643,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         )
         flow = kept_invoice.l10n_fr_pdp_last_flow_id
 
-        draft_invoice.with_context(l10n_fr_pdp_bypass_draft_check=True).button_draft()
+        draft_invoice.button_draft()
         cancelled_invoice.button_cancel()
         self._refresh_pdp_fields(draft_invoice | cancelled_invoice)
         xml = self._build_flow_xml(flow)
@@ -2041,3 +2041,30 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertFalse(self.company.l10n_fr_pdp_flow_10_start_date)
         self.company._force_update_l10n_fr_f10_moves()
         self.assertTrue(invoice.l10n_fr_pdp_last_flow_id)
+
+    def test_reset_move_to_draft(self):
+        invoice = self._create_form_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-09-03',
+            lines=[{
+                'price_unit': 100.0,
+                'tax_ids': self._get_tax_on_payment_20(),
+            }],
+        )
+        self.assertFalse(invoice.l10n_fr_pdp_last_flow_id.initial_flow_id)  # IN
+        self.assertTrue(invoice.l10n_fr_pdp_last_flow_id)  # IN
+        self._run_send_cron('2025-09-20', identifier='FULL-FORM-RE-INITIAL')
+        invoice.button_draft()
+        # check RE flow has been created and can successfully build a payload
+        re_flow = self.env['l10n.fr.pdp.reports.flow'].search([('initial_flow_id', '!=', False)])
+        self.assertFalse(re_flow.payload_id)
+        xml = self._build_flow_xml(re_flow)
+        # RE with no invoice
+        invoices = xml.findall('./TransactionsReport/Invoice')
+        self.assertFalse(invoices)
+        invoice.action_post()
+        # RE with re-posted invoice
+        xml = self._build_flow_xml(re_flow)
+        invoices = xml.findall('./TransactionsReport/Invoice')
+        self.assertEqual(len(invoices), 1)
+        self.assertEqual(invoices[0].findtext('ID'), invoice.name)
