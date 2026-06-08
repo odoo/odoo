@@ -995,7 +995,56 @@ test("translating a char field inside one2many saves the parent record", async (
     expect.verifySteps(["partner.type"]);
 });
 
-test("translation dialog opens in editable list when the required field is set", async () =>{
+test("translate button not clickable for an unsaved record inside a one2many", async () => {
+    Partner._fields.type_id = fields.Many2one({
+        relation: "partner.type",
+    });
+    PartnerType._fields.partner_ids = fields.One2many({
+        string: "Partners",
+        relation: "res.partner",
+        relation_field: "type_id",
+    });
+    Partner._fields.name.translate = true;
+
+    PartnerType._records[0].partner_ids = [1];
+
+    serverState.lang = "en_US";
+    serverState.multiLang = true;
+
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+    ]);
+
+    await mountView({
+        type: "form",
+        resModel: "partner.type",
+        resId: 12,
+        arch: `
+        <form>
+            <field name="partner_ids">
+                <list editable="bottom">
+                    <field name="name"/>
+                </list>
+            </field>
+        </form>`,
+    });
+
+    await contains(".o_list_char").click();
+    expect(".o_selected_row .btn.o_field_translate").toHaveCount(1);
+
+    await contains(".o_field_x2many_list_row_add button").click();
+    await fieldInput("name").edit("new line", { confirm: false });
+
+    expect(".o_selected_row .btn.o_field_translate").toHaveClass("text-muted");
+    expect(".o_selected_row .btn.o_field_translate").toHaveAttribute(
+        "data-tooltip",
+        "Save this record and its parent to translate"
+    );
+    await contains(".o_selected_row .btn.o_field_translate").click(); // nothing should happen
+});
+
+test("translation dialog opens in editable list when the required field is set", async () => {
     Partner._fields.name.translate = true;
     Partner._fields.name.required = true;
 
