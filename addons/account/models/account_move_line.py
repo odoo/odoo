@@ -1240,7 +1240,7 @@ class AccountMoveLine(models.Model):
     @api.depends('product_id')
     def _compute_tax_ids(self):
         for line in self:
-            if line.display_type in ('line_section', 'line_subsection', 'line_note', 'payment_term', 'cogs') or line.is_imported:
+            if line.company_id.vat_disabled or line.display_type in ('line_section', 'line_subsection', 'line_note', 'payment_term', 'cogs') or line.is_imported:
                 continue
             # /!\ Don't remove existing taxes if there is no explicit taxes set on the account.
             account_taxes = line.account_id.sudo().tax_ids

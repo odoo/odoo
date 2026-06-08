@@ -229,6 +229,7 @@ class ResCompany(models.Model):
         compute='_compute_account_enabled_tax_country_ids',
         help="Technical field containing the countries for which this company is using tax-related features"
              "(hence the ones for which l10n modules need to show tax-related fields).")
+    vat_disabled = fields.Boolean(default=False, string="Not Subject to VAT", inverse='_inverse_vat_disabled')
 
     # Cash basis taxes
     tax_exigibility = fields.Boolean(string='Use Cash Basis')
@@ -496,6 +497,10 @@ class ResCompany(models.Model):
             domain=[],
             limit=1,
         ))
+
+    def _inverse_vat_disabled(self):
+        """Can be overridden by localisations to perform specific actions when VAT is disabled."""
+        pass
 
     def _initiate_account_onboardings(self):
         account_onboarding_routes = [

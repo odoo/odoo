@@ -1,0 +1,46 @@
+<templates>
+
+    <t t-name="account.InvoiceGuide">
+         <div class="d-flex flex-row bill_guide_container mb-3">
+            <div class="bill_guide_left d-flex align-items-center justify-content-center py-3">
+                <div>
+                    <div class="text-center">
+                        <img src="/web/static/img/folder.svg" alt="Invoice Guide"/>
+                    </div>
+                    <div class="text-center mt-2">
+                        <a class="btn btn-link px-0 fw-normal"
+                            name="action_activate_einvoicing"
+                            groups="account.group_account_invoice"
+                            t-out="this.kanbanDashboard.onboarding_action_data.title"
+                            t-on-click="this.handleActionClick"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="separator_wrapper d-flex justify-content-center flex-shrink-1">
+                <div class="word-separator d-flex flex-column align-items-center">
+                    <div class="vertical-line border-start flex-grow-1 mt-2"/>
+                    <div class="m-2">
+                        and
+                    </div>
+                    <div class="vertical-line border-start flex-grow-1 mb-2"/>
+                </div>
+            </div>
+            <div class="bill_guide_right d-flex flex-column align-items-center justify-content-center py-3">
+                <div class="text-center">
+                    <img src="/web/static/img/folder.svg" alt="Invoice Guide"/>
+                </div>
+                <div class="text-center mt-2">
+                    <a href="#"
+                        type="object"
+                        class="btn btn-link px-0 fw-normal"
+                        t-on-click="this.openCompanyDetailsPage"
+                    >
+                        Set Company Data
+                    </a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

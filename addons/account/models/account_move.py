@@ -355,6 +355,7 @@ class AccountMove(models.Model):
         readonly=False,
         help="Exclude this journal entry from follow-up reports."
     )
+    company_vat_disabled = fields.Boolean(related='company_id.vat_disabled')
 
     # === Hash Fields === #
     restrict_mode_hash_table = fields.Boolean(related='journal_id.restrict_mode_hash_table')

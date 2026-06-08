@@ -34,9 +34,9 @@
                                 <t t-if="journal_type == 'general'" t-call="JournalMiscelaneous"/>
                             </div>
                             <div class="row mt-auto">
-                                <t t-if="['bank', 'cash', 'credit', 'sale'].includes(journal_type)
+                                <t t-if="['bank', 'cash', 'credit'].includes(journal_type)
                                             and !bank_unconfigured
-                                            or (journal_type == 'purchase' and !journal_is_empty)"
+                                            or (['purchase', 'sale'].includes(journal_type) and !journal_is_empty)"
                                     t-call="JournalBodyGraph"/>
                             </div>
                         </div>
@@ -308,10 +308,10 @@
                     <t t-name="JournalBodySalePurchase" id="account.JournalBodySalePurchase">
                         <div class="col mb-3 mb-sm-0" name="kanban_primary_left">
                             <t t-if="journal_type == 'sale'">
-                                <button type="object" name="action_create_new" class="btn btn-primary" groups="account.group_account_invoice">
-                                    New
-                                </button>
-                                <widget name="account_onboarding" t-if="journal_is_empty and dashboard['onboarding']"/>
+                                <button type="object" name="action_create_new" class="btn btn-primary" groups="account.group_account_invoice">New</button>
+                                <div t-if="journal_is_empty">
+                                    <widget name="invoice_upload_guide"/>
+                                </div>
                             </t>
                             <t t-if="journal_type == 'purchase'">
                                 <div t-if="!journal_is_empty" class="d-flex">

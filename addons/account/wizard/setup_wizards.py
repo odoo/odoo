@@ -19,6 +19,7 @@ class AccountFinancialYearOp(models.TransientModel):
     fiscalyear_last_month = fields.Selection(related="company_id.fiscalyear_last_month", readonly=False,
                                              required=True,
                                              help="The last day of the month will be used if the chosen day doesn't exist.")
+    company_vat_disabled = fields.Boolean(related="company_id.vat_disabled")
 
     @api.depends('company_id.account_opening_move_id')
     def _compute_opening_move_posted(self):
