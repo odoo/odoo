@@ -20,3 +20,16 @@ class AccountJournal(models.Model):
             ('proxy_type', '=', 'pdp'),
         ])
         edi_users._pdp_get_regulatory_documents()
+
+    def _get_onboarding_action_data(self):
+        if not self.company_id._peppol_is_french_company():
+            return super()._get_onboarding_action_data()
+        if self.company_id.account_peppol_proxy_state == 'not_registered':
+            return {
+                'title': self.env._("Activate Electronic Invoicing"),
+                'action': self.company_id._action_open_pdp_form(),
+            }
+        return {
+            'title': self.env._("Electronic Invoicing Settings"),
+            'action': self.env.ref('account.action_account_config')._get_action_dict(),
+        }
