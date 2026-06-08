@@ -15,6 +15,7 @@ class TestImportFiles(TransactionCase):
             model_str = model.replace(".", "_")
             filepath = f"product/static/xls/{model_str}.xls"
         file_content = file_open(filepath, "rb").read()
+
         import_wizard = self.env["base_import.import"].create(  # noqa: OLS03001
             {
                 "res_model": model,
@@ -22,12 +23,12 @@ class TestImportFiles(TransactionCase):
                 "file_type": "application/vnd.ms-excel",
             }
         )
-
         result = import_wizard.parse_preview(
             {
                 "has_headers": True,
             }
         )
+
         self.assertIsNone(result.get("error"))
         field_names = ['/'.join(v) for v in result["matches"].values()]
         results = import_wizard.execute_import(
@@ -171,6 +172,11 @@ class TestImportFiles(TransactionCase):
         if 'stock' in addons:
             self.assertEqual(self.env.ref('__import__.product_template_1').qty_available, 3.0)
             self.assertEqual(self.env.ref('__import__.product_product_1').qty_available, 100.0)
+
+    def test_import_create_product_duplicate_xls(self):
+        results = self.import_product_xls("product.product", filepath="product/static/xls/test_duplicated_variants.xls")
+        self.assertFalse(results["messages"])
+        self.assertEqual(self.env['product.product'].search([], order="id DESC", limit=1).volume, 33)
 
     def test_import_create_product_template_xls(self):
         results = self.import_product_xls("product.template", filepath="product/static/xls/test_import_template.xls")
