@@ -4883,7 +4883,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'crm_iap_enrich',
             'crm_iap_mine',
             'data_cleaning',
-            'data_merge',
             'data_recycle',
             'delivery',
             'delivery_dhl',
