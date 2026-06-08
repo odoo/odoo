@@ -423,6 +423,123 @@ class EmployeePortalAPI(http.Controller):
         emp.sudo().write({'x_mobile_no': mobile, 'work_email': email})
         return self._ok('Profile updated successfully')
 
+    # ── GET /api/employee-portal/service-history ─────────────────────────────
+
+    @http.route(
+        '/api/employee-portal/service-history',
+        auth='none', type='http', methods=['GET'], csrf=False,
+    )
+    def get_service_history(self, **_kw):
+        """Return parsed service history timeline for the logged-in employee."""
+        import re
+        emp, err = self._require_employee_session()
+        if err:
+            return err
+
+        raw = (emp.x_service_history or '').strip()
+        history = []
+        date_pat = r'(\d{2}[./]\d{2}[./]\d{2,4})'
+
+        def _fmt_date(d):
+            try:
+                d = d.replace('/', '.')
+                parts = d.split('.')
+                day, month, year = parts[0], parts[1], parts[2]
+                if len(year) == 2:
+                    year = ('19' if int(year) >= 50 else '20') + year
+                return f'{year}-{month}-{day}'
+            except Exception:
+                return d
+
+        DESIG_PAT = re.compile(
+            r'(GRADE\s+[IVX]+\s+WARDER|HEAD\s+WARDER|CHIEF\s+HEAD\s+WARDER|'
+            r'CHW|ASSISTANT\s+JAILE?R?|ASST\.?\s+JAILE?R?|JAILE?R?|'
+            r'INSPECTOR|SUPERINTENDENT|DEPUTY\s+SUPERINTENDENT|'
+            r'GRADE\s+[IVX]+)',
+            re.IGNORECASE,
+        )
+        DITTO = {',,', ',', '"', "''"}
+
+        prev_designation = ''
+        first_entry = True
+
+        for line in raw.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            if re.match(r'^\[\d{2}-\w{3}-\d{4}\]', line):
+                continue
+
+            line_clean = re.sub(r'\bTILL\s*DATE\b', '', line, flags=re.IGNORECASE).strip()
+            dates = re.findall(date_pat, line_clean)
+
+            if dates:
+                first_date = dates[0]
+                pre_parts = re.split(date_pat, line_clean, maxsplit=1)
+                before_dates = pre_parts[0].strip()
+                post_parts = re.split(date_pat, line_clean)
+                after_dates = post_parts[-1].strip().strip('.,').strip()
+                is_ditto = (not after_dates) or (after_dates in DITTO)
+
+                if not is_ditto:
+                    location = before_dates.rstrip(',').strip()
+                    designation = after_dates
+                else:
+                    m = DESIG_PAT.search(before_dates)
+                    if m:
+                        location = before_dates[:m.start()].strip().rstrip(',').strip()
+                        designation = before_dates[m.start():].strip().rstrip(',').strip()
+                    else:
+                        location = before_dates.rstrip(',').strip()
+                        designation = prev_designation
+
+                if not designation or designation in DITTO:
+                    designation = prev_designation
+                date = _fmt_date(first_date)
+            else:
+                location = ''
+                date = ''
+                designation = line
+
+            if not designation:
+                continue
+
+            lower = designation.lower()
+            if first_entry:
+                event_type = 'appointment'
+                first_entry = False
+            elif designation != prev_designation and any(
+                kw in lower for kw in ('grade i', 'head warder', 'jailer', 'chw', 'chief', 'asst', 'assistant', 'inspector', 'superintendent')
+            ) and not any(kw in lower for kw in ('grade ii', 'grade iii')):
+                event_type = 'promotion'
+            else:
+                event_type = 'posting'
+
+            def _make_title(designation, event_type, location):
+                if event_type == 'appointment':
+                    return f'Appointed as {designation}'
+                if event_type == 'promotion':
+                    return f'Promoted to {designation}'
+                loc = location.title() if location else designation
+                return f'Posted to {loc}'
+
+            history.append({
+                'date': date,
+                'title': _make_title(designation, event_type, location),
+                'location': location.title() if location else '',
+                'event_type': event_type,
+            })
+            prev_designation = designation
+
+        reversed_history = list(reversed(history))
+        for i, entry in enumerate(reversed_history):
+            if i == 0:
+                entry['event_type'] = 'appointment'
+            elif entry['event_type'] == 'appointment':
+                entry['event_type'] = 'posting'
+
+        return self._ok(history=reversed_history)
+
     # ── GET /api/employee-portal/transfers ───────────────────────────────────
 
     @http.route(
