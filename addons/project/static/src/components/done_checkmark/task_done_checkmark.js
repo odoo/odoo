@@ -1,19 +1,11 @@
-import { proxy } from "@odoo/owl";
-import { onRendered } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { BooleanToggleField, booleanToggleField } from "@web/views/fields/boolean_toggle/boolean_toggle_field";
 
 export class TaskCheckMark extends BooleanToggleField {
     static template = "project.TaskCheckMark";
 
-    setup() {
-        super.setup();
-        this.reached = proxy({
-            isReached: false,
-        });
-        onRendered(() => {
-            this.reached.isReached = this.props.record.data[this.props.name];
-        });
+    get isReached() {
+        return this.props.record.data[this.props.name];
     }
 
     async onChange(ev) {
