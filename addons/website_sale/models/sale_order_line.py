@@ -91,6 +91,7 @@ class SaleOrderLine(models.Model):
             bool(self.product_id)
             and self.product_id._is_add_to_cart_allowed()
             and self._is_product_line()
+            and not self.combo_item_id
         )
 
     def _get_cart_display_price(self):
@@ -192,3 +193,7 @@ class SaleOrderLine(models.Model):
                 self._add_warning_alert(self._get_shop_warning_stock(cart_qty, max(avl_qty, 0)))
                 return False
         return True
+
+    def _show_line_in_cart(self):
+        self.ensure_one()
+        return self._is_product_line() and not self.combo_item_id

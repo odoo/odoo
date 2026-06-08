@@ -172,7 +172,7 @@ class SaleOrder(models.Model):
                 to_log = {}
                 order.order_line.fetch(['product_uom_id', 'product_uom_qty', 'display_type', 'is_downpayment'])
                 for order_line in order.order_line:
-                    if order_line.display_type or order_line.is_downpayment:
+                    if not order_line._is_product_line():
                         continue
                     if order_line.product_uom_id.compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0)) < 0:
                         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))

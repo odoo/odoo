@@ -355,9 +355,7 @@ class SaleOrder(models.Model):
 
         # --- Compute order-line data only for unapplied programs ---
         # Mirrors the logic in _program_check_compute_points.
-        order_lines = self._get_not_rewarded_order_lines().filtered(
-            lambda line: not line.combo_item_id
-        )
+        order_lines = self._get_not_rewarded_order_lines()
         products = order_lines.product_id
         products_qties = dict.fromkeys(products, 0)
         for line in order_lines:
