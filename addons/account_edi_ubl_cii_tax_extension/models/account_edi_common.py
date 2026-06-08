@@ -102,7 +102,7 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _get_tax_exemption_reason(self, customer, supplier, tax):
         if tax and (code := tax.ubl_cii_tax_exemption_reason_code):
-            if (cocontractant_note := self._get_belgian_cocontractant_note(customer, supplier)):
+            if cocontractant_note := not tax.amount and tax.ubl_cii_tax_category_code == 'AE' and self._get_belgian_cocontractant_note(customer, supplier):
                 tax_exemption_reason = TAX_EXEMPTION_MAPPING.get(code)
                 tax_exemption_reason = f"{tax_exemption_reason} - {cocontractant_note}" if tax_exemption_reason else cocontractant_note
             else:
