@@ -771,12 +771,25 @@ class EmployeePortalAPI(http.Controller):
                             emp.company_id.id
                             or su_env['res.company'].search([], limit=1).id
                         )
+                        # Use work_email only if it's not already taken by another user.
+                        # Duplicate emails cause create() to fail — fall back to
+                        # a guaranteed-unique placeholder so every employee gets a user.
+                        candidate_email = emp.work_email or ''
+                        if candidate_email:
+                            su_env.cr.execute(
+                                'SELECT id FROM res_users WHERE email=%s LIMIT 1',
+                                (candidate_email,)
+                            )
+                            if su_env.cr.fetchone():
+                                candidate_email = f'{code}@tnpd.local'
+                        else:
+                            candidate_email = f'{code}@tnpd.local'
                         new_user = su_env['res.users'].with_context(
                             no_reset_password=True
                         ).create({
                             'name':        name,
                             'login':       code,
-                            'email':       emp.work_email or f'{code}@tnpd.local',
+                            'email':       candidate_email,
                             'company_id':  company_id,
                             'company_ids': [(6, 0, [company_id])],
                         })
