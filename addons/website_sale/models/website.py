@@ -573,7 +573,7 @@ class Website(models.Model):
             pricelists |= (
                 self
                 .env["res.country.group"]
-                .search([("country_ids.code", "=", country_code)])
+                .search([("country_ids.code", "=", country_code)]).sudo()
                 .pricelist_ids.filtered(
                     lambda pl: pl._is_available_on_website(self) and check_pricelist(pl)
                 )
@@ -581,8 +581,13 @@ class Website(models.Model):
 
         # no GeoIP or no pricelist for this country
         if not pricelists:
-            pricelists = pricelists.browse(website_pricelist_ids).filtered(
-                lambda pl: check_pricelist(pl) and not (country_code and pl.country_group_ids)
+            pricelists = (
+                pricelists
+                .browse(website_pricelist_ids)
+                .sudo()
+                .filtered(
+                    lambda pl: check_pricelist(pl) and not (country_code and pl.country_group_ids)
+                )
             )
 
         # if logged in, add partner pl (which is `property_product_pricelist`, might not be website
