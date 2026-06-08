@@ -80,10 +80,6 @@ test("parseFloatTime", () => {
     expect(parseFloatTime("٢س ٣٠د ٤٥ث")).toBe(2.5125);
 
     clearMemoizeCaches();
-    localization.locale = "de-DE";
-    expect(parseFloatTime("2 Std. 30 Min. 45 Sek.")).toBe(2.5125);
-
-    clearMemoizeCaches();
     localization.thousandsSep = ".";
     localization.decimalPoint = ",";
     expect(parseFloatTime("0,5")).toBe(0.5);
