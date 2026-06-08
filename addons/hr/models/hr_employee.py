@@ -2123,12 +2123,31 @@ class HrEmployee(models.Model):
     def _get_versions_with_contract_overlap_with_period(self, date_from, date_to):
         """
         Returns the versions of the employee between date_from and date_to
-        that have at least 1 day in contract during that period
+        that have at least 1 day in contract during that period and were not fully ammended
+        during the period (example : a contract ammended on 1st march and retrieving it in april period.
         """
-        return self.version_ids.filtered_domain([
+        candidate_versions = self.version_ids.filtered_domain([
             ('contract_date_start', '!=', False), ('contract_date_start', '<=', date_to),
             '|', ('contract_date_end', '>=', date_from), ('contract_date_end', '=', False),
         ])
+        versions_per_contract = defaultdict(lambda: self.env['hr.version'])
+        for version in candidate_versions:
+            key = (version.employee_id.id, version.contract_date_start, version.contract_date_end)
+            versions_per_contract[key] += version
+
+        result = self.env['hr.version']
+        for (employee, contract_start, contract_end), versions in versions_per_contract.items():
+            versions = versions.sorted('date_version')
+            for index, version in enumerate(versions):
+                # effective interval of this version within its contract
+                eff_start = contract_start if index == 0 else version.date_version
+                if index + 1 < len(versions):
+                    eff_end = versions[index + 1].date_version - relativedelta(days=1)
+                else:
+                    eff_end = contract_end or date.max
+                if eff_start <= date_to and eff_end >= date_from:
+                    result += version
+        return result.sorted('date_version')
 
     # ---------------------------------------------------------
     # Messaging
