@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="project.SubtaskCreate" class="subtask_create_input d-flex" owl="1">
+        <input type="text" title="Rename" 
+            class='o_input border-0 border-bottom py-1'
+            t-att-class="{'o_field_invalid border-danger': this.state.isFieldInvalid}"
+            t-custom-ref='subtaskCreateInput'
+            t-att-value="this.state.name"
+            t-att-placeholder="this.placeholder"
+            t-on-input="this._onInput"
+            t-on-click="this._onClick"
+            t-on-change="this._onNameChanged"
+            t-att-disabled="this.props.isReadonly"/>
+        <button t-on-click="this._onSaveClick" class="ms-auto fw-bold btn btn-link py-0 px-2">
+            SAVE
+        </button>
+    </div>
+</templates>

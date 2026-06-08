@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ActionMenus">
+        <div class="o_cp_action_menus d-flex pe-2 gap-1">
+            <div t-if="this.props.items.print?.length" class="d-inline-block">
+                <Dropdown beforeOpen.bind="this.loadPrintItems">
+                    <button class="btn btn-secondary" data-hotkey="shift+u">
+                        <i class="fa fa-print me-1"/>
+                        <span class="o_dropdown_title" t-out="this.props.printDropdownTitle"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-foreach="this.state.printItems" t-as="item" t-key="item.key">
+                            <DropdownItem
+                                    class="item.class"
+                                    onSelected="() => this.onItemSelected(item)"
+                                    t-out="item.description"
+                            />
+                        </t>
+                    </t>
+                </Dropdown>
+            </div>
+
+            <div t-if="this.actionItems.length" class="d-inline-block">
+                <Dropdown>
+                    <button class="btn btn-secondary" data-hotkey="u" data-available-offline="">
+                        <i class="fa fa-cog me-1"/>
+                        <span class="o_dropdown_title">Actions</span>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-set="currentGroup" t-value=""/>
+                        <t t-foreach="this.actionItems" t-as="item" t-key="item.key">
+                            <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
+                                <div role="separator" class="dropdown-divider"/>
+                            </t>
+                            <t t-if="item.Component" t-component="item.Component" t-props="item.props" />
+                            <DropdownItem
+                             t-else=""
+                             class="{ [item.class]: !!item.class, 'o_menu_item': true, 'pe-none text-muted opacity-50': this.offline.offline and !item.availableOffline }"
+                             onSelected="() => this.onItemSelected(item)">
+                                <i t-if="item.icon" t-att-class="item.icon + ' me-1 fa-fw oi-fw'"/>
+                                <t t-out="item.description"/>
+                            </DropdownItem>
+                            <t t-set="currentGroup" t-value="item.groupNumber"/>
+                        </t>
+                    </t>
+                </Dropdown>
+        </div>
+        </div>
+    </t>
+
+</templates>

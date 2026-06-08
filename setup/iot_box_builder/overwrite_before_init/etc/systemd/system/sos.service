@@ -1,0 +1,12 @@
+[Unit]
+Description=Odoo SOS service, meant to enable Tailscale on emergency
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/python3 /etc/sos-controller.py
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

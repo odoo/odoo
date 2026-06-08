@@ -1,0 +1,82 @@
+<odoo>
+    <template id="s_event_columns">
+        <section class="s_mail_block_event o_mail_snippet_general">
+            <div class="container">
+                <div class="row align-items-stretch">
+                    <t t-foreach="[1,2]" t-as="key">
+                        <div class="col-md-6 col-12 pt32 pb32 s_record_snapshot"
+                            data-model="event.event" data-fragment-key="columns"
+                            style="padding-left: 16px !important; padding-right: 16px !important;">
+                            <div class="card rounded h-100" style="border-radius: 5px !important; border-color: rgb(233, 236, 239) !important;">
+                                <div class="o_not_editable">
+                                    <img class="img img-fluid o_editable_media rounded mx-auto" alt="Example Image" style="object-fit: cover; width: 100%;
+                                        --box-border-bottom-left-radius: 0px; --box-border-bottom-right-radius: 0px; --box-border-top-right-radius: 0px; --box-border-top-left-radius: 0px;"
+                                        t-attf-src="/web/image/mass_mailing.s_event_default_image_{{key}}"
+                                        t-attf-data-original-src="/web/image/mass_mailing.s_event_default_image_{{key}}"/>
+                                </div>
+                                <div class="card-body ">
+                                    <h3 class="card-title">
+                                        <strong>Pick an event to promote it.</strong>
+                                    </h3>
+                                    <p><font style="color: rgb(99,99,99);">Click on this block and select your events in the right-hand menu.</font></p>
+                                    <p><font style="color: rgb(99,99,99);">Details will appear here</font></p>
+                                    <p>
+                                        <a href="#" target="_blank" class="btn btn-primary">Register Now</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="s_event_card">
+        <section class="s_text_image o_mail_snippet_general pt24 pb24">
+            <div class="container s_record_snapshot s_text_block o_cc" data-model="event.event" data-fragment-key="card">
+                <div>
+                    <div class="o_not_editable">
+                        <img class="img img-fluid o_editable_media rounded mx-auto" style="width: 100%;
+                            --box-border-bottom-left-radius: 0px; --box-border-bottom-right-radius: 0px; --box-border-top-right-radius: 0px; --box-border-top-left-radius: 0px;"
+                            src="/web/image/mass_mailing.s_event_default_image_2" alt="Example Image"
+                            data-original-src="/web/image/mass_mailing.s_event_default_image_2"/>
+                    </div>
+                    <div class="text-center pt8">
+                        <h3><strong>Pick an event to promote it!</strong></h3>
+                        <p><font style="color: rgb(99,99,99);">Click on this block and select your events in the right-hand menu.</font></p>
+                        <p><font style="color: rgb(99,99,99);">Details will appear here</font></p>
+                        <p>
+                            <a href="#" target="_blank" class="btn btn-primary">Register Now</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="s_event_aside">
+        <section class="s_text_image o_mail_snippet_general pt24 pb24">
+            <div class="container s_record_snapshot s_text_block o_cc" data-model="event.event" data-fragment-key="aside">
+                <div class="row align-items-center">
+                    <div class="col-md-6 col-12">
+                        <div class="o_not_editable">
+                            <img class="img img-fluid o_editable_media rounded mx-auto" data-name="Example Image" style="object-fit: cover; width: 100%;
+                                --box-border-bottom-left-radius: 0px; --box-border-bottom-right-radius: 0px; --box-border-top-right-radius: 0px; --box-border-top-left-radius: 0px;"
+                                src="/web/image/mass_mailing.s_event_default_image_1"
+                                data-original-src="/web/image/mass_mailing.s_event_default_image_1"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <h3><strong>Pick an event to promote it!</strong></h3>
+                        <p><font style="color: rgb(99,99,99);">Click on this block and select your events in the right-hand menu.</font></p>
+                        <p><font style="color: rgb(99,99,99);">Details will appear here</font></p>
+                        <p>
+                            <a href="#" target="_blank" class="btn btn-primary">Register Now</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

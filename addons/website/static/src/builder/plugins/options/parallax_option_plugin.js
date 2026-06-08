@@ -1,0 +1,161 @@
+import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
+import { filterExtends } from "@html_builder/utils/utils";
+import { Plugin } from "@html_editor/plugin";
+import { registry } from "@web/core/registry";
+import { WebsiteBackgroundOption } from "./background_option";
+import { BuilderAction } from "@html_builder/core/builder_action";
+import { withSequence } from "@html_editor/utils/resource";
+
+/**
+ * @typedef { Object } WebsiteParallaxShared
+ * @property { WebsiteParallaxPlugin['applyParallaxType'] } applyParallaxType
+ */
+
+export class WebsiteParallaxPlugin extends Plugin {
+    static id = "websiteParallaxPlugin";
+    static dependencies = ["builderActions", "backgroundImageOption", "builderOptions"];
+    static shared = ["applyParallaxType"];
+    /** @type {import("plugins").WebsiteResources} */
+    resources = {
+        builder_actions: {
+            SetParallaxTypeAction,
+        },
+        on_bg_image_hidden_handlers: this.onBgImageHide.bind(this),
+        content_not_editable_selectors: ".s_parallax_bg, section.s_parallax > .oe_structure",
+        system_node_selectors: ".s_parallax_bg, .s_parallax_bg_wrap",
+        target_element_providers: withSequence(1, this.getTargetElement),
+    };
+    setup() {
+        const builderOptions = this.dependencies.builderOptions.getBuilderOptions();
+        this.backgroundOptionClasses = filterExtends(builderOptions, WebsiteBackgroundOption);
+    }
+    applyParallaxType({ editingElement, value }) {
+        const isParallax = value !== "none";
+        editingElement.classList.toggle("parallax", isParallax);
+        editingElement.classList.toggle("s_parallax_is_fixed", value === "fixed");
+        // Kept for compatibility. The "s_parallax_no_overflow_hidden" class may
+        // still appear when "s_parallax_bg" hasn’t yet been wrapped in
+        // "s_parallax_bg_wrap".
+        editingElement.classList.remove("s_parallax_no_overflow_hidden");
+        const typeValues = {
+            none: 0,
+            fixed: 1,
+            top: 1.5,
+            bottom: -1.5,
+            zoomIn: 0.2,
+            zoomOut: 1.2,
+        };
+        editingElement.dataset.scrollBackgroundRatio = typeValues[value];
+        // Set a parallax type only if there is a zoom option selected.
+        // This is to avoid useless element in the DOM since in the animation
+        // we need the type only for zoom options.
+        if (value === "zoomIn" || value === "zoomOut") {
+            editingElement.dataset.parallaxType = value;
+        } else {
+            delete editingElement.dataset.parallaxType;
+        }
+
+        let parallaxBgEl = editingElement.querySelector(
+            ":scope > .s_parallax_bg, :scope > .s_parallax_bg_wrap .s_parallax_bg"
+        );
+        const parallaxBgWrapEl = editingElement.querySelector(":scope > .s_parallax_bg_wrap");
+        if (isParallax) {
+            if (!parallaxBgEl) {
+                parallaxBgEl = document.createElement("span");
+                parallaxBgEl.classList.add("s_parallax_bg");
+            }
+            // For compatibility, check if not "parallaxBgWrapEl" separately.
+            // "parallaxBgEl" may exist without "parallaxBgWrapEl".
+            if (!parallaxBgWrapEl) {
+                const newWrapEl = document.createElement("span");
+                newWrapEl.classList.add("s_parallax_bg_wrap");
+                newWrapEl.appendChild(parallaxBgEl);
+                editingElement.prepend(newWrapEl);
+                this.dependencies.backgroundImageOption.changeEditingEl(
+                    editingElement,
+                    parallaxBgEl
+                );
+            }
+        } else if (parallaxBgEl) {
+            this.dependencies.backgroundImageOption.changeEditingEl(parallaxBgEl, editingElement);
+            if (parallaxBgWrapEl) {
+                parallaxBgWrapEl.remove();
+            } else {
+                parallaxBgEl.remove(); // Kept for compatibility.
+            }
+        }
+    }
+    onBgImageHide(rootEl) {
+        for (const backgroundClass of this.backgroundOptionClasses) {
+            applyFunDependOnSelectorAndExclude(
+                this.removeParallax.bind(this),
+                rootEl,
+                backgroundClass
+            );
+        }
+    }
+    removeParallax(editingEl) {
+        // ":scope > .s_parallax_bg" is kept for compatibility
+        const parallaxEl = editingEl.querySelector(
+            ":scope > .s_parallax_bg, :scope > .s_parallax_bg_wrap"
+        );
+        const bgImage = parallaxEl?.style.backgroundImage;
+        if (
+            !parallaxEl ||
+            !bgImage ||
+            bgImage === "none" ||
+            editingEl.classList.contains("o_background_video")
+        ) {
+            // The parallax option was enabled but the background image was
+            // removed or a background video has been added: disable the
+            // parallax option.
+            this.applyParallaxType({
+                editingElement: editingEl,
+                value: "none",
+            });
+        }
+    }
+    getTargetElement(editingEl) {
+        if (editingEl.matches(".s_parallax_bg")) {
+            const parallaxBgParentEl = editingEl.parentElement;
+            return parallaxBgParentEl.matches(".s_parallax_bg_wrap")
+                ? parallaxBgParentEl.parentElement
+                : parallaxBgParentEl; // <- kept for compatibility
+        }
+        return editingEl;
+    }
+}
+export class SetParallaxTypeAction extends BuilderAction {
+    static id = "setParallaxType";
+    static dependencies = ["websiteParallaxPlugin"];
+    apply(context) {
+        this.dependencies.websiteParallaxPlugin.applyParallaxType(context);
+    }
+    isApplied({ editingElement, value }) {
+        const attributeValue = parseFloat(
+            editingElement.dataset.scrollBackgroundRatio?.trim() || 0
+        );
+        if (attributeValue === 0) {
+            return value === "none";
+        }
+        if (attributeValue === 1) {
+            return value === "fixed";
+        }
+        const parallaxType = editingElement.dataset.parallaxType;
+        if (parallaxType) {
+            // Compatibility: Previously, "zoom_out" and "zoom_in" had their
+            // behavior reversed. The previous "zoom_out" correspond to the
+            // current "zoomIn" type.
+            if (parallaxType === "zoom_out") {
+                return value === "zoomIn";
+            }
+            if (parallaxType === "zoom_in") {
+                return value === "zoomOut";
+            }
+            return value === parallaxType;
+        }
+        return attributeValue > 0 ? value === "top" : value === "bottom";
+    }
+}
+
+registry.category("website-plugins").add(WebsiteParallaxPlugin.id, WebsiteParallaxPlugin);

@@ -1,0 +1,66 @@
+.o_website_hr_recruitment_jobs_list {
+    #jobs_grid {
+        .o_job_infos {
+            .fa {
+                color: theme-color('secondary');
+                margin-right: .5rem;
+            }
+        }
+
+        .card {
+            &, .o_unpublished_badge, & > a {
+                transition: all .1s;
+            }
+
+            &:hover {
+                box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.05);
+            }
+        }
+    }
+}
+
+.o_linkedin_icon {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 38px;
+    width: 38px;
+    margin: 0!important;
+    border-radius: 0.4rem 0 0 0.4rem;
+    color: #fcf9f2;
+    background-color: #0a66c2;
+}
+
+.o_apply_description_link:hover {
+    filter: brightness(90%);
+    background-color: #fff;
+    color: #35979c;
+}
+
+.o_resume_input {
+    border-color: #35979c;
+}
+
+.o_resume_input::file-selector-button {
+    color: #35979c;
+    border-color: #35979c;
+    background-color: #fff;
+}
+
+%o_website_hr_recruitment_hover {
+    transition: .5s;
+
+    &:hover {
+        transform: scale(1.01, 1.01);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.25) !important;
+    }
+}
+.o_jobs_image_gallery.s_image_gallery img {
+    @extend %o_website_hr_recruitment_hover;
+}
+#jobs_section, #jobs_thankyou {
+    .s_company_team .o_jobs_hr_recruiter {
+        @extend %o_website_hr_recruitment_hover;
+    }
+}

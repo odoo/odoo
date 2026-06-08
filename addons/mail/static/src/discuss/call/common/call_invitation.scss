@@ -1,0 +1,32 @@
+$expand-curve: cubic-bezier(0.22, 1, 0.36, 1);
+
+.o-discuss-CallInvitation {
+    background-color: var(--o-discuss-Call-bgColor, #{$dark});
+    color: #fff;
+    width: MIN(400px, 92vw);
+    transition: width 0.45s $expand-curve;
+
+    &.o-chat {
+    width: MIN(350px, 92vw);
+    }
+
+    &.o-preview-open {
+        width: MIN(500px, 92vw);
+    }
+}
+
+.o-mail-CallInvitation-avatar {
+    width: 40px;
+    height: 40px;
+    --pulse-spread-radius: 0.6rem;
+    animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate;
+}
+
+.o-discuss-CallInvitation-cameraPreview {
+    max-height: 0;
+
+    &.o-opened {
+        transition: max-height 0.45s $expand-curve;
+        max-height: 500px;
+    }
+}

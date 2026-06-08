@@ -1,0 +1,596 @@
+from __future__ import annotations
+
+import datetime as dt
+import functools
+import logging
+import re
+import threading
+import typing
+from contextlib import nullcontext
+from os.path import join as opj
+from urllib.parse import urlparse
+
+import psycopg2
+import werkzeug.routing
+from psycopg2.errors import OperationalError, ReadOnlySqlTransaction
+from werkzeug.exceptions import (
+    Forbidden,
+    HTTPException,
+    NotFound,
+    UnsupportedMediaType,
+)
+from werkzeug.security import safe_join
+from werkzeug.urls import url_encode  # TODO: use urllib
+
+# TODO: drop the fallback
+try:
+    from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
+    ProxyFix = functools.partial(ProxyFix_, x_for=1, x_proto=1, x_host=1)
+except ImportError:
+    from werkzeug.contrib.fixers import ProxyFix
+
+import odoo.modules.db
+from odoo.api import Environment
+from odoo.exceptions import AccessDenied, AccessError, UserError
+from odoo.modules.module import (
+    Manifest,
+    initialize_sys_path,
+)
+from odoo.modules.registry import Registry
+from odoo.tools import config, file_open, file_path, profiler
+from odoo.tools.misc import submap
+
+from . import request, request_var
+from .dispatcher import HttpDispatcher, JsonRPCDispatcher, _dispatchers
+from .response import Response
+from .retrying import retrying
+from .routing_map import ROUTING_KEYS, _generate_routing_rules
+from .stream import STATIC_CACHE, Stream
+from .requestlib import (
+    HTTPRequest,
+    Request,
+    is_cors_preflight,
+)
+from .session import SessionExpiredException, get_default_session, logout, session_store
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Iterable, Mapping
+    from wsgiref.types import StartResponse, WSGIEnvironment
+
+    from .routing_map import Endpoint
+
+_logger = logging.getLogger('odoo.http')
+
+
+def db_list(force: bool = False, host: str | None = None) -> list[str]:
+    """
+    Get the list of available databases.
+
+    :param bool force: See :func:`~odoo.modules.db.list_dbs`
+    :param host: The Host used to replace %h and %d in the dbfilters
+        regexp. Taken from the current request when omitted.
+    :returns: the list of available databases
+    :rtype: List[str]
+    """
+    try:
+        dbs = odoo.modules.db.list_dbs(force=force)
+    except OperationalError:
+        return []
+    return db_filter(dbs, host)
+
+
+def db_filter(dbs: Iterable[str], host: str | None = None) -> list[str]:
+    """
+    Return the subset of ``dbs`` that match the dbfilter or the dbname
+    server configuration. In case neither are configured, return ``dbs``
+    as-is.
+
+    :param Iterable[str] dbs: The list of database names to filter.
+    :param host: The Host used to replace %h and %d in the dbfilters
+        regexp. Taken from the current request when omitted.
+    :returns: The original list filtered.
+    :rtype: List[str]
+    """
+
+    if config['dbfilter']:
+        #        host
+        #     -----------
+        # www.example.com:80
+        #     -------
+        #     domain
+        if host is None:
+            host = request.httprequest.environ.get('HTTP_HOST', '')
+        host = host.partition(':')[0]
+        host = host.removeprefix('www.')
+        domain = host.partition('.')[0]
+
+        dbfilter_re = re.compile(
+            config["dbfilter"].replace(R"%h", re.escape(host))
+                              .replace(R"%d", re.escape(domain)))
+        return [db for db in dbs if dbfilter_re.match(db)]
+
+    if config['db_name']:
+        # In case --db-filter is not provided and --database is passed, Odoo will
+        # use the value of --database as a comma separated list of exposed databases.
+        return sorted(set(config['db_name']).intersection(dbs))
+
+    return list(dbs)
+
+
+def dispatch_rpc(service_name: str, method: str, params: Mapping[str, typing.Any]) -> typing.Any:
+    """
+    Perform a RPC call.
+
+    :param service_name: either "common", "db" or "object".
+    :param method: the method name of the given service to execute
+    :param params: the keyword arguments for method call
+    :return: the return value of the called method
+    """
+    import odoo.service  # noqa: PLC0415
+
+    if service_name == 'object':
+        dispatch = odoo.service.model.dispatch
+    elif service_name == 'common':
+        dispatch = odoo.service.common.dispatch
+    else:
+        raise ValueError(f"Invalid service name: {service_name}")
+
+    # Remove the request to simulate that the call does not come from HTTP
+    request_reset = request_var.set(None)
+    try:
+        threading.current_thread().uid = None
+        threading.current_thread().dbname = None
+        return dispatch(method, params)
+    finally:
+        request_var.reset(request_reset)
+
+
+class RegistryError(RuntimeError):
+    pass
+
+
+class Application:
+    """ Odoo WSGI application """
+    # See also: https://www.python.org/dev/peps/pep-3333
+
+    def initialize(self) -> None:
+        """
+        Initialize the application.
+
+        This is to be called when setting up a WSGI application after
+        initializing the configuration values.
+        """
+        initialize_sys_path()
+        from odoo.service.server import load_server_wide_modules  # noqa: PLC0415
+        load_server_wide_modules()
+
+    def static_path(self, module_name: str) -> str | None:
+        """
+        Map module names to their absolute ``static`` path on the file
+        system.
+        """
+        manifest = Manifest.for_addon(module_name, display_warning=False)
+        return manifest.static_path if manifest is not None else None
+
+    def get_static_file(self, url: str, host: str = '') -> str | None:
+        """
+        Get the full-path of the file if the url resolves to a local
+        static file, otherwise return None.
+
+        Without the second host parameters, ``url`` must be an absolute
+        path, others URLs are considered faulty.
+
+        With the second host parameters, ``url`` can also be a full URI
+        and the authority found in the URL (if any) is validated against
+        the given ``host``.
+        """
+
+        netloc, path = urlparse(url)[1:3]  # TODO: use urllib3
+        try:
+            path_netloc, module, static, resource = path.split('/', 3)
+        except ValueError:
+            return None
+
+        if ((netloc and netloc != host) or (path_netloc and path_netloc != host)):
+            return None
+
+        if not (static == 'static' and resource):
+            return None
+
+        static_path = self.static_path(module)
+        if not static_path:
+            return None
+
+        try:
+            return file_path(opj(static_path, resource))
+        except FileNotFoundError:
+            return None
+
+    @functools.cached_property
+    def nodb_routing_map(self):
+        nodb_routing_map = werkzeug.routing.Map(strict_slashes=False, converters=None)
+        for url, endpoint in _generate_routing_rules([''] + config['server_wide_modules'], nodb_only=True):
+            routing = submap(endpoint.routing, ROUTING_KEYS)
+            if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
+                routing['methods'] = [*routing['methods'], 'OPTIONS']
+            rule = werkzeug.routing.Rule(url, endpoint=endpoint, **routing)
+            rule.merge_slashes = False
+            nodb_routing_map.add(rule)
+
+        return nodb_routing_map
+
+    def get_db_router(self, db: str | None) -> werkzeug.routing.Map:
+        if not db:
+            return self.nodb_routing_map
+        return request.env['ir.http'].routing_map()
+
+    def set_csp(self, response: Response) -> None:
+        headers = response.headers
+        headers['X-Content-Type-Options'] = 'nosniff'
+
+        if 'Content-Security-Policy' in headers:
+            return
+
+        if not headers.get('Content-Type', '').startswith('image/'):
+            return
+
+        headers['Content-Security-Policy'] = "default-src 'none'"
+
+    def __call__(self, environ: WSGIEnvironment, start_response: StartResponse) -> Iterable[bytes]:
+        """
+        WSGI application entry point.
+
+        :param environ: container for CGI environment variables
+            such as the request HTTP headers, the source IP address and
+            the body as an io file.
+        :param start_response: function provided by the WSGI
+            server that this application must call in order to send the
+            HTTP response status line and the response headers.
+        """
+        if config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
+            # It is done in our wsgi server already, but people might be
+            # using another wsgi server.
+            # The ProxyFix middleware has a side effect of updating the
+            # environ, see https://github.com/pallets/werkzeug/pull/2184
+            def fake_app(environ, start_response):
+                return []
+            def fake_start_response(status, headers):  # noqa: E301, E306
+                return
+            ProxyFix(fake_app)(environ, fake_start_response)
+
+        with HTTPRequest(environ) as httprequest:
+            request = Request(httprequest)
+            request_reset = request_var.set(request)
+            try:
+                _set_session_and_dbname(request)
+                threading.current_thread().url = httprequest.url
+
+                if self.get_static_file(httprequest.path):
+                    response = serve_static(request)
+                elif request.db:
+                    try:
+                        with _get_profiler_context_manager(request):
+                            response = serve_db(request)
+                    except RegistryError as e:
+                        _logger.warning("Database or registry unusable, trying without", exc_info=e.__cause__)
+                        # TODO: move those bits in a dedicated function
+                        request.db = None
+                        logout(request.session)
+                        if (httprequest.path.startswith('/odoo/')
+                            or httprequest.path in (
+                                '/odoo', '/web', '/web/login', '/test_http/ensure_db',
+                            )):
+                            # ensure_db() protected routes, remove ?db= from the query string
+                            args_nodb = request.httprequest.args.copy()
+                            args_nodb.pop('db', None)
+                            request.reroute(httprequest.path, url_encode(args_nodb))
+                        response = serve_nodb(request)
+                else:
+                    response = serve_nodb(request)
+                return response(environ, start_response)
+
+            except Exception as exc:
+                # Logs the error here so the traceback starts with ``__call__``.
+                if hasattr(exc, 'loglevel'):
+                    _logger.log(exc.loglevel, exc, exc_info=getattr(exc, 'exc_info', None))
+                elif isinstance(exc, HTTPException):
+                    pass
+                elif isinstance(exc, SessionExpiredException):
+                    _logger.info(exc)
+                elif isinstance(exc, AccessError):
+                    _logger.warning(exc, exc_info='access' in config['dev_mode'])
+                elif isinstance(exc, UserError):
+                    _logger.warning(exc)
+                else:
+                    _logger.exception("Exception during request handling.")
+
+                # Ensure there is always a WSGI handler attached to the exception.
+                if not hasattr(exc, 'error_response'):
+                    if isinstance(exc, AccessDenied):
+                        exc.suppress_traceback()
+                    exc.error_response = request.dispatcher.handle_error(exc)
+
+                return exc.error_response(environ, start_response)
+
+            finally:
+                request_var.reset(request_reset)
+
+
+root = Application()
+
+
+def serve_static(request: Request) -> Response:
+    """ Serve a static file from the file system. """
+    module, _, path = request.httprequest.path[1:].partition('/static/')
+    try:
+        directory = root.static_path(module)
+        if not directory:
+            raise NotFound(f'Module "{module}" not found.\n')
+        filepath = safe_join(directory, path)
+        debug = (
+            'assets' in request.session.debug and
+            ' wkhtmltopdf ' not in request.httprequest.user_agent.string
+        )
+        res = Stream.from_path(filepath, public=True).get_response(
+            max_age=0 if debug else STATIC_CACHE,
+            content_security_policy=None,
+        )
+        root.set_csp(res)
+        return res
+    except OSError:  # cover both missing file and invalid permissions
+        raise NotFound(f'File "{path}" not found in module {module}.\n')
+
+
+def serve_nodb(request: Request) -> Response:
+    """
+    Dispatch the request to its matching controller in a
+    database-free environment.
+    """
+    try:
+        router = root.nodb_routing_map.bind_to_environ(request.httprequest.environ)
+        try:
+            rule, args = router.match(return_rule=True)
+        except NotFound as exc:
+            with file_open(f'{__file__}/../not_found_nodb.html', 'rb') as f:
+                exc.response = Response(f.read(), status=exc.code, mimetype='text/html')
+            raise
+        _set_request_dispatcher(request, rule)
+        request.dispatcher.pre_dispatch(rule, args)
+        endpoint: Endpoint = rule.endpoint  # type: ignore
+        response = request.dispatcher.dispatch(endpoint, args)
+        request.dispatcher.post_dispatch(response)
+        return response
+    except HTTPException as exc:
+        if exc.code is not None:
+            raise
+        # Valid response returned via werkzeug.exceptions.abort
+        response = exc.get_response()
+        HttpDispatcher(request).post_dispatch(response)
+        return response
+
+
+def serve_db(request: Request) -> Response:
+    """ Load the ORM and use it to process the request. """
+    # reuse the same cursor for building, checking the registry, for
+    # matching the controller endpoint and serving the data
+    cr = None
+    try:
+        # get the registry and cursor (RO)
+        try:
+            registry = Registry(request.db)
+            cr = registry.cursor(readonly=True)
+            # check signaling
+            request.env = Environment(cr, request.session.uid, request.session.context)
+            request.update_context(host_id=request.env['ir.http']._get_host_id_from_domain(request.httprequest.host))
+
+            request.registry = request.env.registry
+        except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError) as e:
+            raise RegistryError(f"Cannot get registry {request.db}") from e
+
+        # find the controller endpoint to use
+        try:
+            rule, args = request.registry['ir.http']._match(request.httprequest.path)
+        except NotFound as not_found_exc:
+            # no controller endpoint matched -> fallback or 404
+            serve_func = functools.partial(_serve_ir_http_fallback, request, not_found_exc)
+            readonly = True
+        else:
+            # a controller endpoint matched -> dispatch it the request
+            _set_request_dispatcher(request, rule)
+            serve_func = functools.partial(serve_ir_http, request, rule, args)
+            endpoint: Endpoint = rule.endpoint  # type: ignore
+            readonly = endpoint.routing['readonly']
+            if callable(readonly):
+                readonly = readonly(endpoint.func.__self__, rule, args)
+        # update the parent cache for the route mapping to make it available as
+        # soon as possible and don't lose it if there are invalidations
+        for layer in request.env.transaction.ormcaches__.values():
+            layer.update_parent()
+
+        # keep on using the RO cursor when a readonly route matched,
+        # and for serve fallback
+        if readonly and cr.readonly:
+            threading.current_thread().cursor_mode = 'ro'
+            try:
+                return retrying(serve_func, env=request.env)
+            except ReadOnlySqlTransaction as exc:
+                # although the controller is marked read-only, it
+                # attempted a write operation, try again using a
+                # read/write cursor
+                _logger.warning("%s, retrying with a read/write cursor", exc.args[0].rstrip(), exc_info=True)
+                threading.current_thread().cursor_mode = 'ro->rw'
+            except Exception as exc:  # noqa: BLE001
+                raise _update_served_exception(request, exc)
+        else:
+            threading.current_thread().cursor_mode = 'rw'
+
+        # we must use a RW cursor when a read/write route matched, or
+        # there was a ReadOnlySqlTransaction error
+        if cr.readonly:
+            cr.close()
+            cr = request.env.registry.cursor()
+        else:
+            # the cursor is already a RW cursor, start a new transaction
+            # that will avoid repeatable read serialization errors because
+            # check signaling is not done in `retrying` and that function
+            # would just succeed the second time
+            cr.rollback()
+        assert not cr.readonly
+        request.env = request.env(cr=cr)
+        try:
+            return retrying(serve_func, env=request.env)
+        except Exception as exc:  # noqa: BLE001
+            raise _update_served_exception(request, exc)
+    except HTTPException as exc:
+        if exc.code is not None:
+            raise
+        # Valid response returned via werkzeug.exceptions.abort
+        response = exc.get_response()
+        HttpDispatcher(request).post_dispatch(response)
+        return response
+    finally:
+        request.env = None
+        if cr is not None:
+            cr.close()
+
+
+def _get_profiler_context_manager(request: Request) -> typing.ContextManager:
+    """
+    Get a profiler when the profiling is enabled and the requested
+    URL is profile-safe. Otherwise, get a context-manager that does
+    nothing.
+    """
+    if request.session.get('profile_session') and request.db:
+        if request.session['profile_expiration'] < str(dt.datetime.now()):
+            # avoid having session profiling for too long if user forgets to disable profiling
+            request.session['profile_session'] = None
+            _logger.warning("Profiling expiration reached, disabling profiling")
+        elif 'set_profiling' in request.httprequest.path:
+            _logger.debug("Profiling disabled on set_profiling route")
+        elif request.httprequest.path.startswith('/websocket'):
+            _logger.debug("Profiling disabled for websocket")
+        elif odoo.evented:
+            # only longpolling should be in a evented server, but this is an additional safety
+            _logger.debug("Profiling disabled for evented server")
+        else:
+            try:
+                return profiler.Profiler(
+                    db=request.db,
+                    description=request.httprequest.full_path,
+                    profile_session=request.session['profile_session'],
+                    collectors=request.session['profile_collectors'],
+                    params=request.session['profile_params'],
+                )._get_cm_proxy()
+            except Exception:
+                _logger.exception("Failure during Profiler creation")
+                request.session['profile_session'] = None
+
+    return nullcontext()
+
+
+def _set_session_and_dbname(request: Request) -> None:
+    sid = request.httprequest.cookies.get('session_id', '')
+    session = session_store().get(sid, keep_sid=True)
+
+    for key, val in get_default_session().items():
+        session.setdefault(key, val)
+    if not session.context.get('lang'):
+        session.context['lang'] = request.default_lang()
+
+    dbname = None
+    host = request.httprequest.environ['HTTP_HOST']
+    header_dbname = request.httprequest.headers.get('X-Odoo-Database')
+    if session.db and db_filter([session.db], host=host):
+        dbname = session.db
+        if header_dbname and header_dbname != dbname:
+            e = ("Cannot use both the session_id cookie and the "
+                    "x-odoo-database header.")
+            raise Forbidden(e)
+    elif header_dbname:
+        session.can_save = False  # stateless
+        if db_filter([header_dbname], host=host):
+            dbname = header_dbname
+    else:
+        all_dbs = db_list(force=True, host=host)
+        if len(all_dbs) == 1:
+            dbname = all_dbs[0]  # monodb
+
+    if session.db != dbname:
+        if session.db:
+            _logger.warning("Logged into database %r, but dbfilter rejects it; logging session out.", session.db)
+            logout(session, keep_db=False)
+        session.db = dbname
+
+    session.is_dirty = False
+    request.session = session
+    request.db = dbname
+    threading.current_thread().sess_id = request.session.sid[:8]
+
+
+def _set_request_dispatcher(request: Request, rule: werkzeug.routing.Rule):
+    endpoint: Endpoint = rule.endpoint  # type: ignore
+    routing = endpoint.routing
+    dispatcher_cls = _dispatchers[routing['type']]
+    if (not is_cors_preflight(request, endpoint)
+        and not dispatcher_cls.is_compatible_with(request)):
+        compatible_dispatchers = [
+            disp.routing_type
+            for disp in _dispatchers.values()
+            if disp.is_compatible_with(request)
+        ]
+        e = (f"Request inferred type is compatible with {compatible_dispatchers} "
+                f"but {routing['routes'][0]!r} is type={routing['type']!r}.\n\n"
+                "Please verify the Content-Type request header and try again.")
+        # werkzeug doesn't let us add headers to UnsupportedMediaType
+        # so use the following (ugly) to still achieve what we want
+        res = UnsupportedMediaType(e).get_response()
+        res.headers['Accept'] = ', '.join(dispatcher_cls.mimetypes)
+        raise UnsupportedMediaType(response=res)
+    request.dispatcher = dispatcher_cls(request)
+
+
+def _update_served_exception(request: Request, exc: Exception) -> Exception:
+    if isinstance(exc, HTTPException) and exc.code is None:
+        return exc  # bubble up to _serve_db
+    if (
+        'werkzeug' in config['dev_mode']
+        and request.dispatcher.routing_type != JsonRPCDispatcher.routing_type
+    ):
+        return exc  # bubble up to werkzeug.debug.DebuggedApplication
+    if not hasattr(exc, 'error_response'):
+        if isinstance(exc, AccessDenied):
+            exc.suppress_traceback()
+        exc.error_response = request.registry['ir.http']._handle_error(exc)
+    return exc
+
+
+def _serve_ir_http_fallback(request: Request, not_found: NotFound) -> Response:
+    """
+    Called when no controller match the request path. Delegate to
+    ``ir.http._serve_fallback`` to give modules the opportunity to
+    find an alternative way to serve the request. In case no module
+    provided a response, a generic 404 - Not Found page is returned.
+    """
+    request.params = request.get_http_params()
+    request.registry['ir.http']._auth_method_public({})
+    response = request.registry['ir.http']._serve_fallback()
+    if response:
+        request.registry['ir.http']._post_dispatch(response)
+        return response
+
+    no_fallback = NotFound()
+    no_fallback.__context__ = not_found  # During handling of {not_found}, {no_fallback} occurred:
+    no_fallback.error_response = request.registry['ir.http']._handle_error(no_fallback)
+    raise no_fallback
+
+
+def serve_ir_http(request: Request, rule: werkzeug.routing.Rule, args) -> Response:
+    """
+    Called when a controller match the request path. Delegate to
+    ``ir.http`` to serve a response.
+    """
+    request.registry['ir.http']._authenticate(rule.endpoint)
+    request.registry['ir.http']._pre_dispatch(rule, args)
+    response = request.dispatcher.dispatch(rule.endpoint, args)
+    request.registry['ir.http']._post_dispatch(response)
+    return response

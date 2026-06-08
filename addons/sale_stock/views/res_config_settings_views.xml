@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_stock" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.stock.stock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="sale_security_lead" position="replace">
+                <setting company_dependent="1" help="Schedule deliveries earlier to avoid delays" documentation="/applications/inventory_and_mrp/inventory/management/planning/scheduled_dates.html" title="Margin of error for dates promised to customers. Products will be scheduled for procurement and delivery that many days earlier than the actual promised date, to cope with unexpected delays in the supply chain.">
+                    <field name="use_security_lead"/>
+                    <div class="content-group">
+                        <div class="mt16" invisible="not use_security_lead">
+                            <span>Move forward expected delivery dates by <br/><field name="security_lead" class="oe_inline"/> days</span>
+                        </div>
+                    </div>
+                </setting>
+            </div>
+            <block name="operations_setting_container" position="inside">
+                <setting
+                    id="allow_spontaneous_returns"
+                    help="Allow users to return products"
+                >
+                    <field name="allow_spontaneous_returns"/>
+                    <div class="content-group" invisible="not allow_spontaneous_returns">
+                        <div class="row mt16">
+                            <div>
+                                <field
+                                    name="return_validity_days"
+                                    class="w-25 text-center"
+                                    nolabel="1"
+                                />
+                                <span class="ms-2">days after delivery</span>
+                            </div>
+                        </div>
+                        <button
+                            string="Manage Return Reasons"
+                            name="%(sale_stock.action_open_return_reasons)d"
+                            type="action"
+                            class="btn-link"
+                            icon="oi-arrow-right"
+                        />
+                    </div>
+                </setting>
+            </block>
+        </field>
+    </record>
+
+</odoo>

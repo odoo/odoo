@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ResourceEditorWarningOverlay">
+    <div t-if="this.state.visible" class="position-absolute top-0 start-0 bottom-0 end-0 d-flex align-items-center justify-content-center z-3 p-4 bg-light bg-opacity-75" role="alert">
+        <div class="border shadow-sm p-4 bg-light text-dark rounded-2 bg-opacity-100">
+            <div>
+                <h1 class="fs-2 text-dark mb-4">Your changes might be lost</h1>
+                <p class="mb-3">
+                    <i class="fa fa-info-circle"></i>
+                    Warning: Your changes may be overwritten after updates.
+                    To understand why,
+                    <a href="https://www.odoo.com/documentation/latest/administration/upgrade.html" target="_blank" class="link-primary">read more here</a>.
+                </p>
+                <p class="mb-3">To ensure you won’t lose your changes:</p>
+                <ul class="ps-4">
+                    <li>Add analytics or marketing tags? Inject code in &lt;head&gt; or &lt;body&gt;.</li>
+                    <li>Want to add code on this page? Use the “Embed Code” building block.</li>
+                </ul>
+                <div class="d-flex justify-content-between mt-5">
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-primary" t-on-click="this.onInjectCode">Inject code in &lt;head&gt; or &lt;body&gt;</button>
+                        <button type="button" class="btn btn-secondary" t-on-click="this.onCloseEditor">Close</button>
+                    </div>
+                    <button type="button" class="btn btn-link" t-on-click="this.onHideWarning">Edit code</button>
+                </div>
+            </div>
+        </div>
+
+        <button type="button"
+            class="btn btn-link position-absolute bottom-0 end-0 m-4"
+            t-on-click="this.onStopAsking">
+            Don't show again
+        </button>
+    </div>
+</t>
+
+</templates>

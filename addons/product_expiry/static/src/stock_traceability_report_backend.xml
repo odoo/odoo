@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="product_expiry.TraceabilityReport" t-inherit="stock.TraceabilityReport" t-inherit-mode="extension">
+        <xpath expr="//thead/tr/th[@data-column='lot_name']" position="after">
+            <th t-if="this.hasExpirationDate" class="o_report_line_header" data-column="expiration_date">Expiration Date</th>
+        </xpath>
+    </t>
+
+    <t t-name="product_expiry.ReportMRPLines" t-inherit="stock.ReportMRPLines" t-inherit-mode="extension">
+        <xpath expr="//t[@t-foreach='line.columns']/td" position="attributes">
+            <attribute name="t-if">this.hasExpirationDate or col.name !== 'expiration_date'</attribute>
+        </xpath>
+    </t>
+
+</templates>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_form" model="ir.ui.view">
+        <field name="name">l10n.ke.tremol.inherit.res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <group name="general" position="after">
+                <group string="Kenya Accounting Details" name="l10n_ke_details">
+                    <field name="l10n_ke_exemption_number"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

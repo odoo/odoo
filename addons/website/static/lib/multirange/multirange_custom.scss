@@ -1,0 +1,75 @@
+// This code has been more that widely inspired by the multirange library
+// which can be found on https://github.com/LeaVerou/multirange.
+// The license file can be found in the same folder as this file.
+
+input[type="range"][multiple] {
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.multirange-wrapper {
+    input[type="range"][multiple] {
+        visibility: initial;
+
+        &::-webkit-slider-thumb {
+            pointer-events: auto;
+        }
+
+        &::-moz-range-thumb {
+            pointer-events: auto;
+        }
+
+        &.reverse {
+            direction: rtl;
+        }
+
+        &.multirange {
+            &::-moz-range-track {
+                border-color: transparent; /* needed to switch Firefox to "styleable" control */
+            }
+
+            &.original::-webkit-slider-thumb {
+                position: relative;
+                z-index: 2;
+            }
+
+            &.ghost {
+
+                // Workaround to handle Firefox's lack of support of z-index rules
+                // for #shadow-root elements, see '&.original::-webkit-slider-thumb'
+                // rules. The entire @media query could be removed once Firefox
+                // will support the feature.
+                @media all and (min--moz-device-pixel-ratio:0) and (min-resolution: .001dpcm) {
+
+                    // Helper function to retrive the 'width' segment from a 'border' shorthand rule.
+                    @function -get-border-width($input) {
+                        @each $part in $input {
+                            @if type-of($part) == number {
+                                @return $part;
+                            }
+                        }
+                        @return null;
+                    }
+
+                    $-thumb-border-width: #{-get-border-width($form-range-thumb-border)};
+                    $-ghostGap: calc(#{$form-range-thumb-width} + (#{$-thumb-border-width} * 2));
+
+                    margin-inline-start: $-ghostGap;
+                    width: calc(100% - #{$-ghostGap});
+                }
+
+                &::-webkit-slider-runnable-track {
+                    background: linear-gradient(to right, transparent var(--low), var(--primary) var(--low) var(--high), transparent 0) no-repeat 50% / 100% 100%;
+                }
+
+                &::-moz-range-track {
+                    background: linear-gradient(to right, transparent var(--low), var(--primary) var(--low) var(--high), transparent 0) no-repeat 50% / 100% 100%;
+                }
+            }
+        }
+    }
+
+    [x-out-of-boundaries] {
+        display: none;
+    }
+}

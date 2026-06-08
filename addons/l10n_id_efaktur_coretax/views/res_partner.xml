@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_tax_form_view" model="ir.ui.view">
+        <field name="name">res.partner.tax.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <page name="accounting" position="inside">
+                <group string="Coretax Information" invisible="'ID' not in fiscal_country_codes">
+                    <group>
+                        <field name="l10n_id_kode_transaksi"/>
+                        <label for="l10n_id_buyer_document_type" string="Document Type"/>
+                        <div class="d-flex align-items-baseline gap-3">
+                            <field name="l10n_id_buyer_document_type" />
+                            <field name="l10n_id_buyer_document_number" invisible="l10n_id_buyer_document_type != 'NIK'" placeholder="e.g. 0123456"/>
+                            <field name="l10n_id_buyer_document_number" invisible="l10n_id_buyer_document_type != 'Passport'" placeholder="e.g. A1234567"/>
+                            <field name="l10n_id_buyer_document_number" invisible="l10n_id_buyer_document_type != 'Other'" placeholder="e.g. Document ID Number"/>
+                        </div>
+                    </group>
+                </group>
+            </page>
+        </field>
+    </record>
+</odoo>

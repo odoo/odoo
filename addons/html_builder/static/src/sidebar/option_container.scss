@@ -1,0 +1,53 @@
+.options-container {
+    background-color: $o-we-bg-lighter;
+
+    .options-container-header {
+        --o-hb-btn-has-icon-paddingX: #{map-get($spacers, 1)};
+
+        background-color: $o-we-bg-light;
+
+        .o-hb-image-size-info {
+            margin-left: 8px;
+        }
+    }
+
+    &:where(:not(:first-of-type)) .options-container-header {
+        box-shadow: inset 0 1px 0 $o-we-bg-lighter;
+    }
+
+    .options-container-label {
+        color: $o-we-fg-light;
+        font-size: $o-we-font-size-lg;
+
+        &-actionable {
+            &:hover, &:focus {
+                color: $o-we-fg-lighter;
+                background-color: unset;
+            }
+        }
+    }
+
+    @include o-input-number-no-arrows();
+
+    .o-hb-image-size-info {
+        background-color: $o-we-bg-darker;
+    }
+
+    .hb-row-content .o-hb-image-size-info {
+        font-size: 0.9em;
+    }
+}
+
+.o_we_img_animate {
+    padding-top: 10px;
+
+    img:last-of-type {
+        display: none;
+    }
+
+    &:hover img:last-of-type {
+        content: image-set(var(--animate-src));
+        position: absolute;
+        display: block;
+    }
+}

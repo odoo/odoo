@@ -1,0 +1,35 @@
+.o_matrix_input_table {
+    .o_matrix_ps {
+        padding-left: $modal-inner-padding;
+    }
+    .o_matrix_pe {
+        padding-right: $modal-inner-padding;
+    }
+    //removing input field=number arrows as their size might
+    //change depending on browser default styling and shift input's position
+    .o_matrix_input {
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        &[type=number] {
+            -moz-appearance: textfield;
+        }
+    }
+    .o_matrix_input_td {
+        border: none;
+        &:focus-within {
+            --table-accent-bg: none;
+            background-color: $o-view-background-color;
+            border-bottom: $o-black 1px solid;
+        }
+    }
+    // Sticky header styles
+    thead {
+        position: sticky;
+        top: 0;
+        z-index: 10; // Ensure it stays on top of other content
+        background-color: $o-view-background-color; // Background for visibility
+    }
+}

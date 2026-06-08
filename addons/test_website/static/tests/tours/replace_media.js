@@ -1,0 +1,181 @@
+import { patch } from "@web/core/utils/patch";
+import { VideoSelector } from "@html_editor/main/media/media_dialog/video_selector";
+import {
+    insertSnippet,
+    registerWebsitePreviewTour,
+    changeImageShape,
+} from "@website/js/tours/tour_utils";
+
+const videoId = "Dpq87YCHmJc";
+const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+const embedUrl = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0`;
+
+/**
+ * The purpose of this tour is to check the media replacement flow.
+ */
+registerWebsitePreviewTour(
+    "test_replace_media",
+    {
+        edition: true,
+    },
+    () => [
+        {
+            trigger: "body",
+            run: function () {
+                // Patch the VideoDialog so that it does not do external calls
+                // during the test (note that we don't unpatch but as the patch
+                // is only done after the execution of a test_website test and
+                // specific to an URL only, it is acceptable).
+                // TODO if we ever give the possibility to upload its own videos,
+                // this won't be necessary anymore.
+                patch(VideoSelector.prototype, {
+                    async updateVideoPreview(videoData) {
+                        if (embedUrl === videoData.embedUrl) {
+                            videoData.embedUrl = "about:blank";
+                        }
+                        return super.updateVideoPreview(videoData);
+                    },
+                });
+            },
+        },
+        ...insertSnippet({
+            name: "Title - Image",
+            id: "s_picture",
+            groupName: "Images",
+        }),
+        {
+            content: "select image",
+            trigger: ":iframe .s_picture figure img",
+            run: "click",
+        },
+        {
+            content: "ensure image size is displayed",
+            trigger:
+                ".o_customize_tab [data-container-title='Image'] .options-container-header:contains('kb')",
+        },
+        ...changeImageShape(),
+        {
+            content: "Open MediaDialog from an image",
+            trigger: "button[data-action-id='replaceMedia']",
+            run: "click",
+        },
+        {
+            trigger: ".o_select_media_dialog .o_load_done_msg",
+        },
+        {
+            content: "select svg",
+            trigger: ".o_select_media_dialog .o_button_area[aria-label='sample.svg']",
+            run: "click",
+        },
+        {
+            content: "ensure the svg does have a shape",
+            trigger: ":iframe .s_picture figure img[data-shape]",
+        },
+        {
+            content: "ensure image size is displayed",
+            trigger: ".o_customize_tab [data-container-title='Image'] span[title='Size']",
+        },
+        {
+            trigger: ".o-hb-image-size-info[title=Size]:contains(0.5 kB)",
+        },
+        {
+            content: "replace image",
+            trigger: "button[data-action-id='replaceMedia']",
+            run: "click",
+        },
+        {
+            content: "go to pictogram tab",
+            trigger: ".o_select_media_dialog .nav-link:contains('Icons')",
+            run: "click",
+        },
+        {
+            content: "select an icon",
+            trigger:
+                ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span.fa-heart",
+            run: "click",
+        },
+        {
+            content: "ensure icon block is displayed",
+            trigger: ".o_customize_tab [data-container-title='Icon']",
+        },
+        {
+            content: "select footer",
+            trigger: ":iframe footer",
+            run: "click",
+        },
+        {
+            content: "select icon",
+            trigger: ":iframe .s_picture figure span.fa-heart",
+            run: "click",
+        },
+        {
+            content: "ensure icon block is still displayed",
+            trigger: ".o_customize_tab [data-container-title='Icon']",
+        },
+        {
+            content: "replace icon",
+            trigger: "button[data-action-id='replaceMedia']",
+            run: "click",
+        },
+        {
+            content: "go to video tab",
+            trigger: ".o_select_media_dialog .nav-link:contains('Video')",
+            run: "click",
+        },
+        {
+            content: "enter a video URL",
+            trigger: ".o_select_media_dialog #o_video_text",
+            // Design your first web page.
+            run: `edit ${videoUrl}`,
+        },
+        {
+            content: "wait for preview to appear",
+            // "about:blank" because the VideoWidget was patched at the start of this tour
+            trigger:
+                ".o_select_media_dialog div.media_iframe_video [src='about:blank']:iframe body",
+        },
+        {
+            content: "confirm selection",
+            trigger: ".o_select_media_dialog .modal-footer .btn-primary",
+            run: "click",
+        },
+        {
+            content: "ensure video option block is displayed",
+            trigger: ".o_customize_tab [data-container-title='Video']",
+        },
+        {
+            content: "replace image",
+            trigger: ".btn-success[data-action-id='replaceMedia']",
+            run: "click",
+        },
+        {
+            content: "go to pictogram tab",
+            trigger: ".o_select_media_dialog .nav-link:contains('Icons')",
+            run: "click",
+        },
+        {
+            content: "select an icon",
+            trigger:
+                ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span.fa-heart",
+            run: "click",
+        },
+        {
+            content: "ensure icon block is displayed",
+            trigger: ".o_customize_tab [data-container-title='Icon']",
+        },
+        {
+            content: "select footer",
+            trigger: ":iframe footer",
+            run: "click",
+        },
+        {
+            content: "select icon",
+            trigger: ":iframe .s_picture figure span.fa-heart",
+            run: "click",
+        },
+        {
+            content: "ensure icon block is still displayed",
+            trigger: ".o_customize_tab [data-container-title='Icon']",
+        },
+    ]
+);

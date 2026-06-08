@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="portal_entry_overdue_invoices" model="portal.entry">
+        <field name="name">Invoices to pay</field>
+        <field name="url">/my/invoices?filterby=overdue_invoices</field>
+        <field name="placeholder_count">overdue_invoice_count</field>
+        <field name="category">alert</field>
+    </record>
+</odoo>

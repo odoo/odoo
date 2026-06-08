@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_holidays.TimeOffCalendarCommonPopover.popover" t-inherit="web.CalendarCommonPopover.popover" t-inherit_mode="primary" owl="1">
+        <xpath expr="//span" position="attributes">
+            <attribute name="t-attf-class">flex-grow-1</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('o_cw_popover_close')]" position="attributes">
+            <attribute name="class">o_cw_popover_close ms-0 mt-2 me-2</attribute>
+            <attribute name="data-hotkey">x</attribute>
+        </xpath>
+    </t>
+</templates>

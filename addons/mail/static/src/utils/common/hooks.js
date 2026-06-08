@@ -1,0 +1,1016 @@
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    props,
+    proxy,
+    types,
+    untrack,
+    useEffect,
+    xml,
+} from "@odoo/owl";
+
+import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Reactive } from "@web/core/utils/reactive";
+
+import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
+import { monitorAudio } from "@mail/utils/common/media_monitoring";
+import { browser } from "@web/core/browser/browser";
+import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
+import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
+import { useService } from "@web/core/utils/hooks";
+
+/**
+ * @param {() => HTMLElement} target
+ * @param {string} eventName
+ * @param {Function} handler
+ * @param {boolean|AddEventListenerOptions} [eventParams]
+ */
+export function useLazyExternalListener(target, eventName, handler, eventParams) {
+    const boundHandler = handler.bind(useComponent());
+    let t;
+    onMounted(() => {
+        t = target();
+        if (!t) {
+            return;
+        }
+        t.addEventListener(eventName, boundHandler, eventParams);
+    });
+    onPatched(() => {
+        const t2 = target();
+        if (t !== t2) {
+            if (t) {
+                t.removeEventListener(eventName, boundHandler, eventParams);
+            }
+            if (t2) {
+                t2.addEventListener(eventName, boundHandler, eventParams);
+            }
+            t = t2;
+        }
+    });
+    onWillUnmount(() => {
+        if (!t) {
+            return;
+        }
+        t.removeEventListener(eventName, boundHandler, eventParams);
+    });
+}
+
+export function onExternalClick(refOrName, cb) {
+    let downTarget, upTarget;
+    const ref = typeof refOrName === "string" ? useRef(refOrName) : refOrName;
+    let targetDocument = document;
+    function onClick(ev) {
+        if (ref.el && !ref.el.contains(ev.composedPath()[0])) {
+            cb(ev, { downTarget, upTarget });
+            upTarget = downTarget = null;
+        }
+    }
+    function onMousedown(ev) {
+        downTarget = ev.target;
+    }
+    function onMouseup(ev) {
+        upTarget = ev.target;
+    }
+    onMounted(() => {
+        targetDocument = ref.el?.ownerDocument || document;
+        targetDocument.body.addEventListener("mousedown", onMousedown, true);
+        targetDocument.body.addEventListener("mouseup", onMouseup, true);
+        targetDocument.body.addEventListener("click", onClick, true);
+    });
+    onWillUnmount(() => {
+        targetDocument.body.removeEventListener("mousedown", onMousedown, true);
+        targetDocument.body.removeEventListener("mouseup", onMouseup, true);
+        targetDocument.body.removeEventListener("click", onClick, true);
+    });
+}
+
+/**
+ * Hook that allows to determine precisely when refs are (mouse-)hovered.
+ * Should provide a list of ref names, and can add callbacks when elements are
+ * hovered-in (onHover), hovered-out (onAway), hovering for some time (onHovering).
+ *
+ * @param {string | string[] | Function} refNames name of refs that determine whether this is in state "hovering".
+ *   ref name that end with "*" means it takes parented HTML node into account too. Useful for floating
+ *   menu where dropdown menu container is not accessible. Function type is for useChildRef support.
+ * @param {Object} param1
+ * @param {() => void} [param1.onHover] callback when hovering the ref names.
+ * @param {() => void} [param1.onAway] callback when stop hovering the ref names.
+ * @param {number, () => void} [param1.onHovering] array where 1st param is duration until start hovering
+ *   and function to be executed at this delay duration after hovering is kept true.
+ * @param {() => Array} [param1.stateObserver] when provided, function that, when called, returns list of
+ *   reactive state related to presence of targets' el. This is used to help the hook detect when the targets
+ *   are removed from DOM, to properly mark the hovered target as non-hovered.
+ */
+export function useHover(refNames, { onHover, onAway, stateObserver, onHovering } = {}) {
+    refNames = Array.isArray(refNames) ? refNames : [refNames];
+    const targets = [];
+    let wasHovering = false;
+    let hoveringTimeout;
+    let awayTimeout;
+    let lastHoveredTarget;
+    for (const refName of refNames) {
+        if (typeof refName === "function") {
+            // Special case: useChildRef support
+            targets.push({ ref: refName });
+            continue;
+        }
+        targets.push({ ref: useRef(refName) });
+    }
+    const state = proxy({
+        set isHover(newIsHover) {
+            if (this._isHover !== newIsHover) {
+                this._isHover = newIsHover;
+                this._count++;
+            }
+        },
+        get isHover() {
+            void this._count;
+            return this._isHover;
+        },
+        _contains: [],
+        _count: 0,
+        _isHover: false,
+        _targets: targets,
+        addTarget(target) {
+            state._targets.push(target);
+            const handleMouseenter = (ev) => onmouseenter(ev);
+            const handleMouseleave = (ev) => onmouseleave(ev);
+            target.ref.el.addEventListener("mouseenter", handleMouseenter, true);
+            target.ref.el.addEventListener("mouseleave", handleMouseleave, true);
+            return () => {
+                target.ref.el.removeEventListener("mouseenter", handleMouseenter, true);
+                target.ref.el.removeEventListener("mouseleave", handleMouseleave, true);
+                const idx = state._targets.findIndex((t) => t === target);
+                if (idx !== -1) {
+                    state._targets.splice(idx, 1);
+                }
+            };
+        },
+    });
+    function setHover(hovering) {
+        if (hovering && !wasHovering) {
+            state.isHover = true;
+            clearTimeout(awayTimeout);
+            clearTimeout(hoveringTimeout);
+            if (typeof onHover === "function") {
+                onHover();
+            }
+            if (Array.isArray(onHovering)) {
+                const [delay, cb] = onHovering;
+                hoveringTimeout = setTimeout(() => {
+                    cb();
+                }, delay);
+            }
+        } else if (!hovering) {
+            state.isHover = false;
+            clearTimeout(awayTimeout);
+            if (typeof onAway === "function") {
+                awayTimeout = setTimeout(() => {
+                    clearTimeout(hoveringTimeout);
+                    onAway();
+                }, 100);
+            }
+        }
+        wasHovering = hovering;
+    }
+    function onmouseenter(ev) {
+        if (state.isHover) {
+            return;
+        }
+        for (const target of state._targets) {
+            if (!target.ref.el) {
+                continue;
+            }
+            if (target.ref.el.contains(ev.target)) {
+                setHover(true);
+                lastHoveredTarget = target;
+                return;
+            }
+        }
+        for (const contains of state._contains) {
+            if (contains(ev.target)) {
+                setHover(true);
+                return;
+            }
+        }
+    }
+    function onmouseleave(ev) {
+        if (!state.isHover) {
+            return;
+        }
+        for (const target of state._targets) {
+            if (!target.ref.el) {
+                continue;
+            }
+            if (target.ref.el.contains(ev.relatedTarget)) {
+                return;
+            }
+        }
+        for (const contains of state._contains) {
+            if (contains(ev.relatedTarget)) {
+                return;
+            }
+        }
+        setHover(false);
+        lastHoveredTarget = null;
+    }
+
+    for (const target of targets) {
+        useLazyExternalListener(
+            () => target.ref.el,
+            "mouseenter",
+            (ev) => onmouseenter(ev),
+            true
+        );
+        useLazyExternalListener(
+            () => target.ref.el,
+            "mouseleave",
+            (ev) => onmouseleave(ev),
+            true
+        );
+    }
+
+    if (stateObserver) {
+        useLayoutEffect((open) => {
+            // Note: stateObserver is essentially used with useDropdownState()?.isOpen.
+            // While isOpen can become false, the ref.el can still be there for a short period of time.
+            // Relying on isOpen becoming false forces good syncing of isHover state on dropdown close.
+            if ((lastHoveredTarget && !lastHoveredTarget.ref.el) || !open) {
+                setHover(false);
+                lastHoveredTarget = null;
+            }
+        }, stateObserver);
+    }
+    return state;
+}
+
+export class UseHoverOverlay extends Component {
+    static template = xml`<div t-custom-ref="root"><t t-call-slot="default"/></div>`;
+
+    setup() {
+        super.setup();
+        this.props = props({
+            hover: types.object({
+                _contains: types.array(
+                    types.function([types.instanceOf(EventTarget)], types.boolean())
+                ),
+                addTarget: types.function([types.object({ ref: types.any() })], types.function([])),
+            }),
+        });
+        this.root = useRef("root");
+        const overlayContains = this.env[OVERLAY_SYMBOL].contains;
+        let removeTarget;
+        onMounted(() => {
+            this.props.hover._contains.push(overlayContains);
+            removeTarget = this.props.hover.addTarget({
+                ref: { el: this.root.el.closest(".o-overlay-item") },
+            });
+        });
+        onWillUnmount(() => {
+            const idx = this.props.hover._contains.findIndex((c) => c === overlayContains);
+            if (idx !== -1) {
+                this.props.hover._contains.splice(idx, 1);
+            }
+            removeTarget?.();
+        });
+    }
+}
+
+/**
+ * Hook returning reactive scroll state for a given scrollable element.
+ *
+ * @param {import("@odoo/owl").Signal<Element>} ref - The ref of the scrollable element.
+ * @returns {{
+ *   hasScrollbar: boolean,
+ *   canScrollBefore: boolean,
+ *   canScrollAfter: boolean
+ * }}
+ */
+export function useScrollState(ref) {
+    const state = proxy({
+        hasScrollbar: false,
+        canScrollBefore: false,
+        canScrollAfter: false,
+    });
+    function computeState() {
+        const el = ref();
+        if (!el) {
+            return;
+        }
+        const hasVScroll = el.scrollHeight > el.clientHeight + 1;
+        const hasHScroll = el.scrollWidth > el.clientWidth + 1;
+        state.hasScrollbar = hasVScroll || hasHScroll;
+        if (hasVScroll) {
+            const scrollTop = el.scrollTop;
+            state.canScrollBefore = scrollTop > 0;
+            state.canScrollAfter = scrollTop + el.clientHeight < el.scrollHeight - 1;
+        } else if (hasHScroll) {
+            const scrollLeft = el.scrollLeft;
+            state.canScrollBefore = scrollLeft > 0;
+            state.canScrollAfter = scrollLeft + el.clientWidth < el.scrollWidth - 1;
+        } else {
+            state.canScrollBefore = false;
+            state.canScrollAfter = false;
+        }
+    }
+    useLayoutEffect(
+        (el) => {
+            if (!el) {
+                return;
+            }
+            computeState();
+            el.addEventListener("scroll", computeState);
+            const resizeObserver = new ResizeObserver(computeState);
+            resizeObserver.observe(el);
+            return () => {
+                el.removeEventListener("scroll", computeState);
+                resizeObserver.disconnect();
+            };
+        },
+        () => [ref()]
+    );
+    return state;
+}
+
+/**
+ * Hook that execute the callback function each time the scrollable element hit
+ * the bottom minus the threshold.
+ *
+ * @param {string} refName scrollable t-ref name to observe
+ * @param {function} callback function to execute when scroll hit the bottom minus the threshold
+ * @param {number} threshold number of threshold pixel to trigger the callback
+ */
+export function useOnBottomScrolled(refName, callback, threshold = 1) {
+    const ref = useRef(refName);
+    function onScroll() {
+        if (Math.abs(ref.el.scrollTop + ref.el.clientHeight - ref.el.scrollHeight) < threshold) {
+            callback();
+        }
+    }
+    onMounted(() => {
+        ref.el?.addEventListener("scroll", onScroll);
+    });
+    onWillUnmount(() => {
+        ref.el?.removeEventListener("scroll", onScroll);
+    });
+}
+
+/**
+ * @param {string} refName
+ * @param {function} [cb]
+ */
+export function useVisible(refOrName, cb, { ready = true } = {}) {
+    const ref = typeof refOrName === "string" ? useRef(refOrName) : refOrName;
+    const getEl = () => ("el" in ref ? ref.el : ref());
+    const state = proxy({
+        isVisible: undefined,
+        ready,
+    });
+    function setValue(value) {
+        state.isVisible = value;
+        cb?.(state.isVisible);
+    }
+    const observer = new IntersectionObserver((entries) => {
+        setValue(entries.at(-1).isIntersecting);
+    });
+    useLayoutEffect(
+        (el, ready) => {
+            if (el && ready) {
+                observer.observe(el);
+                return () => {
+                    setValue(undefined);
+                    observer.unobserve(el);
+                };
+            }
+        },
+        () => [getEl(), state.ready]
+    );
+    return state;
+}
+
+/**
+ * @typedef {Object} MessageScrolling
+ * @property {function} clear
+ * @property {function} highlightMessage
+ * @property {number|null} highlightedMessageId
+ */
+
+/**
+ * @param {Object} params
+ * @param {function(): import("models").Thread|null} params.thread
+ * @param {function(): Object} [params.messageFetchRouteParams]
+ * @param {number} [params.duration=1500]
+ * @returns {MessageScrolling}
+ */
+export function useMessageScrolling({
+    thread: threadFn,
+    messageFetchRouteParams = () => ({}),
+    duration = 1500,
+}) {
+    let timeout;
+    const state = proxy({
+        clear() {
+            if (this.highlightedMessageId) {
+                browser.clearTimeout(timeout);
+                timeout = null;
+                this.highlightedMessageId = null;
+            }
+        },
+        /**
+         * @param {import("models").Message} message
+         */
+        async highlightMessage(message) {
+            const thread = threadFn();
+            if (!thread) {
+                return;
+            }
+            state.initiated = true;
+            let messageScrollDirection;
+            if (message.notIn(thread.messages)) {
+                messageScrollDirection = message.id < thread.messages[0]?.id ? "top" : "bottom";
+                await thread.loadAround({
+                    messageId: message.id,
+                    routeParams: messageFetchRouteParams(),
+                });
+            }
+            const lastHighlightedMessageId = state.highlightedMessageId;
+            this.clear();
+            if (lastHighlightedMessageId === message.id) {
+                // Give some time for the state to update.
+                await new Promise(setTimeout);
+            }
+            thread.scrollTop = messageScrollDirection === "top" ? "bottom" : undefined;
+            if (thread.scrollTop === "bottom") {
+                state.startupPromise = new Promise((resolve) => (state.resolveStartup = resolve));
+                await state.startupPromise;
+                state.startupPromise = null;
+                state.resolveStartup = null;
+            }
+            state.highlightedMessageId = message.id;
+            state.initiated = false;
+            timeout = browser.setTimeout(() => this.clear(), duration);
+        },
+        initiated: false,
+        /**
+         * Promise during highlight startup, i.e. highlight is initiated but isn't scrolling yet
+         * Useful to set correct starting condition to initiate scroll to highlight, like scroll to bottom.
+         */
+        startupPromise: null,
+        /** @type {(value?: void) => void | null}  */
+        resolveStartup: null,
+        /** @type {?Promise<void>} Promise during scrolling to highlight */
+        scrollPromise: null,
+        /** @type {(value?: void) => void | null}  */
+        resolveScroll: null,
+        /**
+         * Scroll the element into view and expose a promise that will resolved
+         * once the scroll is done.
+         *
+         * @param {Element} el
+         */
+        scrollTo(el) {
+            state.resolveScroll?.();
+            const { promise: scrollPromise, resolve: resolveScroll } = Promise.withResolvers();
+            state.scrollPromise = scrollPromise;
+            state.resolveScroll = resolveScroll;
+            if ("onscrollend" in window) {
+                document.addEventListener("scrollend", resolveScroll, {
+                    capture: true,
+                    once: true,
+                });
+            } else {
+                // To remove when safari will support the "scrollend" event.
+                setTimeout(resolveScroll, 250);
+            }
+            el.scrollIntoView({ behavior: "smooth", block: "center" });
+            return scrollPromise;
+        },
+        highlightedMessageId: null,
+    });
+    return state;
+}
+
+export class MessageSelectionState {
+    selectedMessageId;
+    data = new Set();
+
+    clearSelected() {
+        this.data.delete(this.selectedMessageId);
+    }
+
+    /** @param {import("models").Message} message */
+    isSelected(message) {
+        return this.data.has(message.id);
+    }
+
+    /** @param {import("models").Message} message */
+    setSelected(message) {
+        this.clearSelected();
+        this.data.add(message.id);
+        this.selectedMessageId = message.id;
+    }
+
+    get size() {
+        return this.data.size;
+    }
+}
+
+export function useMessageSelection() {
+    return proxy(new MessageSelectionState());
+}
+
+export function useMicrophoneVolume() {
+    let isClosed = false;
+    let audioTrack = null;
+    let disconnectAudioMonitor;
+    let audioMonitorPromise;
+    const store = useService("mail.store");
+    const state = proxy({
+        isReady: true,
+        isActive: false,
+        value: 0,
+        toggle: async () => {
+            if (!state.isReady) {
+                return;
+            }
+            state.isReady = false;
+            disconnectAudioMonitor?.();
+            disconnectAudioMonitor = undefined;
+            if (audioTrack) {
+                audioTrack.stop();
+                audioTrack = null;
+                state.isReady = true;
+                state.isActive = false;
+                state.value = 0;
+                return;
+            }
+            let track;
+            try {
+                const audioStream = await browser.navigator.mediaDevices.getUserMedia({
+                    audio: store.settings.audioConstraints,
+                });
+                track = audioStream.getAudioTracks()[0];
+            } catch {
+                store.env.services.dialog.add(CallPermissionDeniedDialog, {
+                    permissionType: "microphone",
+                });
+                return;
+            }
+            if (isClosed) {
+                track.stop();
+                return;
+            }
+            audioMonitorPromise = monitorAudio(track, {
+                onTic: (value) => {
+                    state.value = value;
+                },
+                processInterval: 100,
+            });
+            disconnectAudioMonitor = await audioMonitorPromise;
+            audioTrack = track;
+            state.isActive = true;
+            state.isReady = true;
+        },
+    });
+    onWillUnmount(async () => {
+        isClosed = true;
+        await audioMonitorPromise;
+        audioTrack?.stop();
+        disconnectAudioMonitor?.();
+    });
+    return state;
+}
+
+export function useSelection({ refName, model, preserveOnClickAwayPredicate = () => false }) {
+    const ui = useService("ui");
+    const ref = useRef(refName);
+    function onSelectionChange() {
+        const activeElement = ref.el?.getRootNode().activeElement;
+        if (activeElement && activeElement === ref.el) {
+            Object.assign(model, {
+                start: ref.el.selectionStart,
+                end: ref.el.selectionEnd,
+                direction: ref.el.selectionDirection,
+            });
+        }
+    }
+    onExternalClick(refName, async (ev) => {
+        if (await preserveOnClickAwayPredicate(ev)) {
+            return;
+        }
+        if (!ref.el) {
+            return;
+        }
+        Object.assign(model, {
+            start: ref.el.value.length,
+            end: ref.el.value.length,
+            direction: ref.el.selectionDirection,
+        });
+    });
+    onMounted(() => {
+        document.addEventListener("selectionchange", onSelectionChange);
+        document.addEventListener("input", onSelectionChange);
+    });
+    onWillUnmount(() => {
+        document.removeEventListener("selectionchange", onSelectionChange);
+        document.removeEventListener("input", onSelectionChange);
+    });
+    return {
+        restore() {
+            ref.el?.setSelectionRange(model.start, model.end, model.direction);
+        },
+        moveCursor(position) {
+            model.start = model.end = position;
+            if (ref.el && !ui.isSmall) {
+                // In mobile, selection seems to adjust correctly.
+                // Don't programmatically adjust, otherwise it shows soft keyboard!
+                ref.el.selectionStart = ref.el.selectionEnd = position;
+            }
+        },
+    };
+}
+
+/**
+ * Shared search state machine for components that combine an optional async
+ * fetch (typically an RPC) with an optional sync local lookup. Exposes reactive
+ * fields (`searchTerm`, `searching`, `loading`, `results`) and methods (`run`,
+ * `reset`). Subclass to add domain-specific fields while sharing the base logic.
+ *
+ * Narrow-dedup: if `fetch` resolves to `false` for some term, the next term
+ * that starts with it skips the fetch (a narrower query cannot have results
+ * when the broader one had none). Resolve to anything else to disable this for
+ * the current bookmark; call `reset()` to drop it (e.g. on context change).
+ */
+export class SearchState extends Reactive {
+    searchTerm = "";
+    searching = false;
+    loading = false;
+    /** @type {any} */
+    results;
+    /** @type {string | undefined} */
+    lastEmptyTerm;
+    /** @type {Function | undefined} */
+    sequential;
+    initialResults;
+    /** @type {((term: string) => Promise<boolean | void>) | null} */
+    fetch = null;
+    /** @type {((term: string) => any) | null} */
+    filter = null;
+    /** @type {(() => boolean) | null} */
+    isActiveGetter = null;
+    /** @type {(() => any[]) | null} */
+    depsGetter = null;
+
+    /**
+     * @param {Object} [options]
+     * @param {(term: string) => Promise<boolean | void>} [options.fetch] Async
+     *  server call. Resolving to `false` signals "no results" for narrow-dedup.
+     * @param {(term: string) => any} [options.filter] Sync local lookup that
+     *  produces `results`. Runs immediately on term/deps change and again after
+     *  `fetch` resolves (to pick up server-loaded data).
+     * @param {any} [options.initialResults] Value assigned to `results` on
+     *  reset. Defaults to an empty array.
+     * @param {() => any[]} [options.deps] Extra reactive values read inside
+     *  `fetch`/`filter`. Re-runs the search when they change.
+     * @param {() => boolean} [options.isActive] Predicate deciding whether a
+     *  search is active. Defaults to "term is non-empty". Override when a
+     *  non-empty term is not the right signal (e.g. a mention popover stays
+     *  active for an empty term as long as a delimiter is set).
+     */
+    constructor({ initialResults = [], fetch, filter, isActive, deps } = {}) {
+        super();
+        this.initialResults = initialResults;
+        this.results = initialResults;
+        if (fetch) {
+            this.fetch = fetch;
+        }
+        if (filter) {
+            this.filter = filter;
+        }
+        if (isActive) {
+            this.isActiveGetter = isActive;
+        }
+        if (deps) {
+            this.depsGetter = deps;
+        }
+        this.sequential = useSequential();
+        useLayoutEffect(
+            () => {
+                if (!this.isActive) {
+                    this.reset();
+                    return;
+                }
+                if (this.filter) {
+                    this.results = this.filter(this.searchTerm);
+                }
+                this.run();
+            },
+            () => [this.searchTerm, ...this.deps]
+        );
+        onWillUnmount(() => this.reset());
+    }
+
+    get isActive() {
+        return this.isActiveGetter ? this.isActiveGetter() : !!this.searchTerm;
+    }
+
+    get deps() {
+        return this.depsGetter?.() ?? [];
+    }
+
+    reset() {
+        this.searchTerm = "";
+        this.searching = false;
+        this.loading = false;
+        this.results = this.initialResults;
+        this.lastEmptyTerm = undefined;
+    }
+
+    async run({ skipFetch = false } = {}) {
+        if (!this.isActive) {
+            this.reset();
+            return;
+        }
+        const term = this.searchTerm;
+        this.searching = true;
+        if (this.lastEmptyTerm !== undefined && term.startsWith(this.lastEmptyTerm)) {
+            // Broader term already had no results, so the narrower term
+            // can't either — skip both the fetch and the local filter.
+            return;
+        }
+        if (this.fetch && !skipFetch) {
+            await this.sequential(async () => {
+                this.loading = true;
+                let result;
+                try {
+                    result = await this.fetch(term);
+                } finally {
+                    if (this.searchTerm === term) {
+                        this.loading = false;
+                    }
+                }
+                if (this.searchTerm === term) {
+                    if (this.filter) {
+                        this.results = this.filter(term);
+                    }
+                    this.lastEmptyTerm = result === false ? term : undefined;
+                }
+            });
+        } else if (this.filter) {
+            this.results = this.filter(term);
+        }
+    }
+}
+
+/**
+ * `run({ skipFetch: true })` re-applies the filter without re-fetching,
+ * e.g. after the upstream data was mutated locally.
+ *
+ * @param {ConstructorParameters<typeof SearchState>[0]} [options]
+ * @returns {SearchState}
+ */
+export function useSearch(options = {}) {
+    return proxy(new SearchState(options));
+}
+
+export function useSequential() {
+    let inProgress = false;
+    let nextFunction;
+    let nextResolve;
+    let nextReject;
+    async function call() {
+        const resolve = nextResolve;
+        const reject = nextReject;
+        const func = nextFunction;
+        nextResolve = undefined;
+        nextReject = undefined;
+        nextFunction = undefined;
+        inProgress = true;
+        try {
+            const data = await func();
+            resolve(data);
+        } catch (e) {
+            reject(e);
+        }
+        inProgress = false;
+        if (nextFunction && nextResolve) {
+            call();
+        }
+    }
+    return (func) => {
+        nextResolve?.();
+        const prom = new Promise((resolve, reject) => {
+            nextResolve = resolve;
+            nextReject = reject;
+        });
+        nextFunction = func;
+        if (!inProgress) {
+            call();
+        }
+        return prom;
+    };
+}
+
+/** @param {import("@web/core/dropdown/dropdown_hooks").DropdownState} [dropdownState] */
+export function useDiscussSystray(dropdownState) {
+    const ui = useService("ui");
+    if (dropdownState) {
+        useEffect(() => {
+            if (dropdownState.isOpen) {
+                document.body.classList.add("o-mail-discuss-systray-menu-open");
+            } else {
+                document.body.classList.remove("o-mail-discuss-systray-menu-open");
+            }
+        });
+    }
+    return {
+        class: "o-mail-DiscussSystray-class",
+        get contentClass() {
+            return `d-flex flex-column flex-grow-1 ${
+                ui.isSmall ? "overflow-auto o-scrollbar-thin w-100 mh-100" : ""
+            }`;
+        },
+        get menuClass() {
+            return `p-0 o-mail-DiscussSystray ${
+                ui.isSmall
+                    ? "o-mail-systrayFullscreenDropdownMenu start-0 w-100 mh-100 d-flex flex-column mt-0 border-0 shadow-lg"
+                    : ""
+            }`;
+        },
+    };
+}
+
+export const useMovable = makeDraggableHook({
+    name: "useMovable",
+    onWillStartDrag({ ctx, addCleanup, addStyle, getRect }) {
+        ctx.current.container = document.createElement("div");
+        addStyle(ctx.current.container, {
+            position: "fixed",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+        });
+        ctx.current.element.after(ctx.current.container);
+        addCleanup(() => ctx.current.container.remove());
+    },
+    onDragStart: () => true,
+    onDragEnd: () => true,
+    onDrop({ ctx, getRect }) {
+        const { top, left } = getRect(ctx.current.element);
+        return { top, left };
+    },
+});
+
+export const LONG_PRESS_DELAY = 400;
+
+/**
+ * Subscribes to long press events on the element matching the given ref name.
+ * It internally prevents false positives caused by scroll gestures.
+ *
+ * @param {import("@odoo/owl").Signal<Element>} ref The ref of the element to listen for long presses on.
+ * @param {Object} options
+ * @param {() => void} [options.action] Function called when a long press is detected.
+ * @param {() => boolean} [options.predicate] Optional function to enable long press detection.
+ */
+export function useLongPress(ref, { action, predicate = () => true } = {}) {
+    const MOVE_TRESHOLD = 10;
+    let timer = null;
+    let startX = 0;
+    let startY = 0;
+
+    function reset() {
+        clearTimeout(timer);
+        timer = null;
+    }
+    /** @param {TouchEvent} ev */
+    function isTouchTargetInside(ev) {
+        return ref()?.contains(ev.target);
+    }
+    useLazyExternalListener(
+        () => window,
+        "touchstart",
+        (ev) => {
+            if (!isTouchTargetInside(ev) || !predicate()) {
+                return;
+            }
+            const touch = ev.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
+            timer = setTimeout(() => {
+                action();
+                reset();
+            }, LONG_PRESS_DELAY);
+        },
+        true
+    );
+    useLazyExternalListener(
+        () => window,
+        "touchmove",
+        (ev) => {
+            if (!isTouchTargetInside(ev) || !timer) {
+                return;
+            }
+            const touch = ev.touches[0];
+            const dx = touch.screenX - startX;
+            const dy = touch.screenY - startY;
+            if (Math.hypot(dx, dy) > MOVE_TRESHOLD) {
+                reset();
+            }
+        },
+        true
+    );
+    useLazyExternalListener(
+        () => window,
+        "touchend",
+        (ev) => {
+            if (isTouchTargetInside(ev)) {
+                reset();
+            }
+        },
+        true
+    );
+    useLazyExternalListener(
+        () => window,
+        "touchcancel",
+        (ev) => {
+            if (isTouchTargetInside(ev)) {
+                reset();
+            }
+        },
+        true
+    );
+}
+
+/** @typedef {import("@web/core/utils/hooks").useChildRef} useChildRef */
+
+/**
+ * Hook that works like `useChildRef()` but allow many refs that each child component can save using an id of their choice.
+ * @see useChildRef
+ */
+export function useChildRefs() {
+    /** @type {Map<any, import("@odoo/owl").Signal<Element>>} */
+    const map = new Map();
+    return proxy(map);
+}
+
+export class UseForwardRefsToParent {
+    /**
+     * @param {string} propName
+     * @param {(any) => any} getRefIdFn
+     * @param {import("@odoo/owl").Signal<Element>} ref
+     */
+    constructor(propName, getRefIdFn, ref) {
+        const component = useComponent();
+        this.ref = ref;
+        // Note: The `useChildRefs()` Map is shared with all children, using useLayoutEffect/willUnmount to ensure proper on/off life cycle hook calls for given child.
+        // If we use setup/willDestroy we can have 2 fiber nodes of same child component with one finalizing with willDestroy from cancelling duplicated fiber node.
+        useLayoutEffect(
+            (map, key) => {
+                this.registerRef(map, key);
+                return () => this.removeRef(map, key);
+            },
+            () => [component.props[propName], getRefIdFn(component.props)]
+        );
+    }
+
+    registerRef(map, key) {
+        map?.set(key, this.ref);
+    }
+
+    removeRef(map, key) {
+        map?.delete(key);
+    }
+}
+
+/** @typedef {import("@web/core/utils/hooks").useForwardRefToParent} useForwardRefToParent */
+/**
+ * Hook that works like `useForwardRefToParent()` but allow many refs that each child component can save using an id of their choice.
+ * @see useForwardRefToParent
+ *
+ * @param {string} propName name of prop that contains a `useChildRefs()` object
+ * @param {(Props) => any} getRefIdFn function whose evaluation returns the key in `useChildRefs()` object to save the `ref`, with props passed as param.
+ * @param {import("@web/core/utils/hooks").Ref} ref the `ref` that is saved in `useChildRefs()` at key from `getRefIdFn` function evaluation
+ */
+export function useForwardRefsToParent(propName, getRefIdFn, ref) {
+    new UseForwardRefsToParent(propName, getRefIdFn, ref);
+}
+
+/**
+ * @template {readonly any[]} [T=any[]]
+ * @param {(...deps: T) => void} callback
+ * @param {Object} [options]
+ * @param {boolean} [options.initialRun=true] determine if the hook should skip the first run
+ */
+export function useOnChange(dependencies, callback, { initialRun } = { initialRun: true }) {
+    let firstRun = true;
+    useEffect(() => {
+        const dep = dependencies();
+        if (initialRun || !firstRun) {
+            untrack(() => callback(...dep));
+        }
+        firstRun = false;
+    });
+}

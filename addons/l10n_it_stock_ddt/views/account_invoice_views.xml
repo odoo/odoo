@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_invoice_view_form_inherit_ddt" model="ir.ui.view">
+        <field name="name">account.invoice.form.inherit.ddt</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="get_linked_ddts" type="object" class="oe_stat_button" icon="fa-calendar" invisible="l10n_it_ddt_count == 0">
+                    <field name="l10n_it_ddt_count" widget="statinfo" string="DDTs"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

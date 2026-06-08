@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="mail.Many2ManyFalsyValueLabelField">
+        <div class="o-mail-Many2ManyFalsyValueLabelField d-flex align-items-center gap-1">
+            <span t-if="this.props.readonly and !this.props.record.data[this.props.name].records.length" t-out="this.falsyValueLabel" class="text-muted"/>
+            <Many2ManyTagsField t-else="" t-props="this.m2mProps"/>
+        </div>
+    </t>
+</templates>

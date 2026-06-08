@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <!--
+    Partners Extension
+  -->
+
+    <record id="view_partner_stock_form" model="ir.ui.view">
+        <field name="name">res.partner.stock.property.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="mail.res_partner_view_form_inherit_mail"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales_purchases']/group" position="inside">
+                <group string="Inventory" name="inventory" groups="base.group_no_one" priority="6">
+                    <field name="property_stock_customer" />
+                    <field name="property_stock_supplier" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_stock_warnings_form" model="ir.ui.view">
+        <field name="name">res.partner.stock.warning</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <group name="warnings" position="inside">
+                <group groups="stock.group_warning_stock" col="2">
+                    <separator string="Instructions on the Stock Operations" colspan="2"/>
+                    <field name="picking_warn_msg"
+                           placeholder="e.g. The delivery area is at the back of the building."
+                           nolabel="1" colspan="2"/>
+                </group>
+            </group>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button type="object"
+                    name="action_view_stock_serial"
+                    context="{'create': False}"
+                    class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Lots/Serial Numbers</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+  </data>
+</odoo>

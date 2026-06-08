@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ImportAction">
+        <div t-custom-ref="root" class="h-100 d-flex flex-column">
+            <Layout className="'o_import_action d-flex h-100 overflow-auto'" display="this.display">
+                <t t-set-slot="control-panel-buttons">
+                    <t t-if="this.isPreviewing">
+                        <t t-if="!this.state.isTested">
+                            <button type="button" class="btn btn-primary" t-on-click="() => this.handleImport(true)">Test</button>
+                            <button t-if="!this.state.isPaused" type="button" class="btn btn-secondary" t-on-click="() => this.handleImport(false)">Import</button>
+                            <button t-else="" type="button" class="btn btn-secondary" t-on-click="() => this.handleImport(false)">Resume</button>
+                        </t>
+                        <t t-else="">
+                            <button t-if="!this.state.isPaused" type="button" class="btn btn-primary" t-on-click="() => this.handleImport(false)">Import</button>
+                            <button t-else="" type="button" class="btn btn-primary" t-on-click="() => this.handleImport(false)">Resume</button>
+                            <button type="button" class="btn btn-secondary" t-on-click="() => this.handleImport(true)">Test</button>
+                        </t>
+                    </t>
+                    <FileInput
+                        acceptedFileExtensions="'.csv, .xls, .xlsx, .xlsm, .ods'"
+                        onUpload.bind="(data, files) => this.handleFilesUpload(files)"
+                        resId="this.model.id"
+                        resModel="this.resModel"
+                        route="this.uploadFilesRoute"
+                    >
+                        <button t-if="this.isPreviewing" type="button" class="btn btn-secondary">Re-Upload</button>
+                        <button t-else="" type="button" class="btn btn-primary o_import_file">Upload</button>
+                    </FileInput>
+                </t>
+                <t t-if="this.isPreviewing">
+                    <ImportDataSidepanel
+                        filename="this.state.filename"
+                        options="this.importOptions"
+                        formattingOptions="this.formattingOptions"
+                        importTemplates="this.importTemplates"
+                        isBatched="this.isBatched"
+                        onOptionChanged.bind="this.onOptionChanged"
+                        hasBinaryFields="this.hasBinaryFields"
+                        binaryFilesParams="this.model.binaryFilesParams"
+                        onBinaryFilesParamsChanged.bind="(name, value) => this.model.onBinaryFilesParamsChanged(name, value)"
+                    />
+                    <ImportDataContent
+                        columns="this.model.columns"
+                        onFieldChanged.bind="this.onFieldChanged"
+                        onFieldLanguageChanged.bind="this.onFieldLanguageChanged"
+                        onOptionChanged.bind="this.onOptionChanged"
+                        options="this.importOptions"
+                        isFieldSet.bind="this.isFieldSet"
+                        previewError="this.state.previewError"
+                        importMessages="this.model.importMessages"
+                        languagesInstalled="this.model.languagesInstalled"
+                    />
+                </t>
+                <div t-else="" class="o_view_nocontent">
+                    <div class="o_nocontent_help">
+                        <p class="o_view_nocontent_smiling_face">
+                            <FileInput
+                                acceptedFileExtensions="'.csv, .xls, .xlsx, .xlsm, .ods'"
+                                onUpload.bind="(data, files) => this.handleFilesUpload(files)"
+                                resId="this.model.id"
+                                resModel="this.resModel"
+                                route="this.uploadFilesRoute"
+                            >
+                                <button type="button" class="btn btn-primary o_import_file">Upload</button>
+                            </FileInput>
+                            <span class="text-muted fw-normal"> or drag a file</span>
+                        </p>
+                        <div class="mb-2" t-foreach="this.importTemplates" t-as="template" t-key="template.template">
+                            <a t-att-href="template.template" aria-label="Download" data-tooltip="Download">
+                                <i class="fa fa-download pe-1"/>
+                                <span><t t-out="template.label"/></span>
+                            </a>
+                        </div>
+                        <DocumentationLink path="'/applications/general/export_import_data.html'" label.translate="Documentation" icon="'fa-question-circle'"/>
+                    </div>
+                </div>
+            </Layout>
+        </div>
+    </t>
+</templates>

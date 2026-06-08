@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="html_editor.CustomColorPicker">
+    <div class="o_colorpicker_widget" t-custom-ref="el" t-on-click="this.onClick" t-on-keydown="this.onKeydown" >
+        <div class="d-flex justify-content-between align-items-stretch mb-2">
+            <div t-custom-ref="colorPickerArea"
+                    role="application"
+                    aria-label="Saturation and brightness color picker."
+                    aria-roledescription="Use up and down arrow keys to adapt the brightness. Use left and right arrow keys to adapt the saturation. Press the Control or Command key at the same time to have finer control."
+                    aria-activedescendant="picker_pointer"
+                    class="o_color_pick_area position-relative w-75"
+                    t-att-style="this.props.noTransparency ? 'width: 89%;' : None"
+                    t-on-pointerdown="this.onPointerDownPicker">
+                <div t-custom-ref="colorPickerPointer" id="picker_pointer" class="o_picker_pointer rounded-circle p-1 position-absolute" tabindex="0" t-on-keydown="this.onPickerKeydown"/>
+            </div>
+            <div t-custom-ref="colorSlider" class="o_color_slider position-relative" t-on-pointerdown="this.onPointerDownSlider">
+                <div t-custom-ref="colorSliderPointer" class="o_slider_pointer" tabindex="0" t-on-keydown="this.onSliderKeydown" role="slider" aria-label="Hue" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="360"/>
+            </div>
+            <div t-custom-ref="opacitySlider" class="o_opacity_slider position-relative" t-if="!this.props.noTransparency" t-on-pointerdown="this.onPointerDownOpacitySlider">
+                <div t-custom-ref="opacitySliderPointer" class="o_opacity_pointer" tabindex="0" t-on-keydown="this.onOpacitySliderKeydown" role="slider" aria-label="Opacity" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100"/>
+            </div>
+        </div>
+        <div class="o_color_picker_inputs d-flex mb-2">
+            <div class="o_hex_div px-1 d-flex align-items-center">
+                <IframeInput
+                    value="this.hexDisplay.value"
+                    inputAttrs="{ name: 'hex_input' }"
+                    iframeClass="'o_hex_iframe'"
+                    inputStyle="'border: 1px solid; background-color: transparent; font-family: monospace; font-size: 11px;'"
+                    onClick.bind="this.onHexInputClick"
+                    onInput.bind="this.onHexColorInput"
+                    onKeydown.bind="this.onKeydown"
+                />
+                <label class="flex-grow-0 ms-1">hex</label>
+            </div>
+            <button t-if="window.EyeDropper" class="btn btn-sm p-0 px-1" title="Pick a color from the screen" t-on-click="this.pickColor">
+                <i class="fa fa-eyedropper"/>
+            </button>
+        </div>
+    </div>
+</t>
+
+</templates>

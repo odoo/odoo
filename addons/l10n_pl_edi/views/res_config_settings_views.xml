@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_l10n_pl_edi" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.pl.edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='l10n_pl_section']" position="after">
+                <setting
+                    id="l10n_pl_edi_register"
+                    help="By checking this box, I authorize Odoo to send and receive my invoices through the KSeF in the FA(3) format."
+                    company_dependent="1">
+                    <field name="l10n_pl_edi_register"/>
+                    <div class="content-group mt-2">
+                        <div class="row" invisible="not l10n_pl_edi_register">
+                            <label for="l10n_pl_edi_certificate" class="col-lg-4 o_light_label"/>
+                            <field
+                                name="l10n_pl_edi_certificate"
+                                placeholder="certificate.pem"
+                            />
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

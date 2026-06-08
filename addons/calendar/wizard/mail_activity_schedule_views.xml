@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <record id="mail_activity_schedule_view_form" model="ir.ui.view">
+        <field name="name">mail.activity.schedule.inherit.calendar</field>
+        <field name="model">mail.activity.schedule</field>
+        <field name="inherit_id" ref="mail.mail_activity_schedule_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_outlined')][.//field[@name='date_deadline']]" position="attributes">
+                  <attribute name="invisible">activity_category == 'meeting'</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_outlined')][.//field[@name='activity_user_id']]" position="attributes">
+                  <attribute name="invisible">activity_category == 'meeting'</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_outlined')][.//field[@name='activity_role_id']]" position="attributes">
+                  <attribute name="invisible">activity_category == 'meeting'</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_schedule_activities']" position="attributes">
+                  <attribute name="invisible" add="activity_category == 'meeting' or id" separator="or"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_outlined')][.//field[@name='note']]" position="attributes">
+                <attribute name="invisible">activity_category == 'meeting'</attribute>
+            </xpath>
+            <xpath expr="//group[@name='summary_group']|//div[hasclass('o_outlined')][.//field[@name='summary']]" position="attributes">
+                <attribute name="invisible">activity_category == 'meeting'</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_outlined')][.//field[@name='note']]" position="before">
+                <div invisible="activity_category != 'meeting'" class="o_outlined d-flex align-items-baseline mb-2 gap-2">
+                    <i class="fa fa-calendar" title="Calendar"/>
+                    <button string="Schedule"
+                        invisible="activity_category != 'meeting'"
+                        name="action_create_calendar_event"
+                        type="object"
+                        class="btn-link"
+                    >
+                        Schedule a meeting
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//button[@name='action_schedule_activities_done']" position="attributes">
+                <attribute name="invisible" add="activity_category == 'meeting'" separator="or"/>
+            </xpath>
+        </field>
+    </record>
+    </data>
+</odoo>

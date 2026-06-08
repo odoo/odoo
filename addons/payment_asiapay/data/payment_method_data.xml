@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- https://www.asiapay.com/payment.html#option -->
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_alipay" model="payment.method">
+        <field name="name">Alipay</field>
+        <field name="code">alipay</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/alipay.png"/>
+    </record>
+
+    <record id="payment_method_alipay_hk" model="payment.method">
+        <field name="name">AlipayHK</field>
+        <field name="code">alipay_hk</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/alipay_hk.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.hk')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.HKD')])]"/>
+    </record>
+
+    <record id="payment_method_atome" model="payment.method">
+        <field name="name">Atome</field>
+        <field name="code">atome</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/atome.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.my'), ref('base.sg')])]"/>
+        <field
+            name="supported_currency_ids" eval="[Command.set([ref('base.MYR'), ref('base.SGD')])]"
+        />
+    </record>
+
+    <record id="payment_method_bank_of_ayudhya" model="payment.method">
+        <field name="name">Bank of Ayudhya</field>
+        <field name="code">bank_of_ayudhya</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.th')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.THB')])]"/>
+    </record>
+
+    <record id="payment_method_bangkok_bank" model="payment.method">
+        <field name="name">Bangkok Bank CWF</field>
+        <field name="code">bangkok_bank</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.th')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.THB')])]"/>
+    </record>
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="sequence">10</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+    </record>
+
+    <record id="payment_method_duitnow" model="payment.method">
+        <field name="name">DuitNow</field>
+        <field name="code">duitnow</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/duitnow.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.my')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.MYR')])]"/>
+    </record>
+
+    <record id="payment_method_enets" model="payment.method">
+        <field name="name">eNETS</field>
+        <field name="code">enets</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/enets.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.sg')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.SGD')])]"/>
+    </record>
+
+    <record id="payment_method_fps" model="payment.method">
+        <field name="name">FPS</field>
+        <field name="code">fps</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.hk')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.HKD')])]"/>
+    </record>
+
+    <record id="payment_method_gcash" model="payment.method">
+        <field name="name">GCash</field>
+        <field name="code">gcash</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/gcash.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.ph')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.PHP')])]"/>
+    </record>
+
+    <record id="payment_method_hoolah" model="payment.method">
+        <field name="name">Hoolah</field>
+        <field name="code">hoolah</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/hoolah.png"/>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([ref('base.hk'), ref('base.my'), ref('base.sg'), ref('base.th')])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.HKD'), ref('base.MYR'), ref('base.SGD'), ref('base.THB')])]"
+        />
+    </record>
+
+    <record id="payment_method_humm" model="payment.method">
+        <field name="name">Humm</field>
+        <field name="code">humm</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/humm.png"/>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([ref('base.au'), ref('base.ie'), ref('base.nz'), ref('base.uk')])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.AUD'), ref('base.EUR'), ref('base.GBP'), ref('base.NZD')])]"
+        />
+    </record>
+
+    <record id="payment_method_jkopay" model="payment.method">
+        <field name="name">JKO Pay</field>
+        <field name="code">jkopay</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/jkopay.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.cn')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.CNY')])]"/>
+    </record>
+
+    <record id="payment_method_krungthai_bank" model="payment.method">
+        <field name="name">Krung Thai Bank CWF</field>
+        <field name="code">krungthai_bank</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.th')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.THB')])]"/>
+    </record>
+
+    <record id="payment_method_linepay" model="payment.method">
+        <field name="name">LINE Pay</field>
+        <field name="code">linepay</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/linepay.png"/>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([ref('base.jp'), ref('base.th'), ref('base.tw')])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.JPY'), ref('base.THB'), ref('base.TWD')])]"
+        />
+    </record>
+
+    <record id="payment_method_maya" model="payment.method">
+        <field name="name">Maya</field>
+        <field name="code">maya</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/maya.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.ph')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.PHP')])]"/>
+    </record>
+
+    <record id="payment_method_maybank" model="payment.method">
+        <field name="name">Maybank2u</field>
+        <field name="code">maybank</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/maybank.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.id')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.IDR')])]"/>
+    </record>
+
+    <record id="payment_method_momo" model="payment.method">
+        <field name="name">MoMo</field>
+        <field name="code">momo</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/momo.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.vn')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.VND')])]"/>
+    </record>
+
+    <record id="payment_method_octopus" model="payment.method">
+        <field name="name">Octopus</field>
+        <field name="code">octopus</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/octopus.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.hk')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.HKD')])]"/>
+    </record>
+
+    <record id="payment_method_pace" model="payment.method">
+        <field name="name">Pace</field>
+        <field name="code">pace</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/pace.png"/>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.hk'),
+                        ref('base.jp'),
+                        ref('base.my'),
+                        ref('base.sg'),
+                        ref('base.th'),
+                        ref('base.tw'),
+                ])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.HKD'),
+                        ref('base.JPY'),
+                        ref('base.MYR'),
+                        ref('base.SGD'),
+                        ref('base.THB'),
+                        ref('base.TWD'),
+                ])]"
+        />
+    </record>
+
+    <record id="payment_method_pay_id" model="payment.method">
+        <field name="name">PayID</field>
+        <field name="code">pay_id</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/pay_id.png"/>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([ref('base.au'), ref('base.nz')])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.AUD'), ref('base.NZD')])]"
+        />
+    </record>
+
+    <record id="payment_method_payme" model="payment.method">
+        <field name="name">PayMe</field>
+        <field name="code">payme</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/payme.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.hk')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.HKD')])]"/>
+    </record>
+
+    <record id="payment_method_paypal" model="payment.method">
+        <field name="name">PayPal</field>
+        <field name="code">paypal</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/paypal.png"/>
+    </record>
+
+    <record id="payment_method_poli" model="payment.method">
+        <field name="name">POLi</field>
+        <field name="code">poli</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/poli.png"/>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([ref('base.au'), ref('base.nz')])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.AUD'), ref('base.NZD')])]"
+        />
+    </record>
+
+    <record id="payment_method_samsung_pay" model="payment.method">
+        <field name="name">Samsung Pay</field>
+        <field name="code">samsung_pay</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/samsung_pay.png"/>
+    </record>
+
+    <record id="payment_method_scb" model="payment.method">
+        <field name="name">SCB Easy</field>
+        <field name="code">scb</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.th')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.THB')])]"/>
+    </record>
+
+    <record id="payment_method_tendopay" model="payment.method">
+        <field name="name">TendoPay</field>
+        <field name="code">tendopay</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/tendopay.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.ph')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.PHP')])]"/>
+    </record>
+
+    <record id="payment_method_tenpay" model="payment.method">
+        <field name="name">Tenpay</field>
+        <field name="code">tenpay</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/tenpay.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.cn')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.CNY')])]"/>
+    </record>
+
+    <record id="payment_method_tmb" model="payment.method">
+        <field name="name">TMB Bank</field>
+        <field name="code">tmb</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/tmb.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.th')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.THB')])]"/>
+    </record>
+
+    <record id="payment_method_touch_n_go" model="payment.method">
+        <field name="name">Touch'n Go</field>
+        <field name="code">touch_n_go</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/touch_n_go.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.my')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.MYR')])]"/>
+    </record>
+
+    <record id="payment_method_truemoney" model="payment.method">
+        <field name="name">TrueMoney</field>
+        <field name="code">truemoney</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/truemoney.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.th')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.THB')])]"/>
+    </record>
+
+    <record id="payment_method_ttb" model="payment.method">
+        <field name="name">TTB - TMBThanachart Bank</field>
+        <field name="code">ttb</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.th')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.THB')])]"/>
+    </record>
+
+    <record id="payment_method_uob" model="payment.method">
+        <field name="name">United Overseas Bank</field>
+        <field name="code">uob</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.sg')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.SGD')])]"/>
+    </record>
+
+    <record id="payment_method_wechat_pay" model="payment.method">
+        <field name="name">WeChat Pay</field>
+        <field name="code">wechat_pay</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/wechat_pay.png"/>
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.AUD'),
+                        ref('base.CAD'),
+                        ref('base.CNY'),
+                        ref('base.EUR'),
+                        ref('base.GBP'),
+                        ref('base.HKD'),
+                        ref('base.JPY'),
+                        ref('base.NZD'),
+                        ref('base.SGD'),
+                        ref('base.USD'),
+                ])]"
+        />
+    </record>
+
+    <record id="payment_method_zip" model="payment.method">
+        <field name="name">Zip</field>
+        <field name="code">zip</field>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/zip.png"/>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([ref('base.au'), ref('base.ca'), ref('base.nz'), ref('base.us')])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.AUD'), ref('base.CAD'), ref('base.NZD'), ref('base.USD')])]"
+        />
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS === -->
+
+    <record id="payment_method_amex" model="payment.method">
+        <field name="name">American Express</field>
+        <field name="code">amex</field>
+        <field name="primary_payment_method_id" eval="ref('payment_asiapay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/amex.png"/>
+    </record>
+
+    <record id="payment_method_diners" model="payment.method">
+        <field name="name">Diners Club International</field>
+        <field name="code">diners</field>
+        <field name="primary_payment_method_id" eval="ref('payment_asiapay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/diners.png"/>
+    </record>
+
+    <record id="payment_method_jcb" model="payment.method">
+        <field name="name">JCB</field>
+        <field name="code">jcb</field>
+        <field name="primary_payment_method_id" eval="ref('payment_asiapay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/jcb.png"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_asiapay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_unionpay" model="payment.method">
+        <field name="name">UnionPay</field>
+        <field name="code">unionpay</field>
+        <field name="primary_payment_method_id" eval="ref('payment_asiapay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/unionpay.png"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_asiapay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_asiapay"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+</odoo>

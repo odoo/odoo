@@ -1,0 +1,126 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import ast
+from odoo import api, fields, models, _
+
+
+class PosOrder(models.Model):
+    _inherit = 'pos.order'
+
+    currency_rate = fields.Float(compute='_compute_currency_rate', store=True, digits=0, readonly=True)
+    crm_team_id = fields.Many2one('crm.team', string="Sales Team", ondelete="set null")
+    sale_order_count = fields.Integer(string='Sale Order Count', compute='_count_sale_order', readonly=True, groups="sales_team.group_sale_salesman")
+
+    def _count_sale_order(self):
+        for order in self:
+            order.sale_order_count = len(order.lines.mapped('sale_order_origin_id'))
+
+    @api.model
+    def _complete_values_from_session(self, session, values):
+        values = super(PosOrder, self)._complete_values_from_session(session, values)
+        values['crm_team_id'] = values['crm_team_id'] if values.get('crm_team_id') else session.config_id.crm_team_id.id
+        return values
+
+    @api.depends('date_order', 'company_id')
+    def _compute_currency_rate(self):
+        for order in self:
+            date_order = order.date_order or fields.Datetime.now()
+            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, date_order.date())
+
+    def _prepare_invoice_vals(self):
+        invoice_vals = super(PosOrder, self)._prepare_invoice_vals()
+        invoice_vals['team_id'] = self.crm_team_id.id
+        sale_orders = self.lines.mapped('sale_order_origin_id')
+        if sale_orders:
+            if sale_orders[0].partner_invoice_id.id != sale_orders[0].partner_shipping_id.id:
+                invoice_vals['partner_shipping_id'] = sale_orders[0].partner_shipping_id.id
+            else:
+                addr = self.partner_id.address_get(['delivery'])
+                invoice_vals['partner_shipping_id'] = addr['delivery']
+            if sale_orders[0].payment_term_id and not sale_orders[0].payment_term_id.early_discount:
+                invoice_vals['invoice_payment_term_id'] = sale_orders[0].payment_term_id.id
+            else:
+                invoice_vals['invoice_payment_term_id'] = False
+            if sale_orders[0].partner_invoice_id != sale_orders[0].partner_id:
+                invoice_vals['partner_id'] = sale_orders[0].partner_invoice_id.id
+        return invoice_vals
+
+    def action_pos_order_paid(self):
+        res = super().action_pos_order_paid()
+        if any(p.payment_method_id._is_online_payment() for p in self.payment_ids):
+            sale_orders = self.lines.mapped('sale_order_origin_id')
+            for so in sale_orders.filtered(lambda s: s.state in ('draft', 'sent')):
+                so.action_confirm()
+        return res
+
+    @api.model
+    def sync_from_ui(self, orders):
+        data = super().sync_from_ui(orders)
+        if len(orders) == 0:
+            return data
+
+        AccountTax = self.env['account.tax']
+        pos_orders = self.browse([o['id'] for o in data["pos.order"]])
+        for pos_order in pos_orders:
+            # TODO: the way to retrieve the sale order in not consistent... is it a bad code or intended?
+            used_pos_lines = pos_order.lines.sale_order_origin_id.order_line.pos_order_line_ids
+            downpayment_pos_order_lines = pos_order.lines.filtered(lambda line: (
+                line not in used_pos_lines
+                and line.product_id == pos_order.config_id.down_payment_product_id
+            ))
+            so_x_pos_order_lines = downpayment_pos_order_lines\
+                .grouped(lambda l: l.sale_order_origin_id or l.refunded_orderline_id.sale_order_origin_id)
+            sale_orders = self.env['sale.order']
+            for sale_order, pos_order_lines in so_x_pos_order_lines.items():
+                if not sale_order:
+                    continue
+
+                sale_orders += sale_order
+                down_payment_base_lines = pos_order_lines._prepare_tax_base_line_values()
+                AccountTax._add_tax_details_in_base_lines(down_payment_base_lines, sale_order.company_id)
+                AccountTax._round_base_lines_tax_details(down_payment_base_lines, sale_order.company_id)
+
+                sale_order_sudo = sale_order.sudo()
+                sale_order_sudo._create_down_payment_section_line_if_needed()
+                sale_order_sudo._create_down_payment_lines_from_base_lines(down_payment_base_lines)
+
+            # Confirm the unconfirmed sale orders that are linked to the sale order lines.
+            so_lines = pos_order.lines.mapped('sale_order_line_id')
+            sale_orders |= so_lines.mapped('order_id')
+            if pos_order.state != 'draft':
+                for sale_order in sale_orders.filtered(lambda so: so.state in ['draft', 'sent']):
+                    sale_order.action_confirm()
+        return data
+
+    def action_view_sale_order(self):
+        self.ensure_one()
+        linked_orders = self.lines.mapped('sale_order_origin_id')
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Linked Sale Orders'),
+            'res_model': 'sale.order',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', linked_orders.ids)],
+        }
+
+    def _get_invoice_lines_values(self, line_values, pos_line, move_type):
+        inv_line_vals = super()._get_invoice_lines_values(line_values, pos_line, move_type)
+        if pos_line.sale_order_origin_id:
+            inv_line_vals["name"] = pos_line.display_name
+            if inv_line_vals['extra_tax_data'].get('computation_key') == 'down_payment' and pos_line.down_payment_details:
+                downpayment_details = ast.literal_eval(pos_line.down_payment_details)
+                if downpayment_details and downpayment_details[0].get('percentage_value'):
+                    inv_line_vals["name"] += " of " + str(downpayment_details[0].get('percentage_value')) + "%"
+            origin_line = pos_line.sale_order_line_id
+            origin_line._set_analytic_distribution(inv_line_vals)
+
+        if self.config_id.down_payment_product_id == pos_line.product_id:
+            inv_line_vals["is_downpayment"] = True
+
+        return inv_line_vals
+
+    def write(self, vals):
+        if 'crm_team_id' in vals:
+            vals['crm_team_id'] = vals['crm_team_id'] if vals.get('crm_team_id') else self.session_id.crm_team_id.id
+        return super().write(vals)

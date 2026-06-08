@@ -1,0 +1,69 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import fields
+from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.mail.tests.common import MailCase
+
+
+class TestGuest(MailCase):
+
+    def test_updating_guest_name_linked_to_multiple_channels(self):
+        """This test ensures that when a guest is linked to multiple channels,
+        the guest's name is updated correctly and the appropriate bus notifications are sent.
+        """
+        guest = self.env['mail.guest'].create({'name': 'Guest'})
+        channel_1 = self.env["discuss.channel"]._create_channel(name="Channel 1", group_id=None)
+        channel_2 = self.env["discuss.channel"]._create_channel(name="Channel 2", group_id=None)
+        channel_1._add_members(guests=guest)
+        channel_2._add_members(guests=guest)
+
+        def notifications():
+            guest_write_date = fields.Datetime.to_string(guest.write_date)
+            return [
+                BusResult(
+                    channel_1,
+                    "mail.record/insert",
+                    {
+                        "mail.guest": [
+                            {
+                                "avatar_128_access_token": guest._get_avatar_128_access_token(),
+                                "id": guest.id,
+                                "name": "Guest Name Updated",
+                                "write_date": guest_write_date,
+                            },
+                        ],
+                    },
+                ),
+                BusResult(
+                    channel_2,
+                    "mail.record/insert",
+                    {
+                        "mail.guest": [
+                            {
+                                "avatar_128_access_token": guest._get_avatar_128_access_token(),
+                                "id": guest.id,
+                                "name": "Guest Name Updated",
+                                "write_date": guest_write_date,
+                            },
+                        ],
+                    },
+                ),
+                BusResult(
+                    guest,
+                    "mail.record/insert",
+                    {
+                        "mail.guest": [
+                            {
+                                "avatar_128_access_token": guest._get_avatar_128_access_token(),
+                                "id": guest.id,
+                                "name": "Guest Name Updated",
+                                "write_date": guest_write_date,
+                            },
+                        ],
+                    },
+                ),
+            ]
+
+        with self.assertBus(notifications):
+            guest._update_name("Guest Name Updated")
+        self.assertEqual(guest.name, "Guest Name Updated")

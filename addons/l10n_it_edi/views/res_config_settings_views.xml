@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.proxy.user</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='account_vendor_bills']" position="after">
+                <block title="Italian Electronic Invoicing" invisible="country_code != 'IT' or use_root_proxy_user" id='l10n_it_edi'>
+                    <setting id="l10n_it_edi_setting" string="Fattura Elettronica (FatturaPA)">
+                        <field name="l10n_it_edi_show_purchase_journal_id" invisible="1"/>
+                        <div class="mt8 content-group">
+                            <div class="content-group d-flex align-items-center gap-2">
+                                <field name="l10n_it_edi_register" class="oe_inline"/>
+                                <span class="text-muted">
+                                    By checking this box, I authorize Odoo to send and receive my invoices through the Sistema di Interscambio (SDI).
+                                </span>
+                            </div>
+                        </div>
+                        <div class="mt8 content-group" invisible="not l10n_it_edi_show_purchase_journal_id">
+                            <div class="row mt16">
+                                <label for="l10n_it_edi_purchase_journal_id" string="Default Purchase Journal" class="col-6 o_light_label"/>
+                                <field name="l10n_it_edi_purchase_journal_id"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+                <block title="Italian Electronic Invoicing" invisible="(country_code != 'IT') or not use_root_proxy_user" id='account_edi_branch'>
+                    <span class="o_form_label">
+                        This branch shares the same VAT number and Codice Fiscale as its parent company. Select the parent company to configure the EDI settings.
+                    </span>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

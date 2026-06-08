@@ -1,0 +1,180 @@
+import { SubChannelList } from "@mail/discuss/core/public_web/sub_channel_list";
+
+import { useEffect } from "@odoo/owl";
+
+import { registry } from "@web/core/registry";
+import { range } from "@web/core/utils/numbers";
+import { patch } from "@web/core/utils/patch";
+
+let waitForLoadMoreToDisappear;
+let resolveLoadMoreDisappeared;
+let subChannelLoadMoreState;
+
+function newLoadMoreDef() {
+    waitForLoadMoreToDisappear = new Promise((resolve) => {
+        resolveLoadMoreDisappeared = resolve;
+    });
+    if (!subChannelLoadMoreState?.isVisible) {
+        resolveLoadMoreDisappeared();
+    }
+}
+
+registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
+    steps: () => [
+        {
+            trigger: "body",
+            run() {
+                patch(SubChannelList.prototype, {
+                    setup() {
+                        super.setup(...arguments);
+                        useEffect(() => {
+                            subChannelLoadMoreState = this.loadMoreState;
+                            if (!this.loadMoreState.isVisible) {
+                                resolveLoadMoreDisappeared?.();
+                            }
+                        });
+                    },
+                });
+            },
+        },
+        {
+            trigger: "button[title='Threads']",
+            run: "click",
+        },
+        {
+            trigger: ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(30)",
+        },
+        ...range(99, 69).map((i) => ({
+            trigger: `.o-mail-SubChannelPreview .o-mail-SubChannelPreview-name:text(Sub Channel ${i})`,
+        })),
+        {
+            trigger: ".o-mail-ActionPanel:has(.o-mail-SubChannelList) .o-mail-SearchInput input",
+            run: "edit Sub Channel 10",
+        },
+        {
+            trigger:
+                ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(1):contains(Sub Channel 10)",
+            run() {
+                newLoadMoreDef();
+            },
+        },
+        {
+            trigger: ".o-mail-SearchInput input",
+            run: "clear",
+        },
+        {
+            trigger:
+                ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(31):contains(Sub Channel 99)",
+        },
+        // Already fetched sub channels are shown in addition to the one
+        // that was fetched during the search.
+        ...range(99, 69).map((i) => ({
+            trigger: `.o-mail-SubChannelPreview .o-mail-SubChannelPreview-name:text(Sub Channel ${i})`,
+        })),
+        {
+            trigger:
+                ".o-mail-SubChannelPreview .o-mail-SubChannelPreview-name:text(Sub Channel 10)",
+            async run() {
+                // Ensure lazy loading is still working after a search.
+                await waitForLoadMoreToDisappear;
+                newLoadMoreDef();
+            },
+        },
+        {
+            trigger: ".o-mail-ActionPanel:has(.o-mail-SubChannelList)",
+            run: "scroll bottom",
+        },
+        {
+            trigger:
+                ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(61):contains(Sub Channel 40)",
+        },
+        ...range(99, 39).map((i) => ({
+            trigger: `.o-mail-SubChannelPreview .o-mail-SubChannelPreview-name:text(Sub Channel ${i})`,
+        })),
+        {
+            trigger: "body",
+            async run() {
+                await waitForLoadMoreToDisappear;
+                newLoadMoreDef();
+            },
+        },
+        {
+            trigger: ".o-mail-ActionPanel:has(.o-mail-SubChannelList)",
+            run: "scroll bottom",
+        },
+        {
+            trigger:
+                ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(90):contains(Sub Channel 11)",
+        },
+        ...range(99, 9).map((i) => ({
+            trigger: `.o-mail-SubChannelPreview .o-mail-SubChannelPreview-name:text(Sub Channel ${i})`,
+        })),
+        {
+            trigger: "body",
+            async run() {
+                await waitForLoadMoreToDisappear;
+            },
+        },
+        {
+            trigger: ".o-mail-ActionPanel:has(.o-mail-SubChannelList)",
+            run: "scroll bottom",
+        },
+        {
+            trigger:
+                ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(100):contains(Sub Channel 0)",
+        },
+        ...range(99, 0).map((i) => ({
+            trigger: `.o-mail-SubChannelPreview .o-mail-SubChannelPreview-name:text(Sub Channel ${i})`,
+        })),
+    ],
+});
+
+registry.category("web_tour.tours").add("create_thread_for_attachment_without_body", {
+    steps: () => [
+        {
+            content: "Open general channel",
+            trigger: '.o-mail-DiscussSidebarChannel-itemName:contains("general")',
+            run: "click",
+        },
+        {
+            trigger: ".o-mail-Thread:contains(This is the start of the #General channel)",
+        },
+        {
+            content: "Drop a file",
+            trigger: ".o-mail-DiscussContent-main",
+            async run({ dragFiles }) {
+                const files = [new File(["hi there"], "file2.txt", { type: "text/plain" })];
+                const dropFiles = await dragFiles(files);
+                await dropFiles(".o-Dropzone");
+            },
+        },
+        {
+            trigger: '.o-mail-AttachmentContainer:not(.o-isUploading):contains("file2.txt")',
+        },
+        {
+            content: "Click on send button",
+            trigger: ".o-mail-Composer-mainActions [title='Send']:enabled",
+            run: "click",
+        },
+        {
+            content: "Hover on attachment",
+            trigger:
+                '.o-mail-Message:not(:has(.o-mail-Message-pendingProgress)) .o-mail-AttachmentContainer:contains("file2.txt")',
+            run: "hover",
+        },
+        {
+            content: "Click on expand button",
+            trigger: '.o-mail-Message [title="Expand"]',
+            run: "click",
+        },
+        {
+            content: "Create a new thread",
+            trigger: '.o-dropdown-item:contains("Create Thread")',
+            run: "click",
+        },
+        {
+            content: "Check a new thread is created",
+            trigger: '.o-mail-Discuss:contains("New Thread")',
+        },
+    ],
+});

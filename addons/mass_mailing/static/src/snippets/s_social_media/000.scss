@@ -1,0 +1,68 @@
+.s_social_media {
+    user-select: none;
+    $-size: 3rem; // $spacers isn't working properly here
+    > * {
+        display: inline-block;
+        vertical-align: middle;
+        &.s_social_media_links a {
+            display: inline-block;
+            vertical-align: middle;
+        }
+    }
+    .s_social_media_title {
+        margin: 0 .4rem 0 0;
+    }
+    a[data-platform] {
+        i, span {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            &:not(.small_social_icon, .fa-2x, .fa-3x, .fa-4x, .fa-5x) {
+                &.rounded-circle,
+                &.rounded-empty-circle,
+                &.rounded,
+                &.fa-stack {
+                    font-size: 1rem;
+                    width: $-size - .5rem;
+                    height: $-size - .5rem;
+                }
+            }
+            @for $i from 2 through 5 {
+                &.fa-#{$i}x {
+                    width: $-size + $i;
+                    height: $-size + $i;
+                    line-height: $-size + $i;
+                    font-size: $i * 1rem;
+                }
+            }
+            line-height: 1.5;
+            width: $-size;
+            height: $-size;
+            &.small_social_icon {
+                width: $-size - 1rem;
+                height: $-size - 1rem;
+                font-size: 0.875em;
+            }
+            &.rounded {
+                border-radius: 1px !important;
+            }
+            &.rounded-circle {
+                border-radius: 100px !important;
+            }
+            &.rounded-empty-circle {
+                border-radius: 100px !important;
+                border-width: ceil(1.4 * $border-width);
+                border-style: solid;
+                background: transparent;
+            }
+        }
+        margin: .2rem;
+    }
+    &:not(.no_icon_color) {
+        @each $media, $color in $o-social-colors { // @see builder.variables.scss for the media colors
+            .fa-#{$media}, .s_social_media_#{$media} {
+                color: $color !important;
+            }
+        }
+    }
+}

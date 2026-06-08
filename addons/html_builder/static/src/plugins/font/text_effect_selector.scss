@@ -1,0 +1,78 @@
+.o_text_effect_popover {
+    max-height: 440px !important;
+    min-width: unset;
+    overflow-y: auto;
+
+    .o-hb-text-effect-preview {
+        overflow: hidden;
+        height: 40px;
+        width: 48px;
+        border: $border-width solid $border-color;
+        border-radius: $border-radius-sm;
+        background-color: $white;
+        color: $black;
+
+        .o-hb-text-effect-preview-sample {
+            font-size: 32px;
+            line-height: 1em;
+            scale: 0.8;
+        }
+
+        &.o-hb-text-effect-preview-dark {
+            background-color: $gray-900;
+            color: $white;
+        }
+    }
+
+    .o-hb-text-effect-options {
+        --o-hb-text-effect-option-bg: $white;
+        --o-hb-text-effect-shadow-bg: rgba(0, 0, 0, 0.05);
+
+        width: 330px;
+        font-size: $o-we-font-size;
+        background-color: var(--o-hb-text-effect-option-bg);
+
+        .oi-chevron-left {
+            aspect-ratio: 1 / 1;
+        }
+
+        .o-hb-text-effect-shadow {
+            border-radius: $border-radius-sm;
+            background-color: var(--o-hb-text-effect-shadow-bg);
+
+            .o-hb-text-effect-shadow-options {
+                border-right: $border-width solid var(--o-hb-text-effect-option-bg);
+
+                .hb-row-label {
+                    background-color: transparent;
+                }
+            }
+
+
+            .o-hb-text-effect-remove-shadow {
+                width: 32px;
+            }
+        }
+
+        .o-hb-text-effect-add-shadow {
+            border-style: dashed;
+
+            &, &:focus, &:hover, &:active {
+                border-color: var(
+                    --o-hb-text-effect-add-shadow-border-color,
+                    var(--btn-border-color)
+                );
+            }
+        }
+
+        .o-hb-text-effect-add-shadow, .o-hb-text-effect-remove-shadow {
+            &, &:focus, &:hover {
+                background-color: transparent !important;
+            }
+        }
+    }
+}
+
+.hb-row-content .o-hb-text-effect-preview {
+    display: none !important;
+}

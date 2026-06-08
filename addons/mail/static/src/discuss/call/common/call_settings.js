@@ -1,0 +1,117 @@
+import { Component, onWillStart, props, t, useListener, xml } from "@odoo/owl";
+
+import { _t } from "@web/core/l10n/translation";
+import { browser } from "@web/core/browser/browser";
+import { isMobileOS } from "@web/core/browser/feature_detection";
+import { useService } from "@web/core/utils/hooks";
+import { Tabs, TabHeader, TabPanel } from "@mail/core/common/tabs";
+import { useMicrophoneVolume } from "@mail/utils/common/hooks";
+import { ActionPanel } from "@mail/discuss/core/common/action_panel";
+import { DeviceSelect } from "@mail/discuss/call/common/device_select";
+import { Dialog } from "@web/core/dialog/dialog";
+
+export class CallSettings extends Component {
+    static template = "discuss.CallSettings";
+    static components = { ActionPanel, DeviceSelect, Tabs, TabHeader, TabPanel };
+
+    setup() {
+        super.setup();
+        this.props = props({
+            close: t.function([t.instanceOf(MouseEvent)]).optional(),
+            initialTab: t.string().optional(),
+            isCompact: t.boolean().optional(),
+            withActionPanel: t.boolean().optional(true),
+        });
+        this.notification = useService("notification");
+        this.store = useService("mail.store");
+        this.rtc = useService("discuss.rtc");
+        this.microphoneVolume = useMicrophoneVolume();
+        this.pttExtService = useService("discuss.ptt_extension");
+        useListener(browser, "keydown", (ev) => this._onKeyDown(ev), { capture: true });
+        useListener(browser, "keyup", (ev) => this._onKeyUp(ev), { capture: true });
+        onWillStart(async () => {
+            if (!browser.navigator.mediaDevices) {
+                // zxing-js: isMediaDevicesSuported or canEnumerateDevices is false.
+                this.notification.add(
+                    _t("Media devices unobtainable. SSL might not be set up properly."),
+                    { type: "warning" }
+                );
+                console.warn("Media devices unobtainable. SSL might not be set up properly.");
+                return;
+            }
+        });
+        this.isMobileOS = isMobileOS;
+    }
+
+    get stopText() {
+        return _t("Stop");
+    }
+
+    get testText() {
+        return _t("Test");
+    }
+
+    _onKeyDown(ev) {
+        if (!this.store.settings.isRegisteringKey) {
+            return;
+        }
+        ev.stopPropagation();
+        ev.preventDefault();
+        this.store.settings.setPushToTalkKey(ev);
+    }
+
+    _onKeyUp(ev) {
+        if (!this.store.settings.isRegisteringKey) {
+            return;
+        }
+        ev.stopPropagation();
+        ev.preventDefault();
+        this.store.settings.isRegisteringKey = false;
+    }
+
+    onChangeLogRtc(ev) {
+        this.store.settings.logRtc = ev.target.checked;
+    }
+
+    onClickDownloadLogs() {
+        this.rtc.dumpLogs({ download: true });
+    }
+
+    onClickRegisterKeyButton() {
+        this.store.settings.isRegisteringKey = !this.store.settings.isRegisteringKey;
+    }
+
+    onChangeDelay(ev) {
+        this.store.settings.setDelayValue(ev.target.value);
+    }
+
+    onChangeBlur(ev) {
+        this.store.settings.useBlur = ev.target.checked;
+    }
+
+    onChangeCallAutoFocus() {
+        this.store.settings.useCallAutoFocus = !this.store.settings.useCallAutoFocus;
+    }
+
+    onChangePushToTalk(ev) {
+        this.store.settings.usePushToTalk = ev.target.checked;
+    }
+
+    onInputBackgroundBlurAmount(ev) {
+        this.store.settings.backgroundBlurAmount = Number(ev.target.value);
+    }
+
+    onInputEdgeBlurAmount(ev) {
+        this.store.settings.edgeBlurAmount = Number(ev.target.value);
+    }
+}
+
+export class CallSettingsDialog extends Component {
+    static template = xml`
+        <Dialog size="'md'" footer="false" title.translate="Voice &amp; Video Settings">
+            <CallSettings initialTab="this.props.initialTab" withActionPanel="false"/>
+        </Dialog>
+    `;
+    props = props({ initialTab: t.string().optional() });
+    static components = { CallSettings, Dialog };
+}

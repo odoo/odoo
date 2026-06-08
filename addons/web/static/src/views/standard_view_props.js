@@ -1,0 +1,26 @@
+import { t } from "@odoo/owl";
+
+export const standardViewProps = {
+    info: t.object(),
+    resModel: t.string(),
+    arch: t.instanceOf(Element),
+    className: t.string().optional(),
+    context: t.object(),
+    createRecord: t.function().optional(),
+    display: t.object().optional(),
+    domain: t.array(),
+    fields: t.object(),
+    globalState: t.object().optional(),
+    groupBy: t.array(t.string()),
+    limit: t.number().optional(),
+    noBreadcrumbs: t.boolean().optional(),
+    orderBy: t.array(t.object()),
+    relatedModels: t.object().optional(),
+    resId: t.or([t.number(), t.boolean()]).optional(),
+    resIds: t.array().optional(),
+    searchMenuTypes: t.array(t.string()),
+    selectRecord: t.function().optional(),
+    state: t.object().optional(),
+    useSampleModel: t.boolean(),
+    updateActionState: t.function().optional(),
+};

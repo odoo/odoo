@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="project.ProjectFormView.Buttons" t-inherit="web.FormView.Buttons" t-inherit-mode="primary">
+        <button class="btn btn-outline-primary o_form_button_create" position="replace">
+            <ProjectTemplateDropdown t-if="this.canCreate"
+                onCreate="() => this.create()"
+                newButtonClasses="'btn btn-outline-primary o_form_button_create'"
+                context="this.props.context"
+            />
+        </button>
+    </t>
+</templates>

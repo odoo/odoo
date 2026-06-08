@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp.MRPBooleanIconField">
+        <i t-if="this.props.record.data[this.props.name]" t-attf-class="fa {{this.props.icon}}" t-att-data-tooltip="this.props.label"/>
+    </t>
+
+</templates>

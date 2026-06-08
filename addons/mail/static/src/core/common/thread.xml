@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.Thread">
+    <div class="o-mail-Thread position-relative flex-grow-1 d-flex flex-column overflow-auto o-scrollbar-thin bg-inherit" t-att-class="{ 'pb-5': this.env.inChatter?.aside, 'o-pb-3_5': !this.env.inChatter?.aside, 'ps-2 pe-3': this.env.inDiscussApp and !this.ui.isSmall, 'o-focused': this.props.thread.isFocused }" t-att-data-transient="this.props.thread.isTransient" t-ref="this.rootRef" tabindex="-1" t-on-focusin="this.onFocusin" t-on-focusout="this.onFocusout">
+        <t t-if="!this.props.thread.isEmpty or this.props.thread.loadOlder or this.props.thread.hasLoadingFailed" name="content">
+            <div class="o-mail-Thread-content d-flex flex-column position-relative flex-grow-1 bg-inherit" t-att-class="{'justify-content-end': !this.env.inChatter and this.props.thread.model !== 'mail.box'}">
+                <span class="position-absolute w-100 invisible" t-att-class="this.props.order === 'asc' ? 'bottom-0' : 'top-0'" t-custom-ref="present-treshold" t-att-style="`height: Min(${this.PRESENT_THRESHOLD}px, 100%)`"/>
+                <t t-set="currentDay" t-value="0"/>
+                <t t-if="this.props.order === 'asc'">
+                    <t t-if="this.showLoadOlder" t-call="mail.Thread.loadOlder"/>
+                    <t t-elif="this.isInErrorState" t-call="mail.Thread.loadingError"/>
+                    <t t-elif="this.showStartMessage" t-call="mail.Thread.startMessage"/>
+                </t>
+                <span t-else="" class="pt-1" t-custom-ref="load-newer"/>
+                <t t-set="messages" t-value="this.orderedMessages"/>
+                <t t-foreach="messages" t-as="msg" t-key="msg.id">
+                    <t t-set="prevMsg" t-value="messages[msg_index -1]"/>
+                    <t t-if="msg.dateDay !== currentDay and this.props.showDates">
+                        <DateSection date="msg.dateDay" className="'pt-2 px-2'"/>
+                        <t t-set="currentDay" t-value="msg.dateDay"/>
+                    </t>
+                    <div t-if="msg.threadAsFirstUnread?.eq(this.props.thread) and (prevMsg or this.channel?.markedAsUnread)" class="o-mail-Thread-newMessage d-flex align-items-center fw-bold z-1 px-2">
+                        <div class="o-mail-Thread-newMessageLine flex-grow-1 border border-danger rounded-start-3 opacity-100 shadow-sm my-1"/><span class="o-ps-1_5 pe-1 bg-danger o-text-white rounded text-uppercase shadow-sm o-xxsmaller">New</span>
+                    </div>
+                    <NotificationMessage t-if="msg.isNotification and !msg.notificationHidden" message="msg" messageRefs="this.messageRefs" thread="this.props.thread"/>
+                    <Message
+                        t-elif="!msg.isNotification"
+                        asCard="this.props.thread.model === 'mail.box'"
+                        className="this.getMessageClassName(msg)"
+                        message="msg"
+                        messageSelection="this.messageSelection"
+                        messageRefs="this.messageRefs"
+                        previousMessage="prevMsg"
+                        squashed="this.isSquashed(msg, prevMsg)"
+                        onParentMessageClick.bind="() => this.onParentMessageClick(msg.parent_id)"
+                        thread="this.props.thread"
+                        isFirstMessage="msg_first"
+                        hasActions="!msg.eq(this.channel?.from_message_id)"
+                        showDates="this.props.showDates"
+                    />
+                </t>
+                <span t-if="this.props.order === 'asc'" class="pt-1" t-custom-ref="load-newer"/>
+                <t t-else="">
+                    <t t-if="this.showLoadOlder" t-call="mail.Thread.loadOlder"/>
+                    <t t-if="this.props.thread.isInErrorState" t-call="mail.Thread.loadingError"/>
+                </t>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="o-mail-Thread-empty d-flex flex-column h-100"
+                t-att-class="{
+                    'p-4': this.props.showEmptyMessage and !this.showStartMessage,
+                    'align-items-start justify-content-end': this.showStartMessage,
+                    'align-items-center justify-content-center opacity-75': !this.showStartMessage
+                }">
+                <t t-if="this.props.thread.isLoaded and this.props.showEmptyMessage">
+                    <t name="empty-message">
+                        <t t-if="this.showStartMessage" t-call="mail.Thread.startMessage"/>
+                        <div t-else="" class="d-flex flex-column align-items-center">
+                            <span class="fs-1" style="filter: grayscale(1);">😶</span>
+                            <span>No messages yet.</span>
+                        </div>
+                    </t>
+                </t>
+            </div>
+        </t>
+        <t t-call="mail.Thread.jumpPresent"/>
+    </div>
+</t>
+
+<t t-name="mail.Thread.jumpPresent">
+    <button t-if="this.props.showJumpPresent and this.state.showJumpPresent" class="o-mail-Thread-jumpPresent position-fixed p-2 rounded-circle lh-1 m-n3 user-select-none btn btn-light shadow-sm border border-secondary" t-att-class="{ 'bottom-0': this.env.inChatter and !this.env.inChatter.aside }" t-custom-ref="jump-present" t-on-click="() => this.jumpToPresent()" title="Jump to Present"><i class="oi text-muted" t-att-class="{ 'oi-chevron-down': this.props.order === 'asc', 'oi-chevron-up': this.props.order !== 'asc' }"/></button>
+</t>
+
+<t t-name="mail.Thread.loadOlder">
+    <button class="btn btn-link" t-att-class="{ 'opacity-0': !this.mountedAndLoaded }" t-on-click="this.onClickLoadOlder" t-custom-ref="load-older">Load More</button>
+</t>
+
+<t t-name="mail.Thread.loadingError">
+    <div class="d-flex flex-grow-1 align-items-center justify-content-center flex-column">
+        <span class="fs-1">😔</span>
+        <div class="o-mail-Thread-error">
+            <t t-out="this.errorStateText"/>
+        </div>
+        <span t-if="this.props.thread.hasLoadingFailedError" class="o-xsmaller text-muted" t-out="window.String(this.props.thread.hasLoadingFailedError)"/>
+        <button class="btn btn-link" t-on-click="this.onClickRetry">
+            <i class="fa fa-refresh"/>
+            Try again
+        </button>
+    </div>
+</t>
+
+<!--
+    @param {Number} counter
+    @param {string} [badgeClass]
+    @param {string} [iconClass]
+    @param {boolean} [floating=false]
+-->
+<t t-name="mail.discuss_badge">
+    <span class="badge rounded-pill o-discuss-badge flex-shrink-0 bg-inherit d-flex align-items-center justify-content-center" t-attf-class="{{ badgeClass }}" t-att-style="'margin: 0px; background-color: inherit !important;' + (floating ? 'padding: 1px;' : 'padding: 0px;')">
+        <span class="rounded-pill o-innerBadge" t-attf-class="{{ counterClass }}" t-out="counter" style="top: 0 !important;"/>
+    </span>
+</t>
+
+<t t-name="mail.Thread.startMessage">
+    <div class="pt-4" t-att-class="{ 'px-3': this.env.inChatWindow, 'px-2': this.env.inDiscussApp or this.env.inMeetingChat }">
+        <div class="d-flex gap-2 lh-sm" t-att-class="{
+            'mt-2 mb-1': !this.channel?.parent_channel_id,
+            'mt-1': this.channel?.parent_channel_id,
+        }">
+            <div class="o-mail-Thread-avatar" t-att-class="{
+                'o-mail-Thread-avatarChatWindow mt-1': this.env.inChatWindow,
+                'mt-2': !this.env.inChatWindow,
+            }">
+                <img t-if="!this.channel?.parent_channel_id" class="rounded-3 object-fit-cover" t-att-src="this.channel.avatarUrl" alt="Thread Image"/>
+                <i t-else="" class="fa fa-comments-o text-muted" role="presentation"/>
+            </div>
+            <div role="heading" aria-level="1" class="text-break" t-att-class="{ 'fs-1': !this.env.inChatWindow, 'fs-3': this.env.inChatWindow }" t-out="this.startMessageTitle"/>
+        </div>
+        <p class="text-muted mb-0 small text-break" t-out="this.startMessageSubtitle"/>
+    </div>
+</t>
+</templates>

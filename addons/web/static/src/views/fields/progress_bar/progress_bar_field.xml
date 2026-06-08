@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ProgressBarField">
+        <div class="o_progressbar d-flex align-items-center gap-2 w-100 px-2" t-custom-ref="numpadDecimal">
+            <div t-if="this.props.title" class="o_progressbar_title text-nowrap pe-1"><t t-out="this.props.title"/></div>
+            <div class="progress" aria-valuemin="0" t-att-aria-valuemax="this.maxValue" t-att-aria-valuenow="this.currentValue" t-on-click="this.onProgressClick" t-att-style="this.isEditable ? 'cursor: pointer' : ''">
+                <div t-attf-class="{{ this.progressBarColorClass }}" t-att-style="'width: min(' + 100 * this.currentValue / this.maxValue + '%, 100%)'"></div>
+            </div>
+            <div class="o_progressbar_value d-flex gap-1 flex-shrink-0 text-nowrap">
+                <t t-if="this.isPercentage">
+                    <input
+                        t-if="this.isEditable"
+                        t-custom-ref="currentValue"
+                        class="o_input h-100"
+                        type="text"
+                        inputmode="decimal"
+                        autocomplete="off"
+                        t-att-required="this.props.required"
+                        t-on-focus="this.onInputFocus"
+                        t-on-blur="this.onInputBlur"
+                    />
+                    <div t-attf-class="d-flex {{ this.isEditable ? 'w-auto' : '' }} ">
+                        <t t-if="!this.isEditable" t-out="this.formatCurrentValue(true)"/>
+                        %
+                    </div>
+                </t>
+                <t t-else="">
+                    <input
+                        t-if="this.isEditable"
+                        t-custom-ref="currentValue"
+                        class="o_input h-100"
+                        type="text"
+                        inputmode="decimal"
+                        autocomplete="off"
+                        t-on-focus="this.onInputFocus"
+                        t-on-blur="this.onInputBlur"
+                    />
+                    <div t-attf-class="d-flex {{ this.isEditable ? 'w-auto' : '' }} ">
+                        <span t-if="!this.isEditable" t-out="this.formatCurrentValue(true)"/>
+                        /
+                        <span t-out="this.formatMaxValue(true)"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,102 @@
+declare module "plugins" {
+    import { CarouselOptionShared } from "@website/builder/plugins/carousel_option_plugin";
+    import { CustomizeWebsiteShared } from "@website/builder/plugins/customize_website_plugin";
+    import { on_content_manually_updated_handlers, EditInteractionShared } from "@website/builder/plugins/edit_interaction_plugin";
+    import { WebsiteFontShared } from "@website/builder/plugins/font/font_plugin";
+    import { FormOptionShared } from "@website/builder/plugins/form/form_option_plugin";
+    import { ImageHoverShared } from "@website/builder/plugins/image/image_hover_plugin";
+    import { MenuDataShared } from "@website/builder/plugins/menu_data_plugin";
+    import { can_have_hover_effect_predicates } from "@website/builder/plugins/options/animate_option";
+    import { AnimateOptionShared, on_hover_animation_mode_cleaned_handlers, on_hover_animation_mode_applied_handlers } from "@website/builder/plugins/options/animate_option_plugin";
+    import { WebsiteBackgroundVideoShared } from "@website/builder/plugins/options/background_option_plugin";
+    import { CardImageOptionShared } from "@website/builder/plugins/options/card_image_option_plugin";
+    import { ChartOptionShared } from "@website/builder/plugins/options/chart_option_plugin";
+    import { CookiesBarOptionShared } from "@website/builder/plugins/options/cookies_bar_option";
+    import { DynamicSnippetCarouselOptionShared } from "@website/builder/plugins/options/dynamic_snippet_carousel_option_plugin";
+    import { on_dynamic_snippet_template_updated_handlers, DynamicSnippetOptionShared } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
+    import { footer_templates_providers, FooterOptionShared } from "@website/builder/plugins/options/footer_option_plugin";
+    import { gallery_items_providers, reorder_items_processors } from "@website/builder/plugins/options/gallery_element_option_plugin";
+    import { GoogleMapsOptionShared } from "@website/builder/plugins/options/google_maps_option/google_maps_option_plugin";
+    import { header_templates_providers, HeaderOptionShared } from "@website/builder/plugins/options/header/header_option_plugin";
+    import { ImageGalleryOptionShared } from "@website/builder/plugins/options/image_gallery_option_plugin";
+    import { InstagramOptionShared } from "@website/builder/plugins/options/instagram_option_plugin";
+    import { MegaMenuOptionShared } from "@website/builder/plugins/options/mega_menu_option_plugin";
+    import { NavTabsStyleOptionShared } from "@website/builder/plugins/options/navtabs_style_option_plugin";
+    import { WebsiteParallaxShared } from "@website/builder/plugins/options/parallax_option_plugin";
+    import { searchbar_option_order_by_items } from "@website/builder/plugins/options/searchbar_option_plugin";
+    import { SocialMediaOptionShared } from "@website/builder/plugins/options/social_media_option_plugin";
+    import { on_visibility_toggled_handlers, visibility_selector_parameters } from "@website/builder/plugins/options/visibility_option_plugin";
+    import { WebsitePageConfigOptionShared } from "@website/builder/plugins/options/website_page_config_option_plugin";
+    import { PopupVisibilityShared } from "@website/builder/plugins/popup_visibility_plugin";
+    import { SwitchableViewsShared } from "@website/builder/plugins/switchable_views_plugin";
+    import { theme_options, ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
+    import { TranslateWebpageOptionShared } from "@website/builder/plugins/translation/options/translate_webpage_option_plugin";
+    import { on_nodes_marked_translatable_handlers, TranslationShared } from "@website/builder/plugins/translation/translation_plugin";
+    import { WebsiteSaveShared } from "@website/builder/plugins/website_save_plugin";
+    import { force_background_translation_state_selectors } from "@website/builder/plugins/translation/repeat_translation_state_plugin";
+    import { WebsiteBridgeShared } from "@website/builder/plugins/website_bridge_plugin";
+
+    interface SharedMethods {
+        animateOption: AnimateOptionShared;
+        carouselOption: CarouselOptionShared;
+        cardImageOption: CardImageOptionShared;
+        chartOptionPlugin: ChartOptionShared;
+        CookiesBarOptionPlugin: CookiesBarOptionShared;
+        customizeWebsite: CustomizeWebsiteShared;
+        dynamicSnippetCarouselOption: DynamicSnippetCarouselOptionShared;
+        dynamicSnippetOption: DynamicSnippetOptionShared;
+        edit_interaction: EditInteractionShared;
+        footerOption: FooterOptionShared;
+        googleMapsOption: GoogleMapsOptionShared;
+        headerOption: HeaderOptionShared;
+        imageGalleryOption: ImageGalleryOptionShared;
+        imageHover: ImageHoverShared;
+        instagramOption: InstagramOptionShared;
+        megaMenuOptionPlugin: MegaMenuOptionShared;
+        menuDataPlugin: MenuDataShared;
+        navTabsOptionStyle: NavTabsStyleOptionShared;
+        popupVisibilityPlugin: PopupVisibilityShared;
+        socialMediaOptionPlugin: SocialMediaOptionShared;
+        switchableViews: SwitchableViewsShared;
+        themeTab: ThemeTabShared;
+        translateWebpageOption: TranslateWebpageOptionShared;
+        translation: TranslationShared;
+        websiteBackgroundVideoPlugin: WebsiteBackgroundVideoShared;
+        websiteFont: WebsiteFontShared;
+        websiteFormOption: FormOptionShared;
+        websitePageConfigOptionPlugin: WebsitePageConfigOptionShared;
+        websiteParallaxPlugin: WebsiteParallaxShared;
+        websiteSavePlugin: WebsiteSaveShared;
+        websiteBridge: WebsiteBridgeShared;
+    }
+
+    interface GlobalResources extends WebsiteResourcesAccess {}
+    export type WebsiteResourcesAccess = BuilderResourcesAccess & ResourcesTypesFactory<WebsiteResourcesList>;
+    export type WebsiteResources = ResourcesDeclarationsFactory<WebsiteResourcesAccess>;
+    export interface WebsiteResourcesList {
+        // Handlers
+        on_content_manually_updated_handlers: on_content_manually_updated_handlers;
+        on_dynamic_snippet_template_updated_handlers: on_dynamic_snippet_template_updated_handlers;
+        on_hover_animation_mode_cleaned_handlers: on_hover_animation_mode_cleaned_handlers;
+        on_hover_animation_mode_applied_handlers: on_hover_animation_mode_applied_handlers;
+        on_nodes_marked_translatable_handlers: on_nodes_marked_translatable_handlers;
+        on_visibility_toggled_handlers: on_visibility_toggled_handlers;
+
+        // Predicates
+        can_have_hover_effect_predicates: can_have_hover_effect_predicates;
+
+        // Processors
+        reorder_items_processors: reorder_items_processors;
+
+        // Providers
+        footer_templates_providers: footer_templates_providers;
+        gallery_items_providers: gallery_items_providers;
+        header_templates_providers: header_templates_providers;
+
+        // Data
+        searchbar_option_order_by_items: searchbar_option_order_by_items;
+        force_background_translation_state_selectors: force_background_translation_state_selectors;
+        theme_options: theme_options;
+        visibility_selector_parameters: visibility_selector_parameters;
+    }
+}

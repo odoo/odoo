@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.HeaderTemplateOption">
+        <BuilderRow label.translate="Template">
+            <BuilderSelect>
+                <t t-foreach="this.headerTemplates" t-as="template" t-key="template.key">
+                    <t t-component="template.Component" t-props="template.props"/>
+                </t>
+            </BuilderSelect>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Background" level="1">
+            <BuilderColorPicker
+                enabledTabs="['theme', 'custom', 'gradient']"
+                preview="false"
+                defaultColor="''"
+                action="'customizeWebsiteColor'"
+                actionParam="{
+                    mainParam: 'menu-custom',
+                    gradientColor: 'menu-gradient',
+                    combinationColor: 'menu',
+                    nullValue: 'NULL',
+                }"/>
+            <BuilderColorPicker t-if="this.isActiveItem('header_sales_one_opt')"
+                enabledTabs="['theme', 'custom', 'gradient']"
+                preview="false"
+                defaultColor="''"
+                action="'customizeWebsiteColor'"
+                actionParam="{
+                    mainParam: 'header-sales_one-custom',
+                    gradientColor: 'menu-secondary-gradient',
+                    combinationColor: 'header-sales_one',
+                    nullValue: 'NULL',
+                }"/>
+            <BuilderColorPicker t-if="this.isActiveItem('header_sales_two_opt')"
+                enabledTabs="['theme', 'custom', 'gradient']"
+                preview="false"
+                defaultColor="''"
+                action="'customizeWebsiteColor'"
+                actionParam="{
+                    mainParam: 'header-sales_two-custom',
+                    gradientColor: 'menu-secondary-gradient',
+                    combinationColor: 'header-sales_two',
+                    nullValue: 'NULL',
+                }"/>
+            <BuilderColorPicker t-if="this.isActiveItem('header_sales_three_opt')"
+                enabledTabs="['theme', 'custom', 'gradient']"
+                preview="false"
+                defaultColor="''"
+                action="'customizeWebsiteColor'"
+                actionParam="{
+                    mainParam: 'header-sales_three-custom',
+                    gradientColor: 'menu-secondary-gradient',
+                    combinationColor: 'header-sales_three',
+                    nullValue: 'NULL',
+                }"/>
+            <BuilderColorPicker t-if="this.isActiveItem('header_sales_four_opt')"
+                enabledTabs="['theme', 'custom', 'gradient']"
+                preview="false"
+                defaultColor="''"
+                action="'customizeWebsiteColor'"
+                actionParam="{
+                    mainParam: 'header-sales_four-custom',
+                    gradientColor: 'menu-secondary-gradient',
+                    combinationColor: 'header-sales_four',
+                    nullValue: 'NULL',
+                }"/>
+        </BuilderRow>
+
+        <t t-set="noPreviewOptionsContentWidth" t-value="[
+            'header_search_opt',
+            'header_sales_one_opt',
+            'header_sales_two_opt',
+            'header_sales_three_opt',
+            'header_sales_four_opt',
+        ]"/>
+        <BuilderRow t-if="!this.isActiveItem('header_sidebar_opt')" label.translate="Content Width" level="1">
+            <BuilderButtonGroup applyTo="'#o_main_nav'"
+                    action="this.hasSomeOptions(noPreviewOptionsContentWidth) and 'websiteConfig' or 'previewableWebsiteConfig'">
+                <BuilderButton
+                    title.translate="Small"
+                    iconImg="'/website/static/src/img/snippets_options/content_width_small.svg'"
+                    actionParam="{ views: ['website.header_width_small'], previewClass: `o_container_small`}"/>
+                <BuilderButton
+                    title.translate="Regular"
+                    iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
+                    actionParam="{ views: [], previewClass: `container`}"/>
+                <BuilderButton
+                    title.translate="Full"
+                    iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
+                    actionParam="{ views: ['website.header_width_full'], previewClass: `container-fluid`}"/>
+            </BuilderButtonGroup>
+        </BuilderRow>
+
+        <BuilderRow t-if="this.isActiveItem('header_sidebar_opt')" label.translate="Width" level="1">
+            <BuilderNumberInput
+                action="'customizeWebsiteVariable'"
+                actionParam="'sidebar-width'"
+                default="null"
+                unit="'px'"
+                saveUnit="'rem'"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Scroll Effect" t-if="!this.isActiveItem('header_sidebar_opt')" level="1">
+            <BuilderSelect action="'websiteConfig'" className="'o_scroll_effects_selector'">
+                <BuilderSelectItem
+                    id="'header_visibility_standard_opt'"
+                    label.translate="Standard"
+                    actionParam="{ views: ['website.header_visibility_standard'], vars: { 'header-scroll-effect': '' } }"
+                    classAction="'o_header_standard'"
+                    className="'o_we_img_animate'"
+                >
+                    <t t-call="website.scrollEffectImages" imgName="'header_effect_standard'"/>
+                    <span>Standard</span>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_effect_scroll_opt'"
+                    label.translate="Scroll"
+                    actionParam="{ views: [], vars: { 'header-scroll-effect': 'scroll' } }"
+                    classAction="''"
+                    className="'o_we_img_animate'"
+                >
+                    <t t-call="website.scrollEffectImages" imgName="'header_effect_scroll'"/>
+                    <span>Scroll</span>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_effect_fixed_opt'"
+                    label.translate="Fixed"
+                    actionParam="{ views: ['website.header_visibility_fixed'], vars: { 'header-scroll-effect': 'fixed' } }"
+                    classAction="'o_header_fixed'"
+                    className="'o_we_img_animate'"
+                >
+                    <t t-call="website.scrollEffectImages" imgName="'header_effect_fixed'"/>
+                    <span>Fixed</span>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_effect_disappears_opt'"
+                    label.translate="Disappears"
+                    actionParam="{ views: ['website.header_visibility_disappears'], vars: { 'header-scroll-effect': 'disappears' } }"
+                    classAction="'o_header_disappears'"
+                    className="'o_we_img_animate'"
+                >
+                    <t t-call="website.scrollEffectImages" imgName="'header_effect_disappears'"/>
+                    <span>Disappears</span>
+                </BuilderSelectItem>
+                <BuilderSelectItem
+                    id="'header_effect_fade_out_opt'"
+                    label.translate="Fade Out"
+                    actionParam="{ views: ['website.header_visibility_fade_out'], vars: { 'header-scroll-effect': 'fade-out' } }"
+                    classAction="'o_header_fade_out'"
+                    className="'o_we_img_animate'"
+                >
+                    <t t-call="website.scrollEffectImages" imgName="'header_effect_fade_out'"/>
+                    <span>Fade Out</span>
+                </BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow t-if="!this.isActiveItem('header_sidebar_opt')" label.translate="Show Disclaimer">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{ views: ['website.option_header_disclaimer'] }"/>
+        </BuilderRow>
+    </t>
+
+    <t t-name="website.scrollEffectImages">
+        <Image src="`/website/static/src/img/snippets_options/${imgName}.png`"/>
+        <Image src="'/web/static/img/transparent.png'" attrs="{style: `--animate-src: '/website/static/src/img/snippets_options/${imgName}.gif';`}"/>
+    </t>
+
+    <t t-name="website.HeaderTemplateChoice">
+        <BuilderSelectItem
+            id="this.props.id"
+            title="this.props.title"
+            action="'headerTemplateConfig'"
+            actionParam="{
+                views: this.props.views,
+                vars: {
+                    'header-template': this.props.varName,
+                    'menu-shadow-class': this.props.menuShadowClass,
+                    'menu-box-shadow-style': null,
+                },
+                checkVars: false,
+                defaultAlignment: this.props.defaultAlignment,
+            }">
+            <Image attrs="{ style: 'width: calc(100% - 0.5rem);' }" src="this.props.imgSrc"/>
+        </BuilderSelectItem>
+    </t>
+</templates>

@@ -1,0 +1,32 @@
+.o-discuss-CallMenu-buttonContent {
+    max-width: 150px;
+    @include o-mail-call-bordered(.5);
+    transition: background-color .2s ease-in-out;
+
+    &.o-is-talking {
+        background-color: color-mix(in srgb, var(--discuss-talkingColor, $o-discuss-talkingColor) 30%, transparent) !important;
+        .o-discuss-CallMenu-dropdownMore, .o-discuss-CallMenu-channelInfo {
+            &:hover {
+                background-color: color-mix(in srgb, var(--discuss-talkingColor, $o-discuss-talkingColor) 15%, transparent) !important;
+            }
+        }
+    }
+
+    &.o-isOdooCommunity {
+        height: $o-navbar-height - 20px !important; // same button height as in enterprise.
+        overflow: hidden;
+        color: $o-action !important;
+    }
+}
+
+.o-discuss-CallMenu-dropdownMore, .o-discuss-CallMenu-channelInfo {
+    background-color: transparent !important;
+    &:hover {
+        background-color: mix($gray-200, $gray-300) !important;
+    }
+}
+
+.o-discuss-CallMenu-warningBadge {
+    top: -2px;
+    right: -4px;
+}

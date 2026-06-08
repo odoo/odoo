@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- wizard action on res.partner -->
+        <record id="partner_wizard_action_create_and_open" model="ir.actions.server">
+            <field name="name">Grant portal access</field>
+            <field name="model_id" ref="portal.model_portal_wizard"/>
+            <field name="binding_model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">action = model.action_open_wizard()</field>
+        </record>
+
+        <record id="partner_wizard_action" model="ir.actions.act_window">
+            <field name="name">Grant portal access</field>
+            <field name="res_model">portal.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" eval="False"/>
+        </record>
+
+        <!-- wizard view -->
+        <record id="wizard_view" model="ir.ui.view">
+            <field name="name">Grant portal access</field>
+            <field name="model">portal.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Portal Access Management">
+                    <div class="mb-3">
+                        Select which contacts should belong to the portal in the list below.
+                        The email address of each selected contact must be valid and unique.
+                        If necessary, you can fix any contact's email address directly in the list.
+                    </div>
+                    <field name="welcome_message"
+                        placeholder="This text is included at the end of the email sent to new portal users."
+                        class="mb-3"/>
+                    <field name="user_ids" class="o_portal_wizard_user_one2many" widget="portal_wizard_user_one2many">
+                        <list string="Contacts" editable="bottom" create="false" delete="false">
+                            <field name="partner_id" force_save="1"/>
+                            <field name="email" readonly="is_internal"/>
+                            <field name="email_state" column_invisible="True"/>
+                            <button name="action_refresh_modal" type="object" icon="fa-check text-success"
+                                invisible="email_state != 'ok'" title="Valid Email Address"/>
+                            <button name="action_refresh_modal" type="object" icon="fa-times text-danger"
+                                invisible="email_state != 'ko'" title="Invalid Email Address"/>
+                            <button name="action_refresh_modal" type="object" icon="fa-user-times text-danger"
+                                invisible="email_state != 'exist'" title="Email Address already taken by another user"/>
+                            <field name="login_date"/>
+                            <field name="is_portal" column_invisible="True"/>
+                            <field name="is_internal" column_invisible="True"/>
+                            <button string="Grant Access" name="action_grant_access" type="object" class="btn-secondary"
+                                invisible="is_portal or is_internal or email_state != 'ok'"/>
+                            <button string="Revoke Access" name="action_revoke_access" type="object" class="btn-secondary"
+                                invisible="not is_portal or is_internal"/>
+                            <button string="Re-Invite" name="action_invite_again" type="object" class="btn-secondary"
+                                invisible="not is_portal or is_internal or email_state != 'ok'"/>
+                            <button string="Internal User" invisible="not is_internal"
+                                disabled="True" title="This partner is linked to an internal User and already has access to the Portal."/>
+                        </list>
+                    </field>
+                    <footer>
+                        <button string="Close" class="btn-primary" special="save" data-hotkey="v" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+</odoo>

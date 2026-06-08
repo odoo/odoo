@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_tr_nilvera_trailer_plate_view_tree" model="ir.ui.view">
+        <field name="name">l10n_tr.nilvera.trailer.plate.tree</field>
+        <field name="model">l10n_tr.nilvera.trailer.plate</field>
+        <field name="arch" type="xml">
+            <list string="GİB Plate Numbers" create="True" editable="bottom">
+                <field name="name"/>
+                <field name="plate_number_type"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_tr_nilvera_trailer_plate_view_form" model="ir.ui.view">
+        <field name="name">l10n_tr.nilvera.trailer.plate.form</field>
+        <field name="model">l10n_tr.nilvera.trailer.plate</field>
+        <field name="arch" type="xml">
+            <form string="GİB Plate Number" create="True" editable="bottom">
+                <field name="plate_number_type" nolabel="1" options="{'horizontal': true}" widget="radio"/>
+                <div class="oe_title">
+                    <h2 class="mt-2">
+                        <field name="name" placeholder="Plate Number"/>
+                    </h2>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_tr_nilvera_trailer_plate" model="ir.actions.act_window">
+        <field name="name">GİB Plate Numbers</field>
+        <field name="res_model">l10n_tr.nilvera.trailer.plate</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="l10n_tr_nilvera_trailer_plate_view_tree"/>
+    </record>
+
+    <menuitem
+        id="menu_l10n_tr_nilvera"
+        name="GİB e-Dispatch"
+        parent="stock.menu_stock_config_settings"
+        sequence="100"
+    />
+    <menuitem
+        id="menu_l10n_tr_nilvera_trailer_plate"
+        name="GİB Plate Numbers"
+        parent="menu_l10n_tr_nilvera"
+        action="action_l10n_tr_nilvera_trailer_plate"
+        sequence="200"
+    />
+</odoo>

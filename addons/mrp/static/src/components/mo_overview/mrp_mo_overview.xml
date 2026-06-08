@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <div t-name="mrp.MoOverview" class="o_action">
+        <Layout display="{ controlPanel: {} }">
+            <t t-set-slot="control-panel-actions">
+                <MoOverviewDisplayFilter showOptions="this.state.showOptions" limited="this.isProductionDone" changeDisplay.bind="this.onChangeDisplay" isProductionDraft="this.isProductionDraft"/>
+            </t>
+
+            <t t-set-slot="control-panel-buttons">
+                <button class="btn btn-primary" t-on-click="this.onPrint">Print</button>
+                <button class="btn btn-primary" t-on-click="this.onUnfold">Unfold</button>
+            </t>
+
+            <div class="overflow-auto border-bottom bg-view container-fluid">
+                <table name="overview" class="table">
+                    <thead class="o_mrp_mo_overview_thead">
+                        <tr>
+                            <th class="text-start"/>
+                            <th class="text-center" t-if="this.showReplenishments">Status</th>
+                            <th t-attf-class="{{ this.showUom ? 'text-center' : 'text-end' }}" t-attf-colspan="{{ this.showUom ? 2 : 1 }}">Quantity</th>
+                            <th class="text-end" t-if="this.showAvailabilities">Free to use / On Hand</th>
+                            <th class="text-end" t-if="this.showAvailabilities">Reserved</th>
+                            <th class="text-end" t-if="this.showReceipts">Receipt</th>
+                            <th class="text-end" t-if="this.showUnitCosts">Unit Cost</th>
+                            <th class="text-end" t-if="this.showMoCosts" title="Cost based on related replenishments. Otherwise cost from product form">MO Cost</th>
+                            <th class="text-end" t-if="this.showBomCosts" title="Cost based on the BoM">BoM Cost</th>
+                            <th class="text-end" t-if="this.showRealCosts and this.realInDraft" title="Cost based on cost projection">Real Cost</th>
+                            <th class="text-end" t-elif="this.showRealCosts" title="Cost as it is currently accumulated">Real Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <MoOverviewLine data="this.state.data.summary" showOptions="this.state.showOptions"/>
+                        <MoOverviewComponentsBlock
+                            components="this.state.data.components"
+                            operations="this.state.data.operations"
+                            byproducts="this.state.data.byproducts"
+                            showOptions="this.state.showOptions"/>
+                    </tbody>
+                    <tfoot t-if="this.showMoCosts or this.showRealCosts">
+                        <tr name="unitCost">
+                            <td class="text-end" t-att-colspan="this.totalColspan">Unit Cost</td>
+                            <td t-attf-class="text-end" t-if="this.showMoCosts" t-out="this.formatCost(this.state.data.extras.unit_mo_cost)"/>
+                            <td class="text-end" t-if="this.showBomCosts" t-out="this.formatCost(this.state.data.extras.unit_bom_cost)"/>
+                            <td t-attf-class="text-end" t-if="this.showRealCosts" t-out="this.formatCost(this.state.data.extras.unit_real_cost)"/>
+                        </tr>
+                        <t t-if="this.isProductionDone">
+                            <tr>
+                                <td class="text-end" t-att-colspan="this.totalColspan">Total Cost of Components</td>
+                                <td t-attf-class="text-end" t-if="this.showMoCosts" t-out="this.formatCost(this.state.data.extras.total_mo_cost_components)"/>
+                                <td class="text-end" t-if="this.showBomCosts" t-out="this.formatCost(this.state.data.extras.total_bom_cost_components)"/>
+                                <td t-attf-class="text-end {{ this.getColorClass(this.state.data.extras.total_real_cost_components_decorator) }}" t-if="this.showRealCosts" t-out="this.formatCost(this.state.data.extras.total_real_cost_components)"/>
+                            </tr>
+                            <tr t-if="this.state.data.summary.quantity != 1">
+                                <td class="text-end" t-att-colspan="this.totalColspan">
+                                    Cost of Components per unit
+                                    <t t-if="this.showUom">(in <t t-out='this.state.data.summary.uom_name'/>)</t>
+                                </td>
+                                <td t-attf-class="text-end" t-if="this.showMoCosts" t-out="this.formatCost(this.state.data.extras.unit_mo_cost_components)"/>
+                                <td class="text-end" t-if="this.showBomCosts" t-out="this.formatCost(this.state.data.extras.unit_bom_cost_components)"/>
+                                <td t-attf-class="text-end {{ this.getColorClass(this.state.data.extras.total_real_cost_components_decorator) }}" t-if="this.showRealCosts" t-out="this.formatCost(this.state.data.extras.unit_real_cost_components)"/>
+                            </tr>
+                            <tr t-if="this.hasOperations">
+                                <td class="text-end" t-att-colspan="this.totalColspan">Total Cost of Operations</td>
+                                <td t-attf-class="text-end {{ this.getColorClass(this.state.data.extras.total_mo_cost_operations_decorator) }}" t-if="this.showMoCosts" t-out="this.formatCost(this.state.data.extras.total_mo_cost_operations)"/>
+                                <td class="text-end" t-if="this.showBomCosts" t-out="this.formatCost(this.state.data.extras.total_bom_cost_operations)"/>
+                                <td t-attf-class="text-end" t-if="this.showRealCosts" t-out="this.formatCost(this.state.data.extras.total_real_cost_operations)"/>
+                            </tr>
+                            <tr t-if="this.hasOperations and this.state.data.summary.quantity != 1">
+                                <td class="text-end" t-att-colspan="this.totalColspan">
+                                    Cost of Operations per unit
+                                    <t t-if="this.showUom">(in <t t-out='this.state.data.summary.uom_name'/>)</t>
+                                </td>
+                                <td t-attf-class="text-end {{ this.getColorClass(this.state.data.extras.total_mo_cost_operations_decorator) }}" t-if="this.showMoCosts" t-out="this.formatCost(this.state.data.extras.unit_mo_cost_operations)"/>
+                                <td class="text-end" t-if="this.showBomCosts" t-out="this.formatCost(this.state.data.extras.unit_bom_cost_operations)"/>
+                                <td t-attf-class="text-end" t-if="this.showRealCosts" t-out="this.formatCost(this.state.data.extras.unit_real_cost_operations)"/>
+                            </tr>
+                            <tr t-if="this.hasBreakdown and this.hasOperations">
+                                <td class="text-end" t-att-colspan="this.totalColspan">Total Cost of Production</td>
+                                <td t-attf-class="text-end" t-if="this.showMoCosts" t-out="this.formatCost(this.state.data.extras.total_mo_cost)"/>
+                                <td class="text-end" t-if="this.showBomCosts" t-out="this.formatCost(this.state.data.extras.total_bom_cost)"/>
+                                <td t-attf-class="text-end" t-if="this.showRealCosts" t-out="this.formatCost(this.state.data.extras.total_real_cost)"/>
+                            </tr>
+                        </t>
+                    </tfoot>
+                </table>
+                <t t-if="this.hasBreakdown">
+                    <hr/>
+                    <h2 class="pt-3">Cost Breakdown of Products</h2>
+                    <table name="breakdown" class="table">
+                        <thead>
+                            <tr>
+                                <th class="text-start">Product</th>
+                                <th class="text-end">Avg Cost of Components per Unit</th>
+                                <th t-if="this.hasOperations" class="text-end">Avg Cost of Operations per Unit</th>
+                                <th class="text-end">Avg Total Cost per Unit</th>
+                                <th t-if="this.showUom" class="text-end">Unit of Measure</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="this.state.data.cost_breakdown" t-as="line" t-key="line.index">
+                                <td class="text-start" t-out="line.name"/>
+                                <td class="text-end" t-out="this.formatCost(line.unit_avg_cost_component)"/>
+                                <td t-if="this.hasOperations" class="text-end" t-out="this.formatCost(line.unit_avg_cost_operation)"/>
+                                <td class="text-end" t-out="this.formatCost(line.unit_avg_total_cost)"/>
+                                <td t-if="this.showUom" class="text-end" t-out="line.uom_name"/>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+            </div>
+        </Layout>
+    </div>
+
+</templates>

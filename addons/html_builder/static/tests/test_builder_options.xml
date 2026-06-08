@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+<t t-name="html_builder.TestBuilderOptions">
+    <t t-set="socialMediaElementsSelector" t-value="'.s_social_media i.fa, .s_share i.fa, .social_media_img'"/>
+    <t t-set="replaceMediaOptionSelector" t-value="'img, .media_iframe_video, span.fa, i.fa'"/>
+    <t t-set="replaceMediaOptionExclude" t-value="'[data-oe-xpath], ' + socialMediaElementsSelector"/>
+    <div id="builder_options">
+        <replace_media_option
+            t-att-selector="replaceMediaOptionSelector"
+            t-attf-exclude="{{replaceMediaOptionExclude}}"/>
+        <image_tool_option selector="img" exclude="[data-oe-type='image'] > img:not([data-attachment-id])"/>
+        <image_and_fa_option
+            template="html_builder.ImageAndFaOption"
+            selector="span.fa, i.fa, img"
+            t-attf-exclude="[data-oe-type='image'] > img, [data-oe-xpath], {{socialMediaElementsSelector}}"/>
+        <button_style_option selector="a.btn"/>
+        <many2one_option
+            selector="[data-oe-many2one-model]:not([data-oe-readonly])"
+            editableOnly="false"/>
+        <rating_option template="html_builder.RatingOption" selector=".s_rating"/>
+        <separator_option template="html_builder.SeparatorOption" selector=".s_hr" applyTo="hr"/>
+    </div>
+</t>
+</templates>

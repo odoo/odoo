@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderDateTimePicker">
+    <BuilderComponent>
+        <div t-custom-ref="root" class="w-100">
+            <BuilderTextInputBase
+                    t-props="this.textInputBaseProps"
+                    commit="this.commit"
+                    preview="this.preview"
+                    onFocus.bind="this.onFocus"
+                    value="this.displayValue"
+            />
+        </div>
+    </BuilderComponent>
+</t>
+
+</templates>

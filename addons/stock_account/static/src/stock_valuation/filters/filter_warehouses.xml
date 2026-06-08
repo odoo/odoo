@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="stock_account.StockValuationReport.FilterWarehouses">
+        <Dropdown>
+            <button class="btn btn-secondary" disabled="true">
+                <i class="fa fa-filter me-1"/>All Warehouses
+            </button>
+
+            <!-- <t t-set-slot="content">
+                <div class="dropdown-item gap-2 align-items-center">
+                    <label>Partners</label>
+                    <MultiRecordSelector t-props="getMultiRecordSelectorProps('res.partner', 'partner_ids')" domain="[['parent_id', '=', false]]"/>
+                </div>
+
+                <div class="dropdown-item gap-2 align-items-center">
+                    <label>Tags</label>
+                    <MultiRecordSelector t-props="getMultiRecordSelectorProps('res.partner.category', 'partner_categories')"/>
+                </div>
+            </t> -->
+        </Dropdown>
+    </t>
+</templates>

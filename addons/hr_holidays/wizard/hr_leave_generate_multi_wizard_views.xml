@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_leave_generate_multi_wizard_view_form" model="ir.ui.view">
+        <field name="model">hr.leave.generate.multi.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate time off for multiple employees">
+                <group>
+                    <field name="employee_ids" widget="many2many_avatar_employee" placeholder="All Employees"/>
+                    <field name="valid_work_entry_type_ids" invisible="1"/>
+                    <label for="date_from" string="Dates"/>
+                    <field
+                        name="date_from"
+                        widget="daterange"
+                        options="{'end_date_field': 'date_to'}"
+                        class="w-50" nolabel="1"/>
+                    <field name="date_to" invisible="1" />
+                    <!-- half day or custom hours-->
+                    <label for="date_from_period" invisible="work_entry_type_request_unit != 'half_day'" string="Day Period"/>
+                    <div class="o_row" invisible="work_entry_type_request_unit != 'half_day'">
+                        <field name="date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" class="o_hr_narrow_field me-2"/>
+                        <field name="date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" class="o_hr_narrow_field"/>
+                    </div>
+                    <label for="hour_from" invisible="work_entry_type_request_unit != 'hour'" string="Hours"/>
+                    <div class="o_row" invisible="work_entry_type_request_unit != 'hour'">
+                        <field name="hour_from" required="work_entry_type_request_unit != 'hour'" widget="float_time_selection" class="o_hr_narrow_field me-2"/>
+                        <field name="hour_to" required="work_entry_type_request_unit != 'hour'" widget="float_time_selection" class="o_hr_narrow_field"/>
+                    </div>
+                    <field name="work_entry_type_id" class="w-100"
+                        domain="[('id', 'in', allowed_work_entry_type_ids)]"/>
+                </group>
+                <field name="name" widget="text" placeholder="e.g. Extra recuperation, Company unavailability, ..."/>
+                <footer>
+                    <button name="action_generate_time_off" type="object" class="btn-primary" string="Generate Time Off" accesskey="c"/>
+                    <button special="cancel" close="1" accesskey="j"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_leave_generate_multi_wizard" model="ir.actions.act_window">
+        <field name="name">Multiple Requests</field>
+        <field name="res_model">hr.leave.generate.multi.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

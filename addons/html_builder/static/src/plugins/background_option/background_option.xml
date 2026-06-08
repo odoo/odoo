@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BackgroundOption">
+    <!-- BackgroundToggler -->
+    <BuilderRow label.translate="Background" t-if="this.props.withColors or this.props.withImages">
+    <!-- todo adapt when colorpicker is implemented: snippet_options_background_color_widget-->
+        <t t-if="this.props.withColors" t-call="html_builder.BackgroundColorWidgetOption"/>
+        <t t-if="this.props.withImages">
+            <BuilderButton
+                action="'toggleBgImage'"
+                title.translate="Add a background image"
+                titleActive.translate="Remove the background image"
+                preview="false"
+                className="'ms-auto fa fa-fw fa-camera px-2'"
+                id="'toggle_bg_image_id'"
+            />
+        </t>
+    </BuilderRow>
+    <t t-if="this.props.withImages">
+        <BackgroundImageOption/>
+        <BackgroundPositionOption/>
+        <ImageFilterOption level="2"/>
+        <ImageFormatOption level="2" computeMaxDisplayWidth="this.computeMaxDisplayWidth"/>
+        <!-- Color filter -->
+        <BuilderRow t-if="this.showColorFilter()" label.translate="Color Filter" level="2">
+            <BuilderColorPicker
+                action="'selectFilterColor'"
+                defaultOpacity="50"
+                enabledTabs="['custom', 'gradient']"
+                grayscales="{
+                    'transparent': [
+                        'black-75',
+                        'black-50',
+                        'black-25',
+                        'black-15',
+                        'white-25',
+                        'white-50',
+                        'white-75',
+                        'white-85'
+                    ],
+                    'solid': [],
+                }"
+                selectedTab="'gradient'"/>
+        </BuilderRow>
+        <BackgroundShapeOption t-if="this.props.withShapes"/>
+    </t>
+</t>
+</templates>

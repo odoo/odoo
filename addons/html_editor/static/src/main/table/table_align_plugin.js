@@ -1,0 +1,124 @@
+import { proxy } from "@odoo/owl";
+import { Plugin } from "@html_editor/plugin";
+import { closestElement } from "@html_editor/utils/dom_traversal";
+import { withSequence } from "@html_editor/utils/resource";
+import { _t } from "@web/core/l10n/translation";
+import { TableAlignSelector } from "./table_align_selector";
+
+const verticalAlignmentItems = [
+    {
+        mode: "top",
+        template: "html_editor.VerticalAlignTop",
+    },
+    {
+        mode: "middle",
+        template: "html_editor.VerticalAlignMiddle",
+    },
+    {
+        mode: "bottom",
+        template: "html_editor.VerticalAlignBottom",
+    },
+];
+
+export class TableAlignPlugin extends Plugin {
+    static id = "tableAlign";
+    static dependencies = ["history", "selection"];
+
+    /** @type {import("plugins").EditorResources} */
+    resources = {
+        user_commands: [
+            {
+                id: "alignTop",
+                run: () => this.setVerticalAlignment("top"),
+            },
+            {
+                id: "alignMiddle",
+                run: () => this.setVerticalAlignment("middle"),
+            },
+            {
+                id: "alignBottom",
+                run: () => this.setVerticalAlignment("bottom"),
+            },
+        ],
+        toolbar_items: [
+            withSequence(20, {
+                id: "table_alignment",
+                groupId: "table",
+                description: _t("Vertical align table cells content"),
+                isAvailable: () =>
+                    this.dependencies.selection
+                        .getTargetedNodes()
+                        .some((node) => closestElement(node, "td, th")),
+                Component: TableAlignSelector,
+                props: {
+                    getItems: () => verticalAlignmentItems,
+                    getDisplay: () => this.verticalAlignMode,
+                    focusEditable: () => this.dependencies.selection.focusEditable(),
+                    onSelected: (item) => {
+                        this.setVerticalAlignment(item.mode);
+                    },
+                },
+            }),
+        ],
+
+        /** Handlers */
+        on_selectionchange_handlers: this.updateVerticalAlignParams.bind(this),
+        on_history_commit_undone_handlers: this.updateVerticalAlignParams.bind(this),
+        on_history_commit_redone_handlers: this.updateVerticalAlignParams.bind(this),
+        on_all_formats_removed_handlers: this.setVerticalAlignment.bind(this),
+
+        /** Predicates */
+        has_format_predicates: (node) => {
+            if (closestElement(node, "td, th")?.style.verticalAlign) {
+                return true;
+            }
+        },
+    };
+
+    setup() {
+        this.verticalAlignMode = proxy({ displayName: "" });
+    }
+
+    get currentVerticalAlign() {
+        const targetedCells = this.dependencies.selection
+            .getTargetedNodes()
+            .map((node) => closestElement(node, "td, th"))
+            .filter(Boolean);
+
+        if (!targetedCells.length) {
+            return "";
+        }
+
+        const verticalAlign = targetedCells[0].style.verticalAlign;
+        return verticalAlign &&
+            targetedCells.every((cell) => cell.style.verticalAlign === verticalAlign)
+            ? verticalAlign
+            : "";
+    }
+
+    setVerticalAlignment(mode = "") {
+        const targetedCells = new Set(
+            this.dependencies.selection
+                .getTargetedNodes()
+                .map((node) => closestElement(node, "td, th"))
+                .filter(Boolean)
+        );
+        let isAlignmentUpdated = false;
+
+        for (const cell of targetedCells) {
+            if (cell.isContentEditable && cell.style.verticalAlign !== mode) {
+                cell.style.verticalAlign = mode;
+                isAlignmentUpdated = true;
+            }
+        }
+
+        if (isAlignmentUpdated) {
+            this.dependencies.history.commit();
+        }
+        this.updateVerticalAlignParams();
+    }
+
+    updateVerticalAlignParams() {
+        this.verticalAlignMode.displayName = this.currentVerticalAlign;
+    }
+}

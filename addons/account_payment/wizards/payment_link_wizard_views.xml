@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="action_invoice_order_generate_link" model="ir.actions.act_window">
+        <field name="name">Generate a Payment Link</field>
+        <field name="res_model">payment.link.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="payment.payment_link_wizard_view_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_account_move"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+    <record id="payment_link_wizard__form_inherit_account_payment" model="ir.ui.view">
+        <field name="name">payment.link.wizard.form.inherit.account_payment</field>
+        <field name="model">payment.link.wizard</field>
+        <field name="inherit_id" ref="payment.payment_link_wizard_view_form"/>
+        <field name="arch" type="xml">
+
+            <div name="no_partner_email" position="before">
+                <field name="epd_info"
+                       class="alert alert-info fw-bold w-100 mb-3"
+                       role="alert"
+                       invisible="not epd_info"/>
+            </div>
+
+            <field name="amount" position="after">
+                <field name="invoice_amount_due" invisible="res_model != 'account.move'"/>
+            </field>
+
+            <field name="currency_id" position="after">
+                <field name="open_installments" invisible="1"/>
+            </field>
+
+            <group name="payment_info" position="after">
+                <group name="next_installments"
+                    string="Next Installments"
+                    invisible="not display_open_installments"
+                    class="mt-n4"
+                >
+                    <field name="open_installments_preview" nolabel="1"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

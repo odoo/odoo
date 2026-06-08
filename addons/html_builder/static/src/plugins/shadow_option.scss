@@ -1,0 +1,28 @@
+.o-hb-shadow-text {
+    flex: 1;
+}
+
+.o-hb-shadow-button {
+    border-width: 0;
+    padding: 10px;
+
+    &::before {
+        color: #{$o-we-color-global};
+    }
+    
+    &:hover::before {
+        color: lighten($o-we-color-global, 50%);
+    }
+}
+
+.hb-row-content {
+    .o-hb-shadow-button {
+        display: none;;
+    }
+}
+
+.o-hb-select-dropdown-item {
+    &:has(.o-hb-shadow-button) {
+        padding-right: 0;
+    }
+}

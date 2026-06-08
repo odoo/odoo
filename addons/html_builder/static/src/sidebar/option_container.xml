@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.OptionsContainer">
+    <div t-if="this.options.length"
+        class="options-container mb-1" t-custom-ref="root" t-att-data-container-title="this.title">
+        <div class="options-container-header d-flex align-items-center justify-content-between">
+            <t
+                t-tag="this.props.toggleFold ? 'button' : 'div'"
+                class="options-container-label py-2 flex-grow-1 d-flex align-items-center"
+                t-att-class="this.props.toggleFold ? 'options-container-label-actionable o-hb-btn btn' : ''"
+                t-att-aria-expanded="this.props.toggleFold ? `${!this.props.folded}` : undefined"
+                t-att-aria-controls="this.containerId"
+                t-on-click="this.props.toggleFold ?? (() => {})"
+            >
+                <i t-if="this.props.toggleFold" class="fa fa-fw mx-1" aria-hidden="true" t-att-class="this.props.folded ? 'fa-caret-right' : 'fa-caret-down'"/>
+                <span t-att-class="{'ms-2': !this.props.toggleFold}" t-out="this.title"/>
+                <t t-if="this.props.optionTitleComponents" t-foreach="this.props.optionTitleComponents" t-as="optionTitleComponent" t-key="optionTitleComponent.id">
+                    <t t-component="optionTitleComponent.Component" t-props="optionTitleComponent.props || {}"/>
+                </t>
+            </t>
+
+            <div class="d-flex align-items-center gap-1 p-2">
+                <div t-if="this.props.headerMiddleButtons">
+                    <t t-foreach="this.props.headerMiddleButtons" t-as="headerMiddleButton" t-key="headerMiddleButton.id">
+                        <BuilderContext applyTo="headerMiddleButton.applyTo">
+                            <t t-if="headerMiddleButton.Component"
+                                t-component="headerMiddleButton.Component"
+                                t-props="headerMiddleButton.props || {}"/>
+                            <t t-else="" t-call="{{headerMiddleButton.template}}"/>
+                        </BuilderContext>
+                    </t>
+                </div>
+                <t t-foreach="this.props.containerTopButtons" t-as="button" t-key="button_index">
+                    <button class="o-hb-btn" t-att-class="button.class"
+                            t-att-title="button.title" t-att-aria-label="button.title"
+                            t-on-click="() => button.handler(this.props.editingElement)"/>
+                </t>
+                <t t-if="this.props.isClonable || this.props.cloneDisabledReason">
+                    <!-- Disabled buttons do not display their title -->
+                    <span t-att-title="this.props.cloneDisabledReason" t-att-aria-label="this.props.cloneDisabledReason">
+	                    <button class="fa fa-fw fa-clone oe_snippet_clone o-hb-btn btn btn-success-color-hover"
+	                            title="Duplicate this block"
+	                            aria-label="Duplicate this block"
+                                t-att-disabled="!!this.props.cloneDisabledReason"
+	                            t-on-click="this.cloneElement"/>
+	                </span>
+                </t>
+                <t t-if="this.props.isRemovable || this.props.removeDisabledReason">
+                    <!-- Disabled buttons do not display their title -->
+                    <span t-att-title="this.props.removeDisabledReason" t-att-aria-label="this.props.removeDisabledReason">
+	                    <button class="fa fa-fw fa-trash oe_snippet_remove o-hb-btn btn btn-danger-color-hover"
+	                            title="Remove this block"
+	                            aria-label="Remove this block"
+	                            t-att-disabled="!!this.props.removeDisabledReason"
+	                            t-on-click="this.removeElement"/>
+	                </span>
+                </t>
+            </div>
+        </div>
+        <div t-att-id="this.containerId" t-if="!this.props.folded" class="we-bg-options-container pb-3" t-custom-ref="content">
+            <t t-foreach="this.options" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template + '-' + OptionClass_index">
+                <BuilderContext applyTo="OptionClass.applyTo">
+                    <t t-component="OptionClass" t-props="OptionClass.propsValue || {}"></t>
+                </BuilderContext>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>

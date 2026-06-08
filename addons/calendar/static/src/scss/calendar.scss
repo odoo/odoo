@@ -1,0 +1,140 @@
+.o_cw_popover .o_cw_popover_fields_secondary {
+    max-height: 75vh;
+
+    & > li > div {
+        min-width: 0;
+    }
+}
+
+
+.o_cw_body .o_field_copy {
+    max-width: calc(100% - 6rem);
+    width: unset !important;
+}
+
+.o_cw_body .o_clipboard_button {
+    padding-top: 0px !important;
+}
+
+.o_cw_body li:has(.o_field_html[name="description"]){
+    span:has(i) {
+        align-self: flex-start;
+    }
+    .o_field_html {
+        text-wrap: wrap;
+    }
+}
+
+.o_cw_activity_popover {
+    div:first-child {
+        // Remove popover focus outline.
+        // NB: On open, popover auto-focus the first tabable element (cf useActiveElement hook).
+        //     tabindex="0" has been added to the first div wrapper to make it the first tabable element.
+        //     This prevents having, on popover open, a weird auto-focus style on the first button/link.
+        outline: none;
+    }
+    .o-mail-ActivityListPopoverItem > :first-child .btn-link {
+        // Adjust spacings to prevent buttons box-shadow from overflowing the item container
+        width: 23px;
+        margin: map-get($spacers, 1);
+        padding-right: map-get($spacers, 1);
+        padding-left: map-get($spacers, 1);
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+.o_field_many2manyattendeeexpandable .o_field_tags {
+    flex-direction: column;
+
+    span.badge {
+        width: fit-content;
+    }
+}
+
+.o_calendar_renderer .fc-event {
+    &:not(.o_event_dot) {
+        &.o_attendee_status_active {
+            --o-bg-opacity: 1;
+        }
+
+        &.o_attendee_status_tentative {
+            --o-bg-opacity: .5;
+        }
+
+        &.o_attendee_status_alone,
+        &.o_attendee_status_needsAction {
+            --o-bg-opacity: .5;
+        }
+
+        &.o_attendee_status_declined {
+            --o-bg-opacity: 0;
+        }
+    }
+
+    &.o_event_dot {
+        &.o_attendee_status_needsAction {
+            &:before {
+                content: "\f1db"; // fa-circle-thin
+            }
+        }
+
+        &.o_attendee_status_tentative:before {
+            content: "\f059"; // fa-question-circle
+        }
+
+        &.o_attendee_status_declined:before {
+            content: "\f05e"; // fa-ban
+        }
+
+        &.o_attendee_status_alone {
+            content: "\f06a"; // fa-exclamation-circle
+        }
+    }
+
+    &.o_attendee_status_declined, &.o_event_striked {
+        .fc-event-main {
+            text-decoration: line-through;
+        }
+    }
+
+    &.o_activity_event {
+        // For the user activity events, use the user color with
+        // a slight change so that activities can be spotted
+        // more easily in the calendar view.
+        @for $i from 1 through length($o-colors-complete) {
+            $color: nth($o-colors-complete, $i);
+            &.o_calendar_color_#{$i - 1} {
+                --fc-event-bg-color: #{mix($o-white, $color, 80%)};
+            }
+        }
+    }
+}
+
+.btn:hover .o_calendar_check {
+    display: none;
+}
+
+.btn:hover .o_calendar_pause {
+    display: none;
+}
+
+.btn:not(:hover) .o_calendar_stop {
+    display: none;
+}
+
+.btn-group .btn.active {
+    z-index: 2;
+}
+
+.o_text_green {
+    color: green;
+}
+
+.o_text_red {
+    color: red;
+}
+
+.o_text_orange {
+    color: orange;
+}

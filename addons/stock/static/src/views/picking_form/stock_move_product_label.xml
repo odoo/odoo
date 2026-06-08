@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="stock.MoveProductLabelField">
+        <div class="d-flex align-items-center gap-1">
+            <Many2One t-props="this.m2oProps" t-on-keydown="this.onM2oInputKeydown"/>
+            <t t-if="this.showLabelVisibilityToggler">
+                <button
+                    class="btn btn-link fa fa-bars text-start o_external_button px-1"
+                    id="labelVisibilityButtonId"
+                    data-tooltip="Add a description"
+                    t-on-click="() => this.switchLabelVisibility()"
+                />
+            </t>
+        </div>
+        <textarea
+            class="o_input d-print-none border-0 fst-italic"
+            placeholder="Enter a description"
+            rows="1"
+            type="text"
+            t-att-class="{ 'd-none': !(this.columnIsProductAndLabel.value and (this.label or this.labelVisibility.value)) }"
+            t-att-readonly="this.isDescriptionReadonly"
+            t-att-value="this.label"
+            t-custom-ref="labelNodeRef"
+        />
+    </t>
+
+    <t t-name="stock.AddPackageListRendererRows" t-inherit="web.ListRenderer.Rows" t-inherit-mode="primary">
+        <td class="o_field_x2many_list_row_add" position="inside">
+            <a t-if="this.canAddPackage" href="#" class="px-3" tabindex="0" t-on-click.stop.prevent="() => this.onClickMovePackage()">Move a Pack</a>
+        </td>
+    </t>
+</templates>

@@ -1,0 +1,62 @@
+import { useSubEnv } from "@web/owl2/utils";
+import { Message } from "@mail/core/common/message";
+import { MessageSearchState } from "@mail/core/common/message_search_hook";
+import { useVisible } from "@mail/utils/common/hooks";
+
+import { Component, props, t } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+
+export class MessageCardList extends Component {
+    static components = { Message };
+    static template = "mail.MessageCardList";
+
+    setup() {
+        super.setup();
+        this.store = useService("mail.store");
+        this.props = props({
+            emptyText: t.string().optional(),
+            loadMore: t.boolean().optional(),
+            messageSearch: t.instanceOf(MessageSearchState).optional(),
+            messages: t.array(t.instanceOf(this.store["mail.message"].Class)),
+            mode: t.string(),
+            onClickJump: t.function([]).optional(),
+            onLoadMoreVisible: t.function([]).optional(),
+            showEmpty: t.boolean().optional(),
+            thread: t.instanceOf(this.store["mail.thread"].Class),
+        });
+        this.ui = useService("ui");
+        useSubEnv({ messageCard: true });
+        useVisible("load-more", (isVisible) => {
+            if (isVisible) {
+                this.props.onLoadMoreVisible?.();
+            }
+        });
+    }
+
+    /**
+     * Highlight the given message and scrolls to it. In small mode, the
+     * pin/search menus are closed beforewards
+     *
+     * @param {import('@mail/core/common/message_model').Message} message
+     */
+    async onClickJump(message) {
+        this.props.onClickJump?.();
+        if (this.ui.isSmall || this.env.inChatWindow || this.env.inMeetingView) {
+            this.env.pinMenu?.close();
+            this.env.searchMenu?.close();
+            this.env.inMeetingView?.openChat();
+        }
+        // Give the time for menus to close before scrolling to the message.
+        await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
+        await this.env.messageHighlight?.highlightMessage(message);
+    }
+
+    onClickUnpin(message) {
+        (message.channel_id || message.thread)?.messageUnpin(message);
+    }
+
+    get emptyText() {
+        return this.props.emptyText ?? _t("No messages found");
+    }
+}

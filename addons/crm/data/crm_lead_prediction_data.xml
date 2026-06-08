@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+    <data noupdate="1">
+        <!-- Lead scoring frequency fields -->
+        <record id="frequency_field_state_id" model="crm.lead.scoring.frequency.field">
+            <field name="field_id" ref="crm.field_crm_lead__state_id"/>
+        </record>
+        <record id="frequency_field_country_id" model="crm.lead.scoring.frequency.field">
+            <field name="field_id" ref="crm.field_crm_lead__country_id"/>
+        </record>
+        <record id="frequency_field_phone_state" model="crm.lead.scoring.frequency.field">
+            <field name="field_id" ref="crm.field_crm_lead__phone_state"/>
+        </record>
+        <record id="frequency_field_email_state" model="crm.lead.scoring.frequency.field">
+            <field name="field_id" ref="crm.field_crm_lead__email_state"/>
+        </record>
+        <record id="frequency_field_source_id" model="crm.lead.scoring.frequency.field">
+            <field name="field_id" ref="crm.field_crm_lead__source_id"/>
+        </record>
+        <record id="frequency_field_lang_id" model="crm.lead.scoring.frequency.field">
+            <field name="field_id" ref="crm.field_crm_lead__lang_id"/>
+        </record>
+        <record id="frequency_field_tag_ids" model="crm.lead.scoring.frequency.field">
+            <field name="field_id" ref="crm.field_crm_lead__tag_ids"/>
+        </record>
+        <record id="crm_pls_fields_param" model="ir.config_parameter">
+            <field name="key">crm.pls_fields</field>
+            <field name="value">phone_state,email_state,state_id,country_id,source_id,lang_id,tag_ids</field>
+        </record>
+        <record id="crm_pls_start_date_param" model="ir.config_parameter">
+            <field name="key">crm.pls_start_date</field>
+            <field name="value" eval="(datetime.now() - timedelta(days=8)).strftime('%Y-%m-%d')"/>
+        </record>
+    </data>
+
+	<record id="website_crm_score_cron" model="ir.cron">
+        <field name="name">Predictive Lead Scoring: Recompute Automated Probabilities</field>
+        <field name="model_id" ref="model_crm_lead"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_update_automated_probabilities()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

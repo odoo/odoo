@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="l10n_latam.identification.type" id="rut">
+            <field name="name">RNC</field>
+            <field name="name@es_419">RNC</field>
+            <field name="description">RNC</field>
+            <field name="sequence">1</field>
+            <field name="is_vat" eval="True"/>
+            <field name="country_id" ref="base.do"/>
+        </record>
+
+        <record model="l10n_latam.identification.type" id="national_citizen_id">
+            <field name="name">Cédula</field>
+            <field name="name@es_419">Cédula</field>
+            <field name="description">Cédula</field>
+            <field name="sequence">2</field>
+            <field name="is_vat" eval="False"/>
+            <field name="country_id" ref="base.do"/>
+        </record>
+
+        <record model="l10n_latam.identification.type" id="external_id">
+            <field name="name">Identificador Extranjero</field>
+            <field name="name@es_419">Identificador Extranjero</field>
+            <field name="description">Identificador Extranjero</field>
+            <field name="sequence">3</field>
+            <field name="is_vat" eval="False"/>
+            <field name="country_id" ref="base.do"/>
+        </record>
+    </data>
+</odoo>

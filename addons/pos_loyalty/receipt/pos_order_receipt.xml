@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="pos_loyalty.pos_order_receipt" inherit_id="point_of_sale.pos_order_receipt">
+            <div name="before-footer" position="before">
+                <table t-if="extra_data.get('loyalties')" class="w-100 mt-2">
+                    <tbody t-foreach="extra_data['loyalties']" t-as="loyalty">
+                        <tr class="loyalty">
+                            <td class="text-start" t-out="loyalty['name'] + ' ' + loyalty['type']"/>
+                            <td class="text-end w-50"  t-out="loyalty['points']"/>
+                        </tr>
+                    </tbody>
+                </table>
+                <table t-if="extra_data.get('new_coupons')" class="w-100 mt-2">
+                    <tbody t-foreach="extra_data['new_coupons']" t-as="coupon">
+                        <tr>
+                            <td class="text-start text-top pt-3">
+                                <div class="pb-1" t-out="coupon['name']"/>
+                                <div class="pb-1"> Until: <t t-if="coupon.get('expiration_date')" t-out="coupon['expiration_date']"/><t t-else="">no expiration</t></div>
+                            </td>
+                            <td class="text-end pt-3">
+                                <div><img t-att-src="coupon['barcode_base64']" style="width:300px;height:70px"/></div>
+                                <div class="text-end pb-1" t-out="coupon['code']"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+    </data>
+</odoo>

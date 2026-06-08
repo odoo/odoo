@@ -1,0 +1,16 @@
+[Unit]
+Description=labwc wayland compositor
+Documentation=man:labwc(1)
+After=graphical.target systemd-user-sessions.service
+
+[Service]
+User=odoo
+ExecStart=/usr/bin/labwc
+Environment="XDG_RUNTIME_DIR=/run/odoo"
+Environment="XDG_CACHE_HOME=/run/odoo"
+Environment="WLR_LIBINPUT_NO_DEVICES=1"
+Restart=always
+Type=simple
+
+[Install]
+WantedBy=graphical.target

@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="mail_alias_domain_view_form" model="ir.ui.view">
+        <field name="name">mail.alias.domain.view.form</field>
+        <field name="model">mail.alias.domain</field>
+        <field name="arch" type="xml">
+            <form string="Alias Domain" duplicate="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <label for="name"/>
+                            <div>
+                                <span class="me-1 oe_inline">@</span>
+                                <field name="name" string="Domain"
+                                       class="oe_inline"
+                                       placeholder='e.g. "mycompany.com"'/>
+                            </div>
+                            <field name="company_ids" widget="many2many_tags"
+                                   string="Used In"
+                                   readonly="True"
+                                   groups="base.group_multi_company"
+                                   placeholder="Visible to all"/>
+                        </group>
+                        <group>
+                            <field name="bounce_alias" groups="base.group_no_one"
+                                   placeholder='e.g. "bounce"'/>
+                            <field name="catchall_alias" groups="base.group_no_one"
+                                   placeholder='e.g. "catchall"'/>
+                            <field name="default_from" groups="base.group_no_one"
+                                   placeholder='e.g. "notifications"'/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mail_alias_domain_view_tree" model="ir.ui.view">
+        <field name="name">mail.alias.domain.view.list</field>
+        <field name="model">mail.alias.domain</field>
+        <field name="arch" type="xml">
+            <list string="Alias Domains" duplicate="false">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="bounce_alias"/>
+                <field name="catchall_alias"/>
+                <field name="default_from"/>
+                <field name="company_ids" optional="hide"
+                       widget="many2many_tags"
+                       groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mail_alias_domain_view_search" model="ir.ui.view">
+        <field name="name">mail.alias.domain.view.search</field>
+        <field name="model">mail.alias.domain</field>
+        <field name="arch" type="xml">
+            <search string="Alias Domains">
+                <field name="name"/>
+                <field name="bounce_alias"/>
+                <field name="catchall_alias"/>
+                <field name="company_ids" groups="base.group_multi_company"/>
+                <group>
+                    <filter string="Company" name="group_by_company_ids"
+                        domain="[]" context="{'group_by': 'company_ids'}"
+                        groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="mail_alias_domain_action" model="ir.actions.act_window">
+        <field name="name">Alias Domains</field>
+        <field name="res_model">mail.alias.domain</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

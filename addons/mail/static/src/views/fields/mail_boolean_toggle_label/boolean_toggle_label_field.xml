@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.BooleanToggleLabelField">
+        <button t-attf-class="btn btn-sm {{this.props.record.data[this.props.name] ? this.props.btnClassOn : this.props.btnClassOff}}"
+            t-att-data-tooltip="this.props.label" t-on-click.prevent.stop="this.update" data-available-offline=""
+            t-out="this.props.label" t-att-disabled="this.props.readonly"/>
+    </t>
+
+</templates>

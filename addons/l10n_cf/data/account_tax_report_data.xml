@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tax_report_cf" model="account.report">
+        <field name="name">VAT Report</field>
+        <field name="name@fr">Déclaration TVA</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.cf"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="account_tax_report_cf_balance" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="name@fr">Base</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="account_tax_report_cf_tax" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="name@fr">Taxe</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_line_cf_sales" model="account.report.line">
+                <field name="name">Outgoing</field>
+                <field name="name@fr">Sortant</field>
+                <field name="code">CF_SALES</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_cf_sales_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CF_TAXABLE.base + CF_EXPORT.base + CF_SALE_EXEMPT.base</field>
+                    </record>
+                    <record id="account_tax_report_line_cf_sales_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CF_TAXABLE.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_cf_sales_taxable" model="account.report.line">
+                        <field name="name">Taxable operations</field>
+                        <field name="name@fr">Opérations taxables</field>
+                        <field name="code">CF_TAXABLE</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cf_sales_taxable_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CF_TAXABLE_19.base + CF_TAXABLE_5.base</field>
+                            </record>
+                            <record id="account_tax_report_line_cf_sales_taxable_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CF_TAXABLE_19.tax + CF_TAXABLE_5.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_cf_sales_taxable_19" model="account.report.line">
+                                <field name="name">Taxable - normal rate</field>
+                                <field name="name@fr">Taxable - taux normal</field>
+                                <field name="code">CF_TAXABLE_19</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_cf_sales_taxable_19_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-base_sale_19</field>
+                                    </record>
+                                    <record id="account_tax_report_line_cf_sales_taxable_19_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-tax_sale_19</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_cf_sales_taxable_5" model="account.report.line">
+                                <field name="name">Taxable - reduced rate</field>
+                                <field name="name@fr">Taxable - taux réduit</field>
+                                <field name="code">CF_TAXABLE_5</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_cf_sales_taxable_5_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-base_sale_5</field>
+                                    </record>
+                                    <record id="account_tax_report_line_cf_sales_taxable_5_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-tax_sale_5</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_sales_export" model="account.report.line">
+                        <field name="name">Export</field>
+                        <field name="name@fr">Exportations</field>
+                        <field name="code">CF_EXPORT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_sales_export_base_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-export</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_sales_exempt" model="account.report.line">
+                        <field name="name">Exempt</field>
+                        <field name="name@fr">Exonéré</field>
+                        <field name="code">CF_SALE_EXEMPT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_sales_exempt_base_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-sale_exempt</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_cf_purchases" model="account.report.line">
+                <field name="name">Incoming</field>
+                <field name="name@fr">Entrant</field>
+                <field name="code">CF_VAT_DEDUCT</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_cf_purchases_base_tag" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CF_PURC_TAXABLE.base + CF_IMPORT.base + CF_PURC_EXEMPT.base</field>
+                    </record>
+                    <record id="account_tax_report_line_cf_purchase_tax_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CF_PURC_TAXABLE.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_cf_purchases_taxable" model="account.report.line">
+                        <field name="name">Taxable</field>
+                        <field name="name@fr">Taxable</field>
+                        <field name="code">CF_PURC_TAXABLE</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cf_purchases_taxable_base_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">purc_base</field>
+                            </record>
+                            <record id="account_tax_report_line_cf_purchases_taxable_tax_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">purc_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cf_purchases_import" model="account.report.line">
+                        <field name="name">Import</field>
+                        <field name="name@fr">Importations</field>
+                        <field name="code">CF_IMPORT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cf_purchases_import_base_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">import_base</field>
+                            </record>
+                            <record id="account_tax_report_line_cf_purchases_import_tax_tag" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">import_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cf_purchases_exempt" model="account.report.line">
+                        <field name="name">Exempt</field>
+                        <field name="name@fr">Exonéré</field>
+                        <field name="code">CF_PURC_EXEMPT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cf_purchases_exempt_base_tag" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">purc_exempt</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_cf_net" model="account.report.line">
+                <field name="name">Net VAT</field>
+                <field name="name@fr">TVA nette</field>
+                <field name="code">CF_NET</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_cf_net_tag" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CF_VAT_CREDIT.tax + CF_VAT_TO_PAY.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_cf_credit" model="account.report.line">
+                        <field name="name">VAT Credit</field>
+                        <field name="name@fr">Crédit de TVA</field>
+                        <field name="code">CF_VAT_CREDIT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cf_credit_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CF_VAT_DEDUCT.tax - CF_SALES.tax</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cf_to_pay" model="account.report.line">
+                        <field name="name">VAT to pay</field>
+                        <field name="name@fr">TVA à payer</field>
+                        <field name="code">CF_VAT_TO_PAY</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cf_to_pay_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CF_SALES.tax - CF_VAT_DEDUCT.tax</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

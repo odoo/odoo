@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.BottomSheet">
+        <div
+            class="o_bottom_sheet"
+            t-att-class="{
+                'o_bottom_sheet_ready': this.state.isPositionedReady,
+                'o_bottom_sheet_dismissing': this.state.isDismissing,
+                'o_bottom_sheet_snapping': this.state.isSnappingEnabled,
+            }"
+            t-attf-style="--BottomSheet-progress: {{this.state.progress}}"
+            t-custom-ref="container"
+            >
+            <!-- Scroll container that handles drag gestures -->
+            <div
+                class="o_bottom_sheet_rail"
+                t-att-class="{
+                        o_bottom_sheet_rail_prevent_overscroll : this.props.preventDismissOnContentScroll
+                    }"
+                t-custom-ref="scrollRail"
+                >
+                <!-- Backdrop overlay -->
+                <div class="o_bottom_sheet_backdrop" t-on-click="this.slideOut"/>
+
+                <!-- Dismiss area - used for scroll snap -->
+                <div class="o_bottom_sheet_dismiss"/>
+
+                <!-- Spacer area - used for scroll snap -->
+                <div class="o_bottom_sheet_spacer"/>
+
+                <!-- Sheet container -->
+                <div
+                    class="o_bottom_sheet_sheet offcanvas position-relative overflow-hidden"
+                    role="dialog"
+                    t-custom-ref="sheet"
+                    >
+
+                    <!-- Handle bar -->
+                    <div
+                        tabindex="-1"
+                        role="button"
+                        class="o_bottom_sheet_handle text-center d-flex align-items-center justify-content-center opacity-50 py-2"
+                        t-on-click.stop="this.slideOut"
+                        >
+                        <div class="o_bottom_sheet_handle_bar pt-1 mx-auto rounded-pill d-inline-block px-5 bg-dark"/>
+                    </div>
+
+                    <!-- Body content -->
+                    <div
+                        class="o_bottom_sheet_body offcanvas-body"
+                        role="menu"
+                        t-att-class="this.props.class"
+                        t-custom-ref="ref"
+                        >
+
+                        <!-- Render dynamic component if provided -->
+                        <t t-if="this.props.component">
+                            <t t-component="this.props.component" t-props="this.props.componentProps || {}" close="this.props.close"/>
+                        </t>
+
+                        <!-- Render slot content if provided -->
+                        <t t-else="">
+                            <t t-call-slot="default" close="this.close" back="this.back"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

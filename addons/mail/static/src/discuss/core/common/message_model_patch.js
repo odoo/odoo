@@ -1,0 +1,67 @@
+import { Message } from "@mail/core/common/message_model";
+import { fields } from "@mail/model/export";
+
+import { patch } from "@web/core/utils/patch";
+
+/** @type {import("models").Message} */
+const messagePatch = {
+    setup() {
+        super.setup();
+        this.channel_id = fields.One("discuss.channel", {
+            compute() {
+                return this.thread?.channel;
+            },
+        });
+        this.hasEveryoneSeen = fields.Attr(false, {
+            /** @this {import("models").Message} */
+            compute() {
+                return this.channel_id?.membersThatCanSeen.every((m) => m.hasSeen(this));
+            },
+        });
+        this.hasNewMessageSeparator = fields.Attr(false, {
+            compute() {
+                // compute for caching the value and not re-rendering all
+                // messages when new_message_separator changes
+                return this.channel_id?.self_member_id?.new_message_separator === this.id;
+            },
+        });
+        this.hasSomeoneSeen = fields.Attr(false, {
+            /** @this {import("models").Message} */
+            compute() {
+                return this.channel_id?.membersThatCanSeen
+                    .filter((member) => member.persona.notEq(this.author))
+                    .some((m) => m.hasSeen(this));
+            },
+        });
+        this.isMessagePreviousToLastSelfMessageSeenByEveryone = fields.Attr(false, {
+            /** @this {import("models").Message} */
+            compute() {
+                if (!this.channel_id?.lastSelfMessageSeenByEveryone) {
+                    return false;
+                }
+                return this.id < this.channel_id.lastSelfMessageSeenByEveryone.id;
+            },
+        });
+        this.linkedSubChannel = fields.One("discuss.channel", { inverse: "from_message_id" });
+        this.threadAsFirstUnread = fields.One("mail.thread", { inverse: "firstUnreadMessage" });
+    },
+    /** @returns {import("models").ChannelMember[]} */
+    get channelMemberHaveSeen() {
+        return this.channel_id.membersThatCanSeen.filter(
+            (m) => m.hasSeen(this) && m.persona.notEq(this.author)
+        );
+    },
+    /**
+     * @param {Thread} thread the thread being viewed
+     * @returns {boolean}
+     */
+    showSeenIndicator(thread) {
+        return (
+            this.isSelfAuthored &&
+            thread?.channel?.hasSeenFeature &&
+            !this.isMessagePreviousToLastSelfMessageSeenByEveryone &&
+            this.hasSomeoneSeen
+        );
+    },
+};
+patch(Message.prototype, messagePatch);

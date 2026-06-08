@@ -1,0 +1,15 @@
+:is(.o_resource_form, .modal-content):has(.o_resource_calendar_attendance_calendar_view){
+  & {
+    min-height: 100%;
+    height: 100%;
+  }
+  .o_form_renderer {
+    height: 100%;
+    display: flex !important;
+  }
+  .o_form_sheet {
+    display: flex !important;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+}

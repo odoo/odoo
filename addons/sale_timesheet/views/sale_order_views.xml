@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form_inherit_sale_timesheet" model="ir.ui.view">
+        <field name="name">sale.order.form.sale.timesheet</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_project.view_order_form_inherit_sale_project"/>
+        <field name="arch" type="xml">
+            <button name="action_view_milestone" position="before">
+                <button
+                    name="action_view_timesheet"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-clock-o"
+                    invisible="not show_hours_recorded_button"
+                    groups="hr_timesheet.group_hr_timesheet_user"
+                >
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="timesheet_total_duration" class="mr4"/>
+                            <field name="timesheet_encode_uom_id" options="{'no_open': True}"/>
+                        </span>
+                        <span class="o_stat_text">Recorded</span>
+                    </div>
+                </button>
+            </button>
+        </field>
+    </record>
+
+</odoo>

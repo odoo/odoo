@@ -1,0 +1,21 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import odoo.tests
+
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+
+
+class TestLoadMessages(HttpCaseWithUserDemo):
+    def test_01_mail_message_load_order_tour(self):
+        admin = self.env.ref("base.user_admin")
+        channel = self.env["discuss.channel"].with_user(admin).create({"name": "MyTestChannel"})
+        self.env["mail.message"].create([{
+            "body": str(n),
+            "model": "discuss.channel",
+            "pinned_at": odoo.fields.Datetime.now() if n == 1 else None,
+            "res_id": channel.id,
+            "author_id": admin.partner_id.id,
+            "message_type": "comment",
+        } for n in range(1, 61)])
+        channel.self_member_id._mark_as_read(channel.message_ids[0].id)
+        self.start_tour("/odoo/action-mail.action_discuss", "mail_message_load_order_tour", login="admin")

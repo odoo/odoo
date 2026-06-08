@@ -1,0 +1,70 @@
+import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
+import { SnippetModel } from "@html_builder/snippets/snippet_service";
+
+export class WebsiteSnippetModel extends SnippetModel {
+    /**
+     * @override
+     */
+    getSnippetLabel(snippetEl, isCustom = false) {
+        let label = super.getSnippetLabel(snippetEl);
+        if (label) {
+            return label;
+        }
+
+        const contentEl = snippetEl.children[0];
+        const parallaxLabel = _t("Parallax");
+        const fullScreenHeightLabel = _t("Full-Screen");
+
+        // Retrieve the original snippet label when a snippet is a custom
+        // snippet.
+        if (isCustom) {
+            const originalSnippetLabel = this.getOriginalSnippet(contentEl.dataset.snippet)?.label;
+            if (
+                originalSnippetLabel &&
+                ![parallaxLabel, fullScreenHeightLabel].includes(originalSnippetLabel)
+            ) {
+                return originalSnippetLabel;
+            }
+        }
+
+        // In the following test, we check whether labels should be displayed
+        // depending on whether an option was applied or not. For example, a
+        // snippet will have a “parallax” label if it was saved with the
+        // parallax option enabled. On the other hand, it will not have this
+        // label if the option was disabled before the snippet was saved.
+        if (contentEl.matches(".parallax") || contentEl.querySelector(".parallax")) {
+            label = parallaxLabel;
+        } else if (contentEl.matches(".o_full_screen_height")) {
+            label = fullScreenHeightLabel;
+        }
+        return label;
+    }
+
+    cleanSnippetForSave(snippetCopyEl, cleanForSaveProcessors) {
+        const rootEl = snippetCopyEl.matches(".s_popup")
+            ? snippetCopyEl.firstElementChild
+            : snippetCopyEl;
+        super.cleanSnippetForSave(rootEl, cleanForSaveProcessors);
+    }
+
+    getContext(snippetEl) {
+        const context = super.getContext(...arguments);
+        const editableParentEl = snippetEl.closest("[data-oe-model][data-oe-field][data-oe-id]");
+        return Object.assign(context, {
+            model: editableParentEl.dataset.oeModel,
+            field: editableParentEl.dataset.oeField,
+            resId: editableParentEl.dataset.oeId,
+        });
+    }
+}
+
+registry.category("html_builder.snippetsModel").add("website.snippets", WebsiteSnippetModel);
+
+registry
+    .category("html_builder.snippetsPreprocessor")
+    .add("website_snippets", (namespace, snippets) => {
+        if (namespace === "website.snippets") {
+            // This should be empty in master, it is used to fix snippets in stable.
+        }
+    });

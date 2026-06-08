@@ -1,0 +1,66 @@
+.o_field_property_definition {
+    max-height: 70vh;
+    overflow-y: auto;
+
+    .o_modal_container {
+        @include media-breakpoint-up(sm) {
+            min-width: calc(#{$o-form-view-sheet-max-width} / 2.5);
+        }
+        max-width: calc(#{$o-form-view-sheet-max-width} / 2);
+    }
+
+    .o_field_property_definition_kanban,
+    .o_field_property_definition_value {
+        .form-check-input {
+            margin-left: map-get($spacers, 1);
+        }
+    }
+
+    .o_domain_selector_debug_container {
+        width: 100%;
+        display: inline-block !important;
+    }
+
+    .o-checkbox {
+        padding-left: 0 !important;
+
+        input {
+            margin-left: 0 !important;
+        }
+    }
+}
+
+.o_field_property_definition {
+    .o_input_dropdown {
+        .o_properties_external_button,
+        .o_dropdown_button {
+            display: none;
+        }
+
+        &:hover,
+        &:focus-within {
+            .o_properties_external_button,
+            .o_dropdown_button {
+                display: block;
+            }
+        }
+    }
+}
+
+.o_field_property_definition_type, .o_field_property_definition_type_menu {
+    img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .o_input_dropdown {
+        input {
+            background-repeat: no-repeat;
+            background-size: contain;
+            padding-left: 25px;
+            background-position-x: 0px;
+            background-position-y: 3px;
+            background-size: 20px;
+        }
+    }
+}

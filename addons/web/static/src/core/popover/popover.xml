@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Popover">
+        <div
+            t-custom-ref="ref"
+            t-att-class="this.defaultClassObj"
+            t-attf-style="--animation-time: {{ this.constructor.animationTime }}ms"
+            t-att-role="this.props.role"
+            t-on-pointerenter="() => this.props.holdOnHover and this.position.lock()"
+            t-on-pointerleave="() => this.props.holdOnHover and this.position.unlock()"
+        >
+            <t
+                t-component="this.props.component"
+                t-props="this.props.componentProps"
+                close="this.props.close"
+            />
+            <div t-if="this.props.arrow" class="popover-arrow position-absolute z-n1"/>
+        </div>
+    </t>
+
+</templates>

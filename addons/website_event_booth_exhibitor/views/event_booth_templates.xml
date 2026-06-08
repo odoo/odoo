@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <template id="event_booth_registration" inherit_id="website_event_booth.event_booth_registration">
+        <xpath expr="//input[@name='booth_category_id']" position="attributes">
+            <attribute name="t-att-data-use-sponsor">'true' if booth_category.use_sponsor else 'false'</attribute>
+        </xpath>
+    </template>
+
+</data></odoo>

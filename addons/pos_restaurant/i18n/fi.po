@@ -1,0 +1,1713 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_restaurant
+#
+# Translators:
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2022
+# Jussi Lehto <jussi@gulfeo.com>, 2022
+# Miika Nissi <miika.nissi@tawasta.fi>, 2022
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
+# Retropikzel, 2022
+# Mikko Salmela <salmemik@gmail.com>, 2022
+# Kim Asplund <kim.asplund@gmail.com>, 2022
+# Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2022
+# Joakim Weckman, 2022
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
+# Miku Laitinen <miku.laitinen@gmail.com>, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
+# Tommi Rintala <tommi.rintala@gmail.com>, 2022
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
+# Jiri Grönroos <jiri.gronroos@iki.fi>, 2022
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-29 17:38+0000\n"
+"PO-Revision-Date: 2026-04-04 12:55+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-2/"
+"pos_restaurant/fi/>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_course.py:0
+#: code:addons/pos_restaurant/models/pos_restaurant.py:0
+msgid "%s (copy)"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "%s, sent to the kitchen"
+msgstr "%s, lähetetty keittiöön"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_receipt_header
+msgid ", Guest"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.xml:0
+msgid "/ Guest"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,description_sale:pos_restaurant.pos_food_cheeseburger_product_template
+msgid ""
+"200G Irish Black Angus beef, 9-month matured cheddar cheese, shredded "
+"iceberg lettuce, caramelised onions, crushed tomatoes and Chef’s sauce."
+msgstr ""
+"200 grammaa irlantilaista Black Angus -naudanlihaa, 9 kuukautta kypsytettyä "
+"cheddarjuustoa, silputtua jäävuorisalaattia, karamellisoitua sipulia, "
+"tomaattimurskaa ja keittiömestarin kastiketta."
+
+#. module: pos_restaurant
+#: model:product.template,description_sale:pos_restaurant.pos_food_bacon_product_template
+msgid ""
+"200G Irish Black Angus beef, caramelized onions with paprika, chopped "
+"iceberg salad, red onions, grilled bacon, tomato sauce, pickles, barbecue "
+"sauce"
+msgstr ""
+"200G irlantilaista Black Angus -naudanlihaa, karamellisoitua sipulia "
+"paprikalla, hienonnettua jäävuorisalaattia, punasipulia, grillattua pekonia, "
+"tomaattikastiketta, suolakurkkua, grillikastiketta"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_restaurant_pos_category_kanban_view
+msgid "<span>Course:</span>"
+msgstr ""
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
+msgid "<strong>Floor Name: </strong>"
+msgstr "<strong>Kerroksen nimi: </strong>"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
+msgid "<strong>Point of Sales:</strong>"
+msgstr "<strong>Kassa: </strong>"
+
+#. module: pos_restaurant
+#: model:ir.model.constraint,message:pos_restaurant.constraint_pos_course_name_unique
+msgid "A course with this name already exists"
+msgstr ""
+
+#. module: pos_restaurant
+#: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
+msgid ""
+"A restaurant floor represents the place where customers are served, this is "
+"where you can\n"
+"                define and position the tables."
+msgstr ""
+"Pöytäkartta kuvaa ravintolan tilaa, jossa asiakkaita palvellaan. Voit "
+"määrittää sen avulla\n"
+"                              pöytien asetelmat."
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__active
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__active
+msgid "Active"
+msgstr "Aktiivinen"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
+msgid "Add Decor"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
+msgid "Add Floor"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
+msgid "Add Table"
+msgstr "Lisää taulukko"
+
+#. module: pos_restaurant
+#: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
+msgid "Add a new restaurant floor"
+msgstr "Lisää uusi ravintolakerros"
+
+#. module: pos_restaurant
+#: model_terms:ir.actions.act_window,help:pos_restaurant.action_pos_course
+msgid "Add courses"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
+msgid "Add decor"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
+msgid "Add image"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen_payment_lines/payment_screen_payment_lines.js:0
+msgid "Adjust Amount"
+msgstr "Säädä määrää"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Alignment"
+msgstr ""
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Allow Bill Splitting"
+msgstr "Salli laskun jakaminen"
+
+#. module: pos_restaurant
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_anchovy
+msgid "Anchovy"
+msgstr "Sardelli"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.product_aperol_spritz_product_template
+msgid "Aperol Spritz"
+msgstr "Aperol Spritz"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_search
+msgid "Archived"
+msgstr "Arkistoitu"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.js:0
+msgid "Are you sure you want to delete this floor?"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
+msgid "Assign"
+msgstr "Vastuuta"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Assign categories to default course"
+msgstr ""
+
+#. module: pos_restaurant
+#: model_terms:ir.actions.act_window,help:pos_restaurant.action_pos_course
+msgid ""
+"Assign products to courses like starter, main or dessert to ensure dishes "
+"are prepared and served in the correct order."
+msgstr ""
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Automatic course allocation"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
+msgid "Back"
+msgstr "Takaisin"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
+msgid "Background"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_bacon_product_template
+msgid "Bacon Burger"
+msgstr "Pekonihampurilainen"
+
+#. module: pos_restaurant
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_fries
+msgid "Belgian fresh homemade fries"
+msgstr "Belgialaiset tuoreet kotitekoiset ranskalaiset"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_splitbill
+msgid "Bill Splitting"
+msgstr "Laskun jakaminen"
+
+#. module: pos_restaurant
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_black_olives
+msgid "Black olives"
+msgstr "Mustat oliivit"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Bold"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
+msgid "Book table"
+msgstr "Varaa pöytä"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Border"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__parent_side__bottom
+msgid "Bottom"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,description_sale:pos_restaurant.product_old_fashioned_product_template
+msgid "Bourbon, bitters, sugar, and a twist of citrus zest."
+msgstr "Bourbonia, katkeroa, sokeria ja sitrushedelmien kuorta."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Bring forward"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.burger_drink_combo_product_template
+msgid "Burger Menu Combo"
+msgstr "Burger Menu Combo"
+
+#. module: pos_restaurant
+#: model:product.combo,name:pos_restaurant.burger_combo
+msgid "Burgers"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:pos.payment.method,name:pos_restaurant.payment_method
+msgid "Card"
+msgstr "Kortti"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
+msgid "Cart"
+msgstr "Ostoskori"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_config.py:0
+msgid "Cash Restaurant"
+msgstr "Käteisravintola"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
+msgid "Cheese Burger"
+msgstr "Juustohampurilainen"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_chicken_product_template
+msgid "Chicken Curry Sandwich"
+msgstr "Currykana-voileipä"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_table_popup/add_table_popup.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/floor_plan_editor.xml:0
+msgid "Close"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_club_product_template
+msgid "Club Sandwich"
+msgstr "Klubivoileipä"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.coke_product_template
+msgid "Coca-Cola"
+msgstr "Coca-Cola"
+
+#. module: pos_restaurant
+#: model:pos.category,name:pos_restaurant.pos_category_cocktails
+msgid "Cocktails"
+msgstr "Cocktailit"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_table/edit_table.xml:0
+msgid "Color"
+msgstr "Väri"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_res_config_settings
+msgid "Config Settings"
+msgstr "Asetukset"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_table/edit_table.xml:0
+msgid "Corner rounding"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.product_cosmopolitan_product_template
+msgid "Cosmopolitan"
+msgstr "Cosmopolitan"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_category__course_id
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__course_id
+msgid "Course"
+msgstr "Kurssi"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "Course "
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__name
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__name
+msgid "Course Name"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__course_id
+msgid "Course Ref"
+msgstr "Ruokatilauksen viite"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__index
+msgid "Course index"
+msgstr "Ruokatilauksen indeksi"
+
+#. module: pos_restaurant
+#: model:ir.actions.act_window,name:pos_restaurant.action_pos_course
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__course_ids
+#: model:ir.ui.menu,name:pos_restaurant.menu_pos_course
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_pos_course_list
+msgid "Courses"
+msgstr "Kurssit"
+
+#. module: pos_restaurant
+#: model:product.template,description_sale:pos_restaurant.product_cosmopolitan_product_template
+msgid "Cranberry Jus, lime jus, vodka and Cointreau"
+msgstr "Cranberry Jus, lime jus, vodka ja Cointreau"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__create_uid
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__create_uid
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_uid
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__create_date
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_date
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__create_date
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_date
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Dashed"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__default_screen
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_default_screen
+msgid "Default Screen"
+msgstr "Oletusnäyttö"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.js:0
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/floor_plan_editor.xml:0
+msgid "Delete"
+msgstr "Poista"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
+msgid "Delete Floor"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:pos.preset,name:pos_restaurant.pos_delivery_preset
+msgid "Delivery"
+msgstr "Toimitus"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Design floors and assign orders to tables"
+msgstr "Suunnittele lattiat ja sijoita tilaukset pöytiin"
+
+#. module: pos_restaurant
+#: model:pos.preset,name:pos_restaurant.pos_takein_preset
+msgid "Dine In"
+msgstr "Syö paikan päällä"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/models/pos_order.js:0
+msgid "Direct Sale"
+msgstr "Suoramyynti"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/navbar/navbar.xml:0
+msgid "Discard"
+msgstr "Hylkää"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/navbar/navbar.xml:0
+msgid "Discard all changes"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_category__display_name
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__display_name
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__display_name
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_receipt__display_name
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_preset__display_name
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_restaurant.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__display_name
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__display_name
+msgid "Display Name"
+msgstr "Näyttönimi"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Dotted"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:pos.category,name:pos_restaurant.drinks
+#: model:product.category,name:pos_restaurant.product_category_drinks
+#: model:product.combo,name:pos_restaurant.drink_combo
+msgid "Drinks"
+msgstr "Juomat"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/floor_plan_editor.xml:0
+msgid "Duplicate"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_preset
+msgid "Easily load a set of configuration options"
+msgstr "Lataa helposti valikoima kokoonpanoasetuksia"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
+msgid "Edit Floor"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
+msgid "Edit Floor Plan"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
+msgid "Edit Plan"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Edit text"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan/floor_plan.xml:0
+msgid "Edit your floor plan"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__use_course_allocation
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_use_course_allocation
+msgid "Enable Course Allocation"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
+msgid "Enables Bill Splitting in the Point of Sale."
+msgstr "Mahdollistaa laskun jakamisen kassassa."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/components/numpad_dropdown/numpad_dropdown.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
+msgid "Enter a table number"
+msgstr "Syötä pöydän numero"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.js:0
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.js:0
+msgid "Enter your text"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.espresso_product_template
+msgid "Espresso"
+msgstr "Espresso"
+
+#. module: pos_restaurant
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_extra_cheese
+msgid "Extra cheese"
+msgstr "Lisäjuustoa"
+
+#. module: pos_restaurant
+#: model:product.attribute,name:pos_restaurant.pa_extras_pizza
+msgid "Extras"
+msgstr "Lisätoiminnot"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.fanta_product_template
+msgid "Fanta"
+msgstr "Fanta"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.js:0
+msgid "Fire %s"
+msgstr "Tarjoilun ajoitus %s"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/components/order_course/order_course.xml:0
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__fired
+msgid "Fired"
+msgstr "Irtisanottu"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__fired_date
+msgid "Fired Date"
+msgstr "Käynnistämisen päivämäärä"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
+msgid "Floor"
+msgstr "Kerros"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__name
+msgid "Floor Name"
+msgstr "Kerroksen nimi"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__floor_plan
+msgid "Floor Plan"
+msgstr "Pöytäkartta"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__floor_plan_layout
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_plan_layout
+msgid "Floor Plan Layout"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__floor_plan_settings
+msgid "Floor Plan Settings"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
+#: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_floor_all
+msgid "Floor Plans"
+msgstr "Pöytäkartat"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/floor_plan_editor.js:0
+msgid "Floor name"
+msgstr "Kerroksen nimi"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/navbar/navbar.xml:0
+msgid "Floor plan editor"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_restaurant.py:0
+msgid "Floor: %(floor)s - PoS Config: %(config)s \n"
+msgstr "Lattia: %(floor)s - Kassan asetukset: %(config)s \n"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Floors"
+msgstr "Kerrokset"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Floors & Tables Map"
+msgstr "Kerroksien ja pöytien kartta"
+
+#. module: pos_restaurant
+#: model:pos.category,name:pos_restaurant.food
+msgid "Food"
+msgstr "Ruoka"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.js:0
+msgid "For the current display, an image a resolution of %s is recommended."
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_pos_preset__use_guest
+msgid "Force guest selection when clicking on order button in PoS restaurant"
+msgstr ""
+"Pakota asiakkaan valinta, kun tilauspainiketta painetaan ravintolan kassassa"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
+msgid "Funghi"
+msgstr "Funghi"
+
+#. module: pos_restaurant
+#: model:product.template,description_sale:pos_restaurant.product_negroni_product_template
+msgid "Gin, vermouth rosso, Campari, and an orange peel."
+msgstr "Gin, vermouth rosso, Campari ja appelsiininkuori."
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.green_tea_product_template
+msgid "Green Tea"
+msgstr "Vihreä tee"
+
+#. module: pos_restaurant
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_grilled_vegetables
+msgid "Grilled vegetables"
+msgstr "Grillatut vihannekset"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_preset__use_guest
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_change_receipt
+msgid "Guest"
+msgstr "Vieras"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/payment_screen/order_details_dialog.js:0
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__customer_count
+msgid "Guests"
+msgstr "Vieraat"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_category__id
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__id
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__id
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_receipt__id
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_preset__id
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_restaurant.field_product_template__id
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__id
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__id
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__id
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__id
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.ice_tea_product_template
+msgid "Ice Tea"
+msgstr "Jäätee"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
+msgid ""
+"If false, the table is deactivated and will not be available in the point of "
+"sale"
+msgstr ""
+"Jos arvo on epätosi, pöytä poistetaan käytöstä, eikä se ole käytettävissä "
+"kassassa"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/floor_plan_editor.js:0
+msgid "If you proceed, your changes will be lost"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
+msgid "Images"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Italic"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/components/numpad_dropdown/numpad_dropdown.xml:0
+msgid "Jump"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__write_uid
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__write_uid
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__write_uid
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_uid
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__write_date
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__write_date
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__write_date
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_date
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Layers"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__parent_side__left
+msgid "Left"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_maki_product_template
+msgid "Lunch Maki 18pc"
+msgstr "Lounas Maki 18kpl"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_salmon_product_template
+msgid "Lunch Salmon 20pc"
+msgstr "Lounas Lohi 20kpl"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_temaki_product_template
+msgid "Lunch Temaki mix 3pc"
+msgstr "Lounas Temaki mix 3kpl"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.product_mai_tai_product_template
+msgid "Mai Tai"
+msgstr "Mai Tai"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/floor_plan/floor_plan_service.js:0
+msgid "Main Floor"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.product_margarita_product_template
+msgid "Margarita"
+msgstr "Margarita"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.milkshake_banana_product_template
+msgid "Milkshake Banana"
+msgstr "Banaanipirtelö"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.minute_maid_product_template
+msgid "Minute Maid"
+msgstr "Minute Maid"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.product_mojito_product_template
+msgid "Mojito"
+msgstr "Mojito"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
+msgid "More"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.product_moscow_mule_product_template
+msgid "Moscow Mule"
+msgstr "Moscow Mule"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_mozza_product_template
+msgid "Mozzarella Sandwich"
+msgstr "Mozzarellavoileipä"
+
+#. module: pos_restaurant
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_mushroom
+msgid "Mushroom"
+msgstr "Sieni"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
+msgid "Name"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.product_negroni_product_template
+msgid "Negroni"
+msgstr "Negroni"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
+msgid "New"
+msgstr "Uusi"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/floor_plan_editor.js:0
+msgid "New Floor"
+msgstr "Uusi kerros"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
+msgid "New Order"
+msgstr "Uusi tilaus"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_pos_category_form_inherit_course
+msgid "No default"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan/floor_plan.xml:0
+msgid "No tables are available yet."
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.js:0
+msgid "Notes"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_table/edit_table.xml:0
+msgid "Number of Seats"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.product_old_fashioned_product_template
+msgid "Old Fashioned"
+msgstr "Perinteinen"
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_pos_preset_form_inherit_pos_restaurant
+msgid "Options"
+msgstr "Vaihtoehdot"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__line_ids
+msgid "Order Lines"
+msgstr "Tilausrivit"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__order_id
+msgid "Order Ref"
+msgstr "Tilauksen viite"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_table_popup/add_table_popup.xml:0
+msgid "Oval"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_course
+msgid "POS Course"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_restaurant_order_course
+msgid "POS Restaurant Order Course"
+msgstr "Kassajärjestelmän ravintolatilauksen ruokalaji"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__parent_side
+msgid "Parent Side"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__parent_id
+msgid "Parent Table"
+msgstr "Ylemmän tason taulukko"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_4formaggi_product_template
+msgid "Pasta 4 Formaggi"
+msgstr "Pasta 4 Formaggi"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_bolo_product_template
+msgid "Pasta Bolognese"
+msgstr "Pasta Bolognese"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
+msgid "Pay"
+msgstr "Maksa"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "Payment"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,description_sale:pos_restaurant.pos_food_4formaggi_product_template
+msgid "Pepe, latte, gorgonzola dolce, taleggio, parmigiano reggiano"
+msgstr "Pepe, latte, gorgonzola dolce, taleggio, parmigiano reggiano -juustoa"
+
+#. module: pos_restaurant
+#: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_pepperoni
+msgid "Pepperoni"
+msgstr "Pepperoni"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.product_pina_colada_product_template
+msgid "Pina colada"
+msgstr "Pina colada"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_margherita_product_template
+msgid "Pizza Margherita"
+msgstr "Pizza Margherita"
+
+#. module: pos_restaurant
+#: model:product.template,description_sale:pos_restaurant.pos_food_vege_product_template
+#: model:product.template,name:pos_restaurant.pos_food_vege_product_template
+msgid "Pizza Vegetarian"
+msgstr "Pizza kasvissyöjä"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
+msgid "Plan"
+msgstr "Suunnittele"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_restaurant.py:0
+msgid ""
+"Please close and validate the following open PoS Session before modifying "
+"this floor.\n"
+"Open session: %(session_names)s"
+msgstr ""
+"Sulje ja vahvista seuraava avoin PoS-istunto ennen tämän salin "
+"muokkaamista.\n"
+"Avoin istunto: %(session_names)s"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/payment_screen/order_details_dialog.js:0
+msgid "Point of Sale"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_category
+msgid "Point of Sale Category"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Kassajärjestelmän asetukset"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_order
+msgid "Point of Sale Order"
+msgstr "Kassajärjestelmän tilaus"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_order_line
+msgid "Point of Sale Order Line"
+msgstr "Kassajärjestelmän tilausrivi"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_order_receipt
+msgid "Point of Sale Order Receipt Generator"
+msgstr "Kassajärjestelmän tilauskuittien luontityökalu"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Kassajärjestelmän istunto"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__pos_config_ids
+msgid "Point of Sales"
+msgstr "Kassajärjestelmä"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__category_ids
+msgid "Pos Category"
+msgstr "Kassajärjestelmän kategoria"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
+msgid "Pos Iface Splitbill"
+msgstr "Kassajärjestelmän Iface-jakolasku"
+
+#. module: pos_restaurant
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_potato_thyme
+msgid "Potatoes with thyme"
+msgstr "Perunat timjamilla"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_product_template
+msgid "Product"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/floor_plan_editor.xml:0
+msgid "Properties"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,description_sale:pos_restaurant.product_aperol_spritz_product_template
+msgid "Prosecco, aperol, soda"
+msgstr "Prosecco, aperoli, sooda"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_table_popup/add_table_popup.xml:0
+msgid "Rectangular"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields.selection,name:pos_restaurant.selection__pos_config__default_screen__register
+msgid "Register"
+msgstr "Ilmoittaudu"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
+msgid "Release Order"
+msgstr "Vapauta tilaus"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
+msgid "Release table"
+msgstr "Vapauta pöytä"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
+msgid "Remove Background Image"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
+msgid "Reprint"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_pos_preset_form_inherit_pos_restaurant
+msgid "Restaurant"
+msgstr "Ravintola"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_restaurant_floor
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
+msgid "Restaurant Floor"
+msgstr "Ravintolan kerros"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__floor_ids
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_floor_ids
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_tree
+msgid "Restaurant Floors"
+msgstr "Ravintolan kerrokset"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_restaurant_table
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
+msgid "Restaurant Table"
+msgstr "Ravintolan pöytä"
+
+#. module: pos_restaurant
+#: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__parent_side__right
+msgid "Right"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_table_popup/add_table_popup.xml:0
+msgid "Round"
+msgstr "Pyöreä"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Rounded"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,description_sale:pos_restaurant.product_mai_tai_product_template
+msgid "Rum, lime juice, orgeat syrup, and orange liqueur."
+msgstr "Rommi, limemehu, orgeat-siirappi ja appelsiinilikööri."
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_chirashi_product_template
+msgid "Salmon and Avocado"
+msgstr "Lohta ja avokadoa"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/navbar/navbar.xml:0
+msgid "Save"
+msgstr "Tallenna"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.schweppes_product_template
+msgid "Schweppes"
+msgstr "Schweppes"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__seats
+msgid "Seats"
+msgstr "Istumapaikkoja"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_table_popup/add_table_popup.xml:0
+msgid "Select Table Shape"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
+msgid "Select table to transfer order"
+msgstr ""
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Select the table first or after registering the order"
+msgstr "Valitse pöytä ensin tai kun rekisteröit tilausta"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/payment_screen/order_details_dialog.js:0
+msgid "Self-Order Kiosk"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/payment_screen/order_details_dialog.js:0
+msgid "Self-Order Mobile"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
+msgid "Send"
+msgstr "Lähetä"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Send backward"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Send to back"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Send to front"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__sequence
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
+msgid "Sequence"
+msgstr "Järjestys"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "Set Order Name"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
+msgid "Set Tab"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
+msgid "Set Table"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
+msgid "Set a Background Image"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_table/edit_table.xml:0
+msgid "Shape"
+msgstr "Muoto"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
+msgid "Shapes"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.attribute,name:pos_restaurant.pa_sides
+msgid "Sides"
+msgstr "Lisukkeet"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Size"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_smashed_sweet_potato
+msgid "Smashed sweet potatoes"
+msgstr "Bataattimuusi"
+
+#. module: pos_restaurant
+#: model:pos.category,name:pos_restaurant.pos_category_soft_drinks
+msgid "Soft drinks"
+msgstr "Virvoitusjuomat"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Solid"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
+msgid "Spicy Tuna Sandwich"
+msgstr "Tulinen tonnikalavoileipä"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "Split Order"
+msgstr ""
+
+#. module: pos_restaurant
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
+msgid "Split total or order lines"
+msgstr "Jaa kokonais- tai tilausrivit"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_table_popup/add_table_popup.xml:0
+msgid "Square"
+msgstr "Neliö"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Style"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.combo,name:pos_restaurant.sushi_choice
+msgid "Sushi"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.sushi_drink_combo_product_template
+msgid "Sushi Lunch Combo"
+msgstr "Sushi-lounasyhdistelmä"
+
+#. module: pos_restaurant
+#: model:product.attribute.value,name:pos_restaurant.pav_sides_sweet_potato
+msgid "Sweet potato fries"
+msgstr "Bataattiranskalaiset"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
+msgid "Switch Floor View"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/payment_screen/order_details_dialog.js:0
+#: code:addons/pos_restaurant/static/src/app/screens/ticket_screen/ticket_screen.xml:0
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_change_receipt
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_receipt_header
+msgid "Table"
+msgstr "Pöytä"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_table/edit_table.xml:0
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__table_number
+msgid "Table Number"
+msgstr "Pöydän numero"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__table_ids
+#: model:ir.model.fields.selection,name:pos_restaurant.selection__pos_config__default_screen__tables
+#: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
+msgid "Tables"
+msgstr "Pöydät"
+
+#. module: pos_restaurant
+#: model:pos.preset,name:pos_restaurant.pos_takeout_preset
+msgid "Takeout"
+msgstr "Nouto"
+
+#. module: pos_restaurant
+#: model:product.template,description_sale:pos_restaurant.product_margarita_product_template
+msgid "Tequila Jose Cuervo, lime jus, sugar cane Cointreau"
+msgstr "Tequila Jose Cuervo, lime jus, sokeriruokosokeri Cointreau"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Text"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_pos_order__customer_count
+msgid "The amount of customers that have been served by this order."
+msgstr "Niiden asiakkaiden määrä, joita tämä tilaus on koskenut."
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
+msgid "The default number of customer served at this table."
+msgstr "Tässä pöydässä palveltujen asiakkaiden oletusmäärä."
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__table_number
+msgid "The number of the table as displayed on the floor plan"
+msgstr "Pöydän numero pöytäkartan mukaisesti"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__parent_id
+msgid "The parent table if this table is part of a group of tables"
+msgstr "Ylemmän tason pöytä, jos tämä pöytä on osa pöytäryhmää"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__parent_side
+msgid "The parent table side where this table will be displayed"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
+#: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_floor_ids
+msgid "The restaurant floors served by this point of sale."
+msgstr "Tämän kassan käsittelemät ravintolakerrokset."
+
+#. module: pos_restaurant
+#: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
+msgid "The table where this order was served"
+msgstr "Pöytä, johon tämä tilaus tarjoiltiin"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Thickness"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,description_sale:pos_restaurant.pos_food_margherita_product_template
+msgid "Tomato sauce, Agerola mozzarella \"fior di latte\", fresh basil"
+msgstr "Tomaattikastike, Agerolan mozzarella \"fior di latte\", tuore basilika"
+
+#. module: pos_restaurant
+#: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__parent_side__top
+msgid "Top"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "Transfer"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "Transfer \"%s\" to:"
+msgstr "Siirrä \"%s\" kohteeseen:"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Transfer / Merge"
+msgstr "Siirto / yhdistäminen"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Transfer Course"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "Transfer all products of \"%s\" into:"
+msgstr "Siirrä kaikki tuotteet kohteesta \"%s\" kohteeseen:"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
+msgid "Transparency"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
+msgid "Underline"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_restaurant.py:0
+msgid "Uploaded image's format is not supported. Try with: %s"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__uuid
+msgid "Uuid"
+msgstr "Uuid"
+
+#. module: pos_restaurant
+#: model:product.template,description_sale:pos_restaurant.product_moscow_mule_product_template
+msgid "Vodka 42 Below, lime, sugar, ginger beer"
+msgstr "Vodka 42 Below, lime, sokeri, inkivääriolut"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
+msgid "Walls"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/floor_plan/floor_plan_service.js:0
+msgid "Warning"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.water_product_template
+msgid "Water"
+msgstr "Vesi"
+
+#. module: pos_restaurant
+#: model:product.template,name:pos_restaurant.product_whiskey_sour_product_template
+msgid "Whiskey Sour"
+msgstr "Viski Sour"
+
+#. module: pos_restaurant
+#: model:product.template,description_sale:pos_restaurant.product_whiskey_sour_product_template
+msgid "Whiskey, lemon juice, sugar, and a dash of egg white."
+msgstr "Viski, sitruunamehu, sokeri ja ripaus munanvalkuaista."
+
+#. module: pos_restaurant
+#: model:product.template,description_sale:pos_restaurant.product_pina_colada_product_template
+msgid "White rhum, Malibu, Batida de coco, coconut liqueur, pineapple juice"
+msgstr "Valkoinen rommi, Malibu, Batida de coco, kookoslikööri, ananasmehu"
+
+#. module: pos_restaurant
+#: model:product.template,description_sale:pos_restaurant.product_mojito_product_template
+msgid "White rum, sugar, lime juice, soda water, and mint."
+msgstr "Valkoista rommia, sokeria, limemehua, soodavettä ja minttua."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "With"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You are currently transferring the order %s"
+msgstr "Siirrät parhaillaan tilausta %s"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_restaurant.py:0
+msgid ""
+"You cannot delete a floor when orders are still in draft for this floor."
+msgstr ""
+"Et voi poistaa kerrosta, kun tilaukset ovat vielä luonnosvaiheessa kyseistä "
+"kerrosta varten."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/floor_plan/floor_plan_service.js:0
+msgid "You cannot delete a floor with orders still in draft for this floor."
+msgstr "Et voi poistaa kerrosta, jonka tilaukset ovat vielä luonnosvaiheessa."
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_restaurant.py:0
+msgid ""
+"You cannot delete a table when orders are still in draft for this table."
+msgstr ""
+"Et voi poistaa pöytää, kun tilaukset ovat vielä luonnosvaiheessa kyseistä "
+"pöytää varten."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/floor_plan/floor_plan_service.js:0
+msgid "You cannot delete a table with orders still in draft for this table."
+msgstr "Et voi poistaa pöytää, jonka tilaukset ovat vielä luonnosvaiheessa."
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_preset.py:0
+msgid "You cannot delete the master preset(s)."
+msgstr "Et voi poistaa pääoletusasetuksia."
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_restaurant.py:0
+msgid ""
+"You cannot remove a floor that is used in a PoS session, close the "
+"session(s) first: \n"
+msgstr "Et voi poistaa kassassa käytettyä kerrosta, sulje istunnot ensin: \n"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_restaurant.py:0
+msgid ""
+"You cannot remove a table that is used in a PoS session, close the "
+"session(s) first."
+msgstr "Et voi poistaa kassassa käytettyä pöytää, sulje istunto(t) ensin."
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "You cannot transfer an order to itself"
+msgstr "Et voi siirtää tilausta sille itselleen"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "discount"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "e.g. John"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "fired"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
+msgid "items"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "product(s) selected"
+msgstr ""
+
+#~ msgid " and $1"
+#~ msgstr " ja $1"
+
+#~ msgid "Message"
+#~ msgstr "Viesti"
+
+#~ msgid "Note"
+#~ msgstr "Muistiinpano"
+
+#~ msgid "Split"
+#~ msgstr "Jaa"

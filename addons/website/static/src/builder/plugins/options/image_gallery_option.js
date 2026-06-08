@@ -1,0 +1,17 @@
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
+import { registry } from "@web/core/registry";
+
+export class ImageGalleryOption extends BaseOptionComponent {
+    static id = "image_gallery_option";
+    static template = "website.ImageGalleryOption";
+
+    setup() {
+        super.setup();
+        this.state = useDomState((editingElement) => ({
+            isSlideShow: editingElement.classList.contains("o_slideshow"),
+        }));
+    }
+}
+
+registry.category("website-options").add(ImageGalleryOption.id, ImageGalleryOption);

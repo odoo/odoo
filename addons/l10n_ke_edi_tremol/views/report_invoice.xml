@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_ke_invoice" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='qrcode']" position="before">
+            <div t-if="o.country_code == 'KE' and o.l10n_ke_cu_invoice_number" id="l10n_ke_control_unit_information" style="page-break-inside:avoid;">
+                <b>Kenyan Fiscal Device Info</b>
+                <div class="row mt-4 mb-4">
+                    <div class="col">
+                        <p>
+                            <b>Invoice Number: </b><br></br>
+                            <span t-field="o.l10n_ke_cu_invoice_number"/>
+                        </p>
+                        <p>
+                            <b>Serial Number: </b><br></br>
+                            <span t-field="o.l10n_ke_cu_serial_number"/>
+                        </p>
+                        <p>
+                            <b>Date and Time of Signing: </b><br></br>
+                            <span t-field="o.l10n_ke_cu_datetime"/>
+                        </p>
+                    </div>
+                    <div class="col">
+                        <p t-if="o.l10n_ke_cu_qrcode">
+                            <strong class="text-center">TIMS URL</strong><br/><br/>
+                            <img style="display:block;"  t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;quiet=%s' % ('QR', quote_plus(o.l10n_ke_cu_qrcode), 130, 130, 0)" alt="QR Code"/>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

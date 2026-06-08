@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="point_of_sale.PosOpenUIButton">
+        <button t-if="this.isVisible" type="button" t-out="this.label" t-att-class="this.class" t-on-click="this.onClick" t-on-auxclick="this.onClick"/>
+    </t>
+</odoo>

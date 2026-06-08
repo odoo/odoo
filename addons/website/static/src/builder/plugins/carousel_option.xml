@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CarouselAnimationOption">
+    <BuilderRow label.translate="Transition">
+        <BuilderSelect action="'setCarouselType'" preview="false">
+            <BuilderSelectItem id="'transition_slide'" actionParam="''">Slide</BuilderSelectItem>
+            <BuilderSelectItem id="'transition_fade'" actionParam="'carousel-fade'">Fade</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'carousel-instant'">None</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <t t-if="this.isActiveItem('transition_slide') || this.isActiveItem('transition_fade')">
+        <BuilderRow label.translate="Duration" tooltip.translate="Adjust how long the animation effect to change slide takes" level="1">
+            <BuilderRange
+                action="'setCarouselDuration'"
+                unit="'s'"
+                saveUnit="'ms'"
+                step="0.1"
+                min="0.1"
+                max="5"
+                withNumberInput="true"/>
+        </BuilderRow>
+    </t>
+
+    <BuilderRow label.translate="Autoplay">
+        <BuilderSelect action="'setAutoplay'">
+            <BuilderSelectItem id="'auto_after_first_hover'" actionParam="{ bsRide: 'true', ariaLive: 'off' }">After First Hover</BuilderSelectItem>
+            <BuilderSelectItem id="'auto_always'" actionParam="{ bsRide: 'carousel', ariaLive: 'off' }">Always</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{ bsRide: 'false', ariaLive: 'polite' }">Never</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <t t-if="this.isActiveItem('auto_after_first_hover') || this.isActiveItem('auto_always')">
+        <BuilderRow label.translate="Timespan" tooltip.translate="Adjust how long each slide stays on screen" level="1">
+            <BuilderNumberInput
+                action="'setCarouselTimespan'"
+                unit="'s'"
+                saveUnit="'ms'"
+                step="0.1"
+                min="1"
+                applyWithUnit="false"/>
+        </BuilderRow>
+    </t>
+</t>
+
+<t t-name="website.CarouselOption">
+    <BuilderRow label.translate="Slide">
+        <BuilderButton type="'success'" title.translate="Add Slide"  action="'addSlide'">Add Slide</BuilderButton>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Style">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Regular</BuilderSelectItem>
+            <BuilderSelectItem classAction="'carousel-dark'">Inverted colors</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Control" level="1">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Indicators Inside</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_controllers_indicators_outside'">Indicators Outside</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Arrows" level="1">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'s_carousel_default'">Default</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_boxed'">Boxed</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_rounded'">Rounded</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_arrows_hidden'">Hidden</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Indicators" applyTo="'.carousel-indicators'" level="1">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Bars</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_indicators_dots'">Dots</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_indicators_numbers'">Numbers</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_carousel_indicators_hidden'">Hidden</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <t t-call="website.CarouselAnimationOption"/>
+</t>
+
+<t t-name="website.CarouselItemHeaderMiddleButtons">
+    <t t-set="backward">Move Backward</t>
+    <t t-set="forward">Move Forward</t>
+    <t t-set="slidePrev" t-value="() => this.slide('prev')"/>
+    <t t-set="slideNext" t-value="() => this.slide('next')"/>
+    <t t-set="sameLangDir" t-value="this.env.langDir.content === this.env.langDir.builder"/>
+    <button class="btn btn-primary ms-0 py-0 px-1 me-1"
+            t-att-title="sameLangDir ? backward : forward"
+            t-att-aria-label="sameLangDir ? backward : forward"
+            t-att-class="{ disabled: !this.state.hasMultiItems }"
+            t-on-click="sameLangDir ? slidePrev : slideNext">
+        <span class="fa fa-fw fa-angle-left"/>
+    </button>
+    <button class="btn btn-primary py-0 px-1 me-2"
+            t-att-title="sameLangDir ? forward : backward"
+            t-att-aria-label="sameLangDir ? forward : backward"
+            t-att-class="{ disabled: !this.state.hasMultiItems }"
+            t-on-click="sameLangDir ? slideNext : slidePrev">
+        <span class="fa fa-fw fa-angle-right"/>
+    </button>
+    <button class="btn btn-success ms-0 py-0 px-1 me-1"
+            title="Add Slide"
+            aria-label="Add Slide"
+            t-on-click="this.addSlide">
+        <span class="oi fa-fw oi-plus"/>
+    </button>
+    <button class="btn btn-danger py-0 px-1"
+            t-att-class="{ disabled: !this.state.hasMultiItems }"
+            title="Remove Slide"
+            aria-label="Remove Slide"
+            t-on-click="this.removeSlide">
+        <span class="oi fa-fw oi-minus"/>
+    </button>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <carousel_option
+            template="website.CarouselOption"
+            selector="section"
+            exclude=".s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper:has(>.s_quotes_carousel_compact)"
+            applyTo=":scope > .carousel"/>
+    </xpath>
+</t>
+
+</templates>

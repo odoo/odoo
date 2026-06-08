@@ -1,0 +1,62 @@
+.self_order_pills_selection_popup_dialog {
+    border-radius: 35px 35px 0 0 !important;
+    bottom: 0;
+    top: auto !important;
+    height: auto !important;
+
+    .modal-body {
+        height: auto !important;
+    }
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari and Opera */
+}
+
+@keyframes pills-slide-up {
+    from {
+        transform: translateY(100%);
+    }
+}
+
+/* On mobile (< 576px): override default right-slide animation with a bottom-slide */
+@media (max-width: 575px) {
+    @media (prefers-reduced-motion: no-preference) {
+        .self_order_pills_selection_popup_dialog {
+            animation: pills-slide-up 0.3s ease !important;
+        }
+    }
+}
+
+/* On small screens (576px - 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .self_order_pills_selection_popup_dialog {
+        max-height: 75vh;
+    }
+
+    .self_order_pills_selection_popup {
+        max-height: 70vh;
+    }
+}
+
+/* On medium screens (≥768px) */
+@media (min-width: 768px) {
+    .self_order_pills_selection_popup_dialog {
+        border-radius: 35px !important;
+        bottom: 20%;
+        max-height: 75vh;
+    }
+
+    .self_order_pills_selection_popup {
+        max-height: 70vh;
+    }
+}
+

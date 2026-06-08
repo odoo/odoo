@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <!-- Main menu -->
+    <menuitem name="Surveys"
+      id="menu_surveys"
+      sequence="130"
+      groups="group_survey_user"
+      web_icon="survey,static/description/icon.png"/>
+
+      <!-- Parent menus -->
+    <menuitem name="Questions &amp; Answers"
+      id="survey_menu_questions"
+      parent="menu_surveys"
+      sequence="90"/>
+  </data>
+</odoo>

@@ -1,0 +1,13 @@
+# The following requirements are needed only on Raspberry Pi IoT:
+gatt; sys_platform == "linux"
+
+# The following requirements are needed only on Windows Virtual IoT:
+decorator; sys_platform == "win32"
+
+# The following requirements are needed on every platforms, but are installed
+# via apt-get on the Raspberry Pi:
+PyKCS11==1.5.16; sys_platform == "win32"
+schedule==1.2.1; sys_platform == "win32"
+
+# The following requirements are needed on every platforms:
+websocket-client==1.9.0

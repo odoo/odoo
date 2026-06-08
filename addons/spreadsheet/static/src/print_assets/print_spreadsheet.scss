@@ -1,0 +1,17 @@
+@media print {
+    html:has(.o-spreadsheet) {
+        &,
+        body {
+            /* Needed to override knowledge global print style ... */
+            height: 100% !important;
+        }
+
+        .o_action_manager {
+            height: 100% !important;
+
+            .o_spreadsheet_container {
+                overflow: visible !important;
+            }
+        }
+    }
+}

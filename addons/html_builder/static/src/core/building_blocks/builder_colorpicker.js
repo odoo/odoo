@@ -1,0 +1,243 @@
+import { useComponent } from "@web/owl2/utils";
+import { ColorSelector } from "@html_editor/main/font/color_selector";
+import { Component, props, t } from "@odoo/owl";
+import {
+    useColorPicker,
+    DEFAULT_COLORS,
+    DEFAULT_THEME_COLOR_VARS,
+} from "@html_editor/components/color_picker/color_picker";
+import { BuilderComponent } from "./builder_component";
+import {
+    getAllActionsAndOperations,
+    revertPreview,
+    useBuilderComponent,
+    useDomState,
+    useHasPreview,
+} from "../utils";
+import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
+import { getAllUsedColors } from "@html_builder/utils/utils_css";
+
+// TODO replace by useInputBuilderComponent after extract unit by AGAU
+export function useColorPickerBuilderComponent() {
+    const comp = useComponent();
+    const { getAllActions, callOperation } = getAllActionsAndOperations(comp);
+    const getAction = comp.env.editor.shared.builderActions.getAction;
+    let selectedTab;
+    const state = useDomState(getState);
+    const applyOperation = comp.env.editor.shared.history.makePreviewableAsyncOperation(
+        (applySpecs, isPreviewing) => {
+            const proms = [];
+            for (const applySpec of applySpecs) {
+                proms.push(
+                    applySpec.action.apply({
+                        isPreviewing,
+                        editingElement: applySpec.editingElement,
+                        params: applySpec.actionParam,
+                        value: applySpec.actionValue,
+                        loadResult: applySpec.loadResult,
+                        dependencyManager: comp.env.dependencyManager,
+                    })
+                );
+            }
+            return Promise.all(proms);
+        }
+    );
+    function getState(editingElement) {
+        // if (!editingElement || !editingElement.isConnected) {
+        //     // TODO try to remove it. We need to move hook in BuilderComponent
+        //     return {};
+        // }
+        const actionWithGetValue = getAllActions().find(
+            ({ actionId }) => getAction(actionId).getValue
+        );
+        const { actionId, actionParam } = actionWithGetValue;
+        const actionValue = getAction(actionId).getValue({ editingElement, params: actionParam });
+        return {
+            // defaultTab is the tab to open if the user has not done a selection yet.
+            // If the user has already selected a color, the tab of the last selection is opened
+            defaultTab: comp.props.selectedTab,
+            selectedColor: actionValue || comp.props.defaultColor,
+            selectedColorCombination: comp.env.editor.shared.color.getColorCombination(
+                editingElement,
+                actionParam
+            ),
+            getTargetedElements: () => [editingElement],
+            selectedTab,
+        };
+    }
+    function getColor(colorValue) {
+        return colorValue.startsWith("color-prefix-")
+            ? `var(${colorValue.replace("color-prefix-", "--")})`
+            : colorValue;
+    }
+
+    let previewValue = null;
+    function onApply(colorValue) {
+        previewValue = null;
+        selectedTab = comp.getCorrespondingColorPickerTab(colorValue);
+        callOperation(applyOperation.commit, { userInputValue: getColor(colorValue) });
+    }
+    let onPreview = (colorValue) => {
+        // Avoid previewing the same color twice.
+        if (previewValue === colorValue) {
+            return;
+        }
+        previewValue = colorValue;
+        callOperation(applyOperation.preview, {
+            preview: true,
+            userInputValue: getColor(colorValue),
+            operationParams: {
+                cancellable: true,
+                cancelPrevious: () => applyOperation.revert(),
+            },
+        });
+    };
+    const hasPreview = useHasPreview(getAllActions);
+    if (!hasPreview) {
+        onPreview = () => {};
+    }
+    return {
+        state,
+        onApply,
+        onPreview,
+        onPreviewRevert: () => {
+            previewValue = null;
+            revertPreview(comp.env.editor);
+        },
+    };
+}
+
+export class ColorPickerButton extends Component {
+    static template = "html_builder.ColorPickerButton";
+    static props = {
+        title: { type: String, optional: true },
+        style: { type: String, optional: true },
+        tooltip: { type: String, optional: true },
+        colorPickerConfig: { type: Object, optional: true },
+    };
+
+    setup() {
+        useColorPicker(
+            "colorButton",
+            this.props.colorPickerConfig.props,
+            this.props.colorPickerConfig.options
+        );
+    }
+}
+
+export class BuilderColorPicker extends Component {
+    static template = "html_builder.BuilderColorPicker";
+    props = props({
+        // basicContainerBuilderComponentProps (converted inline)
+        id: t.string().optional(),
+        applyTo: t.string().optional(),
+        preview: t.boolean().optional(),
+        inheritedActions: t.array(t.string()).optional(),
+
+        action: t.string().optional(),
+        actionParam: t.any().optional(),
+
+        // Shorthand actions.
+        classAction: t.any().optional(),
+        attributeAction: t.any().optional(),
+        dataAttributeAction: t.any().optional(),
+        styleAction: t.any().optional(),
+
+        noTransparency: t.boolean().optional(),
+        enabledTabs: t.array().optional(["theme", "gradient", "custom"]),
+        grayscales: t.object().optional(),
+        unit: t.string().optional(),
+        title: t.string().optional(),
+        tooltip: t.string().optional(),
+        getUsedCustomColors: t.function().optional(),
+        selectedTab: t.string().optional("theme"),
+        defaultColor: t.string().optional("#FFFFFF00"),
+        defaultOpacity: t.number().optional(),
+        colorPickerClassName: t.string().optional("o-hb-colorpicker"),
+        colorPickerPopoverClassName: t.string().optional("o-hb-colorpicker-popover"),
+    });
+    static components = {
+        ColorSelector: ColorSelector,
+        BuilderComponent,
+        ColorPickerButton,
+    };
+
+    setup() {
+        useBuilderComponent();
+        const { state, onApply, onPreview, onPreviewRevert } = useColorPickerBuilderComponent();
+        this.state = state;
+
+        this.colorPickerConfig = {
+            props: {
+                state,
+                applyColor: onApply,
+                applyColorPreview: onPreview,
+                applyColorResetPreview: onPreviewRevert,
+                getUsedCustomColors:
+                    this.props.getUsedCustomColors || this.getUsedCustomColors.bind(this),
+                colorPrefix: "color-prefix-",
+                cssVarColorPrefix: "hb-cp-",
+                noTransparency: this.props.noTransparency,
+                enabledTabs: this.props.enabledTabs,
+                grayscales: this.props.grayscales,
+                defaultOpacity: this.props.defaultOpacity,
+                className: this.props.colorPickerClassName,
+                editColorCombination: this.env.editColorCombination,
+            },
+            options: {
+                onClose: onPreviewRevert,
+                popoverClass: this.props.colorPickerPopoverClassName,
+            },
+        };
+    }
+
+    getSelectedColorStyle() {
+        if (this.state.selectedColor) {
+            if (isColorGradient(this.state.selectedColor)) {
+                return `background-image: ${this.state.selectedColor}`;
+            }
+            if (isCSSColor(this.state.selectedColor)) {
+                return `background-color: ${this.state.selectedColor}`;
+            }
+            return `background-color: var(--${this.state.selectedColor})`;
+        }
+        if (this.state.selectedColorCombination) {
+            const colorCombination = this.state.selectedColorCombination.replace("_", "-");
+            return `background-color: var(--hb-cp-${colorCombination}-bg); background-image: var(--hb-cp-${colorCombination}-bg-gradient);`;
+        }
+        return "";
+    }
+
+    getUsedCustomColors() {
+        return getAllUsedColors(this.env.editor.editable);
+    }
+
+    getCorrespondingColorPickerTab(selectedColor) {
+        if (!selectedColor) {
+            return;
+        }
+
+        selectedColor = selectedColor.replace(/color-prefix-/g, "");
+        const isTabEnabled = (tab) => this.props.enabledTabs.includes(tab);
+
+        if (isTabEnabled("gradient") && isColorGradient(selectedColor)) {
+            return "gradient";
+        }
+
+        const solidTabColors = [
+            ...DEFAULT_COLORS.flat(),
+            ...DEFAULT_THEME_COLOR_VARS.map((color) => color.toUpperCase()),
+        ];
+        if (isTabEnabled("solid") && solidTabColors.includes(selectedColor.toUpperCase())) {
+            return "solid";
+        }
+
+        if (isTabEnabled("theme") && /^o_cc\d+$/.test(selectedColor)) {
+            return "theme";
+        }
+
+        if (isTabEnabled("custom")) {
+            return "custom";
+        }
+    }
+}

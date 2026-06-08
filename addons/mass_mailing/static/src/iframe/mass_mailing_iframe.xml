@@ -1,0 +1,65 @@
+<templates>
+    <t t-name="mass_mailing.MassMailingIframe">
+        <div class="o_mass_mailing_iframe_wrapper"
+            t-custom-ref="iframeWrapperRef"
+            t-att-class="{
+                'o_mass_mailing_fullscreen': this.state.showFullscreen,
+                [this.props.extraClass]: this.props.extraClass,
+            }">
+            <div class="d-flex w-100 h-100">
+                <div class="flex-grow-1 position-relative" t-att-class="{'align-self-center': this.state.isMobile}">
+                    <LocalOverlayContainer localOverlay="this.overlayRef" identifier="this.env.localOverlayContainerKey"/>
+                    <div class="o_mass_mailing_can_edit_overlay position-absolute h-100 w-100" t-on-click="() => this.toggleFullScreen(true)"
+                        t-if="this.state.editorReady and
+                            !this.props.readonly and
+                            this.props.withBuilder and
+                            !this.props.showThemeSelector and
+                            !this.props.showCodeView and
+                            !this.state.showFullscreen and
+                            !this.state.isSmall"
+                    >
+                        <div t-attf-class="h-100 w-100 #{this.state.emptyBody ? 'bg_empty_body' : ''}">
+                            <div class="h-100 w-100 opacity_on_hover">
+                                <div class="o_mass_mailing_iframe_fullscreen_label position-absolute translate-middle start-50 btn btn-primary btn-lg"
+                                    t-out="this.state.fullscreenButtonLabel"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="o_mass_mailing_iframe_container"
+                        t-att-class="{ 'o_is_mobile': this.state.isMobile, 'h-100': !this.state.isMobile }">
+                        <iframe t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
+                            t-att-scrolling="this.state.isMobile ? '' : 'no'"
+                            t-att-class="{ 'd-none': this.props.showThemeSelector or this.props.showCodeView }"
+                            t-custom-ref="iframeRef"/>
+                    </div>
+                </div>
+                <div t-if="!this.props.readonly and this.props.withBuilder and !this.props.showThemeSelector and !this.props.showCodeView">
+                    <div class="position-sticky o_mass_mailing-builder_sidebar o_builder_sidebar_open"
+                        t-att-class="{ 'd-none': this.env.isSmall or !this.state.showFullscreen }" t-custom-ref="sidebarRef">
+                        <LazyComponent t-if="this.state.ready" Component="'mass_mailing.MassMailingBuilder'"
+                            props="() => ({
+                                builderProps: this.getBuilderProps(),
+                                toggleCodeView: this.props.toggleCodeView,
+                                saveAndClose: () => this.saveAndClose(),
+                                discardAndClose: () => this.discardAndClose(),
+                            })"
+                            bundle="'mass_mailing.assets_builder'"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="mass_mailing.IframeHead">
+        <meta http-equiv="Content-Security-Policy" content="script-src 'none';"/>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    </t>
+    <t t-name="mass_mailing.IframeBody">
+        <div class="o_mass_mailing_value"
+            t-att-class="{ 'o_readonly': props.readonly, 'note-editable': !props.readonly, 'o_rtl': isRTL }">
+            <t t-if="props.readonly">
+                <t t-out="props.config.value"/>
+            </t>
+        </div>
+        </t>
+</templates>

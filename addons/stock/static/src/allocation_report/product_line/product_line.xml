@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="stock.AllocationReport.ProductLine">
+        <t t-set="outLine" t-value="this.rowSpan() >= 1 ? this.needs[0] : false"/>
+        <tr class="border">
+            <td class="border-end py-4 fs-3" t-att-rowspan="this.rowSpan() or false">
+                <div class="mb-2 w-100 text-center">
+                    <t t-out="this.props.name"/>
+                    <button class="btn btn-link fa fa-area-chart"
+                            t-on-click="() => this.onClickForecast()"
+                            name="forecasted_report_link"/>
+                </div>
+                <div class="fw-bold w-100 text-center">
+                    <t t-out="this.props.totalQty"/> <t t-out="this.props.uom.display_name"/>
+                </div>
+            </td>
+            <t t-if="outLine">
+                <OutLine t-props="this.getOutLineProps(outLine)"/>
+            </t>
+            <t t-else="">
+                <td class="p-3" colspan="5">No allocation need found.</td>
+            </t>
+        </tr>
+        <t t-foreach="this.needs" t-as="outLine" t-key="outLine_index">
+            <tr t-if="outLine_index > 0 &amp;&amp; !outLine.hidden()" class="border">
+                <OutLine t-props="this.getOutLineProps(outLine)"/>
+            </tr>
+        </t>
+        <t t-if="this.displayViewMore()">
+            <tr class="border">
+                <td class="ps-3" colspan="5">
+                    <a href="#" t-on-click="() => this.onClickViewMore()">View more</a>
+                </td>
+            </tr>
+        </t>
+        <tr style="height: 2em;"/>
+    </t>
+</templates>

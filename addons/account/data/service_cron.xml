@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_auto_post_draft_entry" model="ir.cron">
+        <field name="name">Account: Post draft entries with auto_post enabled and accounting date up to today</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="nextcall" eval="(DateTime.now().replace(hour=2, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="model_id" ref="model_account_move"/>
+        <field name="code">model._autopost_draft_entries()</field>
+        <field name="state">code</field>
+    </record>
+
+    <record id="ir_cron_account_move_send" model="ir.cron">
+        <field name="name">Send invoices automatically</field>
+        <field name="model_id" ref="model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_account_move_send()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+</odoo>

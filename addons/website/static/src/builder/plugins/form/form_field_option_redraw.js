@@ -1,0 +1,24 @@
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
+import { registry } from "@web/core/registry";
+import { FormFieldOption } from "./form_field_option";
+
+export class FormFieldOptionRedraw extends BaseOptionComponent {
+    static id = "form_field_option_redraw";
+    static template = "website.s_website_form_field_option_redraw";
+    static props = FormFieldOption.props;
+    static components = { FormFieldOption };
+
+    setup() {
+        super.setup();
+        this.count = 0;
+        this.domState = useDomState((el) => {
+            this.count++;
+            return {
+                redrawSequence: this.count++,
+            };
+        });
+    }
+}
+
+registry.category("website-options").add(FormFieldOptionRedraw.id, FormFieldOptionRedraw);

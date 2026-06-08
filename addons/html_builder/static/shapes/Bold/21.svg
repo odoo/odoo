@@ -1,0 +1,21 @@
+<svg fill="#383E45" xmlns="http://www.w3.org/2000/svg">
+    <style>
+    .mobile {
+        display: none;
+    }
+    @media all and (min-width: 130px) and (max-width: 992px) {
+        .mobile {
+            display: block;
+        }
+        .desktop {
+            display: none;
+        }
+    }
+    </style>
+    <svg class="desktop" viewBox="0 0 3 6" preserveAspectRatio="xMidYMax slice">
+        <polygon points="0,0 2,6 2,7 0,7"/>
+    </svg>
+    <svg class="mobile" viewBox="0 0 4 4" preserveAspectRatio="none">
+        <polygon points="0,0 4,0 4,2.5 0,1.5"/>
+    </svg>
+</svg>

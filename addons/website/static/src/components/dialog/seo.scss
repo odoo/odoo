@@ -1,0 +1,167 @@
+.oe_seo_configuration {
+    --seo__preview-title-color: #1a0dab; // Google Search color
+
+    > .modal-body {
+        padding-top: 0;
+    }
+
+    #language-box {
+        padding-right: 25px;
+        background-color: white;
+    }
+
+    select {
+        background-position: bottom 50% right 1em;
+    }
+
+    .o_seo_og_image {
+        .o_meta_img {
+            position: relative;
+            transition: border-color 200ms;
+            display: inline-block;
+            border: 2px solid map-get($grays, '400');
+
+            > img {
+                width: 70px;
+                height: 70px;
+                object-fit: cover;
+                cursor: pointer;
+            }
+
+            &:hover, &:focus-visible {
+                border-color: $o-brand-primary;
+            }
+
+            &.o_active_image {
+                border-color: $o-brand-primary;
+
+                &:before {
+                    @include o-position-absolute($right: 0);
+                    content: '';
+                    border: 16px solid rgba($o-brand-primary, 0.8);
+                    border-left-color: transparent;
+                    border-bottom-color: transparent;
+                }
+
+                &:after {
+                    @include o-position-absolute(2px, 3px);
+                    display: inline-block;
+                    content: "\f00c";
+                    font-family: FontAwesome;
+                    color: white;
+                    font-size: 12px;
+                }
+            }
+
+            .o-custom-label {
+                @include o-position-absolute($bottom: 0px);
+                cursor: pointer;
+                background: rgba(map-get($grays, '800'), 0.6);
+                font-size: 12px;
+            }
+        }
+
+        .o_meta_img_upload {
+            cursor: pointer;
+            transition: 200ms;
+            display: inline-block;
+            padding: 23px 27px;
+            border: 3px dashed lighten(map-get($grays, '700'), 30%);
+            vertical-align: top;
+            color: lighten(map-get($grays, '600'), 30%);
+
+            &:hover, &:focus-visible {
+                border-color: $o-brand-primary;
+                color: $o-brand-primary;
+            }
+        }
+
+        .o_meta_active_img {
+            height: 240px;
+            object-fit: cover;
+        }
+    }
+
+    div.oe_seo_preview_g {
+        list-style: none;
+        font-family: arial, sans-serif;
+
+        .o_seo_preview_r {
+            cursor: pointer;
+            color:var(--seo__preview-title-color);
+            font-size: 20px;
+            line-height: 32px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -webkit-text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .o_seo_preview_s {
+            font-size: 14px;
+            line-height: 22px;
+            .o_seo_preview_kv {
+                font-size: 12px;
+                line-height: 14px;
+            }
+        }
+
+        .o_seo_preview_q {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .o_seo_preview_g {
+            overflow: hidden;
+            background-color: rgba(0,0,0,0.05);
+            border-radius: 8px;
+            width: 92px;
+            height: 92px;
+
+            .o_seo_preview_i {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+            }
+        }
+
+        .o_seo_preview_l {
+            height: 28px;
+            width: 28px;
+            margin-right: 12px;
+        }
+    }
+
+    td.o_seo_keyword_suggestion span.o_seo_suggestion.badge {
+        cursor: pointer;
+    }
+
+    .o_seo_images_check {
+        .o_seo_keyword_i {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+    .oe_remove:hover {
+        opacity: 0.7;
+    }
+    .o_seo_mentioned_keyword {
+        width: 30px;
+    }
+    .o_seo_keyword_row {
+        border-bottom: 1px dotted map-get($grays, '300');
+    }
+    .o-img-thumbnail {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border: 1px solid map-get($grays, '300');
+    }
+
+    // We don't use a specific class here to highlight the fact that the
+    // variable is tied to the bootstrap class.
+    select.btn-outline-primary:focus option {
+        color: var(--btn-color);
+    }
+}

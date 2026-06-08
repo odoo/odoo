@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="stock.report_return_slip">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context(lang=o._get_report_lang())" />
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row mt8">
+                        <t t-call="stock.return_label_header">
+                            <t t-set="picking" t-value="o"/>
+                            <t
+                                t-set="wh_address_id"
+                                t-value="o.picking_type_code == 'incoming' and o.location_id.warehouse_id.partner_id or o.partner_id"
+                            />
+                        </t>
+                        <div class="col-4 text-center mt-4">
+                            <div>
+                                <span t-field="o.name" t-options="{'widget': 'barcode', 'img_style': 'width:100%;'}">Default Barcode Name</span>
+                                <span t-out="o.name">Default Name</span>
+                            </div>
+                            <div style="margin-top:200px;">
+                                <span t-out="'OBTRETU'" t-options="{'widget': 'barcode', 'img_style': 'width:100%;'}">Default OBTRETU Barcode</span>
+                                <span>OBTRETU</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="return_label_header">
+        <div class="col-8">
+            <h1>RETURN OF <t t-out="picking.name"/></h1>
+            <p>Please put this document inside your return parcel.<br/></p>
+            <p class="mt-4 mb-0 fw-bold">
+                Your parcel must be sent to this address:
+            </p>
+            <div
+                t-out="wh_address_id"
+                t-options="{
+                    'widget': 'contact',
+                    'fields': ['address', 'name', 'phone'],
+                    'no_marker': True,
+                    'phone_icons': True,
+                }"
+            />
+        </div>
+    </template>
+
+    <template id="report_return_document">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="stock.report_return_slip" t-lang="o._get_report_lang()"/>
+        </t>
+    </template>
+
+    <record id="return_label_report" model="ir.actions.report">
+        <field name="name">Return slip</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">stock.report_return_document</field>
+        <field name="report_file">return_slip</field>
+        <field name="binding_model_id" ref="model_stock_picking"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

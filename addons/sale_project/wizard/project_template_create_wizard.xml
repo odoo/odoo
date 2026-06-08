@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="project_project_view_form_simplified_template" model="ir.ui.view">
+        <field name="name">project.project.create.wizard.form</field>
+        <field name="model">project.template.create.wizard</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified_template"/>
+        <field name="arch" type="xml">
+            <field name="date_start" position="before">
+                <field
+                    name="partner_id"
+                    string="Customer"
+                    invisible="not allow_billable"
+                    placeholder="Select who to bill..."
+                    widget="res_partner_many2one"
+                    options="{'no_create_edit': True, 'no_open': True}"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record id="sale_project_view_form_simplified_template" model="ir.ui.view">
+        <field name="name">sale.project.create.wizard.form</field>
+        <field name="model">project.template.create.wizard</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified_template"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="replace"/>
+            <xpath expr="//div[hasclass('oe_title')]" position="replace"/>
+            <xpath expr="//label[@for='alias_name']" position="replace"/>
+            <xpath expr="//group/group/div[field[@name='alias_name']]" position="replace"/>
+            <field name="date_start" position="before">
+                <field
+                    name="template_id"
+                    string="Project Template"
+                    placeholder="New project"
+                    domain="[('is_template', '=', True)]"
+                    context="{'default_is_template': True}"
+                />
+            </field>
+            <xpath expr="//field[@name='date_start']" position="attributes">
+                <attribute name="invisible">not template_id</attribute>
+            </xpath>
+            <xpath expr="//form/footer/button[@name='create_project_from_template']" position="attributes">
+                <attribute name="name">action_create_project_from_so</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

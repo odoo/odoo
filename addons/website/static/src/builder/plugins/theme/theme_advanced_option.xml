@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ThemeAdvancedOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Show Header" tooltip.translate="Show/Hide the header on all pages">
+            <BuilderCheckbox action="'websiteConfig'"
+                actionParam="{
+                    views: ['!website.option_layout_hide_header'],
+                }"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Code Injection" tooltip.translate="Enter code that will be added into every page of your site">
+            <BuilderButton title.translate="&lt;Head&gt; and &lt;body&gt;" action="'editCustomCode'">&lt;head&gt; and &lt;/body&gt;</BuilderButton>
+        </BuilderRow>
+        <BuilderRow label.translate="Google Map">
+            <BuilderButton title.translate="Custom Key" action="'configureApiKey'">Custom Key</BuilderButton>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>

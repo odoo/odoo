@@ -1,0 +1,193 @@
+import { patch } from "@web/core/utils/patch";
+
+/**
+ * Speed up fade-in fade-out to avoid useless delay in tests.
+ */
+function patchSurveyForm() {
+    const SurveyForm = odoo.loader.modules.get("@survey/interactions/survey_form").SurveyForm;
+    patch(SurveyForm.prototype, {
+        submitForm() {
+            this.fadeInOutDelay = 0;
+            return super.submitForm(...arguments);
+        },
+    });
+}
+
+/**
+ * This tour will test that, for the demo certification allowing 2 attempts, a user can
+ * try and fail twice and will no longer be able to take the certification.
+ */
+
+import { registry } from "@web/core/registry";
+
+const patchSteps = [
+    {
+        content: "Patching Survey Form Interaction",
+        trigger: "body",
+        run: function () {
+            patchSurveyForm();
+        },
+    },
+];
+
+const failSteps = [
+    {
+        // Page-1
+        content: "Clicking on Start Certification",
+        trigger: 'button.btn.btn-primary:contains("Start Certification")',
+        run: "click",
+    },
+    {
+        // Question: Do we sell Acoustic Bloc Screens?
+        content: "Selecting answer 'No'",
+        trigger:
+            'div.o_survey_question:contains("Do we sell Acoustic Bloc Screens") label:contains("No")',
+        run: "click",
+    },
+    {
+        // Question: Select all the existing products
+        content: "Ticking answer 'Fanta'",
+        trigger:
+            'div.o_survey_question:contains("Select all the existing products") label:contains("Fanta")',
+        run: "click",
+    },
+    {
+        content: "Ticking answer 'Drawer'",
+        trigger:
+            'div.o_survey_question:contains("Select all the existing products") label:contains("Drawer")',
+        run: "click",
+    },
+    {
+        content: "Ticking answer 'Conference chair'",
+        trigger:
+            'div.o_survey_question:contains("Select all the existing products") label:contains("Conference chair")',
+        run: "click",
+    },
+    {
+        // Question: Select all the available customizations for our Customizable Desk
+        content: "Ticking answer 'Color'",
+        trigger:
+            'div.o_survey_question:contains("Select all the available customizations for our Customizable Desk") label:contains("Color")',
+        run: "click",
+    },
+    {
+        content: "Ticking answer 'Height'",
+        trigger:
+            'div.o_survey_question:contains("Select all the available customizations for our Customizable Desk") label:contains("Height")',
+        run: "click",
+    },
+    {
+        // Question: How many versions of the Corner Desk do we have?
+        content: "Selecting answer '2'",
+        trigger:
+            'div.o_survey_question:contains("How many versions of the Corner Desk do we have") label:contains("2")',
+        run: "click",
+    },
+    {
+        // Question: Do you think we have missing products in our catalog? (not rated)
+        content: "Missing products",
+        trigger:
+            'div.o_survey_question:contains("Do you think we have missing products in our catalog") textarea',
+        run: "edit I don't know products enough to be able to answer that",
+    },
+    {
+        // Page-2 Question: How much do we sell our Cable Management Box?
+        content: "Selecting answer '$80'",
+        trigger:
+            'div.o_survey_question:contains("How much do we sell our Cable Management Box") label:contains("$80")',
+        run: "click",
+    },
+    {
+        // Question: Select all the products that sell for $100 or more
+        content: "Ticking answer 'Corner Desk Right Sit'",
+        trigger:
+            'div.o_survey_question:contains("Select all the products that sell for $100 or more") label:contains("Corner Desk Right Sit")',
+        run: "click",
+    },
+    {
+        content: "Ticking answer 'Desk Combination'",
+        trigger:
+            'div.o_survey_question:contains("Select all the products that sell for $100 or more") label:contains("Desk Combination")',
+        run: "click",
+    },
+    {
+        content: "Ticking answer 'Office Chair Black'",
+        trigger:
+            'div.o_survey_question:contains("Select all the products that sell for $100 or more") label:contains("Office Chair Black")',
+        run: "click",
+    },
+    {
+        // Question: What do you think about our prices (not rated)?
+        trigger:
+            'div.o_survey_question:contains("What do you think about our prices") label:contains("Correctly priced")',
+        run: "click",
+    },
+    {
+        // Page-3 Question: How many days is our money-back guarantee?
+        content: "Inputting answer '60'",
+        trigger:
+            'div.o_survey_question:contains("How many days is our money-back guarantee") input',
+        run: "edit 60",
+    },
+    {
+        // Question: If a customer purchases a product on 6 January 2020, what is the latest day we expect to ship it?
+        content: "Inputting answer '01/06/2020'",
+        trigger:
+            'div.o_survey_question:contains("If a customer purchases a product on 6 January 2020, what is the latest day we expect to ship it") input',
+        run: "edit 01/06/2020",
+    },
+    {
+        // Question: If a customer purchases a 1 year warranty on 6 January 2020, when do we expect the warranty to expire?
+        content: "Inputting answer '01/06/2021 00:00:01'",
+        trigger:
+            'div.o_survey_question:contains("If a customer purchases a 1 year warranty on 6 January 2020, when do we expect the warranty to expire") input',
+        run: "edit 01/06/2021 00:00:01",
+    },
+    {
+        // Question: What day to you think is best for us to start having an annual sale (not rated)?
+        trigger:
+            'div.o_survey_question:contains("What day to you think is best for us to start having an annual sale (not rated)") input',
+        run: "edit Test",
+    },
+    {
+        // Question: What day and time do you think most customers are most likely to call customer service (not rated)?
+        trigger:
+            'div.o_survey_question:contains("What day and time do you think most customers are most likely to call customer service (not rated)") input',
+        run: "edit Test",
+    },
+    {
+        // Question: How many chairs do you think we should aim to sell in a year (not rated)?
+        content: "Inputting answer '0'",
+        trigger:
+            'div.o_survey_question:contains("How many chairs do you think we should aim to sell in a year (not rated)") input',
+        run: "edit 0",
+    },
+    {
+        content: "Finish Survey",
+        trigger: 'button[type="submit"]',
+        run: "click",
+    },
+    {
+        content: "Click on Submit",
+        trigger: 'button.btn-primary:contains("Yes, submit")',
+        run: "click",
+    },
+];
+
+const retrySteps = [
+    {
+        trigger: 'a:contains("Retry")',
+        run: "click",
+        expectUnloadPage: true,
+    },
+];
+
+var lastSteps = [{
+    trigger: 'p:contains("You scored")',
+}, {
+    trigger: 'body:not(:has(a:contains("Retry")))',
+}];
+
+registry.category("web_tour.tours").add("test_certification_failure", {
+    steps: () => [].concat(patchSteps, failSteps, retrySteps, failSteps, lastSteps),
+});

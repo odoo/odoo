@@ -1,0 +1,663 @@
+/**
+ * @typedef DependencyInManifest
+ * ⚠️ Each dependency of this file in `mail` must be explicitly added in
+ * `web.assets_frontend` in the manifest. This error is not caught by the
+ * standard runbot, only during staging or nightly. The missing dependency might
+ * added by livechat so it only happens when frontend modules are installed and
+ * tested while livechat is not installed.
+ */
+import { getInnerHtml, getOuterHtml } from "@mail/utils/common/html";
+
+import { htmlEscape, markup } from "@odoo/owl";
+
+import { router } from "@web/core/browser/router";
+import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
+import { formatList } from "@web/core/l10n/utils";
+import {
+    createDocumentFragmentFromContent,
+    createElementWithContent,
+    htmlJoin,
+    htmlReplace,
+    htmlReplaceAll,
+    htmlTrim,
+    isHtmlEmpty,
+    setElementContent,
+} from "@web/core/utils/html";
+import { escapeRegExp, nbsp } from "@web/core/utils/strings";
+import { getOrigin } from "@web/core/utils/urls";
+import { setAttributes } from "@web/core/utils/xml";
+
+const urlRegexp =
+    /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
+const messageUrlRegExp = new RegExp(`^${escapeRegExp(getOrigin())}/mail/message/(\\d+)$`);
+const MENTION_CLASSNAMES = new Set([
+    "o_mail_redirect",
+    "o_message_redirect",
+    "o_channel_redirect",
+    "o-discuss-mention",
+]);
+
+/**
+ * @param {string|ReturnType<markup>} rawBody
+ * @param {Object} [param1]
+ * @param {Object} [param1.validMentions]
+ * @param {import("models").Persona[]} [param1.validMentions.partners]
+ * @param {import("models").Thread[]} [param1.thread]
+ * @param {boolean} [param1.trim=true] whether the text content should be trimmed or not.
+ *   Trim is useful for when posting message and having the auto-trim of content, but when using auto-sync between html and text the whitespaces should be preserved and should have trim=false.
+ * @returns {Promise<string|ReturnType<markup>>}
+ */
+export function prettifyMessageText(rawBody, { validMentions = {}, thread, trim = true } = {}) {
+    if (rawBody instanceof markup().constructor) {
+        // markup is already "pretty"
+        return rawBody;
+    }
+    let body = trim ? htmlTrim(rawBody) : htmlJoin([rawBody]);
+    body = htmlReplace(body, /(\r|\n){2,}/g, () => markup`<br/><br/>`);
+    body = htmlReplace(body, /(\r|\n)/g, () => markup`<br/>`);
+    body = htmlReplace(body, /&nbsp;/g, () => " ");
+    body = trim ? htmlTrim(body) : htmlJoin([body]);
+    // This message will be received from the mail composer as html content
+    // subtype but the urls will not be linkified. If the mail composer
+    // takes the responsibility to linkify the urls we end up with double
+    // linkification a bit everywhere. Ideally we want to keep the content
+    // as text internally and only make html enrichment at display time but
+    // the current design makes this quite hard to do.
+    body = generateMentionsLinks(body, { ...validMentions, thread });
+    body = parseAndTransform(body, addLink);
+    return body;
+}
+
+/**
+ * @param {string|ReturnType<markup>} htmlBody
+ */
+export async function generateEmojisOnHtml(htmlBody, { allowEmojiLoading = true } = {}) {
+    let body = htmlBody;
+    if (allowEmojiLoading && !emojiLoader.loaded) {
+        await emojiLoader.load();
+    }
+    if (emojiLoader.loaded) {
+        body = _generateEmojisOnHtml(body);
+    }
+    return body;
+}
+
+/**
+ * @param {string|ReturnType<markup>} rawBody
+ * @param {Object} validMentions
+ * @param {import("models").Persona[]} validMentions.partners
+ * @param rawBody {string|ReturnType<markup>}
+ * @param validRecords {Object}
+ * @param validRecords.partners {Partner}
+ */
+export async function prettifyMessageContent(
+    rawBody,
+    { validMentions = [], allowEmojiLoading = true } = {}
+) {
+    let body = prettifyMessageText(rawBody, { validMentions });
+    body = await generateEmojisOnHtml(body, { allowEmojiLoading });
+    return body;
+}
+
+/**
+ * WARNING: this is not enough to unescape potential XSS contained in htmlString, transformFunction
+ * should handle it or it should be handled after/before calling parseAndTransform. So if the result
+ * of this function is used in a t-raw, be very careful.
+ *
+ * @param {string|ReturnType<markup>} htmlString
+ * @param {function} transformFunction
+ * @returns {ReturnType<markup>}
+ */
+export function parseAndTransform(htmlString, transformFunction) {
+    const div = document.createElement("div");
+    try {
+        setElementContent(div, htmlString);
+    } catch {
+        div.appendChild(createElementWithContent("pre", htmlString));
+    }
+    return _parseAndTransform(Array.from(div.childNodes), transformFunction);
+}
+
+/**
+ * @param {Node[]} nodes
+ * @param {function} transformFunction with:
+ *   param node
+ *   param function
+ *   return string
+ * @return {ReturnType<markup>}
+ */
+function _parseAndTransform(nodes, transformFunction) {
+    if (!nodes) {
+        return;
+    }
+    return htmlJoin(
+        Object.values(nodes).map((node) =>
+            transformFunction(node, function () {
+                return _parseAndTransform(node.childNodes, transformFunction);
+            })
+        )
+    );
+}
+
+/**
+ * @param {string} text
+ * @return {ReturnType<markup>} linkified text
+ */
+function linkify(text) {
+    let curIndex = 0;
+    let result = "";
+    let match;
+    while ((match = urlRegexp.exec(text)) !== null) {
+        const url = match[0];
+        const fixedUrl = !/^https?:\/\//i.test(url) ? `http://${url}` : url;
+        if (!URL.canParse(fixedUrl)) {
+            continue;
+        }
+        result = htmlJoin([result, text.slice(curIndex, match.index)]);
+        const { href } = URL.parse(fixedUrl);
+        const link = document.createElement("a");
+        setAttributes(link, {
+            target: "_blank",
+            rel: "noreferrer noopener",
+            href,
+        });
+        link.textContent = url;
+        const messageMatch = messageUrlRegExp.exec(fixedUrl);
+        if (messageMatch !== null) {
+            setAttributes(link, {
+                "data-oe-id": messageMatch[1],
+                "data-oe-model": "mail.message",
+            });
+            link.classList.add("o_message_redirect");
+        }
+        result = htmlJoin([result, getOuterHtml(link)]);
+        curIndex = match.index + match[0].length;
+    }
+    return htmlJoin([result, text.slice(curIndex)]);
+}
+
+/**
+ * @param {Node} node
+ * @param {function} transformFunction
+ * @return {ReturnType<markup>}
+ */
+export function addLink(node, transformChildren) {
+    if (node.nodeType === 3) {
+        // text node
+        const linkified = linkify(node.textContent);
+        if (linkified.toString() !== node.textContent) {
+            const div = createElementWithContent("div", linkified);
+            for (const childNode of [...div.childNodes]) {
+                node.parentNode.insertBefore(childNode, node);
+            }
+            node.parentNode.removeChild(node);
+            return linkified;
+        }
+        return node.textContent;
+    }
+    if (node.tagName === "A") {
+        return getOuterHtml(node);
+    }
+    transformChildren();
+    return getOuterHtml(node);
+}
+
+/**
+ * Generate a mention element (link or span) with the provided metadata.
+ *
+ * @param {Object} [param0={}]
+ * @param {string} [param0.className] CSS class name for the mention element
+ * @param {number} [param0.id] Record ID of the mentioned entity
+ * @param {string} [param0.model] Model name of the mentioned entity
+ * @param {string} [param0.text] Display text for the mention
+ * @param {boolean} [param0.readonly] If true, returns a non-clickable span; if false, returns a clickable link
+ * @returns {HTMLElement} Either an HTMLSpanElement(readonly) or HTMLAnchorElement(clickable)
+ */
+function generateMentionElement({ className, id, model, text, readonly }) {
+    if (readonly) {
+        const span = document.createElement("span");
+        setAttributes(span, {
+            class: "o-discuss-readonly-mention",
+            "data-oe-id": id,
+            "data-oe-model": model,
+            contenteditable: "false",
+        });
+        span.textContent = text;
+        return span;
+    }
+    const link = document.createElement("a");
+    setAttributes(link, {
+        href: router.stateToUrl({ model: model, resId: id }),
+        class: className,
+        "data-oe-id": id,
+        "data-oe-model": model,
+        target: "_blank",
+        contenteditable: "false",
+    });
+    link.textContent = text;
+    return link;
+}
+
+/**
+ * @param {import("models").ResPartner} partner
+ * @param {Object} [params]
+ * @param {import("models").Thread} [params.thread]
+ * @param {boolean} [params.readonly=false] If true, returns a non-clickable mention (<span>)
+ *   instead of a link (<a>). Used for log notes where external partners should not be clickable.
+ */
+export function generatePartnerMentionElement(partner, { thread, readonly } = {}) {
+    return generateMentionElement({
+        className: "o_mail_redirect",
+        id: partner.id,
+        model: "res.partner",
+        text: `@${thread?.getPersonaName(partner) ?? partner.name}`,
+        readonly,
+    });
+}
+
+/** @param {import("models").ResRole} role */
+export function generateRoleMentionElement(role) {
+    return generateMentionElement({
+        className: "o-discuss-mention",
+        id: role.id,
+        model: "res.role",
+        text: `@${role.name}`,
+    });
+}
+
+/** @param {string} label */
+export function generateSpecialMentionElement(label) {
+    const link = document.createElement("a");
+    setAttributes(link, {
+        class: "o-discuss-mention",
+        contenteditable: "false",
+    });
+    link.textContent = `@${label}`;
+    return link;
+}
+
+/**
+ * @param {string|ReturnType<markup>} body
+ * @param {Object} param1
+ * @param {import("models").ResPartner[]} param1.partners
+ * @param {import("models").ResRole[]} param1.roles
+ * @param {string[]} param1.specialMentions
+ * @param {import("models").Thread} param1.thread
+ * @return {ReturnType<markup>}
+ */
+function generateMentionsLinks(body, { partners = [], roles = [], specialMentions = [], thread }) {
+    const mentions = [];
+    for (const partner of partners) {
+        const placeholder = `@-mention-partner-${partner.id}`;
+        const text = `@${thread?.getPersonaName(partner) ?? partner.name}`;
+        mentions.push({
+            link: generatePartnerMentionElement(partner, { thread }),
+            placeholder,
+        });
+        body = htmlReplace(body, text, placeholder);
+    }
+    for (const special of specialMentions) {
+        const text = `@${special}`;
+        const placeholder = `@-mention-special-${special}`;
+        mentions.push({
+            link: generateSpecialMentionElement(special),
+            placeholder,
+        });
+        body = htmlReplace(body, text, placeholder);
+    }
+    for (const role of roles) {
+        const placeholder = `@-mention-role-${role.id}`;
+        const text = `@${role.name}`;
+        mentions.push({
+            link: generateRoleMentionElement(role),
+            placeholder,
+        });
+        body = htmlReplace(body, text, placeholder);
+    }
+    for (const mention of mentions) {
+        const link = mention.link;
+        body = htmlReplace(body, mention.placeholder, getOuterHtml(link));
+    }
+    return htmlEscape(body);
+}
+
+/**
+ * @private
+ * @param {string|ReturnType<markup>} htmlString
+ */
+function _generateEmojisOnHtml(htmlString) {
+    for (const emoji of emojiLoader.emojis) {
+        for (const source of emoji.shortcodes.concat(emoji.emoticons)) {
+            const escapedSource = htmlEscape(source);
+            const regexp = new RegExp(
+                "(\\s|^)(" + escapeRegExp(escapedSource) + ")(?=\\s|$|<)",
+                "g"
+            );
+            htmlString = htmlReplace(htmlString, regexp, (_, group1) => group1 + emoji.codepoints);
+        }
+    }
+    return htmlEscape(htmlString);
+}
+
+/**
+ * @param {string|ReturnType<markup>} body
+ * @returns {ReturnType<markup>}
+ */
+export function prepareBodyForEditing(body) {
+    const doc = createDocumentFragmentFromContent(body);
+    for (const block of doc.body.querySelectorAll(".o_mail_reply_hide")) {
+        block.classList.remove("o_mail_reply_hide");
+    }
+    // for mentioned partner
+    for (const mention of doc.body.querySelectorAll(".o_mail_redirect")) {
+        mention.setAttribute("contenteditable", false);
+    }
+    // for special mentions
+    for (const mention of doc.body.querySelectorAll(".o-discuss-mention")) {
+        mention.setAttribute("contenteditable", false);
+    }
+    // The "(edited)" label is added by the server and must never be editable.
+    // Remove it so that CTRL+A does not select it and it is always re-added at
+    // the end by the server upon saving.
+    for (const edited of doc.body.querySelectorAll(".o-mail-Message-edited")) {
+        edited.remove();
+    }
+    return getInnerHtml(doc.body);
+}
+
+/**
+ * @param {string|ReturnType<markup>} htmlString
+ * @returns {string}
+ */
+export function htmlToTextContentInline(htmlString) {
+    htmlString = htmlReplace(htmlString, /<br\s*\/?>/gi, () => " ");
+    const div = document.createElement("div");
+    try {
+        setElementContent(div, htmlString);
+    } catch {
+        div.appendChild(createElementWithContent("pre", htmlString));
+    }
+    return div.textContent
+        .trim()
+        .replace(/[\n\r]/g, "")
+        .replace(/\s\s+/g, " ");
+}
+
+export function convertBrToLineBreak(str, { trim = true } = {}) {
+    const regex = trim ? /<br\s*\/?>/gi : /<br\/?>/gi;
+    str = htmlReplace(str, regex, () => "\n");
+    if (!trim) {
+        str = htmlReplace(str, /\s/g, () => markup`&nbsp;`);
+    }
+    return createDocumentFragmentFromContent(str).body.textContent.replaceAll(" ", " ");
+}
+
+export function convertLineBreakToBr(str) {
+    return htmlReplace(str, /(\r|\n)/g, () => markup`<br/>`);
+}
+
+/**
+ * @param {string|ReturnType<markup>} content
+ * @returns {ReturnType<markup>}
+ */
+export function trimEmptyBlocksAround(content) {
+    if (isHtmlEmpty(content)) {
+        return content;
+    }
+    const body = createDocumentFragmentFromContent(content).body;
+    let changed = false;
+
+    const removeNode = (node) => {
+        node.remove();
+        changed = true;
+    };
+
+    /** @typedef {"start" | "end"} BoundarySide */
+
+    /**
+     * @param {Element | null | undefined} element
+     * @param {BoundarySide} side
+     * @returns {ChildNode | null}
+     */
+    const getBoundaryChild = (element, side) => {
+        if (!element) {
+            return null;
+        }
+        return side === "start" ? element.firstChild : element.lastChild;
+    };
+
+    /**
+     * @param {Element | null | undefined} element
+     * @param {BoundarySide} side
+     * @returns {Element | null}
+     */
+    const getBoundaryElement = (element, side) => {
+        if (!element) {
+            return null;
+        }
+        return side === "start" ? element.firstElementChild : element.lastElementChild;
+    };
+
+    const trimTextNodes = (element, side) => {
+        let node = getBoundaryChild(element, side);
+        while (node?.nodeType === Node.TEXT_NODE && !node.textContent.trim()) {
+            removeNode(node);
+            node = getBoundaryChild(element, side);
+        }
+    };
+
+    const trimEmptyParagraphs = (side) => {
+        trimTextNodes(body, side);
+        let paragraph = getBoundaryElement(body, side);
+        while (["P", "DIV"].includes(paragraph?.tagName) && isHtmlEmpty(paragraph.innerHTML)) {
+            removeNode(paragraph);
+            trimTextNodes(body, side);
+            paragraph = getBoundaryElement(body, side);
+        }
+    };
+
+    const trimBoundaryParagraph = (side) => {
+        trimEmptyParagraphs(side);
+        const paragraph = getBoundaryElement(body, side);
+        if (!paragraph || !["P", "DIV"].includes(paragraph.tagName)) {
+            return;
+        }
+        trimTextNodes(paragraph, side);
+        let node = getBoundaryChild(paragraph, side);
+        while (node?.nodeName === "BR") {
+            removeNode(node);
+            trimTextNodes(paragraph, side);
+            node = getBoundaryChild(paragraph, side);
+        }
+        trimEmptyParagraphs(side);
+        if (getBoundaryElement(body, side) !== paragraph) {
+            trimBoundaryParagraph(side);
+        }
+    };
+    trimBoundaryParagraph("start");
+    trimBoundaryParagraph("end");
+    return changed ? getInnerHtml(body) : content;
+}
+
+/**
+ * Converts an html string to inline representation.
+ * - Links and mentions are preserved
+ * - For the rest: text content of nodes
+ *
+ * @param {string|ReturnType<markup>} htmlString
+ * @returns {ReturnType<markup>}
+ */
+export function htmlToHtmlInline(htmlString) {
+    const doc = createDocumentFragmentFromContent(htmlString || "");
+    const body = doc.body;
+    const previewBody = body.ownerDocument.createElement("body");
+
+    /** @param {HTMLElement} [node] */
+    const isBlock = (node) =>
+        node?.nodeType === Node.ELEMENT_NODE && ["DIV", "P"].includes(node?.tagName);
+
+    /**
+     * @param {HTMLElement} parent
+     * @param {string} [text]
+     */
+    const appendText = (parent, text) => {
+        if (text) {
+            parent.append(body.ownerDocument.createTextNode(text));
+        }
+    };
+
+    /**
+     * @param {HTMLElement} parent
+     * @param {HTMLElement[]} nodes
+     */
+    const appendInlinePreviewChildren = (parent, nodes) => {
+        for (let index = 0; index < nodes.length; index++) {
+            const node = nodes[index];
+            appendInlinePreview(parent, node);
+            if (isBlock(node) && isBlock(nodes[index + 1])) {
+                appendText(parent, nbsp);
+            }
+        }
+    };
+
+    /**
+     * @param {HTMLElement} parent
+     * @param {HTMLElement} node
+     */
+    const appendInlinePreview = (parent, node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+            appendText(parent, node.textContent);
+            return;
+        }
+        if (node.nodeType !== Node.ELEMENT_NODE) {
+            return;
+        }
+        if (node.tagName === "BR") {
+            appendText(parent, nbsp);
+            return;
+        }
+        if (node.tagName === "A") {
+            const href = node.getAttribute("href");
+            if ([...node.classList].some((cls) => MENTION_CLASSNAMES.has(cls))) {
+                parent.append(node);
+            } else if (href) {
+                const link = body.ownerDocument.createElement("a");
+                link.setAttribute("href", href);
+                link.append(body.ownerDocument.createTextNode(href));
+                parent.append(link);
+            }
+            return;
+        }
+        appendInlinePreviewChildren(parent, [...node.childNodes]);
+    };
+
+    appendInlinePreviewChildren(previewBody, [...body.childNodes]);
+
+    return htmlTrim(getInnerHtml(previewBody)) ?? "";
+}
+
+/**
+ * Parses text to find email: Tagada <address@mail.fr> -> [Tagada, address@mail.fr] or False
+ *
+ * @param {string} text
+ * @returns {[string,string|boolean]|false}
+ */
+export function parseEmail(text) {
+    if (!text) {
+        return;
+    }
+    let result = text.match(/"?(.*?)"? <(.*@.*)>/);
+    if (result) {
+        const name = (result[1] || "").trim().replace(/(^"|"$)/g, "");
+        return [name, (result[2] || "").trim()];
+    }
+    result = text.match(/(.*@.*)/);
+    if (result) {
+        return [String(result[1] || "").trim(), String(result[1] || "").trim()];
+    }
+    return [text, false];
+}
+
+const r = String.raw;
+/**
+ * Match Country Subdivision Flags.
+ * Black Flag emoji + tag-encoded subdivision name + cancel tag
+ * Example:
+ * 🏴 + [B] + [E] + [W] + [A] + [L] + [CANCEL] = Flag for Wallonia (BE-WAL)
+ */
+const SUBDIVISION_FLAG = r`🏴[\u{E0020}-\u{E007E}]+\u{E007F}`;
+/**
+ * Match Keycaps (e.g., 5️⃣, #️⃣).
+ * Numpad character + Variation Selector-16 + Combining Enclosing Keycap
+ */
+const KEYCAP = r`[#*\d]\uFE0F\u20E3`;
+const EMOJI_WITH_SKIN_TONE = r`\p{Emoji_Modifier_Base}\p{Emoji_Modifier}`;
+/**
+ * Match "regular" emojis.
+ * iOS keyboard sometimes appends an extraneous Variation Selector-16, which the
+ * optional \uFE0F accounts for.
+ */
+const EMOJI_PRESENTATION = r`\p{Emoji_Presentation}\uFE0F?`;
+/**
+ * Match "text-default" emojis (☃, ♥, ☂) that are followed by a Variation
+ * Selector-16 (U+FE0F), enabling their emoji representation (☃ → ☃️).
+ * Negative lookahead prevents matching incomplete keycap sequences.
+ */
+const QUALIFIED_TEXT = r`(?![#*\d])\p{Emoji}\uFE0F`;
+const EMOJI = r`(?:${SUBDIVISION_FLAG}|${KEYCAP}|${EMOJI_WITH_SKIN_TONE}|${EMOJI_PRESENTATION}|${QUALIFIED_TEXT})`;
+export const EMOJI_REGEX = new RegExp(
+    r`\p{Regional_Indicator}{2}|` + // Regional Indicator pairs (e.g., 🇧🇪)
+        r`${EMOJI}(?:\u200D${EMOJI})*`, // Zero Width Joiner sequences (e.g., 👨‍👩‍👧‍👦)
+    "gu"
+);
+
+/**
+ * Wrap emojis present in the given text with a title and return a safe HTML
+ * string.
+ *
+ * @param {string|ReturnType<markup>} content
+ * @returns {ReturnType<markup>}
+ */
+export function decorateEmojis(content) {
+    if (!emojiLoader.loaded || !content) {
+        return content;
+    }
+    const doc = createDocumentFragmentFromContent(content);
+    const nodes = doc.evaluate(
+        ".//text()",
+        doc.body,
+        null,
+        XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
+        null
+    );
+    for (let i = 0; i < nodes.snapshotLength; i++) {
+        const node = nodes.snapshotItem(i);
+        const span = document.createElement("span");
+        setElementContent(
+            span,
+            htmlReplaceAll(node.textContent, EMOJI_REGEX, (codepoints) => {
+                if (!emojiLoader.map.has(codepoints)) {
+                    return codepoints;
+                }
+                const title = formatList(emojiLoader.map.get(codepoints).shortcodes, {
+                    style: "unit-narrow",
+                });
+                return markup`<span class="o-mail-emoji" title="${title}">${codepoints}</span>`;
+            })
+        );
+        node.replaceWith(...span.childNodes);
+    }
+    return getInnerHtml(doc.body);
+}
+
+/**
+ * Converts an object of key/value to string, where object represents a attClass with OWL syntax object
+ * and value is evaluation of each key.
+ * Example: "attClassObjectToString({ a: 1, b: 0, c: 1 })" converts to "a c".
+ */
+export function attClassObjectToString(obj) {
+    return Object.entries(obj)
+        .filter(([_, val]) => val)
+        .map(([key, _]) => key)
+        .join(" ");
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="ir_cron_myinvois_document_sync" model="ir.cron">
+            <field name="name">MyInvois: Document Synchronization</field>
+            <field name="model_id" ref="l10n_my_edi.model_myinvois_document"/>
+            <field name="state">code</field>
+            <field name="code">model._myinvois_statuses_update_cron()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(hours=1))"/>
+        </record>
+    </data>
+</odoo>

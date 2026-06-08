@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderRow">
+    <BuilderComponent>
+        <div
+            class="hb-row d-flex position-relative pe-2"
+            t-att-class="this.getLevelClass()"
+            t-custom-ref="root"
+            t-att-data-label="this.props.label"
+            t-att-data-disabled="this.props.disabled"
+            t-att-aria-disabled="this.props.disabled ? 'true' : undefined"
+            >
+
+            <button
+                t-custom-ref="collapse"
+                t-if="this.props.slots.collapse"
+                class="o_hb_collapse_toggler btn border-0 bg-transparent"
+                t-att-class="{ 'active fa-rotate-90': this.state.expanded }"
+                title="Toggle more options"
+                t-on-click="this.toggleCollapseContent"
+                t-att-aria-expanded="this.state.expanded ? 'true' : 'false'"
+                t-att-aria-controls="this.collapseContentId">
+                <i
+                    class="fa fa-caret-right"
+                    role="img"
+                />
+            </button>
+
+            <t t-if="this.props.label">
+                <div
+                    class="hb-row-label"
+                    t-att-class="{'hb-row-label-actionable': this.props.slots.collapse, 'bg-transparent': !this.props.label.trim()}"
+                    t-attf-class="#{this.props.extraLabelClass || ''}"
+                    t-on-pointerover="this.openTooltip"
+                    t-on-pointerleave="this.closeTooltip"
+                    t-on-click="this.toggleCollapseContent"
+                    >
+                    <div class="d-inline-flex align-items-center mw-100" t-custom-ref="label-wrapper">
+                        <span class="text-nowrap text-truncate" t-out="this.props.label" t-custom-ref="label"/>
+                        <i
+                            t-if="this.props.tooltip"
+                            class="fa fa-question icon-sup"
+                            t-att-class="this.env.langDir.builder === 'rtl' ? 'fa-flip-horizontal' : ''"
+                        />
+                    </div>
+                </div>
+                <div
+                    class="hb-row-content d-flex"
+                    t-custom-ref="content"
+                    t-on-click="this.onRowContentClick"
+                    >
+                    <t t-call-slot="default"/>
+                </div>
+            </t>
+            <div
+                t-else=""
+                class="d-flex"
+                style="flex-grow: 1; flex-basis: 0; min-width: 0; gap: 4px;"
+                t-custom-ref="content"
+                >
+                <t t-call-slot="default" toggleCollapseContent="() => this.toggleCollapseContent()"/>
+            </div>
+        </div>
+        <div t-if="this.displayCollapseContent" t-att-class="this.collapseContentClass" t-custom-ref="collapse-content" t-att-id="this.collapseContentId">
+            <t t-call-slot="collapse"/>
+        </div>
+    </BuilderComponent>
+</t>
+
+</templates>

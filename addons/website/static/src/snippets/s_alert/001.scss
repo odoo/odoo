@@ -1,0 +1,29 @@
+
+.s_alert[data-vcss='001'] {
+    margin: $grid-gutter-width/2 0;
+    p, ul, ol {
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+    &.s_alert_sm {
+        padding: $grid-gutter-width/3;
+        @include font-size($font-size-sm);
+    }
+    &.s_alert_md {
+        padding: $grid-gutter-width/2;
+        @include font-size($font-size-base);
+    }
+    &.s_alert_lg {
+        padding: $grid-gutter-width;
+        @include font-size($font-size-lg);
+    }
+    .s_alert_icon {
+        float: left;
+        background-color: rgba($black, 10%); // Fallback
+        background-color: fade-currentColor(15%);
+    }
+    .s_alert_content {
+        overflow: hidden;
+    }
+}

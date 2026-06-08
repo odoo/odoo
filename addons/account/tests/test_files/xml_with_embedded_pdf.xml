@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+	<cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
+	<cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+	<cbc:ID>F26/0045</cbc:ID>
+	<cbc:IssueDate>2026-02-28</cbc:IssueDate>
+	<cbc:DueDate>2026-02-01</cbc:DueDate>
+	<cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+	<cbc:Note>Test Invoice Note</cbc:Note>
+	<cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+	<cac:OrderReference>
+		<cbc:ID>F26/0045</cbc:ID>
+	</cac:OrderReference>
+	<cac:AdditionalDocumentReference>
+		<cbc:ID>test_pdf.pdf</cbc:ID>
+		<cac:Attachment>
+			<cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename="test_pdf.pdf">
+				JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9Db3VudCAxCi9LaWRzIFszIDAgUl0KPj4KZW5kb2JqCjMgMCBvYmoKPDwKL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgovTWVkaWFCb3ggWzAgMCAzMDAgMTQ0XQovQ29udGVudHMgNCAwIFIKL1Jlc291cmNlcyA8PAovRm9udCA8PAovRjEgNSAwIFIKPj4KPj4KPj4KZW5kb2JqCjQgMCBvYmoKPDwKL0xlbmd0aCA0NAo+PgpzdHJlYW0KQlQgL0YxIDEyIFRmIDUwIDcwIFRkIChIZWxsbyBQREYpIFRqIEVUCmVuZHN0cmVhbQplbmRvYmoKNSAwIG9iago8PAovVHlwZSAvRm9udAovU3VidHlwZSAvVHlwZTEKL05hbWUgL0YxCi9CYXNlRm9udCAvSGVsdmV0aWNhCj4+CmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTAgMDAwMDAgbiAKMDAwMDAwMDA2MSAwMDAwMCBuIAowMDAwMDAwMTE2IDAwMDAwIG4gCjAwMDAwMDAyMjAgMDAwMDAgbiAKMDAwMDAwMDMxNSAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9TaXplIDYKL1Jvb3QgMSAwIFIKPj4Kc3RhcnR4cmVmCjM5MAolJUVPRgo=
+			</cbc:EmbeddedDocumentBinaryObject>
+		</cac:Attachment>
+	</cac:AdditionalDocumentReference>
+	<cac:AccountingSupplierParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="0208">0239843188</cbc:EndpointID>
+			<cac:PartyName>
+				<cbc:Name>Testing company</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Street</cbc:StreetName>
+				<cbc:CityName>City</cbc:CityName>
+				<cbc:PostalZone>5000</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode>BE</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID>BE0239843188</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>Testing company</cbc:RegistrationName>
+				<cbc:CompanyID>BE0239843188</cbc:CompanyID>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Name>Testing company</cbc:Name>
+				<cbc:Telephone>+32 123 12 12 12</cbc:Telephone>
+				<cbc:ElectronicMail>info@testingcompany.be</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingSupplierParty>
+	<cac:AccountingCustomerParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="0208">0239843189</cbc:EndpointID>
+			<cac:PartyName>
+				<cbc:Name>Odoo</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Street</cbc:StreetName>
+				<cbc:CityName>City</cbc:CityName>
+				<cbc:PostalZone>5001</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode>BE</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID>BE0239843189</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>Odoo</cbc:RegistrationName>
+				<cbc:CompanyID>BE0239843189</cbc:CompanyID>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Name>Odoo</cbc:Name>
+				<cbc:Telephone>+1 123-123-1234</cbc:Telephone>
+				<cbc:ElectronicMail>info@odoo.com</cbc:ElectronicMail>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	<cac:Delivery>
+		<cac:DeliveryLocation>
+			<cac:Address>
+				<cbc:StreetName>Street</cbc:StreetName>
+				<cbc:CityName>City</cbc:CityName>
+				<cbc:PostalZone>5001</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode>BE</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:Address>
+		</cac:DeliveryLocation>
+	</cac:Delivery>
+	<cac:PaymentMeans>
+		<cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
+		<cbc:PaymentID>F26/0045</cbc:PaymentID>
+		<cac:PayeeFinancialAccount>
+			<cbc:ID>BE0239843189</cbc:ID>
+			<cac:FinancialInstitutionBranch>
+				<cbc:ID>REVOBEB2</cbc:ID>
+			</cac:FinancialInstitutionBranch>
+		</cac:PayeeFinancialAccount>
+	</cac:PaymentMeans>
+	<cac:TaxTotal>
+		<cbc:TaxAmount currencyID="EUR">713.14</cbc:TaxAmount>
+		<cac:TaxSubtotal>
+			<cbc:TaxableAmount currencyID="EUR">3395.92</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="EUR">713.14</cbc:TaxAmount>
+			<cac:TaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:TaxCategory>
+		</cac:TaxSubtotal>
+	</cac:TaxTotal>
+	<cac:LegalMonetaryTotal>
+		<cbc:LineExtensionAmount currencyID="EUR">3395.92</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="EUR">3395.92</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="EUR">4109.06</cbc:TaxInclusiveAmount>
+		<cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
+		<cbc:PayableAmount currencyID="EUR">4109.06</cbc:PayableAmount>
+	</cac:LegalMonetaryTotal>
+	<cac:InvoiceLine>
+		<cbc:ID>1</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">3395.92</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Description>PO1234</cbc:Description>
+			<cbc:Name>Commission</cbc:Name>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">3395.92</cbc:PriceAmount>
+		</cac:Price>
+	</cac:InvoiceLine>
+</Invoice>

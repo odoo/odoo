@@ -1,0 +1,53 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import models, _
+from odoo.addons.account.models.chart_template import template
+
+
+class AccountChartTemplate(models.AbstractModel):
+    _inherit = 'account.chart.template'
+
+    @template('cn_large_bis')
+    def _get_cn_large_bis_template_data(self):
+        return {
+            'name': _('Accounting Standards for Business Enterprises'),
+            'code_digits': 4,
+            'parent': 'cn_common',
+        }
+
+    @template('cn_large_bis', 'res.company')
+    def _get_cn_large_bis_company(self):
+        return {
+            self.env.company.id: {
+                'account_fiscal_country_id': 'base.cn',
+                'transfer_account_code_prefix': '1004',
+                'income_currency_exchange_account_id': 'l10n_cn_large_bis_account_660304',
+                'expense_currency_exchange_account_id': 'l10n_cn_large_bis_account_660304',
+                'account_journal_suspense_account_id': 'l10n_cn_large_bis_account_1008',
+                'transfer_account_id': 'l10n_cn_large_bis_account_1004',
+                'account_production_wip_account_id': 'l10n_cn_large_bis_account_5001',
+                'default_cash_difference_income_account_id': 'l10n_cn_large_bis_account_630101',
+                'default_cash_difference_expense_account_id': 'l10n_cn_large_bis_account_671101',
+                'account_journal_early_pay_discount_gain_account_id': 'l10n_cn_large_bis_account_630102',
+                'account_journal_early_pay_discount_loss_account_id': 'l10n_cn_large_bis_account_671102',
+                'account_production_wip_overhead_account_id': 'l10n_cn_large_bis_account_5101',
+                'account_sale_tax_id': 'l10n_cn_tax_large_bis_sales_excluded_13',
+                'account_purchase_tax_id': 'l10n_cn_purchase_excluded_13',
+                'expense_account_id': 'l10n_cn_large_bis_account_6401',
+                'income_account_id': 'l10n_cn_large_bis_account_6001',
+                'account_stock_valuation_id': 'l10n_cn_common_account_1403',
+            },
+        }
+
+    @template('cn_large_bis', 'account.account')
+    def _get_cn_large_bis_account_account(self):
+        return {
+            'l10n_cn_common_account_160101': {'asset_depreciation_account_id': 'l10n_cn_common_account_160201', 'asset_expense_account_id': 'l10n_cn_large_bis_account_66020201'},
+            'l10n_cn_common_account_160102': {'asset_depreciation_account_id': 'l10n_cn_common_account_160202', 'asset_expense_account_id': 'l10n_cn_large_bis_account_66020202'},
+            'l10n_cn_common_account_160103': {'asset_depreciation_account_id': 'l10n_cn_common_account_160203', 'asset_expense_account_id': 'l10n_cn_large_bis_account_66020203'},
+            'l10n_cn_common_account_160104': {'asset_depreciation_account_id': 'l10n_cn_common_account_160204', 'asset_expense_account_id': 'l10n_cn_large_bis_account_66020204'},
+            'l10n_cn_common_account_160105': {'asset_depreciation_account_id': 'l10n_cn_common_account_160205', 'asset_expense_account_id': 'l10n_cn_large_bis_account_66020205'},
+            'l10n_cn_common_account_160106': {'asset_depreciation_account_id': 'l10n_cn_common_account_160206', 'asset_expense_account_id': 'l10n_cn_large_bis_account_66020206'},
+            'l10n_cn_common_account_1403': {
+                'account_stock_variation_id': 'l10n_cn_large_bis_account_6601',
+            },
+        }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Add PIX code string below QR code for Brazilian invoices -->
+        <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+            <xpath expr="//div[@id='qrcode_info']" position="inside">
+                <t t-set="pix_code_string" t-value="o.qr_code_method == 'emv_qr' and qr_code_url and o.partner_bank_id._get_qr_vals('emv_qr', o.amount_residual, o.currency_id, o.partner_id, o.payment_reference or o.ref, '') or False"/>
+                <p t-if="pix_code_string" class="mb-3">Or</p>
+                <p t-if="pix_code_string" class="mb-0">Copy and paste below<br/>PIX code into your banking application</p>
+            </xpath>
+            <xpath expr="//div[@id='qrcode']" position="after">
+                <t t-set="pix_code_string" t-value="o.qr_code_method == 'emv_qr' and qr_code_url and o.partner_bank_id._get_qr_vals('emv_qr', o.amount_residual, o.currency_id, o.partner_id, o.payment_reference or o.ref, '') or False"/>
+                <div t-if="pix_code_string" class="mb-3 avoid-page-break-inside">
+                    <div class="border rounded p-1 text-muted small" style="word-break: break-all; line-height: 1; max-width: 25rem;">
+                        <span t-out="pix_code_string"/>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+
+        <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+        <template id="report_invoice" inherit_id="account.report_invoice">
+            <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+                <t t-elif="o._get_name_invoice_report() == 'l10n_br.report_invoice_document'"
+                   t-call="l10n_br.report_invoice_document"
+                   t-lang="lang"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

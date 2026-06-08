@@ -1,0 +1,33 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.TableBorderStyleSelector">
+        <Dropdown menuClass="'o-we-toolbar-dropdown'" menuRef="menuRef">
+            <button class="btn btn-light" t-att-title="this.props.title" name="table_border_style">
+                <t t-call="html_editor.TableBorderStyleSvg"/>
+            </button>
+            <t t-set-slot="content">
+                <div data-prevent-closing-overlay="true" data-vertical="true">
+                    <DropdownItem
+                        class="{'dropdown-item_active_noarrow btn btn-light': true, active: this.state.displayName === 'none' }"
+                        t-on-pointerdown.prevent="() => {}"
+                        onSelected="() => this.onSelected({ value: 'none' })"
+                    >None</DropdownItem>
+                    <div t-foreach="this.items" t-as="item" t-key="item.value">
+                        <DropdownItem
+                            class="{'dropdown-item_active_noarrow btn btn-light': true, active: item.value === this.state.displayName}"
+                            t-on-pointerdown.prevent="() => {}"
+                            onSelected="() => this.onSelected(item)"
+                        >
+                            <div class="o-border-preview" t-attf-style="border-style: {{item.value}}; width: 50px;"/>
+                        </DropdownItem>
+                    </div>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+
+    <t t-name="html_editor.TableBorderStyleSvg">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="var(--btn-color)">
+            <path d="M280-120v-80h80v80h-80Zm160 0v-80h80v80h-80Zm160 0v-80h80v80h-80Zm160 0v-80h80v80h-80Zm0-160v-80h80v80h-80Zm0-160v-80h80v80h-80Zm0-160v-80h80v80h-80ZM120-120v-720h720v80H200v640h-80Z"/>
+        </svg>
+    </t>
+</templates>

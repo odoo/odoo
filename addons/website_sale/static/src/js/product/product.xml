@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="sale.Product" t-inherit-mode="extension">
+        <QuantityButtons position="attributes">
+            <attribute name="t-if" add="this.props.can_be_sold" separator=" &amp;&amp; "/>
+        </QuantityButtons>
+        <QuantityButtons position="after">
+            <t t-call="website_sale.not_for_sale"/>
+        </QuantityButtons>
+        <button name="sale_product_configurator_add_button" position="attributes">
+            <attribute name="t-if">this.props.can_be_sold</attribute>
+            <attribute name="class" remove="btn-secondary" add="btn-outline-primary text-nowrap" separator=" "/>
+        </button>
+        <span name="add_button" position="replace">
+            <span name="add_button" class="ms-2 d-none d-lg-inline">Add to Cart</span>
+        </span>
+
+        <button name="sale_product_configurator_add_button" position="after">
+            <t t-call="website_sale.not_for_sale"/>
+        </button>
+        <t name="sale_product_configurator_price" position="after">
+            <t t-call="website_sale.product_prices"/>
+        </t>
+        <t name="sale_product_configurator_optional_price" position="after">
+            <t t-call="website_sale.product_prices"/>
+        </t>
+        <xpath
+            expr="//div[@name='o_sale_product_configurator_name']//span[hasclass('h5')]"
+            position="attributes"
+        >
+            <attribute name="class" remove="h5" add="h6" separator=" "/>
+        </xpath>
+    </t>
+
+    <t t-inherit="sale.product_price" t-inherit-mode="extension">
+        <span name="sale_product_configurator_formatted_price" position="attributes">
+            <attribute name="class" remove="h5" add="h6" separator=" "/>
+        </span>
+    </t>
+
+    <t t-name="website_sale.not_for_sale">
+        <div
+            t-if="!this.props.can_be_sold"
+            class="text-muted fst-italic"
+        >
+            <i class="fa fa-times me-1"/>
+            Not available for sale
+        </div>
+    </t>
+
+    <t t-name="website_sale.product_prices">
+        <h5
+            class="oe_striked_price text-muted small text-decoration-line-through text-nowrap"
+            t-if="this.props.strikethrough_price"
+            t-out="this.getFormattedPrice(this.props.strikethrough_price)"
+        />
+        <div
+            t-if="this.props.base_unit_price"
+            class="o_product_price_unit small w-100 text-muted d-block pb-2"
+        >
+            (<span t-out="this.getFormattedPrice(this.props.base_unit_price)"/>
+            /
+            <span t-out="this.props.base_unit_name"/>)
+        </div>
+    </t>
+</templates>

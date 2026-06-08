@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.HeaderFontOption">
+    <BuilderRow label.translate="Accent Color" tooltip.translate="Apply a light contrast on dropdown buttons">
+        <BuilderSelect action="'websiteConfig'">
+            <BuilderSelectItem
+                label.translate="Default"
+                actionParam="{views: []}"
+            >Default</BuilderSelectItem>
+            <BuilderSelectItem
+                label.translate="Primary"
+                actionParam="{views: ['website.template_header_additional_color_primary']}"
+            >Primary</BuilderSelectItem>
+            <BuilderSelectItem
+                label.translate="Secondary"
+                actionParam="{views: ['website.template_header_additional_color_secondary']}"
+            >Secondary</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Font">
+        <BuilderFontFamilyPicker 
+            action="'customizeWebsiteVariable'"
+            actionParam="'navbar-font'" 
+            valueParamName="'actionValue'"
+        />
+    </BuilderRow>
+
+    <BuilderRow label.translate="Format" tooltip.translate="Default Text Size and Color">
+        <BuilderNumberInput 
+            action="'customizeWebsiteVariable'"
+            actionParam="'header-font-size'" 
+            default="null" 
+            unit="'px'" 
+            saveUnit="'rem'"
+        />
+        <BuilderColorPicker 
+            action="'customizeWebsiteVariable'"     
+            actionParam="'header-text-color'"
+            enabledTabs="['solid', 'custom']"
+        />
+    </BuilderRow>
+</t>
+
+</templates>

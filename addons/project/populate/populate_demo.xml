@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- A Populate demo for the Project module -->
+    <record id="fake_project_demo" model="populate.blueprint">
+        <field name="name">Project - Populate Demo</field>
+        <field name="definition_xml" type="xml">
+            <model name="res.partner" count="2000" id="service_customers">
+                <field name="name" generator="fake.company"/>
+                <field name="email" generator="fake.company_email"/>
+                <field name="phone" generator="fake.phone_number"/>
+                <field name="is_company" eval="True"/>
+                <field name="active" eval="True"/>
+                <field name="street" generator="fake.street_address"/>
+                <field name="city" generator="fake.city"/>
+                <field name="zip" generator="fake.postcode"/>
+                <field name="country_id" domain="[('code', 'in', ['US', 'CA', 'GB', 'DE', 'FR'])]" null_ratio="0.1"/>
+            </model>
+
+            <model name="res.users" count="500" id="project_users" context="{'tracking_disable': True, 'install_mode': True}">
+                <field name="name" generator="fake.name"/>
+                <field name="v_user_name" virtual="True" generator="fake.user_name"/>
+                <field name="v_rng_digits" virtual="True" generator="scalar.integer" start="10" end="99"/>
+                <field name="login" eval="f'{v_user_name}{v_rng_digits if v_rng_digits else ''}'" unique="True"/>
+                <field name="email" generator="fake.email"/>
+            </model>
+
+            <model name="project.project.stage" count="6" id="project_stages" scale="False">
+                <field name="name" generator="misc.cycle" values="['New', 'In Progress', 'Review', 'Done', 'Archived', 'Cancelled']"/>
+                <field name="sequence" start="1" end="100"/>
+                <field name="fold" eval="name in ('Done', 'Cancelled')"/>
+            </model>
+
+            <model name="project.task.type" count="8" id="task_types" scale="False">
+                <field name="name" generator="misc.cycle" values="['To Do', 'In Progress', 'Testing', 'Blocked', 'Review', 'Done', 'On Hold', 'Cancelled']"/>
+                <field name="sequence" generator="misc.counter" start="1"/>
+                <field name="fold" eval="name in ('Done', 'Cancelled')"/>
+            </model>
+
+            <model name="project.project" count="120" id="service_projects" context="{'mail_auto_subscribe_no_notify': True}">  <!-- disable notifications to new assignees -->
+                <field name="name" generator="fake.catch_phrase"/>
+                <field name="active" values="{True: 9, False: 1}"/>
+                <field name="partner_id" ref="service_customers" null_ratio="0.2"/>
+                <field name="user_id" ref="project_users" null_ratio="0.1"/>
+                <field name="privacy_visibility" values="{'portal': 5, 'employees': 3, 'followers': 2}"/>
+                <field name="stage_id" ref="project_stages" null_ratio="0.1"/>
+                <field name="v_has_deadline" virtual="True" generator="scalar.boolean"/>
+                <field name="v_date_start" virtual="True" generator="temporal.date" start="today -1y" end="today -6m" distribution="normal(mean=270, std=60)"/>
+                <field name="v_date" virtual="True" generator="temporal.date" start="today -6m +1d" end="today" distribution="normal(mean=60, std=40)"/>
+                <field name="date_start" eval="v_date_start if v_has_deadline else False"/>
+                <field name="date" eval="v_date if v_has_deadline else False"/>
+                <field name="allow_task_dependencies" values="{True: 4, False: 6}"/>
+                <field name="allow_milestones"/>
+                <field name="allow_recurring_tasks" values="{True: 2, False: 8}"/>
+                <field name="sequence" start="1" end="100"/>
+                <field name="color" start="0" end="11"/>
+                <field name="last_update_status" values="{'on_track': 4, 'at_risk': 2, 'off_track': 1, 'on_hold': 1, 'to_define': 2}"/>
+                <field name="type_ids" ref="task_types" count="8"/>
+                <field name="favorite_user_ids" ref="project_users" count="50" std="20" null_ratio="0.7"/>
+            </model>
+
+            <model name="project.tags" count="500" id="project_tags">
+                <field name="v_name" virtual="True" generator="fake.words" nb="2" unique="True"/>
+                <field name="name" eval="' '.join(word.capitalize() for word in v_name)"/>
+                <field name="color" start="0" end="11"/>
+            </model>
+
+            <model name="project.milestone" count="500" id="project_milestones">
+                <field name="name" generator="fake.bs"/>
+                <field name="project_id" ref="service_projects" domain="[('allow_milestones', '=', True)]"/>
+                <field name="deadline" start="today -120d" end="today" distribution="triangular(min=0, max=120, mode=30)"/>
+                <field name="is_reached" values="{True: 3, False: 7}"/>
+            </model>
+
+            <model name="project.task" count="10000" id="main_tasks" context="{'mail_auto_subscribe_no_notify': True}">
+                <field name="name" generator="fake.sentence" nb_words="5"/>
+                <field name="project_id" ref="service_projects"/>
+                <field name="stage_id" ref="task_types"/>
+                <field name="user_ids" ref="project_users" count="2" std="1" null_ratio="0.2"/>
+                <field name="partner_id" ref="service_customers" null_ratio="0.4"/>
+                <field name="description" generator="fake.paragraph" null_ratio="0.3"/>
+                <field name="priority" values="{'0': 4, '1': 3, '2': 2, '3': 1}"/>
+                <field name="state" values="{'01_in_progress': 5, '02_changes_requested': 1, '03_approved': 2, '04_waiting_normal': 1, '1_done': 3, '1_canceled': 1}"/>
+                <field name="date_deadline" start="now -20d" end="now +90d" null_ratio="0.3"/>
+                <field name="date_assign" start="now -6m" end="now" null_ratio="0.2"/>
+                <field name="allocated_hours" start="1.0" end="80.0" distribution="normal(mean=20, std=15)" null_ratio="0.2"/>
+                <field name="sequence" start="1" end="100"/>
+                <field name="color" start="0" end="11" null_ratio="0.7"/>
+                <field name="active" values="{True: 95, False: 5}"/>
+                <field name="tag_ids" ref="project_tags" count="4" std="1" null_ratio="0.2"/>
+                <field name="milestone_id" ref="project_milestones" null_ratio="0.7"/>
+            </model>
+
+            <model name="project.task" count="5000" id="subtasks" context="{'mail_auto_subscribe_no_notify': True}">
+                <field name="name" generator="fake.sentence" nb_words="4"/>
+                <field name="parent_id" ref="main_tasks"/>
+                <!-- Usually default subtasks are in the project of the parents -->
+                <field name="project_id" eval="model.browse(parent_id).project_id.id"/>
+                <field name="user_ids" ref="project_users" count="1" null_ratio="0.3"/>
+                <field name="description" generator="fake.text" max_nb_chars="150" null_ratio="0.5"/>
+                <field name="priority" values="{'0': 4, '1': 3, '2': 2, '3': 1}"/>
+                <field name="state" values="{'01_in_progress': 4, '03_approved': 2, '1_done': 3, '1_canceled': 1}"/>
+                <field name="date_deadline" start="now -10d" end="now +2m" null_ratio="0.4"/>
+                <field name="allocated_hours" start="0.5" end="20.0" distribution="exponential(rate=0.1)" null_ratio="0.3"/>
+                <field name="sequence" start="1" end="50"/>
+            </model>
+
+            <model name="project.update" count="500" id="project_updates" parallel="False">
+                <field name="name" generator="fake.sentence" nb_words="6"/>
+                <field name="project_id" ref="service_projects"/>
+                <field name="status" values="{'on_track': 5, 'at_risk': 2, 'off_track': 1, 'on_hold': 2}"/>
+                <field name="description" generator="fake.paragraph" null_ratio="0.2"/>
+                <field name="progress" start="0" end="100" distribution="beta(alpha=2, beta=2)"/>
+            </model>
+
+            <model name="project.task" count="2000" id="recurring_tasks" context="{'mail_auto_subscribe_no_notify': True}">
+                <field name="name" generator="fake.sentence" nb_words="4"/>
+                <field name="project_id" ref="service_projects" domain="[('allow_recurring_tasks', '=', True)]"/>
+                <field name="recurring_task" eval="True"/>
+                <field name="user_ids" ref="project_users" count="1" null_ratio="0.1"/>
+                <field name="description" generator="fake.text" max_nb_chars="120" null_ratio="0.4"/>
+                <field name="state" eval="'01_in_progress'"/>
+                <field name="allocated_hours" start="2.0" end="16.0" distribution="normal(mean=8, std=4)"/>
+            </model>
+
+            <model name="project.collaborator" count="1000" id="project_collaborators">
+                <field name="v_project_id" virtual="True" generator="relation.one" comodel_name="project.project" ref="service_projects" domain="[('privacy_visibility', 'in', ['portal'])]"/>
+                <field name="v_partner_id" virtual="True" generator="relation.one" comodel_name="res.partner" ref="service_customers"/>
+                <!-- Make sure the pair (project_id, partner_id) is unique -->
+                <field name="v_collaboration" virtual="True" eval="(v_project_id, v_partner_id)" unique="True"/>
+                <field name="project_id" eval="v_collaboration[0]"/>
+                <field name="partner_id" eval="v_collaboration[1]"/>
+            </model>
+        </field>
+    </record>
+</odoo>

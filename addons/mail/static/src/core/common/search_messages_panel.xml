@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.SearchMessagesPanel">
+        <ActionPanel
+            close="this.props.close"
+            title="this.title"
+            minWidth="200"
+            initialWidth="400"
+            icon="'oi oi-search'"
+        >
+            <SearchMessageInput closeSearch="this.props.closeSearch" messageSearch="this.messageSearch" thread="this.props.thread"/>
+            <SearchMessageResult thread="this.props.thread" messageSearch="this.messageSearch"/>
+        </ActionPanel>
+    </t>
+</templates>

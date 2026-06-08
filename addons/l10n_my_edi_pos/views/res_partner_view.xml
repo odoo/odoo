@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_partner_form_pos_ui_inherit_l10n_my_edi_pos" model="ir.ui.view">
+        <field name="name">res.partner.form.pos.ui.inherit.l10n_my_edi_pos</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="point_of_sale.view_partner_form_pos_ui"/>
+        <field name="arch" type="xml">
+            <field name="category_id" position="after">
+                <field name="l10n_my_edi_industrial_classification" invisible="not is_company or 'MY' not in fiscal_country_codes"/>
+            </field>
+            <field name="vat" position="after">
+                <label for="l10n_my_identification_type" string="Identification" invisible="'MY' not in fiscal_country_codes"/>
+                <div class="d-flex gap-2" invisible="'MY' not in fiscal_country_codes">
+                    <field name="l10n_my_identification_type" readonly="parent_id"/>
+                    <span class="d-flex gap-2 w-100">
+                        <field name="l10n_my_identification_number_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
+                        <field name="l10n_my_identification_number" options="{'placeholder_field': 'l10n_my_identification_number_placeholder'}" readonly="parent_id"/>
+                        <button class="oe_link oe_inline p-0" type="object" name="action_validate_tin" invisible="not l10n_my_edi_display_tin_warning or l10n_my_tin_validation_state or parent_id">Validate</button>
+                        <span class="text-success fa fa-check" title="Validation Successful" invisible="not l10n_my_edi_display_tin_warning or l10n_my_tin_validation_state != 'valid'"/>
+                        <span class="text-danger fa fa-close" title="Validation Failed" invisible="not l10n_my_edi_display_tin_warning or l10n_my_tin_validation_state != 'invalid'"/>
+                    </span>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>

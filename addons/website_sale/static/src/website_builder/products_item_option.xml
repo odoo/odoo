@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sale.ProductsItemOptionPlugin">
+        <div t-attf-class="o_wsale_soptions_menu_sizes {{this.domState.displaySizeOption ? '' : 'd-none'}}">
+            <BuilderRow label.translate="Size">
+                <BuilderButtonGroup action="'setItemSize'">
+                    <table t-custom-ref="table" t-on-mouseenter="this._onTableMouseEnter" t-on-mouseleave="this._onTableMouseLeave">
+                        <t t-foreach="Array(4)" t-as="i" t-key="i_index">
+                            <tr>
+                                <t t-foreach="Array(this.maxWidth)" t-as="j" t-key="j_index">
+                                    <td t-on-mouseover="()=>this._onTableCellMouseOver(i_index, j_index)" t-on-click="()=>this._onTableCellMouseClick(i_index, j_index)">
+                                        <BuilderButton preview="false" actionValue="[i_index, j_index]" className="'border-0'" />
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+                    </table>
+                </BuilderButtonGroup>
+            </BuilderRow>
+        </div>
+        <BuilderRow label.translate="Re-order" t-if="this.displayReOrder">
+            <BuilderButtonGroup action="'changeSequence'">
+                <BuilderButton ltrRtlMapping="'top-bottom'" isLabelLinkedToContent="true"
+                    actionValue="'top'"
+                    title.translate="Push to top"
+                    icon="'fa-fw fa-angle-double-left'" />
+                <BuilderButton ltrRtlMapping="'up-down'" isLabelLinkedToContent="true"
+                    actionValue="'up'"
+                    title.translate="Push up"
+                    icon="'fa-fw fa-angle-left'" />
+                <BuilderButton ltrRtlMapping="'up-down'" isLabelLinkedToContent="true"
+                    actionValue="'down'"
+                    title.translate="Push down"
+                    icon="'fa-fw fa-angle-right'" />
+                <BuilderButton ltrRtlMapping="'top-bottom'" isLabelLinkedToContent="true"
+                    actionValue="'bottom'"
+                    title.translate="Push to bottom"
+                    icon="'fa-fw fa-angle-double-right'" />
+            </BuilderButtonGroup>
+        </BuilderRow>
+    </t>
+</templates>

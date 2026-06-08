@@ -1,0 +1,63 @@
+.s_process_steps[data-vcss='001']  {
+    $process-step-icon-size: 5rem;
+
+    .s_process_step {
+        position: relative;
+
+        .s_process_step_icon {
+            position: relative;
+            margin: $grid-gutter-width 0;
+
+            .fa, img {
+                display: block;
+                height: $process-step-icon-size;
+                width: $process-step-icon-size;
+                line-height: $process-step-icon-size;
+
+                // Note that we use contain and not cover. For "full images"
+                // (like a photo which is a rectangle with colors on the edges),
+                // cover would be better. But for "image icons", contain is a
+                // better fit (as we want the full icon to be visible). Also
+                // in the case of "photos", the user has to be possibility to
+                // crop the image to a square, that way it would act as cover.
+                object-fit: contain;
+            }
+        }
+
+        .s_process_step_content {
+            padding: 0 $grid-gutter-width/2;
+            text-align: center;
+        }
+
+        .s_process_step_connector {
+            position: absolute;
+            z-index: 1;
+            height: $process-step-icon-size;
+            width: calc(100% - #{$process-step-icon-size});
+            left: calc(50% + #{$process-step-icon-size / 2});
+            margin: $grid-gutter-width 0;
+            pointer-events: none;
+
+            path {
+                stroke: $border-color;
+                stroke-width: 2;
+                fill: transparent;
+            }
+        }
+
+        &:last-child .s_process_step_connector {
+            display: none;
+        }
+    }
+
+    .s_process_steps_arrow_head path {
+        fill: map-get($grays, '600');
+        stroke: transparent;
+    }
+
+    @include media-breakpoint-down(lg) {
+        .s_process_step_connector {
+            display: none;
+        }
+    }
+}

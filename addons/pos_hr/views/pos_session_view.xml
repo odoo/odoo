@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_session_form_inherit_pos_hr" model="ir.ui.view">
+        <field name="name">pos.session.form.view.inherit.pos.hr</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='config_id']" position="after">
+                <field name="logged_employee_ids" string="Employees" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+	<t t-name="website.WhatsappOption">
+		<t t-if="!this.state.whatsappNumber">
+			<div class="alert alert-info">
+                A Contact Number is essential, as WhatsApp chat redirection depends on a valid number.
+            </div>
+		</t>
+
+		<BuilderRow label.translate="Name">
+			<BuilderTextInput default.translate="Jane Doe" attributeAction="'value'" applyTo="`.s_whatsapp_translation_inputs input[name='agent_name']`" action="'showChatBox'"/>
+		</BuilderRow>
+
+		<BuilderRow label.translate="Description">
+			<BuilderTextInput default.translate="Online" attributeAction="'value'" applyTo="`.s_whatsapp_translation_inputs input[name='agent_description']`" action="'showChatBox'"/>
+		</BuilderRow>
+
+		<BuilderRow label.translate="Default Message">
+			<BuilderTextInput default.translate="Hi there 👋 how can I help you?" attributeAction="'value'" applyTo="`.s_whatsapp_translation_inputs input[name='agent_message']`" action="'showChatBox'"/>
+		</BuilderRow>
+
+		<BuilderRow label.translate="Contact Number">
+			<BuilderTextInput action="'whatsappNumber'" default="this.state.whatsappNumber"/>
+		</BuilderRow>
+
+		<BuilderRow label.translate="Avatar">
+			<BuilderButton
+				action="'replaceAgentAvatar'"
+				title.translate="Replace Media"
+				className="'flex-grow-1'"
+				type="'success'"
+				label.translate="Replace"/>
+		</BuilderRow>
+
+		<BuilderRow label.translate="Show on">
+			<BuilderSelect action="'moveBlock'" actionParam="'.s_whatsapp'">
+				<BuilderSelectItem actionValue="'currentPage'">This page</BuilderSelectItem>
+				<BuilderSelectItem actionValue="'allPages'">All pages</BuilderSelectItem>
+			</BuilderSelect>
+		</BuilderRow>
+
+		<BuilderRow label.translate="Show CTA">
+			<BuilderCheckbox
+                dataAttributeAction="'isCtaMode'"
+                dataAttributeActionValue="'true'"
+                action="'showChatBox'"/>
+		</BuilderRow>
+
+		<BuilderRow label.translate="Show Notification">
+			<BuilderCheckbox applyTo="'.s_whatsapp_notification_badge'" classAction="'d-none'" inverseAction="true"/>
+		</BuilderRow>
+
+		<BuilderRow label.translate="Position">
+			<BuilderButtonGroup applyTo="'.s_whatsapp_fab'">
+				<BuilderButton title.translate="Left" classAction="'s_whatsapp_pos_left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+				<BuilderButton title.translate="Right" classAction="''" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+			</BuilderButtonGroup>
+		</BuilderRow>
+
+		<BuilderRow label.translate="Layout">
+			<BuilderSelect applyTo="'.s_whatsapp_fab'">
+				<BuilderSelectItem classAction="'rounded-circle'">Disk</BuilderSelectItem>
+				<BuilderSelectItem classAction="'s_whatsapp_fab_circle'">Circle</BuilderSelectItem>
+				<BuilderSelectItem classAction="'rounded'">Square</BuilderSelectItem>
+			</BuilderSelect>
+		</BuilderRow>
+
+		<BuilderRow label.translate="Size">
+			<BuilderSelect applyTo="'.s_whatsapp_fab > i'">
+				<BuilderSelectItem classAction="''">Small</BuilderSelectItem>
+				<BuilderSelectItem classAction="'s_whatsapp_fab_medium'">Medium</BuilderSelectItem>
+				<BuilderSelectItem classAction="'s_whatsapp_fab_large'">Large</BuilderSelectItem>
+			</BuilderSelect>
+		</BuilderRow>
+
+		<BuilderRow label.translate="Color">
+			<BuilderCheckbox applyTo="'.s_whatsapp_fab'" classAction="'no_icon_color'" inverseAction="true"/>
+		</BuilderRow>
+	</t>
+
+	<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+		<xpath expr="//t[@id='snippet_specific_options']" position="after">
+			<whatsapp_option selector=".s_whatsapp"/>
+		</xpath>
+	</t>
+
+</templates>

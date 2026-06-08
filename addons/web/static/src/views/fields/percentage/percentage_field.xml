@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.PercentageField">
+        <t t-if="this.props.readonly">
+            <span t-out="this.formattedValue"/>
+        </t>
+        <t t-else="">
+            <div class="d-flex">
+                <input
+                    t-custom-ref="numpadDecimal"
+                    t-attf-class="o_input"
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                />
+                <span t-if="!this.props.noSymbol">%</span>
+            </div>
+        </t>
+    </t>
+
+</templates>

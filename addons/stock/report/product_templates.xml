@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="label_lot_template_view">
+            <t t-foreach="docs" t-as="lot">
+                <t t-translation="off">
+^XA^CI28
+^FO100,50
+^A0N,44,33^FD<t t-out="lot['display_name_markup']"/>^FS
+^FO100,100
+^A0N,44,33^FDLN/SN: <t t-out="lot['name']"/>^FS
+                    <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
+                        <t t-set="final_barcode" t-value="''" />
+                        <t t-if="lot['lot_record'].product_id.valid_ean" t-set="final_barcode" t-value="'01' + '0' * (14 - len(lot['lot_record'].product_id.barcode)) + lot['lot_record'].product_id.barcode"/>
+                        <!-- TODO: must keep lot/sn as last value in barcode because we cannot pad '0's without changing lot/sn name until we can scan in FNC1. -->
+                        <t t-if="lot['lot_record'].product_id.tracking == 'lot'" name="datamatrix_lot" t-set="final_barcode" t-value="(final_barcode or '') + '10' + lot['name']"/>
+                        <t t-elif="lot['lot_record'].product_id.tracking == 'serial'" t-set="final_barcode" t-value="(final_barcode or '') + '21' + lot['name']"/>
+^FO425,150^BY3
+^BXN,8,200
+^FD<t t-out="final_barcode"/>^FS
+                    </t>
+                    <t t-else="" name="code128_barcode">
+^FO100,150^BY3
+^BCN,100,Y,N,N
+^FD<t t-out="lot['name']"/>^FS
+                    </t>
+^XZ
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

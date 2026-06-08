@@ -1,0 +1,59 @@
+.o_dashboard_card {
+    $dashboard-colors: (
+        purple: (
+            bg: var(--DashboardCard__purple-bg-color, #{$purple-100}),
+            bg-active: var(--DashboardCard__purple-bg-color--active, #{$purple-200}),
+            color: var(--DashboardCard__purple-color, #{$purple-700}),
+            color-active: var(--DashboardCard__purple-color--active, #{$purple-800}),
+        ),
+        cyan: (
+            bg: var(--DashboardCard__cyan-bg-color, #{$cyan-100}),
+            bg-active: var(--DashboardCard__cyan-bg-color--active, #{$cyan-200}),
+            color: var(--DashboardCard__cyan-color, #{$cyan-700}),
+            color-active: var(--DashboardCard__cyan-color--active, #{$cyan-800}),
+        ),
+        orange: (
+            bg: var(--DashboardCard__orange-bg-color, #{$orange-100}),
+            bg-active: var(--DashboardCard__orange-bg-color--active, #{$orange-200}),
+            color: var(--DashboardCard__orange-color, #{$orange-700}),
+            color-active: var(--DashboardCard__orange-color--active, #{$orange-800}),
+        ),
+    );
+
+    @each $name, $states in $dashboard-colors {
+        &.o_dashboard_card_#{$name} {
+            --btn-bg: #{map-get($states, bg)};
+            --btn-hover-bg: #{map-get($states, bg-active)};
+            --btn-active-bg: #{map-get($states, bg-active)};
+            --btn-active-border-color: transparent;
+
+            .o_dashboard_card_data {
+                color: #{map-get($states, color)};
+            }
+
+            &.active {
+                outline: $border-width $border-style #{map-get($states, color-active)};
+                outline-offset: $border-width;
+
+                .o_dashboard_card_data {
+                    color: #{map-get($states, color-active)};
+                }
+            }
+        }
+    }
+}
+
+.o_date_filter_wrapper {
+    @include media-breakpoint-up(md) {
+        border-right: $border-width $border-style $border-color;
+        background: transparent !important;
+    }
+}
+
+.o_website_sale_dashboard {
+    background-color: $o-control-panel-background-color;
+
+    @include media-breakpoint-up(md) {
+        border-bottom: $border-width $border-style $border-color;
+    }
+}

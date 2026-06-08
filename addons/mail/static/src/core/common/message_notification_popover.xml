@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MessageNotificationPopover">
+        <div class="o-mail-MessageNotificationPopover m-2">
+            <div t-foreach="this.recipientsData" t-as="recipient" t-key="recipient_index">
+                <span t-if="recipient.recipientTypeTitle" t-out="recipient.recipientTypeTitle" class="text-muted me-1"/>
+                <span t-if="recipient.name" t-out="recipient.name" class="me-1"/>
+                <span t-if="!recipient.name" t-out="recipient.email" class="me-1"/>
+                <span t-if="recipient.name and recipient.email and !recipient.failure" class="text-muted me-1">(<t t-out="recipient.email"/>)</span>
+                <i t-if="recipient.notification" class="me-1 fa-fw" t-att-class="recipient.notification.statusIcon" t-att-title="recipient.notification.statusTitle" role="img"/>
+                <i t-else="" class="me-2 fa fa-fw fa-send-o"/>
+                <span t-if="recipient.failure" class="text-muted">(<t t-out="recipient.failure"/>)</span>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="courses_search_bar_inherit_survey" inherit_id="website_slides.courses_search_bar">
+            <xpath expr="//div[@id='navbarTagGroups']//ul" position="inside">
+                <li class="order-first">
+                    <a t-if="search_slide_category != 'certification'" class="btn btn-light"
+                    t-att-href="slide_query_url(tag=slugify_tags(search_tags.ids), my=search_my, search=search_term, slide_category='certification')">
+                        <t t-call="website_slides_survey.o_wss_certification_icon"/>
+                        <span class="ms-1">Certifications</span>
+                    </a>
+                </li>
+            </xpath>
+        </template>
+
+        <template id="course_card_inherit_survey" inherit_id="website_slides.course_card">
+            <xpath expr="//div/div" position="after">
+                <div t-if="channel.nbr_certification > 0" class="position-absolute py-1 px-2 h5" style="right:0; top:0">
+                    <t t-call="website_slides_survey.o_wss_certification_icon"/>
+                </div>
+            </xpath>
+        </template>
+
+        <template id="courses_search_results_inherit_survey" inherit_id="website_slides.courses_search_results">
+            <xpath expr="//t[@t-call='website_slides.courses_search_tags']" position="before">
+                <t t-if="search_slide_category == 'certification'">
+                    <span class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
+                        <span class="align-items-center me-1">
+                            <t t-call="website_slides_survey.o_wss_certification_icon"/>
+                        </span>
+                        Certification
+                        <a t-att-href="slide_query_url(tag=slugify_tags(search_tags.ids), my=search_my, search=search_term)" class="btn border-0 py-1 post_link">&#215;</a>
+                    </span>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

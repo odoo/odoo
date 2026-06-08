@@ -1,0 +1,37 @@
+.o_progressbar {
+    --ProgressBarField-width: 150px;
+    --ProgressBarField-min-width: 35px;
+    --ProgressBarField-height: #{map-get($spacers, 2)};
+
+    color: $body-color;
+
+    .progress {
+        --#{$prefix}progress-height: var(--ProgressBarField-height);
+
+        flex-basis: var(--ProgressBarField-width);
+        min-width: var(--ProgressBarField-min-width);
+    }
+}
+
+.o_list_view {
+    .o_progressbar_cell .o_list_number_th {
+        text-align: left !important;
+    }
+
+    .o_data_cell .o_progressbar {
+        width: 100%;
+
+        .o_rtl & {
+            justify-content: flex-end;
+            text-align: right;
+        }
+    }
+}
+
+.o_kanban_renderer {
+    .o_progressbar:not(:hover):not(:focus-within) {
+        input {
+            border-color: transparent;
+        }
+    }
+}

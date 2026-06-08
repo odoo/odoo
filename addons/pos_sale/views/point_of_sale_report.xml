@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//td[@name='account_invoice_line_name']" position="inside">
+            <t t-set="pos_orders" t-value="o.sudo().pos_order_ids"/>
+            <t t-if="pos_orders">
+                <div style="margin-left:15px; font-style: italic">
+                    <t t-set="down_payment_product" t-value="pos_orders[0].config_id.down_payment_product_id"/>
+                    <t t-if="line.product_id == down_payment_product">
+                        <t t-set="sale_orders" t-value="pos_orders[0].lines.filtered(lambda l: l.product_id == down_payment_product and l.price_subtotal_incl == line.price_total).mapped('sale_order_origin_id')"/>
+                        <t t-if="sale_orders">
+                            <div style="font-weight: bold"><i class="fa fa-shopping-basket me-1"/> <t t-out="sale_orders[0].name"/> </div>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

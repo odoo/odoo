@@ -1,0 +1,291 @@
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
+import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
+import { FormActionFieldsOption } from "./form_action_fields_option";
+import {
+    getDependencyEl,
+    getFieldName,
+    getMultipleInputs,
+    isFieldCustom,
+    getCurrentFieldInputEl,
+    getModelName,
+} from "./utils";
+import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import { _t } from "@web/core/l10n/translation";
+
+const { DateTime } = luxon;
+
+export class FormFieldOption extends BaseOptionComponent {
+    static template = "website.s_website_form_field_option";
+    static dependencies = ["websiteFormOption"];
+    static props = {
+        redrawSequence: { type: Number, optional: true },
+    };
+    static components = { FormActionFieldsOption };
+
+    setup() {
+        super.setup();
+        const { loadFieldOptionData } = this.dependencies.websiteFormOption;
+        this.state = proxy({
+            availableFields: [],
+            conditionInputs: [],
+            conditionValueList: [],
+            dependencyEl: null,
+            valueList: null,
+        });
+        this.domState = useDomState((el) => {
+            const modelName = getModelName(el.closest("form"));
+            const fieldName = getFieldName(el);
+            return {
+                elDataset: { ...el.dataset },
+                elClassList: [...el.classList],
+                fieldName,
+                modelName,
+                fieldTranslatedName: el.dataset.translatedName,
+            };
+        });
+        this.format = {
+            date: (value) => (value ? formatDate(DateTime.fromSeconds(parseInt(value))) : ""),
+            datetime: (value) =>
+                value ? formatDateTime(DateTime.fromSeconds(parseInt(value))) : "",
+        };
+
+        this.domStateDependency = useDomState((el) => {
+            const dependencyEl = getDependencyEl(el);
+            if (!dependencyEl) {
+                return {
+                    type: "",
+                    nodeName: "",
+                    isRecordField: false,
+                    isFormDate: false,
+                    isFormDateTime: false,
+                    hasDateTimePicker: false,
+                    isMultipleInputs: false,
+                };
+            }
+
+            return {
+                type: dependencyEl.type,
+                nodeName: dependencyEl.nodeName,
+                isRecordField:
+                    dependencyEl.closest(".s_website_form_field")?.dataset.type === "record",
+                isFormDate: !!dependencyEl.closest(".s_website_form_date"),
+                isFormDateTime: !!dependencyEl.closest(".s_website_form_datetime"),
+                hasDateTimePicker: dependencyEl.classList.contains("datetimepicker-input"),
+                isMultipleInputs: !!dependencyEl.closest(".s_website_form_multiple"),
+            };
+        });
+
+        this.domStateCurrentFieldInput = useDomState((el) => {
+            const currentFieldInputEl = getCurrentFieldInputEl(el);
+            if (!currentFieldInputEl) {
+                return {
+                    type: "",
+                    nodeName: "",
+                    isRecordField: false,
+                    isFormDate: false,
+                    isFormDateTime: false,
+                    hasDateTimePicker: false,
+                    isTextArea: false,
+                };
+            }
+            return {
+                type: currentFieldInputEl.type,
+                nodeName: currentFieldInputEl.nodeName,
+                isRecordField:
+                    currentFieldInputEl.closest(".s_website_form_field")?.dataset.type === "record",
+                isFormDate: !!currentFieldInputEl.closest(".s_website_form_date"),
+                isFormDateTime: !!currentFieldInputEl.closest(".s_website_form_datetime"),
+                hasDateTimePicker: currentFieldInputEl.classList.contains("datetimepicker-input"),
+                isTextArea: currentFieldInputEl.nodeName === "TEXTAREA",
+                minLength: currentFieldInputEl.minLength,
+                maxLength: currentFieldInputEl.maxLength,
+            };
+        });
+
+        this.canLinkStateToCountry = useDomState((el) => {
+            const formEl = el.closest("form");
+            const hasCountryField = !!formEl.querySelector(
+                ".s_website_form_input[name='country_id']"
+            );
+            return { value: getFieldName(el) === "state_id" && hasCountryField };
+        });
+
+        onWillStart(async () => {
+            const el = this.env.getEditingElement();
+            const fieldOptionData = await loadFieldOptionData(el);
+            this.state.fields = fieldOptionData.fields;
+            this.state.availableFields.push(...fieldOptionData.availableFields);
+            this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
+            this.state.valueList = fieldOptionData.valueList;
+            this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
+        });
+        onWillUpdateProps(async (props) => {
+            const el = this.env.getEditingElement();
+            const fieldOptionData = await loadFieldOptionData(el);
+            this.state.fields = fieldOptionData.fields;
+            this.state.availableFields.length = 0;
+            this.state.availableFields.push(...fieldOptionData.availableFields);
+            this.state.conditionInputs.length = 0;
+            this.state.conditionInputs.push(...fieldOptionData.conditionInputs);
+            this.state.valueList = fieldOptionData.valueList;
+            this.state.conditionValueList.length = 0;
+            this.state.conditionValueList.push(...fieldOptionData.conditionValueList);
+        });
+        // TODO select field's hack ?
+    }
+    get canHaveTextValidationCondition() {
+        return ["text", "email", "tel", "url", "search", "password", "number"];
+    }
+    get isTextConditionValueVisible() {
+        const el = this.env.getEditingElement();
+        const dependencyEl = getDependencyEl(el);
+        if (
+            !el.classList.contains("s_website_form_field_hidden_if") ||
+            (dependencyEl &&
+                (["checkbox", "radio"].includes(dependencyEl.type) ||
+                    dependencyEl.nodeName === "SELECT"))
+        ) {
+            return false;
+        }
+        if (!dependencyEl) {
+            return true;
+        }
+        if (dependencyEl?.classList.contains("datetimepicker-input")) {
+            return el.dataset.visibilityComparator === "lessyears";
+        }
+        return (
+            (["text", "email", "tel", "url", "search", "password", "number"].includes(
+                dependencyEl.type
+            ) ||
+                dependencyEl.nodeName === "TEXTAREA") &&
+            !["set", "!set"].includes(el.dataset.visibilityComparator)
+        );
+    }
+    /**
+     * Computes the configuration for the builder list input field used
+     * for validation based on the type of the current field input.
+     *
+     * @returns {Object} An object containing the title and default
+     * value for the builder list.
+     */
+    get multiTextRequirementConfig() {
+        const el = this.env.getEditingElement();
+        const isDomainComparator = el.dataset.requirementComparator === "domain";
+        const isEmail = el.dataset.type === "email";
+        let title = _t("Enter words");
+        if (isDomainComparator) {
+            title = _t("Enter email domains (e.g., gmail.com)");
+        } else if (isEmail) {
+            title = _t("Enter words for local part of the email");
+        }
+        return {
+            title,
+            defaultValue: isDomainComparator ? "example.com" : _t("example"),
+        };
+    }
+    /**
+     * Determines the visibility of the builder list input field used for
+     * validation.
+     *
+     * @returns {boolean} Whether the builder list input should be visible.
+     */
+    get isMultipleTextConditionForRequirementOptionVisible() {
+        const el = this.env.getEditingElement();
+        return el.dataset.requirementComparator && this.isTextField;
+    }
+    /**
+     * Determines the visibility of the character limit checkbox used for
+     * validation.
+     *
+     * @returns {boolean} Whether the character limit option should be visible.
+     */
+    get isTextField() {
+        return (
+            !this.domStateCurrentFieldInput.hasDateTimePicker &&
+            (this.domStateCurrentFieldInput.isTextArea ||
+                ["text", "email", "tel", "url", "search", "password"].includes(
+                    this.domStateCurrentFieldInput.type
+                ))
+        );
+    }
+    /**
+     * Determines the visibility of the text condition input field used for
+     * validation.
+     *
+     * @returns {boolean} Whether the text condition input should be visible.
+     */
+    get isTextConditionForRequirementOptionVisible() {
+        const el = this.env.getEditingElement();
+        return (
+            el.dataset.requirementComparator &&
+            !this.domStateCurrentFieldInput.hasDateTimePicker &&
+            this.domStateCurrentFieldInput.type === "number"
+        );
+    }
+    get isTextConditionOperatorVisible() {
+        const el = this.env.getEditingElement();
+        const dependencyEl = getDependencyEl(el);
+        if (
+            !el.classList.contains("s_website_form_field_hidden_if") ||
+            dependencyEl?.classList.contains("datetimepicker-input")
+        ) {
+            return false;
+        }
+        return (
+            !dependencyEl ||
+            ["text", "email", "tel", "url", "search", "password"].includes(dependencyEl.type) ||
+            dependencyEl.nodeName === "TEXTAREA"
+        );
+    }
+    get isExistingFieldSelectType() {
+        const el = this.env.getEditingElement();
+        return (
+            !isFieldCustom(el) &&
+            ["selection", "many2one", "many2many"].includes(el.dataset.type) &&
+            !el.querySelector("input[type='file']")
+        );
+    }
+    get isExistingFieldSelectTypeMultiple() {
+        const el = this.env.getEditingElement();
+        return !isFieldCustom(el) && this.state.fields[getFieldName(el)].type === "many2many";
+    }
+    get isOtherOptionSupported() {
+        const el = this.env.getEditingElement();
+        return isFieldCustom(el) && ["selection", "many2one"].includes(el.dataset.type);
+    }
+    get isMultipleInputs() {
+        const el = this.env.getEditingElement();
+        return !!getMultipleInputs(el);
+    }
+    get isMaxFilesVisible() {
+        // Do not display the option if only one file is supposed to be
+        // uploaded in the field.
+        const el = this.env.getEditingElement();
+        const fieldEl = el.closest(".s_website_form_field");
+        return (
+            fieldEl.classList.contains("s_website_form_custom") ||
+            ["one2many", "many2many"].includes(fieldEl.dataset.type)
+        );
+    }
+    get isMultiSelectVisible() {
+        const el = this.env.getEditingElement();
+        const dependencyEl = getDependencyEl(el);
+        const containerEl = dependencyEl.closest(".s_website_form_field");
+        return (
+            (["checkbox", "radio"].includes(dependencyEl.type) ||
+                dependencyEl.nodeName === "SELECT" ||
+                containerEl?.dataset.type === "record") &&
+            ["contains", "!contains"].includes(el.dataset.visibilityComparator)
+        );
+    }
+    /**
+     * Dynamic key to force BuilderList to re-render when field type changes.
+     */
+    get getFieldKey() {
+        if (this.domState.elClassList.includes("s_website_form_custom")) {
+            return this.domState.elDataset.type;
+        }
+        return this.domState.fieldName;
+    }
+}

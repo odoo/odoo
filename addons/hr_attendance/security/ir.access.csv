@@ -1,0 +1,44 @@
+id,name,model_id,group_id/id,operation,domain
+hr_attendance_rule_attendance_admin,Attendance Administrator: Full access,hr.attendance,hr_attendance.group_hr_attendance_user,crud,
+hr_attendance_rule_attendance_manager_restrict,Attendance Officer: Restrict Attendances to managed employees,hr.attendance,hr_attendance.group_hr_attendance_officer,crud,"
+                [
+                '|',
+                '&',
+                 ('employee_id.attendance_manager_id', '=', user.id),
+                 ('employee_id.user_id', '=', user.id),
+                '&',
+                ('employee_id.user_id', '!=', user.id),
+                ('employee_id.attendance_manager_id', '=', user.id)
+                ]
+            "
+hr_attendance_rule_attendance_simple_user,Attendance base user: Read his own attendances in other apps,hr.attendance,hr_attendance.group_hr_attendance_own_reader,r,"[('employee_id.user_id', '=', user.id)]"
+hr_attendance_rule_attendance_own,Attendance own user: create/edit his own attendances,hr.attendance,hr_attendance.group_hr_attendance_own,cu,"[
+                ('employee_id.user_id', '=', user.id),
+                '|',
+                ('overtime_status', '!=', 'approved'),
+                '&',
+                ('overtime_status', '=', 'approved'),
+                ('employee_id.company_id.attendance_overtime_validation', '!=', 'manager_validation')
+            ]"
+hr_attendance_rule_employee_company,Employee multi company rule,hr.attendance,,crud,"['|',('employee_id.company_id','=',False),('employee_id.company_id', 'in', company_ids)]"
+access_hr_attendance_overtime_rule_admin,hr.attendance.admin.overtime.rule,hr.attendance.overtime.rule,hr_attendance.group_hr_attendance_manager,crud,
+access_hr_attendance_overtime_rule_user,hr.attendance.admin.overtime.rule,hr.attendance.overtime.rule,hr.group_hr_manager,r,
+access_hr_attendance_overtime_rule_officer,hr.attendance.officer.overtime.rule,hr.attendance.overtime.rule,hr_attendance.group_hr_attendance_officer,r,
+access_hr_attendance_overtime_rule_own,hr.attendance.own.overtime.rule,hr.attendance.overtime.rule,hr_attendance.group_hr_attendance_own,r,
+access_hr_attendance_overtime_ruleset_admin,hr.attendance.admin.overtime.ruleset,hr.attendance.overtime.ruleset,hr_attendance.group_hr_attendance_manager,crud,
+access_hr_attendance_overtime_ruleset_own,hr.attendance.own.overtime.ruleset,hr.attendance.overtime.ruleset,hr_attendance.group_hr_attendance_own,r,
+access_hr_attendance_overtime_ruleset_hr_manager,hr.attendance.admin.overtime.ruleset,hr.attendance.overtime.ruleset,hr.group_hr_manager,r,
+hr_attendance_overtime_ruleset_rule_multi_company,Overtime Ruleset: Multi Company,hr.attendance.overtime.ruleset,,crud,"[
+                '|',
+                ('company_id', 'in', company_ids),
+                '&',
+                ('company_id', '=', False),
+                '|',
+                ('country_id', 'in', user.env['res.company'].browse(company_ids).country_id.ids),
+                ('country_id', '=', False)
+            ]"
+hr_attendance_overtime_line_rule_admin,Overtime Line Administrator: Full access,hr.attendance.overtime.line,hr_attendance.group_hr_attendance_user,crud,
+hr_attendance_overtime_line_rule_officer,Overtime Line Officer: Restrict to managed employees,hr.attendance.overtime.line,hr_attendance.group_hr_attendance_officer,crud,"[('employee_id.attendance_manager_id', '=', user.id)]"
+hr_attendance_overtime_line_rule_own_reader,Overtime Line base user: Read his own overtime lines,hr.attendance.overtime.line,hr_attendance.group_hr_attendance_own_reader,r,"[('employee_id.user_id', '=', user.id)]"
+hr_attendance_overtime_line_rule_own,Overtime Line self edit: Read and modify his own overtime lines,hr.attendance.overtime.line,hr_attendance.group_hr_attendance_own,crud,"[('employee_id.user_id', '=', user.id)]"
+hr_attendance_overtime_line_rule_employee_company,Overtime Line multi company rule,hr.attendance.overtime.line,,crud,"[('employee_id.company_id', 'in', company_ids)]"

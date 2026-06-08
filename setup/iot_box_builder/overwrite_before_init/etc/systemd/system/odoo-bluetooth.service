@@ -1,0 +1,12 @@
+[Unit]
+Description=Odoo Bluetooth service: advertise IoT Box ip address over Bluetooth
+After=network-online.target NetworkManager.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/etc/odoo_bluetooth_service.sh
+
+[Install]
+WantedBy=multi-user.target

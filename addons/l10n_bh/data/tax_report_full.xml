@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_bh_tax_report_full" model="account.report">
+        <field name="name">Full VAT Return</field>
+        <field name="name@ar">الصادرات</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.bh"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_bh_tax_report_full_base" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="name@ar">القاعدة</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="l10n_bh_tax_report_full_adjustment" model="account.report.column">
+                <field name="name">Adj./App.</field>
+                <field name="name@ar">التعديل/التوزيع</field>
+                <field name="expression_label">adjustment</field>
+            </record>
+            <record id="l10n_bh_tax_report_full_tax" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="name@ar">الضريبة</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_bh_tax_report_full_vat_sale" model="account.report.line">
+                <field name="name">VAT on sales</field>
+                <field name="name@ar">ضريبة القيمة المضافة على المبيعات</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_bh_tax_report_full_1a" model="account.report.line">
+                        <field name="name">1(a). Standard rated sales at 10%</field>
+                        <field name="name@ar">1(a). المبيعات المقدرة القياسية بنسبة 10%</field>
+                        <field name="code">bh_1a</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_1a_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-1(a) B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_1a_adjustment" model="account.report.expression">
+                                <field name="label">adjustment</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_1a_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-1(a) T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_full_2" model="account.report.line">
+                        <field name="name">2. Sales to registered VAT payers in other GCC states</field>
+                        <field name="name@ar">2. المبيعات لدافعي ضريبة القيمة المضافة المسجلين في دول مجلس التعاون الخليجي الأخرى</field>
+                        <field name="code">bh_2</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_2_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-2 B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_2_adjustment" model="account.report.expression">
+                                <field name="label">adjustment</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_full_3" model="account.report.line">
+                        <field name="name">3. Sales subject to domestic reverse charge mechanism</field>
+                        <field name="name@ar">3. المبيعات الخاضعة لآلية الرسوم العكسية المحلية</field>
+                        <field name="code">bh_3</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_3_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-3 B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_3_adjustment" model="account.report.expression">
+                                <field name="label">adjustment</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_full_4" model="account.report.line">
+                        <field name="name">4. Zero rated domestic sales</field>
+                        <field name="name@ar">4. المبيعات المحلية المصنفة صفراً</field>
+                        <field name="code">bh_4</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_4_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-4 B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_4_adjustment" model="account.report.expression">
+                                <field name="label">adjustment</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_full_5" model="account.report.line">
+                        <field name="name">5. Exports</field>
+                        <field name="name@ar">5. الصادرات</field>
+                        <field name="code">bh_5</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_5_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-5 B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_5_adjustment" model="account.report.expression">
+                                <field name="label">adjustment</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_full_6" model="account.report.line">
+                        <field name="name">6. Exempt sales</field>
+                        <field name="name@ar">6. المبيعات المعفاة</field>
+                        <field name="code">bh_6</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_6_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-6 B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_6_adjustment" model="account.report.expression">
+                                <field name="label">adjustment</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_full_7" model="account.report.line">
+                        <field name="name">7. Total sales</field>
+                        <field name="name@ar">7. إجمالي المبيعات</field>
+                        <field name="code">bh_7</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_7_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">
+                                    bh_1a.base +
+                                    bh_2.base +
+                                    bh_3.base +
+                                    bh_4.base +
+                                    bh_5.base +
+                                    bh_6.base
+                                </field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_7_adjustment" model="account.report.expression">
+                                <field name="label">adjustment</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">
+                                    bh_1a.adjustment +
+                                    bh_2.adjustment +
+                                    bh_3.adjustment +
+                                    bh_4.adjustment +
+                                    bh_5.adjustment +
+                                    bh_6.adjustment
+                                </field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_7_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">
+                                    bh_1a.tax
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_bh_tax_report_full_vat_purchase" model="account.report.line">
+                <field name="name">VAT on purchases</field>
+                <field name="name@ar">ضريبة القيمة المضافة على المشتريات</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_bh_tax_report_full_8" model="account.report.line">
+                        <field name="name">8(a). Standard rated domestic purchases at 10%</field>
+                        <field name="name@ar">8(a). مشتريات محلية مصنفة قياسية بنسبة 10%</field>
+                        <field name="code">bh_8a</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_8_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">8(a) B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_8_adjustment" model="account.report.expression">
+                                <field name="label">adjustment</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_8_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">8(a) T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_full_9" model="account.report.line">
+                        <field name="name">9(a). Imports subject to VAT paid at customs</field>
+                        <field name="name@ar">9(a). الواردات الخاضعة لضريبة القيمة المضافة المدفوعة في الجمارك</field>
+                        <field name="code">bh_9a</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_9_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">9(a) B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_9_adjustment" model="account.report.expression">
+                                <field name="label">adjustment</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_9_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">9(a) T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_full_10" model="account.report.line">
+                        <field name="name">10. Imports subject to deferral at customs</field>
+                        <field name="name@ar">10. الواردات الخاضعة للتأجيل في الجمارك</field>
+                        <field name="code">bh_10</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_10_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">10 B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_10_adjustment" model="account.report.expression">
+                                <field name="label">adjustment</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_10_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">10 T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_full_11" model="account.report.line">
+                        <field name="name">11(a). Imports subject to VAT accounted for through reverse charge mechanism at 10%</field>
+                        <field name="name@ar">11(a). الواردات الخاضعة لضريبة القيمة المضافة المحسوبة من خلال آلية الرسوم العكسية بنسبة 10%</field>
+                        <field name="code">bh_11a</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_11_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">11(a) B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_11_adjustment" model="account.report.expression">
+                                <field name="label">adjustment</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_11_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">11(a) T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_full_12" model="account.report.line">
+                        <field name="name">12. Purchases subject to domestic reverse charge mechanism</field>
+                        <field name="name@ar">12. المشتريات الخاضعة لآلية الرسوم العكسية المحلية</field>
+                        <field name="code">bh_12</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_12_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">12 B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_12_adjustment" model="account.report.expression">
+                                <field name="label">adjustment</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_12_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">12 T</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_full_13" model="account.report.line">
+                        <field name="name">13. Purchases from non-registered suppliers, zero rated/ exempt purchases</field>
+                        <field name="name@ar">13. المشتريات من الموردين غير المسجلين، والمشتريات ذات التصنيف الصفري/المشتريات المعفاة</field>
+                        <field name="code">bh_13</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_13_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">13 B</field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_13_adjustment" model="account.report.expression">
+                                <field name="label">adjustment</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_full_14" model="account.report.line">
+                        <field name="name">14. Total purchases</field>
+                        <field name="name@ar">14. إجمالي المشتريات</field>
+                        <field name="code">bh_14</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_14_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">
+                                    bh_8a.base +
+                                    bh_9a.base +
+                                    bh_10.base +
+                                    bh_11a.base +
+                                    bh_12.base +
+                                    bh_13.base
+                                </field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_14_adjustment" model="account.report.expression">
+                                <field name="label">adjustment</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">
+                                    bh_8a.adjustment +
+                                    bh_9a.adjustment +
+                                    bh_10.adjustment +
+                                    bh_11a.adjustment +
+                                    bh_12.adjustment +
+                                    bh_13.adjustment
+                                </field>
+                            </record>
+                            <record id="l10n_bh_tax_report_full_14_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">
+                                    bh_8a.tax +
+                                    bh_9a.tax +
+                                    bh_10.tax +
+                                    bh_11a.tax +
+                                    bh_12.tax
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_bh_tax_report_full_total_due" model="account.report.line">
+                <field name="name">15. Total VAT due for current period</field>
+                <field name="name@ar">15. إجمالي ضريبة القيمة المضافة المستحقة عن الفترة الحالية</field>
+                <field name="code">bh_15</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_bh_tax_report_full_15_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">(bh_7.tax + bh_1a.adjustment*0.1) - (bh_14.tax + 0.1*(bh_8a.adjustment + bh_9a.adjustment + bh_10.adjustment + bh_11a.adjustment + bh_12.adjustment))</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_bh_tax_report_full_16" model="account.report.line">
+                        <field name="name">16. Corrections from previous period (between BHD +-5,000)</field>
+                        <field name="name@ar">16. التصحيحات من الفترة السابقة (بين +5,000 دينار بحريني)</field>
+                        <field name="code">bh_16</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_16_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_full_17" model="account.report.line">
+                        <field name="name">17. VAT credit carried forward from previous period(s)</field>
+                        <field name="name@ar">17. رصيد ضريبة القيمة المضافة المرحل من الفترة (الفترات) السابقة</field>
+                        <field name="code">bh_17</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_17_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_bh_tax_report_full_18" model="account.report.line">
+                        <field name="name">18. Net VAT due (or reclaimed)</field>
+                        <field name="name@ar">18. صافي ضريبة القيمة المضافة المستحقة (أو المستردة)</field>
+                        <field name="code">bh_18</field>
+                        <field name="expression_ids">
+                            <record id="l10n_bh_tax_report_full_18_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">bh_15.tax + bh_16.tax - bh_17.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

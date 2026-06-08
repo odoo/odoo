@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="purchase_order_form_mrp" model="ir.ui.view">
+        <field name="name">purchase.order.inherited.form.mrp</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="action_view_mrp_productions" type="object" icon="fa-wrench" invisible="mrp_production_count == 0" groups="mrp.group_mrp_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="mrp_production_count"/></span>
+                        <span class="o_stat_text">Manufacturing</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</data></odoo>

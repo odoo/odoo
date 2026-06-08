@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_contract_type_view_tree" model="ir.ui.view">
+            <field name="model">hr.employee.type</field>
+            <field name="arch" type="xml">
+                <list string="Employee Types" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="country_id"/>
+                    <field name="employees_count" string="Employees"/>
+                    <button name="action_open_employees" 
+                        type="object" 
+                        string="View Employees"
+                        invisible="not employees_count"
+                        class="btn-link"/>
+                    <field name="company_id" groups="hr.group_hr_user" optional="hide"/>
+                    <field name="code" column_invisible="1"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="hr_contract_type_view_form" model="ir.ui.view">
+            <field name="model">hr.employee.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code" invisible="1"/>
+                            <field name="country_id"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_contract_type_action" model="ir.actions.act_window">
+            <field name="name">Employee Types</field>
+            <field name="res_model">hr.employee.type</field>
+            <field name="view_mode">list</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new employee type
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

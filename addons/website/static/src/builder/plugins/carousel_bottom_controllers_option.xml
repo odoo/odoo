@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CarouselBottomControllersOption" t-inherit="website.CarouselOption" t-inherit-mode="primary">
+    <xpath expr="//BuilderSelectItem[@classAction=&quot;'s_carousel_arrows_hidden'&quot;]" position="attributes">
+        <attribute name="id">"carousel_arrows_hidden_opt"</attribute>
+    </xpath>
+    <xpath expr="//BuilderSelectItem[@classAction=&quot;'s_carousel_indicators_hidden'&quot;]" position="attributes">
+        <attribute name="id">"carousel_indicators_hidden_opt"</attribute>
+    </xpath>
+    <xpath expr="//BuilderRow[@label.translate=&quot;Arrows&quot;]/BuilderSelect" position="attributes">
+        <attribute name="action">"toggleControllers"</attribute>
+    </xpath>
+    <xpath expr="//BuilderRow[@label.translate=&quot;Indicators&quot;]/BuilderSelect" position="attributes">
+        <attribute name="action">"toggleControllers"</attribute>
+    </xpath>
+    <xpath expr="//BuilderRow[@label.translate=&quot;Control&quot;]/BuilderSelect" position="replace">
+        <BuilderSelect applyTo="'.o_horizontal_controllers_row'">
+            <BuilderSelectItem classAction="'justify-content-between'">Default</BuilderSelectItem>
+            <BuilderSelectItem classAction="'justify-content-between flex-row-reverse'" >Reversed</BuilderSelectItem>
+            <BuilderSelectItem classAction="'justify-content-center'" t-if="this.isActiveItem('carousel_arrows_hidden_opt') || this.isActiveItem('carousel_indicators_hidden_opt')">Centered</BuilderSelectItem>
+        </BuilderSelect>
+    </xpath>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <carousel_bottom_controllers_option
+            template="website.CarouselBottomControllersOption"
+            selector="section"
+            applyTo=".s_carousel_intro, .s_quotes_carousel_compact"/>
+    </xpath>
+</t>
+
+</templates>

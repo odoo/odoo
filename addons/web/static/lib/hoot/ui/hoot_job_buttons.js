@@ -1,0 +1,50 @@
+/** @odoo-module */
+
+import { Component, props, t, xml } from "@odoo/owl";
+import { Job } from "../core/job";
+import { Test } from "../core/test";
+import { HootLink } from "./hoot_link";
+
+export class HootJobButtons extends Component {
+    static components = { HootLink };
+    static template = xml`
+        <t t-set="type" t-value="this.getType()" />
+        <div class="${HootJobButtons.name} items-center gap-1" t-att-class="this.props.hidden ? 'hidden' : 'flex'">
+            <HootLink
+                ids="{ id: this.props.job.id }"
+                class="'hoot-btn-link border border-primary text-emerald rounded transition-colors'"
+                title="'Run this ' + type + ' only'"
+            >
+                <i class="fa fa-play w-5 h-5" />
+            </HootLink>
+            <t t-if="type === 'test'">
+                <HootLink
+                    ids="{ id: this.props.job.id }"
+                    options="{ debug: true }"
+                    class="'hoot-btn-link border border-primary text-emerald rounded transition-colors'"
+                    title="'Run this ' + type + ' only in debug mode'"
+                >
+                    <i class="fa fa-bug w-5 h-5" />
+                </HootLink>
+            </t>
+            <HootLink
+                ids="{ id: this.props.job.id }"
+                options="{ ignore: true }"
+                class="'hoot-btn-link border border-primary text-rose rounded transition-colors'"
+                title="'Ignore ' + type"
+            >
+                <i class="fa fa-ban w-5 h-5" />
+            </HootLink>
+        </div>
+    `;
+
+    // Props & plugins
+    props = props({
+        hidden: t.boolean().optional(),
+        job: t.instanceOf(Job),
+    });
+
+    getType() {
+        return this.props.job instanceof Test ? "test" : "suite";
+    }
+}

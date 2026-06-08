@@ -1,0 +1,84 @@
+import { DateTimeInput } from "@web/core/datetime/datetime_input";
+import { Dialog } from "@web/core/dialog/dialog";
+import { today } from "@web/core/l10n/dates";
+
+import { Component, props, proxy, types } from "@odoo/owl";
+
+export class ScheduledDateDialog extends Component {
+    static template = "mail.ScheduledDateDialog";
+    static components = {
+        DateTimeInput,
+        Dialog,
+    };
+
+    setup() {
+        this.props = props({
+            close: types.function([types.instanceOf(MouseEvent)]),
+            isRemovable: types.boolean(),
+            save: types.function([types.or([types.boolean(), types.instanceOf(luxon.DateTime)])]),
+            scheduledDate: types.instanceOf(luxon.DateTime).optional(),
+        });
+        const now = luxon.DateTime.now();
+        this.tomorrowMorning = today().plus({ days: 1 }).set({ hour: 8 });
+        this.tomorrowAfternoon = this.tomorrowMorning.set({ hour: 13 });
+        this.mondayMorning = today()
+            .plus({ days: (1 - today().weekday + 7) % 7 || 7 })
+            .set({ hour: 8 });
+
+        this.state = proxy({
+            customDateTime: now
+                .plus({ hours: 1 })
+                .set({ minutes: Math.ceil(now.minute / 5) * 5, seconds: 0, milliseconds: 0 }),
+            selectedOption: undefined,
+        });
+
+        if (!this.props.scheduledDate || this.props.scheduledDate.equals(this.tomorrowMorning)) {
+            this.state.selectedOption = "morning";
+        } else if (this.props.scheduledDate.equals(this.tomorrowAfternoon)) {
+            this.state.selectedOption = "afternoon";
+        } else if (this.props.scheduledDate.equals(this.mondayMorning)) {
+            this.state.selectedOption = "monday";
+        } else {
+            this.state.selectedOption = "custom";
+            this.state.customDateTime = this.props.scheduledDate;
+        }
+        this.dateTimeFormat = {
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            month: "short",
+        };
+    }
+
+    get dateTimePickerProps() {
+        return {
+            minDate: luxon.DateTime.now(),
+            onSelect: (value) => (this.state.customDateTime = value),
+            type: "datetime",
+            value: this.state.customDateTime,
+            rounding: 1,
+        };
+    }
+
+    get scheduledDate() {
+        if (this.state.selectedOption === "morning") {
+            return this.tomorrowMorning;
+        } else if (this.state.selectedOption === "afternoon") {
+            return this.tomorrowAfternoon;
+        } else if (this.state.selectedOption === "monday") {
+            return this.mondayMorning;
+        } else {
+            return this.state.customDateTime;
+        }
+    }
+
+    clear() {
+        this.props.save(false);
+        this.props.close();
+    }
+
+    save() {
+        this.props.save(this.scheduledDate);
+        this.props.close();
+    }
+}

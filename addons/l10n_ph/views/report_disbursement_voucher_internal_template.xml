@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template inherit_id="l10n_ph.report_disbursement_voucher_document" id="report_disbursement_voucher_internal_document" primary="True">
+        <xpath expr="//t[@name='voucher_title']" position="replace">
+            <t name="voucher_title">Disbursement Voucher: Internal</t>
+        </xpath>
+
+        <xpath expr="//div[table[@name='invoices']]" position="after">
+            <t t-if="o.reconciled_bill_ids">
+                <h5 class="mt-3 mb-2"><strong>Related Vendor Bill</strong></h5>
+                <table name="vendor_bill_journal_entries"
+                       class="table table-borderless"
+                       style="page-break-inside: avoid;">
+                    <thead>
+                        <tr>
+                            <th class="col-4"><span>Account</span></th>
+                            <th class="col-4"><span>Number</span></th>
+                            <th class="text-end col-2"><span>Debit</span></th>
+                            <th class="text-end col-2"><span>Credit</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="bill_data" t-value="o._get_aggregated_bill_lines_with_totals()"/>
+                        <t t-foreach="bill_data['lines']" t-as="agg_line">
+                            <tr>
+                                <td><span t-out="agg_line['account_id'].code"/> - <span t-out="agg_line['account_id'].name"/></td>
+                                <td><span t-out="agg_line['move_name']"/></td>
+                                <td class="text-end">
+                                    <span t-out="agg_line['debit']" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-out="agg_line['credit']" t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                                </td>
+                            </tr>
+                        </t>
+                        <tr>
+                            <td><strong>Totals</strong></td>
+                            <td/>
+                            <td class="text-end">
+                                <strong>
+                                    <span t-out="bill_data['total_debit']"
+                                          t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                                </strong>
+                            </td>
+                            <td class="text-end">
+                                <strong>
+                                    <span t-out="bill_data['total_credit']"
+                                          t-options="{'widget': 'monetary', 'display_currency': o.company_id.currency_id}"/>
+                                </strong>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="report_disbursement_voucher_internal">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.partner_id.lang or o.company_id.partner_id.lang"/>
+                <t t-call="l10n_ph.report_disbursement_voucher_internal_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

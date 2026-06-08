@@ -1,0 +1,502 @@
+import { OdooViewsDataSource } from "@spreadsheet/data_sources/odoo_views_data_source";
+import { EvaluationError } from "@odoo/o-spreadsheet";
+import { _t } from "@web/core/l10n/translation";
+import {
+    formatDateTime,
+    deserializeDateTime,
+    formatDate,
+    deserializeDate,
+} from "@web/core/l10n/dates";
+import { orderByToString } from "@web/search/utils/order_by";
+
+import * as spreadsheet from "@odoo/o-spreadsheet";
+import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
+import { getFullFieldStringFromPath } from "../data_sources/data_source";
+
+const { toNumber, deepEquals } = spreadsheet.helpers;
+const { DEFAULT_LOCALE } = spreadsheet.constants;
+
+/**
+ * @typedef {import("@spreadsheet").OdooFields} OdooFields
+ *
+ * @typedef {Object} ListMetaData
+ * @property {Array<string>} columns
+ * @property {string} resModel
+ * @property {OdooFields} fields
+ *
+ * @typedef {Object} ListSearchParams
+ * @property {Array<string>} orderBy
+ * @property {Object} domain
+ * @property {Object} context
+ */
+
+export const SEARCH_COUNT_LIMIT = 10_000;
+
+export class ListDataSource extends OdooViewsDataSource {
+    /**
+     * @override
+     * @param {Object} services Services (see DataSource)
+     * @param {Object} params
+     * @param {ListMetaData} params.metaData
+     * @param {ListSearchParams} params.searchParams
+     */
+    constructor(services, params) {
+        super(services, params);
+        this.maxPosition = 0;
+        this.maxPositionFetched = 0;
+        this.data = [];
+        this.fieldPathsToFetch = new Set(["id"]);
+        this.fieldPathDefinitionsToFetch = new Set(params.columns.map((col) => col.name));
+        this.definitionColumns = params.columns
+            .filter((col) => !col.computedBy)
+            .map((col) => col.name);
+        this.alreadyFetchedFieldPaths = new Set();
+        this.fieldService = services.env.services.field;
+        this.fieldPathsToFieldMap = {};
+        this._recordConcurrency = {};
+        this._recordsCount = {};
+    }
+
+    /**
+     * Increase the max position of the list
+     * @param {number} position
+     */
+    increaseMaxPosition(position) {
+        this.maxPosition = Math.max(this.maxPosition, position);
+    }
+
+    onDefinitionChange(nextDefinition) {
+        let shouldReload = false;
+        const searchParams = JSON.parse(JSON.stringify(nextDefinition.searchParams));
+        if (!deepEquals(this._initialSearchParams, searchParams)) {
+            this._initialSearchParams = searchParams;
+            this._customDomain = this._initialSearchParams.domain;
+            shouldReload = true;
+        }
+        const columns = nextDefinition.columns
+            .filter((col) => !col.computedBy)
+            .map((col) => col.name);
+        if (!deepEquals([...this.definitionColumns].sort(), [...columns].sort())) {
+            this.definitionColumns = columns;
+            columns.forEach((col) => this.fieldPathDefinitionsToFetch.add(col));
+            shouldReload = true;
+        }
+
+        const resModel = JSON.parse(JSON.stringify(nextDefinition.metaData)).resModel;
+        if (!deepEquals(this._metaData.resModel, resModel)) {
+            this._metaData = { resModel };
+            shouldReload = true;
+        }
+
+        if (shouldReload) {
+            this._triggerFetching();
+        }
+    }
+
+    isModelValid() {
+        return this._isModelValid;
+    }
+
+    /**
+     * @param {string} fieldPath
+     */
+    addFieldPathToFetch(fieldPath) {
+        if (!this.alreadyFetchedFieldPaths.has(fieldPath)) {
+            this.fieldPathsToFetch.add(fieldPath);
+        }
+    }
+
+    async getRecordsCount({ fullCount } = { fullCount: false }) {
+        const key = fullCount ? "full" : "partial";
+        if (!this._recordsCount[key]) {
+            const { domain, context } = this._searchParams;
+            const limit = fullCount ? undefined : SEARCH_COUNT_LIMIT;
+            this._recordsCount[key] = this._orm.searchCount(this._metaData.resModel, domain, {
+                context,
+                limit,
+            });
+        }
+        return this._recordsCount[key];
+    }
+
+    async load(params) {
+        if (this._fetchingPromise) {
+            // if fetching is already scheduled for the next tick,
+            // wait the fetching promise to trigger the data source loading
+            // and then await the loading.
+            await this._fetchingPromise;
+            await this._loadPromise;
+            return;
+        }
+        return super.load(params);
+    }
+
+    async _load() {
+        await super._load();
+        // invalidate record count cache
+        this._recordsCount = {};
+        this.fieldPathsToFieldMap = {};
+        const { domain, orderBy, context } = this._searchParams;
+        const specification = await this._getReadSpec();
+        this.alreadyFetchedFieldPaths = new Set([...this.fieldPathsToFetch]);
+        if (this.maxPosition === 0) {
+            this.data = [];
+            return;
+        }
+        const { records } = await this._orm.webSearchRead(this._metaData.resModel, domain, {
+            specification,
+            order: orderByToString(orderBy),
+            limit: this.maxPosition,
+            context,
+        });
+        this.data = records;
+        this.maxPositionFetched = this.maxPosition;
+    }
+
+    /**
+     * Automatically add the currency field if the field is a monetary field.
+     */
+    _addSpecForFieldPath(spec, pathInfo) {
+        const [first, ...rest] = pathInfo.names;
+        const [modelInfo, ...othersModelsInfo] = pathInfo.modelsInfo;
+        const field = modelInfo.fieldDefs[first];
+        switch (field.type) {
+            case "monetary":
+                spec[field.name] = {};
+                spec[field.currency_field] = {
+                    fields: {
+                        ...spec[field.currency_field]?.fields,
+                        name: {}, // currency code
+                        symbol: {},
+                        decimal_places: {},
+                        position: {},
+                    },
+                };
+                break;
+            case "many2one":
+            case "many2many":
+            case "one2many":
+                spec[field.name] = {
+                    fields: {
+                        display_name: {},
+                        ...spec[field.name]?.fields,
+                    },
+                };
+                if (rest.length) {
+                    const newPathInfo = { names: rest, modelsInfo: othersModelsInfo };
+                    this._addSpecForFieldPath(spec[field.name].fields, newPathInfo);
+                }
+                break;
+            case "properties": {
+                spec[field.name] = {};
+                const propertyFields = othersModelsInfo[0]?.fieldDefs;
+                for (const propertyName of rest) {
+                    if (propertyFields[propertyName]?.type === "monetary") {
+                        spec[propertyFields[propertyName].currency_field] = {
+                            fields: {
+                                ...spec[propertyFields[propertyName].currency_field]?.fields,
+                                name: {},
+                                symbol: {},
+                                decimal_places: {},
+                                position: {},
+                            },
+                        };
+                    }
+                }
+                break;
+            }
+            default:
+                spec[field.name] = {};
+                break;
+        }
+        return spec;
+    }
+
+    /**
+     * Get the fields to fetch from the server.
+     */
+    async _getReadSpec() {
+        // FIXME: this method both populates fieldPathsToFieldMap and returns the spec for the read.
+        // This is not ideal and should be split in two methods but would require to store additional info
+        const allFieldPaths = await Promise.all(
+            [...this.fieldPathsToFetch.union(this.fieldPathDefinitionsToFetch)].map((fieldPath) =>
+                fieldPath
+                    ? this.fieldService.loadPath(this._metaData.resModel, fieldPath)
+                    : { isInvalid: "path" }
+            )
+        );
+        const validFieldPaths = allFieldPaths.filter((result) => !result.isInvalid);
+        const spec = {};
+        for (const pathInfo of validFieldPaths) {
+            const { names, modelsInfo } = pathInfo;
+            const fieldPath = names.join(".");
+            this.fieldPathsToFieldMap[fieldPath] = {
+                ...modelsInfo.at(-1).fieldDefs[names.at(-1)],
+                fullString: getFullFieldStringFromPath(pathInfo),
+            };
+
+            if (this.fieldPathsToFetch.has(fieldPath)) {
+                this._addSpecForFieldPath(spec, pathInfo);
+            }
+        }
+        return spec;
+    }
+
+    /**
+     * @param {number} position
+     * @returns {number}
+     */
+    getIdFromPosition(position) {
+        this.assertIsValid();
+        const record = this.data[position];
+        return record ? record.id : undefined;
+    }
+
+    /**
+     * @param {string} fieldPath
+     * @returns {string | EvaluationError}
+     */
+    getListHeaderValue(fieldPath) {
+        this.addFieldPathToFetch(fieldPath);
+        if (this.isLoading()) {
+            return LOADING_ERROR;
+        }
+        if (!this._isValid || !this._isModelValid) {
+            return this._loadError;
+        }
+        if (!this.isMetaDataLoaded()) {
+            this._triggerFetching();
+            return LOADING_ERROR;
+        }
+        if (!this.alreadyFetchedFieldPaths.has(fieldPath)) {
+            this._triggerFetching();
+            return LOADING_ERROR;
+        }
+        this.assertIsValid();
+        const field = this.fieldPathsToFieldMap[fieldPath];
+        if (!field) {
+            return new EvaluationError(
+                _t("The field %s does not exist or you do not have access to that field", fieldPath)
+            );
+        }
+        return field.string;
+    }
+
+    /**
+     * @returns {object | object[]}
+     */
+    _getRecordFromRelation(mainRecord, fieldPath) {
+        const field = this.getFieldFromFieldPath(fieldPath);
+        const fields = fieldPath.split(".");
+        let record = mainRecord;
+        // The last item of fields is the name of the field. As we want to
+        // get the record on which the field is defined, we need to iterate until
+        // the penultimate item of fields.
+        // Property fields have an additional depth level (eg. root_property.property_name)
+        const end = field.is_property ? fields.length - 2 : fields.length - 1;
+        for (let i = 0; i < end; i++) {
+            if (Array.isArray(record)) {
+                record = record.map((r) => r[fields[i]]).flat();
+            } else {
+                record = record && record[fields[i]];
+            }
+        }
+        return record;
+    }
+
+    /**
+     * @param {number} position
+     * @param {string} fieldPath
+     * @returns {string|number|undefined|EvaluationError}
+     */
+    getListCellValue(position, fieldPath) {
+        this.addFieldPathToFetch(fieldPath);
+        if (this.isLoading()) {
+            return LOADING_ERROR;
+        }
+        if (!this._isValid || !this._isModelValid) {
+            return this._loadError;
+        }
+        if (position >= this.maxPositionFetched) {
+            this.increaseMaxPosition(position + 1);
+            // A reload is needed because the asked position is not already loaded.
+            this._triggerFetching();
+            return LOADING_ERROR;
+        }
+        if (!this.alreadyFetchedFieldPaths.has(fieldPath)) {
+            this._triggerFetching();
+            return LOADING_ERROR;
+        }
+        const field = this.getFieldFromFieldPath(fieldPath);
+        if (!field) {
+            return new EvaluationError(
+                _t("The field %s does not exist or you do not have access to that field", fieldPath)
+            );
+        }
+        const mainRecord = this.data[position];
+        if (!mainRecord) {
+            return "";
+        }
+        this.assertIsValid();
+        const record = this._getRecordFromRelation(mainRecord, fieldPath);
+        if (!record) {
+            return "";
+        }
+        if (field.is_property) {
+            const fieldParts = fieldPath.split(".");
+            const propertyField = fieldParts.pop();
+            const rootPropertyField = fieldParts.pop();
+            const propertyValue = record[rootPropertyField].find((p) => p.name === propertyField);
+            return propertyValue ? this._parsePropertyFieldServerValue(field, propertyValue) : "";
+        }
+        const lastField = fieldPath.split(".").at(-1);
+        if (Array.isArray(record)) {
+            // remove duplicates?
+            // needs to be formatted...
+            return record.map((r) => this._parseServerValue(field, r[lastField])).join(", ");
+        }
+        return this._parseServerValue(field, record[lastField]);
+    }
+
+    _parseServerValue(field, value) {
+        switch (field.type) {
+            case "many2one":
+                return value.display_name ?? "";
+            case "one2many":
+            case "many2many": {
+                const labels = value
+                    .map(({ display_name }) => display_name)
+                    .filter((displayName) => displayName !== undefined);
+                return labels.join(", ");
+            }
+            case "selection": {
+                const key = value;
+                const selectedOption = field.selection.find((array) => array[0] === key);
+                return selectedOption ? selectedOption[1] : "";
+            }
+            case "boolean":
+                return value ? true : false;
+            case "date":
+                return value ? toNumber(this._formatDate(value), DEFAULT_LOCALE) : "";
+            case "datetime":
+                return value ? toNumber(this._formatDateTime(value), DEFAULT_LOCALE) : "";
+            case "properties": {
+                return new EvaluationError(_t("Please specify the property field name"));
+            }
+            case "json":
+                return new EvaluationError(_t('Fields of type "%s" are not supported', "json"));
+            case "monetary":
+            case "float":
+            case "integer":
+                return value ?? "";
+            default:
+                return value || "";
+        }
+    }
+
+    _parsePropertyFieldServerValue(field, propertyValue) {
+        const { type, value } = propertyValue;
+        if (!value) {
+            return "";
+        }
+        switch (type) {
+            case "date":
+                return toNumber(this._formatDate(value), DEFAULT_LOCALE);
+            case "datetime":
+                return toNumber(this._formatDateTime(value), DEFAULT_LOCALE);
+            case "many2one":
+                return value[1];
+            case "many2many":
+                return value.map((v) => v[1]).join(", ");
+            case "tags":
+                return value
+                    .map((tagId) => {
+                        const tag = field.tags.find((tag) => tag[0] === tagId);
+                        return tag ? tag[1] : "";
+                    })
+                    .join(", ");
+            case "selection": {
+                const key = value;
+                const selectedOption = field.selection.find((array) => array[0] === key);
+                return selectedOption ? selectedOption[1] : "";
+            }
+            default:
+                return value;
+        }
+    }
+
+    /**
+     * @param {number} position
+     * @param {string} fieldPath
+     * @param {string} currencyFieldName
+     * @returns {import("@spreadsheet/currency/currency_data_source").Currency | undefined}
+     */
+    getListCurrency(position, fieldPath, currencyFieldName) {
+        this.assertIsValid();
+        const currency = this._getRecordFromRelation(this.data[position], fieldPath)?.[
+            currencyFieldName
+        ];
+        if (!currency) {
+            return undefined;
+        }
+        return {
+            code: currency.name,
+            symbol: currency.symbol,
+            decimalPlaces: currency.decimal_places,
+            position: currency.position,
+        };
+    }
+
+    getFieldFromFieldPath(fieldPath) {
+        return this.fieldPathsToFieldMap[fieldPath];
+    }
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    _formatDateTime(dateValue) {
+        const date = deserializeDateTime(dateValue);
+        return formatDateTime(date.reconfigure({ numberingSystem: "latn" }), {
+            format: "yyyy-MM-dd HH:mm:ss",
+        });
+    }
+
+    _formatDate(dateValue) {
+        const date = deserializeDate(dateValue);
+        return formatDate(date.reconfigure({ numberingSystem: "latn" }), {
+            format: "yyyy-MM-dd",
+        });
+    }
+
+    /**
+     * Ask the parent data source to force a reload of this data source in the
+     * next clock cycle. It's necessary when this.limit was updated and new
+     * records have to be fetched.
+     */
+    _triggerFetching() {
+        if (this._fetchingPromise) {
+            return;
+        }
+        this._fetchingPromise = Promise.resolve().then(
+            () =>
+                new Promise((resolve) => {
+                    this._fetchingPromise = undefined;
+                    this.load({ reload: true });
+                    resolve();
+                })
+        );
+    }
+
+    get source() {
+        this._assertMetadataIsLoaded();
+        const data = this._metaData;
+        return {
+            resModel: data.resModel,
+            type: "list",
+            fields: data.columns,
+            groupby: undefined,
+            domain: this._searchParams.domain,
+        };
+    }
+}

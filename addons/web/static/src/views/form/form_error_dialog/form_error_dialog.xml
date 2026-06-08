@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FormErrorDialog">
+        <Dialog size="'sm'" title.translate="'Oh snap!'" contentClass="'o_error_dialog o_form_error_dialog'">
+            <p t-out="this.message" class="text-prewrap"/>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="this.stay">Stay here</button>
+                <button class="btn btn-secondary" t-if="this.redirectAction" t-on-click="this.onRedirectBtnClicked"><t t-out="this.redirectBtnLabel"/></button>
+                <button class="btn btn-secondary" t-on-click="this.discard">Discard changes</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

@@ -1,0 +1,302 @@
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Gif } from "@mail/core/common/gif";
+import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
+
+import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
+import { user } from "@web/core/user";
+import { useService, useAutofocus } from "@web/core/utils/hooks";
+import { useDebounced } from "@web/core/utils/timing";
+import { rpc } from "@web/core/network/rpc";
+import { usePicker } from "@web/core/emoji_picker/emoji_picker";
+
+export function useGifPicker(...args) {
+    return usePicker(GifPicker, ...args);
+}
+
+/**
+ * @typedef {Object} TenorCategory
+ * @property {string} searchterm
+ * @property {string} path
+ * @property {string} image
+ * @property {string} name
+ */
+
+const tenorMediaFormatType = t.object({
+    url: t.string(),
+    duration: t.number(),
+    preview: t.string(),
+    dims: t.array(t.number()),
+    size: t.number(),
+});
+
+const tenorGifType = t.object({
+    id: t.string(),
+    title: t.string(),
+    created: t.number(),
+    content_description: t.string(),
+    itemurl: t.string(),
+    url: t.string(),
+    tags: t.array(t.string()),
+    flags: t.array(t.string()),
+    hasaudio: t.boolean(),
+    media_formats: t.object({ tinygif: tenorMediaFormatType }),
+});
+/** @typedef {import("@odoo/owl").StripType<typeof tenorGifType>} TenorGif */
+
+export class GifPicker extends Component {
+    static template = "discuss.GifPicker";
+    static components = { Gif };
+
+    setup() {
+        super.setup();
+        this.props = props({
+            close: t.function([]).optional(),
+            onSelect: t.function([tenorGifType, t.boolean()]),
+        });
+        this.orm = useService("orm");
+        this.store = useService("mail.store");
+        this.sequential = useSequential();
+        this.inputRef = useAutofocus();
+        useOnBottomScrolled(
+            "scroller",
+            () => {
+                if (!this.state.showCategories) {
+                    if (!this.showFavorite) {
+                        this.search();
+                    } else {
+                        this.loadFavoritesDebounced(this.offset);
+                    }
+                }
+            },
+            300
+        );
+        this.next = "";
+        this.showFavorite = false;
+        this.offset = 0;
+        this.state = proxy({
+            favorites: {
+                /** @type {TenorGif[]} */
+                gifs: [],
+                offset: 0,
+            },
+            searchTerm: "",
+            showCategories: true,
+            /** @type {TenorCategory[]} */
+            categories: [],
+            loadingGif: false,
+            loadingError: false,
+            evenGif: {
+                /** @type {Map<Number, TenorGif>} */
+                gifs: new Map(),
+                /** Size, in pixel, of the column. */
+                columnSize: 0,
+            },
+            oddGif: {
+                /** @type {Map<Number, TenorGif>} */
+                gifs: new Map(),
+                /** Size, in pixel, of the column. */
+                columnSize: 0,
+            },
+            focused: false,
+        });
+        this.loadFavoritesDebounced = useDebounced(this.loadFavorites, 200);
+        onWillStart(() => {
+            this.loadCategories();
+        });
+        if (this.store.self_user) {
+            onWillStart(() => {
+                this.loadFavorites();
+            });
+        }
+        useLayoutEffect(
+            () => {
+                this.clear();
+                this.search();
+                if (this.searchTerm) {
+                    this.closeCategories();
+                } else {
+                    this.openCategories();
+                }
+            },
+            () => [this.searchTerm]
+        );
+    }
+
+    get style() {
+        return "";
+    }
+
+    get searchTerm() {
+        return this.state.searchTerm;
+    }
+
+    set searchTerm(value) {
+        this.state.searchTerm = value;
+    }
+
+    async loadCategories() {
+        if (!this.store.hasGifPickerFeature) {
+            return;
+        }
+        try {
+            let { language, region } = new Intl.Locale(user.lang);
+            if (!region && language === "sr") {
+                region = "RS";
+            }
+            const { tags } = await rpc(
+                "/discuss/gif/categories",
+                {
+                    country: region,
+                    locale: `${language}_${region}`,
+                },
+                { silent: true }
+            );
+            if (tags) {
+                this.state.categories = tags;
+            }
+        } catch {
+            this.state.loadingError = true;
+        }
+    }
+
+    openCategories() {
+        this.showFavorite = false;
+        this.state.showCategories = true;
+        this.searchTerm = "";
+        this.clear();
+    }
+
+    closeCategories() {
+        this.state.showCategories = false;
+    }
+
+    async search() {
+        if (!this.searchTerm) {
+            return;
+        }
+        try {
+            let { language, region } = new Intl.Locale(user.lang);
+            if (!region && language === "sr") {
+                region = "RS";
+            }
+            const params = {
+                country: region,
+                locale: `${language}_${region}`,
+                search_term: this.searchTerm,
+            };
+            if (this.next) {
+                params.position = this.next;
+            }
+            const res = await this.sequential(() => {
+                this.state.loadingGif = true;
+                const res = rpc("/discuss/gif/search", params, {
+                    silent: true,
+                });
+                this.state.loadingGif = false;
+                return res;
+            });
+            if (res) {
+                const { next, results } = res;
+                this.next = next;
+                for (const gif of results) {
+                    this.pushGif(gif);
+                }
+                this.state.loadingError = false;
+            }
+        } catch {
+            this.state.loadingError = true;
+        }
+    }
+
+    /**
+     * @param {TenorGif} gif
+     */
+    pushGif(gif) {
+        if (this.state.evenGif.columnSize <= this.state.oddGif.columnSize) {
+            this.state.evenGif.gifs.set(gif.id, gif);
+            this.state.evenGif.columnSize += gif.media_formats.tinygif.dims[1];
+        } else {
+            this.state.oddGif.gifs.set(gif.id, gif);
+            this.state.oddGif.columnSize += gif.media_formats.tinygif.dims[1];
+        }
+    }
+
+    /**
+     * @param {TenorGif} gif
+     */
+    onClickGif(gif) {
+        this.props.onSelect(gif, true);
+        this.props.close?.();
+    }
+
+    clear() {
+        this.state.evenGif.gifs.clear();
+        this.state.evenGif.columnSize = 0;
+        this.state.oddGif.gifs.clear();
+        this.state.oddGif.columnSize = 0;
+    }
+
+    /**
+     * @param {TenorCategory} category
+     */
+    async onClickCategory(category) {
+        this.clear();
+        this.searchTerm = category.searchterm;
+        this.inputRef.el?.focus();
+        this.closeCategories();
+    }
+
+    /**
+     * @param {TenorGif} gif
+     */
+    async onClickFavorite(gif) {
+        if (!this.isFavorite(gif)) {
+            this.state.favorites.gifs.push(gif);
+            await this.orm.silent.create("discuss.gif.favorite", [{ tenor_gif_id: gif.id }]);
+        } else {
+            const index = this.state.favorites.gifs.findIndex(({ id }) => id === gif.id);
+            if (index >= 0) {
+                this.state.favorites.gifs.splice(index, 1);
+            }
+            await rpc("/discuss/gif/remove_favorite", { tenor_gif_id: gif.id }, { silent: true });
+        }
+    }
+
+    async loadFavorites() {
+        if (!this.store.hasGifPickerFeature) {
+            return;
+        }
+        this.state.loadingGif = true;
+        try {
+            const [results] = await rpc(
+                "/discuss/gif/favorites",
+                { offset: this.offset },
+                { silent: true }
+            );
+            this.offset += 20;
+            this.state.favorites.gifs.push(...results);
+        } catch {
+            this.state.loadingError = true;
+        }
+        this.state.loadingGif = false;
+    }
+
+    /**
+     * @param {TenorGif} gif
+     */
+    isFavorite(gif) {
+        return this.state.favorites.gifs.map((favorite) => favorite.id).includes(gif.id);
+    }
+
+    onClickFavoritesCategory() {
+        this.showFavorite = true;
+        for (const gif of this.state.favorites.gifs) {
+            this.pushGif(gif);
+        }
+        this.closeCategories();
+    }
+
+    onClickOpenDiscussSetting() {
+        this.env.services.action.doAction("mail.action_open_discuss_settings");
+    }
+}

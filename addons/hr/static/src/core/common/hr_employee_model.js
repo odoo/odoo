@@ -1,0 +1,25 @@
+import { Record, fields } from "@mail/model/export";
+
+export class HrEmployee extends Record {
+    static _name = "hr.employee";
+
+    /** @type {Boolean} */
+    active;
+    /** @type {number} */
+    id;
+    /** @type {number} */
+    company_id = fields.One("res.company");
+    department_id = fields.One("hr.department");
+    /** @type {string} */
+    job_title;
+    resource_id = fields.One("resource.resource", { inverse: "employee_id" });
+    work_contact_id = fields.One("res.partner");
+    user_id = fields.One("res.users");
+    /** @type {string} */
+    work_email;
+    work_location_id = fields.One("hr.work.location");
+    /** @type {string} */
+    work_phone;
+}
+
+HrEmployee.register();

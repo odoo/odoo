@@ -1,0 +1,83 @@
+@keyframes o-CallDebrief-mediaControlsFeedbackPop {
+    0% {
+        transform: scale(0.75);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.o-CallDebriefMediaControls {
+    @container callDebrief-mediaPlayer (max-width: 475px) {
+        --CallDebriefMediaControls__timeLabel-order: -1;
+        --CallDebriefMediaControls__timeLabel-width: 100%;
+    }
+
+    .o-CallDebrief-control {
+        @include media-breakpoint-up(md) {
+            --#{$prefix}btn-bg: transparent;
+            --#{$prefix}btn-border-color: transparent;
+            --#{$prefix}btn-disabled-bg: transparent;
+            --#{$prefix}btn-disabled-border-color: transparent;
+
+            &.o-CallDebrief-hotkeyFeedback {
+                --btn-bg: #{$o-component-active-bg};
+
+                animation: o-CallDebrief-mediaControlsFeedbackPop .2s ease-out;
+            }
+        }
+    }
+
+    .o-CallDebrief-select {
+        background-image: none;
+        // Center selected value on Safari
+        text-align-last: center;
+    }
+
+    .o-CallDebriefMediaControls-timeLabel, .o-CallDebriefMediaControls-playbackRate {
+        font-variant-numeric: tabular-nums;
+        user-select: none;
+    }
+
+    .o-CallDebriefMediaControls-timeLabel {
+        order: var(--CallDebriefMediaControls__timeLabel-order);
+        width: var(--CallDebriefMediaControls__timeLabel-width, auto);
+    }
+
+    .o-CallDebriefMediaControls-playbackRate {
+        --#{$prefix}box-shadow-inset: none;
+
+        @include media-breakpoint-up(md) {
+            --#{$prefix}bg-opacity: 0;
+        }
+
+        &:hover, &:focus {
+            --#{$prefix}bg-opacity: 1;
+        }
+
+        &:focus-visible {
+            box-shadow: $focus-ring-box-shadow;
+        }
+    }
+
+    .o-CallDebriefMediaControls-volumeWrapper {
+        &:hover .o-CallDebriefMediaControls-volumeRange {
+            --CallDebriefMediaControls__volumeRange-display: block;
+        }
+    }
+
+    .o-CallDebriefMediaControls-volumeRange {
+        display: var(--CallDebriefMediaControls__volumeRange-display, none);
+        width: map-get($spacers, 5) * 2;
+        transform: rotate(-90deg);
+        transform-origin: calc((1em + #{map-get($spacers, 1)} + #{$border-width}) * -1) center;
+    }
+
+    .o-CallDebrief-playbackRateLabel {
+        width: 5ch;
+        height: 2em;
+    }
+}

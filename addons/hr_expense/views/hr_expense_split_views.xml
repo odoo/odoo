@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_expense_split_form_view" model="ir.ui.view">
+            <field name="name">hr.expense.split.form</field>
+            <field name="model">hr.expense.split</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="expense_id" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="product_has_cost" invisible="1"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="product_id"
+                                context="{
+                                    'default_type': 'service',
+                                    'default_can_be_expensed': 1,
+                                    'list_view_ref': 'hr_expense.product_product_expense_tree_view',
+                                    'form_view_ref': 'hr_expense.product_product_expense_form_view',
+                                }"
+                            />
+                            <field name="employee_id" widget="many2one_avatar_user"/>
+                            <field name="tax_ids" widget="many2many_tags"/>
+                            <field name="tax_amount_currency" string="Tax"/>
+                            <field name="analytic_distribution"
+                                string="Analytic"
+                                widget="analytic_distribution"
+                                groups="analytic.group_analytic_accounting"
+                            />
+                            <field name="total_amount_currency" string="Total" force_save="1" readonly="product_has_cost"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

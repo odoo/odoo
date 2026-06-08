@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- A Populate demo for the Product module -->
+    <record id="fake_product_demo" model="populate.blueprint">
+        <field name="name">Product - Populate Demo</field>
+        <field name="definition_xml" type="xml">
+            <model name="res.partner" count="500" id="vendors">
+                <field name="name" generator="fake.company"/>
+                <field name="email" generator="fake.company_email"/>
+                <field name="phone" generator="fake.phone_number"/>
+                <field name="is_company" eval="True"/>
+                <field name="street" generator="fake.street_address"/>
+                <field name="city" generator="fake.city"/>
+                <field name="zip" generator="fake.postcode"/>
+                <field name="country_id" domain="[('code', 'in', ['US', 'CA', 'GB', 'DE', 'FR', 'CN', 'JP'])]" null_ratio="0.1"/>
+            </model>
+
+            <model name="product.category" count="80" id="product_categories">
+                <field name="name" generator="fake.bs"/>
+            </model>
+
+            <model name="product.category" count="150" id="product_subcategories">
+                <field name="name" generator="fake.catch_phrase"/>
+                <field name="parent_id" ref="product_categories" null_ratio="0.3"/>
+            </model>
+
+            <model name="product.tag" count="200" id="product_tags">
+                <field name="v_name" virtual="True" generator="fake.words" nb="2" unique="True"/>
+                <field name="name" eval="' '.join(word.capitalize() for word in v_name)"/>
+                <field name="color" generator="fake.hex_color"/>
+                <field name="visible_to_customers" values="{True: 8, False: 2}"/>
+                <field name="sequence" start="1" end="100"/>
+            </model>
+
+            <model name="product.attribute" count="25" id="product_attributes" scale="False">
+                <field name="v_name" virtual="True" generator="fake.words" nb="2" unique="True"/>
+                <field name="name" eval="' '.join(word.capitalize() for word in v_name)"/>
+                <field name="v_create_variant" virtual="True" generator="choice.sample" values="{'always': 6, 'dynamic': 3, 'no_variant': 1}"/>
+                <field name="display_type" values="{'radio': 4, 'pills': 2, 'select': 2, 'color': 1, 'multi': 1}"/>
+                <field name="create_variant" eval="'no_variant' if display_type == 'multi' else v_create_variant"/>
+                <field name="sequence" start="1" end="100"/>
+            </model>
+
+            <model name="product.attribute.value" count="300" id="product_attribute_values">
+                <field name="attribute_id" ref="product_attributes"/>
+                <field name="name" generator="fake.word"/>
+                <field name="sequence" start="1" end="50"/>
+            </model>
+
+            <model name="product.template" count="5000" id="product_templates" context="{'tracking_disable': True, 'create_product_product': False}">
+                <field name="name" generator="fake.catch_phrase"/>
+                <field name="active" values="{True: 95, False: 5}"/>
+                <field name="type" values="{'consu': 6, 'service': 4}"/>
+                <field name="categ_id" ref="product_subcategories" null_ratio="0.1"/>
+                <field name="list_price" start="5.0" end="5000.0" distribution="exponential(rate=0.002)"/>
+                <field name="standard_price" start="1.0" end="3000.0" distribution="exponential(rate=0.003)"/>
+                <field name="description" generator="fake.paragraph" null_ratio="0.5"/>
+                <field name="description_sale" generator="fake.text" max_nb_chars="200" null_ratio="0.4"/>
+                <field name="description_purchase" generator="fake.text" max_nb_chars="150" null_ratio="0.5"/>
+                <field name="sequence" start="1" end="100"/>
+                <field name="weight" start="0.1" end="100.0" distribution="exponential(rate=0.05)" null_ratio="0.3"/>
+                <field name="volume" start="0.01" end="50.0" distribution="exponential(rate=0.08)" null_ratio="0.4"/>
+                <field name="sale_ok" values="{True: 9, False: 1}"/>
+                <field name="purchase_ok" values="{True: 8, False: 2}"/>
+                <field name="can_image_1024_be_zoomed" values="{True: 3, False: 7}"/>
+                <field name="product_tag_ids" ref="product_tags" count="3" std="1" null_ratio="0.3"/>
+            </model>
+
+            <model name="product.template.attribute.line" count="8000" id="product_attribute_lines" context="{'create_product_product': False}">
+                <field name="v_product_tmpl_id" virtual="True" generator="relation.one" comodel_name="product.template" ref="product_templates" partition="True"/>
+                <field name="v_attribute_id" virtual="True" generator="relation.one" comodel_name="product.attribute" ref="product_attributes"/>
+                <field name="v_unique_attribute_per_template" virtual="True" eval="(v_product_tmpl_id, v_attribute_id)" unique="True"/>
+                <field name="product_tmpl_id" eval="v_unique_attribute_per_template[0]"/>
+                <field name="attribute_id" eval="v_unique_attribute_per_template[1]"/>
+                <field name="value_ids" domain="[('attribute_id', '=', attribute_id)]" ref="product_attribute_values" count="4" std="1"/>
+                <field name="sequence" start="1" end="50"/>
+            </model>
+
+            <!-- Auto-generate variants now that all attribute lines are in place -->
+            <model name="product.template" type="write" ref="product_templates">
+                <field name="attribute_line_ids" eval="[]"/>
+            </model>
+
+            <model name="product.product" type="write" id="product_templates.product_variant_ids">
+                <field name="default_code" generator="fake.ean13" unique="True"/>
+                <field name="barcode" eval="default_code"/>
+                <field name="active" values="{True: 97, False: 3}"/>
+                <field name="standard_price" start="1.0" end="2500.0" distribution="exponential(rate=0.003)"/>
+                <field name="weight" start="0.1" end="80.0" distribution="exponential(rate=0.05)" null_ratio="0.3"/>
+                <field name="volume" start="0.01" end="40.0" distribution="exponential(rate=0.08)" null_ratio="0.4"/>
+            </model>
+
+            <model name="product.supplierinfo" count="10000" id="product_supplier_info">
+                <field name="partner_id" ref="vendors"/>
+                <field name="product_id" ref="product_templates.product_variant_ids"/>
+                <field name="product_name" generator="fake.catch_phrase" null_ratio="0.7"/>
+                <field name="product_code" generator="fake.ean8" null_ratio="0.6"/>
+                <field name="price" start="1.0" end="2000.0" distribution="exponential(rate=0.004)"/>
+                <field name="min_qty" start="1.0" end="100.0" distribution="exponential(rate=0.05)"/>
+                <field name="delay" start="1" end="90" distribution="normal(mean=15, std=10)"/>
+                <field name="discount" start="0.0" end="30.0" distribution="beta(alpha=2, beta=5)" null_ratio="0.7"/>
+                <field name="sequence" start="1" end="100"/>
+                <field name="date_start" start="today -2y" end="today -6m" null_ratio="0.7"/>
+                <field name="date_end" start="today +6m" end="today +3y" null_ratio="0.8"/>
+            </model>
+
+            <model name="res.country.group" count="20" id="country_groups" scale="False">
+                <field name="name" generator="fake.catch_phrase"/>
+            </model>
+
+            <model name="product.pricelist" count="100" id="product_pricelists">
+                <field name="name" generator="fake.bs"/>
+                <field name="active" values="{True: 9, False: 1}"/>
+                <field name="sequence" start="1" end="100"/>
+                <field name="country_group_ids" ref="country_groups" count="2" std="1" null_ratio="0.6"/>
+            </model>
+
+            <model name="product.pricelist.item" count="5000" id="pricelist_items">
+                <field name="pricelist_id" ref="product_pricelists"/>
+                <field name="product_tmpl_id" ref="product_templates" null_ratio="0.4"/>
+                <field name="product_id" domain="[('product_tmpl_id', '=?', product_tmpl_id)]" ref="product_templates.product_variant_ids" null_ratio="0.5"/>
+                <field name="categ_id" ref="product_subcategories" null_ratio="0.6"/>
+                <field name="compute_price" values="{'fixed': 4, 'percentage': 3, 'formula': 3}"/>
+                <field name="fixed_price" start="5.0" end="4000.0" distribution="exponential(rate=0.002)"/>
+                <field name="percent_price" start="-50.0" end="50.0" distribution="normal(mean=-10, std=15)"/>
+                <field name="price_discount" start="0.0" end="50.0" distribution="beta(alpha=2, beta=3)"/>
+                <field name="price_surcharge" start="-100.0" end="200.0" distribution="normal(mean=10, std=40)" null_ratio="0.5"/>
+                <field name="min_quantity" generator="scalar.integer" start="1" end="100" distribution="exponential(rate=0.08)"/>
+                <field name="date_start" generator="temporal.date" start="today -1y" end="today -1m" null_ratio="0.7"/>
+                <field name="date_end" generator="temporal.date" start="today +1m" end="today +2y" null_ratio="0.8"/>
+            </model>
+        </field>
+    </record>
+</odoo>

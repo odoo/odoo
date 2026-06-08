@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.BinaryField">
+        <t t-if="!this.props.readonly">
+            <t t-if="this.props.record.data[this.props.name]">
+                <div class="w-100 d-inline-flex gap-1 cursor-pointer">
+                    <FileUploader
+                        acceptedFileExtensions="this.props.acceptedFileExtensions"
+                        allowedMIMETypes="this.props.allowedMIMETypes"
+                        onUploaded.bind="this.update"
+                    >
+                        <t name="download" t-if="this.props.record.resId and !this.props.record.dirty">
+                            <button
+                                class="btn btn-link fa fa-download o_download_file_button"
+                                data-tooltip="Download"
+                                aria-label="Download"
+                                t-on-click.stop="this.onFileDownload"
+                            >
+                            </button>
+                        </t>
+                        <t t-set-slot="toggler">
+                            <span t-if="!this.fileName" class="btn btn-primary o_select_file_button py-0">
+                                Replace current file
+                            </span>
+                            <t t-else="">
+                                <input type="text" class="o_input o_select_file_button" t-att-value="this.fileName" readonly="readonly" />
+                            </t>
+                        </t>
+                        <button
+                            class="btn btn-link fa fa-trash o_clear_file_button"
+                            data-tooltip="Clear"
+                            aria-label="Clear"
+                            t-on-click="() => this.update({})"
+                        />
+                    </FileUploader>
+                </div>
+            </t>
+            <t t-else="">
+                <label class="o_select_file_button w-100 o_input">
+                    <FileUploader
+                        acceptedFileExtensions="this.props.acceptedFileExtensions"
+                        allowedMIMETypes="this.props.allowedMIMETypes"
+                        onUploaded.bind="this.update"
+                    >
+                        <t t-set-slot="toggler">
+                            <div class="d-flex">
+                                Upload your file
+                                <button class="btn btn-link fa fa-upload ms-auto" />
+                            </div>
+                        </t>
+                    </FileUploader>
+                </label>
+            </t>
+        </t>
+        <t t-elif="this.props.record.resId and this.props.record.data[this.props.name]">
+            <a class="o_form_uri" href="#" t-on-click.prevent.stop="this.onFileDownload">
+                <span class="fa fa-download me-2" />
+                <t t-if="this.fileName" t-out="this.fileName" />
+            </a>
+        </t>
+        <t t-elif="this.props.fileNameField" t-out="this.fileName"/>
+    </t>
+
+    <t t-name="web.ListBinaryField" t-inherit="web.BinaryField">
+        <xpath expr="//label[hasclass('o_select_file_button')]" position="replace">
+            <label class="o_select_file_button btn btn-sm btn-link p-0">
+                <FileUploader
+                    acceptedFileExtensions="this.props.acceptedFileExtensions"
+                    onUploaded.bind="this.update"
+                >
+                    <t t-set-slot="toggler">
+                        <i class="fa fa-upload fa-fw"/> Upload your file
+                    </t>
+                </FileUploader>
+            </label>
+        </xpath>
+    </t>
+
+</templates>

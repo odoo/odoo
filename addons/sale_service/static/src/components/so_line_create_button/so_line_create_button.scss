@@ -1,0 +1,8 @@
+body:not(.o_touch_device) .o_field_so_line_create_button {
+    &:not(:hover):not(:focus-within) {
+        & .o_many2one:not(:hover) ~ a {
+            display: none !important;
+        }
+    }
+    word-break: keep-all !important;
+}

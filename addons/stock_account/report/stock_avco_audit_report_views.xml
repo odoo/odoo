@@ -1,0 +1,29 @@
+<odoo>
+    <record id="stock_avco_report_view_list" model="ir.ui.view">
+        <field name="name">stock.avco.report.view.list</field>
+        <field name="model">stock.avco.report</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="reference"/>
+                <field name="product_id"/>
+                <field name="date"/>
+                <field name="description"/>
+                <field name="quantity" column_invisible="context.get('cost_method') == 'standard'"/>
+                <field name="added_value" widget="monetary" options="{'currency_field': 'currency_id'}" column_invisible="context.get('cost_method') == 'standard'"/>
+                <field name="value" string="Unit Cost" widget="monetary" options="{'currency_field': 'currency_id'}" column_invisible="context.get('cost_method') != 'standard'"/>
+                <field name="total_value" widget="monetary" options="{'currency_field': 'currency_id'}" column_invisible="context.get('cost_method') == 'standard'"/>
+                <field name="total_quantity" column_invisible="context.get('cost_method') == 'standard'"/>
+                <field name="avco_value" string="Unit Cost" widget="monetary" options="{'currency_field': 'currency_id'}" column_invisible="context.get('cost_method') == 'standard'"/>
+                <field name="justification" column_invisible="context.get('cost_method') != 'average'" optional="hide"/>
+            </list>
+        </field>
+    </record>
+    
+    <record id="stock_avco_report_action" model="ir.actions.act_window">
+        <field name="name">Unit Cost History</field>
+        <field name="res_model">stock.avco.report</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[("product_id", "=", active_id)]</field>
+    </record>
+</odoo>

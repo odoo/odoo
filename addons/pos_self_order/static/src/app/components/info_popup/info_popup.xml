@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.InfoPopup">
+        <div class="self_order_text_popup o_dialog" t-att-id="this.id">
+            <div role="dialog" class="modal d-block" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="position-absolute top-0 start-50 translate-middle px-4 py-3 rounded-4 text-bg-300 border border-white border-5">
+                            <i class="fa fa-info fa-2x" aria-hidden="true"/>
+                        </div>
+                        <div class="modal-body pt-5 overflow-visible text-center">
+                            <span class="fs-2" t-out="this.props.text"/>
+                        </div>
+                        <div t-if="this.props.buttons" class="d-flex flex-wrap justify-content-center gap-2 px-3 pb-3 border-transparent">
+                            <button 
+                                t-foreach="this.props.buttons"
+                                t-as="button"
+                                t-key="button_index"
+                                t-attf-class="btn btn-secondary kiosk-p-btn-lg popup_button"
+                                t-on-click="button.onClick"
+                                type="button">
+                                <t t-out="button.text"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,11 @@
+.o_field_CopyClipboardChar :is(span, input):not(.fa-clipboard) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.o_field_CopyClipboardURL {
+    .o_form_uri {
+        @include text-truncate();
+        flex: 1 1 0 !important;
+    }
+}

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Authorize.Net Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position="inside">
+                <field
+                    string="API Login ID"
+                    name="authorize_login"
+                    invisible="code != 'authorize'"
+                    required="is_live"
+                />
+                <field
+                    string="API Transaction Key"
+                    name="authorize_transaction_key"
+                    widget="password"
+                    invisible="code != 'authorize'"
+                    required="is_live"
+                />
+                <field
+                    string="API Signature Key"
+                    name="authorize_signature_key"
+                    widget="password"
+                    invisible="code != 'authorize'"
+                    required="is_live"
+                />
+                <label
+                    string="API Client Key"
+                    for="authorize_client_key"
+                    invisible="code != 'authorize'"
+                />
+                <div class="o_row" col="2" invisible="code != 'authorize'">
+                    <field name="authorize_client_key"/>
+                    <button
+                        string="Generate Client Key"
+                        type="object"
+                        name="action_update_merchant_details"
+                        class="oe_link"
+                        icon="fa-refresh"
+                    />
+                </div>
+                <label
+                    for="authorize_webhook_id"
+                    invisible="not (authorize_login and authorize_transaction_key and authorize_signature_key) or code != 'authorize'"
+                />
+                <div
+                    class="o_row"
+                    invisible="not (authorize_login and authorize_transaction_key and authorize_signature_key) or code != 'authorize'"
+                >
+                    <field string="Webhook ID" name="authorize_webhook_id" widget="password"/>
+                    <button
+                        string="Generate Your Webhook"
+                        type="object"
+                        name="action_authorize_create_webhook"
+                        invisible="authorize_webhook_id"
+                        class="btn-primary"
+                    />
+                    <button
+                        string="Re-generate Your Webhook"
+                        type="object"
+                        name="action_authorize_create_webhook"
+                        invisible="not authorize_webhook_id"
+                        class="btn-secondary"
+                    />
+                </div>
+            </group>
+            <div name="available_currencies" position="inside">
+                <button
+                    string="Set Account Currency"
+                    type="object"
+                    name="action_update_merchant_details"
+                    invisible="code != 'authorize'"
+                    icon="fa-refresh"
+                    class="oe_link"
+                />
+            </div>
+        </field>
+    </record>
+
+</odoo>

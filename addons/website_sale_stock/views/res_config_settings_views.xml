@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.sale.stock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='product_availability_setting']/div[hasclass('content-group')]" position="before">
+                <div class="content-group">
+                    <div class="row mt16"
+                         id="website_warehouse_setting"
+                         groups="stock.group_stock_multi_warehouses">
+                        <label for="website_warehouse_id" string="Warehouse" class="col-lg-3 o_light_label" />
+                        <field name="website_warehouse_id" placeholder="All warehouses"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

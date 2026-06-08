@@ -1,0 +1,42 @@
+import { Component, props, t, xml } from "@odoo/owl";
+
+const NO_OP = () => {};
+
+export class Switch extends Component {
+    props = props({
+        value: t.boolean().optional(),
+        extraClasses: t.string(),
+        disabled: t.boolean().optional(),
+        label: t.string().optional(),
+        description: t.string().optional(),
+        onChange: t.function().optional(() => NO_OP),
+    });
+    static template = xml`
+    <label t-att-class="'o_switch' + this.extraClasses">
+        <input type="checkbox"
+                name="switch"
+                class="visually-hidden"
+                t-att-checked="this.props.value"
+                t-att-disabled="this.props.disabled"
+                t-on-change="(ev) => this.props.onChange(ev.target.checked)"
+                t-on-keyup="this.onKeyup"/>
+        <span/>
+        <span t-if="this.props.label" t-out="this.props.label" class="ms-2"/>
+        <span t-if="this.props.description" class="text-muted ms-2" t-out="this.props.description"/>
+    </label>
+    `;
+
+    setup() {
+        this.extraClasses = this.props.extraClasses ? ` ${this.props.extraClasses}` : "";
+    }
+    /**
+     * @param {KeyboardEvent} ev
+     */
+    onKeyup(ev) {
+        // "Enter" is not a default on checkboxes, but as the switch doesn't
+        // look like a checkbox anymore, we support it.
+        if (ev.key === "Enter") {
+            ev.currentTarget.checked = !ev.currentTarget.checked;
+        }
+    }
+}

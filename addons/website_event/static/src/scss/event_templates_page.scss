@@ -1,0 +1,129 @@
+.o_wevent_event {
+    min-height: calc(95vh - 70px);
+
+    // Multi-line event title, even in mobile mode
+    nav > div > a.navbar-brand {
+        text-overflow: revert;
+        white-space: normal;
+        overflow: hidden;
+        max-width: calc(100% - 80px);
+    }
+
+    // Ensure menu labels are not split
+    #o_wevent_submenu_desktop {
+        .nav {
+            column-gap: map-get($spacers, 3);
+
+            .nav-link {
+                padding: 0;
+
+                &.active {
+                    color: rgba($body-color, .7);
+                    cursor: default;
+                }
+                &.active:hover {
+                    color: rgba($body-color, .9);
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .o_wevent_bordered_block:not(:last-child) {
+        border-bottom: $border-width solid $border-color;
+    }
+
+    // Custom utility classes to be applied on day numbers and to
+    // be used in conjunction with `small` side-content.
+    .o_wevent_day_header_number {
+        font-size: 2em + ($line-height-base - 1);
+    }
+
+    .o_wevent_add_to_ical i {
+        scale: 1.4;
+    }
+
+    .o_wevent_add_to_outlook,
+    .o_wevent_add_to_google_calendar {
+        --btn-padding-x: 0.7rem;
+    }
+
+    #o_wevent_event_main_sidebar {
+        @include media-breakpoint-up(lg) {
+            max-width: 19rem;
+        }
+    }
+
+    .o_wevent_event_title {
+
+        .o_wevent_event_name {
+            font-weight: $display-font-weight;
+            line-height: $display-line-height;
+            @include font-size(map-get($display-font-sizes, 4));
+        }
+        .o_wevent_event_subtitle {
+            font-weight: $lead-font-weight;
+            @include font-size($lead-font-size);
+        }
+    }
+
+    .o_wevent_registration_single {
+        .o_wevent_nowrap {
+            white-space: nowrap;
+        }
+    }
+
+    .o_wevent_registration_title {
+        font-weight: $font-weight-bold;
+        text-transform: uppercase;
+    }
+}
+
+.o_wevent_event {
+    .o_record_cover_container {
+        overflow: hidden;
+        z-index: 0;
+        color: white;
+
+        .o_record_cover_component {
+            z-index: -1;
+        }
+
+        &.o_wevent_event_main_cover {
+            min-height: 12rem;
+        }
+    }
+}
+
+#modal_ticket_registration {
+    // Handle overflow behaviors.
+    #registration_form, #o_wevent_tickets, #o_wevent_tickets_collapse {
+        position: relative;
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+
+        @include media-breakpoint-up(sm) {
+            :not(.s_popup) > & {
+                overflow: auto;
+                min-height: 0;
+            }
+        }
+    }
+}
+
+/*
+ * SPONSORS
+ */
+
+.o_wevent_hide_sponsors .o_wevent_sponsor_wrapper {
+    display: none !important;
+}
+
+// Used in wevent and wevent_sale
+.o_event_add_to_calendar_btns a {
+    border: 1px solid #DEE2E6;
+    &:hover {
+        background-color: $gray-200;
+    }
+}

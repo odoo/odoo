@@ -1,0 +1,8 @@
+.o_mrp_overview_badge {
+    font-size: $badge-font-size * 1.1;
+}
+
+.o_mrp_overview_badge.text-bg-muted {
+    @include o-print-color(map-get($o-grays, 300), background-color, bg-opacity);
+    @include o-print-color(color-contrast(map-get($o-grays, 300)), color, text-opacity);
+}

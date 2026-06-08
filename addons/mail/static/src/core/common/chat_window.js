@@ -1,0 +1,197 @@
+import { useChildSubEnv, useSubEnv } from "@web/owl2/utils";
+import { ActionList } from "@mail/core/common/action_list";
+import { Composer } from "@mail/core/common/composer";
+import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
+import { Thread } from "@mail/core/common/thread";
+import { AutoresizeInput } from "@mail/core/common/autoresize_input";
+import { CountryFlag } from "@mail/core/common/country_flag";
+import { RenameThreadPlugin } from "@mail/core/common/rename_thread_plugin";
+import { useThreadActions } from "@mail/core/common/thread_actions";
+import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
+import { isEventHandled } from "@web/core/utils/misc";
+
+import { Component, computed, plugin, props, providePlugins, proxy, signal, t } from "@odoo/owl";
+
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { localization } from "@web/core/l10n/localization";
+import { _t } from "@web/core/l10n/translation";
+import { useBackButton, useService } from "@web/core/utils/hooks";
+import { Typing } from "@mail/discuss/typing/common/typing";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { isMobileOS } from "@web/core/browser/feature_detection";
+
+export class ChatWindow extends Component {
+    static components = {
+        ActionList,
+        CountryFlag,
+        DiscussAvatar,
+        Dropdown,
+        Thread,
+        Composer,
+        AutoresizeInput,
+        Typing,
+    };
+    static template = "mail.ChatWindow";
+
+    setup() {
+        super.setup(...arguments);
+        this.store = useService("mail.store");
+        this.props = props({
+            chatWindow: t.instanceOf(this.store.ChatWindow.Class),
+            right: t.number().optional(),
+        });
+        useSubEnv({ inChatWindow: true });
+        this.messageHighlight = useMessageScrolling({ thread: () => this.channel?.thread });
+        providePlugins([RenameThreadPlugin]);
+        this.editingName = plugin(RenameThreadPlugin).editingName;
+        this.state = proxy({
+            actionsMenuOpened: false,
+            jumpThreadPresent: 0,
+            editingGuestName: false,
+        });
+        this.ui = useService("ui");
+        this.chatWindowContentRef = signal.ref(HTMLDivElement);
+        this.threadActions = useThreadActions({ thread: () => this.channel?.thread });
+        this.actionsMenuButtonHover = useHover("actionsMenuButton");
+        this.parentChannelHover = useHover("parentChannel");
+        this.isMobileOS = isMobileOS();
+        this.selfGuestName = computed(() => this.store.self_guest?.name);
+        this.channelDisplayName = computed(() => this.props.chatWindow.channel?.displayName);
+        useChildSubEnv({ messageHighlight: this.messageHighlight });
+        useBackButton(() => this.close());
+    }
+
+    get autofocusComposer() {
+        if (this.isMobileOS || this.channel.composerDisabled || this.channel.composerHidden) {
+            return undefined;
+        }
+        return this.props.chatWindow.autofocus;
+    }
+
+    get autofocusThread() {
+        if (this.isMobileOS || this.channel.composerDisabled || this.channel.composerHidden) {
+            return this.props.chatWindow.autofocus;
+        }
+        return undefined;
+    }
+
+    get hasActionsMenu() {
+        const partition = this.threadActions.partition;
+        return (
+            partition.group.length > 0 ||
+            partition.other.length > 0 ||
+            (this.ui.isSmall && partition.quick.length > 2) ||
+            (!this.ui.isSmall && partition.quick.length > 3)
+        );
+    }
+
+    get channel() {
+        return this.props.chatWindow.channel;
+    }
+
+    get attClass() {
+        return {
+            "w-100 h-100 o-mobile": this.ui.isSmall,
+            "o-rounded-bubble border border-dark o-border-opacity-15 mb-2": !this.ui.isSmall,
+            "o-highlighted": this.props.chatWindow.highlighted,
+        };
+    }
+
+    get style() {
+        const textDirection = localization.direction;
+        const offsetFrom = textDirection === "rtl" ? "left" : "right";
+        const visibleOffset = this.ui.isSmall ? 0 : this.props.right;
+        const oppositeFrom = offsetFrom === "right" ? "left" : "right";
+        return `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto;`;
+    }
+
+    onKeydown(ev) {
+        if (ev.key === "Escape" && this.threadActions.activeAction) {
+            this.threadActions.activeAction.actionPanelClose();
+            ev.stopPropagation();
+            return;
+        }
+        if (ev.target.closest(".o-dropdown") || ev.target.closest(".o-dropdown--menu")) {
+            return;
+        }
+        ev.stopPropagation(); // not letting home menu steal my CTRL-C
+        switch (getActiveHotkey(ev)) {
+            case "escape":
+                if (
+                    isEventHandled(ev, "NavigableList.close") ||
+                    isEventHandled(ev, "Composer.discard")
+                ) {
+                    return;
+                }
+                if (this.editingName()) {
+                    this.editingName.set(false);
+                    return;
+                }
+                this.close({ escape: true });
+                break;
+            case "tab": {
+                const index = this.store.chatHub.opened.findIndex((cw) =>
+                    cw.eq(this.props.chatWindow)
+                );
+                if (index === this.store.chatHub.opened.length - 1) {
+                    this.store.chatHub.opened[0].focus({ jumpToNewMessage: true });
+                } else {
+                    this.store.chatHub.opened[index + 1].focus({ jumpToNewMessage: true });
+                }
+                break;
+            }
+            case "control+k":
+                this.store.env.services.command.openMainPalette({ searchValue: "@" });
+                ev.preventDefault();
+                break;
+        }
+    }
+
+    onClickHeader(ev) {
+        if (
+            this.ui.isSmall ||
+            this.editingName() ||
+            this.props.chatWindow.actionsDisabled ||
+            isEventHandled(ev, "Action.onSelected")
+        ) {
+            return;
+        }
+        this.toggleFold();
+    }
+
+    toggleFold() {
+        if (this.state.actionsMenuOpened) {
+            return;
+        }
+        this.props.chatWindow.fold();
+    }
+
+    close(options) {
+        this.props.chatWindow.requestClose(options);
+    }
+
+    get actionsMenuTitleText() {
+        return _t("Open Actions Menu");
+    }
+
+    async renameChannel(name) {
+        await this.channel.rename(name);
+        this.editingName.set(false);
+    }
+
+    async renameGuest(name) {
+        const newName = name.trim();
+        if (this.store.self_guest.name !== newName) {
+            await this.store.self_guest.updateGuestName(newName);
+        }
+        this.state.editingGuestName = false;
+    }
+
+    async onActionsMenuStateChanged(isOpen) {
+        // await new Promise(setTimeout); // wait for bubbling header
+        this.state.actionsMenuOpened = isOpen;
+    }
+    get showBlankBeforeComposerHiddenText() {
+        return true;
+    }
+}

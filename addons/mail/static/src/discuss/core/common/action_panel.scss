@@ -1,0 +1,28 @@
+.o-mail-ActionPanel .form-check-input {
+    --form-check-bg: #{$white};
+}
+
+.o-mail-ActionPanel.o_resizable_panel {
+    max-width: 40vw;
+    .popover & {
+        width: 475px;
+        max-width: unset;
+    }
+}
+
+.o-mail-ActionPanel-header {
+    z-index: $o-mail-NavigableList-zIndex - 1;
+}
+
+.popover:has(.o-mail-ActionPanel-content) {
+    width: Min(95vw, 400px);
+
+    &.o-mail-SubChannelList-panel {
+        width: Min(95vw, 500px);
+
+    }
+}
+
+.popover .o-mail-ActionPanel-content {
+    max-height: Min(50vh, 530px);
+}

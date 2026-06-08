@@ -1,0 +1,18 @@
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { MailingListSubscribeOption } from "./mailing_list_subscribe_option";
+import { RecaptchaSubscribeOption } from "./recaptcha_subscribe_option";
+import { registry } from "@web/core/registry";
+
+export class NewsletterSubscribeCommonOption extends BaseOptionComponent {
+    static id = "newsletter_subscribe_common_option"
+
+    static template = "website_mass_mailing.NewsletterSubscribeCommonOption";
+    static components = {
+        MailingListSubscribeOption,
+        RecaptchaSubscribeOption,
+    };
+}
+
+registry
+    .category("website-options")
+    .add(NewsletterSubscribeCommonOption.id, NewsletterSubscribeCommonOption);

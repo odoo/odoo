@@ -1,0 +1,253 @@
+import { App, EventBus, t } from "@odoo/owl";
+import { SERVICES_METADATA } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
+import { getTemplate } from "@web/core/templates";
+import { appTranslateFn } from "@web/core/l10n/translation";
+import { session } from "@web/session";
+import { isMacOS } from "@web/core/browser/feature_detection";
+import { services } from "@web/core/services";
+
+// -----------------------------------------------------------------------------
+// Types
+// -----------------------------------------------------------------------------
+
+/**
+ * @typedef {{
+ *  bus: EventBus;
+ *  debug: string;
+ *  services: import("services").ServiceFactories;
+ *  readonly isSmall: boolean;
+ * }} OdooEnv
+ */
+
+// -----------------------------------------------------------------------------
+// makeEnv
+// -----------------------------------------------------------------------------
+
+/**
+ * Return a value Odoo Env object
+ *
+ * @returns {OdooEnv}
+ */
+export function makeEnv() {
+    const bus = new EventBus();
+    const prom = new Promise((resolve) => {
+        bus.addEventListener("SERVICES-LOADED", resolve, { once: true });
+    });
+    return {
+        bus,
+        isReady: prom,
+        services: {},
+        debug: odoo.debug,
+        get isSmall() {
+            throw new Error("UI service not initialized!");
+        },
+    };
+}
+
+// -----------------------------------------------------------------------------
+// Service Launcher
+// -----------------------------------------------------------------------------
+
+const serviceRegistry = registry.category("services");
+
+serviceRegistry.addValidation(
+    t.object({
+        start: t.function(),
+        dependencies: t.array(t.string()).optional(),
+        async: t.or([t.literal(true), t.array(t.string())]).optional(),
+    })
+);
+
+let startServicesPromise = null;
+
+/**
+ * Start all services registered in the service registry, while making sure
+ * each service dependencies are properly fulfilled.
+ *
+ * @param {OdooEnv} env
+ * @returns {Promise<void>}
+ */
+export async function startServices(env, app) {
+    // we start all plugins first (in particular the localization plugin)
+    await app.pluginManager.ready;
+    const toStart = new Map();
+    serviceRegistry.addEventListener("UPDATE", async (ev) => {
+        // Wait for all synchronous code so that if new services that depend on
+        // one another are added to the registry, they're all present before we
+        // start them regardless of the order they're added to the registry.
+        await Promise.resolve();
+        const { operation, key: name, value: service } = ev.detail;
+        if (operation === "delete") {
+            // We hardly see why it would be usefull to remove a service.
+            // Furthermore we could encounter problems with dependencies.
+            // Keep it simple!
+            return;
+        }
+        if (toStart.size) {
+            const namedService = Object.assign(Object.create(service), { name });
+            toStart.set(name, namedService);
+        } else {
+            await _startServices(env, toStart, app);
+        }
+    });
+    await _startServices(env, toStart, app);
+}
+
+async function _startServices(env, toStart, app) {
+    if (startServicesPromise) {
+        return startServicesPromise.then(() => _startServices(env, toStart, app));
+    }
+    const services = env.services;
+    for (const [name, service] of serviceRegistry.getEntries()) {
+        if (!(name in services)) {
+            const namedService = Object.assign(Object.create(service), { name });
+            toStart.set(name, namedService);
+        }
+    }
+
+    // start as many services in parallel as possible
+    async function start() {
+        let service = null;
+        const proms = [];
+        app.pluginManager.run(() => {
+            while ((service = findNext())) {
+                const name = service.name;
+                toStart.delete(name);
+                const entries = (service.dependencies || []).map((dep) => [dep, services[dep]]);
+                const dependencies = Object.fromEntries(entries);
+                if (name in services) {
+                    continue;
+                }
+                const value = service.start(env, dependencies);
+                if ("async" in service) {
+                    SERVICES_METADATA[name] = service.async;
+                }
+                proms.push(
+                    Promise.resolve(value).then((val) => {
+                        services[name] = val || null;
+                    })
+                );
+            }
+        });
+        await Promise.all(proms);
+        if (proms.length) {
+            return start();
+        }
+    }
+    startServicesPromise = start().finally(() => {
+        startServicesPromise = null;
+    });
+    await startServicesPromise;
+    env.bus.trigger("SERVICES-LOADED");
+    if (toStart.size) {
+        const missingDeps = new Set();
+        for (const service of toStart.values()) {
+            for (const dependency of service.dependencies) {
+                if (!(dependency in services) && !toStart.has(dependency)) {
+                    missingDeps.add(dependency);
+                }
+            }
+        }
+        const depNames = [...missingDeps].join(", ");
+        throw new Error(
+            `Some services could not be started: ${[
+                ...toStart.keys(),
+            ]}. Missing dependencies: ${depNames}`
+        );
+    }
+
+    function findNext() {
+        for (const s of toStart.values()) {
+            if (s.dependencies) {
+                if (s.dependencies.every((d) => d in services)) {
+                    return s;
+                }
+            } else {
+                return s;
+            }
+        }
+        return null;
+    }
+}
+
+export const customDirectives = {
+    // t-custom-click="handler"
+    // This custom directive will add two even listeners ("click"; "auxclick") and call the global value "click".
+    // The global value "click" will call the handler with two parameters :
+    //      - ev (the original event)
+    //      - isMiddleClick (a boolean that says if the user middle clicked, or if he did a ctrl+click)
+    //
+    click: (node, value, modifiers) => {
+        let mods = "";
+        if (modifiers.includes("synthetic")) {
+            mods += ".synthetic";
+        }
+        if (modifiers.includes("capture")) {
+            mods += ".capture";
+        }
+        const handlerFunction = `(ev) => __globals__.click(ev, (${value}).bind(this), '${JSON.stringify(
+            modifiers
+        )}')`;
+        node.setAttribute(`t-on-click${mods}`, handlerFunction);
+        node.setAttribute(`t-on-auxclick${mods}`, handlerFunction);
+    },
+};
+
+export const globalValues = {
+    click: (ev, value, modifiers) => {
+        if (ev.button === 0 || ev.button === 1) {
+            modifiers = JSON.parse(modifiers);
+            for (const modifier of modifiers) {
+                if (modifier === "stop") {
+                    ev.stopPropagation();
+                }
+                if (modifier === "prevent") {
+                    ev.preventDefault();
+                }
+            }
+            const ctrlKey = isMacOS() ? ev.metaKey : ev.ctrlKey;
+            const isMiddleClick = (ctrlKey && ev.button === 0) || ev.button === 1;
+            value(ev, isMiddleClick);
+        }
+    },
+};
+
+/**
+ * Create an application with a given component as root and mount it. If no env
+ * is provided, the application will be treated as a "root": an env will be
+ * created and the services will be started, it will also be set as the root
+ * in `__WOWL_DEBUG__`
+ *
+ * @param {import("@odoo/owl").Component} component the component to mount
+ * @param {HTMLElement} target the HTML element in which to mount the app
+ * @param {Partial<ConstructorParameters<typeof App>[1]>} [appConfig] object
+ *  containing a (partial) config for the app.
+ */
+export async function mountComponent(component, target, appConfig = {}) {
+    let { env } = appConfig;
+    const isRoot = !env;
+    if (isRoot) {
+        env = makeEnv();
+    }
+    const app = new App({
+        env,
+        getTemplate,
+        dev: env.debug || session.test_mode,
+        name: component.constructor.name,
+        translatableAttributes: ["data-tooltip"],
+        translateFn: appTranslateFn,
+        customDirectives,
+        plugins: services,
+        globalValues,
+        ...appConfig,
+    });
+    if (isRoot) {
+        await startServices(env, app);
+    }
+    const root = await app.createRoot(component, { ...appConfig, env }).mount(target);
+    if (isRoot) {
+        odoo.__WOWL_DEBUG__ = { root };
+    }
+    return app;
+}

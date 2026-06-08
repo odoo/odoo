@@ -1,0 +1,129 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from base64 import b32encode
+from hashlib import sha256
+
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
+
+
+def format_epson_certified_domain(serial_number):
+    """Epson printers can be configured to use a wildcard certificate,
+    for a domain name derived from the printer serial number.
+
+    :param serial_number: The printer serial number or an IP address.
+    :return: The corresponding domain name, or the original IP address.
+    """
+    if "." in serial_number:
+        # If the field is provided an epson serial number, convert it to a domain name
+        # Note: serial numbers should not contain dots, as IPs or URLs would.
+        return serial_number
+
+    epson_domain = "omnilinkcert.epson.biz"
+
+    sha256_hash = sha256(serial_number.encode()).digest()
+    base32_text = b32encode(sha256_hash).decode().rstrip("=")
+    return f"{base32_text.lower()}.{epson_domain}"
+
+
+EPSON_MODELS = [
+    ('tm_u22_76', 'TM-U220 series (76mm)'),
+    ('tm_u22_70', 'TM-U220 series (70mm)'),
+    ('tm_u22_58', 'TM-U220 series (58mm)'),
+    ('tm_u33_76', 'TM-U330 series (76mm)'),
+    ('tm_u33_70', 'TM-U330 series (70mm)'),
+    ('tm_p60_60', 'TM-P60 series (60mm)'),
+    ('tm_l100_40', 'TM-L100 series (40mm)'),
+]
+
+
+class PosPrinter(models.Model):
+    _name = 'pos.printer'
+
+    _description = 'Point of Sale Printer'
+    _inherit = ['pos.load.mixin']
+
+    name = fields.Char('Printer Name', required=True, default='Printer', help='An internal identification of the printer')
+    printer_type = fields.Selection(
+        string='Printer Type',
+        default='epson_epos',
+        selection=[
+            ('epson_epos', 'ePoS'),
+        ]
+    )
+    use_type = fields.Selection(selection=[
+        ('preparation', "Preparation"),
+        ('receipt', "Receipt"),
+    ], string="Type", default="preparation")
+    product_categories_ids = fields.Many2many('pos.category', 'printer_category_rel', 'printer_id', 'category_id', string='Printed Product Categories')
+    pos_config_ids = fields.Many2many('pos.config', 'pos_config_receipt_printer_rel', 'printer_id', 'config_id', string="Point of Sale")
+    printer_ip = fields.Char(
+        string='Printer IP Address',
+        help=(
+            "Local IP address of an Epson receipt printer, or its serial number if the "
+            "'Automatic Certificate Update' option is enabled in the printer settings. "
+            "It can also be the IP address of a Zebra network printer."
+        ),
+    )
+    use_lna = fields.Boolean(string="Use Local Network Access")
+    use_cashdrawer = fields.Boolean(string='Link Cashdrawer', help="Automatically open the cashdrawer.")
+    paper_size = fields.Selection(string="Paper Size", selection=[
+        ('80', 'Standard 80mm'),
+        ('58', 'Standard 58mm'),
+        ('label', 'Zebra (>=2.75in)'),
+        *EPSON_MODELS,
+    ], required=True, default='80')
+    paper_size_keys = fields.Char(compute='_compute_paper_size_keys')
+    timeout = fields.Integer(string="Connection Timeout (ms)", default=15000, help="Time in milliseconds before considering that the printer is not responding.")
+
+    def copy_data(self, default=None):
+        default = dict(default or {}, pos_config_ids=[(5, 0, 0)], printer_ip="0.0.0.0")
+        vals_list = super().copy_data(default=default)
+        if 'name' not in default:
+            for printer, vals in zip(self, vals_list):
+                vals['name'] = _("%s (copy)", printer.name)
+        return vals_list
+
+    @api.depends('printer_type')
+    def _compute_paper_size_keys(self):
+        for record in self:
+            standard_size = ['58', '80', 'label']
+
+            if record.printer_type == 'epson_epos':
+                epson_models = [key for key, _ in EPSON_MODELS]
+                standard_size.extend(epson_models)
+
+            record.paper_size_keys = ",".join(standard_size)
+
+    @api.onchange('use_type')
+    def _onchange_use_type(self):
+        """Disable use_cashdrawer when printer type is preparation"""
+        for rec in self:
+            if rec.use_type == "preparation" and rec.use_cashdrawer:
+                rec.use_cashdrawer = False
+
+    @api.model
+    def _load_pos_data_domain(self, data, config):
+        return [('id', 'in', config.preparation_printer_ids.ids + config.receipt_printer_ids.ids)]
+
+    @api.model
+    def _load_pos_data_fields(self, config):
+        return ['id', 'name', 'product_categories_ids', 'printer_type', 'use_type', 'use_lna', 'printer_ip', 'paper_size', 'use_cashdrawer', 'timeout']
+
+    @api.constrains('printer_ip')
+    def _constrains_printer_ip(self):
+        for record in self:
+            if record.printer_type == 'epson_epos' and not record.printer_ip:
+                raise ValidationError(_("Printer IP Address cannot be empty."))
+
+    @api.onchange("printer_ip")
+    def _onchange_printer_ip(self):
+        for rec in self:
+            if rec.printer_ip:
+                rec.printer_ip = format_epson_certified_domain(rec.printer_ip)
+
+    @api.onchange('printer_type')
+    def _onchange_printer_type(self):
+        for rec in self:
+            if rec.paper_size not in rec.paper_size_keys.split(","):
+                rec.paper_size = '80'

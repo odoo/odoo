@@ -1,0 +1,100 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import logging
+import re
+from collections import defaultdict
+
+from odoo import models
+from odoo.addons.mail.tools.discuss import add_guest_to_context
+from odoo.tools.misc import verify_limited_field_access_token
+
+
+PRESENCE_CHANNEL_PREFIX = "odoo-presence-"
+PRESENCE_CHANNEL_REGEX = re.compile(
+    rf"{PRESENCE_CHANNEL_PREFIX}"
+    r"(?P<model>res\.users|mail\.guest)_(?P<record_id>\d+)"
+    r"(?:-(?P<token>[a-f0-9]{64}o0x[a-f0-9]+))?$"
+)
+_logger = logging.getLogger(__name__)
+
+
+class IrWebsocket(models.AbstractModel):
+    """Override to handle mail specific features (presence in particular)."""
+
+    _inherit = "ir.websocket"
+
+    def _serve_ir_websocket(self, event_name, data):
+        """Override to process update_presence."""
+        super()._serve_ir_websocket(event_name, data)
+        if event_name == "update_presence":
+            self._update_mail_presence(**data)
+
+    @add_guest_to_context
+    def _subscribe(self, og_data):
+        super()._subscribe(og_data)
+
+    @add_guest_to_context
+    def _update_mail_presence(self, inactivity_period):
+        user, guest = self.env["res.users"]._get_current_persona()
+        if not user and not guest:
+            return
+        self.env["mail.presence"]._try_update_presence(user or guest, inactivity_period)
+
+    def _build_bus_channel_list(self, channels):
+        model_ids_to_token = defaultdict(dict)
+        channels_to_clear = set()
+        for channel in channels:
+            if not isinstance(channel, str) or not channel.startswith(PRESENCE_CHANNEL_PREFIX):
+                continue
+            channels_to_clear.add(channel)
+            if not (match := re.match(PRESENCE_CHANNEL_REGEX, channel)):
+                _logger.warning("Malformed presence channel: %s", channel)
+                continue
+            model, record_id, token = match.groups()
+            model_ids_to_token[model][int(record_id)] = token or ""
+        channels = [c for c in channels if c not in channels_to_clear]
+        # sudo - res.partner, mail.guest: can access presence targets to decide whether
+        # the current user is allowed to read it or not.
+        user_ids = model_ids_to_token["res.users"].keys()
+        users = (
+            self.env["res.users"]
+            .with_context(active_test=False)
+            .sudo()
+            .search([("id", "in", user_ids)])
+            .sudo(False)
+        )
+        user, guest = self.env["res.users"]._get_current_persona()
+        allowed_users = (
+            users.filtered(
+                lambda p: verify_limited_field_access_token(
+                    p, "im_status", model_ids_to_token["res.users"][p.id], scope="mail.presence"
+                )
+                or p.has_access("read"),
+            )
+            | user
+        )
+        guest_ids = model_ids_to_token["mail.guest"].keys()
+        guests = self.env["mail.guest"].sudo().search([("id", "in", guest_ids)]).sudo(False)
+        allowed_guests = (
+            guests.filtered(
+                lambda g: verify_limited_field_access_token(
+                    g, "im_status", model_ids_to_token["mail.guest"][g.id], scope="mail.presence"
+                )
+                or g.has_access("read")
+            )
+            | guest
+        )
+        # sudo - res.users: can access users of allowed partners
+        channels.extend((user, "presence") for user in allowed_users)
+        channels.extend((guest, "presence") for guest in allowed_guests)
+        return super()._build_bus_channel_list(channels)
+
+    def _on_websocket_closed(self, cookies):
+        super()._on_websocket_closed(cookies)
+        if self.env.user and not self.env.user._is_public():
+            # sudo: mail.presence - user can update their own presence
+            self.env.user.sudo().presence_ids.status = "offline"
+        token = cookies.get(self.env["mail.guest"]._cookie_name, "")
+        if guest := self.env["mail.guest"]._get_guest_from_token(token):
+            # sudo: mail.presence - guest can update their own presence
+            guest.sudo().presence_ids.status = "offline"

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form_inherit_ecpay" model="ir.ui.view">
+            <field name="name">ecpay_invoice_view_form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Ecpay" invisible="country_code != 'TW' or move_type not in ['out_invoice', 'out_refund']">
+                        <group invisible="move_type == 'out_refund'">
+                            <group>
+                                <field name="l10n_tw_edi_state"/>
+                                <field name="l10n_tw_edi_ecpay_invoice_id"/>
+                                <field name="l10n_tw_edi_invoice_create_date"/>
+                                <field name="l10n_tw_edi_invalidate_reason" invisible="l10n_tw_edi_state != 'invalid'"/>
+                            </group>
+                            <group>
+                                <field name="l10n_tw_edi_is_print"  readonly="l10n_tw_edi_ecpay_invoice_id" invisible="l10n_tw_edi_is_b2b"/>
+                                <field name="l10n_tw_edi_love_code" readonly="l10n_tw_edi_ecpay_invoice_id" invisible="l10n_tw_edi_is_print or l10n_tw_edi_is_b2b or l10n_tw_edi_carrier_type"/>
+                                <field name="l10n_tw_edi_carrier_type" readonly="l10n_tw_edi_ecpay_invoice_id" invisible="l10n_tw_edi_is_print or l10n_tw_edi_is_b2b or l10n_tw_edi_love_code"/>
+                                <field name="l10n_tw_edi_carrier_number" readonly="l10n_tw_edi_ecpay_invoice_id" invisible="l10n_tw_edi_carrier_type not in ['2', '3', '4', '5'] or l10n_tw_edi_is_print or l10n_tw_edi_is_b2b or l10n_tw_edi_love_code" required="l10n_tw_edi_carrier_type in ['2', '3', '4', '5'] and not l10n_tw_edi_is_print and not l10n_tw_edi_is_b2b"/>
+                                <field name="l10n_tw_edi_carrier_number_2" readonly="l10n_tw_edi_ecpay_invoice_id" invisible="l10n_tw_edi_carrier_type not in ['4', '5'] or l10n_tw_edi_is_print or l10n_tw_edi_is_b2b or l10n_tw_edi_love_code" required="l10n_tw_edi_carrier_type in ['4', '5'] and not l10n_tw_edi_is_print and not l10n_tw_edi_is_b2b"/>
+                                <field name="l10n_tw_edi_clearance_mark" readonly="l10n_tw_edi_ecpay_invoice_id" invisible="not l10n_tw_edi_is_zero_tax_rate"/>
+                                <field name="l10n_tw_edi_zero_tax_rate_reason" readonly="l10n_tw_edi_ecpay_invoice_id" invisible="not l10n_tw_edi_is_zero_tax_rate"/>
+                            </group>
+                        </group>
+                        <group string="ECpay E-invoice Refund" invisible="move_type != 'out_refund'">
+                            <group>
+                                <field name="l10n_tw_edi_refund_invoice_number"/>
+                                <field name="l10n_tw_edi_refund_state" invisible="l10n_tw_edi_is_b2b"/>
+                                <field name="l10n_tw_edi_refund_agreement_type" readonly="l10n_tw_edi_refund_invoice_number" invisible="l10n_tw_edi_is_b2b"/>
+                                <field name="l10n_tw_edi_allowance_notify_way" readonly="l10n_tw_edi_refund_invoice_number" invisible="l10n_tw_edi_is_b2b"/>
+                            </group>
+                            <group/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_print_ecpay_invoice" model="ir.actions.server">
+            <field name="name">Print Ecpay invoice</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+action = record._l10n_tw_edi_print_invoice()
+            </field>
+        </record>
+    </data>
+</odoo>

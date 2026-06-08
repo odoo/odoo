@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="resource_resource_form_view_inherit_hr" model="ir.ui.view">
+        <field name="inherit_id" ref="resource.resource_resource_form" />
+        <field name="model">resource.resource</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tz']" position="attributes">
+                <attribute name="readonly">employee_id</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="resource_resource_tree_view_inherit_hr" model="ir.ui.view">
+        <field name="inherit_id" ref="resource.resource_resource_tree"/>
+        <field name="model">resource.resource</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tz']" position="attributes">
+                <attribute name="readonly">employee_id</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,1696 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import logging
+import random
+from collections import defaultdict
+from urllib.parse import urlencode, urlparse
+
+from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
+from odoo.http import request
+from odoo.modules.db import FunctionStatus
+from odoo.tools import float_round, is_html_empty, lazy
+from odoo.tools.sql import SQL, column_exists, create_column
+from odoo.tools.translate import adapt_translated_field_value, html_translate
+
+from odoo.addons.website.tools import text_from_html
+from odoo.addons.website_sale.const import SHOP_PATH
+
+# A delimiter that users aren't likely to search for in product codes.
+RARE_DELIMITER = "\u241e"
+
+_logger = logging.getLogger(__name__)
+
+
+def get_translated_field_gist_index(registry, column_name):
+    if not registry.has_trigram:
+        return ""
+    if registry.has_unaccent == FunctionStatus.INDEXABLE:
+        return f"USING GIST(unaccent((JSONB_PATH_QUERY_ARRAY({column_name}, '$.*'::jsonpath))::text) gist_trgm_ops)"  # noqa: E501
+    return (
+        f"USING GIST((JSONB_PATH_QUERY_ARRAY({column_name}, '$.*'::jsonpath)::text) gist_trgm_ops)"
+    )
+
+
+class ProductTemplate(models.Model):
+    _name = "product.template"
+    _inherit = [
+        "rating.mixin",
+        "product.template",
+        "website.seo.metadata",
+        "website.published.multi.mixin",
+        "website.searchable.mixin",
+        "website.structured_data.mixin",
+    ]
+    _mail_post_access = "read"
+    _check_company_auto = True
+
+    # === DEFAULT METHODS ===#
+
+    @api.model
+    def _default_website_sequence(self):
+        """We want new product to be the last (highest seq).
+        Every product should ideally have an unique sequence.
+        Default sequence (10000) should only be used for DB first product.
+        As we don't resequence the whole tree (as `sequence` does), this field
+        might have negative value.
+        """
+        self.env.cr.execute("SELECT MAX(website_sequence) FROM %s" % self._table)
+        max_sequence = self.env.cr.fetchone()[0]
+        if max_sequence is None:
+            return 10000
+        return max_sequence + 5
+
+    # === FIELDS ===#
+
+    website_description = fields.Html(
+        string="Description for the website",
+        translate=html_translate,
+        sanitize_overridable=True,
+        sanitize_attributes=False,
+        sanitize_form=False,
+        index="trigram",
+    )
+    description_ecommerce = fields.Html(
+        string="eCommerce Description",
+        translate=html_translate,
+        sanitize_overridable=True,
+        sanitize_attributes=False,
+        sanitize_form=False,
+    )
+
+    alternative_product_ids = fields.Many2many(
+        string="Alternative Products",
+        help="Suggest alternatives to your customer (upsell strategy)."
+        " Those products show up on the product page.",
+        comodel_name="product.template",
+        relation="product_alternative_rel",
+        column1="src_id",
+        column2="dest_id",
+        check_company=True,
+    )
+    accessory_product_ids = fields.Many2many(
+        string="Accessory Products",
+        help="Accessories show up when the customer reviews the cart before payment"
+        " (cross-sell strategy).",
+        comodel_name="product.product",
+        relation="product_accessory_rel",
+        column1="src_id",
+        column2="dest_id",
+        check_company=True,
+    )
+    # Whether a cron should automatically fill optional products.
+    suggest_optional_products = fields.Boolean(
+        string="Suggest Optional Products",
+        compute="_compute_suggest_optional_products",
+        readonly=False,
+        store=True,
+    )
+    # Whether a cron should automatically fill accessory products.
+    suggest_accessory_products = fields.Boolean(
+        string="Suggest Accessory Products",
+        compute="_compute_suggest_accessory_products",
+        readonly=False,
+        store=True,
+    )
+    # Whether a cron should automatically fill alternative products.
+    suggest_alternative_products = fields.Boolean(
+        string="Suggest Alternative Products",
+        compute="_compute_suggest_alternative_products",
+        readonly=False,
+        store=True,
+    )
+    # Last update date of the optional, accessory and alternative products.
+    suggested_products_last_update = fields.Datetime(string="Last update of suggested products")
+
+    website_size_x = fields.Integer(string="Size X", default=1)
+    website_size_y = fields.Integer(string="Size Y", default=1)
+    website_ribbon_id = fields.Many2one(string="Ribbon", comodel_name="product.ribbon")
+    website_sequence = fields.Integer(
+        string="Website Sequence",
+        help="Determine the display order in the Website E-commerce",
+        default=_default_website_sequence,
+        copy=False,
+        index=True,
+    )
+    public_categ_ids = fields.Many2many(
+        string="Website Product Category",
+        help="The product will be available in each mentioned eCommerce category. Go to Shop > Edit"
+        " Click on the page and enable 'Categories' to view all eCommerce categories.",
+        comodel_name="product.public.category",
+        relation="product_public_category_product_template_rel",
+    )
+
+    publish_date = fields.Datetime(
+        string="Publish Date",
+        compute="_compute_publish_date",
+        store=True,
+        required=True,
+        default=fields.Datetime.now,
+    )
+
+    product_template_image_ids = fields.One2many(
+        string="Extra Product Media",
+        comodel_name="product.image",
+        inverse_name="product_tmpl_id",
+        copy=True,
+    )
+
+    compare_list_price = fields.Monetary(
+        string="Compare to Price",
+        help="Add a strikethrough price to your /shop and product pages for comparison purposes."
+        "It will not be displayed if pricelists apply.",
+    )
+    variants_default_code = fields.Char(
+        compute="_compute_variants_default_code",
+        store=True,
+        index="trigram",
+        help="Technical field to enhance performance when looking up default code of product"
+        "variants (LIKE/ILIKE)",
+    )
+    description = fields.Html(index="trigram")
+    description_sale = fields.Text(index="trigram")
+
+    allow_out_of_stock_order = fields.Boolean(string="Sell when Out-of-Stock", default=True)
+    available_threshold = fields.Float(string="Show Threshold", default=5.0)
+    show_availability = fields.Boolean(string="Show availability Qty", default=False)
+    out_of_stock_message = fields.Html(string="Out-of-Stock Message", translate=html_translate)
+
+    # === INDEXES === #
+
+    # We need gist indexes for similarity check in ecommerce fuzzy search.
+    _name_gist_idx = models.Index(
+        lambda registry: get_translated_field_gist_index(registry, "name")
+    )
+    _description_gist_idx = models.Index(
+        lambda registry: get_translated_field_gist_index(registry, "description")
+    )
+    _description_sale_gist_idx = models.Index(
+        lambda registry: get_translated_field_gist_index(registry, "description_sale")
+    )
+    _default_code_gist_idx = models.Index(
+        lambda registry: (
+            "USING GIST(unaccent(default_code) gist_trgm_ops)"
+            if registry.has_trigram and registry.has_unaccent == FunctionStatus.INDEXABLE
+            else ("USING GIST(default_code gist_trgm_ops)" if registry.has_trigram else "")
+        )
+    )
+
+    def _auto_init(self):
+        """Override _auto_init to prevent MemoryError on ecommerce installation in dbs with lots of
+        products."""
+        if not column_exists(self.env.cr, "product_template", "variants_default_code"):
+            create_column(self.env.cr, "product_template", "variants_default_code", "varchar")
+            self.env.cr.execute(
+                SQL(
+                    """
+                    UPDATE product_template
+                    SET variants_default_code = variants.default_codes
+                    FROM (
+                        SELECT pt.id AS template_id,
+                               STRING_AGG(pv.default_code, %s) AS default_codes
+                        FROM product_template pt
+                        JOIN product_product pv ON pv.product_tmpl_id = pt.id
+                        WHERE pv.default_code IS NOT NULL
+                        GROUP BY pt.id
+                    ) AS variants
+                    WHERE product_template.id = variants.template_id
+                """,
+                    RARE_DELIMITER,
+                )
+            )
+        return super()._auto_init()
+
+    # === COMPUTE METHODS ===#
+
+    @api.depends("optional_product_ids")
+    def _compute_suggest_optional_products(self):
+        if self._is_automate_suggested_product_feature_enabled():
+            # Disable auto-suggestion if the user manually sets optional_product_ids
+            self.suggest_optional_products = False
+        else:
+            for template in self:
+                # Maintain consistency for feature enablement: suggest only when empty
+                template.suggest_optional_products = not template.optional_product_ids
+
+    @api.depends("accessory_product_ids")
+    def _compute_suggest_accessory_products(self):
+        if self._is_automate_suggested_product_feature_enabled():
+            # Disable auto-suggestion if the user manually sets accessory_product_ids
+            self.suggest_accessory_products = False
+        else:
+            for template in self:
+                # Maintain consistency for feature enablement: suggest only when empty
+                template.suggest_accessory_products = not template.accessory_product_ids
+
+    @api.depends("alternative_product_ids")
+    def _compute_suggest_alternative_products(self):
+        if self._is_automate_suggested_product_feature_enabled():
+            # Disable auto-suggestion if the user manually sets alternative_product_ids
+            self.suggest_alternative_products = False
+        else:
+            for template in self:
+                # Maintain consistency for feature enablement: suggest only when empty
+                template.suggest_alternative_products = not template.alternative_product_ids
+
+    @api.depends("is_published")
+    def _compute_publish_date(self):
+        """Set `publish_date` to the moment of (re-)publishing."""
+        self.filtered("is_published").publish_date = fields.Datetime.now()
+
+    def _compute_website_url(self):
+        super()._compute_website_url()
+        for product in self:
+            if product.id:
+                product.website_url = "/shop/%s" % self.env["ir.http"]._slug(product)
+
+    @api.depends("product_variant_ids.default_code")
+    def _compute_variants_default_code(self):
+        for template in self:
+            template.variants_default_code = RARE_DELIMITER.join(
+                template.product_variant_ids.filtered("default_code").mapped("default_code")
+            )
+
+    # === CRUD METHODS ===#
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        # Compute the suggest_x fields based on the m2m x now correctly saved
+        for record, vals in zip(records, vals_list):
+            record.write({
+                "suggest_optional_products": not vals.get("optional_product_ids"),
+                "suggest_accessory_products": not vals.get("accessory_product_ids"),
+                "suggest_alternative_products": not vals.get("alternative_product_ids"),
+            })
+        return records
+
+    def write(self, vals):
+        if "active" in vals and not vals["active"] and any(pt._is_donation() for pt in self):
+            raise ValidationError(self.env._("Donation products cannot be archived."))
+        # Clear empty ecommerce description content to avoid side-effects on product pages
+        # when there is no content to display anyway.
+        if vals.get("description_ecommerce"):
+            vals["description_ecommerce"] = adapt_translated_field_value(
+                self.env,
+                vals["description_ecommerce"],
+                lambda lang, v: (  # noqa: ARG005
+                    ""
+                    if is_html_empty(v) and not ("media_iframe_video" in v or "data-embedded" in v)
+                    else v
+                ),
+            )
+        return super().write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_not_donation_product(self):
+        if self.filtered(lambda p: p._is_donation()):
+            raise UserError(self.env._("Donation products cannot be deleted."))
+
+    def _is_donation(self):
+        """Return whether this product is the donation product used by the donation snippet."""
+        self.ensure_one()
+        return self.id == self.env["ir.model.data"]._xmlid_to_res_id(
+            "website_sale.product_donation"
+        )
+
+    # === BUSINESS METHODS ===#
+
+    def _get_website_accessory_product(self):
+        domain = Domain(self.env["website"].sale_product_domain())
+        if not self.env.user._is_internal():
+            domain &= Domain("is_published", "=", True)
+        return self.accessory_product_ids.filtered_domain(domain)
+
+    def _get_website_alternative_product(self):
+        domain = self.env["website"].sale_product_domain()
+        return self.alternative_product_ids.filtered_domain(domain)
+
+    def _cron_update_suggested_products(self, batch_size=100):
+        if not self._is_automate_suggested_product_feature_enabled():
+            return  # Skip the automation if the cron was activated without the feature.
+
+        products_domain = Domain([("sale_ok", "=", True), ("is_published", "=", True)])
+        cron_domain = products_domain & (
+            Domain("suggested_products_last_update", "<", "-12H")
+            | Domain("suggested_products_last_update", "=", False)
+        )
+        # Order by last update (desc) to ensure the cron processes all products over time,
+        # starting with those that haven't been updated recently
+        products_to_update = self.search(
+            cron_domain, order="suggested_products_last_update", limit=batch_size
+        )
+
+        remaining = (
+            len(products_to_update)
+            if len(products_to_update) < batch_size
+            else self.search_count(cron_domain)
+        )
+        self.env["ir.cron"]._commit_progress(remaining=remaining)
+        products_to_update._update_suggested_products()
+        self.env["ir.cron"]._commit_progress(processed=len(products_to_update))
+
+    def action_update_suggested_products(self):
+        # If called from the server action, reset the suggest_ fields
+        self.write({
+            "suggest_optional_products": True,
+            "suggest_accessory_products": True,
+            "suggest_alternative_products": True,
+        })
+        self._update_suggested_products()
+
+    def _update_suggested_products(self):
+        """Update the current product templates' optional, accessory, and alternative products.
+
+        Only salable and published product templates are considered. The heuristics to find
+        suggested products are as follows:
+        - Optional products: Up to 2 products bought together with the main product.
+        - Accessory products: Up to 1 product bought together with the main product.
+        - Alternative products: Up to 4 products sharing similar characteristics (attributes and
+          categories).
+
+        :rtype: None
+        """
+        for company, products in self.grouped("company_id").items():
+            products_by_categories = lazy(lambda: products._get_products_by_categories(company))
+            products_by_sales = lazy(lambda: products._get_products_by_sales(max_products=3))
+            with self.env.protecting(
+                [
+                    self._fields[fname]
+                    for fname in (
+                        "suggest_optional_products",
+                        "suggest_accessory_products",
+                        "suggest_alternative_products",
+                    )
+                ],
+                products,
+            ):  # Avoid recomputing the suggest_* fields when the value isn't set manually.
+                for product in products:
+                    if product.suggest_optional_products or product.suggest_accessory_products:
+                        optionals, accessories = product._get_suggested_optionals_and_accessories(
+                            products_by_sales, max_optionals=2
+                        )
+                        if product.suggest_optional_products:
+                            product.optional_product_ids = optionals
+                        if product.suggest_accessory_products:
+                            product.accessory_product_ids = accessories
+                    if product.suggest_alternative_products:
+                        product.alternative_product_ids = product._get_suggested_alternatives(
+                            products_by_categories, max_products=4
+                        )
+
+        self.suggested_products_last_update = self.env.cr.now()
+
+    @api.model
+    def _is_automate_suggested_product_feature_enabled(self):
+        return self.env["res.groups"]._is_feature_enabled(
+            "website_sale.group_automate_suggested_products"
+        )
+
+    def _get_products_by_sales(self, max_products):
+        """Get products that are bought together with the main product,
+        in at least 2 sale orders dated within 5 years.
+
+        rtype: dict[int, list[int]]
+        """
+        # Return the list of tuples (main_pt_id, recommended_pt_id)
+        # for any product.template sharing the conditions:
+        # - same order, dated from less than 5 years
+        # - active product, cheaper than the main product, not a combo item, not himself
+        result = self.env.execute_query(
+            SQL(
+                """
+                SELECT main_pt_id, recommended_pt_id
+                  FROM (SELECT pt.id  AS main_pt_id,
+                               pt2.id AS recommended_pt_id,
+                               ROW_NUMBER() OVER (
+                                   PARTITION BY pt.id
+                                       ORDER BY COUNT(DISTINCT so.id) DESC, RANDOM()
+                               )      AS rn
+                          FROM sale_order_line sol
+                          JOIN sale_order        so  ON so.id  = sol.order_id
+                          JOIN product_product   pp  ON pp.id  = sol.product_id
+                          JOIN product_template  pt  ON pt.id  = pp.product_tmpl_id
+                          JOIN sale_order_line   sol2 ON sol2.order_id = so.id AND sol2.id != sol.id
+                          JOIN product_product   pp2  ON pp2.id  = sol2.product_id
+                          JOIN product_template  pt2  ON pt2.id  = pp2.product_tmpl_id
+                         WHERE pt.id = ANY(%(pt_ids)s)
+                           AND so.state      = 'sale'
+                           AND so.date_order >= NOW() - INTERVAL '5 years'
+                           AND pt2.active    = TRUE
+                           AND pt2.sale_ok   = TRUE
+                           AND pt2.is_published = TRUE
+                           AND pt2.list_price < pt.list_price
+                           AND sol2.combo_item_id IS NULL
+                           AND pt2.id        != pt.id
+                         GROUP BY pt.id, pt2.id) ranked
+                 WHERE rn <= %(max_products)s
+                """,
+                pt_ids=list(self.ids),
+                max_products=max_products,
+            )
+        )
+        products_by_sales = defaultdict(list)
+        for main_id, recommended_id in result:
+            products_by_sales[main_id].append(recommended_id)
+
+        return products_by_sales
+
+    def _get_products_by_categories(self, company):
+        return dict(
+            self._read_group(
+                Domain([
+                    ("sale_ok", "=", True),
+                    ("is_published", "=", True),
+                    ("company_id", "=", company.id),
+                ]),
+                groupby=["public_categ_ids"],
+                aggregates=["id:recordset"],
+            )
+        )
+
+    def _get_suggested_optionals_and_accessories(self, products_by_sales, max_optionals):
+        """Get the records recommended as optional and accessory products for self."""
+        recommended_ids = products_by_sales.get(self.id, [])
+        optional_products_ids = recommended_ids[:max_optionals]
+        accessory_products_ids = recommended_ids[max_optionals:]  # last ones
+        optional_products = self.env["product.template"].browse(optional_products_ids)
+        accessory_products = (
+            self.env["product.template"].browse(accessory_products_ids).product_variant_ids
+        )
+        # Return one of the variant as accessory_product_ids requires a product.product
+        accessory_product = random.choice(accessory_products) if accessory_products else None
+        return optional_products, accessory_product
+
+    def _get_suggested_alternatives(self, products_by_categories, max_products):
+        """Get similar products based on the categories and attributes shared with self.
+        - Categories weight = 0.8, at least one category in common
+        - Attributes weight = 0.2.
+        """
+        scores = []
+        categories_a = set(self.public_categ_ids.ids)
+        attributes_a = set(self.attribute_line_ids.value_ids.ids)
+        # Limit to 1000 other products with at least one category in common (random order)
+        other_products_sharing_categories = self.env["product.template"]
+        for categ in self.public_categ_ids:
+            other_products_sharing_categories |= products_by_categories.get(categ)
+        other_products_sharing_categories = list(other_products_sharing_categories - self)
+        random.shuffle(other_products_sharing_categories)
+
+        for product_b in other_products_sharing_categories[:1000]:
+            categories_b = set(product_b.public_categ_ids.ids)
+            attributes_b = set(product_b.attribute_line_ids.value_ids.ids)
+            # Jaccard coefficient (A and B / A or B)
+            intersection_cat = categories_a & categories_b
+            union_cat = categories_a | categories_b
+            similar_categories = len(intersection_cat) / len(union_cat)
+            intersection_attr = attributes_a & attributes_b
+            union_attr = attributes_a | attributes_b
+            similar_attributes = len(intersection_attr) / len(union_attr) if union_attr else 0
+            score = 0.8 * similar_categories + 0.2 * similar_attributes
+
+            scores.append((product_b, score))
+
+        # Shuffle equal scores to avoid returning always the same top products
+        random.shuffle(scores)
+        scores = sorted(scores, key=lambda x: x[1], reverse=True)[:max_products]
+
+        # Return the product templates with the highest score
+        return self.env["product.template"].browse([p.id for p, score in scores])
+
+    def _has_no_variant_attributes(self):
+        """Return whether this `product.template` has at least one no_variant
+        attribute.
+
+        :return: True if at least one no_variant attribute, False otherwise
+        :rtype: bool
+        """
+        self.ensure_one()
+        return any(
+            a.create_variant == "no_variant"
+            for a in self.valid_product_template_attribute_line_ids.attribute_id
+        )
+
+    def _has_is_custom_values(self):
+        self.ensure_one()
+        """Return whether this `product.template` has at least one is_custom
+        attribute value.
+
+        :return: True if at least one is_custom attribute value, False otherwise
+        :rtype: bool
+        """
+        ptav_ids = self.valid_product_template_attribute_line_ids.product_template_value_ids
+        return any(v.is_custom for v in ptav_ids._only_active())
+
+    def _get_possible_variants_sorted(self):
+        """Return the sorted recordset of variants that are possible.
+
+        The order is based on the order of the attributes and their values.
+
+        See `_get_possible_variants` for the limitations of this method with
+        dynamic or no_variant attributes, and also for a warning about
+        performances.
+
+        :return: the sorted variants that are possible
+        :rtype: recordset of `product.product`
+        """
+        self.ensure_one()
+
+        def _sort_key_attribute_value(value):
+            # if you change this order, keep it in sync with _order from `product.attribute`
+            return (value.attribute_id.sequence, value.attribute_id.id)
+
+        def _sort_key_variant(variant):
+            """Sort variants by attributes and attribute values.
+
+            We assume all variants will have the same attributes, with only one value for each.
+                - first level sort: same as "product.attribute"._order
+                - second level sort: same as "product.attribute.value"._order
+            """
+            keys = []
+            for attribute in variant.product_template_attribute_value_ids.sorted(
+                _sort_key_attribute_value
+            ):
+                # if you change this order, keep it in sync with _order from
+                # `product.attribute.value`
+                keys.append(attribute.product_attribute_value_id.sequence)
+                keys.append(attribute.id)
+            return keys
+
+        return self._get_possible_variants().sorted(_sort_key_variant)
+
+    def _get_previewed_attribute_values(self, product_query_params=None):
+        """Compute previewed product attribute values for each product in the recordset.
+
+        :return: the previewed attribute values per product
+        :rtype: dict
+        """
+        res = defaultdict(dict)
+        show_count = 20
+        slug = self.env["ir.http"]._slug
+        for template in self:
+            previewed_ptal = next(
+                (
+                    p
+                    for p in template.attribute_line_ids
+                    if p.attribute_id.preview_variants != "hidden"
+                ),
+                None,
+            )
+            if previewed_ptal:
+                previewed_ptavs = [
+                    ptav
+                    for ptav in previewed_ptal.product_template_value_ids
+                    if ptav.ptav_active and ptav.ptav_product_variant_ids
+                ]
+
+                if len(previewed_ptavs) > 1:
+                    previewed_ptavs_data = []
+                    for ptav in previewed_ptavs[:show_count]:
+                        matching_variant = min(ptav.ptav_product_variant_ids, key=lambda p: p.id)
+                        variant_query_params = {
+                            **(product_query_params or {}),
+                            slug(ptav.attribute_id): slug(ptav.product_attribute_value_id),
+                        }
+                        previewed_ptavs_data.append({
+                            "ptav": ptav,
+                            "variant_image_url": self.env["website"].image_url(
+                                matching_variant, "image_512"
+                            ),
+                            "variant_url": template._get_product_url(variant_query_params),
+                        })
+
+                    res[template.id] = {
+                        "ptavs_data": previewed_ptavs_data,
+                        "hidden_ptavs_count": max(0, len(previewed_ptavs) - show_count),
+                    }
+        return res
+
+    def _get_sales_prices(self, pricelist_sudo, fiscal_position_sudo, website):
+        if not self:
+            return {}
+
+        currency = website.currency_id
+        pricelist_prices = pricelist_sudo._compute_price_rule(self, 1.0)
+        comparison_prices_enabled = self.env["res.groups"]._is_feature_enabled(
+            "website_sale.group_product_price_comparison"
+        )
+        uom_price_enabled = self.env["res.groups"]._is_feature_enabled(
+            "product.group_show_uom_price"
+        )
+
+        res = {}
+        for template in self:
+            pricelist_price, pricelist_rule_id = pricelist_prices[template.id]
+
+            product_taxes = template.sudo().taxes_id._filter_taxes_by_company()
+            taxes = fiscal_position_sudo.map_tax(product_taxes)
+
+            base_price = None
+            template_price_vals = {
+                "raw_pricelist_price": pricelist_price,
+                "pricelist_rule_id": pricelist_rule_id,
+                "price_reduce": template._apply_taxes_to_price(
+                    pricelist_price,
+                    currency,
+                    product_taxes=product_taxes,
+                    taxes=taxes,
+                    website=website,
+                ),
+            }
+            pricelist_item_sudo = (
+                template.env["product.pricelist.item"].sudo().browse(pricelist_rule_id)
+            )
+            if pricelist_item_sudo._show_discount_on_shop():
+                pricelist_base_price = pricelist_item_sudo._compute_price_before_discount(
+                    product=template, quantity=1.0, uom=template._get_main_uom(), currency=currency
+                )
+                if currency.compare_amounts(pricelist_base_price, pricelist_price) == 1:
+                    base_price = pricelist_base_price
+                    template_price_vals["base_price"] = template._apply_taxes_to_price(
+                        base_price,
+                        currency,
+                        product_taxes=product_taxes,
+                        taxes=taxes,
+                        website=website,
+                    )
+
+            if not base_price and comparison_prices_enabled and template.compare_list_price:
+                template_price_vals["base_price"] = template.currency_id._convert(
+                    template.compare_list_price, currency, self.env.company, round=False
+                )
+
+            if uom_price_enabled:
+                template_price_vals["base_unit_price"] = (
+                    template.product_variant_id._get_base_unit_price(
+                        template_price_vals["price_reduce"]
+                    )
+                )
+
+            res[template.id] = template_price_vals
+
+        return res
+
+    def _can_be_added_to_cart(self):
+        """Pre-check to `_is_add_to_cart_possible` to know if product can be sold."""
+        self.ensure_one()
+        return bool(self.filtered_domain(self.env["website"]._product_domain()))
+
+    def _is_add_to_cart_possible(self):
+        """
+        It's possible to add to cart (potentially after configuration) if
+        there is at least one possible combination.
+
+        :return: True if it's possible to add to cart, else False
+        :rtype: bool
+        """
+        self.ensure_one()
+        if not self.active or not self._can_be_added_to_cart():
+            # for performance: avoid calling `_get_possible_combinations`
+            return False
+        return next(self._get_possible_combinations(), False) is not False
+
+    def _get_combination_info(
+        self,
+        combination=False,
+        product_id=False,
+        add_qty=1.0,
+        uom_id=False,
+        only_template=False,
+        pricelist=None,
+        fiscal_position=None,
+    ):
+        """Return info about a given combination.
+
+        Note: this method does not take into account whether the combination is
+        actually possible.
+
+        :param combination: recordset of `product.template.attribute.value`
+
+        :param int product_id: `product.product` id. If no `combination`
+            is set, the method will try to load the variant `product_id` if
+            it exists instead of finding a variant based on the combination.
+
+            If there is no combination, that means we definitely want a
+            variant and not something that will have no_variant set.
+
+        :param float add_qty: the quantity for which to get the info,
+            indeed some pricelist rules might depend on it.
+        :param int|None uom_id: the uom for which to get the info, as an `uom.uom` id.
+
+        :param only_template: boolean, if set to True, get the info for the
+            template only: ignore combination and don't try to find variant
+
+        :return: dict with product/combination info:
+
+            - product_id: the variant id matching the combination (if it exists)
+
+            - product_template_id: the current template id
+
+            - display_name: the name of the combination
+
+            - price: the computed price of the combination, take the catalog
+                price if no pricelist is given
+
+            - price_extra: the computed extra price of the combination
+
+            - list_price: the catalog price of the combination, but this is
+                not the "real" list_price, it has price_extra included (so
+                it's actually more closely related to `lst_price`), and it
+                is converted to the pricelist currency (if given)
+
+            - has_discounted_price: True if the pricelist discount policy says
+                the price does not include the discount and there is actually a
+                discount applied (price < list_price), else False
+        """
+        self.ensure_one()
+
+        combination = combination or self.env["product.template.attribute.value"]
+        website = self.env["website"].get_current_website()
+        uom = self.env["uom.uom"].browse(uom_id) or self._get_main_uom()
+
+        if not product_id and not combination and not only_template:
+            combination = self._get_first_possible_combination()
+
+        if only_template:
+            product = self.env["product.product"]
+        elif product_id:
+            product = self.env["product.product"].browse(product_id)
+            if combination - product.product_template_attribute_value_ids:
+                # If the combination is not fully represented in the given product
+                #   make sure to fetch the right product for the given combination
+                product = self._get_variant_for_combination(combination)
+        else:
+            product = self._get_variant_for_combination(combination)
+
+        product_or_template = product or self
+        combination = combination or product.product_template_attribute_value_ids
+
+        display_name = product_or_template.with_context(display_default_code=False).display_name
+        if not product:
+            combination_name = combination._get_combination_name()
+            if combination_name:
+                display_name = f"{display_name} ({combination_name})"
+
+        price_context = product_or_template._get_product_price_context(combination)
+        product_or_template = product_or_template.with_context(**price_context)
+
+        combination_info = {
+            "combination": combination,
+            "product_id": product.id,
+            "product_template_id": self.id,
+            "display_name": display_name,
+            "is_combination_possible": self._is_combination_possible(combination=combination),
+            **self.with_context(**price_context)._get_additional_combination_info(
+                product_or_template=product_or_template,
+                quantity=add_qty or 1.0,
+                uom=uom,
+                website=website,
+                pricelist=pricelist if pricelist is not None else request.pricelist,
+                fiscal_position=(
+                    fiscal_position if fiscal_position is not None else request.fiscal_position
+                ),
+            ),
+        }
+
+        if website.google_analytics_key:
+            combination_info["product_tracking_info"] = self._get_google_analytics_data(
+                product, combination_info
+            )
+
+        if (
+            self.type == "combo"
+            and website.show_line_subtotals_tax_selection == "tax_included"
+            and not all(
+                tax.price_include
+                for tax in self.sudo().combo_ids.combo_item_ids.product_id.taxes_id
+            )
+        ):
+            combination_info["tax_disclaimer"] = self.env._("Taxes calculated at checkout.")
+
+        return combination_info
+
+    def _get_additional_combination_info(
+        self, product_or_template, quantity, uom, website, pricelist, fiscal_position
+    ):
+        """Compute additional combination info, based on given parameters.
+
+        :param product_or_template: `product.product` or `product.template` record
+            as variant values must take precedence over template values (when we have a variant)
+        :param float quantity: requested quantity
+        :param uom: `uom.uom` record
+        :param website: `website` record holding the current website of the request (if any),
+            or the contextual website (tests, ...)
+        :returns: additional product/template information
+        :rtype: dict
+        """
+        pricelist = pricelist.with_context(self.env.context)
+        currency = website.currency_id.with_context(self.env.context)
+
+        # Pricelist price doesn't have to be converted
+        pricelist_price, pricelist_rule_id = pricelist._get_product_price_rule(
+            product=product_or_template, quantity=quantity, uom=uom, currency=currency
+        )
+
+        price_before_discount = pricelist_price
+        pricelist_item = self.env["product.pricelist.item"].browse(pricelist_rule_id)
+        if pricelist_item._show_discount_on_shop():
+            price_before_discount = pricelist_item._compute_price_before_discount(
+                product=product_or_template, quantity=quantity or 1.0, uom=uom, currency=currency
+            )
+
+        has_discounted_price = currency.compare_amounts(price_before_discount, pricelist_price) == 1
+        combination_info = {
+            "list_price": max(pricelist_price, price_before_discount),
+            "price": pricelist_price,
+            "raw_pricelist_price": pricelist_price,
+            "has_discounted_price": has_discounted_price,
+            "discount_start_date": pricelist_item.date_start,
+            "discount_end_date": pricelist_item.date_end,
+        }
+
+        if (
+            not has_discounted_price
+            and product_or_template.compare_list_price
+            and self.env["res.groups"]._is_feature_enabled(
+                "website_sale.group_product_price_comparison"
+            )
+        ):
+            # TODO VCR comparison price only depends on the product template, but is shown/hidden
+            # depending on product price, should be removed from combination info in the future
+            combination_info["compare_list_price"] = product_or_template.currency_id._convert(
+                from_amount=self.compare_list_price, to_currency=currency, round=False
+            )
+
+        # Apply taxes
+        product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company()
+        taxes = self.env["account.tax"]
+        if product_taxes:
+            taxes = fiscal_position.map_tax(product_taxes)
+            # We do not apply taxes on the compare_list_price value because it's meant to be
+            # a strict value displayed as is.
+            for price_key in ("price", "list_price"):
+                combination_info[price_key] = product_or_template._apply_taxes_to_price(
+                    combination_info[price_key],
+                    currency,
+                    product_taxes=product_taxes,
+                    taxes=taxes,
+                    website=website,
+                )
+        is_zero_price = currency.is_zero(combination_info["price"])
+        prevent_sale = website._prevent_product_sale(product_or_template, is_zero_price)
+        combination_info.update({
+            "prevent_sale": prevent_sale,
+            "hide_price": prevent_sale and is_zero_price,
+            # additional info to simplify overrides
+            "currency": currency,  # displayed currency
+            "product_taxes": product_taxes,  # taxes before fpos mapping
+            "taxes": taxes,  # taxes after fpos mapping
+        })
+
+        if self.env["res.groups"]._is_feature_enabled("product.group_show_uom_price"):
+            price_per_product_uom = uom._compute_price(
+                price=combination_info["price"], to_unit=self.uom_id
+            )
+            combination_info.update({
+                "base_unit_name": product_or_template.base_unit_name,
+                "base_unit_price": product_or_template._get_base_unit_price(price_per_product_uom),
+            })
+
+        if combination_info["hide_price"]:
+            # If the price should be hidden, we don't want to send any price information regarding
+            # the product
+            combination_info["compare_list_price"] = 0
+
+        if product_or_template._has_multiple_uoms():
+            # for packaging pricings
+            combination_info["packaging_prices"] = {}
+            for product_uom in product_or_template._get_available_uoms():
+                uom_price = pricelist._get_product_price(  # unit price in packaging UOM
+                    product=product_or_template, quantity=quantity, uom=product_uom
+                )
+                base_uom_price = product_uom._compute_price(  # convert packaging prices to base UOM
+                    price=uom_price, to_unit=product_or_template.uom_id
+                )
+
+                combination_info["packaging_prices"][product_uom.id] = base_uom_price
+
+        if not self.env.context.get("website_sale_product_page"):
+            return combination_info
+
+        if product_or_template.type == "combo":
+            # The max quantity of a combo product is the max quantity of its combo with the lowest
+            # max quantity. If none of the combos has a max quantity, then the combo product also
+            # has no max quantity.
+            max_quantities = [
+                max_quantity
+                for combo in product_or_template.sudo().combo_ids
+                if (max_quantity := combo._get_max_quantity(website, request.cart)) is not None
+            ]
+            if max_quantities:
+                # No uom conversion: combo are not supposed to be sold with other uoms.
+                combination_info["max_combo_quantity"] = min(max_quantities)
+
+        if not product_or_template.is_storable:
+            return combination_info
+
+        combination_info.update({
+            "is_storable": True,
+            "allow_out_of_stock_order": product_or_template.allow_out_of_stock_order,
+            "available_threshold": product_or_template.available_threshold,
+        })
+        if product_or_template.is_product_variant:
+            product_sudo = product_or_template.sudo()
+            computed_qty = product_sudo.uom_id._compute_quantity(
+                website._get_product_available_qty(product_sudo), to_unit=uom, round=False
+            )
+            free_qty = float_round(computed_qty, precision_digits=0, rounding_method="DOWN")
+            has_stock_notification = product_sudo._has_stock_notification(
+                self.env.user.partner_id
+            ) or (
+                request
+                and product_sudo.id
+                in request.session.get("product_with_stock_notification_enabled", set())
+            )
+            stock_notification_email = request and request.session.get(
+                "stock_notification_email", ""
+            )
+            cart_quantity = 0.0
+            if not product_sudo.allow_out_of_stock_order:
+                cart_quantity = product_sudo.uom_id._compute_quantity(
+                    request.cart._get_cart_qty(product_sudo.id), to_unit=uom
+                )
+            digits = self.env["decimal.precision"].precision_get("Product Unit")
+            rounding = 10**-digits
+            combination_info.update({
+                "free_qty": free_qty,
+                "cart_qty": cart_quantity,
+                "uom_name": uom.name,
+                "uom_rounding": rounding,
+                "show_availability": product_sudo.show_availability,
+                "out_of_stock_message": product_sudo.out_of_stock_message,
+                "has_stock_notification": has_stock_notification,
+                "stock_notification_email": stock_notification_email,
+                "is_in_wishlist": product_sudo._is_in_wishlist(),
+            })
+        else:
+            combination_info.update({"free_qty": 0, "cart_qty": 0})
+
+        return combination_info
+
+    def _get_dynamic_attribute_images(self, combination_ids, website_id):
+        """Compute the 'closest variant' image for every value based on the current selection.
+
+        :param int | typing.Iterable[int | str] combination_ids: The IDs of the currently selected
+            `product.template.attribute.value` records.
+        :param int website_id: The ID of the current website. Used
+            to generate correct image URLs for the specific domain context.
+
+        :return: A dictionary mapping attribute value IDs to their corresponding image
+            URLs. Format: { attribute_value_id: image_url }
+        :rtype: dict
+        """
+        combination = self.env["product.template.attribute.value"].browse(combination_ids)
+        website = self.env["website"].browse(website_id)
+        attr_images = defaultdict(lambda: website.image_url(self, "image_128"))
+
+        for ptal in self.valid_product_template_attribute_line_ids:
+            if ptal.attribute_id.is_thumbnail_visible:
+                selected_ptav = combination.filtered(lambda v: v.attribute_line_id == ptal)
+                for ptav in ptal.product_template_value_ids:
+                    simulated = (combination - selected_ptav) + ptav
+                    closest = self._get_closest_possible_combination(simulated)
+                    variant = self._get_variant_for_combination(closest)
+                    if variant:
+                        attr_images[ptav.id] = website.image_url(variant, "image_128")
+
+        return attr_images
+
+    def _apply_taxes_to_price(
+        self,
+        price,
+        currency,
+        *,
+        product=None,
+        product_taxes=None,
+        taxes=None,
+        tax_display=None,
+        website=None,
+    ):
+        product = product or self.env["product.product"]
+
+        if product_taxes is None:
+            product_taxes = self.sudo().taxes_id._filter_taxes_by_company()
+
+        if not product_taxes:
+            # No taxes to apply
+            return price
+
+        if taxes is None:
+            taxes = request.fiscal_position.map_tax(product_taxes)
+
+        price = product._get_tax_included_unit_price_from_price(
+            price, product_taxes, product_taxes_after_fp=taxes
+        )
+
+        # The list_price is always the price of one.
+        tax_details = taxes.compute_all(
+            price, currency, 1, product or self, self.env.user.partner_id
+        )
+
+        if not tax_display:
+            show_tax = (
+                website or self.env.website
+            ).show_line_subtotals_tax_selection
+            tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
+
+        return tax_details[tax_display]
+
+    def create_product_variant(self, product_template_attribute_value_ids):
+        """Create if necessary and possible and return the id of the product
+        variant matching the given combination for this template.
+
+        Note AWA: Known "exploit" issues with this method:
+
+        - This method could be used by an unauthenticated user to generate a
+          lot of useless variants. Unfortunately, after discussing the
+          matter with ODO, there's no easy and user-friendly way to block
+          that behavior.
+          We would have to use captcha/server actions to clean/... that
+          are all not user-friendly/overkill mechanisms.
+
+        - This method could be used to try to guess what product variant ids
+          are created in the system and what product template ids are
+          configured as "dynamic", but that does not seem like a big deal.
+
+        The error messages are identical on purpose to avoid giving too much
+        information to a potential attacker:
+
+        - returning 0 when failing
+        - returning the variant id whether it already existed or not
+
+        :param product_template_attribute_value_ids: the combination for which
+            to get or create variant
+
+        :type product_template_attribute_value_ids: list of id
+            of `product.template.attribute.value`
+
+        :return: id of the product variant matching the combination or 0
+        :rtype: int
+        """
+        combination = self.env["product.template.attribute.value"].browse(
+            product_template_attribute_value_ids
+        )
+
+        return self._create_product_variant(combination, log_warning=True).id or 0
+
+    def _get_image_holder(self):
+        """Return the holder of the image to use as default representation.
+        If the product template has an image it is the product template,
+        otherwise if the product has variants it is the first variant.
+
+        :return: this product template or the first product variant
+        :rtype: recordset of 'product.template' or recordset of 'product.product'
+        """
+        self.ensure_one()
+        if self.image_128:
+            return self
+        variant = self.env["product.product"].browse(self._get_first_possible_variant_id())
+        # if the variant has no image anyway, spare some queries by using template
+        return variant if variant.image_variant_128 else self
+
+    def _get_suitable_image_size(self, columns, x_size, y_size):  # noqa: PLR6301
+        if x_size == 1 and y_size == 1 and columns >= 3:
+            return "image_512"
+        return "image_1024"
+
+    def _init_column(self, column_name):
+        # to avoid generating a single default website_sequence when installing the module,
+        # we need to set the default row by row for this column
+        if column_name == "website_sequence":
+            _logger.debug(
+                "Table '%s': setting default value of new column %s to unique values for each row",
+                self._table,
+                column_name,
+            )
+            self.env.cr.execute("SELECT id FROM %s WHERE website_sequence IS NULL" % self._table)
+            prod_tmpl_ids = self.env.cr.dictfetchall()
+            max_seq = self._default_website_sequence()
+            query = f"""
+                UPDATE {self._table}
+                SET website_sequence = p.web_seq
+                FROM (VALUES %s) AS p(p_id, web_seq)
+                WHERE id = p.p_id
+            """
+            values_args = [
+                (prod_tmpl["id"], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)
+            ]
+            self.env.cr.execute_values(query, values_args)
+        else:
+            super()._init_column(column_name)
+
+    def set_sequence_top(self):
+        min_sequence = self.sudo().search([], order="website_sequence ASC", limit=1)
+        self.website_sequence = min_sequence.website_sequence - 5
+
+    def set_sequence_bottom(self):
+        max_sequence = self.sudo().search([], order="website_sequence DESC", limit=1)
+        self.website_sequence = max_sequence.website_sequence + 5
+
+    def set_sequence_up(self):
+        previous_product_tmpl = self.sudo().search(
+            [
+                ("website_sequence", "<", self.website_sequence),
+                ("website_published", "=", self.website_published),
+            ],
+            order="website_sequence DESC",
+            limit=1,
+        )
+        if previous_product_tmpl:
+            previous_product_tmpl.website_sequence, self.website_sequence = (
+                self.website_sequence,
+                previous_product_tmpl.website_sequence,
+            )
+        else:
+            self.set_sequence_top()
+
+    def set_sequence_down(self):
+        next_prodcut_tmpl = self.search(
+            [
+                ("website_sequence", ">", self.website_sequence),
+                ("website_published", "=", self.website_published),
+            ],
+            order="website_sequence ASC",
+            limit=1,
+        )
+        if next_prodcut_tmpl:
+            next_prodcut_tmpl.website_sequence, self.website_sequence = (
+                self.website_sequence,
+                next_prodcut_tmpl.website_sequence,
+            )
+        else:
+            return self.set_sequence_bottom()
+
+    def _default_website_meta(self):
+        res = super()._default_website_meta()
+        res["default_opengraph"]["og:description"] = self.description_sale
+        res["default_opengraph"]["og:title"] = self.name
+        res["default_opengraph"]["og:image"] = self.env["website"].image_url(self, "image_1024")
+        res["default_meta_description"] = self.description_sale
+        return res
+
+    @api.model
+    def _get_alternative_product_filter(self):
+        return self.env.ref("website_sale.dynamic_filter_cross_selling_alternative_products").id
+
+    @api.model
+    def _get_product_types_allow_zero_price(self):  # noqa: PLR6301
+        """Return service_tracking types that can be sold at zero price.
+
+        When the website's `prevent_sale` is enabled with `prevent_sale_for='zero_price'`,
+        products with these service_tracking values are exempt and can still be added to cart
+        even with a zero price (e.g., event tickets, online courses).
+
+        Note: This exemption only applies to `prevent_sale_for='zero_price'` mode, not to
+        category-based prevention (`prevent_sale_for='specific_categories'`).
+
+        :return: List of service_tracking values that are allowed to have zero price.
+        :rtype: list
+        """
+        return []
+
+    # ---------------------------------------------------------
+    # Rating Mixin API
+    # ---------------------------------------------------------
+
+    def _rating_domain(self):
+        """Only take the published rating into account to compute avg and count."""
+        return super()._rating_domain() & Domain("is_internal", "=", False)
+
+    def _get_images(self):
+        """Return a list of records implementing `image.mixin` to
+        display on the carousel on the website for this template.
+
+        This returns a list and not a recordset because the records might be
+        from different models (template and image).
+
+        It contains in this order: the main image of the template and the
+        Template Extra Images.
+        """
+        self.ensure_one()
+        return [self] + list(self.product_template_image_ids)
+
+    def _get_attribute_value_domain(self, attribute_value_dict):  # noqa: PLR6301
+        return [
+            [("attribute_line_ids.value_ids", "in", attribute_value_ids)]
+            for attribute_value_ids in attribute_value_dict.values()
+        ]
+
+    @api.model
+    def _search_get_detail(self, website, order, options):  # noqa: ARG002
+        domains = [website.sale_product_domain()]
+        category = options.get("category")
+        tags = options.get("tags")
+        min_price = options.get("min_price")
+        max_price = options.get("max_price")
+        attribute_value_dict = options.get("attribute_value_dict")
+        if extra_domain := options.get("extra_domain"):
+            domains.append(extra_domain)
+        if category:
+            domains.append([
+                ("public_categ_ids", "child_of", self.env["ir.http"]._unslug(category)[1])
+            ])
+        if tags:
+            tags = {
+                tag_id for tag in tags.split(",") if (tag_id := self.env["ir.http"]._unslug(tag)[1])
+            }
+            domains.append(
+                Domain.OR([
+                    Domain("product_tag_ids", "in", tags),
+                    Domain("product_variant_ids.additional_product_tag_ids", "in", tags),
+                ])
+            )
+        if min_price:
+            domains.append([("list_price", ">=", min_price)])
+        if max_price:
+            domains.append([("list_price", "<=", max_price)])
+        if attribute_value_dict:
+            domains.extend(self._get_attribute_value_domain(attribute_value_dict))
+        search_fields = [
+            "name",
+            "default_code",
+            "variants_default_code",
+            "description_ecommerce",
+            "attribute_line_ids.value_ids.name",
+            "product_tag_ids.name",
+            "description_sale",
+        ]
+        fetch_fields = ["id", "name", "website_url", "description_ecommerce", "description_sale"]
+        mapping = {
+            "name": {"name": "name", "type": "text", "match": True},
+            "website_url": {"name": "website_url", "type": "text", "truncate": False},
+            "search_item_metadata": {
+                "name": "price",
+                "type": "html",
+                "display_currency": options["display_currency"],
+            },
+            "image_url": {"name": "image_url", "type": "html"},
+            "description": {
+                "name": "description_ecommerce",
+                "type": "text",
+                "html": True,
+                "match": True,
+            },
+            "tags": {"name": "product_tag_ids", "type": "tags", "match": True},
+            "attribute_value_ids": {
+                "name": "attribute_value_ids",
+                "type": "tags",
+                "match": True,
+                "force_show": True,
+            },
+            "description_sale": {
+                "name": "description_sale",
+                "type": "text",
+                "html": True,
+                "match": True,
+            },
+        }
+        return {
+            "model": "product.template",
+            "base_domain": domains,
+            "search_fields": search_fields,
+            "fetch_fields": fetch_fields,
+            "mapping": mapping,
+            "icon": "fa-shopping-cart",
+            "group_name": self.env._("Products"),
+            "sequence": 20,
+        }
+
+    def _search_fetch(self, search_detail, search, offset, limit, order):
+        results, count = super()._search_fetch(search_detail, search, offset, limit, order)
+        return results.with_context(search_term=search), count
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        search_term = self.env.context.get("search_term", "")
+        search_words = search_term.lower().split() if search_term else []
+
+        for product, data in zip(self, results_data):
+            combination_info = product._get_combination_info(only_template=True)
+            values = product.mapped("attribute_line_ids.value_ids")
+            data["attribute_value_ids"] = values.read(["id", "name"])
+            data["product_tag_ids"] = product.product_tag_ids.read(["name"])
+            price = self._search_render_results_prices(mapping, combination_info)
+            if price:
+                data["price"] = price
+            data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
+
+            if search_words and values:
+                matched_values = values.filtered(
+                    lambda attribute_value: any(
+                        word in (attribute_value.name or "").lower() for word in search_words
+                    )
+                )
+                if matched_values:
+                    data["website_url"] = product._get_product_url(
+                        grouped_attributes_values=matched_values.grouped("attribute_id")
+                    )
+        return results_data
+
+    def _search_render_results_prices(self, mapping, combination_info):
+        if combination_info.get("hide_price"):
+            return None
+
+        monetary_options = {"display_currency": mapping["search_item_metadata"]["display_currency"]}
+        return self.env["ir.qweb.field.monetary"].value_to_html(
+            combination_info["price"], monetary_options
+        )
+
+    def _get_google_analytics_data(self, product, combination_info):
+        self.ensure_one()
+        tracking_data = {
+            "item_id": product.barcode or product.id,
+            "item_name": combination_info["display_name"],
+            "item_category": self.categ_id.name,
+            "currency": combination_info["currency"].name,
+            "price": combination_info["price"],
+        }
+
+        if discount := combination_info["currency"].round(
+            combination_info["list_price"] - combination_info["price"]
+        ):
+            tracking_data["discount"] = discount
+
+        if combination_name := combination_info["combination"]._get_combination_name():
+            tracking_data["item_variant"] = combination_name
+
+        direct, others = combination_info["combination"]._split_standard_from_custom_attributes()
+        for ext_id, value in (direct | others).items():
+            # 'brand' maps to predefined GA4 item_brand, others are custom item-scoped params
+            key = f"item_{ext_id}" if ext_id == "brand" else ext_id
+            tracking_data[key] = value
+        return tracking_data
+
+    def _get_contextual_pricelist(self):
+        """Override to fallback on website current pricelist."""
+        pricelist = super()._get_contextual_pricelist()
+        if request and request.is_frontend and not pricelist:
+            return request.pricelist.with_context(self.env.context)
+        return pricelist
+
+    def _website_show_quick_add(self):
+        self.ensure_one()
+        if self._is_sold_out() or not self.filtered_domain(self.env["website"]._product_domain()):
+            return False
+        if not self._get_available_uoms():
+            return False
+        return not (
+            self.env.website.prevent_sale
+            and self.env.website._prevent_product_sale(self, not self._get_contextual_price())
+        )
+
+    @api.model
+    def _get_configurator_display_price(
+        self, product_or_template, quantity, date, currency, pricelist, **kwargs
+    ):
+        """Override of `sale` to apply taxes.
+
+        :param product.product|product.template product_or_template: The product for which to get
+            the price.
+        :param int quantity: The quantity of the product.
+        :param datetime date: The date to use to compute the price.
+        :param res.currency currency: The currency to use to compute the price.
+        :param product.pricelist pricelist: The pricelist to use to compute the price.
+        :param dict kwargs: Locally unused data passed to `super`.
+        :rtype: tuple(float, int or False)
+        :return: The specified product's display price (and the applied pricelist rule)
+        """
+        price, pricelist_rule_id = super()._get_configurator_display_price(
+            product_or_template, quantity, date, currency, pricelist, **kwargs
+        )
+
+        if website := self.env.website:
+            price = product_or_template._apply_taxes_to_price(price, currency, website=website)
+
+        return price, pricelist_rule_id
+
+    def _prepare_jsonld_vals(self):
+        """Generate JSON-LD markup data for the current product template.
+
+        If the template has multiple variants, the https://schema.org/ProductGroup schema is used.
+        Otherwise, the markup data generation is delegated to the variant to use the
+        https://schema.org/Product schema.
+
+        :param website website: The current website.
+        :return: The JSON-LD markup data.
+        :rtype: dict
+        """
+        self.ensure_one()
+        website = self.env["website"].get_current_website()
+
+        if self.product_variant_count == 1:
+            vals = self.product_variant_id._prepare_jsonld_vals()
+        else:
+            base_url = website.get_base_url()
+            # perf: temporal solution to avoid slowness when product have many variants and
+            # pricelist rules
+            limit = (
+                self
+                .env["ir.config_parameter"]
+                .sudo()
+                .get_int("website_sale.markup_data_limit_variants")
+                or None
+            )
+            variants = self.product_variant_ids[:limit] if limit else self.product_variant_ids
+            vals = {
+                "@type": "ProductGroup",
+                "@id": f"{base_url}{self.website_url}/#productgroup",
+                "name": self.name,
+                "image": f"{base_url}{website.image_url(self, 'image_1920')}",
+                "url": f"{base_url}{self.website_url}",
+                "hasVariant": [variant._prepare_jsonld_vals() for variant in variants],
+            }
+            if self.description_ecommerce:
+                vals["description"] = text_from_html(self.description_ecommerce)
+
+        if website.is_view_active("website_sale.product_comment") and self.rating_count:
+            vals["aggregateRating"] = {
+                "@type": "AggregateRating",
+                # sudo: product.product - visitor can access product average rating
+                "ratingValue": self.sudo().rating_avg,
+                "reviewCount": self.rating_count,
+            }
+        return vals
+
+    def _get_jsonld_dict(self, is_detail_page=False):
+        """Return JSON-LD dicts for a product page.
+
+        On a detail page the template's own schema is appended; on a listing
+        page a CollectionPage with an ItemList of product URLs is appended.
+        """
+        schemas = super()._get_jsonld_dict(is_detail_page)
+        if is_detail_page:
+            schemas.append(self._prepare_jsonld_vals())
+        elif self:
+            category = self.env["product.public.category"].browse(
+                self.env.context.get("shop_category_id"),
+            )
+            if category:
+                list_path = category.website_url
+                list_name = category.name
+            else:
+                list_path = SHOP_PATH
+                list_name = self.env._("Shop")
+            schemas.append(self._build_collectionpage_jsonld_vals(list_name, list_path, self))
+        return schemas
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        """Return breadcrumb items for shop and product pages.
+
+        Trail: Home -> Shop -> [category parents] -> Product name (detail only).
+
+        On detail pages the category comes from :attr:`public_categ_ids`.
+        On listing pages it is read from the ``shop_category_id`` context key.
+
+        :rtype: list[tuple[str, str]]
+        """
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._("Shop"), SHOP_PATH))
+        if is_detail_page:
+            category = self.public_categ_ids[:1]
+        else:
+            category = self.env["product.public.category"].browse(
+                self.env.context.get("shop_category_id"),
+            )
+        if category:
+            for cat in category.parents_and_self:
+                items.append((cat.name, cat.website_url))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _get_ribbon(self, price_vals=None, auto_assign_ribbons=None, variant=None):
+        """Return the ribbon to display for the current template.
+
+        It'll be either the ribbon set on the first variant, or the template, or the first
+        applicable ribbon in the automatically assigned ribbons.
+
+        :param dict price_vals: price values for the current product
+        :param auto_assign_ribbons: automatically assigned recordsets, as a `product.ribbon`
+            recordset
+        :param product.product variant: if any, the displayed variant whose ribbon we're looking
+            for.
+
+        :returns: the ribbon to display, if there is one.
+        :rtype: `product.ribbon` recordset
+        """
+        variant = variant or self.product_variant_id
+        ribbon = variant.sudo().variant_ribbon_id or self.sudo().website_ribbon_id
+        if not ribbon:
+            # The None check ensures that we do not recompute the ribbons when no ribbons were
+            # previously found.
+            if auto_assign_ribbons is None:
+                # On product page, the auto_assign_ribbons are not provided.
+                auto_assign_ribbons = self.env["product.ribbon"].search_fetch([
+                    ("assign", "!=", "manual")
+                ])
+            for rb in auto_assign_ribbons:
+                if rb._is_applicable_for(variant, price_vals):
+                    return rb
+
+        return ribbon
+
+    def _get_access_action(self, access_uid=None, force_website=False):
+        """Instead of the classic form view, redirect to website if it is published."""
+        self.ensure_one()
+        if force_website or (self.website_published and self.env.user.share):
+            return {
+                "type": "ir.actions.act_url",
+                "url": self.website_url,
+                "target": "self",
+                "target_type": "public",
+            }
+        return super()._get_access_action(access_uid=access_uid, force_website=force_website)
+
+    @api.model
+    def _allow_publish_rating_stats(self):  # noqa: PLR6301
+        return True
+
+    def _get_product_url(self, query_params=None, grouped_attributes_values=None):
+        self.ensure_one()
+
+        url = urlparse(self.website_url)
+        query_params = query_params or {}
+        if grouped_attributes_values:
+            product_grouped_pavs = self.attribute_line_ids.value_ids.grouped("attribute_id")
+            available_grouped_pavs = {
+                pa: [pav for pav in pavs if pav in product_grouped_pavs[pa]]
+                for pa, pavs in grouped_attributes_values.items()
+                if pa in product_grouped_pavs
+            }
+            compatible_grouped_pavs = {
+                pa: pavs if pa.display_type == "multi" else pavs[:1]
+                for pa, pavs in available_grouped_pavs.items()
+            }
+            slug = self.env["ir.http"]._slug
+            for pa, pavs in compatible_grouped_pavs.items():
+                query_params[slug(pa)] = ",".join([slug(pav) for pav in pavs])
+        if query_params:
+            url = url._replace(query=urlencode(query_params, doseq=True))
+
+        return url.geturl()
+
+    def _can_be_added_to_comparison(self):
+        self.ensure_one()
+
+        return bool(self.valid_product_template_attribute_line_ids)
+
+    def _has_multiple_uoms(self) -> bool:
+        """Check if the product has multiple available uoms for the current website.
+
+        :return: True if the product has multiple available uoms for the current website
+                 or if the default uom is not available
+        """
+        res = super()._has_multiple_uoms()
+        if res:
+            return res
+        if self.env.context.get("website_id") and self.type != "combo":
+            uoms = self._get_available_uoms()
+            if uoms:
+                return self.uom_id not in uoms
+        return res
+
+    def _get_available_uoms(self):
+        """Return a recordset of uoms configured for the product that are available for the current
+        website.
+
+        :returns: uoms available on the product for the current website.
+        :rtype: recordset of `uom.uom`
+        """
+        all_uoms = super()._get_available_uoms()
+        if self.env["res.groups"]._is_feature_enabled("uom.group_uom") and self.env.context.get(
+            "website_id"
+        ):
+            return all_uoms - self.env.website.restricted_uom_ids
+        return all_uoms
+
+    def _get_main_uom(self):
+        """Return the main uom for the product.
+        The main uom is always the first available uom on the current website, if no uom is
+        available, the default uom configured on the product is considered as the main uom.
+
+        :returns: the main uom of the product
+        :rtype: `uom.uom` recordset
+        """
+        self.ensure_one()
+        if self.env.context.get("website_id"):
+            return self._get_available_uoms()[:1] or self.uom_id
+        return super()._get_main_uom()
+
+    def _is_sold_out(self):
+        """Return whether the product is sold out (no available quantity).
+
+        If a product inventory is not tracked, or if it's allowed to be sold regardless
+        of availabilities, the product is never considered sold out.
+
+        Note: only checks the availability of the first variant of the template.
+
+        :return: whether the product can still be sold
+        :rtype: bool
+        """
+        if not self.is_storable or self.allow_out_of_stock_order:
+            return False
+        return not self.product_variant_id or self.product_variant_id._is_sold_out()
+
+    @api.model
+    def _get_additional_configurator_data(
+        self, product_or_template, date, currency, pricelist, *, uom=None, **kwargs
+    ):
+        """Override of `sale` to append basic stock data.
+
+        :param product.product|product.template product_or_template: The product for which to get
+            additional data.
+        :param datetime date: The date to use to compute prices.
+        :param res.currency currency: The currency to use to compute prices.
+        :param product.pricelist pricelist: The pricelist to use to compute prices.
+        :param uom.uom uom: The uom to use to compute prices.
+        :param dict kwargs: Locally unused data passed to overrides.
+        :rtype: dict
+        :return: A dict containing additional data about the specified product.
+        """
+        data = super()._get_additional_configurator_data(
+            product_or_template, date, currency, pricelist, **kwargs
+        )
+
+        if (
+            website := self.env.website
+        ) and product_or_template.is_product_variant:
+            max_quantity = product_or_template._get_max_quantity(website, request.cart, **kwargs)
+            if max_quantity is not None:
+                if uom:
+                    max_quantity = product_or_template.uom_id._compute_quantity(
+                        max_quantity, to_unit=uom
+                    )
+                data["free_qty"] = max_quantity
+        return data

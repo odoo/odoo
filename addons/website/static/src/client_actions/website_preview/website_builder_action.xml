@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.WebsiteBuilderClientAction">
+    <t t-set="show_404_page_message" t-value="this.state.is404 and !this.state.isEditing"/>
+    <div class="d-flex h-100 w-100" t-att-class="{'flex-column': show_404_page_message}" t-custom-ref="container">
+        <CreatePageMessage t-if="show_404_page_message" createPage="() => this.onNewPage(true)"/>
+        <div class="o_website_preview flex-grow-1" t-att-class="this.state.isEditing ? '' : 'border-top'" t-custom-ref="website_preview">
+            <div class="o_iframe_container">
+                <iframe t-if="!this.testMode" t-att-src="this.iframeFallbackUrl"
+                    class="o_ignore_in_tour"
+                    t-custom-ref="iframefallback"/>
+                <iframe t-att-src="this.initialUrl" t-custom-ref="iframe" t-on-load="this.onIframeLoad" />
+                <div t-if="this.websiteContext.isMobile" class="o_mobile_preview_layout">
+                    <img alt="phone" src="/html_builder/static/img/phone.svg"/>
+                </div>
+            </div>
+        </div>
+        <ResizablePanel t-if="this.websiteContext.showResourceEditor" handleSide="'start'" class="'o_resource_editor_wrapper'" onResize.bind="this.onResourceEditorResize" initialWidth="this.aceEditorWidth">
+            <ResourceEditor close="() => this.websiteContext.showResourceEditor = false"/>
+        </ResizablePanel>
+        <LocalOverlayContainer localOverlay="this.overlayRef" identifier="this.env.localOverlayContainerKey"/>
+        <div t-att-class="{'o_builder_sidebar_open': this.state.isEditing and this.state.showSidebar, 'o_is_microsoft_edge': this.isMicrosoftEdge}"
+            class="o-website-builder_sidebar border-start border-dark" t-custom-ref="builder_sidebar">
+            <LazyComponent  t-if="this.state.isEditing" Component="'website.WebsiteBuilder'" props="() => this.websiteBuilderProps" bundle="'website.website_builder_assets'" t-key="this.state.key"/>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.homepage_editor_welcome_message">
+    <div class="container o_homepage_editor_welcome_message text-center pt128 pb128 h-100">
+        <h2 class="mt0">Welcome to your <b>Homepage</b>!</h2>
+        <p class="lead d-none d-md-block">Click on <b>Edit</b> in the top right corner to start designing.</p>
+    </div>
+</t>
+</templates>

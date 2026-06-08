@@ -1,0 +1,44 @@
+import { ListController } from '@web/views/list/list_controller';
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+
+export class StockOrderpointListController extends ListController {
+    static template = "stock.StockOrderpoint.listView";
+
+    static components = {
+        ...super.components,
+        Dropdown,
+        DropdownItem,
+    }
+
+    get nbSelected() {
+        return this.model.root.selection.length;
+    }
+
+    async onClickOrder() {
+        const resIds = await this.model.root.getResIds(true);
+        const action = await this.model.orm.call(this.props.resModel, 'action_replenish', [resIds], {
+            context: this.props.context,
+        });
+        if (action) {
+            await this.actionService.doAction(action);
+        }
+        return this.actionService.doAction({type: 'ir.actions.client', tag: 'reload'});
+    }
+
+    async onClickSnooze() {
+        const resIds = await this.model.root.getResIds(true);
+        return this.actionService.doAction('stock.action_orderpoint_snooze', {
+            additionalContext: { default_orderpoint_ids: resIds },
+            onClose: () => { this.actionService.doAction({type: 'ir.actions.client', tag: 'reload'}); },
+        });
+    }
+
+    async createRecord() {
+        const location_id = this.env.searchModel.categories.find((category) => category.fieldName === "location_id")?.activeValueId;
+        await super.createRecord(...arguments);
+        if (this.editedRecord && location_id) {
+            this.editedRecord.update({ location_id: { id: location_id } });
+        }
+    }
+}

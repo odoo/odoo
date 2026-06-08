@@ -1,0 +1,515 @@
+import { registry } from "@web/core/registry";
+import { formatDateTime } from "@web/core/l10n/dates";
+import { EpsonPrinter } from "../utils/printer/epson_printer";
+import { GeneratePrinterData } from "../utils/printer/generate_printer_data";
+import { RetryPrintPopup } from "../components/popups/retry_print_popup/retry_print_popup";
+import { _t } from "@web/core/l10n/translation";
+import { renderToElement, renderToString } from "@web/core/utils/render";
+import { toCanvas } from "../utils/html-to-image";
+import { logPosImage, logPosMessage } from "../utils/pretty_console_log";
+import { waitImages } from "@point_of_sale/utils";
+import { SelectDefaultPrinterPopup } from "@point_of_sale/app/components/popups/select_default_printer_popup/select_default_printer_popup";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { ZebraPrinter } from "@point_of_sale/app/utils/printer/zebra_printer";
+import { useApp } from "@odoo/owl";
+
+const { DateTime } = luxon;
+
+export const posTicketPrinterService = {
+    dependencies: ["dialog", "pos_data", "notification"],
+    async start(env, dependencies) {
+        const service = new PosTicketPrinterService(env, dependencies);
+        await service.initPrinters();
+        return service;
+    },
+};
+
+export class PosTicketPrinterService {
+    constructor(...args) {
+        this.setup(...args);
+    }
+
+    setup(env, { dialog, pos_data, notification }) {
+        this.app = useApp();
+        this.env = env;
+        this.dialog = dialog;
+        this.notification = notification;
+        this.data = pos_data;
+        this.defaultPrinter = null;
+        this.initDefaultPrinter();
+    }
+
+    get printers() {
+        return [...this.preparationPrinters, ...this.receiptPrinters];
+    }
+
+    get useLna() {
+        return this.printers.find((p) => p.use_lna);
+    }
+
+    get config() {
+        return this.data.models["pos.config"].get(odoo.pos_config_id);
+    }
+
+    get session() {
+        return this.data.models["pos.session"].get(odoo.pos_session_id);
+    }
+
+    get receiptPrinters() {
+        return this.config.receipt_printer_ids;
+    }
+
+    get preparationPrinters() {
+        return this.config.preparation_printer_ids;
+    }
+
+    get hasReceiptPrinters() {
+        return this.receiptPrinters.length > 0;
+    }
+
+    get hasPreparationPrinters() {
+        return this.preparationPrinters.length > 0;
+    }
+
+    get printerStorageKey() {
+        return `pos_default_printer_id_${this.config.id}_${odoo.info?.db}`;
+    }
+
+    getGenerator() {
+        return new GeneratePrinterData(...arguments);
+    }
+
+    getOrderReceiptData(order, { basic = false, simplified = false } = {}) {
+        const generator = this.getGenerator({
+            models: this.data.models,
+            basicReceipt: basic,
+            simplified: simplified,
+            order,
+        });
+        return generator.generateReceiptData();
+    }
+
+    printWeb(iframe) {
+        // By default ticket scale will be full width, when printing
+        // this can be changed from the print dialog
+        if (odoo.debug === "assets") {
+            this.generateImage(iframe).then((image) => {
+                logPosImage(image);
+            });
+        }
+
+        iframe.contentWindow.focus();
+        this._print(iframe.contentWindow);
+    }
+
+    /**
+        Proxy method so we can patch it.
+     */
+    _print(window) {
+        window.print();
+    }
+
+    showPrinterErrorDialog(message, retryFunction, fallbackFunction = undefined) {
+        return this.dialog.add(RetryPrintPopup, {
+            title: message.title,
+            message: message.body,
+            canRetry: true,
+            retry: retryFunction,
+            download: fallbackFunction,
+        });
+    }
+
+    async openCashbox() {
+        if (!this.defaultPrinter?._instance?.openCashbox) {
+            return false;
+        }
+
+        return await this.defaultPrinter._instance?.openCashbox();
+    }
+
+    async print({ printer, iframe, image = null }) {
+        const finalImage =
+            image ||
+            (this.setIframeSizeFromPrinter(iframe, printer) && (await this.generateImage(iframe)));
+        let status;
+        try {
+            status = await printer._instance.print(finalImage);
+        } catch {
+            status = {
+                successful: false,
+                message: { body: _t("An unexpected error occurred while printing.") },
+            };
+        }
+
+        return status;
+    }
+    initDefaultPrinter() {
+        const storedPrinterId = Number(localStorage.getItem(this.printerStorageKey));
+        if (storedPrinterId) {
+            const relPrinter = Array.from(this.printers).find((d) => d.id === storedPrinterId);
+            if (relPrinter) {
+                this.defaultPrinter = relPrinter;
+                return;
+            }
+        }
+    }
+    async selectPrinter(force = false) {
+        const receiptPrinters = this.receiptPrinters;
+        const printer_id = Number(localStorage.getItem(this.printerStorageKey));
+        const isValidPrinter = receiptPrinters.some((printer) => printer.id === printer_id);
+        if (!receiptPrinters.length) {
+            return;
+        }
+        if (!force && isValidPrinter) {
+            this.defaultPrinter = receiptPrinters.find((printer) => printer.id === printer_id);
+        } else if (receiptPrinters.length == 1) {
+            this.defaultPrinter = receiptPrinters[0];
+        } else {
+            const setDefaultPrinter = await makeAwaitable(this.dialog, SelectDefaultPrinterPopup, {
+                receipt_printers: receiptPrinters,
+                selectedId: printer_id,
+            });
+            if (setDefaultPrinter) {
+                const printer = receiptPrinters.find(
+                    (printer) => printer.id === parseInt(setDefaultPrinter)
+                );
+                localStorage.setItem(this.printerStorageKey, printer.id);
+                this.defaultPrinter = printer;
+            }
+        }
+        return this.defaultPrinter;
+    }
+
+    async printWithFallback({
+        iframe,
+        image = null,
+        webFallback = true,
+        download = false,
+        printer = this.defaultPrinter,
+        fallbacks = this.config.receipt_printer_ids,
+    } = {}) {
+        if (this.hasReceiptPrinters && this.config.other_devices && !printer) {
+            printer = await this.selectPrinter();
+        }
+
+        const printersToTry = [];
+        if (printer) {
+            printersToTry.push(printer);
+        }
+        for (const fallbackPrinter of fallbacks) {
+            if (!printer || fallbackPrinter.id !== printer.id) {
+                printersToTry.push(fallbackPrinter);
+            }
+        }
+
+        if (!printersToTry.length && !download) {
+            webFallback && this.printWeb(iframe);
+            return;
+        }
+
+        let status = { successful: false };
+
+        for (const printer of printersToTry.filter(Boolean)) {
+            try {
+                status = await this.print({ printer, iframe, image });
+                if (status.successful) {
+                    break;
+                }
+            } catch (error) {
+                console.error(`Printing failed on printer ${printer.name}:`, error);
+            }
+        }
+
+        if (download && !status.successful) {
+            const image = await this.generateImage(iframe);
+            const link = document.createElement("a");
+            const currentDate = formatDateTime(DateTime.now(), {
+                format: "MM_dd_yyyy-HH_mm_ss",
+            });
+            const configName = this.config.name.replaceAll(" ", "_");
+            link.download = `${configName}-${this.session.id}-${currentDate}.png`;
+            link.href = image.toDataURL("image/png");
+            link.click();
+            status = { successful: true };
+        } else if (!status.successful) {
+            this.showPrinterErrorDialog(
+                status.message,
+                () => this.printWithFallback(...arguments),
+                () => this.printWeb(iframe)
+            );
+        }
+
+        return status;
+    }
+
+    /**
+     * All bellow method are using the default receipt printer but can
+     * fallback to another printer if needed.
+     * - this.config.receipt_printer_ids
+     */
+    async printSaleDetailsReceipt({ webFallback = true, download = false } = {}) {
+        const generator = this.getGenerator({ models: this.data.models });
+        const saleDetails = await this.data.call(
+            "report.point_of_sale.report_saledetails",
+            "get_sale_details",
+            [false, false, false, [this.session.id]]
+        );
+        const data = generator.generateSaleDetailsData(saleDetails);
+        const iframe = await this.generateIframe("point_of_sale.pos_sale_details_receipt", data);
+        return await this.printWithFallback({ iframe, webFallback, download });
+    }
+
+    async printTipReceipt({ order, name, webFallback = true }) {
+        const generator = this.getGenerator({ models: this.data.models, order });
+        const data = generator.generateTipData(name);
+        const iframe = await this.generateIframe("point_of_sale.pos_tip_receipt", data);
+        return await this.printWithFallback({ iframe, webFallback });
+    }
+
+    async printCashMoveReceipt({
+        reason,
+        translatedType,
+        order,
+        formattedAmount,
+        webFallback = true,
+    }) {
+        const printer = this.defaultPrinter;
+        if (!printer) {
+            return;
+        }
+
+        const generator = this.getGenerator({ models: this.data.models, order });
+        const data = generator.generateCashMoveData({ reason, translatedType, formattedAmount });
+        const iframe = await this.generateIframe("point_of_sale.pos_cash_move_receipt", data);
+        return await this.printWithFallback({ iframe, webFallback });
+    }
+
+    async printOrderReceipt({
+        order,
+        basic = false,
+        printBillActionTriggered = false,
+        webFallback = true,
+        simplified = false,
+    } = {}) {
+        const data = this.getOrderReceiptData(order, { basic, simplified });
+        const iframe = await this.generateIframe("point_of_sale.pos_order_receipt", data);
+        const result = await this.printWithFallback({ iframe, webFallback });
+
+        if (!printBillActionTriggered && result) {
+            await this.markReceiptAsPrinted(order);
+        } else if (!order.nb_print) {
+            order.nb_print = 0;
+        }
+
+        if (result?.warningCode) {
+            this.displayPrinterWarning(result, _t("Receipt Printer"));
+        }
+
+        return result;
+    }
+
+    /**
+     * Changes use preparation printers via this.config.preparation_printer_ids
+     */
+    async printOrderChanges({ order, opts = {}, printers = this.config.preparation_printer_ids }) {
+        let isPrinted = false;
+        const unsuccessfulPrints = [];
+        const retryPrinters = new Set();
+        let rawChangeForRetry = null;
+
+        for (const printer of printers) {
+            const generator = this.getGenerator({ models: this.data.models, order });
+            const categoryIds = new Set(printer.product_categories_ids.map((c) => c.id));
+            const changes = generator.generatePreparationData(categoryIds, opts);
+
+            for (const ticket of changes) {
+                rawChangeForRetry = rawChangeForRetry || ticket._rawChange;
+                if (ticket.extra_data.reprint && !opts.explicitReprint) {
+                    continue;
+                }
+
+                if (!printer?._instance) {
+                    unsuccessfulPrints.push(printer.name + " is not connected");
+                    break;
+                }
+
+                let result;
+                if (printer.paper_size === "label") {
+                    const zpl = renderToString(
+                        "point_of_sale.pos_order_change_receipt_zpl",
+                        ticket
+                    );
+                    result = await printer._instance.print(zpl);
+                } else {
+                    const iframe = await this.generateIframe(
+                        "point_of_sale.pos_order_change_receipt",
+                        ticket
+                    );
+                    this.setIframeSizeFromPrinter(iframe, printer);
+                    const image = await this.generateImage(iframe);
+                    result = await this.print({ printer, image });
+                }
+                if (result.successful) {
+                    isPrinted = true;
+                }
+
+                if (!result.successful) {
+                    retryPrinters.add(printer);
+                    unsuccessfulPrints.push(printer.name + ": " + result.message.body);
+                } else if (result.warningCode) {
+                    this.displayPrinterWarning(result, printer.name);
+                }
+            }
+        }
+
+        if (unsuccessfulPrints.length) {
+            const message = {
+                title: _t("Printing failed"),
+                body: unsuccessfulPrints.join("\n"),
+            };
+            this.showPrinterErrorDialog(
+                message,
+                this.printOrderChanges.bind(this, {
+                    order,
+                    opts: {
+                        ...opts,
+                        orderChange: rawChangeForRetry,
+                    },
+                    retryPrinters,
+                })
+            );
+        }
+
+        return isPrinted;
+    }
+
+    /**
+     * Helpers for printer initialization, warnings messages and
+     * data generation.
+     */
+    displayPrinterWarning(printResult, printerName) {
+        let notification;
+        if (printResult.warningCode === "ROLL_PAPER_HAS_ALMOST_RUN_OUT") {
+            notification = _t("%s almost runs out of paper.", printerName);
+        }
+        if (notification) {
+            this.notification.add(notification, {
+                type: "warning",
+            });
+        }
+    }
+
+    async initPrinters() {
+        const printers = [...this.preparationPrinters, ...this.receiptPrinters];
+        for (const printer of printers) {
+            const instance = await this.createPrinterInstance(printer);
+            printer._instance = instance;
+        }
+    }
+
+    async createPrinterInstance(printer) {
+        if (printer.printer_type === "epson_epos") {
+            if (printer.paper_size === "label") {
+                return new ZebraPrinter({ printer });
+            }
+            return new EpsonPrinter({ printer });
+        }
+
+        return false;
+    }
+
+    async getHtmlFromComponent(ComponentClass, data) {
+        const container = document.getElementById("receipt-iframe-container");
+        container.innerHTML = "";
+        const root = this.app.createRoot(ComponentClass, { props: data });
+        await root.mount(container);
+        const result = container.innerHTML;
+        root.destroy();
+        return result;
+    }
+
+    async generateIframe(template, data) {
+        const container = document.getElementById("receipt-iframe-container");
+        const iframe = document.createElement("iframe");
+        const el = renderToElement(template, data);
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.border = "none";
+        iframe.srcdoc = el.outerHTML;
+        container.innerHTML = "";
+        container.appendChild(iframe);
+        await new Promise((resolve) => (iframe.onload = resolve));
+        if ((await waitImages(iframe.contentDocument.body)).timedOut) {
+            logPosMessage(
+                "WARNING",
+                "generateIframe",
+                "Timeout while waiting for images to load in the receipt."
+            );
+        }
+        return iframe;
+    }
+
+    async setIframeSizeFromPrinter(iframe, printer) {
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        const iframeEl = doc.getElementById("pos-receipt");
+        const iframeHead = iframeEl.querySelector("head");
+        const { maxWidth, fontSize } = printer._instance.getStyle();
+
+        const style = document.createElement("style");
+        style.id = "printer-receipt-style";
+
+        const LINE_HEIGHT_RATIO = 1.4;
+
+        const getFontRules = (multiplier) => {
+            const size = fontSize * multiplier;
+            const height = size * LINE_HEIGHT_RATIO;
+            return `
+                font-size: ${size}px !important;
+                line-height: ${height}px !important;
+            `;
+        };
+
+        const cssRules = `
+            #pos-receipt { width: ${maxWidth}px !important; font-size: ${fontSize}px !important; }
+            /** Text classes **/
+            #pos-receipt .text-small { ${getFontRules(0.8)} }
+            #pos-receipt .text-normal { ${getFontRules(1.0)} }
+            #pos-receipt .text-large { ${getFontRules(1.4)} }
+            #pos-receipt .text-huge { ${getFontRules(2.0)} }
+            #pos-receipt .text-insane { ${getFontRules(2.3)} }
+        `;
+
+        style.textContent = cssRules;
+        iframeHead.appendChild(style);
+    }
+
+    async generateImage(iframe) {
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        const iframeEl = doc.getElementById("pos-receipt");
+        const sizes = iframeEl.getBoundingClientRect();
+        const image = await toCanvas(iframeEl, {
+            backgroundColor: "#ffffff",
+            height: Math.ceil(sizes.height),
+            width: Math.ceil(sizes.width),
+            pixelRatio: 1,
+        });
+
+        logPosImage(image);
+        return image;
+    }
+
+    async markReceiptAsPrinted(order) {
+        const count = order.nb_print ? order.nb_print + 1 : 1;
+        if (order.isSynced) {
+            const wasDirty = order.isDirty();
+            await this.data.write("pos.order", [order.id], { nb_print: count });
+            if (!wasDirty) {
+                order._dirty = false;
+            }
+        } else {
+            order.nb_print = count;
+        }
+    }
+}
+
+registry.category("services").add("pos_ticket_printer", posTicketPrinterService);

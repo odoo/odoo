@@ -1,0 +1,98 @@
+// Force the font base of html preview to match with the pdf export
+:root:has(.o_survey_certification) {
+    font-size: 16px;
+}
+
+.o_body_html:has(.o_survey_certification) {
+    padding: 0;
+}
+
+.o_survey_certification {
+    position: relative;
+    height: 210mm;
+    width: 297.2mm;
+    margin-left: -16px;
+    font-family: "Roboto", sans-serif;
+
+    .o_body_html & {
+        margin: 0;
+    }
+
+    &.o_layout_modern {
+        background-image: url("/survey/static/src/img/certification_modern_bg.svg");
+    }
+
+    &.o_layout_classic-1, &.o_layout_classic-2 {
+        background-size: contain;
+        background-position: center;
+
+        .o_certification_container {
+            padding-left: 40mm;
+            padding-right: 40mm;
+        }
+    }
+
+    &.o_layout_classic-1 {
+        background-image: url("/survey/static/src/img/certification_classic-1_bg.svg");
+
+        .o_certification_label {
+            border-top: 1px;
+            border-top-style: solid;
+        }
+    }
+
+    &.o_layout_classic-2 {
+        background-image: url("/survey/static/src/img/certification_classic-2_bg.svg");
+    }
+
+    &.o_layout_minimal {
+        .o_certification_container {
+            border-width: 4px;
+            border-style: solid;
+        }
+
+        .o_certification_number {
+            background-image: url("/survey/static/src/img/certification_minimal_number_bg.svg");
+            background-size: cover;
+        }
+    }
+
+    .o_certification_container {
+        top: 10mm;
+        left: 10mm;
+        bottom: 10mm;
+        right: 10mm;
+        padding: 15mm;
+
+        .o_certification_company_logo {
+            width: 30mm;
+            height: 30mm;
+        }
+
+        .o_certification_number {
+            width: 70mm;
+            height: 70mm;
+        }
+
+        .o_text_cursive {
+            font-family: "Playball", cursive;
+        }
+
+        .o_fixed_table_layout {
+            table-layout: fixed;
+        }
+    }
+
+    .o_watermark {
+        position: absolute;
+        top: 0mm;
+        left: 0mm;
+        bottom: 0mm;
+        right: 0mm;
+        background: url("/survey/static/src/img/watermark.png");
+        background-size: 10%;
+        background-position: center;
+        opacity: .5;
+        z-index: 4;
+    }
+}

@@ -1,0 +1,21 @@
+[contenteditable="true"] {
+    li p {
+        margin-bottom: 0;
+    }
+
+    // Invalidate `--heading-color` when under colored element in editable
+    :where([style*="color:"]) {
+        --heading-color: none;
+    }
+}
+
+.odoo-editor-editable {
+    li {
+        &[style*="color"],
+        &[class*="text-"] {
+            font[class*="bg-"]:not([class*="text-"]):not([style*="color"]) {
+                color: inherit !important;
+            }
+        }
+    }
+}

@@ -1,0 +1,829 @@
+import { proxy } from "@odoo/owl";
+import { Plugin } from "@html_editor/plugin";
+import { uniqueId } from "@web/core/utils/functions";
+import { isRemovable } from "./remove_plugin";
+import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
+import { OptionsContainer } from "@html_builder/sidebar/option_container";
+import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
+import { _t } from "@web/core/l10n/translation";
+import { closestElement } from "@html_editor/utils/dom_traversal";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
+import { ShadowOption } from "@html_builder/plugins/shadow_option";
+import { registry } from "@web/core/registry";
+import { renderToElement } from "@web/core/utils/render";
+import { omit } from "@web/core/utils/objects";
+
+/** @typedef {import("@html_builder/core/base_option_component").BaseOptionComponent} BaseOptionComponent */
+/** @typedef {import("@odoo/owl").Component} Component */
+/** @typedef {import("plugins").CSSSelector} CSSSelector */
+/** @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString */
+/**
+ * @typedef {{
+ *        class: string;
+ *        title: LazyTranslatedString;
+ *        handler: () => Promise<void>;
+ *        disabledReason?: string;
+ * }} BuilderButtonDescriptor
+ *
+ * @typedef {{
+ *     id: string;
+ *     element: HTMLElement;
+ *     options: BaseOptionComponent[];
+ *     optionTitleComponents: BaseOptionComponent[] | [];
+ *     headerMiddleButtons: Component[] | [];
+ *     containerTitle: Component | {};
+ *     hasOverlayOptions: boolean;
+ *     isRemovable: boolean;
+ *     removeDisabledReason: string;
+ *     isClonable: boolean;
+ *     cloneDisabledReason: string;
+ *     optionsContainerTopButtons: BuilderButtonDescriptor[] | [];
+ * }} BuilderOptionContainer
+ *
+ * @typedef {{
+ *      editableOnly?: boolean;
+ *      exclude?: string;
+ * }} BuilderOptionConfig
+ */
+
+/**
+ * @typedef { Object } BuilderOptionsShared
+ * @property { BuilderOptionsPlugin['checkElement'] } checkElement
+ * @property { BuilderOptionsPlugin['closestWithOption'] } closestWithOption
+ * @property { BuilderOptionsPlugin['computeContainers'] } computeContainers
+ * @property { BuilderOptionsPlugin['findOption'] } findOption
+ * @property { BuilderOptionsPlugin['getContainers'] } getContainers
+ * @property { BuilderOptionsPlugin['updateContainers'] } updateContainers
+ * @property { BuilderOptionsPlugin['deactivateContainers'] } deactivateContainers
+ * @property { BuilderOptionsPlugin['getTarget'] } getTarget
+ * @property { BuilderOptionsPlugin['getPageContainers'] } getPageContainers
+ * @property { BuilderOptionsPlugin['getRemoveDisabledReason'] } getRemoveDisabledReason
+ * @property { BuilderOptionsPlugin['getCloneDisabledReason'] } getCloneDisabledReason
+ * @property { BuilderOptionsPlugin['isClonable'] } isClonable
+ * @property { BuilderOptionsPlugin['setNextTarget'] } setNextTarget
+ * @property { BuilderOptionsPlugin['getBuilderOptionContext'] } getBuilderOptionContext
+ * @property { BuilderOptionsPlugin['getBuilderOptions'] } getBuilderOptions
+ */
+
+/**
+ * @typedef {((containers: BuilderOptionContainer[]) => void)[]} on_current_options_containers_changed_handlers
+ * @typedef {((newTargetEl: HTMLElement) => void)[]} on_will_restore_containers_handlers
+ *
+ * @typedef {((el: HTMLElement) => [] | BuilderButtonDescriptor[])[]} options_container_top_buttons_providers
+ *
+ * @typedef {({selector: CSSSelector, target: CSSSelector})[]} auto_unfold_container_providers
+ * @typedef {{
+ *     Component: Component;
+ *     selector: CSSSelector;
+ *     exclude: CSSSelector;
+ *     applyTo: CSSSelector;
+ *     props: object;
+ *     editableOnly?: boolean;
+ * }[]} builder_header_middle_buttons
+ * @typedef {{
+ *     selector: CSSSelector;
+ *     getTitleExtraInfo: (editingElement: HTMLElement) => string;
+ * }[]} container_title
+ * @typedef {{
+ *      Component: BaseOptionComponent;
+ *      selector: CSSSelector;
+ * }[]} elements_to_options_title_components
+ * @typedef {{
+ *      hasOption: (el: HTMLElement) => boolean;
+ *      editableOnly?: boolean;
+ * }[]} has_overlay_options
+ * @typedef {CSSSelector[]} no_parent_containers
+ * @typedef {((el: HTMLElement) => boolean | undefined)[]} should_keep_overlay_options_predicates
+ * @typedef {{[key: string]: string}[]} builder_options_render_context
+ */
+/**
+ * @typedef {((
+ *      el: HTMLElement
+ * ) => string|Markup|LazyTranslatedString|undefined)[]} clone_disabled_reason_providers
+ *
+ * Appends new reasons to the `reasons` array given as a parameter.
+ *
+ * Example:
+ *
+ *     (reasons, el) => {
+ *         reasons.push(`I hate ${el.dataset.name}`);
+ *         return reasons;
+ *     }
+ */
+/**
+ * @typedef {((
+ *      el: HTMLElement
+ * ) => string|Markup|LazyTranslatedString|undefined)[]} remove_disabled_reason_providers
+ *
+ * Appends new reasons to the `reasons` array given as a parameter.
+ *
+ * Example:
+ *
+ *     (reasons, el) => {
+ *         reasons.push(`I hate ${el.dataset.name}`);
+ *         return reasons;
+ *     }
+ */
+
+export class BuilderOptionsPlugin extends Plugin {
+    static id = "builderOptions";
+    static dependencies = ["operation", "domObserver", "history"];
+    static shared = [
+        "checkElement",
+        "closestWithOption",
+        "computeContainers",
+        "findOption",
+        "getContainers",
+        "updateContainers",
+        "deactivateContainers",
+        "getTarget",
+        "getPageContainers",
+        "getRemoveDisabledReason",
+        "getCloneDisabledReason",
+        "setNextTarget",
+        "getBuilderOptionContext",
+        "getBuilderOptions",
+        "isClonable",
+    ];
+    /** @type {import("plugins").BuilderResources} */
+    resources = {
+        history_commit_data_properties: ["currentTarget", "nextTarget"],
+        on_will_reset_history_handlers: () => {
+            this.targetState = {};
+        },
+        on_committed_to_history_handlers: this.onHistoryCommitted.bind(this),
+        on_history_commit_undone_handlers: this.restoreContainers.bind(this),
+        on_history_commit_redone_handlers: this.restoreContainers.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
+        reload_context_processors: (context, el) => {
+            if (el) {
+                context.selector = this.getReloadSelector(el);
+                context.folded = this.lastContainers.map((c) => c.folded);
+            }
+            return context;
+        },
+        on_editor_started_handlers: () => {
+            if (this.config.reloadContext) {
+                const { selector, folded } = this.config.reloadContext;
+                this.updateContainers(this.editable.querySelector(selector));
+                for (let i = 0; i < this.lastContainers.length && i < folded.length; i++) {
+                    this.lastContainers[i].folded &&= folded[i];
+                    this.lastContainers[i].foldedIntent &&= this.config.initialFolded[i];
+                }
+            }
+        },
+        options_container_top_buttons_providers: (el) => {
+            const buttons = [];
+            if (el.matches("section")) {
+                buttons.push({
+                    class: "fa fa-fw fa-crosshairs btn o-hb-btn btn-accent-color-hover",
+                    title: _t("Select only this block"),
+                    handler: (el) => this.updateContainers(el),
+                });
+            }
+            return buttons;
+        },
+        on_revert_history_commit_handlers: (commit) => {
+            this.targetState = { current: commit.data.nextTarget, next: commit.data.currentTarget };
+        },
+        on_apply_history_commit_handlers: (commit) => {
+            this.targetState = { current: commit.data.currentTarget, next: commit.data.nextTarget };
+        },
+        pending_history_commit_data_processors: (data) => ({
+            ...data,
+            currentTarget: this.targetState.current,
+            nextTarget: this.targetState.next,
+        }),
+        save_point_history_commit_data_processors: (data) => ({
+            ...data,
+            targetState: { ...this.targetState },
+        }),
+        on_savepoint_restored_handlers: (savePoint) => {
+            if ("targetState" in savePoint.data) {
+                this.targetState = { ...savePoint.data.targetState };
+            }
+        },
+    };
+
+    setup() {
+        /** @type { current?: Node, next?: Node } */
+        this.targetState = {};
+        this.builderOptions = this.computeBuilderOptionsFromTemplate();
+        this.builderOptionsContext = new Map();
+        this.builderOptionsDependencies = new Map();
+        const options = this.builderOptions.concat([OptionsContainer]);
+        for (const Option of options) {
+            this.getBuilderDependencies(Option);
+            this.getBuilderOptionContext(Option);
+        }
+
+        this.elementsToOptionsTitleComponents = withIds(
+            this.getResource("elements_to_options_title_components")
+        );
+        this.builderHeaderMiddleButtons = withIds(
+            this.getResource("builder_header_middle_buttons")
+        );
+        this.builderContainerTitle = withIds(this.getResource("container_title"));
+        this.lastContainers = [];
+
+        // Selector of elements that should not update/have containers when they
+        // are clicked.
+        this.notActivableElementsSelector = [
+            "#web_editor-top-edit",
+            "#oe_manipulators",
+            ".oe_drop_zone",
+            ".o_notification_manager",
+            ".o_we_no_overlay",
+            ".ui-autocomplete",
+            ".modal .btn-close",
+            ".transfo-container",
+            ".o_datetime_picker",
+        ].join(", ");
+        const unclonableButtonSelector = [
+            ".oe_unremovable",
+            ...this.getResource("submit_button_selectors"),
+        ].join(", ");
+        this.clonableSelector = `a.btn:not(${unclonableButtonSelector})`;
+    }
+    /**
+     * Checks if the given element is a valid builder option target.
+     *
+     * @param {HTMLElement} el
+     * @param {BaseOptionComponent | BuilderOptionConfig} option
+     * @returns {Boolean}
+     */
+    checkElement(el, { editableOnly = true, exclude = "" }) {
+        // Unless specified otherwise, the element should be in an editable.
+        if (editableOnly && !(el.closest(".o_savable") || el.closest(".o_savable_attribute"))) {
+            return false;
+        }
+        // Check that the element is not to be excluded.
+        exclude += `${exclude && ", "}.o_snippet_not_selectable`;
+        if (el.matches(exclude)) {
+            return false;
+        }
+        // If an editable is not required, do not check anything else.
+        if (!editableOnly) {
+            return true;
+        }
+        // `o_editable_media` bypasses the `o_not_editable` class.
+        if (el.matches(".o_editable_media")) {
+            return shouldEditableMediaBeEditable(el);
+        }
+        return !el.matches('.o_not_editable:not(.s_social_media) :not([contenteditable="true"])');
+    }
+
+    getReloadSelector(editingElement) {
+        for (const container of [...this.lastContainers].reverse()) {
+            for (const option of container.options) {
+                if (option.reloadTarget) {
+                    return option.selector;
+                }
+            }
+        }
+        if (editingElement.closest("header")) {
+            return "header";
+        }
+        if (editingElement.closest("main")) {
+            return "main";
+        }
+        if (editingElement.closest("footer")) {
+            return "footer";
+        }
+        return null;
+    }
+
+    updateContainers(target, { forceUpdate = false } = {}) {
+        if (this.dependencies.domObserver.hasStagedMutations()) {
+            console.warn(
+                "Should not have any mutations in the current commit when you update the container selection"
+            );
+        }
+        if (this.dependencies.history.getIsPreviewing()) {
+            return;
+        }
+        if (target) {
+            if (target.closest(this.notActivableElementsSelector)) {
+                return;
+            }
+            this.target = target;
+        }
+        if (!this.target || !this.target.isConnected) {
+            const connectedContainers = this.lastContainers.filter((c) => c.element.isConnected);
+            this.target = connectedContainers.at(-1)?.element;
+        }
+        this.targetState.current = this.target;
+
+        const newContainers = this.computeContainers(this.target);
+        if (newContainers.length === 0 && this.lastContainers.length === 0) {
+            return;
+        }
+        // Do not update the containers if they did not change and are not
+        // forced to update.
+        if (
+            !forceUpdate &&
+            this.target?.isConnected &&
+            newContainers.length === this.lastContainers.length
+        ) {
+            const previousIds = this.lastContainers.map((c) => c.id);
+            const newIds = newContainers.map((c) => c.id);
+            const areSameElements = newIds.every((id, i) => id === previousIds[i]);
+            // Check if the overlay options status changed.
+            const previousOverlays = this.lastContainers.map((c) => c.hasOverlayOptions);
+            const newOverlays = newContainers.map((c) => c.hasOverlayOptions);
+            const areSameOverlays = previousOverlays.every((check, i) => check === newOverlays[i]);
+            if (areSameElements && areSameOverlays) {
+                for (let i = 0; i < this.lastContainers.length; i++) {
+                    Object.assign(this.lastContainers[i], newContainers[i]);
+                }
+                // Skip full dispatch as reactivity handles the updates
+                return;
+            }
+        }
+
+        this.lastContainers = newContainers;
+        this.trigger("on_current_options_containers_changed_handlers", this.lastContainers);
+    }
+
+    getTarget() {
+        return this.target;
+    }
+
+    deactivateContainers() {
+        this.target = null;
+        this.targetState.current = false;
+        this.lastContainers = [];
+        this.trigger("on_current_options_containers_changed_handlers", this.lastContainers);
+    }
+
+    closestWithOption(el) {
+        return closestElement(el, (el) =>
+            this.builderOptions.some(
+                (Option) => el.matches(Option.selector) && this.checkElement(el, Option)
+            )
+        );
+    }
+
+    computeContainers(target) {
+        const mapElementsToOptions = (Options) => {
+            const map = new Map();
+            for (const Option of Options) {
+                let elements = getClosestElements(target, Option.selector);
+                if (!elements.length) {
+                    continue;
+                }
+                elements = elements.filter((el) => this.checkElement(el, Option));
+
+                for (const element of elements) {
+                    if (map.has(element)) {
+                        map.get(element).push(Option);
+                    } else {
+                        map.set(element, [Option]);
+                    }
+                }
+            }
+            return map;
+        };
+        const elementToOptions = mapElementsToOptions(this.builderOptions);
+        const elementToHeaderMiddleButtons = mapElementsToOptions(this.builderHeaderMiddleButtons);
+        const elementToContainerTitle = mapElementsToOptions(this.builderContainerTitle);
+        const elementToOptionTitleComponents = mapElementsToOptions(
+            this.elementsToOptionsTitleComponents
+        );
+
+        // Find the closest element with no options that should still have the
+        // overlay buttons.
+        let element = target;
+        while (element && !elementToOptions.has(element)) {
+            if (this.hasOverlayOptions(element)) {
+                elementToOptions.set(element, []);
+                break;
+            }
+            element = element.parentElement;
+        }
+
+        const previousElementToIdAndStateMap = new Map(
+            this.lastContainers.map((c) => [
+                c.element,
+                { id: c.id, folded: c.folded, foldedIntent: c.foldedIntent },
+            ])
+        );
+        let containers = proxy(
+            [...elementToOptions]
+                .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
+                .map(([element, Options]) => ({
+                    id: previousElementToIdAndStateMap.get(element)?.id || uniqueId(),
+                    folded: previousElementToIdAndStateMap.get(element)?.foldedIntent ?? true,
+                    foldedIntent: previousElementToIdAndStateMap.get(element)?.foldedIntent,
+                    element,
+                    options: Options,
+                    optionTitleComponents: elementToOptionTitleComponents.get(element) || [],
+                    headerMiddleButtons: elementToHeaderMiddleButtons.get(element) || [],
+                    containerTitle: elementToContainerTitle.get(element)
+                        ? elementToContainerTitle.get(element)[0]
+                        : {},
+                    hideOverlay: Options.every((Option) => Option.hideOverlay),
+                    hasOverlayOptions: this.hasOverlayOptions(element),
+                    isRemovable: isRemovable(element),
+                    removeDisabledReason: this.getRemoveDisabledReason(element),
+                    isClonable: this.isClonable(element),
+                    cloneDisabledReason: this.getCloneDisabledReason(element),
+                    optionsContainerTopButtons: this.getOptionsContainerTopButtons(element),
+                }))
+        );
+        const lastValidContainerIdx = containers.findLastIndex((c) =>
+            this.getResource("no_parent_containers").some((selector) => c.element.matches(selector))
+        );
+        if (lastValidContainerIdx > 0) {
+            containers = containers.slice(lastValidContainerIdx);
+        }
+        const lastContainerWithOptions = containers.findLast((c) => c.options.length);
+        if (lastContainerWithOptions) {
+            lastContainerWithOptions.folded = false;
+            // The following is used in case the options in the last container
+            // are not likely the ones the user wants. After we re-organize the
+            // options to avoid these cases, this will be removed
+            for (const { selector, target } of this.getResource(
+                "auto_unfold_container_providers"
+            )) {
+                if (lastContainerWithOptions.element.matches(selector)) {
+                    const ancestorContainer = containers.findLast((c) => c.element.matches(target));
+                    if (ancestorContainer) {
+                        ancestorContainer.folded = ancestorContainer.foldedIntent ?? false;
+                    }
+                }
+            }
+        }
+        return containers;
+    }
+
+    getPageContainers() {
+        return this.computeContainers(this.editable.querySelector("main"));
+    }
+
+    getContainers() {
+        return this.lastContainers;
+    }
+
+    hasOverlayOptions(el) {
+        // An inner snippet alone in a column should not have overlay options.
+        const parentEl = el.parentElement;
+        const isAloneInColumn = parentEl?.children.length === 1 && parentEl.matches(".row > div");
+        const isInnerSnippet = this.config.snippetModel.isInnerContent(el);
+        const keepOptions =
+            this.checkPredicates("should_keep_overlay_options_predicates", el) ?? false;
+        const removeOptions =
+            this.checkPredicates("should_remove_overlay_options_predicates", el) ?? false;
+
+        if ((isInnerSnippet && isAloneInColumn && !keepOptions) || removeOptions) {
+            return false;
+        }
+
+        for (const { hasOption, editableOnly } of this.getResource("has_overlay_options")) {
+            if (this.checkElement(el, { editableOnly }) && hasOption(el)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getOptionsContainerTopButtons(el) {
+        const buttons = [];
+        for (const getContainerButtons of this.getResource(
+            "options_container_top_buttons_providers"
+        )) {
+            buttons.push(...getContainerButtons(el));
+            for (const button of buttons) {
+                const handler = button.handler;
+                button.handler = (...args) => {
+                    this.dependencies.operation.next(async () => {
+                        await handler(...args);
+                        this.dependencies.history.commit();
+                    });
+                };
+            }
+        }
+        return buttons;
+    }
+
+    cleanForSave(root) {
+        for (const Option of this.builderOptions) {
+            const { selector, exclude, cleanForSave } = Option;
+            if (!cleanForSave) {
+                continue;
+            }
+            for (const el of getElementsWithOption(root, selector, exclude)) {
+                cleanForSave(el, this.getBuilderOptionContext(Option));
+            }
+        }
+        return root;
+    }
+
+    /**
+     * Activates the containers of the given element or deactivate them if false
+     * is given. They will be (de)activated once the current commit is added (see
+     * `onCommitted`).
+     *
+     * @param {HTMLElement|Boolean} targetEl the element to activate or `false`
+     */
+    setNextTarget(targetEl) {
+        if (this.dependencies.history.getIsPreviewing()) {
+            return;
+        }
+        // In the case an option changes the target, keep its group unfolded.
+        // We don't know which one it is, so we keep all the opened ones.
+        // Only the last group may be "temporarily" unfolded, or one opened
+        // with `auto_unfold_container_providers`. In case an option call
+        // `setNextTarget`, it will always either be an option in the last
+        // group, or the last group will disappear in favor of the one with
+        // the new target.
+        for (const container of this.lastContainers) {
+            if (!container.folded) {
+                container.foldedIntent = false;
+            }
+        }
+        // Store the next target to activate in the current step.
+        this.targetState.next = targetEl;
+    }
+
+    onHistoryCommitted(commit) {
+        this.targetState = {};
+        // If a target is specified, activate its containers, otherwise simply
+        // update them.
+        const nextTargetEl = commit.data.nextTarget;
+        if (nextTargetEl) {
+            this.updateContainers(nextTargetEl, { forceUpdate: true });
+        } else if (nextTargetEl === false) {
+            this.deactivateContainers();
+        } else {
+            this.updateContainers();
+        }
+    }
+
+    /**
+     * Restores the containers of the target stored in the reversed commit.
+     *
+     * @param {Object} lastCommitReversed the last commit to have been reversed
+     */
+    restoreContainers(lastCommitReversed) {
+        const targetEl =
+            lastCommitReversed.data.currentTarget ?? lastCommitReversed.data.nextTarget;
+        if (targetEl) {
+            this.trigger("on_will_restore_containers_handlers", targetEl);
+            this.updateContainers(targetEl, { forceUpdate: true });
+            // Scroll to the target if not visible.
+            if (!isElementInViewport(targetEl)) {
+                // Firefox mis-scrolls with block "center" on tall snippets; keep "start".
+                targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }
+    }
+
+    getRemoveDisabledReason(el) {
+        return (
+            this.getResource("remove_disabled_reason_providers")
+                .map((p) => p(el))
+                .filter(Boolean)
+                .join(" ") || undefined
+        );
+    }
+
+    getCloneDisabledReason(el) {
+        return (
+            this.getResource("clone_disabled_reason_providers")
+                .map((p) => p(el))
+                .filter(Boolean)
+                .join(" ") || undefined
+        );
+    }
+
+    /**
+     * Checks if the given element can be cloned.
+     *
+     * @param {HTMLElement} el
+     * @returns {boolean}
+     */
+    isClonable(el) {
+        // TODO and isDraggable
+        return el.matches(this.clonableSelector) || isRemovable(el);
+    }
+
+    /**
+     * Finds the given option in the given element closest options container, as
+     * well as in the parent containers if specified, and returns it and its
+     * target element.
+     *
+     * @param {HTMLElement} el the element
+     * @param {String} optionName the option name
+     * @param {Boolean} [allowParent=false] true if the parent containers should
+     *   be considered
+     * @returns {Object} - `option`: the requested option
+     *                   - `targetEl`: the target element of the option
+     */
+    findOption(el, optionName, allowParent = false) {
+        let containers = this.getContainers().filter((container) => container.element.contains(el));
+        containers.reverse();
+        if (!allowParent) {
+            containers = [containers[0]];
+        }
+
+        // Find the given option in the active containers and the element on
+        // which it applies.
+        let targetEl, requestedOption;
+        for (const { element, options } of containers) {
+            requestedOption = options.find((option) => {
+                if (option.OptionComponent) {
+                    return option.OptionComponent.name === optionName;
+                } else {
+                    return option.template.split(".").at(-1) === optionName;
+                }
+            });
+            if (requestedOption) {
+                const { applyTo } = requestedOption;
+                targetEl = applyTo ? element.querySelector(applyTo) : element;
+                break;
+            }
+        }
+
+        return { option: requestedOption, targetEl };
+    }
+
+    /**
+     * Computes and returns the builder options from the options template.
+     *
+     * @returns {Array<Class>}
+     */
+    computeBuilderOptionsFromTemplate() {
+        const baseOptionsRegistry = registry.category("builder-options");
+        this.optionsRegistry = {
+            ...baseOptionsRegistry.content,
+            ...(this.config.builderOptionsRegistry?.content || {}),
+        };
+
+        const optionsRenderContext = this.getResource("builder_options_render_context");
+        const renderContext = Object.assign({}, ...optionsRenderContext);
+        const template = renderToElement(this.config.builderOptionsTemplate, renderContext);
+        return Array.from(template.children, (node) => this.createOptionClassFromXML(node));
+    }
+
+    getBuilderOptions() {
+        return [...this.builderOptions];
+    }
+
+    /**
+     * Creates the option class with the properties given in the XML definition.
+     *
+     * @param {Node} optionNode the option XML definition
+     * @returns {Class}
+     */
+    createOptionClassFromXML(optionNode) {
+        const optionId = optionNode.tagName.toLowerCase();
+        const { props, ...optionAttributes } = this.getOptionAttributes(optionNode);
+        const OptionClass = this.optionsRegistry[optionId]?.[1];
+        this.validateOptionDeclaration(optionId, optionAttributes, OptionClass);
+
+        // If there is no option class/component for the option, create one on
+        // the fly.
+        if (!OptionClass) {
+            return this.createOptionClass(optionId, optionAttributes);
+        }
+
+        // Create a new option class/component to extend the existing one with
+        // the new properties.
+        return this.createOptionClass(
+            optionId,
+            // Avoid overriding the props static definition.
+            { ...omit(optionAttributes, "template"), propsValue: props },
+            OptionClass
+        );
+    }
+
+    /**
+     * Creates an option class with the given name and properties, extending
+     * the given option class (`BaseOptionComponent` by default).
+     *
+     * @param {String} name the class name
+     * @param {Object} optionAttributes the option static properties
+     * @param {Class} [extendedClass=BaseOptionComponent] the class to extend
+     * @returns {Class}
+     */
+    createOptionClass(name, optionAttributes, extendedClass = BaseOptionComponent) {
+        // name is translated from snake_case to PascalCase to respect OWL
+        // components convention.
+        const optionName = name
+            .split("_")
+            .map((s) => s[0].toUpperCase() + s.slice(1))
+            .join("");
+        const OptionClass = { [optionName]: class extends extendedClass {} }[optionName];
+        const defaultComponents = { BorderConfigurator, ShadowOption };
+        return Object.assign(OptionClass, optionAttributes, {
+            components: { ...defaultComponents, ...(OptionClass.components || {}) },
+        });
+    }
+
+    /**
+     * Checks if the given option was correctly declared. It allows to stay
+     * consistent with what should be in the XML, and what should be in the
+     * option class when there is one. The rules are:
+     * - a selector must always be provided,
+     * - if there is no option class, the template should be given in the XML,
+     * - if there is an option class, the template should be declared in it,
+     * - all the other attributes should be declared in the XML.
+     *
+     * @param {String} optionId
+     * @param {Object} optionAttributes
+     * @param {Class} OptionClass
+     */
+    validateOptionDeclaration(optionId, optionAttributes, OptionClass) {
+        if (!optionAttributes.selector) {
+            throw new Error(`Missing 'selector' in the option XML definition: ${optionId}`);
+        }
+        if (!OptionClass) {
+            if (!optionAttributes.template) {
+                throw new Error(`Missing 'template' in the option XML definition: ${optionId}`);
+            }
+            return;
+        }
+        if (optionAttributes.template || !OptionClass.template) {
+            throw new Error(
+                `'template' should be defined in the option component class: ${optionId}`
+            );
+        }
+        const ignoredAttributes = ["template", "editableOnly"];
+        const toCheckAttributes = omit(optionAttributes, ...ignoredAttributes);
+        if (
+            Object.keys(toCheckAttributes).some((attr) => attr in OptionClass) ||
+            !OptionClass.editableOnly
+        ) {
+            throw new Error(
+                `'selector', 'exclude', 'applyTo', 'title', 'editableOnly' and 'groups' should be defined in the option XML definition: ${optionId}`
+            );
+        }
+    }
+
+    /**
+     * Extracts and parses the option attributes.
+     *
+     * @param {Node} node the option XML definition
+     * @returns {Object}
+     */
+    getOptionAttributes(node) {
+        const jsonProps = node.getAttribute("props");
+        const jsonGroups = node.getAttribute("groups");
+        return {
+            template: node.getAttribute("template"),
+            selector: node.getAttribute("selector"),
+            exclude: node.getAttribute("exclude"),
+            applyTo: node.getAttribute("applyTo") || undefined,
+            title: node.getAttribute("title"),
+            editableOnly: node.getAttribute("editableOnly") !== "false",
+            reloadTarget: node.getAttribute("reloadTarget") === "true",
+            groups: jsonGroups ? JSON.parse(jsonGroups) : [],
+            props: jsonProps ? JSON.parse(jsonProps) : {},
+        };
+    }
+
+    /**
+     * Get all dependencies of an OptionComponent and all its descendants.
+     */
+    getBuilderDependencies(OptionComponent) {
+        const cachedDeps = this.builderOptionsDependencies.get(OptionComponent);
+        if (cachedDeps) {
+            return cachedDeps;
+        }
+        const deps = OptionComponent.dependencies || [];
+        this.builderOptionsDependencies.set(OptionComponent, deps);
+        const childDeps = Object.values(OptionComponent.components || {}).flatMap(
+            this.getBuilderDependencies.bind(this)
+        );
+        deps.push(...childDeps);
+        return deps;
+    }
+    /**
+     * Get all the methods (window, document, getResources, ...) that are available in plugins. Provide the OptionComponent to set the right dependencies.
+     */
+    getBuilderOptionContext(OptionComponent) {
+        const context = this.builderOptionsContext.get(OptionComponent);
+        if (!context) {
+            const deps = this.getBuilderDependencies(OptionComponent);
+            const context = this.__editor.getEditorContext(deps);
+            this.builderOptionsContext.set(OptionComponent, context);
+            return context;
+        }
+        return context;
+    }
+}
+
+function getClosestElements(element, selector) {
+    if (!element) {
+        // TODO we should remove it
+        return [];
+    }
+    const parent = element.closest(selector);
+    return parent ? [parent, ...getClosestElements(parent.parentElement, selector)] : [];
+}
+
+function withIds(arr) {
+    return arr.map((el) => ({ ...el, id: uniqueId() }));
+}

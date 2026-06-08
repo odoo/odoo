@@ -1,0 +1,1075 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import re
+import urllib.parse
+from datetime import UTC, date, datetime
+
+from odoo import _, api, fields, models
+from odoo.exceptions import AccessError, UserError
+from odoo.fields import Domain
+from odoo.http import request
+from odoo.models import Query
+from odoo.tools import split_every
+from odoo.tools.json import scriptsafe as json_safe
+from odoo.tools.sql import SQL, escape_like_value
+from odoo.tools.urls import urljoin as url_join
+
+from odoo.addons.website.tools import text_from_html
+
+
+class WebsiteSeoMetadata(models.AbstractModel):
+    _name = 'website.seo.metadata'
+
+    _description = 'SEO metadata'
+
+    is_seo_optimized = fields.Boolean("SEO optimized", compute='_compute_is_seo_optimized', store=True)
+    website_meta_title = fields.Char("Website meta title", translate=True, prefetch="website_meta")
+    website_meta_description = fields.Text("Website meta description", translate=True, prefetch="website_meta")
+    website_meta_keywords = fields.Char("Website meta keywords", translate=True, prefetch="website_meta")
+    website_meta_og_img = fields.Char("Website opengraph image")
+    seo_name = fields.Char("Seo name", translate=True, prefetch=True)
+
+    @api.depends("website_meta_title", "website_meta_description", "website_meta_keywords")
+    def _compute_is_seo_optimized(self):
+        for record in self:
+            record.is_seo_optimized = record.website_meta_title and record.website_meta_description and record.website_meta_keywords
+
+    def _default_website_meta(self):
+        """ This method will return default meta information. It return the dict
+            contains meta property as a key and meta content as a value.
+            e.g. 'og:type': 'website'.
+
+            Override this method in case you want to change default value
+            from any model. e.g. change value of og:image to product specific
+            images instead of default images
+        """
+        self.ensure_one()
+        website = self.env.website
+        title = website.name
+        if 'name' in self:
+            title = '%s | %s' % (self.name, title)
+
+        img_field = 'social_default_image' if website.has_social_default_image else 'logo'
+
+        # Default meta for OpenGraph
+        default_opengraph = {
+            'og:type': 'website',
+            'og:title': title,
+            'og:site_name': website.name,
+            'og:url': url_join(website.domain or request.httprequest.url_root, self.env['ir.http']._url_for(request.httprequest.path)),
+            'og:image': website.image_url(website, img_field),
+        }
+        default_twitter = {
+            'twitter:card': 'summary_large_image',
+            'twitter:image': default_opengraph['og:image'],
+        }
+
+        return {
+            'default_opengraph': default_opengraph,
+            'default_twitter': default_twitter
+        }
+
+    def get_website_meta(self):
+        """ This method will return final meta information. It will replace
+            default values with user's custom value (if user modified it from
+            the seo popup of frontend)
+
+            This method is not meant for overridden. To customize meta values
+            override `_default_website_meta` method instead of this method. This
+            method only replaces user custom values in defaults.
+        """
+        root_url = self.env.website.domain or request.httprequest.url_root.strip('/')
+        default_meta = self._default_website_meta()
+        opengraph_meta, twitter_meta = default_meta['default_opengraph'], default_meta['default_twitter']
+        if self.website_meta_title:
+            opengraph_meta['og:title'] = self.website_meta_title
+        if self.website_meta_description:
+            opengraph_meta['og:description'] = self.website_meta_description
+        og_image = self.website_meta_og_img and urllib.parse.urlunsplit(
+            ["", "", *urllib.parse.urlsplit(self.website_meta_og_img)[2:]]
+        )
+        opengraph_meta['og:image'] = url_join(root_url, self.env['ir.http']._url_for(og_image or opengraph_meta['og:image']))
+        twitter_meta['twitter:image'] = url_join(root_url, self.env['ir.http']._url_for(og_image or twitter_meta['twitter:image']))
+        return {
+            'opengraph_meta': opengraph_meta,
+            'twitter_meta': twitter_meta,
+            'meta_description': self.website_meta_description or default_meta.get('default_meta_description'),
+            'default_meta_description': default_meta.get('default_meta_description'),
+        }
+
+    def _get_website_meta_translations(self):
+        """Return raw stored translations for meta fields with per-request caching."""
+        self.ensure_one()
+        cr = self.env.cr
+        lang_cache = cr.cache.setdefault('website_meta_i18n', {})
+        cache_key = (self._name, self.id)
+        if cache_key in lang_cache:
+            return lang_cache[cache_key]
+
+        stored_fields = [
+            name
+            for name in ('website_meta_description', 'website_meta_keywords')
+            if name in self._fields and self._fields[name].store and self._fields[name].translate
+        ]
+        translations = {}
+        if stored_fields:
+            cr = self.env.cr
+            fields_sql = SQL(', ').join(SQL.identifier(field) for field in stored_fields)
+            cr.execute(
+                SQL(
+                    "SELECT %s FROM %s WHERE id = %s",
+                    fields_sql,
+                    SQL.identifier(self._table),
+                    self.id
+                )
+            )
+            row = cr.fetchone() or ()
+            for idx, field_name in enumerate(stored_fields):
+                value = row[idx] if idx < len(row) else None
+                translations[field_name] = value if isinstance(value, dict) else {}
+
+        lang_cache[cache_key] = translations
+        return translations
+
+    def get_website_meta_i18n_value(self, field_name, lang_code):
+        """Return the translation for the given SEO meta field in lang_code, or ''. """
+        if not lang_code or field_name not in self._fields:
+            return ''
+        field = self._fields[field_name]
+        if not field.translate or not field.store:
+            return self[field_name] or ''
+
+        translations = self._get_website_meta_translations()
+        return translations.get(field_name, {}).get(lang_code) or ''
+
+
+class WebsiteCover_PropertiesMixin(models.AbstractModel):
+    _name = 'website.cover_properties.mixin'
+
+    _description = 'Cover Properties Website Mixin'
+
+    cover_properties = fields.Text('Cover Properties', default=lambda s: json_safe.dumps(s._default_cover_properties()))
+
+    def _default_cover_properties(self):
+        return {
+            "background_color_class": "o_cc3",
+            "background-image": "none",
+            "opacity": "0.2",
+            "resize_class": "o_half_screen_height",
+        }
+
+    def _get_background(self, height=None, width=None):
+        self.ensure_one()
+        properties = json_safe.loads(self.cover_properties)
+        img = properties.get('background-image', "none")
+
+        if img.startswith('url(/web/image/'):
+            suffix = ""
+            if height is not None:
+                suffix += "&height=%s" % height
+            if width is not None:
+                suffix += "&width=%s" % width
+            if suffix:
+                suffix = '?' not in img and "?%s" % suffix or suffix
+                img = img[:-1] + suffix + ')'
+        return img
+
+    def _get_image_url(self):
+        self.ensure_one()
+        img = self._get_background()
+        if not img:
+            return None
+        match = re.search(r"url\(\s*(['\"]?)(?P<url>.*?)\1\s*\)", img)
+        return match.group('url') if match else None
+
+    def write(self, vals):
+        if 'cover_properties' not in vals:
+            return super().write(vals)
+
+        cover_properties = json_safe.loads(vals['cover_properties'])
+        resize_classes = cover_properties.get('resize_class', '').split()
+        classes = ['o_half_screen_height', 'o_full_screen_height', 'cover_auto']
+        if not set(resize_classes).isdisjoint(classes):
+            # Updating cover properties and the given 'resize_class' set is
+            # valid, normal write.
+            return super().write(vals)
+
+        # If we do not receive a valid resize_class via the cover_properties, we
+        # keep the original one (prevents updates on list displays from
+        # destroying resize_class).
+        copy_vals = dict(vals)
+        for item in self:
+            old_cover_properties = json_safe.loads(item.cover_properties)
+            cover_properties['resize_class'] = old_cover_properties.get('resize_class', classes[0])
+            copy_vals['cover_properties'] = json_safe.dumps(cover_properties)
+            super(WebsiteCover_PropertiesMixin, item).write(copy_vals)
+        return True
+
+
+class WebsitePageVisibilityOptionsMixin(models.AbstractModel):
+    _name = 'website.page_visibility_options.mixin'
+    _description = "Website page/record specific visibility options"
+
+    header_visible = fields.Boolean(default=True)
+    footer_visible = fields.Boolean(default=True)
+    breadcrumb_visible = fields.Boolean(default=True)
+
+
+class WebsitePageOptionsMixin(models.AbstractModel):
+    _name = 'website.page_options.mixin'
+    _inherit = ['website.page_visibility_options.mixin']
+    _description = "Website page/record specific options"
+
+    header_overlay = fields.Boolean()
+    header_color = fields.Char()
+    header_text_color = fields.Char()
+    breadcrumb_overlay = fields.Boolean()
+    breadcrumb_color = fields.Char()
+    breadcrumb_text_color = fields.Char()
+
+
+class WebsiteMultiMixin(models.AbstractModel):
+    _name = 'website.multi.mixin'
+
+    _description = 'Multi Website Mixin'
+
+    website_id = fields.Many2one(
+        "website",
+        string="Website",
+        ondelete="restrict",
+        help="Restrict to a specific website.",
+        index=True,
+    )
+
+
+class WebsiteLocatedMixin(models.AbstractModel):
+    _name = 'website.located.mixin'
+
+    _description = "Website Located Mixin"
+
+    website_url = fields.Char("Website URL", compute='_compute_website_url', help="The full relative URL to access the document through the website.")
+    # The compute dependency (for get_base_url) must be added and get_base_url must be overridden if needed
+    website_absolute_url = fields.Char("Website Absolute URL", compute='_compute_website_absolute_url',
+                                       help="The full absolute URL to access the document through the website.")
+
+    @api.depends_context('lang')
+    def _compute_website_url(self):
+        for record in self:
+            record.website_url = '#'
+
+    @api.depends('website_url')
+    def _compute_website_absolute_url(self):
+        self.website_absolute_url = '#'
+        for record in self:
+            if record.website_url != '#':
+                record.website_absolute_url = url_join(record.get_base_url(), record.website_url)
+
+    def _get_extra_tracking_values(self, **kwargs):
+        return {}
+
+
+class WebsiteStructuredDataMixin(models.AbstractModel):
+    """Mixin to generate Schema.org JSON-LD structured data for website pages."""
+    _name = 'website.structured_data.mixin'
+    _description = 'Website Structured Data Mixin'
+
+    def _prepare_jsonld_vals(self):
+        """Build the Schema.org property dictionary for this record.
+        Subclasses must override this to return a dict containing at least
+        the ``@type`` key.
+
+        :return: Dictionary of Schema.org properties.
+        :rtype: dict
+        """
+        return {}
+
+    def _get_jsonld_dict(self, is_detail_page=False):
+        """Collect Schema.org dictionaries for the page.
+        Base implementation returns the website's Organization schema.
+        Override to append page-specific schemas.
+
+        :param bool is_detail_page: True if on a record detail page.
+        :return: List of Schema.org dictionaries.
+        :rtype: list[dict]
+        """
+        website = self.env['website'].get_current_website()
+        return [website._prepare_jsonld_vals()]
+
+    def _render_jsonld(self, is_detail_page=False):
+        """Render the complete JSON-LD payload for the current page.
+        Collects schemas, appends a BreadcrumbList if applicable, and Returns a
+        JSON-LD object with @context and an @graph array bundling all page
+        schemas, or False if none.
+
+        :param bool is_detail_page: True if on a record detail page.
+        :return: JSON-LD string, or False if no schemas exist.
+        :rtype: str | bool
+        """
+        schemas = [s for s in self._get_jsonld_dict(is_detail_page=is_detail_page) if s]
+        if not schemas:
+            return False
+        breadcrumb_items = self._get_breadcrumb_items(is_detail_page=is_detail_page)
+        if len(breadcrumb_items) > 1:
+            schemas.append(self._build_breadcrumb_jsonld(breadcrumb_items))
+        return json_safe.dumps(
+            {'@context': 'https://schema.org', '@graph': schemas},
+            ensure_ascii=False,
+        )
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        """Return ordered ``(name, relative_url)`` pairs for the breadcrumb trail.
+        Override to append model-specific items to the base "Home" item.
+
+        :param bool is_detail_page: True if on a record detail page.
+        :return: List of breadcrumb tuples.
+        :rtype: list[tuple[str, str]]
+        """
+        return [(self.env._('Home'), '/')]
+
+    def _build_breadcrumb_jsonld(self, items):
+        """Build a Schema.org ``BreadcrumbList`` dict from ``(name, url)`` pairs.
+        Resolves relative URLs to absolute.
+
+        :param list[tuple[str, str]] items: Ordered breadcrumb entries.
+        :return: BreadcrumbList schema dictionary.
+        :rtype: dict
+        """
+        website = self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        return {
+            '@type': 'BreadcrumbList',
+            'itemListElement': [
+                {
+                    '@type': 'ListItem',
+                    'position': i,
+                    'name': name,
+                    'item': url_join(base_url, url),
+                }
+                for i, (name, url) in enumerate(items, start=1)
+            ],
+        }
+
+    def _build_collectionpage_jsonld_vals(self, name, path, records, name_field='name', embed_items=False):
+        """Build a ``CollectionPage`` wrapping an ``ItemList`` of ``records``.
+
+        The caller is responsible for only building a CollectionPage when
+        relevant (e.g. a non-empty listing).
+
+        :param str name: CollectionPage name.
+        :param str path: Relative URL of the collection page; ``base_url`` is
+            prepended internally.
+        :param records: Recordset to list.
+        :param str name_field: Record field used as the flat ListItem name.
+        :param bool embed_items: If True each ``ListItem`` embeds the record's
+            full schema (via ``_prepare_jsonld_vals``) under the ``item`` key;
+            otherwise it emits a flat ``url`` + ``name``.
+        :rtype: dict
+        """
+        base_url = self.env['website'].get_current_website().get_base_url()
+        return {
+            '@type': 'CollectionPage',
+            'name': name,
+            'url': f'{base_url}{path}',
+            'publisher': {'@id': f'{base_url}/#organization'},
+            'mainEntity': {
+                '@type': 'ItemList',
+                'numberOfItems': len(records),
+                'itemListElement': [
+                    self._build_listitem_jsonld_vals(record, index, base_url, name_field, embed_items)
+                    for index, record in enumerate(records, start=1)
+                ],
+            },
+        }
+
+    def _build_listitem_jsonld_vals(self, record, position, base_url, name_field, embed_items):
+        """Build a single ``ListItem`` entry for an ``ItemList``.
+
+        :param bool embed_items: If True embed the record's full schema under
+            ``item``; otherwise emit a flat ``url`` + ``name``.
+        :rtype: dict
+        """
+        list_item = {'@type': 'ListItem', 'position': position}
+        if embed_items:
+            list_item['item'] = record._prepare_jsonld_vals()
+        else:
+            list_item['url'] = f'{base_url}{record.website_url}'
+            list_item['name'] = record[name_field]
+        return list_item
+
+    def _build_postaladdress_jsonld_vals(self, partner):
+        """Build a schema.org ``PostalAddress`` dict from a partner's address.
+
+        :param partner: ``res.partner`` whose address fields are read.
+        :return: A ``PostalAddress`` dict, or ``{}`` when no field is filled.
+        :rtype: dict
+        """
+        street = ', '.join(part for part in (partner.street, partner.street2) if part)
+        postal = {
+            key: value
+            for key, value in (
+                ('streetAddress', street),
+                ('addressLocality', partner.city),
+                ('postalCode', partner.zip),
+                ('addressRegion', partner.state_id.code),
+                ('addressCountry', partner.country_id.code),
+            )
+            if value
+        }
+        return {'@type': 'PostalAddress', **postal} if postal else {}
+
+    def _to_iso_datetime(self, dt):
+        """Convert a date/datetime value to an ISO 8601 string in the user's timezone.
+
+        :param dt: Date or Datetime value, or a falsy value.
+        :return: ISO 8601 formatted string (seconds precision), or None if ``dt``
+            is falsy or not a date/datetime.
+        :rtype: str | None
+        """
+        if not dt:
+            return None
+        # Datetime values are tz-naive UTC and must be localized
+        if isinstance(dt, datetime):
+            return dt.replace(tzinfo=UTC).isoformat(timespec='seconds')
+        # Date values have no time component and are serialized as-is
+        if isinstance(dt, date):
+            return dt.isoformat()
+        return None
+
+
+class WebsitePublishedMixin(models.AbstractModel):
+    _name = 'website.published.mixin'
+    _inherit = ['website.located.mixin']
+    _description = 'Website Published Mixin'
+
+    website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
+    is_published = fields.Boolean('Is Published', copy=False, default=lambda self: self._default_is_published(), index=True)
+    publish_on = fields.Datetime(
+        "Auto publish on",
+        copy=False,
+        help="Automatically publish the page on the chosen date and time.",
+    )
+    published_date = fields.Datetime("Published date", copy=False)
+    can_publish = fields.Boolean('Can Publish', compute='_compute_can_publish')
+
+    def _default_is_published(self):
+        return False
+
+    def action_unschedule(self):
+        self.write({'publish_on': False})
+
+    def _models_generator(self):
+        """Yield every stored model defining a ``publish_on`` field.
+
+        Yields:
+            odoo.models.BaseModel: Stored models that define a 'publish_on'
+                field and expose at least the 'id' and 'is_published' fields.
+        """
+        field_records = (
+            self.env['ir.model.fields']
+            .sudo()
+            .search([
+                ('name', '=', 'publish_on'),
+                ('model_id.abstract', '=', False),
+                ('store', '=', True),
+                ('related', '=', False),
+            ])
+        )
+        seen = set()
+        for field in field_records:
+            model_name = field.model
+            if model_name in seen or model_name not in self.env:
+                continue
+            model = self.env[model_name]
+            if {'id', 'is_published', 'publish_on'} <= set(model._fields):
+                seen.add(model_name)
+                yield model
+
+    def _cron_publish_scheduled_pages(self):
+        """Cron helper: publish every scheduled record whose deadline passed."""
+        publish_domain = [('publish_on', '!=', False), ('publish_on', '<=', 'now')]
+        models_to_process = []
+        total_to_process = 0
+
+        for model in self._models_generator():
+            model_sudo = model.sudo()
+            to_publish_count = model_sudo.search_count(publish_domain)
+            if to_publish_count:
+                models_to_process.append(model_sudo)
+                total_to_process += to_publish_count
+
+        if not total_to_process:
+            return
+
+        cron = self.env['ir.cron']
+        if not cron._commit_progress(remaining=total_to_process):
+            return
+
+        for model in models_to_process:
+            pages = model.search(publish_domain, order='publish_on asc, id asc')
+            for batch_ids in split_every(100, pages.ids):
+                batch = model.browse(batch_ids)
+                batch.write({'is_published': True, 'publish_on': False})
+                if not cron._commit_progress(processed=len(batch)):
+                    return
+
+    def _manage_next_scheduled_action(self):
+        scheduled_action = self.env.ref(
+            'website.ir_cron_publish_scheduled_pages',
+            raise_if_not_found=False,
+        )
+        if not scheduled_action:
+            raise UserError(
+                _(
+                    'The scheduled action "Website Publish Mixin: Publish scheduled website page" '
+                    "has been deleted. Please contact your administrator to restore it or reinstall the website module."
+                )
+            )
+
+        cron_trigger_env = self.env['ir.cron.trigger'].sudo()
+        next_trigger = cron_trigger_env.search(
+            [
+                ('cron_id', '=', scheduled_action.id),
+                ('call_at', '>=', fields.Datetime.now()),
+            ],
+            order='call_at asc',
+            limit=1,
+        )
+        next_trigger_datetime = next_trigger.call_at if next_trigger else False
+
+        scheduled_datetimes = []
+        for model in self._models_generator():
+            if model._name == 'website.published.mixin':
+                continue
+            record = model.sudo().search(
+                [('publish_on', '!=', False)],
+                order='publish_on asc',
+                limit=1,
+            )
+            if record:
+                scheduled_datetimes.append(record.publish_on)
+
+        if not scheduled_datetimes:
+            cron_trigger_env.search([
+                ('cron_id', '=', scheduled_action.id),
+                ('call_at', '>=', fields.Datetime.now()),
+            ]).unlink()
+            return False
+
+        scheduled_datetimes.sort()
+        earliest_datetime = scheduled_datetimes[0]
+
+        if not next_trigger_datetime or earliest_datetime < next_trigger_datetime:
+            cron_trigger_env.search([
+                ('cron_id', '=', scheduled_action.id),
+                ('call_at', '>=', fields.Datetime.now()),
+            ]).unlink()
+            scheduled_action._trigger(earliest_datetime)
+
+        return True
+
+    def website_publish_button(self):
+        self.ensure_one()
+        value = not self.website_published
+        self.write({'website_published': value, 'publish_on': False})
+        return value
+
+    def open_website_url(self):
+        return self.env['website'].get_client_action(self.website_url)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        schedule_needed = False
+        for record in records:
+            if record.is_published and not record.can_publish:
+                raise AccessError(self._get_can_publish_error_message())
+            if 'active' in record._fields and not record.active and record.is_published:
+                record.is_published = False
+            if record.publish_on:
+                if record.is_published:
+                    record.is_published = False
+                schedule_needed = True
+
+        records._finalize_publication()
+
+        if schedule_needed:
+            self._manage_next_scheduled_action()
+
+        return records
+
+    def write(self, vals):
+        publish_keys = {'is_published', 'website_published'}
+        if publish_keys & set(vals) and any(not record.can_publish for record in self):
+            raise AccessError(self._get_can_publish_error_message())
+
+        # Copy to avoid mutating caller provided dictionary in-place.
+        vals = dict(vals)
+
+        if vals.get('is_published') or vals.get('website_published'):
+            vals['publish_on'] = False
+
+        if 'active' in vals and vals['active'] is False:
+            vals['is_published'] = False
+            vals['publish_on'] = False
+
+        if vals.get('publish_on'):
+            vals.setdefault('is_published', False)
+
+        previously_published = {record.id: record.is_published for record in self}
+
+        res = super().write(vals)
+
+        if 'publish_on' in vals:
+            self._manage_next_scheduled_action()
+
+        if publish_keys & set(vals) and not self.env.context.get('skip_publish_post_process'):
+            newly_published = self.filtered(
+                lambda record: record.is_published
+                and not previously_published.get(record.id)
+                and not record.published_date
+            )
+            newly_published._finalize_publication()
+
+        return res
+
+    def create_and_get_website_url(self, **kwargs):
+        return self.create(kwargs).website_url
+
+    def _check_for_action_post_publish(self):
+        """Hook for subclasses to add side effects when publishing.
+
+        Returns:
+            recordset: mail.message recordset to post or broadcast (empty by
+            default).
+        """
+        return self.env['mail.message']
+
+    def _finalize_publication(self):
+        """Handle all post-publication side effects safely and consistently.
+
+        This method centralizes logic that used to be scattered in ORM
+        constraints. It ensures cache refresh, chatter notifications, and
+        metadata updates are executed once and outside the main write/create
+        transaction. This prevents long-lived transactions and stale cache
+        issues, while keeping publish behavior identical whether it's triggered
+        manually or via cron.
+
+        TDE: FIXME, lot of issues here
+        """
+
+        # Exit early if this call is explicitly skipped by context.
+        # (Used to prevent recursion when we write at the end of this method.)
+        if self.env.context.get('skip_publish_post_process'):
+            return
+
+        # Keep only records that *just became* published, i.e. visible online
+        # but not yet stamped with a published_date.
+        records = self.filtered(lambda record: record.is_published and not record.published_date)
+        if not records:
+            return
+
+        # Prepare containers for all chatter messages and pending notifications.
+        messages = self.env['mail.message']
+        pending_notifications = []
+
+        # Ask each record if it has a post-publish hook that should run.
+        # For example, a blog post may return a chatter message to broadcast.
+        for record in records:
+            message = record.with_context(force_website_published=True)._check_for_action_post_publish()
+            if message:
+                messages |= message
+                pending_notifications.append(message)
+
+        # ----------------------------------------------------------------------
+        # STEP 1: Clear caches before sending notifications
+        # ----------------------------------------------------------------------
+        if messages:
+            # We're about to send notifications, but the ORM might still cache
+            # an outdated "who was notified" list. This invalidation ensures
+            # that after we post messages, recomputed fields (like
+            # notified_partner_ids) correctly reflect the actual recipients.
+            messages.invalidate_recordset(['notified_partner_ids'])
+
+        # ----------------------------------------------------------------------
+        # STEP 2: Send chatter notifications like the UI would
+        # ----------------------------------------------------------------------
+        for message in pending_notifications:
+            target_sudo = self.env[message.model].browse(message.res_id).sudo()
+            message_sudo = message.sudo()
+            if not target_sudo:
+                continue
+
+            # Compute recipients (followers, partners, etc.)
+            recipients = target_sudo._notify_get_recipients(message_sudo)
+            if recipients:
+                # Mirror the UI path so followers receive the same notifications
+                # they would if the message had been posted manually.
+                target_sudo._notify_thread(message_sudo, skip_existing=True)
+
+                # We've just sent notifications → clear caches again so
+                # message.notified_partner_ids and message.notification_ids
+                # reflect the new state right away (who got pinged, which
+                # notifications exist).
+                message_sudo.invalidate_recordset(
+                    ['notified_partner_ids', 'notification_ids']
+                )
+
+                # --------------------------------------------------------------
+                # STEP 3: Ensure notification rows exist (fallback path)
+                # --------------------------------------------------------------
+                if not message_sudo.notification_ids:
+                    notif_vals = []
+                    for recipient in recipients:
+                        partner_id = recipient.get('id')
+                        if not partner_id:
+                            continue
+                        notif_vals.append({
+                            'author_id': message_sudo.author_id.id,
+                            'mail_message_id': message_sudo.id,
+                            'notification_status': 'sent',
+                            'notification_type': recipient.get('notif') or 'inbox',
+                            'res_partner_id': partner_id,
+                        })
+                    if notif_vals:
+                        # Create missing mail.notification records manually so
+                        # that automated publishes leave the same audit trail as
+                        # UI posts.
+                        self.env['mail.notification'].sudo().create(notif_vals)
+
+                        # Again, refresh caches for message relations so that
+                        # chatter views show the up-to-date "who was notified"
+                        # list.
+                        message_sudo.invalidate_recordset(
+                            ['notified_partner_ids', 'notification_ids']
+                        )
+
+        # ----------------------------------------------------------------------
+        # STEP 4: Stamp publish date and clear any publish_on schedule
+        # ----------------------------------------------------------------------
+        # The context flag prevents re-entering this method during this write.
+        records.with_context(skip_publish_post_process=True).write({
+            'published_date': fields.Datetime.now(),
+            'publish_on': False,
+        })
+
+    @api.depends_context('uid')
+    def _compute_can_publish(self):
+        """ This method can be overridden if you need more complex rights
+        management than just write access to the model.
+        The publish widget will be hidden and the user won't be able to change
+        the 'website_published' value if this method sets can_publish False """
+        for record in self:
+            try:
+                self.env.website._check_user_can_modify(record)
+                record.can_publish = True
+            except AccessError:
+                record.can_publish = False
+
+    @api.model
+    def _get_can_publish_error_message(self):
+        """ Override this method to customize the error message shown when the user doesn't
+        have the rights to publish/unpublish. """
+        return _("You do not have the rights to publish/unpublish")
+
+
+class WebsitePublishedMultiMixin(WebsitePublishedMixin):
+    _name = 'website.published.multi.mixin'
+    _inherit = ['website.published.mixin', 'website.multi.mixin']
+    _description = 'Multi Website Published Mixin'
+
+    website_published = fields.Boolean(compute='_compute_website_published',
+                                       inverse='_inverse_website_published',
+                                       search='_search_website_published',
+                                       related=False, readonly=False)
+
+    @api.depends('is_published', 'website_id')
+    @api.depends_context('website_id')
+    def _compute_website_published(self):
+        current_website_id = self.env.context.get('website_id')
+        for record in self:
+            if current_website_id:
+                record.website_published = record.is_published and (not record.website_id or record.website_id.id == current_website_id)
+            else:
+                record.website_published = record.is_published
+
+    def _inverse_website_published(self):
+        for record in self:
+            record.is_published = record.website_published
+
+    def _search_website_published(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        assert list(value) == [True]
+
+        current_website_id = self.env.context.get('website_id')
+        is_published = Domain('is_published', '=', True)
+        if current_website_id:
+            on_current_website = self.env['website'].browse(current_website_id).website_domain()
+            return is_published & on_current_website
+        else:  # should be in the backend, return things that are published anywhere
+            return is_published
+
+    def open_website_url(self):
+        website_id = False
+        if self.website_id:
+            website_id = self.website_id.id
+            if self.website_id.domain:
+                client_action_url = self.env['website'].get_client_action_url(self.website_url)
+                client_action_url = f'{client_action_url}&website_id={website_id}'
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': url_join(self.website_id.domain, client_action_url),
+                    'target': 'self',
+                }
+        return self.env['website'].get_client_action(self.website_url, False, website_id)
+
+
+class WebsiteSearchableMixin(models.AbstractModel):
+    """Mixin to be inherited by all models that need to searchable through website"""
+    _name = 'website.searchable.mixin'
+    _description = 'Website Searchable Mixin'
+
+    def _split_for_highlight(self, text, term):
+        """
+        Splits a string into parts around search term matches.
+
+        :param text: The text to split
+        :param term: The search term (case-insensitive, supports multi-word)
+
+        :return: tuple (parts, has_highlight)
+        """
+        if not text or not term:
+            return [text], False
+
+        pattern = '|'.join(map(re.escape, term.split()))
+        parts = re.split(f'({pattern})', text, flags=re.IGNORECASE)
+        has_highlight = len(parts) > 1
+        return parts, has_highlight
+
+    @api.model
+    def _search_get_matching_threshold(self, number_of_terms):
+        """
+        Returns the minimum number of terms that must match in a search expression
+        for a record to be considered a match.
+
+        :return: integer indicating the minimum number of terms to match
+        """
+        if number_of_terms < 5:
+            return number_of_terms - 1
+        return number_of_terms - 2
+
+    @api.model
+    def _search_build_domain(self, domain_list, search, fields, extra=None):
+        """
+        Builds a search domain AND-combining a base domain with partial matches of each term in
+        the search expression in any of the fields.
+
+        :param domain_list: base domain list combined in the search expression
+        :param search: search expression string
+        :param fields: list of field names to match the terms of the search expression with
+        :param extra: function that returns an additional subdomain for a search term
+
+        :return: domain limited to the matches of the search expression
+        """
+        domain = Domain.AND(domain_list)
+        if not search:
+            return domain
+
+        search_terms = [escape_like_value(t) for t in search.split()]
+        # less number of terms - each term must match at least one field
+        if len(search_terms) <= 2:
+            for search_term in search_terms:
+                subdomains = [
+                    Domain(field, "ilike", search_term)
+                    for field in fields
+                ]
+                if extra:
+                    subdomains.append(extra(self.env, search_term))
+                domain &= Domain.OR(subdomains)
+        else:  # more than 2 terms - partial match using threshold
+            threshold = self._search_get_matching_threshold(len(search_terms))
+            query = Query(self)
+            case_parts = []
+            for search_term in search_terms:
+                subdomains = [
+                    Domain(field, "ilike", search_term)
+                    for field in fields
+                ]
+                if extra:
+                    subdomains.append(extra(self.env, search_term))
+                or_domain = Domain.OR(subdomains).optimize_full(self)
+                term_sql = or_domain._to_sql(query.table)
+                case_parts.append(
+                    SQL("(CASE WHEN (%s) THEN 1 ELSE 0 END)", term_sql)
+                )
+            where_clause = SQL(
+                "%s >= %s",
+                SQL(" + ").join(case_parts),
+                threshold,
+            )
+            query.add_where(where_clause)
+            domain &= Domain("id", "in", query)
+        return domain
+
+    @api.model
+    def _search_get_detail(self, website, order, options):
+        """
+        Returns indications on how to perform the searches
+
+        :param website: website within which the search is done
+        :param order: order in which the results are to be returned
+        :param options: search options
+
+        :return: search detail as expected in elements of the result of website._search_get_details()
+            These elements contain the following fields:
+            - model: name of the searched model
+            - base_domain: list of domains within which to perform the search
+            - search_fields: fields within which the search term must be found
+            - fetch_fields: fields from which data must be fetched
+            - mapping: mapping from the results towards the structure used in rendering templates.
+                The mapping is a dict that associates the rendering name of each field
+                to a dict containing the 'name' of the field in the results list and the 'type'
+                that must be used for rendering the value
+            - icon: name of the icon to use if there is no image
+
+        This method must be implemented by all models that inherit this mixin.
+        """
+        raise NotImplementedError()
+
+    @api.model
+    def _search_fetch(self, search_detail, search, offset, limit, order):
+        fields = search_detail['search_fields']
+        base_domain = search_detail['base_domain']
+        domain = self._search_build_domain(base_domain, search, fields, search_detail.get('search_extra'))
+        model = self.sudo() if search_detail.get('requires_sudo') else self
+        results = model.search(
+            domain,
+            offset=offset,
+            limit=limit,
+            order=search_detail.get('order', order)
+        )
+        count = model.search_count(domain) if limit and limit == len(results) else len(results)
+        return results, count
+
+    def _search_render_results(self, fetch_fields, mapping, icon, limit):
+        results_data = self[:limit].read(fetch_fields)
+        for result in results_data:
+            result['_fa'] = icon
+            result['_mapping'] = mapping
+        html_fields = [config['name'] for config in mapping.values() if config.get('html')]
+        if html_fields:
+            for data in results_data:
+                for html_field in html_fields:
+                    if data[html_field]:
+                        if html_field == 'arch':
+                            # Undo second escape of text nodes from wywsiwyg.js _getEscapedElement.
+                            data[html_field] = re.sub(r'&amp;(?=\w+;)', '&', data[html_field])
+                        text = text_from_html(data[html_field], True)
+                        data[html_field] = text
+        return results_data
+
+    def _search_highlight_field(self, field_meta, value, term):
+        """
+        Dispatches search highlighting to the appropriate handler based on field
+        type.
+
+        This method acts as the central router: it reads the field type from
+        `field_meta`, retrieves the corresponding highlight handler from
+        `_get_search_highlight_handlers()`, and delegates processing to it.
+
+        :param field_meta: dict containing field configuration
+                           (e.g., name, type, match, truncate, ...)
+        :param value: the original field value to process
+        :param term: the search term to highlight in the value
+
+        :return: tuple (skip_field, processed_value, resulting_type)
+            - skip_field (bool): Whether this field should be omitted from the
+                                 final result set
+            - processed_value: The updated/highlighted value
+            - resulting_type (str): The effective field type after processing
+                                    Handlers may override the type (e.g., 'text'
+                                    becoming 'html' if highlight markup is
+                                    applied)
+        """
+        field_type = field_meta.get('type')
+
+        handlers = self._get_search_highlight_handlers()
+        handler = handlers.get(field_type)
+        if handler:
+            return handler(field_meta, value, term)
+
+        # No handler found, return value unchanged
+        return False, value, field_type
+
+    def _get_search_highlight_handlers(self):
+        """
+        Returns the mapping of field types to their highlight handler methods.
+
+        This explicit type-to-handler mapping allows easy extension of highlight
+        behaviour by adding new field types and corresponding handler methods.
+
+        :return: dict where:
+            - key (str): field type
+            - value (callable): handler function accepting
+                                (field_meta, value, term) and returning
+                                (skip_field, processed_value, resulting_type)
+        """
+        return {
+            'text': self._search_highlight_text,
+            'tags': self._search_highlight_tags,
+        }
+
+    def _search_highlight_text(self, field_meta, value, term):
+        """
+        Highlight handler for plain text fields.
+
+        Splits the text around search term matches and wraps matched segments in
+        highlight markup.
+
+        :return: tuple (skip_field, processed_value, resulting_type)
+            - skip_field (bool): Always False for text fields
+            - processed_value: Highlighted HTML or the original text
+            - resulting_type (str): 'html' if highlights were added, else
+                                    'text'
+        """
+        parts, has_highlight = self._split_for_highlight(value, term)
+
+        if has_highlight:
+            value = self.env.website._render_template(
+                "website.search_text_with_highlight",
+                {'parts': parts}
+            )
+            return False, value, 'html'
+
+        return False, value, 'text'
+
+    def _search_highlight_tags(self, field_meta, value, term):
+        """
+        Highlight handler for tags fields.
+
+        Splits each tag name around search term matches and wraps matched
+        segments in highlight markup.
+
+        :return: tuple (skip_field, processed_value, resulting_type)
+            - skip_field (bool): Always False for tags fields
+            - processed_value: Highlighted HTML or the original tags data
+            - resulting_type (str): 'html' if highlights were added, else 'tags'
+        """
+        highlighted_tags = []
+
+        for tag in value:
+            name = tag.get('name', '')
+            parts, tag_highlight = self._split_for_highlight(name, term)
+            tag['parts'] = parts
+            if tag_highlight:
+                highlighted_tags.append(tag)
+
+        if highlighted_tags:
+            website = self.env.website or self.env.ref('base.default_website')
+            value = website.sudo()._render_template(
+                "website.search_tags_highlight",
+                {'tags': highlighted_tags}
+            )
+            return False, value, 'html'
+
+        return True, value, 'tags'

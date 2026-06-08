@@ -1,0 +1,23 @@
+.o-website-btn-custo-secondary {
+    @include button-variant(darken($o-navbar-background, 5%), darken($o-navbar-background, 5%), $o-navbar-entry-color, darken($o-navbar-background, 10%));
+}
+
+.o_new_content_menu_choices {
+    grid-auto-flow: column;
+    grid-template-rows: repeat(5, auto);
+
+    .o_new_content_element_tile {
+        background: $popover-bg;
+        width: 2.5rem;
+        min-width: 2.5rem;
+        aspect-ratio: 1;
+
+        img {
+            width: 1.5rem;
+        }
+    }
+
+    .o_new_content_element:where(:not(:hover, :focus)) .o_uninstalled_module {
+        filter: grayscale(1);
+    }
+}

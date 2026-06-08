@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.BgBlurOption">
+    <BuilderRow label.translate="Blur" level="this.props.level" t-if="this.blurState.show">
+        <BuilderRange
+            action="'bgBlur'"
+            min="0"
+            max="10"
+            step="0.5"
+        />
+        <BuilderButton
+            classAction="'o_bg_blur_no_enhance'"
+            inverseAction="true"
+            title.translate="Enhance contrast and brightness"
+            className="'ms-1 px-2 fa fa-adjust ' + (this.blurState.hasBlur ? '' : 'disabled')"
+        />
+    </BuilderRow>
+</t>
+
+</templates>

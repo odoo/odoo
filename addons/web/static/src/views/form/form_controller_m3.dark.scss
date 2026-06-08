@@ -1,0 +1,11 @@
+.o_form_view {
+    @include media-breakpoint-down(md) {
+        --o-field-box-border-color: var(--gray-400);
+
+        %-o-field-box {
+            &:has(.o_required_modifier):not(:has(.o_readonly_modifier, .o_field_invalid, :focus-within)) {
+                --o-field-box-border-color: var(--gray-700);
+            }
+        }
+    }
+}

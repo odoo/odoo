@@ -1,0 +1,114 @@
+
+#o_employee_org_chart {
+    --treeEntry-padding-v: #{map-get($spacers, 2)};
+    --treeEntry--after-width: #{$o-hr-org-chart-entry-pic-small-size  * .25};
+    --treeEntry--before-top: calc(-2 * (var(--treeEntry-padding-v)) - (#{$o-hr-org-chart-entry-pic-small-size} * .5));
+
+    .o_org_chart_entry {
+        padding-top: var(--treeEntry-padding-v);
+        padding-bottom: var(--treeEntry-padding-v);
+
+        &:before {
+            bottom: 50%;
+            height: auto;
+        }
+
+        &:first-child:before {
+            --treeEntry--before-top: calc(var(--treeEntry-padding-v) * -1);
+        }
+
+        &:after {
+            top: calc(#{$o-hr-org-chart-entry-pic-small-size} * .5 + var(--treeEntry-padding-v));
+            width: var(--treeEntry--after-width);
+        }
+
+        .o_media_object {
+            width: $o-hr-org-chart-entry-pic-small-size;
+            height: $o-hr-org-chart-entry-pic-small-size;
+            background-size: cover;
+            background-position: center center;
+        }
+
+        &.o_org_chart_entry_self .o_media_object {
+            width: $o-hr-org-chart-entry-pic-size;
+            height: $o-hr-org-chart-entry-pic-size;
+        }
+
+        .o_employee_redirect:hover {
+            .o_media_object {
+                box-shadow: 0 0 0 $border-width * 2 $info;
+            }
+        }
+    }
+
+    .o_org_chart_entry_self {
+        .o_media_object:not(.placeholder) {
+            outline: $border-width solid $info;
+            outline-offset: $border-width;
+        }
+    }
+
+    .o_org_chart_group_up {
+        .o_org_chart_entry {
+            --treeEntry-padding-h: 0px;
+            --treeEntry--after-display: none;
+            --treeEntry--beforeAfter-left: #{$o-hr-org-chart-entry-pic-small-size * .5};
+            --treeEntry--before-top: calc(var(--treeEntry-padding-v) * -1);
+
+            &:before {
+                bottom: calc(100% - 1 * var(--treeEntry-padding-v));
+            }
+
+            &:first-of-type:before {
+                display: none;
+            }
+        }
+    }
+
+    .o_org_chart_group_down .o_treeEntry, .o_org_chart_entry_self_container .o_treeEntry {
+        --treeEntry-padding-h: #{$o-hr-org-chart-entry-pic-size};
+
+        padding-left: calc(var(--treeEntry-padding-h) - var(--treeEntry--after-width));
+    }
+
+    .o_org_chart_entry_self_container {
+        .o_treeEntry:after {
+            top: calc(#{$o-hr-org-chart-entry-pic-size} * .5 + var(--treeEntry-padding-v));
+        }
+
+        &.o_org_chart_has_managers {
+            .o_org_chart_entry_self {
+                --treeEntry-padding-h: #{$o-hr-org-chart-entry-pic-small-size};
+
+                padding-left: calc(var(--treeEntry-padding-h) - var(--treeEntry--after-width));
+            }
+
+            & + .o_org_chart_group_down {
+                padding-left: calc(#{$o-hr-org-chart-entry-pic-small-size} - var(--treeEntry--after-width));
+            }
+        }
+
+        & + .o_org_chart_group_down {
+            --treeEntry--after-width: #{$o-hr-org-chart-entry-pic-size * .25};
+            --treeEntry-padding-h: calc(#{$o-hr-org-chart-entry-pic-size} - var(--treeEntry--after-width));
+        }
+    }
+}
+
+// Specific popup style
+.o_org_chart_popup {
+    --popover-header-padding-y: #{map-get($spacers, 1)};
+    --popover-header-padding-x: #{map-get($spacers, 2)};
+
+    .o_employee_redirect {
+        --btn-padding-x: var(--popover-header-padding-x);
+    }
+
+    .o_media_object {
+        $-media-object-size: $o-hr-org-chart-entry-pic-small-size - map-get($spacers, 2);
+        width: $-media-object-size;
+        height: $-media-object-size;
+        background-size: cover;
+        background-position: center center;
+    }
+}

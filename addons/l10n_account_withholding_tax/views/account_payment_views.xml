@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_form" model="ir.ui.view">
+        <field name="name">account.payment.form</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <field name="payment_type" position="after">
+                <field name="withhold" widget="withhold_selector" options="{'horizontal': True}" invisible="not display_withholding" readonly="state != 'draft'"/>
+            </field>
+            <field name="payment_method_line_id" position="attributes">
+                <attribute name="invisible">withhold == 'withhold'</attribute>
+            </field>
+            <notebook name="payment_notebook" position="inside">
+                <page string="Withholding" invisible="withhold == 'payment'">
+                    <group>
+                        <field name="withholding_line_ids" nolabel="1" colspan="2" readonly="state != 'draft'">
+                            <list editable="bottom" no_open="1">
+                                <field name="source_base_amount_currency" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                <field name="source_base_amount" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                <field name="source_tax_amount_currency" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                <field name="source_tax_amount" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                <field name="source_currency_id" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                <field name="comodel_currency_id" column_invisible="True"/> <!-- Needed for taxes computation -->
+                                <field name="placeholder_value" column_invisible="True"/> <!-- Needed for the placeholder widget -->
+                                <field name="name"
+                                       string="Sequence Number"
+                                       required="not withholding_sequence_id"
+                                       widget="char_with_placeholder_field"
+                                       options="{'placeholder_field': 'placeholder_value'}"
+                                       width="92px"/>
+                                <field name="account_id"
+                                       column_invisible="parent.withholding_hide_tax_base_account"
+                                       width="184px"
+                                       optional="show"/>
+                                <field name="base_amount"/>
+                                <field name="tax_id"
+                                       options="{'no_open': True, 'no_create': True}"
+                                       string="Tax"
+                                       width="92px"/>
+                                <field name="analytic_distribution"
+                                       widget="analytic_distribution"
+                                       groups="analytic.group_analytic_accounting"/>
+                                <field name="amount" string="Withheld Amount" sum="Total Withheld Amount"/>
+                            </list>
+                        </field>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="outstanding_account_id"
+                                   required="withhold == 'withhold_pay' and withholding_line_ids and not withholding_payment_account_id"
+                                   invisible="withhold != 'withhold_pay' or withholding_payment_account_id or not display_withholding"
+                                   readonly="state != 'draft'"/>
+                        </group>
+                        <group invisible="withhold != 'withhold_pay'">
+                            <field name="withholding_net_amount" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <record id="view_account_payment_tree" model="ir.ui.view">
+        <field name="name">account.payment.tree</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="arch" type="xml">
+            <field name="amount_company_currency_signed" position="after">
+                <field name="withholding_amount" string="Withholding Amount" optional="show"/>
+            </field>
+        </field>
+    </record>
+</odoo>

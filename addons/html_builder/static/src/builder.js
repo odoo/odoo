@@ -1,0 +1,367 @@
+import { useRef, useSubEnv } from "@web/owl2/utils";
+import { Editor } from "@html_editor/editor";
+import {
+    Component,
+    EventBus,
+    onMounted,
+    onWillDestroy,
+    onWillStart,
+    onWillUnmount,
+    status,
+    proxy,
+    props,
+    t,
+} from "@odoo/owl";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { _t } from "@web/core/l10n/translation";
+import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_service";
+import { useService } from "@web/core/utils/hooks";
+import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
+import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";
+import { BlockTab } from "@html_builder/sidebar/block_tab";
+import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
+import { useSnippets } from "@html_builder/snippets/snippet_service";
+import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
+import { withSequence } from "@html_editor/utils/resource";
+import { getHtmlStyle } from "@html_editor/utils/formatting";
+import { isVisible } from "@html_builder/utils/utils";
+
+// These elements should only have inline content (even if they have a `block`
+// display style, for example if they are in a flex)
+// NOTE: h1, h2, ..., p, pre already prevents wrapping their children into block
+const ONLY_ALLOW_INLINE_TAGS = new Set([
+    ...["a", "em", "strong", "small", "s", "cite", "q", "abbr", "data", "time", "code"],
+    ...["samp", "sub", "sup", "i", "b", "u", "mark", "bdi", "span", "label", "button"],
+]);
+
+/**
+ * @typedef {((args: {isMobileView: boolean}) => ())[]} on_mobile_view_switched_handlers
+ * called when the screen size switches between mobile and desktop view
+ * @typedef {(() => void)[]} on_dom_updated_handlers
+ * @typedef {{ Component: Component; props: object; }[]} lower_panel_entries
+ */
+
+export class Builder extends Component {
+    static template = "html_builder.Builder";
+    static components = { BlockTab, CustomizeTab };
+    props = props({
+        closeEditor: t.function().optional(),
+        reloadEditor: t.function().optional(() => () => {}),
+        onEditorLoad: t.function().optional(),
+        newInstalledModule: t.string().optional(),
+        installSnippetModule: t.function().optional(),
+        snippetsName: t.string(),
+        toggleMobile: t.function(),
+        overlayRef: t.function(),
+        iframeLoaded: t.object(),
+        isMobile: t.boolean(),
+        Plugins: t.array().optional(),
+        // This fragment of config will be passed to the Editor and be
+        // available to the plugins in `config`
+        config: t.object().optional({}),
+        getThemeTab: t.function().optional(),
+        editableSelector: t.string(),
+        themeTabDisplayName: t.string().optional(_t("Theme")),
+        slots: t.object().optional(),
+        initialTab: t.string().optional("blocks"),
+        onlyCustomizeTab: t.boolean().optional(false),
+    });
+
+    setup() {
+        this.ThemeTab = this.props.getThemeTab?.();
+        this.builder_sidebarRef = useRef("builder_sidebar");
+        this.state = proxy({
+            canUndo: false,
+            canRedo: false,
+            activeTab: this.props.onlyCustomizeTab ? "customize" : this.props.initialTab,
+            currentOptionsContainers: undefined,
+        });
+        this.invisibleElementsPanelState = proxy({
+            invisibleEls: [],
+            invisibleSelector: "",
+        });
+        useHotkey("control+z", () => this.undo());
+        useHotkey("control+y", () => this.redo());
+        useHotkey("control+shift+z", () => this.redo());
+        this.orm = useService("orm");
+        this.ui = useService("ui");
+        this.notification = useService("notification");
+
+        this.snippetModel = useSnippets(this.props.snippetsName);
+
+        this.lastTrigerUpdateId = 0;
+        this.editorBus = new EventBus();
+        this.colorPresetToShow = null;
+        this.shadowSizeToShow = null;
+        this.activeTargetEl = null;
+        const mobileBreakpoint = this.props.config.mobileBreakpoint ?? "lg";
+
+        // TODO: maybe do a different config for the translate mode and the
+        // "regular" mode.
+        /** @type {Editor} */
+        this.editor = new Editor(
+            {
+                Plugins: this.props.Plugins,
+                ...this.props.config,
+                mobileBreakpoint,
+                isMobileView: (targetEl) => {
+                    const mobileViewThreshold =
+                        MEDIAS_BREAKPOINTS[SIZES[mobileBreakpoint.toUpperCase()]].minWidth;
+                    const clientWidth =
+                        targetEl.ownerDocument.defaultView?.frameElement?.clientWidth ||
+                        targetEl.ownerDocument.documentElement.clientWidth;
+                    return !!clientWidth && clientWidth < mobileViewThreshold;
+                },
+                onChange: ({ isPreviewing }) => {
+                    if (!isPreviewing) {
+                        this.state.canUndo = this.editor.shared.history.canUndo();
+                        this.state.canRedo = this.editor.shared.history.canRedo();
+                        this.updateInvisibleEls();
+                        this.editorBus.trigger("UPDATE_EDITING_ELEMENT");
+                        this.triggerDomUpdated();
+                        this.props.config.onChange?.();
+                    }
+                },
+                reloadEditor: ({ url, editingElement } = {}) =>
+                    this.props.reloadEditor(
+                        url,
+                        this.editor.processThrough("reload_context_processors", {}, editingElement)
+                    ),
+                closeEditor: async () => {
+                    await this.props.closeEditor?.();
+                },
+                installSnippetModule: (snippet) => this.props.installSnippetModule?.(snippet),
+                /** @type {import("plugins").BuilderResources} */
+                resources: {
+                    on_dom_updated_handlers: () => {
+                        this.triggerDomUpdated();
+                    },
+                    on_mobile_view_switched_handlers: withSequence(20, () => {
+                        this.triggerDomUpdated();
+                        this.updateInvisibleEls();
+                    }),
+                    on_will_save_handlers: () => {
+                        const snippetMenuEl = this.builder_sidebarRef.el;
+                        const saveButton = snippetMenuEl.querySelector("[data-action='save']");
+                        delete this.removeLoadingEffect;
+                        if (saveButton) {
+                            // Add a loading effect on the save button and disable the other actions
+                            this.removeLoadingEffect = addButtonLoadingEffect(
+                                snippetMenuEl.querySelector("[data-action='save']")
+                            );
+                        }
+                        this.actionButtonEls = snippetMenuEl.querySelectorAll("[data-action]");
+                        for (const actionButtonEl of this.actionButtonEls) {
+                            actionButtonEl.disabled = true;
+                        }
+                    },
+                    on_saved_handlers: () => {
+                        for (const actionButtonEl of this.actionButtonEls) {
+                            actionButtonEl.removeAttribute("disabled");
+                        }
+                        this.removeLoadingEffect?.();
+                    },
+                    on_snippet_dropped_handlers: () => {
+                        this.activeTargetEl = null;
+                    },
+                    on_current_options_containers_changed_handlers: (currentOptionsContainers) => {
+                        this.state.currentOptionsContainers = currentOptionsContainers;
+                        if (currentOptionsContainers.length || this.props.onlyCustomizeTab) {
+                            this.activeTargetEl = null;
+                            this.setTab("customize");
+                        } else if (this.state.activeTab === "customize") {
+                            // If there is no option, go to add blocks
+                            this.setTab("blocks");
+                        }
+                    },
+                    reload_context_processors: (context) => ({
+                        ...context,
+                        initialTab: this.state.activeTab,
+                    }),
+                    lower_panel_entries: withSequence(20, {
+                        Component: InvisibleElementsPanel,
+                        props: this.invisibleElementsPanelState,
+                    }),
+                    is_node_splittable_predicates: (/** @type {Node} */ node) => {
+                        if (node.querySelector?.("[data-oe-translation-source-sha]")) {
+                            return false;
+                        }
+                    },
+                    are_inlines_allowed_at_root_predicates: (el) =>
+                        ONLY_ALLOW_INLINE_TAGS.has(el.tagName.toLowerCase()) || undefined,
+                },
+                localOverlayContainers: {
+                    key: this.env.localOverlayContainerKey,
+                    ref: this.props.overlayRef,
+                },
+                saveSnippet: (snippetEl, cleanForSaveProcessors, wrapWithSaveSnippetHandlers) =>
+                    this.snippetModel.saveSnippet(
+                        snippetEl,
+                        cleanForSaveProcessors,
+                        wrapWithSaveSnippetHandlers
+                    ),
+                snippetModel: this.snippetModel,
+                updateInvisibleElementsPanel: () => this.updateInvisibleEls(),
+                hideStylingInLinkPopover: true,
+                allowTargetBlank: true,
+                dropImageAsAttachment: true,
+                getAnimateTextConfig: () => ({ editor: this.editor, editorBus: this.editorBus }),
+                baseContainers: ["P"],
+                cleanEmptyStructuralContainers: false,
+                isEditableRTL: false,
+                publicAttachments: true,
+                direction: "ltr",
+                maxFontSize: 400,
+            },
+            this.env.services
+        );
+        this.props.onEditorLoad?.(this.editor);
+
+        onWillStart(async () => {
+            await this.snippetModel.load();
+            // Ensure that the iframe is loaded and the editor is created before
+            // instantiating the sub components that potentially need the
+            // editor.
+            const iframeEl = await this.props.iframeLoaded;
+            if (status(this) === "destroyed") {
+                return;
+            }
+            this.editableEl = iframeEl.contentDocument.body.querySelector(
+                this.props.editableSelector
+            );
+
+            if (this.editableEl.matches(".o_rtl")) {
+                this.editor.config.isEditableRTL = true;
+                this.editor.config.direction = "rtl";
+            }
+
+            // Prevent image dragging in the website builder. Not via css because
+            // if one of the image ancestor has a dragstart listener, the dragstart handler
+            // can be called with the image as target.
+            this.onDragStart = (ev) => {
+                if (ev.target.nodeName === "IMG") {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                }
+            };
+
+            // Use a resize observer to trigger `on_mobile_view_switched_handlers`
+            // when the view size switches between desktop and mobile view
+            let isMobileView = this.editor.config.isMobileView(this.editableEl);
+            this.resizeObserver = new ResizeObserver(() => {
+                const wasMobileView = isMobileView;
+                isMobileView = this.editor.config.isMobileView(this.editableEl);
+                if (wasMobileView !== isMobileView) {
+                    this.editor.trigger("on_mobile_view_switched_handlers", { isMobileView });
+                }
+            });
+            this.resizeObserver.observe(this.editableEl);
+
+            this.editor.attachTo(this.editableEl);
+        });
+
+        useSubEnv({
+            editor: this.editor,
+            editorBus: this.editorBus,
+            triggerDomUpdated: this.triggerDomUpdated.bind(this),
+            editColorCombination: this.editColorCombination.bind(this),
+            editShadow: this.editShadow.bind(this),
+        });
+        onWillDestroy(() => {
+            this.resizeObserver?.disconnect();
+            this.editor.destroy();
+        });
+
+        onMounted(() => {
+            this.editor.document.body.classList.add("editor_enable");
+            setBuilderCSSVariables(getHtmlStyle(this.editor.document));
+            // TODO: onload editor
+            this.updateInvisibleEls();
+            this.editableEl.addEventListener("dragstart", this.onDragStart);
+        });
+        onWillUnmount(() => {
+            this.editableEl.removeEventListener("dragstart", this.onDragStart);
+        });
+    }
+    async triggerDomUpdated() {
+        this.lastTrigerUpdateId++;
+        const currentTriggerId = this.lastTrigerUpdateId;
+        const getStatePromises = [];
+        const { promise: updatePromise, resolve } = Promise.withResolvers();
+        this.editorBus.trigger("DOM_UPDATED", { getStatePromises, updatePromise });
+        await Promise.allSettled(getStatePromises);
+        const isLastTriggerId = this.lastTrigerUpdateId === currentTriggerId;
+        resolve(isLastTriggerId);
+    }
+
+    /**
+     * Called when clicking on a tab. Sets the active tab to the given tab.
+     *
+     * @param {String} tab the tab to set
+     * @param {Number | null} presetId the color preset expanding on "theme" tab
+     * open.
+     */
+    onTabClick(tab, { presetId = null, shadowSize = null } = {}) {
+        if (this.state.activeTab === tab) {
+            // If the tab is already active, do nothing.
+            return;
+        }
+        this.setTab(tab);
+        // Deactivate the options when clicking on the "BLOCKS" or "THEME" tabs.
+        if (tab === "theme" || tab === "blocks") {
+            this.colorPresetToShow = presetId;
+            this.shadowSizeToShow = shadowSize;
+            this.activeTargetEl = this.activeTargetEl || this.getActiveTarget();
+            this.editor.shared.builderOptions.deactivateContainers();
+        } else if (this.activeTargetEl) {
+            if (isVisible(this.activeTargetEl)) {
+                // Reactivate the previously active element.
+                this.editor.shared.builderOptions.updateContainers(this.activeTargetEl);
+            }
+            this.activeTargetEl = null;
+        }
+    }
+
+    setTab(tab) {
+        this.state.activeTab = tab;
+    }
+
+    undo() {
+        this.editor.shared.operation.next(() => this.editor.shared.history.undo());
+    }
+
+    redo() {
+        this.editor.shared.operation.next(() => this.editor.shared.history.redo());
+    }
+
+    onMobilePreviewClick() {
+        this.props.toggleMobile();
+    }
+
+    updateInvisibleEls() {
+        const isMobile = this.editor.config.isMobileView(this.editor.editable);
+        const invisibleSelector = `.o_snippet_invisible, ${
+            isMobile ? ".o_snippet_mobile_invisible" : ".o_snippet_desktop_invisible"
+        }`;
+        this.invisibleElementsPanelState.invisibleSelector = invisibleSelector;
+        this.invisibleElementsPanelState.invisibleEls = [
+            ...this.editor.editable.querySelectorAll(invisibleSelector),
+        ];
+    }
+
+    lowerPanelEntries() {
+        return this.editor.resources["lower_panel_entries"] ?? [];
+    }
+
+    editColorCombination(presetId) {
+        this.onTabClick("theme", { presetId });
+    }
+
+    editShadow(shadowSize) {
+        this.onTabClick("theme", { shadowSize });
+    }
+
+    getActiveTarget() {
+        return this.editor.shared["builderOptions"].getContainers().at(-1)?.element;
+    }
+}

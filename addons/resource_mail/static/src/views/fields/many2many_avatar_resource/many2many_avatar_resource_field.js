@@ -1,0 +1,122 @@
+import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
+
+import { Component } from "@odoo/owl";
+
+import { registry } from "@web/core/registry";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { _t } from "@web/core/l10n/translation";
+import {
+    CardMany2ManyTagsAvatarUserField,
+    ListMany2ManyTagsAvatarUserField,
+    Many2ManyTagsAvatarUserField,
+    cardMany2ManyTagsAvatarUserField,
+    listMany2ManyTagsAvatarUserField,
+    many2ManyTagsAvatarUserField,
+} from "@mail/views/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
+import { AvatarTag } from "@web/core/tags_list/avatar_tag";
+import { Many2ManyTagsAvatarFieldPopover } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
+
+class ResourceTag extends Component {
+    static template = "resource_mail.ResourceTag";
+    static components = { AvatarTag };
+    static props = {
+        color: { type: Number, optional: true },
+        imageUrl: { type: String, optional: true },
+        onAvatarClick: { type: Function, optional: true },
+        onDelete: { type: Function, optional: true },
+        text: { type: String, optional: true },
+        tooltip: { type: String, optional: true },
+        type: { type: [String, { value: false }] }, // in sample data, the type is false
+    };
+}
+
+const WithResourceFieldMixin = (T) => class ResourceFieldMixin extends T {
+    setup() {
+        super.setup(...arguments);
+        if (this.relation == "resource.resource") {
+            this.avatarCard = usePopover(AvatarCard);
+        }
+    }
+
+    static components = {
+        ...super.components,
+        Tag: ResourceTag,
+    };
+    static optionTemplate = "resource_mail.Many2ManyAvatarResourceField.option";
+
+    get specification() {
+        return {
+            ...super.specification,
+            resource_type: {},
+            color: {},
+        }
+    }
+
+    displayAvatarCard(record) {
+        return !this.env.isSmall && this.relation === "resource.resource" && record.data.resource_type === "user";
+    }
+
+    getTagProps(record) {
+        return {
+            ...super.getTagProps(...arguments),
+            color: record.data.color,
+            type: record.data.resource_type,
+            imageUrl: record.data.resource_type === "user"
+                ? `/web/image/${this.relation}/${record.resId}/avatar_128`
+                : undefined,
+        };
+    }
+};
+
+const resourceFieldMixin = {
+    relatedFields: (fieldInfo) => {
+        return [
+            ...many2ManyTagsAvatarUserField.relatedFields(fieldInfo),
+            {
+                name: "resource_type",
+                type: "selection",
+                selection: [
+                    ["user", _t("Human")],
+                    ["material", _t("Material")],
+                ],
+            },
+            {
+                name: "color",
+                type: "integer",
+            },
+        ];
+    },
+};
+
+export class Many2ManyAvatarResourceField extends WithResourceFieldMixin(Many2ManyTagsAvatarUserField) {}
+export const many2ManyAvatarResourceField = {
+    ...many2ManyTagsAvatarUserField,
+    ...resourceFieldMixin,
+    component: Many2ManyAvatarResourceField,
+};
+registry.category("fields").add("many2many_avatar_resource", many2ManyAvatarResourceField);
+
+export class ListMany2ManyAvatarResourceField extends WithResourceFieldMixin(ListMany2ManyTagsAvatarUserField) {}
+export const listMany2ManyAvatarResourceField = {
+    ...listMany2ManyTagsAvatarUserField,
+    ...resourceFieldMixin,
+    component: ListMany2ManyAvatarResourceField,
+};
+registry.category("fields").add("list.many2many_avatar_resource", listMany2ManyAvatarResourceField);
+
+export class Many2ManyTagsAvatarResourceFieldPopover extends WithResourceFieldMixin(Many2ManyTagsAvatarFieldPopover) {}
+
+export class CardMany2ManyAvatarResourceField extends WithResourceFieldMixin(CardMany2ManyTagsAvatarUserField) {
+    static PopoverClass = Many2ManyTagsAvatarResourceFieldPopover;
+
+    get placeholder() {
+        return _t("Search resources...");
+    }
+}
+export const cardMany2ManyAvatarResourceField = {
+    ...cardMany2ManyTagsAvatarUserField,
+    ...resourceFieldMixin,
+    component: CardMany2ManyAvatarResourceField,
+};
+registry.category("fields").add("card.many2many_avatar_resource", cardMany2ManyAvatarResourceField);
+registry.category("fields").add("activity.many2many_avatar_resource", cardMany2ManyAvatarResourceField);

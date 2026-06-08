@@ -1,0 +1,773 @@
+import { test, expect, describe } from "@odoo/hoot";
+import { getFilledOrder, setupPosEnv, createPaymentLine } from "../utils";
+import { definePosModels } from "../data/generate_model_definitions";
+import { ConnectionLostError } from "@web/core/network/rpc";
+import {
+    getStrNotes,
+    filterChangeByCategories,
+} from "@point_of_sale/app/models/utils/order_change";
+import { prepareRoundingVals } from "../accounting/utils";
+import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { localization } from "@web/core/l10n/localization";
+const { DateTime } = luxon;
+
+definePosModels();
+
+describe("pos_store.js", () => {
+    test("setTip", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store); // Should have 2 lines
+        expect(order.lines.length).toBe(2);
+
+        await store.setTip(50);
+        expect(order.is_tipped).toBe(true);
+        expect(order.tip_amount).toBe(50);
+        expect(order.lines.length).toBe(3); // 2 original lines + 1 tip line
+    });
+
+    test("orderNoteFormat", async () => {
+        const str = getStrNotes("string");
+        expect(str).toBeOfType("string");
+        expect(str).toBe("string");
+        const json2str = getStrNotes([{ text: "json", colorIndex: 0 }]);
+        expect(json2str).toBeOfType("string");
+        expect(json2str).toBe("json");
+    });
+
+    test("connectNewData canceled order", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = await getFilledOrder(store);
+        const serializedOrder = { ...order.raw };
+
+        await store.deleteOrders([order]);
+        serializedOrder.state = "cancel";
+        let isListenerCalled = false;
+        const listenerCleanup = models["pos.order"].addEventListener("update", (data) => {
+            if (data.id === order.id) {
+                const orderToRecompute = models["pos.order"].get(data.id);
+                orderToRecompute.triggerRecomputeAllPrices();
+                isListenerCalled = true;
+            }
+        });
+        models.connectNewData({
+            "pos.order": [serializedOrder],
+        });
+        order.model.triggerEvents("update", { id: order.id, fields: [] });
+        const updatedOrder = models["pos.order"].get(order.id);
+        expect(updatedOrder.state).toBe("cancel");
+        expect(isListenerCalled).toBe(true);
+        listenerCleanup();
+    });
+
+    test("sendOrderInPreparation clears change state when no prep changes", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const productOutsidePrep = store.models["product.template"].get(14);
+        const date = DateTime.now();
+
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: productOutsidePrep,
+                qty: 1,
+                write_date: date,
+                create_date: date,
+            },
+            order
+        );
+
+        expect(order.hasChange).toBe(true);
+
+        let printCalled = false;
+        store.printChanges = async () => {
+            printCalled = true;
+            return true;
+        };
+
+        await store.sendOrderInPreparation(order);
+
+        expect(printCalled).toBe(false);
+        expect(order.hasChange).toBe(false);
+    });
+
+    describe("syncAllOrders", () => {
+        test("simple sync", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(1);
+            expect(order.lines).toHaveLength(2);
+            expect(order.lines[0].id).toBeOfType("string");
+            expect(order.lines[1].id).toBeOfType("string");
+
+            await store.syncAllOrders();
+            // Object should be updated in place
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(0);
+            expect(order.lines).toHaveLength(2);
+            expect(order.lines[0].id).toBeOfType("number");
+            expect(order.lines[1].id).toBeOfType("number");
+
+            const noSync = await store.syncAllOrders();
+            expect(noSync).toBe(undefined);
+            expect(store.models["pos.order"].length).toBe(1);
+        });
+
+        test("sync specific order", async () => {
+            const store = await setupPosEnv();
+            const order1 = await getFilledOrder(store);
+            const order2 = await getFilledOrder(store);
+
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(2);
+            expect(order1.lines).toHaveLength(2);
+            expect(order1.lines[0].id).toBeOfType("string");
+            expect(order1.lines[1].id).toBeOfType("string");
+
+            expect(order2.lines).toHaveLength(2);
+            expect(order2.lines[0].id).toBeOfType("string");
+            expect(order2.lines[1].id).toBeOfType("string");
+
+            await store.syncAllOrders({ orders: [order1] });
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(1);
+            expect(order1.lines).toHaveLength(2);
+            expect(order1.lines[0].id).toBeOfType("number");
+            expect(order1.lines[1].id).toBeOfType("number");
+
+            expect(order2.lines).toHaveLength(2);
+            expect(order2.lines[0].id).toBeOfType("string");
+            expect(order2.lines[1].id).toBeOfType("string");
+
+            const data = await store.syncAllOrders();
+            expect(data).toHaveLength(1);
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(0);
+            expect(order2.lines).toHaveLength(2);
+            expect(order2.lines[0].id).toBeOfType("number");
+            expect(order2.lines[1].id).toBeOfType("number");
+        });
+
+        test("getChanges", async () => {
+            const store = await setupPosEnv();
+            const product = store.models["product.product"].get(5);
+            product.display_name = "001 TEST";
+            const order = await getFilledOrder(store);
+            const result = order.getChanges();
+            const [line] = Object.values(result.addedQuantity);
+            expect(line.basic_name).toBe("001 TEST");
+        });
+
+        test("sync no network should not raise error", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(1);
+            expect(order.lines).toHaveLength(2);
+            expect(order.lines[0].id).toBeOfType("string");
+            expect(order.lines[1].id).toBeOfType("string");
+
+            store.data.network.offline = true;
+            const data = await store.syncAllOrders();
+            expect(data).toBeInstanceOf(ConnectionLostError);
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(1);
+            expect(order.lines).toHaveLength(2);
+            expect(order.lines[0].id).toBeOfType("string");
+            expect(order.lines[1].id).toBeOfType("string");
+        });
+
+        test("retry sync reserializes updated order lines", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+
+            await store.syncAllOrders();
+
+            order.lines[0].qty += 1;
+
+            let syncCallCount = 0;
+            let secondPayload;
+            const originalCall = store.data.call.bind(store.data);
+            store.data.call = async (model, method, args, kwargs) => {
+                if (model === "pos.order" && method === "sync_from_ui") {
+                    syncCallCount += 1;
+                    if (syncCallCount === 1) {
+                        const firstPayload = args[0][0];
+                        expect(firstPayload.lines.length).toBeGreaterThan(0);
+                        expect(firstPayload.lines[0][0]).toBe(1);
+                        throw new Error("sync failure");
+                    }
+                    secondPayload = args[0][0];
+                }
+                return originalCall(model, method, args, kwargs);
+            };
+
+            await store.syncAllOrders({ orders: [order] });
+            await store.syncAllOrders({ orders: [order] });
+
+            expect(syncCallCount).toBe(2);
+            expect(secondPayload.lines.length).toBeGreaterThan(0);
+            expect(secondPayload.lines[0][0]).toBe(1);
+        });
+
+        test("insync order should not be re-synced", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(1);
+            expect(order.lines).toHaveLength(2);
+            expect(order.lines[0].id).toBeOfType("string");
+            expect(order.lines[1].id).toBeOfType("string");
+            store.syncingOrders.add(order.uuid);
+
+            const data = await store.syncAllOrders();
+            expect(store.getPendingOrder().orderToCreate).toHaveLength(1);
+            expect(data).toBeEmpty();
+            expect(order.lines).toHaveLength(2);
+            expect(order.lines[0].id).toBeOfType("string");
+            expect(order.lines[1].id).toBeOfType("string");
+        });
+    });
+
+    test("addLineToCurrentOrder", async () => {
+        const store = await setupPosEnv();
+        store.setOrder(null);
+        expect(store.getOrder()).toBe(undefined);
+        // Should create order if none exist
+        const product = store.models["product.product"].get(5);
+        await store.addLineToCurrentOrder({ product_tmpl_id: product.product_tmpl_id });
+        expect(store.getOrder()).not.toBe(undefined);
+        expect(store.getOrder().lines.length).toBe(1);
+        expect(store.getOrder().lines[0].product_id.id).toBe(product.id);
+        expect(store.getOrder().lines[0].qty).toBe(1);
+        await store.addLineToCurrentOrder({ product_tmpl_id: product.product_tmpl_id, qty: 3 }, {});
+        expect(store.getOrder().lines[0].qty).toBe(4);
+    });
+
+    test("addLineToCurrentOrder keeps the given variant with a single-value dynamic attribute", async () => {
+        const store = await setupPosEnv();
+        store.setOrder(null);
+        const variantM = store.models["product.product"].get(61);
+
+        await store.addLineToCurrentOrder(
+            { product_id: variantM, product_tmpl_id: variantM.product_tmpl_id },
+            {},
+            variantM.needToConfigure()
+        );
+
+        const orderLines = store.getOrder().lines;
+        const addedProduct = orderLines.at(-1).product_id;
+        expect(orderLines.length).toBe(1);
+        expect(addedProduct.id).toBe(61);
+    });
+
+    test("getPreparationChangesNoPrepCateg", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const generator = store.ticketPrinter.getGenerator({ models: store.models, order });
+        const changes = generator.generatePreparationData(new Set([]), {});
+        expect(changes.length).toBe(0);
+    });
+
+    test("orderContainsProduct", async () => {
+        const store = await setupPosEnv();
+        await getFilledOrder(store);
+        const product1 = store.models["product.template"].get(5);
+        const product2 = store.models["product.template"].get(6);
+        const product3 = store.models["product.template"].get(8);
+        expect(store.orderContainsProduct(product1)).toBe(true);
+        expect(store.orderContainsProduct(product2)).toBe(true);
+        expect(store.orderContainsProduct(product3)).toBe(false);
+        const order = await store.addNewOrder();
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: product3,
+                qty: 1,
+            },
+            order
+        );
+
+        expect(store.orderContainsProduct(product1)).toBe(true);
+        expect(store.orderContainsProduct(product2)).toBe(true);
+        expect(store.orderContainsProduct(product3)).toBe(true);
+    });
+
+    test("generateReceiptsDataToPrint", async () => {
+        const store = await setupPosEnv();
+        const pos_categories = store.models["pos.category"].map((c) => c.id);
+        const order = await getFilledOrder(store);
+        order.lines[1].setNote('[{"text":"Wait","colorIndex":0}]');
+        order.lines[0].setCustomerNote("Test Orderline Customer Note");
+        const generator = store.ticketPrinter.getGenerator({ models: store.models, order });
+        const orderChange = generator.generatePreparationData(new Set([...pos_categories]), {});
+        const newChanges = orderChange[0].changes;
+        expect(orderChange.length).toBe(1);
+        expect(newChanges.title).toBe("NEW");
+        expect(newChanges.data.length).toBe(2);
+        expect(newChanges.data[0]).toEqual({
+            basic_name: "TEST",
+            customer_note: "Test Orderline Customer Note",
+            product_id: 5,
+            attribute_value_names: [],
+            quantity: 3,
+            note: "",
+            pos_categ_id: 1,
+            pos_categ_sequence: 1,
+            group: false,
+            combo_line_ids: [],
+            combo_parent_uuid: undefined,
+        });
+        expect(newChanges.data[1]).toEqual({
+            basic_name: "TEST 2",
+            customer_note: "",
+            product_id: 6,
+            attribute_value_names: [],
+            quantity: 2,
+            note: "Wait",
+            pos_categ_id: 2,
+            pos_categ_sequence: 2,
+            group: false,
+            combo_line_ids: [],
+            combo_parent_uuid: undefined,
+        });
+    });
+
+    test("filterChangeByCategories", async () => {
+        const store = await setupPosEnv();
+        const allowedCategories = [1];
+
+        const productA = store.models["product.product"].get(5);
+        const productB = store.models["product.product"].get(6);
+        productA.pos_categ_ids = [1];
+        productB.pos_categ_ids = [2];
+
+        const currentOrderChange = {
+            addedQuantity: [
+                {
+                    uuid: "combo-parent-uuid",
+                    combo_line_ids: [
+                        {
+                            uuid: "combo-child-a-uuid",
+                            combo_parent_uuid: "combo-parent-uuid",
+                            product_id: productA,
+                            combo_line_ids: false,
+                        },
+                        {
+                            uuid: "combo-child-b-uuid",
+                            combo_parent_uuid: "combo-parent-uuid",
+                            product_id: productB,
+                            combo_line_ids: false,
+                        },
+                    ],
+                },
+                {
+                    uuid: "combo-child-a-uuid",
+                    combo_parent_uuid: "combo-parent-uuid",
+                    product_id: productA.id,
+                    combo_line_ids: false,
+                },
+                {
+                    uuid: "combo-child-b-uuid",
+                    combo_parent_uuid: "combo-parent-uuid",
+                    product_id: productB.id,
+                    combo_line_ids: false,
+                },
+                { uuid: "line1", product_id: productA.id, combo_line_ids: false },
+                { uuid: "line2", product_id: productB.id, combo_line_ids: false },
+            ],
+            cancelled: [],
+            noteUpdate: [],
+        };
+
+        const filtered = filterChangeByCategories(
+            new Set(allowedCategories),
+            currentOrderChange,
+            store.models
+        );
+
+        const expectedUuids = ["combo-parent-uuid", "combo-child-a-uuid", "line1"];
+        const actualUuids = filtered.addedQuantity.map((c) => c.uuid);
+
+        expect(actualUuids.sort()).toEqual(expectedUuids.sort());
+    });
+
+    test("deleteOrders", async () => {
+        const store = await setupPosEnv();
+        const order1 = await getFilledOrder(store);
+        await store.syncAllOrders();
+        await store.deleteOrders([order1]);
+        expect(store.models["pos.order"].getBy("uuid", order1.uuid)).toBeEmpty();
+    });
+
+    test("deleteOrders multiple orders", async () => {
+        const store = await setupPosEnv();
+        await getFilledOrder(store);
+        store.addNewOrder();
+        let openOrders = store.getOpenOrders();
+        expect(openOrders.length).toBe(2);
+        const deletedOrders = await store.deleteOrders(openOrders);
+        expect(deletedOrders).toBe(true);
+        openOrders = store.getOpenOrders();
+        expect(openOrders.length).toBe(0);
+    });
+
+    test("productsToDisplay", async () => {
+        const store = await setupPosEnv();
+        store.selectedCategory = store.models["pos.category"].get(1);
+        let products = store.productsToDisplay;
+
+        expect(products.length).toBe(3);
+        expect(products[1].id).toBe(19);
+        expect(products[products.length - 1].id).toBe(5);
+        expect(store.selectedCategory.id).toBe(1);
+        store.selectedCategory = store.models["pos.category"].get(1);
+        store.searchProductWord = "TEST";
+        products = store.productsToDisplay;
+        expect(products.length).toBe(4);
+        expect(products[0].id).toBe(5);
+        expect(products[1].id).toBe(6);
+        expect(store.selectedCategory).toBe(undefined);
+        store.searchProductWord = "TEST 2";
+        products = store.productsToDisplay;
+        expect(products.length).toBe(1);
+        expect(products[0].id).toBe(6);
+    });
+
+    test("productToDisplayByCateg", async () => {
+        const store = await setupPosEnv();
+
+        // Case 1: Grouping disabled
+        store.config.iface_group_by_categ = false;
+        let grouped = store.productToDisplayByCateg;
+        expect(grouped.length).toBe(1); // Only one group
+        expect(grouped[0][0]).toBe("0");
+        expect(grouped[0][1].length).toBe(18); // 18 products in same group
+
+        // Case 2: Grouping enabled
+        store.config.iface_group_by_categ = true;
+        grouped = store.productToDisplayByCateg;
+        expect(grouped.length).toBe(6);
+        // Confirm grouping structure
+        for (const [catId, prods] of grouped) {
+            expect(Array.isArray(prods)).toBe(true);
+            expect(prods.length).toBeGreaterThan(0);
+            for (const prod of prods) {
+                if (catId === "0") {
+                    expect(prod.pos_categ_ids.length).toBe(0);
+                    continue;
+                }
+                const categoryIds = prod.pos_categ_ids.map((c) => c.id);
+                expect(categoryIds).toInclude(parseInt(catId));
+            }
+        }
+
+        // Case 3: Grouping with search filtering
+        store.searchProductWord = "TEST";
+        grouped = store.productToDisplayByCateg;
+        expect(grouped.length).toBe(3);
+        expect(grouped[0][1][0].name).toBe("TEST");
+        expect(grouped[1][1][0].name).toBe("TEST 2");
+        expect(grouped[2][1][0].name).toBe("Accounting Test Product 1");
+        expect(grouped[2][1][1].name).toBe("Accounting Test Product 2");
+
+        // Case 4: Grouping with category filtering
+        store.searchProductWord = "";
+        store.selectedCategory = store.models["pos.category"].get(1);
+        grouped = store.productToDisplayByCateg;
+        expect(grouped.length).toBe(1);
+        expect(grouped[0][0]).toBe(1);
+        expect(grouped[0][1][1].name).toBe("Multi Category Product");
+        expect(grouped[0][1][2].name).toBe("TEST");
+
+        // Case 5: Grouping with category 'Food' selected (parent of 'Burger' & 'Pizza')
+        store.selectedCategory = store.models["pos.category"].get(3);
+        grouped = store.productToDisplayByCateg;
+        expect(grouped.length).toBe(3);
+        expect(grouped[0][0]).toBe(3);
+        expect(grouped[0][1][0].name).toBe("Club sandwich");
+        expect(grouped[1][1][0].name).toBe("Bacon burger");
+        expect(grouped[2][1][0].name).toBe("Pizza margarita");
+
+        // Case 6: Grouping with special products excluded
+        const specialProduct = store.models["product.template"].get(25);
+        store.searchProductWord = "";
+        store.selectedCategory = store.models["pos.category"].get(
+            specialProduct.pos_categ_ids[0].id
+        );
+
+        grouped = store.productToDisplayByCateg;
+        expect(grouped).toHaveLength(1);
+        expect(grouped[0][1].map((p) => p.id)).not.toInclude(specialProduct.id);
+    });
+
+    test("productToDisplayByCateg count", async () => {
+        const store = await setupPosEnv();
+        const createProductsAndCateg = (prefix, count) => {
+            const categ = store.models["pos.category"].create({
+                name: `${prefix}_categ`,
+            });
+
+            for (let i = 0; i < count; i++) {
+                store.models["product.template"].create({
+                    name: `${prefix}_${i}`,
+                    pos_categ_ids: [categ.id],
+                    active: true,
+                    available_in_pos: true,
+                });
+            }
+
+            return categ;
+        };
+
+        store.config.iface_group_by_categ = true;
+        const test1 = createProductsAndCateg("producttest1", 100);
+        const test2 = createProductsAndCateg("producttest2", 150);
+        const grouped = store.productToDisplayByCateg;
+        const byCateg = store.models["product.template"].getAllBy("pos_categ_ids");
+
+        const test1Products = byCateg[test1.id];
+        const test2Products = byCateg[test2.id];
+        const groupedTest1 = grouped.find((data) => data[0] == test1.id)[1];
+        const groupedTest2 = grouped.find((data) => data[0] == test2.id)[1];
+
+        expect(test1Products).toHaveLength(100);
+        expect(test2Products).toHaveLength(150);
+        expect(groupedTest1).toHaveLength(100);
+        expect(groupedTest2).toHaveLength(100);
+
+        store.searchProductWord = "producttest1";
+        const groupedSearchTest1 = store.productToDisplayByCateg;
+        const groupedSearchTest1Prods = groupedSearchTest1.find((data) => data[0] == test1.id)[1];
+        expect(groupedSearchTest1).toHaveLength(1);
+        expect(groupedSearchTest1Prods).toHaveLength(100);
+
+        store.searchProductWord = "producttest";
+        const groupedSearchTest = store.productToDisplayByCateg;
+        const groupedSearchTest1Prods2 = groupedSearchTest.find((data) => data[0] == test1.id)[1];
+        const groupedSearchTest2Prods2 = groupedSearchTest.find((data) => data[0] == test2.id)[1];
+        expect(groupedSearchTest).toHaveLength(2);
+        expect(groupedSearchTest1Prods2).toHaveLength(100);
+        expect(groupedSearchTest2Prods2).toHaveLength(100);
+
+        store.searchProductWord = "";
+        const productWoCategory = store.models["product.template"].readMany([15, 16]);
+        const groupedSearchTest3 = store.productToDisplayByCateg;
+        expect(groupedSearchTest3[groupedSearchTest3.length - 1][0]).toEqual("0");
+        expect(groupedSearchTest3[groupedSearchTest3.length - 1][1]).toHaveLength(2);
+        expect(groupedSearchTest3[groupedSearchTest3.length - 1][1].map((p) => p.id)).toEqual(
+            productWoCategory.map((p) => p.id)
+        );
+
+        store.selectedCategory = test1;
+        const groupedSearchTest4 = store.productToDisplayByCateg;
+        expect(groupedSearchTest4).toHaveLength(1);
+        expect(groupedSearchTest4[0][0]).toEqual(test1.id);
+        expect(groupedSearchTest4[0][1]).toHaveLength(100);
+    });
+
+    test("onDeleteOrder", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const deletedOrder = await store.onDeleteOrder(order);
+        expect(deletedOrder).toBe(true);
+        expect(store.models["pos.order"].getBy("uuid", order.uuid)).toBeEmpty();
+    });
+
+    test("setNextOrderRefs", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        await store.setNextOrderRefs(order);
+        expect(order.pos_reference).toBeOfType("string");
+        expect(order.pos_reference.length).toBeGreaterThan(1);
+        expect(order.sequence_number).toBeOfType("integer");
+        expect(order.tracking_number).toBeOfType("string");
+        expect(order.tracking_number.length).toBeGreaterThan(2);
+    });
+
+    test("pending orders", async () => {
+        const store = await setupPosEnv();
+        let { orderToCreate, orderToUpdate, orderToDelete } = store.getPendingOrder();
+        expect(orderToCreate).toHaveLength(0);
+        expect(orderToUpdate).toHaveLength(0);
+        expect(orderToDelete).toHaveLength(0);
+        const order = await getFilledOrder(store);
+        ({ orderToCreate, orderToUpdate, orderToDelete } = store.getPendingOrder());
+        expect(order.id).toBe(orderToCreate[0].id);
+        // After sync, order should be in 'orderToUpdate'
+        await store.syncAllOrders({ orders: [order] });
+        store.addPendingOrder([order.id]);
+        ({ orderToCreate, orderToUpdate, orderToDelete } = store.getPendingOrder());
+        expect(orderToCreate).toHaveLength(0);
+        expect(orderToUpdate).toHaveLength(1);
+        // Remove pending order
+        store.addPendingOrder([order.id], true);
+        ({ orderToCreate, orderToUpdate, orderToDelete } = store.getPendingOrder());
+        expect(orderToUpdate).toHaveLength(0);
+        expect(orderToDelete).toHaveLength(1);
+        // Clear pending orders
+        store.clearPendingOrder();
+        ({ orderToCreate, orderToUpdate, orderToDelete } = store.getPendingOrder());
+        expect(orderToDelete).toHaveLength(0);
+    });
+
+    test("getPaymentMethodFmtAmount", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const cashPm = store.models["pos.payment.method"].find((pm) => pm.is_cash_count);
+
+        // Case 1: No rounding enabled
+        expect(store.getPaymentMethodFmtAmount(cashPm, order)).toBeEmpty();
+
+        // Case 2: Rounding enabled, not limited to cash
+        const { cashPm: cash1, cardPm: card1 } = prepareRoundingVals(store, 0.05, "HALF-UP", false);
+        expect(store.getPaymentMethodFmtAmount(cash1, order)).toBe("$ 17.85");
+        expect(store.getPaymentMethodFmtAmount(card1, order)).toBe("$ 17.85");
+
+        // Case 3: Rounding enabled, only for cash
+        const { cashPm: cash2, cardPm: card2 } = prepareRoundingVals(store, 0.05, "HALF-UP", true);
+        expect(store.getPaymentMethodFmtAmount(cash2, order)).toBe("$ 17.85");
+        expect(store.getPaymentMethodFmtAmount(card2, order)).toBeEmpty();
+    });
+
+    test("displayQrCode", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const card = store.models["pos.payment.method"].get(2);
+        const paymentline = createPaymentLine(store, order, card);
+
+        // No qr_code
+        store.displayQrCode(paymentline);
+        expect(store.qrCode).toBeEmpty();
+
+        // With qr_code
+        paymentline.qr_code = "Test QR Code";
+        store.displayQrCode(paymentline);
+        expect({ ...(store.qrCode || {}), closer: typeof store.qrCode?.closer }).toEqual({
+            paymentline,
+            closer: "function",
+        });
+    });
+
+    test("closeQrCode", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const card = store.models["pos.payment.method"].get(2);
+        const paymentline = createPaymentLine(store, order, card);
+
+        // no error if no qrCode
+        store.closeQrCode();
+        expect(store.qrCode).toBeEmpty();
+
+        // close qrCode
+        store.qrCode = { paymentline, closer: () => {} };
+        store.closeQrCode();
+        expect(store.qrCode).toBeEmpty();
+    });
+
+    test("getValidationOrderOptions", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+
+        const fastPM = store.config.payment_method_ids[0];
+        const card = store.models["pos.payment.method"].get(2);
+
+        const getOpts = () => store.getValidationOrderOptions({ order });
+        const expectedWithoutFastPM = {
+            pos: store,
+            orderUuid: order.uuid,
+        };
+        const expectedWithFastPM = {
+            pos: store,
+            orderUuid: order.uuid,
+            fastPaymentMethod: fastPM,
+        };
+
+        // No payment lines
+        expect(getOpts()).toEqual(expectedWithFastPM);
+        // Refund order
+        order.is_refund = true;
+        const paymentline = createPaymentLine(store, order, card);
+        expect(getOpts()).toEqual(expectedWithoutFastPM);
+
+        // No refund + positive payment
+        order.is_refund = false;
+        expect(getOpts()).toEqual(expectedWithoutFastPM);
+
+        // No refund + negative payment
+        paymentline.amount = -10;
+        expect(getOpts()).toEqual(expectedWithFastPM);
+
+        // No refund + multiple payments
+        createPaymentLine(store, order, card, { amount: -5 });
+        expect(getOpts()).toEqual(expectedWithoutFastPM);
+    });
+
+    test("autoValidateOrder", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        store.validateOrder = async () => "test_validated";
+
+        // Should not be validated
+        order.toBeValidate = () => false;
+        expect(await store.autoValidateOrder(order)).toBe(false);
+
+        // Should not autovalidate electronic payments
+        order.toBeValidate = () => true;
+        store.config.auto_validate_electronic_payment = false;
+        expect(await store.autoValidateOrder(order)).toBe(false);
+
+        // Is in refund process
+        store.config.auto_validate_electronic_payment = true;
+        order.isRefundInProcess = () => true;
+        expect(await store.autoValidateOrder(order)).toBe(false);
+
+        // Should be autovalidated
+        order.isRefundInProcess = () => false;
+        expect(await store.autoValidateOrder(order)).toBe("test_validated");
+    });
+
+    test("tip scenario with different decimal separators", async () => {
+        const store = await setupPosEnv();
+        const numberBuffer = getService("number_buffer");
+        const order = store.addNewOrder();
+
+        const fakeState = { buffer: "", toStartOver: false, lastSet: false };
+        numberBuffer.bufferHolderStack.push({
+            component: {},
+            state: fakeState,
+            config: { decimalPoint: false },
+        });
+
+        patchWithCleanup(localization, { decimalPoint: ".", thousandsSep: "," });
+        numberBuffer._setUp();
+        expect(numberBuffer.decimalPoint).toBe(".");
+
+        localization.decimalPoint = ",";
+        localization.thousandsSep = ".";
+        numberBuffer._setUp();
+
+        expect(numberBuffer.decimalPoint).toBe(",");
+
+        for (const key of ["1", ",", "5", "0"]) {
+            numberBuffer._updateBuffer(key);
+        }
+        expect(numberBuffer.get()).toBe("1,50");
+        expect(numberBuffer.getFloat()).toBe(1.5);
+
+        store.setOrder(order);
+        await store.setTip(numberBuffer.getFloat());
+        expect(order.is_tipped).toBe(true);
+        expect(order.tip_amount).toBe(1.5);
+
+        fakeState.buffer = "";
+        localization.decimalPoint = ".";
+        localization.thousandsSep = ",";
+        numberBuffer._setUp();
+        expect(numberBuffer.decimalPoint).toBe(".");
+
+        for (const key of ["2", ".", "5"]) {
+            numberBuffer._updateBuffer(key);
+        }
+        expect(numberBuffer.get()).toBe("2.5");
+        expect(numberBuffer.getFloat()).toBe(2.5);
+
+        store.setOrder(order);
+        await store.setTip(numberBuffer.getFloat());
+        expect(order.tip_amount).toBe(2.5);
+    });
+});

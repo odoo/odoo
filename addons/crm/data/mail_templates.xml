@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="crm_module_access_request_template" inherit_id="base_install_request.mail_installation_request_template" primary="True">
+        <xpath expr="//a[@id='review_request_button']" position="attributes">
+            <attribute name="t-attf-href">/odoo/users/{{user_id.id}}</attribute>
+        </xpath>
+    </template>
+</odoo>

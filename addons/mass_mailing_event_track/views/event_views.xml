@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="event_event_view_form_inherit_mass_mailing_track" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.mass.mailing.track</field>
+        <field name="model">event.event</field>
+        <field name="priority" eval="4"/>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position="before">
+                <button name="action_mass_mailing_track_speakers" string="Contact Speakers" type="object" invisible="track_count == 0" groups="mass_mailing.group_mass_mailing_user"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

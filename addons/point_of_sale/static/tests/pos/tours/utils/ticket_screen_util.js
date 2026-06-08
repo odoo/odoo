@@ -1,0 +1,317 @@
+import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
+import { isSyncStatusConnected } from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+
+export function nbOrdersIs(nb) {
+    return [
+        {
+            trigger: `.ticket-screen .order-row:count(${nb})`,
+        },
+    ];
+}
+export function clickDiscard() {
+    return {
+        content: "go back",
+        trigger: ".ticket-screen button.discard",
+        run: "click",
+    };
+}
+export function selectOrder(orderName) {
+    return [
+        {
+            trigger: `.ticket-screen .order-row:contains(${orderName})`,
+            run: "click",
+        },
+        {
+            trigger: `.ticket-screen .order-row:contains(${orderName}).highlight`,
+        },
+    ];
+}
+export function selectOrderByPrice(price) {
+    return [
+        {
+            trigger: `.ticket-screen .order-row:contains("${price}")`,
+            run: "click",
+        },
+        {
+            trigger: `.ticket-screen .order-row.active:contains("${price}")`,
+        },
+    ];
+}
+export function doubleClickOrder(orderName) {
+    return [
+        {
+            trigger: `.ticket-screen .order-row:contains("${orderName}")`,
+            run: "dblclick",
+        },
+    ];
+}
+export function loadSelectedOrder() {
+    return [
+        ProductScreen.clickReview(),
+        {
+            trigger: ".ticket-screen .pads .button.validation.load-order-button:not(.syncing)",
+            run: "click",
+        },
+    ];
+}
+export function deleteOrder(orderName) {
+    return [
+        {
+            isActive: ["mobile"],
+            trigger: `.ticket-screen .order-row > div:contains("${orderName}")`,
+            run: "click",
+        },
+        {
+            isActive: ["mobile"],
+            trigger: `.ticket-screen .order-row:has(div:contains("${orderName}")) .btn-danger`,
+            run: "click",
+        },
+        {
+            isActive: ["desktop"],
+            trigger: `.ticket-screen .orders .order-row > td:contains("${orderName}") ~ td.text-end button.text-danger`,
+            run: "click",
+        },
+    ];
+}
+export function selectFilter(name) {
+    return [
+        {
+            trigger: `.pos-search-bar .filter`,
+            run: "click",
+        },
+        {
+            trigger: `.pos-search-bar .filter ul`,
+        },
+        {
+            trigger: `.pos-search-bar .filter ul li:contains("${name}")`,
+            run: "click",
+        },
+    ];
+}
+export function search(field, searchWord) {
+    return [
+        {
+            trigger: ".pos-search-bar input",
+            run: `edit ${
+                field !== "Invoice Number"
+                    ? searchWord
+                    : "TSJ/" + new Date().getFullYear() + "/" + searchWord
+            }`,
+        },
+        {
+            trigger: `.pos-search-bar .search ul li:contains("${field}")`,
+            run: "click",
+        },
+    ];
+}
+export function settleTips() {
+    return [
+        {
+            trigger: ".ticket-screen .controls .settle-tips",
+            run: "click",
+        },
+        isSyncStatusConnected(),
+    ];
+}
+export function clickControlButton(name) {
+    return [
+        ProductScreen.clickReview(),
+        {
+            trigger: `.ticket-screen ${ProductScreen.controlButtonTrigger(name)}`,
+            run: "click",
+        },
+    ];
+}
+export function confirmRefund() {
+    return [
+        ProductScreen.clickReview(),
+        {
+            trigger: ".ticket-screen .btn-primary.pay-order-button:not(.disabled)",
+            run: "click",
+        },
+    ];
+}
+export function checkStatus(orderName, status) {
+    return [
+        {
+            isActive: ["desktop"],
+            trigger: `.ticket-screen tbody tr > td:contains("${orderName}") ~ td .badge:contains(${status})`,
+        },
+        {
+            isActive: ["mobile"],
+            trigger: `.ticket-screen .order-row > div:contains("${orderName}") ~ div .badge:contains(${status})`,
+        },
+    ];
+}
+/**
+ * Check if the nth row contains the given string.
+ * Note that 1st row is the header-row.
+ * @param {boolean | undefined} viewMode true if in mobile view, false if in desktop, undefined if in both views.
+ */
+export function nthRowContains(n, string, viewMode) {
+    return [
+        {
+            isActive: [viewMode ? "mobile" : "desktop"],
+            trigger: `.ticket-screen .orders tbody .order-row:nth-child(${n}):contains("${string}")`,
+        },
+    ];
+}
+export function checkOrderDetailsDialog(orderRef, totalPayment, payments) {
+    const steps = [
+        {
+            trigger: `.modal-content .field-details:contains("Order Reference"):contains(${orderRef})`,
+        },
+        {
+            trigger: ".modal-content .field-details:contains('Origin')",
+        },
+        {
+            trigger: `.modal-content h3:contains("Payment Info")`,
+        },
+        {
+            trigger: `.modal-content .text-success:contains(${totalPayment})`,
+        },
+    ];
+    for (const pm in payments) {
+        steps.push({
+            trigger: `.modal-content .row:has(.fw-medium:contains("${pm}")):has(.fw-medium:contains(${payments[pm]}))`,
+        });
+    }
+    return steps;
+}
+export function nthRowIsHighlighted(n) {
+    return [
+        {
+            trigger: ".ticket-screen .order-row.highlight",
+        },
+    ];
+}
+export function nthRowNotContains(n, string, viewMode) {
+    return [
+        {
+            isActive: [viewMode ? "mobile" : "desktop"],
+            trigger: `.ticket-screen .orders tbody .order-row:nth-child(${n}):not(:contains("${string}"))`,
+        },
+    ];
+}
+export function contains(string) {
+    return [
+        {
+            trigger: `.ticket-screen .orders:contains("${string}")`,
+        },
+    ];
+}
+export function filterIs(name) {
+    return [
+        {
+            trigger: `.ticket-screen .pos-search-bar .filter span:contains("${name}")`,
+        },
+    ];
+}
+export function invoicePrinted() {
+    return [
+        {
+            trigger: ProductScreen.controlButtonTrigger("Print Invoice"),
+        },
+    ];
+}
+export function toRefundTextContains(text, product) {
+    if (!product) {
+        return inLeftSide({
+            trigger: `.ticket-screen .qty .refund:contains("${text}")`,
+        });
+    }
+    return inLeftSide({
+        trigger: `.ticket-screen .product-name:contains("${product}"):has(.refund:contains("${text}"))`,
+    });
+}
+export function refundedNoteContains(text) {
+    return inLeftSide({
+        trigger: `.ticket-screen .refund-note:contains("${text}")`,
+    });
+}
+export function noLinesToRefund() {
+    return inLeftSide({
+        content: "No lines are marked for to refund or refunding",
+        trigger: ".ticket-screen:not(:has(.to-refund-highlight))",
+    });
+}
+export function tipContains(amount) {
+    return [
+        {
+            trigger: `.ticket-screen .tip-cell:contains("${amount}")`,
+        },
+    ];
+}
+export function back() {
+    return {
+        isActive: ["mobile"],
+        trigger: ".back-button",
+        run: "click",
+    };
+}
+
+export function clickFilterButton(buttonText) {
+    return [
+        {
+            trigger: `.filter-buttons button:contains("${buttonText}")`,
+            run: "click",
+        },
+    ];
+}
+export function checkCameraIsOpen() {
+    return {
+        content: "Verify that the camera view is visible in the left pane.",
+        trigger: ".ticket-screen .leftpane .o_crop_container",
+    };
+}
+
+export function noOrderIsThere() {
+    return {
+        content: "No orders should be visible on the Ticket Screen",
+        trigger: ".ticket-screen:not(:has(.order-row))",
+    };
+}
+
+export function isReady() {
+    return {
+        content: "Wait for the Ticket Screen to be ready",
+        trigger: ".ticket-screen:not(.loading-orders)",
+    };
+}
+
+export function isShown() {
+    return [
+        {
+            content: "ticket screen is shown",
+            trigger: ".pos .ticket-screen",
+        },
+    ];
+}
+
+export function checkCustomerAddress(addressText) {
+    return [
+        {
+            isActive: ["desktop"],
+            trigger: `.ticket-screen tbody tr > td:contains("${addressText}")`,
+        },
+    ];
+}
+
+export function sendEmail(email, expectSuccess = true) {
+    return [
+        ...clickControlButton("Send"),
+        {
+            trigger: ".send-receipt-email-input",
+            run: `edit ${email}`,
+        },
+        {
+            trigger: `.modal-body .fa-paper-plane`,
+            run: "click",
+        },
+        ...(expectSuccess ? [{ trigger: `.modal-body .text-success` }] : []),
+        Dialog.cancel(),
+        back(),
+    ];
+}

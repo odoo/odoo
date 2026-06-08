@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="survey.survey_breadcrumb_template">
+    <ol class="breadcrumb mb-0">
+        <t t-set="canGoBack" t-value="surveyCanGoBack"/>
+        <t t-foreach="pages" t-as="page" t-key="page_index">
+            <t t-set="isActivePage" t-value="page.id === currentPageId"/>
+            <li t-attf-class="breadcrumb-item{{ isActivePage ? ' active' : '' }}"
+                t-att-data-page-id="page.id"
+                t-att-data-page-title="page.title">
+                <t t-if="currentPageId === page.id">
+                    <!-- Users can only go back and not forward -->
+                    <!-- As soon as we reach the current page, set "can_go_back" to False -->
+                    <t t-set="canGoBack" t-value="false" />
+                </t>
+                <t t-if="canGoBack">
+                    <a class="text-primary text-break" href="#">
+                        <span t-out="page_index + 1"/>.
+                        <span t-out="page.title" />
+                    </a>
+                </t>
+                <t t-else="">
+                    <span t-attf-class="{{ isActivePage ? 'text-body' : 'text-muted' }}">
+                        <span t-out="page_index + 1"/>.
+                        <span class="text-break" t-out="page.title" />
+                    </span>
+                </t>
+            </li>
+        </t>
+    </ol>
+</t>
+
+</templates>

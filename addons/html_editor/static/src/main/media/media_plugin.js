@@ -1,0 +1,318 @@
+import { Plugin } from "@html_editor/plugin";
+import {
+    ICON_SELECTOR,
+    MEDIA_SELECTOR,
+    EDITABLE_MEDIA_CLASS,
+    isIconElement,
+    isMediaElement,
+    isProtected,
+    isProtecting,
+    paragraphRelatedElementsSelector,
+} from "@html_editor/utils/dom_info";
+import { _t } from "@web/core/l10n/translation";
+import { MediaDialog } from "./media_dialog/media_dialog";
+import { TABS } from "./media_dialog/media_dialog_utils";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { boundariesOut, rightPos } from "@html_editor/utils/position";
+import { withSequence } from "@html_editor/utils/resource";
+import { closestElement } from "@html_editor/utils/dom_traversal";
+import { fuzzyLookup } from "@web/core/utils/search";
+import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
+
+export const ATTACHMENT_PENDING_RECORD_ID = "o_attachment_pending_record_id";
+
+/**
+ * @typedef { Object } MediaShared
+ * @property { MediaPlugin['openMediaDialog'] } openMediaDialog
+ */
+
+/**
+ * @typedef {((mediaEl: HTMLElement) => void)[]} on_media_dialog_saved_handlers
+ * @typedef {((arg: { newMediaEl: HTMLElement }) => void)[]} on_media_added_handlers
+ * @typedef {((elements: HTMLElement[], params: { node: Node }) => Promise<void>)[]} on_will_save_media_dialog_handlers
+ * @typedef {((arg: { newMediaEl: HTMLElement }) => void)[]} on_media_replaced_handlers
+ *
+ * @typedef {{
+ *      id: "DOCUMENTS" | "ICONS" | "IMAGES" | "VIDEOS";
+ *      title: import("plugins").LazyTranslatedString;
+ *      Component: import("@odoo/owl").Component;
+ *      sequence: number;
+ *  }[]} media_dialog_extra_tabs
+ */
+
+export class MediaPlugin extends Plugin {
+    static id = "media";
+    static dependencies = ["selection", "history", "dom", "dialog"];
+    static shared = ["openMediaDialog", "extractUnmappedAttachmentsIds"];
+    static defaultConfig = {
+        allowImage: true,
+        allowMediaDocuments: true,
+    };
+    /** @type {import("plugins").EditorResources} */
+    resources = {
+        user_commands: [
+            {
+                id: "replaceImage",
+                description: _t("Replace media"),
+                icon: "fa-file-image-o",
+                run: this.replaceImage.bind(this),
+                isAvailable: isHtmlContentSupported,
+            },
+            {
+                id: "insertMedia",
+                title: _t("Media"),
+                description: this.config.allowVideo
+                    ? _t("Insert image, icon or video")
+                    : _t("Insert image or icon"),
+                icon: "fa-file-image-o",
+                run: (params, context = {}) =>
+                    this.openMediaDialog({
+                        activeTab: this.getActiveDialogTab(context.searchTerm),
+                    }),
+                isAvailable: isHtmlContentSupported,
+            },
+        ],
+        toolbar_groups: withSequence(31, { id: "image_actions", namespaces: ["image"] }),
+        toolbar_items: [
+            withSequence(40, {
+                id: "replace_image",
+                groupId: "image_actions",
+                commandId: "replaceImage",
+            }),
+        ],
+        powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),
+        ...(this.config.allowImage && {
+            powerbox_items: this.getInsertMediaPowerboxItem(),
+        }),
+        power_buttons: withSequence(1, { commandId: "insertMedia" }),
+        closest_savable_providers: withSequence(20, (el) => this.editable),
+
+        /** Handlers */
+        on_selectionchange_handlers: this.selectAroundIcon.bind(this),
+
+        /** Processors */
+        clean_for_save_processors: (root) => this.cleanForSave(root),
+        normalize_processors: this.normalizeMedia.bind(this),
+        clipboard_content_processors: this.clean.bind(this),
+        clipboard_text_processors: (text) => text.replace(/\u200B/g, ""),
+
+        /** Predicates */
+        is_node_splittable_predicates: (node) => {
+            // avoid merge
+            if (isIconElement(node)) {
+                return false;
+            }
+        },
+        is_node_editable_predicates: this.isEditableMediaElement.bind(this),
+        is_functional_empty_node_predicates: (node) => {
+            if (isMediaElement(node)) {
+                return true;
+            }
+        },
+
+        selectors_for_feff_providers: () =>
+            `:is(${paragraphRelatedElementsSelector}, ${FORMATTABLE_TAGS.join(
+                ", "
+            )}, A, LI) > :is(${ICON_SELECTOR})`,
+    };
+
+    setup() {
+        this.availableTabs = [
+            ...Object.values(TABS),
+            ...this.getResource("media_dialog_extra_tabs"),
+        ];
+    }
+
+    getInsertMediaPowerboxItem() {
+        const self = this;
+        return {
+            categoryId: "media",
+            commandId: "insertMedia",
+            // Evaluation is deferred because this.availableTabs is only ready after setup.
+            get keywords() {
+                return self.availableTabs.map((tab) => tab.title);
+            },
+        };
+    }
+
+    getRecordInfo(editableEl = null) {
+        return this.config.getRecordInfo ? this.config.getRecordInfo(editableEl) : {};
+    }
+
+    isEditableMediaElement(node) {
+        if (isMediaElement(node) && node.classList.contains(EDITABLE_MEDIA_CLASS)) {
+            return true;
+        }
+    }
+
+    replaceImage() {
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        const node = targetedNodes.find((node) => node.tagName === "IMG");
+        if (node) {
+            this.openMediaDialog({ node });
+        }
+    }
+
+    normalizeMedia(node) {
+        const mediaElements = [...node.querySelectorAll(MEDIA_SELECTOR)];
+        if (node.matches(MEDIA_SELECTOR)) {
+            mediaElements.push(node);
+        }
+        for (const el of mediaElements) {
+            if (isProtected(el) || isProtecting(el)) {
+                continue;
+            }
+            el.setAttribute(
+                "contenteditable",
+                el.hasAttribute("contenteditable") ? el.getAttribute("contenteditable") : "false"
+            );
+            // Do not update the text if it's already OK to avoid recording a
+            // mutation on Firefox. (Chrome filters them out.)
+            if (isIconElement(el) && el.textContent !== "\u200B") {
+                el.textContent = "\u200B";
+            }
+        }
+        return node;
+    }
+
+    clean(root) {
+        for (const el of root.querySelectorAll(MEDIA_SELECTOR)) {
+            if (isIconElement(el)) {
+                el.textContent = "";
+            }
+        }
+        return root;
+    }
+
+    cleanForSave(root) {
+        for (const el of root.querySelectorAll(MEDIA_SELECTOR)) {
+            if (isIconElement(el)) {
+                el.textContent = "";
+            }
+            el.removeAttribute("contenteditable");
+        }
+        return root;
+    }
+
+    async onSaveMediaDialog(element, { node }) {
+        if (!element) {
+            // @todo @phoenix to remove
+            throw new Error("Element is required: onSaveMediaDialog");
+            // return;
+        }
+        if (element.dataset?.attachmentId) {
+            element.classList.add(ATTACHMENT_PENDING_RECORD_ID);
+        }
+        if (node) {
+            const changedIcon = isIconElement(node) && isIconElement(element);
+            if (changedIcon) {
+                // Preserve tag name when changing an icon and not recreate the
+                // editors unnecessarily.
+                for (const attribute of element.attributes) {
+                    node.setAttribute(attribute.nodeName, attribute.nodeValue);
+                }
+                element = node;
+            } else {
+                node.replaceWith(element);
+            }
+            this.trigger("on_media_replaced_handlers", { newMediaEl: element });
+        } else {
+            await this.addMedia(element);
+        }
+        // Collapse selection after the inserted/replaced element.
+        const [anchorNode, anchorOffset] = rightPos(element);
+        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+        this.trigger("on_media_dialog_saved_handlers", element);
+        this.dependencies.history.commit();
+    }
+
+    async addMedia(element) {
+        this.dependencies.dom.insert(element);
+        this.trigger("on_media_added_handlers", { newMediaEl: element });
+    }
+
+    extractUnmappedAttachmentsIds(content = this.editable) {
+        return [...content.getElementsByClassName(ATTACHMENT_PENDING_RECORD_ID)]
+            .map((attachment) => {
+                attachment.classList.remove(ATTACHMENT_PENDING_RECORD_ID);
+                return attachment.dataset?.attachmentId;
+            })
+            .filter(Boolean)
+            .map((id) => parseInt(id));
+    }
+
+    openMediaDialog(params = {}, editableEl = null) {
+        const oldSave =
+            params.save ||
+            ((...args) => {
+                // The media dialog calls the save function with 4 params: this.props.save(elements, selectedMedia, this.activeTab(), this.props.media)
+                const [elements, , , oldMediaNode] = args;
+                const node = oldMediaNode || params.node;
+                this.onSaveMediaDialog(elements, { node });
+            });
+        params.save = async (...args) => {
+            const selection = args[0];
+            const elements = selection
+                ? selection[Symbol.iterator]
+                    ? selection
+                    : [selection]
+                : [];
+            await this.triggerAsync("on_will_save_media_dialog_handlers", elements, {
+                node: args[3] || params.node,
+            });
+            return oldSave(...args);
+        };
+        const { resModel, resId, field, type } = this.getRecordInfo(editableEl);
+        const mediaDialogClosedPromise = this.dependencies.dialog.addDialog(MediaDialog, {
+            resModel,
+            resId,
+            field,
+            document: this.document,
+            useMediaLibrary: !!(
+                field &&
+                ((resModel === "ir.ui.view" && field === "arch") || type === "html")
+            ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
+            media: params.node,
+            onAttachmentChange: this.config.onAttachmentChange || (() => {}),
+            noImages: !this.config.allowImage,
+            extraTabs: this.getResource("media_dialog_extra_tabs"),
+            pendingAttachments: this.config.getPendingAttachmentsIds
+                ? this.config.getPendingAttachmentsIds()
+                : [],
+            ...this.config.mediaModalParams,
+            ...params,
+        });
+        return mediaDialogClosedPromise;
+    }
+
+    /**
+     * @param {import("@html_editor/core/selection_plugin").SelectionData} param0
+     */
+    selectAroundIcon({ editableSelection }) {
+        if (!editableSelection.isCollapsed) {
+            return;
+        }
+        const iconEl = closestElement(editableSelection.anchorNode, isIconElement);
+        if (!iconEl) {
+            return;
+        }
+        const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(iconEl);
+        const iconOuterBoundaries = { anchorNode, anchorOffset, focusNode, focusOffset };
+        this.dependencies.selection.setSelection(iconOuterBoundaries);
+    }
+
+    /**
+     * @param {string} searchTerm
+     * @returns {string|undefined}
+     */
+    getActiveDialogTab(searchTerm) {
+        if (!searchTerm) {
+            return undefined;
+        }
+        const matchedTabs = fuzzyLookup(searchTerm, this.availableTabs, (tab) => tab.title);
+        if (!matchedTabs.length) {
+            return undefined;
+        }
+        return matchedTabs[0].id;
+    }
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="web.CodeEditor">
+        <div
+            t-custom-ref="editorRef"
+            class="w-100"
+            t-att-class="this.props.class"
+            t-att-data-mode="this.state.activeMode"
+        />
+    </t>
+
+</templates>

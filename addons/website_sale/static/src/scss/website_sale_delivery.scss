@@ -1,0 +1,34 @@
+.o_delivery_method_row {
+    grid-template-columns: var(--o-wsale-delivery-narrow-layout-columns, minmax(max-content, 1fr) minmax(10rem, auto) minmax(5.5rem, auto));
+
+    @include media-breakpoint-down(md) {
+        --o-wsale-delivery-narrow-layout-columns: 2fr 1fr;
+
+        .o_delivery_date_col {
+            grid-column: 1 / -1;
+        }
+    }
+    @include media-breakpoint-between(lg, xl) {
+        --o-wsale-delivery-narrow-layout-columns: 2fr 1fr;
+
+        .o_delivery_date_col {
+            grid-column: 1 / -1;
+        }
+    }
+
+    input[name="estimated_delivery"] {
+        margin-left: $form-check-padding-start;
+    }
+}
+
+.o_wsale_delivery_date_badge {
+    .form-control:disabled {
+        color: inherit;
+        border: 0;
+        background-color: inherit;
+    }
+}
+
+.tooltip {
+    --tooltip-zindex: 1040;
+}

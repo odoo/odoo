@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.RecordAutocomplete" >
+        <AutoComplete
+            placeholder="this.props.placeholder"
+            value="this.props.value"
+            autoSelect="true"
+            resetOnSelect="this.props.multiSelect"
+            class="this.props.className"
+            sources="this.sources"
+            onChange.bind="this.onChange"
+        >
+            <t t-set-slot="option" t-slot-scope="optionScope">
+                <t t-if="optionScope.data.record">
+                    <t t-call-slot="autoCompleteItem" label="optionScope.label" data="optionScope.data"/>
+                </t>
+                <t t-else="">
+                    <t t-out="optionScope.label"/>
+                </t>
+            </t>
+        </AutoComplete>
+    </t>
+
+</templates>

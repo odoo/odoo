@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.SubChannelList">
+        <ActionPanel close="this.props.close" title.translate="Threads" resizable="!!this.env.inMeetingView" initialWidth="400" icon="'fa fa-comments-o'">
+            <t t-set-slot="header">
+                <div class="d-flex align-items-center my-0">
+                    <div class="input-group input-group-sm ms-1 my-2">
+                        <SearchInput search="this.search" placeholder.translate="Search by name" autofocus="true"/>
+                        <button t-if="this.props.channel.canCreateSubChannels" class="btn btn-primary smaller" aria-label="Create Thread" t-on-click="this.onClickCreate">Create</button>
+                    </div>
+                </div>
+            </t>
+            <div class="o-mail-SubChannelList mw-100 w-100 h-100" t-att-class="{ 'align-items-center justify-content-center': this.search.results.length === 0 }">
+                <div t-if="this.search.results.length === 0" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+                    <p class="my-1 text-center fst-italic text-500">
+                        <t t-if="this.search.searching">No threads found.</t>
+                        <t t-else="">This conversation has no threads yet.</t>
+                    </p>
+                </div>
+                <div class="d-flex flex-column flex-grow-1 gap-2">
+                    <SubChannelPreview t-foreach="this.search.results" t-as="channel" t-key="channel.localId" channel="channel" onClick="() => this.onClickSubChannel(channel)"/>
+                    <span t-if="!this.search.searchTerm" class="pt-1" t-custom-ref="load-more"/>
+                </div>
+            </div>
+        </ActionPanel>
+    </t>
+</templates>

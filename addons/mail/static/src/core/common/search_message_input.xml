@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.SearchMessageInput">
+        <div class="o-mail-SearchMessageInput d-flex align-items-center py-2">
+            <SearchInput
+                search="this.props.messageSearch"
+                accesskey="'Q'"
+                autofocus="true"
+                onClear="() => this.clear()"
+                placeholder="this.inputPlaceholder"
+            />
+            <Dropdown t-if="this.env.inChatter">
+                <button class="btn btn-outline-secondary ms-2" aria-label="Filter Messages" title="Filter Messages">
+                    <i class="fa fa-filter" role="img"/>
+                </button>
+                <t t-set-slot="content">
+                    <t t-foreach="this.searchFilters" t-as="searchFilter" t-key="searchFilter.label">
+                        <DropdownItem onSelected="() => this.onChangeSearchFilter(searchFilter)">
+                            <input type="radio" class="form-check-input ms-0 me-2" t-att-checked="searchFilter.is_notification === this.props.messageSearch.is_notification" value="searchFilter.label"/>
+                            <t t-out="searchFilter.name"/>
+                        </DropdownItem>
+                    </t>
+                </t>
+            </Dropdown>
+            <button t-if="this.env.inChatter" class="btn btn-outline-secondary ms-2" t-on-click="() => this.onClickClose()" aria-label="Close button">
+                <i class="o_searchview_icon oi oi-close cursor-pointer" role="img" aria-label="Close search" title="Close"/>
+            </button>
+        </div>
+    </t>
+</templates>

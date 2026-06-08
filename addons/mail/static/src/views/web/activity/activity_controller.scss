@@ -1,0 +1,157 @@
+.o_activity_view {
+    > table {
+        thead > tr > th:first-of-type {
+            min-width: 300px;
+        }
+    }
+    .o_activity_summary_cell {
+        .o-mail-ActivityCell-counter {
+            color: map-get($theme-colors, 'dark');
+        }
+        &.planned {
+            background-color: map-get($theme-colors, 'success');
+            color: map-get($theme-colors, 'light');
+            a {
+                color: map-get($theme-colors, 'light');
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+        &.overdue {
+            background-color: map-get($theme-colors, 'danger');
+            color: map-get($theme-colors, 'light');
+            a {
+                color: map-get($theme-colors, 'light');
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+        &.today {
+            background-color: map-get($theme-colors, 'warning');
+            color: map-get($theme-colors, 'light');
+            a {
+                color: map-get($theme-colors, 'light');
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+        &.done {
+            background-color: map-get($theme-colors, 'secondary');
+            a {
+                color: map-get($theme-colors, 'dark');
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+        &.o_activity_empty_cell {
+            > i {
+                display: none;
+            }
+            &:hover {
+                background-color: $component-active-bg;
+
+                > i {
+                    color: gray;
+                    display: flex;
+                }
+            }
+        }
+    }
+
+    // it contains a kanban card representing the record
+    .o_activity_record > div {
+        display: flex;
+        flex: 1 1 auto;
+        align-items: center;
+        height: 100%;
+
+        span.o_m2o_avatar {
+            width: 32px;
+            justify-content: center;
+
+            i.fa-pencil {
+                font-size: x-large;
+            }
+        }
+
+        .o_m2o_avatar > img, > img {
+            object-fit: cover;
+            width: 32px;
+            height: 32px;
+            max-height: 32px;
+        }
+
+        .o_m2m_avatar, .o_m2m_avatar_empty {
+            width: 32px !important;
+            height: 32px !important;
+        }
+        .o_m2o_avatar {
+            margin-right: 16px;
+        }
+        .o_m2o_avatar .o_delete {
+            font-size: initial !important;
+        }
+        .o_m2m_avatar_empty {
+            padding-top: 2px;
+            font-size: large;
+        }
+
+        .o_text_bold {
+            font-weight: $font-weight-bold;
+        }
+
+        .o_text_block {
+            @include o-text-overflow($max-width: 15rem);
+            display: block;
+        }
+    }
+
+    .o_activity_record:hover {
+        background-color: $component-active-bg;
+    }
+
+    .o_activity_filter_planned {
+        background-color: mix(map-get($theme-colors, 'success'), $o-webclient-background-color, 5%);
+    }
+    .o_activity_filter_today {
+        background-color: mix(map-get($theme-colors, 'warning'), $o-webclient-background-color, 5%);
+    }
+    .o_activity_filter_overdue {
+        background-color: mix(map-get($theme-colors, 'danger'), $o-webclient-background-color, 5%);
+    }
+    .o_activity_type_cell {
+        min-width:100px;
+        .oi-ellipsis-v {
+            cursor: pointer;
+        }
+
+        .o_template_element {
+            white-space: nowrap;
+            padding:5px;
+            cursor: pointer;
+            &:hover {
+                color: o-text-color('success');
+            }
+        }
+        .o_activity_counter {
+            margin: 5px 0 0 0;
+            > .o_column_progress {
+                width: 100%;
+                > div.active {
+                    border: 1px solid;
+                }
+            }
+        }
+    }
+    .o_activity_view_table_footer {
+        background-color: map-get($grays, '100' );
+    }
+}
+
+.o_activity_view_table {
+    height: 1px; // this value is ignored on the table but it is necessary to ensure h-100 works on descendants to vertically center content inside cells
+}

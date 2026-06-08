@@ -1,0 +1,68 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+{
+    'name': 'Calendar',
+    'version': '1.1',
+    'sequence': 165,
+    'depends': ['base', 'mail'],
+    'summary': "Schedule employees' meetings",
+    'description': """
+This is a full-featured calendar system.
+========================================
+
+It supports:
+------------
+    - Calendar of events
+    - Recurring events
+
+If you need to manage your meetings, you should install the CRM module.
+    """,
+    'category': 'Productivity/Calendar',
+    'demo': [
+        'data/calendar_demo.xml'
+    ],
+    'data': [
+        'data/calendar_cron.xml',
+        'data/mail_templates_chatter.xml',
+        'data/mail_template_data.xml',
+        'data/calendar_data.xml',
+        'data/mail_activity_type_data.xml',
+        'data/mail_message_subtype_data.xml',
+        'views/mail_activity_views.xml',
+        'views/calendar_templates.xml',
+        'views/calendar_views.xml',
+        'views/res_config_settings_views.xml',
+        'views/res_partner_views.xml',
+        'views/res_users_views.xml',
+        'wizard/calendar_provider_config.xml',
+        'wizard/calendar_popover_delete_wizard.xml',
+        'wizard/mail_activity_schedule_views.xml',
+        'security/ir.access.csv',
+    ],
+    'application': True,
+    'assets': {
+        'web.assets_backend': [
+            'calendar/static/src/core/common/**/*',
+            'calendar/static/src/**/*',
+        ],
+        # Unit test files
+        'web.assets_unit_tests': [
+            'calendar/static/tests/**/*.js',
+            ('remove', 'calendar/static/tests/tours/**/*'),
+        ],
+        'web.assets_tests': [
+            'calendar/static/tests/tours/**/*',
+        ],
+        'mail.assets_public': [
+            'calendar/static/src/core/common/**/*',
+        ],
+        'im_livechat.assets_embed_core': [
+            'calendar/static/src/core/common/**/*',
+        ],
+        'portal.assets_chatter_helpers': [
+            'calendar/static/src/core/common/**/*',
+        ],
+    },
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
+}

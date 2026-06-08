@@ -1,0 +1,1771 @@
+import {
+    advanceTime,
+    animationFrame,
+    click,
+    describe,
+    edit,
+    expect,
+    hover,
+    press,
+    queryAll,
+    queryFirst,
+    queryOne,
+    queryValue,
+    setInputRange,
+    test,
+    waitFor,
+    waitUntil,
+} from "@odoo/hoot";
+import { contains } from "@web/../tests/web_test_helpers";
+import { setupEditor } from "./_helpers/editor";
+import { getContent, setSelection } from "./_helpers/selection";
+import { expandToolbar } from "./_helpers/toolbar";
+import { expectElementCount } from "./_helpers/ui_expectations";
+import { execCommand } from "./_helpers/userCommands";
+import { unformat } from "./_helpers/format";
+import { getIframeInput } from "./_helpers/iframe_input";
+
+test("can set foreground color", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await click(".o_color_button[data-color='#6BADDE']");
+    await animationFrame();
+    await expectElementCount(".o-we-toolbar", 1);
+    expect(".o_font_color_selector").toHaveCount(0); // selector closed
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(107, 173, 222);">[test]</font></p>`);
+});
+
+test("can set background color", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-select-color-background");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await click(".o_color_button[data-color='#6BADDE']");
+    await animationFrame();
+    await expectElementCount(".o-we-toolbar", 1);
+    expect(".o_font_color_selector").toHaveCount(0); // selector closed
+    expect(getContent(el)).toBe(
+        `<p><font style="background-color: rgba(107, 173, 222, 0.6);">[test]</font></p>`
+    );
+});
+
+test("should add opacity to custom background colors but not to theme colors", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await contains(".o-select-color-background").click();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await contains(".o_color_button[data-color='#FF0000']").click(); // Select a custom color.
+    await expectElementCount(".o-we-toolbar", 1);
+    expect(".o_font_color_selector").toHaveCount(0);
+    // Verify custom color applies RGBA with 0.6 opacity.
+    expect(getContent(el)).toBe(
+        `<p><font style="background-color: rgba(255, 0, 0, 0.6);">[test]</font></p>`
+    );
+    // Verify paintbrush border bottom color has no opacity.
+    expect("i.fa-paint-brush").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+
+    await contains(".o-select-color-background").click();
+    expect(".o_font_color_selector").toHaveCount(1);
+    expect(".o_color_button[data-color='#FF0000']").toHaveClass("selected");
+
+    await contains(".o_color_button[data-color='o-color-1']").click(); // Select a theme color
+    await waitFor(".o-we-toolbar");
+    expect(getContent(el)).toBe(`<p><font style="" class="bg-o-color-1">[test]</font></p>`);
+    // Verify computed background color has no opacity.
+    expect(queryFirst("p font", { root: el })).toHaveStyle({
+        backgroundColor: "rgb(113, 75, 103)",
+    });
+});
+
+test("default opacity should get applied when applying background color to icon", async () => {
+    const { el } = await setupEditor('<p>[ab<span class="fa fa-glass"></span>cd]</p>');
+
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-select-color-background");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await click(".o_color_button[data-color='#FF0000']");
+    await animationFrame();
+    await expectElementCount(".o-we-toolbar", 1);
+    expect(".o_font_color_selector").toHaveCount(0); // selector closed
+    expect(getContent(el)).toBe(
+        `<p><font style="background-color: rgba(255, 0, 0, 0.6);">[ab\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeffcd]</font></p>`
+    );
+});
+
+test("can render and apply color theme", async () => {
+    await setupEditor("<p>[test]</p>");
+
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+    expect("button[data-color='o-color-1']").toHaveCount(1);
+    expect("button[data-color='o-color-1']").toHaveStyle(
+        { "background-color": "var(--o-color-1)" },
+        { inline: true }
+    );
+
+    expect(".text-o-color-1").toHaveCount(0);
+    await click("button[data-color='o-color-1']");
+    await waitFor(".text-o-color-1");
+    expect(".text-o-color-1").toHaveCount(1);
+});
+
+test("can render and apply gradient color", async () => {
+    await setupEditor("<p>[test]</p>");
+
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect("button[data-color='o-color-1']").toHaveStyle(
+        { "background-color": "var(--o-color-1)" },
+        { inline: true }
+    );
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    await click(
+        "button[data-color='linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%)']"
+    );
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({
+        borderImage:
+            "linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%) 1 / 1 / 0 stretch",
+    });
+    expect("font.text-gradient").toHaveCount(1);
+    expect("font.text-gradient").toHaveStyle({
+        backgroundImage: "linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%)",
+    });
+});
+
+test("custom text-colors used in the editor are shown in the colorpicker", async () => {
+    await setupEditor(
+        `<p>
+            <font style="color: rgb(255, 0, 0);">test</font>
+            <font style="color: rgb(0, 255, 0);">[test]</font>
+            <font style="color: color(srgb 0.4 0.2 0.8 / 0.4);">color_function_test</font>
+        </p>`
+    );
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click(".btn:contains('Custom')");
+    await animationFrame();
+    const hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    expect(hexInputEl).toHaveValue("#00FF00");
+    expect("button[data-color='#FF0000']").toHaveCount(1);
+    expect("button[data-color='#FF0000']").toHaveStyle({ backgroundColor: "rgb(255, 0, 0)" });
+    expect("button[data-color='#00FF00']").toHaveCount(1);
+    expect("button[data-color='#00FF00']").toHaveStyle({ backgroundColor: "rgb(0, 255, 0)" });
+    expect("button[data-color='#6632CD66']").toHaveCount(1);
+    expect("button[data-color='#6632CD66']").toHaveStyle({
+        backgroundColor: "rgba(102, 50, 205, 0.4)",
+    });
+});
+
+test("custom background colors used in the editor are shown in the colorpicker", async () => {
+    await setupEditor(
+        `<p>
+            <font style="background-color: rgb(255, 0, 0);">test</font>
+            <font style="background-color: rgb(0, 255, 0);">[test]</font>
+            <font style="background-color: color(srgb 0.4 0.2 0.8 / 0.4);">color_function_test</font>
+        </p>`
+    );
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-background");
+    await animationFrame();
+    await click(".btn:contains('Custom')");
+    await animationFrame();
+    const hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    expect(hexInputEl).toHaveValue("#00FF00");
+    expect("button[data-color='#FF0000']").toHaveCount(1);
+    expect("button[data-color='#FF0000']").toHaveStyle({ backgroundColor: "rgb(255, 0, 0)" });
+    expect("button[data-color='#00FF00']").toHaveCount(1);
+    expect("button[data-color='#00FF00']").toHaveStyle({ backgroundColor: "rgb(0, 255, 0)" });
+    expect("button[data-color='#00FF00']").toHaveCount(1);
+    expect("button[data-color='#6632CD66']").toHaveStyle({
+        backgroundColor: "rgba(102, 50, 205, 0.4)",
+    });
+});
+
+test("applied custom color should be shown in colorpicker after switching tab", async () => {
+    const { el } = await setupEditor(
+        '<p><font style="background-color: rgb(255, 0, 0);">[test]</font></p>'
+    );
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-background");
+    await animationFrame();
+    await click(".btn:contains('Custom')");
+    await animationFrame();
+    let hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    expect(hexInputEl).toHaveValue("#FF0000");
+    const newColor = "#00FF00";
+    await contains(hexInputEl).edit(newColor);
+    expect(hexInputEl).toHaveValue(newColor);
+    expect(getContent(el)).toBe(
+        '<p><font style="background-color: rgb(0, 255, 0);">[test]</font></p>'
+    );
+    await click(".btn:contains('Solid')");
+    await animationFrame();
+    await click(".btn:contains('Custom')");
+    await animationFrame();
+    hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    expect(hexInputEl).toHaveValue(newColor);
+});
+
+test("select hex color and apply it", async () => {
+    const { el } = await setupEditor(`<p>[test]</p>`);
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await click(".btn:contains('Custom')");
+    await animationFrame();
+    const hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    await click(hexInputEl);
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await edit("#017E84"); // === rgb(1, 126, 132)
+    await animationFrame();
+    expect("button[data-color='#017E84']").toHaveCount(1);
+    expect("button[data-color='#017E84']").toHaveStyle({ backgroundColor: "rgb(1, 126, 132)" });
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
+
+    await click(".odoo-editor-editable");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(0);
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
+});
+
+test("should be able to apply hex color with opacity component", async () => {
+    const { el } = await setupEditor(`<p>[test]</p>`);
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await click(".btn:contains('Custom')");
+    await animationFrame();
+    const hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    await click(hexInputEl);
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await edit("#017E8480"); // === rgba(1, 126, 132, 0.5)
+    await animationFrame();
+    expect("button[data-color='#017E8480']").toHaveCount(1);
+    expect("button[data-color='#017E8480']").toHaveStyle({
+        backgroundColor: "rgba(1, 126, 132, 0.5)",
+    });
+    expect(getContent(el)).toBe(
+        `<p><font style="color: rgba(1, 126, 132, 0.5);">[test]</font></p>`
+    );
+
+    await click(".odoo-editor-editable");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(0);
+    expect(getContent(el)).toBe(
+        `<p><font style="color: rgba(1, 126, 132, 0.5);">[test]</font></p>`
+    );
+});
+
+test("custom color tab should be opened by default if selected color is a custom color", async () => {
+    await setupEditor(`<p>a<font style="color: rgb(120, 100, 0, 0.6);">[test]</font>b</p>`);
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+    expect(".btn:contains('Custom')").toHaveClass("active");
+});
+
+test("gradient tab should be opened by default if selected color is a gradient color", async () => {
+    await setupEditor(
+        `<p>a<font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font>b</p>`
+    );
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+    expect(".btn:contains('Gradient')").toHaveClass("active");
+});
+
+test("solid color tab should be opened by default if selected color is a theme color", async () => {
+    await setupEditor(`<p>a<font class="text-o-color-1">[test]</font>b</p>`);
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+    expect(".btn:contains('Solid')").toHaveClass("active");
+});
+
+test("always show the current custom color", async () => {
+    const defaultTextColor = "rgb(1, 10, 100)";
+    const styleContent = `* {color: ${defaultTextColor};}`;
+    await setupEditor(`<p>[test]</p>`, { styleContent });
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+
+    await click(".btn:contains('Custom')");
+    await animationFrame();
+    const hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    await click(hexInputEl);
+    await animationFrame();
+    expect(".o_colorpicker_section:nth-of-type(1) button").toHaveCount(1);
+    expect(".o_colorpicker_section:nth-of-type(1) button").toHaveStyle(
+        { backgroundColor: defaultTextColor },
+        { message: "backgroundColor is the default black" }
+    );
+
+    await edit("#017E84"); // === rgb(1, 126, 132)
+    await animationFrame();
+    // When we edit the hex value, we only preview the color, so there should
+    // be two buttons now: the previously applied one and the preview one.
+    expect(".o_colorpicker_section:nth-of-type(1) button").toHaveCount(2);
+    expect(".o_colorpicker_section:nth-of-type(1) button.selected").toHaveStyle({
+        backgroundColor: "rgb(1, 126, 132)",
+    });
+
+    await hover(".o_colorpicker_section:nth-of-type(2) button:first");
+    await animationFrame();
+    expect(".o_colorpicker_section:first button").toHaveCount(2);
+    expect(".o_colorpicker_section:nth-of-type(1) button.selected").toHaveStyle({
+        backgroundColor: "rgb(1, 126, 132)",
+    });
+});
+
+test("show applied text color selected in solid color tab", async () => {
+    setupEditor(`<p><font style="color: rgb(255, 0, 0);">[test]</font></p>`);
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_color_section .o_color_button.selected").toHaveCount(1);
+    expect(".o_color_section .o_color_button.selected").toHaveStyle({
+        backgroundColor: "rgb(255, 0, 0)",
+    });
+    await contains("button[data-color='#0000FF']").click();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-foreground"); // Open color selector again
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+    expect(".o_color_section .o_color_button.selected").toHaveCount(1);
+    expect(".o_color_section .o_color_button.selected").toHaveStyle({
+        backgroundColor: "rgb(0, 0, 255)",
+    });
+});
+
+test("Can reset a color", async () => {
+    const { editor } = await setupEditor(
+        `<p class="tested">
+            <font style="color: rgb(255, 0, 0);">[test]</font>
+        </p>`
+    );
+    await expandToolbar();
+    expect("font[style='color: rgb(255, 0, 0);']").toHaveCount(1);
+    expect(".tested").not.toHaveInnerHTML("test");
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click("button.fa-trash");
+    await animationFrame();
+    expect("font[style='color: rgb(255, 0, 0);']").toHaveCount(0);
+    expect(".tested").toHaveInnerHTML("test");
+    execCommand(editor, "historyUndo");
+    expect("font[style='color: rgb(255, 0, 0);']").toHaveCount(1);
+    expect(".tested").not.toHaveInnerHTML("test");
+});
+
+test("can reset a font color when both color and background-color are applied", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <p>
+                <font style="color: rgb(255, 0, 0);">
+                    <font style="background-color: rgb(0, 0, 255);">[test]</font>
+                </font>
+            </p>
+        `)
+    );
+    await expectElementCount(".o-we-toolbar", 1);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await contains(".o_font_color_selector button.fa-trash").click();
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        `<p><font style="background-color: rgb(0, 0, 255);">[test]</font></p>`
+    );
+});
+
+test("can reset a text gradient on partial selection when background gradient and text-gradient are applied", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <p>
+                <font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">t[es]t</font>
+                </font>
+            </p>
+        `)
+    );
+    await expectElementCount(".o-we-toolbar", 1);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await contains(".o_font_color_selector button.fa-trash").click();
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p>
+                <font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">t</font>
+                    [es]
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">t</font>
+                </font>
+            </p>
+        `)
+    );
+});
+
+test("can reset a background color when both color and background-color are applied", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <p>
+                <font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[test]</font>
+                </font>
+            </p>
+        `)
+    );
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-background");
+    await contains(".o_font_color_selector button.fa-trash").click();
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        `<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[test]</font></p>`
+    );
+});
+
+test("can reset a background gradient on partial selection when background gradient and text-gradient are applied", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <p>
+                <font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">t[es]t</font>
+                </font>
+            </p>
+        `)
+    );
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-background");
+    await contains(".o_font_color_selector button.fa-trash").click();
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p>
+                <font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">t</font>
+                </font>
+                <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[es]</font>
+                <font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">t</font>
+                </font>
+            </p>
+        `)
+    );
+});
+
+test.tags("desktop");
+test("selected text color is shown in the toolbar and update when hovering", async () => {
+    await setupEditor(
+        `<p>
+            <font style="color: rgb(255, 0, 0);">[test]</font>
+        </p>`
+    );
+
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    // Hover a color
+    await hover("button[data-color='#FF00FF']");
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 255)" });
+    // Hover out
+    await hover(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+});
+
+test("selected text color is shown in the toolbar and update when clicking", async () => {
+    await setupEditor(
+        `<p>
+            <font style="color: rgb(255, 0, 0);">[test]</font>
+        </p>`
+    );
+
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click("button[data-color='#FF00FF']");
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 255)" });
+});
+
+test("selected text color using color function is shown in the toolbar", async () => {
+    await setupEditor(
+        `<p>
+            <font style="color: color(srgb 0.4 0.2 0.8 / 0.4);">[color_function_test]</font>
+        </p>`
+    );
+
+    await expandToolbar();
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgba(102, 50, 205, 0.4)" });
+});
+
+test("selected text color is not shown in the toolbar after removeFormat", async () => {
+    const defaultTextColor = "rgb(1, 10, 100)";
+    const styleContent = `* {color: ${defaultTextColor};}`;
+    const { el } = await setupEditor(
+        `<p>
+            <font style="color: rgb(255, 0, 0);">t[es]t</font>
+        </p>`,
+        { styleContent }
+    );
+
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+    await click(".btn .fa-eraser");
+    await animationFrame();
+    expect(getContent(el)).toBe(`<p>
+            <font style="color: rgb(255, 0, 0);">t</font>[es]<font style="color: rgb(255, 0, 0);">t</font>
+        </p>`);
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: defaultTextColor });
+});
+
+test("selected color is shown and updates when selection change", async () => {
+    const { el } = await setupEditor(
+        `<p><font style="color: rgb(255, 156, 0);">test1</font> <font style="color: rgb(150, 255, 0);">[test2]</font></p>`
+    );
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await animationFrame();
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(150, 255, 0)" });
+    setSelection({
+        anchorNode: el.firstChild,
+        anchorOffset: 0,
+        focusNode: el.firstChild,
+        focusOffset: 1,
+    });
+    await waitUntil(() => queryOne("i.fa-font").style.borderBottomColor === "rgb(255, 156, 0)");
+    expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 156, 0)" });
+});
+
+test("selected background color using color function is shown in the toolbar", async () => {
+    await setupEditor(
+        `<p>
+            <font style="background: color(srgb 0.4 0.2 0.8 / 0.4);">[color_function_test]</font>
+        </p>`
+    );
+
+    await expandToolbar();
+    await animationFrame();
+    expect("i.fa-paint-brush").toHaveStyle({ borderBottomColor: "rgba(102, 50, 205, 0.4)" });
+});
+
+test("selected background color is shown in the toolbar and update when clicking", async () => {
+    await setupEditor(
+        `<p>
+            <font style="background: rgb(255, 0, 0);">[test]</font>
+        </p>`
+    );
+
+    await expandToolbar();
+    await animationFrame();
+    expect("i.fa-paint-brush").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+    await click(".o-select-color-background");
+    await animationFrame();
+    await click("button[data-color='#FF00FF']");
+    await animationFrame();
+    expect("i.fa-paint-brush").toHaveStyle({ borderBottomColor: "rgb(255, 0, 255)" });
+});
+
+test("clicking on button color parent does not crash", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click(".o_colorpicker_section");
+    await animationFrame();
+    await click(".o_color_button[data-color='#6BADDE']");
+    await animationFrame();
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(107, 173, 222);">[test]</font></p>`);
+});
+
+test("gradient picker should be closed by default when switching gradient tab", async () => {
+    await setupEditor("<p>[test]</p>");
+
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    expect(".o_colorpicker_widget").toHaveCount(0);
+    await click("button[title='Define a custom gradient']");
+    await animationFrame();
+    expect(".o_colorpicker_widget").toHaveCount(1);
+    await click("button[title='Define a custom gradient']"); // Should be toggleable
+    await animationFrame();
+    expect(".o_colorpicker_widget").toHaveCount(0);
+});
+
+test("gradient picker correctly shows the current selected gradient", async () => {
+    await setupEditor(
+        `<p><font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font></p>`
+    );
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click("button[title='Define a custom gradient']");
+    await animationFrame();
+    expect("button.active:contains('Linear')").toHaveCount(1);
+    const angleInputEl = await getIframeInput(
+        ".o_font_color_selector iframe.o_angle_iframe",
+        "input[name='angle_input']"
+    );
+    expect(angleInputEl).toHaveValue(2);
+    expect("input[name='custom gradient percentage color 1']").toHaveValue(10);
+    expect("input[name='custom gradient percentage color 2']").toHaveValue(90);
+});
+
+test("custom colorpicker should show default color when selected text has gradient", async () => {
+    await setupEditor(
+        `<p><font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font></p>`
+    );
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await expectElementCount(".o_font_color_selector", 1);
+    await click(".btn:contains('Custom')");
+    await animationFrame();
+    const hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    expect(hexInputEl).toHaveValue("#FF0000");
+});
+
+test("gradient picker does change the selector gradient color", async () => {
+    await setupEditor(
+        `<p><font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font></p>`
+    );
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click("button[title='Define a custom gradient']");
+    await animationFrame();
+    expect("button.active:contains('Linear')").toHaveCount(1);
+    await animationFrame();
+    const angleInputEl = await getIframeInput(
+        ".o_font_color_selector iframe.o_angle_iframe",
+        "input[name='angle_input']"
+    );
+    await contains(angleInputEl).edit("10");
+    await setInputRange("input[name='custom gradient percentage color 1']", 30);
+    await setInputRange("input[name='custom gradient percentage color 2']", 50);
+    expect("font.text-gradient").toHaveStyle({
+        backgroundImage: "linear-gradient(10deg, rgb(255, 204, 51) 30%, rgb(226, 51, 255) 50%)",
+    });
+});
+
+test("gradient picker allow adding gradient color", async () => {
+    await setupEditor(
+        `<p><font style="background-image: linear-gradient(2deg, rgb(255, 0, 255) 10%, rgb(0, 255, 0) 90%);" class="text-gradient">[test]</font></p>`
+    );
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click("button[title='Define a custom gradient']");
+    await animationFrame();
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    expect("button.active:contains('Linear')").toHaveCount(1);
+    await click(".custom-gradient-configurator .gradient-preview");
+    await animationFrame();
+    expect("input[name='custom gradient percentage color 1']").toHaveValue(10);
+    expect("input[name='custom gradient percentage color 2']").toHaveValue(50); // todo simulate click position ?
+    expect("input[name='custom gradient percentage color 3']").toHaveValue(90);
+    expect("font.text-gradient").toHaveStyle({
+        backgroundImage:
+            "linear-gradient(2deg, rgb(255, 0, 255) 10%, rgb(128, 128, 128) 50%, rgb(0, 255, 0) 90%)",
+    });
+});
+
+test("clicking on the angle input does not close the dropdown", async () => {
+    await setupEditor(
+        `<p><font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font></p>`
+    );
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click("button[title='Define a custom gradient']");
+    await animationFrame();
+    expect("button.active:contains('Linear')").toHaveCount(1);
+    await animationFrame();
+    const angleInputEl = await getIframeInput(
+        ".o_font_color_selector iframe.o_angle_iframe",
+        "input[name='angle_input']"
+    );
+    await contains(angleInputEl).click();
+    expect(angleInputEl).toHaveCount(1);
+});
+
+test("should be able to select farthest-corner option in radial gradient", async () => {
+    await setupEditor(`<p>a[bcd]e</p>`);
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".btn:contains('Gradient')").toHaveCount(1);
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    await click("button[title='Define a custom gradient']");
+    await animationFrame();
+    expect("button:contains('Radial')").toHaveCount(1);
+    await click(".btn:contains('Radial')");
+    await animationFrame();
+    expect("button[title='Extend to the farthest corner']").toHaveCount(1);
+    await click("button[title='Extend to the farthest corner']");
+    await animationFrame();
+    expect("button[title='Extend to the farthest corner']").toHaveClass("active");
+});
+
+test.tags("desktop");
+test("should be able to show preview when hovering radial type button", async () => {
+    const gradientBefore = `radial-gradient(circle closest-side at 25% 25%, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)`;
+    const gradientAfter = `radial-gradient(circle farthest-side at 25% 25%, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)`;
+
+    const { el } = await setupEditor(
+        `<p>a<font style="background-image: ${gradientBefore}; background-color: transparent;">[bcd]</font>e</p>`
+    );
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-background");
+    await animationFrame();
+    expect(".btn:contains('Gradient')").toHaveCount(1);
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    await click("button[title='Define a custom gradient']");
+    await animationFrame();
+    expect("button:contains('Radial')").toHaveCount(1);
+    await click(".btn:contains('Radial')");
+    await animationFrame();
+    expect("button[title='Extend to the farthest corner']").toHaveCount(1);
+
+    // Hover for preview
+    await hover("button[title='Extend to the farthest side']");
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        `<p>a<font style="background-image: ${gradientAfter}; background-color: transparent;">[bcd]</font>e</p>`
+    );
+    expect("button[title='Extend to the farthest side']").not.toHaveClass("active");
+
+    // Hover out
+    await hover(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_custom_gradient_button").toHaveStyle({ backgroundImage: gradientBefore });
+    expect(getContent(el)).toBe(
+        `<p>a<font style="background-image: ${gradientBefore}; background-color: transparent;">[bcd]</font>e</p>`
+    );
+    expect("button[title='Extend to the farthest side']").not.toHaveClass("active");
+
+    // Hover again, click and hover out
+    await hover("button[title='Extend to the farthest side']");
+    await animationFrame();
+    await click("button[title='Extend to the farthest side']");
+    await animationFrame();
+    await hover(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+
+    expect(".o_custom_gradient_button").toHaveStyle({ backgroundImage: gradientAfter });
+    expect(getContent(el)).toBe(
+        `<p>a<font style="background-image: ${gradientAfter}; background-color: transparent;">[bcd]</font>e</p>`
+    );
+    expect("button[title='Extend to the farthest side']").toHaveClass("active");
+});
+
+test("solid tab color navigation using keys", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await press("Tab");
+    expect('.o_font_color_selector button:contains("Custom")').toBeFocused();
+    await press("Tab");
+    expect('.o_font_color_selector button:contains("Gradient")').toBeFocused();
+    await press("Tab");
+    expect(".o_font_color_selector button.fa-trash").toBeFocused();
+    await press("Tab");
+    expect('.o_font_color_selector button[data-color="o-color-1"]').toBeFocused();
+    await press("ArrowDown");
+    expect('.o_font_color_selector button[data-color="#000000"]').toBeFocused();
+    await press("ArrowRight");
+    expect('.o_font_color_selector button[data-color="#424242"]').toBeFocused();
+    await press("ArrowDown");
+    expect('.o_font_color_selector button[data-color="#FF9C00"]').toBeFocused();
+    await press("ArrowLeft");
+    expect('.o_font_color_selector button[data-color="#FF0000"]').toBeFocused();
+    await press("ArrowUp");
+    expect('.o_font_color_selector button[data-color="#000000"]').toBeFocused();
+    await press("Enter");
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(0, 0, 0);">[test]</font></p>`);
+});
+
+test("custom tab color navigation using keys", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await click(".o_color_button[data-color='#FF0000']");
+    await animationFrame();
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    await press("Tab");
+    expect('.o_font_color_selector button:contains("Custom")').toBeFocused();
+    await press("Enter");
+    await animationFrame();
+    expect(".btn:contains('Custom')").toHaveClass("active");
+    await press("Tab");
+    await press("Tab");
+    await press("Tab");
+    expect(`.o_font_color_selector button[data-color="#FF0000"]`).toBeFocused();
+    await press("ArrowDown");
+    expect('.o_font_color_selector button[data-color="black"]').toBeFocused();
+    await press("ArrowDown");
+    expect('.o_font_color_selector button[data-color="black"]').toBeFocused(); // Should do nothing
+    await press("Enter");
+    expect(getContent(el)).toBe(`<p><font style="" class="text-black">[test]</font></p>`);
+});
+
+describe.tags("desktop");
+describe("keyboard navigation", () => {
+    test("update saturation and brightness picker with keys", async () => {
+        await setupEditor(
+            `<p>
+                <font style="color: rgb(255, 0, 0);">[test]</font>
+            </p>`
+        );
+        await expandToolbar();
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await press("Tab");
+        expect('.o_font_color_selector button:contains("Custom")').toBeFocused();
+        await press("Enter");
+        await animationFrame();
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        expect(".o_font_color_selector .o_picker_pointer").toBeFocused();
+        const hexInputEl = await getIframeInput(
+            ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+            "input[name='hex_input']"
+        );
+        expect(hexInputEl).toHaveValue("#FF0000");
+        await press("ArrowUp");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#FF3333");
+        await press("ArrowLeft");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#F53D3D");
+        await press("ArrowDown");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#F20D0D");
+        await press("ArrowRight");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#FF0000");
+    });
+
+    test("update hue slider with keys", async () => {
+        await setupEditor(
+            `<p>
+                <font style="color: rgb(0, 255, 0);">[test]</font>
+            </p>`
+        );
+        await expandToolbar();
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await press("Tab");
+        expect('.o_font_color_selector button:contains("Custom")').toBeFocused();
+        await press("Enter");
+        await animationFrame();
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        expect(".o_font_color_selector .o_slider_pointer").toBeFocused();
+        const hexInputEl = await getIframeInput(
+            ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+            "input[name='hex_input']"
+        );
+        expect(hexInputEl).toHaveValue("#00FF00");
+        await press("ArrowUp");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#00FF2A");
+        await press("ArrowDown");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#00FF00");
+        await press("ArrowRight");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#00FF2A");
+        await press("ArrowLeft");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#00FF00");
+        await press("PageUp");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#00FF80");
+        await press("PageDown");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#00FF00");
+        await press("Home");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#FF0000");
+        await press("ArrowUp");
+        await animationFrame();
+        expect(hexInputEl).not.toHaveValue("#FF0000");
+        await press("End");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#FF0000");
+    });
+
+    test("update opacity slider with keys", async () => {
+        await setupEditor(
+            `<p>
+                <font style="color: rgb(255, 0, 0);">[test]</font>
+            </p>`
+        );
+        await expandToolbar();
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await press("Tab");
+        expect('.o_font_color_selector button:contains("Custom")').toBeFocused();
+        await press("Enter");
+        await animationFrame();
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        await press("Tab", { shiftKey: true });
+        expect(".o_font_color_selector .o_opacity_pointer").toBeFocused();
+        const hexInputEl = await getIframeInput(
+            ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+            "input[name='hex_input']"
+        );
+        expect(hexInputEl).toHaveValue("#FF0000");
+        await press("ArrowDown");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#FF0000E6");
+        await press("ArrowLeft");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#FF0000CC");
+        await press("Home");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#FF000000");
+        await press("ArrowUp");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#FF00001A");
+        await press("ArrowRight");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#FF000033");
+        await press("End");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#FF0000");
+    });
+
+    test("click on saturation and brightness picker sets implicit focus on it", async () => {
+        await setupEditor("<p>[test]</p>");
+        await expandToolbar();
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await contains('.o_font_color_selector button:contains("Custom")').click();
+        await contains(".o_font_color_selector .o_color_pick_area").click();
+        await press("Tab");
+        expect(".o_font_color_selector .o_slider_pointer").toBeFocused();
+        await contains(".o_font_color_selector .o_color_pick_area").click({
+            position: { top: 0, left: 0 }, // other positions don't guarantee a fixed color
+            relative: true,
+        });
+        const hexInputEl = await getIframeInput(
+            ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+            "input[name='hex_input']"
+        );
+        expect(hexInputEl).toHaveValue("#FFFFFF");
+        await press("ArrowDown");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#E6E6E6");
+    });
+
+    test("click on hue slider sets implicit focus on it", async () => {
+        await setupEditor(
+            `<p>
+                <font style="color: rgb(0, 255, 0);">[test]</font>
+            </p>`
+        );
+        await expandToolbar();
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await contains('.o_font_color_selector button:contains("Custom")').click();
+        await contains(".o_font_color_selector .o_color_slider").click();
+        await press("Tab");
+        expect(".o_font_color_selector .o_opacity_pointer").toBeFocused();
+        await contains(".o_font_color_selector .o_color_slider").click();
+        const hexInputEl = await getIframeInput(
+            ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+            "input[name='hex_input']"
+        );
+        expect(hexInputEl).not.toHaveValue("#00FF00");
+        await press("Home");
+        await animationFrame();
+        expect(hexInputEl).toHaveValue("#FF0000");
+    });
+
+    test("click on opacity slider sets implicit focus on it", async () => {
+        await setupEditor(
+            `<p>
+                <font style="color: rgb(255, 0, 0);">[test]</font>
+            </p>`
+        );
+        await expandToolbar();
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await contains('.o_font_color_selector button:contains("Custom")').click();
+        expect(".o_opacity_pointer").toHaveAttribute("aria-valuenow", "100.00");
+        await contains(".o_font_color_selector .o_opacity_slider").click();
+        await press("Tab");
+        await animationFrame();
+        const hexIframeEl = queryOne(
+            ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe"
+        );
+        expect(hexIframeEl).toBeFocused();
+        await contains(".o_font_color_selector .o_opacity_slider").click();
+        expect(".o_opacity_pointer").not.toHaveAttribute("aria-valuenow", "100.00");
+        const opacityValue = queryOne(".o_opacity_pointer").ariaValueNow;
+        await press("ArrowDown");
+        expect(".o_opacity_pointer").not.toHaveAttribute("aria-valuenow", opacityValue);
+    });
+});
+
+describe.tags("desktop");
+describe("color preview", () => {
+    test("preview color should work and be reverted", async () => {
+        await setupEditor("<p>[test]</p>");
+
+        await expandToolbar();
+        expect(".o_font_color_selector").toHaveCount(0);
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await hover("button[data-color='o-color-1']");
+        await animationFrame();
+        expect("font").toHaveCount(1);
+        expect("font").toHaveClass("text-o-color-1");
+        await hover(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        expect("font").toHaveCount(0);
+    });
+
+    test("preview color and close dropdown should revert the preview", async () => {
+        await setupEditor("<p>[test]</p>");
+
+        await expandToolbar();
+        expect(".o_font_color_selector").toHaveCount(0);
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await hover("button[data-color='o-color-1']");
+        await animationFrame();
+        expect("font").toHaveCount(1);
+        expect("font").toHaveClass("text-o-color-1");
+        await press("escape");
+        await animationFrame();
+        expect("font").toHaveCount(0);
+    });
+
+    test("preview color and then apply works with undo/redo", async () => {
+        const { editor } = await setupEditor("<p>[test]</p>");
+
+        await expandToolbar();
+        expect(".o_font_color_selector").toHaveCount(0);
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await hover("button[data-color='o-color-1']");
+        await animationFrame();
+        expect("font").toHaveCount(1);
+        expect("font").toHaveClass("text-o-color-1");
+        await hover("button[data-color='o-color-2']");
+        await animationFrame();
+        expect("font").toHaveCount(1);
+        expect("font").toHaveClass("text-o-color-2");
+        await click("button[data-color='o-color-2']");
+        await animationFrame();
+        expect("font").toHaveCount(1);
+        expect("font").toHaveClass("text-o-color-2");
+        await animationFrame();
+        execCommand(editor, "historyUndo");
+        expect("font").toHaveCount(0);
+        execCommand(editor, "historyRedo");
+        expect("font").toHaveCount(1);
+        expect("font").toHaveClass("text-o-color-2");
+    });
+
+    test("preview color are not restored when undo", async () => {
+        const { editor } = await setupEditor("<p>[test]</p>");
+
+        await expandToolbar();
+        expect(".o_font_color_selector").toHaveCount(0);
+        await click(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        await hover("button[data-color='o-color-1']");
+        await animationFrame();
+        expect("font").toHaveCount(1);
+        expect("font").toHaveClass("text-o-color-1");
+        await hover("button[data-color='o-color-2']");
+        await animationFrame();
+        expect("font").toHaveCount(1);
+        expect("font").toHaveClass("text-o-color-2");
+        await press("escape");
+        await animationFrame();
+        expect("font").toHaveCount(0);
+        execCommand(editor, "historyUndo");
+        expect("font").toHaveCount(0);
+    });
+
+    test("should preview color in table on hover in solid tab", async () => {
+        const defaultTextColor = "color: rgb(1, 10, 100);";
+        const styleContent = `* {${defaultTextColor}}`;
+        const { el } = await setupEditor(
+            `
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `,
+            { styleContent }
+        );
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-background");
+        await animationFrame();
+        // Hover a color
+        await hover("button[data-color='#CE0000']");
+        expect(getContent(el)).toBe(`
+            <p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td o_selected_td_bg_color_preview" style="background-color: rgba(206, 0, 0, 0.6); ${defaultTextColor}">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td o_selected_td_bg_color_preview" style="background-color: rgba(206, 0, 0, 0.6); ${defaultTextColor}">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `);
+        // Hover out
+        await hover(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        expect(getContent(el)).toBe(`
+            <p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `);
+        await expectElementCount(".o-we-toolbar", 1);
+    });
+
+    test("should preview color in table on hover in custom tab", async () => {
+        const defaultTextColor = "color: rgb(1, 10, 100);";
+        const styleContent = `* {${defaultTextColor}}`;
+        const { el } = await setupEditor(
+            `
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p><br>]</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        `,
+            { styleContent }
+        );
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-background");
+        await animationFrame();
+        await click(".btn:contains('Custom')");
+        await animationFrame();
+        // Hover a color
+        await hover("button[data-color='black']");
+        expect(getContent(el)).toBe(`
+            <p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td o_selected_td_bg_color_preview bg-black" style="${defaultTextColor}">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td o_selected_td_bg_color_preview bg-black" style="${defaultTextColor}">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `);
+        // Hover out
+        await hover(".o-we-toolbar .o-select-color-foreground");
+        await animationFrame();
+        expect(getContent(el)).toBe(`
+            <p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>[<br></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="o_selected_td">
+                            <p>]<br></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+        `);
+        await expectElementCount(".o-we-toolbar", 1);
+    });
+
+    test("should preview selected text color when tabbing", async () => {
+        await setupEditor(
+            `<p>
+                This is a <font style="color: rgb(255, 0, 0);">[test]</font>.
+            </p>`
+        );
+
+        await expandToolbar();
+        await animationFrame();
+        expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+        await click(".o-select-color-foreground");
+        await animationFrame();
+        await press("Tab"); // Tab to Custom
+        await animationFrame();
+        await press("Tab"); // Tab to Gradient
+        await animationFrame();
+        await press("Tab"); // Tab to Trash
+        await animationFrame();
+        expect("font").toHaveCount(0); // The color was deleted
+        await press("Tab"); // Tab to 1st color
+        await animationFrame();
+        expect("font").toHaveStyle({ color: "rgb(113, 75, 103)" });
+    });
+
+    test("should preview when changing custom color", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await animationFrame();
+        await click(".btn:contains('Custom')");
+        await animationFrame();
+        await contains(".o_font_color_selector .o_color_pick_area").click();
+        expect("p font").toHaveAttribute("style");
+        await press("Escape"); // Close tab and cancel preview.
+        await animationFrame();
+        expect("font").toHaveCount(0); // The color was deleted
+    });
+
+    test("should show the custom color preview in a color button", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await animationFrame();
+        await click(".btn:contains('Custom')");
+        await animationFrame();
+        const colorBtnsLength = queryAll(".o_colorpicker_section:first .o_color_button").length;
+        await contains(".o_font_color_selector .o_color_pick_area").click();
+        await animationFrame();
+        expect("p font").toHaveAttribute("style");
+        const color = queryOne("p font").style.color;
+        const hexInputEl = await getIframeInput(
+            ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+            "input[name='hex_input']"
+        );
+        const hexColor = queryValue(hexInputEl);
+        expect(`.o_color_button[data-color='${hexColor}']`).toBeDisplayed();
+        expect(`.o_color_button[data-color='${hexColor}']`).toHaveStyle({ backgroundColor: color });
+        expect(".o_colorpicker_section:first .o_color_button").toHaveCount(colorBtnsLength + 1);
+    });
+
+    test("should not modify the custom color preview button by hovering another color button", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await animationFrame();
+        await click(".btn:contains('Custom')");
+        await animationFrame();
+
+        // 1. Hover a color button before modifying the custom color: should not
+        // display the preview button.
+        const colorBtnsLength = queryAll(".o_colorpicker_section:first .o_color_button").length;
+        await contains(".o_color_button[data-color='black']").hover();
+        expect(".o_colorpicker_section:first .o_color_button").toHaveCount(colorBtnsLength);
+
+        // 2. Update custom color: should show the preview button with the
+        // selected value.
+        await contains(".o_font_color_selector .o_color_pick_area").click();
+        expect("p font").toHaveAttribute("style");
+        const color = queryOne("p font").style.color;
+        const hexInputEl = await getIframeInput(
+            ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+            "input[name='hex_input']"
+        );
+        const hexColor = queryValue(hexInputEl);
+        expect(`.o_color_button[data-color='${hexColor}']`).toBeDisplayed();
+        expect(`.o_color_button[data-color='${hexColor}']`).toHaveStyle({ backgroundColor: color });
+
+        // 3. Hover a color button: should not impact the preview button.
+        await contains(".o_color_button[data-color='black']").hover();
+        expect(`.o_color_button[data-color='${hexColor}']`).toHaveStyle({ backgroundColor: color });
+    });
+
+    test("should remove the custom color preview after switching tabs", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await animationFrame();
+        await click(".btn:contains('Custom')");
+        await animationFrame();
+        await contains(".o_font_color_selector .o_color_pick_area").click();
+        expect("p font").toHaveAttribute("style");
+        const color = queryOne("p font").style.color;
+        const hexInputEl = await getIframeInput(
+            ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+            "input[name='hex_input']"
+        );
+        const hexColor = queryValue(hexInputEl);
+        expect(`.o_color_button[data-color='${hexColor}']`).toBeDisplayed();
+        expect(`.o_color_button[data-color='${hexColor}']`).toHaveStyle({ backgroundColor: color });
+        await contains(".btn:contains('Gradient')").click();
+        await contains(".btn:contains('Custom')").click();
+        expect(`.o_color_button[data-color='${hexColor}']`).toHaveCount(0);
+    });
+
+    test("should apply custom color when clicking outside the popover", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await animationFrame();
+        await click(".btn:contains('Custom')");
+        await animationFrame();
+        await contains(".o_font_color_selector .o_color_pick_area").click();
+        expect("p font").toHaveAttribute("style");
+        const color = queryOne("p font").style.color;
+        await click("p");
+        await animationFrame();
+        expect("p font").toHaveStyle({ color });
+    });
+
+    test("should apply custom color when pressing Enter", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await animationFrame();
+        await click(".btn:contains('Custom')");
+        await animationFrame();
+        await contains(".o_font_color_selector .o_color_pick_area").click();
+        expect("p font").toHaveAttribute("style");
+        const color = queryOne("p font").style.color;
+        await press("Enter");
+        await animationFrame();
+        expect("p font").toHaveStyle({ color });
+    });
+
+    test("should preview the custom color after hovering out of color swatch", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await animationFrame();
+        await click(".btn:contains('Custom')");
+        await animationFrame();
+        await contains(".o_font_color_selector .o_color_pick_area").click();
+        expect("p font").toHaveAttribute("style");
+        const color = queryOne("p font").style.color;
+        await contains(".o_colorpicker_section .o_color_button[data-color='800']").hover();
+        expect("p font").not.toHaveAttribute("style");
+        expect("p font").toHaveClass("text-800");
+        await contains(".btn:contains('Custom')").hover();
+        expect("p font").toHaveStyle({ color });
+        expect("p font").not.toHaveAttribute("class");
+        await press("Escape"); // Close tab and cancel preview.
+        await animationFrame();
+        expect("font").toHaveCount(0); // The color was deleted
+    });
+
+    test("should not preview the custom color if it was not modified first", async () => {
+        await setupEditor(`
+            <p>This is a <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(47, 128, 237) 0%, rgb(178, 255, 218) 100%);">[test]</font>.</p>
+        `);
+
+        await expandToolbar();
+        await animationFrame();
+        const gradient = queryOne("p font").style.backgroundImage;
+        await click(".o-select-color-foreground");
+        await animationFrame();
+        await click(".btn:contains('Custom')");
+        await animationFrame();
+        await contains(".btn[title='Reset']").hover();
+        expect("font").toHaveCount(0);
+        await hover("p");
+        await animationFrame();
+        const hexInputEl = await getIframeInput(
+            ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+            "input[name='hex_input']"
+        );
+        expect(hexInputEl).toHaveValue("#FF0000"); // Should not have any impact.
+        // The value applied is still the gradient, not the custom color.
+        expect("p font").toHaveStyle({ backgroundImage: gradient });
+    });
+
+    test("should not preview the custom color if it is not the active tab", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await animationFrame();
+        await click(".btn:contains('Custom')");
+        await animationFrame();
+        await contains(".o_font_color_selector .o_color_pick_area").click();
+        expect("p font").toHaveAttribute("style");
+        const color = queryOne("p font").style.color;
+        await click(".btn:contains('Gradient')");
+        await animationFrame();
+        await contains(".o_gradient_color_button").hover();
+        expect("p font").not.toHaveStyle({ color });
+        expect("p font").toHaveClass("text-gradient");
+        await hover(".btn:contains('Gradient')");
+        await animationFrame();
+        expect("font").toHaveCount(0); // The color was deleted
+    });
+
+    test("should not apply the custom color when confirming another tab's color", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await animationFrame();
+        await click(".btn:contains('Custom')");
+        await animationFrame();
+        await contains(".o_font_color_selector .o_color_pick_area").click();
+        expect("p font").toHaveAttribute("style");
+        const customColor = queryOne("p font").style.color;
+        await click(".btn:contains('Solid')");
+        await animationFrame();
+        await contains(".o_color_button[data-color='#FF00FF']").click();
+        expect("p font").not.toHaveStyle({ color: customColor });
+        expect("p font").toHaveStyle({ color: "rgb(255, 0, 255)" });
+    });
+
+    test("should preview when changing the gradient", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await contains(".btn:contains('Gradient')").click();
+        await contains(".o_custom_gradient_button").click(); // Click previews the default gradient.
+        const initialGradient = queryOne(".o_custom_gradient_button").style.backgroundImage;
+        await contains(".o_font_color_selector .o_color_pick_area").click();
+        expect(".o_custom_gradient_button").not.toHaveStyle({ backgroundImage: initialGradient });
+        const gradient1 = queryOne(".o_custom_gradient_button").style.backgroundImage;
+        await click("input[type='range'][name$='color 2']");
+        await animationFrame();
+        await contains(".o_font_color_selector .o_color_slider").click();
+        expect(".o_custom_gradient_button").not.toHaveStyle({ backgroundImage: initialGradient });
+        expect(".o_custom_gradient_button").not.toHaveStyle({ backgroundImage: gradient1 });
+        await press("Escape"); // Close tab and cancel preview.
+        await animationFrame();
+        expect("font").toHaveCount(0); // Gradient was canceled
+    });
+
+    test("should preview when changing different gradient settings", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await contains(".btn:contains('Gradient')").click();
+        await contains(".o_custom_gradient_button").click();
+        const angleInputEl = await getIframeInput(
+            ".o_font_color_selector iframe.o_angle_iframe",
+            "input[name='angle_input']"
+        );
+        await contains(angleInputEl).edit(250, {
+            confirm: "tab",
+        });
+        expect("p font").toHaveStyle({
+            backgroundImage:
+                "linear-gradient(250deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
+        await contains("button:contains('Radial')").click();
+        expect("p font").toHaveStyle({
+            backgroundImage:
+                "radial-gradient(circle closest-side at 25% 25%, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
+        await press("Escape"); // Close tab and cancel preview.
+        await animationFrame();
+        expect("font").toHaveCount(0); // Gradient was canceled
+    });
+
+    test("should apply the gradient when pressing Enter on an input field", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await contains(".btn:contains('Gradient')").click();
+        await contains(".o_custom_gradient_button").click();
+        const angleInputEl = await getIframeInput(
+            ".o_font_color_selector iframe.o_angle_iframe",
+            "input[name='angle_input']"
+        );
+        await contains(angleInputEl).edit("250");
+        expect("p font").toHaveStyle({
+            backgroundImage:
+                "linear-gradient(250deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
+        await press("Escape");
+        await animationFrame();
+        expect("p font").toHaveStyle({
+            backgroundImage:
+                "linear-gradient(250deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
+    });
+
+    test("should preview the gradient when clicking on 'Custom' and then apply it when clicking the second time", async () => {
+        await setupEditor(`<p>This is a [test].</p>`);
+
+        await expandToolbar();
+        await animationFrame();
+        await click(".o-select-color-foreground");
+        await contains(".btn:contains('Gradient')").click();
+        await contains(".o_custom_gradient_button").click();
+
+        await contains(".o_custom_gradient_button").click();
+        await animationFrame();
+        expect(".o_custom_gradient_button").toHaveStyle({
+            backgroundImage:
+                "linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
+        expect("p font").toHaveStyle({
+            backgroundImage:
+                "linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
+        // second press on "Custom" should save the gradient
+        await contains(".o_custom_gradient_button").click();
+        await press("Escape");
+        await animationFrame();
+        expect("p font").toHaveStyle({
+            backgroundImage:
+                "linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        });
+    });
+});
+
+test("Should not close the color picker on icon color change", async () => {
+    const { el } = await setupEditor(
+        `<p><span class="fa fa-glass" contenteditable="false"></span></p>`
+    );
+    await animationFrame();
+    const icon = el.querySelector(".fa");
+    setSelection({
+        anchorNode: icon.previousSibling,
+        anchorOffset: 1,
+        focusNode: icon.nextSibling,
+        focusOffset: 0,
+    });
+    await waitFor(".o-select-color-foreground");
+    await click(".o-select-color-foreground");
+    await waitFor('[data-color="o-color-1"]');
+    await hover('[data-color="o-color-1"]');
+    expectElementCount('[data-color="o-color-1"]', 1);
+    await advanceTime(200);
+    await animationFrame();
+    await waitFor('.o_font_color_selector [data-color="o-color-2"]');
+    await hover('[data-color="o-color-2"]');
+    // Color picker should stay open
+    expectElementCount('[data-color="o-color-2"]', 1);
+});
+
+test.tags("desktop");
+test("should move focus to next element when pressing Tab after selecting custom gradient", async () => {
+    await setupEditor(`<p>This is a [test].</p>`);
+    await expectElementCount(".o-we-toolbar", 1);
+
+    // Open the color picker and select the graident tab
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await expectElementCount(".o_font_color_selector", 1);
+    await click(".btn:contains('Gradient')");
+    await expectElementCount(".o_custom_gradient_button", 1);
+
+    // Click on the custom gradient button and it should be focused
+    await click(".btn.o_custom_gradient_button");
+    await animationFrame();
+    expect(".btn.o_custom_gradient_button").toBeFocused();
+
+    // On Tab, the focus should move to the next focusable element
+    await press("Tab");
+    expect(queryAll(".o_type_row button")[0]).toBeFocused();
+});
+
+test.tags("desktop");
+test("should close the color picker and return focus to the toolbar color button on escape", async () => {
+    const { el } = await setupEditor(`<p>[test]</p>`);
+    await expectElementCount(".o-we-toolbar", 1);
+
+    // Open the color picker and select the graident tab
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await expectElementCount(".o_font_color_selector", 1);
+    expect("button.solid-tab").toBeFocused();
+
+    // On Escape, the color picker should close and
+    // focus should return to the toolbar color button
+    await press("Escape");
+    expectElementCount(".o_font_color_selector", 0); // selector closed
+    expect(".o-select-color-foreground").toBeFocused();
+    expect(getContent(el)).toBe(`<p>[test]</p>`);
+});
+
+test.tags("desktop");
+test("should close the color picker and return focus to the editable on selecting a color", async () => {
+    const { el } = await setupEditor(`<p>[test]</p>`);
+    await expectElementCount(".o-we-toolbar", 1);
+
+    // Open the color picker and select the graident tab
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await expectElementCount(".o_font_color_selector", 1);
+    expect("button.solid-tab").toBeFocused();
+
+    // Select the color by enter and the color picker should
+    // close and focus should return to the editable
+    await contains(".o_color_button[data-color='#6BADDE']").focus();
+    expect(".o_color_button[data-color='#6BADDE']").toBeFocused();
+    await press("Enter");
+    expectElementCount(".o_font_color_selector", 0); // selector closed
+    expect(el).toBeFocused();
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(107, 173, 222);">[test]</font></p>`);
+});

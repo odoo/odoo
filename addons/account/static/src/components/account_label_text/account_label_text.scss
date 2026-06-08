@@ -1,0 +1,53 @@
+.o_account_label_text {
+    textarea.o_input {
+        resize: none;
+
+        &.o_has_product::first-line {
+            font-weight: 600;
+        }
+    }
+
+    .o_m2o_overlay {
+        pointer-events: none;
+
+        .o-autocomplete {
+            height: 100%;
+
+            &--input {
+                height: 100%;
+                opacity: 0;
+            }
+
+            &--dropdown-menu {
+                pointer-events: auto;
+
+                &:has(li.o_m2o_no_result),
+                &:has(.o_loading) {
+                    display: none;
+                }
+            }
+        }
+
+        .o_dropdown_button {
+            display: none;
+        }
+    }
+
+    .o_external_button {
+        visibility: hidden;
+    }
+
+    &:focus-within {
+        .o_external_button {
+            visibility: visible;
+        }
+    }
+}
+
+.o_has_product {
+    font-style: italic;
+
+    &::first-line {
+        font-style: normal;
+    }
+}

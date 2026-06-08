@@ -1,0 +1,95 @@
+from odoo.addons.base.tests.files import JPG_B64, JPG_RAW, SVG_B64, SVG_RAW
+from odoo.tests.common import tagged, TransactionCase
+
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
+class TestWebSave(TransactionCase):
+    def test_web_save_create(self):
+        ''' Test the web_save method on a new record. '''
+        # Create a new record, without unity specification (it should return only the id)
+        self.env['test_orm.person'].search([]).unlink()
+        result = self.env['test_orm.person'].web_save({'name': 'ged'}, {})
+        person = self.env['test_orm.person'].search([])
+        self.assertTrue(person.exists())
+        self.assertEqual(person.name, 'ged')
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result, [{'id': person.id}])
+
+        # Create a new record, with unity specification
+        result = self.env['test_orm.person'].web_save({'name': 'ged'}, {'display_name': {}})
+        person = self.env['test_orm.person'].browse(result[0]['id'])
+        self.assertTrue(person.exists())
+        self.assertEqual(result, [{'id': person.id, 'display_name': 'ged'}])
+
+    def test_web_save_write(self):
+        ''' Test the web_save method on an existing record. '''
+
+        person = self.env['test_orm.person'].create({'name': 'ged'})
+
+        # Modify an existing record, without unity specification (it should return only the id)
+        result = person.web_save({'name': 'aab'}, {})
+        self.assertEqual(person.name, 'aab')
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result, [{'id': person.id}])
+
+        # Modify an existing record, with unity specification
+        result = person.web_save({'name': 'lpe'}, {'display_name': {}})
+        self.assertEqual(result, [{'id': person.id, 'display_name': 'lpe'}])
+
+    def test_web_save_computed_stored_binary(self):
+        [result] = self.env['test_orm.binary_svg'].web_save(
+            {'name': 'test', 'image_wo_attachment': SVG_B64},
+            {'image_wo_attachment': {}, 'image_wo_attachment_related': {}},
+        )
+        self.assertEqual(result['image_wo_attachment'], '322.00 bytes')
+        self.assertEqual(result['image_wo_attachment_related'], '322.00 bytes')
+
+        # check cache values
+        record = self.env['test_orm.binary_svg'].browse(result['id'])
+        self.assertEqual(record.image_wo_attachment.content, SVG_RAW)
+        self.assertEqual(record.image_wo_attachment.content, record.image_wo_attachment_related.content)
+
+        # check database values
+        self.env.invalidate_all()
+        self.assertEqual(record.image_wo_attachment.content, SVG_RAW)
+        self.assertEqual(record.image_wo_attachment.content, record.image_wo_attachment_related.content)
+
+        # check web_save() on existing record
+        self.env.invalidate_all()
+        [result] = record.web_save(
+            {'image_wo_attachment': JPG_B64},
+            {'image_wo_attachment': {}, 'image_wo_attachment_related': {}},
+        )
+        self.assertEqual(result['image_wo_attachment'], '29.47 Kb')
+        self.assertEqual(result['image_wo_attachment_related'], '29.47 Kb')
+
+        # check cache values
+        self.assertEqual(record.image_wo_attachment.content, JPG_RAW)
+        self.assertEqual(record.image_wo_attachment.content, record.image_wo_attachment_related.content)
+
+        # check database values
+        self.env.invalidate_all()
+        self.assertEqual(record.image_wo_attachment.content, JPG_RAW)
+        self.assertEqual(record.image_wo_attachment.content, record.image_wo_attachment_related.content)
+
+    def test_web_save_multi(self):
+        Model = self.env['test_orm.mixed']
+        records = Model.create([
+            {'char': 'Record 1', 'integer': 100, 'number': 2.5},
+            {'char': 'Record 2', 'integer': 200, 'number': 3.5},
+        ])
+
+        vals = [
+            {"char": "Updated 1", "integer": 150, "number": 1.1},
+            {"integer": 250, "number": 1.1},
+        ]
+        specification = {
+            "char": {},
+            "integer": {},
+        }
+        result = records.web_save_multi(vals, specification)
+
+        self.assertEqual(result, [
+            {'id': records[0].id, 'char': 'Updated 1', 'integer': 150},
+            {'id': records[1].id, 'char': 'Record 2', 'integer': 250},
+        ])

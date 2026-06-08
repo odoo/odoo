@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website.s_whatsapp.chatbox">
+        <div class="s_whatsapp_chatbox end-0 rounded-3 position-absolute shadow-lg overflow-hidden mb-2 d-none o_translate_mode_hidden">
+            <div class="s_whatsapp_header d-flex align-items-center p-2 text-white">
+                <div class="o_not_editable">
+                    <img class="rounded-circle" t-att-src="this.agentAvatarSrc" alt="agent"/>
+                </div>
+                <div class="ms-2 me-auto flex-grow-1 d-flex flex-column lh-1">
+                    <div class="text-break mb-1 fw-bold" t-out="this.agentName"/>
+                    <div class="text-break text-white-75" t-out="this.agentDescription"/>
+                </div>
+                <div class="o_not_editable">
+                    <button class="btn-close btn-close-white s_whatsapp_close_btn" aria-label="Close chat"/>
+                </div>
+            </div>
+            <div class="s_whatsapp_messages p-2">
+                <div class="s_whatsapp_agent_msg position-relative w-75 m-0 rounded-top rounded-end p-2 text-break" t-out="this.agentMessage"/>
+            </div>
+            <div class="s_whatsapp_user_input">
+                <!-- Regular input box -->
+                <div class="s_whatsapp_input_box align-items-stretch gap-2 p-2">
+                    <textarea name="wa_message" class="s_whatsapp_user_message form-control align-content-center flex-grow-1" t-att-placeholder="this.messagePlaceholder" rows="1"/>
+                    <div class="o_not_editable">
+                        <button class="s_whatsapp_send btn border-0 p-md-0 rounded-pill" aria-label="Send message">
+                            <i class="fa fa-paper-plane" aria-hidden="true"/>
+                        </button>
+                    </div>
+                </div>
+                <!-- CTA mode -->
+                <div class="s_whatsapp_cta_box p-2 border-top">
+                    <button class="s_whatsapp_cta_btn btn w-100 py-3 rounded-4 border-0" t-att-aria-label="this.ctaLabel">
+                        <i class="fa fa-whatsapp me-2" aria-hidden="true"/>
+                        <span t-out="this.ctaLabel"/>
+                    </button>
+                </div>
+            </div>
+            <div class="s_whatsapp_warning alert alert-warning d-none m-2 fs-6">
+                <i class="fa fa-info-circle me-1" aria-hidden="true"/>
+                <span>
+                    Messaging is not available. Please contact us by another way.
+                </span>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,35 @@
+.o_self_product_page {
+
+    .o_self_product_page_header{
+      .o_self_product_name{
+         left: 3.2rem;
+         right: 3.2rem;
+      }
+    }
+
+    --product-image-offset: 5rem;
+
+    .o_self_product_image {
+        margin-bottom: calc(-1.25 * var(--product-image-offset));
+        max-width: 250px;
+    }
+
+    @include media-breakpoint-down(sm) {
+      .o_self_product_image {
+          max-width: 200px;
+      }
+    }
+
+    .o_self_product_page_attributes {
+        margin-top: var(--product-image-offset);
+    }
+}
+
+
+@include o-kiosk-portrait(){
+   .o_self_product_page {
+        .o_self_product_image {
+            max-width: 350px;
+        }
+   }
+}

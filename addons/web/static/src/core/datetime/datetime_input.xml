@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.DateTimeInput">
+        <input
+            type="text"
+            t-custom-ref="start-date"
+            t-att-id="this.props.id"
+            style="field-sizing: content;"
+            class="o_datetime_input o_input cursor-pointer user-select-none"
+            t-att-class="this.props.class"
+            autocomplete="off"
+            inputmode="none"
+            t-att-placeholder="this.props.placeholder"
+            t-att-disabled="this.props.disabled"
+        />
+    </t>
+</templates>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="web.AttachmentImageField">
+        <div class="o_attachment_image">
+            <img t-if="this.props.record.data[this.props.name]"
+                t-attf-src="/web/image/{{ this.props.record.data[this.props.name].id }}/300x300?unique=1"
+                t-att-title="!!this.env.debug and this.props.record.data[this.props.name].display_name"
+                alt="Image"/>
+        </div>
+    </t>
+
+</templates>

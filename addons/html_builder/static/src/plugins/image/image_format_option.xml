@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.ImageFormat">
+    <BuilderRow label.translate="Format" level="this.props.level" t-if="this.state.showFormat">
+        <BuilderSelect>
+            <t t-foreach="this.state.formats" t-as="format" t-key="format.id">
+                <BuilderSelectItem className="'o_we_badge_at_end'" action="'setImageFormat'" actionParam="format">
+                    <div class="d-flex align-items-center overflow-hidden">
+                        <span class="text-truncate flex-grow-1 me-2" t-out="format.label"/>
+                        <span class="badge rounded-pill me-1 top-0 align-self-center flex-shrink-0" t-out="format.mimetype.split('/')[1]"/>
+                    </div>
+                </BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Quality" tooltip.translate="Increase for more detail, decrease for speed" t-if="this.state.showQuality and this.state.formats.length" level="this.props.level">
+        <BuilderRange
+            action="'setImageQuality'"
+            min="0"
+            max="100"
+            t-if="!this.state.compressionUnsupported"
+            unit="'%'"
+            applyWithUnit="false"
+            withNumberInput="true" />
+        <span t-if="this.state.compressionUnsupported" class="fst-italic">
+            WebP compression not supported on this browser
+        </span>
+    </BuilderRow>
+</t>
+
+
+
+</templates>

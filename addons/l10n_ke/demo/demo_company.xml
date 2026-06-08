@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.partner_demo_company_ke" model="res.partner" forcecreate="1">
+        <field name="name">KE Company</field>
+        <field name="vat"/>
+        <field name="street">Cannon Hse, 3rd Flr Haile Selassie Ave, 48505-00100 GPO</field>
+        <field name="city">Nairobi</field>
+        <field name="country_id" ref="base.ke"/>
+        <field name="zip"/>
+        <field name="phone">+254 775 550 919</field>
+        <field name="email">kenyancompany@example.com</field>
+        <field name="website">www.keexample.com</field>
+    </record>
+
+    <record id="base.demo_company_ke" model="res.company" forcecreate="1">
+        <field name="name">KE Company</field>
+        <field name="partner_id" ref="base.partner_demo_company_ke"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('base.demo_company_ke')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('base.demo_company_ke'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>ke</value>
+        <value model="res.company" eval="obj().env.ref('base.demo_company_ke')"/>
+        <value name="install_demo" eval="True"/>
+    </function>
+</odoo>

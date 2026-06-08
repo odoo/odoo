@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_pos_pos_form" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="consolidated_invoice_ids" invisible="1"/>
+                <button name="action_show_myinvois_documents"
+                        type="object"
+                        icon="fa-sun-o"
+                        class="oe_stat_button"
+                        groups="account.group_account_invoice"
+                        invisible="not consolidated_invoice_ids">
+                    <span>Consolidated<br/>Invoice</span>
+                </button>
+           </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.view.form.inherit.gamification</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button type="object" class="oe_stat_button" groups="base.group_no_one"
+                    name="action_karma_report" icon="fa-certificate">
+                    <field string="Karma" name="karma" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ACTIONS -->
+    <record id="action_current_rank_users" model="ir.actions.act_window">
+        <field name="name">Users</field>
+        <field name="res_model">res.users</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('rank_id', '=', active_id)]</field>
+    </record>
+
+    <record id="action_new_simplified_res_users" model="ir.actions.act_window">
+        <field name="name">Create User</field>
+        <field name="res_model">res.users</field>
+        <field name="target">current</field>
+        <field name="view_id" ref="base.view_users_simple_form"/>
+        <field name="context">{}</field>
+        <field name="help">Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system.</field>
+    </record>
+
+</data>
+</odoo>

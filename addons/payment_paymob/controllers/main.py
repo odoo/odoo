@@ -1,0 +1,112 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import hashlib
+import hmac
+import json
+import pprint
+
+from odoo import http
+from odoo.http import request
+
+from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.logging import get_payment_logger
+from odoo.addons.payment_paymob import const
+
+_logger = get_payment_logger(__name__)
+
+
+class PaymobController(http.Controller):
+    _return_url = "/payment/paymob/return"
+    _webhook_url = "/payment/paymob/webhook"
+
+    @http.route(_return_url, type="http", auth="public", methods=["GET"])
+    def paymob_return_from_checkout(self, **data):
+        """Process the payment data sent by Paymob after redirection from checkout.
+
+        :param dict data: The payment data.
+        """
+        _logger.info("Handling redirection from Paymob with data:\n%s", pprint.pformat(data))
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("paymob", data)
+        if tx_sudo:
+            received_signature = data.get("hmac", "")
+            hmac_key = tx_sudo.provider_id.paymob_hmac_key
+            expected_signature = PaymobController._compute_signature(data, hmac_key)
+            payment_utils.verify_signature(received_signature, expected_signature)
+            tx_sudo._record(data)
+        return request.redirect("/payment/status")
+
+    @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
+    def paymob_webhook(self, **data):
+        """Process the payment data sent by Paymob to the webhook.
+
+        :param dict data: The payment data.
+        :return: An empty string to acknowledge the notification.
+        :rtype: str
+        """
+        payment_data = request.get_json_data().get("obj")
+        _logger.info(
+            "Notification received from Paymob with data:\n%s", pprint.pformat(payment_data)
+        )
+        normalized_data = self._normalize_response(payment_data, data.get("hmac"))
+        tx_sudo = (
+            self.env["payment.transaction"].sudo()._search_by_reference("paymob", normalized_data)
+        )
+        if tx_sudo:
+            received_signature = data.get("hmac", "")
+            hmac_key = tx_sudo.provider_id.paymob_hmac_key
+            expected_signature = PaymobController._compute_signature(data, hmac_key)
+            payment_utils.verify_signature(received_signature, expected_signature)
+            tx_sudo._record(normalized_data)
+        return ""  # Acknowledge the notification
+
+    @staticmethod
+    def _normalize_response(payment_data, hmac_sig):
+        """Normalize the payment data received from Paymob.
+
+        Convert webhook data (which returns a dict with parsed values) and redirect response (which
+        returns strings for all values and json-formatted booleans like 'false' for False) into a
+        consistent format.
+
+        :param dict payment_data: The payment data received.
+        :param str hmac_sig: The HMAC signature returned in the params.
+        :return: The normalized response.
+        :rtype: dict
+        """
+        response = {}
+        for field in const.SIGNATURE_FIELDS:
+            if isinstance(payment_data.get(field), bool):
+                response[field] = json.dumps(payment_data.get(field))
+            else:
+                response[field] = str(payment_data.get(field, "false"))
+
+        order_data = payment_data.get("order", {})
+        response.update({
+            "data.message": payment_data.get("data").get("message"),
+            "hmac": hmac_sig,
+            "order": str(order_data.get("id")),
+            "merchant_order_id": order_data.get("merchant_order_id"),
+            "source_data.pan": payment_data.get("source_data", {}).get("pan"),
+            "source_data.sub_type": payment_data.get("source_data", {}).get("sub_type"),
+            "source_data.type": payment_data.get("source_data", {}).get("type"),
+        })
+        return response
+
+    @staticmethod
+    def _compute_signature(payload, hmac_key):
+        """Compute the signature from the payload.
+
+        See https://developers.paymob.com/pak/manage-callback/hmac-calculation.
+
+        :param dict payload: The notification payload.
+        :param str hmac_key: The HMAC key of the provider handling the transaction.
+        :return: The computed signature.
+        :rtype: str
+        """
+        # Concatenate relevant fields used to check for signature and if not found add "false"
+        signing_string = "".join(
+            payload.get(field, "false") for field in const.SIGNATURE_FIELDS
+        ).encode("utf-8")
+        # Calculate the signature using the hmac_key with SHA-512.
+        signed_hmac = hmac.new(hmac_key.encode("utf-8"), signing_string, hashlib.sha512)
+        # Calculate the signature by encoding the result with base16.
+        return signed_hmac.hexdigest()

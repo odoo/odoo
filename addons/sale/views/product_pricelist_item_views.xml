@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_pricelist_item_form" model="ir.ui.view">
+        <field name="name">product.pricelist.item.view.form.inherit</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+        <field name="arch" type="xml">
+            <group name="date_range" position="after">
+                <div groups="sale.group_discount_per_so_line">
+                    <div
+                        class="alert alert-info"
+                        role="alert"
+                        invisible="compute_price != 'percentage'"
+                    >
+                        <div id="discount_price_warning">
+                            In sale order line original price is unit price and discount is in
+                            discount column.
+                        </div>
+                    </div>
+                    <div
+                        class="alert alert-info"
+                        role="alert"
+                        invisible="compute_price == 'percentage'"
+                    >
+                        <div id="formula_fixed_price_warning">
+                            For formula or fixed pricing, the original price isn’t shown in
+                            sale orders.
+                        </div>
+                    </div>
+                </div>
+            </group>
+        </field>
+    </record>
+
+</odoo>

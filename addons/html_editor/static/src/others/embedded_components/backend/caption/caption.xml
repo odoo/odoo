@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- caption template -->
+    <t t-name="html_editor.EmbeddedCaption">
+        <input t-attf-class="border-0 p-0"
+            t-custom-ref="captionInput" type="text" maxLength="100" t-att-placeholder="'Write your caption here'"
+            t-on-blur="this.onInputBlur" t-on-keydown.stop="" t-on-beforeinput="this.onInputBeforeInput" t-on-keyup="this.onInputKeyup"
+            t-att-value="this.state.caption"/>
+    </t>
+</templates>

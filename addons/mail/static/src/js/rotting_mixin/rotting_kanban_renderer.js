@@ -1,0 +1,19 @@
+import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+import { RottingKanbanHeader } from "./rotting_kanban_header";
+
+export class RottingKanbanRenderer extends KanbanRenderer {
+    static components = {
+        ...KanbanRenderer.components,
+        KanbanHeader: RottingKanbanHeader,
+    };
+    /**
+     * @override
+     */
+    getGroupClasses(group, isGroupProcessing) {
+        let classes = super.getGroupClasses(group, isGroupProcessing);
+        if (this.props.progressBarState && this.props.progressBarState.rotIsFiltered[group.id]) {
+            classes += " o_kanban_group_show o_kanban_group_show_danger";
+        }
+        return classes;
+    }
+}

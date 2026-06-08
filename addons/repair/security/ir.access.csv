@@ -1,0 +1,7 @@
+id,name,model_id,group_id/id,operation,domain
+access_repair_user,Repair user,repair.order,stock.group_stock_user,crud,
+repair_order_rule,repair order multi-company,repair.order,,crud,"[('company_id', 'in', company_ids)]"
+access_repair_tag_user,Repair Tags user,repair.tags,stock.group_stock_user,crud,
+access_repair_service_line,Repair Service Line,repair.service.line,stock.group_stock_user,crud,
+access_repair_consumption_warning,Repair Consumption Warning,repair.consumption.warning,stock.group_stock_user,crud,
+access_repair_consumption_warning_line,Repair Consumption Warning Line,repair.consumption.warning.line,stock.group_stock_user,cru,

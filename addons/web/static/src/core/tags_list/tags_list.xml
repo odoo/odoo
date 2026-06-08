@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.TagsList">
+        <t t-foreach="this.visibleTags" t-as="tag" t-key="tag.id or tag_index">
+            <t t-call-slot="default" t-props="tag"/>
+        </t>
+        <t t-if="this.invisibleTags.length">
+            <BadgeTag color="0" cssClass="'bg-secondary o_m2m_avatar_empty fw-bold cursor-pointer'" text="'+' + this.invisibleTags.length" tooltip.translate="Click to show more" t-on-click.stop="this.showAllTags"/>
+        </t>
+    </t>
+
+</templates>

@@ -1,0 +1,18 @@
+<templates xml:space="preserve">
+    <div t-name="mail.ActivityModelSelector" class="o_field_widget o_field_many2one flex-row">
+        <t t-if="this.state.resModelName">
+            <span t-out="this.state.resModelName" class="text-truncate"/>
+            <button t-on-click="() => this.onRecordReset()" class="btn fa fa-close"/>
+        </t>
+        <t t-else="">
+            <div class="o_input_dropdown">
+                <ModelSelector
+                value="this.state.resModelName"
+                onModelSelected.bind="this.onModelSelected"
+                models="this.state.models"
+                placeholder.translate="No linked record"
+                />
+            </div>
+        </t>
+    </div>
+</templates>

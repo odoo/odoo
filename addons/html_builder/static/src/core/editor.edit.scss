@@ -1,0 +1,100 @@
+.editor_enable .btn:hover {
+    cursor: text;
+}
+
+// This style block is about the "editor message" which highlights the areas
+// where the user can drag & drop snippets.
+.o_savable {
+    // Summernote did not Support for placeholder text, guess who else does not...
+    &[placeholder]:not(:focus) {
+        &:empty:before,
+        &:has(br:only-child):before,
+        &[data-oe-zws-empty-inline]:before {
+            content: attr(placeholder);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+    }
+
+    &.oe_structure.oe_empty, &[data-oe-type=html], .oe_structure.oe_empty {
+
+        // Base case (website.page (#wrap), t-field (product description), ...)
+        > .oe_drop_zone.oe_insert:not(.oe_vertical):not(.oe_sanitized_drop_zone) {
+            @include o-editor-messages;
+            height: auto;
+
+            // Empty editable element during drag & drop
+            &:only-child {
+                width: 100% - 2 * $-editor-messages-margin-x;
+                padding: 12px 0;
+                margin: 20px $-editor-messages-margin-x;
+            }
+
+            &:not(:only-child) {
+                &[data-editor-message-default]::before {
+                    content: none;
+                }
+            }
+        }
+
+        // Exception 1: empty wrap NOT during drag & drop
+        &#wrap:empty {
+            @include o-editor-messages;
+            padding: 112px 0px;
+            margin: 20px $-editor-messages-margin-x;
+        }
+
+        // Exception 2: empty wrap during drag & drop (override of base case)
+        &#wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):not(.oe_sanitized_drop_zone):only-child {
+            padding: 112px 0px;
+        }
+    }
+
+    &[data-oe-type=html].oe_empty:empty {
+        @include o-editor-messages;
+        padding: 12px 0;
+        margin: 20px $-editor-messages-margin-x;
+    }
+}
+
+.oe_structure_solo > .oe_drop_zone {
+    // TODO implement something more robust. This is currently for our only
+    // use case of oe_structure_solo: the footer. The dropzone in there need to
+    // be 1px lower that the end-of-page dropzone to distinguish them. The
+    // usability has to be reviewed anyway.
+    transform: translateY(10px); // For some reason "1px" is not enough...
+}
+
+.o-we-hint {
+    position: relative;
+
+    &:after {
+        content: attr(o-we-hint-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        color: inherit;
+        opacity: 0.4;
+        pointer-events: none;
+        text-align: inherit;
+        width: 100%;
+    }
+}
+
+.css_non_editable_mode_hidden,
+.o_savable .media_iframe_video .css_editable_mode_display {
+    display: block !important;
+}
+
+[data-snippet].o_snippet_previewing_on_drag > *:not(.o_snippet_drag_preview) {
+    display: none !important;
+}
+
+.o_we_force_no_transition {
+    // Note: this is forced through a CSS class instead of inline style to avoid
+    // overridding existing inline styles or forgetting to restore them as the
+    // code evolves. We may need to increase the CSS priority of this. It will
+    // also not work to override important inline style... this is a limitation.
+    transition: none !important;
+}

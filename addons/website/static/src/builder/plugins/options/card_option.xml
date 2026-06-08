@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CardOption">
+    <WebsiteBackgroundOption
+        withColors="true"
+        withImages="true"
+        withShapes="true"
+        withColorCombinations="true"
+    />
+    <BorderConfigurator label.translate="Border"/>
+    <ShadowOption/>
+    <t t-if="!this.props.disableWidth" t-call="website.CardWidthOption"/>
+    <CardImageOption/>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <card_option selector=".s_card" t-attf-exclude="div:is({{this.cardParentHandlers}}) > .s_card"/>
+        <card_option
+            t-att-selector="this.cardParentHandlers"
+            t-att-applyTo="this.cardDisableWidthApplyTo"
+            props='{ "disableWidth": true }'/>
+    </xpath>
+</t>
+
+</templates>

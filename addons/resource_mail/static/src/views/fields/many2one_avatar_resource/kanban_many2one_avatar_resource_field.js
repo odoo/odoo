@@ -1,0 +1,35 @@
+import { Component } from "@odoo/owl";
+import { Avatar } from "@mail/views/web/fields/avatar/avatar";
+import { registry } from "@web/core/registry";
+import { computeM2OProps, KanbanMany2One } from "@web/views/fields/many2one/many2one";
+import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
+
+export class CardMany2OneAvatarResourceField extends Component {
+    static template = "resource_mail.CardMany2OneAvatarResourceField";
+    static components = { Avatar, KanbanMany2One };
+    static props = { ...Many2OneField.props };
+
+    get m2oProps() {
+        return {
+            ...computeM2OProps(this.props),
+            specification: {
+                resource_type: {},
+            },
+        };
+    }
+}
+
+/** @type {import("registries").FieldsRegistryItemShape} */
+export const cardMany2OneAvatarResourceField = {
+    ...buildM2OFieldDescription(CardMany2OneAvatarResourceField),
+    additionalClasses: ["o_field_many2one_avatar"],
+    fieldDependencies: [
+        { name: "display_name", type: "char" },
+        // to add in model that will use this widget for m2o field related to resource.resource record (as related field is only supported for x2m)
+        { name: "resource_type", type: "selection" },
+    ],
+};
+
+registry
+    .category("fields")
+    .add("card.many2one_avatar_resource", cardMany2OneAvatarResourceField);

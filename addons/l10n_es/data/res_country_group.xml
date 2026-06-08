@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="mainland_es" model="res.country.group">
+            <field name="name">Mainland Spain VAT</field>
+            <field name="code">ES-VAT</field>
+            <field name="country_ids" eval="[Command.set([ref('base.es')])]"/>
+            <field name="exclude_state_ids" eval="[Command.set([
+                ref('base.state_es_ce'), ref('base.state_es_ml'),
+                ref('base.state_es_tf'), ref('base.state_es_gc'),
+            ])]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,48 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+
+{
+    'name': 'Delivery - Stock',
+    'category': 'Shipping Connectors',
+    'description': """
+Allows you to add delivery methods in pickings.
+===============================================
+
+When creating invoices from picking, the system is able to add and compute the shipping line.
+""",
+    'depends': ['printer', 'sale_stock', 'delivery'],
+    'data': [
+        "data/mail_template_data.xml",
+        'report/shipping_reports.xml',
+        'views/ir_actions_report.xml',
+        'views/product_template_view.xml',
+        'views/product_product_view.xml',
+        'views/delivery_view.xml',
+        'views/delivery_portal_template.xml',
+        'views/report_shipping.xml',
+        'views/report_deliveryslip.xml',
+        'views/report_package_barcode.xml',
+        'wizard/choose_delivery_carrier_views.xml',
+        'wizard/stock_put_in_pack_views.xml',
+        'views/stock_package_type_views.xml',
+        'views/stock_picking_type_views.xml',
+        'views/stock_rule_views.xml',
+        'views/stock_move_line_views.xml',
+        'views/stock_menu_views.xml',
+        'report/product_templates.xml',
+        'security/ir.access.csv',
+    ],
+    'assets': {
+        'web.assets_frontend': [
+            'stock_delivery/static/src/return_order_dialog/*',
+        ],
+        'web.assets_tests': [
+            ('include', 'printer.assets_tests'),
+        ],
+    },
+    'demo': ['data/delivery_demo.xml'],
+    'auto_install': True,
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
+    'post_init_hook': '_auto_install_sale_app',
+}

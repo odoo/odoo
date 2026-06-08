@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp.MoOverviewComponentsBlock">
+        <t t-foreach="this.props.components" t-as="component" t-key="component.summary.index">
+            <MoOverviewLine
+                data="component.summary"
+                hasFoldButton="this.hasReplenishments(component)"
+                isFolded="this.state.fold[component.summary.index]"
+                showOptions="this.props.showOptions"
+                toggleFolded.bind="this.onToggleFolded"/>
+            <!-- Display Replenishment block -->
+            <t t-if="this.hasReplenishmentsBlock(component)" t-foreach="component.replenishments" t-as="replenishment" t-key="replenishment.summary.index">
+                <MoOverviewLine
+                    data="replenishment.summary"
+                    hasFoldButton="this.hasComponents(replenishment)"
+                    isFolded="this.state.fold[replenishment.summary.index]"
+                    showOptions="this.props.showOptions"
+                    toggleFolded.bind="this.onToggleFolded"/>
+                <t t-if="this.hasComponentsBlock(replenishment)">
+                    <MoOverviewComponentsBlock
+                        unfoldAll="this.state.unfoldAll"
+                        components="replenishment.components"
+                        operations="replenishment.operations"
+                        byproducts="replenishment.byproducts"
+                        showOptions="this.props.showOptions"/>
+                </t>
+            </t>
+        </t>
+        <MoOverviewOperationsBlock
+            unfoldAll="this.state.unfoldAll"
+            summary="this.props.operations.summary"
+            operations="this.props.operations.details"
+            showOptions="this.props.showOptions"/>
+        <MoOverviewByproductsBlock
+            unfoldAll="this.state.unfoldAll"
+            summary="this.props.byproducts.summary"
+            byproducts="this.props.byproducts.details"
+            showOptions="this.props.showOptions"/>
+    </t>
+
+</templates>

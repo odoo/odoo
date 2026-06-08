@@ -1,0 +1,116 @@
+import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
+import { fields } from "@mail/model/misc";
+
+import { _t } from "@web/core/l10n/translation";
+import { rpc } from "@web/core/network/rpc";
+import { patch } from "@web/core/utils/patch";
+import { LivechatLeaveDialog } from "./livechat_leave_dialog";
+
+/** @type {import("models").DiscussChannel} */
+const discussChannelPatch = {
+    setup() {
+        super.setup(...arguments);
+        this.appAsLivechats = fields.One("DiscussApp", {
+            compute() {
+                return this.channel_type === "livechat" ? this.store.discuss : null;
+            },
+        });
+        this.shadowedBySelf = 0;
+    },
+    _computeIsDisplayInSidebar() {
+        return (
+            (!this.self_member_id && this.livechat_status === "need_help") ||
+            super._computeIsDisplayInSidebar()
+        );
+    },
+    _computeDiscussAppCategory() {
+        if (this.channel_type !== "livechat") {
+            return super._computeDiscussAppCategory();
+        }
+        if (
+            this.livechat_status === "need_help" &&
+            this.store.discuss.livechatLookingForHelpCategory
+        ) {
+            return this.store.discuss.livechatLookingForHelpCategory;
+        }
+        return this.store.discuss.defaultLivechatCategory;
+    },
+    get autoOpenChatWindowOnNewMessage() {
+        return (
+            (this.channel_type === "livechat" &&
+                !this.store.chatHub.compact &&
+                this.self_member_id) ||
+            super.autoOpenChatWindowOnNewMessage
+        );
+    },
+
+    get inChathubOnNewMessage() {
+        if (this.channel_type === "livechat") {
+            return Boolean(this.channel.self_member_id);
+        }
+        return super.inChathubOnNewMessage;
+    },
+
+    get livechatStatusLabel() {
+        if (this.livechat_end_dt) {
+            return _t("Conversation has ended");
+        }
+        if (this.livechat_status === "need_help") {
+            return _t("Looking for help");
+        }
+        return _t("In progress");
+    },
+    get matchesSelfExpertise() {
+        return (
+            this.store.self_user &&
+            this.livechat_expertise_ids.some((expertise) =>
+                expertise.in(this.store.self_user.livechat_expertise_ids)
+            )
+        );
+    },
+    get shouldSubscribeToBusChannel() {
+        return super.shouldSubscribeToBusChannel || Boolean(this.shadowedBySelf);
+    },
+    /** @param {"in_progress"|"need_help"} status */
+    updateLivechatStatus(status) {
+        if (this.livechat_status === status) {
+            return;
+        }
+        rpc("/im_livechat/session/update_status", { channel_id: this.id, livechat_status: status });
+    },
+    get allowedToLeaveChannelTypes() {
+        return [...super.allowedToLeaveChannelTypes, "livechat"];
+    },
+    computeCorrespondent() {
+        const correspondent = super.computeCorrespondent();
+        if (this.channel_type === "livechat" && !correspondent) {
+            return this.livechatVisitorMember;
+        }
+        return correspondent;
+    },
+    get correspondents() {
+        return super.correspondents.filter(
+            (correspondent) => correspondent.livechat_member_type !== "bot"
+        );
+    },
+    async leaveChannel() {
+        if (this.livechatShouldAskLeaveConfirmation) {
+            this.store.env.services.dialog.add(LivechatLeaveDialog, {
+                channel: this,
+                onConfirm: async () => await super.leaveChannel(...arguments),
+            });
+        } else {
+            await super.leaveChannel(...arguments);
+        }
+    },
+    showThreadIcon(...args) {
+        if (this.self_member_id?.livechat_member_type === "visitor") {
+            return false;
+        }
+        return (
+            (this.channel_type === "livechat" && this.correspondent) ||
+            super.showThreadIcon(...args)
+        );
+    },
+};
+patch(DiscussChannel.prototype, discussChannelPatch);

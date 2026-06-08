@@ -1,0 +1,874 @@
+import { EditWebsiteSystrayItem } from "@website/client_actions/website_preview/edit_website_systray_item";
+import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
+import { insertText, pasteHtml, pasteText } from "@html_editor/../tests/_helpers/user_actions";
+import { beforeEach, delay, describe, expect, globals, press, test } from "@odoo/hoot";
+import { animationFrame, manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-dom";
+import { contains, mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    defineWebsiteModels,
+    invisibleEl,
+    setupSidebarBuilderForTranslation,
+    setupWebsiteBuilder,
+    websiteServiceInTranslateMode,
+} from "./website_helpers";
+import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
+import { uniqueId } from "@web/core/utils/functions";
+import { TranslationPlugin } from "@website/builder/plugins/translation/translation_plugin";
+import { dummyBase64Img } from "@html_builder/../tests/helpers";
+
+defineWebsiteModels();
+
+test("systray in translate mode", async () => {
+    mockService("website", {
+        get currentWebsite() {
+            return {
+                metadata: {
+                    lang: "fr_BE",
+                    langName: " Français (BE)",
+                    translatable: true,
+                    defaultLangName: "English (US)",
+                },
+                default_lang_id: {
+                    code: "en_US",
+                },
+            };
+        },
+    });
+    await setupWebsiteBuilder(`<h1> Homepage </h1>`, { openEditor: false });
+    await contains(".o-website-btn-custo-primary").click();
+    expect(".o_popover .o_translate_website_dropdown_item:contains('Translate')").toHaveCount(1);
+    expect(".o_popover .o_edit_website_dropdown_item:contains('Edit')").toHaveCount(1);
+});
+
+test("hide snippets menu in translate mode", async () => {
+    await setupSidebarBuilderForTranslation({ websiteContent: `<h1> Homepage </h1>` });
+    expect(".o-snippets-tabs").toHaveCount(0);
+});
+
+test("invisible elements in translate mode", async () => {
+    await setupSidebarBuilderForTranslation({ websiteContent: invisibleEl });
+    expect(
+        ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element')"
+    ).toHaveCount(1);
+});
+
+test("show invisible elements in translate mode", async () => {
+    await setupSidebarBuilderForTranslation({ websiteContent: invisibleEl });
+
+    expect(":iframe .o_snippet_invisible").toHaveAttribute("data-invisible", "1");
+    await contains(
+        ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element') i.fa-eye-slash"
+    ).click();
+    expect(":iframe .o_snippet_invisible").not.toHaveAttribute("data-invisible");
+});
+
+test("show+hide invisible elements in translate mode do not switch away from customize tab", async () => {
+    await setupSidebarBuilderForTranslation({ websiteContent: invisibleEl });
+    expect(".o_customize_tab").toHaveCount(1);
+    expect(":iframe .o_snippet_invisible").toHaveAttribute("data-invisible", "1");
+    await contains(
+        ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element') i.fa-eye-slash"
+    ).click();
+    expect(".o_customize_tab").toHaveCount(1);
+    expect(":iframe .o_snippet_invisible").not.toHaveAttribute("data-invisible");
+    await contains(
+        ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element') i.fa-eye"
+    ).click();
+    expect(".o_customize_tab").toHaveCount(1);
+    expect(":iframe .o_snippet_invisible").toHaveAttribute("data-invisible", "1");
+});
+
+test("translate text", async () => {
+    const resultSave = [];
+    onRpc("/website/field/translation/update", async (data) => {
+        const { params } = await data.json();
+        resultSave.push(params.translations.fr_BE.sourceSha);
+        return true;
+    });
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({ inWrap: "Hello" }),
+    });
+    const editor = getEditor();
+    const textNode = editor.editable.querySelector("span").firstChild;
+    setSelection({ anchorNode: textNode, anchorOffset: 1 });
+    await insertText(editor, "1");
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect(resultSave.length).toBe(1);
+    expect(resultSave[0]).toBe("H1ello");
+});
+
+test("add text in translate mode do not split", async () => {
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({ inWrap: "Hello" }),
+    });
+    const editor = getEditor();
+    setContent(editor.editable.querySelector("#wrap"), getTranslateEditable({ inWrap: "Hello[]" }));
+    // Event trigger when you press "Enter" => create a new paragraph
+    await manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
+        inputType: "insertParagraph",
+    });
+    await insertText(editor, "1");
+    await animationFrame();
+    expect(":iframe .s_allow_columns p").toHaveCount(1);
+});
+
+test("only have translation editors on deepest nodes", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({
+            inWrap: getTranslateEditable({ inWrap: "Hello" }).match(/<span.*<\/span>/)[0],
+        }),
+    });
+    expect(":iframe [data-oe-model]:has([data-oe-model])").not.toHaveAttribute("contenteditable");
+    expect(":iframe [data-oe-model] [data-oe-model]").toHaveAttribute("contenteditable", "true");
+});
+
+test("translate field", async () => {
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        expect.step(args[1]);
+        return true;
+    });
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <div data-oe-model="test" data-oe-field="field" data-oe-id="1"><p id="sectionId">Title</p></div>
+        `,
+    });
+    const editor = getEditor();
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expect(":iframe [data-oe-model='test']").toHaveClass("o_savable");
+    setSelection({ anchorNode: queryOne(":iframe #sectionId"), anchorOffset: 0 });
+    await insertText(editor, "New");
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect.verifySteps([
+        `<div data-oe-model="test" data-oe-field="field" data-oe-id="1" class=""><p id="sectionId">NewTitle</p></div>`,
+    ]);
+});
+
+test("Translate link of a mega menu", async () => {
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <div data-oe-model="test">
+                <section>
+                    <div class="container s_allow_columns">
+                        <a href="#" class="nav-link d-inline">
+                            <span data-oe-model="ir.ui.view" data-oe-id="526" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="123" class="translate_branding">
+                                Hello
+                            </span>
+                        </a>
+                    </div>
+                </section>
+            </div>
+        `,
+    });
+    const editor = getEditor();
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    const textNode = editor.editable.querySelector("[data-oe-id='526']").childNodes[0];
+    setSelection({
+        anchorNode: textNode,
+        anchorOffset: 0,
+        focusOffset: 5,
+    });
+    pasteText(editor, "x");
+    expect(":iframe a [data-oe-model].o_dirty").toHaveCount(1);
+});
+
+test("cascade of [data-oe-model] in translation", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <div data-oe-model="test"><section>${getTranslateEditable({
+                inWrap: "Hello",
+            })}</section></div>
+        `,
+    });
+    expect(":iframe [data-oe-model='test']").not.toHaveClass("o_savable");
+    expect(":iframe .container").not.toHaveAttribute("contenteditable");
+    expect(":iframe .container span.o_savable").toHaveAttribute("contenteditable", "true");
+});
+
+test("404 page in translate mode", async () => {
+    patchWithCleanup(EditWebsiteSystrayItem.prototype, {
+        setup() {
+            websiteServiceInTranslateMode.is404 = () => true;
+            this.websiteService = websiteServiceInTranslateMode;
+            this.websiteContext = this.websiteService.context;
+        },
+    });
+    await setupWebsiteBuilder(`<h1> Homepage </h1>`, { openEditor: false });
+    await contains(".o-website-btn-custo-primary").click();
+    expect(
+        ".o_popover .o_translate_website_dropdown_item:contains('Translate 404 page')"
+    ).toHaveCount(1);
+    expect(".o_popover .o_edit_website_dropdown_item:contains('Edit 404 page')").toHaveCount(1);
+    expect(".o_popover .o_edit_website_dropdown_item:contains('Create page')").toHaveCount(1);
+});
+
+test("color span is inserted in a.btn (and s_badge) with a background to show the translation state", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({
+            inWrap: `<a class="btn">Hello</a> <span class="s_badge">Badge</span>`,
+        }),
+    });
+    expect(":iframe a .o_translation_state_inner_span").toHaveCount(1);
+    expect(":iframe .s_badge .o_translation_state_inner_span").toHaveCount(1);
+});
+
+test("translate attribute", async () => {
+    const resultSave = [];
+    onRpc("/website/field/translation/update", async (data) => {
+        const { params } = await data.json();
+        resultSave.push(params.translations.fr_BE.sourceSha);
+        return true;
+    });
+    onRpc("ir.ui.view", "save", ({ args }) => true);
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <img src="/web/image/website.landscape_md_9" class="img img-fluid mx-auto rounded" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
+        `,
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    await contains(":iframe img").click();
+    await contains(
+        ".options-container [data-action-id='translateAttribute'][data-action-param='title'] input"
+    ).edit("titre");
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect(resultSave.length).toBe(1);
+    expect(resultSave[0]).toBe("titre");
+});
+
+test("translate attribute history", async () => {
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <img src="/web/image/website.landscape_md_9" class="img img-fluid" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
+        `,
+    });
+    const wrapEl = getEditor().editable.querySelector("#wrap");
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    await contains(":iframe img").click();
+    await contains(
+        ".options-container [data-action-id='translateAttribute'][data-action-param='title'] input"
+    ).edit("titre");
+    const getImg = ({ titleName, translated }) =>
+        `<img src="/web/image/website.landscape_md_9" class="img img-fluid o_savable_attribute o_translatable_attribute${
+            translated ? " oe_translated" : ""
+        }" loading="lazy" title="${titleName}" style="" data-oe-translation-state="to_translate"></img>`;
+    expect(wrapEl).toHaveInnerHTML(getImg({ titleName: "titre", translated: true }));
+    await contains(".o-snippets-menu button.fa-undo").click();
+    expect(wrapEl).toHaveInnerHTML(getImg({ titleName: "title", translated: false }));
+    await contains(":iframe img").click();
+    expect(
+        ".options-container [data-action-id='translateAttribute'][data-action-param='title'] input"
+    ).toHaveValue("title");
+});
+
+test("translate input of searchbar", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <form method="get" class="o_searchbar_form s_searchbar_input " data-snippet="s_searchbar_input" data-name="Search Input">
+                <div role="search" class=" o_search_input_group input-group ">
+                    <input type="search" name="search" class="o_cc o_cc1 border search-query form-control oe_search_box o_savable_attribute" placeholder="&lt;span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;568&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;7f55382219f0202c1b4f56deb099e2fedcec87ee73fe2edb2105df5447323bc6&quot;&gt;Search...&lt;/span&gt;" data-search-type="all" data-limit="6" data-order-by="name asc" autocomplete="off">
+                </div>
+        </form>
+        `,
+        loadIframeBundles: true,
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    await contains(":iframe input").click();
+    expect(
+        "[data-action-id='translateAttribute'][data-action-param='placeholder'] input"
+    ).toHaveValue("Search...");
+});
+
+test("undo shortcut in translate", async () => {
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: `<h1>Homepage</h1>`,
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    setSelection({ anchorNode: queryOne(":iframe h1"), anchorOffset: 0 });
+    await insertText(getEditor(), "New ");
+    expect(":iframe h1").toHaveText("New Homepage");
+    await press(["ctrl", "z"]);
+    await getEditor().shared.operation.next();
+    expect(":iframe h1").not.toHaveText("New Homepage");
+});
+
+test("translation span wrapper for <option>", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <select class="form-select s_website_form_input" id="orcye1cjptbg">
+                <option id="orcye1cjptbg1" value="Option 1" selected="selected"
+                    data-oe-translation-span-wrapper="&lt;span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;567&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;translated&quot; data-oe-translation-source-sha=&quot;fae2db093e1dd31042e8ab9427e8673a70c43f4bc519235d9a232efad60769aa&quot;&gt;Première option&lt;/span&gt;">
+                    Option 1</option>
+                <option id="orcye1cjptbg2" value="Option 2">
+                    Option 2</option>
+            </select>`,
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expect(":iframe .form-select.s_website_form_input option").toHaveCount(2);
+    // Only the first option has the translation span wrapper. This should not
+    // happen in practice, but we ensure it does not cause a crash if the number
+    // of options differs between the original and translated versions.
+    expect(
+        ":iframe .o_translation_select > div > span[data-oe-translation-source-sha]"
+    ).toHaveCount(1, {
+        message: "Only the first option has the translation span wrapper",
+    });
+    expect(":iframe .o_translation_select > div > span[data-oe-translation-source-sha]").toHaveText(
+        "Première option"
+    );
+});
+
+describe("paste in translate", () => {
+    test("paste html in a translated span should not add blocks", async () => {
+        const { getEditor } = await setupSidebarBuilderForTranslation({
+            websiteContent: getTranslateEditable({ inWrap: "a<b>c</b>a" }),
+        });
+        setSelection({ anchorNode: queryOne(":iframe b") });
+        pasteHtml(getEditor(), `<h1><u>hello</u></h1>`);
+        expect(":iframe b u").toHaveText("hello");
+        expect(":iframe h1").toHaveCount(0);
+    });
+
+    test("paste html in translate mode should not add img", async () => {
+        const { getEditor } = await setupSidebarBuilderForTranslation({
+            websiteContent: getTranslateEditable({ inWrap: "a<b>c</b>a" }),
+        });
+        setSelection({ anchorNode: queryOne(":iframe b") });
+        pasteHtml(getEditor(), `<img src="${dummyBase64Img}"/>`);
+        expect(":iframe img").toHaveCount(0);
+    });
+
+    test("paste html in translate mode should add o_translate_inline on `a` element", async () => {
+        const { getEditor } = await setupSidebarBuilderForTranslation({
+            websiteContent: getTranslateEditable({ inWrap: "a<b>c</b>a" }),
+        });
+        setSelection({ anchorNode: queryOne(":iframe b") });
+        pasteHtml(getEditor(), `<a href="/">link</a>`);
+        expect(":iframe b a").toHaveClass("o_translate_inline");
+    });
+});
+
+test("test that powerbox should not open in translate mode", async () => {
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable("&nbsp;"),
+    });
+    const editor = getEditor();
+    const textNode = editor.editable.querySelector("span").firstChild;
+    expect(textNode.nodeType).toBe(Node.TEXT_NODE);
+    setSelection({ anchorNode: textNode, anchorOffset: 0 });
+    // Simulate typing `/`
+    await insertText(editor, "/");
+    await animationFrame();
+    await expectElementCount(".o-we-powerbox", 0);
+});
+
+test("copy of a translated span should not copy branding attributes", async () => {
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({ inWrap: "a<b>c</b>a" }),
+    });
+    await contains(":iframe [contenteditable=true]").focus();
+    const editor = getEditor();
+    const textNode = editor.editable.querySelector("b").firstChild;
+    expect(textNode.nodeType).toBe(Node.TEXT_NODE);
+    setSelection({ anchorNode: textNode, anchorOffset: 0, focusNode: textNode, focusOffset: 1 });
+    const clipboardData = new DataTransfer();
+    await press(["ctrl", "c"], { dataTransfer: clipboardData });
+    expect(clipboardData.getData("text/plain")).toBe("c");
+    expect(clipboardData.getData("text/html")).toBe(`<b>c</b>`);
+});
+
+describe("save translation", () => {
+    beforeEach(async () => {
+        onRpc("/website/field/translation/update", async (data) => {
+            const { params } = await data.json();
+            expect.step({ [params.record_id[0]]: params.translations.fr_BE });
+            return true;
+        });
+    });
+    const srcSha1 = "srcSha1";
+    const srcSha2 = "srcSha2";
+    async function modifyBothTextsAndSave(editor) {
+        await contains(".modal .btn:contains(Ok, never show me this again)").click();
+        const textFirstNode = editor.editable.querySelector(
+            `[data-oe-translation-source-sha=${srcSha1}]`
+        ).firstChild;
+        setSelection({ anchorNode: textFirstNode, anchorOffset: 1 });
+        await insertText(editor, "1");
+        const textSecondNode = editor.editable.querySelector(
+            `[data-oe-translation-source-sha=${srcSha2}]`
+        ).firstChild;
+        setSelection({ anchorNode: textSecondNode, anchorOffset: 1 });
+        await insertText(editor, "1");
+        await contains(".o-snippets-top-actions button:contains(Save)").click();
+    }
+
+    test("save translation of contents of the same view", async () => {
+        const { getEditor } = await setupSidebarBuilderForTranslation({
+            websiteContent: `${getTranslateEditable({
+                inWrap: "abc",
+                sourceSha: srcSha1,
+            })} ${getTranslateEditable({ inWrap: "def", sourceSha: srcSha2 })}`,
+        });
+        await modifyBothTextsAndSave(getEditor());
+        expect.verifySteps([{ 526: { srcSha1: "a1bc", srcSha2: "d1ef" } }]);
+    });
+
+    test("save translation of contents of different views", async () => {
+        const { getEditor } = await setupSidebarBuilderForTranslation({
+            websiteContent: `${getTranslateEditable({
+                inWrap: "abc",
+                oeId: 1,
+                sourceSha: srcSha1,
+            })} ${getTranslateEditable({ inWrap: "def", oeId: 2, sourceSha: srcSha2 })}`,
+        });
+        await modifyBothTextsAndSave(getEditor());
+        expect.verifySteps([{ 1: { srcSha1: "a1bc" } }, { 2: { srcSha2: "d1ef" } }]);
+    });
+
+    test("save delayed translation even if not dirty", async () => {
+        const websiteContent = `
+            ${getTranslateEditable({ inWrap: "abc", oeId: 1, sourceSha: srcSha1 })}
+            ${getTranslateEditable({ inWrap: "def", oeId: 2, sourceSha: srcSha2 })}
+            ${getTranslateEditable({ inWrap: "ghi", oeId: 2, sourceSha: "srcSha3" })}
+            ${getTranslateEditable({ inWrap: "jkl", oeId: 3, sourceSha: "srcSha4" })}
+            ${getTranslateEditable({ inWrap: "mno", oeId: 4, sourceSha: "srcSha5" })}
+        `.replace(/translate_branding">(?!jkl<)/g, ' o_delay_translation translate_branding">');
+        const { getEditor } = await setupSidebarBuilderForTranslation({
+            websiteContent: websiteContent,
+        });
+        await modifyBothTextsAndSave(getEditor());
+        expect.verifySteps([{ 4: {} }, { 1: { srcSha1: "a1bc" } }, { 2: { srcSha2: "d1ef" } }]);
+    });
+});
+
+test("replicated translated snippets are marked dirty", async () => {
+    const sourceSha = "replicatedSourceSha";
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            ${getTranslateEditable({ inWrap: "Hello", sourceSha, oeId: "1" })}
+            ${getTranslateEditable({ inWrap: "Hello", sourceSha, oeId: "1" })}
+        `,
+    });
+    const editor = getEditor();
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+
+    const spans = editor.editable.querySelectorAll(
+        `[data-oe-translation-source-sha="${sourceSha}"]`
+    );
+    const sourceSpan = spans[0];
+    const replicaSpan = spans[1];
+
+    setSelection({ anchorNode: sourceSpan.firstChild, anchorOffset: 0 });
+    await insertText(editor, "X");
+    editor.shared.history.commit();
+
+    expect([sourceSpan, replicaSpan]).toHaveClass("o_dirty");
+    expect([sourceSpan, replicaSpan]).toHaveText("XHello");
+});
+
+test("TOC navbar translation entry follows the heading translation", async () => {
+    const headSha = "headSha";
+    const navSha = "navSha";
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <section class="s_table_of_content">
+                <div class="s_table_of_content_navbar_wrap o_not_editable">
+                    <div class="s_table_of_content_navbar">
+                        <a class="table_of_content_link" href="#toc_h1">
+                            <span data-oe-model="ir.ui.view" data-oe-id="1" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="${navSha}" class="o_editable translate_branding">Heading</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="s_table_of_content_main">
+                    <h2 id="toc_h1">
+                        <span data-oe-model="ir.ui.view" data-oe-id="1" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="${headSha}" class="o_editable translate_branding">Heading</span>
+                    </h2>
+                </div>
+            </section>`,
+    });
+    const editor = getEditor();
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+
+    // `handleToC` aliases the navbar's sha to the heading's and tags it
+    // `o_translation_without_style`.
+    const navSpan = editor.editable.querySelector(
+        ".s_table_of_content_navbar_wrap [data-oe-translation-source-sha]"
+    );
+    expect(navSpan).toHaveClass("o_translation_without_style");
+    expect(navSpan.dataset.oeTranslationSaveSha).toBe(navSha);
+    expect(navSpan.dataset.oeTranslationSourceSha).toBe(headSha);
+
+    const headingTextNode = editor.editable.querySelector(
+        `h2 [data-oe-translation-source-sha="${headSha}"]`
+    );
+    setSelection({ anchorNode: headingTextNode, anchorOffset: 0 });
+    await insertText(editor, "X");
+
+    // Replication copies the heading's plain text into the navbar entry,
+    // and the dirty source propagates `o_dirty` to it so it reaches the
+    // save payload (where `cleanForSave` restores the navbar's original
+    // sha).
+    expect(navSpan).toHaveText("XHeading");
+    expect(navSpan).toHaveClass("o_dirty");
+});
+
+test("'Translate to' button should be visible in translate mode", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({ inWrap: "Hello" }),
+    });
+    onRpc("/html_editor/generate_text", () =>
+        JSON.stringify([
+            {
+                id: "t_" + parseInt(uniqueId() - 1),
+                text: "Bonjour",
+            },
+        ])
+    );
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe .o_savable").toHaveText("Bonjour");
+});
+
+test("'Translate to' works with partial request failure", async () => {
+    const originalText = "a".repeat(2000);
+    await setupSidebarBuilderForTranslation({
+        websiteContent:
+            getTranslateEditable({ inWrap: `${originalText}1`, sourceSha: "1" }) +
+            getTranslateEditable({ inWrap: `${originalText}2`, sourceSha: "2" }) +
+            getTranslateEditable({ inWrap: `${originalText}3`, sourceSha: "3" }) +
+            getTranslateEditable({ inWrap: `${originalText}4`, sourceSha: "4" }) +
+            getTranslateEditable({ inWrap: `${originalText}5`, sourceSha: "5" }) +
+            getTranslateEditable({ inWrap: `${originalText}6`, sourceSha: "6" }),
+    });
+    onRpc("/html_editor/generate_text", async (data) => {
+        const { params } = await data.json();
+        const prompt = JSON.parse(params.prompt)[0];
+        const number = prompt.text.slice(-1);
+        if (["2", "4", "5"].includes(number)) {
+            throw new Error("ConnectionLostError");
+        }
+        return JSON.stringify([
+            {
+                id: prompt.id,
+                text: `${prompt.text}french`,
+            },
+        ]);
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    patchWithCleanup(console, {
+        warn: (msg, error) => expect.step(msg),
+    });
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe main:nth-child(1) .o_savable").toHaveText(`${originalText}1french`);
+    expect(":iframe main:nth-child(2) .o_savable").toHaveText(`${originalText}2`);
+    expect(":iframe main:nth-child(3) .o_savable").toHaveText(`${originalText}3french`);
+    expect(":iframe main:nth-child(4) .o_savable").toHaveText(`${originalText}4`);
+    expect(":iframe main:nth-child(5) .o_savable").toHaveText(`${originalText}5`);
+    expect(":iframe main:nth-child(6) .o_savable").toHaveText(`${originalText}6french`);
+    expect(".o_notification_content").toHaveText(
+        "Translation Error. 3 text blocks were skipped during translation. Please try again."
+    );
+    expect.verifySteps([
+        "Translation chunck failed:",
+        "Translation chunck failed:",
+        "Translation chunck failed:",
+    ]);
+});
+
+test("text with bold or italic tags should preserve spacing after translate with AI", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({ inWrap: "Hello <b>world</b>" }),
+    });
+    // Note that space in this response is intentional just to replicate how the
+    // AI will response.
+    onRpc("/html_editor/generate_text", () =>
+        JSON.stringify([
+            {
+                id: "t_" + parseInt(uniqueId() - 2),
+                text: "Bonjour ",
+            },
+            {
+                id: "t_" + parseInt(uniqueId() - 2),
+                text: "le monde",
+            },
+        ])
+    );
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    expect(":iframe .o_savable").toHaveInnerHTML("Hello <b>world</b>");
+
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe .o_savable").toHaveInnerHTML("Bonjour <b>le monde</b>");
+});
+
+test("image's title and alt attribute with 'Translate to' button", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <main>
+                <img src="/web/image/website.landscape_md_9" class="img img-fluid mx-auto rounded" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" alt="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;545&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>alt text</span>"/>
+            </main>
+        `,
+    });
+    onRpc("/html_editor/generate_text", () =>
+        JSON.stringify([
+            {
+                id: "ta_" + parseInt(uniqueId() - 2),
+                text: "texte alt",
+            },
+            {
+                id: "ta_" + parseInt(uniqueId() - 2),
+                text: "titre",
+            },
+        ])
+    );
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    expect(":iframe img").toHaveAttribute("title", "title");
+    expect(":iframe img").toHaveAttribute("alt", "alt text");
+
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe img").toHaveAttribute("title", "titre");
+    expect(":iframe img").toHaveAttribute("alt", "texte alt");
+});
+
+test("input's placeholder attribute with 'Translate to' button", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <main>
+                <input type="text" placeholder='<span data-oe-model="ir.ui.view" data-oe-id="544" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="sourceSha">Enter your name</span>' />
+            </main>
+        `,
+    });
+    onRpc("/html_editor/generate_text", () =>
+        JSON.stringify([
+            {
+                id: "ta_" + parseInt(uniqueId() - 1),
+                text: "Entrez votre nom",
+            },
+        ])
+    );
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    expect(":iframe input").toHaveAttribute("placeholder", "Enter your name");
+
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe input").toHaveAttribute("placeholder", "Entrez votre nom");
+});
+
+test("textArea's placeholder attribute and textContent with 'Translate to' button", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <main>
+                <textarea name="textarea" class="form-control s_website_form_input" placeholder='<span data-oe-model="ir.ui.view" data-oe-id="544" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="sourceSha">Enter your message</span>'><span data-oe-model="ir.ui.view" data-oe-id="545" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="sourceSha">Your message here</span></textarea>
+            </main>
+        `,
+    });
+    onRpc("/html_editor/generate_text", () =>
+        JSON.stringify([
+            {
+                id: "ta_" + (parseInt(uniqueId()) - 2),
+                text: "Votre message ici",
+            },
+            {
+                id: "ta_" + (parseInt(uniqueId()) - 2),
+                text: "Entrez votre message",
+            },
+        ])
+    );
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    expect(":iframe textarea").toHaveValue("Your message here");
+    expect(":iframe textarea").toHaveAttribute("placeholder", "Enter your message");
+
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe textarea").toHaveValue("Votre message ici");
+    expect(":iframe textarea").toHaveAttribute("placeholder", "Entrez votre message");
+});
+
+test("avoid translating elements with same hash with 'Translate to' button", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            ${getTranslateEditable({ inWrap: "Hello", sourceSha: "1a1b1c" })}
+            ${getTranslateEditable({ inWrap: "Hello", sourceSha: "1a1b1c" })}
+            ${getTranslateEditable({ inWrap: "Goodbye", sourceSha: "2b2c2d" })}
+        `,
+    });
+    onRpc("/html_editor/generate_text", async (data) => {
+        const { params } = await data.json();
+        const prompt = JSON.parse(params.prompt);
+        expect(prompt).toHaveLength(2);
+        return JSON.stringify([
+            {
+                id: "t_" + parseInt(uniqueId() - 2),
+                text: "Bonjour",
+            },
+            {
+                id: "t_" + parseInt(uniqueId() - 2),
+                text: "Au revoir",
+            },
+        ]);
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe main:nth-child(1) .o_savable").toHaveText("Bonjour");
+    expect(":iframe main:nth-child(2) .o_savable").toHaveText("Bonjour");
+    expect(":iframe main:nth-child(3) .o_savable").toHaveText("Au revoir");
+});
+
+test("elements marked as o_dirty should not be translated with 'Translate to' button", async () => {
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            ${getTranslateEditable({ inWrap: "Hello", sourceSha: "1a1b1c" })}
+            ${getTranslateEditable({ inWrap: "Goodbye", sourceSha: "2b2c2d" })}
+        `,
+    });
+    const editor = getEditor();
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    const firstTextNode = queryOne(":iframe main:nth-child(1) .o_savable").firstChild;
+    setSelection({
+        anchorNode: firstTextNode,
+        anchorOffset: 0,
+        focusNode: firstTextNode,
+        focusOffset: firstTextNode.textContent.length,
+    });
+    await insertText(editor, "Bonjour");
+    expect(":iframe main:nth-child(1) .o_savable").toHaveText("Bonjour");
+    onRpc("/html_editor/generate_text", async (data) => {
+        const { params } = await data.json();
+        const prompt = JSON.parse(params.prompt);
+        expect(prompt).toHaveLength(1);
+        return JSON.stringify([
+            {
+                id: "t_" + parseInt(uniqueId() - 1),
+                text: "Au revoir",
+            },
+        ]);
+    });
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe main:nth-child(1) .o_savable").toHaveText("Bonjour");
+    expect(":iframe main:nth-child(2) .o_savable").toHaveText("Au revoir");
+});
+
+test("trying to translate an element inside a .o_not_editable should add a notification", async () => {
+    mockService("notification", {
+        add(message, options = {}) {
+            expect(message).toBe("This translation is not editable.");
+        },
+    });
+    await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({
+            inWrap: "Hello",
+            oeId: 10,
+            containerEditable: false,
+        }),
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    await contains(":iframe [data-oe-id='10']").click();
+});
+
+test("trying to translate an attribute of an image inside a .o_not_editable should add a notification", async () => {
+    expect.assertions(2);
+    mockService("notification", {
+        add(message, options = {}) {
+            expect(message).toBe("This translation is not editable.");
+        },
+    });
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <div class="o_not_editable">
+                <img src="/web/image/website.landscape_md_9" class="img img-fluid mx-auto rounded" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
+            <div/>
+        `,
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    await contains(":iframe img").click();
+    expect(".modal .modal-body input").toHaveCount(0);
+});
+
+test("it should be possible to translate the attribute of an image that has the o_editable_media even if it is inside a o_not_editable area", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <div class="o_not_editable">
+                <img src="/web/image/website.landscape_md_9" class="img img-fluid mx-auto rounded o_editable_media" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>title</span>" style=""></img>
+            <div/>
+        `,
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    await contains(":iframe img").click();
+    expect(
+        ".options-container [data-action-id='translateAttribute'][data-action-param='title'] input"
+    ).toHaveCount(1);
+});
+
+test("placeholders aren't translated on elements that aren't input or textarea", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <div class="div-target o_editable" placeholder="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>placeholder</span>">Text</div>
+            <input class="input-target" placeholder="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>placeholder</span>"></input>
+        `,
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expect(":iframe .div-target").not.toHaveClass("o_translatable_attribute");
+    await contains(":iframe .div-target").click();
+    await animationFrame();
+    expect(".hb-row [data-action-id='translateAttribute']").toHaveCount(0);
+    expect(":iframe .input-target").toHaveClass("o_translatable_attribute");
+    await contains(":iframe .input-target").click();
+    await animationFrame();
+    expect(".hb-row [data-action-id='translateAttribute']").toHaveCount(1);
+});
+
+test("Ensure the contenteditable attributes have been set before the TranslationPlugin checks for the node to be translated", async () => {
+    patchWithCleanup(TranslationPlugin.prototype, {
+        prepareTranslation() {
+            expect(":iframe .translate_branding").toHaveAttribute("contenteditable", "true");
+            super.prepareTranslation();
+        },
+    });
+    await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({ inWrap: "Hello" }),
+    });
+});
+
+test("sidebar should open even when translated elements fetch is slow", async () => {
+    const originalFetch = globals.fetch;
+
+    patchWithCleanup(globals, {
+        async fetch(url, options) {
+            if (url === "/website/get_translated_elements") {
+                await delay(100);
+            }
+            return originalFetch.call(this, url, options);
+        },
+    });
+    await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({ inWrap: "Hello" }),
+    });
+    expect(".o_builder_sidebar_open").toHaveCount(1);
+});
+
+function getTranslateEditable({
+    inWrap,
+    oeId = "526",
+    sourceSha = "sourceSha",
+    containerEditable = true,
+}) {
+    return `
+        <main>
+            <div class="container s_allow_columns${containerEditable ? "" : " o_not_editable"}">
+                <p>
+                    <span data-oe-model="ir.ui.view" data-oe-id="${oeId}" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="${sourceSha}" class="translate_branding">${inWrap}</span>
+                </p>
+            </div>
+        </main>`;
+}

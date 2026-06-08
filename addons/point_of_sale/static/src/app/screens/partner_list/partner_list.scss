@@ -1,0 +1,37 @@
+.partner-list {
+    padding: 0;
+
+    tr {
+        border: $border-width solid $border-color;
+        &:hover {
+            cursor: pointer;
+        }
+        &:active {
+            background-color: $o-component-active-bg;
+        }
+    }
+}
+
+.partner-list table { 
+    td {
+        border: $border-width solid $border-color;
+        border-style: solid none;
+        padding: map-get($spacers, 3);
+    }
+}
+
+@include media-breakpoint-down(lg) {
+    .partner-list {
+        table {
+            border: transparent;
+        }
+        .partner-list {
+            thead {
+                display: none;
+            }
+            td {
+                padding: 0;
+            }
+        }
+    }
+}

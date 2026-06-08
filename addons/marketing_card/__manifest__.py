@@ -1,0 +1,39 @@
+{
+    'name': 'Marketing Card',
+    'version': '1.1',
+    'category': 'Marketing/Marketing Card',
+    'summary': 'Generate dynamic shareable cards',
+    'depends': ['link_tracker', 'mass_mailing', 'website', 'base_report_wkhtmltox'],
+    'data': [
+        'security/marketing_card_groups.xml',
+        'views/card_card_templates.xml',
+        'data/card_template_data.xml',
+        'views/card_card_views.xml',
+        'views/card_campaign_views.xml',
+        'views/card_frontend_templates.xml',
+        'views/card_template_views.xml',
+        'views/card_menus.xml',
+        'views/mailing_mailing_views.xml',
+        'views/website_templates.xml',
+        'security/ir.access.csv',
+    ],
+    'demo': [
+        'demo/card_campaign_demo.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'marketing_card/static/src/scss/*',
+        ],
+        'web.assets_frontend': [
+            'marketing_card/static/src/scss/frontend/*.scss',
+            'marketing_card/static/src/interactions/*',
+            'marketing_card/static/src/scss/linkedin_share_composer.scss',
+        ],
+    },
+    'application': True,
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
+    'other_files': [
+        'data/utm_source_data.xml',
+    ],
+}

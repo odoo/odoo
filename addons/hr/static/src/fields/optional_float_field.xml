@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="hr.OptionalFloatField">
+        <span t-if="this.props.readonly" t-out="this.formattedValue" />
+        <input 
+            t-else="" 
+            t-on-focusin="this.onFocusIn" 
+            t-on-focusout="this.onFocusOut" 
+            t-att-id="this.props.id" 
+            t-custom-ref="numpadDecimal"  
+            t-att-type="this.props.inputType" 
+            inputmode="decimal" 
+            class="o_input" 
+            autocomplete="off"
+            t-att-step="this.props.step" 
+            t-att-placeholder="this.props.placeholder"/>
+    </t>
+
+</templates>

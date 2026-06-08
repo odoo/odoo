@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="hr_attendance.attendance_menu">
+    <t t-if="this.state.isDisplayed">
+        <Dropdown position="'bottom-end'"
+                  beforeOpen.bind="this.beforeDropdownOpen"
+                  menuClass="'p-0'"
+                  state="this.dropdown">
+            <button>
+                <i class="fa fa-circle"
+                   t-attf-class="text-{{ this.state.checkedIn ? 'success' : 'danger' }}"
+                   role="img"
+                   aria-label="Attendance"/>
+            </button>
+
+            <t t-set-slot="content">
+                <div class="att_container d-flex flex-column">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center gap-5 border-bottom p-3">
+                            <h3 class="mb-0 ps-1">
+                                <t t-if="this.hasCheckedInToday">
+                                    <small>Welcome back</small> <span class="d-block"><t t-out="this.employeeName"/>!</span>
+                                </t>
+                                <t t-else="">
+                                    <small>Welcome,</small> <span class="d-block"><t t-out="this.employeeName"/>.</span>
+                                </t>
+                            </h3>
+                        </div>
+                        <div t-if="this.showVideoStream" class="d-flex justify-content-center p-3">
+                            <AttendanceVideoStream
+                                height="200"
+                                width="240"
+                                exposeCameraCapture.bind="this.setCameraCapture"
+                                onStreamStateChange.bind="this.setStreamAvailable"
+                            />
+                        </div>
+                    </div>
+                    <div class="o_att_today_wrap px-3">
+                        <table class="table table-sm table-borderless">
+                            <tbody>
+                                <tr t-foreach="this.attendancesToday" t-as="attendance" t-key="attendance.id">
+                                    <td>
+                                        <t t-set="start" t-value="this.splitTime(attendance.start)"/>
+                                        <t t-out="start.h"/>:<span class="text-muted"><t t-out="start.m"/></span>
+                                    </td>
+                                    <td class="px-0">–</td>
+                                    <td>
+                                        <t t-if="attendance.end">
+                                            <t t-set="end" t-value="this.splitTime(attendance.end)"/>
+                                            <t t-out="end.h"/>:<span class="text-muted"><t t-out="end.m"/></span>
+                                        </t>
+                                        <t t-else="">
+                                            Now
+                                        </t>
+                                    </td>
+                                    <td class="ps-4 text-end">
+                                        <t t-set="duration" t-value="this.splitTime(attendance.duration)"/>
+                                        <t t-out="duration.h"/>h<span class="text-muted"><t t-out="duration.m"/></span>
+                                    </td>
+                                </tr>
+                                <tr class="border-top">
+                                    <td colspan="3">
+                                        Today
+                                    </td>
+                                    <td class="ps-4 text-end">
+                                        <t t-set="total" t-value="this.splitTime(this.hoursToday)"/>
+                                        <t t-out="total.h"/>h<span class="text-muted"><t t-out="total.m"/></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="o_wrap_btn_sign_out position-md-sticky bottom-0 p-3 pt-0 z-2">
+                        <button t-on-click="() => this.signInOut()"
+                                t-attf-class="btn btn-{{ this.state.checkedIn ? 'warning' : 'primary' }} w-100">
+                            <span t-if="!this.state.checkedIn">Check in</span>
+                            <span t-else="">Check out</span>
+                            <i t-attf-class="fa fa-sign-{{ this.state.checkedIn ? 'out' : 'in' }} ms-1"/>
+                        </button>
+                    </div>
+                </div>
+            </t>
+        </Dropdown>
+    </t>
+</t>
+
+</templates>

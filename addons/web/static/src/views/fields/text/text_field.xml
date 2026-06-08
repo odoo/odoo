@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.TextField">
+        <t t-if="this.props.readonly">
+            <span t-out="this.props.record.data[this.props.name] or ''" />
+        </t>
+        <t t-else="">
+            <textarea
+                class="o_input"
+                t-att-class="{
+                    'o_field_translate': this.isTranslatable,
+                    'o_field_placeholder': this.props.dynamicPlaceholder,
+                }"
+                t-att-id="this.props.id"
+                t-att-placeholder="this.props.placeholder"
+                t-att-rows="this.rowCount"
+                t-custom-ref="textarea"
+                t-on-blur="this.onBlur"
+            />
+            <div class="o_field_input_buttons">
+                <TranslationButton
+                    t-if="this.isTranslatable"
+                    fieldName="this.props.name"
+                    record="this.props.record"
+                />
+                <button t-if="this.props.dynamicPlaceholder"
+                    class="btn btn-link fa fa-magic"
+                    title="Insert Field"
+                    t-on-click="this.onDynamicPlaceholderOpen"
+                />
+            </div>
+        </t>
+    </t>
+
+</templates>

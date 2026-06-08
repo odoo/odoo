@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
+        <xpath expr="//*[@name='thread content']" position="replace">
+            <t>$0</t>
+            <CloseConfirmation t-if="this.props.chatWindow.confirmCloseResolver" channelName="this.channel.displayName" onCloseConfirmationDialog="() => this.props.chatWindow.confirmCloseResolver.resolve(false)" onClickLeaveConversation="() => this.props.chatWindow.confirmCloseResolver.resolve(true)"/>
+        </xpath>
+    </t>
+</templates>

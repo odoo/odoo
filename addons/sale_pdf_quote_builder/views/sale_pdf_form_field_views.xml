@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="sale_pdf_form_field_list" model="ir.ui.view">
+        <field name="name">sale.pdf.form.field.list</field>
+        <field name="model">sale.pdf.form.field</field>
+        <field name="arch" type="xml">
+            <list editable="top" multi_edit="true" create="false">
+                <field name="name"/>
+                <field name="path"/>
+                <field name="document_type"/>
+                <field name="product_document_ids" widget="many2many_tags" optional="hide"/>
+                <field name="quotation_document_ids" widget="many2many_tags" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="quotation_document_search" model="ir.ui.view">
+        <field name="name">sale.pdf.form.field.search</field>
+        <field name="model">sale.pdf.form.field</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter name="customizable" string="Customizable" domain="[('path', '=', False)]"/>
+                <filter
+                    string="This document"
+                    name="context_document"
+                    domain="[
+                        ('document_type', '=', context.get('default_document_type')),
+                        ('product_document_ids', '=', context.get('default_product_document_ids')),
+                        ('quotation_document_ids', '=', context.get('default_quotation_document_ids'))
+                    ]"
+                />
+            </search>
+        </field>
+    </record>
+
+</odoo>

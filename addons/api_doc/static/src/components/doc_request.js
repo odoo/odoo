@@ -1,0 +1,90 @@
+import { Component, props, proxy, signal, t } from "@odoo/owl";
+import { LANGUAGES, createRequestCode } from "@api_doc/utils/doc_code_gen";
+import { CodeEditor } from "@web/core/code_editor/code_editor";
+import { browser } from "@web/core/browser/browser";
+
+class CopyableCodeEditor extends CodeEditor {
+    static template = "web.DocRequest.CodeEditor";
+
+    copied = signal(false);
+
+    copyToClipboard() {
+        navigator?.clipboard?.writeText(this.aceEditor.getValue());
+        this.copied.set(true);
+        setTimeout(() => {
+            this.copied.set(false);
+        }, 1000);
+    }
+}
+
+export class DocRequest extends Component {
+    static template = "web.DocRequest";
+
+    static components = {
+        CodeEditor: CopyableCodeEditor,
+    };
+    props = props({
+        url: t.string(),
+        request: t.any().optional(),
+        httpMethod: t.string().optional("POST"),
+    });
+
+    setup() {
+        this.maxLines = Infinity;
+        this.LANGUAGES = LANGUAGES;
+        this.state = proxy({
+            exampleLanguage: LANGUAGES.json,
+            exampleCode: "",
+            requestCode: this.createRequestCode(LANGUAGES.json),
+            response: {},
+            requestTab: 0,
+            showTraceback: false
+        });
+        this.selectLanguage(localStorage.getItem("doc/code-lang") || LANGUAGES.json);
+    }
+
+    selectLanguage(language) {
+        localStorage.setItem("doc/code-lang", language);
+        this.state.exampleLanguage = language;
+        this.state.exampleCode = this.createRequestCode(language);
+    }
+
+    createRequestCode(language) {
+        return createRequestCode({
+            language,
+            url: window.location.origin + this.props.url,
+            apiKey: this.env.modelStore.apiKey,
+            requestObj: this.props.request,
+        });
+    }
+
+    get responseText() {
+        const response = this.state.response;
+        return response.error || response.body;
+    }
+
+    get hasResponse() {
+        return this.state.response.error || this.state.response.body;
+    }
+
+    async execute() {
+        this.state.response = {};
+        const result = await this.env.modelStore.executeRequest(
+            this.props.url,
+            this.state.requestCode
+        );
+        if (result) {
+            this.state.response = result;
+        }
+    }
+
+    toggleTraceback() {
+        this.state.showTraceback = !this.state.showTraceback;
+    }
+
+    onClickClipboard() {
+        browser.navigator.clipboard.writeText(
+            `Error ${this.state.response.status}:\n\n${this.responseText.title}\n\n${this.responseText.traceback}`
+        );
+    }
+}

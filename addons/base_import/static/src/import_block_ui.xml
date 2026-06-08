@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- TODO should re-use the blockUI template of web -->
+    <t t-name="base_import.BlockUI">
+        <div class="o_blockUI fixed-top d-flex justify-content-center align-items-center flex-column vh-100 bg-black-50">
+            <div class="o_spinner mb-4">
+                <img src="/web/static/img/spin.svg" alt="Loading..."/>
+            </div>
+            <div t-if="this.props.message or this.props.blockComponent">
+                <div class="o_message text-center px-4" t-out="this.props.message" />
+                <t t-if="this.props.blockComponent" t-component="this.props.blockComponent.class" t-props="this.props.blockComponent.props"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

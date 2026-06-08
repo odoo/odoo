@@ -1,0 +1,172 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError
+from odoo.fields import Command
+from odoo.http import request
+
+from odoo.addons.website_sale_collect import utils
+
+
+class DeliveryCarrier(models.Model):
+    _inherit = "delivery.carrier"
+
+    delivery_type = fields.Selection(
+        selection_add=[("in_store", "Pick up in store")], ondelete={"in_store": "set default"}
+    )
+    warehouse_ids = fields.Many2many(string="Stores", comodel_name="stock.warehouse")
+
+    def _compute_support_pickup_locations(self):
+        in_store_dms = self.filtered(lambda dm: dm.delivery_type == "in_store")
+        super(DeliveryCarrier, self - in_store_dms)._compute_support_pickup_locations()
+        in_store_dms.support_pickup_locations = True
+
+    @api.constrains("delivery_type", "is_published", "warehouse_ids")
+    def _check_in_store_dm_has_warehouses_when_published(self):
+        if any(
+            self.filtered(
+                lambda dm: (
+                    dm.delivery_type == "in_store" and dm.is_published and not dm.warehouse_ids
+                )
+            )
+        ):
+            raise ValidationError(
+                self.env._("The delivery method must have at least one warehouse to be published.")
+            )
+
+    @api.constrains("delivery_type", "company_id", "warehouse_ids")
+    def _check_warehouses_have_same_company(self):
+        for dm in self:
+            if (
+                dm.delivery_type == "in_store"
+                and dm.company_id
+                and any(wh.company_id and dm.company_id != wh.company_id for wh in dm.warehouse_ids)
+            ):
+                raise ValidationError(
+                    self.env._("The delivery method and a warehouse must share the same company")
+                )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get("delivery_type") == "in_store":
+                vals.update(self._get_in_store_default_vals())
+
+                # Set the default warehouses and publish if one is found.
+                if "company_id" in vals:
+                    company_id = vals.get("company_id")
+                else:
+                    company_id = (
+                        self.env["product.product"].browse(vals.get("product_id")).company_id.id
+                        or self.env.company.id
+                    )
+                warehouses = self.env["stock.warehouse"].search([("company_id", "in", company_id)])
+                vals.update({
+                    "warehouse_ids": [Command.set(warehouses.ids)],
+                    "is_published": bool(warehouses),
+                })
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if vals.get("delivery_type") == "in_store":
+            vals.update(self._get_in_store_default_vals())
+        return super().write(vals)
+
+    @staticmethod
+    def _get_in_store_default_vals():
+        return {
+            "integration_level": "rate",
+            "allow_cash_on_delivery": False,
+            "country_ids": False,
+            "state_ids": False,
+            "zip_prefix_ids": False,
+        }
+
+    # === BUSINESS METHODS ===#
+
+    def _in_store_get_close_locations(self, partner_address, product_id=None, uom_id=None):
+        """Get the formatted close pickup locations sorted by distance to the partner address.
+
+        :param res.partner partner_address: The address to use to sort the pickup locations.
+        :param str product_id: The product whose product page was used to open the location
+                               selector, if any, as a `product.product` id.
+        :param int uom_id: The unit of measure to use for the product stock values, if any.
+        :return: The sorted and formatted close pickup locations.
+        :rtype: list[dict]
+        """
+        try:
+            product_id = product_id and int(product_id)
+        except ValueError:
+            product = self.env["product.product"]
+        else:
+            product = self.env["product.product"].browse(product_id)
+
+        partner_address.geo_localize()  # Calculate coordinates.
+
+        pickup_locations = []
+        location_countries = set()
+        order_sudo = (request and request.cart) or False
+        for wh in self.warehouse_ids:
+            pickup_location_values = wh._prepare_pickup_location_data()
+            if not pickup_location_values:  # Ignore warehouses with badly configured addresses.
+                continue
+
+            # Prepare the stock data based on either the product or the order.
+            in_store_stock_data = {}
+            if product:  # Called from the product page.
+                uom = self.env["uom.uom"].browse(uom_id)
+                cart_qty = (order_sudo and order_sudo._get_cart_qty(product.id)) or 0
+                in_store_stock_data = utils.format_product_stock_values(
+                    product, wh_id=wh.id, uom=uom, cart_qty=cart_qty
+                )
+            elif order_sudo:  # Called from the checkout page.
+                in_store_stock_data = {"in_stock": order_sudo._is_in_stock(wh.id)}
+
+            location_countries.add(wh.partner_id.country_id)
+            # Calculate the distance between the partner address and the warehouse location.
+            pickup_location_values.update({
+                "additional_data": (
+                    {"in_store_stock_data": in_store_stock_data} if in_store_stock_data else {}
+                ),
+                "distance": utils.calculate_partner_distance(partner_address, wh.partner_id),
+            })
+            pickup_locations.append(pickup_location_values)
+
+        # Prepare the country data for the location selector's selection menu.
+        country_values = [
+            {
+                "label": country.name,
+                "value": {
+                    "name": country.name,
+                    "code": country.code,
+                    "image_url": country.image_url,
+                },
+            }
+            for country in location_countries
+            if country
+        ]
+
+        return {
+            "country_data": country_values,
+            "pickup_location_data": sorted(pickup_locations, key=lambda k: k["distance"]),
+        }
+
+    def in_store_rate_shipment(self, *_args):
+        return {
+            "success": True,
+            "price": self.product_id.list_price,
+            "error_message": False,
+            "warning_message": False,
+        }
+
+    def _get_pickup_locations(self, country=None, country_code=None, **kwargs):
+        """Override of `website_sale` to include the selected country from the location selector.
+
+        :param res.country country: The country of the shipping partner.
+        :param str country_code: The country code from the location selector to look up to.
+        :return: The close pickup locations data.
+        :rtype: res.partner
+        """
+        if country_code:
+            country = self.env["res.country"].search([("code", "=", country_code)], limit=1)
+        return super()._get_pickup_locations(country=country, **kwargs)

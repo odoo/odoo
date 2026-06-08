@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FormStatusIndicator">
+        <div class="o_form_status_indicator d-md-flex align-items-center align-self-md-end me-auto" t-att-class="{ o_form_status_indicator_new_record: this.props.isNew }">
+            <div class="o_form_status_indicator_buttons d-flex" t-att-class="{ invisible: !(this.isNew or this.displayButtons) }">
+                <button
+                    type="button"
+                    class="o_form_button_save btn btn-light border-0 px-1 py-0 lh-sm"
+                    data-hotkey="s"
+                    t-on-click.stop="this.save"
+                    data-tooltip="Save manually"
+                    aria-label="Save manually"
+                    data-available-offline=""
+                    t-custom-ref="save">
+                    <i class="fa fa-cloud-upload fa-fw" />
+                </button>
+                <button
+                    type="button"
+                    class="o_form_button_cancel btn btn-light border-0 px-1 py-0 lh-sm"
+                    data-hotkey="j"
+                    t-on-click.stop="this.discard"
+                    data-tooltip="Discard all changes"
+                    data-available-offline=""
+                    aria-label="Discard all changes">
+                    <i class="fa fa-times fa-fw" />
+                </button>
+            </div>
+            <span
+                t-if="!this.props.isNew and this.indicatorMode === 'invalid'"
+                class="text-danger small ms-2"
+                data-tooltip="Unable to save. Correct the issue or discard all changes">
+                <i class="fa fa-warning" />
+            </span>
+        </div>
+    </t>
+</templates>

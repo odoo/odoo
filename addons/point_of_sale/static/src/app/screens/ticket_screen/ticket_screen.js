@@ -1,0 +1,1080 @@
+import { useLayoutEffect } from "@web/owl2/utils";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { parseDate, parseDateTime, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import { parseFloat } from "@web/views/fields/parsers";
+import { _t } from "@web/core/l10n/translation";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
+import { BackButton } from "@point_of_sale/app/screens/product_screen/action_pad/back_button/back_button";
+import { InvoiceButton } from "@point_of_sale/app/screens/ticket_screen/invoice_button/invoice_button";
+import { OrderDetailsDialog } from "@point_of_sale/app/screens/ticket_screen/order_details_dialog/order_details_dialog";
+import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
+import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
+import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { Component, onMounted, onWillStart, onWillUnmount, props, proxy, t } from "@odoo/owl";
+import {
+    BACKSPACE,
+    Numpad,
+    getButtons,
+    ZERO,
+    DECIMAL,
+} from "@point_of_sale/app/components/numpad/numpad";
+import { PosOrderLineRefund } from "@point_of_sale/app/models/pos_order_line_refund";
+import { fuzzyLookup } from "@web/core/utils/search";
+import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
+import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
+import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
+import { ConnectionLostError } from "@web/core/network/rpc";
+import { TipCell } from "@point_of_sale/app/screens/ticket_screen/tip_cell/tip_cell";
+import { ProgressBar } from "@point_of_sale/app/screens/ticket_screen/progress_bar/progress_bar";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+import { SendReceiptPopup } from "@point_of_sale/app/components/popups/send_receipt_popup/send_receipt_popup";
+import { PrintPopup } from "@point_of_sale/app/components/popups/print_popup/print_popup";
+
+const { DateTime } = luxon;
+const NBR_BY_PAGE = 30;
+
+export const ticketScreenProps = {
+    // When passed as true, it will use the saved _state.ui as default
+    // value when this component is reinstantiated.
+    // After setting the default value, the _state.ui will be overridden
+    // by the passed props.ui if there is any.
+    reuseSavedUIState: t.boolean().optional(false),
+    stateOverride: t.object().optional(),
+    ui: t.object().optional({}),
+};
+
+export class TicketScreen extends Component {
+    static storeOnOrder = false;
+    static template = "point_of_sale.TicketScreen";
+    static components = {
+        ActionpadWidget,
+        InvoiceButton,
+        Orderline,
+        OrderDisplay,
+        CenteredIcon,
+        SearchBar,
+        Numpad,
+        BackButton,
+        BarcodeVideoScanner,
+        TipCell,
+        ProgressBar,
+        Dropdown,
+        DropdownItem,
+    };
+    props = props(ticketScreenProps);
+
+    setup() {
+        this.pos = usePos();
+        this.ui = useService("ui");
+        this.dialog = useService("dialog");
+        this.numberBuffer = useService("number_buffer");
+        this.doPrint = useTrackedAsync((_selectedSyncedOrder) => this.print(_selectedSyncedOrder));
+        this.numberBuffer.use({
+            triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
+        });
+
+        this.state = proxy({
+            nbrByPage: NBR_BY_PAGE,
+            page: 1,
+            nbrPage: 1,
+            filter: null,
+            search: this.pos.getDefaultSearchDetails(),
+            selectedOrderUuid: this.pos.getOrder()?.uuid || null,
+            selectedOrderlineIds: {},
+            selectedPreset: null,
+        });
+        Object.assign(this.state, this.props.stateOverride || {});
+
+        this.orderTimers = proxy({});
+
+        useLayoutEffect(
+            () => this.updateOrderTimers(),
+            () => [
+                this.state.filter,
+                this.state.page,
+                this.state.search,
+                this.state.selectedPreset,
+                this.state.nbrByPage,
+            ]
+        );
+
+        onMounted(() => {
+            this._timersInterval = setInterval(this.updateOrderTimers.bind(this), 60_000);
+            this.onMounted();
+        });
+
+        onWillUnmount(() => clearInterval(this._timersInterval));
+
+        onWillStart(() => {
+            if (!this.pos.loadingOrderState) {
+                this.pos.loadingOrderState = true;
+                // Start fetching orders without blocking screen rendering
+                this.pos
+                    .getServerOrders()
+                    .catch((error) => {
+                        if (error instanceof ConnectionLostError) {
+                            return;
+                        }
+                        throw error;
+                    })
+                    .finally(() => {
+                        this.pos.loadingOrderState = false;
+                    });
+            }
+        });
+    }
+    onMounted() {
+        setTimeout(() => {
+            // Show updated list of synced orders when going back to the screen.
+            this.onFilterSelected(this.state.filter);
+        });
+    }
+    clearOrderTimers() {
+        for (const key in this.orderTimers) {
+            delete this.orderTimers[key];
+        }
+    }
+    updateOrderTimers() {
+        this.clearOrderTimers();
+        const displayedOrders = this.getFilteredOrderList();
+        for (const order of displayedOrders) {
+            if (order.preset_time) {
+                if (order.preset_time > DateTime.now()) {
+                    this.orderTimers[order.uuid] = Math.ceil(
+                        order.preset_time.diff(DateTime.now(), "minutes").minutes
+                    );
+                } else {
+                    this.orderTimers[order.uuid] = 0;
+                }
+            }
+        }
+    }
+    async onClickPageNbr() {
+        const nbr = await makeAwaitable(this.dialog, NumberPopup, {
+            title: _t("Number by page"),
+            isValid: (value) => value > 0 && value <= 100,
+        });
+
+        if (nbr && !isNaN(nbr)) {
+            this.state.nbrByPage = parseInt(nbr);
+            this.state.page = 1;
+            await this._updateSyncedOrders();
+        }
+    }
+    onPresetSelected(preset) {
+        if (this.state.selectedPreset === preset) {
+            this.state.selectedPreset = null;
+        } else {
+            this.state.selectedPreset = preset;
+            const firstFilteredOrder = this.getFilteredOrderList()[0];
+
+            if (firstFilteredOrder) {
+                this.onClickOrder(firstFilteredOrder);
+            }
+        }
+    }
+    async print(order) {
+        this.dialog.add(PrintPopup, { order });
+    }
+    onClickSend() {
+        if (this.pos.canSendReceipt) {
+            this.dialog.add(SendReceiptPopup, {
+                order: this.getSelectedOrder(),
+            });
+        }
+    }
+    async onFilterSelected(selectedFilter) {
+        this.state.filter = selectedFilter;
+        this.pos.screenState.ticketScreen.totalCount = 0;
+        this.pos.screenState.ticketScreen.offsetByDomain = {};
+
+        await this._updateSyncedOrders();
+        this.updateOrderTimers();
+    }
+    getNumpadButtons() {
+        return getButtons(
+            [{ value: "-", text: "+/-", disabled: true }, ZERO, DECIMAL],
+            [
+                { value: "quantity", text: _t("Qty"), class: "active border-primary" },
+                { value: "discount", text: _t("% Disc"), disabled: true },
+                { value: "price", text: _t("Price"), disabled: true },
+                BACKSPACE,
+            ]
+        );
+    }
+    async onClickScanOrder(qrcode) {
+        if (qrcode) {
+            const uuid = new URL(qrcode).searchParams.get("order_uuid");
+            const orders = await this.pos.data.loadServerOrders([["uuid", "=", uuid]]);
+            const order = orders[0];
+            if (order) {
+                this.state.filter = "SYNCED";
+                this.setSelectedOrder(order);
+                this.pos.scanning = !this.pos.scanning;
+            } else {
+                this.env.services.notification.add(_t("Invalid QR Code! Please, Scan again!"), {
+                    type: "warning",
+                });
+            }
+        } else {
+            this.env.services.notification.add(_t("Please, Scan again!"), {
+                type: "warning",
+            });
+        }
+    }
+    async onSearch(search) {
+        this.state.search = search;
+        this.state.page = 1;
+        await this._updateSyncedOrders();
+    }
+    onClickOrder(clickedOrder) {
+        this.setSelectedOrder(clickedOrder);
+        this.numberBuffer.reset();
+        if ((!clickedOrder || clickedOrder.finalized) && !this.getSelectedOrderlineId()) {
+            // Automatically select the first refundable orderline of the selected order.
+            const firstLine = this.getSelectedOrder()
+                .getOrderlines()
+                .find((line) => line.isValidForRefund);
+            if (firstLine) {
+                this.state.selectedOrderlineIds[clickedOrder.id] = firstLine.id;
+            }
+        }
+    }
+    onDblClickOrder(order) {
+        if (!order.finalized) {
+            this.setOrder(order);
+        }
+    }
+
+    _onInfoOrder(order) {
+        this.dialog.add(OrderDetailsDialog, {
+            order,
+            editPayment: () => this.pos.editPayment(order),
+        });
+    }
+    async onClickReprintAll(order) {
+        const printingChanges = order.lastPrints;
+        if (printingChanges.length) {
+            await this.pos.ticketPrinter.printOrderChanges({ order, opts: printingChanges });
+        }
+    }
+    async onNextPage() {
+        if (this.state.page < this.getNbrPages()) {
+            this.state.page += 1;
+            await this._updateSyncedOrders();
+        }
+    }
+    async onPrevPage() {
+        if (this.state.page > 1) {
+            this.state.page -= 1;
+            await this._updateSyncedOrders();
+        }
+    }
+    async onInvoiceOrder(orderId) {
+        const order = this.pos.models["pos.order"].get(orderId);
+        this.setSelectedOrder(order);
+    }
+    onClickOrderline(orderline) {
+        const order = this.getSelectedOrder();
+        if (this.isOrderSynced) {
+            if (this.state.selectedOrderlineIds[order.id] == orderline.id) {
+                const toRefundDetail = this.getToRefundDetail(orderline);
+                if (Object.values(toRefundDetail).some((detail) => detail.destination_order_uuid)) {
+                    return;
+                }
+                if (toRefundDetail.qty == toRefundDetail.refundableQty) {
+                    toRefundDetail.qty = 0;
+                } else {
+                    toRefundDetail.qty += 1;
+                }
+                this._onUpdateSelectedOrderline({
+                    key: undefined,
+                    buffer: `${toRefundDetail.qty}`,
+                });
+                return;
+            }
+            this.state.selectedOrderlineIds[order.id] = orderline.id;
+            this.numberBuffer.reset();
+        }
+    }
+    onClickRefundOrderUid(orderUuid) {
+        // Open the refund order.
+        const refundOrder = this.pos.models["pos.order"].find((order) => order.uuid == orderUuid);
+        if (refundOrder) {
+            this.setOrder(refundOrder);
+        }
+    }
+    _setToRefundDetail(toRefundDetail, buffer) {
+        // When already linked to an order, do not modify the to refund quantity.
+        if (toRefundDetail.destionation_order_id) {
+            return this.numberBuffer.reset();
+        }
+
+        toRefundDetail.refundableQty = toRefundDetail.line.qty - toRefundDetail.line.refundedQty;
+        if (toRefundDetail.refundableQty <= 0) {
+            return this.numberBuffer.reset();
+        }
+
+        if (buffer == null || buffer == "") {
+            toRefundDetail.qty = 0;
+        } else {
+            const quantity = Math.abs(parseFloat(buffer));
+            if (quantity > toRefundDetail.refundableQty) {
+                this.numberBuffer.reset();
+                if (!toRefundDetail.line.combo_parent_id) {
+                    this.dialog.add(AlertDialog, {
+                        title: _t("Maximum Exceeded"),
+                        body: _t(
+                            "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
+                            quantity,
+                            toRefundDetail.refundableQty
+                        ),
+                    });
+                }
+            } else {
+                toRefundDetail.qty = quantity;
+            }
+        }
+    }
+    _onUpdateSelectedOrderline({ key, buffer }) {
+        const order = this.getSelectedOrder();
+        if (!order) {
+            return this.numberBuffer.reset();
+        }
+
+        const selectedOrderlineId = this.getSelectedOrderlineId();
+        let orderline = order.lines.find((line) => line.id == selectedOrderlineId);
+        if (!orderline) {
+            return this.numberBuffer.reset();
+        }
+
+        if (orderline.combo_parent_id) {
+            orderline = orderline.combo_parent_id;
+        }
+
+        const parentToRefundDetail = this.getToRefundDetail(orderline);
+        this._setToRefundDetail(parentToRefundDetail, buffer);
+
+        for (const comboLine of orderline.combo_line_ids) {
+            const toRefundDetail = this.getToRefundDetail(comboLine);
+            toRefundDetail.qty = (comboLine.qty / orderline.qty) * parentToRefundDetail.qty;
+        }
+
+        if (parentToRefundDetail.qty === parentToRefundDetail.refundableQty) {
+            this._selectNextOrderline(order, selectedOrderlineId);
+        }
+    }
+    _selectNextOrderline(order, selectedOrderlineId) {
+        const orderlines = order.getOrderlines();
+        const currentIndex = orderlines.findIndex((line) => line.id === selectedOrderlineId);
+        if (currentIndex !== -1) {
+            const nextLine = orderlines
+                .slice(currentIndex + 1)
+                .find((line) => line.isValidForRefund);
+            if (nextLine) {
+                this.state.selectedOrderlineIds[order.id] = nextLine.id;
+                this.numberBuffer.reset();
+            }
+        }
+    }
+    async addAdditionalRefundInfo(order, destinationOrder) {
+        // used by L10N, e.g: add a refund reason using a specific L10N field
+        return Promise.resolve();
+    }
+    // Used to override inside `pos_blackbox_be` and `pos_urban_piper`
+    async _doneOrder(order) {
+        return;
+    }
+    async onDoRefund() {
+        const order = this.getSelectedOrder();
+
+        if (order && this._doesOrderHaveSoleItem(order)) {
+            if (!this._prepareAutoRefundOnOrder(order)) {
+                // Don't proceed on refund if preparation returned false.
+                return;
+            }
+        }
+
+        if (!order || !this.getHasItemsToRefund()) {
+            return;
+        }
+
+        const partner = order.getPartner();
+        // The order that will contain the refund orderlines.
+        // We select the order if it is empty, else we create a new one.
+        const destinationOrder = this._getEmptyOrder(partner);
+
+        destinationOrder.is_refund = true;
+        destinationOrder.pricelist_id = order.pricelist_id;
+        // Add orderline for each toRefundDetail to the destinationOrder.
+        const lines = [];
+        for (const refundDetail of this._getRefundableDetails(partner, order)) {
+            const line = this.pos.models["pos.order.line"].create(
+                this.getRefundLinesDetails(refundDetail, destinationOrder)
+            );
+            lines.push(line);
+            refundDetail.destination_order_uuid = destinationOrder.uuid;
+        }
+        // link the refund combo lines
+        const refundComboParentLines = lines.filter(
+            (l) => l.refunded_orderline_id.combo_line_ids.length > 0
+        );
+        for (const refundComboParent of refundComboParentLines) {
+            const children = refundComboParent.refunded_orderline_id.combo_line_ids
+                .map((l) => l.refund_orderline_ids)
+                .flat();
+            refundComboParent.combo_line_ids = [["link", ...children]];
+        }
+
+        //Add a check too see if the fiscal position exist in the pos
+        if (order.fiscal_position_not_found) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Fiscal Position not found"),
+                body: _t(
+                    "The fiscal position used in the original order is not loaded. Make sure it is loaded by adding it in the pos configuration."
+                ),
+            });
+            return;
+        }
+
+        if (order.fiscal_position_id) {
+            destinationOrder.fiscal_position_id = order.fiscal_position_id;
+        }
+        // Set the partner to the destinationOrder.
+        this.setPartnerToRefundOrder(partner, destinationOrder);
+        destinationOrder.refunded_order_id = order;
+        this.pos.setOrder(destinationOrder);
+        await this.addAdditionalRefundInfo(order, destinationOrder);
+
+        this.postRefund(destinationOrder);
+        this.pos.ticket_screen_mobile_pane = "left";
+        destinationOrder.setScreenData({ name: "PaymentScreen" });
+        this.pos.navigate("PaymentScreen", { orderUuid: destinationOrder.uuid });
+    }
+
+    getRefundLinesDetails(refundDetail, destinationOrder) {
+        const refundLine = refundDetail.line;
+        return {
+            qty: -refundDetail.qty,
+            price_unit: refundLine.price_unit,
+            product_id: refundLine.product_id,
+            order_id: destinationOrder,
+            discount: refundLine.discount,
+            tax_ids: refundLine.tax_ids.map((tax) => ["link", tax]),
+            refunded_orderline_id: refundLine,
+            price_type: "automatic",
+            attribute_value_ids: refundLine.attribute_value_ids.map((attr) => ["link", attr]),
+        };
+    }
+
+    async onDeleteOrder(order) {
+        await this.pos.onDeleteOrder(order);
+        this.setSelectedOrder(this.pos.getOrder());
+    }
+
+    postRefund(destinationOrder) {}
+
+    setPartnerToRefundOrder(partner, destinationOrder) {
+        if (partner && !destinationOrder.getPartner()) {
+            destinationOrder.setPartner(partner);
+        }
+    }
+    setSelectedOrder(order) {
+        this.state.selectedOrderUuid = order?.uuid || null;
+    }
+    getSelectedOrder() {
+        return this.pos.models["pos.order"].getBy("uuid", this.state.selectedOrderUuid) || null;
+    }
+    getSelectedOrderlineId() {
+        if (this.getSelectedOrder()) {
+            return this.state.selectedOrderlineIds[this.getSelectedOrder().id];
+        }
+    }
+    isOrderDoneOrPaid(order) {
+        return order.state === "done" || order.state === "paid";
+    }
+    isOrderCancelled(order) {
+        return order.state === "cancel";
+    }
+    get isOrderSynced() {
+        const order = this.getSelectedOrder();
+        return (
+            order &&
+            this.isOrderDoneOrPaid(order) &&
+            (order.getScreenData().name === "" || this.state.filter === "SYNCED")
+        );
+    }
+    getFilteredOrderList() {
+        const orderModel = this.pos.models["pos.order"];
+        let orders =
+            this.state.filter === "SYNCED"
+                ? orderModel.filter((o) => this.isOrderDoneOrPaid(o))
+                : this.state.filter === "CANCELLED"
+                ? orderModel.filter((o) => this.isOrderCancelled(o))
+                : orderModel.filter(
+                      (o) =>
+                          (!this.isOrderDoneOrPaid(o) && !this.isOrderCancelled(o)) ||
+                          o.getScreenData().name == "TipScreen"
+                  );
+
+        if (
+            this.state.filter &&
+            !["ACTIVE_ORDERS", "SYNCED", "CANCELLED"].includes(this.state.filter)
+        ) {
+            orders = orders.filter((order) => {
+                const screen = order.getScreenData();
+                return this._getScreenToStatusMap()[screen.name] === this.state.filter;
+            });
+        }
+
+        if (this.state.search.searchTerm) {
+            const repr = this._getSearchFields()[this.state.search.fieldName].repr;
+            orders = fuzzyLookup(this.state.search.searchTerm, orders, repr);
+        }
+        if (this.state.search.partnerId && this.state.search.fieldName === "PARTNER") {
+            orders = orders.filter((order) => order.partner_id?.id === this.state.search.partnerId);
+        }
+
+        if (this.state.selectedPreset) {
+            orders = orders.filter((order) => order.preset_id?.id === this.state.selectedPreset.id);
+        }
+
+        const sortOrders = (orders, ascending = false) =>
+            orders.sort((a, b) => {
+                const dateA = a.date_order;
+                const dateB = b.date_order;
+
+                if (!dateA.equals(dateB)) {
+                    return ascending ? dateA - dateB : dateB - dateA;
+                } else {
+                    const nameA = parseInt(a.pos_reference.replace(/\D/g, "")) || 0;
+                    const nameB = parseInt(b.pos_reference.replace(/\D/g, "")) || 0;
+                    return ascending ? nameA - nameB : nameB - nameA;
+                }
+            });
+
+        let sortedOrders;
+        if (this.state.selectedPreset?.use_timing) {
+            sortedOrders = orders.sort((a, b) => {
+                const timerA = this.orderTimers[a.uuid] ?? 0;
+                const timerB = this.orderTimers[b.uuid] ?? 0;
+                const finishedA = timerA <= 0;
+                const finishedB = timerB <= 0;
+                if (finishedA !== finishedB) {
+                    return finishedA ? 1 : -1;
+                }
+                return timerA - timerB;
+            });
+            this.pos.screenState.ticketScreen.totalCount = sortedOrders.length;
+        } else if (["SYNCED", "CANCELLED"].includes(this.state.filter)) {
+            sortedOrders = sortOrders(orders);
+        } else {
+            this.pos.screenState.ticketScreen.totalCount = orders.length;
+            sortedOrders = sortOrders(orders, true);
+        }
+
+        return sortedOrders.slice(
+            (this.state.page - 1) * this.state.nbrByPage,
+            this.state.page * this.state.nbrByPage
+        );
+    }
+    get buttonClasses() {
+        return this.getHasItemsToRefund() ? "btn-primary" : "btn-secondary disabled";
+    }
+    getDate(order) {
+        return this.pos.getDate(order.date_order);
+    }
+    getTotal(order) {
+        return this.env.utils.formatCurrency(order.priceIncl);
+    }
+    getPartner(order) {
+        return order.getPartnerName();
+    }
+    getCardholderName(order) {
+        return order.getCardHolderName();
+    }
+    getCashier(order) {
+        return order.employee_id ? order.employee_id.name : "";
+    }
+    getStatus(order) {
+        if (this.isOrderCancelled(order)) {
+            return _t("Cancelled");
+        }
+        if (
+            this.isOrderDoneOrPaid(order) &&
+            (order.getScreenData().name === "" || this.state.filter === "SYNCED")
+        ) {
+            return _t("Paid");
+        }
+        const screen = order.getScreenData();
+        return this._getOrderStates().get(this._getScreenToStatusMap()[screen.name])?.text;
+    }
+    getStatusDecoration(status) {
+        if (status === "Ongoing" || status === "Payment") {
+            return "info";
+        }
+        if (status === "Receipt" || status === "Paid") {
+            return "success";
+        }
+        if (status === "Cancelled") {
+            return "danger";
+        }
+        return "secondary";
+    }
+    /**
+     * If the order is the only order and is empty
+     */
+    isDefaultOrderEmpty(order) {
+        const status = this._getScreenToStatusMap()[order.getScreenData().name];
+        const productScreenStatus = this._getScreenToStatusMap().ProductScreen;
+        return (
+            order.getOrderlines().length === 0 &&
+            this.pos.getOpenOrders().length === 1 &&
+            status === productScreenStatus &&
+            order.payment_ids.length === 0
+        );
+    }
+    /**
+     * Hide the delete button if one of the payments is a 'done' electronic payment.
+     */
+    shouldHideDeleteButton(order) {
+        const orders = this.pos.models["pos.order"].filter((o) => !o.finalized);
+        return (
+            (orders.length === 1 && orders[0].lines.length === 0) ||
+            (this.ui.isSmall && order != this.getSelectedOrder()) ||
+            this.isDefaultOrderEmpty(order) ||
+            order.finalized ||
+            order.payment_ids.some(
+                (payment) => payment.isElectronic() && payment.getPaymentStatus() === "done"
+            )
+        );
+    }
+    isHighlighted(order) {
+        const selectedOrder = this.getSelectedOrder();
+        return selectedOrder ? order.id && order.id == selectedOrder.id : false;
+    }
+    showCardholderName() {
+        return this.pos.models["pos.payment.method"].some((method) => method.useTerminal);
+    }
+    getSearchBarConfig() {
+        return {
+            searchFields: new Map(
+                Object.entries(this._getSearchFields()).map(([key, val]) => [key, val.displayName])
+            ),
+            filter: { show: true, options: this._getFilterOptions() },
+            defaultSearchDetails: this.state.search,
+            defaultFilter: this.state.filter,
+        };
+    }
+    getNbrPages() {
+        return Math.ceil(this.pos.screenState.ticketScreen.totalCount / this.state.nbrByPage);
+    }
+    getPageNumber() {
+        if (!this.pos.screenState.ticketScreen.totalCount) {
+            return `0/0`;
+        } else {
+            return `${(this.state.page - 1) * this.state.nbrByPage + 1}-${Math.min(
+                this.state.page * this.state.nbrByPage,
+                this.pos.screenState.ticketScreen.totalCount
+            )} / ${this.pos.screenState.ticketScreen.totalCount}`;
+        }
+    }
+    getHasItemsToRefund() {
+        const order = this.getSelectedOrder();
+        if (!order) {
+            return false;
+        }
+        if (this._doesOrderHaveSoleItem(order)) {
+            return true;
+        }
+        const total = Object.values(order.uiState.lineToRefund).reduce((acc, val) => {
+            if (!val.destination_order_uuid) {
+                acc += val.qty;
+            }
+            return acc;
+        }, 0);
+
+        return !this.pos.isProductQtyZero(total);
+    }
+    switchPane() {
+        this.pos.switchPaneTicketScreen();
+    }
+    /**
+     * Find the empty order with the following priority:
+     * - The empty order with the same parter as the provided.
+     * - The first empty order without a partner.
+     * - If no empty order, create a new one.
+     * @param {Object | null} partner
+     * @returns {boolean}
+     */
+    _getEmptyOrder(partner) {
+        let emptyOrderForPartner = null;
+        let emptyOrder = null;
+        for (const order of this.pos.models["pos.order"].filter((order) => !order.finalized)) {
+            if (order.getOrderlines().length === 0 && order.payment_ids.length === 0) {
+                if (order.getPartner() === partner) {
+                    emptyOrderForPartner = order;
+                    break;
+                } else if (!order.getPartner() && emptyOrder === null) {
+                    // If emptyOrderForPartner is not found, we will use the first empty order.
+                    emptyOrder = order;
+                }
+            }
+        }
+        return (
+            emptyOrderForPartner ||
+            emptyOrder ||
+            this.pos.addNewOrder({ partner_id: partner, is_refund: true })
+        );
+    }
+    _doesOrderHaveSoleItem(order) {
+        const orderlines = order.getOrderlines();
+        if (orderlines.length !== 1) {
+            return false;
+        }
+        const theOrderline = orderlines[0];
+        const refundableQty = theOrderline.getQuantity() - theOrderline.refundedQty;
+        return this.pos.isProductQtyZero(refundableQty - 1);
+    }
+    _prepareAutoRefundOnOrder(order) {
+        const selectedOrderlineId = this.getSelectedOrderlineId();
+        const orderline = order.lines.find((line) => line.id == selectedOrderlineId);
+        if (!orderline) {
+            return false;
+        }
+
+        const toRefundDetail = this.getToRefundDetail(orderline);
+        if (this.pos.isProductQtyZero(toRefundDetail.maxQty - 1) && toRefundDetail.qty === 0) {
+            toRefundDetail.qty = 1;
+        }
+        return true;
+    }
+    /**
+     * Returns the corresponding toRefundDetail of the given orderline.
+     * SIDE-EFFECT: Automatically creates a toRefundDetail object for
+     * the given orderline if it doesn't exist and returns it.
+     * @param {models.Orderline} orderline
+     * @returns
+     */
+    getToRefundDetail(orderline) {
+        const lineToRefund = orderline.order_id.uiState.lineToRefund;
+
+        if (orderline.uuid in lineToRefund) {
+            return lineToRefund[orderline.uuid];
+        }
+
+        const newToRefundDetail = new PosOrderLineRefund(
+            {
+                line_uuid: orderline.uuid,
+                qty: 0,
+            },
+            this.pos.models
+        );
+
+        lineToRefund[orderline.uuid] = newToRefundDetail;
+        return newToRefundDetail;
+    }
+    /**
+     * Select the lines from lineToRefund, as they can come from different orders.
+     * Returns only details that:
+     * - The quantity to refund is not zero
+     * - Filtered by partner (optional)
+     * - It's not yet linked to an active order (no destinationOrderUid)
+     *
+     * @param {Object} partner (optional)
+     * @param {Order} order
+     * @returns {Array} refundableDetails
+     */
+    _getRefundableDetails(partner, order) {
+        return Object.values(this.pos.linesToRefund).filter(
+            (refund) =>
+                !this.pos.isProductQtyZero(refund.qty) &&
+                refund.line.order_id.uuid === order.uuid &&
+                (partner ? refund.line.order_id.partner_id?.id === partner.id : true) &&
+                !refund.destinationOrder
+        );
+    }
+
+    async setOrder(order) {
+        if (this.pos.isOrderSyncing(order)) {
+            return;
+        }
+        if (this.pos.config.isShareable) {
+            await this.pos.syncAllOrders();
+        }
+        this.pos.setOrder(order);
+        this.pos.navigateToOrderScreen(order);
+    }
+
+    onClickNewOrder() {
+        const order = this.pos.createNewOrder({
+            preset_id: this.state.selectedPreset || null,
+        });
+        this.pos.selectedOrderUuid = order.uuid;
+        this.pos.addPendingOrder([order.id]);
+        this.pos.navigateToOrderScreen(order);
+    }
+
+    _getFilterOptions() {
+        const orderStates = this._getOrderStates();
+        orderStates.set("SYNCED", { text: _t("Paid") });
+        return orderStates;
+    }
+    /**
+     * @returns {Record<string, { repr: (order: models.Order) => string, displayName: string, modelFields: Array }>}
+     */
+    _getSearchFields() {
+        const fields = {
+            REFERENCE: {
+                repr: (order) => order.getName(),
+                displayName: _t("Reference"),
+                modelFields: ["tracking_number", "floating_order_name"],
+            },
+            RECEIPT_NUMBER: {
+                repr: (order) => order.pos_reference,
+                displayName: _t("Receipt Number"),
+                modelFields: ["pos_reference"],
+            },
+            INVOICE_NUMBER: {
+                repr: (order) => order.invoiceName,
+                displayName: _t("Invoice Number"),
+                modelFields: ["account_move.name"],
+            },
+            DATE: {
+                repr: (order) => this.getDate(order),
+                displayName: _t("Date"),
+                modelFields: ["date_order"],
+                formatSearch: (searchTerm) => {
+                    const includesTime = searchTerm.includes(":");
+                    try {
+                        if (includesTime) {
+                            return serializeDateTime(parseDateTime(searchTerm));
+                        } else {
+                            return serializeDate(parseDate(searchTerm));
+                        }
+                    } catch {
+                        return searchTerm;
+                    }
+                },
+            },
+            PARTNER: {
+                repr: (order) => order.getPartnerName(),
+                displayName: _t("Customer"),
+                modelFields: ["partner_id.complete_name"],
+            },
+        };
+
+        if (this.showCardholderName()) {
+            fields.CARDHOLDER_NAME = {
+                repr: (order) => order.getCardHolderName(),
+                displayName: _t("Cardholder Name"),
+                modelFields: ["payment_ids.cardholder_name"],
+            };
+        }
+
+        return fields;
+    }
+    /**
+     * Maps the order screen params to order status.
+     */
+    _getScreenToStatusMap() {
+        return {
+            ProductScreen: "ONGOING",
+            PaymentScreen: this.pos.config.set_tip_after_payment ? "OPEN" : "PAYMENT",
+            TipScreen: "TIPPING",
+        };
+    }
+    _getOrderStates() {
+        // We need the items to be ordered, therefore, Map is used instead of normal object.
+        const states = new Map();
+        states.set("ACTIVE_ORDERS", { text: _t("Active") });
+        // The spaces are important to make sure the following states
+        // are under the category of `Active`.
+        states.set("ONGOING", { text: _t("Ongoing"), indented: true });
+        if (this.pos.config.set_tip_after_payment) {
+            states.set("OPEN", { text: _t("Open"), indented: true });
+            states.set("TIPPING", { text: _t("Tipping"), indented: true });
+        } else {
+            states.set("PAYMENT", { text: _t("Payment"), indented: true });
+        }
+        states.set("CANCELLED", { text: _t("Cancelled") });
+        return states;
+    }
+    //#region SEARCH SYNCED ORDERS
+    _computeSyncedOrdersDomain() {
+        let { fieldName, searchTerm } = this.state.search;
+        if (!searchTerm) {
+            return [];
+        }
+        const searchField = this._getSearchFields()[fieldName];
+        if (searchField && searchField.modelFields && searchField.modelFields.length > 0) {
+            if (searchField.formatSearch) {
+                searchTerm = searchField.formatSearch(searchTerm);
+            }
+            const domain = [];
+            for (const modelField of searchField.modelFields) {
+                domain.unshift([modelField, "ilike", `%${searchTerm}%`]);
+                if (domain.length > 1) {
+                    domain.unshift("|");
+                }
+            }
+            if (this.state.search.partnerId && this.state.search.fieldName === "PARTNER") {
+                domain.unshift(["partner_id.id", "in", [this.state.search.partnerId]]);
+            }
+            return domain;
+        } else {
+            return [];
+        }
+    }
+    /**
+     * Fetches the done orders from the backend that needs to be shown.
+     * If the order is already in cache, the full information about that
+     * order is not fetched anymore, instead, we use info from cache.
+     */
+    async _updateSyncedOrders() {
+        if (this.state.filter !== "CANCELLED" && this.state.filter !== "SYNCED") {
+            return;
+        }
+        const screenState = this.pos.screenState.ticketScreen;
+        const domain = this._computeSyncedOrdersDomain();
+        const offset = screenState.offsetByDomain[JSON.stringify(domain)] || 0;
+        const config_id = this.pos.config.id;
+        const state_filter = this.state.filter === "CANCELLED" ? "cancelled" : "paid";
+        const { ordersInfo, totalCount } = await this.pos.data.call(
+            "pos.order",
+            "search_order_ids",
+            [],
+            {
+                config_id,
+                domain,
+                limit: this.state.nbrByPage,
+                offset,
+                state_filter,
+            }
+        );
+
+        if (!screenState.offsetByDomain[JSON.stringify(domain)]) {
+            screenState.offsetByDomain[JSON.stringify(domain)] = 0;
+        }
+        screenState.offsetByDomain[JSON.stringify(domain)] += ordersInfo.length;
+        screenState.totalCount = totalCount;
+
+        const idsNotInCacheOrOutdated = ordersInfo
+            .filter((orderInfo) => {
+                const order = this.pos.models["pos.order"].get(orderInfo[0]);
+
+                if (
+                    order &&
+                    parseDateTime(orderInfo[1], { tz: "UTC" }).setZone("local").ts >
+                        order.date_order.ts
+                ) {
+                    return true;
+                }
+
+                return !order;
+            })
+            .map((info) => info[0]);
+
+        if (idsNotInCacheOrOutdated.length > 0) {
+            await this.pos.data.loadServerOrders([
+                ["id", "in", Array.from(new Set(idsNotInCacheOrOutdated))],
+            ]);
+        }
+    }
+    //#endregion
+    getPresetTimeColor(order) {
+        const slot = order.preset_id.currentSlot;
+        const presetTime = order.preset_time;
+        if (!slot) {
+            if (presetTime < DateTime.now()) {
+                return "text-bg-danger";
+            } else {
+                return "text-bg-light text-emphasis";
+            }
+        }
+        if (
+            slot.datetime <= presetTime &&
+            presetTime < slot.datetime.plus({ minutes: order.preset_id.interval_time })
+        ) {
+            return "text-bg-warning";
+        } else if (presetTime < slot.datetime) {
+            return "text-bg-danger";
+        } else {
+            return "text-bg-light text-emphasis";
+        }
+    }
+
+    async settleTips() {
+        const promises = [];
+        for (const order of this.getFilteredOrderList()) {
+            const amount = this.env.utils.parseValidFloat(order.uiState.TipScreen.inputTipAmount);
+
+            if (!order.isSynced) {
+                logPosMessage(
+                    "TicketScreen",
+                    "settleTips",
+                    `${order.name} is not yet sync. Sync it to server before setting a tip.`
+                );
+                continue;
+            }
+
+            order.state = "draft";
+            this.pos.selectedOrderUuid = order.uuid;
+            await this.pos.setTip(amount);
+            order.state = "paid";
+            order.uiState.screen_data.value = { name: "", props: {} };
+
+            const serializedTipLine = order.getSelectedOrderline().serializeForORM();
+            order.getSelectedOrderline().delete();
+            delete serializedTipLine["record_dependencies"];
+            delete serializedTipLine["relations_uuid_mapping"];
+
+            promises.push(
+                new Promise((resolve) => {
+                    const fn = async () => {
+                        const tipLine = await this.pos.data.create("pos.order.line", [
+                            serializedTipLine,
+                        ]);
+                        const state = await this.pos.data.ormWrite("pos.order", [order.id], {
+                            is_tipped: true,
+                            tip_amount: tipLine[0].price_unit,
+                        });
+
+                        if (state) {
+                            order.update({
+                                is_tipped: true,
+                                tip_amount: tipLine[0].price_unit,
+                            });
+                        }
+                        resolve();
+                    };
+                    fn();
+                })
+            );
+        }
+
+        await Promise.all(promises);
+    }
+
+    getCurrentTimePreset(order) {
+        return this.orderTimers[order.uuid] ?? 0;
+    }
+
+    getMaxTimePreset(order) {
+        return order.preset_id?.interval_time;
+    }
+}
+
+registry.category("pos_pages").add("TicketScreen", {
+    name: "TicketScreen",
+    component: TicketScreen,
+    route: `/pos/ui/${odoo.pos_config_id}/ticket`,
+    params: {},
+});

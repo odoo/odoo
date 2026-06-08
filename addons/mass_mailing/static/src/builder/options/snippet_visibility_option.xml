@@ -1,0 +1,29 @@
+<templates>
+    <t t-name="mass_mailing.VisibilityOption">
+        <BuilderRow label.translate="Visibility">
+            <BuilderSelect action="'dataAttributeChangeAction'" actionParam="'filterDomain'">
+                <BuilderSelectItem actionValue="''">Always Visible</BuilderSelectItem>
+                <BuilderSelectItem actionValue="this.stringifiedDomain" id="'show_domain_selector'">Conditionally</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderContext t-if="this.isActiveItem('show_domain_selector')">
+            <BuilderRow level="1" label.translate="Domain" extraLabelClass="'align-self-end'">
+                <div t-if="this.state.facets?.length" class="d-flex flex-column">
+                    <div class="d-inline-flex align-items-center pt-1" t-foreach="this.state.facets" t-as="facet" t-key="facet_index">
+                        <span class="fa fa-filter pe-1"/>
+                        <span t-out="facet"/>
+                    </div>
+                </div>
+                <button t-else="" class="btn btn-secondary me-auto mt-1" t-on-click="this.onClickEditDomain" >
+                    Edit Conditions
+                </button>
+            </BuilderRow>
+            <!-- Trick to have the content of two rows on the same level -->
+            <BuilderRow t-if="this.state.facets?.length" label.translate=" ">
+                <button class="btn btn-secondary me-auto mt-1" t-on-click="this.onClickEditDomain">
+                    Add Conditions
+                </button>
+            </BuilderRow>
+        </BuilderContext>
+    </t>
+</templates>

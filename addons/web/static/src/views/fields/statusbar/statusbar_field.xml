@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.StatusBarField.Dropdown">
+        <t t-foreach="items" t-as="item" t-key="item.value">
+            <DropdownItem
+                class="this.getDropdownItemClassNames(item)"
+                onSelected="() => this.selectItem(item)"
+            >
+                <span t-out="item.label" />
+            </DropdownItem>
+        </t>
+    </t>
+
+    <t t-name="web.StatusBarField">
+        <div class="o_statusbar_status" t-custom-ref="root" role="radiogroup" aria-label="Statusbar">
+            <Dropdown position="'bottom-end'">
+                <button
+                    t-custom-ref="after"
+                    type="button"
+                    class="btn btn-secondary dropdown-toggle o_arrow_button o_first"
+                    t-att-disabled="this.props.isDisabled"
+                    aria-label="More..."
+                >
+                    ...
+                </button>
+                <t t-set-slot="content">
+                    <t t-call="web.StatusBarField.Dropdown" items="this.items.after"/>
+                </t>
+            </Dropdown>
+            <t t-foreach="this.items.inline" t-as="item" t-key="item.value">
+                <button
+                    type="button"
+                    class="btn btn-secondary o_arrow_button"
+                    t-att-class="{
+                        o_first: item_first,
+                        o_arrow_button_current: item.isSelected,
+                        o_last: item_last,
+                    }"
+                    t-att-disabled="this.props.isDisabled || item.isSelected"
+                    role="radio"
+                    t-att-aria-checked="item.isSelected.toString()"
+                    t-att-aria-current="item.isSelected and 'step'"
+                    t-att-data-value="item.value"
+                    t-out="item.label"
+                    t-on-click="() => this.selectItem(item)"
+                />
+            </t>
+            <Dropdown position="'bottom-start'">
+                <button
+                    t-custom-ref="before"
+                    type="button"
+                    class="btn btn-secondary dropdown-toggle o_arrow_button o_last"
+                    t-att-disabled="this.props.isDisabled"
+                    aria-label="More..."
+                >
+                    ...
+                </button>
+                <t t-set-slot="content">
+                    <t t-call="web.StatusBarField.Dropdown" items="this.items.before"/>
+                </t>
+            </Dropdown>
+            <Dropdown position="'bottom-end'">
+                <t t-set="allItems" t-value="this.getAllItems()" />
+                <t t-set="selectedIndex" t-value="allItems.findIndex((item) => item.isSelected)" />
+                <button
+                    t-custom-ref="dropdown" 
+                    type="button" 
+                    class="btn btn-secondary dropdown-toggle"
+                    t-att-class="{'o_arrow_button': this.env.isSmall, 'o_last': selectedIndex === 0 , 'o_first': selectedIndex === allItems.length - 1}"
+                    t-att-disabled="this.props.isDisabled"
+                >
+                    <t t-out="this.getCurrentLabel()" />
+                </button>
+                <t t-set-slot="content">
+                    <t t-call="web.StatusBarField.Dropdown" items="this.getAllItems()"/>
+                </t>
+            </Dropdown>
+        </div>
+    </t>
+</templates>

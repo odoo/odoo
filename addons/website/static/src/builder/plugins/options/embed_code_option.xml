@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.EmbedCodeOption">
+    <BuilderRow label.translate="Code">
+        <BuilderButton action="'editCode'" preview="false"
+                type="'success'"
+                className="'o_we_edit_code o_we_no_toggle'"
+                title.translate="Edit embedded code">
+            Edit
+        </BuilderButton>
+    </BuilderRow>
+    <BuilderRow label.translate="Alignment">
+        <BuilderButtonGroup>
+            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" classAction="'text-start'" icon="'fa-fw fa-align-left'"/>
+            <BuilderButton title.translate="Center" classAction="'text-center'" icon="'fa-fw fa-align-center'"/>
+            <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" classAction="'text-end'" icon="'fa-fw fa-align-right'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <embed_code_option template="website.EmbedCodeOption" selector=".s_embed_code"/>
+    </xpath>
+</t>
+</templates>

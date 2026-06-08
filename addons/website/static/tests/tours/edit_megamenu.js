@@ -1,0 +1,442 @@
+import { registry } from "@web/core/registry";
+import {
+    selectHeader,
+    clickOnEditAndWaitEditMode,
+    changeOptionInPopover,
+    clickOnExtraMenuItem,
+    clickOnSave,
+    openLinkPopup,
+    clickToolbarButton,
+    unfoldOptionsGroup,
+    waitForEditMode,
+} from "@website/js/tours/tour_utils";
+import { addMegaMenu, simulateLotOfMenusAsOnRunbot } from "./edit_menus";
+
+const toggleMegaMenu = {
+    content: "Toggles the mega menu.",
+    trigger: ":iframe .top_menu .nav-item a.o_mega_menu_toggle",
+    async run({ click, waitUntil }) {
+        // When the mega menu toggle is inside the extra menu items, the mega menu
+        // content is already visible via CSS (display:block) without needing a click.
+        // The toggle also has pointer-events:none in that context.
+        if (this.anchor.closest(".o_extra_menu_items")) {
+            return;
+        }
+        await click();
+        await waitUntil(() => this.anchor.getAttribute("aria-expanded") === "true", {
+            timeout: 3000,
+        });
+    },
+};
+
+registry.category("web_tour.tours").add("edit_megamenu", {
+    steps: () => [
+        waitForEditMode,
+        // Add a megamenu item to the top menu.
+        {
+            content: "Click on a menu item",
+            trigger: ":iframe .top_menu .nav-item .nav-link [data-oe-model='website.menu']",
+            run: "click",
+        },
+        {
+            content: "Click on 'Link' to open Link Dialog",
+            trigger: ".o-we-linkpopover .js_edit_menu",
+            run: "click",
+        },
+        ...simulateLotOfMenusAsOnRunbot,
+        ...addMegaMenu("Megaaaaa!"),
+        {
+            trigger: ".o_builder_sidebar_open",
+        },
+        {
+            trigger: ".o_builder_open .o_website_preview:not(.o_is_blocked)",
+        },
+        // Edit a menu item
+        clickOnExtraMenuItem({}, true),
+        toggleMegaMenu,
+        {
+            content: "Select the last menu link of the first column",
+            trigger: ":iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :nth-child(6)", // 6th is the last one
+            run: "click",
+        },
+        {
+            content: "Hit the delete button to remove the menu link",
+            trigger: ".o_overlay_options .oe_snippet_remove",
+            run: "click",
+        },
+        {
+            content: "Check that the last menu link was deleted",
+            trigger:
+                ":iframe .s_mega_menu_odoo_menu .row > div:first-child .nav:not(:has(:nth-child(6)))",
+        },
+        {
+            content: "Click on the first title item.",
+            trigger: ":iframe .o_mega_menu h4",
+            run: "click",
+        },
+        {
+            content: "Press enter.",
+            trigger: ":iframe .o_mega_menu h4",
+            run() {
+                this.anchor.dispatchEvent(
+                    new window.InputEvent("input", { bubbles: true, inputType: "insertParagraph" })
+                );
+            },
+        },
+        {
+            content: "The menu should still be visible. Edit a menu item.",
+            trigger: ":iframe .o_mega_menu h4",
+            // The content is removed in the previous step so it's now invisible.
+            run: "editor New Menu Item",
+        },
+        {
+            // If this step fails, it means that a patch inside bootstrap was lost.
+            content: "Press the 'down arrow' key.",
+            trigger: ":iframe .o_mega_menu h4",
+            run: "press ArrowDown",
+        },
+        ...clickOnSave(),
+        clickOnExtraMenuItem({}, true),
+        toggleMegaMenu,
+        {
+            content: "The menu item should have been renamed.",
+            trigger: ':iframe .o_mega_menu h4:contains("New Menu Item")',
+        },
+    ],
+});
+registry.category("web_tour.tours").add("megamenu_active_nav_link", {
+    steps: () => [
+        waitForEditMode,
+        // Add a megamenu item to the top menu.
+        ...openLinkPopup({
+            trigger: ":iframe .top_menu .nav-item a:contains('Home')",
+            label: "Home",
+        }),
+        {
+            content: "Click on 'Link' to open Link Dialog",
+            trigger: ".o-we-linkpopover button.js_edit_menu",
+            run: "click",
+        },
+        ...addMegaMenu("MegaTron"),
+        clickOnExtraMenuItem({}, true),
+        toggleMegaMenu,
+        ...openLinkPopup({
+            trigger:
+                ":iframe .o_extra_menu_items:has(a.show) .o_mega_menu .nav-link:contains(Laptops)",
+            label: "Home",
+            url: "#",
+            focusNodeIndex: 0,
+            runClick: false,
+        }),
+        {
+            content: "Click on 'Edit Link'",
+            trigger: ".o-we-linkpopover a.o_we_edit_link",
+            run: "click",
+        },
+        {
+            content: "Wait for popover to switch to edit mode",
+            trigger: ".o-we-linkpopover:not(:has(.o_we_edit_link))",
+        },
+        {
+            content: "Change the link",
+            trigger: ".o-we-linkpopover input.o_we_href_input_link",
+            run: "edit /new_page",
+        },
+        ...clickOnSave(),
+        clickOnExtraMenuItem({}, true),
+        {
+            content: "Click on the first menu link of the first column",
+            trigger: ":iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :nth-child(1)",
+            run: "click",
+        },
+        {
+            content: "Check if the new mega menu is active",
+            trigger: `:iframe .top_menu:has(.nav-item a.o_mega_menu_toggle.active:contains("MegaTron"))`,
+        },
+    ],
+});
+registry.category("web_tour.tours").add("edit_megamenu_big_icons_subtitles", {
+    steps: () => [
+        waitForEditMode,
+        // Add a megamenu item to the top menu.
+        ...openLinkPopup({
+            trigger: ":iframe .top_menu .nav-item a",
+            label: "Home",
+        }),
+        {
+            content: "Click on 'Link' to open Link Dialog",
+            trigger: ".o-we-linkpopover .js_edit_menu",
+            run: "click",
+        },
+        ...addMegaMenu("Megaaaaa2!"),
+        // Edit a menu item
+        clickOnExtraMenuItem({}, true),
+        toggleMegaMenu,
+        {
+            content: "Select the first menu link of the first column",
+            trigger: ":iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :first-child",
+            run: "click",
+        },
+        // Change MegaMenu template
+        ...unfoldOptionsGroup("Mega Menu"),
+        ...changeOptionInPopover("Mega Menu", "Template", "Big Icons Subtitles"),
+        ...clickToolbarButton(
+            "h4 of first menu link of the first column",
+            ".s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child h4",
+            "Bold (Ctrl + B)"
+        ),
+        ...clickOnSave(),
+        clickOnExtraMenuItem({}, true),
+        toggleMegaMenu,
+        {
+            content: "The menu item should only convert selected text to Bold.",
+            trigger:
+                ":iframe .s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child span:not(:has(strong))",
+        },
+    ],
+});
+
+const createMegaMenu = function (name) {
+    return [
+        {
+            content: "Create a new mega menu item",
+            trigger: ".modal-body a:eq(1):contains(add mega menu item)",
+            run: "click",
+        },
+        {
+            content: "Set the mega menu item name to " + name,
+            trigger: ".modal:contains(mega menu item) .modal-dialog .o_website_dialog input:eq(0)",
+            run: `edit ${name}`,
+        },
+        {
+            trigger:
+                ".modal:contains(mega menu item) .modal-footer .btn-primary:contains(continue)",
+            run: "click",
+        },
+        {
+            trigger: `.modal:contains(Edit menu) .oe_menu_editor li:last:contains(${name})`,
+        },
+    ];
+};
+
+const createDropdown = function (name) {
+    return [
+        {
+            content: "Create a new menu item for the dropdown",
+            trigger: ".modal:contains(edit menu) .modal-body a:eq(0):contains(add menu item)",
+            run: "click",
+        },
+        {
+            content: "Set the dropdown name to " + name,
+            trigger: ".modal:contains(menu item) .modal-dialog .o_website_dialog input:eq(0)",
+            run: `edit ${name}`,
+        },
+        {
+            trigger: ".modal:contains(menu item) .modal-dialog .o_website_dialog input:eq(1)",
+            run: "edit /",
+        },
+        {
+            trigger: ".modal:contains(menu item) .modal-footer .btn-primary:contains(continue)",
+            run: "click",
+        },
+        {
+            trigger: `.modal:contains(Edit menu) .oe_menu_editor li:last:contains(${name})`,
+        },
+        {
+            content: "Create a new menu item for the dropdown item",
+            trigger: ".modal:contains(edit menu) .modal-body a:eq(0):contains(add menu item)",
+            run: "click",
+        },
+        {
+            trigger: ".modal:contains(menu item) .modal-dialog .o_website_dialog input:eq(0)",
+            run: `edit ${name} item`,
+        },
+        {
+            trigger: ".modal:contains(menu item) .modal-dialog .o_website_dialog input:eq(1)",
+            run: "edit /",
+        },
+        {
+            trigger: ".modal:contains(menu item) .modal-footer .btn-primary:contains(continue)",
+            run: "click",
+        },
+        {
+            content: "Move the dropdown item into the dropdown",
+            trigger: `.oe_menu_editor li:last:contains(${name} item) .oi-draggable`,
+            run(helpers) {
+                return helpers.drag_and_drop('.oe_menu_editor li:contains("' + name + '")', {
+                    position: {
+                        left: 50,
+                        top: 5,
+                    },
+                    relative: true,
+                });
+            },
+        },
+        {
+            trigger: `.modal:contains(menu item) .oe_menu_editor li:has(span:text(${name})):has(li:text(${name} item))`,
+        },
+    ];
+};
+
+const testHeaderNavVisibility = function (elementsVisibility) {
+    const test = [];
+    for (const [menu, visibility] of Object.entries(elementsVisibility)) {
+        test.push({
+            trigger: `:iframe .top_menu li:contains('${menu}')${
+                visibility ? ":visible" : ":not(:visible)"
+            }`,
+        });
+    }
+    return test;
+};
+
+const openMenu = () => ({
+    content: "Open Menu",
+    trigger: ":iframe body[is-ready=true] span.navbar-toggler-icon",
+    run: "click",
+});
+
+registry.category("web_tour.tours").add("edit_megamenu_visibility", {
+    steps: () => [
+        waitForEditMode,
+        {
+            content: "Click on a menu item",
+            trigger: ":iframe .top_menu .nav-item a span",
+            run: "click",
+        },
+        {
+            content: "Click on Edit Menu",
+            trigger: ".o-we-linkpopover button.js_edit_menu",
+            run: "click",
+        },
+        {
+            trigger: ".o_website_dialog:visible",
+        },
+        ...createMegaMenu("MM des"),
+        ...createDropdown("Drop 1"),
+        ...createMegaMenu("MM mob"),
+        ...createDropdown("Drop 2"),
+        ...createMegaMenu("MM cond"),
+        {
+            trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(save)",
+            run: "click",
+        },
+        selectHeader(),
+
+        ...changeOptionInPopover("Header", "Template", "Hamburger Menu"),
+        {
+            trigger: ":iframe span.navbar-toggler-icon",
+            timeout: 30000,
+        },
+
+        openMenu(),
+        // Mega Menu 1: Desktop Only
+        {
+            content: "Open the first mega menu",
+            trigger: ":iframe header#top span:contains('MM des')",
+            run: "click",
+        },
+        {
+            content: "Click on the first mega menu content",
+            trigger: ":iframe header#top div.o_mega_menu.show section",
+            run: "click",
+        },
+        {
+            trigger:
+                '.options-container [data-label="Visibility"] button[data-action-param="no_mobile"]',
+            run: "click",
+        },
+        {
+            trigger:
+                '.options-container [data-label="Visibility"] button[data-action-param="no_mobile"].active',
+        },
+        // Mega Menu 2: Mobile Only
+        {
+            content: "Open the second mega menu",
+            trigger: ":iframe header#top span:contains('MM mob')",
+            run: "click",
+        },
+        {
+            content: "Click on the second mega menu content",
+            trigger: ":iframe header#top div.o_mega_menu.show section",
+            run: "click",
+        },
+        {
+            trigger:
+                '.options-container [data-label="Visibility"] button[data-action-param="no_desktop"]',
+            run: "click",
+        },
+        {
+            content: "As we are in desktop mode, block is hidden",
+            trigger: ".o_we_invisible_entry:contains(block)",
+            run: "click",
+        },
+        {
+            trigger:
+                '.options-container [data-label="Visibility"] button[data-action-param="no_desktop"].active',
+        },
+        // Mega Menu 3: Logged Out Only
+        {
+            content: "Open the third mega menu",
+            trigger: ":iframe header#top span:contains('MM cond')",
+            run: "click",
+        },
+        {
+            content: "Click on the third mega menu content",
+            trigger: ":iframe header#top div.o_mega_menu.show section",
+            run: "click",
+        },
+        {
+            trigger: "#customize-tab.active:contains(style)",
+        },
+        ...changeOptionInPopover("Block", "Visibility", "Conditionally"),
+        ...changeOptionInPopover("Block", "Users", "Visible for Logged Out"),
+        ...clickOnSave(),
+        // Check desktop visibility while NOT editing
+        openMenu(),
+        ...testHeaderNavVisibility({
+            "MM des": true,
+            "Drop 1": true,
+            "MM mob": false,
+            "Drop 2": true,
+            "MM cond": false,
+        }),
+        {
+            content: "Switch to mobile view",
+            trigger: ".o_mobile_preview > a",
+            run: "click",
+        },
+        openMenu(),
+        // Check mobile visibility while NOT editing
+        ...testHeaderNavVisibility({
+            "MM des": false,
+            "Drop 1": true,
+            "MM mob": true,
+            "Drop 2": true,
+            "MM cond": false,
+        }),
+        ...clickOnEditAndWaitEditMode(),
+        // Check mobile visibility while editing
+        ...testHeaderNavVisibility({
+            "MM des": true,
+            "Drop 1": true,
+            "MM mob": true,
+            "Drop 2": true,
+            "MM cond": true,
+        }),
+        {
+            content: "Switch to desktop view",
+            trigger: "button:has(> span.fa-mobile)",
+            run: "click",
+        },
+        // Check desktop visibility while editing
+        openMenu(),
+        ...testHeaderNavVisibility({
+            "MM des": true,
+            "Drop 1": true,
+            "MM mob": true,
+            "Drop 2": true,
+            "MM cond": true,
+        }),
+    ],
+});

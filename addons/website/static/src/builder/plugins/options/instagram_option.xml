@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.InstagramOption">
+    <BuilderRow label.translate="Instagram Page" tooltip.translate="Your Instagram page must be public to be integrated into an Odoo website.">
+        <BuilderTextInput action="'instagramPage'" placeholder.translate="Your Instagram account" preview="false" prefix="'@'"/>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <instagram_option template="website.InstagramOption" selector=".s_instagram_page"/>
+    </xpath>
+</t>
+
+</templates>

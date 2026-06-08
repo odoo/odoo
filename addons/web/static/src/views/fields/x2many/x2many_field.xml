@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.X2ManyField">
+        <div t-att-class="this.className">
+            <div class="o_x2m_control_panel d-empty-none mt-1 mb-4">
+                <t t-if="this.displayControlPanelButtons">
+                    <div class="o_cp_buttons gap-1" role="toolbar" aria-label="Control panel buttons" t-custom-ref="buttons">
+                        <t t-foreach="this.controls" t-as="control" t-key="control_index">
+                            <button
+                                t-if="control.type === 'create' and !this.evalInvisible(control.invisible)"
+                                type="button"
+                                class="btn btn-secondary"
+                                t-att-class="control.class"
+                                t-on-click.stop.prevent="() => this.onAdd({ context: control.context })"
+                            >
+                                <t t-out="control.string"/>
+                            </button>
+                            <ViewButton
+                                t-if="control.type === 'button' and !this.evalInvisible(control.invisible)"
+                                className="`${control.className}`"
+                                clickParams="control.clickParams"
+                                icon="control.icon"
+                                record="this.props.record.data[this.props.name]"
+                                string="control.string"
+                                title="control.title"
+                            />
+                        </t>
+                    </div>
+                </t>
+                <div t-if="this.props.record.data[this.props.name].count > this.props.record.data[this.props.name].limit" class="o_cp_pager" role="search">
+                    <Pager t-props="this.pagerProps"/>
+                </div>
+            </div>
+            <ListRenderer t-if="this.props.viewMode === 'list'" t-props="this.rendererProps" />
+            <KanbanRenderer t-elif="this.props.viewMode" t-props="this.rendererProps" />
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="web.FloatTimeField">
+        <time t-if="this.props.readonly" t-out="this.formattedValue" />
+        <input t-else="" 
+            t-att-id="this.props.id" 
+            t-att-type="this.props.inputType" 
+            t-custom-ref="numpadDecimal" 
+            t-on-focus="() => this.openPopover()"
+            t-on-focusout="() => this.closePopover()"
+            t-on-input="(ev) => this.onValueChange(ev)"
+            class="o_input" 
+            autocomplete="off" />
+    </t>
+    
+    <t t-name="web.DurationPopover">
+        <div class="o_duration_popover p-1">
+            <time t-out="this.props.state.formattedResult" />
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- https://stripe.com/payments/payment-methods-guide -->
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_ach_direct_debit" model="payment.method">
+        <field name="name">ACH Direct Debit</field>
+        <field name="code">ach_direct_debit</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/ach_direct_debit.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.pr'), ref('base.us')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.USD')])]"/>
+    </record>
+
+    <record id="payment_method_affirm" model="payment.method">
+        <field name="name">Affirm</field>
+        <field name="code">affirm</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/affirm.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">full_only</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.us'), ref('base.ca')])]"/>
+        <field
+            name="supported_currency_ids" eval="[Command.set([ref('base.CAD'), ref('base.USD')])]"
+        />
+    </record>
+
+    <record id="payment_method_afterpay" model="payment.method">
+        <field name="name">Afterpay</field>
+        <field name="code">afterpay</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/afterpay.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([ref('base.au'), ref('base.nz'), ref('base.us'), ref('base.ca')])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.CAD'), ref('base.USD'), ref('base.AUD'), ref('base.NZD')])]"
+        />
+    </record>
+
+    <record id="payment_method_alipay" model="payment.method">
+        <field name="name">Alipay</field>
+        <field name="code">alipay</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/alipay.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.AUD'),
+                        ref('base.CAD'),
+                        ref('base.CNY'),
+                        ref('base.EUR'),
+                        ref('base.GBP'),
+                        ref('base.HKD'),
+                        ref('base.JPY'),
+                        ref('base.MYR'),
+                        ref('base.NZD'),
+                        ref('base.SGD'),
+                        ref('base.USD'),
+                ])]"
+        />
+    </record>
+
+    <record id="payment_method_alma" model="payment.method">
+        <field name="name">Alma</field>
+        <field name="code">alma</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/alma.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.be'),
+                        ref('base.es'),
+                        ref('base.fr'),
+                        ref('base.it'),
+                        ref('base.lu'),
+                        ref('base.nl'),
+                ])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
+
+    <record id="payment_method_amazon_pay" model="payment.method">
+        <field name="name">Amazon Pay</field>
+        <field name="code">amazon_pay</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/amazon_pay.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.AUD'),
+                        ref('base.CHF'),
+                        ref('base.DKK'),
+                        ref('base.EUR'),
+                        ref('base.GBP'),
+                        ref('base.HKD'),
+                        ref('base.JPY'),
+                        ref('base.NOK'),
+                        ref('base.NZD'),
+                        ref('base.SEK'),
+                        ref('base.USD'),
+                        ref('base.ZAR'),
+                ])]"
+        />
+    </record>
+
+    <record id="payment_method_bacs_direct_debit" model="payment.method">
+        <field name="name">BACS Direct Debit</field>
+        <field name="code">bacs_direct_debit</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/bacs_direct_debit.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.uk')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.GBP')])]"/>
+    </record>
+
+    <record id="payment_method_bancontact" model="payment.method">
+        <field name="name">Bancontact</field>
+        <field name="code">bancontact</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/bancontact.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.be')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
+
+    <record id="payment_method_becs_direct_debit" model="payment.method">
+        <field name="name">BECS Direct Debit</field>
+        <field name="code">becs_direct_debit</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/becs_direct_debit.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.au')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.AUD')])]"/>
+    </record>
+
+    <record id="payment_method_boleto" model="payment.method">
+        <field name="name">Boleto</field>
+        <field name="code">boleto</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/boleto.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.br')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BRL')])]"/>
+    </record>
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="sequence">10</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+    </record>
+
+    <record id="payment_method_cash_app_pay" model="payment.method">
+        <field name="name">Cash App Pay</field>
+        <field name="code">cash_app_pay</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/cash_app_pay.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.us')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.USD')])]"/>
+    </record>
+
+    <record id="payment_method_clearpay" model="payment.method">
+        <field name="name">Clearpay</field>
+        <field name="code">clearpay</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/clearpay.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.uk')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.GBP')])]"/>
+    </record>
+
+    <record id="payment_method_eps" model="payment.method">
+        <field name="name">EPS</field>
+        <field name="code">eps</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/eps.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.at')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
+
+    <record id="payment_method_fpx" model="payment.method">
+        <field name="name">FPX</field>
+        <field name="code">fpx</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/fpx.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.my')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.MYR')])]"/>
+    </record>
+
+    <record id="payment_method_grabpay" model="payment.method">
+        <field name="name">GrabPay</field>
+        <field name="code">grabpay</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/grabpay.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.my'), ref('base.sg')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.SGD'), ref('base.MYR')])]"/>
+    </record>
+
+    <record id="payment_method_ideal" model="payment.method">
+        <field name="name">iDEAL</field>
+        <field name="code">ideal</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/ideal_wero.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.nl')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
+
+    <record id="payment_method_klarna" model="payment.method">
+        <field name="name">Klarna</field>
+        <field name="code">klarna</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/klarna.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.au'),
+                        ref('base.at'),
+                        ref('base.be'),
+                        ref('base.ca'),
+                        ref('base.cz'),
+                        ref('base.dk'),
+                        ref('base.fi'),
+                        ref('base.fr'),
+                        ref('base.de'),
+                        ref('base.gr'),
+                        ref('base.ie'),
+                        ref('base.it'),
+                        ref('base.nl'),
+                        ref('base.nz'),
+                        ref('base.no'),
+                        ref('base.pl'),
+                        ref('base.pt'),
+                        ref('base.es'),
+                        ref('base.se'),
+                        ref('base.ch'),
+                        ref('base.uk'),
+                        ref('base.us'),
+                ])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.AUD'),
+                        ref('base.EUR'),
+                        ref('base.CAD'),
+                        ref('base.CZK'),
+                        ref('base.DKK'),
+                        ref('base.NZD'),
+                        ref('base.NOK'),
+                        ref('base.PLN'),
+                        ref('base.RON'),
+                        ref('base.SEK'),
+                        ref('base.CHF'),
+                        ref('base.GBP'),
+                        ref('base.USD'),
+                ])]"
+        />
+    </record>
+
+    <record id="payment_method_mobile_pay" model="payment.method">
+        <field name="name">MobilePay</field>
+        <field name="code">mobile_pay</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/mobile_pay.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.dk'), ref('base.fi')])]"/>
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.EUR'), ref('base.DKK'), ref('base.SEK'), ref('base.NOK')])]"
+        />
+    </record>
+
+    <record id="payment_method_multibanco" model="payment.method">
+        <field name="name">Multibanco</field>
+        <field name="code">multibanco</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/multibanco.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.pt')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
+
+    <record id="payment_method_p24" model="payment.method">
+        <field name="name">P24</field>
+        <field name="code">p24</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/p24.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.pl')])]"/>
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([ref('base.EUR'), ref('base.PLN')])]"
+        />
+    </record>
+
+    <record id="payment_method_paynow" model="payment.method">
+        <field name="name">PayNow</field>
+        <field name="code">paynow</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/paynow.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.sg')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.SGD')])]"/>
+    </record>
+
+    <record id="payment_method_paypal" model="payment.method">
+        <field name="name">Paypal</field>
+        <field name="code">paypal</field>
+        <field name="sequence">20</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/paypal.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.AUD'),
+                        ref('base.CAD'),
+                        ref('base.CHF'),
+                        ref('base.CZK'),
+                        ref('base.DKK'),
+                        ref('base.EUR'),
+                        ref('base.GBP'),
+                        ref('base.HKD'),
+                        ref('base.NOK'),
+                        ref('base.NZD'),
+                        ref('base.PLN'),
+                        ref('base.SEK'),
+                        ref('base.SGD'),
+                        ref('base.USD'),
+                ])]"
+        />
+    </record>
+
+    <record id="payment_method_pix" model="payment.method">
+        <field name="name">Pix</field>
+        <field name="code">pix</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/pix.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.br')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BRL')])]"/>
+    </record>
+
+    <record id="payment_method_promptpay" model="payment.method">
+        <field name="name">Prompt Pay</field>
+        <field name="code">promptpay</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/promptpay.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.th')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.THB')])]"/>
+    </record>
+
+    <record id="payment_method_revolut_pay" model="payment.method">
+        <field name="name">Revolut Pay</field>
+        <field name="code">revolut_pay</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/revolut_pay.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_manual_capture">full_only</field>
+        <field name="support_refund">partial</field>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.at'),
+                        ref('base.be'),
+                        ref('base.bg'),
+                        ref('base.cy'),
+                        ref('base.cz'),
+                        ref('base.de'),
+                        ref('base.dk'),
+                        ref('base.ee'),
+                        ref('base.es'),
+                        ref('base.fi'),
+                        ref('base.fr'),
+                        ref('base.gr'),
+                        ref('base.hr'),
+                        ref('base.hu'),
+                        ref('base.ie'),
+                        ref('base.it'),
+                        ref('base.li'),
+                        ref('base.lt'),
+                        ref('base.lu'),
+                        ref('base.lv'),
+                        ref('base.mt'),
+                        ref('base.nl'),
+                        ref('base.no'),
+                        ref('base.pl'),
+                        ref('base.pt'),
+                        ref('base.ro'),
+                        ref('base.se'),
+                        ref('base.si'),
+                        ref('base.sk'),
+                        ref('base.uk'),
+                ])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.DKK'),
+                        ref('base.EUR'),
+                        ref('base.GBP'),
+                        ref('base.HUF'),
+                        ref('base.PLN'),
+                        ref('base.RON'),
+                ])]"
+        />
+    </record>
+
+    <record id="payment_method_satispay" model="payment.method">
+        <field name="name">Satispay</field>
+        <field name="code">satispay</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/satispay.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.it')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
+
+    <record id="payment_method_sepa_direct_debit" model="payment.method">
+        <field name="name">SEPA Direct Debit</field>
+        <field name="code">sepa_direct_debit</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/sepa.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.at'),
+                        ref('base.be'),
+                        ref('base.bg'),
+                        ref('base.cy'),
+                        ref('base.cz'),
+                        ref('base.de'),
+                        ref('base.dk'),
+                        ref('base.ee'),
+                        ref('base.es'),
+                        ref('base.fi'),
+                        ref('base.fr'),
+                        ref('base.gr'),
+                        ref('base.hr'),
+                        ref('base.hu'),
+                        ref('base.ie'),
+                        ref('base.is'),
+                        ref('base.it'),
+                        ref('base.lt'),
+                        ref('base.lu'),
+                        ref('base.lv'),
+                        ref('base.mt'),
+                        ref('base.nl'),
+                        ref('base.no'),
+                        ref('base.pl'),
+                        ref('base.pt'),
+                        ref('base.ro'),
+                        ref('base.se'),
+                        ref('base.si'),
+                        ref('base.sk'),
+                        ref('base.uk'),
+                ])]"
+        />
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
+
+    <record id="payment_method_swish" model="payment.method">
+        <field name="name">Swish</field>
+        <field name="code">swish</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/swish.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.se')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.SEK')])]"/>
+    </record>
+
+    <record id="payment_method_twint" model="payment.method">
+        <field name="name">Twint</field>
+        <field name="code">twint</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/twint.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.ch')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.CHF')])]"/>
+    </record>
+
+    <record id="payment_method_upi" model="payment.method">
+        <field name="name">UPI</field>
+        <field name="code">upi</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/upi.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.in')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.INR')])]"/>
+    </record>
+
+    <!-- Generic payment method representing an unknown payment method -->
+    <record id="payment_method_unknown" model="payment.method">
+        <field name="name">Express Checkout</field>
+        <field name="code">unknown</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/unknown.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_express_checkout">True</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+    </record>
+
+    <record id="payment_method_wechat_pay" model="payment.method">
+        <field name="name">WeChat Pay</field>
+        <field name="code">wechat_pay</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/wechat_pay.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.AUD'),
+                        ref('base.CAD'),
+                        ref('base.CHF'),
+                        ref('base.CNY'),
+                        ref('base.DKK'),
+                        ref('base.EUR'),
+                        ref('base.GBP'),
+                        ref('base.HKD'),
+                        ref('base.JPY'),
+                        ref('base.NOK'),
+                        ref('base.SEK'),
+                        ref('base.SGD'),
+                        ref('base.USD'),
+                ])]"/>
+    </record>
+
+    <record id="payment_method_zip" model="payment.method">
+        <field name="name">Zip</field>
+        <field name="code">zip</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/zip.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.au'), ref('base.us')])]"/>
+        <field
+            name="supported_currency_ids" eval="[Command.set([ref('base.AUD'), ref('base.USD')])]"
+        />
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS === -->
+    <record id="payment_method_amex" model="payment.method">
+        <field name="name">American Express</field>
+        <field name="code">amex</field>
+        <field name="primary_payment_method_id" eval="ref('payment_stripe.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/amex.png"/>
+    </record>
+
+    <record id="payment_method_apple_pay" model="payment.method">
+        <field name="name">Apple Pay</field>
+        <field name="code">apple_pay</field>
+        <field name="primary_payment_method_id" eval="ref('payment_stripe.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/apple_pay.png"/>
+    </record>
+
+    <record id="payment_method_cartes_bancaires" model="payment.method">
+        <field name="name">Cartes Bancaires</field>
+        <field name="code">cartes_bancaires</field>
+        <field name="primary_payment_method_id" eval="ref('payment_stripe.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+    </record>
+
+    <record id="payment_method_diners" model="payment.method">
+        <field name="name">Diners Club International</field>
+        <field name="code">diners</field>
+        <field name="primary_payment_method_id" eval="ref('payment_stripe.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/diners.png"/>
+    </record>
+
+    <record id="payment_method_discover" model="payment.method">
+        <field name="name">Discover</field>
+        <field name="code">discover</field>
+        <field name="primary_payment_method_id" eval="ref('payment_stripe.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/discover.png"/>
+    </record>
+
+    <record id="payment_method_google_pay" model="payment.method">
+        <field name="name">Google Pay</field>
+        <field name="code">google_pay</field>
+        <field name="primary_payment_method_id" eval="ref('payment_stripe.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/google_pay.png"/>
+    </record>
+
+    <record id="payment_method_ideal_brand" model="payment.method">
+        <field name="name">iDEAL</field>
+        <field name="code">ideal_brand</field>
+        <field name="primary_payment_method_id" eval="ref('payment_stripe.payment_method_ideal')"/>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/ideal.png"/>
+    </record>
+
+    <record id="payment_method_jcb" model="payment.method">
+        <field name="name">JCB</field>
+        <field name="code">jcb</field>
+        <field name="primary_payment_method_id" eval="ref('payment_stripe.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/jcb.png"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="primary_payment_method_id" eval="ref('payment_stripe.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_unionpay" model="payment.method">
+        <field name="name">UnionPay</field>
+        <field name="code">unionpay</field>
+        <field name="primary_payment_method_id" eval="ref('payment_stripe.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/unionpay.png"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="primary_payment_method_id" eval="ref('payment_stripe.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+    <record id="payment_method_wero_brand" model="payment.method">
+        <field name="name">Wero</field>
+        <field name="code">wero</field>
+        <field name="primary_payment_method_id" eval="ref('payment_stripe.payment_method_ideal')"/>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="image" type="bytes" file="payment/static/img/wero.png"/>
+    </record>
+
+</odoo>

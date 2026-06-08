@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mt_picking_state" model="mail.message.subtype">
+            <field name="name">Transfer Status</field>
+            <field name="res_model">stock.picking</field>
+            <field name="default" eval="False"/>
+            <field name="internal" eval="True"/>
+        </record>
+    </data>
+</odoo>

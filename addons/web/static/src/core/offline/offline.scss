@@ -1,0 +1,11 @@
+.o_disabled_offline {
+    cursor: not-allowed !important;
+    pointer-events: auto !important;
+    opacity: 0.5 !important;
+}
+
+// must override this rule https://github.com/odoo/odoo/blob/9e3b9bd085483ba0e0e956762fc0ad7d759eec73/addons/web/static/src/webclient/webclient.scss#L140
+.o_disabled_offline[type="action"],
+.o_disabled_offline[type="toggle"] {
+    cursor: not-allowed !important;
+}

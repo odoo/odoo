@@ -1,0 +1,47 @@
+.o-hb-btn {
+    transition: none;
+    min-width: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    flex: 1 1 25%;
+    white-space: nowrap;
+    min-height: var(--o-hb-btn-minHeight);
+
+    &.o-hb-btn-has-icon, &.fa, &.oi {
+        --btn-padding-x: var(--o-hb-btn-has-icon-paddingX, #{map-get($spacers , 2)});
+
+        flex: 0 1 auto;
+        min-width: fit-content;
+    }
+
+    &.o-hb-btn-has-img-icon, &:has(.hb-svg) {
+        flex: 0 1 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        --btn-padding-x: #{map-get($spacers , 2)};
+    }
+
+    &.o-hb-btn-has-img-icon > img {
+        max-height: 1em;
+        width: 1.4em;
+        margin-top: 0.2em;
+        margin-bottom: 0.2em;
+    }
+
+    &.o-hb-btn-has-img-icon .hb-svg {
+        flex-shrink: 0;
+
+        &, .o_graphic, .o_subdle {
+            fill: currentColor;
+        }
+
+        .o_subdle {
+            fill-opacity: 0.5;
+        }
+    }
+
+    .fa, .oi, &:before {
+        line-height: inherit;
+    }
+}

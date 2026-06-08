@@ -1,0 +1,83 @@
+// This file regroups all the styles applied on each external layout.
+
+// external_layout_bubble
+.o_report_layout_bubble {
+    #informations {
+        margin: 0;
+        border-radius: $border-radius-lg;
+        padding: map-get($spacers, 2) $table-cell-padding-y;
+
+        // In pdf it overlaps with existing margin, set to 0 to replicate in HTML
+        div:first-child {
+            padding-left: 0;
+        }
+
+        div:last-child {
+            padding-right: 0;
+        }
+    }
+}
+.o_shape_bubble_1 {
+    top: -870px;
+    right: -450px;
+}
+
+.o_shape_bubble_2 {
+    left: -450px;
+    top: 0px;
+
+    &-html {
+        top: -50%;
+    }
+}
+
+// external_layout_folder
+.o_folder_adaptative_shape {
+    top: -1px;
+    height: 3rem;
+
+    .o_folder_angle_shape {
+        left: -1px;
+    }
+
+    .o_folder_title {
+        margin-right: $o-default-report-margins;
+    }
+}
+
+// external_layout_column
+.o_report_layout_column {
+    #informations > div.col:not(:last-child) {
+        margin-right: map-get($spacers, 2);
+        border-right: $border-width solid;
+    }
+}
+
+// external_layout_center
+.o_layout_center_header {
+    margin: (-$o-default-report-margins) (-$o-default-report-margins) (-$o-default-report-margins * .5);
+    padding: $o-default-report-margins $o-default-report-margins ($o-default-report-margins * .5);
+    max-height: 60mm;
+
+    ul {
+        margin-bottom: 0;
+    }
+}
+
+// external_layout_dual
+.o_layout_dual_footer {
+    .o_dual_shape_1 {
+        top: 22mm;
+    }
+}
+
+// external_layout_lines
+.o_layout_lines_header {
+    .o_company_address_list {
+        margin-bottom: 0;
+
+        p {
+            margin-bottom: 0;
+        }
+    }
+}

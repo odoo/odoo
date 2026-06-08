@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.IconListOption">
+    <BuilderRow label.translate="Icons" tooltip.translate="Applies to all icons at once">
+        <BuilderButton action="'replaceListIcon'" preview="false">
+            <i class="fa fa-fw fa-refresh me-1"/> Replace Icons
+        </BuilderButton>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Color" level="1">
+        <BuilderColorPicker enabledTabs="['solid', 'custom']" styleAction="'--icon-list-icon-color'"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Background Color" level="1">
+        <BuilderColorPicker enabledTabs="['solid', 'custom', 'gradient']" styleAction="'--icon-list-icon-bg-color'"/>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <icon_list_option template="website.IconListOption" selector=".s_icon_list"/>
+    </xpath>
+</t>
+
+</templates>

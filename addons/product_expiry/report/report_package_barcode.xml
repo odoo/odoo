@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_package_barcode_content_inherit_expiry" inherit_id="stock.report_package_barcode_content">
+        <xpath expr="//div[@t-field='quant.lot_id.name']/.." position="attributes">
+            <t t-if="quant.lot_id.expiration_date">
+                <attribute name="class">d-inline-block p-0 text-end align-top</attribute>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[@t-field='quant.lot_id.name']" position="after">
+            <t t-if="quant.lot_id.expiration_date">
+                Exp. <span t-field="quant.lot_id.expiration_date" t-options='{"widget": "date"}'/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

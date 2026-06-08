@@ -1,0 +1,23 @@
+// --------------------------------------------------------------------------
+// This file contains the website-specific logic for the editing elements
+// shown on the frontend in edit mode, such as the dropzones, overlay, etc.
+// --------------------------------------------------------------------------
+
+// When the page hasn’t been scrolled, we want the first dropzone inside the
+// #wrap to be positioned on top of the header, so it’s more visible. In all
+// other cases, once the page has been scrolled, the dropzones should be placed
+// behind the header.
+header#top:not(.o_header_is_scrolled) + main #wrap .oe_drop_zone:first-child {
+    z-index: $o-we-dropzone-z-index + 1;
+}
+
+// The first and last dropzones in the “parallax” snippet are in the same place
+// as the dropzones just before and after it, so we shift them a bit.
+.parallax > .oe_structure > .oe_drop_zone {
+    &:first-child {
+        top: $o-we-dropzone-size/2;
+    }
+    &:last-child {
+        bottom: $o-we-dropzone-size/2;
+    }
+}

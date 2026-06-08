@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- mail.test.simple -->
+    <record id="st_mail_test_simple_external" model="mail.message.subtype">
+        <field name="name">External subtype</field>
+        <field name="description">External subtype</field>
+        <field name="res_model">mail.test.simple</field>
+        <field name="default" eval="False"/>
+        <field name="internal" eval="False"/>
+    </record>
+
+    <!-- mail.test.ticket -->
+    <record id="st_mail_test_ticket_container_upd" model="mail.message.subtype">
+        <field name="name">Container Changed Subtype</field>
+        <field name="description">Container Changed</field>
+        <field name="res_model">mail.test.ticket</field>
+        <field name="default" eval="True"/>
+        <field name="internal" eval="False"/>
+    </record>
+
+    <!-- mail.test.container -->
+    <record id="st_mail_test_container_default" model="mail.message.subtype">
+        <field name="name">Container Default Subtype</field>
+        <field name="res_model">mail.test.container</field>
+        <field name="default" eval="True"/>
+        <field name="internal" eval="False"/>
+    </record>
+    <!-- when subscribing to mail.test.container, delegate to mail.test.ticket child -->
+    <record id="st_mail_test_container_child_full" model="mail.message.subtype">
+        <field name="name">Container Child Full Subtype</field>
+        <field name="res_model">mail.test.container</field>
+        <field name="parent_id" ref="test_mail.st_mail_test_ticket_container_upd"/>
+        <field name="relation_field">container_id</field>
+        <field name="default" eval="False"/>
+        <field name="internal" eval="False"/>
+    </record>
+
+    <!-- mail.test.ticket.mc -->
+    <record id="st_mail_test_ticket_container_mc_upd" model="mail.message.subtype">
+        <field name="name">Container MC Changed Subtype</field>
+        <field name="description">Container Changed</field>
+        <field name="res_model">mail.test.ticket.mc</field>
+        <field name="default" eval="True"/>
+        <field name="internal" eval="False"/>
+    </record>
+    <record id="st_mail_test_ticket_internal" model="mail.message.subtype">
+        <field name="name">Ticket MC Internal</field>
+        <field name="description">Ticket MC Internal</field>
+        <field name="res_model">mail.test.ticket.mc</field>
+        <field name="default" eval="False"/>
+        <field name="internal" eval="True"/>
+    </record>
+
+    <!-- mail.test.ticket.partner -->
+    <record id="st_mail_test_ticket_partner_new" model="mail.message.subtype">
+        <field name="name">New ticket</field>
+        <field name="description">New Ticket</field>
+        <field name="res_model">mail.test.ticket.partner</field>
+        <field name="default" eval="True"/>
+        <field name="internal" eval="False"/>
+    </record>
+
+</odoo>

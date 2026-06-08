@@ -1,0 +1,55 @@
+import { WORKER_STATE } from "@bus/services/worker_service";
+
+import { editComposer } from "@im_livechat/../tests/tours/livechat_tour_utils";
+
+import { whenReady } from "@odoo/owl";
+
+import { patch } from "@web/core/utils/patch";
+import { registry } from "@web/core/registry";
+
+registry.category("web_tour.tours").add("website_livechat.lazy_frontend_bus", {
+    steps: () => [
+        {
+            trigger: "body",
+            async run() {
+                await whenReady();
+                const busService = odoo.__WOWL_DEBUG__.root.env.services.bus_service;
+                if (busService.isActive) {
+                    throw new Error("The bus service should not be started at page load.");
+                }
+                patch(busService, {
+                    start() {
+                        document.body.classList.add("o-bus-service-started");
+                        return super.start(...arguments);
+                    },
+                });
+                const workerService = odoo.__WOWL_DEBUG__.root.env.services.worker_service;
+                if (workerService._state !== WORKER_STATE.UNINITIALIZED) {
+                    throw new Error("The worker service should not be started at page load.");
+                }
+                patch(workerService, {
+                    ensureWorkerStarted() {
+                        document.body.classList.add("o-worker-service-started");
+                        return super.ensureWorkerStarted(...arguments);
+                    },
+                });
+            },
+        },
+        {
+            trigger: "body:not(.o-bus-service-started):not(.o-worker-service-started)",
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
+            run: "click",
+        },
+        editComposer("Hello, I need help!"),
+        {
+            trigger: "body:not(.o-bus-service-started):not(.o-worker-service-started)",
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
+            run: "press Enter",
+        },
+        { trigger: "body.o-bus-service-started.o-worker-service-started" },
+    ],
+});

@@ -1,0 +1,26 @@
+.o_import_data_sidepanel {
+    width: 262px;
+    overflow-y: auto;
+
+    .o_import_grid {
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+
+        .o_grid_span_2 {
+            grid-column: span 2;
+        }
+
+        .o_import_grid_col {
+            align-content: center;
+        }
+    }
+
+    .o_import_file input {
+        display: inline-block;
+        width: 6ch;
+
+        &:not(:valid) {
+            background-color: $danger-bg-subtle;
+        }
+    }
+}

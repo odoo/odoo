@@ -1,0 +1,11 @@
+.o-mail-Poll, .o-mail-PollResult {
+    --mail-Poll-bgColor: #{mix($gray-100, $gray-200)};
+    --border-opacity: .5;
+}
+
+$poll-color-opacity-map: (
+    "secondary": 0.6,
+    "o-action": 0.2,
+    "o-brand-primary": 0.4
+);
+@include o-mail-poll();

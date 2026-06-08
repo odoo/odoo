@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ReferenceField">
+        <t t-set="relation" t-value="this.getRelation()"/>
+        <div class="o_row">
+            <t t-if="!this.props.readonly and !this.hideModelSelector">
+                <select class="o_input"
+                    t-att-tabindex="relation ? '-1': 0"
+                    t-on-change="(ev) => this.updateModel(ev.target.value || false)"
+                >
+                    <option />
+                    <t t-foreach="this.selection" t-as="option" t-key="option[0]">
+                        <option t-att-value="option[0]" t-att-selected="option[0] === relation" t-out="option[1]" />
+                    </t>
+                </select>
+            </t>
+            <t t-if="relation">
+                <Many2One t-key="relation" t-props="this.m2oProps"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,10 @@
+<templates xml:space="preserve">
+    <t t-name="mass_mailing.MailingFilterFormViewDialog.buttons" t-inherit="web.FormViewDialog.ToOne.buttons" t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o_form_button_save')]" position="replace">
+            <button class="btn btn-primary o_form_button_save" t-on-click="this.saveButtonClicked">Save &amp; Apply</button>
+        </xpath>
+        <xpath expr="//button[hasclass('o_form_button_save')]" position="after">
+            <button class="btn btn-secondary o_form_button_save_for_later" t-on-click="this.saveForLaterButtonClicked">Save for later</button>
+        </xpath>
+    </t>
+</templates>

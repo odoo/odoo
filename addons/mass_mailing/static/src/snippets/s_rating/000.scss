@@ -1,0 +1,55 @@
+
+.s_rating:not([data-vcss]) {
+    $star: "\f005";
+    $star-o: "\f006";
+    $circle: "\f111";
+    $circle-o: "\f10c";
+    $heart: "\f004";
+    $heart-o: "\f08a";
+    @mixin s_rating_generate_icons($off, $on) {
+        .fa:before {
+            content: $off;
+        }
+        @for $counter from 5 to 0 {
+            &.s_rating_#{$counter} {
+                .fa:nth-of-type(-n+#{$counter}):before {
+                    content: $on;
+                }
+            }
+        }
+    }
+    > .s_rating_stars   { @include s_rating_generate_icons($star-o, $star);     }
+    > .s_rating_squares { @include s_rating_generate_icons($circle-o, $circle); }
+    > .s_rating_hearts  { @include s_rating_generate_icons($heart-o, $heart);   }
+    > .s_rating_bar {
+        .fa {
+            display: none;
+        }
+        .s_rating_bar {
+            display: flex;
+            height: $progress-height;
+            background-color: $gray-300;
+            &:before {
+                content: "";
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                @include transition($progress-bar-transition);
+                @include gradient-striped();
+                background-size: $progress-height $progress-height;
+                background-color: map-get($theme-colors, 'primary');
+                animation: progress-bar-stripes $progress-bar-animation-timing;
+            }
+        }
+        @for $counter from 5 to 0 {
+            &.s_rating_#{$counter} {
+                .s_rating_bar:before {
+                    width: percentage($counter/5);
+                }
+            }
+        }
+    }
+    > .s_rating_1x { .fa { font-size: 1em; }; }
+    > .s_rating_2x { .fa { font-size: 2em; }; }
+    > .s_rating_3x { .fa { font-size: 3em; }; }
+}

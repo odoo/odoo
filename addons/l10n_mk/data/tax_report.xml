@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_mk_vat_04" model="account.report">
+        <field name="name">Tax Return - VAT-04</field>
+        <field name="name@ru">ДАНОЧНА ПРИЈАВА - ДДВ-04</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.mk"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_mk_column_base" model="account.report.column">
+                <field name="name">Tax base excluding VAT</field>
+                <field name="name@mk">Даночна основа без ДДВ</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="l10n_mk_column_tax" model="account.report.column">
+                <field name="name">VAT</field>
+                <field name="name@mk">ДДВ</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_mk_vat_1" model="account.report.line">
+                <field name="name">Trade of goods and services</field>
+                <field name="name@mk">ПРОМЕТ НА ДОБРА И УСЛУГИ</field>
+                <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="l10n_mk_vat_1_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">l10n_mk_01_02.tax + l10n_mk_03_04.tax + l10n_mk_05_06.tax + l10n_mk_12_13.tax + l10n_mk_14_15.tax + l10n_mk_16_17.tax + l10n_mk_18_19.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="l10n_mk_tr_1_1" model="account.report.line">
+                        <field name="name">Taxable turnover at general tax rate</field>
+                        <field name="name@mk">Оданочив промет по општа даночна стапка</field>
+                        <field name="code">l10n_mk_01_02</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_1_1_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">01</field>
+                            </record>
+                            <record id="l10n_mk_tr_1_1_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">02</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_1_2" model="account.report.line">
+                        <field name="name">Taxable turnover at a preferential tax rate of 10%</field>
+                        <field name="name@mk">Оданочив промет по повластена даночна стапка од 10%</field>
+                        <field name="code">l10n_mk_03_04</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_1_2_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">03</field>
+                            </record>
+                            <record id="l10n_mk_tr_1_2_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">04</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_1_3" model="account.report.line">
+                        <field name="name">Taxable turnover at a preferential rate of 5%</field>
+                        <field name="name@mk">Оданочив промет по повластена стапка од 5%</field>
+                        <field name="code">l10n_mk_05_06</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_1_3_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">05</field>
+                            </record>
+                            <record id="l10n_mk_tr_1_3_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">06</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_1_4" model="account.report.line">
+                        <field name="name">Export</field>
+                        <field name="name@mk">Извоз</field>
+                        <field name="code">l10n_mk_07</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_1_4_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">07</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_1_5" model="account.report.line">
+                        <field name="name">Tax-exempt turnover with the right to deduct previous tax</field>
+                        <field name="name@mk">Промет ослободен од данок со право на одбивка на претходен данок</field>
+                        <field name="code">l10n_mk_08</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_1_5_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">08</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_1_6" model="account.report.line">
+                        <field name="name">Tax-exempt turnover without the right to deduct previous tax</field>
+                        <field name="name@mk">Промет ослободен од данок без право на одбивка на претходен данок</field>
+                        <field name="code">l10n_mk_09</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_1_6_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">09</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_1_7" model="account.report.line">
+                        <field name="name">Turnover not subject to taxation in the country</field>
+                        <field name="name@mk">Промет кој не е предмет на оданочување во земјата</field>
+                        <field name="code">l10n_mk_10</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_1_7_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_1_8" model="account.report.line">
+                        <field name="name">Turnover in the country for which the recipient calculates tax (Art. 32-a)</field>
+                        <field name="name@mk">Промет во земјата за кој данокот го пресметува примателот (член 32-а)</field>
+                        <field name="code">l10n_mk_11</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_1_8_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">11</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_1_9" model="account.report.line">
+                        <field name="name">Received turnover from foreign taxpayers - General rate (Art. 32 items 4 and 5)</field>
+                        <field name="name@mk">Примен промет од странски даночни обврзници - Општа стапка (член 32 точка 4 и 5)</field>
+                        <field name="code">l10n_mk_12_13</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_1_9_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">12</field>
+                            </record>
+                            <record id="l10n_mk_tr_1_9_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">13</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_1_10" model="account.report.line">
+                        <field name="name">Received turnover from foreign taxpayers - Preferential rate (Art. 32 items 4 and 5)</field>
+                        <field name="name@mk">Примен промет од странски даночни обврзници - Повластена стапка (член 32 точка 4 и 5)</field>
+                        <field name="code">l10n_mk_14_15</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_1_10_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">14</field>
+                            </record>
+                            <record id="l10n_mk_tr_1_10_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">15</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_1_11" model="account.report.line">
+                        <field name="name">Received domestic turnover - General rate (Art. 32-a)</field>
+                        <field name="name@mk">Примен промет во земјата - Општа стапка (член 32-а)</field>
+                        <field name="code">l10n_mk_16_17</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_1_11_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">16</field>
+                            </record>
+                            <record id="l10n_mk_tr_1_11_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">17</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_1_12" model="account.report.line">
+                        <field name="name">Received domestic turnover - Preferential rate (Art. 32-a)</field>
+                        <field name="name@mk">Примен промет во земјата - Повластена стапка (член 32-а)</field>
+                        <field name="code">l10n_mk_18_19</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_1_12_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">18</field>
+                            </record>
+                            <record id="l10n_mk_tr_1_12_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">19</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_mk_vat_2" model="account.report.line">
+                <field name="name">Input deliveries with the right of deductibility</field>
+                <field name="name@mk">ВЛЕЗНИ ИСПОЛНУВАЊА СО ПРАВО НА ОДБИВКА</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_mk_tr_2_1" model="account.report.line">
+                        <field name="name">Inbound traffic</field>
+                        <field name="name@mk">Влезен промет</field>
+                        <field name="code">l10n_mk_21_22</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_2_1_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">21</field>
+                            </record>
+                            <record id="l10n_mk_tr_2_1_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">22</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_2_2" model="account.report.line">
+                        <field name="name">Inbound turnover - recipient calculates tax (Art. 32)</field>
+                        <field name="name@mk">Влезен промет за кој данокот го пресметува примателот (член 32)</field>
+                        <field name="code">l10n_mk_23_24</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_2_2_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">23</field>
+                            </record>
+                            <record id="l10n_mk_tr_2_2_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">24</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_2_3" model="account.report.line">
+                        <field name="name">Inbound turnover in the country - recipient calculates tax (Art. 32-a)</field>
+                        <field name="name@mk">Влезен промет во земјата за кој данокот го пресметува примателот (член 32-а)</field>
+                        <field name="code">l10n_mk_25_26</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_2_3_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">25</field>
+                            </record>
+                            <record id="l10n_mk_tr_2_3_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">26</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_2_4" model="account.report.line">
+                        <field name="name">Import</field>
+                        <field name="name@mk">Увоз</field>
+                        <field name="code">l10n_mk_27_28</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_2_4_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">27</field>
+                            </record>
+                            <record id="l10n_mk_tr_2_4_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">28</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_2_5" model="account.report.line">
+                        <field name="name">Previous taxes to deduct (22+24+26+28)</field>
+                        <field name="name@mk">Претходни даноци за одбивање (22+24+26+28)</field>
+                        <field name="code">l10n_mk_29</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_2_5_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">l10n_mk_21_22.tax + l10n_mk_23_24.tax + l10n_mk_25_26.tax + l10n_mk_27_28.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_2_6" model="account.report.line">
+                        <field name="name">Other taxes, previous taxes and deduction amounts</field>
+                        <field name="name@mk">Останати даноци, претходни даноци и износи за одбивање</field>
+                        <field name="code">l10n_mk_30</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_2_6_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_2_7" model="account.report.line">
+                        <field name="name">Total amount of VAT due or receivable (Result of 20-29 and 30)</field>
+                        <field name="name@mk">Даночен долг / побарување (резултат од 20-29 и 30)</field>
+                        <field name="code">l10n_mk_31</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_2_7_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">l10n_mk_20.tax - l10n_mk_29.tax + l10n_mk_30.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_mk_tr_2_8" model="account.report.line">
+                        <field name="name">Waiver of claim (for other taxpayers)</field>
+                        <field name="name@mk">Отстапување на побарување</field>
+                        <field name="code">l10n_mk_32</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mk_tr_2_8_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,48 @@
+<templates xml:space="preserve">
+    <span t-name="mail.MailActivityListRescheduleDropdown">
+        <Dropdown>
+            <button class="btn btn-link p-0 text-dark" type="button">
+                <i class="fa fa-calendar o_button_icon"/> <span class="o_dropdown_title">Reschedule</span>
+            </button>
+
+            <t t-set-slot="content">
+                <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, this.targetDays.today.actionName)">
+                    <div class="d-flex justify-content-between">
+                        <span>
+                            <i class="oi oi-schedule-today me-1"/> Today
+                        </span>
+                        <span t-out="this.targetDays.today.displayDay" class="ms-2 text-muted"/>
+                    </div>
+                </DropdownItem>
+                <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, this.targetDays.tomorrow.actionName)">
+                    <div class="d-flex justify-content-between">
+                        <span>
+                            <i class="oi oi-schedule-tomorrow me-1"/> Tomorrow
+                        </span>
+                        <span t-out="this.targetDays.tomorrow.displayDay" class="ms-2 text-muted"/>
+                    </div>
+                </DropdownItem>
+                <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, this.targetDays.nextWeek.actionName)">
+                    <div class="d-flex justify-content-between">
+                        <span>
+                            <i class="oi oi-schedule-later me-1"/> Next Week
+                        </span>
+                        <span t-out="this.targetDays.nextWeek.displayDay" class="ms-2 text-muted"/>
+                    </div>
+                </DropdownItem>
+                <DropdownItem closingMode="'none'">
+                    <div class="d-flex justify-content-between">
+                        <label for="activity_reschedule_date_picker">
+                            <i class="fa fa-calendar me-1"/>
+                        </label>
+                        <span class="ms-2 text-muted">
+                            <DateTimeInput type="'date'" id="'activity_reschedule_date_picker'" placeholder.translate="Select date"
+                                onApply="(value) => this.rescheduleActivity(false, this.targetDays.customDate.actionName, value)"
+                            />
+                        </span>
+                    </div>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </span>
+</templates>

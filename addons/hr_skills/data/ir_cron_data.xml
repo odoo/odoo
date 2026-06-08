@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="hr_job_skills_cron_add_certification_activity_to_employees" model="ir.cron">
+        <field name="name">Skills: Add an activity to employees with missing or expiring certifications</field>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">model._add_certification_activity_to_employees()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+</odoo>

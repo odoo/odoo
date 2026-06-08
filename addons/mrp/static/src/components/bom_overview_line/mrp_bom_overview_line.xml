@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <tr t-name="mrp.BomOverviewLine" t-on-click="() => this.props.toggleFolded(this.identifier)">
+        <td name="td_mrp_bom">
+            <div class="text-truncate" t-attf-style="margin-left: {{ this.marginMultiplicator * 20 }}px">
+                <t t-if="this.hasFoldButton">
+                    <t t-set="title_fold">Fold</t>
+                    <t t-set="title_unfold">Unfold</t>
+                    <span class="o_mrp_bom_unfoldable btn btn-light p-0" t-att-aria-label="this.props.isFolded ? title_unfold : title_fold" t-att-title="this.props.isFolded ? title_unfold : title_fold" style="margin-right: 1px">
+                        <i t-attf-class="fa fa-fw fa-caret-{{ this.props.isFolded ? 'right' : 'down' }}" role="img"/>
+                    </span>
+                </t>
+                <a href="#" t-on-click.prevent="() => this.goToAction(this.data.link_id, this.data.link_model)" t-out="this.data.name"/>
+                <t t-if="this.data.phantom_bom">
+                    <div class="fa fa-dropbox" title="This is a BoM of type Kit!" role="img" aria-label="This is a BoM of type Kit!"/>
+                </t>
+            </div>
+        </td>
+        <td class="text-end" name="quantity">
+            <t t-if="this.data.type == 'operation'" t-out="this.formatFloatTime(this.data.quantity, {'unit': 'minutes', 'showSeconds': true})"/>
+            <t t-else="" t-out="this.formatFloat(this.data.quantity, {'digits': [false, this.precision]})"/>
+        </td>
+         <td t-if="this.showUom" class="text-start" t-out="this.data.uom_name"/>
+         <td name="td_mrp_bom_free_to_use" t-if="this.forecastMode" class="text-center">
+            <t t-if="this.hasQuantity">
+                <t t-out="this.formatFloat(this.data.quantity_available, {'digits': [false, this.precision]})"/> /
+                <t t-out="this.formatFloat(this.data.quantity_on_hand, {'digits': [false, this.precision]})"/>
+            </t>
+        </td>
+        <td t-if="this.forecastMode" class="text-center">
+            <div t-if="this.data.hasOwnProperty('status')" class="o_field_badge">
+                <span
+                    t-on-click.prevent="this.goToForecast"
+                    title="Forecast Report"
+                    t-attf-class="badge rounded-pill o_mrp_overview_badge {{this.statusBackgroundClass}}"
+                    t-att-role="this.data.type != 'operation' ? 'button' : undefined"
+                    t-out="this.data.status"
+                />
+            </div>
+        </td>
+        <td t-if="this.forecastMode" class="text-center">
+            <span t-if="this.hasLeadTime"><t t-out="this.data.lead_time"/> Days</span>
+        </td>
+        <td t-if="this.forecastMode">
+            <div t-if="this.data.route_name &amp;&amp; this.data.route_detail">
+                <span t-attf-class="{{ this.data.route_alert ? 'text-danger' : '' }}"><t t-out="this.data.route_name"/>: </span>
+                <a href="#" t-on-click.prevent="() => this.goToRoute(this.data.route_type)" t-out="this.data.route_detail"/>
+            </div>
+        </td>
+        <td t-attf-class="text-end {{ this.data.type == 'component' ? 'opacity-50' : '' }}" t-attf-colspan="{{ this.forecastMode ? 1 : 2 }}" t-out="this.formatMonetary(this.data.bom_cost)"/>
+        <td t-if="this.showAttachments" class="text-center">
+            <span t-if="this.data.has_attachments">
+                <a href="#" role="button" t-on-click.prevent="this.goToAttachment" class="fa fa-fw o_button_icon fa-files-o"/>
+            </span>
+        </td>
+    </tr>
+
+</templates>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="calendar.Many2ManyAttendee" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary">
+        <xpath expr="//Many2XAutocomplete" position="attributes">
+            <attribute name="placeholder">this.props.placeholder</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="calendar.AttendeeTag" t-inherit="web.AvatarTag" t-inherit-mode="primary">
+        <xpath expr="//img[hasclass('o_avatar')]" position="replace">
+            <div class="o_attendee_tags_list">
+                <img class="o_avatar o_m2m_avatar position-relative rounded" t-att-src="this.props.imageUrl" t-on-click="this.onAvatarClick"/>
+                <div t-if="this.statusIcon" class="attendee_tag_status fa fa-fw rounded-circle" t-att-class="this.statusIcon" t-attf-class="o_attendee_status_{{this.props.status}}"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_tag_badge_text')]" position="after">
+            <div t-if="this.props.isUnavailable" data-tooltip="Unavailable" class="ms-1">
+                <i class="fa fa-moon-o position-relative" role="img"/>
+            </div>
+            <div t-if="this.props.noEmail" data-tooltip="No email" class="ms-1">
+                <i class="fa fa-exclamation-triangle position-relative" role="img"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

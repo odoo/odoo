@@ -1,0 +1,193 @@
+import { useRef } from "@web/owl2/utils";
+import { ThemeSelector } from "./theme_selector";
+import { assets, AssetsLoadingError, getBundle } from "@web/core/assets";
+import {
+    Component,
+    markup,
+    onMounted,
+    onWillUnmount,
+    onWillUpdateProps,
+    status,
+    proxy,
+    useApp,
+} from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { renderToFragment } from "@web/core/utils/render";
+import { localization } from "@web/core/l10n/localization";
+import { isBrowserSafari } from "@web/core/browser/feature_detection";
+import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
+
+const CSSSheetsCache = new Map();
+
+export class ThemeSelectorIframe extends Component {
+    static template = "mass_mailing.ThemeSelectorIframe";
+    static props = {
+        config: Object,
+    };
+
+    app = useApp();
+
+    setup() {
+        this.themeService = useService("mass_mailing.themes");
+        this.orm = useService("orm");
+        this.state = proxy({
+            show: false,
+        });
+        this.themeSelectorProps = {
+            favoriteThemes: proxy({
+                promise: undefined,
+            }),
+        };
+        this.iframeRef = useRef("iframe");
+        onMounted(() => {
+            this.setupIframe();
+        });
+        onWillUnmount(() => {
+            if (this.themeSelectorRoot) {
+                this.themeSelectorRoot.destroy();
+            }
+        });
+        onWillUpdateProps((newProps) => {
+            if (newProps.config.mailingModelId !== this.props.config.mailingModelId) {
+                this.themeSelectorProps.favoriteThemes.promise = this.fetchFavoriteThemes(newProps);
+            }
+        });
+    }
+
+    get isBrowserSafari() {
+        return isBrowserSafari();
+    }
+
+    getFavoriteDomain(props) {
+        return props.config.filterTemplates
+            ? [["mailing_model_id", "=", props.config.mailingModelId]]
+            : [];
+    }
+
+    getThemeSelectorProps() {
+        Object.assign(this.themeSelectorProps, {
+            config: this.props.config,
+            styleSheetsPromise: this.getStyleSheets(),
+            themesPromise: this.themeService.load(),
+            iframeRef: this.iframeRef,
+        });
+        this.themeSelectorProps.favoriteThemes.promise = this.fetchFavoriteThemes(this.props);
+        return this.themeSelectorProps;
+    }
+
+    async fetchFavoriteThemes(props) {
+        const favoriteTemplates = await this.orm.call("mailing.mailing", "action_fetch_favorites", [
+            this.getFavoriteDomain(props),
+        ]);
+        return favoriteTemplates.map((favorite) => ({
+            bodyArch: markup(favorite.body_arch),
+            id: favorite.id,
+            modelId: favorite.mailing_model_id[0],
+            modelName: favorite.mailing_model_id[1],
+            name: `template_${favorite.id}`,
+            nowrap: true,
+            subject: favorite.subject,
+            userId: favorite.user_id[0],
+            userName: favorite.user_id[1],
+        }));
+    }
+
+    renderHeadContent() {
+        return renderToFragment("mass_mailing.IframeHead", this);
+    }
+
+    async setupIframe() {
+        let loadingError;
+        try {
+            await loadIframe(this.iframeRef.el, async (iframe) => {
+                iframe.contentDocument.head.appendChild(this.renderHeadContent());
+                iframe.contentDocument.body.style.setProperty("direction", localization.direction);
+                this.themeSelectorRoot = this.app.createRoot(ThemeSelector, {
+                    env: this.env,
+                    props: this.getThemeSelectorProps(),
+                });
+                return Promise.all([
+                    this.loadIframeAssets(),
+                    this.themeSelectorRoot.mount(this.iframeRef.el.contentDocument.body),
+                ]);
+            });
+        } catch (error) {
+            loadingError = error;
+        }
+        if (!status(this) === "destroyed") {
+            return;
+        } else if (loadingError) {
+            throw loadingError;
+        }
+        this.state.show = true;
+    }
+
+    loadIframeAssets() {
+        return loadIframeBundles(this.iframeRef.el, ["mass_mailing.assets_iframe_theme_selector"]);
+    }
+
+    /**
+     * Get common stylesheets used for every favorite mail template
+     *
+     * @returns {Promise<Array<CSSStyleSheet>>}
+     */
+    async getStyleSheets() {
+        const { cssLibs } = await getBundle("mass_mailing.assets_iframe_style");
+        const loadCSSPromises = [];
+        if (cssLibs) {
+            loadCSSPromises.push(...cssLibs.map((url) => this.loadCSSSheets(url)));
+        }
+        const cssTexts = await Promise.all(loadCSSPromises);
+        if (status(this) === "destroyed") {
+            return [];
+        }
+        const sheetPromises = [];
+        for (const cssText of cssTexts) {
+            const sheet = new this.iframeRef.el.contentDocument.defaultView.CSSStyleSheet();
+            sheetPromises.push(sheet.replace(cssText).then(() => sheet));
+        }
+        return Promise.all(sheetPromises);
+    }
+
+    /**
+     * Custom load which does not add the CSSStyleSheet in the current document
+     */
+    loadCSSSheets(url, retryCount = 0) {
+        if (CSSSheetsCache.has(url)) {
+            return CSSSheetsCache.get(url);
+        }
+        const promise = new Promise((resolve, reject) =>
+            fetch(url)
+                .then((response) => {
+                    if (!response.ok) {
+                        reject(
+                            new AssetsLoadingError(`The loading of ${url} failed`, {
+                                cause: response.status,
+                            })
+                        );
+                    }
+                    return response.text();
+                })
+                .then(resolve)
+                .catch(async (error) => {
+                    CSSSheetsCache.delete(url);
+                    if (retryCount < assets.retries.count) {
+                        const delay = assets.retries.delay + assets.retries.extraDelay * retryCount;
+                        await new Promise((res) => setTimeout(res, delay));
+                        this.loadCSSSheets(url, retryCount + 1)
+                            .then(resolve)
+                            .catch((reason) => {
+                                CSSSheetsCache.delete(url);
+                                reject(reason);
+                            });
+                    } else {
+                        reject(
+                            new AssetsLoadingError(`The loading of ${url} failed`, { cause: error })
+                        );
+                    }
+                })
+        );
+        CSSSheetsCache.set(url, promise);
+        return promise;
+    }
+}

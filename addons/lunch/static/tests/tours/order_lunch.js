@@ -1,0 +1,47 @@
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_utils";
+
+registry.category("web_tour.tours").add('order_lunch_tour', {
+    steps: () => [
+    stepUtils.showAppsMenuItem(),
+{
+    trigger: '.o_app[data-menu-xmlid="lunch.menu_lunch"]',
+    content: "Start by accessing the lunch app.",
+    run: "click",
+},
+{
+    content:"click on location",
+    trigger: ".lunch_location .o_input_dropdown input",
+    run: 'click'
+},
+{
+    content: "Pick 'Farm 1' option",
+    trigger: '.dropdown-item:contains("Farm 1")',
+    run: "click",
+},
+{
+    trigger: '.lunch_location input:value("Farm 1")',
+},
+{
+    trigger: ".o_kanban_record",
+    content: "Click on a product you want to order and is available.",
+    run: 'click'
+},
+{
+    trigger: 'textarea[id="note_0"]',
+    content: "Add additionnal information about your order.",
+    run: "edit allergy to peanuts",
+},
+{
+    trigger: 'button[name="add_to_cart"]',
+    content: "Add your order to the cart.",
+    run: "click",
+},
+{
+    trigger: 'button:contains("Order Now")',
+    content: "Validate your order",
+    run: 'click',
+}, {
+    trigger: ".o_lunch_widget_line li[name='o_lunch_order_line'] .badge:contains('Ordered')",
+    content: 'Check that order is ordered',
+}]});

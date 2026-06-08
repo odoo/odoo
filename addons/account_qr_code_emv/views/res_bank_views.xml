@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_bank_form_inherit_account" model="ir.ui.view">
+        <field name="name">res.partner.bank.form.inherit</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='internal_notes']" position="before">
+                <field name="display_qr_setting" invisible="1" />
+                <page string="EMV QR Settings" name="emv_qr_settings" invisible="not display_qr_setting">
+                    <group>
+                        <field name="country_proxy_keys" invisible="1"/>
+                        <field name="proxy_type" widget="dynamic_selection" options="{'available_field': 'country_proxy_keys'}"/>
+                        <field name="proxy_value"/>
+                        <field name="include_reference"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

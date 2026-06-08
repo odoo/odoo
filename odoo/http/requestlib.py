@@ -1,0 +1,411 @@
+from __future__ import annotations
+
+import functools
+import hashlib
+import hmac
+import json
+import logging
+import threading
+import time
+import typing
+import warnings
+from contextlib import contextmanager
+from urllib.parse import urlsplit
+
+import babel.core
+from werkzeug.datastructures import (
+    Headers,
+    ImmutableMultiDict,
+    MultiDict,
+)
+from werkzeug.exceptions import NotFound
+from werkzeug.urls import URL, url_encode, url_parse
+from werkzeug.utils import redirect
+
+from odoo.tools import consteq, json_default
+
+from . import request
+from .dispatcher import HttpDispatcher
+from .geoip import GeoIP
+from .response import FutureResponse, Response
+from .session import DEFAULT_LANG, STORED_SESSION_BYTES, get_default_session
+
+from ._facade import DEFAULT_MAX_CONTENT_LENGTH, MAX_FORM_SIZE, HTTPRequest  # noqa: F401
+if typing.TYPE_CHECKING:
+    from collections.abc import Iterable, Set as AbstractSet, Mapping
+
+    from odoo.api import Environment
+    from odoo.models import BaseModel
+    from odoo.modules.registry import Registry
+
+    from .routing_map import Endpoint
+
+    HeaderType = Mapping[str, str | Iterable[str]] | Iterable[tuple[str, str]]
+
+    import werkzeug.wrappers
+    HTTPRequest = werkzeug.wrappers.Request
+
+_logger = logging.getLogger('odoo.http')
+
+CSRF_TOKEN_SALT = 60 * 60 * 24 * 365  # 1 year
+""" The default csrf token lifetime, a salt against BREACH. """
+
+
+@contextmanager
+def borrow_request():
+    """ Get the current request and unexpose it from the local stack. """
+    warnings.warn("Use Context().run() to reset the context", DeprecationWarning, stacklevel=2)
+    from . import request_var  # noqa: PLC0415
+    req = request_var.get()
+    token = request_var.set(None)
+    try:
+        yield req
+    finally:
+        request_var.reset(token)
+
+
+def fragment_to_query_string(func=None, /, *, ignore: AbstractSet = frozenset()):
+    """
+    Decorate a controller method to redirect the client transforming the fragment
+    into the query string if no relevant query parameters can be found.
+
+    :param ignore: set of query parameter keys that should be ignored in
+        addition to ``debug`` (which is always ignored) when checking if
+        the query is empty. e.g., ``/page.html?debug=1`` is considered
+        empty and triggers the "fragment to query" redirection.
+    """
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(self, *a, **kw):
+            if not (kw.keys() - {'debug'} - ignore):
+                return Response("""<!DOCTYPE html>
+                <html><head><script>
+                    (function() {
+                        const url = window.location;
+                        const fragment = url.hash.substring(1);  // remove the leading "#"
+                        let new_url = url.pathname + url.search;
+                        if(fragment.length !== 0) {
+                            const separator = url.search ? (url.search === '?' ? '' : '&') : '?';
+                            new_url = url.pathname + url.search + separator + fragment;
+                        }
+                        if (new_url == url.pathname) {
+                            new_url = '/';
+                        }
+                        window.location = new_url;
+                    })()
+                </script></head><body></body></html>""")
+
+            return func(self, *a, **kw)
+
+        return wrapper
+
+    # allow to use it both as a simple decorator or a decorator factory
+    if func is None:
+        return decorator
+
+    return decorator(func)
+
+
+def is_cors_preflight(request: Request, endpoint: Endpoint) -> bool:
+    return (
+        request.httprequest.method == 'OPTIONS'
+        and endpoint.routing.get('cors', False)
+    )
+
+
+class Request:
+    """
+    Wrapper around the incoming HTTP request with deserialized request
+    parameters, session utilities and request dispatching logic.
+    """
+
+    def __init__(self, httprequest: HTTPRequest):
+        self.httprequest = httprequest
+        self.future_response = FutureResponse()
+        self.dispatcher = HttpDispatcher(self)  # until we match
+        self.geoip = GeoIP(httprequest.remote_addr or '')
+
+        # set by serve_db
+        self.registry: Registry | None = None
+        self.env: Environment | None = None
+        # set by the Dispatcher
+        self.params: Mapping | None = None
+
+    # =====================================================
+    # Getters and setters
+    # =====================================================
+    def update_env(self, user: int | BaseModel | None = None, context: dict | None = None, su: bool | None = None) -> None:
+        """ Update the environment of the current request.
+
+        :param user: optional user/user id to change the current user
+        :type user: int or :class:`res.users record<~odoo.addons.base.models.res_users.ResUsers>`
+        :param dict context: optional context dictionary to change the current context
+        :param bool su: optional boolean to change the superuser mode
+        """
+        cr = None  # None is a sentinel, it keeps the same cursor
+        self.env = self.env(cr, user, context, su)
+        self.env.transaction.default_env = self.env
+        threading.current_thread().uid = self.env.uid
+
+    def update_context(self, **overrides) -> None:
+        """
+        Override the environment context of the current request with the
+        values of ``overrides``. To replace the entire context, please
+        use :meth:`~update_env` instead.
+        """
+        self.update_env(context=dict(self.env.context, **overrides))
+
+    @property
+    def context(self):
+        warnings.warn("Since 19.0, use request.env.context directly", DeprecationWarning, stacklevel=2)
+        return self.env.context
+
+    @context.setter
+    def context(self, value):
+        e = "Use request.update_context instead."
+        raise NotImplementedError(e)
+
+    @property
+    def uid(self):
+        warnings.warn("Since 19.0, use request.env.uid directly", DeprecationWarning, stacklevel=2)
+        return self.env.uid
+
+    @uid.setter
+    def uid(self, value):
+        e = "Use request.update_env instead."
+        raise NotImplementedError(e)
+
+    @property
+    def cr(self):
+        warnings.warn("Since 19.0, use request.env.cr directly", DeprecationWarning, stacklevel=2)
+        return self.env.cr
+
+    @cr.setter
+    def cr(self, value):
+        if value is None:
+            e = "Close the cursor instead."
+            raise NotImplementedError(e)
+        e = "You cannot replace the cursor attached to the current request."
+        raise ValueError()
+
+    _cr = cr
+
+    @functools.cached_property
+    def best_lang(self) -> str | None:
+        lang = self.httprequest.accept_languages.best
+        if not lang:
+            return None
+
+        try:
+            code, territory, _, _ = babel.core.parse_locale(lang, sep='-')
+            if territory:
+                lang = f'{code}_{territory}'
+            else:
+                lang = babel.core.LOCALE_ALIASES[code]
+            return lang
+        except (ValueError, KeyError):
+            return None
+
+    @functools.cached_property
+    def cookies(self):
+        cookies = MultiDict(self.httprequest.cookies)
+        if self.registry:
+            self.registry['ir.http']._sanitize_cookies(cookies)
+        return ImmutableMultiDict(cookies)
+
+    # =====================================================
+    # Helpers
+    # =====================================================
+    def csrf_token(self, time_limit: int | None = None) -> str:
+        """
+        Generates and returns a CSRF token for the current session
+
+        :param time_limit: the CSRF token should only be
+            valid for the specified duration (in second), by default
+            48h, ``None`` for the token to be valid as long as the
+            current user's session is.
+        :returns: ASCII token string
+        """
+        secret = self.env['ir.config_parameter'].sudo().get_str('database.secret')
+        if not secret:
+            e = "CSRF protection requires a configured database secret"
+            raise ValueError(e)
+
+        # if no `time_limit` => distant 1y expiry so max_ts acts as salt, e.g. vs BREACH
+        max_ts = int(time.time() + (time_limit or CSRF_TOKEN_SALT))
+        msg = f'{self.session.sid[:STORED_SESSION_BYTES]}{max_ts}'.encode()
+
+        hm = hmac.new(secret.encode('ascii'), msg, hashlib.sha1).hexdigest()
+        return f'{hm}o{max_ts}'
+
+    def validate_csrf(self, csrf: str) -> bool:
+        """
+        Is the given csrf token valid?
+
+        :param csrf: The token to validate.
+        :returns: ``True`` when valid, ``False`` when not.
+        """
+        if not csrf:
+            return False
+
+        secret = self.env['ir.config_parameter'].sudo().get_str('database.secret')
+        if not secret:
+            e = "CSRF protection requires a configured database secret"
+            raise ValueError(e)
+
+        hm, _, max_ts = csrf.rpartition('o')
+        msg = f'{self.session.sid[:STORED_SESSION_BYTES]}{max_ts}'.encode()
+
+        if max_ts:
+            try:
+                if int(max_ts) < int(time.time()):
+                    return False
+            except ValueError:
+                return False
+
+        hm_expected = hmac.new(secret.encode('ascii'), msg, hashlib.sha1).hexdigest()
+        return consteq(hm, hm_expected)
+
+    def default_context(self) -> dict:
+        return dict(get_default_session()['context'], lang=self.default_lang())
+
+    def default_lang(self) -> str:
+        """Returns default user language according to request specification
+
+        :returns: Preferred language if specified or 'en_US'
+        """
+        return self.best_lang or DEFAULT_LANG
+
+    def get_http_params(self) -> dict:
+        """
+        Extract key=value pairs from the query string and the forms
+        present in the body (both application/x-www-form-urlencoded and
+        multipart/form-data).
+
+        :returns: The merged key-value pairs.
+        """
+        return {
+            **self.httprequest.args,
+            **self.httprequest.form,
+            **self.httprequest.files,
+        }
+
+    def get_json_data(self):
+        return json.loads(self.httprequest.get_data(as_text=True))
+
+    def make_response(self,
+        data: str,
+        headers: HeaderType | None = None,
+        cookies: Mapping | None = None,
+        status: int = 200,
+    ) -> Response:
+        """ Helper for non-HTML responses, or HTML responses with custom
+        response headers or cookies.
+
+        While handlers can just return the HTML markup of a page they want to
+        send as a string if non-HTML data is returned they need to create a
+        complete response object, or the returned data will not be correctly
+        interpreted by the clients.
+
+        :param data: response body
+        :param status: http status code
+        :param headers: HTTP headers to set on the response
+        :param cookies: cookies to set on the client
+        :returns: a response object.
+        """
+        response = Response(data, status=status, headers=headers)
+        if cookies:
+            for k, v in cookies.items():
+                response.set_cookie(k, v)
+        return response
+
+    def make_json_response(
+        self,
+        data: typing.Any,
+        headers: HeaderType | None = None,
+        cookies: Mapping | None = None,
+        status: int = 200,
+    ) -> Response:
+        """ Helper for JSON responses, it json-serializes ``data`` and
+        sets the Content-Type header accordingly if none is provided.
+
+        :param data: the data that will be json-serialized into the response body
+        :param status: http status code
+        :param headers: HTTP headers to set on the response
+        :param cookies: cookies to set on the client
+        """
+        data = json.dumps(data, ensure_ascii=False, default=json_default)
+
+        headers = Headers(headers)
+        headers['Content-Length'] = str(len(data))
+        if 'Content-Type' not in headers:
+            headers['Content-Type'] = 'application/json; charset=utf-8'
+
+        return self.make_response(data, headers.to_wsgi_list(), cookies, status)
+
+    def not_found(self, description: str | None = None) -> NotFound:
+        """ Shortcut for a `HTTP 404
+        <http://tools.ietf.org/html/rfc7231#section-6.5.4>`_ (Not Found)
+        response
+        """
+        return NotFound(description)
+
+    def redirect(self, location: URL | str, code: int = 303, local: bool = True) -> Response:
+        # compatibility, Werkzeug support URL as location
+        if isinstance(location, URL):
+            location = location.to_url()
+        if local:
+            location = url_parse(location).replace(scheme='', netloc='').to_url().lstrip('/\\')
+            location = '/' + urlsplit(location).geturl().lstrip('/\\')
+        if self.db:
+            return self.env['ir.http']._redirect(location, code)
+        return redirect(location, code, Response=Response)
+
+    def redirect_query(self, location: str, query: dict | None = None, code: int = 303, local: bool = True) -> Response:
+        if query:
+            location += '?' + url_encode(query)
+        return self.redirect(location, code=code, local=local)
+
+    def render(self, template: str, qcontext: dict | None = None, lazy: bool = True, **kw) -> Response:
+        """ Lazy render of a QWeb template.
+
+        The actual rendering of the given template will occur at then end of
+        the dispatching. Meanwhile, the template and/or qcontext can be
+        altered or even replaced by a static response.
+
+        :param template: template to render
+        :param qcontext: Rendering context to use
+        :param lazy: whether the template rendering should be deferred
+                          until the last possible moment
+        :param kw: forwarded to werkzeug's Response object
+        """
+        response = Response(template=template, qcontext=qcontext, **kw)
+        if not lazy:
+            return response.render()
+        return response
+
+    def reroute(self, path: str | bytes, query_string=None) -> None:
+        """
+        Rewrite the current request URL using the new path and query
+        string. This act as a light redirection, it does not return a
+        3xx responses to the browser but still change the current URL.
+        """
+        # WSGI encoding dance https://peps.python.org/pep-3333/#unicode-issues
+        if isinstance(path, str):
+            path = path.encode('utf-8')
+        path = path.decode('latin1', 'replace')
+
+        if query_string is None:
+            query_string = request.httprequest.environ['QUERY_STRING']
+
+        # Change the WSGI environment
+        environ = self.httprequest._HTTPRequest__environ.copy()
+        environ['PATH_INFO'] = path
+        environ['QUERY_STRING'] = query_string
+        environ['RAW_URI'] = f'{path}?{query_string}'
+        # REQUEST_URI left as-is so it still contains the original URI
+
+        # Create and expose a new request from the modified WSGI env
+        httprequest = HTTPRequest(environ)
+        threading.current_thread().url = httprequest.url
+        self.httprequest = httprequest

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="ir_module_reference_print" model="ir.actions.report">
+            <field name="name">Technical guide</field>
+            <field name="model">ir.module.module</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">base.report_irmodulereference</field>
+            <field name="report_file">base.report_irmodulereference</field>
+            <field name="binding_model_id" ref="model_ir_module_module"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>
