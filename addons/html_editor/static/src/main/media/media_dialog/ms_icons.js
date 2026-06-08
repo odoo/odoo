@@ -1136,6 +1136,10 @@ const MS_ICONS = {
         has_fill: false,
         tags: "application arrow arrows arrows pointing out box corners dimensions direction display document enlarge enter expand file four arrows frame full screen fullscreen maximize media mode move open outward arrows pan resize scale size square stretch view visual window with zoom",
     },
+    padding: {
+        has_fill: true,
+        tags: "adjust alignment arrangement arrows boundaries box composition control design direction document dots edges edit formatting layout lines margin margins offset options padding presentation rectangle settings size space spacing square structure text visual",
+    },
     palette: {
         has_fill: true,
         tags: "appearance art artist artistic brush color colors creative customization customize design designer draw drawing editor filters graphic hues paint painting palette shades spectrum style swatch theme tint tints tone tones visual",
@@ -1583,6 +1587,10 @@ const MS_ICONS = {
     terminal: {
         has_fill: false,
         tags: "IT administration angle brackets application code coding command line command prompt computer computing console debugger developer developer tools emulator execute input field program programming prompt rectangle run code script software system tech technology terminal text editor text input window",
+    },
+    text_ad: {
+        has_fill: true,
+        tags: "ad advert advertisement announcement banner box call to action caption communication cta description doc document file frame label marketing message outline page paid promotion promotion rectangle sponsored sponsored content sponsored post square text text ad text advertising text box text frame title writing",
     },
     text_fields: {
         has_fill: false,

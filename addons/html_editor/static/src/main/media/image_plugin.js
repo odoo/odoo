@@ -63,7 +63,7 @@ export class ImagePlugin extends Plugin {
             {
                 id: "previewImage",
                 description: _t("Preview image"),
-                icon: "zoom_in",
+                icon: "fullscreen",
                 run: this.previewImage.bind(this),
                 isAvailable: isHtmlContentSupported,
             },
@@ -85,16 +85,11 @@ export class ImagePlugin extends Plugin {
         ],
         toolbar_groups: [
             withSequence(26, { id: "image_modifiers", namespaces: ["image"] }),
-            withSequence(26, { id: "image_size", namespaces: ["image"] }),
-            withSequence(32, { id: "image_delete", namespaces: ["image"] }),
+            withSequence(28, { id: "image_actions", namespaces: ["image"] }),
+            withSequence(34, { id: "image_delete", namespaces: ["image"] }),
         ],
         toolbar_items: [
-            {
-                id: "image_preview",
-                groupId: "image_actions",
-                commandId: "previewImage",
-            },
-            {
+            withSequence(10, {
                 id: "image_alignment",
                 description: _t("Set image alignment"),
                 groupId: "image_modifiers",
@@ -108,15 +103,15 @@ export class ImagePlugin extends Plugin {
                     },
                 },
                 isAvailable: isHtmlContentSupported,
-            },
-            {
+            }),
+            withSequence(30, {
                 id: "image_padding",
                 groupId: "image_modifiers",
                 description: _t("Set image padding"),
                 Component: ImageToolbarDropdown,
                 props: {
                     name: "image_padding",
-                    icon: "html_editor.ImagePaddingIcon",
+                    icon: "padding",
                     items: IMAGE_PADDING,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
                     onSelected: (item) => {
@@ -124,10 +119,10 @@ export class ImagePlugin extends Plugin {
                     },
                 },
                 isAvailable: isHtmlContentSupported,
-            },
+            }),
             {
                 id: "image_size",
-                groupId: "image_size",
+                groupId: "image_actions",
                 description: _t("Resize image"),
                 Component: ImageToolbarDropdown,
                 props: {
@@ -143,6 +138,11 @@ export class ImagePlugin extends Plugin {
                 },
                 isAvailable: (selection) =>
                     isHtmlContentSupported(selection) && (this.config.allowImageResize ?? true),
+            },
+            {
+                id: "image_preview",
+                groupId: "image_actions",
+                commandId: "previewImage",
             },
             {
                 id: "image_delete",
