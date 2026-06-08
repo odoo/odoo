@@ -4,7 +4,6 @@ import {
     useEnv,
     useLayoutEffect,
     useRef,
-    useState,
     useSubEnv,
 } from "@web/owl2/utils";
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
@@ -13,6 +12,7 @@ import {
     onWillDestroy,
     onWillStart,
     onWillUpdateProps,
+    proxy,
     status,
     toRaw,
     useEffect,
@@ -65,7 +65,7 @@ export function useDomState(getState, { checkEditingElement = true } = {}) {
             }
         }
     };
-    const state = useState({});
+    const state = proxy({});
     onWillStart(() => handler());
     useBus(env.editorBus, "DOM_UPDATED", handler);
     return state;
@@ -404,7 +404,7 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
         };
 
         env.selectableContext.addSelectableItem(selectableItem);
-        state = useState({
+        state = proxy({
             isActive: false,
         });
         useEffect(() => {

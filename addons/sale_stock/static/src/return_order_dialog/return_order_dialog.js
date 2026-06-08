@@ -1,4 +1,4 @@
-import { Component, onWillStart, useState } from "@odoo/owl";
+import { Component, onWillStart, proxy } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { useService } from "@web/core/utils/hooks";
@@ -20,7 +20,7 @@ export class ReturnOrderDialog extends Component {
 
     setup() {
         this.dialog = useService("dialog");
-        this.state = useState({ returnableLines: [], returnReasonId: null });
+        this.state = proxy({ returnableLines: [], returnReasonId: null });
 
         onWillStart(async () => {
             this.orderReturnData = await this._loadData();
