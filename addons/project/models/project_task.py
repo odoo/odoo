@@ -861,6 +861,8 @@ class ProjectTask(models.Model):
                 vals['recurrence_id'] = task.recurrence_id.copy().id
             if task.allow_milestones:
                 vals['milestone_id'] = milestone_mapping.get(vals['milestone_id'], vals['milestone_id'])
+            if self.env.context.get('copy_from_template') and task.date_deadline and task.create_date:
+                vals['date_deadline'] = fields.Date.context_today(self) + (task.date_deadline.date() - task.create_date.date())
             if not default.get('child_ids') and task.child_ids:
                 default = {
                     'parent_id': False,
