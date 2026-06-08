@@ -1,5 +1,4 @@
-import { onRendered } from "@web/owl2/utils";
-import { onMounted, proxy } from "@odoo/owl";
+import { onMounted, proxy, useEffect } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { StateSelectionField, stateSelectionField } from "@web/views/fields/state_selection/state_selection_field";
 
@@ -19,7 +18,7 @@ export class TodoDoneCheckmark extends StateSelectionField {
             const fieldValue = this.props.record.data[this.props.name]
             this.notDoneState = fieldValue == '1_done' ? '01_in_progress' : fieldValue;
         });
-        onRendered(() => {
+        useEffect(() => {
             if (!this.stateDone.notReloadState) {
                 this.stateDone.isDone = this.props.record.data[this.props.name] == '1_done';
             }
