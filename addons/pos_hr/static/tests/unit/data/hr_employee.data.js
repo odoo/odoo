@@ -27,6 +27,8 @@ export class HrEmployee extends models.ServerModel {
         {
             id: 4,
             name: "A Little Guy",
+            user_id: 4,
+            work_contact_id: 3,
         },
     ];
 
@@ -40,6 +42,8 @@ export class HrEmployee extends models.ServerModel {
             emp._role = employeeRoles[emp.id] || "manager";
             if (emp.id === 2) {
                 emp._pin = Sha1.hash("1234");
+            } else if (emp.id === 3) {
+                emp._pin = Sha1.hash("1111");
             }
         });
         return records;

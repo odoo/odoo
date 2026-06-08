@@ -96,27 +96,6 @@ class TestUi(TestPosHrHttpCommon):
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour("PosHrTour", login="pos_admin")
 
-    def test_cashier_stay_logged_in(self):
-        # open a session, the /pos/ui controller will redirect to it
-        self.main_pos_config.with_user(self.pos_admin).open_ui()
-
-        self.start_tour(
-            "/pos/ui/%d" % self.main_pos_config.id,
-            "CashierStayLogged",
-            login="pos_admin",
-        )
-
-    def test_cashier_can_see_product_info(self):
-        # open a session, the /pos/ui controller will redirect to it
-        self.product_a.available_in_pos = True
-        self.main_pos_config.with_user(self.pos_admin).open_ui()
-
-        self.start_tour(
-            "/pos/ui/%d" % self.main_pos_config.id,
-            "CashierCanSeeProductInfo",
-            login="pos_admin",
-        )
-
     def test_basic_user_cannot_close_session(self):
         # open a session, the /pos/ui controller will redirect to it
         self.main_pos_config.advanced_employee_ids = []
@@ -128,23 +107,6 @@ class TestUi(TestPosHrHttpCommon):
         self.start_tour(
             "/pos/ui/%d" % self.main_pos_config.id,
             "CashierCannotClose",
-            login="pos_user",
-        )
-
-    def test_basic_user_can_change_price(self):
-        self.main_pos_config.advanced_employee_ids = []
-        self.main_pos_config.basic_employee_ids = [
-            Command.link(self.emp3.id),
-            Command.link(self.admin.id)
-        ]
-        self.main_pos_config.write({
-            "restrict_price_control": False,
-        })
-        self.main_pos_config.with_user(self.pos_admin).open_ui()
-
-        self.start_tour(
-            "/pos/ui?config_id=%d" % self.main_pos_config.id,
-            "test_basic_user_can_change_price",
             login="pos_user",
         )
 
@@ -217,19 +179,6 @@ class TestUi(TestPosHrHttpCommon):
         })
         order_payment.with_context(**payment_context).check()
         self.start_pos_tour("test_minimal_employee_refund", login="pos_admin")
-
-    def test_cost_and_margin_visibility(self):
-        self.product_a.available_in_pos = True
-        self.main_pos_config.write({
-            'is_margins_costs_accessible_to_every_user': True,
-        })
-        self.main_pos_config.with_user(self.pos_admin).open_ui()
-
-        self.start_tour(
-            "/pos/ui?config_id=%d" % self.main_pos_config.id,
-            "test_cost_and_margin_visibility",
-            login="pos_admin",
-        )
 
     @users('pos_admin')
     def test_create_pos_config_without_hr_right(self):

@@ -19,7 +19,7 @@ test("selectCashier", async () => {
         (employee) => ![2, 3].includes(employee.id) && employee.delete()
     );
     const comp = await mountWithCleanup(CashierName, {});
-    const result = await comp.selectCashier();
+    const result = await comp.selectCashier("1111");
     expect(result.name).toBe("Employee1");
     expect(result.id).toBe(3);
     store.setCashier(result);

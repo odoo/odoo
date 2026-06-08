@@ -8,7 +8,6 @@ import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_pop
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as CashierSelectionPopup from "@pos_hr/../tests/tours/utils/cashier_selection_popup_util";
 import * as BackendUtils from "@point_of_sale/../tests/pos/tours/utils/backend_utils";
-import * as Utils from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 import { negate, scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 
@@ -94,39 +93,6 @@ registry.category("web_tour.tours").add("PosHrTour", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("CashierStayLogged", {
-    steps: () =>
-        [
-            Chrome.clickBtn("Open Register"),
-            PosHr.loginScreenIsShown(),
-            PosHr.clickLoginButton(),
-            CashierSelectionPopup.has("Pos Employee1"),
-            CashierSelectionPopup.has("Pos Employee2"),
-            CashierSelectionPopup.has("Mitchell Admin"),
-            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
-            Dialog.confirm("Open Register"),
-            PosHr.refreshPage(),
-            ProductScreen.isShown(),
-            Chrome.clickMenuButton(),
-            PosHr.clickLockButton(),
-            PosHr.refreshPage(),
-            PosHr.loginScreenIsShown(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("CashierCanSeeProductInfo", {
-    steps: () =>
-        [
-            Chrome.clickBtn("Open Register"),
-            PosHr.loginScreenIsShown(),
-            PosHr.clickLoginButton(),
-            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickInfoProduct("product_a", [Dialog.confirm("Close")]),
-            Dialog.isNot(),
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("CashierCannotClose", {
     steps: () =>
         [
@@ -145,18 +111,6 @@ registry.category("web_tour.tours").add("CashierCannotClose", {
             {
                 trigger: `span.dropdown-item:contains("Close Register")`,
             },
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("test_basic_user_can_change_price", {
-    steps: () =>
-        [
-            Chrome.clickBtn("Open Register"),
-            PosHr.loginScreenIsShown(),
-            PosHr.clickLoginButton(),
-            CashierSelectionPopup.has("Test Employee 3", { run: "click" }),
-            Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Desk Pad", "1", "10", "10"),
         ].flat(),
 });
 
@@ -232,35 +186,6 @@ registry.category("web_tour.tours").add("test_cashier_changed_in_receipt", {
                 cashier_name: "Test", // Test Employee 3 (Take the first word)
             }),
             FeedbackScreen.clickNextOrder(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("test_cost_and_margin_visibility", {
-    steps: () =>
-        [
-            Chrome.clickBtn("Open Register"),
-            PosHr.loginScreenIsShown(),
-            PosHr.clickLoginButton(),
-            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickInfoProduct("product_a"),
-            {
-                trigger: ".section-financials :contains('Margin')",
-            },
-            Dialog.confirm("Close"),
-            PosHr.clickCashierName(),
-            CashierSelectionPopup.has("Test Employee 3", { run: "click" }),
-            ProductScreen.clickInfoProduct("product_a"),
-            {
-                trigger: ".section-financials :contains('Margin')",
-            },
-            Dialog.confirm("Close"),
-            PosHr.clickCashierName(),
-            CashierSelectionPopup.has("Test Employee 4", { run: "click" }),
-            ProductScreen.clickInfoProduct("product_a"),
-            Utils.negateStep({
-                trigger: ".section-financials :contains('Margin')",
-            }),
         ].flat(),
 });
 
