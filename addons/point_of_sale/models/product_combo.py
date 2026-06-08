@@ -46,8 +46,9 @@ class ProductCombo(models.Model):
 
     @api.constrains('qty_max', 'qty_free')
     def _check_qty_max_greater_than_qty_free(self):
-        if any(combo.qty_free > combo.qty_max for combo in self):
-            raise ValidationError(_("The free quantity must be smaller or equal to the maximum quantity."))
+        for combo in self:
+            if (combo.qty_free > combo.qty_max):
+                combo.qty_max = combo.qty_free
 
     def _compute_from_pos(self):
         self.is_from_pos = self.env.context.get('is_from_pos', False)

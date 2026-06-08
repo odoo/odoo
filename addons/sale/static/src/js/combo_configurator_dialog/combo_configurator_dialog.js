@@ -44,7 +44,7 @@ export class ComboConfiguratorDialog extends Component {
     setup() {
         this.dialog = useService('dialog');
         this.env.dialogData.dismiss = !this.props.edit && this.props.discard.bind(this);
-        this.state = useState({
+        this.state = proxy({
             selectedItemsList: [],
             qty: {},
             quantity: this.props.quantity,
