@@ -386,7 +386,6 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             {'quantity': 2.0, 'picked': False, 'lot_ids': lot_1.ids},
             {'quantity': 1.0, 'picked': False, 'lot_ids': lot_2.ids},
         ])
-        mo.move_raw_ids.picked = True
         mo.button_mark_done()
 
     def test_automatic_consume_new_added_component(self):
