@@ -203,7 +203,9 @@ export class AddFontDialog extends Component {
         let shortestNamedFont;
         for (const font of this.state.uploadedFonts) {
             if (!shortestNamedFont || font.name.length < shortestNamedFont.name.length) {
-                shortestNamedFont = font;
+                // Create a copy of the font to not mangle the original font
+                // when setting the weight and style later
+                shortestNamedFont = JSON.parse(JSON.stringify(font));
             }
             font.isItalic = /italic/i.test(font.name);
             font.weight = getUploadedFontWeight(font.name);
@@ -213,7 +215,7 @@ export class AddFontDialog extends Component {
             }
         }
         if (!Object.values(targetFonts).some((font) => font.weight === 400)) {
-            // Keep font with shortest name.
+            // Keep font with the shortest name.
             shortestNamedFont.weight = 400;
             shortestNamedFont.style = "normal";
             targetFonts["400normal"] = shortestNamedFont;
@@ -221,7 +223,7 @@ export class AddFontDialog extends Component {
         const fontFaces = [];
         for (const font of Object.values(targetFonts)) {
             fontFaces.push(`@font-face{
-                font-family: ${baseFontName};
+                font-family: "${baseFontName}";
                 font-style: ${font.style};
                 font-weight: ${font.weight};
                 src:url("${font.url}");
