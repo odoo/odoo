@@ -4,8 +4,20 @@
 <t t-name="website.WebsiteBuilder">
     <Builder t-props="this.builderProps">
         <t t-set-slot="extraActions">
-            <button type="button" t-on-click="this.discard" class="o-hb-btn btn" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
-            <button type="button" t-on-click="this.save" class="o-hb-btn btn btn-success px-3" data-action="save" accesskey="s">Save</button>
+            <div class="o-website-discard-save-buttons d-flex">
+                <button type="button" t-on-click="this.discard"
+                    t-on-pointerover="this.updateTooltip"
+                    class="o-hb-btn btn" data-action="cancel"
+                    data-tooltip="Tip: Esc to preview" accesskey="j">
+                    <span class="d-inline-block text-truncate mw-100 align-bottom">Discard</span>
+                </button>
+                <button type="button" t-on-click="this.save"
+                    t-on-pointerover="this.updateTooltip"
+                    class="o-hb-btn btn btn-success px-3" data-action="save"
+                    accesskey="s">
+                    <span class="d-inline-block text-truncate mw-100 align-bottom">Save</span>
+                </button>
+            </div>
         </t>
     </Builder>
 </t>
