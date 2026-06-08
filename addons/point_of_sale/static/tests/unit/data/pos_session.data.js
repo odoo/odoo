@@ -47,6 +47,7 @@ export class PosSession extends models.ServerModel {
             "ir.module.module",
             "pos.prep.order",
             "pos.prep.line",
+            "pos.product.template.snooze",
         ];
     }
 

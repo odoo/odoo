@@ -1,9 +1,12 @@
 import { test, expect } from "@odoo/hoot";
+import { queryFirst, animationFrame } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ProductListPage } from "@pos_self_order/app/pages/product_list_page/product_list_page";
 import { setupSelfPosEnv } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
+import { serializeDateTime } from "@web/core/l10n/dates";
 
+const { DateTime } = luxon;
 definePosSelfModels();
 
 test("selectProduct", async () => {
@@ -28,6 +31,29 @@ test("selectProduct", async () => {
     models["product.combo.item"].get(3).delete();
     comp.selectProduct(comboProduct);
     expect(store.currentOrder.lines).toHaveLength(3);
+});
+
+test("test_self_order_product_availability: selectProduct - snoozed product is not added", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const product = models["product.template"].get(5);
+    const now = DateTime.now();
+    const snooze = models["pos.product.template.snooze"].create({
+        product_template_id: product,
+        pos_config_id: store.config,
+        start_time: serializeDateTime(now),
+        end_time: serializeDateTime(now.plus({ hours: 1 })),
+    });
+    store.snoozedProductTracker.setSnoozes([snooze]);
+    const comp = await mountWithCleanup(ProductListPage, {});
+    comp.flyToCart = () => {};
+    await animationFrame();
+    comp.selectProduct(product);
+    expect(store.currentOrder.lines).toHaveLength(0);
+    // Verify "Out of stock" badge is displayed in the DOM
+    const snoozedArticle = queryFirst(".o_self_product_box .opacity-25");
+    expect(snoozedArticle).not.toBe(null);
+    expect(snoozedArticle.querySelector(".text-bg-danger").textContent).toInclude("Out of stock");
 });
 
 test("getSubCategories and selectCategory", async () => {

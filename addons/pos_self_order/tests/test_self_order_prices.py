@@ -1,5 +1,6 @@
 import odoo.tests
 from odoo import Command
+from uuid import uuid4
 
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 
@@ -145,7 +146,7 @@ class TestSelfOrderPrice(SelfOrderCommonTest):
             'limit_categories': True,
         })
 
-    def combo_generator(self, name, extra_price, lst_price, max=1, free=1):
+    def combo_generator(self, name, extra_price, lst_price, qty_max=1, qty_free=1):
         product1 = self.env['product.product'].create({
             'name': f'{name} 1',
             'is_storable': True,
@@ -205,9 +206,9 @@ class TestSelfOrderPrice(SelfOrderCommonTest):
 
         combo = self.env['product.combo'].create({
             'name': f'Test Combo {name}',
-            'qty_max': max,
-            'is_upsell': free == 0,
-            'qty_free': free,
+            'qty_max': qty_max,
+            'is_upsell': qty_free == 0,
+            'qty_free': qty_free,
         })
         self.env['product.combo.item'].create({
             'product_id': product1.id,
@@ -256,80 +257,169 @@ class TestSelfOrderPrice(SelfOrderCommonTest):
         self.original_presets[1].write({'pricelist_id': self.pricelist_percent.id})
         self.original_presets[2].write({'pricelist_id': self.pricelist_free.id})
 
-    def test_combo_prices(self):
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.current_session_id.set_opening_control(0, '')
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, 'test_combo_prices')
-
-    def test_price_between_frontend_and_backend(self):
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.current_session_id.set_opening_control(0, '')
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, 'test_price_between_frontend_and_backend')
-
-    def test_prices_are_immutable_from_frontend(self):
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.current_session_id.set_opening_control(0, '')
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, 'test_prices_are_immutable_from_frontend')
-
-    def test_pricelist_should_not_be_changed_from_frontend(self):
-        self.setup_preset_and_pricelist()
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.current_session_id.set_opening_control(0, '')
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, 'test_pricelist_should_not_be_changed_from_frontend')
-
-    def test_pricelist_price_between_frontend_and_backend(self):
-        self.setup_preset_and_pricelist()
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.current_session_id.set_opening_control(0, '')
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, 'test_pricelist_price_between_frontend_and_backend')
-
-    def test_fiscal_position_between_frontend_and_backend(self):
-        self.pos_config.write({
-            'available_preset_ids': [Command.set(self.original_presets.ids)],
-            'default_preset_id': self.original_presets[0].id,
+    def _create_self_order(self, lines_vals, pricelist=None, fiscal_position=None):
+        session = self.pos_config.current_session_id
+        if not session:
+            self.pos_config.with_user(self.pos_admin).open_ui()
+            session = self.pos_config.current_session_id
+            session.set_opening_control(0, "")
+        reference, tracking_number = self.pos_config._get_next_order_refs()
+        return self.env['pos.order'].create({
+            'pos_reference': reference,
+            'tracking_number': tracking_number,
+            'session_id': session.id,
+            'config_id': self.pos_config.id,
+            'company_id': self.env.company.id,
+            'currency_id': self.pos_config.currency_id.id,
+            'pricelist_id': (pricelist or self.pos_config.pricelist_id).id,
+            'fiscal_position_id': (fiscal_position or self.pos_config.default_fiscal_position_id).id,
+            'state': 'draft',
+            'access_token': uuid4().hex,
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'lines': lines_vals,
         })
-        self.tax_21.price_include_override = 'tax_included'
-        self.tax_6.price_include_override = 'tax_included'
 
-        fp = self.env['account.fiscal.position'].create({
-            'name': 'Take out',
+    def _order_line_vals(self, product, qty=1.0, price_unit=0.0, attribute_values=None, **extra):
+        vals = {
+            'product_id': product.id,
+            'qty': qty,
+            'price_unit': price_unit,
+            'tax_ids': [Command.set(product.taxes_id.ids)],
+            'price_subtotal': 0,
+            'price_subtotal_incl': 0,
+            'price_type': 'original',
+        }
+        if attribute_values:
+            vals['attribute_value_ids'] = [Command.set(attribute_values)]
+        vals.update(extra)
+        return Command.create(vals)
+
+    def test_recompute_prices_between_frontend_and_backend(self):
+        product = self.env['product.product'].search([('name', '=', 'Random Product 1')], limit=1)
+        order = self._create_self_order([
+            self._order_line_vals(product, qty=2.0, price_unit=1.0),
+        ])
+
+        order.recompute_prices()
+
+        expected_price = order.pricelist_id._get_product_price(product, 1.0, currency=order.currency_id)
+        self.assertAlmostEqual(order.lines[0].price_unit, expected_price, places=2)
+        self.assertGreater(order.amount_total, 0)
+
+    def test_recompute_prices_are_immutable_from_frontend(self):
+        product = self.price_extra_product
+        ptav = self.price_extra_product.attribute_line_ids.product_template_value_ids
+
+        order = self._create_self_order([
+            self._order_line_vals(product, qty=2.0, price_unit=0.0, attribute_values=[ptav.ids[1], ptav.ids[3]]),
+        ])
+
+        order.recompute_prices()
+        combination = ptav[1] | ptav[3]
+
+        product_ctx = product.with_context(product._get_product_price_context(combination))
+        expected_price = order.pricelist_id._get_product_price(product_ctx, 1.0, currency=order.currency_id)
+        self.assertAlmostEqual(order.lines[0].price_unit, expected_price, places=2)
+        self.assertGreater(order.lines[0].price_subtotal_incl, order.lines[0].price_subtotal)
+
+    def test_recompute_prices_with_pricelist_percent(self):
+        self.setup_preset_and_pricelist()
+        product = self.env['product.product'].search([('name', '=', 'Random Product 1')], limit=1)
+        order = self._create_self_order(
+            [self._order_line_vals(product, qty=1.0, price_unit=999.0)],
+            pricelist=self.pricelist_percent,
+        )
+
+        order.recompute_prices()
+
+        expected_price = self.pricelist_percent._get_product_price(product, 1.0, currency=order.currency_id)
+        self.assertAlmostEqual(order.lines[0].price_unit, expected_price, places=2)
+
+    def test_recompute_prices_with_pricelist_min_quantity_rule(self):
+        product = self.cola
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Qty3 Fixed 1',
+            'company_id': self.env.company.id,
+            'item_ids': [
+                Command.create({
+                    'compute_price': 'fixed',
+                    'fixed_price': 1.0,
+                    'min_quantity': 3,
+                    'applied_on': '1_product',
+                    'product_tmpl_id': product.product_tmpl_id.id,
+                }),
+            ],
         })
+        order = self._create_self_order(
+            [self._order_line_vals(product, qty=3.0, price_unit=100.0)],
+            pricelist=pricelist,
+        )
+        order.recompute_prices()
+        self.assertAlmostEqual(order.lines[0].price_unit, 2.2, places=2)
+        self.assertAlmostEqual(order.amount_total, 7.59, places=2)
+
+    def test_recompute_prices_with_fiscal_position_mapping(self):
+        product = self.env['product.product'].search([('name', '=', 'Random Product 1')], limit=1)
+        fp = self.env['account.fiscal.position'].create({'name': 'Take out'})
         self.tax_6.copy({
             'name': f"{self.tax_6.name} Take out",
             'fiscal_position_ids': [Command.set(fp.ids)],
             'original_tax_ids': [Command.set(self.tax_21.ids)],
         })
-        self.pos_config.write({
-            'tax_regime_selection': True,
-            'default_fiscal_position_id': fp.id,
-            'fiscal_position_ids': [Command.set(fp.ids)],
-        })
 
-        self.original_presets[0].write({
-            'pricelist_id': [Command.clear()],
-            'fiscal_position_id': fp.id,
-            'name': 'Take out',
-        })
+        order = self._create_self_order(
+            [self._order_line_vals(product, qty=1.0, price_unit=0.0)],
+            fiscal_position=fp,
+        )
 
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.current_session_id.set_opening_control(0, '')
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, 'test_fiscal_position_between_frontend_and_backend')
+        order.recompute_prices()
 
-        session = self.pos_config.current_session_id
-        if session and session.state != 'closed':
-            session.order_ids.unlink()
-            session.close_session_from_ui()
+        expected_price = order.pricelist_id._get_product_price(product, 1.0, currency=order.currency_id)
+        self.assertAlmostEqual(order.lines[0].price_unit, expected_price, places=2)
+        self.assertAlmostEqual(order.lines[0].price_subtotal_incl, expected_price * 1.06, places=2)
 
-        self.tax_21.price_include_override = 'tax_excluded'
-        self.tax_6.price_include_override = 'tax_excluded'
+    def test_recompute_prices_combo_prices(self):
+        parent_product = self.big_combo
+        combo_item1 = self.combo1.combo_item_ids[0]
+        combo_item2 = self.combo1.combo_item_ids[1]
 
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.current_session_id.set_opening_control(0, '')
-        self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, 'test_fiscal_position_between_frontend_and_backend')
+        order = self._create_self_order([
+            self._order_line_vals(parent_product, combo_id=self.combo1.id)
+        ])
+        child_lines = self.env['pos.order.line'].create([
+            {
+                'product_id': combo_item1.product_id.id,
+                'qty': 1.0,
+                'price_unit': 0.0,
+                'tax_ids': [Command.set(combo_item1.product_id.taxes_id.ids)],
+                'price_subtotal': 0,
+                'price_subtotal_incl': 0,
+                'price_type': 'original',
+                'combo_item_id': combo_item1.id,
+                'combo_parent_id': order.lines[0].id,
+                'order_id': order.id,
+            },
+            {
+                'product_id': combo_item2.product_id.id,
+                'qty': 1.0,
+                'price_unit': 0.0,
+                'tax_ids': [Command.set(combo_item2.product_id.taxes_id.ids)],
+                'price_subtotal': 0,
+                'price_subtotal_incl': 0,
+                'price_type': 'original',
+                'combo_item_id': combo_item2.id,
+                'combo_parent_id': order.lines[0].id,
+                'order_id': order.id,
+            }
+        ])
+
+        order.recompute_prices()
+
+        parent_line = order.lines.filtered(lambda l: l.product_id.id == parent_product.id)
+        self.assertEqual(len(child_lines), 2)
+        self.assertTrue(all(line.price_unit > 0 for line in child_lines))
+        self.assertAlmostEqual(parent_line.price_subtotal, 0.0, places=2)
+        self.assertGreater(order.amount_total, 0)

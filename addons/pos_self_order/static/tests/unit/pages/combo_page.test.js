@@ -1,9 +1,12 @@
 import { test, expect } from "@odoo/hoot";
+import { queryFirst, animationFrame } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ComboPage } from "@pos_self_order/app/pages/combo_page/combo_page";
 import { setupSelfPosEnv } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
+import { serializeDateTime } from "@web/core/l10n/dates";
 
+const { DateTime } = luxon;
 definePosSelfModels();
 
 test("onChoiceClicked and selectItem", async () => {
@@ -54,6 +57,30 @@ test("getComboSelection", async () => {
         expect(selction[1].combo_item_id.id).toBe(4);
         expect(selction[1].qty).toBe(1);
     }
+});
+
+test("test_self_order_product_availability: selectItem - snoozed product is not selectable", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const comboProduct = models["product.template"].get(7);
+    const item = models["product.combo.item"].get(2);
+    const now = DateTime.now();
+    const snooze = models["pos.product.template.snooze"].create({
+        product_template_id: item.product_id.product_tmpl_id,
+        pos_config_id: store.config,
+        start_time: serializeDateTime(now),
+        end_time: serializeDateTime(now.plus({ hours: 1 })),
+    });
+    store.snoozedProductTracker.setSnoozes([snooze]);
+    const comp = await mountWithCleanup(ComboPage, {
+        props: { productTemplate: comboProduct },
+    });
+    await animationFrame();
+    comp.selectItem(item);
+    // Verify "Out of stock" badge and opacity in the DOM
+    const snoozedBox = queryFirst(".combo_product_box.opacity-50");
+    expect(snoozedBox).not.toBe(null);
+    expect(snoozedBox.querySelector(".text-bg-danger").textContent).toInclude("Out of stock");
 });
 
 test("isBackVisible", async () => {

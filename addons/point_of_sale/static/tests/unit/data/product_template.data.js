@@ -789,11 +789,13 @@ export class ProductTemplate extends models.ServerModel {
     ];
     get_product_info_pos() {
         return {
-            all_prices: { tax_details: [] },
+            all_prices: { tax_details: [], price_with_tax: 0, price_without_tax: 0 },
             pricelists: [],
             suppliers: [],
             variants: [],
             optional_products: [],
+            free_qty: 0,
+            uom: "Units",
         };
     }
 }

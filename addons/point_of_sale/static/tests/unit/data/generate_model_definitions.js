@@ -47,6 +47,7 @@ import { BarcodeNomenclature } from "./barcode_nomenclature.data";
 import { ProductAttributeValue } from "./product_attribute_value.data";
 import { PosPrepOrder } from "./pos_prep_order.data";
 import { PosPrepLine } from "./pos_prep_line.data";
+import { PosProductTemplateSnooze } from "./pos_product_template_snooze.data";
 
 export const hootPosModels = [
     ResCountry,
@@ -96,6 +97,7 @@ export const hootPosModels = [
     BarcodeNomenclature,
     PosPrepOrder,
     PosPrepLine,
+    PosProductTemplateSnooze,
 ];
 
 export const definePosModels = () => {
