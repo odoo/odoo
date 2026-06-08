@@ -16,6 +16,7 @@ from collections import defaultdict
 from collections.abc import Sequence
 
 import chardet
+from markupsafe import Markup, escape
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
@@ -23,6 +24,7 @@ from odoo.tools import (
     DEFAULT_SERVER_DATE_FORMAT,
     DEFAULT_SERVER_DATETIME_FORMAT,
     config,
+    html_sanitize,
 )
 from odoo.tools.image import binary_to_image
 from odoo.tools.mimetypes import guess_mimetype
@@ -461,7 +463,10 @@ class Base_ImportImport(models.TransientModel):
                         }
                     )
                 else:
-                    values.append(cell.value)
+                    if cell.ctype == xlrd.XL_CELL_TEXT and isinstance(cell.value, str):
+                        values.append(cell.value.replace("\n", "<br/>"))
+                    else:
+                        values.append(cell.value)
             if any(x and (not isinstance(x, str) or x.strip()) for x in values):
                 rows.append(values)
 
@@ -470,22 +475,17 @@ class Base_ImportImport(models.TransientModel):
 
     # use the same method for xlsx and xls files
     def _read_xlsx(self, options):
-        try:
-            from xlrd import xlsx  # noqa: F401, PLC0415
-            if xlsx:
-                return self._read_xls(options)
-        except ImportError:
-            pass
-
         import openpyxl  # noqa: PLC0415
         import openpyxl.cell.cell as types  # noqa: PLC0415
         import openpyxl.styles.numbers as styles  # noqa: PLC0415
+        from openpyxl.cell.rich_text import CellRichText  # noqa: PLC0415
         with self.file.open() as file:
-            book = openpyxl.load_workbook(file, data_only=True)
+            book = openpyxl.load_workbook(file, data_only=True, rich_text=True)
         sheets = options['sheets'] = book.sheetnames
         sheet_name = options['sheet'] = options.get('sheet') or sheets[0]
         sheet = book[sheet_name]
         rows = []
+        html_columns = options.get('_html_columns', set())
         for rowx, row in enumerate(sheet.rows, 1):
             values = []
             for colx, cell in enumerate(row, 1):
@@ -512,11 +512,86 @@ class Base_ImportImport(models.TransientModel):
                         _("Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with format: %(cell_format)s, as (%(format_type)s) formats are not supported.", row=rowx, col=colx, cell_value=cell.value, cell_format=cell.number_format, format_type=d_fmt)
                         )
                 else:
-                    values.append(str(cell.value))
+                    # A cell always has its own font object. If the entire cell content uses the same
+                    # formatting, the style is stored on the cell itself and cell.value is a plain string.
+                    # If different parts of the text use different formatting, cell.value becomes a
+                    # CellRichText instance, where each text segment carries its own font information.
+                    if colx - 1 not in html_columns:
+                        values.append(str(cell.value))
+                    elif isinstance(cell.value, CellRichText):
+                        values.append(Markup().join(
+                            self._text_to_html(value.text, value.font)
+                            for value in cell.value
+                        ))
+                    elif isinstance(cell.value, str):
+                        values.append(self._text_to_html(cell.value, cell.font, preserve_html=True))
+                    else:
+                        values.append(str(cell.value))
 
             if any(x and (not isinstance(x, str) or x.strip()) for x in values):
                 rows.append(values)
         return sheet.max_row, rows
+
+    def _text_to_html(self, text, font, preserve_html=False):
+        # Ignore Default formatting to avoid implying unneccessary styling.
+        DEFAULT_COLORS = ['FF000000', '000000', 'FFFFFFFF', 'FFFFFF']
+        DEFAULT_FONTS = ['calibri', 'arial', 'helvetica', 'liberation sans']
+        DEFAULT_SIZES = [10, 11]
+
+        text = html_sanitize(text) if preserve_html else escape(text)
+        text = Markup("<br/>").join(text.split("\n"))
+
+        if not font:
+            return text
+
+        wrappers = [
+            (font.b, Markup("<b>%s</b>")),
+            (font.i, Markup("<i>%s</i>")),
+            (font.u, Markup("<u>%s</u>")),
+            (font.strike, Markup("<s>%s</s>")),
+        ]
+
+        for enabled, template in wrappers:
+            if enabled:
+                text = template % text
+
+        styles = []
+
+        if font.color and isinstance(font.color.rgb, str) and font.color.rgb.upper() not in DEFAULT_COLORS:
+            rgb = font.color.rgb.removeprefix("FF")
+            styles.append("color:#%s" % escape(rgb))
+
+        if font.sz and font.sz not in DEFAULT_SIZES:
+            styles.append("font-size:%spx" % int(font.sz))
+
+        font_name = font.rFont if hasattr(font, "rFont") else font.name
+        if font_name and font_name.lower() not in DEFAULT_FONTS:
+            styles.append("font-family:%s" % escape(font_name))
+
+        if styles:
+            text = Markup("<span style='%s'>%s</span>") % ("; ".join(styles), text)
+
+        return text
+
+    def _get_html_column_indexes(self, fields):
+        html_columns = set()
+        for index, field in enumerate(fields):
+            if not field:
+                continue
+
+            model = self.env[self.res_model]
+            field_path = field.split(LANGUAGE_SEPARATOR, 1)[0].split("/")
+            for field_name in field_path[:-1]:
+                current_field = model._fields.get(field_name)
+                if not current_field or not current_field.relational:
+                    break
+                model = self.env[current_field.comodel_name]
+            else:
+                current_field = model._fields.get(field_path[-1])
+                if current_field and current_field.type == 'html':
+                    html_columns.add(index)
+
+        return html_columns
 
     def _read_ods(self, options):
         from . import odf_ods_reader  # noqa: PLC0415
@@ -1188,7 +1263,8 @@ class Base_ImportImport(models.TransientModel):
         if not import_fields:
             raise ImportValidationError(_("You must configure at least one field to import"))
 
-        _file_length, rows_to_import = self._read_file(options)
+        read_options = dict(options, _html_columns=self._get_html_column_indexes(fields))
+        _file_length, rows_to_import = self._read_file(read_options)
         if len(rows_to_import[0]) != len(fields):
             raise ImportValidationError(
                 _(

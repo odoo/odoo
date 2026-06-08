@@ -4,9 +4,12 @@ import datetime
 import difflib
 import io
 import pprint
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
+from openpyxl.cell.rich_text import CellRichText, TextBlock
+from openpyxl.cell.text import InlineFont
 from PIL import Image
 
 from odoo.tests.common import tagged, TransactionCase, can_import, RecordCapturer
@@ -529,6 +532,27 @@ class TestPreview(TransactionCase):
             {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'translate': False, 'fields': [], 'type': 'integer', 'model_name': 'import.preview'},
         ])
         self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['1', '3', '5'], ['2', '4', '6']])
+
+    @unittest.skipUnless(can_import('openpyxl'), "XLSX not available")
+    def test_rich_text_to_html(self):
+        importer = self.env["base_import.import"]
+
+        cases = [
+            (InlineFont(b=True), "Bold", "<b>Bold</b>"),
+            (InlineFont(i=True), "Italic", "<i>Italic</i>"),
+            (InlineFont(color="FFFF0000"), "Red", "<span style='color:#FF0000'>Red</span>"),
+            (InlineFont(sz=20), "Large", "<span style='font-size:20px'>Large</span>"),
+            (InlineFont(rFont="Century"), "Century", "<span style='font-family:Century'>Century</span>"),
+        ]
+
+        for font, text, expected_html in cases:
+            with self.subTest(text=text):
+                cell = SimpleNamespace(value=CellRichText([TextBlock(font, text)]))
+                result_html = "".join(
+                    importer._text_to_html(value.text, value.font)
+                    for value in cell.value
+                )
+                self.assertEqual(result_html, expected_html)
 
     @unittest.skipUnless(can_import('odf'), "ODFPY not available")
     def test_ods_success(self):
