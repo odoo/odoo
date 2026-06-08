@@ -758,22 +758,50 @@ class EmployeePortalAPI(http.Controller):
                 # Wrap each employee in a savepoint so a failure for one
                 # employee does not abort the entire transaction.
                 with su_env.cr.savepoint():
-                    # Re-use orphaned user with same login
+                    company_id = (
+                        emp.company_id.id
+                        or su_env['res.company'].search([], limit=1).id
+                    )
+
+                    # Re-use existing user with same login only if NOT already
+                    # linked to a different employee (hr_employee_user_uniq).
                     su_env.cr.execute(
                         'SELECT id FROM res_users WHERE login=%s LIMIT 1', (code,)
                     )
                     row = su_env.cr.fetchone()
                     if row:
-                        user_id = row[0]
-                        emp.write({'user_id': user_id})
-                    else:
-                        company_id = (
-                            emp.company_id.id
-                            or su_env['res.company'].search([], limit=1).id
+                        existing_uid = row[0]
+                        # Check if this user is already linked to another employee
+                        su_env.cr.execute(
+                            'SELECT id FROM hr_employee WHERE user_id=%s AND id!=%s LIMIT 1',
+                            (existing_uid, emp.id)
                         )
-                        # Use work_email only if it's not already taken by another user.
-                        # Duplicate emails cause create() to fail — fall back to
-                        # a guaranteed-unique placeholder so every employee gets a user.
+                        if su_env.cr.fetchone():
+                            # Taken by another employee — create a unique login variant
+                            alt_login = f'{code}_{emp.id}'
+                            su_env.cr.execute(
+                                'SELECT id FROM res_users WHERE login=%s LIMIT 1', (alt_login,)
+                            )
+                            alt_row = su_env.cr.fetchone()
+                            if alt_row:
+                                user_id = alt_row[0]
+                            else:
+                                new_user = su_env['res.users'].with_context(
+                                    no_reset_password=True
+                                ).create({
+                                    'name':        name,
+                                    'login':       alt_login,
+                                    'email':       f'{code}_{emp.id}@tnpd.local',
+                                    'company_id':  company_id,
+                                    'company_ids': [(6, 0, [company_id])],
+                                })
+                                user_id = new_user.id
+                            emp.write({'user_id': user_id})
+                        else:
+                            user_id = existing_uid
+                            emp.write({'user_id': user_id})
+                    else:
+                        # Use work_email only if not already taken by another user.
                         candidate_email = emp.work_email or ''
                         if candidate_email:
                             su_env.cr.execute(
