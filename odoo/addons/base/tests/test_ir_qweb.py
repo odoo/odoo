@@ -2717,3 +2717,40 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
         self.env.invalidate_all()
 
         check(extend_view_2.id, "<div><div>Hello3</div><article></article><section></section></div>", queries=5, cachemiss=1)
+
+    def test_render_reuses_t_call_compilation_within_one_render(self):
+        View = self.env['ir.ui.view']
+        View.create([{
+            'name': 'Test Loop Child',
+            'type': 'qweb',
+            'key': 'base.test_t_call_loop_child',
+            'arch_db': '<t t-name="base.test_t_call_loop_child"><span t-out="value"/></t>',
+        }, {
+            'name': 'Test Loop Parent',
+            'type': 'qweb',
+            'key': 'base.test_t_call_loop_parent',
+            'arch_db': """<t t-name="base.test_t_call_loop_parent">
+                <div>
+                    <t t-foreach="[1, 2, 3]" t-as="value">
+                        <t t-call="base.test_t_call_loop_child"/>
+                    </t>
+                </div>
+            </t>""",
+        }])
+
+        compile_count = {}
+        orig_compile = self.env['ir.qweb']._compile.__func__
+
+        def wrapped_compile(qweb, template):
+            compile_count[template] = compile_count.get(template, 0) + 1
+            return orig_compile(qweb, template)
+
+        with patch('odoo.addons.base.models.ir_qweb.IrQweb._compile', new=wrapped_compile):
+            value = self.env['ir.qweb']._render('base.test_t_call_loop_parent')
+
+        self.assertEqual(
+            etree.fromstring(value),
+            etree.fromstring("<div><span>1</span><span>2</span><span>3</span></div>"),
+        )
+        self.assertEqual(compile_count.get('base.test_t_call_loop_parent'), 1)
+        self.assertEqual(compile_count.get('base.test_t_call_loop_child'), 1)
