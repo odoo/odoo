@@ -78,7 +78,7 @@
                 <field name="name" string="Number" readonly="1" decoration-bf="1"/>
                 <field name="date_order" readonly="state in ['cancel', 'sale']"/>
                 <field name="commitment_date"/>
-                <field name="partner_id" readonly="1"/>
+                <field name="partner_id" widget="many2one_avatar_user" readonly="1"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="hide"/>
                 <field name="team_id" optional="hide"/>
                 <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>  <!--for JS widgets-->
@@ -141,7 +141,7 @@
         <field name="inherit_id" ref="sale.sale_order_tree"/>
         <field name="arch" type="xml">
             <field name="user_id" position="before">
-                <field name="website_id" groups="website.group_multi_website" optional="show"/>
+                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
             </field>
         </field>
     </record>

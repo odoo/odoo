@@ -16,30 +16,6 @@
                 groups="sales_team.group_sale_salesman"
                 sequence="10"/>
 
-            <menuitem id="menu_sale_order"
-                name="Orders"
-                action="action_orders"
-                groups="sales_team.group_sale_salesman"
-                sequence="20"/>
-
-            <menuitem id="report_sales_team"
-                name="Sales Teams"
-                action="sales_team.crm_team_action_sales"
-                groups="sales_team.group_sale_manager"
-                sequence="30"/>
-
-            <menuitem id="res_partner_menu"
-                action="account.res_partner_action_customer"
-                groups="sales_team.group_sale_salesman"
-                sequence="40"/>
-
-        </menuitem>
-
-        <menuitem id="menu_sale_invoicing"
-            name="To Invoice"
-            groups="sales_team.group_sale_salesman"
-            sequence="20">
-
             <menuitem
                 id="menu_service_material"
                 action="action_service_material"
@@ -47,13 +23,10 @@
                 sequence="10"
             />
 
-            <menuitem id="menu_sale_order_invoice"
-                action="action_orders_to_invoice"
-                sequence="20"/>
-
-            <menuitem id="menu_sale_order_upselling"
-                action="action_orders_upselling"
-                sequence="30"/>
+            <menuitem id="res_partner_menu"
+                action="account.res_partner_action_customer"
+                groups="sales_team.group_sale_salesman"
+                sequence="40"/>
 
         </menuitem>
 

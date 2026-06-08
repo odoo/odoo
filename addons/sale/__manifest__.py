@@ -75,8 +75,13 @@ This module contains all the common features of Sales Management and eCommerce.
             "sale/static/src/js/sale_product_field/*",
             "sale/static/src/js/sale_utils.js",
             "sale/static/src/js/sale_label_text/*",
+            "sale/static/src/js/date_filter_button/**/*",
+            "sale/static/src/js/dashboard/**/*",
             "sale/static/src/xml/**/*",
             "sale/static/src/views/**/*",
+        ],
+        "web.assets_web_dark": [
+            "sale/static/src/js/dashboard/**/*.dark.scss",
         ],
         "web.assets_frontend": [
             "sale/static/src/interactions/**/*",
