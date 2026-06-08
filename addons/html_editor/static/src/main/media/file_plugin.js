@@ -10,7 +10,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class FilePlugin extends Plugin {
     static id = "file";
-    static dependencies = ["dom", "history", "selection"];
+    static dependencies = ["clipboard", "dom", "history", "selection"];
     resources = {
         user_commands: {
             id: "uploadFile",
@@ -48,6 +48,22 @@ export class FilePlugin extends Plugin {
         is_powerbox_available_predicates: (node) => {
             if (closestElement(node, ".o_file_box")) {
                 return false;
+            }
+        },
+        allow_wrap_inline_in_blocks_predicates: (node) => {
+            if (closestElement(node, ".o_file_box")) {
+                return false;
+            }
+        },
+
+        /** Overrides */
+        paste_overrides: (selection, clipboardData) => {
+            if (closestElement(selection.anchorNode, ".o_file_box")) {
+                this.dependencies.clipboard.pasteText(
+                    selection,
+                    clipboardData.getData("text/plain")
+                );
+                return true;
             }
         },
     };
