@@ -343,12 +343,11 @@
                                         <span t-field="category.name"/>
                                     </t>
                                 </h1>
-                                <h1
-                                    class="o_wsale_shop_title h4-fs"
-                                    t-if="not category and not search"
-                                >
-                                    All products
-                                </h1>
+                                <div class="o_wsale_shop_title" t-if="not category and not search">
+                                    <h1 class="h4-fs">
+                                        All products
+                                    </h1>
+                                </div>
                                 <t t-if="category">
                                     <t t-set='editor_msg'>
                                         Drag blocks here to customize the header of
