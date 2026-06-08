@@ -1598,6 +1598,25 @@ export class Rtc extends Record {
             })
         );
         this.channel?.focusAvailableVideo();
+        let isPipActionSupported = false;
+        try {
+            browser.navigator.mediaSession.setActionHandler(
+                "enterpictureinpicture",
+                ({ enterPictureInPictureReason }) => {
+                    if (enterPictureInPictureReason === "contentoccluded") {
+                        this.openPip({ context: { root: { el: this.rootEl } } });
+                    }
+                }
+            );
+            isPipActionSupported = true;
+        } catch {
+            // safely ignore, "enterpictureinpicture" event is not universally available.
+        }
+        if (isPipActionSupported) {
+            this.cleanups.push(() =>
+                browser.navigator.mediaSession.setActionHandler("enterpictureinpicture", null)
+            );
+        }
     }
 
     newLogs() {
