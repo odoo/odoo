@@ -13,7 +13,6 @@ const commandSetupRegistry = registry.category("command_setup");
 const commandProviderRegistry = registry.category("command_provider");
 
 const NEW_CHANNEL = "NEW_CHANNEL";
-const VIEW_HIDDEN = "VIEW_HIDDEN";
 
 class CreateChannelDialog extends Component {
     static components = { Dialog };
@@ -256,16 +255,6 @@ export class DiscussCommandPalette {
                 props: { action: { icon: "fa fa-fw fa-hashtag", searchValueSuffix: true } },
             };
         }
-        if (channelOrPersona === VIEW_HIDDEN) {
-            return {
-                Component: DiscussCommand,
-                name: _t("View hidden conversations"),
-                props: { action: {} },
-                action: () => {
-                    this.env.services.action.doAction("mail.discuss_my_conversations_action");
-                },
-            };
-        }
         throw new Error(`Unsupported use of makeDiscussCommand("${channelOrPersona}")`);
     }
 }
@@ -280,9 +269,6 @@ commandProviderRegistry.add("find_or_start_conversation", {
         if (!palette.store.inPublicPage) {
             if (palette.cleanedTerm) {
                 palette.commands.push(palette.makeDiscussCommand(NEW_CHANNEL));
-            }
-            if (palette.store.has_unpinned_channels) {
-                palette.commands.push(palette.makeDiscussCommand(VIEW_HIDDEN));
             }
         }
         return palette.commands;

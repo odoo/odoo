@@ -742,7 +742,6 @@ export class DiscussChannel extends Record {
      */
     async unpinChannel({ notify = true, undos = new Map() } = {}) {
         undos.set(this, []);
-        this.store.has_unpinned_channels = true;
         // Unpin sub-channels first to prevent onPinStateUpdated of parent from removing
         // isLocallyPinned from them before their values are saved for undo.
         for (const subThread of this.sub_channel_ids) {

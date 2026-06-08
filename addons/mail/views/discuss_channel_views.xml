@@ -166,8 +166,6 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="display_name"/>
-                    <filter string="Visible" name="filter_visible" domain="[('self_member_id.is_pinned', '=', True)]"/>
-                    <filter string="Hidden" name="filter_hidden" domain="[('self_member_id.is_pinned', '=', False)]"/>
                     <separator/>
                     <filter string="Channel" name="filter_channel" domain="[('channel_type', '=', 'channel')]"/>
                     <filter string="Group" name="filter_group" domain="[('channel_type', '=', 'group')]"/>
@@ -211,7 +209,6 @@
             <field name="view_mode">kanban,list,form</field>
             <field name="domain">[("is_member", "=", True)]</field>
             <field name="search_view_id" ref="mail.discuss_my_conversations_view_search" />
-            <field name="context" eval="{'search_default_filter_hidden': 1}"/>
         </record>
 
     <record id="mail.action_discuss" model="ir.actions.client">

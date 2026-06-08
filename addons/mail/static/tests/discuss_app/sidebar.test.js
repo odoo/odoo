@@ -852,7 +852,6 @@ test("Can unpin chat channel", async () => {
     await click("[title='Chat Actions']");
     await click(".o-dropdown-item:text('Hide Until New Message')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')", { count: 0 });
-    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))");
 });
 
 test("No 'Hide Until New Message' on conversation with self in call", async () => {
@@ -918,7 +917,6 @@ test("opening a hidden channel re-pins it", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-DiscussSidebarChannel:has(:text('InitialChannel'))");
-    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')", { count: 0 });
     await click("input[placeholder='Search conversations']");
     await insertText(
@@ -927,7 +925,6 @@ test("opening a hidden channel re-pins it", async () => {
     );
     await click(".o-mail-DiscussCommand-nameContainer:text('Mitchell Admin')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')");
-    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))");
     await click("input[placeholder='Search conversations']");
     await insertText(
         ".o_command_palette_search input[placeholder='Search conversations']",
@@ -935,9 +932,6 @@ test("opening a hidden channel re-pins it", async () => {
     );
     await click(".o-mail-DiscussCommand-nameContainer:text('General')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')");
-    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))", {
-        count: 0,
-    });
 });
 
 test("Can leave channel", async () => {
