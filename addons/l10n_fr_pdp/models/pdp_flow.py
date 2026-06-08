@@ -215,7 +215,7 @@ class PdpFlow(models.Model):
                 moves = flow._get_moves()
             valid_moves = moves.filtered(lambda move: move.l10n_fr_pdp_status not in invalid_move_states)
 
-            if not valid_moves:
+            if not flow.initial_flow_id and not valid_moves:
                 flow._message_post_once(self.env._("Payload build failed: no valid invoices."))
                 continue
 

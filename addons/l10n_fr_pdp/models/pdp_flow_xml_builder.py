@@ -27,9 +27,6 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
 
     @api.model
     def _build_payload(self, flow, valid_moves):
-        if not valid_moves:
-            return False
-
         document = {'_tag': 'Report'}
 
         self._add_report_header(document, flow)  # TB-1
@@ -191,15 +188,14 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         b2bi_invoices = self._get_b2bi_transaction_nodes(flow, b2bi_moves)
         b2c_agregates = self._get_b2c_transaction_nodes(b2c_moves)
 
-        if b2bi_invoices or b2c_agregates:
-            document['TransactionsReport'] = {
-                'ReportPeriod': {
-                    'StartDate': {'_text': self._format_date(flow.period_start)},
-                    'EndDate': {'_text': self._format_date(flow.period_end)},
-                },
-                'Invoice': b2bi_invoices,
-                'Transactions': b2c_agregates,
-            }
+        document['TransactionsReport'] = {
+            'ReportPeriod': {
+                'StartDate': {'_text': self._format_date(flow.period_start)},
+                'EndDate': {'_text': self._format_date(flow.period_end)},
+            },
+            'Invoice': b2bi_invoices,
+            'Transactions': b2c_agregates,
+        }
 
     @api.model
     def _get_b2bi_transaction_nodes(self, flow, moves):
