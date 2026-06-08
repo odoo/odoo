@@ -17,7 +17,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 import { nbsp } from "@web/core/utils/strings";
 
-import { Component, proxy, signal, useEffect } from "@odoo/owl";
+import { Component, computed, proxy, signal, useEffect } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -145,6 +145,7 @@ export class Message extends Component {
         this.ui = useService("ui");
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
+        this.isActive = computed(() => Boolean(this._isActive));
         useSubEnv({ inMessage: true });
         useChildSubEnv({
             message: this.props.message,
@@ -369,7 +370,8 @@ export class Message extends Component {
         return _t("Message");
     }
 
-    get isActive() {
+    /** The getter of the isActive. Meant to be patched */
+    get _isActive() {
         return (
             this.state.isHovered ||
             this.state.isClicked ||

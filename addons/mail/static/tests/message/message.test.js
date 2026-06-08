@@ -4,6 +4,7 @@ import {
     tripleClick,
 } from "@html_editor/../tests/_helpers/user_actions";
 
+import { mailChatterMessageActionsInvisibleWhenNotHovered } from "@mail/../tests/mail_shared_tests";
 import {
     click,
     contains,
@@ -53,6 +54,11 @@ const { DateTime } = luxon;
 
 describe.current.tags("desktop");
 defineMailModels();
+
+test(
+    "Chatter message actions should be invisible when not mouse-hovered",
+    mailChatterMessageActionsInvisibleWhenNotHovered
+);
 
 test("Start edition on click edit", async () => {
     const pyEnv = await startServer();

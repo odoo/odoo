@@ -30,7 +30,7 @@
                         </t>
                         <t t-elif="this.message.isPending" t-call="mail.Message.pendingStatus"/>
                         <t t-elif="!this.message.is_transient">
-                            <small t-if="this.isActive and this.props.showDates" class="o-mail-Message-date o-xsmaller mt-2 text-center lh-1" t-att-title="this.message.datetimeMedium">
+                            <small t-if="this.isActive() and this.props.showDates" class="o-mail-Message-date o-xsmaller mt-2 text-center lh-1" t-att-title="this.message.datetimeMedium">
                                 <t t-out="this.message.dateSimple"/>
                             </small>
                             <t t-elif="this.message.is_bookmarked  and !(this.props.thread?.eq(this.store.bookmarkBox))" t-call="mail.Message.sidebarBookmark"/>
@@ -166,7 +166,7 @@
             'my-n2': !this.message.bubbleColor and !this.props.asCard and !this.isMobileOS,
             'gap-1': this.isMobileOS,
             'mx-1': !this.isMobileOS,
-            'invisible': !this.isActive and !this.isMobileOS,
+            'invisible': !this.isActive() and !this.isMobileOS,
             'o-expanded': this.optionsDropdown.isOpen
         }"
     >
