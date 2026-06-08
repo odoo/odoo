@@ -62,6 +62,7 @@
                                         t-attf-id="{{props.id or 'autocomplete'}}_{{source_index}}_{{option_index}}"
                                         t-att-role="!option.unselectable and 'option'"
                                         t-att-href="!option.unselectable and '#'"
+                                        t-att-title="option.title"
                                         t-att-class="{ 'ui-state-active': isActiveSourceOption([source_index, option_index]) }"
                                         t-att-aria-selected="isActiveSourceOption([source_index, option_index]) ? 'true' : 'false'"
                                     >
