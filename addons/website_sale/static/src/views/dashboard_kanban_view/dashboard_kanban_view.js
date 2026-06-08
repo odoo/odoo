@@ -1,13 +1,13 @@
 import { registry } from '@web/core/registry';
 import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
 import { kanbanView } from '@web/views/kanban/kanban_view';
-import { Dashboard } from '../../js/dashboard/dashboard';
+import { WebsiteSaleDashboard } from '../../js/dashboard/dashboard';
 
 export class DashboardKanbanRenderer extends KanbanRenderer {
 	static template = 'website_sale.KanbanRenderer';
 	static components = {
 		...KanbanRenderer.components,
-		Dashboard,
+		WebsiteSaleDashboard,
 	};
 }
 

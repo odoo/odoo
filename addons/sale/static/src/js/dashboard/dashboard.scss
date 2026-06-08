@@ -18,6 +18,12 @@
             color: var(--DashboardCard__orange-color, #{$orange-700}),
             color-active: var(--DashboardCard__orange-color--active, #{$orange-800}),
         ),
+        red: (
+            bg: var(--DashboardCard__red-bg-color, #{$red-100}),
+            bg-active: var(--DashboardCard__red-bg-color--active, #{$red-200}),
+            color: var(--DashboardCard__red-color, #{$red-700}),
+            color-active: var(--DashboardCard__red-color--active, #{$red-800}),
+        ),
     );
 
     @each $name, $states in $dashboard-colors {
@@ -50,7 +56,7 @@
     }
 }
 
-.o_website_sale_dashboard {
+.o_sale_dashboard {
     background-color: $o-control-panel-background-color;
 
     @include media-breakpoint-up(md) {

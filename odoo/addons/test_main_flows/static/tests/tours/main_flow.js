@@ -976,13 +976,13 @@ stepUtils.autoExpandMoreButtons(),
     content: "Go to Sales menu",
     run: "click",
 }, {
-    trigger: ".dropdown-item[data-menu-xmlid='sale.menu_sale_order'], nav.o_burger_menu_content li[data-menu-xmlid='sale.menu_sale_order']",
+    trigger: ".dropdown-item[data-menu-xmlid='sale.menu_sale_quotations'], nav.o_burger_menu_content li[data-menu-xmlid='sale.menu_sale_quotations']",
     content: "Go to the sales orders",
     run: "click",
 },
 {
     isActive: ["desktop"],
-    trigger: '.o_control_panel .o_breadcrumb:contains("Sales Orders")',
+    trigger: '.o_control_panel .o_breadcrumb:contains("Quotations")',
 },
 {
     isActive: ["desktop"],
@@ -992,7 +992,7 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: '.o_navbar_breadcrumbs .o_breadcrumb:contains("Sales Orders")',
+    trigger: '.o_navbar_breadcrumbs .o_breadcrumb:contains("Quotations")',
 },
 {
     isActive: ["mobile"],

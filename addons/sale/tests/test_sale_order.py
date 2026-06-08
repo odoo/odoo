@@ -42,6 +42,21 @@ class TestSaleOrder(SaleCommon):
         cls.confirmation_email_template = cls.sale_order._get_confirmation_template()
         cls.async_emails_cron = cls.env.ref("sale.send_pending_emails_cron")
 
+    def test_is_unfulfilled_excludes_service_products(self):
+        """Check that orders containing only service products or fully delivered physical products
+        are not considered unfulfilled."""
+        self.sale_order.action_confirm()
+        self.assertIn(
+            self.sale_order, self.env["sale.order"].search([("is_unfulfilled", "=", True)])
+        )
+        # deliver all storable products
+        self.sale_order.order_line.filtered(
+            lambda line: line.product_id.type != "service"
+        ).qty_delivered = 5.0
+        self.assertNotIn(
+            self.sale_order, self.env["sale.order"].search([("is_unfulfilled", "=", True)])
+        )
+
     def test_computes_auto_fill(self):
         free_product, dummy_product = self.env["product.product"].create([
             {"name": "Free product", "list_price": 0.0},

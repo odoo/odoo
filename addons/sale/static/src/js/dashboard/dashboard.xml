@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="website_sale.Dashboard">
-        <div class="o_website_sale_dashboard container-fluid d-flex flex-column-reverse flex-lg-row justify-content-between align-items-center gap-3 p-3 pt-0 pt-md-3">
+    <t t-name="sale.Dashboard">
+        <div class="o_sale_dashboard container-fluid d-flex flex-column-reverse flex-lg-row justify-content-between align-items-center gap-3 p-3 pt-0 pt-md-3">
 
             <!-- Left Section -->
             <div class="d-flex justify-content-lg-start justify-content-md-center gap-1 gap-md-3 gap-lg-2 px-md-5 px-lg-0 w-100 w-lg-auto">
                 <t t-foreach="this.dashboardCards" t-as="card" t-key="card.key">
                     <button
-                        t-if="card.alwaysVisible || this.state.dashboardData[card.key] > 0"
+                        t-if="this.isCardVisible(card)"
                         t-att-title="card.title"
                         class="o_dashboard_card btn flex-grow-1 d-md-flex d-lg-block align-items-md-baseline justify-content-md-center gap-md-1 py-2 px-4 lh-sm"
                         t-att-class="this.getDashboardCardAdditionalClass(card.key)"
-                        t-on-click="this.state.dashboardData[card.key] > 0 ? this.handleCardClick : () => {}"
+                        t-on-click="this.handleCardClick"
                         t-att-card_name="card.key"
                     >
                         <span
@@ -35,16 +35,13 @@
                             <span class="text-body fw-bold"><t t-out="dashboardPeriodCard.title"/></span>
                             <div class="d-flex align-items-baseline gap-1">
                                 <span class="fs-4 fw-bold">
-                                    <t t-out="dashboardPeriodCard.monetary ? this.formatCurrency(this.state.dashboardData[dashboardPeriodCard.key]['total']) : this.state.dashboardData[dashboardPeriodCard.key]['total']"/>
-                                </span>
+                                    <t t-out="dashboardPeriodCard.monetary ? this.formatCurrency(this.state.dashboardData[dashboardPeriodCard.key]['total']) : this.state.dashboardData[dashboardPeriodCard.key]['total']"/>                                </span>
                                 <span
                                     t-if="this.state.dashboardData[dashboardPeriodCard.key]['gain'] !== null"
                                     class="o_dashboard_card_evolution"
                                     t-att-class="this.getPeriodCardClass(dashboardPeriodCard.key)"
                                 >
-                                    <t
-                                        t-out="this.state.dashboardData[dashboardPeriodCard.key]['gain']"
-                                    />%
+                                    <t t-out="this.state.dashboardData[dashboardPeriodCard.key]['gain']"/>%
                                 </span>
                                 <span
                                     t-else=""
