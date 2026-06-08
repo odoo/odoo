@@ -1,49 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="s_team_board" name="Team Board">
-        <section class="s_team_board my-6 container">
+        <section class="s_team_board my-4 py-4 container">
             <h2 class="py-4 h3-fs">Meet Our Team</h2>
             <p class="pb-2 h5-fs">The people building the experience you rely on every day.</p>
-            <div class="team_board_member_cards_container">
-                <div class="row card-group row-cols-1 row-cols-md-4 g-3">
-                    <div class="col">
-                        <div class="card h-100 d-flex flex-column">
-                            <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
-                                <img class="o_card_img card-img-top rounded pb-0" src="/web/image/website.s_company_team_image_1"/>
-                            </figure>
-                            <div class="card-body flex-grow-1">
-                                <h3 class="card-title h5-fs" style="text-align: left;">Tony Fred</h3>
-                                <p class="card-text text-secondary-emphasis" style="text-align: left;">Chief Executive Officer</p>
-                                <p>Tony shapes product strategy and keeps execution aligned across teams.</p>
-                            </div>
-                        </div>
+            <div class="s_team_board_grid o_team_board_card_container s_team_board_comfortable">
+                <div data-name="Team Board Card" class="card s_card"
+                    data-bs-toggle="modal"
+                    data-bs-target="#s_team_board_modal"
+                    aria-haspopup="dialog"
+                    aria-controls="s_team_board_modal">
+                    <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
+                        <img class="o_card_img card-img-top rounded pb-0" src="/web/image/website.s_company_team_image_1"/>
+                    </figure>
+                    <div class="card-body">
+                        <h3 class="card-title h5-fs" style="text-align: left;">Tony Fred</h3>
+                        <p class="card-text text-secondary-emphasis" style="text-align: left;">Chief Executive Officer</p>
+                        <p>Tony shapes product strategy and keeps execution aligned across teams.</p>
                     </div>
-                    <div class="col">
-                        <div class="card h-100 d-flex flex-column">
-                            <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
-                                <img class="o_card_img card-img-top rounded pb-0" src="/web/image/website.s_company_team_image_2"/>
-                            </figure>
-                            <div class="card-body">
-                                <h3 class="card-title h5-fs" style="text-align: left;">Mitch Stark</h3>
-                                <p class="card-text text-secondary-emphasis" style="text-align: left;">Chief Commercial Officer</p>
-                                <p>Mitch leads go-to-market initiatives and partner relationships.</p>
-                            </div>
-                        </div>
+                </div>
+                <div data-name="Team Board Card" class="card s_card"
+                    data-bs-toggle="modal"
+                    data-bs-target="#s_team_board_modal"
+                    aria-haspopup="dialog"
+                    aria-controls="s_team_board_modal">
+                    <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
+                        <img class="o_card_img card-img-top rounded pb-0" src="/web/image/website.s_company_team_image_2"/>
+                    </figure>
+                    <div class="card-body">
+                        <h3 class="card-title h5-fs" style="text-align: left;">Mitch Stark</h3>
+                        <p class="card-text text-secondary-emphasis" style="text-align: left;">Chief Commercial Officer</p>
+                        <p>Mitch leads go-to-market initiatives and partner relationships.</p>
                     </div>
-                    <div class="col">
-                        <div class="card h-100 d-flex flex-column">
-                            <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
-                                <img class="o_card_img card-img-top rounded pb-0" src="/web/image/website.s_company_team_image_3"/>
-                            </figure>
-                            <div class="card-body">
-                                <h3 class="card-title h5-fs" style="text-align: left;">Aline Turner</h3>
-                                <p class="card-text text-secondary-emphasis" style="text-align: left;">Chief Technical Officer</p>
-                                <p>Aline drives platform architecture and engineering quality.</p>
-                            </div>
-                        </div>
+                </div>
+                <div 
+                    data-bs-toggle="modal"
+                    data-bs-target="#s_team_board_modal"
+                    aria-haspopup="dialog"
+                    aria-controls="s_team_board_modal"
+                    data-name="Team Board Card"
+                    class="card s_card">
+                    <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
+                        <img class="o_card_img card-img-top rounded pb-0" src="/web/image/website.s_company_team_image_3"/>
+                    </figure>
+                    <div class="card-body">
+                        <h3 class="card-title h5-fs" style="text-align: left;">Aline Turner</h3>
+                        <p class="card-text text-secondary-emphasis" style="text-align: left;">Chief Technical Officer</p>
+                        <p>Aline drives platform architecture and engineering quality.</p>
                     </div>
                 </div>
             </div>
         </section>
     </template>
+    <asset id="website.s_team_board_stylesheet" name="Team board 000 scss">
+        <bundle>web.assets_frontend</bundle>
+        <path>website/static/src/snippets/s_team_board/000.scss</path>
+    </asset>
 </odoo>

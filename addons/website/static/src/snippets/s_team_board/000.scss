@@ -1,0 +1,110 @@
+.s_team_board {
+    .o_team_board_card_container {
+        display: flex;
+        flex-direction: column;
+
+        .card-body p:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .o_team_board_card_container.s_team_board_grid {
+        gap: 1rem;
+        justify-content: space-between;
+
+        figure,
+        .card-body { width: 100%; }
+
+        .card {
+            width: 100%;
+            height: auto;
+            @include media-breakpoint-up(md) {
+                flex-grow: 0;
+                flex-shrink: 1;
+            }
+        }
+
+        @include media-breakpoint-up(md) {
+            flex-direction: row;
+        }
+    }
+
+    .o_team_board_card_container.s_team_cards_list_layout {
+        gap: 0.5rem;
+        .card {
+            margin-bottom: 1rem;
+            flex-direction: row;
+            align-items: stretch;
+
+            figure {
+                flex: 0 0 auto;
+                width: 16.66666667%;
+                margin: 0;
+                padding: 0;
+                &::before { display: none; }
+                aspect-ratio: auto;
+                height: auto;
+            }
+
+            .card-body {
+                flex: 0 0 auto;
+                width: 83.33333333%;
+            }
+
+            figure img {
+                max-width: 100%;
+                height: auto;
+                position: static !important;
+                display: block;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-top-right-radius: 0;
+            }
+        }
+    }
+
+    .o_team_board_card_container.s_team_board_compact {
+        .card-body {
+            font-size: 0.875rem;
+            line-height: 1.35;
+        }
+
+        .card-title {
+            margin-bottom: 0.15rem;
+            font-size: 1rem;
+        }
+
+        .card-text {
+            margin-bottom: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        .card-body p {
+            margin-bottom: 0.25rem;
+        }
+    }
+
+    .o_team_board_card_container.s_team_board_comfortable {
+        .card-body {
+            font-size: 1.0625rem;
+            line-height: 1.7;
+        }
+
+        .card-title {
+            margin-bottom: 0.75rem;
+            font-size: 1.35rem;
+        }
+
+        .card-text {
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            letter-spacing: 0.01em;
+        }
+
+        .card-body p {
+            margin-bottom: 1rem;
+        }
+
+    }
+}
