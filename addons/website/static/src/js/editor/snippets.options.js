@@ -441,7 +441,9 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                 let shortestNamedFont;
                 for (const font of this.state.uploadedFonts) {
                     if (!shortestNamedFont || font.name.length < shortestNamedFont.name.length) {
-                        shortestNamedFont = font;
+                        // Create a copy of the font to not mangle the original font
+                        // when setting the weight and style later
+                        shortestNamedFont = JSON.parse(JSON.stringify(font));
                     }
                     font.isItalic = /italic/i.test(font.name);
                     font.isLight = /light|300/i.test(font.name);
@@ -460,7 +462,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                     }
                 }
                 if (!Object.values(targetFonts).filter((font) => font.isRegular).length) {
-                    // Keep font with shortest name.
+                    // Keep font with the shortest name.
                     shortestNamedFont.weight = 400;
                     shortestNamedFont.style = "normal";
                     targetFonts["400"] = shortestNamedFont;
@@ -468,7 +470,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                 const fontFaces = [];
                 for (const font of Object.values(targetFonts)) {
                     fontFaces.push(`@font-face{
-                        font-family: ${baseFontName};
+                        font-family: "${baseFontName}";
                         font-style: ${font.style};
                         font-weight: ${font.weight};
                         src:url("${font.url}");
