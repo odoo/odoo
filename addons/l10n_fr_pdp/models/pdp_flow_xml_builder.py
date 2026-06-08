@@ -67,7 +67,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 },
             },
             'Issuer': {
-                'Id': {'schemeId': '0002', '_text': flow.company_id.partner_id._l10n_fr_pdp_get_siren()},
+                'Id': {'schemeId': '0002', '_text': flow.company_id.partner_id._l10n_fr_get_siren()},
                 'Name': {'_text': flow.company_id.name[:99]},
                 'RoleCode': {'_text':  'BY' if flow.operation_type == 'purchase' else 'SE'},
                 **({'URIUniversalCommunication': {
@@ -342,7 +342,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             # Use specific identifier for territories like NC (RIDET), PF (TAHITI), WF
             company_scheme = specific_scheme['qualifier']
             company_id = partner.ref
-        elif siren := partner._l10n_fr_pdp_get_siren():
+        elif siren := partner._l10n_fr_get_siren():
             # Standard French SIREN
             company_scheme = '0002'
             company_id = siren

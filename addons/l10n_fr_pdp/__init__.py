@@ -20,21 +20,9 @@ def _pre_init_pdp(env):
 
 
 def _post_init_pdp(env):
-    """Update templates for Factur-X."""
-    for view_name in [
-        'account_edi_ubl_cii.account_invoice_partner_facturx_export_22',
-        'account_edi_ubl_cii.account_invoice_facturx_export_22',
-    ]:
-        view = env.ref(view_name).sudo()
-        view.reset_arch(mode="hard")
-
     demo_company_partner = env.ref('base.partner_demo_company_fr', raise_if_not_found=False)
     if demo_company_partner and demo_company_partner not in demo_company_partner._get_partners_to_skip_peppol_computation():
         demo_company_partner.peppol_eas = False
         demo_company_partner.peppol_endpoint = False
         demo_company_partner._compute_peppol_eas()
         demo_company_partner._compute_peppol_endpoint()
-
-
-def uninstall_hook(env):
-    env["res.partner"]._clear_removed_edi_formats("ubl_21_fr")

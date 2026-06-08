@@ -282,7 +282,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
 
         wizard = self.create_send_and_print(move_1 + move_2)
         with patch(
-            'odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr.AccountEdiXmlUbl21Fr._export_invoice_constraints_new',
+            'odoo.addons.l10n_fr_account_ubl_cii.models.account_edi_xml_ubl_21_fr.AccountEdiXmlUbl21Fr._export_invoice_constraints_new',
             mocked_export_invoice_constraints
         ):
             wizard.action_send_and_print()
@@ -358,6 +358,10 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
             wizard.button_send()
 
     def test_paid_lifecycle_in_payment(self):
+        if self.env['account.move']._get_invoice_in_payment_state() != 'in_payment':
+            # The 'in_payment' state does not exist; and it is just 'paid'
+            self.skipTest('Accounting not installed')
+
         move = self._create_french_invoice()
         move.action_post()
 

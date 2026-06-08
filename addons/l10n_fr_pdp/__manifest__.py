@@ -8,7 +8,7 @@
 """,
     'depends': [
         'l10n_fr_account',
-        'account_edi_ubl_cii_tax_extension',
+        'l10n_fr_account_ubl_cii',
         'account_peppol_response',
         'auth_totp_mail_enforce',
         'iap',
@@ -31,5 +31,4 @@
     'license': 'LGPL-3',
     'pre_init_hook': '_pre_init_pdp',
     'post_init_hook': '_post_init_pdp',
-    'uninstall_hook': 'uninstall_hook',
 }
