@@ -2019,3 +2019,21 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertEqual(xml.findtext('./ReportDocument/TypeCode'), 'RE')
         self.assertIn(invalid_invoice.name, [node.findtext('ID') for node in invoice_nodes])
         self.assertIn(invalid_invoice, rectificative_flow.sent_move_ids)
+
+    def test_reset_move_to_draft(self):
+        service_tax = self._get_tax_on_payment_20_tax_included()
+        invoice = self._create_form_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-09-03',
+            lines=[{
+                'price_unit': 100.0,
+                'tax_ids': service_tax,
+            }],
+        )
+        payment = self._register_payment(invoice, '2025-09-09').move_id
+        self.assertFalse(invoice.l10n_fr_pdp_last_flow_id.initial_flow_id)  # IN
+        self.assertFalse(payment.l10n_fr_pdp_last_flow_id.initial_flow_id)  # IN
+        self._run_send_cron('2025-09-20', identifier='FULL-FORM-RE-INITIAL')
+        invoice.button_draft()
+        # self.assertTrue(payment.l10n_fr_pdp_last_flow_id.initial_flow_id)  # RE
+        self.assertTrue(invoice.l10n_fr_pdp_last_flow_id.initial_flow_id)  # RE
