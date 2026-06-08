@@ -28,6 +28,8 @@ export class CheckBox extends Component {
         className: t.string().optional(),
         name: t.string().optional(),
         indeterminate: t.boolean().optional(),
+        title: t.string().optional(),
+        ariaLabel: t.string().optional(),
     });
 
     rootRef = signal(null);

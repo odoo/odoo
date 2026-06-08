@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add("test_company_access_error_redirect", {
             trigger: ".o-dropdown--menu",
         },
         {
-            trigger: ".o_switch_company_item [role=menuitemcheckbox][aria-checked=true]:count(2)",
+            trigger: ".o_switch_company_item input[type='checkbox']:checked:count(2)",
             run() {
                 assertEqual(
                     cookie.get("cids"),

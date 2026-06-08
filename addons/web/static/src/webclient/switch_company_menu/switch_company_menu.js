@@ -14,6 +14,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { user, userBus } from "@web/core/user";
 import { router } from "@web/core/browser/router";
+import { CheckBox } from "@web/core/checkbox/checkbox";
 
 function getCompany(cid) {
     return user.allowedCompaniesWithAncestors.find((c) => c.id === cid);
@@ -186,7 +187,7 @@ export class CompanySelector {
 
 export class SwitchCompanyMenu extends Component {
     static template = "web.SwitchCompanyMenu";
-    static components = { Dropdown, DropdownItem, DropdownGroup, SwitchCompanyItem };
+    static components = { Dropdown, DropdownItem, DropdownGroup, SwitchCompanyItem, CheckBox };
     static props = {};
     static CompanySelector = CompanySelector;
 
@@ -216,6 +217,7 @@ export class SwitchCompanyMenu extends Component {
 
         this.containerRef = useChildRef();
         this.navigationOptions = {
+            shouldFocusChildInput: false,
             hotkeys: {
                 space: (navigator) => {
                     const navItem = navigator.activeItem;
@@ -258,28 +260,19 @@ export class SwitchCompanyMenu extends Component {
         );
     }
 
-    get selectAllClass() {
-        if (
+    get isAllCompaniesSelected() {
+        return (
+            this.visibleCompanies.length > 0 &&
             this.visibleCompanies.every((c) => this.companySelector.isCompanySelected(c.company.id))
-        ) {
-            return "btn-link text-primary";
-        } else {
-            return "btn-link text-secondary";
-        }
+        );
     }
 
-    get selectAllIcon() {
-        if (
-            this.visibleCompanies.every((c) => this.companySelector.isCompanySelected(c.company.id))
-        ) {
-            return "fa-check-square text-primary";
-        } else if (
-            this.visibleCompanies.some((c) => this.companySelector.isCompanySelected(c.company.id))
-        ) {
-            return "fa-minus-square-o";
-        } else {
-            return "fa-square-o";
-        }
+    get isIndeterminate() {
+        return this.hasSelectedCompanies && !this.isAllCompaniesSelected;
+    }
+
+    get checkboxTitleLabel() {
+        return this.hasSelectedCompanies ? _t("Deselect all") : _t("Select all");
     }
 
     computeVisibleCompanies() {
@@ -307,13 +300,11 @@ export class SwitchCompanyMenu extends Component {
 
     resetState() {
         this.state.searchFilter = "";
-        this.state.showFilter = this.hasLotsOfCompanies;
         this.state.visibleCompanies = this.computeVisibleCompanies();
     }
 
     onSearch(ev) {
         this.state.searchFilter = ev.target.value;
-        this.state.showFilter = true;
         this.state.visibleCompanies = this.computeVisibleCompanies();
     }
 
