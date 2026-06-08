@@ -1116,10 +1116,14 @@ class PosSession(models.Model):
             payment_receivable_line = self._create_combine_account_payment(payment_method, amounts, diff_amount=bank_payment_method_diffs.get(payment_method.id) or 0)
             payment_method_to_receivable_lines[payment_method] = combine_receivable_line | payment_receivable_line
 
-        for payment, amounts in split_receivables_bank.items():
-            split_receivable_line = MoveLine.create(self._get_split_receivable_vals(payment, amounts['amount'], amounts['amount_converted']))
-            payment_receivable_line = self._create_split_account_payment(payment, amounts)
-            payment_to_receivable_lines[payment] = split_receivable_line | payment_receivable_line
+        split_items = list(split_receivables_bank.items())
+        split_receivable_lines = MoveLine.create([
+            self._get_split_receivable_vals(payment, amounts['amount'], amounts['amount_converted'])
+            for payment, amounts in split_items
+        ])
+        payment_receivable_lines = self._create_split_account_payments(split_items)
+        for (payment, amounts), split_receivable_line in zip(split_items, split_receivable_lines):
+            payment_to_receivable_lines[payment] = split_receivable_line | payment_receivable_lines.get(payment, self.env['account.move.line'])
 
         for bank_payment_method in self.payment_method_ids.filtered(lambda pm: pm.type == 'bank' and pm.split_transactions):
             self._create_diff_account_move_for_split_payment_method(bank_payment_method, bank_payment_method_diffs.get(bank_payment_method.id) or 0)
@@ -1197,31 +1201,43 @@ class PosSession(models.Model):
         account_payment.move_id.action_post()
 
     def _create_split_account_payment(self, payment, amounts):
+        return self._create_split_account_payments([(payment, amounts)]).get(payment, self.env['account.move.line'])
+
+    def _get_split_account_payment_vals(self, payment, amounts, accounting_partner, destination_account):
         payment_method = payment.payment_method_id
-        if not payment_method.journal_id:
-            return self.env['account.move.line']
-        outstanding_account = payment_method.outstanding_account_id
-        accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
-        destination_account = accounting_partner.property_account_receivable_id
         payment_type = "inbound"
         if self.currency_id.compare_amounts(amounts['amount'], 0) < 0:
             payment_type = 'outbound'
-
-        account_payment = self.env['account.payment'].create({
+        return {
             'amount': abs(amounts['amount']),
             'partner_id': accounting_partner.id,
             'journal_id': payment_method.journal_id.id,
-            'force_outstanding_account_id': outstanding_account.id,
+            'force_outstanding_account_id': payment_method.outstanding_account_id.id,
             'destination_account_id': destination_account.id,
             'memo': _('%(payment_method)s POS payment of %(partner)s in %(session)s', payment_method=payment_method.name, partner=payment.partner_id.display_name, session=self.name),
             'pos_payment_method_id': payment_method.id,
             'pos_session_id': self.id,
             'payment_type': payment_type,
-        })
+        }
 
-        self._ensure_payment_outstanding_account(account_payment, amounts['amount'])
-        account_payment.action_post()
-        return account_payment.move_id.line_ids.filtered(lambda line: line.account_id == accounting_partner.property_account_receivable_id)
+    def _create_split_account_payments(self, payment_amounts_list):
+        vals_list = []
+        entries = []
+        for payment, amounts in payment_amounts_list:
+            if not payment.payment_method_id.journal_id:
+                continue
+            accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
+            destination_account = accounting_partner.property_account_receivable_id
+            vals_list.append(self._get_split_account_payment_vals(payment, amounts, accounting_partner, destination_account))
+            entries.append((payment, amounts, destination_account))
+        account_payments = self.env['account.payment'].create(vals_list)
+        for account_payment, (payment, amounts, destination_account) in zip(account_payments, entries):
+            self._ensure_payment_outstanding_account(account_payment, amounts['amount'])
+        account_payments.action_post()
+        payment_to_line = {}
+        for account_payment, (payment, amounts, destination_account) in zip(account_payments, entries):
+            payment_to_line[payment] = account_payment.move_id.line_ids.filtered(lambda line: line.account_id == destination_account)
+        return payment_to_line
 
     def _create_cash_statement_lines_and_cash_move_lines(self, data):
         # Create the split and combine cash statement lines and account move lines.
@@ -1370,9 +1386,13 @@ class PosSession(models.Model):
             if receivable_account.reconcile:
                 lines.filtered(lambda line: not line.reconciled).with_context(no_cash_basis=True).reconcile()
 
-        for payment, lines in payment_to_receivable_lines.items():
-            if payment.partner_id.property_account_receivable_id.reconcile:
-                lines.filtered(lambda line: not line.reconciled).with_context(no_cash_basis=True).reconcile()
+        split_plan = [
+            lines.filtered(lambda line: not line.reconciled)
+            for payment, lines in payment_to_receivable_lines.items()
+            if payment.partner_id.property_account_receivable_id.reconcile
+        ]
+        if split_plan:
+            self.env['account.move.line'].with_context(no_cash_basis=True)._reconcile_plan(split_plan)
 
         # Reconcile invoice payments' receivable lines. But we only do when the account is reconcilable.
         # Though `account_default_pos_receivable_account_id` should be of type receivable, there is currently
