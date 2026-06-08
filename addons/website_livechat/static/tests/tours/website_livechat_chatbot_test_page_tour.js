@@ -37,7 +37,6 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
         },
         {
             trigger: messagesContain("Please find documentation at"),
-            run: () => {},
         },
         {
             trigger: ".o-livechat-root:shadow [title='Close Chat Window (ESC)']",

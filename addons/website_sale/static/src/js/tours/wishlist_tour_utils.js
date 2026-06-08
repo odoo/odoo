@@ -29,15 +29,10 @@ export function addToWishlistFromShopPage() {
     ];
 }
 
-export function goToWishlist({
-    quantity = 1,
-    position = "bottom",
-    backend = false,
-} = {}) {
+export function goToWishlist({ quantity = 1 } = {}) {
     return {
         content: _t("Go to wishlist"),
-        trigger: `${backend ? ":iframe" : ""} a sup.my_wish_quantity:text(${quantity})`,
-        tooltipPosition: position,
+        trigger: `a sup.my_wish_quantity:text(${quantity})`,
         run: "click",
         expectUnloadPage: true,
     };

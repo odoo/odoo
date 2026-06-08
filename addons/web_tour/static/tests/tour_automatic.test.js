@@ -73,12 +73,21 @@ test("Step Tour validity", async () => {
         },
         {
             trigger: "button.bar",
-            run() {},
         },
     ];
     tourRegistry.add("tour1", {
         steps: () => steps,
     });
+    const expectedKeys = [
+        "trigger",
+        "id?",
+        "isActive?",
+        "run?",
+        "content?",
+        "expectUnloadPage?",
+        "timeout?",
+        "tooltipPosition?",
+    ];
     await makeMockEnv({});
     const waited_error1 = `Error in schema for TourStep\n${JSON.stringify(
         [
@@ -87,17 +96,7 @@ test("Step Tour validity", async () => {
                 path: "",
                 message: "object value has unknown keys",
                 unknownKeys: ["Belgium", "wins", "EURO2024"],
-                expectedKeys: [
-                    "id?",
-                    "content?",
-                    "debugHelp?",
-                    "isActive?",
-                    "run?",
-                    "timeout?",
-                    "tooltipPosition?",
-                    "trigger",
-                    "expectUnloadPage?",
-                ],
+                expectedKeys,
             },
         ],
         null,
@@ -110,17 +109,7 @@ test("Step Tour validity", async () => {
                 path: "",
                 message: "object value has unknown keys",
                 unknownKeys: ["my_title", "doku"],
-                expectedKeys: [
-                    "id?",
-                    "content?",
-                    "debugHelp?",
-                    "isActive?",
-                    "run?",
-                    "timeout?",
-                    "tooltipPosition?",
-                    "trigger",
-                    "expectUnloadPage?",
-                ],
+                expectedKeys,
             },
         ],
         null,

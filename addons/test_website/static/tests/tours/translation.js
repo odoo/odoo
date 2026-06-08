@@ -69,7 +69,7 @@ function createNewPage() {
             trigger: ".o-we-linkpopover .btn-primary",
             run: "click",
         },
-        ...clickOnSave("bottom", 50000, false),
+        ...clickOnSave(50000, false),
     ];
 }
 
@@ -148,7 +148,7 @@ function singleLanguage() {
             trigger: ":iframe main p.o_savable[data-oe-field='arch'][contenteditable='true']",
             run: "editor Modified Text",
         },
-        ...clickOnSave("bottom", 50000, false),
+        ...clickOnSave(50000, false),
         ...openHtmlEditor(),
         {
             content: "Change text",
@@ -350,7 +350,7 @@ function multiLanguage(mainLanguage, secondLanguage) {
             trigger: ":iframe h1",
             run: "editor Yet another version of the text.",
         },
-        ...clickOnSave("bottom", 50000, false),
+        ...clickOnSave(50000, false),
         ...switchLanguage(secondLanguage),
         {
             content: "Ensure English page is NOT updated",
@@ -388,7 +388,7 @@ function multiLanguage(mainLanguage, secondLanguage) {
             trigger: ":iframe main p.o_savable[contenteditable='true']",
             run: "editor Modified View",
         },
-        ...clickOnSave("bottom", 50000, false),
+        ...clickOnSave(50000, false),
         ...switchLanguage(secondLanguage),
         ...openTranslate(),
         {
@@ -424,7 +424,7 @@ function multiLanguage(mainLanguage, secondLanguage) {
             trigger: ":iframe main p.o_savable[data-oe-field='arch'][contenteditable='true']",
             run: "editor Even more modified Text",
         },
-        ...clickOnSave("bottom", 50000, false),
+        ...clickOnSave(50000, false),
         ...switchLanguage(secondLanguage),
         {
             content: "Check old translation is displayed",

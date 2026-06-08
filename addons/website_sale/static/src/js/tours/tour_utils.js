@@ -236,16 +236,10 @@ export function fillAddressForm(
     return steps;
 }
 
-export function goToCart({
-    quantity = 1,
-    position = "bottom",
-    backend = false,
-    expectUnloadPage = true,
-} = {}) {
+export function goToCart({ quantity = 1, backend = false, expectUnloadPage = true } = {}) {
     return {
         content: _t("Go to cart"),
         trigger: `${backend ? ":iframe" : ""} a sup.my_cart_quantity:text(${quantity})`,
-        tooltipPosition: position,
         run: "click",
         expectUnloadPage,
     };
