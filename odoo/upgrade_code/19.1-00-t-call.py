@@ -7,6 +7,7 @@ import typing
 from lxml import etree
 
 from odoo.upgrade_code.tools_etree import get_indentation, update_etree
+from odoo.tools import config
 
 if typing.TYPE_CHECKING:
     from odoo.cli.upgrade_code import FileManager
@@ -180,6 +181,7 @@ def change(root: etree._ElementTree, path: str) -> bool:
             # Move the t-set if the are some content or if it's used for an
             # other t-set else we can remove it and add as an attribute.
             if ('t-set' in used or
+                config.get('upgrade_path') or  # XPath may reference t-set; keep it during upgrades
                 (
                     len(tset) or
                     tset.get('groups') or
