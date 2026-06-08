@@ -54,7 +54,7 @@ from odoo.tools import (
     ormcache, partition, Query, split_every, unique,
     SQL, sql, groupby,
 )
-from odoo.tools.constants import PREFETCH_MAX
+from odoo.tools.constants import PREFETCH_MAX, AVERAGE_NUMBER_OF_FIELDS
 from odoo.tools.lru import LRU
 from odoo.tools.misc import ReversedIterable, exception_to_unicode, unquote
 from odoo.tools.translate import _, LazyTranslate
@@ -117,8 +117,6 @@ AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 INSERT_BATCH_SIZE = 100
 UPDATE_BATCH_SIZE = 100
 SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
-AVERAGE_NUMBER_OF_FIELDS = 2 # the best estimation is the average number of needed fields.
-
 
 # hacky-ish way to prevent access to a field through the ORM (except for sudo mode)
 NO_ACCESS = '.'
@@ -3758,7 +3756,7 @@ class BaseModel(metaclass=MetaModel):
             instance) for ``self`` in cache.
         """
         # determine which fields can be prefetched
-        big_recordset_prefetch_fields = None if len(self) <= PREFETCH_MAX * AVERAGE_NUMBER_OF_FIELDS else self.env.cr.cache.set_default('big_recordset_prefetch_fields', set())
+        big_recordset_prefetch_fields = self.env.cr.cache.setdefault('big_recordset_prefetch_fields', set()) if self.env.context.get('big_recordset_prefetch',False) else None
         if self.env.context.get('prefetch_fields', True) and field.prefetch:
             fnames = [
                 name
@@ -5900,6 +5898,8 @@ class BaseModel(metaclass=MetaModel):
             ids = (ids,)
         else:
             ids = tuple(ids)
+        if not self.env.context.get("big_recordset_prefetch", False) and len(ids) > PREFETCH_MAX * AVERAGE_NUMBER_OF_FIELDS:
+            self.env = self.env(context={**self.env.context, "big_recordset_prefetch": True})
         return self.__class__(self.env, ids, ids)
 
     #
