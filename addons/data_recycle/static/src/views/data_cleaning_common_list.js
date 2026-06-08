@@ -20,7 +20,7 @@ export class DataCleaningCommonListController extends ListController {
             type: 'ir.actions.act_window',
             views: [[false, 'form']],
             res_model: record.data.res_model_name,
-            res_id: record.data.res_id,
+            res_id: record.data.res_id && record.data.res_id.resId,
             context: {
                 create: false,
                 edit: false
