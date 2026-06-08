@@ -423,7 +423,7 @@ export class BuilderOptionsPlugin extends Plugin {
                     containerTitle: elementToContainerTitle.get(element)
                         ? elementToContainerTitle.get(element)[0]
                         : {},
-                    hideOverlay: Options.every((Option) => Option.hideOverlay),
+                    hideOverlay: Options.length && Options.every((Option) => Option.hideOverlay),
                     hasOverlayOptions: this.hasOverlayOptions(element),
                     isRemovable: isRemovable(element),
                     removeDisabledReason: this.getRemoveDisabledReason(element),
