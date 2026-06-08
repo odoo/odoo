@@ -321,3 +321,39 @@ export const checkIdentityService = {
 
 registry.category("public_components").add("web.check_identity_form", CheckIdentityForm);
 registry.category("services").add("check_identity", checkIdentityService);
+<<<<<<< 19f28200f9ea85f10886d57d5ed459a64db20b1f
+||||||| 633950cd7fe83b57498db3d568d326d67e2749c3
+
+// Patch RPC to replay it automatically when the identity is verified
+const originalRpc = rpc._rpc;
+
+rpc._rpc = function (...args) {
+    const originalPromise = originalRpc(...args);
+    const promise = originalPromise.catch(async (error) => {
+        if (error.data?.name === "odoo.http.session.CheckIdentityException") {
+            await odoo.__WOWL_DEBUG__.root.env.services["check_identity"].checkIdentity();
+            return originalRpc(...args);
+        }
+        throw error;
+    });
+    promise.abort = originalPromise.abort;
+    return promise;
+};
+=======
+
+// Patch RPC to replay it automatically when the identity is verified
+const originalRpc = rpc._rpc;
+rpc._rpc = function (...args) {
+    const originalPromise = originalRpc(...args);
+    const promise = originalPromise.catch(async (error) => {
+        if (error.data?.name === "odoo.http.session.CheckIdentityException") {
+            await odoo.__WOWL_DEBUG__.root.env.services["check_identity"].checkIdentity();
+            return originalRpc(...args);
+        }
+        throw error;
+    });
+    promise.abort = originalPromise.abort;
+    return promise;
+};
+rpc._originalRpc = originalRpc;
+>>>>>>> f7cd178a578e1e637b922c8c2d0f8a928bd89ba3
