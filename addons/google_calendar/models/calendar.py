@@ -213,7 +213,7 @@ class CalendarEvent(models.Model):
             event = google_event.get_odoo_event(self.env)
             existing_attendees = event.attendee_ids
         attendees_by_emails = {tools.email_normalize(a.email): a for a in existing_attendees}
-        partners = self._get_sync_partner(emails)
+        partners = self._get_sync_partner({a.get('email'): a.get('displayName') for a in google_attendees})
         for attendee in zip(emails, partners, google_attendees):
             email = attendee[0]
             if email in attendees_by_emails:
