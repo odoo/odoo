@@ -346,10 +346,11 @@ const originalRpc = rpc._rpc;
 rpc._originalRpc = originalRpc;
 rpc._rpc = function (...args) {
     const originalPromise = originalRpc(...args);
-    const promise = originalPromise.catch(async (error) => {
+    const promise = originalPromise.catch((error) => {
         if (error.data?.name === "odoo.http.session.CheckIdentityException") {
-            await odoo.__WOWL_DEBUG__.root.env.services["check_identity"].checkIdentity();
-            return originalRpc(...args);
+            return odoo.__WOWL_DEBUG__.root.env.services["check_identity"]
+                .checkIdentity()
+                .then(() => originalRpc(...args));
         }
         throw error;
     });
